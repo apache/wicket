@@ -48,6 +48,18 @@ public class NoCrypt implements ICrypt
 	}
 
 	/**
+	 * Decrypts a string into a string.
+	 * 
+	 * @param text
+	 *            text to decript
+	 * @return the decrypted text
+	 */
+	public final String decryptUrlSafe(final String text)
+	{
+		return text;
+	}
+
+	/**
 	 * Encrypt a string into a string
 	 * 
 	 * @param plainText
@@ -55,6 +67,18 @@ public class NoCrypt implements ICrypt
 	 * @return encrypted string
 	 */
 	public final String encrypt(final String plainText)
+	{
+		return plainText;
+	}
+
+	/**
+	 * Encrypt a string into a string
+	 * 
+	 * @param plainText
+	 *            text to encrypt
+	 * @return encrypted string
+	 */
+	public final String encryptUrlSafe(final String plainText)
 	{
 		return plainText;
 	}

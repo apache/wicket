@@ -46,15 +46,17 @@ public final class ModificationWatcher
 	/** Maps Modifiable objects to Entry objects */
 	private final Map modifiableToEntry = new HashMap();
 
+	private Task task;
+
 	// MarkupContainer class for holding modifiable entries to watch
 	private static final class Entry
 	{
-
 		// The most recent lastModificationTime polled on the object
 		Time lastModifiedTime;
 
 		// The set of listeners to call when the modifiable changes
 		final ChangeListenerSet listeners = new ChangeListenerSet();
+		
 		// The modifiable thing
 		IModifiable modifiable;
 	}
@@ -85,8 +87,9 @@ public final class ModificationWatcher
 	 *            The modifiable thing to monitor
 	 * @param listener
 	 *            The listener to call if the modifiable is modified
+	 * @return <tt>true</tt> if the set did not already contain the specified element.
 	 */
-	public final void add(final IModifiable modifiable, final IChangeListener listener)
+	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
 		// Look up entry for modifiable
 		final Entry entry = (Entry)modifiableToEntry.get(modifiable);
@@ -111,14 +114,32 @@ public final class ModificationWatcher
 				// The IModifiable is not returning a valid lastModifiedTime
 				log.info("Cannot track modifications to resource " + modifiable);
 			}
+			
+			return true;
 		}
 		else
 		{
 			// Add listener to existing entry
-			entry.listeners.add(listener);
+			return entry.listeners.add(listener);
 		}
 	}
 
+	/**
+	 * Remove all entries associated with 'modifiable'
+	 * 
+	 * @param modifiable
+	 * @return the object removed, else null
+	 */
+	public IModifiable remove(final IModifiable modifiable)
+	{
+		final Entry entry = (Entry)modifiableToEntry.remove(modifiable);
+		if(entry != null)
+		{
+			return entry.modifiable;
+		}
+		return null;
+	}
+	
 	/**
 	 * Start watching at a given polling rate
 	 * 
@@ -128,7 +149,7 @@ public final class ModificationWatcher
 	public void start(final Duration pollFrequency)
 	{
 		// Construct task with the given polling frequency
-		final Task task = new Task("ModificationWatcher");
+		task = new Task("ModificationWatcher");
 
 		task.run(pollFrequency, new ICode()
 		{
@@ -159,5 +180,16 @@ public final class ModificationWatcher
 				}
 			}
 		});
+	}
+
+	/**
+	 *  stops the modification watcher from watching.
+	 */
+	public void destroy()
+	{
+		if(task != null)
+		{
+			task.stop();
+		}
 	}
 }

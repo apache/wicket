@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.wizard.example.hotel;
 
@@ -28,14 +26,16 @@ import wicket.model.CompoundPropertyModel;
 
 /**
  * Step 3, Stay Preferences, of the hotel preferences wizard.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class StayPreferencesStep extends AbstractHotelPrefStep
 {
 	/**
 	 * Construct.
-	 * @param model the model
+	 * 
+	 * @param model
+	 *            the model
 	 */
 	public StayPreferencesStep(HotelPreferencesModel model)
 	{
@@ -73,7 +73,9 @@ public class StayPreferencesStep extends AbstractHotelPrefStep
 	{
 		/**
 		 * Construct.
-		 * @param id component id
+		 * 
+		 * @param id
+		 *            component id
 		 */
 		public Editor(String id)
 		{
@@ -87,7 +89,8 @@ public class StayPreferencesStep extends AbstractHotelPrefStep
 				}
 			});
 
-			// we want to show the wake up call input fields (time) only when the customer
+			// we want to show the wake up call input fields (time) only when
+			// the customer
 			// wants to get a wake up call
 			WebMarkupContainer wakeUpCallContainer = new WebMarkupContainer("wakeUpCallContainer")
 			{

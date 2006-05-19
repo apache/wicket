@@ -18,25 +18,22 @@
 -->
 <SCRIPT language="JavaScript">
 //<![CDATA[ <!--
-/* Note that the logic below always launches the JNLP
-application
-* if the browser is Gecko based. This is because it is
-not possible
-* to detect MIME type application/x-java-jnlp-file on
-Gecko-based browsers.
+/* Note that the logic below always launches the JNLP application
+* if the browser is Gecko based. This is because it is not possible
+* to detect MIME type application/x-java-jnlp-file on Gecko-based browsers.
 */
+var javawsInstalled=true;
 if (javawsInstalled ||
 (navigator.userAgent.indexOf("Gecko") !=-1)) {
-   document.write("<a
-href=http://localhost:8084/app.jnlp>Launch the
-application</a>");
+   document.write("<a href=http://localhost:8084/app.jnlp>Launch the application</a>");
 } else {
    document.write("Click ");
-   document.write("<a
-href=http://java.sun.com/PluginBrowserCheck?pass=http://localhost:8084/AutoInstallJRE.html&fail=http://java.sun.com/j2se/1.5.0/download.html>here</a>
-");
-   document.write("to download and install JRE 5.0 and
-the application.");
+   document.write("<a href=http://java.sun.com/PluginBrowserCheck?pass=http://localhost:8084/AutoInstallJRE.html&fail=http://java.sun.com/j2se/1.5.0/download.html>here</a> ");
+   document.write("to download and install JRE 5.0 and the application.");
 }
+
+// it mustnt break if the string contains the cdata end marker ]]>
+var test1="some]]>";
+
 //]]> -->
 </SCRIPT>

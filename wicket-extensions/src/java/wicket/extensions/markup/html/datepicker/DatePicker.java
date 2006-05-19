@@ -1,34 +1,41 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.datepicker;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.resources.JavaScriptReference;
-import wicket.extensions.markup.html.resources.StyleSheetReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.resources.JavaScriptReference;
+import wicket.markup.html.resources.StyleSheetReference;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.convert.Converter;
+import wicket.util.convert.IConverter;
+import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.converters.DateConverter;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Datepicker component.
@@ -37,20 +44,24 @@ import wicket.model.Model;
  * </p>
  * <p>
  * (Java)
+ * 
  * <pre>
- * TextField dateField = new TextField("dateField", Date.class);
+ * TextField dateField = new TextField(&quot;dateField&quot;, Date.class);
  * add(dateField);
- * add(new DatePicker("dateFieldPicker", dateField));
+ * add(new DatePicker(&quot;dateFieldPicker&quot;, dateField));
  * </pre>
+ * 
  * (html)
+ * 
  * <pre>
- * &lt;input type="text" wicket:id="dateField" size="10" /&gt;
- * &lt;span wicket:id="dateFieldPicker" /&gt;
+ *        &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *        &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
+ * 
  * </p>
  * <p>
- * Your target doesn't have to be a text field however, attach to any tag that is
- * supported by JSCalendar.
+ * Your target doesn't have to be a text field however, attach to any tag that
+ * is supported by JSCalendar.
  * </p>
  * <p>
  * Customize the looks, localization etc of the datepicker by providing a custom
@@ -60,44 +71,44 @@ import wicket.model.Model;
  * This component is based on Dynarch's JSCalendar component, which can be found
  * at <a href="http://www.dynarch.com/">the Dynarch site</a>.
  * </p>
- *
+ * 
  * @see wicket.extensions.markup.html.datepicker.DatePickerSettings
- *
  * @author Eelco Hillenius
  * @author Mihai Bazon (creator of the JSCalendar component)
  */
 public class DatePicker extends Panel
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
-	 * Attribute modifier that modifies/ adds an id attribute with value of the
+	 * Attribute modifier that modifies/ adds an attribute with value of the
 	 * given component's path.
 	 */
-	private final static class IdAttributeModifier extends AttributeModifier
+	private final static class PathAttributeModifier extends AttributeModifier
 	{
-
-		/** model for substituting the id attribute of a component based on the component id. */
-		private final static class IdModel extends Model
-		{
-			/**
-			 * @see wicket.model.IModel#getObject(wicket.Component)
-			 */
-			public Object getObject(Component component)
-			{
-				return component.getPath();
-			}
-		}
-
-		/** target component. */
-		private final Component component;
+		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
-		 * @param component the target component
+		 * 
+		 * @param attribute
+		 *            the attribute to modify
+		 * @param pathProvider
+		 *            the component that provides the path
 		 */
-		public IdAttributeModifier(Component component)
+		public PathAttributeModifier(String attribute, final Component pathProvider)
 		{
-			super("id", true, new IdModel());
-			this.component = component;
+			super(attribute, true, new Model()
+			{
+				private static final long serialVersionUID = 1L;
+
+				public Object getObject(Component component)
+				{
+					// do this lazily, so we know for sure we have the whole
+					// path including the page etc.
+					return pathProvider.getPath();
+				}
+			});
 		}
 	}
 
@@ -106,21 +117,27 @@ public class DatePicker extends Panel
 	 */
 	private final static class TriggerButton extends WebMarkupContainer
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
-		 * @param id component id
-		 * @param resourceReference button icon reference
+		 * 
+		 * @param id
+		 *            component id
+		 * @param resourceReference
+		 *            button icon reference
 		 */
 		public TriggerButton(final String id, final wicket.ResourceReference resourceReference)
 		{
 			super(id);
-			add(new IdAttributeModifier(this));
+			add(new PathAttributeModifier("id", this));
 			IModel srcReplacement = new Model()
 			{
+				private static final long serialVersionUID = 1L;
+
 				public Object getObject(Component component)
 				{
-					String url = getPage().urlFor(resourceReference.getPath());
-					return url;
+					return urlFor(resourceReference);
 				};
 			};
 			add(new AttributeModifier("src", true, srcReplacement));
@@ -132,9 +149,13 @@ public class DatePicker extends Panel
 	 */
 	private final class InitScript extends WebComponent
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * Construct.
-		 * @param id component id
+		 * 
+		 * @param id
+		 *            component id
 		 */
 		public InitScript(String id)
 		{
@@ -142,9 +163,11 @@ public class DatePicker extends Panel
 		}
 
 		/**
-		 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+		 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+		 *      wicket.markup.ComponentTag)
 		 */
-		protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+		protected void onComponentTagBody(final MarkupStream markupStream,
+				final ComponentTag openTag)
 		{
 			replaceComponentTagBody(markupStream, openTag, getInitScript());
 		}
@@ -159,61 +182,154 @@ public class DatePicker extends Panel
 	/** settings for the javascript datepicker component. */
 	private final DatePickerSettings settings;
 
+	private DateConverter dateConverter;
+
 	/**
 	 * Construct with a default button and style.
-	 * @param id the component id
-	 * @param target the receiving component
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param target
+	 *            the receiving component
 	 */
 	public DatePicker(String id, Component target)
 	{
 		this(id, target, new DatePickerSettings());
 	}
 
+	/**
+	 * Construct with a default button and style.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param label
+	 *            the label for target component.
+	 * @param target
+	 *            the receiving component
+	 */
+	public DatePicker(String id, Component label, Component target)
+	{
+		this(id, label, target, new DatePickerSettings());
+	}
 
 	/**
 	 * Construct.
-	 * @param id the component id
-	 * @param target the receiving component
-	 * @param settings datepicker properties
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param target
+	 *            the receiving component
+	 * @param settings
+	 *            datepicker properties
 	 */
-	public DatePicker(String id, Component target, DatePickerSettings settings)
+	public DatePicker(final String id, final Component target, final DatePickerSettings settings)
+	{
+		this(id, null, target, settings);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            the component id
+	 * @param label
+	 *            the label component (may be null)
+	 * @param target
+	 *            the receiving component
+	 * @param settings
+	 *            datepicker properties
+	 */
+	public DatePicker(final String id, final Component label, final Component target,
+			final DatePickerSettings settings)
 	{
 		super(id);
 
-		if(settings == null)
+		if (settings == null)
 		{
-			throw new NullPointerException("settings must be non null when using this constructor");
+			throw new IllegalArgumentException(
+					"Settings must be non null when using this constructor");
 		}
 
 		this.settings = settings;
-		
+
 		if (target == null)
 		{
-			throw new NullPointerException("targetTextField must be not null");
+			throw new IllegalArgumentException("Target must be not null");
 		}
 
-		target.add(new IdAttributeModifier(target));
+		target.add(new PathAttributeModifier("id", target));
 		this.target = target;
 
+		if (label != null)
+		{
+			label.add(new PathAttributeModifier("for", target));
+		}
 		add(triggerButton = new TriggerButton("trigger", settings.getIcon()));
 		add(new InitScript("script"));
-		addToHeader(new JavaScriptReference("calendarMain", DatePicker.class, "calendar.js"));
-		addToHeader(new JavaScriptReference("calendarSetup", DatePicker.class, "calendar-setup.js"));
-		addToHeader(new JavaScriptReference("calendarLanguage", settings.getLanguage()));
-		addToHeader(new StyleSheetReference("calendarStyle", settings.getStyle()));
+		add(new JavaScriptReference("calendarMain", DatePicker.class, "calendar.js"));
+		add(new JavaScriptReference("calendarSetup", DatePicker.class, "calendar-setup.js"));
+		add(new JavaScriptReference("calendarLanguage", new Model()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject(Component component)
+			{
+				return settings.getLanguage(DatePicker.this.getLocale());
+			}
+		}));
+		add(new StyleSheetReference("calendarStyle", settings.getStyle()));
+	}
+	
+	/**
+	 * Sets the date converter to use for generating the javascript format string.
+	 * If this is not set or set to null the default DateConverter will be used.
+	 * 
+	 * @param dateConverter
+	 */
+	public void setDateConverter(DateConverter dateConverter)
+	{
+		this.dateConverter = dateConverter;
 	}
 
 	/**
 	 * Gets the initilization javascript.
+	 * 
 	 * @return the initilization javascript
 	 */
-	private String getInitScript()
+	private CharSequence getInitScript()
 	{
-		StringBuffer b = new StringBuffer("\nCalendar.setup(\n{");
-		b.append("\n\t\tinputField : \"").append(target.getPath()).append("\",");
+		String targetId = target.getPath();
+		AppendingStringBuffer b = new AppendingStringBuffer("\nCalendar.setup(\n{");
+		b.append("\n\t\tinputField : \"").append(targetId).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
-		b.append(settings.toScript());
+		
+		String pattern = null;
+		if(dateConverter == null)
+		{
+			// TODO this should be much easier and nicer to do in 2.0
+			IConverter converter = target.getConverter();
+			if(converter instanceof Converter)
+			{
+				ITypeConverter typeConverter = ((Converter)converter).get(Date.class);
+				if(typeConverter instanceof DateConverter)
+				{
+					dateConverter = (DateConverter)typeConverter;
+				}
+			}
+			if(dateConverter == null) dateConverter = new DateConverter();
+		}
+		DateFormat df = dateConverter.getDateFormat(target.getLocale());
+		if(df instanceof SimpleDateFormat)
+		{
+			pattern = ((SimpleDateFormat)df).toPattern();
+		}
+		b.append(settings.toScript(target.getLocale(),pattern));
+		int last = b.length() - 1;
+		if (',' == b.charAt(last))
+		{
+			b.deleteCharAt(last);
+		}
 		b.append("\n});");
-		return b.toString();
+		return b;
 	}
 }

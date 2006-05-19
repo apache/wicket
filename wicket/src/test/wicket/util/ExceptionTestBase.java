@@ -19,8 +19,9 @@
 package wicket.util;
 
 import java.lang.reflect.Constructor;
-import junit.framework.TestCase;
+
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 /**
  * Base class for testing exceptions in order to make

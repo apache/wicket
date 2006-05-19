@@ -17,24 +17,28 @@
  */
 package wicket.markup.html;
 
+import java.io.Serializable;
+
+import wicket.Response;
 
 /**
- * An interface to be implemented by components which are able to render
- * header sections. Usually this is only Page. However, Border implements it
- * as well to handle bordered pages (common page layout).
+ * An interface to be implemented by components which are able to render the
+ * header section associated with the markup. Default implementations are with
+ * WebComponent and WebMarkupContainer.
  * 
  * @author Juergen Donnerstag
  */
-public interface IHeaderContributor
+public interface IHeaderContributor extends Serializable
 {
 	/**
-	 * Print to the web response what ever the component wants
-	 * to contribute to the head section.
+	 * Render to the web response whatever the component wants to contribute to
+	 * the head section.
 	 * <p>
-	 * Note: This method is kind of dangerous as users are able
-	 * to write to the output whatever they like. 
+	 * Note: This method is kind of dangerous as users are able to write to the
+	 * output whatever they like.
 	 * 
-	 * @param container The HtmlHeaderContainer
+	 * @param response
+	 *            Response object
 	 */
-	public void printHead(final HtmlHeaderContainer container);
+	void renderHead(final Response response);
 }

@@ -18,11 +18,12 @@
  */
 package wicket.markup.html.basic;
 
-import wicket.PageParameters;
+import wicket.AttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.panel.Panel;
+import wicket.model.Model;
 
 
 /**
@@ -32,15 +33,20 @@ import wicket.markup.html.panel.Panel;
  */
 public class SimplePage extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public SimplePage(final PageParameters parameters) 
+	public SimplePage() 
 	{
+		add(new Label("myLabel", "Test Label"));
+		
 	    WebMarkupContainer container = new WebMarkupContainer("test");
 	    container.setRenderBodyOnly(true);
 	    add(container);
+
+	    container.add(new Label("myLabel2", "Test Label2"));
 
 	    Panel panel = new SimplePanel("myPanel");
 	    panel.setRenderBodyOnly(true);
@@ -48,5 +54,10 @@ public class SimplePage extends WebPage
 
 	    Border border = new SimpleBorder("myBorder");
 	    add(border);
+
+	    Border border2 = new SimpleBorder("myBorder2");
+	    border2.setRenderBodyOnly(false);
+	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+	    add(border2);
     }
 }

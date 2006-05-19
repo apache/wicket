@@ -17,10 +17,13 @@
  */
 package wicket.util.file;
 
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+import wicket.util.io.Streams;
 import wicket.util.time.Time;
 import wicket.util.watch.IModifiable;
 
@@ -35,6 +38,32 @@ import wicket.util.watch.IModifiable;
  */
 public class File extends java.io.File implements IModifiable
 {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param parent
+	 *            parent
+	 * @param child
+	 *            child
+	 */
+	public File(final File parent, final String child)
+	{
+		super(parent, child);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param file
+	 *            File from java.io package
+	 */
+	public File(final java.io.File file)
+	{
+		super(file.getAbsolutePath());
+	}
+
 	/**
 	 * Constructor.
 	 * 
@@ -62,19 +91,6 @@ public class File extends java.io.File implements IModifiable
 	/**
 	 * Constructor.
 	 * 
-	 * @param parent
-	 *            parent
-	 * @param child
-	 *            child
-	 */
-	public File(final File parent, final String child)
-	{
-		super(parent, child);
-	}
-
-	/**
-	 * Constructor.
-	 * 
 	 * @param uri
 	 *            file uri
 	 */
@@ -95,22 +111,61 @@ public class File extends java.io.File implements IModifiable
 	}
 
 	/**
+	 * @return String read from this file
+	 * @throws IOException
+	 */
+	public final String readString() throws IOException
+	{
+		final InputStream in = new FileInputStream(this);
+		try
+		{
+			return Streams.readString(in);
+		}
+		finally
+		{
+			in.close();
+		}
+	}
+
+	/**
+	 * @return True if the file was removed
 	 * @see java.io.File#delete()
 	 */
-	public final void remove()
+	public boolean remove()
 	{
-		Files.remove(this);
+		return Files.remove(this);
 	}
-	
+
 	/**
 	 * Writes the given input stream to this file
 	 * 
 	 * @param input
 	 *            The input
-	 * @throws IOException 
+	 * @return Number of bytes written
+	 * @throws IOException
 	 */
-	public final void writeTo(final InputStream input) throws IOException
+	public final int write(final InputStream input) throws IOException
 	{
-		Files.writeTo(this, input);
+		return Files.writeTo(this, input);
+	}
+
+	/**
+	 * Write the given string to this file
+	 * 
+	 * @param string
+	 *            The string to write
+	 * @throws IOException
+	 */
+	public final void write(final String string) throws IOException
+	{
+		final FileWriter out = new FileWriter(this);
+		try
+		{
+			out.write(string);
+		}
+		finally
+		{
+			out.close();
+		}
 	}
 }

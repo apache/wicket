@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.2  2006/02/23 22:17:44  jdonnerstag
+ * used eclipse 3.2M5 clean up wizard
+ *
  * Revision 1.1  2005/01/26 09:27:54  eelco12
  * refactoring:
  * package rename table -> list
@@ -97,7 +100,9 @@ public class DiffPrint
 		public void setupOutput()
 		{
 			if (outfile == null)
+			{
 				outfile = new PrintWriter(new OutputStreamWriter(System.out));
+			}
 		}
 
 		protected Base(Object[] a, Object[] b)
@@ -199,11 +204,19 @@ public class DiffPrint
 				show_from += next.deleted;
 				show_to += next.inserted;
 				for (i = next.line0; i <= l0 && !nontrivial; i++)
+				{
 					if (!ignore.execute(file0[i]))
+					{
 						nontrivial = true;
+					}
+				}
 				for (i = next.line1; i <= l1 && !nontrivial; i++)
+				{
 					if (!ignore.execute(file1[i]))
+					{
 						nontrivial = true;
+					}
+				}
 			}
 
 			first0 = f0;
@@ -217,7 +230,9 @@ public class DiffPrint
 			 */
 
 			if (!nontrivial)
+			{
 				show_from = show_to = 0;
+			}
 
 			deletes = show_from;
 			inserts = show_to;
@@ -256,9 +271,13 @@ public class DiffPrint
 			 * should print the line number before the range, which is B.
 			 */
 			if (++b > ++a)
+			{
 				outfile.print("" + a + sepchar + b);
+			}
 			else
+			{
 				outfile.print(b);
+			}
 		}
 
 		/**
@@ -269,11 +288,17 @@ public class DiffPrint
 		public static char change_letter(int inserts, int deletes)
 		{
 			if (inserts == 0)
+			{
 				return 'd';
+			}
 			else if (deletes == 0)
+			{
 				return 'a';
+			}
 			else
+			{
 				return 'c';
+			}
 		}
 	}
 
@@ -305,7 +330,9 @@ public class DiffPrint
 			/* Determine range of line numbers involved in each file. */
 			analyze_hunk(hunk);
 			if (deletes == 0 && inserts == 0)
+			{
 				return;
+			}
 
 			/* Print out the line number header for this hunk */
 			print_number_range(',', first0, last0);
@@ -315,16 +342,26 @@ public class DiffPrint
 
 			/* Print the lines that the first file has. */
 			if (deletes != 0)
+			{
 				for (int i = first0; i <= last0; i++)
+				{
 					print_1_line("< ", file0[i]);
+				}
+			}
 
 			if (inserts != 0 && deletes != 0)
+			{
 				outfile.println("---");
+			}
 
 			/* Print the lines that the second file has. */
 			if (inserts != 0)
+			{
 				for (int i = first1; i <= last1; i++)
+				{
 					print_1_line("> ", file1[i]);
+				}
+			}
 		}
 	}
 
@@ -356,7 +393,9 @@ public class DiffPrint
 			/* Determine range of line numbers involved in each file. */
 			analyze_hunk(hunk);
 			if (deletes == 0 && inserts == 0)
+			{
 				return;
+			}
 
 			/* Print out the line number header for this hunk */
 			print_number_range(',', first0, last0);
@@ -370,7 +409,9 @@ public class DiffPrint
 				{
 					/* Resume the insert, if we stopped. */
 					if (!inserting)
+					{
 						outfile.println(i - first1 + first0 + "a");
+					}
 					inserting = true;
 
 					/*
@@ -388,13 +429,17 @@ public class DiffPrint
 						inserting = false;
 					}
 					else
+					{
 						/* Line is not `.', so output it unmodified. */
 						print_1_line("", file1[i]);
+					}
 				}
 
 				/* End insert mode, if we are still in it. */
 				if (inserting)
+				{
 					outfile.println(".");
+				}
 			}
 		}
 	}
@@ -422,17 +467,23 @@ public class DiffPrint
 		{
 			setupOutput();
 			if (label != null)
+			{
 				outfile.println(mark + ' ' + label);
+			}
 			else if (inf.lastModified() > 0)
+			{
 				outfile.println(mark
 						+ ' '
 						+ inf.getPath()
 						+ '\t'
 						+ new SimpleDateFormat("yyyy.MM.dd HH:mm:ss")
 								.format(new Date(inf.lastModified())));
+			}
 			else
+			{
 				/* Don't pretend that standard input is ancient. */
 				outfile.println(mark + ' ' + inf.getPath());
+			}
 		}
 
 		/**
@@ -474,7 +525,9 @@ public class DiffPrint
 			analyze_hunk(hunk);
 
 			if (deletes == 0 && inserts == 0)
+			{
 				return;
+			}
 
 			/* Include a context's width before and after. */
 
@@ -507,17 +560,21 @@ public class DiffPrint
 					 */
 
 					while (next != null && next.line0 + next.deleted <= i)
+					{
 						next = next.link;
+					}
 
 					/* Compute the marking for line I. */
 
 					String prefix = " ";
 					if (next != null && next.line0 <= i)
+					{
 						/*
 						 * The change NEXT covers this line. If lines were inserted here in file
 						 * 1, this is "changed". Otherwise it is "deleted".
 						 */
 						prefix = (next.inserted > 0) ? "!" : "-";
+					}
 
 					print_1_line(prefix, file0[i]);
 				}
@@ -538,17 +595,21 @@ public class DiffPrint
 					 */
 
 					while (next != null && next.line1 + next.inserted <= i)
+					{
 						next = next.link;
+					}
 
 					/* Compute the marking for line I. */
 
 					String prefix = " ";
 					if (next != null && next.line1 <= i)
+					{
 						/*
 						 * The change NEXT covers this line. If lines were deleted here in file
 						 * 0, this is "changed". Otherwise it is "inserted".
 						 */
 						prefix = (next.deleted > 0) ? "!" : "+";
+					}
 
 					print_1_line(prefix, file1[i]);
 				}
@@ -592,9 +653,13 @@ public class DiffPrint
 			 * should print the line number before the range, which is B.
 			 */
 			if (b < a)
+			{
 				outfile.print(b + ",0");
+			}
 			else
+			{
 				super.print_number_range(',', a, b);
+			}
 		}
 
 		protected void print_hunk(Diff.change hunk)
@@ -603,7 +668,9 @@ public class DiffPrint
 			analyze_hunk(hunk);
 
 			if (deletes == 0 && inserts == 0)
+			{
 				return;
+			}
 
 			/* Include a context's width before and after. */
 
@@ -691,7 +758,9 @@ public class DiffPrint
 		{
 			String line = rdr.readLine();
 			if (line == null)
+			{
 				break;
+			}
 			s.addElement(line);
 		}
 		String[] a = new String[s.size()];
@@ -736,7 +805,9 @@ public class DiffPrint
 		boolean reverse = style == 'e';
 		Diff.change script = d.diff_2(reverse);
 		if (script == null)
+		{
 			System.err.println("No differences");
+		}
 		else
 		{
 			Base p;

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebResponseWithCryptedUrl.java 5486 2006-04-21 19:39:59Z jdonnerstag $ $Revision$
+ * $Date: 2006-04-21 21:39:59 +0200 (Fr, 21 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,8 +25,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Session;
+import wicket.Application;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.crypt.ICrypt;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -35,6 +36,8 @@ import wicket.util.string.Strings;
  * query string. Thus it hides the details from the user.
  *  
  * @author Juergen Donnerstag
+ * 
+ * @deprecated since 1.2 Please see {@link wicket.protocol.http.request.CryptedUrlwebRequestCodingStrategy}
  */
 public class WebResponseWithCryptedUrl extends WebResponse
 {
@@ -46,9 +49,8 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 * 
 	 * @param httpServletResponse
 	 *            The servlet response object
-	 * @throws IOException
 	 */
-	public WebResponseWithCryptedUrl(final HttpServletResponse httpServletResponse) throws IOException
+	public WebResponseWithCryptedUrl(final HttpServletResponse httpServletResponse)
 	{
 		super(httpServletResponse);
 	}
@@ -60,83 +62,64 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
-	public String encodeURL(String url)
+	public CharSequence encodeURL(CharSequence url)
 	{
 	    // Get the crypt implementation from the application
-		ICrypt urlCrypt = Session.get().getApplication().newCrypt();
+		ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory().newCrypt();
 		if (urlCrypt != null)
 		{
 		    // The url must have a query string, otherwise keep the url unchanged
-		    final int pos = url.indexOf('?');
+		    final int pos = url.toString().indexOf('?');
 		    if (pos > 0)
 		    {
 		        // The url's path
-			    String urlPrefix = url.substring(0, pos);
-			    
+		    	CharSequence urlPrefix = url.subSequence(0, pos);
+
 			    // Extract the querystring 
-			    String queryString = url.substring(pos + 1);
-			    
+		    	String queryString = url.subSequence(pos + 1, url.length()).toString();
+
 			    // if the querystring starts with a parameter like 
-			    // "secure=", than don#t change the querystring as it 
+			    // "x=", than don't change the querystring as it 
 			    // has been encoded already
-			    if (!queryString.startsWith("secure="))
+			    if (!queryString.startsWith("x="))
 			    {
 			        // The length of the encrypted string depends on the
 			        // length of the original querystring. Let's try to
 			        // make the querystring shorter first without loosing
 			        // information.
-				    queryString = shortenUrl(queryString);
-				    
+				    queryString = shortenUrl(queryString).toString();
+
 				    // encrypt the query string
-					
-					final String encryptedQueryString = urlCrypt.encrypt(queryString);
-					
+					final String encryptedQueryString = urlCrypt.encryptUrlSafe(queryString);
+
 					// build the new complete url
-					final String encryptedUrl = urlPrefix + "?secure=" + escapeUrl(encryptedQueryString);
-					return encryptedUrl;
+					return new AppendingStringBuffer(urlPrefix).append("?x=").append(encryptedQueryString);
 			    }
 		    }
 		}
-		
+
 		// we didn't change anything
 		return url;
 	}
-	
+
 	/**
-	 * Escape invalid URL characters 
-	 * 
-	 * @param queryString The orginal querystring
-	 * @return url The querystring with invalid characters escaped
-	 */
-	private String escapeUrl(String queryString)
-	{
-	    queryString = Strings.replaceAll(queryString, " ", "%20");
-	    queryString = Strings.replaceAll(queryString, "\"", "%22");
-	    queryString = Strings.replaceAll(queryString, "%", "%26");
-	    queryString = Strings.replaceAll(queryString, "=", "%3D");
-	    queryString = Strings.replaceAll(queryString, "/", "%2F");
-	    queryString = Strings.replaceAll(queryString, "+", "%2B");
-	    queryString = Strings.replaceAll(queryString, "&", "%26");
-	    queryString = Strings.replaceAll(queryString, "~", "%7E");
-	    queryString = Strings.replaceAll(queryString, "?", "%3F");
-	    
-	    return queryString;
-	}
-	
-	/**
-	 * Try to shorten the querystring without loosing information
+	 * Try to shorten the querystring without loosing information.
+	 * Note: WebRequestWithCryptedUrl must implement exactly
+	 * the opposite logic.
 	 * 
 	 * @param queryString The original query string
 	 * @return The shortened querystring
 	 */
-	private String shortenUrl(String queryString)
+	protected CharSequence shortenUrl(CharSequence queryString)
 	{
-	    queryString = Strings.replaceAll(queryString, "path=", "1=");
-	    queryString = Strings.replaceAll(queryString, "version=", "2=");
-	    queryString = Strings.replaceAll(queryString, "interface=IRedirectListener", "4=");
-	    queryString = Strings.replaceAll(queryString, "interface=", "3=");
-	    queryString = Strings.replaceAll(queryString, "bookmarkablePage=", "5=");
-	    
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=", "1=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener", "2=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener", "3=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener", "4=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener", "5=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=", "6=");
+	    queryString = Strings.replaceAll(queryString, WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME+"=", "7=");
+
 	    // For debugging only: determine possibilities to further shorten
 	    // the query string
 	    if (log.isInfoEnabled())
@@ -146,11 +129,11 @@ public class WebResponseWithCryptedUrl extends WebResponse
 	        Matcher matcher = words.matcher(queryString);
 	        while (matcher.find())
 	        {
-	            String word = queryString.substring(matcher.start(), matcher.end());
+	            CharSequence word = queryString.subSequence(matcher.start(), matcher.end());
 	            log.info("URL pattern NOT shortened: '" + word + "' - '" + queryString + "'");
 	        }
 	    }
-	    
+
 	    return queryString;
 	}
 }

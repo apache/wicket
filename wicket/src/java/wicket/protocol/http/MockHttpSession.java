@@ -24,7 +24,6 @@ import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import wicket.util.value.ValueMap;
 
@@ -36,7 +35,9 @@ import wicket.util.value.ValueMap;
  */
 public class MockHttpSession implements HttpSession, Serializable
 {
-    private final ValueMap attributes = new ValueMap();
+	private static final long serialVersionUID = 1L;
+
+	private final ValueMap attributes = new ValueMap();
 
     private final ServletContext context;
 
@@ -133,8 +134,9 @@ public class MockHttpSession implements HttpSession, Serializable
      * NOT USED.
      * 
      * @return Always null
+     * @deprecated
      */
-    public HttpSessionContext getSessionContext()
+    public javax.servlet.http.HttpSessionContext getSessionContext()
     {
         return null;
     }

@@ -20,7 +20,7 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.model.IModel;
-import wicket.util.string.Strings;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Abstract base class for single-select choices.
@@ -33,6 +33,10 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 {
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
+
+	private static final String NO_SELECTION_VALUE = "-1";
+
+	private static final String EMPTY_STRING = "";
 
 	/** Is the null value a valid value? */
 	private boolean nullValid = false;
@@ -54,14 +58,15 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @param id 
-	 * @param data 
-	 * @param renderer 
+	 * @param id
+	 * @param data
+	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(String, List ,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(final String id, final List data, final IChoiceRenderer renderer)
+	public AbstractSingleSelectChoice(final String id, final List data,
+			final IChoiceRenderer renderer)
 	{
-		super(id, data,renderer);
+		super(id, data, renderer);
 	}
 
 	/**
@@ -73,15 +78,54 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @param id 
-	 * @param model 
-	 * @param data 
-	 * @param renderer 
+	 * @param id
+	 * @param model
+	 * @param data
+	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(final String id, IModel model, final List data, final IChoiceRenderer renderer)
+	public AbstractSingleSelectChoice(final String id, IModel model, final List data,
+			final IChoiceRenderer renderer)
 	{
-		super(id, model,data, renderer);
+		super(id, model, data, renderer);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel)
+	 */
+	public AbstractSingleSelectChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel,IModel)
+	 */
+	public AbstractSingleSelectChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel,IChoiceRenderer)
+	 */
+	public AbstractSingleSelectChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 *      IModel, IModel,IChoiceRenderer)
+	 */
+	public AbstractSingleSelectChoice(String id, IModel model, IModel choices,
+			IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
 	}
 
 	/**
@@ -95,7 +139,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 			int index = getChoices().indexOf(object);
 			return getChoiceRenderer().getIdValue(object, index);
 		}
-		return "-1";
+		return NO_SELECTION_VALUE;
 	}
 
 	/**
@@ -121,36 +165,49 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	}
 
 	/**
-	 * @see FormComponent#setModelValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	public final void setModelValue(final String value)
+	protected final Object convertValue(final String[] value)
 	{
+		String tmp = value != null && value.length > 0?value[0]:null;
 		List choices = getChoices();
-		for(int index=0;index<choices.size();index++)
+		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
 			final Object choice = choices.get(index);
-			if(getChoiceRenderer().getIdValue(choice, index).equals(value))
+			if (getChoiceRenderer().getIdValue(choice, index).equals(tmp))
 			{
-				setModelObject(choice);
-				break;
+				return choice;
 			}
 		}
+		return null;
 	}
 
 	/**
+	 * The localizer will be ask for the property to display
+	 * Depending on if null is allowed or not it will ask for:
+	 * 
+	 * <ul>
+	 * <li>nullValid: when null is valid and by default it will show an empty string as a choice.</li>
+	 * <li>null: when null is not a valid choice and it will make a choice with "Choose One"</li>
+	 * </ul>
+	 * 
+	 * The choice for null is valid will always be returned. The choice when null is not valid
+	 * will only be returned if the selected object is null.
+	 * 
 	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
-	protected String getDefaultChoice(final Object selected)
+	protected CharSequence getDefaultChoice(final Object selected)
 	{
-		// The <option> tag buffer
-		final StringBuffer buffer = new StringBuffer();
-
 		// Is null a valid selection value?
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			final String option = getLocalizer().getString(getId() + ".null", this, "");
+			final String option = getLocalizer().getString("nullValid", this, "");
+
+			// The <option> tag buffer
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(32 + option.length());
+
 
 			// Add option tag
 			buffer.append("\n<option");
@@ -163,52 +220,34 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 
 			// Add body of option tag
 			buffer.append(" value=\"\">").append(option).append("</option>");
+			return buffer;
 		}
 		else
 		{
 			// Null is not valid. Is it selected anyway?
-			if (selected == null)
+			if (selected == null || selected.equals(NO_SELECTION_VALUE)
+					|| selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
-				final String option = getLocalizer().getString(getId() + ".null", this, CHOOSE_ONE);
-				buffer.append("\n<option selected=\"selected\" value=\"\">").append(option).append(
+				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
+				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">").append(option).append(
 						"</option>");
 			}
 		}
-
-		return buffer.toString();
+		return "";
 	}
 
-	/**
+
+	/*
 	 * Gets whether the given value represents the current selection.
 	 * 
-	 * @param object
-	 *            The object to check
-	 * @param index
-	 *            The index of the object in the collection
-	 * @return Whether the given value represents the current selection
-	 */
-	protected boolean isSelected(final Object object, int index)
-	{
-		final String value = getValue();
-		return value != null && value.equals(getChoiceRenderer().getIdValue(object, index));
-	}
-
-	/**
-	 * Updates this components' model from the request.
 	 * 
-	 * @see wicket.markup.html.form.AbstractChoice#updateModel()
+	 * aram object The object to check @param index The index of the object in
+	 * the collection @param selected The current selected id value @return
+	 * Whether the given value represents the current selection
 	 */
-	protected final void updateModel()
+	protected boolean isSelected(final Object object, int index, String selected)
 	{
-		final String id = getInput();
-		if (Strings.isEmpty(id))
-		{
-			setModelObject(null);
-		}
-		else
-		{
-			setModelValue(id);
-		}
+		return selected != null && selected.equals(getChoiceRenderer().getIdValue(object, index));
 	}
 }

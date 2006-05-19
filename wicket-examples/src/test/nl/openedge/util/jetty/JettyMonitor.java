@@ -1,32 +1,30 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Copyright (c) 2003, Open Edge B.V.
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice, 
- * this list of conditions and the following disclaimer. Redistributions 
- * in binary form must reproduce the above copyright notice, this list of 
- * conditions and the following disclaimer in the documentation and/or other 
- * materials provided with the distribution. Neither the name of OpenEdge B.V. 
- * nor the names of its contributors may be used to endorse or promote products 
- * derived from this software without specific prior written permission.
+ * $Id$ $Revision:
+ * 3905 $ $Date$
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
- * THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
+ * use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met: Redistributions of source
+ * code must retain the above copyright notice, this list of conditions and the
+ * following disclaimer. Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution. Neither
+ * the name of OpenEdge B.V. nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 package nl.openedge.util.jetty;
 
@@ -47,10 +45,11 @@ import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 
 /**
- * Monitor thread. This thread listens on the port specified by the STOP.PORT system parameter
- * (defaults to 8079) for request authenticated with the key given by the STOP.KEY system parameter
- * (defaults to "mortbay") for admin requests. Commands "stop" and "status" are currently supported.
- * Based on Monitor from JettyServer (start and stop classes).
+ * Monitor thread. This thread listens on the port specified by the STOP.PORT
+ * system parameter (defaults to 8079) for request authenticated with the key
+ * given by the STOP.KEY system parameter (defaults to "mortbay") for admin
+ * requests. Commands "stop" and "status" are currently supported. Based on
+ * Monitor from JettyServer (start and stop classes).
  * 
  * @author Eelco Hillenius
  */
@@ -64,7 +63,7 @@ public class JettyMonitor extends Thread
 	private String commKey;
 
 	/** Log. */
-	private Log log = LogFactory.getLog(JettyMonitor.class);
+	private static Log log = LogFactory.getLog(JettyMonitor.class);
 
 	/** socket chanel for commands. */
 	private ServerSocketChannel serverSocketChanel = null;
@@ -94,7 +93,8 @@ public class JettyMonitor extends Thread
 		log.info("Starting Jetty Monitor on port " + monitorPort);
 		createServerSocket();
 		log.info("Socket created");
-		// listen to incomming connections until stop command is issued (method blocks)
+		// listen to incomming connections until stop command is issued (method
+		// blocks)
 		listen();
 		try
 		{
@@ -129,7 +129,7 @@ public class JettyMonitor extends Thread
 			}
 			if (!"mortbay".equals(commKey))
 			{
-				commKey = Long.toString((long) (Long.MAX_VALUE * Math.random()), 36);
+				commKey = Long.toString((long)(Long.MAX_VALUE * Math.random()), 36);
 				log.debug("Using key " + commKey);
 			}
 		}
@@ -142,7 +142,8 @@ public class JettyMonitor extends Thread
 	}
 
 	/**
-	 * Listen to incomming commands until stop command is issued (method blocks).
+	 * Listen to incomming commands until stop command is issued (method
+	 * blocks).
 	 */
 	private void listen()
 	{
@@ -160,14 +161,16 @@ public class JettyMonitor extends Thread
 				InputStream socketInputStream = socket.getInputStream();
 				InputStreamReader inputStreamReader = new InputStreamReader(socketInputStream);
 				LineNumberReader lnReader = new LineNumberReader(inputStreamReader);
-				String key = lnReader.readLine(); // first line contains auth key
+				String key = lnReader.readLine(); // first line contains auth
+				// key
 				if (!commKey.equals(key))
 				{
 					log.warn("Keys '" + commKey + "' and '" + key + "' do not match!");
 					continue;
 				}
 
-				String cmd = lnReader.readLine(); // second line contains command
+				String cmd = lnReader.readLine(); // second line contains
+				// command
 				OutputStream socketOutputStream = socket.getOutputStream();
 				goOn = handleCommand(cmd, socketOutputStream, goOn);
 
@@ -287,8 +290,9 @@ public class JettyMonitor extends Thread
 	}
 
 	/**
-	 * Starts a new monitor on the given port, holding the given instance of Jetty. This static
-	 * method starts a monitor that listens for admin requests.
+	 * Starts a new monitor on the given port, holding the given instance of
+	 * Jetty. This static method starts a monitor that listens for admin
+	 * requests.
 	 * 
 	 * @param theServer
 	 *            instance of Jetty Server

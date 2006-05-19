@@ -18,6 +18,7 @@
 package wicket.markup.html.link;
 
 import wicket.Page;
+import wicket.PageMap;
 import wicket.PageParameters;
 
 /**
@@ -28,14 +29,16 @@ import wicket.PageParameters;
  */
 public class BookmarkablePageLink extends Link
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The page class that this link links to. */
 	private final Class pageClass;
 
+	/** Any page map for this link */
+	private String pageMapName = null;
+
 	/** The parameters to pass to the class constructor when instantiated. */
 	private final PageParameters parameters;
-	
-	/** Just a unique identifier for popup windows within a session. */
-	private static int popupNumber = 0;
 
 	/**
 	 * Constructor.
@@ -69,8 +72,38 @@ public class BookmarkablePageLink extends Link
 		{
 			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");
 		}
+		else if (!Page.class.isAssignableFrom(pageClass))
+		{
+			throw new IllegalArgumentException("Page class must be derived from "
+					+ Page.class.getName());
+		}
 		this.pageClass = pageClass;
 		this.parameters = parameters;
+	}
+
+	/**
+	 * Get tge page class registered with the link
+	 * 
+	 * @return Page class
+	 */
+	public final Class getPageClass()
+	{
+		return this.pageClass;
+	}
+
+	/**
+	 * @return Page map for this link
+	 */
+	public final PageMap getPageMap()
+	{
+		if (pageMapName != null)
+		{
+			return PageMap.forName(pageMapName);
+		}
+		else
+		{
+			return getPage().getPageMap();
+		}
 	}
 
 	/**
@@ -86,15 +119,27 @@ public class BookmarkablePageLink extends Link
 	}
 
 	/**
-	 * Called when a link is clicked; this is here to satisfy the interface, as
-	 * bookmarkable links will be dispatched by the handling servlet.
+	 * THIS METHOD IS NOT USED! Bookmarkable links do not have a click handler.
+	 * It is here to satisfy the interface only, as bookmarkable links will be
+	 * dispatched by the handling servlet.
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
-	public void onClick()
+	public final void onClick()
 	{
 		// Bookmarkable links do not have a click handler.
 		// Instead they are dispatched by the request handling servlet.
+	}
+
+	/**
+	 * @param pageMap
+	 *            The pagemap for this link's destination
+	 * @return This
+	 */
+	public final BookmarkablePageLink setPageMap(final PageMap pageMap)
+	{
+		this.pageMapName = pageMap.getName();
+		return this;
 	}
 
 	/**
@@ -148,14 +193,20 @@ public class BookmarkablePageLink extends Link
 	 * @return The URL that this link links to
 	 * @see wicket.markup.html.link.Link#getURL()
 	 */
-	protected String getURL()
+	protected CharSequence getURL()
 	{
-		String pageMapName = null;
+		if (pageMapName != null && getPopupSettings() != null)
+		{
+			throw new IllegalStateException("You cannot specify popup settings and a page map");
+		}
+
 		if (getPopupSettings() != null)
 		{
-			pageMapName = "popup" + popupNumber;
-			popupNumber++;
+			return urlFor(getPopupSettings().getPageMap(), pageClass, parameters);
 		}
-		return getPage().urlFor(pageMapName, pageClass, parameters);
+		else
+		{
+			return urlFor(getPageMap(), pageClass, parameters);
+		}
 	}
 }

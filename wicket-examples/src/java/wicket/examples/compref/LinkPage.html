@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.link.Link</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	Links are your basic call back mechanism. You can attach links to any element you want.
+	See Link-o-matic for more link examples.
+	</p>
+
+	<p>
+	Here is a normal link, attached to an anchor:<br />
+	<a href="#" wicket:id="link1">this link is clicked <span wicket:id="label1">n</span> times</a>
+	</p>
+
+	<p>
+	And here is a link attached to a button element, with a nested label:<br />
+	<button wicket:id="link2">this button is clicked <span wicket:id="label2">n</span> times</button>
+	</p>
+
+	<p>
+	But you could also attach a link to an input/button element, and attach an AttributeModifier
+	to it to display the number of clicks:<br />
+	<input type="button" wicket:id="link3" value="this button is clicked n times" />
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

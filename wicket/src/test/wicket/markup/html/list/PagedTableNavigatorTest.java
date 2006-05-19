@@ -27,7 +27,7 @@ import wicket.protocol.http.MockWebApplication;
 
 
 /**
- * Test for simple table behaviour.
+ * Test for simple table behavior.
  */
 public class PagedTableNavigatorTest extends TestCase
 {
@@ -49,13 +49,13 @@ public class PagedTableNavigatorTest extends TestCase
 	}
 
 	/**
-	 * Test simple table behaviour.
+	 * Test simple table behavior.
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);
-		application.getPages().setHomePage(PagedTableNavigatorPage.class);
+		application.setHomePage(PagedTableNavigatorPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTableNavigatorPage page = (PagedTableNavigatorPage)application.getLastRenderedPage();

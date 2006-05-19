@@ -17,17 +17,25 @@
  */
 package wicket.markup.html.form;
 
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
+import wicket.util.convert.ConversionException;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
 
 /**
  * HTML checkbox input component.
- * TODO elaborate with an example
- * 
+ * <p>
+ * Java:
+ * <pre>
+ * form.add(new CheckBox("bool"));
+ * </pre>
+ * HTML:
+ * <pre>
+ * &lt;input type="checkbox" wicket:id="bool" /&gt;
+ * </pre>
+ * </p>
  * <p>
  * You can can extend this class and override method wantOnSelectionChangedNotifications()
  * to force server roundtrips on each selection change.
@@ -37,6 +45,8 @@ import wicket.util.string.Strings;
  */
 public class CheckBox extends FormComponent implements IOnChangeListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -54,25 +64,11 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * @see FormComponent#setModelValue(java.lang.String)
-	 */
-	public final void setModelValue(String value)
-	{
-		try
-		{
-			setModelObject(Strings.toBoolean(value));
-		}
-		catch (StringValueConversionException e)
-		{
-			throw new WicketRuntimeException("Invalid boolean value \"" + value + "\"");
-		}
-	}
-
-	/**
 	 * @see wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	public void onSelectionChanged()
 	{
+		convert();
 		updateModel();
 		onSelectionChanged(getModelObject());
 	}
@@ -144,11 +140,21 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		// Should a roundtrip be made (have onSelectionChanged called) when the checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
-			final String url = urlFor(IOnChangeListener.class);
+			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
 			// NOTE: do not encode the url as that would give invalid JavaScript
-			tag.put("onclick", "location.href='" + url + "&" + getPath()
-					+ "=' + this.checked;");
+			try
+			{
+				Form form = getForm();
+				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// NOTE: do not encode the url as that would give invalid JavaScript
+				tag.put("onclick", "location.href='" + url + "&" + getInputName()
+						+ "=' + this.checked;");
+			}
+			
 		}
 
 		super.onComponentTag(tag);
@@ -162,26 +168,20 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		return true;
 	}
 
+	
 	/**
-	 * Updates this components' model from the request.
-	 * 
-	 * @see wicket.markup.html.form.FormComponent#updateModel()
+	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected void updateModel()
+	protected Object convertValue(String[] value)
 	{
+		String tmp = value != null && value.length > 0?value[0]:null;
 		try
 		{
-			setModelObject(Strings.toBoolean(getInput()));
+			return Strings.toBoolean(tmp);
 		}
 		catch (StringValueConversionException e)
 		{
-			throw new WicketRuntimeException("Invalid boolean input value posted \"" + getInput() + "\"");
+			throw new ConversionException("Invalid boolean input value posted \"" + getInput() + "\"", e).setTargetType(Boolean.class);
 		}
-	}
-
-	static
-	{
-		// Allow optional use of the IOnChangeListener interface
-		RequestCycle.registerRequestListenerInterface(IOnChangeListener.class);
 	}
 }

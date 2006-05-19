@@ -1,20 +1,18 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.examples.wizard.example.hotel;
 
@@ -22,7 +20,7 @@ import wicket.examples.wizard.framework.AbstractStep;
 
 /**
  * Base class for the steps of the hotel preferences wizard.
- *
+ * 
  * @author Eelco Hillenius
  */
 public abstract class AbstractHotelPrefStep extends AbstractStep
@@ -32,7 +30,9 @@ public abstract class AbstractHotelPrefStep extends AbstractStep
 
 	/**
 	 * Construct.
-	 * @param model the model
+	 * 
+	 * @param model
+	 *            the model
 	 */
 	public AbstractHotelPrefStep(HotelPreferencesModel model)
 	{
@@ -45,6 +45,7 @@ public abstract class AbstractHotelPrefStep extends AbstractStep
 
 	/**
 	 * Gets the subject model of this step.
+	 * 
 	 * @return the subject model of this step
 	 */
 	public final HotelPreferencesModel getModel()
@@ -54,6 +55,7 @@ public abstract class AbstractHotelPrefStep extends AbstractStep
 
 	/**
 	 * Gets the preferences.
+	 * 
 	 * @return the preferences
 	 */
 	protected final HotelPreferences getPreferences()

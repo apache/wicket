@@ -17,21 +17,34 @@
  */
 package wicket.markup;
 
-import junit.framework.TestCase;
+
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.filter.HtmlProblemFinder;
+import wicket.WicketTestCase;
 
 /**
  * @author Juergen Donnerstag
  */
-public class HtmlProblemFinderTest extends TestCase
+public class HtmlProblemFinderTest extends WicketTestCase
 {
+
+
+    /**
+     * Construct.
+     *
+     * @param name
+     */
+    public HtmlProblemFinderTest(String name)
+    {
+        super(name);
+    }
+
     /**
      *
      */
     public void testProblemFinder()
     {
-        final MarkupParser parser = new MarkupParser(new XmlPullParser(null))
+        final MarkupParser parser = new MarkupParser(new XmlPullParser())
         {
             public void initFilterChain()
             {
@@ -46,7 +59,7 @@ public class HtmlProblemFinderTest extends TestCase
 	    }
 	    catch (Exception ex)
 	    {
-	        ; // ignore
+	        // ignore
 	    }
     }
 }

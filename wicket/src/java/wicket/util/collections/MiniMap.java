@@ -18,7 +18,6 @@
 package wicket.util.collections;
 
 import java.io.Serializable;
-
 import java.util.AbstractList;
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -35,6 +34,8 @@ import java.util.Set;
  */
 public final class MiniMap implements Map, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The array of keys. Keys that are null are not used. */
 	private final Object[] keys;
 

@@ -5,7 +5,7 @@
   <id>wicket</id>
   <name>Wicket</name>
   <groupId>wicket</groupId>
-  <currentVersion>1.1-SNAPSHOT</currentVersion>
+  <currentVersion>1.2-SNAPSHOT</currentVersion>
   <organization>
     <name>Wicket developers</name>
     <url>http://wicket.sourceforge.net</url>
@@ -90,25 +90,77 @@
       <name>1.0</name>
       <tag>WICKET_R_1_0_0</tag>
     </version>
+    <version>
+      <id>1.1-b1</id>
+      <name>1.1-b1</name>
+      <tag>WICKET_R_1_1_BETA1</tag>
+    </version>
+    <version>
+      <id>1.1-b2</id>
+      <name>1.1-b2</name>
+      <tag>WICKET_R_1_1_BETA2</tag>
+    </version>
+    <version>
+      <id>1.1-b3</id>
+      <name>1.1-b3</name>
+      <tag>WICKET_R_1_1_BETA3</tag>
+    </version>
+    <version>
+      <id>1.1-b4</id>
+      <name>1.1-b4</name>
+      <tag>WICKET_R_1_1_BETA4</tag>
+    </version>
+    <version>
+      <id>1.1-rc1</id>
+      <name>1.1-rc1</name>
+      <tag>WICKET_R_1_1_RC1</tag>
+    </version>
+    <version>
+      <id>1.1-rc2</id>
+      <name>1.1-rc2</name>
+      <tag>WICKET_R_1_1_RC2</tag>
+    </version>
+    <version>
+      <id>1.1</id>
+      <name>1.1</name>
+      <tag>WICKET_R_1_1</tag>
+    </version>
+    <version>
+      <id>1.2-20060127-0105</id>
+      <name>1.2-20060127-0105</name>
+      <tag>WICKET_1_2_SNAPSHOT_2006_01_27</tag>
+    </version>
   </versions>
   <mailingLists>
     <mailingList>
-      <name>${pom.name} Dev List</name>
-      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
+      <name>${pom.name} announcements list</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-announce</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-announce</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-announce</archive>
     </mailingList>
     <mailingList>
-      <name>${pom.name} User List</name>
+      <name>${pom.name} user list</name>
       <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</subscribe>
       <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-user</unsubscribe>
       <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-user</archive>
     </mailingList>
     <mailingList>
-      <name>${pom.name} CVS commit List</name>
+      <name>${pom.name} development list</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-develop</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-develop</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} CVS commit list</name>
       <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</subscribe>
       <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-autocvs</unsubscribe>
       <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-autocvs</archive>
+    </mailingList>
+    <mailingList>
+      <name>${pom.name} automated builds list</name>
+      <subscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-builds</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/mailman/listinfo/${pom.groupId}-builds</unsubscribe>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=${pom.groupId}-builds</archive>
     </mailingList>
   </mailingLists>
   <developers>
@@ -147,6 +199,30 @@
       <name>Gwyn Evans</name>
       <id>gwynevans</id>
       <email>gwynevans at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
+      <name>Igor Vaynberg</name>
+      <id>ivaynberg</id>
+      <email>ivaynberg@users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
+      <name>Ate Douma</name>
+      <id>adouma</id>
+      <email>adouma at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
+      <name>Jan Blok</name>
+      <id>jan_blok</id>
+      <email>jan_blok at users.sourceforge.net</email>
+      <roles/>
+    </developer>
+    <developer>
+      <name>Janne Hietamäki</name>
+      <id>jannehietamaki</id>
+      <email>jannehietamaki at users.sourceforge.net</email>
       <roles/>
     </developer>
   </developers>
@@ -199,19 +275,172 @@
       <name>Francois Denommee</name>
       <email>-</email>
     </contributor>
+    <contributor>
+      <name>Timur Mehrvarz</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Cameron Braid</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Phil Kulak</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Matej Knopp</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Jonathan Carlson</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Justin Lee</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Anatol Pomozov</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Karthik Gurumurthy</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Jan Mikkelsen</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Simon Berriman</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Ingram Chen</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Nick Heudecker</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Andrew Berman</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Gert Jan Verhoog</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Timothy Bennet</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Niclas Hedhman</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+      <name>Ralf Ebert</name>
+      <email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Joshua Lim</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jesper Preuss</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Nathan Hamblen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Thomas Singer</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ryan Sonnek</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Alastair Maw</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Philip A. Chapman</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Joni Suominen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jim McLaughlin</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jonathan Cone</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ramnivas Laddad</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Lulian Costan</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Geertjan Wielenga</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Timo Stamm</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jesse Sightler</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Per Ejeklint</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>David Leangen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ingram Chen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Mark Derricutt</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ari Suutari</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Joe Toth</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jan Bares</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Scott Sauyet</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ali Zaid Anwar</name>
+    		<email>-</email>
+    </contributor>
   </contributors>
   <dependencies>
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <version>1.4</version>
-      <url>http://www.dom4j.org</url>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -226,22 +455,11 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.8</version>
+      <version>1.2.12</version>
       <url>http://logging.apache.org/log4j</url>
       <properties>
         <wicket.group>optional</wicket.group>
         <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>ognl</groupId>
-      <artifactId>ognl</artifactId>
-      <version>2.6.7</version>
-      <url>http://www.ognl.org</url>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description>Used for introspection.</wicket.description>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
@@ -254,27 +472,6 @@
         <wicket.group>compile</wicket.group>
         <wicket.description>Compile time only, is supplied by your application server.</wicket.description>
         <war.bundle>false</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>concurrent</groupId>
-      <artifactId>concurrent</artifactId>
-      <version>1.3.3</version>
-      <properties>
-        <wicket.group>required</wicket.group>
-        <wicket.description/>
-        <war.bundle>true</war.bundle>
-      </properties>
-    </dependency>
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-      <version>1.0</version>
-      <url>http://jakarta.apache.org/commons/fileupload/</url>
-      <properties>
-        <wicket.group>optional</wicket.group>
-        <wicket.description>This library is required when you want to use the file upload component.</wicket.description>
-        <war.bundle>true</war.bundle>
       </properties>
     </dependency>
     <dependency>
@@ -296,6 +493,9 @@
       <includes>
         <include>**/*Test.java</include>
       </includes>
+      <excludes>
+        <exclude>**/Abstract*Test.java</exclude>
+      </excludes>
       <resources>
         <resource>
           <directory>${basedir}/src/test</directory>
@@ -328,8 +528,9 @@
     <report>maven-license-plugin</report>
     <report>maven-tasklist-plugin</report>
     <report>maven-javadoc-plugin</report>
-    <report>maven-junit-report-plugin</report>
-    <report>maven-clover-plugin</report>
+    <!--    <report>maven-linkcheck-plugin</report> -->
+    <!--    <report>maven-junit-report-plugin</report> -->
+    <!--    <report>maven-clover-plugin</report> -->
   </reports>
   <properties/>
 </project>

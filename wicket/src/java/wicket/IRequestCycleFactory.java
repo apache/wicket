@@ -17,12 +17,14 @@
  */
 package wicket;
 
+import java.io.Serializable;
+
 /**
  * Factory for creating request cycles for a session.
  * 
  * @author Jonathan Locke
  */
-public interface IRequestCycleFactory
+public interface IRequestCycleFactory extends Serializable
 {
 	/**
 	 * Creates a new RequestCycle object.
@@ -35,6 +37,6 @@ public interface IRequestCycleFactory
 	 *            The response
 	 * @return The cycle
 	 */
-	public RequestCycle newRequestCycle(final Session session, final Request request,
+	RequestCycle newRequestCycle(final Session session, final Request request,
 			final Response response);
 }

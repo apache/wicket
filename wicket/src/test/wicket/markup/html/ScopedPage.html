@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.sourceforge.net/">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Insert title here</title>
+  </head>
+  <body>
+    <span wicket:id="unscoped"> unscoped </span>
+    <div wicket:id="cont1">
+      <a wicket:id="globalLink" href="#"> Click me </a> 
+      <span wicket:id="local"> local </span>
+      <div wicket:id="cont11">
+        <span wicket:id="global"> global </span> 
+        <span wicket:id="localscoped"> localscoped </span>
+        <span wicket:id="clicked"> clicked </span>
+      </div>
+    </div>
+    <div wicket:id="cont2">
+      <span wicket:id="local"> local </span> 
+      <span wicket:id="localscoped"> localscoped </span> 
+      <span wicket:id="global"> global </span>
+    </div>
+  </body>
+</html>

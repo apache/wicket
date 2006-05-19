@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-01-04 01:28:14 -0800 (Wed, 04 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +19,6 @@ package wicket.util.time;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -35,6 +34,8 @@ import java.util.Date;
  */
 public final class Time extends AbstractTime
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The beginning of UNIX time: January 1, 1970, 0:00 GMT. */
 	public static final Time START_OF_UNIX_TIME = milliseconds(0);
 
@@ -239,6 +240,20 @@ public final class Time extends AbstractTime
 	public Time add(final Duration duration)
 	{
 		return milliseconds(getMilliseconds() + duration.getMilliseconds());
+	}
+
+	/**
+	 * @return Amount of time that has elapsed since this time
+	 * @throws IllegalStateException Thrown if this time is in the future
+	 */
+	public Duration elapsedSince()
+	{
+		final Time now = now();
+		if (this.greaterThan(now))
+		{
+			throw new IllegalStateException("This time is in the future");
+		}
+		return now.subtract(this);
 	}
 
 	/**

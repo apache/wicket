@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-03-16 11:34:01 -0800 (Thu, 16 Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,19 +19,29 @@ package wicket;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.authorization.UnauthorizedActionException;
+import wicket.feedback.FeedbackMessages;
+import wicket.feedback.IFeedback;
+import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
+import wicket.request.RequestParameters;
+import wicket.session.pagemap.IPageMapEntry;
+import wicket.settings.IDebugSettings;
+import wicket.settings.IPageSettings;
 import wicket.util.lang.Classes;
+import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
 import wicket.util.value.Count;
+import wicket.version.IPageVersionManager;
 import wicket.version.undo.Change;
 import wicket.version.undo.UndoPageVersionManager;
 
@@ -73,12 +83,12 @@ import wicket.version.undo.UndoPageVersionManager;
  * <li><b>Bookmarkable Pages </b>- Pages can be constructed with any
  * constructor when they are being used in a Wicket session, but if you wish to
  * link to a Page using a URL that is "bookmarkable" (which implies that the URL
- * will not have any session information encoded in it, and that you can call this
- * page directly without having a session first directly from your browser),
- * you need to implement your Page with a no-arg constructor or with a constructor
- * that accepts a PageParameters argument (which wraps any query string parameters for a
- * request). In case the page has both constructors, the constructor with PageParameters will
- * be used.
+ * will not have any session information encoded in it, and that you can call
+ * this page directly without having a session first directly from your
+ * browser), you need to implement your Page with a no-arg constructor or with a
+ * constructor that accepts a PageParameters argument (which wraps any query
+ * string parameters for a request). In case the page has both constructors, the
+ * constructor with PageParameters will be used.
  * 
  * <li><b>Models </b>- Pages, like other Components, can have models (see
  * {@link IModel}). A Page can be assigned a model by passing one to the Page's
@@ -91,7 +101,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * the name of the Component determines which property of the implicit page
  * model the component is bound to. If more control is desired over the binding
  * of Components to the page model (for example, if you want to specify some
- * OGNL expression other than the component's name for retrieving the model
+ * property expression other than the component's name for retrieving the model
  * object), BoundCompoundPropertyModel can be used.
  * 
  * <li><b>Back Button </b>- Pages can support the back button by enabling
@@ -107,19 +117,16 @@ import wicket.version.undo.UndoPageVersionManager;
  * page. If it returns false (ACCESS_DENIED), then onRender() will not render
  * the page. Besides returning true or false, an implementation of checkAccess()
  * may also choose to send the user to another page with
- * Component.setResponsePage() or Page.redirectToInterceptPage(). This can be
- * used to allow a user to authenticate themselves if they were denied access.
- * 
- * <li><b>Clustering </b>- The newPageState() method provides a convenient way
- * for a Page to create a {@link PageState}record that reconstitutes the Page
- * when replicated in a cluster.
+ * Component.setResponsePage() or Component.redirectToInterceptPage(). This can
+ * be used to allow a user to authenticate themselves if they were denied
+ * access.
  * 
  * @see wicket.markup.html.WebPage
  * @see wicket.MarkupContainer
  * @see wicket.model.CompoundPropertyModel
  * @see wicket.model.BoundCompoundPropertyModel
  * @see wicket.Component
- * @see wicket.IPageVersionManager
+ * @see wicket.version.IPageVersionManager
  * @see wicket.version.undo.UndoPageVersionManager
  * 
  * @author Jonathan Locke
@@ -127,17 +134,15 @@ import wicket.version.undo.UndoPageVersionManager;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Page extends MarkupContainer
-	implements IRedirectListener, IFeedbackBoundary
+public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
 {
-	/** Access allowed flag (value == true). */
-	protected static final boolean ACCESS_ALLOWED = true;
+	private static final long serialVersionUID = 1L;
 
-	/** Access denied flag (value == false). */
-	protected static final boolean ACCESS_DENIED = false;
-
-	/** True if this page is dirty. */
-	private static final short FLAG_IS_DIRTY = FLAG_RESERVED1;
+	/**
+	 * When passed to {@link Page#getVersion(int)} the latest page version is
+	 * returned.
+	 */
+	public static final int LATEST_VERSION = -1;
 
 	/** True if this page is currently rendering. */
 	private static final short FLAG_IS_RENDERING = FLAG_RESERVED2;
@@ -152,10 +157,13 @@ public abstract class Page extends MarkupContainer
 	private static final Log log = LogFactory.getLog(Page.class);
 
 	/** Used to create page-unique numbers */
-	private int autoIndex;
+	private short autoIndex;
 
 	/** Feedback messages for this page */
 	private FeedbackMessages feedbackMessages;
+
+	/** Numeric version of this page's id */
+	private short numericId;
 
 	/** The PageMap within the session that this page is stored in */
 	private transient PageMap pageMap;
@@ -166,8 +174,11 @@ public abstract class Page extends MarkupContainer
 	/** Set of components that rendered if component use checking is enabled */
 	private transient Set renderedComponents;
 
-	/** The session that this page is in. */
-	private transient Session session = null;
+	/**
+	 * Boolean if the page is stateless, so it doesn't have to be in the page
+	 * map, will be set in urlFor
+	 */
+	private transient boolean stateless = true;
 
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
@@ -184,6 +195,8 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
+	 * Constructor.
+	 * 
 	 * @param model
 	 *            See Component
 	 * @see Component#Component(String, IModel)
@@ -197,15 +210,248 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * Redirects to any intercept page previously specified by a call to
-	 * redirectToInterceptPage.
+	 * Constructor.
 	 * 
-	 * @return True if an original destination was redirected to
-	 * @see PageMap#redirectToInterceptPage(Page)
+	 * @param pageMap
+	 *            The page map to put this page in
 	 */
-	public final boolean continueToOriginalDestination()
+	protected Page(final PageMap pageMap)
 	{
-		return getPageMap().continueToOriginalDestination();
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
+		super(null);
+		init(pageMap);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param pageMap
+	 *            the name of the page map to put this page in
+	 * @param model
+	 *            See Component
+	 * @see Component#Component(String, IModel)
+	 */
+	protected Page(final PageMap pageMap, final IModel model)
+	{
+		// A Page's id is not determined until setId is called when the Page is
+		// added to a PageMap in the Session.
+		super(null, model);
+		init(pageMap);
+	}
+
+	/**
+	 * Called right after a component's listener method (the provided method
+	 * argument) was called. This method may be used to clean up dependencies,
+	 * do logging, etc. NOTE: this method will also be called when
+	 * {@link WebPage#beforeCallComponent(Component, RequestListenerInterface)}
+	 * or the method invocation itself failed.
+	 * 
+	 * @param component
+	 *            the component that is to be called
+	 * @param listener
+	 *            the listener of that component that is to be called
+	 */
+	public void afterCallComponent(final Component component,
+			final RequestListenerInterface listener)
+	{
+	}
+
+	/**
+	 * Called just before a component's listener method (the provided method
+	 * argument) is called. This method may be used to set up dependencies,
+	 * enforce authorization, etc. NOTE: if this method fails, the method will
+	 * not be excuted. Method
+	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)}
+	 * will always be called.
+	 * 
+	 * @param component
+	 *            the component that is to be called
+	 * @param listener
+	 *            the listener of that component that is to be called
+	 */
+	public void beforeCallComponent(final Component component,
+			final RequestListenerInterface listener)
+	{
+	}
+
+	/**
+	 * @return fixed true;
+	 * 
+	 * @deprecated this method is to be removed in future version in favor of
+	 *             instances of
+	 *             {@link wicket.authorization.IAuthorizationStrategy} such as
+	 *             {@link wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy}.
+	 *             It isn't called anymore and made final so that people see
+	 *             what must be changed.
+	 */
+	public final boolean checkAccess()
+	{
+		return true;
+	}
+
+	/**
+	 * @see wicket.MarkupContainer#internalDetach()
+	 */
+	public void internalDetach()
+	{
+		try
+		{
+			super.internalDetach();
+		} 
+		catch (RuntimeException re)
+		{
+			throw re;
+		}
+		finally
+		{
+			getSession().pageDetached(this);
+		}
+	}
+	/**
+	 * Detaches any attached models referenced by this page.
+	 */
+	public void detachModels()
+	{
+		// visit all this page's children to detach the models
+		visitChildren(new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				try
+				{
+					// detach any models of the component
+					component.detachModels();
+				}
+				catch (Exception e) // catch anything; we MUST detach all models
+				{
+					log.error("detaching models of component " + component + " failed:", e);
+				}
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		detachModel();
+	}
+
+	/**
+	 * Mark this page as dirty in the session
+	 */
+	public final void dirty()
+	{
+		Session.get().dirtyPage(this);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 */
+	public final void renderPage()
+	{
+		// first try to check if the page can be rendered:
+		if (!isActionAuthorized(RENDER))
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("Page not allowed to render: " + this);
+			}
+			throw new UnauthorizedActionException(this, Component.RENDER);
+		}
+
+		// Make sure it is really empty
+		renderedComponents = null;
+
+		// Reset it to stateless so that it can be tested again
+		this.stateless = true;
+
+		// Set form component values from cookies
+		setFormComponentValuesFromCookies();
+
+		// First, give priority to IFeedback instances, as they have to
+		// collect their messages before components like ListViews
+		// remove any child components
+		visitChildren(IFeedback.class, new IVisitor()
+		{
+			public Object component(Component component)
+			{
+				((IFeedback)component).updateFeedback();
+				component.internalAttach();
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		if (this instanceof IFeedback) {
+			((IFeedback)this).updateFeedback();
+		}
+		
+		// Now, do the initialization for the other components
+		internalAttach();
+
+		// Visit all this page's children to reset markup streams and check
+		// rendering authorization, as appropriate. We set any result; positive
+		// or negative as a temporary boolean in the components, and when a
+		// authorization exception is thrown it will block the rendering of this
+		// page
+		visitChildren(new IVisitor()
+		{
+			public Object component(final Component component)
+			{
+				// Find out if this component can be rendered
+				final boolean renderAllowed = component.isActionAuthorized(RENDER);
+
+				// Authorize rendering
+				component.setRenderAllowed(renderAllowed);
+				return IVisitor.CONTINUE_TRAVERSAL;
+			}
+		});
+
+		// Handle request by rendering page
+		onBeforeRender();
+		try
+		{
+			render(null);
+		}
+		finally
+		{
+			onAfterRender();
+		}
+
+		// Check rendering if it happened fully
+		checkRendering(this);
+
+		// Add/touch the response page in the session (its pagemap).
+		getSession().touch(this);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * This method is called when a component was rendered standalone. If it is
+	 * a markupcontainer then the rendering for that container is checked.
+	 * 
+	 * @param component
+	 * 
+	 */
+	public final void endComponentRender(Component component)
+	{
+		if (component instanceof MarkupContainer)
+		{
+			checkRendering((MarkupContainer)component);
+		}
+		else
+		{
+			renderedComponents = null;
+		}
+	}
+
+	/**
+	 * Expire the oldest version of this page
+	 */
+	public final void expireOldestVersion()
+	{
+		if (versionManager != null)
+		{
+			versionManager.expireOldestVersion();
+		}
 	}
 
 	/**
@@ -215,7 +461,7 @@ public abstract class Page extends MarkupContainer
 	 * 
 	 * @return A page unique number
 	 */
-	public final int getAutoIndex()
+	public final short getAutoIndex()
 	{
 		return this.autoIndex++;
 	}
@@ -244,54 +490,94 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
+	 * @see wicket.Component#getId()
+	 */
+	public final String getId()
+	{
+		return Integer.toString(numericId);
+	}
+
+	/**
+	 * @see wicket.session.pagemap.IPageMapEntry#getNumericId()
+	 */
+	public int getNumericId()
+	{
+		return numericId;
+	}
+
+	/**
+	 * @see wicket.session.pagemap.IPageMapEntry#getPageClass()
+	 */
+	public final Class getPageClass()
+	{
+		return getClass();
+	}
+
+	/**
 	 * @return Returns the PageMap that this Page is stored in.
 	 */
 	public final PageMap getPageMap()
 	{
+		// If the transient needs to be restored
 		if (pageMap == null)
 		{
-			setPageMap(pageMapName);
+			// Look the page map up in the session
+			pageMap = PageMap.forName(pageMapName);
 		}
 		return pageMap;
 	}
 
 	/**
-	 * THIS FEATURE IS CURRENTLY EXPERIMENTAL. DO NOT USE THIS METHOD.
-	 * 
-	 * @return The list of PageSets to which this Page belongs.
+	 * @return Get a page map entry for this page. By default, this is the page
+	 *         itself. But if you know of some way to compress the state for the
+	 *         page, you can return a custom implementation that produces the
+	 *         page on-the-fly.
 	 */
-	public final Iterator getPageSets()
+	public IPageMapEntry getPageMapEntry()
 	{
-		return getSession().getApplication().getPageSets(this);
+		return this;
 	}
 
 	/**
-	 * Override this method to implement a custom way of producing a version of a Page
-	 * when it cannot be found in the Session.
-	 * @param versionNumber The version desired
-	 * @return A Page object with the component/model hierarchy that was attached to this
-	 *         page at the time represented by the requested version.
+	 * @return Size of this page in bytes
+	 */
+	public final long getSizeInBytes()
+	{
+		this.pageMap = null;
+		return Objects.sizeof(this);
+	}
+
+	/**
+	 * Override this method to implement a custom way of producing a version of
+	 * a Page when it cannot be found in the Session.
+	 * 
+	 * @param versionNumber
+	 *            The version desired
+	 * @return A Page object with the component/model hierarchy that was
+	 *         attached to this page at the time represented by the requested
+	 *         version.
 	 */
 	public Page getVersion(final int versionNumber)
 	{
 		// If we're still the original Page and that's what's desired
 		if (versionManager == null)
 		{
-			if (versionNumber == 0)
+			if (versionNumber == 0 || versionNumber == LATEST_VERSION)
 			{
 				return this;
 			}
 			else
 			{
-				throw new IllegalStateException(
-						"No version manager available to retrieve requested versionNumber "
-								+ versionNumber);
+				log.info("No version manager available to retrieve requested versionNumber "
+						+ versionNumber);
+				return null;
 			}
 		}
 		else
 		{
 			// Save original change tracking state
 			final boolean originalTrackChanges = getFlag(FLAG_TRACK_CHANGES);
+
 			try
 			{
 				// While the version manager is potentially playing around with
@@ -300,7 +586,15 @@ public abstract class Page extends MarkupContainer
 				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
-				final Page page = versionManager.getVersion(versionNumber);
+				final Page page;
+				if (versionNumber != LATEST_VERSION)
+				{
+					page = versionManager.getVersion(versionNumber);
+				}
+				else
+				{
+					page = versionManager.getVersion(getCurrentVersionNumber());
+				}
 
 				// If we went all the way back to the original page
 				if (page != null && page.getCurrentVersionNumber() == 0)
@@ -320,6 +614,14 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
+	 * @return Number of versions of this page
+	 */
+	public final int getVersions()
+	{
+		return versionManager == null ? 1 : versionManager.getVersions() + 1;
+	}
+
+	/**
 	 * @return This page's component hierarchy as a string
 	 */
 	public final String hierarchyAsString()
@@ -336,19 +638,11 @@ public abstract class Page extends MarkupContainer
 					levels++;
 				}
 				buffer.append(StringValue.repeat(levels, "	") + component.getPageRelativePath()
-						+ ":" + Classes.name(component.getClass()));
+						+ ":" + Classes.simpleName(component.getClass()));
 				return null;
 			}
 		});
 		return buffer.toString();
-	}
-
-	/**
-	 * @return True if this Page is dirty and needs to be replicated
-	 */
-	public final boolean isDirty()
-	{
-		return getFlag(FLAG_IS_DIRTY);
 	}
 
 	/**
@@ -365,48 +659,12 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * @return Gets a PageState record for this page
-	 */
-	public PageState newPageState()
-	{
-		return new PageState()
-		{
-			public Page getPage()
-			{
-				return Page.this;
-			}
-		};
-	}
-
-	/**
 	 * Redirect to this page.
 	 * 
 	 * @see wicket.IRedirectListener#onRedirect()
 	 */
 	public final void onRedirect()
 	{
-		final RequestCycle cycle = getRequestCycle();
-	
-		// Do not need to update cluster when redirecting to a page
-		cycle.setUpdateCluster(false);
-		
-		// This method is used when redirecting to a page
-		cycle.setResponsePage(this);
-	}
-
-	/**
-	 * Redirects browser to an intermediate page such as a sign-in page.
-	 * The current request's url is saved for future use by method continueToOriginalDestination();
-	 * Only use this method when you plan to continue to the current url at some later time;
-	 * otherwise just use setResponsePage or - when you are in a constructor or checkAccessMethod,
-	 * call redirectTo.
-	 * 
-	 * @param page
-	 *            The sign in page
-	 */
-	public final void redirectToInterceptPage(final Page page)
-	{
-		getPageMap().redirectToInterceptPage(page);
 	}
 
 	/**
@@ -449,77 +707,31 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 */
-	public final void doRender()
-	{
-		// check access much earlier then in onRender!
-		// if false in onRender then checkRendering below fails anyway!!
-		if (checkAccess())
-		{
-			try
-			{
-				// we have to initialize the page's request now
-	
-				// first, give priority to IFeedback instances, as they have to collect their
-				// message before components like ListViews remove any child components
-				visitChildren(IFeedback.class, new IVisitor()
-				{
-					public Object component(Component component)
-					{
-						component.internalBeginRequest();
-						return IVisitor.CONTINUE_TRAVERSAL;
-					}
-				});
-				
-				// now, do the initialization for the other components
-				internalBeginRequest();
-			
-	
-				// Handle request by rendering page
-				render();
-	
-				// Check rendering if it happened fully
-				checkRendering();
-			}
-			finally
-			{
-				// The request is over
-				internalEndRequest();
-			}
-		}
-	}
-
-	/**
-	 * @param dirty
-	 *            True to make this page dirty, false to make it clean.
-	 */
-	public final void setDirty(final boolean dirty)
-	{
-		setFlag(FLAG_IS_DIRTY, dirty);
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
-	 * @param pageMapName
-	 *            Sets this page into the page map with the given name. If the
-	 *            page map does not yet exist, it is automatically created.
+	 * Set the id for this Page. This method is called by PageMap when a Page is
+	 * added because the id, which is assigned by PageMap, is not known until
+	 * this time.
+	 * 
+	 * @param id
+	 *            The id
 	 */
-	public final void setPageMap(final String pageMapName)
+	public final void setNumericId(final int id)
 	{
-		// Save name for restoring transient
-		this.pageMapName = pageMapName;
+		this.numericId = (short)id;
+	}
 
-		// Get or create page map
-		final Session session = getSession();
-		this.pageMap = session.getPageMap(pageMapName);
-		if (this.pageMap == null)
-		{
-			// TODO This could potentially enable denial of service attacks. We
-			// may want to limit pagemaps created via URLs (see Session.java)
-			this.pageMap = session.newPageMap(pageMapName);
-		}
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * This method is called when a component will be rendered standalone.
+	 * 
+	 * @param component
+	 * 
+	 */
+	public final void startComponentRender(Component component)
+	{
+		renderedComponents = null;
 	}
 
 	/**
@@ -533,92 +745,45 @@ public abstract class Page extends MarkupContainer
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Set-up response with appropriate content type, locale and encoding. The
+	 * locale is set equal to the session's locale. The content type header
+	 * contains information about the markup type (@see #getMarkupType()) and
+	 * the encoding. The response (and request) encoding is determined by an
+	 * application setting (@see
+	 * ApplicationSettings#getResponseRequestEncoding()). In addition, if the
+	 * page's markup contains a xml declaration like &lt?xml ... ?&gt; an xml
+	 * declaration with proper encoding information is written to the output as
+	 * well, provided it is not disabled by an applicaton setting (@see
+	 * ApplicationSettings#getStripXmlDeclarationFromOutput()).
 	 * <p>
-	 * Gets a url that invokes the given listener interface on the given
-	 * component. The listener interface can be any interface with a single
-	 * method taking no arguments which has been registered with a call to
-	 * {@link RequestCycle#registerRequestListenerInterface(Class)}. The
-	 * component must implement the given interface.
-	 * 
-	 * @param component
-	 *            Component implementing listener interface
-	 * @param listenerInterface
-	 *            The listener interface to invoke when the URL is requested
-	 * @return A URL that encodes an interface to call on a given component
-	 */
-	public abstract String urlFor(final Component component, final Class listenerInterface);
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * 
-	 * @param path
-	 *            The path
-	 * @return The url for the path
-	 */
-	public abstract String urlFor(final String path);
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Gets the url for the given page class using the given parameters.
-	 * 
-	 * @param pageMapName
-	 *            Name of pagemap to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public abstract String urlFor(final String pageMapName, final Class pageClass,
-			final PageParameters parameters);
-
-	/**
-	 * Whether access is allowed to this page.
-	 * 
-	 * @return true if access is allowed, false otherwise
-	 */
-	protected boolean checkAccess()
-	{
-		return ACCESS_ALLOWED;
-	}
-
-	/**
-	 * Set-up response with appropriate content type and locale. The locale
-	 * is set equal to the session locale. The content type header contains
-	 * information about the markup type (@see #getMarkupType()) and the 
-	 * encoding. The response (and request) encoding is determined by an
-	 * application setting (@see ApplicationSettings#getResponseRequestEncoding()).
-	 * In addition and in case the page's markup contains a xml declaration like
-	 * &lt?xml ... ?&gt; an xml declaration with proper encoding information is
-	 * written to the output as well, provided it is not disabled by an 
-	 * applicaton setting (@see ApplicationSettings#getStripXmlDeclarationFromOutput()).
-	 * <p>
-	 * Note: Prior to Wicket 1.1 the output encoding was determined by the page's
-	 * markup encoding. Because this caused uncertainties about the /request/
-	 * encoding, it has been changed in favour of the new, much saver, approach.
-	 * Please see the Wiki for more details.
+	 * Note: Prior to Wicket 1.1 the output encoding was determined by the
+	 * page's markup encoding. Because this caused uncertainties about the
+	 * /request/ encoding, it has been changed in favour of the new, much safer,
+	 * approach. Please see the Wiki for more details.
 	 */
 	protected void configureResponse()
 	{
-		// Get the response
-		final Response response = getResponse();
-		
-		// Set content type based on markup type for page
-		response.setContentType("text/" + getMarkupType() + "; charset="
-				+ getApplicationSettings().getResponseRequestEncoding());
+		// Get the response and application
+		final RequestCycle cycle = getRequestCycle();
+		final Application application = cycle.getApplication();
+		final Response response = cycle.getResponse();
 
+		// Determine encoding
+		final String encoding = application.getRequestCycleSettings().getResponseRequestEncoding();
+
+		// Set content type based on markup type for page
+		response.setContentType("text/" + getMarkupType() + "; charset=" + encoding);
+
+		// Write out an xml declaration if the markup stream and settings allow
 		final MarkupStream markupStream = findMarkupStream();
-		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null) &&
-		        (getApplicationSettings().getStripXmlDeclarationFromOutput() == false))
+		if ((markupStream != null) && (markupStream.getXmlDeclaration() != null)
+				&& (application.getMarkupSettings().getStripXmlDeclarationFromOutput() == false))
 		{
-		    response.write("<?xml version='1.0' encoding='" + 
-		            getApplicationSettings().getResponseRequestEncoding() +
-		            "'?>");
+			response.write("<?xml version='1.0' encoding='");
+			response.write(encoding);
+			response.write("'?>");
 		}
-		
+
 		// Set response locale from session locale
 		response.setLocale(getSession().getLocale());
 	}
@@ -627,34 +792,17 @@ public abstract class Page extends MarkupContainer
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 
-	 * @see wicket.Component#internalOnEndRequest()
+	 * @see wicket.Component#internalOnDetach()
 	 */
-	protected final void internalOnEndRequest()
+	protected final void internalOnDetach()
 	{
 		if (log.isDebugEnabled())
 		{
 			log.debug("ending request for page " + this + ", request " + getRequest());
 		}
-		// visit all this page's children to detach the models
-		visitChildren(new IVisitor()
-		{
-			public Object component(Component component)
-			{
-				try
-				{
-					// detach any models of the component
-					component.detachModels();
-				}
-				catch (Exception e) // catch anything; we MUST detach all models
-				{
-					log.error("detaching models of component " + component + " failed:", e);
-				}
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
 
-		detachModel();
-		
+		detachModels();
+
 		if (isVersioned())
 		{
 			// Any changes to the page after this point will be tracked by the
@@ -664,28 +812,6 @@ public abstract class Page extends MarkupContainer
 			setFlag(FLAG_TRACK_CHANGES, true);
 
 			endVersion();
-		}
-	}
-
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 */
-	private final void endVersion()
-	{
-		// If a new version was created
-		if (getFlag(FLAG_NEW_VERSION))
-		{
-			// We're done with this version
-			if (versionManager != null)
-			{
-				versionManager.endVersion();
-			}
-
-			// Reset boolean for next request
-			setFlag(FLAG_NEW_VERSION, false);
 		}
 	}
 
@@ -716,88 +842,89 @@ public abstract class Page extends MarkupContainer
 	 */
 	protected IPageVersionManager newVersionManager()
 	{
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
+		final IPageSettings settings = getSession().getApplication().getPageSettings();
 		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
 	}
 
 	/**
 	 * Renders this container to the given response object.
+	 * 
+	 * @param markupStream
 	 */
-	protected final void onRender()
+	protected void onRender(final MarkupStream markupStream)
 	{
-		// Check access to page, already done in doRender of the page
-		//if (checkAccess())
+		// Set page's associated markup stream
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
+		setMarkupStream(associatedMarkupStream);
+
+		// Configure response object with locale and content type
+		configureResponse();
+
+		// Render all the page's markup
+		setFlag(FLAG_IS_RENDERING, true);
+		try
 		{
-			// Set page's associated markup stream
-			final MarkupStream markupStream = getAssociatedMarkupStream();
-			setMarkupStream(markupStream);
-
-			// Configure response object with locale and content type
-			configureResponse();
-
-			// Render all the page's markup
-			setFlag(FLAG_IS_RENDERING, true);
-			try
-			{
-				renderAll(markupStream);
-			}
-			finally
-			{
-				setFlag(FLAG_IS_RENDERING, false);
-			}
+			renderAll(associatedMarkupStream);
+		}
+		finally
+		{
+			setFlag(FLAG_IS_RENDERING, false);
 		}
 	}
 
 	/**
+	 * A component was added.
+	 * 
 	 * @param component
 	 *            The component that was added
 	 */
 	final void componentAdded(final Component component)
 	{
-		setDirty(true);
-		if (isVersioned(component))
+		checkHierarchyChange(component);
+
+		dirty();
+		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentAdded(component);
 		}
 	}
 
 	/**
+	 * A component's model changed.
+	 * 
 	 * @param component
 	 *            The component whose model is about to change
 	 */
 	final void componentModelChanging(final Component component)
 	{
-		setDirty(true);
-		if (isVersioned(component))
+		checkHierarchyChange(component);
+
+		dirty();
+		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentModelChanging(component);
 		}
 	}
-	
-	final void componentStateChanging(final Component component, Change change)
-	{
-		setDirty(true);
-		if (isVersioned(component))
-		{
-			versionManager.componentStateChanging(change);
-		}
-	}
 
 	/**
+	 * A component was removed.
+	 * 
 	 * @param component
 	 *            The component that was removed
 	 */
 	final void componentRemoved(final Component component)
 	{
-		setDirty(true);
-		if (isVersioned(component))
+		checkHierarchyChange(component);
+
+		dirty();
+		if (mayTrackChangesFor(component))
 		{
 			versionManager.componentRemoved(component);
 		}
 	}
 
 	/**
-	 * Adds a component to the set of rendered components
+	 * Adds a component to the set of rendered components.
 	 * 
 	 * @param component
 	 *            The component that was rendered
@@ -805,13 +932,19 @@ public abstract class Page extends MarkupContainer
 	final void componentRendered(final Component component)
 	{
 		// Inform the page that this component rendered
-		if (getSession().getApplication().getSettings().getComponentUseCheck())
+		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
 			if (renderedComponents == null)
 			{
 				renderedComponents = new HashSet();
 			}
-			renderedComponents.add(component);
+			if (renderedComponents.add(component) == false)
+			{
+				throw new MarkupException(
+						"The component "
+								+ component
+								+ " has the same wicket:id as another component already added at the same level");
+			}
 			if (log.isDebugEnabled())
 			{
 				log.debug("Rendered " + component);
@@ -819,85 +952,128 @@ public abstract class Page extends MarkupContainer
 		}
 	}
 
-	/**
-	 * This method is not called getSession() because we want to ensure that
-	 * getSession() is final in Component.
-	 * 
-	 * @return Session for this page
-	 */
-	final Session getSessionInternal()
+	final void componentStateChanging(final Component component, Change change)
 	{
-		if (this.session == null)
+		checkHierarchyChange(component);
+
+		dirty();
+		if (mayTrackChangesFor(component))
 		{
-			this.session = Session.get();
-			if (this.session == null)
-			{
-				throw new IllegalStateException("Internal Error: Page not attached to session");
-			}
+			versionManager.componentStateChanging(change);
 		}
-		return this.session;
 	}
 
 	/**
-	 * Reset this page. Called if rendering is interrupted by an exception to
-	 * put the page back into a state where it can function again.
+	 * @return Return true from this method if you want to keep a page out of
+	 *         the session.
 	 */
-	final void resetMarkupStreams()
+	final boolean isStateless()
 	{
-		// When an exception is thrown while rendering a page, there may
-		// be invalid markup streams set on various containers. We need
-		// to reset these to null to ensure they get recreated correctly.
-		visitChildren(MarkupContainer.class, new IVisitor()
+		return stateless;
+	}
+
+	final void setStateless(boolean stateless)
+	{
+		this.stateless = stateless;
+	}
+
+	/**
+	 * Sets values for form components based on cookie values in the request.
+	 * 
+	 */
+	final void setFormComponentValuesFromCookies()
+	{
+		// Visit all Forms contained in the page
+		visitChildren(Form.class, new Component.IVisitor()
 		{
+			// For each FormComponent found on the Page (not Form)
 			public Object component(final Component component)
 			{
-				final MarkupContainer container = (MarkupContainer)component;
-				container.setMarkupStream(null);
+				((Form)component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
 	}
 
 	/**
-	 * Set the id for this Page. This method is called by PageMap when a Page is
-	 * added because the id, which is assigned by PageMap, is not known until
-	 * this time.
-	 * 
-	 * @param id
-	 *            The id
+	 * @param pageMap
+	 *            Sets this page into the page map with the given name. If the
+	 *            page map does not yet exist, it is automatically created.
 	 */
-	final void setId(final int id)
+	final void setPageMap(final PageMap pageMap)
 	{
-		setId(Integer.toString(id));
+		// Save transient reference to pagemap
+		this.pageMap = pageMap;
+
+		// Save name for restoring transient
+		this.pageMapName = pageMap.getName();
+	}
+	
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * @param map
+	 */
+	protected final void moveToPageMap(PageMap map)
+	{
+		// TODO post 1.2 shouldn't we remove this page from the pagemap/session if it would be in there?
+		// This should be done if the page was not cloned first, but shouldn't be done if it was cloned..
+		setPageMap(map);
+		numericId = (short)map.nextId();
+	}
+
+	
+
+	/**
+	 * Checks whether the hierarchy may be changed at all, and throws an
+	 * exception if this is not the case.
+	 * 
+	 * @param component
+	 *            the component which is about to be added or removed
+	 */
+	private void checkHierarchyChange(Component component)
+	{
+		// Throw exception if modification is attempted during rendering
+		if ((!component.isAuto()) && getFlag(FLAG_IS_RENDERING))
+		{
+			throw new WicketRuntimeException(
+					"Cannot modify component hierarchy during render phase");
+		}
 	}
 
 	/**
 	 * Throw an exception if not all components rendered.
+	 * 
+	 * @param renderedContainer
+	 *            The page itself if it was a full page render or the container
+	 *            that was rendered standalone
 	 */
-	private final void checkRendering()
+	private final void checkRendering(final MarkupContainer renderedContainer)
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
-		final ApplicationSettings settings = getSession().getApplication().getSettings();
-		if (settings.getComponentUseCheck() && !getResponse().isRedirect())
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
+		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();
 			final List unrenderedAutoComponents = new ArrayList();
 			final StringBuffer buffer = new StringBuffer();
-			visitChildren(new IVisitor()
+			renderedContainer.visitChildren(new IVisitor()
 			{
 				public Object component(final Component component)
 				{
 					// If component never rendered
 					if (renderedComponents == null || !renderedComponents.contains(component))
 					{
+						// If auto component ...
 						if (component.isAuto())
 						{
 							// Add to list of unrendered auto components to
 							// delete below
 							unrenderedAutoComponents.add(component);
 						}
-						else
+						else if (component.isVisibleInHierarchy())
 						{
 							// Increase number of unrendered components
 							unrenderedComponents.increment();
@@ -905,6 +1081,13 @@ public abstract class Page extends MarkupContainer
 							// Add to explanatory string to buffer
 							buffer.append(Integer.toString(unrenderedComponents.getCount()) + ". "
 									+ component + "\n");
+						}
+						else
+						{
+							// if the component is not visible in hierarchy we
+							// should not visit its children since they are also
+							// not visible
+							return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 						}
 					}
 					return CONTINUE_TRAVERSAL;
@@ -919,16 +1102,44 @@ public abstract class Page extends MarkupContainer
 				((Component)unrenderedAutoComponents.get(i)).remove();
 			}
 
-			// Get rid of set
-			renderedComponents = null;
-
 			// Throw exception if any errors were found
 			if (unrenderedComponents.getCount() > 0)
 			{
+				// Get rid of set
+				renderedComponents = null;
+
 				// Throw exception
-				throw new WicketRuntimeException("The component(s) below failed to render:\n\n"
-						+ buffer.toString());
+				throw new WicketRuntimeException(
+						"The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n"
+								+ buffer.toString());
 			}
+		}
+
+		// Get rid of set
+		renderedComponents = null;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 */
+	private final void endVersion()
+	{
+		// If a new version was created
+		if (getFlag(FLAG_NEW_VERSION))
+		{
+			// We're done with this version
+			if (versionManager != null)
+			{
+				versionManager.endVersion();
+			}
+
+			// Evict any page version(s) as need be
+			getApplication().getSessionSettings().getPageMapEvictionStrategy().evict(getPageMap());
+
+			// Reset boolean for next request
+			setFlag(FLAG_NEW_VERSION, false);
 		}
 	}
 
@@ -937,93 +1148,87 @@ public abstract class Page extends MarkupContainer
 	 */
 	private final void init()
 	{
-		// All Pages are born dirty so they get clustered right away
-		setDirty(true);
-
-		// Get session
-		final Session session = getSession();
-
-		// Add page to session
-		session.add(this);
-
-		// Set versioning of page based on default
-		setVersioned(session.getApplication().getSettings().getVersionPagesByDefault());
-
-		// Loop through the PageSet objects for this Page
-		for (final Iterator iterator = getPageSets(); iterator.hasNext();)
+		final RequestCycle cycle = getRequestCycle();
+		String pageMapName = null;
+		if (cycle != null)
 		{
-			// Get next PageSet
-			final PageSet pageSet = (PageSet)iterator.next();
-
-			// Let PageSet initialize the Page
-			pageSet.init(this);
+			RequestParameters parameters = getRequest().getRequestParameters();
+			pageMapName = parameters.getPageMapName();
 		}
+		final PageMap pageMap = PageMap.forName(pageMapName);
+		init(pageMap);
 	}
 
 	/**
+	 * Initializes Page by adding it to the Session and initializing it.
+	 * 
+	 * @param pageMap
+	 *            The page map to put this page in.
+	 */
+	private final void init(final PageMap pageMap)
+	{
+		// Set the page map
+		if (pageMap != null)
+		{
+			setPageMap(pageMap);
+		}
+		else
+		{
+			throw new IllegalStateException("PageMap cannot be null");
+		}
+
+		// Set the numeric id on this page
+		setNumericId(getPageMap().nextId());
+
+		// Set versioning of page based on default
+		setVersioned(Application.get().getPageSettings().getVersionPagesByDefault());
+
+		// All Pages are born dirty so they get clustered right away
+		dirty();
+	}
+
+	/**
+	 * For the given component, whether we may record changes.
+	 * 
 	 * @param component
 	 *            The component which is affected
 	 * @return True if the change is okay to report
 	 */
-	private final boolean isVersioned(final Component component)
+	private final boolean mayTrackChangesFor(final Component component)
 	{
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto())
+		if (component.isAuto() || (!component.isVersioned()))
 		{
 			return false;
 		}
 		else
 		{
-			// Throw exception if modification is attempted during rendering
-			if (getFlag(FLAG_IS_RENDERING))
+			// the component is versioned... are we tracking changes at all?
+			if (getFlag(FLAG_TRACK_CHANGES))
 			{
-				throw new WicketRuntimeException(
-						"Cannot modify component hierarchy during render phase");
-			}
+				// we are tracking changes... do we need to start new version?
+				if (!getFlag(FLAG_NEW_VERSION))
+				{
+					// if we have no version manager
+					if (versionManager == null)
+					{
+						// then install a new version manager
+						versionManager = newVersionManager();
+					}
 
-			// Start new version?
-			if (getFlag(FLAG_TRACK_CHANGES) && component.isVersioned())
-			{
-				// Start new version
-				newVersion();
+					// start a new version
+					versionManager.beginVersion();
+					setFlag(FLAG_NEW_VERSION, true);
+				}
 
-				// Okay to record version information
+				// return true as we are ready for versioning
 				return true;
 			}
 
-			// Not tracking changes or component not versioned
+			// we are not tracking changes or the component not versioned
 			return false;
 		}
 	}
 
-	/**
-	 * Starts a new version of this page
-	 */
-	private final void newVersion()
-	{
-		// If we have no version manager
-		if (versionManager == null)
-		{
-			// then install a new version manager
-			versionManager = newVersionManager();
-		}
-
-		// If a new version has not yet been started
-		if (!getFlag(FLAG_NEW_VERSION))
-		{
-			// start a new version
-			versionManager.beginVersion();
-			setFlag(FLAG_NEW_VERSION, true);
-		}
-	}
-
-	static
-	{
-		// Allow calls through the IRedirectListener interface
-		RequestCycle.registerRequestListenerInterface(IRedirectListener.class);
-
-		// Allow XmlHttpRequest calls
-		RequestCycle.registerRequestListenerInterface(IEventRequestListener.class);
-	}
 }

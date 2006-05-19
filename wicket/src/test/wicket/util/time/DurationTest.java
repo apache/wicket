@@ -19,14 +19,12 @@
 package wicket.util.time;
 
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import wicket.util.string.StringValueConversionException;
-import wicket.util.time.Duration;
 
 /**
  * Test cases for this object

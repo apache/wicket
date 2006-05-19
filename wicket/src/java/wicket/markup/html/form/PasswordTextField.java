@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 3618 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,11 +27,16 @@ import wicket.model.IModel;
  * A password text field component. As you type, characters show up as asterisks
  * or some other such character so that nobody can look over your shoulder and
  * read your password.
+ * <p>
+ * By default this text field is required. If it is not, call
+ * {@link #setRequired(boolean)} with value of <code>false</code>.
  * 
  * @author Jonathan Locke
  */
 public class PasswordTextField extends TextField
 {
+	private static final long serialVersionUID = 1L;
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PasswordTextField.class);
 
@@ -51,6 +56,7 @@ public class PasswordTextField extends TextField
 	public PasswordTextField(final String id)
 	{
 		super(id);
+		setRequired(true);
 	}
 
 	/**
@@ -59,6 +65,7 @@ public class PasswordTextField extends TextField
 	public PasswordTextField(final String id, IModel model)
 	{
 		super(id, model);
+		setRequired(true);
 	}
 
 	/**
@@ -82,15 +89,19 @@ public class PasswordTextField extends TextField
 	public final String getModelValue()
 	{
 		final String value = getModelObjectAsString();
-		try
+		if(value != null)
 		{
-			return getApplication().newCrypt().encrypt(value);
+			try
+			{
+				// TODO kept for backwards compatibility. Replace with encryptUrlSafe after 1.2
+				return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(
+						value);
+			}
+			catch (Exception ex)
+			{
+				log.error("Failed to instantiate encryption object. Continue without encryption");
+			}
 		}
-		catch (Exception ex)
-		{
-			log.error("Failed to instantiate encryption object. Continue without encryption");
-		}
-
 		return value;
 	}
 
@@ -113,14 +124,17 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String)
+	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String[])
 	 */
-	public final void setModelValue(String value)
+	public final void setModelValue(String[] valueArray)
 	{
+		String value = valueArray != null && valueArray.length > 0? valueArray[0]: null;
 		String decryptedValue;
 		try
 		{
-			decryptedValue = getApplication().newCrypt().decrypt(value);
+			// TODO kept for backwards compatibility. Replace with decryptUrlSafe after 1.2
+			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
+					.decrypt(value);
 		}
 		catch (Exception ex)
 		{
@@ -140,9 +154,13 @@ public class PasswordTextField extends TextField
 	 */
 	protected final void onComponentTag(final ComponentTag tag)
 	{
-		checkComponentTag(tag, "input");
-		checkComponentTagAttribute(tag, "type", "password");
 		super.onComponentTag(tag);
 		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
 	}
+	
+	protected String getInputType()
+	{
+		return "password";
+	}
+	
 }

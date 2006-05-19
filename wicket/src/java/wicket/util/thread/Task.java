@@ -43,7 +43,6 @@ import wicket.util.time.Time;
  */
 public final class Task
 {
-
 	/** True if the task's thread should be a daemon. */
 	private boolean isDaemon = true;
 
@@ -51,12 +50,16 @@ public final class Task
 	private boolean isStarted = false;
 
 	/** The log to give to the user's code. */
-	private Log log = null;
+	private transient Log log = null;
+	
 	/** The name of this task. */
 	private final String name;
 
 	/** The time that the task should start. */
 	private Time startTime = Time.now();
+
+	/** When set the taks will stop as soon as possible. */
+	private boolean stop;
 
 	/**
 	 * Constructor.
@@ -91,12 +94,18 @@ public final class Task
 				{
 					// Sleep until start time
 					startTime.fromNow().sleep();
+					final Log log = getLog();
 
-					while (true)
+					while (!stop)
 					{
 						// Get the start of the current period
 						final Time startOfPeriod = Time.now();
 
+						if (log.isDebugEnabled())
+						{
+							log.debug("Run the job: " + code.toString());
+						}
+						
 						try
 						{
 							// Run the user's code
@@ -104,8 +113,13 @@ public final class Task
 						}
 						catch (Exception e)
 						{
-							getLog().error(
-									"Unhandled exception thrown by user code in task " + name, e);
+							log.error("Unhandled exception thrown by user code in task " 
+									+ name, e);
+						}
+						
+						if (log.isDebugEnabled())
+						{
+							log.debug("Finished with job: " + code.toString());
 						}
 
 						// Sleep until the period is over (or not at all if it's
@@ -199,7 +213,17 @@ public final class Task
 	protected Log getLog()
 	{
 		if (log == null)
+		{
 			log = LogFactory.getLog(Task.class);
+		}
 		return log;
+	}
+
+	/**
+	 * Will stop the task as soon as it does have that opportunity  
+	 */
+	public void stop()
+	{
+		stop = true;
 	}
 }

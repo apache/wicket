@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,13 +21,14 @@ import wicket.model.IModel;
 
 /**
  * Base class for banners.
- *
+ * 
  * @author Eelco Hillenius
  */
 public abstract class Banner extends Panel
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
 	public Banner(String id)
@@ -39,6 +38,7 @@ public abstract class Banner extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 * @param model
 	 */

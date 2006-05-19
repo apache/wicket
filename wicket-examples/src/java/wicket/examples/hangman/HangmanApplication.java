@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 3646 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -34,9 +34,8 @@ public class HangmanApplication extends WicketExampleApplication
 	 */
 	public HangmanApplication()
 	{
-		getPages().setHomePage(Home.class);
 	}
-
+	
 	/**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
@@ -49,5 +48,13 @@ public class HangmanApplication extends WicketExampleApplication
 				return new HangmanSession(HangmanApplication.this);
 			}
 		};
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
 	}
 }

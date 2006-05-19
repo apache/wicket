@@ -17,7 +17,7 @@
  */
 package wicket.examples.signin;
 
-import wicket.Application;
+import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
 /**
@@ -27,7 +27,7 @@ import wicket.protocol.http.WebSession;
  */
 public final class SignInSession extends WebSession
 {
-    /** Trivial user representation */
+	/** Trivial user representation */
 	private String user;
 
 	/**
@@ -36,7 +36,7 @@ public final class SignInSession extends WebSession
 	 * @param application
 	 *            The application
 	 */
-	protected SignInSession(Application application)
+	protected SignInSession(final WebApplication application)
 	{
 		super(application);
 	}
@@ -90,5 +90,3 @@ public final class SignInSession extends WebSession
 		this.user = user;
 	}
 }
-
-

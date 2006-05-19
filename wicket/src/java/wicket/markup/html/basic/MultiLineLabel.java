@@ -27,7 +27,7 @@ import wicket.util.string.Strings;
 /**
  * A MultiLineLabel component replaces its body with the model object.
  * <p>
- * Unlike {@link Label},{@link MultiLineLabel}shows text that spans multiple
+ * Unlike {@link Label}, {@link MultiLineLabel} shows text that spans multiple
  * lines by inserting line breaks (<code>BR</code> tags) for newlines and
  * paragraph markers (<code>P</code> tags) for sequences of more than one
  * newline.
@@ -36,6 +36,8 @@ import wicket.util.string.Strings;
  */
 public class MultiLineLabel extends WebComponent
 { 
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Constructor. Same as Label(String).
 	 * 
@@ -76,7 +78,7 @@ public class MultiLineLabel extends WebComponent
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		final String body = Strings.toMultilineMarkup(getModelObjectAsString());
+		final CharSequence body = Strings.toMultilineMarkup(getModelObjectAsString());
 		replaceComponentTagBody(markupStream, openTag, body);
 	}
 }

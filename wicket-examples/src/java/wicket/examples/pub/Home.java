@@ -46,7 +46,7 @@ public final class Home extends WicketExamplePage
 	{
 		add(new Image("beer"));
 
-		// create a dummy object to serve as our Ognl substitution model
+		// create a dummy object to serve as our substitution model
 		ValueMap map = new ValueMap();
 		map.put("user", "Jonathan");
 
@@ -54,7 +54,7 @@ public final class Home extends WicketExamplePage
 		// It uses the page's resource (Home_cc_LC.properties) and gets the
 		// text with resource key 'salution'. For the US, this is:
 		// salutation=${user}, dude!
-		// variable ${user} will be regconized as an Ognl variable, and will
+		// variable ${user} will be regconized as a property variable, and will
 		// be substituted with the given model (the wrapped map). Hence,
 		// ${user} will be replaced by map.get('user'), which is 'Jonathan'.
 		StringResourceModel labelModel = new StringResourceModel("salutation", this, new Model(map));
@@ -62,7 +62,8 @@ public final class Home extends WicketExamplePage
 		// Add the label with the dynamic model
 		add(new Label("salutation", labelModel));
 
-		// Add a couple of links to be able to play around with the session locale
+		// Add a couple of links to be able to play around with the session
+		// locale
 		add(new Link("goCanadian")
 		{
 			public void onClick()
@@ -91,7 +92,7 @@ public final class Home extends WicketExamplePage
 				getSession().setLocale(new Locale("de", "DE"));
 			}
 		});
-        add(new Link("goChinese")
+		add(new Link("goChinese")
 		{
 			public void onClick()
 			{

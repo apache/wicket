@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="MAVEN_REPO/log4j/jars/log4j-1.2.11.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-logging/jars/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/ognl/jars/ognl-2.6.7.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/org.springframework/jars/spring-1.2.6.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty-4.2.9.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jasper-runtime-4.2.20RC0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jasper-compiler-4.2.20RC0.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/servletapi/jars/servletapi-2.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/cglib/jars/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/asm/jars/asm-1.5.3.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-attributes/jars/commons-attributes-api-2.1.jar"/>
+	<classpathentry kind="var" path="MAVEN_REPO/commons-attributes/jars/commons-attributes-compiler-2.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-spring-cattr"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-spring"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

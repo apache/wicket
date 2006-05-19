@@ -21,24 +21,22 @@ package wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListViewNavigator;
-import wicket.markup.html.list.PageableListView;
+import wicket.markup.html.navigation.paging.PagingNavigator;
 
 /**
  * Dummy page used for resource testing.
  */
 public class PagedTableNavigatorPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
-	 * @param parameters page parameters.
+	 *  page parameters.
 	 */
-	public PagedTableNavigatorPage(final PageParameters parameters)
+	public PagedTableNavigatorPage()
 	{
 		super();
 		List list = new ArrayList();
@@ -53,6 +51,8 @@ public class PagedTableNavigatorPage extends WebPage
 
 		PageableListView table = new PageableListView("table", list, 2)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
@@ -61,7 +61,7 @@ public class PagedTableNavigatorPage extends WebPage
 		};
 
 		add(table);
-		add(new PageableListViewNavigator("navigator", table));
+		add(new PagingNavigator("navigator", table));
 	}
 
 	/**

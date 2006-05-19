@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ResourceFinderResourceStreamLocator.java,v 1.6 2006/01/02 07:13:35
+ * jdonnerstag Exp $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,16 +27,16 @@ import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 
 /**
- * IResourceStreamLocator implementation that locates resources along a filesystem
- * search path.
+ * IResourceStreamLocator implementation that locates resources along a
+ * filesystem search path.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
  */
-public final class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
+public class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
+	private static Log log = LogFactory.getLog(ResourceFinderResourceStreamLocator.class);
 
 	/** The finder to use to locate the resource stream */
 	private IResourceFinder finder;
@@ -53,12 +53,16 @@ public final class ResourceFinderResourceStreamLocator extends AbstractResourceS
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.String)
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(Class,
+	 *      java.lang.String)
 	 */
-	protected IResourceStream locate(final String path)
+	public IResourceStream locate(final Class clazz, final String path)
 	{
 		// Log attempt
-		log.debug("Attempting to locate resource '" + path + "' on path " + finder);
+		if (log.isDebugEnabled())
+		{
+			log.debug("Attempting to locate resource '" + path + "' on path " + finder);
+		}
 
 		// Try to find file resource on the path supplied
 		final URL file = finder.find(path);

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 1.5 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,8 +34,8 @@ public interface ITypeConverter extends Serializable
 	 * 
 	 * @param value
 	 *            The value to convert
-	 * @param locale 
+	 * @param locale
 	 * @return The converted value
 	 */
-	public Object convert(Object value, Locale locale);
+	Object convert(Object value, Locale locale);
 }

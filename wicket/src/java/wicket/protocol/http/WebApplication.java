@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WebApplication.java 4771 2006-03-05 17:07:48 -0800 (Sun, 05 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-05 17:07:48 -0800 (Sun, 05 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,30 +18,39 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import wicket.Application;
-import wicket.ApplicationSettings;
-import wicket.AutoLinkResolver;
+import wicket.IRequestCycleFactory;
+import wicket.IRequestTarget;
 import wicket.ISessionFactory;
+import wicket.PageMap;
+import wicket.Request;
+import wicket.RequestCycle;
+import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
-import wicket.response.BufferedResponse;
-import wicket.util.file.IResourceFinder;
+import wicket.markup.resolver.AutoLinkResolver;
+import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.target.coding.BookmarkablePageRequestTargetUrlCodingStrategy;
+import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import wicket.request.target.coding.PackageRequestTargetUrlCodingStrategy;
+import wicket.request.target.coding.SharedResourceRequestTargetUrlCodingStrategy;
+import wicket.session.ISessionStore;
+import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.WebApplicationPath;
-import wicket.util.time.Duration;
-import wicket.util.time.Time;
+import wicket.util.lang.PackageName;
+import wicket.util.watch.ModificationWatcher;
+
 
 /**
  * A web application is a subclass of Application which associates with an
@@ -48,62 +58,106 @@ import wicket.util.time.Time;
  * is intended to be subclassed by framework clients to define a web
  * application.
  * <p>
- * Application settings are given defaults by the WebApplication() constructor,
- * such as error page classes appropriate for HTML. WebApplication subclasses
- * can override these values and/or modify other application settings in their
- * respective constructors by calling getSettings() to retrieve a mutable
- * ApplicationSettings object.
+ * Application settings are given defaults by the WebApplication() constructor
+ * and internalInit method, such as error page classes appropriate for HTML.
+ * WebApplication subclasses can override these values and/or modify other
+ * application settings by overriding the init() method and then by calling
+ * getXXXSettings() to retrieve an interface to a mutable Settings object. Do
+ * not do this in the constructor itself because the defaults will then override
+ * your settings.
  * <p>
  * If you want to use servlet specific configuration, e.g. using init parameters
  * from the {@link javax.servlet.ServletConfig}object, you should override the
  * init() method. For example:
  * 
  * <pre>
- * 
- *       public void init()
- *       {
- *           String webXMLParameter = getWicketServlet()
- *               .getInitParameter(&quot;myWebXMLParameter&quot;);
- *           URL schedulersConfig = getWicketServlet().getServletContext()
- *               .getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *           ...
- *  
+ *    public void init()
+ *    {
+ *        String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *        URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *        ...
  * </pre>
  * 
  * @see WicketServlet
- * @see wicket.ApplicationSettings
- * @see wicket.ApplicationPages
+ * @see wicket.settings.IApplicationSettings
+ * @see wicket.settings.IDebugSettings
+ * @see wicket.settings.IExceptionSettings
+ * @see wicket.settings.IMarkupSettings
+ * @see wicket.settings.IPageSettings
+ * @see wicket.settings.IRequestCycleSettings
+ * @see wicket.settings.IResourceSettings
+ * @see wicket.settings.ISecuritySettings
+ * @see wicket.settings.ISessionSettings
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
+ * @author Johan Compagner
+ * @author Eelco Hillenius
+ * @author Juergen Donnerstag
  */
-public abstract class WebApplication extends Application
+public abstract class WebApplication extends Application implements ISessionFactory
 {
+	/**
+	 * Map of buffered responses that are in progress per session. Buffered
+	 * responses are temporarily stored
+	 */
+	private final Map bufferedResponses = new HashMap();
+
+	/** the default request cycle processor implementation. */
+	private IRequestCycleProcessor requestCycleProcessor;
+
+	/**
+	 * the prefix for storing variables in the actual session (typically
+	 * {@link HttpSession} for this application instance.
+	 */
+	private String sessionAttributePrefix;
+
 	/** Session factory for this web application */
-	private ISessionFactory sessionFactory = new ISessionFactory()
-	{
-		public Session newSession()
-		{
-			return new WebSession(WebApplication.this);
-		}
-	};
+	private ISessionFactory sessionFactory = this;
 
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
 
-	/** Map of redirects in progress per session */
-	private Map redirectMap = Collections.synchronizedMap(new HashMap());
+	/** Request logger instance. */
+	private RequestLogger requestLogger;
 
 	/**
-	 * Constructor.
+	 * The cached application key. Will be set in
+	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
+	 */
+	private String applicationKey;
+
+	/**
+	 * Constructor. <strong>Use {@link #init()} for any configuration of your
+	 * application instead of overriding the constructor.</strong>
 	 */
 	public WebApplication()
 	{
-		// Set default error pages for HTML markup
-		getPages().setPageExpiredErrorPage(PageExpiredErrorPage.class).setInternalErrorPage(
-				InternalErrorPage.class);
+	}
 
-		// Add resolver for automatically resolving HTML links
-		getComponentResolvers().add(new AutoLinkResolver());
+	/**
+	 * Gets the prefix for storing variables in the actual session (typically
+	 * {@link HttpSession} for this application instance.
+	 * 
+	 * @param request
+	 *            the request
+	 * 
+	 * @return the prefix for storing variables in the actual session
+	 */
+	public final String getSessionAttributePrefix(final WebRequest request)
+	{
+		if (sessionAttributePrefix == null)
+		{
+			String servletPath = request.getServletPath();
+			if (servletPath == null)
+			{
+				throw new WicketRuntimeException("unable to retrieve servlet path");
+			}
+			sessionAttributePrefix = "wicket:" + servletPath + ":";
+		}
+		// Namespacing for session attributes is provided by
+		// adding the servlet path
+		return sessionAttributePrefix;
 	}
 
 	/**
@@ -113,11 +167,111 @@ public abstract class WebApplication extends Application
 	{
 		if (wicketServlet == null)
 		{
-			throw new IllegalStateException("wicketServlet is not set yet. Any code in your" +
-					" Application object that uses the wicketServlet instance should be put" +
-					" in the init() method instead of your constructor");
+			throw new IllegalStateException("wicketServlet is not set yet. Any code in your"
+					+ " Application object that uses the wicketServlet instance should be put"
+					+ " in the init() method instead of your constructor");
 		}
 		return wicketServlet;
+	}
+
+	/**
+	 * @see wicket.Application#getApplicationKey()
+	 */
+	public final String getApplicationKey()
+	{
+		if (applicationKey == null)
+		{
+			throw new IllegalStateException("the application key does not seem to"
+					+ " be set properly or this method is called before WicketServlet is"
+					+ " set, which leads to the wrong behavior");
+		}
+		return applicationKey;
+	}
+
+	/**
+	 * Mounts an encoder at the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the encoder on
+	 * @param encoder
+	 *            the encoder that will be used for this mount
+	 */
+	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
+	{
+		checkMountPath(path);
+
+		if (encoder == null)
+		{
+			throw new IllegalArgumentException("Encoder must be not null");
+		}
+
+		getRequestCycleProcessor().getRequestCodingStrategy().mount(path, encoder);
+	}
+
+	/**
+	 * Mounts all bookmarkable pages at the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param packageName
+	 *            the name of the package for which all bookmarkable pages or
+	 *            sharedresources should be mounted
+	 */
+	public final void mount(final String path, final PackageName packageName)
+	{
+		checkMountPath(path);
+		if (packageName == null)
+		{
+			throw new IllegalArgumentException("PackageName cannot be null");
+		}
+		mount(path, new PackageRequestTargetUrlCodingStrategy(path, packageName));
+	}
+
+	/**
+	 * Mounts a bookmarkable page class to the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param bookmarkablePageClass
+	 *            the bookmarkable page class to mount
+	 */
+	public final void mountBookmarkablePage(final String path, final Class bookmarkablePageClass)
+	{
+		checkMountPath(path);
+		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
+				null));
+	}
+
+	/**
+	 * Mounts a bookmarkable page class to the given pagemap and path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param pageMap
+	 *            pagemap this mount is for
+	 * @param bookmarkablePageClass
+	 *            the bookmarkable page class to mount
+	 */
+	public final void mountBookmarkablePage(final String path, final PageMap pageMap,
+			final Class bookmarkablePageClass)
+	{
+		checkMountPath(path);
+		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
+				pageMap.getName()));
+	}
+
+	/**
+	 * Mounts a shared resource class to the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the bookmarkable page class on
+	 * @param resourceKey
+	 *            the shared key of the resource being mounted
+	 */
+	public final void mountSharedResource(final String path, final String resourceKey)
+	{
+		checkMountPath(path);
+		mount(path, new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
 	}
 
 	/**
@@ -143,6 +297,7 @@ public abstract class WebApplication extends Application
 		if (this.wicketServlet == null)
 		{
 			this.wicketServlet = wicketServlet;
+			this.applicationKey = wicketServlet.getServletName();
 		}
 		else
 		{
@@ -151,20 +306,146 @@ public abstract class WebApplication extends Application
 	}
 
 	/**
+	 * Unmounts whatever encoder is mounted at a given path.
+	 * 
+	 * @param path
+	 *            the path of the encoder to unmount
+	 */
+	public final void unmount(String path)
+	{
+		checkMountPath(path);
+		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
+	}
+
+	/**
+	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
+	 */
+	public void logEventTarget(IRequestTarget target)
+	{
+		super.logEventTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if (rl != null)
+		{
+			rl.logEventTarget(target);
+		}
+	}
+
+	/**
+	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
+	 */
+	public void logResponseTarget(IRequestTarget target)
+	{
+		super.logResponseTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if (rl != null)
+		{
+			rl.logResponseTarget(target);
+		}
+	}
+
+	/**
+	 * Gets the {@link RequestLogger}.
+	 * 
+	 * @return The RequestLogger
+	 */
+	public final RequestLogger getRequestLogger()
+	{
+		return requestLogger;
+	}
+
+	/**
+	 * Sets the {@link RequestLogger}.
+	 * 
+	 * @param logger
+	 *            The request logger
+	 */
+	public final void setRequestLogger(RequestLogger logger)
+	{
+		requestLogger = logger;
+	}
+
+	/**
+	 * Create a request cycle factory which is used by default by WebSession.
+	 * You may provide your own default factory by subclassing WebApplication
+	 * and overriding this method or your may subclass WebSession to create a
+	 * session specific request cycle factory.
+	 * 
+	 * @see WebSession#getRequestCycleFactory()
+	 * @see IRequestCycleFactory
+	 * 
+	 * @return Request cycle factory
+	 */
+	protected IRequestCycleFactory getDefaultRequestCycleFactory()
+	{
+		return new IRequestCycleFactory()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public RequestCycle newRequestCycle(Session session, Request request, Response response)
+			{
+				// Respond to request
+				return new WebRequestCycle((WebSession)session, (WebRequest)request,
+						(WebResponse)response);
+			}
+		};
+	}
+
+	/**
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
+	 * 
+	 * @return the default request cycle processor
+	 */
+	protected final IRequestCycleProcessor getRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = newRequestCycleProcessor();
+		}
+		return requestCycleProcessor;
+	}
+
+	/**
+	 * May be replaced by subclasses which whishes to uses there own
+	 * implementation of IRequestCycleProcessor
+	 * 
+	 * @return IRequestCycleProcessor
+	 */
+	// TODO Doesn't this method belong in Application, not WebApplication?
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new DefaultWebRequestCycleProcessor();
+	}
+
+	/**
 	 * @see wicket.Application#getSessionFactory()
 	 */
 	protected ISessionFactory getSessionFactory()
 	{
-		return sessionFactory;
+		return this.sessionFactory;
 	}
-
+	
+	/**
+	 * Create new Wicket Session object. Note, this method is not called
+	 * if you registered your own ISessionFactory with the Application.
+	 * 
+	 * @see wicket.ISessionFactory#newSession()
+	 */
+	public Session newSession()
+	{
+		return new WebSession(WebApplication.this);
+	}
+	
 	/**
 	 * Initialize; if you need the wicket servlet for initialization, e.g.
 	 * because you want to read an initParameter from web.xml or you want to
 	 * read a resource from the servlet's context path, you can override this
 	 * method and provide custom initialization. This method is called right
 	 * after this application class is constructed, and the wicket servlet is
-	 * set.
+	 * set. <strong>Use this method for any application setup instead of the
+	 * constructor.</strong>
 	 */
 	protected void init()
 	{
@@ -172,74 +453,86 @@ public abstract class WebApplication extends Application
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * Internal intialization. Reads servlet init parameter "configuration". If
-	 * the parameter is "development", settings appropriate for development are
-	 * set. If it's "deployment", deployment settings are used. If development
-	 * configuration is specified and a "sourceFolder" init parameter is also
-	 * set, then resources in that folder will be polled for changes.
 	 */
-	protected final void internalInit()
+	protected void internalDestroy()
 	{
-		final WicketServlet servlet = getWicketServlet();
-		final String configuration = wicketServlet.getInitParameter("configuration");
-		if (configuration != null)
-		{
-			getSettings().configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
-		}
+		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher();
+		if(resourceWatcher != null) resourceWatcher.destroy();
+		super.internalDestroy();
+		bufferedResponses.clear();
+		// destroy the resource watcher
 	}
 
 	/**
-	 * Gets a WebSession object from the HttpServletRequest, creating a new one
-	 * if it doesn't already exist.
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * @param request
-	 *            The http request object
-	 * @return The session object
+	 * Internal intialization. First determine the deployment mode. First check
+	 * the system property -Dwicket.configuration. If it does not exist check
+	 * the servlet init parameter (
+	 * <code>&lt;init-param&gt&lt;param-name&gt;configuration&lt;/param-name&gt;</code>).
+	 * If not found check the servlet context init paramert
+	 * <code>&lt;context-param&gt&lt;param-name6gt;configuration&lt;/param-name&gt;</code>).
+	 * If the parameter is "development" (which is default), settings
+	 * appropriate for development are set. If it's "deployment" , deployment
+	 * settings are used. If development is specified and a "sourceFolder" init
+	 * parameter is also set, then resources in that folder will be polled for
+	 * changes.
 	 */
-	final WebSession getSession(final HttpServletRequest request)
+	protected void internalInit()
 	{
-		// Get session, creating if it doesn't exist
-		final HttpSession httpSession = request.getSession(true);
+		super.internalInit();
 
-		// Namespacing for session attributes is provided by adding the servlet
-		// path
-		final String sessionAttributePrefix = "wicket-" + request.getServletPath();
+		// Set default error pages for HTML markup
+		getApplicationSettings().setPageExpiredErrorPage(PageExpiredErrorPage.class);
+		getApplicationSettings().setInternalErrorPage(InternalErrorPage.class);
+		getApplicationSettings().setAccessDeniedPage(AccessDeniedPage.class);
 
-		// The actual attribute for the session is
-		// "wicket-<servlet-path>-session"
-		final String sessionAttribute = sessionAttributePrefix + "-" + Session.sessionAttributeName;
+		// Add resolver for automatically resolving HTML links
+		getPageSettings().addComponentResolver(new AutoLinkResolver());
 
-		// Get Session abstraction from httpSession attribute
-		WebSession webSession = (WebSession)httpSession.getAttribute(sessionAttribute);
-		if (webSession == null)
+		// Set resource finder to web app path
+		getResourceSettings().setResourceFinder(
+				new WebApplicationPath(getWicketServlet().getServletContext()));
+
+		String contextPath = wicketServlet.getInitParameter(Application.CONTEXTPATH);
+		if (contextPath != null)
 		{
-			// Create session using session factory
-			final Session session = getSessionFactory().newSession();
-			if (session instanceof WebSession)
-			{
-				webSession = (WebSession)session;
-			}
-			else
-			{
-				throw new WicketRuntimeException(
-						"Session created by a WebApplication session factory must be a subclass of WebSession");
-			}
-
-			// Set the client Locale for this session
-			webSession.setLocale(request.getLocale());
-
-			// Save this session in the HttpSession using the attribute name
-			httpSession.setAttribute(sessionAttribute, webSession);
+			getApplicationSettings().setContextPath(contextPath);
 		}
 
-		// Set application on session
-		webSession.setApplication(this);
+		// Check if system property -Dwicket.configuration exists
+		String configuration = null;
+		try
+		{
+			configuration = System.getProperty("wicket." + Application.CONFIGURATION);
+		}
+		catch (SecurityException e)
+		{
+			// ignore; it is not allowed to read system properties
+		}
 
-		// Set session attribute name and attach/reattach http servlet session
-		webSession.init(httpSession, sessionAttributePrefix);
+		// If no system parameter check servlet specific <init-param>
+		if (configuration == null)
+		{
+			configuration = wicketServlet.getInitParameter(Application.CONFIGURATION);
+		}
+		// If no system parameter and not <init-param>, than check
+		// <context-param>
+		if (configuration == null)
+		{
+			configuration = wicketServlet.getServletContext().getInitParameter(
+					Application.CONFIGURATION);
+		}
 
-		return webSession;
+		// Development mode is default if not settings have been found
+		if (configuration != null)
+		{
+			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+		}
+		else
+		{
+			configure(Application.DEVELOPMENT, wicketServlet.getInitParameter("sourceFolder"));
+		}
 	}
 
 	/**
@@ -251,7 +544,7 @@ public abstract class WebApplication extends Application
 	 */
 	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
 	{
-		return new WebRequest(servletRequest);
+		return new ServletWebRequest(servletRequest);
 	}
 
 	/**
@@ -261,83 +554,150 @@ public abstract class WebApplication extends Application
 	 * 
 	 * @param servletResponse
 	 * @return a WebResponse object
-	 * @throws IOException
 	 */
 	protected WebResponse newWebResponse(final HttpServletResponse servletResponse)
-			throws IOException
 	{
-		return (getSettings().getBufferResponse()
-				? new BufferedWebResponse(servletResponse)
-				: new WebResponse(servletResponse));
+		return (getRequestCycleSettings().getBufferResponse() ? new BufferedWebResponse(
+				servletResponse) : new WebResponse(servletResponse));
 	}
 
 	/**
-	 * Returns the redirect map where the buffered render pages are stored in.
+	 * @see wicket.Application#newSessionStore()
+	 */
+	protected ISessionStore newSessionStore()
+	{
+		return new HttpSessionStore();
+	}
+
+	/**
+	 * Add a buffered response to the redirect buffer.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * @param bufferId
+	 *            the id that should be used for storing the buffer
+	 * @param renderedResponse
+	 *            the response to buffer
+	 */
+	final void addBufferedResponse(String sessionId, String bufferId,
+			BufferedHttpServletResponse renderedResponse)
+	{
+		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		if (responsesPerSession == null)
+		{
+			responsesPerSession = new MostRecentlyUsedMap(4);
+			bufferedResponses.put(sessionId, responsesPerSession);
+		}
+		responsesPerSession.put(bufferId, renderedResponse);
+	}
+
+	/**
+	 * Gets a WebSession object from the HttpServletRequest, creating a new one
+	 * if it doesn't already exist.
 	 * 
 	 * @param request
-	 * @param requestUri
-	 * @return The Redirect map or null when there are no redirects.
+	 *            The http request object
+	 * @return The session object
 	 */
-	public BufferedResponse getBufferedResponse(HttpServletRequest request, String requestUri)
+	final WebSession getSession(final WebRequest request)
 	{
-		String sessionId = request.getSession(true).getId();
-		Map sessionMap = (Map)redirectMap.get(sessionId);
-		if (sessionMap != null)
+		ISessionStore sessionStore = getSessionStore();
+		Session session = sessionStore.lookup(request);
+
+		if (session == null)
 		{
-			sessionMap.put("last-time-used", Time.now());
-			return (BufferedResponse)sessionMap.remove(requestUri);
+			// Create session using session factory
+			session = getSessionFactory().newSession();
+
+			// Set the client Locale for this session
+			session.setLocale(request.getLocale());
+
+			// Bind the session to the session store
+			sessionStore.bind(request, session);
+		}
+
+		WebSession webSession;
+		if (session instanceof WebSession)
+		{
+			webSession = (WebSession)session;
+		}
+		else
+		{
+			throw new WicketRuntimeException("Session created by a WebApplication session factory "
+					+ "must be a subclass of WebSession");
+		}
+
+		// Set application on session
+		session.setApplication(this);
+
+		// Set session attribute name and attach/reattach http servlet session
+		webSession.initForRequest();
+
+		return webSession;
+	}
+
+	/**
+	 * Returns the redirect map where the buffered render pages are stored in
+	 * and removes it immediately.
+	 * 
+	 * @param sessionId
+	 *            the session id
+	 * 
+	 * @param bufferId
+	 *            the id of the buffer as passed in as a request parameter
+	 * @return the buffered response or null if not found (when this request is
+	 *         on a different box than the original request came in
+	 */
+	final BufferedHttpServletResponse popBufferedResponse(String sessionId, String bufferId)
+	{
+		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		if (responsesPerSession != null)
+		{
+			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession
+					.remove(bufferId);
+			if (responsesPerSession.size() == 0)
+			{
+				bufferedResponses.remove(sessionId);
+			}
+			return buffered;
 		}
 		return null;
 	}
 
 	/**
-	 * @param request
-	 * @param requestUri
-	 * @param renderedResponse
+	 * @param sessionId
+	 *            The session id that was destroyed
 	 */
-	public void addRedirect(HttpServletRequest request, String requestUri,
-			BufferedResponse renderedResponse)
+	void sessionDestroyed(String sessionId)
 	{
-		String sessionId = request.getSession(true).getId();
-		Map sessionMap = (Map)redirectMap.get(sessionId);
-		if (sessionMap == null)
+		bufferedResponses.remove(sessionId);
+
+		RequestLogger logger = getRequestLogger();
+		if (logger != null)
 		{
-			sessionMap = new HashMap(4);
-			final Time now = Time.now();
-			sessionMap.put("last-time-used", now);
-			synchronized (redirectMap)
-			{
-				Iterator it = redirectMap.entrySet().iterator();
-				while (it.hasNext())
-				{
-					Map.Entry entry = (Entry)it.next();
-					final Time lastTimeUsed = (Time)((Map)entry.getValue()).get("last-time-used");
-					if (now.subtract(lastTimeUsed).greaterThan(Duration.minutes(5)))
-					{
-						it.remove();
-					}
-				}
-				redirectMap.put(sessionId, sessionMap);
-			}
+			logger.sessionDestroyed(sessionId);
 		}
-		sessionMap.put(requestUri, renderedResponse);
 	}
-	
-	
+
 	/**
-	 * @see wicket.Application#createApplicationSettings()
+	 * Checks mount path is valid.
+	 * 
+	 * @param path
+	 *            mount path
 	 */
-	public ApplicationSettings createApplicationSettings()
+	private void checkMountPath(String path)
 	{
-		return new ApplicationSettings(this) 
-		{	
-			/**
-			 * @see wicket.ApplicationSettings#newResourceFinder()
-			 */
-			public IResourceFinder newResourceFinder()
-			{
-				return new WebApplicationPath(getWicketServlet().getServletContext());
-			}
-		};
+		if (path == null)
+		{
+			throw new IllegalArgumentException("Mount path cannot be null");
+		}
+		if (!path.startsWith("/"))
+		{
+			throw new IllegalArgumentException("Mount path has to start with '/'");
+		}
+		if (path.startsWith("/resources/") || path.equals("/resources"))
+		{
+			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
+		}
 	}
 }

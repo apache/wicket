@@ -27,8 +27,8 @@ import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 
 /**
- * IResourceStreamLocator implementation that locates resources along a filesystem
- * search path.
+ * IResourceStreamLocator implementation that locates resources along a
+ * filesystem search path.
  * 
  * @author Juergen Donnerstag
  * @author Jonathan Locke
@@ -36,7 +36,7 @@ import wicket.util.resource.UrlResourceStream;
 public final class PathResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(ResourceStreamLocator.class);
+	private static Log log = LogFactory.getLog(PathResourceStreamLocator.class);
 
 	/** The path to search along */
 	private Path searchPath;
@@ -53,12 +53,16 @@ public final class PathResourceStreamLocator extends AbstractResourceStreamLocat
 	}
 
 	/**
-	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.String)
+	 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(Class,
+	 *      java.lang.String)
 	 */
-	protected IResourceStream locate(final String path)
+	public IResourceStream locate(final Class clazz, final String path)
 	{
 		// Log attempt
-		log.debug("Attempting to locate resource '" + path + "' on path " + searchPath);
+		if (log.isDebugEnabled())
+		{
+			log.debug("Attempting to locate resource '" + path + "' on path " + searchPath);
+		}
 
 		// Try to find file resource on the path supplied
 		final URL url = searchPath.find(path);

@@ -49,9 +49,18 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	 * @throws ConversionException
 	 *             if value is unparsable or out of range
 	 */
-	protected Number parse(final Object value, final double min, final double max, Locale locale)
+	protected Number parse(Object value, final double min, final double max, Locale locale)
 	{
 		final NumberFormat numberFormat = getNumberFormat(locale);
+
+		if(value instanceof String)
+		{
+		    // Convert spaces to no-break space (U+00A0) to fix problems with broser conversions. 
+		    // Space is not valid thousands-separator, but no-br space is.
+		    String v = (String)value;
+		    value = v.replace(' ' , '\u00A0');
+		}
+
 		final Number number = (Number)parse(numberFormat, value);
 
 		if (number == null)

@@ -24,10 +24,11 @@ import java.util.List;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.FeedbackMessage;
-import wicket.FeedbackMessagesModel;
-import wicket.IFeedback;
-import wicket.IFeedbackBoundary;
+import wicket.feedback.FeedbackMessage;
+import wicket.feedback.FeedbackMessagesModel;
+import wicket.feedback.IFeedback;
+import wicket.feedback.IFeedbackMessageFilter;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -35,16 +36,22 @@ import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
- * A panel that displays {@link wicket.FeedbackMessage}s in a list view.
- * The maximum number of messages to show can be set with setMaxMessages().
+ * A panel that displays {@link wicket.feedback.FeedbackMessage}s in a list
+ * view. The maximum number of messages to show can be set with
+ * setMaxMessages().
  * 
- * @see wicket.FeedbackMessage
- * @see wicket.FeedbackMessages
+ * @see wicket.feedback.FeedbackMessage
+ * @see wicket.feedback.FeedbackMessages
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
 public class FeedbackPanel extends Panel implements IFeedback
 {
+	private static final long serialVersionUID = 1L;
+
+	/** whether model messages should be HTML escaped. Default is true. */
+	private boolean escapeMessages = true;
+
 	/** Message view */
 	private final MessageListView messageListView;
 
@@ -53,6 +60,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	private final class MessageListView extends ListView
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**
 		 * @see wicket.Component#Component(String)
 		 */
@@ -68,8 +77,11 @@ public class FeedbackPanel extends Panel implements IFeedback
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
+			message.markRendered();
 			final IModel replacementModel = new Model()
 			{
+				private static final long serialVersionUID = 1L;
+
 				/**
 				 * Returns feedbackPanel + the message level, eg
 				 * 'feedbackPanelERROR'. This is used as the class of the li /
@@ -84,6 +96,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 			};
 
 			final Label label = new Label("message", message.getMessage());
+			label.setEscapeModelStrings(getEscapeMessages());
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
@@ -96,10 +109,99 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public FeedbackPanel(final String id)
 	{
+		this(id, null);
+	}
+
+	/**
+	 * @see wicket.Component#Component(String)
+	 */
+	public FeedbackPanel(final String id, IFeedbackMessageFilter filter)
+	{
 		super(id);
+		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
+		{
+			private static final long serialVersionUID = 1L;
+
+			public boolean isVisible()
+			{
+				return anyMessage();
+			}
+		};
+		add(messagesContainer);
 		this.messageListView = new MessageListView("messages");
 		messageListView.setVersioned(false);
-		add(messageListView);
+		messagesContainer.add(messageListView);
+		
+		if (filter!=null) {
+			setFilter(filter);
+		}
+	}
+
+	
+	
+	/**
+	 * Gets whether model messages should be HTML escaped. Default is true.
+	 * 
+	 * @return whether model messages should be HTML escaped
+	 */
+	public final boolean getEscapeMessages()
+	{
+		return escapeMessages;
+	}
+
+	/**
+	 * @return Model for feedback messages on which you can install filters and
+	 *         other properties
+	 */
+	public final FeedbackMessagesModel getFeedbackMessagesModel()
+	{
+		return (FeedbackMessagesModel)messageListView.getModel();
+	}
+
+	/**
+	 * @return The current message filter
+	 */
+	public final IFeedbackMessageFilter getFilter()
+	{
+		return getFeedbackMessagesModel().getFilter();
+	}
+
+	/**
+	 * @return The current sorting comparator
+	 */
+	public final Comparator getSortingComparator()
+	{
+		return getFeedbackMessagesModel().getSortingComparator();
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
+
+	/**
+	 * Sets whether model messages should be HTML escaped. Default is true.
+	 * 
+	 * @param escapeMessages
+	 *            whether model messages should be HTML escaped
+	 */
+	public final void setEscapeMessages(boolean escapeMessages)
+	{
+		this.escapeMessages = escapeMessages;
+	}
+
+	/**
+	 * Sets a filter to use on the feedback messages model
+	 * 
+	 * @param filter
+	 *            The message filter to install on the feedback messages model
+	 */
+	public final void setFilter(IFeedbackMessageFilter filter)
+	{
+		getFeedbackMessagesModel().setFilter(filter);
 	}
 
 	/**
@@ -113,100 +215,57 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Sets the optional collecting component. When this is not set explicitly, the first occurence
-	 * of {@link IFeedbackBoundary} will be searched for higher up in the run-time
-	 * hierarchy.
-	 * @param collectingComponent the collecting component
-	 */
-	public final void setCollectingComponent(Component collectingComponent)
-	{
-		FeedbackMessagesModel feedbackMessagesModel =
-			(FeedbackMessagesModel)messageListView.getModel();
-		feedbackMessagesModel.setCollectingComponent(collectingComponent);
-	}
-
-	/**
 	 * Sets the comparator used for sorting the messages.
-	 * @param sortingComparator comparator used for sorting the messages.
+	 * 
+	 * @param sortingComparator
+	 *            comparator used for sorting the messages.
 	 */
 	public final void setSortingComparator(Comparator sortingComparator)
 	{
-		FeedbackMessagesModel feedbackMessagesModel =
-			(FeedbackMessagesModel)messageListView.getModel();
-		feedbackMessagesModel.setSortingComparator(sortingComparator);
+		getFeedbackMessagesModel().setSortingComparator(sortingComparator);
 	}
 
 	/**
-	 * @see wicket.Component#isVersioned()
+	 * @see wicket.feedback.IFeedback#updateFeedback()
 	 */
-	public boolean isVersioned()
+	public void updateFeedback()
 	{
-		return false; // makes no sense to version the feedback panel
+		// Force model to load
+		messageListView.getModelObject();
 	}
 
 	/**
-	 * @see wicket.Component#onBeginRequest()
-	 */
-	protected final void onBeginRequest()
-	{
-		messageListView.getModelObject(); // force loading of model
-	}
-
-	/**
-	 * Gets the css class for the given message.
-	 * @param message the message
-	 * @return the css class; by default, this returns feedbackPanel + the message level, eg
-	 *		'feedbackPanelERROR', but you can override this method to provide your own
-	 */
-	protected String getCSSClass(final FeedbackMessage message)
-	{
-		return "feedbackPanel" + message.getLevelAsString();
-	}
-
-	/**
-	 * Gets a new instance of FeedbackMessagesModel to use.
-	 * @return instance of FeedbackMessagesModel to use
-	 */
-	protected FeedbackMessagesModel newFeedbackMessagesModel()
-	{
-		return new FeedbackMessagesModel(true, null);
-	}
-
-	/**
-	 * Gets the currently collected messages for this panel.
-	 * @return the currently collected messages for this panel, possibly empty
-	 */
-	protected final List getCurrentMessages()
-	{
-		List msgs = (List)messageListView.getModelObject();
-		return Collections.unmodifiableList(msgs);
-	}
-
-	/**
-	 * Search messages that this panel will render, and see if there is any message of level ERROR or up.
-	 * This is a convenience method; same as calling 'anyMessage(FeedbackMessage.ERROR)'.
+	 * Search messages that this panel will render, and see if there is any
+	 * message of level ERROR or up. This is a convenience method; same as
+	 * calling 'anyMessage(FeedbackMessage.ERROR)'.
+	 * 
 	 * @return whether there is any message for this panel of level ERROR or up
 	 */
-	protected final boolean anyErrorMessage()
+	public final boolean anyErrorMessage()
 	{
 		return anyMessage(FeedbackMessage.ERROR);
 	}
 
 	/**
-	 * Search messages that this panel will render, and see if there is any message.
+	 * Search messages that this panel will render, and see if there is any
+	 * message.
+	 * 
 	 * @return whether there is any message for this panel
 	 */
-	protected final boolean anyMessage()
+	public final boolean anyMessage()
 	{
 		return anyMessage(FeedbackMessage.UNDEFINED);
 	}
 
 	/**
-	 * Search messages that this panel will render, and see if there is any message of the given level.
-	 * @param level the level, see FeedbackMessage
+	 * Search messages that this panel will render, and see if there is any
+	 * message of the given level.
+	 * 
+	 * @param level
+	 *            the level, see FeedbackMessage
 	 * @return whether there is any message for this panel of the given level
 	 */
-	protected final boolean anyMessage(int level)
+	public final boolean anyMessage(int level)
 	{
 		List msgs = getCurrentMessages();
 
@@ -221,4 +280,40 @@ public class FeedbackPanel extends Panel implements IFeedback
 
 		return false;
 	}
+
+	/**
+	 * Gets the css class for the given message.
+	 * 
+	 * @param message
+	 *            the message
+	 * @return the css class; by default, this returns feedbackPanel + the
+	 *         message level, eg 'feedbackPanelERROR', but you can override this
+	 *         method to provide your own
+	 */
+	protected String getCSSClass(final FeedbackMessage message)
+	{
+		return "feedbackPanel" + message.getLevelAsString();
+	}
+
+	/**
+	 * Gets the currently collected messages for this panel.
+	 * 
+	 * @return the currently collected messages for this panel, possibly empty
+	 */
+	protected final List getCurrentMessages()
+	{
+		final List messages = (List)messageListView.getModelObject();
+		return Collections.unmodifiableList(messages);
+	}
+
+	/**
+	 * Gets a new instance of FeedbackMessagesModel to use.
+	 * 
+	 * @return Instance of FeedbackMessagesModel to use
+	 */
+	protected FeedbackMessagesModel newFeedbackMessagesModel()
+	{
+		return new FeedbackMessagesModel();
+	}
+	
 }

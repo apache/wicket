@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.pages;
 
+import javax.servlet.http.HttpServletResponse;
+
 import wicket.markup.html.WebPage;
 
 /**
@@ -26,11 +28,38 @@ import wicket.markup.html.WebPage;
  */
 public class PageExpiredErrorPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Constructor.
 	 */
 	public PageExpiredErrorPage()
 	{
 		add(homePageLink("homePageLink"));
+	}
+	
+	/**
+	 * @see wicket.markup.html.WebPage#configureResponse()
+	 */
+	protected void configureResponse()
+	{
+		super.configureResponse();
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
+	}
+
+	/**
+	 * @see wicket.Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
+	}
+
+	/**
+	 * @see wicket.Page#isErrorPage()
+	 */
+	public boolean isErrorPage()
+	{
+		return true;
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 5121 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,9 +17,12 @@
  */
 package wicket.examples.images;
 
-import wicket.Application;
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.image.resource.DefaultButtonImageResource;
+import wicket.protocol.http.request.urlcompressing.URLCompressor;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
+import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * WicketServlet class for wicket.examples.linkomatic example.
@@ -33,11 +36,26 @@ public class ImagesApplication extends WicketExampleApplication
 	 */
 	public ImagesApplication()
 	{
-		getPages().setHomePage(Home.class);
-        // insert an alias for the Home class so that all images don't have the full home package in there url. 
-		getPages().putClassAlias(Home.class,"home");
-        // insert an alias for the wicket.Application class so that all images don't have the wicket.Application in there url. 
-		getPages().putClassAlias(Application.class,"application");
-		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
+
+	}
+
+	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
+	/**
+	 * Special overwrite to have url compressing for this example.
+	 * 
+	 * @see URLCompressor
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
+	 */
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+				new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	}
 }

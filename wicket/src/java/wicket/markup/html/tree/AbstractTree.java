@@ -185,9 +185,19 @@ public abstract class AbstractTree extends Panel
 	 * @param treeState
 	 *            the tree state to set as the current one
 	 */
-	public final void setTreeState(final TreeState treeState)
+	public void setTreeState(final TreeState treeState)
 	{
 		this.treeState = treeState;
+	}
+
+	/**
+	 * Sets the current tree model.
+	 *
+	 * @param treeModel the tree model to set as the current one
+	 */
+	public void setTreeModel(final TreeModel treeModel)
+	{
+		this.treeState = newTreeState(treeModel);
 	}
 
 	/**

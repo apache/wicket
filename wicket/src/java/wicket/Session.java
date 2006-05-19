@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.25 $ $Date$
+ * $Id: Session.java 5063 2006-03-21 11:21:19 -0800 (Tue, 21 Mar 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-03-21 11:21:19 -0800 (Tue, 21
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,10 +20,9 @@ package wicket;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,7 +30,14 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.application.IClassResolver;
+import wicket.authorization.IAuthorizationStrategy;
+import wicket.feedback.FeedbackMessage;
+import wicket.feedback.FeedbackMessages;
+import wicket.request.ClientInfo;
+import wicket.session.ISessionStore;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 
 /**
@@ -46,7 +53,7 @@ import wicket.util.string.Strings;
  * does not itself have a reference to the session that contains it. However,
  * the Page component at the root of the containment hierarchy does have a
  * reference to the Session that holds the Page. So
- * {@link Component#getSession()}traverses the component hierarchy to the root
+ * {@link Component#getSession()} traverses the component hierarchy to the root
  * Page and then calls {@link Page#getSession()}.
  * 
  * <li><b>Access via Thread Local </b>- In the odd case where neither a
@@ -84,9 +91,12 @@ import wicket.util.string.Strings;
  * <li><b>Session Properties </b>- Arbitrary objects can be attached to a
  * Session by installing a session factory on your Application class which
  * creates custom Session subclasses that have typesafe properties specific to
- * the application (see {@link Application}for details). To discourage
+ * the application (see {@link Application} for details). To discourage
  * non-typesafe access to Session properties, no setProperty() or getProperty()
- * method is provided.
+ * method is provided. In a clustered environment, you should take care to call
+ * the dirty() method when you change a property or youre own. This way the 
+ * session will be reset again in the http session so that the http session 
+ * knows the session is changed.
  * 
  * <li><b>Class Resolver </b>- Sessions have a class resolver (
  * {@link IClassResolver}) implementation that is used to locate classes for
@@ -99,33 +109,47 @@ import wicket.util.string.Strings;
  * calling remove(Page) or removeAll(), although such an action should rarely be
  * necessary.
  * 
+ * <li><b>Flash Messages</b>- Flash messages are messages that are stored in
+ * session and are removed after they are displayed to the user. Session acts as
+ * a store for these messages because they can last across requests.
+ * 
  * @author Jonathan Locke
+ * @author Eelco Hillenius
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class Session implements Serializable
 {
-	/** Name of session attribute under which this session is stored */
-	public static final String sessionAttributeName = "session";
+	private static final long serialVersionUID = 1L;
 
-	/** Separator for component paths. */
-	private static final char componentPathSeparator = ':';
+	/** Name of session attribute under which this session is stored */
+	public static final String SESSION_ATTRIBUTE_NAME = "session";
+
+	/** Prefix for attributes holding page map entries */
+	static final String pageMapEntryAttributePrefix = "p:";
 
 	/** Thread-local current session. */
 	private static final ThreadLocal current = new ThreadLocal();
 
+	/** A store for dirty objects for one request */
+	private static final ThreadLocal dirtyObjects = new ThreadLocal();
+
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
 
-	/** Next available page state sequence number */
-	int pageStateSequenceNumber;
+	/** Attribute prefix for page maps stored in the session */
+	private static final String pageMapAttributePrefix = "m:";
 
 	/** Application that this is a session of. */
 	private transient Application application;
 
+	/**
+	 * Cached instance of agent info which is typically designated by calling
+	 * {@link RequestCycle#newClientInfo()}.
+	 */
+	private ClientInfo clientInfo;
+
 	/** The converter instance. */
 	private transient IConverter converter;
-
-	/** Active request cycle */
-	private transient RequestCycle cycle;
 
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
@@ -136,18 +160,40 @@ public abstract class Session implements Serializable
 	/** Factory for constructing Pages for this Session */
 	private transient IPageFactory pageFactory;
 
-	/** Maps from name to page map */
-	private final Map pageMapForName = new HashMap();
+	/** A number to generate names for auto create pagemaps */
+	private int autoCreatePageMapCounter = 0;
 
+	/** A linked list for last used pagemap queue */
+	private LinkedList/* <PageMap> */usedPageMaps = new LinkedList();
+
+	/** The session store of this session. */
+	// private transient ISessionStore sessionStore;
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
+
+	/** feedback messages */
+	private FeedbackMessages feedbackMessages;
+
+	private transient Map usedPages;
+
+	/** cached id because you can't access the id after session unbound */
+	private String id = null;
+
+	/**
+	 * Temporary instance of the session store. Should be set on each request as
+	 * it is not supposed to go in the session.
+	 */
+	private transient ISessionStore sessionStore;
+
+	/** Application level meta data. */
+	private MetaDataEntry[] metaData;
 
 	/**
 	 * Visitor interface for visiting page maps
 	 * 
 	 * @author Jonathan Locke
 	 */
-	static interface IVisitor
+	public static interface IPageMapVisitor
 	{
 		/**
 		 * @param pageMap
@@ -163,7 +209,13 @@ public abstract class Session implements Serializable
 	 */
 	public static Session get()
 	{
-		return (Session)current.get();
+		final Session session = (Session)current.get();
+		if (session == null)
+		{
+			throw new WicketRuntimeException("there is no session attached to current thread "
+					+ Thread.currentThread().getName());
+		}
+		return session;
 	}
 
 	/**
@@ -176,7 +228,22 @@ public abstract class Session implements Serializable
 	 */
 	public static void set(final Session session)
 	{
+		if (session == null)
+		{
+			throw new IllegalArgumentException("Argument session can not be null");
+		}
 		current.set(session);
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Clears the session for calling thread.
+	 * 
+	 */
+	public static void unset()
+	{
+		current.set(null);
 	}
 
 	/**
@@ -191,10 +258,22 @@ public abstract class Session implements Serializable
 		this.application = application;
 
 		// Set locale to default locale
-		setLocale(application.getSettings().getDefaultLocale());
+		setLocale(application.getApplicationSettings().getDefaultLocale());
+	}
 
-		// Create default page map
-		newPageMap(PageMap.defaultName);
+	/**
+	 * Removes all pages from the session. Although this method should rarely be
+	 * needed, it is available (possibly for security reasons).
+	 */
+	public final void clear()
+	{
+		visitPageMaps(new IPageMapVisitor()
+		{
+			public void pageMap(PageMap pageMap)
+			{
+				pageMap.clear();
+			}
+		});
 	}
 
 	/**
@@ -208,26 +287,62 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * @return The authorization strategy for this session
+	 */
+	public IAuthorizationStrategy getAuthorizationStrategy()
+	{
+		return application.getSecuritySettings().getAuthorizationStrategy();
+	}
+
+	/**
 	 * @return The class resolver for this Session
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		return application.getSettings().getDefaultClassResolver();
+		return application.getApplicationSettings().getClassResolver();
 	}
 
 	/**
-	 * Gets the converter instance.
+	 * Gets the client info object for this session. This method lazily gets the
+	 * new agent info object for this session. It uses any cached or set ({@link #setClientInfo(ClientInfo)})
+	 * client info object or uses {@link RequestCycle#newClientInfo()} to get
+	 * the info object based on the current request when no client info object
+	 * was set yet, and then caches the returned object; we can expect the
+	 * client to stay the same for the whole session, and implementations of
+	 * {@link RequestCycle#newClientInfo()} might be relatively expensive.
 	 * 
-	 * @return the converter
+	 * @return the client info object based on this request
 	 */
-	public final IConverter getConverter()
+	public ClientInfo getClientInfo()
 	{
-		if (converter == null)
+		if (clientInfo == null)
 		{
-			// Let the factory create a new converter
-			converter = getApplication().getConverterFactory().newConverter(getLocale());
+			this.clientInfo = RequestCycle.get().newClientInfo();
 		}
-		return converter;
+		return clientInfo;
+	}
+
+	/**
+	 * @return The default page map
+	 */
+	public final PageMap getDefaultPageMap()
+	{
+		return pageMapForName(PageMap.DEFAULT_NAME, true);
+	}
+
+	/**
+	 * Gets the unique id for this session from the underlying SessionStore
+	 * 
+	 * @return The unique id for this session
+	 */
+	public final String getId()
+	{
+		if (id == null)
+		{
+			id = getSessionStore().getSessionId(RequestCycle.get().getRequest());
+			dirty = true;
+		}
+		return id;
 	}
 
 	/**
@@ -238,6 +353,19 @@ public abstract class Session implements Serializable
 	public Locale getLocale()
 	{
 		return locale;
+	}
+
+	/**
+	 * Gets metadata for this session using the given key.
+	 * 
+	 * @param key
+	 *            The key for the data
+	 * @return The metadata
+	 * @see MetaDataKey
+	 */
+	public final Serializable getMetaData(final MetaDataKey key)
+	{
+		return key.get(metaData);
 	}
 
 	/**
@@ -254,36 +382,41 @@ public abstract class Session implements Serializable
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
+	public final synchronized Page getPage(final String pageMapName, final String path,
+			final int versionNumber)
 	{
 		if (log.isDebugEnabled())
 		{
 			log.debug("Getting page [path = " + path + ", versionNumber = " + versionNumber + "]");
 		}
 
-		// Retrieve the page for the first path component from this session
-		Page page = getPage(pageMapName, Strings.firstPathComponent(path, componentPathSeparator));
-
-		// Is there a page with the right id at all?
-		if (page != null)
+		// Get page map by name, creating the default page map automatically
+		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
+		if (pageMap != null)
 		{
-			// Get the version of the page requested from the page
-			final Page version = page.getVersion(versionNumber);
-
-			// Is the requested version available?
-			if (version != null)
+			// Get page entry for id and version
+			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+			Thread t = (Thread)usedPages.get(id);
+			while (t != null && t != Thread.currentThread())
 			{
-				// Need to update session with new page?
-				if (version != page)
+				try
 				{
-					// This is our new page
-					page = version;
-
-					// Replaces old page entry
-					page.getPageMap().put(page);
+					wait(1000);
 				}
-				return page;
+				catch (InterruptedException ex)
+				{
+					throw new WicketRuntimeException(ex);
+				}
+				t = (Thread)usedPages.get(id);
 			}
+			usedPages.put(id, Thread.currentThread());
+			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
+			if(page == null)
+			{
+				usedPages.remove(id);
+				notifyAll();
+			}
+			return page;
 		}
 		return null;
 	}
@@ -295,7 +428,7 @@ public abstract class Session implements Serializable
 	{
 		if (pageFactory == null)
 		{
-			pageFactory = application.getSettings().getDefaultPageFactory();
+			pageFactory = application.getSessionSettings().getPageFactory();
 		}
 		return pageFactory;
 	}
@@ -316,27 +449,86 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Gets a page map for the given name, automatically creating it if need be.
+	 * 
 	 * @param pageMapName
 	 *            Name of page map, or null for default page map
+	 * @param autoCreate
+	 *            True if the page map should be automatically created if it
+	 *            does not exist
 	 * @return PageMap for name
 	 */
-	public final PageMap getPageMap(String pageMapName)
+	public final PageMap pageMapForName(String pageMapName, final boolean autoCreate)
 	{
-		if (pageMapName == null)
+		PageMap pageMap = (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+		if (pageMap == null && autoCreate)
 		{
-			pageMapName = PageMap.defaultName;
+			pageMap = newPageMap(pageMapName);
 		}
-		return (PageMap)pageMapForName.get(pageMapName);
+		return pageMap;
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Automatically creates a page map, giving it a session unique name.
 	 * 
-	 * @return The currently active request cycle for this session
+	 * @return Created PageMap
 	 */
-	public final RequestCycle getRequestCycle()
+	public synchronized final PageMap createAutoPageMap()
 	{
-		return cycle;
+		return newPageMap(createAutoPageMapName());
+	}
+
+	/**
+	 * With this call you can create a pagemap name but not create the pagemap
+	 * itself already. It will give the first pagemap name where it couldn't
+	 * find a current pagemap for.
+	 * 
+	 * It will return the same name if you call it 2 times in a row.
+	 * 
+	 * @return The created pagemap name
+	 */
+	public synchronized final String createAutoPageMapName()
+	{
+		String name = "wicket-" + autoCreatePageMapCounter;
+		PageMap pm = pageMapForName(name, false);
+		while (pm != null)
+		{
+			autoCreatePageMapCounter++;
+			name = "wicket-" + autoCreatePageMapCounter;
+			pm = pageMapForName(name, false);
+		}
+		return name;
+	}
+
+	/**
+	 * @return A list of all PageMaps in this session.
+	 */
+	public final List getPageMaps()
+	{
+		final List list = new ArrayList();
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageMapAttributePrefix))
+			{
+				list.add(getAttribute(attribute));
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * @return Size of this session, including all the pagemaps it contains
+	 */
+	public final long getSizeInBytes()
+	{
+		long size = Objects.sizeof(this);
+		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
+		{
+			final PageMap pageMap = (PageMap)iterator.next();
+			size += pageMap.getSizeInBytes();
+		}
+		return size;
 	}
 
 	/**
@@ -348,11 +540,33 @@ public abstract class Session implements Serializable
 	{
 		return style;
 	}
-	
+
 	/**
-	 * Invalidates this session
+	 * Set the session for each PageMap
 	 */
-	public abstract void invalidate();
+	public final void init()
+	{
+		// Set session on each page map
+		visitPageMaps(new IPageMapVisitor()
+		{
+			public void pageMap(PageMap pageMap)
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("updateSession(): Attaching session to PageMap " + pageMap);
+				}
+				pageMap.setSession(Session.this);
+			}
+		});
+	}
+
+	/**
+	 * Invalidates this session.
+	 */
+	public void invalidate()
+	{
+		getSessionStore().invalidate(RequestCycle.get().getRequest());
+	}
 
 	/**
 	 * Creates a new page map with a given name
@@ -363,8 +577,18 @@ public abstract class Session implements Serializable
 	 */
 	public final PageMap newPageMap(final String name)
 	{
+		// Check that session doesn't have too many page maps already
+		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
+		if (usedPageMaps.size() >= maxPageMaps)
+		{
+			PageMap pm = (PageMap)usedPageMaps.getFirst();
+			pm.remove();
+		}
+
+		// Create new page map
 		final PageMap pageMap = new PageMap(name, this);
-		pageMapForName.put(name, pageMap);
+		setAttribute(attributeForPageMapName(name), pageMap);
+		dirty();
 		return pageMap;
 	}
 
@@ -380,37 +604,22 @@ public abstract class Session implements Serializable
 	 *            The response
 	 * @return The new request cycle.
 	 */
+	// FIXME post 1.2 Move to application. We really shouldn't need a session to make request cycles.
+	// see https://sourceforge.net/tracker/?func=detail&atid=684975&aid=1468853&group_id=119783
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
 	}
 
 	/**
-	 * Removes the given page from the cache. This method may be useful if you
-	 * have special knowledge that a given page cannot be accessed again. For
-	 * example, the user may have closed a popup window.
-	 * 
-	 * @param page
-	 *            The page to remove
+	 * @param pageMap
+	 *            Page map to remove
 	 */
-	public final void remove(final Page page)
+	public final void removePageMap(final PageMap pageMap)
 	{
-		page.getPageMap().remove(page);
-	}
-
-	/**
-	 * Removes all pages from the session. Although this method should rarely be
-	 * needed, it is available (possibly for security reasons).
-	 */
-	public final void removeAll()
-	{
-		visitPageMaps(new IVisitor()
-		{
-			public void pageMap(PageMap pageMap)
-			{
-				pageMap.removeAll();
-			}
-		});
+		usedPageMaps.remove(pageMap);
+		removeAttribute(attributeForPageMapName(pageMap.getName()));
+		dirty();
 	}
 
 	/**
@@ -424,6 +633,25 @@ public abstract class Session implements Serializable
 	public final void setApplication(final Application application)
 	{
 		this.application = application;
+		if (usedPages == null)
+		{
+			usedPages = new HashMap(3);
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * Sets the client info object for this session. This will only work when
+	 * {@link #getClientInfo()} is not overriden.
+	 * 
+	 * @param clientInfo
+	 *            the client info object
+	 */
+	public final void setClientInfo(ClientInfo clientInfo)
+	{
+		this.clientInfo = clientInfo;
+		dirty();
 	}
 
 	/**
@@ -434,22 +662,31 @@ public abstract class Session implements Serializable
 	 */
 	public final void setLocale(final Locale locale)
 	{
+		if (locale == null)
+		{
+			throw new IllegalArgumentException("Parameter 'locale' must not be null");
+		}
 		this.locale = locale;
 		this.converter = null;
 		dirty();
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Sets the metadata for this session using the given key. If the
+	 * metadata object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
-	 * Sets the currently active request cycle for this session.
-	 * 
-	 * @param cycle
-	 *            The request cycle
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
 	 */
-	public final void setRequestCycle(final RequestCycle cycle)
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
-		this.cycle = cycle;
+		metaData = key.set(metaData, object);
 	}
 
 	/**
@@ -457,119 +694,174 @@ public abstract class Session implements Serializable
 	 * 
 	 * @param style
 	 *            The style to set.
+	 * @return the Session object
 	 */
-	public final void setStyle(final String style)
+	public final Session setStyle(final String style)
 	{
 		this.style = style;
+		dirty();
+		return this;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * The page will be 'touched' in the session. If it wasn't added yet to the
+	 * pagemap, it will be added to the page map else it will set this page to
+	 * the front.
+	 * 
+	 * If another page was removed because of this it will be cleaned up.
+	 * 
+	 * @param page
+	 */
+	public final void touch(Page page)
+	{
+		// Touch the page in its pagemap.
+		page.getPageMap().put(page);
+	}
+
+	/**
+	 * @param visitor
+	 *            The visitor to call at each Page in this PageMap.
+	 */
+	public final void visitPageMaps(final IPageMapVisitor visitor)
+	{
+		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		{
+			final String attribute = (String)iterator.next();
+			if (attribute.startsWith(pageMapAttributePrefix))
+			{
+				visitor.pageMap((PageMap)getAttribute(attribute));
+			}
+		}
+	}
+
+
+	/**
+	 * Registers an informational feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void info(final String message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.INFO);
+	}
+
+	/**
+	 * Registers a warning feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void warn(final String message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.WARNING);
+	}
+
+	/**
+	 * Registers an error feedback message for this session
+	 * 
+	 * @param message
+	 *            The feedback message
+	 */
+	public final void error(final String message)
+	{
+		addFeedbackMessage(message, FeedbackMessage.ERROR);
+	}
+
+	/**
+	 * Gets feedback messages stored in session
+	 * 
+	 * @return unmodifiable list of feedback messages
+	 */
+	public final FeedbackMessages getFeedbackMessages()
+	{
+		if (feedbackMessages == null)
+		{
+			feedbackMessages = new FeedbackMessages();
+		}
+		return feedbackMessages;
+	}
+
+	/**
+	 * Gets the converter instance. This method returns the cached converter for
+	 * the current locale. Whenever the locale is changed, the cached value is
+	 * cleared and the converter will be recreated for the new locale on a next
+	 * request.
+	 * 
+	 * @return the converter
+	 */
+	public final IConverter getConverter()
+	{
+		if (converter == null)
+		{
+			// Let the factory create a new converter
+			converter = getApplication().getApplicationSettings().getConverterFactory()
+					.newConverter(getLocale());
+		}
+		return converter;
+	}
+
+	/**
+	 * Adds a feedback message to the list of messages
+	 * 
+	 * @param message
+	 * @param level
+	 * 
+	 */
+	private void addFeedbackMessage(String message, int level)
+	{
+		getFeedbackMessages().add(null, message, level);
 		dirty();
 	}
 
 	/**
-	 * Replicates this session to the cluster if it has changed.
+	 * Any detach logic for session subclasses. This is called on the end of
+	 * handling a request, when the RequestCycle is about to be detached from
+	 * the current thread.
 	 */
-	public void updateCluster()
+	protected void detach()
 	{
-		// If state is dirty
-		if (dirty)
-		{
-			log.debug("updateCluster(): Session is dirty.  Replicating.");
-
-			// State is no longer dirty
-			this.dirty = false;
-
-			// Set attribute.
-			setAttribute(sessionAttributeName, this);
-		}
-		else
-		{
-			log.debug("updateCluster(): Session not dirty.");
-		}
-
-		// Go through all pages in all page maps, replicating any dirty pages
-		visitPageMaps(new IVisitor()
-		{
-			public void pageMap(PageMap pageMap)
-			{
-				pageMap.visitPages(new PageMap.IVisitor()
-				{
-					public void page(Page page)
-					{
-						if (page.isDirty())
-						{
-							page.setDirty(false);
-							replicate(page);
-						}
-					}
-				});
-			}
-		});
 	}
 
 	/**
-	 * Updates this session using changed state information that may have been
-	 * replicated to this node on a cluster.
+	 * Marks session state as dirty
 	 */
-	public final void updateSession()
+	protected final void dirty()
 	{
-		// Go through each page map in the session
-		log.debug("updateSession(): Updating session.");
-		visitPageMaps(new IVisitor()
-		{
-			public void pageMap(PageMap pageMap)
-			{
-				log.debug("updateSession(): Attaching session to PageMap " + pageMap);
-				pageMap.setSession(Session.this);
-			}
-		});
-
-		// Get PageStates from session attributes
-		log.debug("updateSession(): Getting PageState attributes.");
-		final List pageStates = getPageStateAttributes();
-
-		// Sort page states so that they can be added in reverse order of
-		// creation. This ensures that any newer pages will bump out older ones.
-		sortBySequenceNumber(pageStates);
-
-		// Adds pages to session
-		addPages(pageStates);
-		log.debug("updateSession(): Done updating session.");
+		this.dirty = true;
 	}
 
 	/**
-	 * Adds page to session if not already added.
+	 * Gets the attribute value with the given name
 	 * 
-	 * @param page
-	 *            Page to add to this session
-	 */
-	protected final void add(final Page page)
-	{
-		// Set page map for page. If cycle is null, we may be being called from
-		// some kind of test harness, so we will just use the default page map
-		final String pageMapName = cycle == null ? PageMap.defaultName : cycle.getRequest()
-				.getParameter("pagemap");
-		page.setPageMap(pageMapName);
-
-		// Add to page local transient page map
-		final Page removedPage = page.getPageMap().add(page);
-
-		// Get any page that was removed
-		if (removedPage != null)
-		{
-			removeAttribute(removedPage.getId());
-		}
-	}
-
-	/**
 	 * @param name
 	 *            The name of the attribute to store
 	 * @return The value of the attribute
 	 */
-	protected abstract Object getAttribute(final String name);
+	protected final Object getAttribute(final String name)
+	{
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			return getSessionStore().getAttribute(cycle.getRequest(), name);
+		}
+		return null;
+	}
 
 	/**
 	 * @return List of attributes for this session
 	 */
-	protected abstract List getAttributeNames();
+	protected final List getAttributeNames()
+	{
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			return getSessionStore().getAttributeNames(cycle.getRequest());
+		}
+		return null;
+	}
 
 	/**
 	 * @return Request cycle factory for this kind of session.
@@ -577,194 +869,212 @@ public abstract class Session implements Serializable
 	protected abstract IRequestCycleFactory getRequestCycleFactory();
 
 	/**
-	 * Gets a PageState record for a given Page. The default, inefficient
-	 * implementation is to simply wrap the entire Page object. More intimate
-	 * knowledge of a Page, however, may allow significant compression of state
-	 * information.
+	 * Gets the session store.
+	 * 
+	 * @return the session store
+	 */
+	protected final ISessionStore getSessionStore()
+	{
+		if (sessionStore == null)
+		{
+			sessionStore = application.getSessionStore(); 
+		}
+		return sessionStore;
+	}
+
+	/**
+	 * Removes the attribute with the given name.
+	 * 
+	 * @param name
+	 *            the name of the attribute to remove
+	 */
+	protected final void removeAttribute(String name)
+	{
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			getSessionStore().removeAttribute(cycle.getRequest(), name);
+		}
+	}
+
+	/**
+	 * Adds or replaces the attribute with the given name and value.
+	 * 
+	 * @param name
+	 *            The name of the attribute
+	 * @param value
+	 *            The value of the attribute
+	 */
+	protected final void setAttribute(String name, Object value)
+	{
+		RequestCycle cycle = RequestCycle.get();
+		if (cycle != null)
+		{
+			// Set the actual attribute
+			getSessionStore().setAttribute(cycle.getRequest(), name, value);
+			return;
+		}
+		
+		throw new WicketRuntimeException("Can not set the attribute. No RequestCycle available");
+	}
+
+	/**
+	 * Updates the session, e.g. for replication purposes.
+	 */
+	protected void update()
+	{
+		// If state is dirty
+		if (dirty)
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("update: Session is dirty.  Replicating.");
+			}
+
+			// State is no longer dirty
+			this.dirty = false;
+
+			// Set attribute.
+			setAttribute(SESSION_ATTRIBUTE_NAME, this);
+		}
+		else
+		{
+			if (log.isDebugEnabled())
+			{
+				log.debug("update: Session not dirty.");
+			}
+		}
+
+		// Go through all dirty entries, replicating any dirty objects
+		List dirtyObjects = (List)Session.dirtyObjects.get();
+		if (dirtyObjects != null)
+		{
+			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
+			{
+				String attribute = null;
+				Object object = iterator.next();
+				if (object instanceof Page)
+				{
+					final Page page = (Page)object;
+					if (page.isStateless())
+					{
+						// check, can it be that stateless pages where added to the session?
+						// and should be removed now?
+						continue;
+					}
+					attribute = page.getPageMap().attributeForId(page.getNumericId());
+					if(getAttribute(attribute) == null)
+					{
+						// page removed by another thread. don't add it again.
+						continue;
+					}
+					object = page.getPageMapEntry();
+				}
+				else if (object instanceof PageMap)
+				{
+					attribute = attributeForPageMapName(((PageMap)object).getName());
+				}
+
+				setAttribute(attribute, object);
+			}
+			Session.dirtyObjects.set(null);
+		}
+	}
+
+	/**
+	 * Removes any rendered feedback messages as well as compacts memory. This
+	 * method is usually called at the end of the request cycle processing.
+	 */
+	final void cleanupFeedbackMessages()
+	{
+		if (feedbackMessages != null)
+		{
+			Iterator msgs = feedbackMessages.iterator();
+			while (msgs.hasNext())
+			{
+				final FeedbackMessage msg = (FeedbackMessage)msgs.next();
+				if (msg.isRendered())
+				{
+					msgs.remove();
+					dirty();
+				}
+			}
+			if (feedbackMessages.size() == 0)
+			{
+				feedbackMessages = null;
+				dirty();
+			}
+			else
+			{
+				feedbackMessages.trimToSize();
+			}
+		}
+	}
+
+	/**
+	 * @param page
+	 *            The page to add to dirty objects list
+	 */
+	void dirtyPage(final Page page)
+	{
+		List dirtyObjects = getDirtyObjectsList();
+		if (!dirtyObjects.contains(page))
+		{
+			dirtyObjects.add(page);
+		}
+	}
+
+	/**
+	 * INTERNAL API. Page was detached event.
 	 * 
 	 * @param page
-	 *            The page
-	 * @return The page state record
+	 *            The page that was detached
 	 */
-	protected PageState newPageState(final Page page)
+	final synchronized void pageDetached(Page page)
 	{
-		return page.newPageState();
+		usedPages.remove(page.getId());
+		notifyAll();
 	}
 
 	/**
-	 * @param name
-	 *            The name of the attribute to remove
+	 * @param map
+	 *            The page map to add to dirty objects list
 	 */
-	protected abstract void removeAttribute(final String name);
-
-	/**
-	 * @param name
-	 *            The name of the attribute to store
-	 * @param object
-	 *            The attribute value
-	 */
-	protected abstract void setAttribute(final String name, final Object object);
-
-	/**
-	 * Marks session state as dirty
-	 */
-	final void dirty()
+	void dirtyPageMap(final PageMap map)
 	{
-		this.dirty = true;
+		if (!map.isDefault())
+		{
+			usedPageMaps.remove(map);
+			usedPageMaps.addLast(map);
+		}
+		List dirtyObjects = getDirtyObjectsList();
+		if (!dirtyObjects.contains(map))
+		{
+			dirtyObjects.add(map);
+		}
 	}
 
 	/**
-	 * Get the page with the given id.
-	 * 
 	 * @param pageMapName
-	 *            Page map name
-	 * @param id
-	 *            Page id
-	 * @return Page with the given id
+	 *            Name of page map
+	 * @return Session attribute holding page map
 	 */
-	final Page getPage(final String pageMapName, final String id)
+	private final String attributeForPageMapName(final String pageMapName)
 	{
-		// This call will always mark the Page dirty
-		return (Page)getPageMap(pageMapName).get(id);
+		return pageMapAttributePrefix + pageMapName;
 	}
 
 	/**
-	 * @return The next access number
+	 * @return The current thread dirty objects list
 	 */
-	final int nextPageStateSequenceNumber()
+	List getDirtyObjectsList()
 	{
-		dirty();
-		return this.pageStateSequenceNumber++;
-	}
-
-	/**
-	 * @param pageMap
-	 *            Page map to remove
-	 */
-	final void removePageMap(final PageMap pageMap)
-	{
-		pageMapForName.remove(pageMap);
-	}
-
-	/**
-	 * @param visitor
-	 *            The visitor to call at each Page in this PageMap.
-	 */
-	final void visitPageMaps(final IVisitor visitor)
-	{
-		for (final Iterator iterator = pageMapForName.values().iterator(); iterator.hasNext();)
+		List list = (List)dirtyObjects.get();
+		if (list == null)
 		{
-			visitor.pageMap((PageMap)iterator.next());
+			list = new ArrayList(4);
+			dirtyObjects.set(list);
 		}
-	}
-
-	/**
-	 * @param pageStates
-	 */
-	private final void addPages(final List pageStates)
-	{
-		// Add page states as need be
-		for (final Iterator iterator = pageStates.iterator(); iterator.hasNext();)
-		{
-			// Get next attribute name
-			final PageState pageState = (PageState)iterator.next();
-
-			// If PageState has not been added to the session
-			if (!pageState.addedToSession)
-			{
-				// Get page from page state
-				final Page page = pageState.getPage();
-				log.debug("addPages(): Adding replicated page state " + pageState
-						+ ", which produced page " + page);
-
-				// Add to page map specified in page state info
-				attach(page);
-				getPageMap(pageState.pageMapName).put(page);
-
-				// Page has been added to session now
-				pageState.addedToSession = true;
-			}
-		}
-	}
-
-	/**
-	 * @param page
-	 *            The page to traverse
-	 */
-	private final void attach(Page page)
-	{
-		page.visitChildren(new Component.IVisitor()
-		{
-			public Object component(Component component)
-			{
-				component.onSessionAttach();
-				return Component.IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-	}
-
-	/**
-	 * @return List of PageState values set as session attributes
-	 */
-	private final List getPageStateAttributes()
-	{
-		// PageStates to add
-		final List pageStates = new ArrayList();
-
-		// Copy any changed pages into our (transient) Session
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
-		{
-			// Get attribute value
-			final Object value = getAttribute((String)iterator.next());
-			if (value instanceof PageState)
-			{
-				pageStates.add(value);
-			}
-		}
-		return pageStates;
-	}
-
-	/**
-	 * Called when an PageState record should be added to the replicated state
-	 * 
-	 * @param page
-	 *            The page to replicate
-	 */
-	private final void replicate(final Page page)
-	{
-		// Create PageState for page
-		final PageState pageState = newPageState(page);
-		//pageState.addedToSession = true;
-		pageState.pageMapName = page.getPageMap().getName();
-
-		// Set HttpSession attribute for new PageState
-		setAttribute(page.getId(), pageState);
-	}
-
-	/**
-	 * @param pageStates
-	 */
-	private final void sortBySequenceNumber(final List pageStates)
-	{
-		// Sort in ascending order by access number so that pages which have
-		// a higher access number (which means they were accessed more recently)
-		// are added /last/.
-		Collections.sort(pageStates, new Comparator()
-		{
-			public int compare(Object object1, Object object2)
-			{
-				int sequenceNumber1 = ((PageState)object1).sequenceNumber;
-				int sequenceNumber2 = ((PageState)object2).sequenceNumber;
-				if (sequenceNumber1 < sequenceNumber2)
-				{
-					return -1;
-				}
-				if (sequenceNumber1 > sequenceNumber2)
-				{
-					return 1;
-				}
-				return 0;
-			}
-		});
+		return list;
 	}
 }

@@ -17,13 +17,16 @@
  */
 package wicket.markup;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import wicket.Response;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.XmlTag.Type;
 import wicket.markup.parser.filter.HtmlHandler;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
-import wicket.util.value.LowerCaseKeyValueMap;
+import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 
 /**
@@ -58,15 +61,31 @@ public class ComponentTag extends MarkupElement
 
 	/** The component's id identified by wicket:id="xxx" */
 	private String id;
+
+	/** The component's path in the markup */
+	private String path;
+
+	/** True, if attributes have been modified or added */
+	private boolean modified = false;
 	
-	/** Additional attributes map. Attributes contributed by <wicket:param> */
-	private LowerCaseKeyValueMap additionalAttributes;
+	/**
+	 * In case of inherited markup, the base and the extended markups are merged
+	 * and the information about the tags origin is lost. In some cases like
+	 * wicket:head and wicket:link this information however is required.
+	 */
+	private Class markupClass;
+
+	/**
+	 * Tags which are detected to have only an open tag, which is allowed with
+	 * some HTML tags like 'br' for example
+	 */
+	private boolean hasNoCloseTag = false;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param tag
-	 *			  The underlying xml tag
+	 *            The underlying xml tag
 	 */
 	public ComponentTag(final XmlTag tag)
 	{
@@ -78,7 +97,7 @@ public class ComponentTag extends MarkupElement
 	 * Gets whether this tag closes the provided open tag.
 	 * 
 	 * @param open
-	 *			  The open tag
+	 *            The open tag
 	 * @return True if this tag closes the given open tag
 	 */
 	public final boolean closes(final MarkupElement open)
@@ -96,7 +115,7 @@ public class ComponentTag extends MarkupElement
 	 * converted into Wicket bookmarkable URLs.
 	 * 
 	 * @param autolink
-	 *			  enable/disable automatic href conversion
+	 *            enable/disable automatic href conversion
 	 */
 	public final void enableAutolink(final boolean autolink)
 	{
@@ -181,10 +200,10 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#getString(String)
 	 * @param key
-	 *			  The key
+	 *            The key
 	 * @return The string value
 	 */
-	public final String getString(String key)
+	public final CharSequence getString(String key)
 	{
 		return xmlTag.getString(key);
 	}
@@ -231,7 +250,7 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @param id
-	 *			  Required component id
+	 *            Required component id
 	 * @return True if this tag is an open tag with the given component name
 	 * @see wicket.markup.parser.XmlTag#isOpen()
 	 */
@@ -251,13 +270,24 @@ public class ComponentTag extends MarkupElement
 
 	/**
 	 * @param id
-	 *			  Required component id
+	 *            Required component id
 	 * @return True if this tag is an openclose tag with the given component id
 	 * @see wicket.markup.parser.XmlTag#isOpenClose()
 	 */
 	public final boolean isOpenClose(String id)
 	{
 		return xmlTag.isOpenClose() && this.id.equals(id);
+	}
+
+	/**
+	 * Compare tag name including namespace
+	 * 
+	 * @param tag
+	 * @return true if name and namespace are equal
+	 */
+	public boolean hasEqualTagName(final ComponentTag tag)
+	{
+		return xmlTag.hasEqualTagName(tag.getXmlTag());
 	}
 
 	/**
@@ -275,7 +305,7 @@ public class ComponentTag extends MarkupElement
 	 * it is immutable.
 	 * 
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
-	 *		   if it is immutable.
+	 *         if it is immutable.
 	 */
 	public ComponentTag mutable()
 	{
@@ -287,7 +317,9 @@ public class ComponentTag extends MarkupElement
 		{
 			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
 			tag.id = id;
-			tag.getAdditionalAttributes().putAll(this.additionalAttributes); 
+			tag.setMarkupClass(this.markupClass);
+			tag.setHasNoCloseTag(this.hasNoCloseTag);
+			tag.setPath(this.path);
 			return tag;
 		}
 	}
@@ -295,9 +327,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#put(String, boolean)
 	 * @param key
-	 *			  The key
+	 *            The key
 	 * @param value
-	 *			  The value
+	 *            The value
 	 */
 	public final void put(String key, boolean value)
 	{
@@ -307,9 +339,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#put(String, int)
 	 * @param key
-	 *			  The key
+	 *            The key
 	 * @param value
-	 *			  The value
+	 *            The value
 	 */
 	public final void put(String key, int value)
 	{
@@ -319,11 +351,11 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#put(String, String)
 	 * @param key
-	 *			  The key
+	 *            The key
 	 * @param value
-	 *			  The value
+	 *            The value
 	 */
-	public final void put(String key, String value)
+	public final void put(String key, CharSequence value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -331,9 +363,9 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#put(String, StringValue)
 	 * @param key
-	 *			  The key
+	 *            The key
 	 * @param value
-	 *			  The value
+	 *            The value
 	 */
 	public final void put(String key, StringValue value)
 	{
@@ -343,7 +375,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#putAll(Map)
 	 * @param map
-	 *			  a key/value map
+	 *            a key/value map
 	 */
 	public final void putAll(final Map map)
 	{
@@ -353,7 +385,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#remove(String)
 	 * @param key
-	 *			  The key to remove
+	 *            The key to remove
 	 */
 	public final void remove(String key)
 	{
@@ -367,7 +399,14 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean requiresCloseTag()
 	{
-		return HtmlHandler.requiresCloseTag(this.getName());
+		if (getNamespace() == null)
+		{
+			return HtmlHandler.requiresCloseTag(getName());
+		}
+		else
+		{
+			return HtmlHandler.requiresCloseTag(getNamespace() + ":" + getName());
+		}
 	}
 
 	/**
@@ -375,7 +414,7 @@ public class ComponentTag extends MarkupElement
 	 * attribute, e.g. wicket:id="componentId".
 	 * 
 	 * @param id
-	 *			  The component's id assigned to the tag.
+	 *            The component's id assigned to the tag.
 	 */
 	public final void setId(final String id)
 	{
@@ -385,7 +424,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.parser.XmlTag#setName(String)
 	 * @param name
-	 *			  New tag name
+	 *            New tag name
 	 */
 	public final void setName(String name)
 	{
@@ -393,12 +432,22 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * @see wicket.markup.parser.XmlTag#setNamespace(String)
+	 * @param namespace
+	 *            New tag name namespace
+	 */
+	public final void setNamespace(String namespace)
+	{
+		xmlTag.setNamespace(namespace);
+	}
+
+	/**
 	 * Assuming this is a close tag, assign it's corresponding open tag.
 	 * 
 	 * @param tag
-	 *			  the open-tag
+	 *            the open-tag
 	 * @throws RuntimeException
-	 *			   if 'this' is not a close tag
+	 *             if 'this' is not a close tag
 	 */
 	public final void setOpenTag(final ComponentTag tag)
 	{
@@ -410,7 +459,7 @@ public class ComponentTag extends MarkupElement
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * @param type
-	 *			  The new type
+	 *            The new type
 	 */
 	public final void setType(final Type type)
 	{
@@ -420,9 +469,25 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @return A synthetic close tag for this tag
 	 */
-	public final String syntheticCloseTagString()
+	public final CharSequence syntheticCloseTagString()
 	{
-		return "</" + getName() + ">";
+		AppendingStringBuffer buf = new AppendingStringBuffer();
+		buf.append("</");
+		if (getNamespace() != null)
+		{
+			buf.append(getNamespace()).append(":");
+		}
+		buf.append(getName()).append(">");
+
+		return buf;
+	}
+	
+	/**
+	 * @see wicket.markup.MarkupElement#toCharSequence()
+	 */
+	public CharSequence toCharSequence()
+	{
+		return xmlTag.toCharSequence();
 	}
 
 	/**
@@ -432,29 +497,80 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final String toString()
 	{
-		return xmlTag.toString();
+		return toCharSequence().toString();
 	}
 
 	/**
-	 * Converts this object to a string representation.
+	 * Write the tag to the response
 	 * 
-	 * @param stripWicketAttributes If true, tag attributes with namespace
-	 *		'wicket# will not be printed. 
-	 * @param namespace Wicket namespace
-	 * @return String version of this object
+	 * @param response
+	 *            The response to write to
+	 * @param stripWicketAttributes
+	 *            if true, wicket:id are removed from output
+	 * @param namespace
+	 *            Wicket's namespace to use
 	 */
-	public final String toString(final boolean stripWicketAttributes, final String namespace)
+	public final void writeOutput(final Response response, final boolean stripWicketAttributes,
+			final String namespace)
 	{
-		if (stripWicketAttributes == false)
+		response.write("<");
+
+		if (getType() == XmlTag.CLOSE)
 		{
-			return xmlTag.toXmlString(null);
+			response.write("/");
 		}
-		else
+
+		if (getNamespace() != null)
 		{
-			return xmlTag.toXmlString(namespace + ":id");
+			response.write(getNamespace());
+			response.write(":");
 		}
+
+		response.write(getName());
+		
+		String namespacePrefix = null;
+		if (stripWicketAttributes == true)
+		{
+			namespacePrefix = namespace + ":";
+		}
+
+		if (getAttributes().size() > 0)
+		{
+			final Iterator iterator = getAttributes().keySet().iterator();
+			while (iterator.hasNext())
+			{
+				final String key = (String)iterator.next();
+				if (key == null)
+				{
+					continue;
+				}
+				
+				if ((namespacePrefix == null) || (key.startsWith(namespacePrefix) == false))
+				{
+					response.write(" ");
+					response.write(key);
+					CharSequence value = getString(key);
+
+					// attributes without values are possible, e.g. 'disabled'
+					if (value != null)
+					{
+						response.write("=\"");
+						value = Strings.replaceAll(value, "\"", "\\\"");
+						response.write(value);
+						response.write("\"");
+					}
+				}
+			}
+		}
+
+		if (getType() == XmlTag.OPEN_CLOSE)
+		{
+			response.write("/");
+		}
+
+		response.write(">");
 	}
-	
+
 	/**
 	 * Converts this object to a string representation including useful
 	 * information for debugging
@@ -473,22 +589,87 @@ public class ComponentTag extends MarkupElement
 	{
 		return xmlTag;
 	}
-	
+
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
-	 * Get additional attributes contributed by &lt;wicket:param&gt;
+	 * Manually mark the ComponentTag being modified. Flagging the tag being
+	 * modified does not happen automatically.
 	 * 
-	 * @return additional attributes
+	 * @param modified
 	 */
-	public final LowerCaseKeyValueMap getAdditionalAttributes()
+	public final void setModified(final boolean modified)
 	{
-	    if (this.additionalAttributes == null)
-	    {
-	        this.additionalAttributes = new LowerCaseKeyValueMap();  
-	    }
-	    
-	    return this.additionalAttributes;
+		this.modified = modified;
 	}
 
+	/**
+	 * 
+	 * @return True, if the component tag has been marked modified
+	 */
+	public final boolean isModified()
+	{
+		return this.modified;
+	}
+
+	/**
+	 * Gets the component path of wicket elements
+	 * 
+	 * @return path
+	 */
+	public String getPath()
+	{
+		return path;
+	}
+
+	/**
+	 * Sets the component path of wicket elements
+	 * 
+	 * @param path
+	 *            path
+	 */
+	void setPath(final String path)
+	{
+		this.path = path;
+	}
+
+	/**
+	 * 
+	 * @return True if the HTML tag (e.g. br) has no close tag
+	 */
+	public boolean hasNoCloseTag()
+	{
+		return hasNoCloseTag;
+	}
+
+	/**
+	 * True if the HTML tag (e.g. br) has no close tag
+	 * 
+	 * @param hasNoCloseTag 
+	 */
+	public void setHasNoCloseTag(boolean hasNoCloseTag)
+	{
+		this.hasNoCloseTag = hasNoCloseTag;
+	}
+
+	/**
+	 * In case of inherited markup, the base and the extended markups are merged
+	 * and the information about the tags origin is lost. In some cases like
+	 * wicket:head and wicket:link this information however is required.
+	 * 
+	 * @return wicketHeaderClass
+	 */
+	public Class getMarkupClass()
+	{
+		return markupClass;
+	}
+
+	/**
+	 * Set the class of wicket component which contains the wicket:head tag.
+	 * 
+	 * @param wicketHeaderClass
+	 *            wicketHeaderClass
+	 */
+	public void setMarkupClass(Class wicketHeaderClass)
+	{
+		this.markupClass = wicketHeaderClass;
+	}
 }

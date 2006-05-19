@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,7 +20,7 @@ import java.net.URL;
 
 /**
  * Knows how to find resources.
- *
+ * 
  * @author jcompagner
  */
 public interface IResourceFinder
@@ -33,5 +32,5 @@ public interface IResourceFinder
 	 *            The filename with possible path
 	 * @return The url located on the path
 	 */
-	public URL find(final String pathname);
+	URL find(final String pathname);
 }

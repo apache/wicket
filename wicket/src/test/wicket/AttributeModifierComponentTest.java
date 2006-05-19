@@ -54,8 +54,12 @@ public class AttributeModifierComponentTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null);
-		application.getPages().setHomePage(AttributeModifierComponentPage.class);
+		application = new MockWebApplication(null) {
+			public Class getHomePage()
+			{
+				return AttributeModifierComponentPage.class;
+			}
+		};
 	}
 
 	/**

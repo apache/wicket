@@ -21,12 +21,9 @@ package wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.list.ListItem;
-import wicket.markup.html.list.PageableListView;
-import wicket.markup.html.list.PageableListViewNavigationIncrementLink;
+import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
 
 
 /**
@@ -34,12 +31,13 @@ import wicket.markup.html.list.PageableListViewNavigationIncrementLink;
  */
 public class IncrementalTableNavigationPage extends WebPage
 {
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
-	 * @param parameters page parameters.
+	 *  page parameters.
 	 */
-	public IncrementalTableNavigationPage(final PageParameters parameters)
+	public IncrementalTableNavigationPage()
 	{
 		super();
 		List list = new ArrayList();
@@ -54,6 +52,8 @@ public class IncrementalTableNavigationPage extends WebPage
 
 		PageableListView table = new PageableListView("table", list, 2)
 		{
+			private static final long serialVersionUID = 1L;
+
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
@@ -62,10 +62,10 @@ public class IncrementalTableNavigationPage extends WebPage
 		};
 
 		add(table);
-		PageableListViewNavigationIncrementLink prev = new PageableListViewNavigationIncrementLink(
+		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink(
 				"prev", table, -1);
 		add(prev);
-		PageableListViewNavigationIncrementLink nextNext = new PageableListViewNavigationIncrementLink(
+		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink(
 				"nextNext", table, +2);
 		add(nextNext);
 	}

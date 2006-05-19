@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: UploadPage.java 4619 2006-02-23 14:25:06 -0800 (Thu, 23 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-23 14:25:06 -0800 (Thu, 23 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,10 +28,11 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
 import wicket.markup.html.form.upload.FileUpload;
 import wicket.markup.html.form.upload.FileUploadField;
-import wicket.markup.html.form.upload.UploadForm;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -67,14 +69,12 @@ public class UploadPage extends WicketExamplePage
 	public UploadPage(final PageParameters parameters)
 	{
 		// Set upload folder to tempdir + 'wicket-uploads'.
-		this.uploadFolder = uploadFolder = new Folder(System.getProperty("java.io.tmpdir"),
-				"wicket-uploads");
-		
+		this.uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
+
 		// Ensure folder exists
 		uploadFolder.mkdirs();
 
 		// Create feedback panels
-		final FeedbackPanel simpleUploadFeedback = new FeedbackPanel("simpleUploadFeedback");
 		final FeedbackPanel uploadFeedback = new FeedbackPanel("uploadFeedback");
 
 		// Add uploadFeedback to the page itself
@@ -83,7 +83,6 @@ public class UploadPage extends WicketExamplePage
 		// Add simple upload form, which is hooked up to its feedback panel by
 		// virtue of that panel being nested in the form.
 		final FileUploadForm simpleUploadForm = new FileUploadForm("simpleUpload");
-		simpleUploadForm.add(simpleUploadFeedback);
 		add(simpleUploadForm);
 
 		// Add folder view
@@ -91,6 +90,12 @@ public class UploadPage extends WicketExamplePage
 		files.addAll(Arrays.asList(uploadFolder.listFiles()));
 		fileListView = new FileListView("fileList", files);
 		add(fileListView);
+
+		// Add upload form with ajax progress bar
+		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm("ajax-simpleUpload");
+		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
+		add(ajaxSimpleUploadForm);
+
 	}
 
 	/**
@@ -124,7 +129,7 @@ public class UploadPage extends WicketExamplePage
 	/**
 	 * Form for uploads.
 	 */
-	private class FileUploadForm extends UploadForm
+	private class FileUploadForm extends Form
 	{
 		private FileUploadField fileUploadField;
 
@@ -138,15 +143,18 @@ public class UploadPage extends WicketExamplePage
 		{
 			super(name);
 
+			// set this form to multipart mode (allways needed for uploads!)
+			setMultiPart(true);
+
 			// Add one file input field
 			add(fileUploadField = new FileUploadField("fileInput"));
-			
+
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));
 		}
 
 		/**
-		 * @see wicket.markup.html.form.upload.UploadForm#onSubmit()
+		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
 		protected void onSubmit()
 		{
@@ -154,17 +162,17 @@ public class UploadPage extends WicketExamplePage
 			if (upload != null)
 			{
 				// Create a new file
-				File newFile = new File(uploadFolder, upload.getFile().getName());
+				File newFile = new File(uploadFolder, upload.getClientFileName());
 
 				// Check new file, delete if it allready existed
 				checkFileExists(newFile);
 				try
 				{
 					// Save to new file
-					newFile.createNewFile(); 
+					newFile.createNewFile();
 					upload.writeTo(newFile);
 
-					UploadPage.this.info("saved file: " + upload.getFile());
+					UploadPage.this.info("saved file: " + upload.getClientFileName());
 				}
 				catch (Exception e)
 				{
@@ -174,26 +182,6 @@ public class UploadPage extends WicketExamplePage
 				// refresh the file list view
 				refreshFiles();
 			}
-		}
-
-		/**
-		 * Gets the last part of the string after c or the string itself when c
-		 * is not found.
-		 * 
-		 * @param s
-		 *            the string
-		 * @param c
-		 *            the char
-		 * @return part of string
-		 */
-		private String afterLast(final String s, final char c)
-		{
-			final int index = s.lastIndexOf(c);
-			if (index == -1)
-			{
-				return s;
-			}
-			return s.substring(index + 1);
 		}
 	}
 

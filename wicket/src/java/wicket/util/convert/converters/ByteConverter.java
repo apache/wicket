@@ -30,6 +30,8 @@ import wicket.util.convert.ITypeConverter;
  */
 public final class ByteConverter extends AbstractIntegerConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * The singleton instance for a byte converter
 	 */

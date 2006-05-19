@@ -19,12 +19,14 @@ package wicket.markup.html.border;
 
 
 /**
- * Test the component: WicketComponentTree
+ * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */
 public class BorderComponent2 extends Border
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * @param id
 	 */

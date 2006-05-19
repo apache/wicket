@@ -28,10 +28,42 @@ import java.util.Map;
  * 
  * @author Eelco Hillenius
  */
-public final class DateConverter extends AbstractConverter
+public class DateConverter extends AbstractConverter
 {
+	private static final long serialVersionUID = 1L;
+
 	/** The date format to use for the specific locales (used as the key)*/
-	private Map dateFormats = new HashMap();
+	private final Map dateFormats = new HashMap();
+
+	/** 
+     * Specify whether or not date/time parsing is to be lenient.  With
+     * lenient parsing, the parser may use heuristics to interpret inputs that
+     * do not precisely match this object's format.  With strict parsing,
+     * inputs must match the object's format.
+	 */
+	private final boolean lenient;
+
+	/**
+	 * Construct. Lenient is false.
+	 */
+	public DateConverter()
+	{
+		super();
+		lenient = false;
+	}
+
+	/**
+	 * Construct.
+	 * @param lenient when true, parsing is lenient. With
+     * lenient parsing, the parser may use heuristics to interpret inputs that
+     * do not precisely match this object's format.  With strict parsing,
+     * inputs must match the object's format.
+	 */
+	public DateConverter(boolean lenient)
+	{
+		super();
+		this.lenient = lenient;
+	}
 
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
@@ -45,12 +77,13 @@ public final class DateConverter extends AbstractConverter
 	 * @param locale 
 	 * @return Returns the date format.
 	 */
-	public final DateFormat getDateFormat(Locale locale)
+	public DateFormat getDateFormat(Locale locale)
 	{
 		DateFormat dateFormat = (DateFormat)dateFormats.get(locale);
 		if (dateFormat == null)
 		{
 			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+			dateFormat.setLenient(lenient);
 			dateFormats.put(locale, dateFormat);
 		}
 		return dateFormat;

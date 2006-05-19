@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 1.6 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,6 @@
  */
 package wicket.examples.panels.signin;
 
-import wicket.IFeedback;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
@@ -68,27 +67,24 @@ public abstract class SignInPanel extends Panel
 		 * 
 		 * @param id
 		 *            id of the form component
-		 * @param feedback
-		 *            The feedback panel to update
 		 */
-		public SignInForm(final String id, final IFeedback feedback)
+		public SignInForm(final String id)
 		{
-			super(id, feedback);
+			super(id);
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			add(username = new TextField("username", new PropertyModel(properties,
-					"username")));
-			add(password = new PasswordTextField("password", new PropertyModel(
-					properties, "password")));
+			add(username = new TextField("username", new PropertyModel(properties, "username")));
+			add(password = new PasswordTextField("password", new PropertyModel(properties,
+					"password")));
 
 			// MarkupContainer row for remember me checkbox
 			WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(
-					SignInPanel.this, "rememberMe")));
+			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(SignInPanel.this,
+					"rememberMe")));
 
 			// Make form values persistent
 			setPersistent(rememberMe);
@@ -107,17 +103,10 @@ public abstract class SignInPanel extends Panel
 				// If login has been called because the user was not yet
 				// logged in, than continue to the original destination,
 				// otherwise to the Home page
-				if (getPage().continueToOriginalDestination())
+				if (!continueToOriginalDestination())
 				{
-					// HTTP redirect response has been committed. No more data
-					// shall be written to the response.
-					setResponsePage(null);
-				}
-				else
-				{
-					setResponsePage(getApplicationSettings().getDefaultPageFactory()
-							.newPage(getApplicationPages().getHomePage(),
-									(PageParameters) null));
+					setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
+							getApplication().getHomePage(), (PageParameters)null));
 				}
 			}
 			else
@@ -159,7 +148,7 @@ public abstract class SignInPanel extends Panel
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler
-		add(new SignInForm("signInForm", feedback));
+		add(new SignInForm("signInForm"));
 	}
 
 	/**

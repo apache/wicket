@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,10 +28,10 @@ public interface IStringIterator
 	/**
 	 * @return True if there is a next string
 	 */
-	public boolean hasNext();
+	boolean hasNext();
 
 	/**
 	 * @return The next string!
 	 */
-	public String next();
+	String next();
 }

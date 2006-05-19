@@ -19,6 +19,7 @@ package wicket.markup.html.list;
 
 import java.util.List;
 
+import wicket.markup.html.navigation.paging.IPageable;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
 
@@ -29,7 +30,7 @@ import wicket.version.undo.Change;
  * 
  * @author Jonathan Locke
  */
-public abstract class PageableListView extends ListView
+public abstract class PageableListView extends ListView implements IPageable
 {
 	/** The page to show. */
 	private int currentPage;
@@ -162,28 +163,27 @@ public abstract class PageableListView extends ListView
 
 
 	/**
-	 * Prevent users from accidentially using it. Throw an
-	 * IllegalArgumentException.
+	 * Prevent users from accidentially using it.
 	 * 
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)
+	 * @throws UnsupportedOperationException always
 	 */
-	public ListView setStartIndex(int startIndex) throws IllegalArgumentException
+	public ListView setStartIndex(int startIndex) throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException(
 				"You must not use setStartIndex() with PageableListView");
 	}
 
 	/**
-	 * Prevent users from accidentially using it. Throw an
-	 * IllegalArgumentException.
+	 * Prevent users from accidentially using it.
 	 * 
 	 * @param size
 	 *            the view size
 	 * @return This
-	 * @throws IllegalArgumentException
+	 * @throws UnsupportedOperationException always
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)
 	 */
-	public ListView setViewSize(int size) throws IllegalArgumentException
+	public ListView setViewSize(int size) throws UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException(
 				"You must not use setViewSize() with PageableListView");
@@ -194,6 +194,8 @@ public abstract class PageableListView extends ListView
 	 */
 	private class CurrentPageChange extends Change
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** the former 'current' page. */
 		private int currentPage;
 
@@ -212,6 +214,14 @@ public abstract class PageableListView extends ListView
 		{
 			setCurrentPage(currentPage);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "CurrentPageChange[currentPage: " + currentPage + "]";
+		}
 	}
 
 	/**
@@ -219,6 +229,8 @@ public abstract class PageableListView extends ListView
 	 */
 	private class RowsPerPageChange extends Change
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** the former nbr of rows per page. */
 		private int rowsPerPage;
 
@@ -237,5 +249,14 @@ public abstract class PageableListView extends ListView
 		{
 			setRowsPerPage(rowsPerPage);
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "RowsPerPageChange[component: " + getPath() + ", prefix: " + rowsPerPage + "]";
+		}
 	}
+
 }

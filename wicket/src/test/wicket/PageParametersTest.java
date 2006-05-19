@@ -38,4 +38,47 @@ public class PageParametersTest extends TestCase
 		PageParameters parameters = new PageParameters("a=-1");
 		assertEquals("-1", parameters.get("a"));
 	}
+
+	/**
+	 * 
+	 */
+	public void test_1()
+	{
+		PageParameters parameters = new PageParameters("0=test");
+		assertEquals("test", parameters.get("0"));
+	}
+
+	/**
+	 * 
+	 */
+	public void test_2()
+	{
+		PageParameters parameters = new PageParameters("test");
+		assertNull(parameters.get("test"));
+	}
+
+	/**
+	 * 
+	 */
+	public void test_3()
+	{
+		PageParameters parameters = new PageParameters("test=");
+		assertEquals("", parameters.get("test"));
+	}
+
+	/**
+	 * 
+	 */
+	public void test_4()
+	{
+		try
+		{
+			PageParameters parameters = new PageParameters("=test");
+			fail("Expected an exception: invalid URL parameter");
+		}
+		catch(IllegalArgumentException ex)
+		{
+			// ok; expected
+		}
+	}
 }

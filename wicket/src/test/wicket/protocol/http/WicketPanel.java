@@ -28,6 +28,8 @@ import wicket.markup.html.panel.Panel;
  */
 public class WicketPanel extends Panel 
 {
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Construct.
 	 * @param id

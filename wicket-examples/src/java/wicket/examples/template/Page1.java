@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,20 +18,23 @@ package wicket.examples.template;
 
 
 /**
- * Our base page that serves as a template for pages that inherit from it. Doesn't have
- * to be abstract, but was made abstract here to stress the fact that this page is not
- * meant for direct use.
+ * Our base page that serves as a template for pages that inherit from it.
+ * Doesn't have to be abstract, but was made abstract here to stress the fact
+ * that this page is not meant for direct use.
  * 
  * @author Eelco Hillenius
  */
 public class Page1 extends TemplatePage
 {
-    /**
-     * Constructor
-     */
-    public Page1()
-    {
-    	super();
-    	setPageTitle("Template example, page 1");
-    }
+	/**
+	 * Constructor
+	 */
+	public Page1()
+	{
+		super();
+		setPageTitle("Template example, page 1");
+
+		// markup inheritance for panels (and borders probably doesn't work yet
+		// add(new Panel1("panel1"));
+	}
 }

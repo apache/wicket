@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 
 
@@ -26,11 +25,12 @@ import wicket.markup.html.WebPage;
  */
 public class MarkupInheritanceBase_1 extends WebPage 
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
-	 * @param parameters
 	 */
-	public MarkupInheritanceBase_1(final PageParameters parameters) 
+	public MarkupInheritanceBase_1() 
 	{
     }
 }

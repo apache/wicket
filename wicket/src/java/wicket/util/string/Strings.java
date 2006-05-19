@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,14 +17,14 @@
  */
 package wicket.util.string;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.dom4j.Node;
+import wicket.WicketRuntimeException;
 
 /**
  * A variety of static String utility methods.
@@ -51,9 +51,32 @@ import org.dom4j.Node;
  */
 public final class Strings
 {
-    private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+
+	/** A table of hex digits */
+	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
+			'B', 'C', 'D', 'E', 'F' };
 
 	/**
+	 * The line seperator for the current platform.
+	 */
+	public static final String LINE_SEPARATOR;
+
+	static
+	{
+		LINE_SEPARATOR = (String)AccessController.doPrivileged(new PrivilegedAction()
+		{
+			public Object run()
+			{
+				return System.getProperty("line.separator");
+			}
+		});
+	}
+
+	/**
+	 * Returns everything after the first occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -63,6 +86,10 @@ public final class Strings
 	 */
 	public static String afterFirst(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.indexOf(c);
 
 		if (index == -1)
@@ -92,6 +119,8 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything after the last occurence of the given character in s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -101,6 +130,10 @@ public final class Strings
 	 */
 	public static String afterLast(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.lastIndexOf(c);
 
 		if (index == -1)
@@ -112,6 +145,9 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything before the first occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -121,6 +157,10 @@ public final class Strings
 	 */
 	public static String beforeFirst(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.indexOf(c);
 
 		if (index == -1)
@@ -132,6 +172,9 @@ public final class Strings
 	}
 
 	/**
+	 * Returns everything before the last occurrence of the given character in
+	 * s.
+	 * 
 	 * @param s
 	 *            The string
 	 * @param c
@@ -141,6 +184,10 @@ public final class Strings
 	 */
 	public static String beforeLast(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final int index = s.lastIndexOf(c);
 
 		if (index == -1)
@@ -170,7 +217,7 @@ public final class Strings
 	}
 
 	/**
-	 * Capitalizes a string
+	 * Capitalizes a string.
 	 * 
 	 * @param s
 	 *            The string
@@ -178,6 +225,10 @@ public final class Strings
 	 */
 	public static String capitalize(final String s)
 	{
+		if (s == null)
+		{
+			return null;
+		}
 		final char[] chars = s.toCharArray();
 
 		if (chars.length > 0)
@@ -197,7 +248,7 @@ public final class Strings
 	 * @see Strings#escapeMarkup(String, boolean)
 	 * @return The escaped string
 	 */
-	public static String escapeMarkup(final String s)
+	public static CharSequence escapeMarkup(final String s)
 	{
 		return escapeMarkup(s, false);
 	}
@@ -215,7 +266,7 @@ public final class Strings
 	 *            True to replace ' ' with nonbreaking space
 	 * @return The escaped string
 	 */
-	public static String escapeMarkup(final String s, final boolean escapeSpaces)
+	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces)
 	{
 		return escapeMarkup(s, escapeSpaces, false);
 	}
@@ -235,8 +286,8 @@ public final class Strings
 	 *            True to convert non-7 bit characters to unicode HTML (&#...)
 	 * @return The escaped string
 	 */
-	public static String escapeMarkup(final String s,
-			final boolean escapeSpaces, final boolean convertToHtmlUnicodeEscapes)
+	public static CharSequence escapeMarkup(final String s, final boolean escapeSpaces,
+			final boolean convertToHtmlUnicodeEscapes)
 	{
 		if (s == null)
 		{
@@ -244,9 +295,9 @@ public final class Strings
 		}
 		else
 		{
-			final StringBuffer buffer = new StringBuffer();
-
 			int len = s.length();
+			final AppendingStringBuffer buffer = new AppendingStringBuffer((int)(len * 1.1));
+
 			for (int i = 0; i < len; i++)
 			{
 				final char c = s.charAt(i);
@@ -285,46 +336,46 @@ public final class Strings
 						buffer.append("&gt;");
 						break;
 
-					case '&':
+					case '&' :
 
 						// if this is an entity (&#), then do not convert
 						if ((i < len - 1) && (s.charAt(i + 1) == '#'))
-					    {
+						{
 							buffer.append(c);
-							
-					    }
+
+						}
 						else
 						{
 							// it is not an entity, so convert it to &amp;
 							buffer.append("&amp;");
 						}
-					    break;
+						break;
 
-					case '"':
-					    buffer.append("&quot;");
-					    break;
+					case '"' :
+						buffer.append("&quot;");
+						break;
 
-					case '\'':
-					    buffer.append("&#039;");
-					    break;
+					case '\'' :
+						buffer.append("&#039;");
+						break;
 
 					default :
 
 						if (convertToHtmlUnicodeEscapes)
 						{
-			                int ci = 0xffff & c;
-			                if (ci < 160 )
-							{   
+							int ci = 0xffff & c;
+							if (ci < 160)
+							{
 								// nothing special only 7 Bit
 								buffer.append(c);
 							}
 							else
 							{
-			                    // Not 7 Bit use the unicode system
+								// Not 7 Bit use the unicode system
 								buffer.append("&#");
 								buffer.append(new Integer(ci).toString());
 								buffer.append(';');
-			                }
+							}
 						}
 						else
 						{
@@ -335,30 +386,35 @@ public final class Strings
 				}
 			}
 
-			return buffer.toString();
+			return buffer;
 		}
 	}
 
 	/**
 	 * Replace HTML numbers like &#20540 by the appropriate character.
 	 * 
-	 * @param str The text to be evaluated
+	 * @param str
+	 *            The text to be evaluated
 	 * @return The text with "numbers" replaced
 	 */
 	public static String replaceHtmlEscapeNumber(String str)
 	{
+		if (str == null)
+		{
+			return null;
+		}
 		Matcher matcher = htmlNumber.matcher(str);
 		while (matcher.find())
 		{
-		    int pos = matcher.start();
-		    int end = matcher.end();
-		    int number = Integer.parseInt(str.substring(pos+2, end-1));
-		    char ch = (char)number;
-		    str = str.substring(0, pos) + ch + str.substring(end);
+			int pos = matcher.start();
+			int end = matcher.end();
+			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
+			char ch = (char)number;
+			str = str.substring(0, pos) + ch + str.substring(end);
 			matcher = htmlNumber.matcher(str);
 		}
-		
-	    return str;
+
+		return str;
 	}
 
 	/**
@@ -377,6 +433,10 @@ public final class Strings
 	 */
 	public static String firstPathComponent(final String path, final char separator)
 	{
+		if (path == null)
+		{
+			return null;
+		}
 		final int index = path.indexOf(separator);
 
 		if (index == -1)
@@ -388,20 +448,62 @@ public final class Strings
 	}
 
 	/**
+	 * Checks whether the <code>string</code> is considered empty. Empty means
+	 * that the string may contain whitespace, but no visible characters.
+	 * 
+	 * "\n\t " is considered empty, while " a" is not.
+	 * 
 	 * @param string
 	 *            The string
 	 * @return True if the string is null or ""
 	 */
-	public static boolean isEmpty(final String string)
+	public static boolean isEmpty(final CharSequence string)
 	{
-		return string == null || string.trim().equals("");
+		return string == null || string.length() == 0 || string.toString().trim().equals("");
 	}
 
 	/**
+	 * Checks whether two strings are equals taken care of 'null' values and
+	 * treating 'null' same as trim(string).equals("")
+	 * 
+	 * @param string1
+	 * @param string2
+	 * @return true, if both strings are equal
+	 */
+	public static boolean isEqual(final String string1, final String string2)
+	{
+		if ((string1 == null) && (string2 == null))
+		{
+			return true;
+		}
+
+		if (isEmpty(string1) && isEmpty(string2))
+		{
+			return true;
+		}
+		if (string1 == null || string2 == null)
+		{
+			return false;
+		}
+
+		return string1.equals(string2);
+	}
+
+	/**
+	 * Converts the text in <code>s</code> to a corresponding boolean. On,
+	 * yes, y, true and 1 are converted to <code>true</code>. Off, no, n,
+	 * false and 0 (zero) are converted to <code>false</code>. An empty
+	 * string is converted to <code>false</code>. Conversion is
+	 * case-insensitive, and does <em>not</em> take internationalization into
+	 * account.
+	 * 
+	 * 'Ja', 'Oui', 'Igen', 'Nein', 'Nee', 'Non', 'Nem' are all illegal values.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Boolean value
+	 *            the value to convert into a boolean
+	 * @return Boolean the converted value of <code>s</code>
 	 * @throws StringValueConversionException
+	 *             when the value of <code>s</code> is not recognized.
 	 */
 	public static boolean isTrue(final String s) throws StringValueConversionException
 	{
@@ -467,7 +569,7 @@ public final class Strings
 	}
 
 	/**
-	 * Replace all occurrences of one string replaceWith another string
+	 * Replace all occurrences of one string replaceWith another string.
 	 * 
 	 * @param s
 	 *            The string to process
@@ -477,10 +579,31 @@ public final class Strings
 	 *            The value to searchFor replaceWith
 	 * @return The resulting string with searchFor replaced with replaceWith
 	 */
-	public static String replaceAll(final String s, final String searchFor, final String replaceWith)
+	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor,
+			CharSequence replaceWith)
 	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		// If searchFor is null or the empty string, then there is nothing to
+		// replace, so returning s is the only option here.
+		if (searchFor == null || "".equals(searchFor))
+		{
+			return s;
+		}
+
+		// If replaceWith is null, then the searchFor should be replaced with
+		// nothing, which can be seen as the empty string.
+		if (replaceWith == null)
+		{
+			replaceWith = "";
+		}
+
+		String searchString = searchFor.toString();
 		// Look for first occurrence of searchFor
-		int matchIndex = s.indexOf(searchFor);
+		int matchIndex = search(s, searchString, 0);
 		if (matchIndex == -1)
 		{
 			// No replace operation needs to happen
@@ -488,7 +611,8 @@ public final class Strings
 		}
 		else
 		{
-			// Allocate a StringBuffer that will hold one replacement with a
+			// Allocate a AppendingStringBuffer that will hold one replacement
+			// with a
 			// little extra room.
 			int size = s.length();
 			final int replaceWithLength = replaceWith.length();
@@ -497,34 +621,211 @@ public final class Strings
 			{
 				size += (replaceWithLength - searchForLength);
 			}
-			final StringBuffer buffer = new StringBuffer(size + 16);
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(size + 16);
 
 			int pos = 0;
 			do
 			{
-				// Append text up to the match
-				buffer.append(s.substring(pos, matchIndex));
+				// Append text up to the match`
+				append(buffer, s, pos, matchIndex);
 
 				// Add replaceWith text
 				buffer.append(replaceWith);
 
 				// Find next occurrence, if any
 				pos = matchIndex + searchForLength;
-				matchIndex = s.indexOf(searchFor, pos);
+				matchIndex = search(s, searchString, pos);
 			}
 			while (matchIndex != -1);
 
-			// add tail of s
-			buffer.append(s.substring(pos));
+			// Add tail of s
+			buffer.append(s.subSequence(pos, s.length()));
 
-			// return processed buffer
-			return buffer.toString();
+			// Return processed buffer
+			return buffer;
 		}
 	}
 
 	/**
+	 * Converts encoded &#92;uxxxx to unicode chars and changes special saved
+	 * chars to their original forms.
+	 * 
+	 * @param escapedUnicodeString
+	 *            escaped unicode string, like '\u4F60\u597D'.
+	 * 
+	 * @return The actual unicode. Can be used for instance with message bundles
+	 */
+	public static String fromEscapedUnicode(String escapedUnicodeString)
+	{
+		int off = 0;
+		char[] in = escapedUnicodeString.toCharArray();
+		int len = in.length;
+		char[] convtBuf = new char[len];
+
+		if (convtBuf.length < len)
+		{
+			int newLen = len * 2;
+			if (newLen < 0)
+			{
+				newLen = Integer.MAX_VALUE;
+			}
+			convtBuf = new char[newLen];
+		}
+		char aChar;
+		char[] out = convtBuf;
+		int outLen = 0;
+		int end = off + len;
+
+		while (off < end)
+		{
+			aChar = in[off++];
+			if (aChar == '\\')
+			{
+				aChar = in[off++];
+				if (aChar == 'u')
+				{
+					// Read the xxxx
+					int value = 0;
+					for (int i = 0; i < 4; i++)
+					{
+						aChar = in[off++];
+						switch (aChar)
+						{
+							case '0' :
+							case '1' :
+							case '2' :
+							case '3' :
+							case '4' :
+							case '5' :
+							case '6' :
+							case '7' :
+							case '8' :
+							case '9' :
+								value = (value << 4) + aChar - '0';
+								break;
+							case 'a' :
+							case 'b' :
+							case 'c' :
+							case 'd' :
+							case 'e' :
+							case 'f' :
+								value = (value << 4) + 10 + aChar - 'a';
+								break;
+							case 'A' :
+							case 'B' :
+							case 'C' :
+							case 'D' :
+							case 'E' :
+							case 'F' :
+								value = (value << 4) + 10 + aChar - 'A';
+								break;
+							default :
+								throw new IllegalArgumentException("Malformed \\uxxxx encoding.");
+						}
+					}
+					out[outLen++] = (char)value;
+				}
+				else
+				{
+					if (aChar == 't')
+						aChar = '\t';
+					else if (aChar == 'r')
+						aChar = '\r';
+					else if (aChar == 'n')
+						aChar = '\n';
+					else if (aChar == 'f')
+						aChar = '\f';
+					out[outLen++] = aChar;
+				}
+			}
+			else
+			{
+				out[outLen++] = (char)aChar;
+			}
+		}
+		return new String(out, 0, outLen);
+	}
+
+	/**
+	 * Converts unicodes to encoded &#92;uxxxx.
+	 * 
+	 * @param unicodeString
+	 *            The unicode string
+	 * @return The escaped unicode string, like '\u4F60\u597D'.
+	 */
+	public static String toEscapedUnicode(String unicodeString)
+	{
+		int len = unicodeString.length();
+		int bufLen = len * 2;
+		StringBuffer outBuffer = new StringBuffer(bufLen);
+		for (int x = 0; x < len; x++)
+		{
+			char aChar = unicodeString.charAt(x);
+			// Handle common case first, selecting largest block that
+			// avoids the specials below
+			if ((aChar > 61) && (aChar < 127))
+			{
+				if (aChar == '\\')
+				{
+					outBuffer.append('\\');
+					outBuffer.append('\\');
+					continue;
+				}
+				outBuffer.append(aChar);
+				continue;
+			}
+			switch (aChar)
+			{
+				case ' ' :
+					if (x == 0)
+						outBuffer.append('\\');
+					outBuffer.append(' ');
+					break;
+				case '\t' :
+					outBuffer.append('\\');
+					outBuffer.append('t');
+					break;
+				case '\n' :
+					outBuffer.append('\\');
+					outBuffer.append('n');
+					break;
+				case '\r' :
+					outBuffer.append('\\');
+					outBuffer.append('r');
+					break;
+				case '\f' :
+					outBuffer.append('\\');
+					outBuffer.append('f');
+					break;
+				case '=' : // Fall through
+				case ':' : // Fall through
+				case '#' : // Fall through
+				case '!' :
+					outBuffer.append('\\');
+					outBuffer.append(aChar);
+					break;
+				default :
+					if ((aChar < 0x0020) || (aChar > 0x007e))
+					{
+						outBuffer.append('\\');
+						outBuffer.append('u');
+						outBuffer.append(toHex((aChar >> 12) & 0xF));
+						outBuffer.append(toHex((aChar >> 8) & 0xF));
+						outBuffer.append(toHex((aChar >> 4) & 0xF));
+						outBuffer.append(toHex(aChar & 0xF));
+					}
+					else
+					{
+						outBuffer.append(aChar);
+					}
+			}
+		}
+		return outBuffer.toString();
+	}
+
+	/**
 	 * Simpler, faster version of String.split() for splitting on a simple
-	 * character
+	 * character.
 	 * 
 	 * @param s
 	 *            The string to split
@@ -534,6 +835,10 @@ public final class Strings
 	 */
 	public static String[] split(final String s, final char c)
 	{
+		if (s == null)
+		{
+			return new String[0];
+		}
 		final List strings = new ArrayList();
 		int pos = 0;
 		while (true)
@@ -556,6 +861,8 @@ public final class Strings
 	}
 
 	/**
+	 * Strips the ending from the string <code>s</code>.
+	 * 
 	 * @param s
 	 *            The string to strip
 	 * @param ending
@@ -565,8 +872,28 @@ public final class Strings
 	 */
 	public static String stripEnding(final String s, final String ending)
 	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		// Stripping a null or empty string from the end returns the
+		// original string.
+		if (ending == null || "".equals(ending))
+		{
+			return s;
+		}
+		final int endingLength = ending.length();
+		final int sLength = s.length();
+
+		// When the length of the ending string is larger
+		// than the original string, the original string is returned.
+		if (endingLength > sLength)
+		{
+			return s;
+		}
 		final int index = s.lastIndexOf(ending);
-		final int endpos = s.length() - ending.length();
+		final int endpos = sLength - endingLength;
 
 		if (index == endpos)
 		{
@@ -578,10 +905,15 @@ public final class Strings
 
 
 	/**
+	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
+	 * values of s.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Boolean value
+	 *            The string to convert.
+	 * @return Boolean <code>TRUE</code> when <code>isTrue(s)</code>.
 	 * @throws StringValueConversionException
+	 *             when s is not a valid value
+	 * @see #isTrue(String)
 	 */
 	public static Boolean toBoolean(final String s) throws StringValueConversionException
 	{
@@ -589,10 +921,14 @@ public final class Strings
 	}
 
 	/**
+	 * Converts the 1 character string s to a character.
+	 * 
 	 * @param s
-	 *            String
-	 * @return Character value
+	 *            The 1 character string to convert to a char.
+	 * @return Character value to convert
 	 * @throws StringValueConversionException
+	 *             when the string is longer or shorter than 1 character, or
+	 *             <code>null</code>.
 	 */
 	public static char toChar(final String s) throws StringValueConversionException
 	{
@@ -614,20 +950,26 @@ public final class Strings
 
 	/**
 	 * Converts a String to multiline HTML markup by replacing newlines with
-	 * line break entities (&lt;br&gt;) and multiple occurrences of newline with
-	 * paragraph break entities (&lt;p&gt;).
+	 * line break entities (&lt;br/&gt;) and multiple occurrences of newline
+	 * with paragraph break entities (&lt;p&gt;).
 	 * 
 	 * @param s
 	 *            String to transform
 	 * @return String with all single occurrences of newline replaced with
-	 *         &lt;br&gt; and all multiple occurrences of newline replaced with
+	 *         &lt;br/&gt; and all multiple occurrences of newline replaced with
 	 *         &lt;p&gt;.
 	 */
-	public static String toMultilineMarkup(final String s)
+	public static CharSequence toMultilineMarkup(final CharSequence s)
 	{
-		final StringBuffer buffer = new StringBuffer();
+		if (s == null)
+		{
+			return null;
+		}
+
+		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		int newlineCount = 0;
 
+		buffer.append("<p>");
 		for (int i = 0; i < s.length(); i++)
 		{
 			final char c = s.charAt(i);
@@ -644,11 +986,11 @@ public final class Strings
 				default :
 					if (newlineCount == 1)
 					{
-						buffer.append("<br>");
+						buffer.append("<br/>");
 					}
 					else if (newlineCount > 1)
 					{
-						buffer.append("<p>");
+						buffer.append("</p><p>");
 					}
 
 					buffer.append(c);
@@ -656,12 +998,20 @@ public final class Strings
 					break;
 			}
 		}
-
-		return buffer.toString();
+		if (newlineCount == 1)
+		{
+			buffer.append("<br/>");
+		}
+		else if (newlineCount > 1)
+		{
+			buffer.append("</p><p>");
+		}
+		buffer.append("</p>");
+		return buffer;
 	}
 
 	/**
-	 * Converts the given object to a string
+	 * Converts the given object to a string.
 	 * 
 	 * @param object
 	 *            The object
@@ -669,17 +1019,13 @@ public final class Strings
 	 */
 	public static String toString(final Object object)
 	{
-		if (object instanceof Throwable)
-		{
-			return toString((Throwable)object);
-		}
-		else if (object instanceof Node)
-		{
-			return ((Node)object).getText();
-		}
-		else if (object == null)
+		if (object == null)
 		{
 			return null;
+		}
+		else if (object instanceof Throwable)
+		{
+			return toString((Throwable)object);
 		}
 		else
 		{
@@ -688,7 +1034,7 @@ public final class Strings
 	}
 
 	/**
-	 * Converts a Throwable to a string
+	 * Converts a Throwable to a string.
 	 * 
 	 * @param throwable
 	 *            The throwable
@@ -698,9 +1044,38 @@ public final class Strings
 	{
 		if (throwable != null)
 		{
-			final StringWriter stringWriter = new StringWriter();
-			throwable.printStackTrace(new PrintWriter(stringWriter));
-			return Strings.replaceAll(stringWriter.toString(), "\t", "    ");
+			ArrayList al = new ArrayList();
+			Throwable cause = throwable;
+			al.add(cause);
+			while (cause.getCause() != null && cause != cause.getCause())
+			{
+				cause = cause.getCause();
+				al.add(cause);
+			}
+
+			AppendingStringBuffer sb = new AppendingStringBuffer(256);
+			// first print the last cause
+			int length = al.size() - 1;
+			cause = (Throwable)al.get(length);
+			if (throwable instanceof WicketRuntimeException)
+			{
+				sb.append("WicketMessage: ");
+				sb.append(throwable.getMessage());
+				sb.append("\n\n");
+			}
+			sb.append("Root cause:\n\n");
+			outputThrowable(cause, sb, false);
+
+			if (length > 0)
+			{
+				sb.append("\n\nComplete stack:\n\n");
+				for (int i = 0; i < length; i++)
+				{
+					outputThrowable((Throwable)al.get(i), sb, true);
+					sb.append("\n");
+				}
+			}
+			return sb.toString();
 		}
 		else
 		{
@@ -709,7 +1084,90 @@ public final class Strings
 	}
 
 	/**
-	 * Private constructor prevents construction
+	 * Outputs the throwable and its stacktrace to the stringbuffer. If
+	 * stopAtWicketSerlvet is true then the output will stop when the wicket
+	 * servlet is reached. sun.reflect. packages are filtered out.
+	 * 
+	 * @param cause
+	 * @param sb
+	 * @param stopAtWicketServlet
+	 */
+	private static void outputThrowable(Throwable cause, AppendingStringBuffer sb,
+			boolean stopAtWicketServlet)
+	{
+		sb.append(cause);
+		sb.append("\n");
+		StackTraceElement[] trace = cause.getStackTrace();
+		for (int i = 0; i < trace.length; i++)
+		{
+			String traceString = trace[i].toString();
+			if (!(traceString.startsWith("sun.reflect.") && i > 1))
+			{
+				sb.append("     at ");
+				sb.append(traceString);
+				sb.append("\n");
+				if (stopAtWicketServlet
+						&& traceString.startsWith("wicket.protocol.http.WicketServlet"))
+				{
+					return;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Convert a nibble to a hex character
+	 * 
+	 * @param nibble
+	 *            the nibble to convert.
+	 * @return hex character
+	 */
+	private static char toHex(int nibble)
+	{
+		return hexDigit[(nibble & 0xF)];
+	}
+
+	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
+	{
+		if (s instanceof AppendingStringBuffer)
+		{
+			AppendingStringBuffer asb = (AppendingStringBuffer)s;
+			buffer.append(asb.getValue(), from, to - from);
+		}
+		else if (s instanceof StringBuffer)
+		{
+			buffer.append((StringBuffer)s, from, to - from);
+		}
+		else
+		{
+			buffer.append(s.subSequence(from, to));
+		}
+	}
+
+	private static int search(final CharSequence s, String searchString, int pos)
+	{
+		int matchIndex = -1;
+		if (s instanceof String)
+		{
+			matchIndex = ((String)s).indexOf(searchString, pos);
+		}
+		else if (s instanceof StringBuffer)
+		{
+			matchIndex = ((StringBuffer)s).indexOf(searchString, pos);
+		}
+		else if (s instanceof AppendingStringBuffer)
+		{
+			matchIndex = ((AppendingStringBuffer)s).indexOf(searchString, pos);
+		}
+		else
+		{
+			matchIndex = s.toString().indexOf(searchString);
+		}
+		return matchIndex;
+	}
+
+	/**
+	 * Private constructor prevents construction.
 	 */
 	private Strings()
 	{

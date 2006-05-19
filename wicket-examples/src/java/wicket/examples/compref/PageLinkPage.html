@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.link.PageLink</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	The basic PageLink component allows you to navigate to other pages. It uses the
+	application scope configured IPageFactory to create a new page instance.<br />
+	<i>NOTE: using PageLink is a style thing. You can just as easily create a normal link and set the
+	response page in the onClick handler. One extra here is that PageLink tries to detect
+	whether the link points to the same page you are in, and if you are, it will disable
+	the link.</i>
+	</p>
+
+	<p>
+	<a wicket:id="pageLink">go to our private/ non bookmarkable page</a>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

@@ -17,16 +17,26 @@
  */
 package wicket.markup.html.form.encryption;
 
+import wicket.WicketTestCase;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCrypt;
 import wicket.util.crypt.SunJceCrypt;
-import junit.framework.TestCase;
 
 /**
  * @author Juergen Donnerstag
  */
-public class CryptTest extends TestCase
+public class CryptTest extends WicketTestCase
 {
+    /**
+     * Construct.
+     * 
+     * @param name
+     */
+    public CryptTest(String name)
+    {
+	super(name);
+    }
+
 	/**
 	 * 
 	 */
@@ -37,9 +47,12 @@ public class CryptTest extends TestCase
 
 		assertEquals("test", crypt.encrypt("test"));
 		assertEquals("test", crypt.decrypt("test"));
+		assertEquals("test", crypt.encryptUrlSafe("test"));
+		assertEquals("test", crypt.decryptUrlSafe("test"));
 	}
 
 	/**
+	 * 
 	 * 
 	 */
 	public void testCrypt()
@@ -50,8 +63,14 @@ public class CryptTest extends TestCase
 		{
 			if (crypt.encrypt("test") != null)
 			{
-				assertEquals("KxMxhk6i4Us=", crypt.encrypt("test"));
-				assertEquals("test", crypt.decrypt("KxMxhk6i4Us="));
+				final String text = "abcdefghijkABC: A test which creates a '/' and/or a '+'";
+				final String expectedDefaultEncrypted = "g+N/AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd+go0P+0kuIe6UvAYP7dlzx+9mfmPaMQ5lCk=";
+				final String expectedUrlSafeEncrypted = "g*N-AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd*go0P*0kuIe6UvAYP7dlzx*9mfmPaMQ5lCk";
+				
+				assertEquals(expectedDefaultEncrypted, crypt.encrypt(text));
+				assertEquals(text, crypt.decrypt(expectedDefaultEncrypted));
+				assertEquals(expectedUrlSafeEncrypted, crypt.encryptUrlSafe(text));
+				assertEquals(text, crypt.decrypt(expectedUrlSafeEncrypted));
 			}
 		}
 		catch (Exception ex)

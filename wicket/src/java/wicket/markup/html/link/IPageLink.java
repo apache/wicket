@@ -48,7 +48,7 @@ public interface IPageLink extends Serializable
 	 * 
 	 * @return The page to go to.
 	 */
-	public Page getPage();
+	Page getPage();
 
 	/**
 	 * Gets the class of the destination page, which serves as a form of
@@ -76,5 +76,5 @@ public interface IPageLink extends Serializable
 	 * @return The class of page linked to, as a form of identity
 	 * @see Link#linksTo(Page)
 	 */
-	public Class getPageIdentity();
+	Class getPageIdentity();
 }

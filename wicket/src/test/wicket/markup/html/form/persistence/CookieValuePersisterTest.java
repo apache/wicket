@@ -62,7 +62,7 @@ public class CookieValuePersisterTest extends TestCase
 	{
 		super.setUp();
 		application = new MockWebApplication(null);
-		application.getPages().setHomePage(CookieValuePersisterTestPage.class);
+		application.setHomePage(CookieValuePersisterTestPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 	}
@@ -89,7 +89,7 @@ public class CookieValuePersisterTest extends TestCase
 
 		// Just after init, the requests and responses cookie lists must be
 		// empty
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(0, getResponseCookies(cycle).size());
 
 		// The persister to be used for the tests
@@ -99,27 +99,27 @@ public class CookieValuePersisterTest extends TestCase
 		// Cookies works. As no cookies in the request, no "delete" cookie
 		// will be added to the response.
 		persister.clear(textField);
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(0, getResponseCookies(cycle).size());
 
 		// Save the input field's value (add it to the response's cookie list)
 		persister.save(textField);
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertNull(((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals(cycle.getWebRequest().getContextPath(),((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// To clear in the context of cookies means to add a special cookie
 		// (maxAge=0) to the response, provided a cookie with
 		// the same name has been provided in the request. Thus, no changes in
 		// our test case
 		persister.clear(textField);
-		assertEquals(0, getRequestCookies(cycle).length);
+		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertNull(((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals(cycle.getWebRequest().getContextPath(),((Cookie)getResponseCookies(cycle).get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's name
 		// it remains unchanged

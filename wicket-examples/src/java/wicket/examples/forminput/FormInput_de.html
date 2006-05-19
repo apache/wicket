@@ -6,6 +6,7 @@
 </head>
 <body>
     <span wicket:id="mainNavigation"/>
+    <form wicket:id="inputForm" id="inputForm">
 	<div>
 		Use locale: 
 		<select wicket:id="localeSelect">
@@ -15,26 +16,28 @@
 		<a href="#" wicket:id="defaultLocaleLink">[default]</a>
     </div>
 	<p>
-    <form wicket:id="inputForm" id="inputForm">
       <fieldset>
         <legend>Input Form</legend>
-
-       <table id="inputFormTable">
+       	 <table id="inputFormTable">
           <tr>
           <td valign="top">
-
 			  <label for="stringProperty">String</label>
 			  <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
 			  <label for="integerProperty">Integer</label>
 			  <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
 			  <label for="doubleProperty">Double</label>
 			  <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
-			  <label for="dateProperty">Date</label>
+			  <label wicket:id="dateLabel" for="dateProperty">Date</label>
 			  <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
 			  <span wicket:id="datePicker"></span>
+			  <label>Listview in ein Form</label>
+			  <ul>
+			   <li wicket:id="lines">
+			    <input type="text" wicket:id="lineEdit" /> 
+			   </li>
+			  </ul>
 			  <label for="booleanProperty">Boolean</label>
 			  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
-
 	      </td>
 	      <td valign="top">
 
@@ -42,27 +45,40 @@
 			  <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
 	          <label for="urlProperty">URL (muss eine gültige URL sein)</label>
 	          <input wicket:id="urlProperty" id="urlProperty" type="text" size="40"/>
-			  <label for="numberRadioChoice">Bitte eine Zahl auswählen</label>
+	          <label for="phoneNumberUS">US phone number (mask: '(###) ###-####')</label>
+	          <input wicket:id="phoneNumberUS" id="phoneNumberUS" type="text" size="40"/>        
+			  <label for="numberRadioChoice">Bitte eine Zahl auswählen (RadioChoice)</label>
 			  <span valign="top" wicket:id="numberRadioChoice" id="numberRadioChoice">
 	    		<input type="radio">foo</input>
 				<input type="radio">bar</input>
+			  </span>
+			  <span wicket:id="numbersGroup">
+			  <label>Bitte eine Zahl auswählen (RadioGroup)</label>			  
+				<span wicket:id="numbers">
+					<input type="radio" wicket:id="radio"/>
+					<span wicket:id="number">[this is where number will be]</span>
+				</span>
+			  </span>
+			  <span wicket:id="numbersCheckGroup">
+			  <label>Bitte eins oder mehr auswählen (CheckGroup)</label>			  
+				<span wicket:id="numbers">
+					<input type="checkbox" wicket:id="check"/>
+					<span wicket:id="number">[this is where number will be]</span>
+				</span>
 			  </span>
 			  <label for="siteSelection">Deine bevorzugten Seiten</label>
 			  <select wicket:id="siteSelection" id="siteSelection">
 			  	<option>foo</option>
 			  	<option>bar</option>
 			  </select>
-
 		  </td>
 		  </tr>
 		  <tr>
 		  <td colspan="2">
-
 			  <input wicket:id="saveButton" type="image" value="buttonFactory:save:Sichern"/>
 			  <a wicket:id="resetButtonLink" src="">
 			      <img wicket:id="resetButtonImage" value="buttonFactory:reset:Zurücksetzen"/> 
 			  </a>
-
 		  </td>
 		  </tr>
 		 </table>

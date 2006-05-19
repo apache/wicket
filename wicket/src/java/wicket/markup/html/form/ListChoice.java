@@ -32,6 +32,8 @@ import wicket.model.IModel;
  */
 public class ListChoice extends DropDownChoice
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
 	
@@ -124,6 +126,39 @@ public class ListChoice extends DropDownChoice
 		this.maxRows = maxRows;
 	}
 
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 */
+	public ListChoice(String id, IModel choices)
+	{
+		super(id, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 */
+	public ListChoice(String id, IModel model, IModel choices)
+	{
+		super(id, model, choices);
+	}
+	
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 */
+	public ListChoice(String id, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, choices, renderer);
+	}
+
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 */
+	public ListChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	{
+		super(id, model, choices, renderer);
+	}
+	
 	/**
 	 * Gets the maximum number of rows to display.
 	 * 

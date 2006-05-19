@@ -2,7 +2,7 @@
 
 <projectDescription>
   <name>wicket-quickstart</name>
-  <comment>Quickstart project for the Wicket framework. This project will get you up and running using Jetty as a servlet container and web server. This will allow you to quickly start developing your first &lt;a href="http://wicket.sourceforge.net"&gt;Wicket&lt;/a&gt; application.</comment>
+  <comment>A quickstart project for the Wicket framework. This project will get you up and running using Jetty as a servlet container and web server. This will allow you to quickly start developing your first Wicket application.</comment>
   <projects>
     <project>wicket</project>
   </projects>

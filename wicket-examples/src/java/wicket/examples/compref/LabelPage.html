@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.basic.Label</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	You use a label to display strings on your page.
+	</p>
+
+	<p>
+	A static label just prints out the text you fed it:<br />
+
+	<span wicket:id="staticLabel" class="mark">this text will be replaced</span>
+	</p>
+	<p>
+
+	<p>
+	Actually, each label has an instance of IModel backing it. This means
+	we can create dynamic labels, like this label that prints out the current date/time.<br />
+
+	<span wicket:id="dynamicLabel" class="mark">this text will be replaced</span>
+
+	<br />One of the first things you probably noticed, is that the date is nicely formatted,
+	hopefully even in your locale's format. This is because Wicket works with converters.
+	Converters are fully customizable and allow you to do any mapping of incomming request
+	parameters (from text), and outgoing display values (to text). Usually you won't need to
+	bother with converters yourself. Wicket comes with sensible defaults.
+	</p>
+
+	<p>
+	A lot of times, you want to get the actual text from some other location, like a
+	resource bundle:<br />
+
+	<span wicket:id="resourceLabel" class="mark">this text will be replaced</span>
+
+	<br />In this case, the actual display text will be loaded from resource bundle
+	'LabelPage.properties', and {0} will be replaced with the locale argument we fed it.
+	</p>
+
+	<p>
+	Normally, markup characters will be escaped for you in order to prevent all kinds of
+	troubles/ mess up attempts. However in this example, we actually want any markup to be
+	interpreted by the browser<br />
+
+	<span wicket:id="markupLabel" class="mark">this text will be replaced</span>
+
+	<span wicket:id="explainPanel">panel contents come here</span>
+
+</body>
+</html>

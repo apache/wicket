@@ -1,0 +1,52 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.form.RadioGroup and wicket.markup.html.form.Radio</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	A RadioGroup and Radio components let users select a single value from a group of radio buttons. These components are more flexible then the RadioChoice component in that individual radio choices are full components, unlike with RadioChoice, and thus can be used anywhere in the markup.
+	</p>
+	<p>
+	 <form wicket:id="form">
+		<span wicket:id="group">
+			<table style="border: 2px dotted #fc0; width: 400px; padding: 5px;">
+			 <tr>
+			  <td valign="top">Select a person</td>
+			  <td>
+				  <table cellspacing="0" cellpadding="2">
+					<tr>
+						<td><b>Select</b></td>
+						<td><b>First Name</b></td>
+						<td><b>Last Name</b></td>
+					</tr>
+				  	<tr wicket:id="persons">
+				  		<td><input type="radio" wicket:id="radio"/></td>
+				  		<td><span wicket:id="name">[this is where name will be]</span></td>
+				  		<td><span wicket:id="lastName">[this is where lastname will be]</span></td>
+				  	</tr>
+				  </table>
+				  <span valign="top">
+				  </span>
+			  </td>
+			 </tr>
+			 <tr>
+			  <td colspan="2" align="center">
+			   <input type="submit" value="submit" />
+			  </td>
+			 </tr>
+			</table>
+		</span>
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +27,7 @@ import javax.swing.tree.TreeModel;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.tree.Tree;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case
@@ -39,7 +40,9 @@ public class Home extends WicketExamplePage
 {
 	/**
 	 * Constructor.
-	 * @param parameters Page parameters
+	 * 
+	 * @param parameters
+	 *            Page parameters
 	 */
 	public Home(final PageParameters parameters)
 	{
@@ -63,13 +66,31 @@ public class Home extends WicketExamplePage
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		MyTree tree = new MyTree("tree", treeModel);
+		Tree tree = new Tree("tree", treeModel)
+		{
+			protected String getNodeLabel(DefaultMutableTreeNode node)
+			{
+				Object userObject = node.getUserObject();
+				return (userObject instanceof List) ? "<sub>" : String
+						.valueOf(node.getUserObject());
+			}
+		};
 		add(tree);
+
+		// and another one
+		Tree tree2 = new MyTree("tree2", treeModel);
+		add(tree2);
+
+		// and yet another one
+		Tree tree3 = new AnotherTree("tree3", treeModel);
+		add(tree3);
 	}
 
 	/**
 	 * Convert the nested lists to a tree model
-	 * @param list the list
+	 * 
+	 * @param list
+	 *            the list
 	 * @return tree model
 	 */
 	private TreeModel convertToTreeModel(List list)
@@ -83,8 +104,11 @@ public class Home extends WicketExamplePage
 
 	/**
 	 * Add a sublist to the parent.
-	 * @param parent the parent
-	 * @param sub the sub list
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param sub
+	 *            the sub list
 	 */
 	private void add(DefaultMutableTreeNode parent, List sub)
 	{

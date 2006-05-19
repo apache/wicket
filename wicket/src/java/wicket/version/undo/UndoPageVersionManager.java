@@ -17,12 +17,13 @@
  */
 package wicket.version.undo;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
-import wicket.IPageVersionManager;
 import wicket.Page;
+import wicket.util.collections.ArrayListStack;
+import wicket.version.IPageVersionManager;
 
 /**
  * A version manager implemented by recording component changes as undo records
@@ -33,21 +34,25 @@ import wicket.Page;
  */
 public class UndoPageVersionManager implements IPageVersionManager
 {
+	/** log. */
+	private static Log log = LogFactory.getLog(UndoPageVersionManager.class);
+
+	private static final long serialVersionUID = 1L;
+
 	/** The current list of changes */
 	private ChangeList changeList;
 
-	/**
-	 * Holds the change list that was applied to a given version number. For
-	 * example, the ChangeList that was /applied/ to version 0 would be stored
-	 * under the key Integer(0).
-	 */
-	private final Map appliedChangeListForVersionNumber;
+	/** Stack of change lists for undoing */
+	private final ArrayListStack changeListStack = new ArrayListStack();
+
+	/** The current version number */
+	private int currentVersionNumber = 0;
+	
+	/** Maximum number of most-recent versions to keep */
+	private final int maxVersions;
 
 	/** The page being managed */
 	private final Page page;
-
-	/** The current version number */
-	private int versionNumber = 0;
 
 	/**
 	 * Constructor
@@ -60,23 +65,12 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	public UndoPageVersionManager(final Page page, final int maxVersions)
 	{
-		// Save page that this version manager is working on
 		this.page = page;
-
-		// Create an insertion-ordered MRU map
-		this.appliedChangeListForVersionNumber = new LinkedHashMap()
-		{
-			protected boolean removeEldestEntry(final Map.Entry ignored)
-			{
-				// Tell collections class to remove oldest entry if there are
-				// more than maxVersions entries
-				return size() > maxVersions;
-			}
-		};
+		this.maxVersions = maxVersions;
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#beginVersion()
+	 * @see wicket.version.IPageVersionManager#beginVersion()
 	 */
 	public void beginVersion()
 	{
@@ -84,11 +78,11 @@ public class UndoPageVersionManager implements IPageVersionManager
 		changeList = new ChangeList();
 
 		// We are working on the next version now
-		versionNumber++;
+		currentVersionNumber++;
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentAdded(wicket.Component)
+	 * @see wicket.version.IPageVersionManager#componentAdded(wicket.Component)
 	 */
 	public void componentAdded(Component component)
 	{
@@ -96,7 +90,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentModelChanging(wicket.Component)
+	 * @see wicket.version.IPageVersionManager#componentModelChanging(wicket.Component)
 	 */
 	public void componentModelChanging(Component component)
 	{
@@ -104,15 +98,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#componentStateChanging(wicket.version.undo.Change)
-	 */
-	public void componentStateChanging(Change change)
-	{
-		changeList.componentStateChanging(change);
-	}
-	
-	/**
-	 * @see wicket.IPageVersionManager#componentRemoved(wicket.Component)
+	 * @see wicket.version.IPageVersionManager#componentRemoved(wicket.Component)
 	 */
 	public void componentRemoved(Component component)
 	{
@@ -120,26 +106,54 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#endVersion()
+	 * @see wicket.version.IPageVersionManager#componentStateChanging(wicket.version.undo.Change)
+	 */
+	public void componentStateChanging(Change change)
+	{
+		changeList.componentStateChanging(change);
+	}
+
+	/**
+	 * @see wicket.version.IPageVersionManager#endVersion()
 	 */
 	public void endVersion()
 	{
-		// Store change list under key for previous version, since the change
-		// list is the set of changes to /get/ to the current version.
-		appliedChangeListForVersionNumber.put(new Integer(getCurrentVersionNumber() - 1),
-				changeList);
+		// Push change list onto stack
+		changeListStack.push(changeList);
+		
+		// If stack is overfull, remove oldest entry
+		if (getVersions() > maxVersions)
+		{
+			expireOldestVersion();
+		}
+
+		// Make memory efficient for replication
+		changeListStack.trimToSize();
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("Version " + currentVersionNumber + " for page " + page + " stored");
+		}
+	}
+	
+	/**
+	 * Expires an old version
+	 */
+	public void expireOldestVersion()
+	{
+		changeListStack.remove(0);
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#getCurrentVersionNumber()
+	 * @see wicket.version.IPageVersionManager#getCurrentVersionNumber()
 	 */
 	public int getCurrentVersionNumber()
 	{
-		return versionNumber;
+		return currentVersionNumber;
 	}
 
 	/**
-	 * @see wicket.IPageVersionManager#getVersion(int)
+	 * @see wicket.version.IPageVersionManager#getVersion(int)
 	 */
 	public Page getVersion(final int versionNumber)
 	{
@@ -167,6 +181,14 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
+	 * @see wicket.version.IPageVersionManager#getVersions()
+	 */
+	public int getVersions()
+	{
+		return changeListStack.size();
+	}
+
+	/**
 	 * Goes back a version from the current version
 	 * 
 	 * @return True if the page was successfully reverted to its previous
@@ -174,9 +196,18 @@ public class UndoPageVersionManager implements IPageVersionManager
 	 */
 	private boolean undo()
 	{
-		// Get the change list that was applied to the previous version
-		final Integer key = new Integer(getCurrentVersionNumber() - 1);
-		final ChangeList changeList = (ChangeList)appliedChangeListForVersionNumber.get(key);
+		if (log.isDebugEnabled())
+		{
+			log.debug("UNDO: rollback " + page + " to version " + currentVersionNumber);
+		}
+
+		if(changeListStack.isEmpty())
+		{
+		    return false;
+		}
+
+		// Pop off top change list
+		final ChangeList changeList = (ChangeList)changeListStack.pop();
 		if (changeList == null)
 		{
 			return false;
@@ -185,11 +216,8 @@ public class UndoPageVersionManager implements IPageVersionManager
 		// Undo changes made to previous version to get to this version
 		changeList.undo();
 
-		// Remove version from change list map
-		appliedChangeListForVersionNumber.remove(key);
-
 		// One less version around
-		versionNumber--;
+		currentVersionNumber--;
 		return true;
 	}
 }
