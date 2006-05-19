@@ -20,6 +20,7 @@ package wicket.protocol.http;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AbortException;
 import wicket.IRedirectListener;
 import wicket.Page;
 import wicket.RequestCycle;
@@ -179,6 +180,7 @@ public class WebRequestCycle extends RequestCycle
 			{
 				// re-assign the original response
 				setResponse(currentResponse);
+				if(ex instanceof AbortException) throw ex;
 				log.error(ex.getMessage(), ex);
 				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);
