@@ -6,7 +6,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-examples</artifactId>
 	<packaging>war</packaging>
-	<version>1.2-rc4</version>
+	<version>2.0-SNAPSHOT</version>
 	<name>Wicket Examples</name>
 	<description>Examples displaying a component reference and several componens in action.</description>
 	<url>http://wicket.sourceforge.net/</url>
@@ -47,14 +47,14 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
-			<version>1.2-rc4</version>
+			<version>2.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>1.2-rc4</version>
+			<version>>2.0-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
