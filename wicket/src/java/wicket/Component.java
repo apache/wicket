@@ -219,6 +219,9 @@ import wicket.version.undo.Change;
  * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page
  * has been rendered at least once by calling doRender().
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -794,7 +797,9 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 
 	/**
 	 * Gets the converter that should be used by this component.
-	 * @param type TODO
+	 * 
+	 * @param type
+	 *            TODO
 	 * 
 	 * @return The converter that should be used by this component
 	 */
@@ -867,10 +872,11 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @return markup attributes
 	 */
-	public final ValueMap<String,CharSequence> getMarkupAttributes()
+	public final ValueMap<String, CharSequence> getMarkupAttributes()
 	{
 		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
-		ValueMap<String,CharSequence> attrs = new ValueMap<String,CharSequence>(markupStream.getTag().getAttributes());
+		ValueMap<String, CharSequence> attrs = new ValueMap<String, CharSequence>(markupStream
+				.getTag().getAttributes());
 		attrs.makeImmutable();
 		return attrs;
 	}
@@ -884,8 +890,8 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * <p>
 	 * Note: The component must have been added (directly or indirectly) to a
 	 * container with an associated markup file (Page, Panel or Border). This
-	 * TODO post 1.2 this restriction will be implicitly met after implementing 2.0's
-	 * constructor change
+	 * TODO post 1.2 this restriction will be implicitly met after implementing
+	 * 2.0's constructor change
 	 * 
 	 * @return markup id of this component, which is the result of the call to
 	 *         {@link #getPageRelativePath()} where the ':' character (the
@@ -1601,8 +1607,9 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 						}
 					});
 				}
-				
-				if (this instanceof IFeedback) {
+
+				if (this instanceof IFeedback)
+				{
 					((IFeedback)this).updateFeedback();
 				}
 
@@ -1994,7 +2001,8 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *            The parameters for thsi bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final void setResponsePage(final Class<? extends Page> cls, PageParameters<String,Object> parameters)
+	public final void setResponsePage(final Class<? extends Page> cls,
+			PageParameters<String, Object> parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -2133,7 +2141,8 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class<? extends Page> pageClass, final PageParameters<String,Object> parameters)
+	public final CharSequence urlFor(final Class<? extends Page> pageClass,
+			final PageParameters<String, Object> parameters)
 	{
 		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
 	}
@@ -2172,7 +2181,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @return Bookmarkable URL to page
 	 */
 	public final CharSequence urlFor(final PageMap pageMap, final Class<? extends Page> pageClass,
-			final PageParameters<String,Object> parameters)
+			final PageParameters<String, Object> parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
@@ -2362,7 +2371,8 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 			return Collections.emptyList();
 		}
 
-		List<IBehavior> subset = new ArrayList<IBehavior>(behaviors.size()); // avoid growing
+		List<IBehavior> subset = new ArrayList<IBehavior>(behaviors.size()); // avoid
+																				// growing
 		for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
 		{
 			IBehavior behavior = i.next();
@@ -2578,16 +2588,17 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	protected boolean isStateless()
 	{
 		Iterator<IBehavior> behaviors = getBehaviors().iterator();
-		while(behaviors.hasNext())
+		while (behaviors.hasNext())
 		{
 			IBehavior behavior = behaviors.next();
-			if(!behavior.isStateless())
+			if (!behavior.isStateless())
 			{
 				return false;
 			}
 		}
 		return true;
-	}	
+	}
+
 	/**
 	 * Called to allow a component to detach resources after use. The semantics
 	 * of this will be tightened in Wicket 1.3 when we will add the guarantee
@@ -2732,10 +2743,9 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 			if ((markupOpenTag != null) && markupOpenTag.isOpen() && !markupStream.atCloseTag())
 			{
 				// There must be a component in this discarded body
-				markupStream
-						.throwMarkupException("Expected close tag for '" + markupOpenTag + "' Possible attempt to embed component(s) '" + 
-								markupStream.get() + 
-								"' in the body of this component which discards its body");
+				markupStream.throwMarkupException("Expected close tag for '" + markupOpenTag
+						+ "' Possible attempt to embed component(s) '" + markupStream.get()
+						+ "' in the body of this component which discards its body");
 			}
 		}
 	}
