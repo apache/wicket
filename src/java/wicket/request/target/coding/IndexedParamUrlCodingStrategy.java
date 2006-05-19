@@ -2,6 +2,7 @@ package wicket.request.target.coding;
 
 import java.util.Map;
 
+import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
@@ -32,7 +33,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	 * @param bookmarkablePageClass
 	 *            class of mounted page
 	 */
-	public IndexedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass)
+	public IndexedParamUrlCodingStrategy(String mountPath, Class<? extends Page> bookmarkablePageClass)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 	}
@@ -47,7 +48,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	 * @param pageMapName
 	 *            name of pagemap
 	 */
-	public IndexedParamUrlCodingStrategy(String mountPath, Class bookmarkablePageClass,
+	public IndexedParamUrlCodingStrategy(String mountPath, Class<? extends Page> bookmarkablePageClass,
 			String pageMapName)
 	{
 		super(mountPath, bookmarkablePageClass, pageMapName);
@@ -78,9 +79,9 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		}
 	}
 
-	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
+	protected ValueMap<String, Object> decodeParameters(String urlFragment, Map<String,? extends Object> urlParameters)
 	{
-		PageParameters params = new PageParameters();
+		PageParameters<String, Object> params = new PageParameters<String, Object>();
 		if (urlFragment == null)
 		{
 			return params;

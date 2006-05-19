@@ -64,9 +64,9 @@ public final class Strings
 
 	static
 	{
-		LINE_SEPARATOR = (String)AccessController.doPrivileged(new PrivilegedAction()
+		LINE_SEPARATOR = AccessController.doPrivileged(new PrivilegedAction<String>()
 		{
-			public Object run()
+			public String run()
 			{
 				return System.getProperty("line.separator");
 			}
@@ -839,7 +839,7 @@ public final class Strings
 		{
 			return new String[0];
 		}
-		final List strings = new ArrayList();
+		final List<String> strings = new ArrayList<String>();
 		int pos = 0;
 		while (true)
 		{
@@ -1044,7 +1044,7 @@ public final class Strings
 	{
 		if (throwable != null)
 		{
-			ArrayList al = new ArrayList();
+			ArrayList<Throwable> al = new ArrayList<Throwable>();
 			Throwable cause = throwable;
 			al.add(cause);
 			while (cause.getCause() != null && cause != cause.getCause())
@@ -1056,7 +1056,7 @@ public final class Strings
 			AppendingStringBuffer sb = new AppendingStringBuffer(256);
 			// first print the last cause
 			int length = al.size() - 1;
-			cause = (Throwable)al.get(length);
+			cause = al.get(length);
 			if (throwable instanceof WicketRuntimeException)
 			{
 				sb.append("WicketMessage: ");
@@ -1071,7 +1071,7 @@ public final class Strings
 				sb.append("\n\nComplete stack:\n\n");
 				for (int i = 0; i < length; i++)
 				{
-					outputThrowable((Throwable)al.get(i), sb, true);
+					outputThrowable(al.get(i), sb, true);
 					sb.append("\n");
 				}
 			}

@@ -20,6 +20,7 @@ package wicket.session;
 
 import java.util.List;
 
+import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
 
@@ -49,7 +50,7 @@ public interface ISessionStore
 	 * 
 	 * @return List of attributes for this session
 	 */
-	List getAttributeNames(Request request);
+	List<String> getAttributeNames(Request request);
 
 
 	/**
@@ -123,4 +124,29 @@ public interface ISessionStore
 	 *            The SessionId that must be unbinded.
 	 */
 	void unbind(String sessionId);
+
+	/**
+	 * Called at the start of a request. It can be used for example to rebuild
+	 * server state from the client request.
+	 * 
+	 * @param request
+	 *            The request object
+	 */
+	void onBeginRequest(Request request);
+
+	/**
+	 * Called at the end of a request. It can be used for instance to release
+	 * temporary server state when using client state saving.
+	 * 
+	 * @param request
+	 *            The request
+	 */
+	void onEndRequest(Request request);
+
+	/**
+	 * @param name
+	 * @param session
+	 * @return The pagemap instances for the session
+	 */
+	PageMap createPageMap(String name, Session session);
 }

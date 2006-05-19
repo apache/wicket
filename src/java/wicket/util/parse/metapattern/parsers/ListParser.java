@@ -39,7 +39,7 @@ public class ListParser extends MetaPatternParser
 	private final MetaPattern separatorPattern;
 
 	/** The list elements parsed */
-	private final List values = new ArrayList();
+	private final List<String> values = new ArrayList<String>();
 
 	/**
 	 * Constructs a list parser from an entry MetaPattern, a separator
@@ -97,7 +97,7 @@ public class ListParser extends MetaPatternParser
 	 * 
 	 * @return the parsed values
 	 */
-	public final List getValues()
+	public final List<String> getValues()
 	{
 		return values;
 	}

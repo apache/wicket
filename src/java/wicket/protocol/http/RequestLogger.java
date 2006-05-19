@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -53,7 +54,6 @@ import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.session.ISessionStore;
-import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Classes;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -84,14 +84,14 @@ public class RequestLogger
 	
 	private int peakSessions;
 	
-	private Map liveSessions;
+	private Map<String, SessionData> liveSessions;
 	
 	/**
 	 * Construct.
 	 */
 	public RequestLogger()
 	{
-		liveSessions = new ConcurrentHashMap();
+		liveSessions = new ConcurrentHashMap<String, SessionData>();
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class RequestLogger
 	/**
 	 * @return Collection of live Sessions
 	 */
-	public Collection getLiveSessions()
+	public Collection<SessionData> getLiveSessions()
 	{
 		return liveSessions.values();
 	}
@@ -256,7 +256,7 @@ public class RequestLogger
 	private SessionData getSessionData()
 	{
 		Session session = Session.get();
-		SessionData sessionData = (SessionData)liveSessions.get(session.getId());
+		SessionData sessionData = liveSessions.get(session.getId());
 		if(sessionData == null)
 		{
 			sessionData = createSessionData(session);
@@ -291,7 +291,7 @@ public class RequestLogger
 
 		private final Session session;
 		
-		private LinkedList requests;
+		private LinkedList<RequestData> requests;
 		
 		private RequestData currentRequest;
 
@@ -304,7 +304,7 @@ public class RequestLogger
 		public SessionData(Session session)
 		{
 			this.session = session;
-			this.requests = new LinkedList();
+			this.requests = new LinkedList<RequestData>();
 		}
 		
 		/**
@@ -327,7 +327,7 @@ public class RequestLogger
 		/**
 		 * @return The request list of this session
 		 */
-		public List getRequests()
+		public List<RequestData> getRequests()
 		{
 			return requests;
 		}
@@ -528,7 +528,7 @@ public class RequestLogger
 
 		private Date startDate;
 		private long timeTaken;
-		private List entries = new ArrayList(5);
+		private List<String> entries = new ArrayList<String>(5);
 		private String eventTarget;
 		private String responseTarget;
 		
@@ -605,7 +605,7 @@ public class RequestLogger
 			AppendingStringBuffer sb = new AppendingStringBuffer();
 			for (int i = 0; i < entries.size(); i++)
 			{
-				String element = (String)entries.get(i);
+				String element = entries.get(i);
 				sb.append(element);
 				if(entries.size() != i-1)
 				{

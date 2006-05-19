@@ -36,7 +36,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Jonathan Locke
  */
-public final class PageParameters extends ValueMap
+public final class PageParameters<K,V> extends ValueMap<K,V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public final class PageParameters extends ValueMap
 	 *            The map to copy
 	 * @see ValueMap#ValueMap(java.util.Map)
 	 */
-	public PageParameters(final Map parameterMap)
+	public PageParameters(final Map<? extends K, ? extends V> parameterMap)
 	{
 		super(parameterMap);
 	}
@@ -116,14 +116,14 @@ public final class PageParameters extends ValueMap
 				final String key = pair.substring(0, pos).trim();
 				final String value = pair.substring(pos + 1).trim();
 
-				put(key, value);
+				put((K)key, (V)value);
 			}
 			else
 			{
 				final String key = pair.trim();
 				final String value = null;
 
-				put(key, value);
+				put((K)key, (V)value);
 			}
 		}
 	}

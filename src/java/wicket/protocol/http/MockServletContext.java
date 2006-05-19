@@ -63,12 +63,12 @@ public class MockServletContext implements ServletContext
 
 	private Application application;
 
-	private ValueMap attributes = new ValueMap();
+	private ValueMap<String, Object> attributes = new ValueMap<String, Object>();
 
-	private ValueMap initParameters = new ValueMap();
+	private ValueMap<String, String> initParameters = new ValueMap<String, String>();
 
 	/** Map of mime types */
-	private final ValueMap mimeTypes = new ValueMap();
+	private final ValueMap<String, String> mimeTypes = new ValueMap<String, String>();
 
 	private File webappRoot;
 
@@ -154,7 +154,7 @@ public class MockServletContext implements ServletContext
 	 * 
 	 * @return The attribute names
 	 */
-	public Enumeration getAttributeNames()
+	public Enumeration<String> getAttributeNames()
 	{
 		return Collections.enumeration(attributes.keySet());
 	}
@@ -190,7 +190,7 @@ public class MockServletContext implements ServletContext
 	 * 
 	 * @return The init parameter names
 	 */
-	public Enumeration getInitParameterNames()
+	public Enumeration<String> getInitParameterNames()
 	{
 		return Collections.enumeration(initParameters.keySet());
 	}
@@ -382,11 +382,11 @@ public class MockServletContext implements ServletContext
 	 *            The starting name
 	 * @return The set of resource paths at this location
 	 */
-	public Set getResourcePaths(String name)
+	public Set<String> getResourcePaths(String name)
 	{
 		if (webappRoot == null)
 		{
-			return new HashSet();
+			return new HashSet<String>();
 		}
 
 		if (name.startsWith("/"))
@@ -428,7 +428,7 @@ public class MockServletContext implements ServletContext
 		}
 
 		File[] files = current.listFiles();
-		Set result = new HashSet();
+		Set<String> result = new HashSet<String>();
 		int stripLength = webappRoot.getPath().length();
 		for (int f = 0; f < files.length; f++)
 		{

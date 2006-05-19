@@ -38,7 +38,7 @@ public class ResourceLink extends Link implements IResourceListener
 	private final Resource resource;
 
 	/** The resource parameters */
-	private final ValueMap resourceParameters;
+	private final ValueMap<String, Object> resourceParameters;
 
 
 	/**
@@ -81,7 +81,7 @@ public class ResourceLink extends Link implements IResourceListener
 	 *            The resource parameters
 	 */
 	public ResourceLink(final String id, final ResourceReference resourceReference,
-			ValueMap resourceParameters)
+			ValueMap<String,Object> resourceParameters)
 	{
 		super(id);
 		this.resourceReference = resourceReference;

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import wicket.MarkupContainer;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
@@ -48,7 +49,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * The actual component class the markup is directly associated with. It
 	 * might be super class of the component class
 	 */
-	private final Class markupClass;
+	private final Class<? extends MarkupContainer> markupClass;
 
 	/**
 	 * Construct.
@@ -58,7 +59,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * @param markupClass
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream,
-			final ContainerInfo containerInfo, final Class markupClass)
+			final ContainerInfo containerInfo, final Class<? extends MarkupContainer> markupClass)
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = containerInfo;
@@ -139,7 +140,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @return The directly associated class
 	 */
-	public Class getMarkupClass()
+	public Class<? extends MarkupContainer> getMarkupClass()
 	{
 		return markupClass;
 	}

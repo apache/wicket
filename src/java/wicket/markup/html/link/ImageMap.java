@@ -36,7 +36,7 @@ public final class ImageMap extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 	
 	/** list of shape links. */
-	private final List shapeLinks = new ArrayList();
+	private final List<ShapeLink> shapeLinks = new ArrayList<ShapeLink>();
 
 	/**
 	 * A shape that has a circle form.
@@ -355,9 +355,9 @@ public final class ImageMap extends WebMarkupContainer
 
 		imageMap.append("\n<map name=\"").append(getPath()).append("\"> ");
 
-		for (Iterator iterator = shapeLinks.iterator(); iterator.hasNext();)
+		for (Iterator<ShapeLink> iterator = shapeLinks.iterator(); iterator.hasNext();)
 		{
-			final ShapeLink shapeLink = (ShapeLink)iterator.next();
+			final ShapeLink shapeLink = iterator.next();
 			imageMap.append('\n');
 			imageMap.append(shapeLink.toString());
 

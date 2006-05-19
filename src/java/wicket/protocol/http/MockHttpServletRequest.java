@@ -76,7 +76,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/** The application */
 	private final Application application;
 
-	private final ValueMap attributes = new ValueMap();
+	private final ValueMap<String, Object> attributes = new ValueMap<String, Object>();
 
 	private String authType;
 
@@ -84,13 +84,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final ServletContext context;
 
-	private final List cookies = new ArrayList();
+	private final List<Cookie> cookies = new ArrayList<Cookie>();
 
-	private final ValueMap headers = new ValueMap();
+	private final ValueMap<String,List<String>> headers = new ValueMap<String,List<String>>();
 
 	private String method;
 
-	private final ValueMap parameters = new ValueMap();
+	private final ValueMap<String, Object> parameters = new ValueMap<String, Object>();
 
 	private String path;
 
@@ -136,10 +136,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void addHeader(String name, String value)
 	{
-		List list = (List)headers.get(name);
+		List<String> list = headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList(1);
+			list = new ArrayList<String>(1);
 			headers.put(name, list);
 		}
 		list.add(value);
@@ -162,7 +162,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The names
 	 */
-	public Enumeration getAttributeNames()
+	public Enumeration<String> getAttributeNames()
 	{
 		return Collections.enumeration(attributes.keySet());
 	}
@@ -232,7 +232,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			return null;
 		}
 		Cookie[] result = new Cookie[cookies.size()];
-		return (Cookie[])cookies.toArray(result);
+		return cookies.toArray(result);
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getHeader(final String name)
 	{
-		final List l = (List)headers.get(name);
+		final List l = headers.get(name);
 		if (l == null || l.size() < 1)
 		{
 			return null;
@@ -289,7 +289,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The header names
 	 */
-	public Enumeration getHeaderNames()
+	public Enumeration<String> getHeaderNames()
 	{
 		return Collections.enumeration(headers.keySet());
 	}
@@ -303,10 +303,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Enumeration getHeaders(final String name)
 	{
-		List list = (List)headers.get(name);
+		List<String> list = headers.get(name);
 		if (list == null)
 		{
-			list = new ArrayList();
+			list = new ArrayList<String>();
 		}
 		return Collections.enumeration(list);
 	}
@@ -393,9 +393,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The locales
 	 */
-	public Enumeration getLocales()
+	public Enumeration<Locale> getLocales()
 	{
-		List list = new ArrayList(1);
+		List<Locale> list = new ArrayList<Locale>(1);
 		list.add(getLocale());
 		return Collections.enumeration(list);
 	}
@@ -427,7 +427,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The parameters
 	 */
-	public Map getParameterMap()
+	public Map<String, Object> getParameterMap()
 	{
 		return parameters;
 	}
@@ -437,7 +437,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * 
 	 * @return The parameter names
 	 */
-	public Enumeration getParameterNames()
+	public Enumeration<String> getParameterNames()
 	{
 		return Collections.enumeration(parameters.keySet());
 	}
@@ -515,9 +515,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 			final StringBuffer buf = new StringBuffer();
 			try
 			{
-				for (Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+				for (Iterator<String> iterator = parameters.keySet().iterator(); iterator.hasNext();)
 				{
-					final String name = (String)iterator.next();
+					final String name = iterator.next();
 					final String value = parameters.getString(name);
 					buf.append(URLEncoder.encode(name, "UTF-8"));
 					buf.append('=');
@@ -907,7 +907,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param parameters
 	 *            the parameters to set
 	 */
-	public void setParameters(final Map parameters)
+	public void setParameters(final Map<String,Object> parameters)
 	{
 		this.parameters.putAll(parameters);
 	}
@@ -978,7 +978,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param params
 	 *            Additional parameters
 	 */
-	public void setRequestToBookmarkablePage(final Page page, final Map params)
+	public void setRequestToBookmarkablePage(final Page page, final Map<String, String> params)
 	{
 		parameters.putAll(params);
 		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass().getName());
@@ -1045,21 +1045,21 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param values
 	 *            The values for each of the form components
 	 */
-	public void setRequestToFormComponent(final Form form, final Map values)
+	public void setRequestToFormComponent(final Form form, final Map<Component, String> values)
 	{
 		setRequestToComponent(form);
 
-		final Map valuesApplied = new HashMap();
+		final Map<String, Component> valuesApplied = new HashMap<String, Component>();
 		form.visitChildren(new Component.IVisitor()
 		{
 			public Object component(final Component component)
 			{
 				if (component instanceof FormComponent)
 				{
-					String value = (String)values.get(component);
+					String value = values.get(component);
 					if (value != null)
 					{
-						parameters.put(((FormComponent)component).getInputName(), values
+						parameters.put(((FormComponent)component).getInputName(), (String)values
 								.get(component));
 						valuesApplied.put(component.getId(), component);
 					}
@@ -1070,10 +1070,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		if (values.size() != valuesApplied.size())
 		{
-			Map diff = new HashMap();
+			Map<Component, String> diff = new HashMap<Component, String>();
 			diff.putAll(values);
 			
-			Iterator iter = valuesApplied.keySet().iterator();
+			Iterator<String> iter = valuesApplied.keySet().iterator();
 			while (iter.hasNext())
 			{
 				diff.remove(iter.next());

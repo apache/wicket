@@ -49,8 +49,8 @@ import wicket.RequestCycle;
  * </ul>
  * </p>
  * <p>
- * A convience implementation that makes breaking up this processor in smaller
- * delegate strategies easier can be found as
+ * A convenience implementation that makes breaking up this processor in smaller
+ * delegate strategies easier can be found in class
  * {@link wicket.request.compound.CompoundRequestCycleProcessor} (or
  * {@link wicket.request.compound.AbstractCompoundRequestCycleProcessor}).
  * </p>

@@ -35,7 +35,7 @@ import wicket.RequestCycle;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractDetachableModel implements IModel
+public abstract class AbstractDetachableModel<V> implements IModel<V>
 {
 	/** Logger. */
 	private static final Log log = LogFactory.getLog(AbstractDetachableModel.class);
@@ -89,12 +89,12 @@ public abstract class AbstractDetachableModel implements IModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public abstract IModel getNestedModel();
+	public abstract IModel<V> getNestedModel();
 
 	/**
 	 * @see wicket.model.IModel#getObject(Component)
 	 */
-	public final Object getObject(final Component component)
+	public final V getObject(final Component component)
 	{
 		attach();
 		return onGetObject(component);
@@ -113,7 +113,7 @@ public abstract class AbstractDetachableModel implements IModel
 	/**
 	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public final void setObject(final Component component, final Object object)
+	public final void setObject(final Component component, final V object)
 	{
 		attach();
 		onSetObject(component, object);
@@ -150,7 +150,7 @@ public abstract class AbstractDetachableModel implements IModel
 	 *            The component asking for the object
 	 * @return The object
 	 */
-	protected abstract Object onGetObject(final Component component);
+	protected abstract V onGetObject(final Component component);
 
 	/**
 	 * Called when setObject is called in order to change the detachable
@@ -162,5 +162,5 @@ public abstract class AbstractDetachableModel implements IModel
 	 * @param object
 	 * 			The new model object
 	 */
-	protected abstract void onSetObject(final Component component, final Object object);
+	protected abstract void onSetObject(final Component component, final V object);
 }

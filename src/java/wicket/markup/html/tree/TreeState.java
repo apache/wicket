@@ -74,22 +74,22 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	/**
 	 * Maps from TreePath to a TreeStateNode.
 	 */
-	private Hashtable treePathMapping;
+	private Hashtable<TreePath, TreeStateNode> treePathMapping;
 
 	/**
 	 * Used for getting path/row information.
 	 */
 	private SearchInfo info;
 
-	private ArrayListStack tempStacks;
+	private ArrayListStack<ArrayListStack<TreePath>> tempStacks;
 
 	/**
 	 * Construct.
 	 */
 	public TreeState()
 	{
-		tempStacks = new ArrayListStack();
-		treePathMapping = new Hashtable();
+		tempStacks = new ArrayListStack<ArrayListStack<TreePath>>();
+		treePathMapping = new Hashtable<TreePath, TreeStateNode>();
 		info = new SearchInfo();
 	}
 
@@ -736,7 +736,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 	 */
 	private TreeStateNode getMapping(TreePath path)
 	{
-		return (TreeStateNode) treePathMapping.get(path);
+		return treePathMapping.get(path);
 	}
 
 	/**
@@ -865,15 +865,15 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 			}
 
 			// Check all the parent paths, until a match is found.
-			ArrayListStack paths;
+			ArrayListStack<TreePath> paths;
 
 			if (tempStacks.size() == 0)
 			{
-				paths = new ArrayListStack();
+				paths = new ArrayListStack<TreePath>();
 			}
 			else
 			{
-				paths = (ArrayListStack)tempStacks.pop();
+				paths = tempStacks.pop();
 			}
 
 			try
@@ -889,7 +889,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 						// paths.
 						while (node != null && paths.size() > 0)
 						{
-							path = (TreePath) paths.pop();
+							path = paths.pop();
 							node = node.createChildFor(path.getLastPathComponent());
 						}
 						return node;
@@ -1702,7 +1702,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 						info.childIndex = row - this.row - 1;
 						return true;
 					}
-					else
+					else if (lastChild != null)
 					{
 						// May have been in last childs bounds.
 						int lastChildEndRow = 1

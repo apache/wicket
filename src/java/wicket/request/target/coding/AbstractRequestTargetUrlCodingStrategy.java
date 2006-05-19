@@ -86,7 +86,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
 	 */
-	protected ValueMap decodeParameters(String urlFragment, Map urlParameters)
+	protected ValueMap<String,Object> decodeParameters(String urlFragment, Map<String,? extends Object> urlParameters)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))
@@ -96,7 +96,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 
 		if (urlFragment.length() == 0)
 		{
-			return new ValueMap();
+			return new ValueMap<String,Object>();
 		}
 
 		// Split into pairs
@@ -112,7 +112,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 
 		// Loop through pairs
 
-		ValueMap parameters = new ValueMap();
+		ValueMap<String,Object> parameters = new ValueMap<String,Object>();
 		for (int i = 0; i < pairs.length; i += 2)
 		{
 			String value = pairs[i + 1];

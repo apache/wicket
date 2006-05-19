@@ -78,7 +78,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * markup which contains the wicket:head. It can be modified by means of the
 	 * scope attribute.
 	 */
-	private Map renderedComponentsPerScope;
+	private Map<String, List<String>> renderedComponentsPerScope;
 
 	/**
 	 * Construct
@@ -252,7 +252,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	{
 		if (this.renderedComponentsPerScope == null)
 		{
-			this.renderedComponentsPerScope = new HashMap();
+			this.renderedComponentsPerScope = new HashMap<String, List<String>>();
 		}
 
 //		if (scope == null)
@@ -260,10 +260,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 //			scope = header.getMarkupStream().getContainerClass().getName();
 //		}
 		
-		List componentScope = (List)this.renderedComponentsPerScope.get(scope);
+		List<String> componentScope = this.renderedComponentsPerScope.get(scope);
 		if (componentScope == null)
 		{
-			componentScope = new ArrayList();
+			componentScope = new ArrayList<String>();
 			this.renderedComponentsPerScope.put(scope, componentScope);
 		}
 

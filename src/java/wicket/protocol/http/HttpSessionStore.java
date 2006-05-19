@@ -26,7 +26,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import wicket.AccessStackPageMap;
+import wicket.PageMap;
 import wicket.Request;
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.util.lang.Bytes;
 
@@ -127,9 +130,9 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	/**
 	 * @see wicket.session.ISessionStore#getAttributeNames(Request)
 	 */
-	public List getAttributeNames(Request request)
+	public List<String> getAttributeNames(Request request)
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		WebRequest webRequest = toWebRequest(request);
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
@@ -160,5 +163,13 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	private String getSessionAttributePrefix(final WebRequest request)
 	{
 		return application.getSessionAttributePrefix(request);
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String, wicket.Session)
+	 */
+	public PageMap createPageMap(String name, Session session)
+	{
+		return new AccessStackPageMap(name,session);
 	}
 }

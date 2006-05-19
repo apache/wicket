@@ -292,7 +292,7 @@ public class Localizer
 	 *            The component to evaluate
 	 * @return The stack of classes
 	 */
-	private List getComponentStack(final Component component)
+	private List<Class> getComponentStack(final Component component)
 	{
 		// No component, no stack
 		if (component == null)
@@ -301,7 +301,7 @@ public class Localizer
 		}
 
 		// Build the search stack
-		final List searchStack = new ArrayList();
+		final List<Class> searchStack = new ArrayList<Class>();
 		searchStack.add(component.getClass());
 
 		if (!(component instanceof Page))

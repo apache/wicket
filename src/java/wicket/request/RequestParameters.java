@@ -67,9 +67,12 @@ public class RequestParameters implements Serializable
 
 	/** any bookmarkable page class. */
 	private String bookmarkablePageClass;
-
+	
+	/** bookmarkable form name*/
+	private String bookmarkableFormName;
+	
 	/** free-to-use map of non-reserved parameters. */
-	private Map parameters;
+	private Map<String,? extends Object> parameters;
 
 	/** any resource key. */
 	private String resourceKey;
@@ -203,7 +206,7 @@ public class RequestParameters implements Serializable
 	 * 
 	 * @return free-to-use map of non-reserved parameters
 	 */
-	public Map getParameters()
+	public Map<String,? extends Object> getParameters()
 	{
 		return parameters;
 	}
@@ -214,7 +217,7 @@ public class RequestParameters implements Serializable
 	 * @param parameters
 	 *            free-to-use map of non-reserved parameters
 	 */
-	public void setParameters(Map parameters)
+	public void setParameters(Map<String,? extends Object> parameters)
 	{
 		this.parameters = parameters;
 	}
@@ -332,5 +335,21 @@ public class RequestParameters implements Serializable
 		}
 		b.append("]");
 		return b.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	public String getBookmarkableFormName()
+	{
+		return bookmarkableFormName;
+	}
+
+	/**
+	 * @param bookmarkableFormName
+	 */
+	public void setBookmarkableFormName(String bookmarkableFormName)
+	{
+		this.bookmarkableFormName = bookmarkableFormName;
 	}
 }

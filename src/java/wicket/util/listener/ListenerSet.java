@@ -31,7 +31,7 @@ import java.util.Set;
 public abstract class ListenerSet
 {
 	/** Set of change listeners */
-	private final Set listeners = new HashSet();
+	private final Set<IListener> listeners = new HashSet<IListener>();
 
 	/**
 	 * Adds a listener to this set of listeners.
@@ -52,12 +52,12 @@ public abstract class ListenerSet
 	public void notifyListeners()
 	{
 		// Create a stable copy for iterating over
-		final Set copy = new HashSet(listeners);
+		final Set<IListener> copy = new HashSet<IListener>(listeners);
 
 		// Notify all listeners that the file changed
-		for (final Iterator iterator = copy.iterator(); iterator.hasNext();)
+		for (final Iterator<IListener> iterator = copy.iterator(); iterator.hasNext();)
 		{
-			notifyListener((IListener)iterator.next());
+			notifyListener(iterator.next());
 		}
 	}
 

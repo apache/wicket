@@ -250,11 +250,11 @@ public class ParameterParser
 	 * 
 	 * @return a map of name/value pairs
 	 */
-	public Map parse(final String str, char separator)
+	public Map<String, String> parse(final String str, char separator)
 	{
 		if (str == null)
 		{
-			return new HashMap();
+			return new HashMap<String, String>();
 		}
 		return parse(str.toCharArray(), separator);
 	}
@@ -271,11 +271,11 @@ public class ParameterParser
 	 * 
 	 * @return a map of name/value pairs
 	 */
-	public Map parse(final char[] chars, char separator)
+	public Map<String, String> parse(final char[] chars, char separator)
 	{
 		if (chars == null)
 		{
-			return new HashMap();
+			return new HashMap<String, String>();
 		}
 		return parse(chars, 0, chars.length, separator);
 	}
@@ -296,14 +296,14 @@ public class ParameterParser
 	 * 
 	 * @return a map of name/value pairs
 	 */
-	public Map parse(final char[] chars, int offset, int length, char separator)
+	public Map<String, String> parse(final char[] chars, int offset, int length, char separator)
 	{
 
 		if (chars == null)
 		{
-			return new HashMap();
+			return new HashMap<String, String>();
 		}
-		HashMap params = new HashMap();
+		HashMap<String, String> params = new HashMap<String, String>();
 		this.chars = chars;
 		this.pos = offset;
 		this.len = length;

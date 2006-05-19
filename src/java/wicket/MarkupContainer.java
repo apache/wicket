@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.behavior.IBehavior;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
@@ -38,7 +39,6 @@ import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.util.resource.IResourceStream;
@@ -91,7 +91,7 @@ import wicket.version.undo.Change;
  * @see MarkupStream
  * @author Jonathan Locke
  */
-public abstract class MarkupContainer extends Component
+public abstract class MarkupContainer<V> extends Component<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -119,7 +119,7 @@ public abstract class MarkupContainer extends Component
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MarkupContainer(final String id, IModel model)
+	public MarkupContainer(final String id, IModel<V> model)
 	{
 		super(id, model);
 	}
@@ -419,19 +419,19 @@ public abstract class MarkupContainer extends Component
 	 * @return Iterator that iterates over children in the order specified by
 	 *         comparator
 	 */
-	public final Iterator iterator(Comparator comparator)
+	public final Iterator<Component> iterator(Comparator<Component> comparator)
 	{
-		final List sorted;
+		final List<Component> sorted;
 		if (children == null)
 		{
-			sorted = Collections.EMPTY_LIST;
+			sorted = Collections.emptyList();
 		}
 		else
 		{
 			if (children instanceof Component)
 			{
-				sorted = new ArrayList(1);
-				sorted.add(children);
+				sorted = new ArrayList<Component>(1);
+				sorted.add((Component)children);
 			}
 			else
 			{
@@ -632,10 +632,10 @@ public abstract class MarkupContainer extends Component
 		super.setModel(model);
 		if (previous instanceof ICompoundModel)
 		{
-			visitChildren(new IVisitor()
+			visitChildren(new IVisitor<Component<V>>()
 			{
 
-				public Object component(Component component)
+				public Object component(Component<V> component)
 				{
 					IModel compModel = component.getModel();
 					if (compModel == previous)
@@ -778,7 +778,7 @@ public abstract class MarkupContainer extends Component
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
-	public final Object visitChildren(final IVisitor visitor)
+	public final Object visitChildren(final IVisitor<Component<V>> visitor)
 	{
 		return visitChildren(null, visitor);
 	}
@@ -862,7 +862,7 @@ public abstract class MarkupContainer extends Component
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream newMarkupResourceStream(Class containerClass)
+	public IResourceStream newMarkupResourceStream(Class<? extends MarkupContainer> containerClass)
 	{
 		// Get locator to search for the resource
 		final IResourceStreamLocator locator = getApplication().getResourceSettings()
@@ -885,7 +885,7 @@ public abstract class MarkupContainer extends Component
 
 			// Walk up the class hierarchy one level, if markup has not
 			// yet been found
-			containerClass = containerClass.getSuperclass();
+			containerClass = (Class<? extends MarkupContainer>)containerClass.getSuperclass();
 		}
 
 		return null;

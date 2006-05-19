@@ -60,7 +60,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	private final ContainerInfo containerInfo;
 
 	/** temporary storage unomdified while the object instance exists */
-	private final List searchStack;
+	private final List<Class> searchStack;
 
 	/**
 	 * The application settings required. Note: you can rely on
@@ -85,7 +85,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		this.containerInfo = containerInfo;
 		this.settings = Application.get().getResourceSettings();
 
-		this.searchStack = new ArrayList();
+		this.searchStack = new ArrayList<Class>();
 		searchStack.add(containerInfo.getContainerClass());
 	}
 

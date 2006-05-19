@@ -46,11 +46,12 @@ public class FormDispatchEventTest extends WicketTestCase
 		}
 		
 		/**
+		 * @param name 
 		 * @return The hidden field id of the form
 		 */
-		public String getHiddenField()
+		public String getHiddenField(String name)
 		{
-			return getHiddenFieldId();
+			return getHiddenFieldId(name);
 		}
 	}
 
@@ -108,7 +109,7 @@ public class FormDispatchEventTest extends WicketTestCase
 		form.onFormSubmitted();
 		assertTrue("form should should set value ", submit);
 
-		application.getServletRequest().setParameter(form.getHiddenField(),
+		application.getServletRequest().setParameter(form.getHiddenField(Form.HIDDEN_FIELD_FAKE_SUBMIT),
 				dropDown.urlFor(IOnChangeListener.INTERFACE).toString());
 
 		form.onFormSubmitted();

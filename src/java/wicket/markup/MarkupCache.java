@@ -21,6 +21,7 @@ package wicket.markup;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
-import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -49,7 +49,7 @@ public class MarkupCache
 	private static final Log log = LogFactory.getLog(MarkupCache.class);
 
 	/** Map of markup tags by class (exactly what is in the file). */
-	private final Map markupCache = new ConcurrentHashMap();
+	private final Map<CharSequence, Markup> markupCache = new ConcurrentHashMap<CharSequence, Markup>();
 
 	/**
 	 * Markup inheritance requires that merged markup gets re-merged either
@@ -146,9 +146,9 @@ public class MarkupCache
 	 *            container as well (markup inheritance)
 	 * @return Markup resource
 	 */
-	private final Markup getMarkup(final MarkupContainer container, final Class clazz)
+	private final Markup getMarkup(final MarkupContainer container, final Class<? extends MarkupContainer> clazz)
 	{
-		Class containerClass = clazz;
+		Class<? extends MarkupContainer> containerClass = clazz;
 		if (clazz == null)
 		{
 			containerClass = container.getClass();
@@ -163,14 +163,14 @@ public class MarkupCache
 
 		// Look up markup tag list by class, locale, style and markup type
 		final CharSequence key = markupKey(container, clazz);
-		Markup markup = (Markup)markupCache.get(key);
+		Markup markup = markupCache.get(key);
 
 		// If no markup in the cache
 		if (markup == null)
 		{
 			synchronized (markupCache)
 			{
-				markup = (Markup)markupCache.get(key);
+				markup = markupCache.get(key);
 
 				// If no markup is in the cache
 				if (markup == null)
@@ -330,7 +330,7 @@ public class MarkupCache
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final CharSequence markupKey(final MarkupContainer container, final Class clazz)
+	private final CharSequence markupKey(final MarkupContainer container, final Class<? extends MarkupContainer> clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = container.getLocale();
@@ -388,6 +388,7 @@ public class MarkupCache
 	 *            The markup to checked for inheritance
 	 * @return A markup object with the the base markup elements resolved.
 	 */
+	@SuppressWarnings("unchecked")
 	private Markup checkForMarkupInheritance(final MarkupContainer container,
 			final CharSequence key, final Markup markup)
 	{
@@ -400,9 +401,9 @@ public class MarkupCache
 			return markup;
 		}
 
+		Class<? extends MarkupContainer> markupClass = markup.getResource().getMarkupClass();
 		// get the base markup
-		final Markup baseMarkup = getMarkup(container, markup.getResource().getMarkupClass()
-				.getSuperclass());
+		final Markup baseMarkup = getMarkup(container, (Class<? extends MarkupContainer>)markupClass.getSuperclass());
 
 		if (baseMarkup == Markup.NO_MARKUP)
 		{

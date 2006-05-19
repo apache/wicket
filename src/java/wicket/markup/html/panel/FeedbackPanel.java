@@ -78,7 +78,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
 			message.markRendered();
-			final IModel replacementModel = new Model()
+			final IModel<String> replacementModel = new Model<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -89,7 +89,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				 * 
 				 * @see wicket.model.IModel#getObject(Component)
 				 */
-				public Object getObject(final Component component)
+				public String getObject(final Component component)
 				{
 					return getCSSClass(message);
 				}
@@ -220,7 +220,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * @param sortingComparator
 	 *            comparator used for sorting the messages.
 	 */
-	public final void setSortingComparator(Comparator sortingComparator)
+	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
 	{
 		getFeedbackMessagesModel().setSortingComparator(sortingComparator);
 	}

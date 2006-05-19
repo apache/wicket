@@ -38,10 +38,10 @@ import wicket.util.collections.ArrayListStack;
 public final class TagTypeHandler extends AbstractMarkupFilter
 {
 	/** Tag stack to find balancing tags */
-	final private ArrayListStack stack = new ArrayListStack();
+	final private ArrayListStack<ComponentTag> stack = new ArrayListStack<ComponentTag>();
 
 	/** Map of simple tags. */
-	private static final Map requireOpenBodyCloseTag = new HashMap();
+	private static final Map<String, Boolean> requireOpenBodyCloseTag = new HashMap<String, Boolean>();
 
 	static
 	{
@@ -74,7 +74,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 		// If there is something in the stack, ...
 		while (stack.size() > 0)
 		{
-			final ComponentTag top = (ComponentTag)stack.pop();
+			final ComponentTag top = stack.pop();
 			return top;
 		}
 

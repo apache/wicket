@@ -30,6 +30,7 @@ import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
@@ -134,7 +135,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Page extends MarkupContainer implements IRedirectListener, IPageMapEntry
+public abstract class Page<V> extends MarkupContainer<V> implements IRedirectListener, IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
 
@@ -172,13 +173,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private String pageMapName;
 
 	/** Set of components that rendered if component use checking is enabled */
-	private transient Set renderedComponents;
+	private transient Set<Component> renderedComponents;
 
 	/**
 	 * Boolean if the page is stateless, so it doesn't have to be in the page
 	 * map, will be set in urlFor
 	 */
-	private transient boolean stateless = true;
+	private transient Boolean stateless = Boolean.TRUE;
 
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
@@ -361,7 +362,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		renderedComponents = null;
 
 		// Reset it to stateless so that it can be tested again
-		this.stateless = true;
+		this.stateless = null;
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
@@ -508,7 +509,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @see wicket.session.pagemap.IPageMapEntry#getPageClass()
 	 */
-	public final Class getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
 		return getClass();
 	}
@@ -936,7 +937,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			if (renderedComponents == null)
 			{
-				renderedComponents = new HashSet();
+				renderedComponents = new HashSet<Component>();
 			}
 			if (renderedComponents.add(component) == false)
 			{
@@ -964,11 +965,29 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Return true from this method if you want to keep a page out of
-	 *         the session.
+	 * @return Returns true if this page can be seen as stateless so it won't go into the session 
 	 */
-	final boolean isStateless()
+	public final boolean isStateless()
 	{
+		if(stateless == null)
+		{
+			Object returnValue = visitChildren(Component.class, new IVisitor<Component>()
+			{
+				public Object component(Component component)
+				{
+					if(!component.isStateless()) return false;
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+			if(returnValue == null)
+			{
+				stateless = Boolean.TRUE;
+			}
+			else if(returnValue instanceof Boolean)
+			{
+				stateless = (Boolean)returnValue;
+			}
+		}
 		return stateless;
 	}
 
@@ -1057,7 +1076,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
 		{
 			final Count unrenderedComponents = new Count();
-			final List unrenderedAutoComponents = new ArrayList();
+			final List<Component> unrenderedAutoComponents = new ArrayList<Component>();
 			final StringBuffer buffer = new StringBuffer();
 			renderedContainer.visitChildren(new IVisitor()
 			{
@@ -1099,7 +1118,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			// callback because we're traversing the list at that time.
 			for (int i = 0; i < unrenderedAutoComponents.size(); i++)
 			{
-				((Component)unrenderedAutoComponents.get(i)).remove();
+				unrenderedAutoComponents.get(i).remove();
 			}
 
 			// Throw exception if any errors were found

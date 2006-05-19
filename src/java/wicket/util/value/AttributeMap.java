@@ -24,7 +24,7 @@ import java.util.Map;
  * 
  * @author Eelco Hillenius
  */
-public final class AttributeMap extends ValueMap
+public final class AttributeMap<K,V> extends ValueMap<K,V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +42,7 @@ public final class AttributeMap extends ValueMap
 	 * @param map
 	 *            Map to be copied
 	 */
-	public AttributeMap(Map map)
+	public AttributeMap(Map<? extends K, ? extends V> map)
 	{
 		super(map);
 	}

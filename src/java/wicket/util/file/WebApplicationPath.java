@@ -35,10 +35,10 @@ import wicket.util.string.StringList;
 public final class WebApplicationPath implements IResourcePath
 {
 	/** The list of urls in the path */
-	private final List webappPaths = new ArrayList();
+	private final List<Comparable> webappPaths = new ArrayList<Comparable>();
 
 	/** The list of folders in the path */
-	private final List folders = new ArrayList();
+	private final List<Comparable> folders = new ArrayList<Comparable>();
 
 	private final ServletContext servletContext;
 
@@ -88,7 +88,7 @@ public final class WebApplicationPath implements IResourcePath
 	 */
 	public URL find(final String pathname)
 	{
-		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
+		for (final Iterator<Comparable> iterator = folders.iterator(); iterator.hasNext();)
 		{
 			Folder folder = (Folder)iterator.next();
 			File file = new File(folder, pathname);
@@ -104,7 +104,7 @@ public final class WebApplicationPath implements IResourcePath
 				}
 			}
 		}
-		for (final Iterator iterator = webappPaths.iterator(); iterator.hasNext();)
+		for (final Iterator<Comparable> iterator = webappPaths.iterator(); iterator.hasNext();)
 		{
 			final String path = (String)iterator.next();
 			try

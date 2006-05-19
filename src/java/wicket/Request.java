@@ -90,7 +90,7 @@ public abstract class Request
 	 * 
 	 * @return Map of parameters
 	 */
-	public abstract Map getParameterMap();
+	public abstract Map<String, ? extends Object> getParameterMap();
 
 	/**
 	 * Gets an array of multiple parameters by name.

@@ -51,8 +51,8 @@ import wicket.resource.loader.IStringResourceLoader;
 import wicket.session.DefaultPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
-import wicket.util.convert.ConverterFactory;
-import wicket.util.convert.IConverterFactory;
+import wicket.util.convert.ConverterSupplierFactory;
+import wicket.util.convert.IConverterSupplierFactory;
 import wicket.util.crypt.CachingSunJceCryptFactory;
 import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
@@ -103,7 +103,7 @@ public final class Settings
 	private boolean stripXmlDeclarationFromOutput;
 
 	/** Class of access denied page. */
-	private Class accessDeniedPage;
+	private Class<? extends Page> accessDeniedPage;
 
 	/** The application */
 	private Application application;
@@ -121,19 +121,13 @@ public final class Settings
 	private IClassResolver classResolver = new DefaultClassResolver();
 
 	/** List of (static) ComponentResolvers */
-	private List componentResolvers = new ArrayList();
+	private List<IComponentResolver> componentResolvers = new ArrayList<IComponentResolver>();
 
 	/** True to check that each component on a page is used */
 	private boolean componentUseCheck = true;
 
 	/** True if multiple tabs/spaces should be compressed to a single space */
 	private boolean compressWhitespace = false;
-
-	/**
-	 * Factory for the converter instance; default to the non localized factory
-	 * {@link ConverterFactory}.
-	 */
-	private IConverterFactory converterFactory = new ConverterFactory();
 
 	/** Default values for persistence of form data (by means of cookies) */
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
@@ -154,7 +148,7 @@ public final class Settings
 	private String defaultMarkupEncoding;
 
 	/** Class of internal error page. */
-	private Class internalErrorPage;
+	private Class<? extends Page> internalErrorPage;
 
 	/** I18N support */
 	private Localizer localizer;
@@ -169,13 +163,13 @@ public final class Settings
 	private int maxPageVersions = Integer.MAX_VALUE;
 
 	/** Map to look up resource factories by name */
-	private Map nameToResourceFactory = new HashMap();
+	private Map<String, IResourceFactory> nameToResourceFactory = new HashMap<String, IResourceFactory>();
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
 
 	/** The error page displayed when an expired page is accessed. */
-	private Class pageExpiredErrorPage;
+	private Class<? extends Page> pageExpiredErrorPage;
 
 	/** factory to create new Page objects */
 	private IPageFactory pageFactory = new DefaultPageFactory();
@@ -208,7 +202,9 @@ public final class Settings
 	private ModificationWatcher resourceWatcher;
 
 	/** List of {@link IResponseFilter}s. */
-	private List responseFilters;
+	private List<IResponseFilter> responseFilters;
+
+	private IConverterSupplierFactory converterFactory;
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the
@@ -219,7 +215,7 @@ public final class Settings
 	private String responseRequestEncoding = "UTF-8";
 
 	/** Chain of string resource loaders to use */
-	private List stringResourceLoaders = new ArrayList(4);
+	private List<IStringResourceLoader> stringResourceLoaders = new ArrayList<IStringResourceLoader>(4);
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
@@ -318,7 +314,7 @@ public final class Settings
 	{
 		if (responseFilters == null)
 		{
-			responseFilters = new ArrayList(3);
+			responseFilters = new ArrayList<IResponseFilter>(3);
 		}
 		responseFilters.add(responseFilter);
 	}
@@ -339,7 +335,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#getAccessDeniedPage()
 	 */
-	public Class getAccessDeniedPage()
+	public Class<? extends Page> getAccessDeniedPage()
 	{
 		return accessDeniedPage;
 	}
@@ -382,7 +378,7 @@ public final class Settings
 	 * @see AutoComponentResolver for an example
 	 * @return List of ComponentResolvers
 	 */
-	public List getComponentResolvers()
+	public List<IComponentResolver> getComponentResolvers()
 	{
 		return componentResolvers;
 	}
@@ -420,10 +416,14 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#getConverterFactory()
+	 * @see wicket.settings.IApplicationSettings#getConverterSupplierFactory()
 	 */
-	public IConverterFactory getConverterFactory()
+	public IConverterSupplierFactory getConverterSupplierFactory()
 	{
+		if(converterFactory == null)
+		{
+			converterFactory = new ConverterSupplierFactory();
+		}
 		return converterFactory;
 	}
 
@@ -482,7 +482,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#getInternalErrorPage()
 	 */
-	public Class getInternalErrorPage()
+	public Class<? extends Page> getInternalErrorPage()
 	{
 		return internalErrorPage;
 	}
@@ -526,7 +526,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#getPageExpiredErrorPage()
 	 */
-	public Class getPageExpiredErrorPage()
+	public Class<? extends Page> getPageExpiredErrorPage()
 	{
 		return pageExpiredErrorPage;
 	}
@@ -572,7 +572,7 @@ public final class Settings
 	 */
 	public IResourceFactory getResourceFactory(final String name)
 	{
-		return (IResourceFactory)nameToResourceFactory.get(name);
+		return nameToResourceFactory.get(name);
 	}
 
 	/**
@@ -624,7 +624,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IRequestCycleSettings#getResponseFilters()
 	 */
-	public List getResponseFilters()
+	public List<IResponseFilter> getResponseFilters()
 	{
 		if (responseFilters == null)
 		{
@@ -647,7 +647,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
-	public List getStringResourceLoaders()
+	public List<IStringResourceLoader> getStringResourceLoaders()
 	{
 		return Collections.unmodifiableList(stringResourceLoaders);
 	}
@@ -720,7 +720,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
 	 */
-	public void setAccessDeniedPage(Class accessDeniedPage)
+	public void setAccessDeniedPage(Class<? extends Page> accessDeniedPage)
 	{
 		if (accessDeniedPage == null)
 		{
@@ -803,9 +803,9 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#setConverterFactory(wicket.util.convert.IConverterFactory)
+	 * @see wicket.settings.IApplicationSettings#setConverterSupplierFactory(wicket.util.convert.IConverterSupplierFactory)
 	 */
-	public void setConverterFactory(IConverterFactory factory)
+	public void setConverterSupplierFactory(IConverterSupplierFactory factory)
 	{
 		if (factory == null)
 		{
@@ -870,7 +870,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#setInternalErrorPage(java.lang.Class)
 	 */
-	public void setInternalErrorPage(final Class internalErrorPage)
+	public void setInternalErrorPage(final Class<? extends Page> internalErrorPage)
 	{
 		if (internalErrorPage == null)
 		{
@@ -917,7 +917,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
-	public void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
+	public void setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage)
 	{
 		if (pageExpiredErrorPage == null)
 		{

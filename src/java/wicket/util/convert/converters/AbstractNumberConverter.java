@@ -34,7 +34,8 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	 * @return Returns the numberFormat.
 	 */
 	public abstract NumberFormat getNumberFormat(Locale locale);
-
+	
+	
 	/**
 	 * Parses a value as a String and returns a Number.
 	 * 
@@ -61,7 +62,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 		    value = v.replace(' ' , '\u00A0');
 		}
 
-		final Number number = (Number)parse(numberFormat, value);
+		final Number number = (Number)parse(numberFormat, value,locale);
 
 		if (number == null)
 		{
@@ -76,10 +77,24 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 
 		if (number.doubleValue() > max)
 		{
-			throw newConversionException("Value cannot be greater than " + max, value,locale).setFormat(
+			throw newConversionException("Value cannot be greater than " + max, value, locale).setFormat(
 					numberFormat);
 		}
 
 		return number;
 	}
+	
+	/**
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
+	 */
+	public String convertToString(final Object value, Locale locale)
+	{
+		NumberFormat fmt = getNumberFormat(locale);
+		if (fmt != null)
+		{
+			return fmt.format(value);
+		}
+		return value.toString();
+	}
+
 }

@@ -52,7 +52,7 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * @param file reference. The model must provide an instance
 	 * 		of {@link String}
 	 */
-	public StyleSheetReference(String id, Class referer, IModel file)
+	public StyleSheetReference(String id, Class referer, IModel<String> file)
 	{
 		super(id, referer, file, "href");
 	}
@@ -73,7 +73,7 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * @param resourceReference resource reference.  The model must provide an instance
 	 * 		of {@link ResourceReference}
 	 */
-	public StyleSheetReference(String id, IModel resourceReference)
+	public StyleSheetReference(String id, IModel<ResourceReference> resourceReference)
 	{
 		super(id, resourceReference, "href");
 	}
@@ -85,7 +85,7 @@ public final class StyleSheetReference extends PackagedResourceReference
 	{
 		// Must be attached to a style tag
 		checkComponentTag(tag, "link");
-		ValueMap attributes = tag.getAttributes();
+		ValueMap<String,CharSequence> attributes = tag.getAttributes();
 		attributes.put("rel", "stylesheet");
 		attributes.put("type", "text/css");
 	}

@@ -52,7 +52,7 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * @param file reference as a string. The model must provide an instance
 	 * 		of {@link String}
 	 */
-	public JavaScriptReference(String id, Class referer, IModel file)
+	public JavaScriptReference(String id, Class referer, IModel<String> file)
 	{
 		super(id, referer, file, "src");
 	}
@@ -73,7 +73,7 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * @param resourceReference resource reference. The model must provide an instance
 	 * 		of {@link ResourceReference}
 	 */
-	public JavaScriptReference(String id, IModel resourceReference)
+	public JavaScriptReference(String id, IModel<ResourceReference> resourceReference)
 	{
 		super(id, resourceReference, "src");
 	}
@@ -85,7 +85,7 @@ public class JavaScriptReference extends PackagedResourceReference
 	{
 		// Must be attached to a script tag
 		checkComponentTag(tag, "script");
-		ValueMap attributes = tag.getAttributes();
+		ValueMap<String,CharSequence> attributes = tag.getAttributes();
 		attributes.put("type", "text/javascript");
 	}
 }

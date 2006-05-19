@@ -19,7 +19,7 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
-import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.IConverter;
 
 /**
  * Converts from Object to Long.
@@ -34,15 +34,14 @@ public final class LongConverter extends AbstractIntegerConverter
 	/**
 	 * The singleton instance for a long converter
 	 */
-	public static final ITypeConverter INSTANCE = new LongConverter();
+	public static final IConverter INSTANCE = new LongConverter();
 	
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convert(final Object value, Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
-		final Number number = value instanceof Number ? (Number)value : parse(value,
-				Long.MIN_VALUE, Long.MAX_VALUE,locale);
+		final Number number = parse(value, Long.MIN_VALUE, Long.MAX_VALUE,locale);
 
         if (number == null)
         {

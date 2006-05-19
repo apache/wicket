@@ -111,7 +111,7 @@ public abstract class ListView extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel model)
+	public ListView(final String id, final IModel<List> model)
 	{
 		super(id, model);
 
@@ -135,7 +135,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public ListView(final String id, final List list)
 	{
-		this(id, new Model((Serializable)list));
+		this(id, new Model<List>(list));
 	}
 
 	/**
@@ -145,12 +145,12 @@ public abstract class ListView extends WebMarkupContainer
 	 * 
 	 * @return The list of items in this list view.
 	 */
-	public final List getList()
+	public final List<Object> getList()
 	{
-		final List list = (List)getModelObject();
+		final List<Object> list = (List<Object>)getModelObject();
 		if (list == null)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 	}

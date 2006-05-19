@@ -44,7 +44,7 @@ public final class ModificationWatcher
 	private static final Log log = LogFactory.getLog(ModificationWatcher.class);
 
 	/** Maps Modifiable objects to Entry objects */
-	private final Map modifiableToEntry = new HashMap();
+	private final Map<IModifiable, Entry> modifiableToEntry = new HashMap<IModifiable, Entry>();
 
 	private Task task;
 
@@ -92,7 +92,7 @@ public final class ModificationWatcher
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
 		// Look up entry for modifiable
-		final Entry entry = (Entry)modifiableToEntry.get(modifiable);
+		final Entry entry = modifiableToEntry.get(modifiable);
 
 		// Found it?
 		if (entry == null)
@@ -132,7 +132,7 @@ public final class ModificationWatcher
 	 */
 	public IModifiable remove(final IModifiable modifiable)
 	{
-		final Entry entry = (Entry)modifiableToEntry.remove(modifiable);
+		final Entry entry = modifiableToEntry.remove(modifiable);
 		if(entry != null)
 		{
 			return entry.modifiable;
@@ -159,11 +159,11 @@ public final class ModificationWatcher
 				// concurrent
 				// modification problems without the associated liveness issues
 				// of holding a lock while potentially polling file times!
-				for (final Iterator iterator = new ArrayList(modifiableToEntry.values()).iterator(); iterator
+				for (final Iterator<Entry> iterator = new ArrayList<Entry>(modifiableToEntry.values()).iterator(); iterator
 						.hasNext();)
 				{
 					// Get next entry
-					final Entry entry = (Entry)iterator.next();
+					final Entry entry = iterator.next();
 
 					// If the modifiable has been modified after the last known
 					// modification time

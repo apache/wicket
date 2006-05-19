@@ -17,8 +17,9 @@
  */
 package wicket.application;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import wicket.WicketRuntimeException;
-import wicket.util.concurrent.ConcurrentReaderHashMap;
 
 /**
  * Resolves a class by using the classloader that loaded this class.
@@ -41,7 +42,7 @@ public final class DefaultClassResolver implements IClassResolver
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private ConcurrentReaderHashMap classes = new ConcurrentReaderHashMap();
+	private ConcurrentHashMap<String, Class> classes = new ConcurrentHashMap<String, Class>(64,0.75f,1);
 
 	/**
 	 * @see wicket.application.IClassResolver#resolveClass(java.lang.String)
@@ -50,7 +51,7 @@ public final class DefaultClassResolver implements IClassResolver
 	{
 		try
 		{
-			Class clz = (Class)classes.get(classname);
+			Class clz = classes.get(classname);
 			if (clz == null)
 			{
 				synchronized (classes)

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import wicket.markup.html.form.FormComponent;
@@ -239,9 +240,9 @@ public abstract class NumberValidator extends AbstractValidator
             }
 		}
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", new Long(minimum));
             map.put("maximum", new Long(maximum));
             return map;
@@ -280,9 +281,9 @@ public abstract class NumberValidator extends AbstractValidator
             }
         }
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", new Long(minimum));
             return map;
         }
@@ -320,9 +321,9 @@ public abstract class NumberValidator extends AbstractValidator
             }
         }
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("maximum", new Long(maximum));
             return map;
         }
@@ -362,9 +363,9 @@ public abstract class NumberValidator extends AbstractValidator
             }
 		}
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", new Double(minimum));
             map.put("maximum", new Double(maximum));
             return map;
@@ -403,9 +404,9 @@ public abstract class NumberValidator extends AbstractValidator
             }
         }
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", new Double(minimum));
             return map;
         }
@@ -443,9 +444,9 @@ public abstract class NumberValidator extends AbstractValidator
             }
         }
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("maximum", new Double(maximum));
             return map;
         }

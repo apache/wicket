@@ -74,7 +74,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Link extends WebMarkupContainer implements ILinkListener
+public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -437,5 +437,14 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		{
 			getResponse().write(afterDisabledLink);
 		}
+	}
+	
+	/**
+	 * @see wicket.MarkupContainer#isStateless()
+	 */
+	@Override
+	protected boolean isStateless()
+	{
+		return false;
 	}
 }

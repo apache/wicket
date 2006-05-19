@@ -127,10 +127,10 @@ public abstract class Application
 	 * be retrieved even without being in a request/ being set in the thread
 	 * local (we need that e.g. for when we are in a destruction thread).
 	 */
-	private static final Map applicationKeyToApplication = new HashMap(1);
+	private static final Map<String, Application> applicationKeyToApplication = new HashMap<String, Application>(1);
 
 	/** Thread local holder of the application object. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Application.class);
@@ -166,7 +166,7 @@ public abstract class Application
 	 */
 	public static Application get()
 	{
-		final Application application = (Application)current.get();
+		final Application application = current.get();
 		if (application == null)
 		{
 			throw new WicketRuntimeException("There is no application attached to current thread "
@@ -188,7 +188,7 @@ public abstract class Application
 	 */
 	public static Application get(String applicationKey)
 	{
-		Application application = (Application)applicationKeyToApplication.get(applicationKey);
+		Application application = applicationKeyToApplication.get(applicationKey);
 		return application;
 	}
 
@@ -412,7 +412,7 @@ public abstract class Application
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class getHomePage();
+	public abstract Class<? extends Page> getHomePage();
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.

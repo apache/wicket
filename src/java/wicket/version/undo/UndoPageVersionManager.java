@@ -43,7 +43,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 	private ChangeList changeList;
 
 	/** Stack of change lists for undoing */
-	private final ArrayListStack changeListStack = new ArrayListStack();
+	private final ArrayListStack<ChangeList> changeListStack = new ArrayListStack<ChangeList>();
 
 	/** The current version number */
 	private int currentVersionNumber = 0;
@@ -207,7 +207,7 @@ public class UndoPageVersionManager implements IPageVersionManager
 		}
 
 		// Pop off top change list
-		final ChangeList changeList = (ChangeList)changeListStack.pop();
+		final ChangeList changeList = changeListStack.pop();
 		if (changeList == null)
 		{
 			return false;

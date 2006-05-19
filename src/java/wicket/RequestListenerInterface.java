@@ -36,7 +36,7 @@ import wicket.util.lang.Classes;
 public class RequestListenerInterface
 {
 	/** Map from name to request listener interface */
-	private static final Map interfaces = Collections.synchronizedMap(new HashMap());
+	private static final Map<String, RequestListenerInterface> interfaces = Collections.synchronizedMap(new HashMap<String, RequestListenerInterface>());
 
 	/**
 	 * Looks up a request interface listener by name.
@@ -48,7 +48,7 @@ public class RequestListenerInterface
 	 */
 	public static final RequestListenerInterface forName(final String interfaceName)
 	{
-		return (RequestListenerInterface)interfaces.get(interfaceName);
+		return interfaces.get(interfaceName);
 	}
 
 	/** The listener interface method */

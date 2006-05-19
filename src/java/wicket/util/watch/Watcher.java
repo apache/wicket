@@ -18,8 +18,8 @@
 package wicket.util.watch;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.listener.ChangeListenerSet;
 import wicket.util.listener.IChangeListener;
 
@@ -32,7 +32,7 @@ import wicket.util.listener.IChangeListener;
 public final class Watcher
 {
 	/** Maps objects to change listener sets */
-	private final Map keyToEntry  = new ConcurrentHashMap();
+	private final Map<Object, Entry> keyToEntry  = new ConcurrentHashMap<Object, Entry>();
 
 	// Class for holding entries to watch
 	private static final class Entry
@@ -68,7 +68,7 @@ public final class Watcher
 	public final boolean add(final Object key, final IChangeListener listener)
 	{
 		// Look up entry for modifiable
-		final Entry entry = (Entry)keyToEntry.get(key);
+		final Entry entry = keyToEntry.get(key);
 
 		// Found it?
 		if (entry == null)
@@ -125,7 +125,7 @@ public final class Watcher
 	public void notifyListeners(final Object key)
 	{
 		// Look up entry for modifiable
-		final Entry entry = (Entry)keyToEntry.get(key);
+		final Entry entry = keyToEntry.get(key);
 		if (entry != null)
 		{
 			entry.listeners.notifyListeners();

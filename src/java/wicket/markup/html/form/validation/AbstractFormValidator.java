@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,13 +45,13 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map messageModel()
+	protected Map<String, Serializable> messageModel()
 	{
 		FormComponent[] formComponents = getDependentFormComponents();
 
 		if (formComponents != null && formComponents.length > 0)
 		{
-			Map args = new HashMap(formComponents.length * 3);
+			Map<String, Serializable> args = new HashMap<String, Serializable>(formComponents.length * 3);
 			for (int i = 0; i < formComponents.length; i++)
 			{
 				final FormComponent formComponent = formComponents[i];
@@ -59,7 +60,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 				IModel label = formComponent.getLabel();
 				if (label != null)
 				{
-					args.put(arg, label.getObject(formComponent));
+					args.put(arg, (Serializable)label.getObject(formComponent));
 				}
 				else
 				{
@@ -74,7 +75,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 		}
 		else
 		{
-			return new HashMap(2);
+			return new HashMap<String, Serializable>(2);
 		}
 	}
 

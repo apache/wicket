@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -136,9 +137,9 @@ public class PatternValidator extends StringValidator
 	}
 
 	
-	protected Map messageModel(FormComponent formComponent)
+	protected Map<String, Serializable> messageModel(FormComponent formComponent)
 	{
-		final Map map = super.messageModel(formComponent);
+		final Map<String, Serializable> map = super.messageModel(formComponent);
 		map.put("pattern", pattern);
 		return map;
 	}

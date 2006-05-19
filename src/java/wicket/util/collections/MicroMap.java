@@ -32,7 +32,7 @@ import java.util.Set;
  * 
  * @author Jonathan Locke
  */
-public final class MicroMap implements Map, Serializable
+public final class MicroMap<K,V> implements Map<K,V>, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,10 +40,10 @@ public final class MicroMap implements Map, Serializable
 	public static final int MAX_ENTRIES = 1;
 
 	/** The one and only key in this tiny map */
-	private Object key;
+	private K key;
 
 	/** The value for the only key in this tiny map */
-	private Object value;
+	private V value;
 
 	/**
 	 * Constructor
@@ -60,7 +60,7 @@ public final class MicroMap implements Map, Serializable
 	 * @param value
 	 *            The value
 	 */
-	public MicroMap(final Object key, final Object value)
+	public MicroMap(final K key, final V value)
 	{
 		put(key, value);
 	}
@@ -108,7 +108,7 @@ public final class MicroMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	public Object get(final Object key)
+	public V get(final Object key)
 	{
 		if (key.equals(this.key))
 		{
@@ -121,12 +121,12 @@ public final class MicroMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
 	 */
-	public Object put(final Object key, final Object value)
+	public V put(final K key, final V value)
 	{
 		// Replace?
 		if (key.equals(this.key))
 		{
-			final Object oldValue = this.value;
+			final V oldValue = this.value;
 
 			this.value = value;
 
@@ -153,11 +153,11 @@ public final class MicroMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	public Object remove(final Object key)
+	public V remove(final Object key)
 	{
 		if (key.equals(this.key))
 		{
-			final Object oldValue = this.value;
+			final V oldValue = this.value;
 
 			this.key = null;
 			this.value = null;
@@ -171,13 +171,15 @@ public final class MicroMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map map)
+	public void putAll(final Map<? extends K, ? extends V> map)
 	{
 		if (map.size() <= MAX_ENTRIES)
 		{
-			final Map.Entry e = (Map.Entry)map.entrySet().iterator().next();
-
-			put(e.getKey(), e.getValue());
+			Iterator<? extends Map.Entry<? extends K, ? extends V>> i = map.entrySet().iterator();
+	        if( i.hasNext() ) {
+	            Map.Entry<? extends K, ? extends V> e = i.next();
+	            put(e.getKey(), e.getValue());
+	        }
 		}
 		else
 		{
@@ -197,20 +199,20 @@ public final class MicroMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#keySet()
 	 */
-	public Set keySet()
+	public Set<K> keySet()
 	{
-		return new AbstractSet()
+		return new AbstractSet<K>()
 		{
-			public Iterator iterator()
+			public Iterator<K> iterator()
 			{
-				return new Iterator()
+				return new Iterator<K>()
 				{
 					public boolean hasNext()
 					{
 						return index < MicroMap.this.size();
 					}
 
-					public Object next()
+					public K next()
 					{
 						index++;
 
@@ -236,11 +238,11 @@ public final class MicroMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#values()
 	 */
-	public Collection values()
+	public Collection<V> values()
 	{
-		return new AbstractList()
+		return new AbstractList<V>()
 		{
-			public Object get(final int index)
+			public V get(final int index)
 			{
 				return value;
 			}
@@ -255,38 +257,38 @@ public final class MicroMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
-	public Set entrySet()
+	public Set<Map.Entry<K, V>> entrySet()
 	{
-		return new AbstractSet()
+		return new AbstractSet<Map.Entry<K,V>>()
 		{
-			public Iterator iterator()
+			public Iterator<Map.Entry<K,V>> iterator()
 			{
-				return new Iterator()
+				return new Iterator<Map.Entry<K,V>>()
 				{
 					public boolean hasNext()
 					{
 						return index < MicroMap.this.size();
 					}
 
-					public Object next()
+					public Map.Entry<K,V> next()
 					{
 						index++;
 
-						return new Map.Entry()
+						return new Map.Entry<K,V>()
 						{
-							public Object getKey()
+							public K getKey()
 							{
 								return key;
 							}
 
-							public Object getValue()
+							public V getValue()
 							{
 								return value;
 							}
 
-							public Object setValue(final Object value)
+							public V setValue(final V value)
 							{
-								final Object oldValue = MicroMap.this.value;
+								final V oldValue = MicroMap.this.value;
 
 								MicroMap.this.value = value;
 

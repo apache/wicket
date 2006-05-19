@@ -24,15 +24,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.IConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -61,7 +60,7 @@ import wicket.util.string.Strings;
  */
 public class PropertyResolver
 {
-	private final static Map classesToGetAndSetters = new ConcurrentHashMap(64);
+	private final static Map<Class<? extends Object>, Map<String, IGetAndSet>> classesToGetAndSetters = new ConcurrentHashMap<Class<? extends Object>, Map<String, IGetAndSet>>(64);
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PropertyResolver.class);
@@ -114,7 +113,7 @@ public class PropertyResolver
 	 *            type.
 	 */
 	public final static void setValue(final String expression, final Object object, Object value,
-			IConverter converter)
+			PropertyResolverConverter converter)
 	{
 		if (expression == null || expression.equals(""))
 		{
@@ -133,7 +132,7 @@ public class PropertyResolver
 			throw new WicketRuntimeException("Null object returned for expression: " + expression
 					+ " for setting value: " + value + " on: " + object);
 		}
-		setter.setValue(value, converter == null ? Session.get().getConverter() : converter);
+		setter.setValue(value, converter == null ? new PropertyResolverConverter(Session.get(),Session.get().getLocale()) : converter);
 	}
 
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
@@ -143,7 +142,7 @@ public class PropertyResolver
 		int index = expressionBracketsSeperated.indexOf('.');
 		int lastIndex = 0;
 		Object value = object;
-		Class clz = value.getClass();
+		Class<? extends Object> clz = value.getClass();
 		String exp = expressionBracketsSeperated;
 		while (index != -1)
 		{
@@ -202,16 +201,16 @@ public class PropertyResolver
 	}
 
 
-	private final static IGetAndSet getGetAndSetter(String exp, Class clz)
+	private final static IGetAndSet getGetAndSetter(String exp, Class<? extends Object> clz)
 	{
-		Map getAndSetters = (Map)classesToGetAndSetters.get(clz);
+		Map<String, IGetAndSet> getAndSetters = classesToGetAndSetters.get(clz);
 		if (getAndSetters == null)
 		{
-			getAndSetters = new ConcurrentHashMap(8);
+			getAndSetters = new ConcurrentHashMap<String, IGetAndSet>(8);
 			classesToGetAndSetters.put(clz, getAndSetters);
 		}
 
-		IGetAndSet getAndSetter = (IGetAndSet)getAndSetters.get(exp);
+		IGetAndSet getAndSetter = getAndSetters.get(exp);
 		if (getAndSetter == null)
 		{
 			Method method = null;
@@ -350,7 +349,7 @@ public class PropertyResolver
 	 * @param expression
 	 * @return introspected field
 	 */
-	private static Field findField(Class clz, String expression)
+	private static Field findField(Class<? extends Object> clz, String expression)
 	{
 		Field field = null;
 		try
@@ -369,13 +368,13 @@ public class PropertyResolver
 	 * @param expression
 	 * @return The method for the expression null if not found
 	 */
-	private final static Method findGetter(Class clz, String expression)
+	private final static Method findGetter(Class<? extends Object> clz, String expression)
 	{
 		String name = Character.toUpperCase(expression.charAt(0)) + expression.substring(1);
 		Method method = null;
 		try
 		{
-			method = clz.getMethod("get" + name, null);
+			method = clz.getMethod("get" + name, (Class[])null);
 		}
 		catch (Exception e)
 		{
@@ -384,7 +383,7 @@ public class PropertyResolver
 		{
 			try
 			{
-				method = clz.getMethod("is" + name, null);
+				method = clz.getMethod("is" + name, (Class[])null);
 			}
 			catch (Exception e)
 			{
@@ -394,7 +393,7 @@ public class PropertyResolver
 		return method;
 	}
 
-	private final static Method findMethod(Class clz, String expression)
+	private final static Method findMethod(Class<? extends Object> clz, String expression)
 	{
 		if (expression.endsWith("()"))
 		{
@@ -403,7 +402,7 @@ public class PropertyResolver
 		Method method = null;
 		try
 		{
-			method = clz.getMethod(expression, null);
+			method = clz.getMethod(expression, (Class[])null);
 		}
 		catch (Exception e)
 		{
@@ -436,7 +435,7 @@ public class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public void setValue(Object value, IConverter converter)
+		public void setValue(Object value, PropertyResolverConverter converter)
 		{
 			getAndSetter.setValue(this.value, value, converter);
 		}
@@ -476,7 +475,7 @@ public class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public void setValue(final Object object, final Object value, IConverter converter);
+		public void setValue(final Object object, final Object value, PropertyResolverConverter converter);
 
 	}
 
@@ -501,9 +500,9 @@ public class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
-			((Map)object).put(key, value);
+			((Map<String, Object>)object).put(key, value);
 		}
 
 		/**
@@ -538,9 +537,10 @@ public class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		@SuppressWarnings("unchecked")
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
-			List lst = (List)object;
+			List<Object> lst = (List<Object>)object;
 
 			if (lst.size() > index)
 			{
@@ -592,7 +592,7 @@ public class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			value = converter.convert(value, object.getClass().getComponentType());
 			Array.set(object, index, value);
@@ -637,7 +637,7 @@ public class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			throw new WicketRuntimeException("Cant set the length on an array");
 		}
@@ -663,7 +663,7 @@ public class PropertyResolver
 			this.getMethod = method;
 		}
 
-		private final static Method findSetter(Method getMethod, Class clz)
+		private final static Method findSetter(Method getMethod, Class<? extends Object> clz)
 		{
 			String name = getMethod.getName();
 			name = "set" + name.substring(3);
@@ -705,7 +705,7 @@ public class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			if (setMethod == null)
 			{
@@ -791,7 +791,7 @@ public class PropertyResolver
 			Object ret = null;
 			try
 			{
-				ret = getMethod.invoke(object, null);
+				ret = getMethod.invoke(object, (Object[])null);
 			}
 			catch (InvocationTargetException ex)
 			{
@@ -811,7 +811,7 @@ public class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public final void setValue(final Object object, final Object value, IConverter converter)
+		public final void setValue(final Object object, final Object value, PropertyResolverConverter converter)
 		{
 			if (setMethod == null)
 			{
@@ -855,7 +855,7 @@ public class PropertyResolver
 			}
 		}
 
-		private final static Method findSetter(Method getMethod, Class clz)
+		private final static Method findSetter(Method getMethod, Class<? extends Object> clz)
 		{
 			String name = getMethod.getName();
 			if (name.startsWith("get"))
@@ -973,7 +973,7 @@ public class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
-		public void setValue(Object object, Object value, IConverter converter)
+		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
 			value = converter.convert(value, field.getType());
 			try

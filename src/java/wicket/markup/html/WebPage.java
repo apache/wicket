@@ -26,6 +26,7 @@ import javax.servlet.http.Cookie;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
@@ -98,7 +99,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		Set/* <Class> */missingBodyTagsLogged = new HashSet(1);
+		Set/* <Class> */<Class<? extends WebPage>>missingBodyTagsLogged = new HashSet<Class<? extends WebPage>>(1);
 	}
 
 	/** The resource references used for new window/tab support */
@@ -377,7 +378,15 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			// made in a new window/ tab, in which case it should go in a
 			// different page map so that we don't intermangle the history of
 			// those windows
-			final ArrayListStack accessStack = getPageMap().getAccessStack();
+			final ArrayListStack accessStack;
+			if(getPageMap() instanceof AccessStackPageMap)
+			{
+				 accessStack = ((AccessStackPageMap)getPageMap()).getAccessStack();
+			}
+			else
+			{
+				accessStack = new ArrayListStack();
+			}
 			CharSequence url = null;
 			if (target instanceof IBookmarkablePageRequestTarget)
 			{
@@ -410,7 +419,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 						meta = new MissingBodyTagLoggedMetaData();
 						app.setMetaData(MISSING_BODY_TAG_LOGGED_MDK, meta);
 					}
-					Class pageClass = WebPage.this.getClass();
+					Class<? extends WebPage> pageClass = WebPage.this.getClass();
 					if (!meta.missingBodyTagsLogged.contains(pageClass))
 					{
 						log
@@ -439,14 +448,14 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				// we know that we have a new window/ tab instance
 				if (onUnLoadModel == null)
 				{
-					onUnLoadModel = new Model()
+					onUnLoadModel = new Model<String>()
 					{
 						private static final long serialVersionUID = 1L;
 
 						/**
 						 * @see wicket.model.Model#getObject(wicket.Component)
 						 */
-						public Object getObject(Component component)
+						public String getObject(Component component)
 						{
 							Application application = Application.get();
 							return "deleteWicketCookie('pm-" + getPageMap().getName()

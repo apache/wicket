@@ -39,7 +39,7 @@ import java.util.Map;
 public final class TimeMap
 {
 	/** Map from ITimeFrameSource implementing objects to Object values. */
-	private final Map sources = new HashMap();
+	private final Map<ITimeFrameSource, Object> sources = new HashMap<ITimeFrameSource, Object>();
 
 	/**
 	 * @return Object for the current time
@@ -56,9 +56,9 @@ public final class TimeMap
 	 */
 	public Object get(final Time time)
 	{
-		for (final Iterator iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
 		{
-			final TimeFrame current = ((ITimeFrameSource)iterator.next()).getTimeFrame();
+			final TimeFrame current = iterator.next().getTimeFrame();
 			if (current.contains(time))
 			{
 				return sources.get(current);
@@ -81,9 +81,9 @@ public final class TimeMap
 	{
 		final TimeFrame timeframe = source.getTimeFrame();
 
-		for (final Iterator iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
 		{
-			final TimeFrame current = ((ITimeFrameSource)iterator.next()).getTimeFrame();
+			final TimeFrame current = iterator.next().getTimeFrame();
 
 			if (timeframe.overlaps(current))
 			{

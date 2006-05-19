@@ -52,7 +52,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class ValueMap extends HashMap
+public class ValueMap<K,V> extends HashMap<K,V>
 {
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
@@ -75,7 +75,7 @@ public class ValueMap extends HashMap
 	 * @param map
 	 *            The map to copy
 	 */
-	public ValueMap(final Map map)
+	public ValueMap(final Map<? extends K, ? extends V> map)
 	{
 		super.putAll(map);
 	}
@@ -119,7 +119,7 @@ public class ValueMap extends HashMap
 			if (parser.matches())
 			{
 				// Succeeded. Put key and value into map
-				put(parser.getKey(), parser.getValue());
+				put((K)parser.getKey(), (V)parser.getValue());
 			}
 			else
 			{
@@ -410,9 +410,9 @@ public class ValueMap extends HashMap
 	}
 
 	/**
-	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
+	 * @see java.util.Map#put(K, V)
 	 */
-	public Object put(final Object key, final Object value)
+	public V put(final K key, final V value)
 	{
 		checkMutability();
 		return super.put(key, value);
@@ -436,7 +436,7 @@ public class ValueMap extends HashMap
 		final Object o = get(key);
 		if (o == null)
 		{
-			return put(key, value);
+			return put((K)key, (V)value);
 		}
 		else if (o.getClass().isArray())
 		{
@@ -452,18 +452,18 @@ public class ValueMap extends HashMap
 			}
 			destArray[length] = value;
 
-			return put(key, destArray);
+			return put((K)key, (V)destArray);
 		}
 		else
 		{
-			return put(key, new String[] { o.toString(), value });
+			return put((K)key, (V)new String[] { o.toString(), value });
 		}
 	}
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map map)
+	public void putAll(final Map<? extends K, ? extends V> map)
 	{
 		checkMutability();
 		super.putAll(map);
@@ -472,7 +472,7 @@ public class ValueMap extends HashMap
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	public Object remove(final Object key)
+	public V remove(final Object key)
 	{
 		checkMutability();
 		return super.remove(key);

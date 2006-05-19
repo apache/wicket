@@ -122,7 +122,7 @@ public class MarkupParser
 	 *            were not found in the markup file.
 	 * @return a preconfigured markup filter chain
 	 */
-	private final IMarkupFilter newFilterChain(final List tagList)
+	private final IMarkupFilter newFilterChain(final List<ComponentTag> tagList)
 	{
 		// Chain together all the different markup filters and configure them
 		IMarkupFilter filter = new WicketTagIdentifier(markup, xmlParser);
@@ -243,7 +243,7 @@ public class MarkupParser
 	{
 		// Handlers may add MarkupElements which were not found in the markup
 		// file.
-		final List autoAddList = new ArrayList();
+		final List<ComponentTag> autoAddList = new ArrayList<ComponentTag>();
 
 		// Initialize the markup filter chain
 		this.markupFilterChain = newFilterChain(autoAddList);

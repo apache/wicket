@@ -72,14 +72,14 @@ import wicket.Component;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IModel extends IDetachable
+public interface IModel<V> extends IDetachable
 {
 	/**
 	 * Gets the nested model.
 	 * 
 	 * @return The nested model object.
 	 */
-	IModel getNestedModel();
+	IModel<V> getNestedModel();
 
 	/**
 	 * Gets the model object.
@@ -89,7 +89,7 @@ public interface IModel extends IDetachable
 	 * 
 	 * @return The model object
 	 */
-	Object getObject(final Component component);
+	V getObject(final Component component);
 
 	/**
 	 * Sets the model object.
@@ -100,5 +100,5 @@ public interface IModel extends IDetachable
 	 * @param object
 	 *            The model object
 	 */
-	void setObject(final Component component, final Object object);
+	void setObject(final Component component, final V object);
 }

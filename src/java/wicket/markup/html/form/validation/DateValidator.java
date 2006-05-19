@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -154,9 +155,9 @@ public abstract class DateValidator extends AbstractValidator
             }
 		}
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", minimum);
             map.put("maximum", maximum);
             return map;
@@ -195,9 +196,9 @@ public abstract class DateValidator extends AbstractValidator
             }
         }
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", minimum);
             return map;
         }
@@ -235,9 +236,9 @@ public abstract class DateValidator extends AbstractValidator
             }
         }
         
-        protected Map messageModel(FormComponent formComponent)
+        protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
-            final Map map = super.messageModel(formComponent);
+            final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("maximum", maximum);
             return map;
         }

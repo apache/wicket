@@ -76,13 +76,13 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * Autolink resolver delegates for constructing new autolinks reference
 	 * keyed on tag name (such as &lt;script&gt; or &lt;a&gt;.
 	 */
-	private static final Map/* <String, IAutolinkResolverDelegate> */tagNameToAutolinkResolverDelegates = new HashMap();
+	private static final Map/* <String, IAutolinkResolverDelegate> */<String, IAutolinkResolverDelegate>tagNameToAutolinkResolverDelegates = new HashMap<String, IAutolinkResolverDelegate>();
 
 	/**
 	 * Resolver objects that know what attribute to read for getting the
 	 * reference keyed on tag name (such as &lt;script&gt; or &lt;a&gt;.
 	 */
-	private static final Map/* <String, ITagReferenceResolver> */tagNameToTagReferenceResolvers = new HashMap();
+	private static final Map/* <String, ITagReferenceResolver> */<String, TagReferenceResolver>tagNameToTagReferenceResolvers = new HashMap<String, TagReferenceResolver>();
 
 	/**
 	 * If no specific resolver is found, always use the href attribute for
@@ -169,7 +169,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		private final String path;
 
 		/** The optional page parameters. */
-		private final PageParameters pageParameters;
+		private final PageParameters<String,Object> pageParameters;
 
 		/** The extension if any. */
 		private final String extension;
@@ -197,7 +197,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (queryStringPos != -1)
 			{
 				final String queryString = reference.substring(queryStringPos + 1);
-				pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+				pageParameters = new PageParameters<String,Object>(new ValueMap<String,String>(queryString, "&"));
 				infoPath = reference.substring(0, queryStringPos);
 			}
 			else
@@ -264,7 +264,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * Gets pageParameters.
 		 * @return pageParameters
 		 */
-		public final PageParameters getPageParameters()
+		public final PageParameters<String,Object> getPageParameters()
 		{
 			return pageParameters;
 		}
@@ -402,7 +402,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * Anything that is not in this list will be handled as a resource
 		 * reference.
 		 */
-		private static final Set supportedPageExtensions = new HashSet(4);
+		private static final Set<String> supportedPageExtensions = new HashSet<String>(4);
 
 		static
 		{
@@ -450,7 +450,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				try
 				{
-					final Class clazz = defaultClassResolver.resolveClass(className);
+					final Class<? extends Page> clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
 					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters, pathInfo.anchor);
 				}
 				catch (WicketRuntimeException ex)
@@ -464,7 +464,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
 						&& page.getMarkupStream().isMergedMarkup())
 				{
-					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
+					Class<? extends Page> clazz = (Class<? extends Page>)container.getMarkupStream().getTag().getMarkupClass();
 					if (clazz != null)
 					{
 						// Href is relative. Resolve the url given relative to the
@@ -473,7 +473,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	
 						try
 						{
-							clazz = defaultClassResolver.resolveClass(className);
+							clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
 							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters(), pathInfo.anchor);
 						}
 						catch (WicketRuntimeException ex)
@@ -540,8 +540,8 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param parameters
 		 * @param anchor
 		 */
-		public AutolinkBookmarkablePageLink(final String id, final Class pageClass,
-				final PageParameters parameters, final String anchor)
+		public AutolinkBookmarkablePageLink(final String id, final Class<? extends Page> pageClass,
+				final PageParameters<String,Object> parameters, final String anchor)
 		{
 			super(id, pageClass, parameters);
 			this.anchor = anchor;
@@ -745,7 +745,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		tag.setId(autoId);
 
 		// get the reference resolver
-		ITagReferenceResolver referenceResolver = (ITagReferenceResolver)tagNameToTagReferenceResolvers
+		ITagReferenceResolver referenceResolver = tagNameToTagReferenceResolvers
 				.get(tagName);
 		if (referenceResolver == null)
 		{
@@ -760,7 +760,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		// create the path info object
 		PathInfo pathInfo = new PathInfo(reference);
 		// now get the resolver delegate
-		IAutolinkResolverDelegate autolinkResolverDelegate = (IAutolinkResolverDelegate)tagNameToAutolinkResolverDelegates
+		IAutolinkResolverDelegate autolinkResolverDelegate = tagNameToAutolinkResolverDelegates
 				.get(tagName);
 		Component autoComponent = null;
 		if (autolinkResolverDelegate != null)
@@ -809,6 +809,6 @@ public final class AutoLinkResolver implements IComponentResolver
 	 */
 	public static final IAutolinkResolverDelegate getAutolinkResolverDelegate(final String tagName)
 	{
-		return (IAutolinkResolverDelegate)tagNameToAutolinkResolverDelegates.get(tagName);
+		return tagNameToAutolinkResolverDelegates.get(tagName);
 	}
 }

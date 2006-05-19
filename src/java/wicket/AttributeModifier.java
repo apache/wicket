@@ -226,7 +226,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	{
 		if (isEnabled())
 		{
-			final ValueMap attributes = tag.getAttributes();
+			final ValueMap<String, CharSequence> attributes = tag.getAttributes();
 			final Object replacementValue = getReplacementOrNull(component);
 
 			if (VALUELESS_ATTRIBUTE_ADD.equals(replacementValue))

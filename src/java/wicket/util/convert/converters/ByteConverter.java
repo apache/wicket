@@ -19,7 +19,7 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
-import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.IConverter;
 
 
 /**
@@ -35,15 +35,14 @@ public final class ByteConverter extends AbstractIntegerConverter
 	/**
 	 * The singleton instance for a byte converter
 	 */
-	public static final ITypeConverter INSTANCE = new ByteConverter();
+	public static final IConverter INSTANCE = new ByteConverter();
 	
-    /**
-     * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object, java.util.Locale)
-     */
-    public Object convert(final Object value, Locale locale)
+	/**
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
+	 */
+    public Object convertToObject(final String value, Locale locale)
     {
-        final Number number = value instanceof Number ? (Number)value : parse(value,
-                Byte.MIN_VALUE, Byte.MAX_VALUE,locale);
+        final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE,locale);
 
         if (number == null)
         {
@@ -52,7 +51,7 @@ public final class ByteConverter extends AbstractIntegerConverter
 
         return new Byte(number.byteValue());
     }
-
+    
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */

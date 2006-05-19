@@ -37,7 +37,7 @@ public class MockHttpSession implements HttpSession, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final ValueMap attributes = new ValueMap();
+	private final ValueMap<String, Object> attributes = new ValueMap<String, Object>();
 
     private final ServletContext context;
 
@@ -74,7 +74,7 @@ public class MockHttpSession implements HttpSession, Serializable
      * 
      * @return The attribute names
      */
-    public Enumeration getAttributeNames()
+    public Enumeration<String> getAttributeNames()
     {
         return Collections.enumeration(attributes.keySet());
 
@@ -163,7 +163,7 @@ public class MockHttpSession implements HttpSession, Serializable
     public String[] getValueNames()
     {
         String[] result = new String[attributes.size()];
-        return (String[])attributes.keySet().toArray(result);
+        return attributes.keySet().toArray(result);
     }
 
     /**

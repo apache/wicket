@@ -18,6 +18,7 @@
 package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
@@ -77,9 +78,9 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		}
 		
 		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(0, ix);
-		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
+		Class<? extends Page> bookmarkablePageClass = (Class<? extends Page>)Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
-		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
+		PageParameters<String, Object> parameters = new PageParameters<String, Object>(decodeParameters(parametersFragment, requestParameters.getParameters()));
 
 		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);

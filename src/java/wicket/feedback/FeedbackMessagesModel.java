@@ -40,10 +40,10 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	private IFeedbackMessageFilter filter;
 
 	/** Lazy loaded, temporary list. */
-	private transient List messages;
+	private transient List<FeedbackMessage> messages;
 
 	/** Comparator used for sorting the messages. */
-	private Comparator sortingComparator;
+	private Comparator<FeedbackMessage> sortingComparator;
 
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
@@ -83,7 +83,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @return The current sorting comparator
 	 */
-	public final Comparator getSortingComparator()
+	public final Comparator<FeedbackMessage> getSortingComparator()
 	{
 		return sortingComparator;
 	}
@@ -96,11 +96,11 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			List pageMessages = component.getPage().getFeedbackMessages().messages(filter);
+			List<FeedbackMessage> pageMessages = component.getPage().getFeedbackMessages().messages(filter);
 
-			List sessionMessages = component.getSession().getFeedbackMessages().messages(filter);
+			List<FeedbackMessage> sessionMessages = component.getSession().getFeedbackMessages().messages(filter);
 
-			messages = new ArrayList(pageMessages.size() + sessionMessages.size());
+			messages = new ArrayList<FeedbackMessage>(pageMessages.size() + sessionMessages.size());
 			messages.addAll(pageMessages);
 			messages.addAll(sessionMessages);
 
@@ -135,7 +135,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	 * @param sortingComparator
 	 *            comparator used for sorting the messages
 	 */
-	public final void setSortingComparator(Comparator sortingComparator)
+	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
 	{
 		this.sortingComparator = sortingComparator;
 	}
@@ -171,7 +171,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	 *            processing
 	 * @return The processed FeedbackMessage list
 	 */
-	protected List processMessages(final List messages)
+	protected List<FeedbackMessage> processMessages(final List<FeedbackMessage> messages)
 	{
 		return messages;
 	}

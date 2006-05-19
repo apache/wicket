@@ -103,6 +103,19 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	{
 		return false;
 	}
+	
+	/**
+	 * @see wicket.MarkupContainer#isStateless()
+	 */
+	@Override
+	protected boolean isStateless()
+	{
+		if(wantOnSelectionChangedNotifications())
+		{
+			return false;
+		}
+		return super.isStateless();
+	}	
 
 	/**
 	 * Processes the component tag.

@@ -38,7 +38,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.validation.IValidator;
-import wicket.markup.html.form.validation.TypeValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.convert.ConversionException;
@@ -73,7 +72,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class FormComponent extends WebMarkupContainer
+public abstract class FormComponent<V> extends WebMarkupContainer<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -127,7 +126,7 @@ public abstract class FormComponent extends WebMarkupContainer
 		/**
 		 * @see wicket.model.IModel#getObject(wicket.Component)
 		 */
-		public Object getObject(Component component)
+		public String getObject(Component component)
 		{
 			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled())
 					? null
@@ -139,7 +138,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * Attribute modifier that adds 'disabled="disabled"' to the component tag's
 	 * attribute if a form component is disabled.
 	 */
-	private static final class DisabledAttributeModifier extends AttributeModifier
+	private final class DisabledAttributeModifier extends AttributeModifier
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -194,7 +193,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	private IModel labelModel = null;
 
-	private transient Object convertedInput;
+	private transient V convertedInput;
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -229,15 +228,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public final FormComponent add(final IValidator validator)
 	{
-		// keep this in until we remove TypeValidator
-		if (validator instanceof TypeValidator)
-		{
-			setType(((TypeValidator)validator).getType());
-		}
-		else
-		{
-			validators_add(validator);
-		}
+		validators_add(validator);
 		return this;
 	}
 
@@ -341,16 +332,16 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * 
 	 * @return List of validators
 	 */
-	public final List getValidators()
+	public final List<IValidator> getValidators()
 	{
 		final int size = validators_size();
 		if (size == 0)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		else
 		{
-			final List list = new ArrayList();
+			final List<IValidator> list = new ArrayList<IValidator>();
 			for (int i = 0; i < size; i++)
 			{
 				list.add(validators_get(i));
@@ -587,7 +578,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	{
 		if (!checkRequired())
 		{
-			error(Collections.singletonList("RequiredValidator"), new HashMap());
+			error(Collections.singletonList("RequiredValidator"), new HashMap<String, Serializable>());
 		}
 	}
 
@@ -608,7 +599,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 			catch (ConversionException e)
 			{
-				Map args = new HashMap();
+				Map<String, Serializable> args = new HashMap<String, Serializable>();
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{
@@ -629,14 +620,14 @@ public abstract class FormComponent extends WebMarkupContainer
 		}
 		else if (!Strings.isEmpty(getInput()))
 		{
-			final IConverter converter = getConverter();
+			final IConverter converter = getConverter(type);
 			try
 			{
-				convertedInput = converter.convert(getInput(), type);
+				convertedInput = (V)converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{
-				Map args = new HashMap();
+				Map<String, Serializable> args = new HashMap<String, Serializable>();
 				args.put("type", Classes.simpleName(type));
 				final Locale locale = e.getLocale();
 				if (locale != null)
@@ -674,9 +665,9 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @throws ConversionException
 	 *             If input can't be converted
 	 */
-	protected Object convertValue(String[] value) throws ConversionException
+	protected V convertValue(String[] value) throws ConversionException
 	{
-		return value != null && value.length > 0 ? value[0].trim() : null;
+		return (V)(value != null && value.length > 0 ? value[0].trim() : null);
 	}
 
 	/**
@@ -986,7 +977,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	/**
 	 * @return value of input converted into appropriate type if any was set
 	 */
-	public final Object getConvertedInput()
+	public final V getConvertedInput()
 	{
 		return convertedInput;
 	}
@@ -1055,7 +1046,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @param args
 	 *            argument substituion map with format map:varname->varvalue
 	 */
-	public final void error(List/* <String> */resourceKeys, Map/* <String,String> */args)
+	public final void error(List<String> resourceKeys, Map<String, Serializable> args)
 	{
 		String prefix = getValidatorKeyPrefix();
 		if (Strings.isEmpty(prefix))
@@ -1065,14 +1056,14 @@ public abstract class FormComponent extends WebMarkupContainer
 
 		// prepare the arguments map by adding default arguments such as input,
 		// name, and label
-		final Map fullArgs;
+		final HashMap<String, Object> fullArgs;
 		if (args == null)
 		{
-			fullArgs = new HashMap(6);
+			fullArgs = new HashMap<String, Object>(6);
 		}
 		else
 		{
-			fullArgs = new HashMap(args.size() + 6);
+			fullArgs = new HashMap<String, Object>(args.size() + 6);
 			fullArgs.putAll(args);
 		}
 
@@ -1103,18 +1094,18 @@ public abstract class FormComponent extends WebMarkupContainer
 			}
 		}
 
-		final IModel argsModel = new Model((Serializable)fullArgs);
+		final IModel<HashMap<String, Object>> argsModel = new Model<HashMap<String, Object>>(fullArgs);
 
 		// iterate through keys in order they were provided
 
 		final Localizer localizer = getLocalizer();
-		final Iterator keys = resourceKeys.iterator();
+		final Iterator<String> keys = resourceKeys.iterator();
 
 		String message = null;
 
 		while (keys.hasNext())
 		{
-			final String key = (String)keys.next();
+			final String key = keys.next();
 
 			String resource = prefix + getId() + "." + key;
 

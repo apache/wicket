@@ -38,7 +38,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	 * thread local for the entries that were processed during the current
 	 * request.
 	 */
-	private static final ThreadLocal processedEntries = new ThreadLocal();
+	private static final ThreadLocal<Set<IHeaderContributor>> processedEntries = new ThreadLocal<Set<IHeaderContributor>>();
 
 	/**
 	 * Construct.
@@ -67,13 +67,13 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 		}
 
 		// get the processed entries for this request
-		Set entries = (Set)processedEntries.get();
+		Set<IHeaderContributor> entries = processedEntries.get();
 
 		int len = contributors.length;
 		// were any contributors set?
 		if (entries == null)
 		{
-			entries = new HashSet(len);
+			entries = new HashSet<IHeaderContributor>(len);
 			processedEntries.set(entries);
 		}
 

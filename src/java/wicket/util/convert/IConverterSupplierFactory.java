@@ -17,7 +17,7 @@
  */
 package wicket.util.convert;
 
-import java.util.Locale;
+import wicket.ISupplyConverters;
 
 /**
  * Factory that creates and configures instances of
@@ -26,7 +26,7 @@ import java.util.Locale;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IConverterFactory
+public interface IConverterSupplierFactory
 {
 	/**
 	 * Creates and returns a new instance of {@link IConverter}.
@@ -34,5 +34,5 @@ public interface IConverterFactory
 	 * @param locale The Locale to create the converter for 
 	 * @return A new IConverter instance
 	 */
-	IConverter newConverter(final Locale locale);
+	ISupplyConverters newConverterSupplier();
 }

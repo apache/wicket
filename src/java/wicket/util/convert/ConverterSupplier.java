@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import wicket.ISupplyConverters;
 import wicket.util.convert.converters.BooleanConverter;
 import wicket.util.convert.converters.ByteConverter;
 import wicket.util.convert.converters.CharacterConverter;
@@ -31,7 +32,6 @@ import wicket.util.convert.converters.FloatConverter;
 import wicket.util.convert.converters.IntegerConverter;
 import wicket.util.convert.converters.LongConverter;
 import wicket.util.convert.converters.ShortConverter;
-import wicket.util.convert.converters.StringConverter;
 import wicket.util.lang.Objects;
 
 /**
@@ -45,7 +45,7 @@ import wicket.util.lang.Objects;
  * converter interface:
  * 
  * <pre>
- * final IConverter converter = new ConverterFactory().newConverter();
+ * final IConverter converter = new ConverterSupplierFactory().newConverter();
  * converter.setLocale(Locale.US);
  * converter.convert(new Double(7.1), String.class);
  * </pre>
@@ -63,57 +63,74 @@ import wicket.util.lang.Objects;
  * classes directly. There are convenient validators and conversion features
  * built into Wicket that you can use directly.
  * 
- * @see IConverterFactory
+ * @see IConverterSupplierFactory
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class Converter implements IConverter
+public class ConverterSupplier implements ISupplyConverters
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Maps Classes to ITypeConverters. */
-	private final Map classToConverter = new HashMap();
+	private final Map<Class, IConverter> classToConverter = new HashMap<Class, IConverter>();
 
 	/**
-	 * Converter that is to be used when no registered converter is found.
+	 * ConverterSupplier that is to be used when no registered converter is found.
 	 */
-	private IConverter defaultConverter = new IConverter()
+	private class DefaultConverter implements IConverter
 	{
+		private Class type;
+		
+		/**
+		 * Construct.
+		 * @param type
+		 */
+		public DefaultConverter(Class type)
+		{
+			this.type = type;
+		}
+		
 		private static final long serialVersionUID = 1L;
 		
 		/**
-		 * Converts the given value object to class c.
-		 * 
-		 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
-		 *      java.lang.Class)
+		 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
 		 */
-		public Object convert(Object value, Class c)
+		public Object convertToObject(String value, Locale locale)
+		{
+			if(value == null)
+			{
+				return null;
+			}
+			if("".equals(value))
+			{
+				if(type == String.class)
+				{
+					return "";
+				}
+				return null;
+			}
+			
+			return Objects.convertValue(value, type);
+		}
+
+		/**
+		 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, java.util.Locale)
+		 */
+		public String convertToString(Object value, Locale locale)
 		{
 			if(value == null || "".equals(value))
 			{
 				return null;
 			}
 			
-			return Objects.convertValue(value, c);
-		}
-
-		public Locale getLocale()
-		{
-			return Locale.getDefault();
-		}
-
-		public void setLocale(Locale locale)
-		{
+			return (String)Objects.convertValue(value, String.class);
 		}
 	};
-
-	/** The current locale. */
-	private Locale locale = null;
 
 	/**
 	 * Constructor
 	 */
-	public Converter()
+	public ConverterSupplier()
 	{
 		set(Boolean.TYPE, BooleanConverter.INSTANCE);
 		set(Boolean.class, BooleanConverter.INSTANCE);
@@ -131,80 +148,40 @@ public class Converter implements IConverter
 		set(Long.class, LongConverter.INSTANCE);
 		set(Short.TYPE, ShortConverter.INSTANCE);
 		set(Short.class, ShortConverter.INSTANCE);
-		set(String.class, new StringConverter());
 		set(Date.class, new DateConverter());
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param locale
-	 *            The locale
-	 */
-	public Converter(final Locale locale)
-	{
-		this();
-		setLocale(locale);
-	}
-
-	/**
-	 * Removes all registered converters.
-	 */
-	public final void clear()
-	{
-		classToConverter.clear();
+		// TODO convert to string will go fine, but what about to object? It will make a java.util.Date
+		set(java.sql.Date.class, new DateConverter());
 	}
 
 	/**
 	 * Converts the given value to class c.
 	 * 
-	 * @param value
-	 *            The value to convert
-	 * @param c
-	 *            The class to convert to
-	 * @return The converted value
+	 * @param type
+	 *            Class to get the converter for.
+	 *            
+	 * @return The converter for the given type
 	 * 
 	 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
-	 *      java.lang.Class)
+	 *      java.lang.Class, Locale)
 	 */
-	public final Object convert(Object value, Class c)
+	public final IConverter getConverter(Class type)
 	{
 		// Null is always converted to null
-		if (value == null)
+		if (type == null)
 		{
-			return null;
+			return new DefaultConverter(String.class);
 		}
 
-		// Class cannot be null
-		if (c == null)
-		{
-			throw new IllegalArgumentException("Class cannot be null");
-		}
-
-		// Catch all cases where value is already the right type
-		if (c.isAssignableFrom(value.getClass()))
-		{
-			return value;
-		}
 
 		// Get type converter for class
-		final ITypeConverter converter = get(c);
+		final IConverter converter = get(type);
 		if (converter == null)
 		{
-			return defaultConverter.convert(value, c);
+			return new DefaultConverter(type);
 		}
-
-		try
-		{
-			// Use type converter to convert to value
-			return converter.convert(value,locale);
-		}
-		catch (ConversionException e)
-		{
-			throw e.setConverter(this);
-		}
+		return converter;
 	}
-
+	
 	/**
 	 * Gets the type converter that is registered for class c.
 	 * 
@@ -213,29 +190,9 @@ public class Converter implements IConverter
 	 * @return The type converter that is registered for class c or null if no
 	 *         type converter was registered for class c
 	 */
-	public final ITypeConverter get(Class c)
+	public final IConverter get(Class c)
 	{
-		return (ITypeConverter)classToConverter.get(c);
-	}
-
-	/**
-	 * Gets the converter that is to be used when no registered converter is
-	 * found.
-	 * 
-	 * @return the converter that is to be used when no registered converter is
-	 *         found
-	 */
-	public final IConverter getDefaultConverter()
-	{
-		return defaultConverter;
-	}
-
-	/**
-	 * @see wicket.util.convert.ILocalizable#getLocale()
-	 */
-	public final Locale getLocale()
-	{
-		return locale;
+		return classToConverter.get(c);
 	}
 
 	/**
@@ -247,9 +204,9 @@ public class Converter implements IConverter
 	 * @return The converter that was registered for class c before removal or
 	 *         null if none was registered
 	 */
-	public final ITypeConverter remove(Class c)
+	public final IConverter remove(Class c)
 	{
-		return (ITypeConverter)classToConverter.remove(c);
+		return classToConverter.remove(c);
 	}
 
 	/**
@@ -262,50 +219,16 @@ public class Converter implements IConverter
 	 * @return The previous registered converter for class c or null if none was
 	 *         registered yet for class c
 	 */
-	public final ITypeConverter set(final Class c, final ITypeConverter converter)
+	public final IConverter set(final Class c, final IConverter converter)
 	{
 		if (converter == null)
 		{
-			throw new IllegalArgumentException("Converter cannot be null");
+			throw new IllegalArgumentException("ConverterSupplier cannot be null");
 		}
 		if (c == null)
 		{
 			throw new IllegalArgumentException("Class cannot be null");
 		}
-		return (ITypeConverter)classToConverter.put(c, converter);
-	}
-
-	/**
-	 * Sets the converter that is to be used when no registered converter is
-	 * found. This allows converter chaining.
-	 * 
-	 * @param defaultConverter
-	 *            The converter that is to be used when no registered converter
-	 *            is found
-	 */
-	public final void setDefaultConverter(IConverter defaultConverter)
-	{
-		this.defaultConverter = defaultConverter;
-	}
-
-	/**
-	 * @see wicket.util.convert.ILocalizable#setLocale(java.util.Locale)
-	 */
-	public void setLocale(Locale locale)
-	{
-		this.locale = locale;
-
-		// Set locale on default converter
-		defaultConverter.setLocale(locale);
-	}
-
-	/**
-	 * @param value
-	 *            The value to convert to a String
-	 * @return The string
-	 */
-	public String toString(Object value)
-	{
-		return (String)convert(value, String.class);
+		return classToConverter.put(c, converter);
 	}
 }

@@ -175,7 +175,7 @@ public abstract class RequestCycle
 	private static final Log log = LogFactory.getLog(RequestCycle.class);
 
 	/** Thread-local that holds the current request cycle. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal<RequestCycle> current = new ThreadLocal<RequestCycle>();
 
 	/** No processing has been done. */
 	private static final int NOT_STARTED = 0;
@@ -229,7 +229,7 @@ public abstract class RequestCycle
 	private boolean redirect;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient ArrayListStack/* <IRequestTarget> */requestTargets = new ArrayListStack(3);
+	private transient ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(3);
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
@@ -244,7 +244,7 @@ public abstract class RequestCycle
 	 */
 	public final static RequestCycle get()
 	{
-		return (RequestCycle)current.get();
+		return current.get();
 	}
 
 	/**
@@ -340,7 +340,7 @@ public abstract class RequestCycle
 	 */
 	public final IRequestTarget getRequestTarget()
 	{
-		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
+		return (!requestTargets.isEmpty()) ? requestTargets.peek() : null;
 	}
 
 	/**
@@ -544,7 +544,7 @@ public abstract class RequestCycle
 		{
 			if (!requestTargets.isEmpty())
 			{
-				IRequestTarget former = (IRequestTarget)requestTargets.peek();
+				IRequestTarget former = requestTargets.peek();
 				log.debug("replacing request target " + former + " with " + requestTarget);
 			}
 			else
@@ -594,7 +594,7 @@ public abstract class RequestCycle
 	 * @param pageClass
 	 *            The page class to render as a response
 	 */
-	public final void setResponsePage(final Class pageClass)
+	public final void setResponsePage(final Class<? extends Page> pageClass)
 	{
 		setResponsePage(pageClass, null);
 	}
@@ -609,7 +609,7 @@ public abstract class RequestCycle
 	 *            The page parameters that gets appended to the bookmarkable
 	 *            url,
 	 */
-	public final void setResponsePage(final Class pageClass, final PageParameters pageParameters)
+	public final void setResponsePage(final Class<? extends Page> pageClass, final PageParameters<String,Object> pageParameters)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
 		setRequestTarget(target);
@@ -709,7 +709,7 @@ public abstract class RequestCycle
 	 *            The parameters to pass to the resource.
 	 * @return The url for the shared resource
 	 */
-	public final CharSequence urlFor(final ResourceReference resourceReference, ValueMap parameters)
+	public final CharSequence urlFor(final ResourceReference resourceReference, ValueMap<String, Object> parameters)
 	{
 		RequestParameters requestParameters = new RequestParameters();
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
@@ -733,8 +733,8 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
-			final PageParameters parameters)
+	public final CharSequence urlFor(final PageMap pageMap, final Class<? extends Page> pageClass,
+			final PageParameters<String, Object> parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
 				? PageMap.DEFAULT_NAME
@@ -791,9 +791,9 @@ public abstract class RequestCycle
 		// clean up target stack; calling detach has effects like
 		// NOTE: don't remove the targets as testing code might need them
 		// furthermore, the targets will be cg-ed with this cycle too
-		for (Iterator iter = requestTargets.iterator(); iter.hasNext();)
+		for (Iterator<IRequestTarget> iter = requestTargets.iterator(); iter.hasNext();)
 		{
-			IRequestTarget target = (IRequestTarget)iter.next();
+			IRequestTarget target = iter.next();
 			if (target != null)
 			{
 				try
@@ -825,11 +825,13 @@ public abstract class RequestCycle
 
 		try
 		{
+			getApplication().getSessionStore().onEndRequest(request);
+
 			onEndRequest();
 		}
 		catch (RuntimeException e)
 		{
-			log.error("Exception occurred during onEndRequest", e);
+			log.error("Exception occurred during request detachement", e);
 		}
 
 		// Release thread local resources
@@ -859,6 +861,8 @@ public abstract class RequestCycle
 	{
 		// Prepare session for request
 		session.init();
+
+		getApplication().getSessionStore().onBeginRequest(request);
 
 		// Event callback
 		onBeginRequest();

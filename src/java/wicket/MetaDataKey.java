@@ -36,7 +36,7 @@ public abstract class MetaDataKey implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	/** Type of data associated with this key */
-	private Class type;
+	private Class<?> type;
 
 	/**
 	 * Constructor.
