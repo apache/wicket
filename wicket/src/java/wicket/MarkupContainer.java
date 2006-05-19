@@ -38,6 +38,7 @@ import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
+import wicket.markup.html.list.ListItem;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
@@ -390,9 +391,9 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @return Iterator that iterates through children in the order they were
 	 *         added
 	 */
-	public final Iterator iterator()
+	public final Iterator<Component> iterator()
 	{
-		return new Iterator()
+		return new Iterator<Component>()
 		{
 			int index = 0;
 
@@ -401,7 +402,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 				return index < children_size();
 			}
 
-			public Object next()
+			public Component next()
 			{
 				return children_get(index++);
 			}
@@ -626,9 +627,10 @@ public abstract class MarkupContainer<V> extends Component<V>
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
-	public Component setModel(final IModel model)
+	@Override
+	public Component setModel(final IModel<V> model)
 	{
-		final IModel previous = getModel();
+		final IModel<V> previous = getModel();
 		super.setModel(model);
 		if (previous instanceof ICompoundModel)
 		{

@@ -17,8 +17,6 @@
  */
 package wicket.markup.html.list;
 
-import java.util.List;
-
 import wicket.Component;
 import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
@@ -26,16 +24,16 @@ import wicket.model.IModel;
 /**
  * Model for list items.
  */
-public class ListItemModel extends AbstractDetachableModel
+public class ListItemModel<V> extends AbstractDetachableModel<V>
 {
 	private static final long serialVersionUID = 1L;
 	
 	// It is easy and cheap to re-build it if necessary.
 	// Avoid synchronising it in a cluster
-	private transient Object object;
+	private transient V object;
 
 	/** The ListView's list model */
-	private final ListView listView;
+	private final ListView<V> listView;
 
 	/* The list item's index */
 	private final int index;
@@ -48,7 +46,7 @@ public class ListItemModel extends AbstractDetachableModel
 	 * @param index
 	 *            The index of this model
 	 */
-	public ListItemModel(final ListView listView, final int index)
+	public ListItemModel(final ListView<V> listView, final int index)
 	{
 		this.listView = listView;
 		this.index = index;
@@ -58,7 +56,8 @@ public class ListItemModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public IModel getNestedModel()
+	@Override
+	public IModel<V> getNestedModel()
 	{
 		return null;
 	}
@@ -66,15 +65,17 @@ public class ListItemModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onAttach()
 	 */
+	@Override
 	protected void onAttach()
 	{
 		// Re-attach the model object based on index and ListView model object
-		this.object = ((List)listView.getModelObject()).get(index);
+		this.object = listView.getModelObject().get(index);
 	}
 
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		this.object = null;
@@ -83,7 +84,8 @@ public class ListItemModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
-	protected Object onGetObject(final Component component)
+	@Override
+	protected V onGetObject(final Component component)
 	{
 		return object;
 	}
@@ -92,7 +94,8 @@ public class ListItemModel extends AbstractDetachableModel
 	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
 	 *      java.lang.Object)
 	 */
-	protected void onSetObject(final Component component, final Object object)
+	@Override
+	protected void onSetObject(final Component component, final V object)
 	{
 		this.object = object;
 	}
