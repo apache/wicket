@@ -79,7 +79,7 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	public void save(final FormComponent component)
 	{
-		final String name = component.getPageRelativePath();
+		final String name = getName(component);
 		final String value = component.getValue();
 
 		Cookie cookie = getCookie(component);
@@ -95,6 +95,15 @@ public class CookieValuePersister implements IValuePersister
 		cookie.setMaxAge(getSettings().getMaxAge());
 		
 		save(cookie);
+	}
+	
+	/**
+	 * @param component Component to get name for
+	 * @return The name of the component.
+	 */
+	protected String getName(final FormComponent component)
+	{
+		return component.getPageRelativePath();
 	}
 
 	/**
@@ -145,7 +154,7 @@ public class CookieValuePersister implements IValuePersister
 	private Cookie getCookie(final FormComponent component)
 	{
 		// Gets the cookie's name
-		final String name = component.getPageRelativePath();
+		final String name = getName(component);
 
 		// Get all cookies attached to the Request by the client browser
 		Cookie[] cookies = getCookies();
