@@ -343,7 +343,7 @@ public class ClientProperties implements Serializable
 	 */
 	public static final String UTC_OFFSET = "utcOffset";
 
-	private Map data = new HashMap();
+	private Map<String, Object> data = new HashMap<String, Object>();
 
 	/**
 	 * Creates a new <code>ClientProperties</code> object.
@@ -416,7 +416,7 @@ public class ClientProperties implements Serializable
 	 */
 	public String[] getPropertyNames()
 	{
-		return (String[])data.keySet().toArray(new String[data.size()]);
+		return data.keySet().toArray(new String[data.size()]);
 	}
 
 	/**

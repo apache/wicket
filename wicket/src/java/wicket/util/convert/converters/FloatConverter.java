@@ -19,7 +19,7 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
-import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.IConverter;
 
 /**
  * Converts from Object to Float.
@@ -34,15 +34,14 @@ public final class FloatConverter extends AbstractDecimalConverter
 	/**
 	 * The singleton instance for a float converter
 	 */
-	public static final ITypeConverter INSTANCE = new FloatConverter();
+	public static final IConverter INSTANCE = new FloatConverter();
 	
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convert(final Object value, Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
-		final Number number = value instanceof Number ? (Number)value : parse(value,
-				-Float.MAX_VALUE, Float.MAX_VALUE,locale);
+		final Number number = parse(value,-Float.MAX_VALUE, Float.MAX_VALUE,locale);
 
         if (number == null)
         {

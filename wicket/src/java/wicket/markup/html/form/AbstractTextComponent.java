@@ -26,7 +26,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractTextComponent extends FormComponent
+public abstract class AbstractTextComponent<V> extends FormComponent<V>
 {
 	/**
 	 * @see wicket.Component#Component(String)
@@ -95,7 +95,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String[] value) throws ConversionException
+	protected V convertValue(String[] value) throws ConversionException
 	{
 		String tmp = value != null && value.length > 0?value[0]:null;
 		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))

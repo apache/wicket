@@ -91,9 +91,9 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Map of parameters
 	 */
-	public Map getParameterMap()
+	public Map<String, ? extends Object> getParameterMap()
 	{
-		final Map map = new HashMap();
+		final Map<String, Object> map = new HashMap<String, Object>();
 
 		for (final Enumeration enumeration = httpServletRequest.getParameterNames(); enumeration
 				.hasMoreElements();)

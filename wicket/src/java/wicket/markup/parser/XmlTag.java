@@ -45,7 +45,7 @@ public class XmlTag extends MarkupElement
 	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
 
 	/** Attribute map. */
-	private AttributeMap attributes;
+	private AttributeMap<String,CharSequence> attributes;
 
 	/** Column number. */
 	int columnNumber;
@@ -126,17 +126,17 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return The tag's attributes
 	 */
-	public AttributeMap getAttributes()
+	public AttributeMap<String,CharSequence> getAttributes()
 	{
 		if (attributes == null)
 		{
 			if (copyOf == this)
 			{
-				attributes = new AttributeMap();
+				attributes = new AttributeMap<String,CharSequence>();
 			}
 			else
 			{
-				attributes = new AttributeMap(copyOf.attributes);
+				attributes = new AttributeMap<String,CharSequence>(copyOf.attributes);
 			}
 		}
 		return attributes;

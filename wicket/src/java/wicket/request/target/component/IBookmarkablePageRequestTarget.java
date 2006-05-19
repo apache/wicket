@@ -18,6 +18,7 @@
 package wicket.request.target.component;
 
 import wicket.IRequestTarget;
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.request.target.IEventProcessor;
 
@@ -34,14 +35,14 @@ public interface IBookmarkablePageRequestTarget extends IRequestTarget, IEventPr
 	 * 
 	 * @return the page class
 	 */
-	Class getPageClass();
+	Class<? extends Page> getPageClass();
 
 	/**
 	 * Gets the optional page parameters.
 	 * 
 	 * @return the page parameters or null
 	 */
-	PageParameters getPageParameters();
+	PageParameters<String,Object> getPageParameters();
 
 	/**
 	 * Gets the optional page map name.

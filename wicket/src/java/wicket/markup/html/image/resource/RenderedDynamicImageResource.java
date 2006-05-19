@@ -49,7 +49,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
   private int height = 100;
   
   /** Transient image data so that image only needs to be generated once per VM */
-  private transient SoftReference imageData;
+  private transient SoftReference<byte[]> imageData;
   
   /** Type of image (one of BufferedImage.TYPE_*) */
   private int type = BufferedImage.TYPE_INT_RGB;
@@ -158,12 +158,12 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
     byte[] data = null;
     if (imageData != null)
     {
-      data = (byte[])imageData.get();
+      data = imageData.get();
     }
     if (data == null)
     {
       data = render();
-      imageData = new SoftReference(data);
+      imageData = new SoftReference<byte[]>(data);
       setLastModifiedTime(Time.now());
     }
     return data;

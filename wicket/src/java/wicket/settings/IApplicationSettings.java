@@ -3,10 +3,11 @@ package wicket.settings;
 import java.util.Locale;
 
 import wicket.Application;
+import wicket.Page;
 import wicket.application.IClassResolver;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
-import wicket.util.convert.IConverterFactory;
+import wicket.util.convert.IConverterSupplierFactory;
 
 /**
  * Settings interface for application settings.
@@ -19,8 +20,8 @@ import wicket.util.convert.IConverterFactory;
  * You can set property homePageRenderStrategy to choose from different ways the
  * home page url shows up in your browser.
  * <p>
- * <b>A Converter Factory </b>- By overriding getConverterFactory(), you can
- * provide your own factory which creates locale sensitive Converter instances.
+ * <b>A ConverterSupplier Factory </b>- By overriding getConverterFactory(), you can
+ * provide your own factory which creates locale sensitive ConverterSupplier instances.
  * 
  * @author Jonathan Locke
  */
@@ -32,7 +33,7 @@ public interface IApplicationSettings
 	 * @return Returns the accessDeniedPage.
 	 * @see IApplicationSettings#setAccessDeniedPage(Class)
 	 */
-	Class getAccessDeniedPage();
+	Class<? extends Page> getAccessDeniedPage();
 
 	/**
 	 * Gets the default resolver to use when finding classes
@@ -41,6 +42,13 @@ public interface IApplicationSettings
 	 */
 	IClassResolver getClassResolver();
 
+	/**
+	 * Gets the converter supplier factory.
+	 * 
+	 * @return the converter factory
+	 */
+	IConverterSupplierFactory getConverterSupplierFactory();
+	
 	/**
 	 * Gets context path to use for absolute path generation. For example an
 	 * Application Server that is used as a virtual server on a Webserver:
@@ -57,13 +65,6 @@ public interface IApplicationSettings
 	String getContextPath();
 
 	/**
-	 * Gets the converter factory.
-	 * 
-	 * @return the converter factory
-	 */
-	IConverterFactory getConverterFactory();
-
-	/**
 	 * @return Returns the defaultLocale.
 	 */
 	Locale getDefaultLocale();
@@ -74,7 +75,7 @@ public interface IApplicationSettings
 	 * @return Returns the internalErrorPage.
 	 * @see IApplicationSettings#setInternalErrorPage(Class)
 	 */
-	Class getInternalErrorPage();
+	Class<? extends Page> getInternalErrorPage();
 
 	/**
 	 * Gets the page expired page class.
@@ -82,7 +83,7 @@ public interface IApplicationSettings
 	 * @return Returns the pageExpiredErrorPage.
 	 * @see IApplicationSettings#setPageExpiredErrorPage(Class)
 	 */
-	Class getPageExpiredErrorPage();
+	Class<? extends Page> getPageExpiredErrorPage();
 
 	/**
 	 * Sets the access denied page class. The class must be bookmarkable and
@@ -91,7 +92,7 @@ public interface IApplicationSettings
 	 * @param accessDeniedPage
 	 *            The accessDeniedPage to set.
 	 */
-	void setAccessDeniedPage(final Class accessDeniedPage);
+	void setAccessDeniedPage(final Class<? extends Page> accessDeniedPage);
 
 	/**
 	 * Sets the default class resolver to use when finding classes.
@@ -100,6 +101,14 @@ public interface IApplicationSettings
 	 *            The default class resolver
 	 */
 	void setClassResolver(final IClassResolver defaultClassResolver);
+
+	
+	/**
+	 * Sets the ConverterSupplierFactory
+	 * 
+	 * @param factory
+	 */
+	public void setConverterSupplierFactory(IConverterSupplierFactory factory);
 
 	/**
 	 * Sets context path to use for absolute path generation. For example an
@@ -122,14 +131,6 @@ public interface IApplicationSettings
 	void setContextPath(String contextPath);
 
 	/**
-	 * Sets converter factory
-	 * 
-	 * @param factory
-	 *            new factory
-	 */
-	void setConverterFactory(IConverterFactory factory);
-
-	/**
 	 * @param defaultLocale
 	 *            The defaultLocale to set.
 	 */
@@ -142,7 +143,7 @@ public interface IApplicationSettings
 	 * @param internalErrorPage
 	 *            The internalErrorPage to set.
 	 */
-	void setInternalErrorPage(final Class internalErrorPage);
+	void setInternalErrorPage(final Class<? extends Page> internalErrorPage);
 
 	/**
 	 * Sets the page expired page class. The class must be bookmarkable and must
@@ -151,5 +152,6 @@ public interface IApplicationSettings
 	 * @param pageExpiredErrorPage
 	 *            The pageExpiredErrorPage to set.
 	 */
-	void setPageExpiredErrorPage(final Class pageExpiredErrorPage);
+	void setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage);
+
 }

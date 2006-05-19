@@ -19,6 +19,7 @@
 package wicket.util.convert;
 
 import java.text.ParseException;
+import java.util.Locale;
 
 import javax.swing.text.MaskFormatter;
 
@@ -31,7 +32,7 @@ import wicket.WicketRuntimeException;
 /**
  * A converter that takes a mask into account. It is specifically meant for
  * overrides on individual components, that provide their own converter by
- * returning it from {@link Component#getConverter()}. It uses an instance of
+ * returning it from {@link Component#getConverter(Object)}. It uses an instance of
  * {@link MaskFormatter} to delegate the masking and unmasking to.
  * <p>
  * The following characters can be specified (adopted from the MaskFormatter
@@ -94,7 +95,7 @@ import wicket.WicketRuntimeException;
  * 
  * @author Eelco Hillenius
  */
-public class MaskConverter extends SimpleConverterAdapter
+public class MaskConverter implements IConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -162,9 +163,9 @@ public class MaskConverter extends SimpleConverterAdapter
 	 * Converts the value to a string using
 	 * {@link MaskFormatter#valueToString(Object)}.
 	 * 
-	 * @see wicket.util.convert.SimpleConverterAdapter#toString(java.lang.Object)
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
-	public String toString(Object value)
+	public String convertToString(Object value, Locale locale)
 	{
 		try
 		{
@@ -180,9 +181,9 @@ public class MaskConverter extends SimpleConverterAdapter
 	 * Converts a string to an object using
 	 * {@link MaskFormatter#stringToValue(String)}.
 	 * 
-	 * @see wicket.util.convert.SimpleConverterAdapter#toObject(java.lang.String)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
 	 */
-	public Object toObject(String value)
+	public Object convertToObject(String value, Locale locale)
 	{
 		try
 		{

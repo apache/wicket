@@ -20,6 +20,7 @@ package wicket.session;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import wicket.AbortException;
 import wicket.IPageFactory;
@@ -28,7 +29,6 @@ import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.authorization.AuthorizationException;
 import wicket.markup.MarkupException;
-import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * A factory that constructs Pages.

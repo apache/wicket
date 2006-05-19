@@ -44,7 +44,7 @@ import wicket.markup.parser.XmlTag;
 public final class WicketTagIdentifier extends AbstractMarkupFilter
 {
 	/** List of well known wicket tag namses */
-	private static List wellKnownTagNames;
+	private static List<String> wellKnownTagNames;
 
 	/** The current markup needed to get the markups namespace */
 	private final Markup markup;
@@ -139,7 +139,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		if (wellKnownTagNames == null)
 		{
-			wellKnownTagNames = new ArrayList();
+			wellKnownTagNames = new ArrayList<String>();
 		}
 
 		if (wellKnownTagNames.contains(name) == false)

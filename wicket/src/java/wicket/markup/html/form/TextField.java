@@ -25,7 +25,7 @@ import wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public class TextField extends AbstractTextComponent
+public class TextField<V> extends AbstractTextComponent<V>
 {
 	private static final long serialVersionUID = 1L;
 	

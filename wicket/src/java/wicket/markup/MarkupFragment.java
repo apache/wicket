@@ -46,7 +46,7 @@ public class MarkupFragment
 	public static final MarkupFragment NO_MARKUP_FRAGMENT = new MarkupFragment(Markup.NO_MARKUP);
 
 	/** The list of markup elements */
-	private/* final */List markupElements;
+	private/* final */List<MarkupElement> markupElements;
 
 	/** The associate markup */
 	private final Markup markup;
@@ -60,7 +60,7 @@ public class MarkupFragment
 	MarkupFragment(final Markup markup)
 	{
 		this.markup = markup;
-		this.markupElements = new ArrayList();
+		this.markupElements = new ArrayList<MarkupElement>();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class MarkupFragment
 		buf.append(this.markup.toString());
 		buf.append("\n");
 
-		final Iterator iter = this.markupElements.iterator();
+		final Iterator<MarkupElement> iter = this.markupElements.iterator();
 		while (iter.hasNext())
 		{
 			buf.append(iter.next());
@@ -93,7 +93,7 @@ public class MarkupFragment
 	 */
 	public final MarkupElement get(final int index)
 	{
-		return (MarkupElement)markupElements.get(index);
+		return markupElements.get(index);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class MarkupFragment
 	{
 		for (int i = 0; i < this.markupElements.size(); i++)
 		{
-			MarkupElement elem = (MarkupElement)this.markupElements.get(i);
+			MarkupElement elem = this.markupElements.get(i);
 			if (elem instanceof ComponentTag)
 			{
 				// Make the tag immutable
@@ -163,7 +163,7 @@ public class MarkupFragment
 	 */
 	final void reset()
 	{
-		this.markupElements = new ArrayList();
+		this.markupElements = new ArrayList<MarkupElement>();
 	}
 
 	/**

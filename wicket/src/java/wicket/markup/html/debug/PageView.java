@@ -68,7 +68,7 @@ public final class PageView extends Panel
 		super(id);
 		
 		// Create an empty list. It'll be filled later
-		final List data = new ArrayList();
+		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		// Name of page
 		add(new Label("info", page == null ? "[Stateless Page]" : page.toString()));
@@ -79,11 +79,11 @@ public final class PageView extends Panel
 		{
 			data.addAll(getComponentData(page));
 		}
-		Collections.sort(data, new Comparator()
+		Collections.sort(data, new Comparator<ComponentData>()
 		{
-			public int compare(Object o1, Object o2)
+			public int compare(ComponentData o1, ComponentData o2)
 			{
-				return ((ComponentData)o1).path.compareTo(((ComponentData)o2).path);
+				return o1.path.compareTo(o2.path);
 			}
 		});
 		
@@ -115,9 +115,9 @@ public final class PageView extends Panel
 	 * @param page
 	 * @return List of component data objects
 	 */
-	private List getComponentData(final Page page)
+	private List<ComponentData> getComponentData(final Page page)
 	{
-		final List data = new ArrayList();
+		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		page.visitChildren(new IVisitor()
 		{

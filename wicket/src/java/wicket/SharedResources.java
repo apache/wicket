@@ -43,10 +43,10 @@ public class SharedResources
 	private static Log log = LogFactory.getLog(SharedResources.class);
 
 	/** Map of Class to alias String */
-	private final Map classAliasMap = new HashMap();
+	private final Map<Class, String> classAliasMap = new HashMap<Class, String>();
 
 	/** Map of shared resources states */
-	private final Map resourceMap = new HashMap();
+	private final Map<String, Resource> resourceMap = new HashMap<String, Resource>();
 
 	/**
 	 * Construct.
@@ -125,7 +125,7 @@ public class SharedResources
 	public String resourceKey(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
-		String alias = (String)classAliasMap.get(scope);
+		String alias = classAliasMap.get(scope);
 		if (alias == null)
 		{
 			alias = scope.getName();
@@ -169,7 +169,7 @@ public class SharedResources
 		final String key = resourceKey(scope, name, locale, style);
 		synchronized (resourceMap)
 		{
-			Resource value = (Resource)resourceMap.get(key);
+			Resource value = resourceMap.get(key);
 			if (value == null)
 				resourceMap.put(key, resource);
 		}
@@ -282,7 +282,7 @@ public class SharedResources
 	{
 		synchronized (resourceMap)
 		{
-			return (Resource)resourceMap.get(key);
+			return resourceMap.get(key);
 		}
 	}
 

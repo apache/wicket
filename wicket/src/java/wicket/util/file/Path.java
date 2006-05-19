@@ -33,7 +33,7 @@ import wicket.util.string.StringList;
 public final class Path implements IResourcePath
 {
 	/** The list of folders in the path */
-	private final List folders = new ArrayList();
+	private final List<Folder> folders = new ArrayList<Folder>();
 
 	/**
 	 * Constructor
@@ -100,9 +100,9 @@ public final class Path implements IResourcePath
 	 */
 	public URL find(final String pathname)
 	{
-		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
+		for (final Iterator<Folder> iterator = folders.iterator(); iterator.hasNext();)
 		{
-			final Folder folder = (Folder)iterator.next();
+			final Folder folder = iterator.next();
 			final File file = new File(folder, pathname);
 
 			if (file.exists())
@@ -124,7 +124,7 @@ public final class Path implements IResourcePath
 	/**
 	 * @return Returns the folders.
 	 */
-	public List getFolders()
+	public List<Folder> getFolders()
 	{
 		return folders;
 	}

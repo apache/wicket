@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +53,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id)
 	{
-		this(id, new Model(new ArrayList()), new ChoiceRenderer());
+		this(id, new Model<List>(new ArrayList()), new ChoiceRenderer());
 	}
 
 	/**
@@ -68,7 +67,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final List choices)
 	{
-		this(id, new Model((Serializable)choices), new ChoiceRenderer());
+		this(id, new Model<List>(choices), new ChoiceRenderer());
 	}
 
 	/**
@@ -84,7 +83,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, final List choices, final IChoiceRenderer renderer)
 	{
-		this(id, new Model((Serializable)choices), renderer);
+		this(id, new Model<List>(choices), renderer);
 	}
 
 	/**
@@ -100,7 +99,7 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public AbstractChoice(final String id, IModel model, final List choices)
 	{
-		this(id, model, new Model((Serializable)choices), new ChoiceRenderer());
+		this(id, model, new Model<List>(choices), new ChoiceRenderer());
 	}
 
 	/**
@@ -119,7 +118,7 @@ abstract class AbstractChoice extends FormComponent
 	public AbstractChoice(final String id, IModel model, final List choices,
 			final IChoiceRenderer renderer)
 	{
-		this(id, model, new Model((Serializable)choices), renderer);
+		this(id, model, new Model<List>(choices), renderer);
 	}
 
 	/**
@@ -239,7 +238,7 @@ abstract class AbstractChoice extends FormComponent
 				addStateChange(new ChoicesListChange());
 			}
 		}
-		this.choices = new Model((Serializable)choices);
+		this.choices = new Model<List>(choices);
 	}
 
 	/**
@@ -338,8 +337,10 @@ abstract class AbstractChoice extends FormComponent
 	protected void appendOptionHtml(AppendingStringBuffer buffer, Object choice, int index,
 			String selected)
 	{
-		final String displayValue = (String)getConverter().convert(
-				renderer.getDisplayValue(choice), String.class);
+		Object objectValue = renderer.getDisplayValue(choice);
+		Class objectClass = objectValue == null?null:objectValue.getClass();
+		final String displayValue = (String)getConverter(objectClass).convertToString(
+				objectValue, getLocale());
 		buffer.append("\n<option ");
 		if (isSelected(choice, index, selected))
 		{

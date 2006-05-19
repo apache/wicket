@@ -23,7 +23,7 @@ package wicket.model;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractModel implements IModel
+public abstract class AbstractModel<V> implements IModel<V>
 {
 	/**
 	 * @see wicket.model.IModel#detach()

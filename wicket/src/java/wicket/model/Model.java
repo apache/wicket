@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import wicket.Component;
-import wicket.WicketRuntimeException;
 
 /**
  * Model is the basic implementation of an AbstractModel. It just wraps a simple
@@ -35,12 +34,12 @@ import wicket.WicketRuntimeException;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class Model extends AbstractModel
+public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Backing object. */
-	private Serializable object;
+	private V object;
 
 	/**
 	 * Construct the model without providing an object.
@@ -55,7 +54,7 @@ public class Model extends AbstractModel
 	 * @param object
 	 *            The model object proper
 	 */
-	public Model(final Serializable object)
+	public Model(final V object)
 	{
 		setObject(object);
 	}
@@ -65,9 +64,9 @@ public class Model extends AbstractModel
 	 *            The Map, which may or may not be Serializable
 	 * @return A Model object wrapping the Map
 	 */
-	public static Model valueOf(final Map map)
+	public static Model<Map> valueOf(final Map map)
 	{
-		return new Model(map instanceof Serializable ? (Serializable)map : new HashMap(map));
+		return new Model<Map>(map instanceof Serializable ? map : new HashMap(map));
 	}
 
 	/**
@@ -75,9 +74,9 @@ public class Model extends AbstractModel
 	 *            The List, which may or may not be Serializable
 	 * @return A Model object wrapping the List
 	 */
-	public static Model valueOf(final List list)
+	public static Model<Serializable> valueOf(final List list)
 	{
-		return new Model(list instanceof Serializable ? (Serializable)list : new ArrayList(list));
+		return new Model<Serializable>(list instanceof Serializable ? (Serializable)list : new ArrayList(list));
 	}
 
 	/**
@@ -91,7 +90,7 @@ public class Model extends AbstractModel
 	/**
 	 * @see wicket.model.IModel#getObject(wicket.Component)
 	 */
-	public Object getObject(final Component component)
+	public V getObject(final Component component)
 	{
 		return object;
 	}
@@ -104,16 +103,9 @@ public class Model extends AbstractModel
 	 *            the model object
 	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public void setObject(final Component component, final Object object)
+	public void setObject(final Component component, final V object)
 	{
-		if (object != null)
-		{
-			if (!(object instanceof Serializable))
-			{
-				throw new WicketRuntimeException("Model object must be Serializable");
-			}
-		}
-		setObject((Serializable)object);
+		setObject(object);
 	}
 
 	/**
@@ -124,7 +116,7 @@ public class Model extends AbstractModel
 	 *            The serializable model object
 	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public void setObject(final Serializable object)
+	public void setObject(final V object)
 	{
 		this.object = object;
 	}

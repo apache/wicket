@@ -251,4 +251,22 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	protected void onUnbind(String sessionId)
 	{
 	}
+
+	/**
+	 * Noop implementation. Clients can override this method.
+	 * 
+	 * @see wicket.session.ISessionStore#onBeginRequest(wicket.Request)
+	 */
+	public void onBeginRequest(Request request)
+	{
+	}
+
+	/**
+	 * Noop implementation. Clients can override this method.
+	 * 
+	 * @see wicket.session.ISessionStore#onEndRequest(wicket.Request)
+	 */
+	public void onEndRequest(Request request)
+	{
+	}
 }

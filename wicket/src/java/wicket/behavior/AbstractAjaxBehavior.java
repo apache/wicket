@@ -45,8 +45,10 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			IBehaviorListener,
 			IHeaderContributor
 {
+	private static final long serialVersionUID = 1L;
+	
 	/** thread local for head contributions. */
-	private static final ThreadLocal headContribHolder = new ThreadLocal();
+	private static final ThreadLocal<Set<String>> headContribHolder = new ThreadLocal<Set<String>>();
 
 	/** the component that this handler is bound to. */
 	private Component component;
@@ -173,12 +175,12 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 */
 	public final void renderHead(final Response response)
 	{
-		Set contributors = (Set)headContribHolder.get();
+		Set<String> contributors = headContribHolder.get();
 
 		// were any contributors set?
 		if (contributors == null)
 		{
-			contributors = new HashSet(1);
+			contributors = new HashSet<String>(1);
 			headContribHolder.set(contributors);
 		}
 
@@ -281,5 +283,14 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 */
 	protected void onRenderHeadInitContribution(final Response response)
 	{
+	}
+	
+	/**
+	 * @see wicket.behavior.AbstractBehavior#isStateless()
+	 */
+	@Override
+	public boolean isStateless()
+	{
+		return false;
 	}
 }

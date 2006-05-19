@@ -44,9 +44,6 @@ public final class ConversionException extends RuntimeException
 	/** Target type for the failed conversion. */
 	private Class targetType;
 
-	/** The type converter that was used */
-	private ITypeConverter typeConverter;
-
 	/**
 	 * Construct exception with message.
 	 * 
@@ -92,22 +89,6 @@ public final class ConversionException extends RuntimeException
 		return converter;
 	}
     
-    /**
-     * @return Locale
-     */
-    public final Locale getLocale()
-    {
-		if (locale != null)
-		{
-			return locale;
-		}
-    	if (converter != null)
-        {
-    		return converter.getLocale();
-        }
-        return null;
-    }
-
 	/**
 	 * Get the used format.
 	 * 
@@ -116,6 +97,16 @@ public final class ConversionException extends RuntimeException
 	public final Format getFormat()
 	{
 		return format;
+	}
+
+	/**
+	 * Get the used locale.
+	 * 
+	 * @return the used locale
+	 */
+	public final Locale getLocale()
+	{
+		return locale;
 	}
 
 	/**
@@ -136,14 +127,6 @@ public final class ConversionException extends RuntimeException
 	public final Class getTargetType()
 	{
 		return targetType;
-	}
-
-	/**
-	 * @return Returns the typeConverter.
-	 */
-	public ITypeConverter getTypeConverter()
-	{
-		return typeConverter;
 	}
 
 	/**
@@ -211,14 +194,4 @@ public final class ConversionException extends RuntimeException
 		return this;
 	}
 
-	/**
-	 * @param typeConverter
-	 *            The typeConverter to set.
-	 * @return This
-	 */
-	public ConversionException setTypeConverter(ITypeConverter typeConverter)
-	{
-		this.typeConverter = typeConverter;
-		return this;
-	}
 }

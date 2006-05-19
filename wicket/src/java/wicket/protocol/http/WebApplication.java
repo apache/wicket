@@ -101,7 +101,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
 	 */
-	private final Map bufferedResponses = new HashMap();
+	private final Map<String, Map<String, BufferedHttpServletResponse> > bufferedResponses = new HashMap<String, Map<String, BufferedHttpServletResponse> >();
 
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
@@ -566,7 +566,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	protected ISessionStore newSessionStore()
 	{
-		return new HttpSessionStore();
+		return new SecondLevelCacheSessionStore(new FileStore());
 	}
 
 	/**
@@ -582,10 +582,10 @@ public abstract class WebApplication extends Application implements ISessionFact
 	final void addBufferedResponse(String sessionId, String bufferId,
 			BufferedHttpServletResponse renderedResponse)
 	{
-		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		Map<String, BufferedHttpServletResponse> responsesPerSession = bufferedResponses.get(sessionId);
 		if (responsesPerSession == null)
 		{
-			responsesPerSession = new MostRecentlyUsedMap(4);
+			responsesPerSession = new MostRecentlyUsedMap<String, BufferedHttpServletResponse>(4);
 			bufferedResponses.put(sessionId, responsesPerSession);
 		}
 		responsesPerSession.put(bufferId, renderedResponse);
@@ -650,7 +650,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	final BufferedHttpServletResponse popBufferedResponse(String sessionId, String bufferId)
 	{
-		Map responsesPerSession = (Map)bufferedResponses.get(sessionId);
+		Map responsesPerSession = bufferedResponses.get(sessionId);
 		if (responsesPerSession != null)
 		{
 			BufferedHttpServletResponse buffered = (BufferedHttpServletResponse)responsesPerSession

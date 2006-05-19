@@ -28,7 +28,7 @@ import wicket.Component;
  * 
  * @author Jonathan Locke
  */
-public class BoundCompoundPropertyModel extends CompoundPropertyModel
+public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -81,7 +81,7 @@ public class BoundCompoundPropertyModel extends CompoundPropertyModel
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
-	public BoundCompoundPropertyModel(final Object model)
+	public BoundCompoundPropertyModel(final V model)
 	{
 		super(model);
 	}

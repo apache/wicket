@@ -39,7 +39,7 @@ class ChangeList implements Serializable
 	private static Log log = LogFactory.getLog(ChangeList.class);
 
 	/** the changes. */
-	private List changes = new ArrayList();
+	private List<Change> changes = new ArrayList<Change>();
 
 	/**
 	 * A component was added.
@@ -90,7 +90,7 @@ class ChangeList implements Serializable
 		// Go through changes in reverse time order to undo
 		for (int i = changes.size() - 1; i >= 0; i--)
 		{
-			((Change)changes.get(i)).undo();
+			changes.get(i).undo();
 		}
 	}
 	

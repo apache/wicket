@@ -188,7 +188,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	/**
 	 * set of resource references to contribute.
 	 */
-	private List headerContributors = null;
+	private List<IHeaderContributor> headerContributors = null;
 
 	/**
 	 * Construct.
@@ -205,7 +205,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public HeaderContributor(IHeaderContributor headerContributor)
 	{
-		headerContributors = new ArrayList();
+		headerContributors = new ArrayList<IHeaderContributor>();
 		headerContributors.add(headerContributor);
 	}
 
@@ -382,7 +382,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		if (headerContributors != null)
 		{
-			return (IHeaderContributor[])headerContributors
+			return headerContributors
 					.toArray(new IHeaderContributor[headerContributors.size()]);
 		}
 		return null;
@@ -464,7 +464,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		if (headerContributors == null)
 		{
-			headerContributors = new ArrayList();
+			headerContributors = new ArrayList<IHeaderContributor>();
 		}
 	}
 }

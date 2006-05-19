@@ -42,9 +42,9 @@ public abstract class Objects
 {
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
-		private HashMap replacedComponents;
+		private HashMap<String, Object> replacedComponents;
 
-		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents)
+		private ReplaceObjectInputStream(InputStream in, HashMap<String, Object> replacedComponents)
 				throws IOException
 		{
 			super(in);
@@ -65,9 +65,9 @@ public abstract class Objects
 
 	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
 	{
-		private HashMap replacedComponents;
+		private HashMap<String, Object> replacedComponents;
 
-		private ReplaceObjectOutputStream(OutputStream out, HashMap replacedComponents)
+		private ReplaceObjectOutputStream(OutputStream out, HashMap<String, Object> replacedComponents)
 				throws IOException
 		{
 			super(out);
@@ -131,7 +131,7 @@ public abstract class Objects
 	private static final int MIN_REAL_TYPE = FLOAT;
 
 	/** defaults for primitives. */
-	static HashMap primitiveDefaults = new HashMap();
+	static HashMap<Class, Comparable> primitiveDefaults = new HashMap<Class, Comparable>();
 
 	static
 	{
@@ -162,7 +162,7 @@ public abstract class Objects
 		{
 			return BigDecimal.valueOf(0L);
 		}
-		Class c = value.getClass();
+		Class<? extends Object> c = value.getClass();
 		if (c == BigDecimal.class)
 		{
 			return (BigDecimal)value;
@@ -201,7 +201,7 @@ public abstract class Objects
 		{
 			return BigInteger.valueOf(0L);
 		}
-		Class c = value.getClass();
+		Class<? extends Object> c = value.getClass();
 		if (c == BigInteger.class)
 		{
 			return (BigInteger)value;
@@ -240,7 +240,7 @@ public abstract class Objects
 		{
 			return false;
 		}
-		Class c = value.getClass();
+		Class<? extends Object> c = value.getClass();
 		if (c == Boolean.class)
 		{
 			return ((Boolean)value).booleanValue();
@@ -268,13 +268,15 @@ public abstract class Objects
 		try
 		{
 			final ByteArrayInputStream in = new ByteArrayInputStream(data);
+			ObjectInputStream ois = null;
 			try
 			{
-				return new ObjectInputStream(in).readObject();
+				ois  = new ObjectInputStream(in);
+				return ois.readObject();
 			}
 			finally
 			{
-				in.close();
+				if(ois != null) ois.close();
 			}
 		}
 		catch (ClassNotFoundException e)
@@ -310,7 +312,7 @@ public abstract class Objects
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				final HashMap replacedObjects = new HashMap();
+				final HashMap<String, Object> replacedObjects = new HashMap<String, Object>();
 				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
@@ -417,7 +419,7 @@ public abstract class Objects
 						if ((v1 instanceof Comparable)
 								&& v1.getClass().isAssignableFrom(v2.getClass()))
 						{
-							result = ((Comparable)v1).compareTo(v2);
+							result = ((Comparable<Object>)v1).compareTo(v2);
 							break;
 						}
 						else
@@ -547,7 +549,7 @@ public abstract class Objects
 		{
 			return 0.0;
 		}
-		Class c = value.getClass();
+		Class<? extends Object> c = value.getClass();
 		if (c.getSuperclass() == Number.class)
 		{
 			return ((Number)value).doubleValue();
@@ -669,7 +671,7 @@ public abstract class Objects
 	{
 		if (value != null)
 		{
-			Class c = value.getClass();
+			Class<? extends Object> c = value.getClass();
 			if (c == Integer.class)
 			{
 				return INT;
@@ -813,7 +815,7 @@ public abstract class Objects
 		{
 			return 0L;
 		}
-		Class c = value.getClass();
+		Class<? extends Object> c = value.getClass();
 		if (c.getSuperclass() == Number.class)
 		{
 			return ((Number)value).longValue();
@@ -889,13 +891,15 @@ public abstract class Objects
 		try
 		{
 			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ObjectOutputStream oos = null;
 			try
 			{
-				new ObjectOutputStream(out).writeObject(object);
+				oos = new ObjectOutputStream(out);
+				oos.writeObject(object);
 			}
 			finally
 			{
-				out.close();
+				if(oos != null) oos.close();
 			}
 			return out.toByteArray();
 		}

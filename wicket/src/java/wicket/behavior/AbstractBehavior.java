@@ -30,6 +30,8 @@ import wicket.markup.ComponentTag;
  */
 public abstract class AbstractBehavior implements IBehavior
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
 	 */
@@ -111,5 +113,13 @@ public abstract class AbstractBehavior implements IBehavior
 	 */
 	public void cleanup()
 	{
+	}
+	
+	/**
+	 * @see wicket.behavior.IBehavior#isStateless()
+	 */
+	public boolean isStateless()
+	{
+		return true;
 	}
 }

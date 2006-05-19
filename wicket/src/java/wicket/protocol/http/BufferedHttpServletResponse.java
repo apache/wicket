@@ -52,10 +52,10 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	private PrintWriter pw = new PrintWriter(sbw);
 
 	/** cookies list */
-	private List cookies;
+	private List<Cookie> cookies;
 
 	/** headers map */
-	private Map headers;
+	private Map<String, Object> headers;
 
 	/** the real response for encoding the url */
 	private HttpServletResponse realResponse;
@@ -86,7 +86,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		isOpen();
 		if (cookies == null)
 		{
-			cookies = new ArrayList(2);
+			cookies = new ArrayList<Cookie>(2);
 		}
 		cookies.add(cookie);
 	}
@@ -185,7 +185,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		isOpen();
 		if (headers == null)
 		{
-			headers = new HashMap();
+			headers = new HashMap<String, Object>();
 		}
 	}
 
@@ -210,7 +210,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 		else
 		{
-			ArrayList list = new ArrayList();
+			ArrayList<Object> list = new ArrayList<Object>();
 			list.add(previousObject);
 			list.add(object);
 			headers.put(name, list);
@@ -533,7 +533,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		{
 			for (int i = 0; i < this.cookies.size(); i++)
 			{
-				Cookie cookie = (Cookie)this.cookies.get(i);
+				Cookie cookie = this.cookies.get(i);
 				servletResponse.addCookie(cookie);
 			}
 		}

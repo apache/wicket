@@ -250,9 +250,9 @@ public class FormTester
 			String[] values = wicketTester.getServletRequest().getParameterValues(
 					formComponent.getInputName());
 			// remove duplicated
-			HashSet all = new HashSet(Arrays.asList(values));
+			HashSet<String> all = new HashSet<String>(Arrays.asList(values));
 			all.add(value);
-			Map newParameters = new HashMap();
+			Map<String, Object> newParameters = new HashMap<String, Object>();
 			newParameters.put(formComponent.getInputName(), all.toArray(new String[all.size()]));
 			wicketTester.getServletRequest().setParameters(newParameters);
 		}
@@ -419,7 +419,10 @@ public class FormTester
 					Assert.fail("RadioGroup " + formComponent.getPath() + " does not has index:"
 							+ index);
 				}
-				assignValueToFormComponent(formComponent, foundRadio.getPath());
+				else
+				{
+					assignValueToFormComponent(formComponent, foundRadio.getPath());
+				}
 			}
 			else if (formComponent instanceof CheckGroup)
 			{
@@ -430,7 +433,10 @@ public class FormTester
 					Assert.fail("CheckGroup " + formComponent.getPath() + " does not has index:"
 							+ index);
 				}
-				assignValueToFormComponent(formComponent, foundCheck.getPath());
+				else
+				{
+					assignValueToFormComponent(formComponent, foundCheck.getPath());
+				}
 			}
 			else
 			{

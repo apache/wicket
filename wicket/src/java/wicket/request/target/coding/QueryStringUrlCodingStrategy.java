@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import wicket.Page;
 import wicket.PageMap;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -84,7 +85,7 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * @param bookmarkablePageClass
 	 *            the class of the mounted page
 	 */
-	public QueryStringUrlCodingStrategy(final String mountPath, final Class bookmarkablePageClass)
+	public QueryStringUrlCodingStrategy(final String mountPath, final Class<? extends Page> bookmarkablePageClass)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 	}
@@ -154,9 +155,9 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * 
 	 * @return Parameters
 	 */
-	protected ValueMap decodeParameters(String fragment, Map passedParameters)
+	protected ValueMap<String,Object> decodeParameters(String fragment, Map<String,? extends Object> passedParameters)
 	{
-		ValueMap parameters = new ValueMap();
+		ValueMap<String,Object> parameters = new ValueMap<String,Object>();
 
 		if (passedParameters != null)
 		{

@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class ExternalPageViewer
 {
-	private static final List browserPaths = new ArrayList();
+	private static final List<String> browserPaths = new ArrayList<String>();
 
 	// TODO Post 1.2: General: We could use JNLP to launch browser (see http://www.croftsoft.com/library/tutorials/browser/), but why not use Swing HTMLArea??
 	static
@@ -126,10 +126,10 @@ public class ExternalPageViewer
 	 */
 	private String getBrowserPath()
 	{
-		Iterator iter = browserPaths.iterator();
+		Iterator<String> iter = browserPaths.iterator();
 		while (iter.hasNext())
 		{
-			String path = (String)iter.next();
+			String path = iter.next();
 			if (new File(path).exists())
 			{
 				return path;

@@ -260,7 +260,7 @@ public class WicketTester extends MockWebApplication
 	 *            a test page class with default constructor
 	 * @return Page Rendered Page
 	 */
-	public final Page startPage(Class pageClass)
+	public final Page startPage(Class<? extends Page> pageClass)
 	{
 		setHomePage(pageClass);
 		setupRequestAndResponse();
@@ -439,7 +439,7 @@ public class WicketTester extends MockWebApplication
 	 * @param expectedComponentClass
 	 *            expected component class
 	 */
-	public void assertComponent(String path, Class expectedComponentClass)
+	public void assertComponent(String path, Class<?> expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
 		Assert.assertTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:"
@@ -498,7 +498,7 @@ public class WicketTester extends MockWebApplication
 	 * @param expectedList
 	 *            expected list in the model of {@link ListView}
 	 */
-	public void assertListView(String path, List expectedList)
+	public void assertListView(String path, List<String> expectedList)
 	{
 		ListView listView = (ListView)getComponentFromLastRenderedPage(path);
 		WicketTesterHelper.assertEquals(expectedList, listView.getList());
@@ -616,7 +616,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertNoErrorMessage()
 	{
-		List messages = getMessages(FeedbackMessage.ERROR);
+		List<String> messages = getMessages(FeedbackMessage.ERROR);
 		Assert.assertTrue("expect no error message, but contains\n"
 				+ WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
@@ -626,7 +626,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertNoInfoMessage()
 	{
-		List messages = getMessages(FeedbackMessage.INFO);
+		List<String> messages = getMessages(FeedbackMessage.INFO);
 		Assert.assertTrue("expect no info message, but contains\n"
 				+ WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
@@ -639,7 +639,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertErrorMessages(String[] expectedErrorMessages)
 	{
-		List actualMessages = getMessages(FeedbackMessage.ERROR);
+		List<String> actualMessages = getMessages(FeedbackMessage.ERROR);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), actualMessages);
 	}
 
@@ -651,7 +651,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertInfoMessages(String[] expectedInfoMessages)
 	{
-		List actualMessages = getMessages(FeedbackMessage.INFO);
+		List<String> actualMessages = getMessages(FeedbackMessage.INFO);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
 	}
 
@@ -664,7 +664,7 @@ public class WicketTester extends MockWebApplication
 	 * @return List list of messages (in String)
 	 * @see FeedbackMessage
 	 */
-	public List getMessages(final int level)
+	public List<String> getMessages(final int level)
 	{
 		FeedbackMessages feedbackMessages = getLastRenderedPage().getFeedbackMessages();
 		List allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
@@ -676,7 +676,7 @@ public class WicketTester extends MockWebApplication
 				return message.getLevel() == level;
 			}
 		});
-		List actualMessages = new ArrayList();
+		List<String> actualMessages = new ArrayList<String>();
 		for (Iterator iter = allMessages.iterator(); iter.hasNext();)
 		{
 			actualMessages.add(((FeedbackMessage)iter.next()).getMessage());

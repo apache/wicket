@@ -17,8 +17,14 @@
  */
 package wicket.model;
 
+import java.util.Locale;
+
 import wicket.Component;
+import wicket.Session;
+import wicket.util.convert.ConverterSupplier;
+import wicket.util.convert.IConverter;
 import wicket.util.lang.PropertyResolver;
+import wicket.util.lang.PropertyResolverConverter;
 import wicket.util.string.Strings;
 
 /**
@@ -30,10 +36,10 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel extends AbstractDetachableModel
+public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V>
 {
 	/** Any model object (which may or may not implement IModel) */
-	private Object nestedModel;
+	private V nestedModel;
 
 	/**
 	 * Constructor
@@ -41,7 +47,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 * @param modelObject
 	 *            The nested model object
 	 */
-	public AbstractPropertyModel(final Object modelObject)
+	public AbstractPropertyModel(final V modelObject)
 	{
 		if (modelObject == null)
 		{
@@ -57,11 +63,11 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 * @return The nested model, <code>null</code> when this is the final
 	 *         model in the hierarchy
 	 */
-	public final IModel getNestedModel()
+	public final IModel<V> getNestedModel()
 	{
 		if (nestedModel instanceof IModel)
 		{
-			return ((IModel)nestedModel);
+			return ((IModel<V>)nestedModel);
 		}
 		return null;
 	}
@@ -71,11 +77,11 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 *            The component to get the model object for
 	 * @return The model for this property
 	 */
-	protected Object modelObject(final Component component)
+	protected V modelObject(final Component component)
 	{
 		if (nestedModel instanceof IModel)
 		{
-			return ((IModel)nestedModel).getObject(component);
+			return ((IModel<V>)nestedModel).getObject(component);
 		}
 		return nestedModel;
 	}
@@ -111,7 +117,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
-	protected Object onGetObject(final Component component)
+	protected V onGetObject(final Component component)
 	{
 		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
@@ -123,7 +129,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 		final Object modelObject = modelObject(component);
 		if (modelObject != null)
 		{
-			return PropertyResolver.getValue(expression, modelObject);
+			return (V)PropertyResolver.getValue(expression, modelObject);
 		}
 		return null;
 	}
@@ -137,7 +143,7 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	 *            object
 	 * @see AbstractDetachableModel#onSetObject(Component, Object)
 	 */
-	protected void onSetObject(final Component component, Object object)
+	protected void onSetObject(final Component component, V object)
 	{
 		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
@@ -165,15 +171,25 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 				{
 					// and there is a non-null property type for the component
 					final Class propertyType = propertyType(component);
-					if (propertyType != null)
+					if (propertyType != null && component != null)
 					{
 						// convert the String to the right type
-						object = component.getConverter().convert(string, propertyType);
+						object = (V)component.getConverter(propertyType).convertToObject(string, component.getLocale());
 					}
 				}
 			}
 
-			PropertyResolver.setValue(expression, modelObject, object, component==null ? null:component.getConverter());
+			PropertyResolverConverter prc = null;
+			if(component != null)
+			{
+				prc = new PropertyResolverConverter(component,component.getLocale());
+			}
+			else
+			{
+				prc = new PropertyResolverConverter(Session.get(),Session.get().getLocale());
+			}
+			
+			PropertyResolver.setValue(expression, modelObject, object, prc);
 		}
 	}
 

@@ -217,7 +217,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		boolean dirty = true;
 
 		/** tree paths. */
-		private List paths = new ArrayList();
+		private List<DefaultMutableTreeNode> paths = new ArrayList<DefaultMutableTreeNode>();
 
 		/**
 		 * @see wicket.model.AbstractDetachableModel#getNestedModel()

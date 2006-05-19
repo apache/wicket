@@ -32,7 +32,7 @@ import wicket.authorization.IAuthorizationStrategy;
 public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** List of strategies to consult */
-	private ArrayList strategies = new ArrayList();
+	private ArrayList<IAuthorizationStrategy> strategies = new ArrayList<IAuthorizationStrategy>();
 
 	/**
 	 * Adds a strategy to the chain
@@ -57,7 +57,7 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 		int size = strategies.size();
 		for (int i = 0; i < size; i++)
 		{
-			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
+			IAuthorizationStrategy strategy = strategies.get(i);
 			if (!strategy.isInstantiationAuthorized(componentClass))
 			{
 				return false;
@@ -75,7 +75,7 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 		int size = strategies.size();
 		for (int i = 0; i < size; i++)
 		{
-			IAuthorizationStrategy strategy = (IAuthorizationStrategy)strategies.get(i);
+			IAuthorizationStrategy strategy = strategies.get(i);
 			if (!strategy.isActionAuthorized(component, action))
 			{
 				return false;

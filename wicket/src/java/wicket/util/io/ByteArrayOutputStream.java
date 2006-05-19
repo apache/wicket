@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class ByteArrayOutputStream extends OutputStream
 {
-	private List buffers = new java.util.ArrayList();
+	private List<byte[]> buffers = new java.util.ArrayList<byte[]>();
 	private int count;
 	private byte[] currentBuffer;
 	private int currentBufferIndex;
@@ -211,7 +211,7 @@ public class ByteArrayOutputStream extends OutputStream
 
 	private byte[] getBuffer(int index)
 	{
-		return (byte[])buffers.get(index);
+		return buffers.get(index);
 	}
 
 	private void needNewBuffer(int newcount)

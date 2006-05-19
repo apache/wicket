@@ -17,7 +17,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -84,13 +83,13 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 */
 	public CheckGroup(String id, Collection collection)
 	{
-		this(id, new Model((Serializable)collection));
+		this(id, new Model<Collection>(collection));
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public CheckGroup(String id, IModel model)
+	public CheckGroup(String id, IModel<Collection> model)
 	{
 		super(id, model);
 		setRenderBodyOnly(true);
@@ -101,7 +100,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 */
 	protected Object convertValue(String[] paths) throws ConversionException
 	{
-		List collection = new ArrayList();
+		List<Object> collection = new ArrayList<Object>();
 
 		/*
 		 * if the input is null we do not need to do anything since the model
@@ -153,10 +152,10 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 */
 	public void updateModel()
 	{
-		Collection collection = (Collection)getModelObject();
+		Collection<?> collection = (Collection<?>)getModelObject();
 		if (collection == null)
 		{
-			collection = (Collection)getConvertedInput();
+			collection = (Collection<?>)getConvertedInput();
 			setModelObject(collection);
 		}
 		else
@@ -216,6 +215,19 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	protected boolean wantOnSelectionChangedNotifications()
 	{
 		return false;
+	}
+	
+	/**
+	 * @see wicket.MarkupContainer#isStateless()
+	 */
+	@Override
+	protected boolean isStateless()
+	{
+		if(wantOnSelectionChangedNotifications())
+		{
+			return false;
+		}
+		return super.isStateless();
 	}
 
 }

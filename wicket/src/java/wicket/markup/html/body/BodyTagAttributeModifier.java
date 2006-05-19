@@ -50,7 +50,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 * Make sure we don't keep a reference to the component longer than realy
 	 * needed.
 	 */
-	private transient WeakReference componentReference;
+	private transient WeakReference<Component> componentReference;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model
@@ -149,7 +149,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	{
 		if (behaviorOwner != null)
 		{
-			this.componentReference = new WeakReference(behaviorOwner);
+			this.componentReference = new WeakReference<Component>(behaviorOwner);
 		}
 	}
 
@@ -218,9 +218,9 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 		inputStream.defaultReadObject();
 
 		final Object object = inputStream.readObject();
-		if (object != null)
+		if (object instanceof Component)
 		{
-			componentReference = new WeakReference(object);
+			componentReference = new WeakReference<Component>((Component)object);
 		}
 	}
 

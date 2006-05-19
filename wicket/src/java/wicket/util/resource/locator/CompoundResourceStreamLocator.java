@@ -35,7 +35,7 @@ import wicket.util.resource.IResourceStream;
  */
 public final class CompoundResourceStreamLocator implements IResourceStreamLocator
 {
-	private final List locators = new ArrayList();
+	private final List<IResourceStreamLocator> locators = new ArrayList<IResourceStreamLocator>();
 
 	/**
 	 * Constructor
@@ -59,10 +59,10 @@ public final class CompoundResourceStreamLocator implements IResourceStreamLocat
 	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
 			String extension)
 	{
-		Iterator iter = locators.iterator();
+		Iterator<IResourceStreamLocator> iter = locators.iterator();
 		while (iter.hasNext())
 		{
-			IResourceStream resource = ((IResourceStreamLocator)iter.next()).locate(clazz, path,
+			IResourceStream resource = iter.next().locate(clazz, path,
 					style, locale, extension);
 			if (resource != null)
 			{
@@ -101,7 +101,7 @@ public final class CompoundResourceStreamLocator implements IResourceStreamLocat
 	 */
 	public IResourceStreamLocator remove(final int index)
 	{
-		return (IResourceStreamLocator)locators.remove(index);
+		return locators.remove(index);
 	}
 
 	/**

@@ -58,7 +58,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	}
 
 	/** Allow to have link regions within link regions */
-	private ArrayListStack autolinkStatus;
+	private ArrayListStack<Boolean> autolinkStatus;
 
 	/** Current status */
 	private boolean autolinking = true;
@@ -135,7 +135,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					{
 						if (autolinkStatus == null)
 						{
-							autolinkStatus = new ArrayListStack();
+							autolinkStatus = new ArrayListStack<Boolean>();
 						}
 
 						// remember the current setting to be reset after the
@@ -157,7 +157,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 				else if (tag.isClose())
 				{
 					// restore the autolink setting from before the region
-					autolinking = ((Boolean)autolinkStatus.pop()).booleanValue();
+					autolinking = autolinkStatus.pop().booleanValue();
 				}
 
 				return wtag;

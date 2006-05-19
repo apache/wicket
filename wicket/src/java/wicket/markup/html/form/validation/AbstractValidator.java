@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +91,7 @@ public abstract class AbstractValidator implements IValidator
 	 * @param map
 	 *            The model for variable interpolation
 	 */
-	public void error(final FormComponent formComponent, final String resourceKey, final Map map)
+	public void error(final FormComponent formComponent, final String resourceKey, final Map<String, Serializable> map)
 	{
 		error(formComponent, resourceKey, (map == null) ? new Model() : Model.valueOf(map));
 	}
@@ -104,7 +105,7 @@ public abstract class AbstractValidator implements IValidator
 	 * @param map
 	 *            The model for variable interpolation
 	 */
-	public void error(final FormComponent formComponent, final Map map)
+	public void error(final FormComponent formComponent, final Map<String, Object> map)
 	{
 		error(formComponent, resourceKey(formComponent), (map == null) ? new Model() : Model
 				.valueOf(map));
@@ -140,7 +141,7 @@ public abstract class AbstractValidator implements IValidator
 			throw new IllegalArgumentException("resourceKey cannot be null");
 		}
 
-		final List keys = new ArrayList(2);
+		final List<String> keys = new ArrayList<String>(2);
 		keys.add(resourceKey);
 
 		final String defaultKey = Classes.simpleName(getClass());
@@ -149,7 +150,7 @@ public abstract class AbstractValidator implements IValidator
 			keys.add(defaultKey);
 		}
 
-		Map args = (Map)resourceModel.getObject(formComponent);
+		Map<String, Serializable> args = (Map<String, Serializable>)resourceModel.getObject(formComponent);
 
 		formComponent.error(keys, args);
 	}
@@ -182,9 +183,9 @@ public abstract class AbstractValidator implements IValidator
 	 *            form component
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map messageModel(final FormComponent formComponent)
+	protected Map<String, Serializable> messageModel(final FormComponent formComponent)
 	{
-		final Map resourceModel = new HashMap(4);
+		final Map<String, Serializable> resourceModel = new HashMap<String, Serializable>(4);
 		resourceModel.put("input", formComponent.getInput());
 		resourceModel.put("name", formComponent.getId());
 
@@ -196,7 +197,7 @@ public abstract class AbstractValidator implements IValidator
 
 		if (label != null)
 		{
-			resourceModel.put("label", label);
+			resourceModel.put("label", (Serializable)label);
 		}
 		else
 		{

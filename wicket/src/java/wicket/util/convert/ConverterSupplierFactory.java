@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,25 +17,22 @@
  */
 package wicket.util.convert;
 
-import java.io.Serializable;
-import java.util.Locale;
+import wicket.ISupplyConverters;
 
 /**
- * Converter for a specific data type. The type of the conversion is implicit in
- * the class which implements ITypeConverter. For example, a BooleanConverter
- * which implements this interface might convert values from Object to Boolean.
+ * Implementation of {@link wicket.util.convert.IConverterFactory}which creates
+ * an instance of ConverterSupplier in order to fulfill the IConverter contract.
  * 
+ * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface ITypeConverter extends Serializable
+public final class ConverterSupplierFactory implements IConverterSupplierFactory
 {
 	/**
-	 * Converts the given value
-	 * 
-	 * @param value
-	 *            The value to convert
-	 * @param locale
-	 * @return The converted value
+	 * @see wicket.util.convert.IConverterSupplierFactory#newConverterSupplier()
 	 */
-	Object convert(Object value, Locale locale);
+	public ISupplyConverters newConverterSupplier()
+	{
+		return new ConverterSupplier();
+	}
 }

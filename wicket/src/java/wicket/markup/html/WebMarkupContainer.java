@@ -28,7 +28,7 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainer extends MarkupContainer
+public class WebMarkupContainer<V> extends MarkupContainer<V>
 {
 	private static final long serialVersionUID = 1L;
 	

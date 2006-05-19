@@ -19,7 +19,7 @@ package wicket.util.convert.converters;
 
 import java.util.Locale;
 
-import wicket.util.convert.ITypeConverter;
+import wicket.util.convert.IConverter;
 
 /**
  * Converts from Object to Character.
@@ -34,12 +34,12 @@ public final class CharacterConverter extends AbstractConverter
 	/**
 	 * The singleton instance for a character converter
 	 */
-	public static final ITypeConverter INSTANCE = new CharacterConverter();
+	public static final IConverter INSTANCE = new CharacterConverter();
 	
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convert(final Object value, Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
 		final String stringValue = value.toString();
 		int length = stringValue.length();

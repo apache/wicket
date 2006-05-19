@@ -37,7 +37,7 @@ import wicket.util.string.StringValue;
 public abstract class EnumeratedType extends StringValue
 {
 	/** Map of type values by class */
-	private static final Map valueListByClass = new HashMap();
+	private static final Map<Class<? extends EnumeratedType>, List<EnumeratedType>> valueListByClass = new HashMap<Class<? extends EnumeratedType>, List<EnumeratedType>>();
 
 	/**
 	 * Constructor.
@@ -60,16 +60,16 @@ public abstract class EnumeratedType extends StringValue
 	 *            The enumerated type subclass to get values for
 	 * @return List of all values of the given subclass
 	 */
-	public static List getValues(final Class c)
+	public static List<EnumeratedType> getValues(final Class<? extends EnumeratedType> c)
 	{
 		// Get values for class
-		List valueList = (List)valueListByClass.get(c);
+		List<EnumeratedType> valueList = valueListByClass.get(c);
 
 		// If no list exists
 		if (valueList == null)
 		{
 			// create lazily
-			valueList = new ArrayList();
+			valueList = new ArrayList<EnumeratedType>();
 			valueListByClass.put(c, valueList);
 		}
 

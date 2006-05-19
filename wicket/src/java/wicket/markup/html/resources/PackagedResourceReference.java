@@ -51,7 +51,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	public PackagedResourceReference(final String id, final Class referer, final String file,
 			final String attributeToReplace)
 	{
-		this(id, referer, new Model(file), attributeToReplace);
+		this(id, referer, new Model<String>(file), attributeToReplace);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final Class referer, final IModel file,
+	public PackagedResourceReference(final String id, final Class referer, final IModel<String> file,
 			final String attributeToReplace)
 	{
 		super(id);
@@ -86,26 +86,20 @@ public class PackagedResourceReference extends WebMarkupContainer
 			throw new IllegalArgumentException("AttributeToReplace may not be null");
 		}
 
-		IModel srcReplacement = new Model()
+		IModel<CharSequence> srcReplacement = new Model<CharSequence>()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component)
+			public CharSequence getObject(Component component)
 			{
-				Object o = file.getObject(component);
+				String o = file.getObject(component);
 				if (o == null)
 				{
 					throw new IllegalArgumentException(
 							"The model must provide a non-null object (component == " + component
 									+ ")");
 				}
-				if (!(o instanceof String))
-				{
-					throw new IllegalArgumentException(
-							"The model must provide an instance of String");
-				}
-				String f = (String)component.getConverter().convert(file.getObject(component),
-						String.class);
+				String f = (String)component.getConverter(o.getClass()).convertToString(o,getLocale());
 				PackageResourceReference ref = new PackageResourceReference(Application.get(),
 						referer, f);
 				return getRequestCycle().urlFor(ref);
@@ -127,7 +121,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	public PackagedResourceReference(final String id, final ResourceReference resourceReference,
 			final String attributeToReplace)
 	{
-		this(id, new Model(resourceReference), attributeToReplace);
+		this(id, new Model<ResourceReference>(resourceReference), attributeToReplace);
 	}
 
 	/**
@@ -141,7 +135,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final IModel resourceReference,
+	public PackagedResourceReference(final String id, final IModel<ResourceReference> resourceReference,
 			final String attributeToReplace)
 	{
 		super(id);
@@ -155,27 +149,20 @@ public class PackagedResourceReference extends WebMarkupContainer
 			throw new IllegalArgumentException("AttributeToReplace may not be null");
 		}
 
-		IModel srcReplacement = new Model()
+		IModel<CharSequence> srcReplacement = new Model<CharSequence> ()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component)
+			public CharSequence getObject(Component component)
 			{
-				Object o = resourceReference.getObject(component);
+				ResourceReference o = resourceReference.getObject(component);
 				if (o == null)
 				{
 					throw new IllegalArgumentException(
 							"The model must provide a non-null object (component == " + component
 									+ ")");
 				}
-				if (!(o instanceof ResourceReference))
-				{
-					throw new IllegalArgumentException(
-							"The model must provide an instance of ResourceReference");
-				}
-
-				ResourceReference ref = (ResourceReference)o;
-				return urlFor(ref);
+				return urlFor(o);
 			}
 		};
 		add(new AttributeModifier(attributeToReplace, true, srcReplacement));

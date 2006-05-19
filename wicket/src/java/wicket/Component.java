@@ -226,7 +226,7 @@ import wicket.version.undo.Change;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component implements Serializable
+public abstract class Component<V> implements Serializable, ISupplyConverters
 {
 	/**
 	 * Change record of a model.
@@ -243,7 +243,7 @@ public abstract class Component implements Serializable
 		 * 
 		 * @param model
 		 */
-		public ComponentModelChange(IModel model)
+		public ComponentModelChange(IModel<V> model)
 		{
 			super();
 			this.model = model;
@@ -269,7 +269,7 @@ public abstract class Component implements Serializable
 	/**
 	 * Generic component visitor interface for component traversals.
 	 */
-	public static interface IVisitor
+	public static interface IVisitor<T extends Component>
 	{
 		/**
 		 * Value to return to continue a traversal.
@@ -297,7 +297,7 @@ public abstract class Component implements Serializable
 		 *         should stop. If no return value is useful, the generic
 		 *         non-null value STOP_TRAVERSAL can be used.
 		 */
-		public Object component(Component component);
+		public Object component(T component);
 	}
 
 	/**
@@ -516,7 +516,7 @@ public abstract class Component implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** List of behaviors to be applied for this Component */
-	private List behaviors = null;
+	private List<IBehavior> behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
 	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
@@ -531,7 +531,7 @@ public abstract class Component implements Serializable
 	private MetaDataEntry[] metaData;
 
 	/** The model for this component. */
-	private IModel model;
+	private IModel<V> model;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -571,7 +571,7 @@ public abstract class Component implements Serializable
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
-	public Component(final String id, final IModel model)
+	public Component(final String id, final IModel<V> model)
 	{
 		setId(id);
 		getApplication().notifyComponentInstantiationListeners(this);
@@ -595,7 +595,7 @@ public abstract class Component implements Serializable
 		// Lazy create
 		if (behaviors == null)
 		{
-			behaviors = new ArrayList(1);
+			behaviors = new ArrayList<IBehavior>(1);
 		}
 
 		behaviors.add(behavior);
@@ -639,9 +639,9 @@ public abstract class Component implements Serializable
 		// Also detach models from any contained attribute modifiers
 		if (behaviors != null)
 		{
-			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
 			{
-				IBehavior behavior = (IBehavior)i.next();
+				IBehavior behavior = i.next();
 				behavior.detachModel(this);
 			}
 		}
@@ -677,7 +677,7 @@ public abstract class Component implements Serializable
 	 * @return First container parent that is an instance of the given class, or
 	 *         null if none can be found
 	 */
-	public final MarkupContainer findParent(final Class c)
+	public final MarkupContainer findParent(final Class<? extends MarkupContainer> c)
 	{
 		// Start with immediate parent
 		MarkupContainer current = parent;
@@ -773,11 +773,11 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return The currently coupled behaviors as a unmodifiable list
 	 */
-	public final List/* <IBehavior> */getBehaviors()
+	public final List<IBehavior> getBehaviors()
 	{
 		if (behaviors == null)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		return Collections.unmodifiableList(behaviors);
@@ -794,12 +794,13 @@ public abstract class Component implements Serializable
 
 	/**
 	 * Gets the converter that should be used by this component.
+	 * @param type TODO
 	 * 
 	 * @return The converter that should be used by this component
 	 */
-	public IConverter getConverter()
+	public IConverter getConverter(Class type)
 	{
-		return getSession().getConverter();
+		return getSession().getConverter(type);
 	}
 
 	/**
@@ -866,10 +867,10 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return markup attributes
 	 */
-	public final ValueMap getMarkupAttributes()
+	public final ValueMap<String,CharSequence> getMarkupAttributes()
 	{
 		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
-		ValueMap attrs = new ValueMap(markupStream.getTag().getAttributes());
+		ValueMap<String,CharSequence> attrs = new ValueMap<String,CharSequence>(markupStream.getTag().getAttributes());
 		attrs.makeImmutable();
 		return attrs;
 	}
@@ -933,7 +934,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return The model
 	 */
-	public IModel getModel()
+	public IModel<V> getModel()
 	{
 		// If model is null
 		if (model == null)
@@ -951,9 +952,9 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return The backing model object
 	 */
-	public final Object getModelObject()
+	public final V getModelObject()
 	{
-		final IModel model = getModel();
+		final IModel<V> model = getModel();
 		if (model != null)
 		{
 			// If this component has the root model for a compound model
@@ -984,10 +985,10 @@ public abstract class Component implements Serializable
 		if (modelObject != null)
 		{
 			// Get converter
-			final IConverter converter = getConverter();
+			final IConverter converter = getConverter(modelObject.getClass());
 
 			// Model string from property
-			final String modelString = (String)converter.convert(modelObject, String.class);
+			final String modelString = (String)converter.convertToString(modelObject, getLocale());
 
 			if (modelString != null)
 			{
@@ -1524,9 +1525,9 @@ public abstract class Component implements Serializable
 				// behavior to clean up
 				if (behaviors != null)
 				{
-					for (Iterator i = behaviors.iterator(); i.hasNext();)
+					for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
 					{
-						IBehavior behavior = (IBehavior)i.next();
+						IBehavior behavior = i.next();
 						try
 						{
 							behavior.exception(this, ex);
@@ -1718,9 +1719,9 @@ public abstract class Component implements Serializable
 
 		if (behaviors != null)
 		{
-			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
 			{
-				IBehavior behavior = (IBehavior)i.next();
+				IBehavior behavior = i.next();
 				behavior.rendered(this);
 			}
 		}
@@ -1742,10 +1743,10 @@ public abstract class Component implements Serializable
 		{
 			final WebPage webPage = (WebPage)getPage();
 
-			final Iterator iter = this.behaviors.iterator();
+			final Iterator<IBehavior> iter = this.behaviors.iterator();
 			while (iter.hasNext())
 			{
-				IBehavior behavior = (IBehavior)iter.next();
+				IBehavior behavior = iter.next();
 				if (behavior instanceof IHeaderContributor)
 				{
 					((IHeaderContributor)behavior).renderHead(container.getResponse());
@@ -1862,7 +1863,7 @@ public abstract class Component implements Serializable
 	 *            The model
 	 * @return This
 	 */
-	public Component setModel(final IModel model)
+	public Component setModel(final IModel<V> model)
 	{
 		// Detach current model
 		if (this.model != null)
@@ -1896,9 +1897,9 @@ public abstract class Component implements Serializable
 	 *            The object to set
 	 * @return This
 	 */
-	public final Component setModelObject(final Object object)
+	public final Component setModelObject(final V object)
 	{
-		final IModel model = getModel();
+		final IModel<V> model = getModel();
 
 		// Check whether anything can be set at all
 		if (model == null)
@@ -1979,7 +1980,7 @@ public abstract class Component implements Serializable
 	 *            The response page class
 	 * @see RequestCycle#setResponsePage(Class)
 	 */
-	public final void setResponsePage(final Class cls)
+	public final void setResponsePage(final Class<? extends Page> cls)
 	{
 		getRequestCycle().setResponsePage(cls);
 	}
@@ -1993,7 +1994,7 @@ public abstract class Component implements Serializable
 	 *            The parameters for thsi bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final void setResponsePage(final Class cls, PageParameters parameters)
+	public final void setResponsePage(final Class<? extends Page> cls, PageParameters<String,Object> parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -2132,7 +2133,7 @@ public abstract class Component implements Serializable
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final Class pageClass, final PageParameters parameters)
+	public final CharSequence urlFor(final Class<? extends Page> pageClass, final PageParameters<String,Object> parameters)
 	{
 		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
 	}
@@ -2170,8 +2171,8 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
-			final PageParameters parameters)
+	public final CharSequence urlFor(final PageMap pageMap, final Class<? extends Page> pageClass,
+			final PageParameters<String,Object> parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
@@ -2354,17 +2355,17 @@ public abstract class Component implements Serializable
 	 * @return The subset of the currently coupled behaviors that are of the
 	 *         provided type as a unmodifiable list or null
 	 */
-	protected final List/* <IBehavior> */getBehaviors(Class type)
+	protected final List<IBehavior> getBehaviors(Class<?> type)
 	{
 		if (behaviors == null)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
-		List subset = new ArrayList(behaviors.size()); // avoid growing
-		for (Iterator i = behaviors.iterator(); i.hasNext();)
+		List<IBehavior> subset = new ArrayList<IBehavior>(behaviors.size()); // avoid growing
+		for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
 		{
-			Object behavior = i.next();
+			IBehavior behavior = i.next();
 			if (type.isAssignableFrom(behavior.getClass()))
 			{
 				subset.add(behavior);
@@ -2405,13 +2406,13 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return The model
 	 */
-	protected IModel initModel()
+	protected IModel<V> initModel()
 	{
 		// Search parents for CompoundPropertyModel
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			final IModel model = current.getModel();
+			final IModel<V> model = current.getModel();
 			if (model instanceof ICompoundModel)
 			{
 				// we turn off versioning as we share the model with another
@@ -2572,6 +2573,22 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * @return if this component is stateless or not.
+	 */
+	protected boolean isStateless()
+	{
+		Iterator<IBehavior> behaviors = getBehaviors().iterator();
+		while(behaviors.hasNext())
+		{
+			IBehavior behavior = behaviors.next();
+			if(!behavior.isStateless())
+			{
+				return false;
+			}
+		}
+		return true;
+	}	
+	/**
 	 * Called to allow a component to detach resources after use. The semantics
 	 * of this will be tightened in Wicket 1.3 when we will add the guarantee
 	 * that onDetach() be called after all framework use of a Component (in the
@@ -2648,9 +2665,9 @@ public abstract class Component implements Serializable
 			{
 				tag = tag.mutable();
 
-				for (Iterator i = behaviors.iterator(); i.hasNext();)
+				for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
 				{
-					IBehavior behavior = (IBehavior)i.next();
+					IBehavior behavior = i.next();
 
 					// Components may reject some behavior components
 					if (isBehaviorAccepted(behavior))
@@ -2916,12 +2933,12 @@ public abstract class Component implements Serializable
 	 *            The model
 	 * @return The root object
 	 */
-	private final IModel getRootModel(final IModel model)
+	private final IModel<V> getRootModel(final IModel<V> model)
 	{
-		IModel nestedModelObject = model;
+		IModel<V> nestedModelObject = model;
 		while (true)
 		{
-			final IModel next = nestedModelObject.getNestedModel();
+			final IModel<V> next = nestedModelObject.getNestedModel();
 			if (next == null)
 			{
 				break;

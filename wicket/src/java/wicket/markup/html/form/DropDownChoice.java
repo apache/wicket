@@ -205,4 +205,17 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	{
 		return false;
 	}
+	
+	/**
+	 * @see wicket.MarkupContainer#isStateless()
+	 */
+	@Override
+	protected boolean isStateless()
+	{
+		if(wantOnSelectionChangedNotifications())
+		{
+			return false;
+		}
+		return super.isStateless();
+	}
 }

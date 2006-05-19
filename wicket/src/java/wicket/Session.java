@@ -117,7 +117,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements Serializable
+public abstract class Session implements Serializable, ISupplyConverters
 {
 	private static final long serialVersionUID = 1L;
 
@@ -128,10 +128,10 @@ public abstract class Session implements Serializable
 	static final String pageMapEntryAttributePrefix = "p:";
 
 	/** Thread-local current session. */
-	private static final ThreadLocal current = new ThreadLocal();
+	private static final ThreadLocal<Session> current = new ThreadLocal<Session>();
 
 	/** A store for dirty objects for one request */
-	private static final ThreadLocal dirtyObjects = new ThreadLocal();
+	private static final ThreadLocal<List<Serializable>> dirtyObjects = new ThreadLocal<List<Serializable>>();
 
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(Session.class);
@@ -149,7 +149,7 @@ public abstract class Session implements Serializable
 	private ClientInfo clientInfo;
 
 	/** The converter instance. */
-	private transient IConverter converter;
+	private transient ISupplyConverters converterSupplier;
 
 	/** True if session state has been changed */
 	private transient boolean dirty = false;
@@ -164,7 +164,7 @@ public abstract class Session implements Serializable
 	private int autoCreatePageMapCounter = 0;
 
 	/** A linked list for last used pagemap queue */
-	private LinkedList/* <PageMap> */usedPageMaps = new LinkedList();
+	private LinkedList/* <PageMap> */<PageMap>usedPageMaps = new LinkedList<PageMap>();
 
 	/** The session store of this session. */
 	// private transient ISessionStore sessionStore;
@@ -174,7 +174,7 @@ public abstract class Session implements Serializable
 	/** feedback messages */
 	private FeedbackMessages feedbackMessages;
 
-	private transient Map usedPages;
+	private transient Map<String, Thread> usedPages;
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -209,7 +209,7 @@ public abstract class Session implements Serializable
 	 */
 	public static Session get()
 	{
-		final Session session = (Session)current.get();
+		final Session session = current.get();
 		if (session == null)
 		{
 			throw new WicketRuntimeException("there is no session attached to current thread "
@@ -396,7 +396,7 @@ public abstract class Session implements Serializable
 		{
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			Thread t = (Thread)usedPages.get(id);
+			Thread t = usedPages.get(id);
 			while (t != null && t != Thread.currentThread())
 			{
 				try
@@ -407,7 +407,7 @@ public abstract class Session implements Serializable
 				{
 					throw new WicketRuntimeException(ex);
 				}
-				t = (Thread)usedPages.get(id);
+				t = usedPages.get(id);
 			}
 			usedPages.put(id, Thread.currentThread());
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
@@ -503,15 +503,15 @@ public abstract class Session implements Serializable
 	/**
 	 * @return A list of all PageMaps in this session.
 	 */
-	public final List getPageMaps()
+	public final List<PageMap> getPageMaps()
 	{
-		final List list = new ArrayList();
+		final List<PageMap> list = new ArrayList<PageMap>();
 		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
 		{
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
-				list.add(getAttribute(attribute));
+				list.add((PageMap)getAttribute(attribute));
 			}
 		}
 		return list;
@@ -523,9 +523,9 @@ public abstract class Session implements Serializable
 	public final long getSizeInBytes()
 	{
 		long size = Objects.sizeof(this);
-		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
+		for (final Iterator<PageMap> iterator = getPageMaps().iterator(); iterator.hasNext();)
 		{
-			final PageMap pageMap = (PageMap)iterator.next();
+			final PageMap pageMap = iterator.next();
 			size += pageMap.getSizeInBytes();
 		}
 		return size;
@@ -581,12 +581,12 @@ public abstract class Session implements Serializable
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
 		if (usedPageMaps.size() >= maxPageMaps)
 		{
-			PageMap pm = (PageMap)usedPageMaps.getFirst();
+			PageMap pm = usedPageMaps.getFirst();
 			pm.remove();
 		}
 
 		// Create new page map
-		final PageMap pageMap = new PageMap(name, this);
+		final PageMap pageMap =getSessionStore().createPageMap(name,this);
 		setAttribute(attributeForPageMapName(name), pageMap);
 		dirty();
 		return pageMap;
@@ -635,7 +635,7 @@ public abstract class Session implements Serializable
 		this.application = application;
 		if (usedPages == null)
 		{
-			usedPages = new HashMap(3);
+			usedPages = new HashMap<String, Thread>(3);
 		}
 	}
 
@@ -667,7 +667,6 @@ public abstract class Session implements Serializable
 			throw new IllegalArgumentException("Parameter 'locale' must not be null");
 		}
 		this.locale = locale;
-		this.converter = null;
 		dirty();
 	}
 
@@ -789,18 +788,19 @@ public abstract class Session implements Serializable
 	 * the current locale. Whenever the locale is changed, the cached value is
 	 * cleared and the converter will be recreated for the new locale on a next
 	 * request.
+	 * @param type TODO
 	 * 
 	 * @return the converter
 	 */
-	public final IConverter getConverter()
+	public final IConverter getConverter(Class type)
 	{
-		if (converter == null)
+		if (converterSupplier == null)
 		{
 			// Let the factory create a new converter
-			converter = getApplication().getApplicationSettings().getConverterFactory()
-					.newConverter(getLocale());
+			converterSupplier = getApplication().getApplicationSettings().getConverterSupplierFactory()
+					.newConverterSupplier();
 		}
-		return converter;
+		return converterSupplier.getConverter(type);
 	}
 
 	/**
@@ -853,7 +853,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @return List of attributes for this session
 	 */
-	protected final List getAttributeNames()
+	protected final List<String> getAttributeNames()
 	{
 		RequestCycle cycle = RequestCycle.get();
 		if (cycle != null)
@@ -946,7 +946,7 @@ public abstract class Session implements Serializable
 		}
 
 		// Go through all dirty entries, replicating any dirty objects
-		List dirtyObjects = (List)Session.dirtyObjects.get();
+		List dirtyObjects = Session.dirtyObjects.get();
 		if (dirtyObjects != null)
 		{
 			for (final Iterator iterator = dirtyObjects.iterator(); iterator.hasNext();)
@@ -1017,7 +1017,7 @@ public abstract class Session implements Serializable
 	 */
 	void dirtyPage(final Page page)
 	{
-		List dirtyObjects = getDirtyObjectsList();
+		List<Serializable> dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(page))
 		{
 			dirtyObjects.add(page);
@@ -1047,7 +1047,7 @@ public abstract class Session implements Serializable
 			usedPageMaps.remove(map);
 			usedPageMaps.addLast(map);
 		}
-		List dirtyObjects = getDirtyObjectsList();
+		List<Serializable> dirtyObjects = getDirtyObjectsList();
 		if (!dirtyObjects.contains(map))
 		{
 			dirtyObjects.add(map);
@@ -1067,12 +1067,12 @@ public abstract class Session implements Serializable
 	/**
 	 * @return The current thread dirty objects list
 	 */
-	List getDirtyObjectsList()
+	List<Serializable> getDirtyObjectsList()
 	{
-		List list = (List)dirtyObjects.get();
+		List<Serializable> list = dirtyObjects.get();
 		if (list == null)
 		{
-			list = new ArrayList(4);
+			list = new ArrayList<Serializable>(4);
 			dirtyObjects.set(list);
 		}
 		return list;

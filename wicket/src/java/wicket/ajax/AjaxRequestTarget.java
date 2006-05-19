@@ -162,10 +162,10 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private final EncodingResponse encodingResponse;
 
-	private final List/* <String> */javascripts = new ArrayList();
+	private final List<String> javascripts = new ArrayList<String>();
 
 	/** the component instances that will be rendered */
-	private final Map/* <String,Component> */markupIdToComponent = new HashMap();
+	private final Map<String,Component> markupIdToComponent = new HashMap<String, Component>();
 
 	/**
 	 * Constructor
@@ -301,19 +301,19 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
-			Iterator it = markupIdToComponent.entrySet().iterator();
+			Iterator<Entry<String,Component>> it = markupIdToComponent.entrySet().iterator();
 			while (it.hasNext())
 			{
-				final Map.Entry entry = (Entry)it.next();
-				final Component component = (Component)entry.getValue();
-				final String markupId = (String)entry.getKey();
+				final Map.Entry<String,Component> entry = it.next();
+				final Component component = entry.getValue();
+				final String markupId = entry.getKey();
 				respondComponent(response, markupId, component);
 			}
 
-			it = javascripts.iterator();
-			while (it.hasNext())
+			Iterator<String> it2 = javascripts.iterator();
+			while (it2.hasNext())
 			{
-				String js = (String)it.next();
+				String js = it2.next();
 				respondInvocation(response, js);
 			}
 			response.write("</ajax-response>");

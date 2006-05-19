@@ -72,7 +72,7 @@ public class Markup
 	 * A cache which maps (componentPath + id) to the componentTags index in the
 	 * markup
 	 */
-	private Map componentMap;
+	private Map<String, Integer> componentMap;
 
 	/**
 	 * Constructor
@@ -247,7 +247,7 @@ public class Markup
 			return -1;
 		}
 		
-		final Integer value = (Integer)this.componentMap.get(completePath);
+		final Integer value = this.componentMap.get(completePath);
 		if (value == null)
 		{
 			// not found
@@ -345,7 +345,7 @@ public class Markup
 			// Add the tag to the cache
 			if (this.componentMap == null)
 			{
-				this.componentMap = new HashMap();
+				this.componentMap = new HashMap<String, Integer>();
 			}
 
 			final String key;

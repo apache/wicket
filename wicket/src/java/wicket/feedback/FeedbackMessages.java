@@ -46,7 +46,7 @@ public final class FeedbackMessages implements Serializable
 	/**
 	 * Holds a list of {@link wicket.feedback.FeedbackMessage}s.
 	 */
-	private ArrayList messages = null;
+	private ArrayList<FeedbackMessage> messages = null;
 
 	/**
 	 * Package local constructor; clients are not allowed to create instances as
@@ -92,10 +92,10 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void clearRendered()
 	{
-		Iterator msgs = iterator();
+		Iterator<FeedbackMessage> msgs = iterator();
 		while (msgs.hasNext())
 		{
-			final FeedbackMessage msg = (FeedbackMessage)msgs.next();
+			final FeedbackMessage msg = msgs.next();
 			if (msg.isRendered())
 			{
 				msgs.remove();
@@ -230,9 +230,9 @@ public final class FeedbackMessages implements Serializable
 	{
 		if (messages != null)
 		{
-			for (Iterator iterator = messages.iterator(); iterator.hasNext();)
+			for (Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
 			{
-				FeedbackMessage message = (FeedbackMessage)iterator.next();
+				FeedbackMessage message = iterator.next();
 				if (message.getReporter() == component)
 				{
 					return message;
@@ -249,18 +249,18 @@ public final class FeedbackMessages implements Serializable
 	 *            Filter for selecting messages
 	 * @return The messages or an empty list if no messages are found
 	 */
-	public final List messages(final IFeedbackMessageFilter filter)
+	public final List<FeedbackMessage> messages(final IFeedbackMessageFilter filter)
 	{
 		if (messages == null)
 		{
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		else
 		{
-			final List list = new ArrayList();
-			for (final Iterator iterator = messages.iterator(); iterator.hasNext();)
+			final List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
+			for (final Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
 			{
-				final FeedbackMessage message = (FeedbackMessage)iterator.next();
+				final FeedbackMessage message = iterator.next();
 				if (filter == null || filter.accept(message))
 				{
 					list.add(message);
@@ -315,7 +315,7 @@ public final class FeedbackMessages implements Serializable
 		}
 		if (messages == null)
 		{
-			messages = new ArrayList();
+			messages = new ArrayList<FeedbackMessage>();
 		}
 		messages.add(message);
 	}
@@ -325,11 +325,12 @@ public final class FeedbackMessages implements Serializable
 	 * 
 	 * @return iterator over stored messages
 	 */
-	public final Iterator iterator()
+	@SuppressWarnings("unchecked")
+	public final Iterator<FeedbackMessage> iterator()
 	{
 		if (messages == null)
 		{
-			return Collections.EMPTY_LIST.iterator();
+			return ((List<FeedbackMessage>)Collections.EMPTY_LIST).iterator();
 		}
 		else
 		{

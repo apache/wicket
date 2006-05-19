@@ -226,6 +226,14 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
+	 * @see wicket.Component#isStateless()
+	 */
+	@Override
+	protected boolean isStateless()
+	{
+		return getImageResource() == null && localizedImageResource.isStateless();
+	}
+	/**
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)

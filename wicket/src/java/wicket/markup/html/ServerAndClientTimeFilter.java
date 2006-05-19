@@ -58,7 +58,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if (headIndex != -1 && bodyIndex != -1)
 		{
-			Map map = new HashMap(4);
+			Map<String, String> map = new HashMap<String, String>(4);
 			map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			map.put("servertime", ((double)timeTaken) / 1000 + "s");
 

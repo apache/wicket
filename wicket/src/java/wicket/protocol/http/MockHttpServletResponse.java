@@ -56,11 +56,11 @@ public class MockHttpServletResponse implements HttpServletResponse
 
     private int code = HttpServletResponse.SC_OK;
 
-    private final List cookies = new ArrayList();
+    private final List<Cookie> cookies = new ArrayList<Cookie>();
 
     private String errorMessage = null;
 
-    private final ValueMap headers = new ValueMap();
+    private final ValueMap<String, List<String>> headers = new ValueMap<String, List<String>>();
 
     private Locale locale = null;
 
@@ -120,10 +120,10 @@ public class MockHttpServletResponse implements HttpServletResponse
      */
     public void addHeader(final String name, final String value)
     {
-        List list = (List)headers.get(name);
+        List<String> list = headers.get(name);
         if (list == null)
         {
-            list = new ArrayList(1);
+            list = new ArrayList<String>(1);
             headers.put(name, list);
         }
         list.add(value);
@@ -271,7 +271,7 @@ public class MockHttpServletResponse implements HttpServletResponse
      * 
      * @return The collection of cookies
      */
-    public Collection getCookies()
+    public Collection<Cookie> getCookies()
     {
         return cookies;
     }
@@ -312,7 +312,7 @@ public class MockHttpServletResponse implements HttpServletResponse
      */
     public String getHeader(final String name)
     {
-        List l = (List)headers.get(name);
+        List l = headers.get(name);
         if (l == null || l.size() < 1)
         {
             return null;
@@ -328,7 +328,7 @@ public class MockHttpServletResponse implements HttpServletResponse
      * 
      * @return The header names
      */
-    public Set getHeaderNames()
+    public Set<String> getHeaderNames()
     {
         return headers.keySet();
     }
@@ -602,7 +602,7 @@ public class MockHttpServletResponse implements HttpServletResponse
      */
     public void setHeader(final String name, final String value)
     {
-        List l = new ArrayList(1);
+        List<String> l = new ArrayList<String>(1);
         l.add(value);
         headers.put(name, l);
     }

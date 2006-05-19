@@ -309,7 +309,7 @@ public class PackageResource extends WebResource
 	 */
 	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
 	{
-		final List resources = new ArrayList();
+		final List<PackageResource> resources = new ArrayList<PackageResource>();
 		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/").toString();
 		ClassLoader loader = scope.getClassLoader();
 		try
@@ -357,7 +357,7 @@ public class PackageResource extends WebResource
 						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
 						JarFile jarFile = new JarFile(filename,false);
 						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
-						return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
+						return resources.toArray(new PackageResource[resources.size()]);
 					}
 					if (!basedir.isDirectory())
 					{
@@ -373,7 +373,7 @@ public class PackageResource extends WebResource
 			throw new WicketRuntimeException(e);
 		}
 
-		return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
+		return resources.toArray(new PackageResource[resources.size()]);
 	}
 
 	/**
@@ -384,7 +384,7 @@ public class PackageResource extends WebResource
 	 * @param packageRef
 	 * @param jf
 =	 */
-	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse, final List resources, String packageRef, JarFile jf)
+	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse, final List<PackageResource> resources, String packageRef, JarFile jf)
 	{
 		Enumeration enumeration = jf.entries();
 		while (enumeration.hasMoreElements())
@@ -445,7 +445,7 @@ public class PackageResource extends WebResource
 	 *            Whether this method should recurse into sub packages
 	 */
 	private static final void addResources(final Class scope, final Pattern pattern,
-			final List resources, final StringBuffer relativePath, final File dir, boolean recurse)
+			final List<PackageResource> resources, final StringBuffer relativePath, final File dir, boolean recurse)
 	{
 		File[] files = dir.listFiles();
 		for (int i = 0; i < files.length; i++)

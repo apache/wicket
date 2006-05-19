@@ -27,18 +27,18 @@ import wicket.PageParameters;
  * 
  * @author Jonathan Locke
  */
-public class BookmarkablePageLink extends Link
+public class BookmarkablePageLink<V> extends Link<V>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The page class that this link links to. */
-	private final Class pageClass;
+	private final Class<? extends Page> pageClass;
 
 	/** Any page map for this link */
 	private String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
-	private final PageParameters parameters;
+	private final PageParameters<String,Object> parameters;
 
 	/**
 	 * Constructor.
@@ -48,9 +48,9 @@ public class BookmarkablePageLink extends Link
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(final String id, final Class pageClass)
+	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass)
 	{
-		this(id, pageClass, new PageParameters());
+		this(id, pageClass, new PageParameters<String,Object>());
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class BookmarkablePageLink extends Link
 	 *            The parameters to pass to the new page when the link is
 	 *            clicked
 	 */
-	public BookmarkablePageLink(final String id, final Class pageClass,
-			final PageParameters parameters)
+	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass,
+			final PageParameters<String,Object> parameters)
 	{
 		super(id);
 		if (pageClass == null)
@@ -86,7 +86,7 @@ public class BookmarkablePageLink extends Link
 	 * 
 	 * @return Page class
 	 */
-	public final Class getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
 		return this.pageClass;
 	}
@@ -208,5 +208,15 @@ public class BookmarkablePageLink extends Link
 		{
 			return urlFor(getPageMap(), pageClass, parameters);
 		}
+	}
+	
+	/**
+	 * @see wicket.markup.html.link.Link#isStateless()
+	 */
+	@Override
+	protected boolean isStateless()
+	{
+		// should we test behaviours? Can a bookmarkable link have behaviours that are statefull?
+		return true;
 	}
 }

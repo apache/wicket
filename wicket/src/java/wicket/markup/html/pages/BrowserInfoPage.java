@@ -142,7 +142,7 @@ public class BrowserInfoPage extends WebPage
 	private final void initComps()
 	{
 		WebComponent meta = new WebComponent("meta");
-		PageParameters parameters = new PageParameters();
+		PageParameters<String,Object> parameters = new PageParameters<String,Object>();
 		parameters.put("cto", continueTo);
 		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class, parameters));
 		meta.add(new AttributeModifier("content", true, new Model("0; url=" + url)));

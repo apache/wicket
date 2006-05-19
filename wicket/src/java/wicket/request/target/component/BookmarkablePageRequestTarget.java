@@ -37,13 +37,13 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	private Page page;
 
 	/** the class of the page. */
-	private final Class pageClass;
+	private final Class<? extends Page> pageClass;
 
 	/** optional page map name. */
 	private final String pageMapName;
 
 	/** optional page parameters. */
-	private final PageParameters pageParameters;
+	private final PageParameters<String,Object> pageParameters;
 
 	/**
 	 * Construct.
@@ -51,7 +51,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public BookmarkablePageRequestTarget(Class pageClass)
+	public BookmarkablePageRequestTarget(Class<? extends Page> pageClass)
 	{
 		this(null, pageClass);
 	}
@@ -64,7 +64,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(Class pageClass, PageParameters pageParameters)
+	public BookmarkablePageRequestTarget(Class<? extends Page> pageClass, PageParameters<String,Object> pageParameters)
 	{
 		this(null, pageClass, pageParameters);
 	}
@@ -78,7 +78,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageClass
 	 *            the class of the page
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass)
+	public BookmarkablePageRequestTarget(String pageMapName, Class<? extends Page> pageClass)
 	{
 		this(null, pageClass, null);
 	}
@@ -93,8 +93,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(String pageMapName, Class pageClass,
-			PageParameters pageParameters)
+	public BookmarkablePageRequestTarget(String pageMapName, Class<? extends Page> pageClass,
+			PageParameters<String, Object> pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -161,7 +161,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see wicket.request.target.component.IBookmarkablePageRequestTarget#getPageClass()
 	 */
-	public final Class getPageClass()
+	public final Class<? extends Page> getPageClass()
 	{
 		return pageClass;
 	}
@@ -177,7 +177,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see wicket.request.target.component.IBookmarkablePageRequestTarget#getPageParameters()
 	 */
-	public final PageParameters getPageParameters()
+	public final PageParameters<String,Object> getPageParameters()
 	{
 		return pageParameters;
 	}
@@ -254,7 +254,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            request cycle
 	 * @return new instance of page
 	 */
-	protected Page newPage(final Class pageClass, final RequestCycle requestCycle)
+	protected Page newPage(final Class<? extends Page> pageClass, final RequestCycle requestCycle)
 	{
 		// Construct a new instance using the default page factory
 		IPageFactory pageFactory = requestCycle.getApplication().getSessionSettings()
@@ -277,7 +277,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            the request cycle
 	 * @return the page
 	 */
-	private final Page getPage(RequestCycle requestCycle)
+	protected final Page getPage(RequestCycle requestCycle)
 	{
 		if (page == null && pageClass != null && !requestCycle.getRedirect())
 		{

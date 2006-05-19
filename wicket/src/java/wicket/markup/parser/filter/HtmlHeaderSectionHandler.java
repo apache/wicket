@@ -53,7 +53,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 * In case you want to add extra Components to the markup, just add them to
 	 * the list. MarkupParser will handle it.
 	 */
-	private List tagList;
+	private List<ComponentTag> tagList;
 
 	/**
 	 * Construct.
@@ -62,7 +62,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 * @param parent
 	 *            The next MarkupFilter in the chain
 	 */
-	public HtmlHeaderSectionHandler(final List tagList, final IMarkupFilter parent)
+	public HtmlHeaderSectionHandler(final List<ComponentTag> tagList, final IMarkupFilter parent)
 	{
 		super(parent);
 		setTagList(tagList);
@@ -73,7 +73,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 * 
 	 * @param tagList
 	 */
-	public void setTagList(final List tagList)
+	public void setTagList(final List<ComponentTag> tagList)
 	{
 		this.tagList = tagList;
 	}

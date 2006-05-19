@@ -28,7 +28,7 @@ import java.util.EmptyStackException;
  * 
  * @author Jonathan Locke
  */
-public final class ArrayListStack extends ArrayList
+public final class ArrayListStack<E> extends ArrayList<E>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,7 +57,7 @@ public final class ArrayListStack extends ArrayList
 	 * @param collection
 	 *            The collection to add
 	 */
-	public ArrayListStack(final Collection collection)
+	public ArrayListStack(final Collection<E> collection)
 	{
 		super(collection);
 	}
@@ -68,7 +68,7 @@ public final class ArrayListStack extends ArrayList
 	 * @param item
 	 *            the item to be pushed onto this stack.
 	 */
-	public final void push(final Object item)
+	public final void push(final E item)
 	{
 		add(item);
 	}
@@ -80,9 +80,9 @@ public final class ArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public final Object pop()
+	public final E pop()
 	{
-		final Object top = peek();
+		final E top = peek();
 		remove(size() - 1);
 		return top;
 	}
@@ -94,7 +94,7 @@ public final class ArrayListStack extends ArrayList
 	 * @exception EmptyStackException
 	 *                If this stack is empty.
 	 */
-	public final Object peek()
+	public final E peek()
 	{
 		int size = size();
 		if (size == 0)

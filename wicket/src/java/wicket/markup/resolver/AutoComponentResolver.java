@@ -63,7 +63,7 @@ public final class AutoComponentResolver implements IComponentResolver
      * inside <wicket:component>, their respective Java components are not.
      * They must be added to the parent container of <wicket:component>.
      */ 
-    private final Map nestedComponents = new HashMap();
+    private final Map<Component,Object> nestedComponents = new HashMap<Component,Object>();
     
     /**
      * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,

@@ -73,7 +73,7 @@ public abstract class Resource implements IResourceListener
 	 * ThreadLocal to keep any parameters associated with the request for this
 	 * resource
 	 */
-	private static final ThreadLocal parameters = new ThreadLocal();
+	private static final ThreadLocal<ValueMap<String, Object>> parameters = new ThreadLocal<ValueMap<String, Object>>();
 
 	/**
 	 * Constructor
@@ -162,7 +162,7 @@ public abstract class Resource implements IResourceListener
 	 * @param parameters
 	 *            Map of query parameters that paramterize this resource
 	 */
-	public final void setParameters(final Map parameters)
+	public final void setParameters(final Map<String,? extends Object> parameters)
 	{
 		if (parameters == null)
 		{
@@ -170,7 +170,7 @@ public abstract class Resource implements IResourceListener
 		}
 		else
 		{
-			Resource.parameters.set(new ValueMap(parameters));
+			Resource.parameters.set(new ValueMap<String,Object>(parameters));
 		}
 	}
 
@@ -189,13 +189,13 @@ public abstract class Resource implements IResourceListener
 	 * @return Any query parameters associated with the request for this
 	 *         resource
 	 */
-	protected ValueMap getParameters()
+	protected ValueMap<String, Object> getParameters()
 	{
 		if (parameters.get() == null)
 		{
 			setParameters(RequestCycle.get().getRequest().getParameterMap());
 		}
-		return (ValueMap)parameters.get();
+		return parameters.get();
 	}
 
 	/**

@@ -60,9 +60,9 @@ public class WicketTesterHelper
 	 * @param page
 	 * @return List of component data objects
 	 */
-	public static List getComponentData(final Page page)
+	public static List<ComponentData> getComponentData(final Page page)
 	{
-		final List data = new ArrayList();
+		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		page.visitChildren(new IVisitor()
 		{
@@ -105,7 +105,7 @@ public class WicketTesterHelper
 	 * @param expects
 	 * @param actuals
 	 */
-	public static void assertEquals(final Collection expects, final Collection actuals)
+	public static void assertEquals(final Collection<? extends Object> expects, final Collection<? extends Object> actuals)
 	{
 		if (!expects.containsAll(actuals) || !actuals.containsAll(expects))
 		{

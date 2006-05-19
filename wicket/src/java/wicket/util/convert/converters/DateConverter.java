@@ -33,7 +33,7 @@ public class DateConverter extends AbstractConverter
 	private static final long serialVersionUID = 1L;
 
 	/** The date format to use for the specific locales (used as the key)*/
-	private final Map dateFormats = new HashMap();
+	private final Map<Locale, DateFormat> dateFormats = new HashMap<Locale, DateFormat>();
 
 	/** 
      * Specify whether or not date/time parsing is to be lenient.  With
@@ -66,12 +66,26 @@ public class DateConverter extends AbstractConverter
 	}
 
 	/**
-	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-	public Object convert(final Object value, Locale locale)
+	public Object convertToObject(final String value, Locale locale)
 	{
-        return parse(getDateFormat(locale), value);
+        return parse(getDateFormat(locale), value,locale);
 	}
+	
+	/**
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.String, Locale)
+	 */
+	public String convertToString(final Object value, Locale locale)
+	{
+		final DateFormat dateFormat = getDateFormat(locale);
+		if (dateFormat != null)
+		{
+			return dateFormat.format(value);
+		}
+		return value.toString();
+	}
+
 
 	/**
 	 * @param locale 
@@ -79,7 +93,7 @@ public class DateConverter extends AbstractConverter
 	 */
 	public DateFormat getDateFormat(Locale locale)
 	{
-		DateFormat dateFormat = (DateFormat)dateFormats.get(locale);
+		DateFormat dateFormat = dateFormats.get(locale);
 		if (dateFormat == null)
 		{
 			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
@@ -102,7 +116,7 @@ public class DateConverter extends AbstractConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
-	protected Class getTargetType()
+	protected Class<Date> getTargetType()
 	{
 		return Date.class;
 	}

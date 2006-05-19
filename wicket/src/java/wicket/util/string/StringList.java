@@ -60,7 +60,7 @@ public final class StringList extends AbstractStringList
 	private static final long serialVersionUID = 1L;
 
 	// The underlying list of strings
-	private final List strings;
+	private final List<String> strings;
 
 	// The total length of all strings in the list
 	private int totalLength;
@@ -158,7 +158,7 @@ public final class StringList extends AbstractStringList
 	public static StringList valueOf(final Object[] objects)
 	{
 		// check for null parameter
-		int length = (objects == null) ? 0 : objects.length;
+		final int length = (objects == null) ? 0 : objects.length;
 		final StringList strings = new StringList(length);
 
 		for (int i = 0; i < length; i++)
@@ -197,7 +197,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public static StringList valueOf(final String[] array)
 	{
-		int length = (array == null) ? 0 : array.length;
+		final int length = (array == null) ? 0 : array.length;
 		final StringList strings = new StringList(length);
 
 		for (int i = 0; i < length; i++)
@@ -213,7 +213,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public StringList()
 	{
-		this.strings = new ArrayList();
+		this.strings = new ArrayList<String>();
 	}
 
 	/**
@@ -224,7 +224,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public StringList(final int size)
 	{
-		this.strings = new ArrayList(size);
+		this.strings = new ArrayList<String>(size);
 	}
 
 	/**
@@ -292,7 +292,7 @@ public final class StringList extends AbstractStringList
 	/**
 	 * @return List value (not a copy of this list)
 	 */
-	public List getList()
+	public List<String> getList()
 	{
 		return strings;
 	}

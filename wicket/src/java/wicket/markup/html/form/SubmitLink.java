@@ -181,7 +181,7 @@ public class SubmitLink extends Button
 		Form form = getForm();
 		StringBuffer sb = new StringBuffer(100);
 		sb.append("document.getElementById('");
-		sb.append(form.getHiddenFieldId());
+		sb.append(form.getHiddenFieldId(Form.HIDDEN_FIELD_FAKE_SUBMIT));
 		sb.append("').name=\'");
 		sb.append(getInputName());
 		sb.append("';");

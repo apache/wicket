@@ -18,6 +18,7 @@
 package wicket.request.target.coding;
 
 import wicket.IRequestTarget;
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.RequestParameters;
@@ -33,7 +34,7 @@ import wicket.util.string.AppendingStringBuffer;
 public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
-	private final Class bookmarkablePageClass;
+	private final Class<? extends Page> bookmarkablePageClass;
 
 	/** page map name. */
 	private final String pageMapName;
@@ -49,7 +50,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	 *            the page map name if any
 	 */
 	public BookmarkablePageRequestTargetUrlCodingStrategy(final String mountPath,
-			final Class bookmarkablePageClass, String pageMapName)
+			final Class<? extends Page> bookmarkablePageClass, String pageMapName)
 	{
 		super(mountPath);
 
@@ -76,13 +77,13 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 		url.append(getMountPath());
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
-		PageParameters pageParameters = target.getPageParameters();
+		PageParameters<String, Object> pageParameters = target.getPageParameters();
 		String pagemap = pageMapName != null?pageMapName: target.getPageMapName();
 		if(pagemap != null)
 		{
 			if(pageParameters == null)
 			{
-				pageParameters = new PageParameters();
+				pageParameters = new PageParameters<String, Object>();
 			}
 			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
 		}
@@ -96,7 +97,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
-		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
+		final PageParameters<String,Object> parameters = new PageParameters<String,Object>(decodeParameters(parametersFragment, requestParameters.getParameters()));
 		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);
 

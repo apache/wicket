@@ -30,7 +30,7 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel extends AbstractPropertyModel implements ICompoundModel
+public class CompoundPropertyModel<V> extends AbstractPropertyModel<V> implements ICompoundModel<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class CompoundPropertyModel extends AbstractPropertyModel implements ICom
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
-	public CompoundPropertyModel(final Object model)
+	public CompoundPropertyModel(final V model)
 	{
 		super(model);
 	}

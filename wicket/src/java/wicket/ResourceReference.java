@@ -62,7 +62,7 @@ public class ResourceReference implements Serializable
 	private transient Resource resource;
 
 	/** The scope of the named resource */
-	private final Class scope;
+	private final Class<?> scope;
 
 	/** The style of the resource */
 	private String style;
@@ -77,7 +77,7 @@ public class ResourceReference implements Serializable
 	 * @param name
 	 *            The name of the resource
 	 */
-	public ResourceReference(final Class scope, final String name)
+	public ResourceReference(final Class<?> scope, final String name)
 	{
 		this.scope = scope;
 		this.name = name;

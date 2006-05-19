@@ -87,11 +87,11 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		// markup container. If no parent is found, the whole page will be
 		// updated.
 
-		Component container = ((Component)pageable).findParent(MarkupContainer.class);
+		Component container = ((Component<?>)pageable).findParent(MarkupContainer.class);
 		target.addComponent(container);
 
 		// find the PagingNavigator parent of this link
-		Component navigator = (AjaxPagingNavigator)((Component)owner)
+		Component navigator = (AjaxPagingNavigator)((Component<?>)owner)
 				.findParent(AjaxPagingNavigator.class);
 
 		if (navigator == null)

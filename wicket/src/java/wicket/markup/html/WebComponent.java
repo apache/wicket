@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
  */
-public class WebComponent extends Component
+public class WebComponent<V> extends Component<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class WebComponent extends Component
 	/**
 	 * @see Component#Component(String, IModel)
 	 */
-	public WebComponent(final String id, final IModel model)
+	public WebComponent(final String id, final IModel<V> model)
 	{
 		super(id, model);
 	}

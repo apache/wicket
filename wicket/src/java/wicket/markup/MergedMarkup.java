@@ -361,7 +361,7 @@ public class MergedMarkup extends Markup
 						"Expected to find </wicket:child> in base markup: " + baseMarkup.toString());
 			}
 		}
-		else
+		else if(childTag != null)
 		{
 			// And now all remaining elements from the derived markup.
 			// But first add </wicket:child>

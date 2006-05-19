@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import wicket.markup.html.form.FormComponent;
@@ -161,9 +162,9 @@ public abstract class StringValidator extends AbstractValidator
 			}
 		}
 
-		protected Map messageModel(FormComponent formComponent)
+		protected Map<String, Serializable> messageModel(FormComponent formComponent)
 		{
-			final Map map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(formComponent);
 			map.put("minimum", new Integer(minimum));
 			map.put("maximum", new Integer(maximum));
 			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
@@ -205,9 +206,9 @@ public abstract class StringValidator extends AbstractValidator
 			}
 		}
 
-		protected Map messageModel(FormComponent formComponent)
+		protected Map<String, Serializable> messageModel(FormComponent formComponent)
 		{
-			final Map map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(formComponent);
 			map.put("minimum", new Integer(minimum));
 			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
 			return map;
@@ -248,9 +249,9 @@ public abstract class StringValidator extends AbstractValidator
 			}
 		}
 
-		protected Map messageModel(FormComponent formComponent)
+		protected Map<String, Serializable> messageModel(FormComponent formComponent)
 		{
-			final Map map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(formComponent);
 			map.put("maximum", new Integer(maximum));
 			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
 			return map;

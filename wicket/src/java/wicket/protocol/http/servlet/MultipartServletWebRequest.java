@@ -47,10 +47,10 @@ import wicket.util.value.ValueMap;
 public class MultipartServletWebRequest extends ServletWebRequest implements IMultipartWebRequest
 {
 	/** Map of file items. */
-	private final ValueMap files = new ValueMap();
+	private final ValueMap<String, FileItem> files = new ValueMap<String, FileItem>();
 
 	/** Map of parameters. */
-	private final ValueMap parameters = new ValueMap();
+	private final ValueMap<String, Object> parameters = new ValueMap<String, Object>();
 
 
 	/**
@@ -195,7 +195,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	/**
 	 * @return Returns the files.
 	 */
-	public Map getFiles()
+	public Map<String, FileItem> getFiles()
 	{
 		return files;
 	}
@@ -209,7 +209,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	 */
 	public FileItem getFile(final String fieldName)
 	{
-		return (FileItem)files.get(fieldName);
+		return files.get(fieldName);
 	}
 
 	/**
@@ -224,7 +224,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	/**
 	 * @see wicket.protocol.http.WebRequest#getParameterMap()
 	 */
-	public Map getParameterMap()
+	public Map<String, Object> getParameterMap()
 	{
 		return parameters;
 	}
