@@ -52,7 +52,7 @@ import wicket.session.DefaultPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
 import wicket.util.convert.CoverterLocatorFactory;
-import wicket.util.convert.IConverterSupplierFactory;
+import wicket.util.convert.ICoverterLocatorFactory;
 import wicket.util.crypt.CachingSunJceCryptFactory;
 import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
@@ -204,7 +204,7 @@ public final class Settings
 	/** List of {@link IResponseFilter}s. */
 	private List<IResponseFilter> responseFilters;
 
-	private IConverterSupplierFactory converterFactory;
+	private ICoverterLocatorFactory converterFactory;
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the
@@ -418,7 +418,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#getConverterSupplierFactory()
 	 */
-	public IConverterSupplierFactory getConverterSupplierFactory()
+	public ICoverterLocatorFactory getConverterSupplierFactory()
 	{
 		if(converterFactory == null)
 		{
@@ -803,9 +803,9 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#setConverterSupplierFactory(wicket.util.convert.IConverterSupplierFactory)
+	 * @see wicket.settings.IApplicationSettings#setConverterSupplierFactory(wicket.util.convert.ICoverterLocatorFactory)
 	 */
-	public void setConverterSupplierFactory(IConverterSupplierFactory factory)
+	public void setConverterSupplierFactory(ICoverterLocatorFactory factory)
 	{
 		if (factory == null)
 		{
