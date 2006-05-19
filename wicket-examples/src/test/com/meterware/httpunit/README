@@ -1,0 +1,44 @@
+2005-04-03 Juergen Donnerstag
+Once we introduced wicket namespace to handle wicket tags and attributes 
+like <wicket:link ..> and <a wicket:id="myLabel" ..> wicket-example tests
+failed. Tracing the error down through jWebUnit and HttpUnit I found that
+HttpUnit calls ParseHTML.getDOM() for each assertXXX() like test. getDOM()
+calls Node.cloneNode( /* deep */ true) to make a copy of the DOM tree
+(obviously to protected the DOM against accidental changes). As Xerces-2.6.2
+is the underlying XML implementation, the Xerces2 implementation of cloneNode()
+gets called. And cloneNode() is causing all the problems. From my point the
+cloneNode() (resp. importNode) implementation has several bugs with respect to
+namespaces (though I have not studied the xml spec in detail).
+a) cloneNode() first creates an empty Document but does not copy the 
+   strictErrorHandling() attribute from the original document. As default 
+   for this attribute is true, strict error handling is always enable 
+   during clone node and there is no way to disable it.
+   Because html with namespace is not valid xml and since we do not have a
+   xhtml + wicket DTD, wicket's output with wicket namespace is non-valid xml.
+   (of course you can strip wicket tags and attrs from output, but for
+   debugging purposes you'll still need it). Thus Xerces throws a 
+   NAMESPACE_ERR exception. In order to circumvent that problem I copied 
+   the HtmlDocumentImpl.java and changed cloneNode() to always disable 
+   error handling while cloning. 
+b) Unfortunately cloneNode() still didn't work. Tags like 
+   <span wicket:id="myLabel" id="xxxx"> failed. The clone always looked
+   like <span wicket:id="myLabel"> and id="xxxx" was swallowed. The reason, 
+   again, was not 100% compliant XML. The wicket attribute did not have a namespace
+   URI (though I specific <html xmlns:wicket="http://...") and thus the
+   namespace was simply neglected. Because it was neglected Xerces now 
+   thinks that wicket:id == id and simply replaces the first occurence
+   with the second. The outcome was that always on attribute was swallowed.
+   
+Because 2.6.2 is the newest version but has been available for more than 
+a year, I checked the current CVS head as well. The problems however
+still seem to be there.
+
+As I didn't find a better solution I eventually made a "local" copy of
+HttpUnit:ParsedHTML.java and modified getDOM() to not make copy but to
+use the original DOM tree. 
+
+I'm not even sure a XHTML + Wicket DTD will solve our problem completely.
+The reason being that ALL wicket markup must than be XHTML compliant. 
+As plain (old) HTML however should still be supported ...
+
+In case anyone reads this and nows a better solution, please let me know.

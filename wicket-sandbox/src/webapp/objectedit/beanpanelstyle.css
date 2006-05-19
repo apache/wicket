@@ -1,0 +1,19 @@
+#javabeanPanel {
+	padding: 10px;
+}
+.wicketJavabeanpanelPropertiesList th {
+	border-style: solid;
+	border-width: 2px;
+	border-color: gray;
+	padding: 5px;
+}
+.wicketJavabeanpanelPropertiesList {
+	border-style: solid;
+	border-width: 1px;
+	border-color: gray;
+	padding: 10px;
+}
+
+.wicketJavabeanpanelPropertiesList tr td {
+	padding: 2px;
+}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.form.Form</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	A Form is a component that has special interaction with nested form components.
+	Form components are components that extend from wicket.markup.html.form.FormComponent,
+	and which are called controls in the HTML specification. Examples of such controls
+	are textfields, checkboxes and radio buttons.
+	Users generally "complete" a form by modifying its controls (entering text,
+	selecting menu items, etc.), before submitting the form usually by clicking on
+	a submit button. On a form submit, the form normally goes through a processing cycle of
+	validation, model updating of the nested controls, possibly persisting (with cookies)
+	the model values of the controls and calling the form's onSubmit method.
+	</p>
+	<p>
+	This example shows you the basic Form itself. It has no nested controls, but it does
+	have an implementation of onSubmit, which sets a feedback message, and it works together
+	with a feeback panel (a panel that lists any feedback messages that were set).
+	</p>
+	<p>
+	 <form wicket:id="form">
+	  <input type="submit" value="click me to submit the form and display a message" />
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

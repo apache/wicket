@@ -1,0 +1,38 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+  <title>Wicket Examples - displaytag</title>
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+<body>
+  <span wicket:id="mainNavigation" />
+  
+  <h2><wicket:link>
+    <a href="DisplaytagIndex.html">Example</a>
+  </wicket:link> &gt; Column grouping</h2>
+  <br />
+  
+  <table class="simple">
+    <thead>
+      <tr>
+        <th>City</th>
+        <th>Project</th>
+        <th>Hours</th>
+        <th>Task</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows" class="even">
+        <td><span wicket:id="city">Test City</span></td>
+        <td><span wicket:id="project">Test Project</span></td>
+        <td><span wicket:id="hours">Test Hours</span></td>
+        <td><span wicket:id="task">Test Task</span></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

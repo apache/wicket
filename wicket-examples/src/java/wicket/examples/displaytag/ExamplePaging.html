@@ -1,0 +1,133 @@
+<html xmlns:wicket>
+<head>
+  <title>Wicket Examples - displaytag</title>
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+<body>
+  <span wicket:id="mainNavigation" />
+  
+  <h2><wicket:link><a href="DisplaytagIndex.html">Example</a></wicket:link> &gt; Auto-paging of long lists</h2>
+  <br />
+  <span wicket:id="pageTableNav" />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="description">Test Comments</span></td>
+      </tr>
+      <wicket:remove>
+        <tr class="odd">
+          <td>Test ID</td>
+          <td>Test Name</td>
+          <td>Test Email</td>
+          <td>Test Status</td>
+          <td>Test Comments</td>
+        </tr>
+      </wicket:remove>
+    </tbody>
+  </table>
+  <br />
+  This table has deliberately only one page
+  <p />
+  <p /><span wicket:id="pageTableNav2" />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows2" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="comments">Test Comments</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+  An empty table
+  <p />
+  <p /><span wicket:id="pageTableNav4" />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows4" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="comments">Test Comments</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+  Select a number from the drop down list below to add or remove elements from the list
+  <p />
+  <p />
+  <select wicket:id="addRemove">
+    <option>+10</option>
+    <option>+5</option>
+    <option default="true">+3</option>
+    <option>+2</option>
+    <option>+1</option>
+    <option>-1</option>
+    <option>-2</option>
+    <option>-3</option>
+    <option>-5</option>
+    <option>-10</option>
+  </select>
+  <p /><span wicket:id="info5">XXX rows added</span>
+  <p /><span wicket:id="pageTableNav5" />
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows5" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="description">Test Comments</span></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

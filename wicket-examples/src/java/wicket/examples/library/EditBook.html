@@ -1,0 +1,75 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - library</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+
+  <span wicket:id = "border">
+  <span wicket:id = "feedback"/>
+  <p>
+  <form wicket:id = "editBookForm">        
+    <table cellpadding="3">  
+      <tr>
+	    <td align="right">Title:</td>
+	    <td wicket:id = "titleFeedback">
+	      <input wicket:id = "title" type="text" value="Huckleberry Finn" size="30"/>
+        </td>
+      </tr>
+	  <tr>
+	    <td align="right">Author:</td>
+	    <td wicket:id = "authorFeedback">
+	      <input wicket:id = "author" type="text" value="Mark Twain" hidden="1" size="30"/>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td align="right">Fiction:</td>
+	    <td>
+	      <input wicket:id = "fiction" type="checkbox"/>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td align="right">Favorite Companion Book:</td>
+	    <td>
+			<select wicket:id = "companionBook">
+			<option>Volvo</option>
+			<option>Saab</option>
+			<option>Fiat</option>
+			<option>Audi</option>
+			</select>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td align="right" valign="top">Styles:</td>
+	    <td>
+			<select multiple wicket:id = "writingStyles">
+			<option>Foo</option>
+			<option>Bar</option>
+			</select>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td align="right" valign="top">Related book:</td>
+	    <td valign="top">
+	    	<span valign="top" wicket:id = "relatedBook">
+	    		<input type="radio">A
+				<input type="radio">B
+				<input type="radio">C
+			</span>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td>
+	    </td>
+	    <td>
+	      <p>
+	      <br>
+          <input type="submit" value="Save Changes"/>
+          </p>
+        </td>
+	  </tr>
+    </table>	
+  </form>
+  </span>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>SourceForge</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java"/>
+    <body>
+        <section name="SourceForge">
+            <p>Wicket is hosted by <a href="http://www.sourceforge.net">SourceForge</a>, 
+				which provides a variety of free tools and services 
+				that the Wicket team uses to manage the project. The website 
+				you are reading now is the authoritative source for 
+				documentation and project information.</p>
+            <p>Useful SourceForge links:</p>
+            <ul>
+                <li><a href="http://sourceforge.net/projects/wicket"> 
+                    Project summary</a></li>
+                <li><a href="http://sourceforge.net/project/showfiles.php?group_id=119783">
+                    Downloads</a></li>
+                <li>the <a 
+                    href="http://sourceforge.net/mail/?group_id=119783">Mailing 
+                    lists</a></li>
+                <li><a 
+                    href="http://sourceforge.net/tracker/?group_id=119783">Issue trackers</a></li>
+            </ul>
+        </section>
+    </body>
+</document>

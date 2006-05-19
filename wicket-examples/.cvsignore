@@ -4,3 +4,6 @@ guestbook.lck
 guestbook.log
 guestbook.properties
 guestbook.script
+build
+velocity.log
+*.backup

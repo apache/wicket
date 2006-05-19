@@ -1,0 +1,37 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - signin</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+    <span wicket:id = "feedback"/>
+    <p>
+    <i>Username and password are both "wicket"</i>
+    </p>
+    <p>
+	<form wicket:id = "signInForm">
+		<table>
+			<tr>
+			  <td align = "right">Username:</td>
+			  <td>
+			    <input wicket:id = "username" type = "text" value = "foo@goo.moo" size = "30"/>
+	          </td>
+			</tr>
+			<tr>
+			  <td align = "right">Password:</td>
+			  <td>
+			    <input wicket:id = "password" type = "password" value = "password" hidden = "1" size="30"/>
+			  </td>
+			</tr>
+			<tr>
+			  <td></td>
+			  <td>
+                <input type = "submit" value = "Sign In"/>
+              </td>
+			</tr>
+		</table>	
+	</form>
+</body>
+</html>

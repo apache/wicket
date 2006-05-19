@@ -1,0 +1,55 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - upload</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+	<style>
+		legend { border: 1px solid #e9601a; background-color: #bbb; color: #fff; padding: 4px;}
+		fieldset { border: 1px solid #e9601a; padding: 10px; margin-top: 10px;}
+	</style>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+    <form wicket:id="simpleUpload">
+	 <fieldset>
+	  <legend>Upload form</legend>
+    	<p>
+	    <label for="upload">File</label>
+	    <input wicket:id="fileInput" id="upload" type="file"/>
+	    </p>
+	    <input type="submit" value="Upload!"/>
+	 </fieldset>
+    </form>
+
+    <form wicket:id="ajax-simpleUpload">
+	 <fieldset>
+	  <legend>Upload form with ajax progress bar</legend>
+    	<p>
+	    <label for="upload">File</label>
+	    <input wicket:id="fileInput" id="upload" type="file"/>
+	    </p>
+	    <input type="submit" value="Upload!"/>
+	    <span wicket:id="progress">[[ajax upload progressbar]]</span>
+	 </fieldset>
+    </form>
+
+
+	 <div>
+		<span wicket:id="uploadFeedback"/>
+	 </div>
+
+    <div>
+      <h4>Current files in <span wicket:id="dir">(dir)</span>:</h4>
+      <table>
+        <tr wicket:id="fileList">
+            <td width="200"><span wicket:id="file">(file)</span></td>
+            <td><a href="#" wicket:id="delete"><img src="delete.gif" border="0"/></a></td>
+        </tr>
+      </table>
+    </div>
+
+
+
+
+</body>
+</html>

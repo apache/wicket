@@ -121,10 +121,10 @@ Total time: 10 seconds]]></screen>
         <sect2>
             <title>HelloWorld.java</title>
             <para>The actual HelloWorld page is a very simple class which 
-                extends <classname>HtmlPage</classname> and takes a 
+                extends <classname>WebPage</classname> and takes a 
                 <classname>PageParameters</classname> value in its 
                 constructor.</para>
-            <programlisting><![CDATA[public class HelloWorld extends HtmlPage
+            <programlisting><![CDATA[public class HelloWorld extends WebPage
 {
     public HelloWorld(final PageParameters parameters)
     {

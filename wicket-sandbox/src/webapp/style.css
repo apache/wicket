@@ -1,0 +1,189 @@
+body {
+	background-color: white;
+	background-image: url('wicket-logo.png');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: 96% 96%;
+	color: #6F6F6F;
+	font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';
+	font-size: 9pt;
+	line-height: 1.8em;
+	padding: 10px 10px 10px 10px;
+	margin: 10px 10px 10px 10px;
+}
+
+h1,h2,h3,h4,h5,h6,h7,h8 {
+	color: #E9601A;
+}
+
+#extitle, #wicket-extitle {
+	font-size: 12pt;
+	font-weight: bold;
+	color: #E9601A;
+	padding: 10px 10px 10px 10px;
+}
+
+.feedbackPanelERROR {
+	color: red;
+	list-style: circle;
+	font-weight: bold;
+}
+
+.feedbackPanelINFO {
+	color: green;
+	list-style: circle;
+	font-weight: bold;
+}
+
+#hellomessage {
+	font-size: 30pt;
+}
+
+#titleblock {
+	background: #DEDEDE;
+	color: white;
+	font-weight: bold;
+	border-bottom: solid #E9601A;
+	border-width: thin;
+	padding: 2px 2px 2px 6px;	
+}
+
+h2 {
+	font-size: 1.25em;
+}
+
+h3 {
+	font-size: 1em;
+}
+
+a {
+	color: #6F6F6F;
+	text-decoration: underline;
+}
+
+img {
+	border: none;
+}
+
+pre {
+	font-family: 'Lucida Sans', 'Helvetica', 'Sans serif', 'sans';
+}
+
+th {
+	background: #C3C3C3;
+	color: white;
+	font-weight: bold;
+}
+
+tr.b {
+	background: #F5F5F5;
+}
+
+tr.a {
+	background: #E6E6E5;
+}
+
+tr.none {
+	background: transparent;
+}
+
+a.none {
+	background: transparent;
+	padding-right: 0px;
+}
+
+#wicket-inputForm {
+	width: 300px;
+}
+
+#wicket-inputForm label {
+	display: block;
+	padding: 3px 0 0;
+}
+
+#wicket-inputForm label.non {
+	display: inline !important;
+}
+
+#wicket-tab
+{
+	float:left;
+}
+#navigation
+{
+	float:left;
+	width:100%;
+	background:#DAE0D2 url("bg_blue.gif") repeat-x bottom;
+	font-size:100%;
+	line-height:normal;
+}
+
+#navigation ul 
+{
+	margin:0;
+	padding:10px 10px 0;
+	list-style:none;
+}
+
+#navigation li 
+{
+	margin:0;
+	padding:0;
+	display: inline;
+}
+
+#navigation a 
+{
+	float:left;
+	background:url("left_both_blue.gif") no-repeat left top;
+	margin:0;
+	padding:0 0 0 9px;
+	border-bottom:1px solid #765;
+	text-decoration:none;
+}
+
+#navigation a span 
+{
+	float:left;
+	display:block;
+	background:url("right_both_blue.gif") no-repeat right top;
+	padding:5px 15px 4px 6px;
+	color:#444444;
+}
+
+#navigation a span 
+{
+	float:none;
+}
+
+#navigation a:hover span 
+{
+	color:#333;
+}
+#navigation .active 
+{
+	background-position:0 -150px;
+	border-width:0;
+}
+
+#navigation .active span 
+{
+	background-position:100% -150px;
+	padding-bottom:5px;
+	color:#333;
+}
+
+#navigation a:hover 
+{
+	background-position:0% -150px;
+}
+
+#navigation a:hover span 
+{
+	background-position:100% -150px;
+}
+
+#nestedExampleTree
+{
+	width: 300px;	
+}
