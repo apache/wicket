@@ -31,9 +31,7 @@ import wicket.markup.html.resources.JavaScriptReference;
 import wicket.markup.html.resources.StyleSheetReference;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.convert.Converter;
 import wicket.util.convert.IConverter;
-import wicket.util.convert.ITypeConverter;
 import wicket.util.convert.converters.DateConverter;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -307,14 +305,10 @@ public class DatePicker extends Panel
 		if(dateConverter == null)
 		{
 			// TODO this should be much easier and nicer to do in 2.0
-			IConverter converter = target.getConverter();
-			if(converter instanceof Converter)
+			IConverter typeConverter = target.getConverter(Date.class);
+			if(typeConverter instanceof DateConverter)
 			{
-				ITypeConverter typeConverter = ((Converter)converter).get(Date.class);
-				if(typeConverter instanceof DateConverter)
-				{
-					dateConverter = (DateConverter)typeConverter;
-				}
+				dateConverter = (DateConverter)typeConverter;
 			}
 			if(dateConverter == null) dateConverter = new DateConverter();
 		}
