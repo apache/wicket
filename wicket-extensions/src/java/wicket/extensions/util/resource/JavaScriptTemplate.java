@@ -18,6 +18,7 @@
  */
 package wicket.extensions.util.resource;
 
+import wicket.util.string.JavascriptUtils;
 import wicket.util.string.Strings;
 
 /**
@@ -30,11 +31,12 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	private static final long serialVersionUID = 1L;
 
 	/** Start tag for JavaScript body. */
-	private static final String JAVASCRIPT_START_TAG = "<script type=\"text/javascript\">"
+	private static final String JAVASCRIPT_START_TAG = JavascriptUtils.SCRIPT_OPEN_TAG
 			+ Strings.LINE_SEPARATOR;
 
 	/** End tag for JavaScript body. */
-	private static final String JAVASCRIPT_END_TAG = Strings.LINE_SEPARATOR + "</script>";
+	private static final String JAVASCRIPT_END_TAG = Strings.LINE_SEPARATOR
+			+ JavascriptUtils.SCRIPT_CLOSE_TAG;
 
 	/**
 	 * Construct.
