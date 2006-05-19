@@ -63,7 +63,7 @@ import wicket.util.lang.Objects;
  * classes directly. There are convenient validators and conversion features
  * built into Wicket that you can use directly.
  * 
- * @see IConverterSupplierFactory
+ * @see ICoverterLocatorFactory
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */

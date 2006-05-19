@@ -26,10 +26,10 @@ import wicket.ICoverterLocator;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class CoverterLocatorFactory implements IConverterSupplierFactory
+public final class CoverterLocatorFactory implements ICoverterLocatorFactory
 {
 	/**
-	 * @see wicket.util.convert.IConverterSupplierFactory#newConverterSupplier()
+	 * @see wicket.util.convert.ICoverterLocatorFactory#newConverterSupplier()
 	 */
 	public ICoverterLocator newConverterSupplier()
 	{

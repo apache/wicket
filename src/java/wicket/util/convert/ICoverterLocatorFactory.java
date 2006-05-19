@@ -26,7 +26,7 @@ import wicket.ICoverterLocator;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IConverterSupplierFactory
+public interface ICoverterLocatorFactory
 {
 	/**
 	 * Creates and returns a new instance of {@link IConverter}.
