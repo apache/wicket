@@ -12,9 +12,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.TestCase;
-import wicket.ISupplyConverters;
+import wicket.ICoverterLocator;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.ConverterSupplier;
+import wicket.util.convert.CoverterLocator;
 
 /**
  * Tests for the base converters.
@@ -49,7 +49,7 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testConversion()
 	{
-		final ISupplyConverters converter = new ConverterSupplier();
+		final ICoverterLocator converter = new CoverterLocator();
 		assertEquals("7", converter.getConverter(Integer.class).convertToString(new Integer(7), Locale.US));
 		assertEquals("7.1", converter.getConverter(Double.class).convertToString(new Double(7.1), Locale.US));
 		assertEquals("7,1", converter.getConverter(Double.class).convertToString(new Double(7.1), DUTCH_LOCALE));

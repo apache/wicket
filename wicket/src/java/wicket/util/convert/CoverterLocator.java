@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.ISupplyConverters;
+import wicket.ICoverterLocator;
 import wicket.util.convert.converters.BooleanConverter;
 import wicket.util.convert.converters.ByteConverter;
 import wicket.util.convert.converters.CharacterConverter;
@@ -45,7 +45,7 @@ import wicket.util.lang.Objects;
  * converter interface:
  * 
  * <pre>
- * final IConverter converter = new ConverterSupplierFactory().newConverter();
+ * final IConverter converter = new CoverterLocatorFactory().newConverter();
  * converter.setLocale(Locale.US);
  * converter.convert(new Double(7.1), String.class);
  * </pre>
@@ -67,7 +67,7 @@ import wicket.util.lang.Objects;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class ConverterSupplier implements ISupplyConverters
+public class CoverterLocator implements ICoverterLocator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -75,7 +75,7 @@ public class ConverterSupplier implements ISupplyConverters
 	private final Map<Class, IConverter> classToConverter = new HashMap<Class, IConverter>();
 
 	/**
-	 * ConverterSupplier that is to be used when no registered converter is found.
+	 * CoverterLocator that is to be used when no registered converter is found.
 	 */
 	private class DefaultConverter implements IConverter
 	{
@@ -130,7 +130,7 @@ public class ConverterSupplier implements ISupplyConverters
 	/**
 	 * Constructor
 	 */
-	public ConverterSupplier()
+	public CoverterLocator()
 	{
 		set(Boolean.TYPE, BooleanConverter.INSTANCE);
 		set(Boolean.class, BooleanConverter.INSTANCE);
@@ -223,7 +223,7 @@ public class ConverterSupplier implements ISupplyConverters
 	{
 		if (converter == null)
 		{
-			throw new IllegalArgumentException("ConverterSupplier cannot be null");
+			throw new IllegalArgumentException("CoverterLocator cannot be null");
 		}
 		if (c == null)
 		{

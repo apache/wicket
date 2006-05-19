@@ -33,7 +33,7 @@ import wicket.Component;
  * Note, this class is specifically meant for providing custom converters per
  * component by overriding {@link Component#getConverter(Object)}. It is less usefull
  * for application scoped converters; registering {@link ITypeConverter}s with
- * an instance of {@link ConverterSupplier} is a better choice for that.
+ * an instance of {@link CoverterLocator} is a better choice for that.
  * </p>
  * <p>
  * <strong>WARNING. Due to a current limitation as a result of how

@@ -20,8 +20,8 @@ import wicket.util.convert.IConverterSupplierFactory;
  * You can set property homePageRenderStrategy to choose from different ways the
  * home page url shows up in your browser.
  * <p>
- * <b>A ConverterSupplier Factory </b>- By overriding getConverterFactory(), you can
- * provide your own factory which creates locale sensitive ConverterSupplier instances.
+ * <b>A CoverterLocator Factory </b>- By overriding getConverterFactory(), you can
+ * provide your own factory which creates locale sensitive CoverterLocator instances.
  * 
  * @author Jonathan Locke
  */
@@ -104,7 +104,7 @@ public interface IApplicationSettings
 
 	
 	/**
-	 * Sets the ConverterSupplierFactory
+	 * Sets the CoverterLocatorFactory
 	 * 
 	 * @param factory
 	 */
