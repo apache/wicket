@@ -117,7 +117,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Session implements Serializable, ISupplyConverters
+public abstract class Session implements Serializable, ICoverterLocator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -149,7 +149,7 @@ public abstract class Session implements Serializable, ISupplyConverters
 	private ClientInfo clientInfo;
 
 	/** The converter instance. */
-	private transient ISupplyConverters converterSupplier;
+	private transient ICoverterLocator converterSupplier;
 
 	/** True if session state has been changed */
 	private transient boolean dirty = false;

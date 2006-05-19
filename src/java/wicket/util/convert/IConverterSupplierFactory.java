@@ -17,7 +17,7 @@
  */
 package wicket.util.convert;
 
-import wicket.ISupplyConverters;
+import wicket.ICoverterLocator;
 
 /**
  * Factory that creates and configures instances of
@@ -34,5 +34,5 @@ public interface IConverterSupplierFactory
 	 * @param locale The Locale to create the converter for 
 	 * @return A new IConverter instance
 	 */
-	ISupplyConverters newConverterSupplier();
+	ICoverterLocator newConverterSupplier();
 }

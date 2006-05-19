@@ -21,7 +21,7 @@ import java.util.Locale;
 
 import wicket.Component;
 import wicket.Session;
-import wicket.util.convert.ConverterSupplier;
+import wicket.util.convert.CoverterLocator;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.PropertyResolver;
 import wicket.util.lang.PropertyResolverConverter;

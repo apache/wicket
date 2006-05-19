@@ -30,7 +30,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 import wicket.WicketRuntimeException;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.ConverterSupplier;
+import wicket.util.convert.CoverterLocator;
 
 /**
  * @author jcompagner
@@ -38,7 +38,7 @@ import wicket.util.convert.ConverterSupplier;
  */
 public class PropertyResolverTest extends TestCase
 {
-	private static final PropertyResolverConverter CONVERTER = new PropertyResolverConverter(new ConverterSupplier(), Locale.US);
+	private static final PropertyResolverConverter CONVERTER = new PropertyResolverConverter(new CoverterLocator(), Locale.US);
 	
 	private Person person;
 	
