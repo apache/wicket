@@ -1696,7 +1696,7 @@ public abstract class Component implements Serializable
 		}
 		catch (RuntimeException re)
 		{
-			if (re instanceof WicketRuntimeException)
+			if (re instanceof WicketRuntimeException || re instanceof AbortException)
 				throw re;
 			throw new WicketRuntimeException("Exception in rendering component: " + this, re);
 		}
