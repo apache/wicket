@@ -82,7 +82,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public abstract class ListView extends WebMarkupContainer
+public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 {
 	/** Index of the first item to show */
 	private int firstIndex = 0;
@@ -111,7 +111,7 @@ public abstract class ListView extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel<List> model)
+	public ListView(final String id, final IModel<List<V>> model)
 	{
 		super(id, model);
 
@@ -133,9 +133,9 @@ public abstract class ListView extends WebMarkupContainer
 	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final List list)
+	public ListView(final String id, final List<V> list)
 	{
-		this(id, new Model<List>(list));
+		this(id, new Model<List<V>>(list));
 	}
 
 	/**
@@ -145,9 +145,9 @@ public abstract class ListView extends WebMarkupContainer
 	 * 
 	 * @return The list of items in this list view.
 	 */
-	public final List<Object> getList()
+	public final List<V> getList()
 	{
-		final List<Object> list = (List<Object>)getModelObject();
+		final List<V> list = getModelObject();
 		if (list == null)
 		{
 			return Collections.emptyList();
@@ -247,7 +247,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveDownLink(final String id, final ListItem item)
+	public final Link moveDownLink(final String id, final ListItem<V> item)
 	{
 		return new Link(id)
 		{
@@ -302,7 +302,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveUpLink(final String id, final ListItem item)
+	public final Link moveUpLink(final String id, final ListItem<V> item)
 	{
 		return new Link(id)
 		{
@@ -358,7 +358,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link removeLink(final String id, final ListItem item)
+	public final Link removeLink(final String id, final ListItem<V> item)
 	{
 		return new Link(id)
 		{
@@ -373,7 +373,7 @@ public abstract class ListView extends WebMarkupContainer
 				{
 					private static final long serialVersionUID = 1L;
 
-					final Object removedObject = item.getModelObject();
+					final V removedObject = item.getModelObject();
 					final int oldIndex = getList().indexOf(item.getModelObject());
 
 					public void undo()
@@ -481,7 +481,7 @@ public abstract class ListView extends WebMarkupContainer
 	 *            {@link Serializable}.
 	 * @return This for chaining
 	 */
-	public Component setList(List list)
+	public Component setList(List<V> list)
 	{
 		return setModel(new Model((Serializable)list));
 	}
@@ -496,7 +496,8 @@ public abstract class ListView extends WebMarkupContainer
 	 * 
 	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
 	 */
-	public Component setModel(IModel model)
+	@Override
+	public Component setModel(IModel<List<V>> model)
 	{
 		// remove all children; this has no effect when the list
 		// didn't render before, as in that case the list view
@@ -520,9 +521,9 @@ public abstract class ListView extends WebMarkupContainer
 	 *            The list item index
 	 * @return The ListItemModel created
 	 */
-	protected IModel getListItemModel(final IModel listViewModel, final int index)
+	protected IModel<V> getListItemModel(final IModel<List<V>> listViewModel, final int index)
 	{
-		return new ListItemModel(this, index);
+		return new ListItemModel<V>(this, index);
 	}
 
 	/**
@@ -593,9 +594,9 @@ public abstract class ListView extends WebMarkupContainer
 	 * @param index
 	 * @return ListItem
 	 */
-	protected ListItem newItem(final int index)
+	protected ListItem<V> newItem(final int index)
 	{
-		return new ListItem(index, getListItemModel(getModel(), index));
+		return new ListItem<V>(index, getListItemModel(getModel(), index));
 	}
 
 	/**
