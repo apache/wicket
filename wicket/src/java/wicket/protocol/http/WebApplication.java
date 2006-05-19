@@ -49,6 +49,7 @@ import wicket.session.ISessionStore;
 import wicket.util.collections.MostRecentlyUsedMap;
 import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
+import wicket.util.watch.ModificationWatcher;
 
 
 /**
@@ -455,8 +456,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	protected void internalDestroy()
 	{
+		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher();
+		if(resourceWatcher != null) resourceWatcher.destroy();
 		super.internalDestroy();
 		bufferedResponses.clear();
+		// destroy the resource watcher
 	}
 
 	/**

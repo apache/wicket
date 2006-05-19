@@ -46,6 +46,8 @@ public final class ModificationWatcher
 	/** Maps Modifiable objects to Entry objects */
 	private final Map modifiableToEntry = new HashMap();
 
+	private Task task;
+
 	// MarkupContainer class for holding modifiable entries to watch
 	private static final class Entry
 	{
@@ -147,7 +149,7 @@ public final class ModificationWatcher
 	public void start(final Duration pollFrequency)
 	{
 		// Construct task with the given polling frequency
-		final Task task = new Task("ModificationWatcher");
+		task = new Task("ModificationWatcher");
 
 		task.run(pollFrequency, new ICode()
 		{
@@ -178,5 +180,16 @@ public final class ModificationWatcher
 				}
 			}
 		});
+	}
+
+	/**
+	 *  stops the modification watcher from watching.
+	 */
+	public void destroy()
+	{
+		if(task != null)
+		{
+			task.stop();
+		}
 	}
 }

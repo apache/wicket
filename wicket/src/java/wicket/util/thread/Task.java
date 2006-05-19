@@ -58,6 +58,9 @@ public final class Task
 	/** The time that the task should start. */
 	private Time startTime = Time.now();
 
+	/** When set the taks will stop as soon as possible. */
+	private boolean stop;
+
 	/**
 	 * Constructor.
 	 * 
@@ -93,7 +96,7 @@ public final class Task
 					startTime.fromNow().sleep();
 					final Log log = getLog();
 
-					while (true)
+					while (!stop)
 					{
 						// Get the start of the current period
 						final Time startOfPeriod = Time.now();
@@ -214,5 +217,13 @@ public final class Task
 			log = LogFactory.getLog(Task.class);
 		}
 		return log;
+	}
+
+	/**
+	 * Will stop the task as soon as it does have that opportunity  
+	 */
+	public void stop()
+	{
+		stop = true;
 	}
 }
