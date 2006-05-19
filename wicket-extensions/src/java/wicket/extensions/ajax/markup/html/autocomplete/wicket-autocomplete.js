@@ -78,6 +78,13 @@ function WicketAutoComplete(elementId,callbackUrl){
 			}
 		}
 
+		var choiceDiv = document.createElement("div");
+		document.body.appendChild(choiceDiv);
+		choiceDiv.id = elementId+"-autocomplete";
+		choiceDiv.className = "wicket-aa";
+		choiceDiv.style.display = "none";
+		choiceDiv.style.position = "absolute";
+		choiceDiv.style.zIndex = "900";
 	}
 	
 	function getEvent(event){	
