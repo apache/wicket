@@ -34,6 +34,11 @@ import wicket.util.value.ValueMap;
  * since the URL is stable across sessions and can be stored in a browser's
  * bookmark database.
  * 
+ * @param <K>
+ * 			The key type the map holds.
+ * @param <V>
+ * 			The value type the map holds.
+ *  
  * @author Jonathan Locke
  */
 public final class PageParameters<K,V> extends ValueMap<K,V>

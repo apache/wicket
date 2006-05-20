@@ -24,6 +24,11 @@ import java.util.Map;
  * Holds a map of most recently used items of a given maximum size. Old entries
  * are expired when the map exceeds that maximum size.
  * 
+ * @param <K>
+ * 			The key type the map holds.
+ * @param <V>
+ * 			The value type the map holds.
+ * 
  * @author Jonathan Locke
  */
 public class MostRecentlyUsedMap<K,V> extends LinkedHashMap<K,V>

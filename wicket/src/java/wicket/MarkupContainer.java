@@ -87,6 +87,9 @@ import wicket.version.undo.Change;
  * page. Since Page is at the top of the container hierarchy, it is guaranteed
  * that findMarkupStream will always return a valid markup stream.
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @see MarkupStream
  * @author Jonathan Locke
  */
@@ -592,7 +595,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 *             Thrown if there was no child with the same id.
 	 * @return This
 	 */
-	public final MarkupContainer replace(final Component child)
+	public final MarkupContainer replace(final Component<?> child)
 	{
 		if (child == null)
 		{
@@ -637,10 +640,10 @@ public abstract class MarkupContainer<V> extends Component<V>
 		super.setModel(model);
 		if (previous instanceof ICompoundModel)
 		{
-			visitChildren(new IVisitor<Component<V>>()
+			visitChildren(new IVisitor<Component>()
 			{
 
-				public Object component(Component<V> component)
+				public Object component(Component component)
 				{
 					IModel compModel = component.getModel();
 					if (compModel == previous)
@@ -762,7 +765,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 					&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
 			{
 				// visit the children in the container
-				value = ((MarkupContainer)child).visitChildren(clazz, visitor);
+				value = ((MarkupContainer<?>)child).visitChildren(clazz, visitor);
 
 				// If visitor returns a non-null value, it halts the traversal
 				if ((value != IVisitor.CONTINUE_TRAVERSAL)
@@ -785,7 +788,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
-	public final Object visitChildren(final IVisitor<Component<V>> visitor)
+	public final Object visitChildren(final IVisitor<Component> visitor)
 	{
 		return visitChildren(null, visitor);
 	}
@@ -1079,7 +1082,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 		}
 	}
 
-	private final Component children_get(int index)
+	private final Component<?> children_get(int index)
 	{
 		if (index == 0)
 		{
@@ -1125,7 +1128,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 		return null;
 	}
 
-	private final int children_indexOf(Component child)
+	private final int children_indexOf(Component<?> child)
 	{
 		if (children instanceof Component)
 		{
@@ -1151,7 +1154,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 		return -1;
 	}
 
-	private final Component children_remove(Component component)
+	private final Component children_remove(Component<?> component)
 	{
 		int index = children_indexOf(component);
 		if (index != -1)
@@ -1260,7 +1263,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 *            The child to put into the map
 	 * @return Any component that was replaced
 	 */
-	private final Component put(final Component child)
+	private final Component put(final Component<?> child)
 	{
 		int index = children_indexOf(child);
 		if (index == -1)
@@ -1278,7 +1281,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @param component
 	 *            Component being removed
 	 */
-	private final void removedComponent(final Component component)
+	private final void removedComponent(final Component<?> component)
 	{
 		// Notify Page that component is being removed
 		final Page page = component.findPage();
@@ -1290,7 +1293,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 		// detach children models
 		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer)component).visitChildren(new IVisitor()
+			((MarkupContainer<?>)component).visitChildren(new IVisitor<Component>()
 			{
 				public Object component(Component component)
 				{

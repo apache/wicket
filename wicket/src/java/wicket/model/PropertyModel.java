@@ -82,6 +82,9 @@ import wicket.util.lang.PropertyResolver;
  * @see wicket.model.Model
  * @see wicket.model.AbstractDetachableModel
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke

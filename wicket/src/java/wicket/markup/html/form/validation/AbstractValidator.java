@@ -93,7 +93,7 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent, final String resourceKey, final Map<String, Serializable> map)
 	{
-		error(formComponent, resourceKey, (map == null) ? new Model() : Model.valueOf(map));
+		error(formComponent, resourceKey, (map == null) ? new Model<Map<String, Serializable>>() : Model.valueOf(map));
 	}
 
 	/**
@@ -105,9 +105,9 @@ public abstract class AbstractValidator implements IValidator
 	 * @param map
 	 *            The model for variable interpolation
 	 */
-	public void error(final FormComponent formComponent, final Map<String, Object> map)
+	public void error(final FormComponent formComponent, final Map<String, Serializable> map)
 	{
-		error(formComponent, resourceKey(formComponent), (map == null) ? new Model() : Model
+		error(formComponent, resourceKey(formComponent), (map == null) ? new Model<Map<String, Serializable>>() : Model
 				.valueOf(map));
 	}
 
@@ -125,8 +125,8 @@ public abstract class AbstractValidator implements IValidator
 	 * @param resourceModel
 	 *            The model for variable interpolation, it needs to have a map inside it.
 	 */
-	public void error(final FormComponent formComponent, final String resourceKey,
-			IModel /* <Map>*/ resourceModel)
+	public void error(final FormComponent<?> formComponent, final String resourceKey,
+			IModel<Map<String, Serializable>> resourceModel)
 	{
 		if(resourceModel == null)
 		{

@@ -22,6 +22,11 @@ import java.util.Map;
 /**
  * ValueMap for attributes.
  * 
+ * @param <K>
+ * 			The key type the map holds.
+ * @param <V>
+ * 			The value type the map holds.
+ * 
  * @author Eelco Hillenius
  */
 public final class AttributeMap<K,V> extends ValueMap<K,V>

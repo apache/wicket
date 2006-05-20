@@ -28,6 +28,9 @@ import wicket.markup.html.form.FormComponent;
  * @see wicket.model.Model
  * @see wicket.model.AbstractDetachableModel
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Jonathan Locke
  */
 public class CompoundPropertyModel<V> extends AbstractPropertyModel<V> implements ICompoundModel<V>

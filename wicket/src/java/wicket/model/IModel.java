@@ -68,6 +68,9 @@ import wicket.Component;
  * @see wicket.Component#sameRootModel(wicket.Component)
  * @see wicket.Component#sameRootModel(IModel)
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke

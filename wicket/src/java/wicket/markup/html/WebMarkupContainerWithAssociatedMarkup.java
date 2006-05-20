@@ -27,9 +27,12 @@ import wicket.model.IModel;
 
 /**
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
+public class WebMarkupContainerWithAssociatedMarkup<V> extends WebMarkupContainer<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +50,7 @@ public class WebMarkupContainerWithAssociatedMarkup extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel model)
+	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel<V> model)
 	{
 		super(id, model);
 	}

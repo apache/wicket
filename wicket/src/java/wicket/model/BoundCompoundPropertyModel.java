@@ -26,6 +26,9 @@ import wicket.Component;
  * A compound property model that supports type conversions and property
  * expression bindings.
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Jonathan Locke
  */
 public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
@@ -39,7 +42,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 	 * that any BoundCompoundPropertyModel will really have enough bindings to
 	 * matter.
 	 */
-	private final ArrayList bindings = new ArrayList(1);
+	private final ArrayList<Binding> bindings = new ArrayList<Binding>(1);
 
 	/**
 	 * Internal binding representation.
@@ -184,7 +187,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 	{
 		for (int i = 0; i < bindings.size(); i++)
 		{
-			final Binding binding = (Binding)bindings.get(i);
+			final Binding binding = bindings.get(i);
 			if (component == binding.component)
 			{
 				return binding;

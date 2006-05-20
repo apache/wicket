@@ -24,6 +24,9 @@ import wicket.util.string.Strings;
 /**
  * Abstract base class for TextArea and TextField.
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractTextComponent<V> extends FormComponent<V>

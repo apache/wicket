@@ -31,6 +31,9 @@ import wicket.RequestCycle;
  * called at the end of the request. In effect, attachment and detachment is
  * only done when it is actually needed.
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -111,7 +114,7 @@ public abstract class AbstractDetachableModel<V> implements IModel<V>
 	}
 
 	/**
-	 * @see wicket.model.IModel#setObject(Component, Object)
+	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
 	 */
 	public final void setObject(final Component component, final V object)
 	{

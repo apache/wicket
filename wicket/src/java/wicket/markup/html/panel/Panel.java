@@ -49,10 +49,13 @@ import wicket.model.IModel;
  *  &lt;/wicket:panel&gt;
  * </pre>
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class Panel extends WebMarkupContainerWithAssociatedMarkup
+public class Panel<V> extends WebMarkupContainerWithAssociatedMarkup<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -76,7 +79,7 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
     /**
      * @see wicket.Component#Component(String, IModel)
      */
-    public Panel(final String id, final IModel model)
+    public Panel(final String id, final IModel<V> model)
     {
         super(id, model);
     }    

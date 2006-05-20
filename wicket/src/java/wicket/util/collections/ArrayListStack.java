@@ -26,6 +26,9 @@ import java.util.EmptyStackException;
  * unsynchronized (the JDK's methods are synchronized). In addition you can set
  * the initial capacity if you want via the ArrayListStack(int) constructor.
  * 
+ * @param <E>
+ *            Type of object this list holds
+ * 
  * @author Jonathan Locke
  */
 public final class ArrayListStack<E> extends ArrayList<E>

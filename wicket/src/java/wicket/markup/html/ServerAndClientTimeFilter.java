@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +59,7 @@ public class ServerAndClientTimeFilter implements IResponseFilter
 		long timeTaken = System.currentTimeMillis() - RequestCycle.get().getStartTime();
 		if (headIndex != -1 && bodyIndex != -1)
 		{
-			Map<String, String> map = new HashMap<String, String>(4);
+			Map<String, Serializable> map = new HashMap<String, Serializable>(4);
 			map.put("clienttime", "' + (new Date().getTime() - clientTimeVariable)/1000 +  's");
 			map.put("servertime", ((double)timeTaken) / 1000 + "s");
 

@@ -239,7 +239,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		private static final long serialVersionUID = 1L;
 
 		/** Former model. */
-		private IModel model;
+		private IModel<V> model;
 
 		/**
 		 * Construct.
@@ -273,6 +273,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 
 	/**
 	 * Generic component visitor interface for component traversals.
+	 * @param <T>  The type of the component where a visitor walks over.
 	 */
 	public static interface IVisitor<T extends Component>
 	{
@@ -1600,15 +1601,15 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 
 				if (this instanceof MarkupContainer)
 				{
-					MarkupContainer container = (MarkupContainer)this;
+					MarkupContainer<V> container = (MarkupContainer<V>)this;
 
 					// First, give priority to IFeedback instances, as they have
 					// to
 					// collect their messages before components like ListViews
 					// remove any child components
-					container.visitChildren(IFeedback.class, new IVisitor()
+					container.visitChildren(IFeedback.class, new IVisitor<Component<?>>()
 					{
-						public Object component(Component component)
+						public Object component(Component<?> component)
 						{
 							((IFeedback)component).updateFeedback();
 							component.internalAttach();

@@ -30,6 +30,11 @@ import java.util.Set;
  * object. This is particularly useful to control memory usage in Wicket because
  * many containers hold only a single component.
  * 
+ * @param <K>
+ * 			The key type the map holds.
+ * @param <V>
+ * 			The value type the map holds.
+ * 
  * @author Jonathan Locke
  */
 public final class MicroMap<K,V> implements Map<K,V>, Serializable
