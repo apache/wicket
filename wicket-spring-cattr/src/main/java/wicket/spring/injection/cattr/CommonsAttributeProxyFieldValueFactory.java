@@ -20,6 +20,7 @@ package wicket.spring.injection.cattr;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.attributes.Attributes;
 
@@ -27,7 +28,6 @@ import wicket.injection.IFieldValueFactory;
 import wicket.proxy.LazyInitProxyFactory;
 import wicket.spring.ISpringContextLocator;
 import wicket.spring.SpringBeanLocator;
-import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * {@link IFieldValueFactory} that uses {@link LazyInitProxyFactory} to create
@@ -67,7 +67,7 @@ public class CommonsAttributeProxyFieldValueFactory implements
 	private ISpringContextLocator contextLocator;
 
 	/** cache for values. */
-	private final Map cache = new ConcurrentHashMap();
+	private final Map<SpringBeanLocator, Object> cache = new ConcurrentHashMap<SpringBeanLocator, Object>();
 
 	/**
 	 * @param contextLocator
