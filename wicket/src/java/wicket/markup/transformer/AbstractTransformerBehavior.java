@@ -61,6 +61,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		tag.put("xmlns:wicket", "http://wicket.sourceforge.net");
@@ -84,6 +85,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	/**
 	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
 	 */
+	@Override
 	public void onRendered(final Component component)
 	{
 		final RequestCycle requestCycle = RequestCycle.get();
@@ -111,6 +113,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	/**
 	 * @see wicket.behavior.AbstractBehavior#cleanup()
 	 */
+	@Override
 	public void cleanup()
 	{
 		this.webResponse = null;
@@ -119,6 +122,7 @@ public abstract class AbstractTransformerBehavior extends AbstractBehavior imple
 	/**
 	 * @see wicket.behavior.AbstractBehavior#onException(wicket.Component, java.lang.RuntimeException)
 	 */
+	@Override
 	public void onException(Component component, RuntimeException exception)
 	{
 		if (this.webResponse != null)

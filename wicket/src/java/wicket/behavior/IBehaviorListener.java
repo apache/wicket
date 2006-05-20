@@ -40,6 +40,7 @@ public interface IBehaviorListener extends IRequestListener
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
 			IBehaviorListener.class)
 	{
+		@Override
 		public IRequestTarget newRequestTarget(Page page, Component component,
 				RequestListenerInterface listener, RequestParameters requestParameters)
 		{

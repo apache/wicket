@@ -52,6 +52,7 @@ public abstract class Objects
 			enableResolveObject(true);
 		}
 
+		@Override
 		protected Object resolveObject(Object obj) throws IOException
 		{
 			Object replaced = replacedComponents.get(obj);
@@ -75,6 +76,7 @@ public abstract class Objects
 			enableReplaceObject(true);
 		}
 
+		@Override
 		protected Object replaceObject(Object obj) throws IOException
 		{
 			if (obj instanceof Component)

@@ -100,6 +100,7 @@ public class ComponentTag extends MarkupElement
 	 *            The open tag
 	 * @return True if this tag closes the given open tag
 	 */
+	@Override
 	public final boolean closes(final MarkupElement open)
 	{
 		if (open instanceof ComponentTag)
@@ -485,6 +486,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * @see wicket.markup.MarkupElement#toCharSequence()
 	 */
+	@Override
 	public CharSequence toCharSequence()
 	{
 		return xmlTag.toCharSequence();
@@ -495,6 +497,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public final String toString()
 	{
 		return toCharSequence().toString();
@@ -577,6 +580,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public final String toUserDebugString()
 	{
 		return xmlTag.toUserDebugString();

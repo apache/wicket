@@ -135,6 +135,7 @@ public class WicketMessageResolver implements IComponentResolver
 		 * 
 		 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 		 */
+		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
 			// Convert <wicket:message /> into

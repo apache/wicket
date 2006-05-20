@@ -88,6 +88,7 @@ public class ByteArrayResource extends WebResource
 	/**
 	 * @see wicket.Resource#getResourceStream()
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

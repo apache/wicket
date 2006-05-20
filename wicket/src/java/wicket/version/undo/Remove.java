@@ -74,6 +74,7 @@ class Remove extends Change
 	/**
 	 * @see wicket.version.undo.Change#undo()
 	 */
+	@Override
 	public void undo()
 	{
 		if (log.isDebugEnabled())
@@ -89,6 +90,7 @@ class Remove extends Change
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "Remove[component: " + component.getPath() + "]";

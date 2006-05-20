@@ -59,11 +59,13 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				onClick(target);
 			}
 
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return AjaxLink.this.getAjaxCallDecorator();

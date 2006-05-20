@@ -70,6 +70,7 @@ public class PagingNavigationIncrementLink extends Link
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// Tell the PageableListView which page to print next
@@ -123,6 +124,7 @@ public class PagingNavigationIncrementLink extends Link
 	 * @return True if this link links to the given page
 	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
 	 */
+	@Override
 	public boolean linksTo(final Page page)
 	{
 		int currentPage = pageable.getCurrentPage();

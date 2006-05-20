@@ -82,6 +82,7 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
+	@Override
 	public IModel getNestedModel()
 	{
 		return null;
@@ -124,6 +125,7 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());

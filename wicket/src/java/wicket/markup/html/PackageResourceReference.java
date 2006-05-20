@@ -157,6 +157,7 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return hash;
@@ -165,6 +166,7 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof PackageResourceReference)
@@ -181,6 +183,7 @@ public class PackageResourceReference extends ResourceReference
 	/**
 	 * @see wicket.ResourceReference#newResource()
 	 */
+	@Override
 	protected Resource newResource()
 	{
 		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),

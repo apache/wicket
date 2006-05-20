@@ -81,6 +81,7 @@ public class JavaScriptReference extends PackagedResourceReference
 	/**
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// Must be attached to a script tag

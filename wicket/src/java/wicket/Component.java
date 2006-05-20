@@ -255,6 +255,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "ComponentModelChange[component: " + getPath() + "]";
@@ -263,6 +264,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setModel(this.model);
@@ -330,6 +332,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "EnabledChange[component: " + component.getPath() + ",enabled: " + enabled + "]";
@@ -338,6 +341,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			component.setEnabled(enabled);
@@ -371,6 +375,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "VisibilityChange[component: " + component.getPath() + ", visible: " + visible
@@ -380,6 +385,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			component.setVisible(visible);
@@ -746,6 +752,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @deprecated
 	 */
 	// TODO Post 1.2: Remove this method
+	@Deprecated
 	public final IApplicationSettings getApplicationPages()
 	{
 		return getApplication().getSettings();
@@ -764,6 +771,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @deprecated will be removed after 1.2
 	 */
 	// TODO Post 1.2: Remove this method
+	@Deprecated
 	public final Settings getApplicationSettings()
 	{
 		return getApplication().getSettings();
@@ -994,7 +1002,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 			final IConverter converter = getConverter(modelObject.getClass());
 
 			// Model string from property
-			final String modelString = (String)converter.convertToString(modelObject, getLocale());
+			final String modelString = converter.convertToString(modelObject, getLocale());
 
 			if (modelString != null)
 			{
@@ -1279,6 +1287,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @return True if the given component has this component as an ancestor
 	 * @deprecated use getParent().contains(component, false)
 	 */
+	@Deprecated
 	public final boolean isAncestorOf(final Component component)
 	{
 		return getParent().contains(component, false);
@@ -2091,6 +2100,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @return The path to this component
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(true);
@@ -2552,6 +2562,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @deprecated use onAttach() instead. This method will be removed in 1.3
 	 */
+	@Deprecated
 	protected void onBeginRequest()
 	{
 	}
@@ -2620,6 +2631,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *             This semantical change shouldn't have a noticable impact on
 	 *             it's use I believe.
 	 */
+	@Deprecated
 	protected void onEndRequest()
 	{
 	}
@@ -2644,6 +2656,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @deprecated since 1.2 Please implement onRender(MarkupStream) instead
 	 */
 	// TODO Post 1.2: Remove this method?
+	@Deprecated
 	protected final void onRender()
 	{
 		onRender(findMarkupStream());

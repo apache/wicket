@@ -42,6 +42,7 @@ public abstract class WebResource extends Resource
 	/**
 	 * @see wicket.Resource#configureResponse(wicket.Response)
 	 */
+	@Override
 	protected final void configureResponse(final Response response)
 	{
 		if (response instanceof WebResponse)

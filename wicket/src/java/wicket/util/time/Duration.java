@@ -459,6 +459,7 @@ public class Duration extends AbstractTimeValue
 	 * 
 	 * @return String representation
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(Locale.getDefault());

@@ -135,6 +135,7 @@ public class MockWebApplication extends WebApplication
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public ServletContext getServletContext()
 			{
 				return context;
@@ -143,6 +144,7 @@ public class MockWebApplication extends WebApplication
 			/**
 			 * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
 			 */
+			@Override
 			public String getInitParameter(String name)
 			{
 				return null;
@@ -151,6 +153,7 @@ public class MockWebApplication extends WebApplication
 			/**
 			 * @see javax.servlet.GenericServlet#getServletName()
 			 */
+			@Override
 			public String getServletName()
 			{
 				return "WicketMockServlet";
@@ -432,6 +435,7 @@ public class MockWebApplication extends WebApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return homePage;
@@ -450,6 +454,7 @@ public class MockWebApplication extends WebApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#newSessionStore()
 	 */
+	@Override
 	protected ISessionStore newSessionStore()
 	{
 		return new HttpSessionStore();

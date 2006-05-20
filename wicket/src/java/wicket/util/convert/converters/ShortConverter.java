@@ -54,6 +54,7 @@ public final class ShortConverter extends AbstractIntegerConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	@Override
 	protected Class getTargetType()
 	{
 		return Short.class;

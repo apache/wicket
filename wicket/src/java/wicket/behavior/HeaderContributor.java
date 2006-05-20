@@ -90,6 +90,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return hash;
@@ -98,6 +99,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj.getClass().equals(getClass()))
@@ -378,6 +380,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see wicket.behavior.AbstractHeaderContributor#getHeaderContributors()
 	 */
+	@Override
 	public final IHeaderContributor[] getHeaderContributors()
 	{
 		if (headerContributors != null)

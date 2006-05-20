@@ -32,6 +32,7 @@ public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 	 *            The locale
 	 * @return Returns the numberFormat.
 	 */
+	@Override
 	public final NumberFormat getNumberFormat(Locale locale)
 	{
 		final NumberFormat numberFormat = NumberFormat.getIntegerInstance(locale);

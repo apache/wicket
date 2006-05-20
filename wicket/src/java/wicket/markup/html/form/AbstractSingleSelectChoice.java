@@ -131,6 +131,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see FormComponent#getModelValue()
 	 */
+	@Override
 	public final String getModelValue()
 	{
 		final Object object = getModelObject();
@@ -167,6 +168,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@Override
 	protected final Object convertValue(final String[] value)
 	{
 		String tmp = value != null && value.length > 0?value[0]:null;
@@ -197,6 +199,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * 
 	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
+	@Override
 	protected CharSequence getDefaultChoice(final Object selected)
 	{
 		// Is null a valid selection value?
@@ -246,6 +249,7 @@ abstract class AbstractSingleSelectChoice extends AbstractChoice
 	 * the collection @param selected The current selected id value @return
 	 * Whether the given value represents the current selection
 	 */
+	@Override
 	protected boolean isSelected(final Object object, int index, String selected)
 	{
 		return selected != null && selected.equals(getChoiceRenderer().getIdValue(object, index));

@@ -136,6 +136,7 @@ public class PrependingStringBuffer
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return new String(buffer, position, size);

@@ -49,6 +49,7 @@ public class FileCleaner
 		 * Run the reaper thread that will delete files as their associated marker objects
 		 * are reclaimed by the garbage collector.
 		 */
+		@Override
 		public void run()
 		{
 			for (;;)

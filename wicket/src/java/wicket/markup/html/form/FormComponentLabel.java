@@ -48,6 +48,7 @@ public class FormComponentLabel extends WebMarkupContainer
 		fc.setOutputMarkupId(true);
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);

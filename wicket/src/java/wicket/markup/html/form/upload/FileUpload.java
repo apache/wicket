@@ -78,6 +78,7 @@ public class FileUpload implements Serializable
 	 * @deprecated - this method was very counterintuitive. its been replaced by
 	 *             getClientFileName(). see bug 1372481.
 	 */
+	@Deprecated
 	public File getFile()
 	{
 		return new File(item.getName());

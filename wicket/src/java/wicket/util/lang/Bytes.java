@@ -368,6 +368,7 @@ public final class Bytes extends LongValue
 	 * 
 	 * @return The string for this byte count
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(Locale.getDefault());

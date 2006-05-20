@@ -136,6 +136,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	 * @return The underlying output stream.
 	 * @exception IOException if an error occurs.
 	 */
+	@Override
 	protected OutputStream getStream() throws IOException
 	{
 		return currentOutputStream;
@@ -148,6 +149,7 @@ public class DeferredFileOutputStream extends ThresholdingOutputStream
 	 * written to keep in memory, so we elect to switch to disk-based storage.
 	 * @exception IOException if an error occurs.
 	 */
+	@Override
 	protected void thresholdReached() throws IOException
 	{
 		byte[] data = memoryOutputStream.toByteArray();

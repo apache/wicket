@@ -47,7 +47,8 @@ public final class RawMarkup extends MarkupElement
      * @param o The object to compare with
      * @return True if equal
      */
-    public boolean equals(final Object o)
+    @Override
+	public boolean equals(final Object o)
     {
         if (o instanceof String)
         {
@@ -66,7 +67,8 @@ public final class RawMarkup extends MarkupElement
      * We must override hashCode since we overrode equals.
      * @return Hashcode for this object
      */
-    public int hashCode()
+    @Override
+	public int hashCode()
     {
         return string.hashCode();
     }
@@ -74,7 +76,8 @@ public final class RawMarkup extends MarkupElement
     /**
      * @return This raw markup string
      */
-    public String toString()
+    @Override
+	public String toString()
     {
         return string.toString();
     }
@@ -82,14 +85,16 @@ public final class RawMarkup extends MarkupElement
     /**
      * @see wicket.markup.MarkupElement#toCharSequence()
      */
-    public CharSequence toCharSequence()
+    @Override
+	public CharSequence toCharSequence()
     {
     	return string;
     }
     /**
      * @see MarkupElement#toUserDebugString()
      */
-    public String toUserDebugString()
+    @Override
+	public String toUserDebugString()
     {
         return "[Raw markup]";
     }

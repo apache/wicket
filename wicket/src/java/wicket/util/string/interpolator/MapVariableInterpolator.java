@@ -61,6 +61,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            The variable
 	 * @return The value
 	 */
+	@Override
 	protected final String getValue(final String variableName)
 	{
 		return variables.get(variableName).toString();

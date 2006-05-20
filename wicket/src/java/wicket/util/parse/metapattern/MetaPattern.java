@@ -314,6 +314,7 @@ public class MetaPattern
 	 * @return A String representing this MetaPattern
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		if (pattern != null)

@@ -101,6 +101,7 @@ public class Button extends FormComponent
 	 * 
 	 * @see wicket.Component#initModel()
 	 */
+	@Override
 	protected IModel initModel()
 	{
 		return null;
@@ -139,11 +140,13 @@ public class Button extends FormComponent
 
 				boolean formerValue = Button.this.defaultFormProcessing;
 
+				@Override
 				public void undo()
 				{
 					Button.this.defaultFormProcessing = formerValue;
 				}
 
+				@Override
 				public String toString()
 				{
 					return "DefaultFormProcessingChange[component: " + getPath()
@@ -163,6 +166,7 @@ public class Button extends FormComponent
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 	}
@@ -187,6 +191,7 @@ public class Button extends FormComponent
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for component tag

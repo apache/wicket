@@ -313,7 +313,7 @@ public class MarkupParser
 
 					for (int i = 0; i < autoAddList.size(); i++)
 					{
-						this.markup.addMarkupElement((MarkupElement)autoAddList.get(i));
+						this.markup.addMarkupElement(autoAddList.get(i));
 					}
 					autoAddList.clear();
 				}

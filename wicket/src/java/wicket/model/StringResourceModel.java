@@ -315,6 +315,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	 * 
 	 * @return The model
 	 */
+	@Override
 	public final IModel getNestedModel()
 	{
 		return model;
@@ -400,6 +401,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	 * 
 	 * @return The string for this model object
 	 */
+	@Override
 	public String toString()
 	{
 		return getString();
@@ -438,6 +440,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	/**
 	 * Attaches to the given session.
 	 */
+	@Override
 	protected final void onAttach()
 	{
 		// Initialise information that we need to work successfully
@@ -457,6 +460,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	/**
 	 * Detaches from the given session
 	 */
+	@Override
 	protected final void onDetach()
 	{
 		// Detach any model
@@ -477,6 +481,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	 * 
 	 * @see AbstractDetachableModel#onGetObject(Component)
 	 */
+	@Override
 	protected final Object onGetObject(final Component component)
 	{
 		return getString();

@@ -28,7 +28,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.behavior.IBehavior;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
@@ -38,7 +37,6 @@ import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
-import wicket.markup.html.list.ListItem;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
@@ -250,6 +248,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 *            Path to component
 	 * @return The component at the path
 	 */
+	@Override
 	public final Component get(final String path)
 	{
 		// Reference to this container
@@ -335,6 +334,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * 
 	 * Called when a request begins.
 	 */
+	@Override
 	public void internalAttach()
 	{
 		// Handle begin request for the container itself
@@ -370,6 +370,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * 
 	 * Called when a request ends.
 	 */
+	@Override
 	public void internalDetach()
 	{
 		// Handle end request for the container itself
@@ -499,6 +500,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 
 				final Object removedChildren = MarkupContainer.this.children;
 
+				@Override
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
@@ -511,6 +513,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 					}
 				}
 
+				@Override
 				public String toString()
 				{
 					return "RemoveAllChange[component: " + getPath() + ", removed Children: "
@@ -669,6 +672,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	/**
 	 * @see wicket.Component#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return toString(false);
@@ -679,6 +683,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 *            True if a detailed string is desired
 	 * @return String representation of this container
 	 */
+	@Override
 	public String toString(final boolean detailed)
 	{
 		final StringBuffer buffer = new StringBuffer();
@@ -791,6 +796,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @return The markup stream for this component, or if it doesn't have one,
 	 *         the markup stream for the nearest parent which does have one
 	 */
+	@Override
 	protected final MarkupStream findMarkupStream()
 	{
 		// Start here
@@ -913,6 +919,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @param openTag
 	 *            The open tag for the body
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		renderComponentTagBody(markupStream, openTag);
@@ -923,6 +930,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * 
 	 * @param markupStream
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		renderComponent(markupStream);
@@ -996,6 +1004,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @param markupStream
 	 *            The markup stream
 	 */
+	@Override
 	protected final void setMarkupStream(final MarkupStream markupStream)
 	{
 		this.markupStream = markupStream;

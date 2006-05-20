@@ -429,6 +429,7 @@ public class MarkupCache
 			 * 
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
+			@Override
 			public boolean equals(Object obj)
 			{
 				return true;
@@ -439,6 +440,7 @@ public class MarkupCache
 			 * 
 			 * @see java.lang.Object#hashCode()
 			 */
+			@Override
 			public int hashCode()
 			{
 				return key.hashCode();
@@ -462,7 +464,7 @@ public class MarkupCache
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{
-			MarkupElement elem = (MarkupElement) markup.get(i);
+			MarkupElement elem = markup.get(i);
 			if (elem instanceof WicketTag)
 			{
 				WicketTag wtag = (WicketTag)elem;

@@ -77,6 +77,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	 * 
 	 * @see wicket.ajax.AjaxEventBehavior#onEvent(wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected void onEvent(AjaxRequestTarget target)
 	{
 		// handle the event
@@ -91,7 +92,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		target.addComponent(container);
 
 		// find the PagingNavigator parent of this link
-		Component navigator = (AjaxPagingNavigator)((Component<?>)owner)
+		Component navigator = ((Component<?>)owner)
 				.findParent(AjaxPagingNavigator.class);
 
 		if (navigator == null)
@@ -116,6 +117,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	 * 
 	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#getAjaxCallDecorator()
 	 */
+	@Override
 	protected IAjaxCallDecorator getAjaxCallDecorator()
 	{
 		return new CancelEventIfNoAjaxDecorator();

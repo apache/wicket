@@ -57,6 +57,7 @@ public final class CharacterConverter extends AbstractConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	@Override
 	protected Class getTargetType()
 	{
 		return Character.class;

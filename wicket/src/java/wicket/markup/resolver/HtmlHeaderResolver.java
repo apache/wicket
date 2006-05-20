@@ -104,6 +104,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 						{
 							private static final long serialVersionUID = 1L;
 
+							@Override
 							public boolean isTransparentResolver()
 							{
 								return true;
@@ -126,6 +127,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 						{
 							private static final long serialVersionUID = 1L;
 		
+							@Override
 							public boolean isTransparentResolver()
 							{
 								return true;

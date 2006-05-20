@@ -95,6 +95,7 @@ public final class PageView extends Panel
 			/**
 			 * Populate the table with Wicket elements
 			 */
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				final ComponentData componentData = (ComponentData)listItem.getModelObject();

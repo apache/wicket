@@ -129,6 +129,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getEventProcessorStrategy()
 	 */
+	@Override
 	protected IEventProcessorStrategy getEventProcessorStrategy()
 	{
 		// lazily create
@@ -153,6 +154,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getExceptionResponseStrategy()
 	 */
+	@Override
 	protected IExceptionResponseStrategy getExceptionResponseStrategy()
 	{
 		// lazily create
@@ -177,6 +179,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getRequestTargetResolverStrategy()
 	 */
+	@Override
 	protected IRequestTargetResolverStrategy getRequestTargetResolverStrategy()
 	{
 		// lazily create
@@ -201,6 +204,7 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 	 * 
 	 * @see wicket.request.compound.AbstractCompoundRequestCycleProcessor#getResponseStrategy()
 	 */
+	@Override
 	protected IResponseStrategy getResponseStrategy()
 	{
 		// lazily create

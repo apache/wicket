@@ -71,6 +71,7 @@ public final class OptionalMetaPattern extends MetaPattern
 	/**
 	 * @return String representation of this pattern
 	 */
+	@Override
 	public String toString()
 	{
 		return "(?:" + super.toString() + ")?";

@@ -56,6 +56,7 @@ public class WebSession extends Session
 	 * invalidateNow(), however this will remove all Wicket components from this
 	 * session, which means that you will no longer be able to work with them.
 	 */
+	@Override
 	public void invalidate()
 	{
 		sessionInvalidated = true;
@@ -84,6 +85,7 @@ public class WebSession extends Session
 	 * 
 	 * @see wicket.Session#detach()
 	 */
+	@Override
 	protected void detach()
 	{
 		if (sessionInvalidated)
@@ -95,6 +97,7 @@ public class WebSession extends Session
 	/**
 	 * @see wicket.Session#getRequestCycleFactory()
 	 */
+	@Override
 	protected IRequestCycleFactory getRequestCycleFactory()
 	{
 		if (requestCycleFactory == null)
@@ -109,6 +112,7 @@ public class WebSession extends Session
 	/**
 	 * Updates the session, e.g. for replication purposes.
 	 */
+	@Override
 	protected void update()
 	{
 		if (sessionInvalidated == false)

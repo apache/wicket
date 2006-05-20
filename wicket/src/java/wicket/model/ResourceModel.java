@@ -64,6 +64,7 @@ public class ResourceModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
 	 */
+	@Override
 	public Object getObject(Component component)
 	{
 		return component.getLocalizer().getString(resourceKey, component, defaultValue);

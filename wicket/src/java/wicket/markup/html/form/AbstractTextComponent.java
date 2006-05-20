@@ -65,6 +65,7 @@ public abstract class AbstractTextComponent<V> extends FormComponent<V>
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#isInputNullable()
 	 */
+	@Override
 	public boolean isInputNullable()
 	{
 		return false;
@@ -87,6 +88,7 @@ public abstract class AbstractTextComponent<V> extends FormComponent<V>
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return true;
@@ -95,6 +97,7 @@ public abstract class AbstractTextComponent<V> extends FormComponent<V>
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@Override
 	protected V convertValue(String[] value) throws ConversionException
 	{
 		String tmp = value != null && value.length > 0?value[0]:null;

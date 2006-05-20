@@ -17,12 +17,8 @@
  */
 package wicket.model;
 
-import java.util.Locale;
-
 import wicket.Component;
 import wicket.Session;
-import wicket.util.convert.CoverterLocator;
-import wicket.util.convert.IConverter;
 import wicket.util.lang.PropertyResolver;
 import wicket.util.lang.PropertyResolverConverter;
 import wicket.util.string.Strings;
@@ -39,7 +35,7 @@ import wicket.util.string.Strings;
 public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V>
 {
 	/** Any model object (which may or may not implement IModel) */
-	private V nestedModel;
+	private Object nestedModel;
 
 	/**
 	 * Constructor
@@ -47,7 +43,7 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	 * @param modelObject
 	 *            The nested model object
 	 */
-	public AbstractPropertyModel(final V modelObject)
+	public AbstractPropertyModel(final Object modelObject)
 	{
 		if (modelObject == null)
 		{
@@ -63,11 +59,12 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	 * @return The nested model, <code>null</code> when this is the final
 	 *         model in the hierarchy
 	 */
-	public final IModel<V> getNestedModel()
+	@Override
+	public final IModel getNestedModel()
 	{
 		if (nestedModel instanceof IModel)
 		{
-			return ((IModel<V>)nestedModel);
+			return ((IModel)nestedModel);
 		}
 		return null;
 	}
@@ -77,11 +74,11 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	 *            The component to get the model object for
 	 * @return The model for this property
 	 */
-	protected V modelObject(final Component component)
+	protected Object modelObject(final Component component)
 	{
 		if (nestedModel instanceof IModel)
 		{
-			return ((IModel<V>)nestedModel).getObject(component);
+			return ((IModel)nestedModel).getObject(component);
 		}
 		return nestedModel;
 	}
@@ -96,6 +93,7 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onAttach()
 	 */
+	@Override
 	protected void onAttach()
 	{
 	}
@@ -105,6 +103,7 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	 * 
 	 * @see AbstractDetachableModel#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		// Detach nested object if it's an IModel
@@ -117,13 +116,14 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
+	@Override
 	protected V onGetObject(final Component component)
 	{
 		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			return modelObject(component);
+			return (V)modelObject(component);
 		}
 
 		final Object modelObject = modelObject(component);
@@ -143,6 +143,7 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	 *            object
 	 * @see AbstractDetachableModel#onSetObject(Component, Object)
 	 */
+	@Override
 	protected void onSetObject(final Component component, V object)
 	{
 		final String expression = propertyExpression(component);
@@ -203,6 +204,7 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());

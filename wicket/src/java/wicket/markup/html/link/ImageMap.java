@@ -77,6 +77,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see wicket.markup.html.link.ImageMap.ShapeLink#getCoordinates()
 		 */
+		@Override
 		String getCoordinates()
 		{
 			return x + "," + y + "," + radius;
@@ -85,6 +86,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see wicket.markup.html.link.ImageMap.ShapeLink#getType()
 		 */
+		@Override
 		String getType()
 		{
 			return "circle";
@@ -118,6 +120,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see wicket.markup.html.link.ImageMap.ShapeLink#getCoordinates()
 		 */
+		@Override
 		String getCoordinates()
 		{
 			final StringBuffer buffer = new StringBuffer();
@@ -136,6 +139,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see wicket.markup.html.link.ImageMap.ShapeLink#getType()
 		 */
+		@Override
 		String getType()
 		{
 			return "polygon";
@@ -187,6 +191,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see wicket.markup.html.link.ImageMap.ShapeLink#getCoordinates()
 		 */
+		@Override
 		String getCoordinates()
 		{
 			return x1 + "," + y1 + "," + x2 + "," + y2;
@@ -195,6 +200,7 @@ public final class ImageMap extends WebMarkupContainer
 		/**
 		 * @see wicket.markup.html.link.ImageMap.ShapeLink#getType()
 		 */
+		@Override
 		String getType()
 		{
 			return "rectangle";
@@ -226,6 +232,7 @@ public final class ImageMap extends WebMarkupContainer
 		 * 
 		 * @return The shape as a string
 		 */
+		@Override
 		public String toString()
 		{
 			// Add any popup script
@@ -335,6 +342,7 @@ public final class ImageMap extends WebMarkupContainer
 	 * 
 	 * @see wicket.Component#onRender(MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Get mutable copy of next tag

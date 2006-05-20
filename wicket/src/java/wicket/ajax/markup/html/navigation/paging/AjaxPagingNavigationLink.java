@@ -56,6 +56,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		onClick(null);

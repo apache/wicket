@@ -76,6 +76,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	/**
 	 * @see wicket.protocol.http.AbstractHttpSessionStore#onBeginRequest(wicket.Request)
 	 */
+	@Override
 	public void onBeginRequest(Request request)
 	{
 		Map<String, Object> map = getStore(request);
@@ -105,6 +106,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	/**
 	 * @see wicket.protocol.http.AbstractHttpSessionStore#onEndRequest(wicket.Request)
 	 */
+	@Override
 	public void onEndRequest(Request request)
 	{
 		pages.set(null);
@@ -114,6 +116,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request,
 	 *      java.lang.String)
 	 */
+	@Override
 	public final Object getAttribute(Request request, String name)
 	{
 		Map<String, Object> store = getStore(request);
@@ -125,6 +128,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	/**
 	 * @see wicket.session.ISessionStore#getAttributeNames(wicket.Request)
 	 */
+	@Override
 	public final List<String> getAttributeNames(Request request)
 	{
 		List<String> lst = super.getAttributeNames(request);
@@ -136,6 +140,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	 * @see wicket.session.ISessionStore#removeAttribute(wicket.Request,
 	 *      java.lang.String)
 	 */
+	@Override
 	public final void removeAttribute(Request request, String name)
 	{
 		Map<String, Object> store = getStore(request);
@@ -149,6 +154,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	 * @see wicket.session.ISessionStore#setAttribute(wicket.Request,
 	 *      java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public final void setAttribute(Request request, String name, Object value)
 	{
 		if(value instanceof Page)
@@ -167,6 +173,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	/**
 	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String, wicket.Session)
 	 */
+	@Override
 	public PageMap createPageMap(String name, Session session)
 	{
 		return new ClientPageSessionStorePageMap(name, session);
@@ -189,16 +196,19 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 			super(name, session);
 		}
 
+		@Override
 		protected void removeEntry(IPageMapEntry entry)
 		{
 			// ignored for client state saving.
 		}
 
+		@Override
 		protected void put(Page page)
 		{
 			// ignored for client state saving.
 		}
 
+		@Override
 		protected Page get(int id, int versionNumber)
 		{
 			RequestCycle rc = RequestCycle.get();

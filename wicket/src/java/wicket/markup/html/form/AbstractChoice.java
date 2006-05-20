@@ -262,6 +262,7 @@ abstract class AbstractChoice extends FormComponent
 	/**
 	 * @see wicket.Component#detachModel()
 	 */
+	@Override
 	protected void detachModel()
 	{
 		super.detachModel();
@@ -303,6 +304,7 @@ abstract class AbstractChoice extends FormComponent
 	 *            The open tag for the body
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		List choices = getChoices();
@@ -339,7 +341,7 @@ abstract class AbstractChoice extends FormComponent
 	{
 		Object objectValue = renderer.getDisplayValue(choice);
 		Class objectClass = objectValue == null?null:objectValue.getClass();
-		final String displayValue = (String)getConverter(objectClass).convertToString(
+		final String displayValue = getConverter(objectClass).convertToString(
 				objectValue, getLocale());
 		buffer.append("\n<option ");
 		if (isSelected(choice, index, selected))
@@ -363,6 +365,7 @@ abstract class AbstractChoice extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected boolean supportsPersistence()
 	{
 		return true;
@@ -402,6 +405,7 @@ abstract class AbstractChoice extends FormComponent
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			choices = oldChoices;
@@ -412,6 +416,7 @@ abstract class AbstractChoice extends FormComponent
 		 * 
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "ChoiceListChange[component: " + getPath() + ", old choices: " + oldChoices

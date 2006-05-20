@@ -404,6 +404,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return this.input.toString();

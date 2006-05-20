@@ -625,6 +625,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * @return a shallow copy of this map.
 	 */
+	@Override
 	public Object clone()
 	{
 		IntHashMap result = null;
@@ -698,6 +699,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object o)
 		{
 			if (!(o instanceof Entry))
@@ -722,6 +724,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return key ^ (value == null ? 0 : value.hashCode());
@@ -730,6 +733,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return getKey() + "=" + getValue(); //$NON-NLS-1$
@@ -926,6 +930,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
+		@Override
 		public Iterator iterator()
 		{
 			return newKeyIterator();
@@ -934,6 +939,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#size()
 		 */
+		@Override
 		public int size()
 		{
 			return size;
@@ -942,6 +948,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
+		@Override
 		public boolean contains(Object o)
 		{
 			if (o instanceof Number)
@@ -954,6 +961,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#remove(java.lang.Object)
 		 */
+		@Override
 		public boolean remove(Object o)
 		{
 			if (o instanceof Number)
@@ -966,6 +974,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#clear()
 		 */
+		@Override
 		public void clear()
 		{
 			IntHashMap.this.clear();
@@ -995,6 +1004,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
+		@Override
 		public Iterator iterator()
 		{
 			return newValueIterator();
@@ -1003,6 +1013,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#size()
 		 */
+		@Override
 		public int size()
 		{
 			return size;
@@ -1011,6 +1022,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
+		@Override
 		public boolean contains(Object o)
 		{
 			return containsValue(o);
@@ -1019,6 +1031,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#clear()
 		 */
+		@Override
 		public void clear()
 		{
 			IntHashMap.this.clear();
@@ -1050,6 +1063,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
+		@Override
 		public Iterator iterator()
 		{
 			return newEntryIterator();
@@ -1058,6 +1072,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#contains(java.lang.Object)
 		 */
+		@Override
 		public boolean contains(Object o)
 		{
 			if (!(o instanceof Entry))
@@ -1072,6 +1087,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#remove(java.lang.Object)
 		 */
+		@Override
 		public boolean remove(Object o)
 		{
 			return removeMapping(o) != null;
@@ -1080,6 +1096,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#size()
 		 */
+		@Override
 		public int size()
 		{
 			return size;
@@ -1088,6 +1105,7 @@ public class IntHashMap implements Cloneable, Serializable
 		/**
 		 * @see java.util.AbstractCollection#clear()
 		 */
+		@Override
 		public void clear()
 		{
 			IntHashMap.this.clear();

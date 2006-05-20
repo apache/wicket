@@ -66,6 +66,7 @@ public class Radio extends WebMarkupContainer
 	 * @param tag
 	 *            the abstraction representing html tag of this component
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for component tag

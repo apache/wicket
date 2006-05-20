@@ -142,6 +142,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof WebExternalResourceRequestTarget)
@@ -155,6 +156,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "WebExternalResourceRequestTarget".hashCode();
@@ -165,6 +167,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[WebExternalResourceRequestTarget@" + hashCode() + " " + url + "]";

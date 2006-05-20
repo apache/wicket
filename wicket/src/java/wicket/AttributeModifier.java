@@ -182,6 +182,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 * @param component
 	 *            the model that initiates the detachement
 	 */
+	@Override
 	public final void detachModel(Component component)
 	{
 		if (replaceModel != null)
@@ -204,6 +205,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	public final void onComponentTag(Component component, ComponentTag tag)
 	{
 		if (tag.getType() != XmlTag.CLOSE)
@@ -277,6 +279,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[AttributeModifier attribute=" + attribute + ", enabled=" + isEnabled()

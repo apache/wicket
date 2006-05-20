@@ -508,6 +508,7 @@ public class PackageResource extends WebResource
 	/**
 	 * @return Gets the resource for the component.
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		// Locate resource

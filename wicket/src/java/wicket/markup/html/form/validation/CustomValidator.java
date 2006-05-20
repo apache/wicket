@@ -26,6 +26,7 @@ package wicket.markup.html.form.validation;
  * 
  * @deprecated Users should use {@link StringValidator} directly 
  */
+@Deprecated
 public abstract class CustomValidator extends StringValidator
 {
 }

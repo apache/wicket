@@ -121,6 +121,7 @@ public class Markup
 	/**
 	 * @return String representation of markup list
 	 */
+	@Override
 	public String toString()
 	{
 		if (resource != null)

@@ -59,6 +59,7 @@ public abstract class AjaxCheckBox extends CheckBox
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onUpdate(AjaxRequestTarget target)
 			{
 				AjaxCheckBox.this.onUpdate(target);

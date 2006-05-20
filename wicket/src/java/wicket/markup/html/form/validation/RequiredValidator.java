@@ -32,6 +32,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @deprecated
  */
+@Deprecated
 public class RequiredValidator extends AbstractValidator
 {
 	private static final long serialVersionUID = 1L;
@@ -105,6 +106,7 @@ public class RequiredValidator extends AbstractValidator
 	/**
 	 * @see Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[RequiredValidator]";

@@ -76,6 +76,7 @@ public class HiddenField extends TextField
 	}
 
 
+	@Override
 	protected String getInputType()
 	{
 		return "hidden";

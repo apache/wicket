@@ -197,6 +197,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see wicket.Component#initModel()
 	 */
+	@Override
 	protected IModel initModel()
 	{
 		// Images don't support Compound models. They either have a simple
@@ -208,6 +209,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "img");
@@ -236,6 +238,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 	}

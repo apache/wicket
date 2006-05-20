@@ -406,6 +406,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 * 
 		 * @see wicket.Request#getLocale()
 		 */
+		@Override
 		public Locale getLocale()
 		{
 			return this.request.getLocale();
@@ -414,6 +415,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * @see wicket.Request#getParameter(java.lang.String)
 		 */
+		@Override
 		public String getParameter(final String key)
 		{
 			if (key == null)
@@ -426,6 +428,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * @see wicket.Request#getParameterMap()
 		 */
+		@Override
 		public Map getParameterMap()
 		{
 			return this.parameterMap;
@@ -434,6 +437,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * @see wicket.Request#getParameters(java.lang.String)
 		 */
+		@Override
 		public String[] getParameters(final String key)
 		{
 			if (key == null)
@@ -446,6 +450,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * @see wicket.Request#getPath()
 		 */
+		@Override
 		public String getPath()
 		{
 			// Hasn't changed. We only encoded the querystring
@@ -455,6 +460,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * @see wicket.Request#getRelativeURL()
 		 */
+		@Override
 		public String getRelativeURL()
 		{
 			return this.url.substring(this.startRelativeUrl);
@@ -463,6 +469,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		/**
 		 * @see wicket.Request#getURL()
 		 */
+		@Override
 		public String getURL()
 		{
 			return this.url;

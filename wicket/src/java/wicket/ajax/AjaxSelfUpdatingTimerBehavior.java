@@ -46,6 +46,7 @@ public class AjaxSelfUpdatingTimerBehavior extends AbstractAjaxTimerBehavior
 	/**
 	 * @see wicket.ajax.AbstractAjaxTimerBehavior#onTimer(wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected final void onTimer(final AjaxRequestTarget target)
 	{
 		target.addComponent(getComponent());

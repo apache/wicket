@@ -140,6 +140,7 @@ public final class Path implements IResourcePath
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[folders = " + StringList.valueOf(folders) + "]";

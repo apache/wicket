@@ -503,6 +503,7 @@ public final class Time extends AbstractTime
 	 * 
 	 * @return This time as a formatted string
 	 */
+	@Override
 	public String toString()
 	{
 		return toDateString() + "-" + toTimeString();

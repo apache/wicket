@@ -52,6 +52,7 @@ public abstract class MetaDataKey implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		return getClass().isInstance(obj);

@@ -117,7 +117,8 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
    *
    * @see wicket.Resource#invalidate()
    */
-  public synchronized void invalidate()
+  @Override
+public synchronized void invalidate()
   {
     imageData = null;
   }
@@ -152,7 +153,8 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
     invalidate();
   }
   
-  protected byte[] getImageData()
+  @Override
+protected byte[] getImageData()
   {
     // get image data is always called in sync block
     byte[] data = null;

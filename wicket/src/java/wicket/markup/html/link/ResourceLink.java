@@ -112,6 +112,7 @@ public class ResourceLink extends Link implements IResourceListener
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 	}
@@ -127,6 +128,7 @@ public class ResourceLink extends Link implements IResourceListener
 	/**
 	 * @see wicket.markup.html.link.Link#getURL()
 	 */
+	@Override
 	protected final CharSequence getURL()
 	{
 		if (resourceReference != null)

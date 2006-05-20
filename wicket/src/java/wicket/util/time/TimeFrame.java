@@ -205,6 +205,7 @@ public final class TimeFrame implements ITimeFrameSource
 	/**
 	 * @return String representation of this object
 	 */
+	@Override
 	public String toString()
 	{
 		return "[start=" + start + ", end=" + end + "]";

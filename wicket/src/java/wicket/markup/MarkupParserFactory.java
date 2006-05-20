@@ -59,6 +59,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	{
 		final MarkupParser parser = new MarkupParser(new XmlPullParser())
 		{
+			@Override
 			public void initFilterChain()
 			{
 				if (filters != null)

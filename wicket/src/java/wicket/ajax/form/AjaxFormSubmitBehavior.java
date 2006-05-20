@@ -63,6 +63,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		this.form = form;
 	}
 
+	@Override
 	protected CharSequence getEventHandler()
 	{
 		final String formId = form.getMarkupId();
@@ -81,6 +82,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		return getCallbackScript(call, null, null)+";";
 	}
 
+	@Override
 	protected void onEvent(AjaxRequestTarget target)
 	{
 		form.onFormSubmitted();

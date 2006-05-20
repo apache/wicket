@@ -45,6 +45,7 @@ public class StringResponse extends Response
 	/**
 	 * @see wicket.Response#write(CharSequence)
 	 */
+	@Override
 	public void write(final CharSequence string)
 	{
 		out.append(string);
@@ -53,6 +54,7 @@ public class StringResponse extends Response
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return out.toString();
@@ -69,6 +71,7 @@ public class StringResponse extends Response
 	/**
 	 * @see wicket.Response#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream()
 	{
 		throw new UnsupportedOperationException("Cannot get output stream on StringResponse");

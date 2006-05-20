@@ -94,6 +94,7 @@ public final class RedirectPage extends WebPage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

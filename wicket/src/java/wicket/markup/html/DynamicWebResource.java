@@ -122,6 +122,7 @@ public abstract class DynamicWebResource extends WebResource
 	/**
 	 * @return Gets the resource to attach to the component.
 	 */
+	@Override
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

@@ -50,6 +50,7 @@ public class NullResponse extends Response
 	/**
 	 * @see wicket.Response#write(CharSequence)
 	 */
+	@Override
 	public void write(CharSequence string)
 	{
 		// Does nothing
@@ -58,10 +59,12 @@ public class NullResponse extends Response
 	/**
 	 * @see wicket.Response#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream()
 	{
 		return new OutputStream()
 		{
+			@Override
 			public void write(int b) throws IOException
 			{
 			}

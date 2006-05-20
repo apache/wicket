@@ -112,6 +112,7 @@ public class StringRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof StringRequestTarget)
@@ -125,6 +126,7 @@ public class StringRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "StringRequestTarget".hashCode();
@@ -135,6 +137,7 @@ public class StringRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[StringRequestTarget@" + hashCode() + " " + string + "]";

@@ -67,6 +67,7 @@ public class ListParser extends MetaPatternParser
 	 * @see #getValues()
 	 * @see wicket.util.parse.metapattern.parsers.MetaPatternParser#matches()
 	 */
+	@Override
 	public final boolean matches()
 	{
 		// Are there any more elements

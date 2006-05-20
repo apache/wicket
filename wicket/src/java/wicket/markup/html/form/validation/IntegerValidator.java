@@ -33,6 +33,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @deprecated @see {@link NumberValidator}
  */
+@Deprecated
 public class IntegerValidator extends StringValidator
 {
 	private static final long serialVersionUID = 1L;
@@ -120,6 +121,7 @@ public class IntegerValidator extends StringValidator
 	 * ensures the value is in bounds.
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
 	 */
+	@Override
 	public final void onValidate(FormComponent formComponent, String value)
 	{
 		// If value is non-empty
@@ -146,6 +148,7 @@ public class IntegerValidator extends StringValidator
 	/**
 	 * @see wicket.markup.html.form.validation.AbstractValidator#messageModel(wicket.markup.html.form.FormComponent)
 	 */
+	@Override
 	protected Map<String, Serializable> messageModel(FormComponent formComponent)
 	{
 		final Map<String, Serializable> map = super.messageModel(formComponent);
@@ -157,6 +160,7 @@ public class IntegerValidator extends StringValidator
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[IntegerValidator min = " + min + ", max = " + max + "]";

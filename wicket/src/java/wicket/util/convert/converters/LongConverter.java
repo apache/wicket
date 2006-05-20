@@ -54,6 +54,7 @@ public final class LongConverter extends AbstractIntegerConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	@Override
 	protected Class getTargetType()
 	{
 		return Long.class;

@@ -109,6 +109,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setRequired(required);
@@ -126,6 +127,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 		/**
 		 * @see wicket.model.IModel#getObject(wicket.Component)
 		 */
+		@Override
 		public String getObject(Component component)
 		{
 			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled())
@@ -795,6 +797,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	 * @deprecated Use {@link #getInputAsArray()} instead
 	 */
 	//TODO Post 1.2: remove
+	@Deprecated
 	protected final String[] inputAsStringArray()
 	{
 		return getInputAsArray();
@@ -807,6 +810,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		tag.put("name", getInputName());
@@ -824,6 +828,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	/**
 	 * @see wicket.Component#internalOnModelChanged()
 	 */
+	@Override
 	protected void internalOnModelChanged()
 	{
 		// If the model for this form component changed, we should make it
@@ -982,6 +987,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 		return convertedInput;
 	}
 
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();

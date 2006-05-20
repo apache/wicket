@@ -89,7 +89,7 @@ public abstract class AbstractDetachableModel<V> implements IModel<V>
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	public abstract IModel<V> getNestedModel();
+	public abstract IModel getNestedModel();
 
 	/**
 	 * @see wicket.model.IModel#getObject(Component)
@@ -122,6 +122,7 @@ public abstract class AbstractDetachableModel<V> implements IModel<V>
 	/**
 	 * @see Object#toString() 
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer("Model:classname=[");
 		sb.append(getClass().getName()).append("]");

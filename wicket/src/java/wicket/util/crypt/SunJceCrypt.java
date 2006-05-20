@@ -89,6 +89,7 @@ public class SunJceCrypt extends AbstractCrypt
 	 * @return the input crypted. Null in case of an error
 	 * @throws GeneralSecurityException
 	 */
+	@Override
 	protected final byte[] crypt(final byte[] input, final int mode)
 			throws GeneralSecurityException
 	{

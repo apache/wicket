@@ -47,6 +47,7 @@ public interface ICrypt
 	 * @return the decrypted string.
 	 * @deprecated
 	 */
+	@Deprecated
 	String decrypt(final String text);
 
 	/**
@@ -66,6 +67,7 @@ public interface ICrypt
 	 * @return encrypted string
 	 * @deprecated
 	 */
+	@Deprecated
 	String encrypt(final String plainText);
 
 	/**

@@ -73,6 +73,7 @@ public class LongValue implements Comparable, Serializable
 	 *            The value to compare against
 	 * @return True if this value is equal to that value
 	 */
+	@Override
 	public final boolean equals(final Object that)
 	{
 		if (that instanceof LongValue)
@@ -106,6 +107,7 @@ public class LongValue implements Comparable, Serializable
 	/**
 	 * @return Hashcode for this object
 	 */
+	@Override
 	public final int hashCode()
 	{
 		return Primitives.hashCode(value);
@@ -136,6 +138,7 @@ public class LongValue implements Comparable, Serializable
 	 * 
 	 * @return The string for this value
 	 */
+	@Override
 	public String toString()
 	{
 		return String.valueOf(value);

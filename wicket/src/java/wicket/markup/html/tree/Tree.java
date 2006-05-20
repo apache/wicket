@@ -117,6 +117,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.markup.html.list.Loop#populateItem(LoopItem)
 		 */
+		@Override
 		protected void populateItem(final Loop.LoopItem loopItem)
 		{
 			// nothing needed; we just render the tags and use CSS to indent
@@ -144,6 +145,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.markup.html.list.ListView#getReuseItems()
 		 */
+		@Override
 		public boolean getReuseItems()
 		{
 			return Tree.this.getOptimizeItemRemoval();
@@ -152,6 +154,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.markup.html.list.ListView#newItem(int)
 		 */
+		@Override
 		protected ListItem newItem(final int index)
 		{
 			IModel listItemModel = getListItemModel(getModel(), index);
@@ -162,6 +165,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public boolean isVisible()
 				{
 					TreeState treeState = getTreeState();
@@ -178,6 +182,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
+		@Override
 		protected void populateItem(ListItem listItem)
 		{
 			// get the model object which is a tree node
@@ -222,6 +227,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
 		 */
+		@Override
 		public IModel getNestedModel()
 		{
 			// TODO General: Check calls to this method; original: return paths;
@@ -231,6 +237,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.model.AbstractDetachableModel#onAttach()
 		 */
+		@Override
 		protected void onAttach()
 		{
 			if (dirty)
@@ -252,6 +259,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.model.AbstractDetachableModel#onDetach()
 		 */
+		@Override
 		protected void onDetach()
 		{
 		}
@@ -259,6 +267,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 		 */
+		@Override
 		protected Object onGetObject(Component component)
 		{
 			return paths;
@@ -394,6 +403,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * @deprecated Will be replaced by {@link #getReuseItems()}
 	 */
 	// TODO Post 1.2: Remove
+	@Deprecated
 	public boolean getOptimizeItemRemoval()
 	{
 		return getReuseItems();
@@ -429,6 +439,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * @deprecated Will be replaced by {@link #setReuseItems(boolean)}
 	 */
 	// TODO Post 1.2: Remove
+	@Deprecated
 	public void setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
 		setReuseItems(optimizeItemRemoval);
@@ -459,6 +470,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * @param treeModel
 	 *            the tree model to set as the current one
 	 */
+	@Override
 	public void setTreeModel(final TreeModel treeModel)
 	{
 		super.setTreeModel(treeModel);
@@ -473,6 +485,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * @param treeState
 	 *            the tree state to set as the current one
 	 */
+	@Override
 	public void setTreeState(final TreeState treeState)
 	{
 		super.setTreeState(treeState);
@@ -562,6 +575,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				junctionLinkClicked(node);
@@ -584,6 +598,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				nodeLinkClicked(node);
@@ -652,6 +667,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected ResourceReference getImageResourceReference()
 				{
 					if (isExpanded(node))
@@ -702,6 +718,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * @see wicket.Component#internalOnAttach()
 	 */
+	@Override
 	protected void internalOnAttach()
 	{
 		// if we don't optimize, rebuild the paths on every request

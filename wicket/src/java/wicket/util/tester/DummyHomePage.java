@@ -79,6 +79,7 @@ public class DummyHomePage extends WebPage
 		/**
 		 * 
 		 */
+		@Override
 		public void onClick()
 		{
 			setResponsePage(testPageSource.getTestPage());

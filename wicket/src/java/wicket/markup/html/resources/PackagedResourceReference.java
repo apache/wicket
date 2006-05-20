@@ -90,6 +90,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public CharSequence getObject(Component component)
 			{
 				String o = file.getObject(component);
@@ -99,7 +100,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 							"The model must provide a non-null object (component == " + component
 									+ ")");
 				}
-				String f = (String)component.getConverter(o.getClass()).convertToString(o,getLocale());
+				String f = component.getConverter(o.getClass()).convertToString(o,getLocale());
 				PackageResourceReference ref = new PackageResourceReference(Application.get(),
 						referer, f);
 				return getRequestCycle().urlFor(ref);
@@ -153,6 +154,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public CharSequence getObject(Component component)
 			{
 				ResourceReference o = resourceReference.getObject(component);

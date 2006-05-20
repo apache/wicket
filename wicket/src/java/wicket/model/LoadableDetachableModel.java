@@ -86,6 +86,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.IDetachable#detach()
 	 */
+	@Override
 	public final void detach()
 	{
 		if (attached)
@@ -105,6 +106,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.IModel#getObject(wicket.Component)
 	 */
+	@Override
 	public Object getObject(Component component)
 	{
 		if (!attached)
@@ -136,6 +138,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());

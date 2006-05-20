@@ -144,6 +144,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @see wicket.MarkupContainer#isTransparentResolver()
 	 */
+	@Override
 	public boolean isTransparentResolver()
 	{
 		return transparentResolver;
@@ -231,6 +232,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
@@ -256,6 +258,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	 * 
 	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
 	 */
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
 		this.renderHeadFromAssociatedMarkupFile(container);

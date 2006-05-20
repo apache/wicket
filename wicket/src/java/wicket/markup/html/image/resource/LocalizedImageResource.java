@@ -364,6 +364,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			/**
 			 * @see wicket.ResourceReference#newResource()
 			 */
+			@Override
 			protected Resource newResource()
 			{
 				PackageResource pr = PackageResource.get(getScope(), getName(), LocalizedImageResource.this.locale, style);

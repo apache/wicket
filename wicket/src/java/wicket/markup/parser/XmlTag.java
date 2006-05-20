@@ -537,6 +537,7 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public String toString()
 	{
 		return toCharSequence().toString();
@@ -545,6 +546,7 @@ public class XmlTag extends MarkupElement
 	/**
 	 * @see wicket.markup.MarkupElement#toCharSequence()
 	 */
+	@Override
 	public CharSequence toCharSequence()
 	{
 		if (!isMutable && (text != null))
@@ -560,6 +562,7 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return String version of this object
 	 */
+	@Override
 	public String toUserDebugString()
 	{
 		return "'" + toString() + "' (line " + lineNumber + ", column " + columnNumber + ")";

@@ -101,6 +101,7 @@ public class ExceptionErrorPage extends WebPage
 	/**
 	 * @see wicket.markup.html.WebPage#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
@@ -120,6 +121,7 @@ public class ExceptionErrorPage extends WebPage
 	/**
 	 * @see wicket.Page#isErrorPage()
 	 */
+	@Override
 	public boolean isErrorPage()
 	{
 		return true;
@@ -128,6 +130,7 @@ public class ExceptionErrorPage extends WebPage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

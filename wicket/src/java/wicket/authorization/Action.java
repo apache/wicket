@@ -67,6 +67,7 @@ public class Action implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if (obj instanceof Action)
@@ -88,6 +89,7 @@ public class Action implements Serializable
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "Action".hashCode();
@@ -98,6 +100,7 @@ public class Action implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return name;

@@ -86,6 +86,7 @@ public class PasswordTextField extends TextField
 	/**
 	 * @see FormComponent#getModelValue()
 	 */
+	@Override
 	public final String getModelValue()
 	{
 		final String value = getModelObjectAsString();
@@ -126,6 +127,7 @@ public class PasswordTextField extends TextField
 	/**
 	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String[])
 	 */
+	@Override
 	public final void setModelValue(String[] valueArray)
 	{
 		String value = valueArray != null && valueArray.length > 0? valueArray[0]: null;
@@ -152,12 +154,14 @@ public class PasswordTextField extends TextField
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
 		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
 	}
 	
+	@Override
 	protected String getInputType()
 	{
 		return "password";

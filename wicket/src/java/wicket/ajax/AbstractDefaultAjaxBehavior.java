@@ -62,6 +62,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#getImplementationId()
 	 */
+	@Override
 	protected final String getImplementationId()
 	{
 		return "wicket-default";
@@ -72,6 +73,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
+	@Override
 	protected void onBind()
 	{
 		getComponent().setOutputMarkupId(true);
@@ -81,6 +83,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onRenderHeadInitContribution(wicket.Response)
 	 */
+	@Override
 	protected void onRenderHeadInitContribution(final Response response)
 	{
 		final IAjaxSettings settings = Application.get().getAjaxSettings();

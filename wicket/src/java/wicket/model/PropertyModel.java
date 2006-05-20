@@ -86,7 +86,7 @@ import wicket.util.lang.PropertyResolver;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class PropertyModel extends AbstractPropertyModel
+public class PropertyModel<V> extends AbstractPropertyModel<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -150,6 +150,7 @@ public class PropertyModel extends AbstractPropertyModel
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());
@@ -161,6 +162,7 @@ public class PropertyModel extends AbstractPropertyModel
 	/**
 	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
+	@Override
 	protected String propertyExpression(Component component)
 	{
 		return expression;
@@ -169,6 +171,7 @@ public class PropertyModel extends AbstractPropertyModel
 	/**
 	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
 	 */
+	@Override
 	protected Class propertyType(Component component)
 	{
 		return propertyType;

@@ -56,11 +56,13 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			Application.get().getPageSettings().setAutomaticMultiWindowSupport(false);
 		}
 
+		@Override
 		protected void removeEntry(IPageMapEntry entry)
 		{
 			getStore().removePage(getSession().getId(), entry.getPage());
 		}
 
+		@Override
 		protected void put(Page page)
 		{
 			if(lastPage != page)
@@ -71,6 +73,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			getStore().storePage(getSession().getId(), page);
 		}
 
+		@Override
 		protected Page get(int id, int versionNumber)
 		{
 			if(lastPage != null && lastPage.getNumericId() == id)
@@ -190,6 +193,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @see wicket.session.ISessionStore#setAttribute(wicket.Request,
 	 *      java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public final void setAttribute(Request request, String name, Object value)
 	{
 		// ignore all pages, they are stored through the pagemap
@@ -202,6 +206,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * @see wicket.protocol.http.AbstractHttpSessionStore#onUnbind(java.lang.String)
 	 */
+	@Override
 	protected void onUnbind(String sessionId)
 	{
 		getStore().unbind(sessionId);
@@ -218,6 +223,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String, wicket.Session)
 	 */
+	@Override
 	public PageMap createPageMap(String name, Session session)
 	{
 		return new SecondLevelCachePageMap(name, session);

@@ -603,6 +603,7 @@ public class DiskFileItem implements FileItem
 	/**
 	 * Removes the file contents from the temporary storage.
 	 */
+	@Override
 	protected void finalize()
 	{
 		File outputFile = dfos.getFile();
@@ -680,6 +681,7 @@ public class DiskFileItem implements FileItem
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "name=" + this.getName() + ", StoreLocation="

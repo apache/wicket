@@ -149,7 +149,7 @@ public abstract class DynamicImageResource extends DynamicWebResource
       final ByteArrayOutputStream out = new ByteArrayOutputStream();
       
       // Get image writer for format
-      final ImageWriter writer = (ImageWriter) ImageIO.
+      final ImageWriter writer = ImageIO.
         getImageWritersByFormatName(format).next();
       
       // Write out image
@@ -168,14 +168,16 @@ public abstract class DynamicImageResource extends DynamicWebResource
   /**
    * @see DynamicWebResource#getResourceState()
    */
-  protected synchronized ResourceState getResourceState()
+  @Override
+protected synchronized ResourceState getResourceState()
   {
     return new ResourceState()
     {
       private byte[] imageData;
       private final String contentType = "image/" + format;
       
-      public Time lastModifiedTime()
+      @Override
+	public Time lastModifiedTime()
       {
         if (lastModifiedTime == null)
         {
@@ -186,14 +188,16 @@ public abstract class DynamicImageResource extends DynamicWebResource
         return lastModifiedTime;
       }
       
-      public byte[] getData()
+      @Override
+	public byte[] getData()
       {
         if (imageData==null)
           imageData = getImageData();
         return imageData;
       }
       
-      public String getContentType()
+      @Override
+	public String getContentType()
       {
         return contentType;
       }

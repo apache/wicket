@@ -54,6 +54,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
 	 */
+	@Override
 	protected void onBind()
 	{
 		super.onBind();
@@ -77,6 +78,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	/**
 	 * @see wicket.ajax.AjaxEventBehavior#getEventHandler()
 	 */
+	@Override
 	protected final CharSequence getEventHandler()
 	{
 		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
@@ -86,6 +88,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	/**
 	 * @see wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
 	 */
+	@Override
 	protected void onCheckEvent(String event)
 	{
 		if ("href".equalsIgnoreCase(event))
@@ -99,6 +102,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @see wicket.ajax.AjaxEventBehavior#onEvent(wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
 		final FormComponent formComponent = getFormComponent();

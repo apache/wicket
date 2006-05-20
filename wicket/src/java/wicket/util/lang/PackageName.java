@@ -63,6 +63,7 @@ public class PackageName
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object that)
 	{
 		if (that instanceof PackageName)
@@ -83,6 +84,7 @@ public class PackageName
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return name;

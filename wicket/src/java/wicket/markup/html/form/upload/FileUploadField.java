@@ -89,6 +89,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
+	@Override
 	public Component setModel(IModel model)
 	{
 		hasExplicitModel = true;
@@ -98,6 +99,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 		// Only update the model if one was passed in
@@ -111,6 +113,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#getInputAsArray()
 	 */
+	@Override
 	public String[] getInputAsArray()
 	{
 		FileUpload fu = getFileUpload();
@@ -120,6 +123,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#isMultiPart()
 	 */
+	@Override
 	public boolean isMultiPart()
 	{
 		return true;
@@ -128,6 +132,7 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// Must be attached to an input tag
@@ -145,6 +150,7 @@ public class FileUploadField extends FormComponent
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected boolean supportsPersistence()
 	{
 		return false;

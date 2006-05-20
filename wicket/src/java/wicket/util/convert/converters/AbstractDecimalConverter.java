@@ -37,6 +37,7 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	 * @param locale 
 	 * @return Returns the numberFormat.
 	 */
+	@Override
 	public NumberFormat getNumberFormat(Locale locale)
 	{
 		NumberFormat numberFormat = numberFormats.get(locale);

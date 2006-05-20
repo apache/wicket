@@ -76,6 +76,7 @@ public abstract class WebRequest extends Request
 	 * 
 	 * @return the preferred <code>Locale</code> for the client
 	 */
+	@Override
 	public abstract Locale getLocale();
 
 	/**
@@ -85,6 +86,7 @@ public abstract class WebRequest extends Request
 	 *            Parameter name
 	 * @return Parameter value
 	 */
+	@Override
 	public abstract String getParameter(final String key);
 
 	/**
@@ -92,6 +94,7 @@ public abstract class WebRequest extends Request
 	 * 
 	 * @return Map<String, Object> of parameters
 	 */
+	@Override
 	public abstract Map<String, ? extends Object> getParameterMap();
 
 	/**
@@ -101,6 +104,7 @@ public abstract class WebRequest extends Request
 	 *            Parameter name
 	 * @return Parameter values
 	 */
+	@Override
 	public abstract String[] getParameters(final String key);
 
 	/**
@@ -116,6 +120,7 @@ public abstract class WebRequest extends Request
 	 * @return The request URL for local use, which is the context path + the
 	 *         relative url
 	 */
+	@Override
 	public String getURL()
 	{
 		/*

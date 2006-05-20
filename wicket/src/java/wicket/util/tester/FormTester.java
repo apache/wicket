@@ -300,6 +300,7 @@ public class FormTester
 			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
+			@Override
 			protected void assignValueToFormComponent(FormComponent formComponent, String value)
 			{
 				// single selectable should overwrite already selected option
@@ -332,6 +333,7 @@ public class FormTester
 			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
 			 *      java.lang.String)
 			 */
+			@Override
 			protected void assignValueToFormComponent(FormComponent formComponent, String value)
 			{
 				// multiple selectable should retain selected option

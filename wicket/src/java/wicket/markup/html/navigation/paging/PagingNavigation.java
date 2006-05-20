@@ -139,6 +139,7 @@ public class PagingNavigation extends Loop
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public final void undo()
 		{
 			PagingNavigation.this.startIndex = startIndex;
@@ -147,6 +148,7 @@ public class PagingNavigation extends Loop
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "StartIndexChange[component: " + getPath() + ", prefix: " + startIndex + "]";
@@ -280,6 +282,7 @@ public class PagingNavigation extends Loop
 	/**
 	 * @see wicket.Component#internalOnAttach()
 	 */
+	@Override
 	protected void internalOnAttach()
 	{
 		// PagingNavigation itself (as well as the PageableListView)
@@ -310,6 +313,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @see wicket.markup.html.list.Loop#populateItem(Loop.LoopItem)
 	 */
+	@Override
 	protected void populateItem(final Loop.LoopItem loopItem)
 	{
 		// Get the index of page this link shall point to
@@ -354,6 +358,7 @@ public class PagingNavigation extends Loop
 	 * 
 	 * @see Loop#renderItem(Loop.LoopItem)
 	 */
+	@Override
 	protected void renderItem(final Loop.LoopItem loopItem)
 	{
 		// Call default implementation

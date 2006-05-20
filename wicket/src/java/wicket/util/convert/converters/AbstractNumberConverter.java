@@ -87,6 +87,7 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	/**
 	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
 	 */
+	@Override
 	public String convertToString(final Object value, Locale locale)
 	{
 		NumberFormat fmt = getNumberFormat(locale);

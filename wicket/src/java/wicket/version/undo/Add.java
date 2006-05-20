@@ -69,6 +69,7 @@ class Add extends Change
 	/**
 	 * @see wicket.version.undo.Change#undo()
 	 */
+	@Override
 	public void undo()
 	{
 		if (log.isDebugEnabled())
@@ -84,6 +85,7 @@ class Add extends Change
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "Add[component: " + component.getPath() + "]";

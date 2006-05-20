@@ -740,7 +740,7 @@ public final class Strings
 			}
 			else
 			{
-				out[outLen++] = (char)aChar;
+				out[outLen++] = aChar;
 			}
 		}
 		return new String(out, 0, outLen);

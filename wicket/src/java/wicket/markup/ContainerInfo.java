@@ -102,6 +102,7 @@ public class ContainerInfo
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return containerClass.getName() + ":" + locale + ":" + style + ":" + fileExtension;

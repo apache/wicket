@@ -63,11 +63,13 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				onClick(target);
 			}
 
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new CancelEventIfNoAjaxDecorator(AjaxFallbackLink.this
@@ -86,6 +88,7 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		onClick(null);

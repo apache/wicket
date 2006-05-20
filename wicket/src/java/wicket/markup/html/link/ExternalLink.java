@@ -142,6 +142,7 @@ public class ExternalLink extends WebMarkupContainer
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		if (href != null)
@@ -175,6 +176,7 @@ public class ExternalLink extends WebMarkupContainer
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		this.checkComponentTag(openTag, "a");

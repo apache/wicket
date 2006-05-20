@@ -65,6 +65,7 @@ public class MostRecentlyUsedMap<K,V> extends LinkedHashMap<K,V>
 	/**
 	 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
 	 */
+	@Override
 	protected boolean removeEldestEntry(final Map.Entry<K,V> eldest)
 	{
 		final boolean remove = size() > maxEntries;

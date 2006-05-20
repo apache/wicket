@@ -104,6 +104,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object obj)
 	{
 		if (obj instanceof ComponentRequestTarget)
@@ -117,6 +118,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "ComponentRequestTarget".hashCode();
@@ -127,6 +129,7 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[ComponentRequestTarget@" + hashCode() + " " + component + "]";

@@ -54,6 +54,7 @@ public abstract class AbstractReadOnlyModel extends AbstractModel
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return super.toString();

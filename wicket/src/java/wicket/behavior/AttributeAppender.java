@@ -101,6 +101,7 @@ public class AttributeAppender extends AttributeModifier
 	 * @see wicket.AttributeModifier#newValue(java.lang.String,
 	 *      java.lang.String)
 	 */
+	@Override
 	protected String newValue(String currentValue, String appendValue)
 	{
 		final int appendValueLen = (appendValue == null) ? 0 : appendValue.length();

@@ -106,6 +106,7 @@ public class ImageButton extends Button implements IResourceListener
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "input");

@@ -48,6 +48,7 @@ public class CompoundPropertyModel<V> extends AbstractPropertyModel<V> implement
 	/**
 	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
+	@Override
 	protected String propertyExpression(final Component component)
 	{
 		if (component == null)
@@ -61,6 +62,7 @@ public class CompoundPropertyModel<V> extends AbstractPropertyModel<V> implement
 	/**
 	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
 	 */
+	@Override
 	protected Class propertyType(final Component component)
 	{
 		if (component instanceof FormComponent)
@@ -73,6 +75,7 @@ public class CompoundPropertyModel<V> extends AbstractPropertyModel<V> implement
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return new StringBuffer(super.toString()).toString();

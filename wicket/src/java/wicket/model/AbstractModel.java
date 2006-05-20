@@ -35,6 +35,7 @@ public abstract class AbstractModel<V> implements IModel<V>
 	/**
 	 * @see Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer("Model:classname=[");
