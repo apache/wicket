@@ -332,6 +332,8 @@ public class AjaxRequestTarget implements IRequestTarget
 			// of response will cause any javascript failureHandler to be
 			// invoked
 			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
+			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 

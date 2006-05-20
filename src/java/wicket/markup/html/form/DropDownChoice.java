@@ -55,7 +55,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public class DropDownChoice extends AbstractSingleSelectChoice implements IOnChangeListener
+public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -70,7 +70,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(final String id, final List choices)
+	public DropDownChoice(final String id, final List<V> choices)
 	{
 		super(id, choices);
 	}
@@ -78,7 +78,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, final List data, final IChoiceRenderer renderer)
+	public DropDownChoice(final String id, final List<V> data, final IChoiceRenderer<V> renderer)
 	{
 		super(id,data, renderer);
 	}
@@ -86,7 +86,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(final String id, IModel model, final List choices)
+	public DropDownChoice(final String id, IModel<V> model, final List<V> choices)
 	{
 		super(id, model, choices);
 	}
@@ -94,7 +94,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, IModel model, final List data, final IChoiceRenderer renderer)
+	public DropDownChoice(final String id, IModel<V> model, final List<V> data, final IChoiceRenderer<V> renderer)
 	{
 		super(id, model,data, renderer);
 	}
@@ -102,7 +102,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public DropDownChoice(String id, IModel choices)
+	public DropDownChoice(String id, IModel<List<V>> choices)
 	{
 		super(id, choices);
 	}
@@ -110,7 +110,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public DropDownChoice(String id, IModel model, IModel choices)
+	public DropDownChoice(String id, IModel<V> model, IModel<List<V>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -118,7 +118,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel choices, IChoiceRenderer renderer)
+	public DropDownChoice(String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -127,7 +127,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public DropDownChoice(String id, IModel<V> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
