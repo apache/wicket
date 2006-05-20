@@ -30,8 +30,8 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket</developerConnection>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket</developerConnection>
 		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket</url>
 	</scm>
 
