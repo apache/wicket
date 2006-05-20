@@ -21,13 +21,13 @@ package wicket.injection;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.panel.Panel;
-import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * Injector scans fields of an object instance and checks if the specified
@@ -41,7 +41,7 @@ public class Injector
 {
 	private static Injector instance = new Injector();
 
-	private ConcurrentHashMap/* <Class, Field[]> */classToFields = new ConcurrentHashMap();
+	private ConcurrentHashMap<Class, Field[]> classToFields = new ConcurrentHashMap<Class, Field[]>();
 
 	/**
 	 * @return static instance of ProxyInjector
@@ -86,7 +86,7 @@ public class Injector
 		Class clazz = object.getClass();
 		Field[] fields;
 
-		fields = (Field[]) classToFields.get(clazz);
+		fields = classToFields.get(clazz);
 		if (fields == null)
 		{
 			fields = findFields(clazz, factory);
@@ -143,7 +143,7 @@ public class Injector
 	 */
 	private Field[] findFields(Class clazz, IFieldValueFactory factory)
 	{
-		List/* <Field> */matched = new ArrayList();
+		List<Field> matched = new ArrayList<Field>();
 
 		while (clazz != null && !isBoundaryClass(clazz))
 		{

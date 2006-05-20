@@ -35,6 +35,7 @@ public class SpringBeanLocatorTest extends TestCase
 
 	private ISpringContextLocator ctxLocator;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		ctx=new ApplicationContextMock();

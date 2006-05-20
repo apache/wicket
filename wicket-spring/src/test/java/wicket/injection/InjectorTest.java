@@ -72,6 +72,7 @@ public class InjectorTest extends TestCase
 	{
 		Injector injector = new Injector()
 		{
+			@Override
 			protected boolean isBoundaryClass(Class clazz)
 			{
 				return clazz.equals(InternalTestObject.class);

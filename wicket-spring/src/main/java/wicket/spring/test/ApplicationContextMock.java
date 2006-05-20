@@ -32,7 +32,7 @@ import org.springframework.core.io.Resource;
 // TODO finish implementing all needed methods
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
-	private Map beans = new HashMap();
+	private Map<String, Object> beans = new HashMap<String, Object>();
 
 	/**
 	 * puts bean with the given name into the context
@@ -90,14 +90,14 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class)
 	 */
-	public Map getBeansOfType(Class type) throws BeansException
+	public Map<String, Object> getBeansOfType(Class type) throws BeansException
 	{
-		Map found = new HashMap();
+		Map<String, Object> found = new HashMap<String, Object>();
 
-		Iterator it = beans.entrySet().iterator();
+		Iterator<Entry<String,Object>> it = beans.entrySet().iterator();
 		while (it.hasNext())
 		{
-			final Map.Entry entry = (Entry) it.next();
+			final Map.Entry<String,Object> entry = it.next();
 			if (type.isAssignableFrom(entry.getValue().getClass()))
 			{
 				found.put(entry.getKey(), entry.getValue());

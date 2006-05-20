@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class CompoundFieldValueFactory implements IFieldValueFactory
 {
-	private List delegates = new ArrayList();
+	private List<IFieldValueFactory> delegates = new ArrayList<IFieldValueFactory>();
 
 	/**
 	 * Constructor
@@ -43,7 +43,7 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 * 
 	 * @param factories
 	 */
-	public CompoundFieldValueFactory(List factories)
+	public CompoundFieldValueFactory(List<IFieldValueFactory> factories)
 	{
 		if (factories == null)
 		{
@@ -92,10 +92,10 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public Object getFieldValue(Field field, Object fieldOwner)
 	{
-		Iterator it = delegates.iterator();
+		Iterator<IFieldValueFactory> it = delegates.iterator();
 		while (it.hasNext())
 		{
-			final IFieldValueFactory factory = (IFieldValueFactory) it.next();
+			final IFieldValueFactory factory = it.next();
 			Object object = factory.getFieldValue(field, fieldOwner);
 			if (object != null)
 			{
@@ -110,10 +110,10 @@ public class CompoundFieldValueFactory implements IFieldValueFactory
 	 */
 	public boolean supportsField(Field field)
 	{
-		Iterator it = delegates.iterator();
+		Iterator<IFieldValueFactory> it = delegates.iterator();
 		while (it.hasNext())
 		{
-			final IFieldValueFactory factory = (IFieldValueFactory) it.next();
+			final IFieldValueFactory factory = it.next();
 			if (factory.supportsField(field)) {
 				return true;
 			}

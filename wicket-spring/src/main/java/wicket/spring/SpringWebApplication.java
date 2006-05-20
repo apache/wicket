@@ -65,6 +65,7 @@ public abstract class SpringWebApplication extends WebApplication implements
 	/**
 	 * @see wicket.Application#internalInit()
 	 */
+	@Override
 	protected void internalInit()
 	{
 		super.internalInit();

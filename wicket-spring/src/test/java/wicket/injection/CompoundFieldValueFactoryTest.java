@@ -24,6 +24,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 
 	private IFieldValueFactory[] fact = new IFieldValueFactory[4];
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		Field field = CompoundFieldValueFactoryTest.class.getDeclaredField("testField");
@@ -80,7 +81,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 	public void testListConstructor()
 	{
 		prepare(4);
-		List list = Arrays.asList(new IFieldValueFactory[] {fact[0], fact[1], fact[2],
+		List<IFieldValueFactory> list = Arrays.asList(new IFieldValueFactory[] {fact[0], fact[1], fact[2],
 				fact[3]});
 		CompoundFieldValueFactory f = new CompoundFieldValueFactory(list);
 		f.getFieldValue(field, this);
@@ -88,7 +89,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 
 		try
 		{
-			f = new CompoundFieldValueFactory((List) null);
+			f = new CompoundFieldValueFactory((List<IFieldValueFactory>) null);
 			fail();
 		}
 		catch (IllegalArgumentException e)
@@ -138,7 +139,7 @@ public class CompoundFieldValueFactoryTest extends TestCase
 		ctrl[2].expectAndReturn(fact[2].getFieldValue(field, this), new Object());
 		ctrl[2].replay();
 		ctrl[3].replay();
-		List list = Arrays.asList(new IFieldValueFactory[] {fact[0], fact[1], fact[2],
+		List<IFieldValueFactory> list = Arrays.asList(new IFieldValueFactory[] {fact[0], fact[1], fact[2],
 				fact[3]});
 		CompoundFieldValueFactory f = new CompoundFieldValueFactory(list);
 

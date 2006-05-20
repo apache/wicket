@@ -208,6 +208,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof SpringBeanLocator)
@@ -222,6 +223,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int hashcode = beanTypeName.hashCode();
