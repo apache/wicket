@@ -321,6 +321,7 @@ public final class MarkupStream
 	/**
 	 * @return String representation of markup stream
 	 */
+	@Override
 	public String toString()
 	{
 		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex + ", current = "

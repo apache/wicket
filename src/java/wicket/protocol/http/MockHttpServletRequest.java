@@ -323,6 +323,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		return new ServletInputStream()
 		{
+			@Override
 			public int read()
 			{
 				return -1;
@@ -557,6 +558,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @return The path
 	 * @deprecated Use ServletContext.getRealPath(String) instead.
 	 */
+	@Deprecated
 	public String getRealPath(String name)
 	{
 		return context.getRealPath(name);
@@ -1059,7 +1061,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 					String value = values.get(component);
 					if (value != null)
 					{
-						parameters.put(((FormComponent)component).getInputName(), (String)values
+						parameters.put(((FormComponent)component).getInputName(), values
 								.get(component));
 						valuesApplied.put(component.getId(), component);
 					}

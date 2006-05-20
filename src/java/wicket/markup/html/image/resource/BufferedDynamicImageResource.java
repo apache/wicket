@@ -86,7 +86,8 @@ public class BufferedDynamicImageResource extends DynamicImageResource
     imageData = toImageData(image);
   }
   
-  protected byte[] getImageData()
+  @Override
+protected byte[] getImageData()
   {
     return imageData;
   }  

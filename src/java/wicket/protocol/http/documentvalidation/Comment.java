@@ -53,7 +53,8 @@ public class Comment implements DocumentElement
      * 
      * @return The string
      */
-    public String toString()
+    @Override
+	public String toString()
     {
         return "[comment = '" + text + "']";
     }

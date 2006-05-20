@@ -958,6 +958,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * @param parent
 		 *			  the parent
 		 */
+		@Override
 		public void setParent(MutableTreeNode parent)
 		{
 			super.setParent(parent);
@@ -976,6 +977,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * @param childIndex
 		 *			  the index of this node relative to its parent
 		 */
+		@Override
 		public void remove(int childIndex)
 		{
 			TreeStateNode node = (TreeStateNode) getChildAt(childIndex);
@@ -990,6 +992,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * @param o
 		 *			  the user object
 		 */
+		@Override
 		public void setUserObject(Object o)
 		{
 			super.setUserObject(o);
@@ -1506,6 +1509,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * 
 		 * @return true if the receiver is a leaf
 		 */
+		@Override
 		public boolean isLeaf()
 		{
 			TreeModel model = getModel();

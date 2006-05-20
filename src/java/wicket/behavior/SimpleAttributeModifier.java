@@ -49,6 +49,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	 * @see wicket.behavior.AbstractBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	public void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		if (isEnabled())

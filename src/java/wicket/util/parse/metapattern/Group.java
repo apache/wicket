@@ -64,6 +64,7 @@ public class Group extends MetaPattern
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "(" + super.toString() + ")";

@@ -226,6 +226,7 @@ public final class XmlReader extends Reader
 	/**
 	 * @see java.io.Reader#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		this.reader.close();
@@ -235,6 +236,7 @@ public final class XmlReader extends Reader
 	/**
 	 * @see java.io.Reader#read(char[], int, int)
 	 */
+	@Override
 	public int read(char[] buf, int from, int to) throws IOException
 	{
 		return this.reader.read(buf, from, to);
@@ -243,6 +245,7 @@ public final class XmlReader extends Reader
 	/**
 	 * @return The markup to be parsed
 	 */
+	@Override
 	public String toString()
 	{
 		return this.inputStream.toString() + " (" + this.encoding + ")";

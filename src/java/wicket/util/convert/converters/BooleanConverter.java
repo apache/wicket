@@ -56,6 +56,7 @@ public final class BooleanConverter extends AbstractConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	@Override
 	protected Class getTargetType()
 	{
 		return Boolean.class;

@@ -134,7 +134,8 @@ public class Tag implements DocumentElement
      * 
      * @return The string
      */
-    public String toString()
+    @Override
+	public String toString()
     {
         return "[tag = '" + tag + "']";
     }

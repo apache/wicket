@@ -74,6 +74,7 @@ public final class BodyContainer implements Serializable
 	 * @return this
 	 * @deprecated use {@link #addOnLoadModifier(String, Component)} instead
 	 */
+	@Deprecated
 	public final BodyContainer addOnLoadModifier(final String value)
 	{
 		final Model model = new Model(value);
@@ -95,6 +96,7 @@ public final class BodyContainer implements Serializable
 	 * @return this
 	 * @deprecated use {@link #addOnLoadModifier(IModel, Component)} instead
 	 */
+	@Deprecated
 	public final BodyContainer addOnLoadModifier(final IModel model)
 	{
 		final Component bodyContainer = page.get(id);
@@ -111,6 +113,7 @@ public final class BodyContainer implements Serializable
 	 * @return this
 	 * @deprecated use {@link #addOnUnLoadModifier(String, Component)} instead
 	 */
+	@Deprecated
 	public final BodyContainer addOnUnLoadModifier(final String value)
 	{
 		final IModel model = new Model(value);
@@ -128,6 +131,7 @@ public final class BodyContainer implements Serializable
 	 * @return this
 	 * @deprecated use {@link #addOnUnLoadModifier(IModel, Component)} instead
 	 */
+	@Deprecated
 	public final BodyContainer addOnUnLoadModifier(final IModel model)
 	{
 		final Component bodyContainer = page.get(id);
@@ -153,6 +157,7 @@ public final class BodyContainer implements Serializable
 			super(attribute, true, replaceModel);
 		}
 
+		@Override
 		protected String newValue(final String currentValue, final String replacementValue)
 		{
 			if(currentValue != null && !currentValue.trim().endsWith(";"))

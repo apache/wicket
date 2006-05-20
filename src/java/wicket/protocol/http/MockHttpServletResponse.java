@@ -414,7 +414,8 @@ public class MockHttpServletResponse implements HttpServletResponse
         byteStream = new ByteArrayOutputStream();
         servletStream = new ServletOutputStream()
         {
-            public void write(int b)
+            @Override
+			public void write(int b)
             {
                 byteStream.write(b);
             }
@@ -422,12 +423,14 @@ public class MockHttpServletResponse implements HttpServletResponse
         stringWriter = new StringWriter();
         printWriter = new PrintWriter(stringWriter)
         {
-            public void close()
+            @Override
+			public void close()
             {
                 // Do nothing
             }
 
-            public void flush()
+            @Override
+			public void flush()
             {
                 // Do nothing
             }
@@ -651,7 +654,8 @@ public class MockHttpServletResponse implements HttpServletResponse
      *            The message
      * @deprecated
      */
-    public void setStatus(final int status, final String msg)
+    @Deprecated
+	public void setStatus(final int status, final String msg)
     {
         setStatus(status);
     }

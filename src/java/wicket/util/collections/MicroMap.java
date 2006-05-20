@@ -203,6 +203,7 @@ public final class MicroMap<K,V> implements Map<K,V>, Serializable
 	{
 		return new AbstractSet<K>()
 		{
+			@Override
 			public Iterator<K> iterator()
 			{
 				return new Iterator<K>()
@@ -228,6 +229,7 @@ public final class MicroMap<K,V> implements Map<K,V>, Serializable
 				};
 			}
 
+			@Override
 			public int size()
 			{
 				return MicroMap.this.size();
@@ -242,11 +244,13 @@ public final class MicroMap<K,V> implements Map<K,V>, Serializable
 	{
 		return new AbstractList<V>()
 		{
+			@Override
 			public V get(final int index)
 			{
 				return value;
 			}
 
+			@Override
 			public int size()
 			{
 				return MicroMap.this.size();
@@ -261,6 +265,7 @@ public final class MicroMap<K,V> implements Map<K,V>, Serializable
 	{
 		return new AbstractSet<Map.Entry<K,V>>()
 		{
+			@Override
 			public Iterator<Map.Entry<K,V>> iterator()
 			{
 				return new Iterator<Map.Entry<K,V>>()
@@ -306,6 +311,7 @@ public final class MicroMap<K,V> implements Map<K,V>, Serializable
 				};
 			}
 
+			@Override
 			public int size()
 			{
 				return MicroMap.this.size();

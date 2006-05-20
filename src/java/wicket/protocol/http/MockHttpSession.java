@@ -136,7 +136,8 @@ public class MockHttpSession implements HttpSession, Serializable
      * @return Always null
      * @deprecated
      */
-    public javax.servlet.http.HttpSessionContext getSessionContext()
+    @Deprecated
+	public javax.servlet.http.HttpSessionContext getSessionContext()
     {
         return null;
     }
@@ -149,7 +150,8 @@ public class MockHttpSession implements HttpSession, Serializable
      * @return The value or null
      * @deprecated use getAttribute(String) instead
      */
-    public Object getValue(final String name)
+    @Deprecated
+	public Object getValue(final String name)
     {
         return getAttribute(name);
     }
@@ -160,7 +162,8 @@ public class MockHttpSession implements HttpSession, Serializable
      * @return The names of the attributes
      * @deprecated use getAttributeNames() instead
      */
-    public String[] getValueNames()
+    @Deprecated
+	public String[] getValueNames()
     {
         String[] result = new String[attributes.size()];
         return attributes.keySet().toArray(result);
@@ -193,7 +196,8 @@ public class MockHttpSession implements HttpSession, Serializable
      *            The value
      * @deprecated Use setAttribute(String, Object) instead
      */
-    public void putValue(final String name, final Object o)
+    @Deprecated
+	public void putValue(final String name, final Object o)
     {
         setAttribute(name, o);
     }
@@ -216,7 +220,8 @@ public class MockHttpSession implements HttpSession, Serializable
      *            The name of the value
      * @deprecated Use removeAttribute(String) instead
      */
-    public void removeValue(String name)
+    @Deprecated
+	public void removeValue(String name)
     {
         removeAttribute(name);
     }

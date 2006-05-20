@@ -235,6 +235,7 @@ public final class Folder extends File
 	 * 
 	 * @return True if the folder was successfully removed
 	 */
+	@Override
 	public boolean remove()
 	{
 		return remove(this);

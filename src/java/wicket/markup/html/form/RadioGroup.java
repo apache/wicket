@@ -87,6 +87,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@Override
 	protected Object convertValue(String[] input) throws ConversionException
 	{
 		if (input != null && input.length > 0)
@@ -152,6 +153,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	 * Radio group does not support persistence through cookies
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return false;

@@ -59,6 +59,7 @@ public final class FileResponse extends Response
 	/**
 	 * @see wicket.Response#close()
 	 */
+	@Override
 	public void close()
 	{
 		if (printWriter != null)
@@ -83,6 +84,7 @@ public final class FileResponse extends Response
 	/**
 	 * @see wicket.Response#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream()
 	{
 		try
@@ -102,6 +104,7 @@ public final class FileResponse extends Response
 	/**
 	 * @see wicket.Response#write(CharSequence)
 	 */
+	@Override
 	public void write(final CharSequence string)
 	{
 		try

@@ -97,6 +97,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof PageRequestTarget)
@@ -110,6 +111,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "PageRequestTarget".hashCode();
@@ -120,6 +122,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[PageRequestTarget@" + hashCode() + " page=" + page + "]";

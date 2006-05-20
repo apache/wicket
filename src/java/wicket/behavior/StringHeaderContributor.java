@@ -95,6 +95,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return contribution.hashCode();
@@ -103,6 +104,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof StringContributor)
@@ -115,6 +117,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "StringContributor[contribution=" + contribution + "]";
@@ -146,6 +149,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see wicket.behavior.AbstractHeaderContributor#getHeaderContributors()
 	 */
+	@Override
 	public final IHeaderContributor[] getHeaderContributors()
 	{
 		return new IHeaderContributor[] { contributor };
@@ -154,6 +158,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see wicket.behavior.AbstractBehavior#detachModel(wicket.Component)
 	 */
+	@Override
 	public void detachModel(Component component)
 	{
 		contributor.contribution.detach();
@@ -162,6 +167,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "StringHeaderContributor[contribution=" + contributor.contribution.getObject(null)

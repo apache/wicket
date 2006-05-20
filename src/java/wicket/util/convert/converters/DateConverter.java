@@ -76,6 +76,7 @@ public class DateConverter extends AbstractConverter
 	/**
 	 * @see wicket.util.convert.IConverter#convertToString(java.lang.String, Locale)
 	 */
+	@Override
 	public String convertToString(final Object value, Locale locale)
 	{
 		final DateFormat dateFormat = getDateFormat(locale);
@@ -116,6 +117,7 @@ public class DateConverter extends AbstractConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	@Override
 	protected Class<Date> getTargetType()
 	{
 		return Date.class;

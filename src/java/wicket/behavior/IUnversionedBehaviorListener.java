@@ -36,6 +36,7 @@ public interface IUnversionedBehaviorListener extends IBehaviorListener
 	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
 			IUnversionedBehaviorListener.class, false)
 	{
+		@Override
 		public IRequestTarget newRequestTarget(Page page, Component component,
 				RequestListenerInterface listener, RequestParameters requestParameters)
 		{

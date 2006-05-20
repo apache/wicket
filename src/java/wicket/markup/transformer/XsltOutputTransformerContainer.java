@@ -99,6 +99,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.MarkupContainer#getMarkupType()
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "xsl";
@@ -109,6 +110,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component,
 	 *      java.lang.String)
 	 */
+	@Override
 	public CharSequence transform(final Component component, final String output) throws Exception
 	{
 		return new XsltTransformer(this.xslFile).transform(component, output);

@@ -74,6 +74,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setSuffix(prevSuffix);
@@ -82,6 +83,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "SuffixChange[component: " + getPath() + ", suffix: " + prevSuffix + "]";
@@ -109,6 +111,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			setPrefix(prevPrefix);
@@ -117,6 +120,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "PrefixChange[component: " + getPath() + ", prefix: " + prevPrefix + "]";
@@ -342,6 +346,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
@@ -363,7 +368,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
 			Class objectClass = displayValue == null?null:displayValue.getClass();
 			// Get label for choice
-			final String label = (String)getConverter(objectClass).convertToString(displayValue, getLocale());
+			final String label = getConverter(objectClass).convertToString(displayValue, getLocale());
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know

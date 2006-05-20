@@ -156,6 +156,7 @@ public class Fragment extends WebMarkupContainer
 				private static final long serialVersionUID = 1L;
 				private final String oldMarkupId = Fragment.this.markupId;
 
+				@Override
 				public void undo()
 				{
 					Fragment.this.markupId = oldMarkupId;
@@ -171,6 +172,7 @@ public class Fragment extends WebMarkupContainer
 	 * 
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		if (tag.isOpenClose())
@@ -185,6 +187,7 @@ public class Fragment extends WebMarkupContainer
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Skip the components body. It will be replaced by the fragment

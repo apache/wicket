@@ -1698,6 +1698,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * 
 	 * @return a string representation of the string buffer.
 	 */
+	@Override
 	public String toString()
 	{
 		return new String(this.value, 0, count);
@@ -1725,7 +1726,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	private void readObject(java.io.ObjectInputStream s) throws IOException, ClassNotFoundException
 	{
 		s.defaultReadObject();
-		value = (char[])value.clone();
+		value = value.clone();
 	}
 
 	/**
@@ -1741,6 +1742,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * @return <code>true</code> if the <code>AppendingStringBuffer</code>are
 	 *         equal; <code>false</code> otherwise.
 	 */
+	@Override
 	public boolean equals(Object anObject)
 	{
 		if (this == anObject)
@@ -1803,6 +1805,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * 
 	 * @return a hash code value for this object.
 	 */
+	@Override
 	public int hashCode()
 	{
 		int h = 0;

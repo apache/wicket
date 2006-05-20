@@ -104,6 +104,7 @@ public class DownloadLink extends Link
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		getRequestCycle().setRequestTarget(new IRequestTarget()

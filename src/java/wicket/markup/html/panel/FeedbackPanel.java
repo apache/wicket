@@ -74,6 +74,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
+		@Override
 		protected void populateItem(final ListItem listItem)
 		{
 			final FeedbackMessage message = (FeedbackMessage)listItem.getModelObject();
@@ -89,6 +90,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				 * 
 				 * @see wicket.model.IModel#getObject(Component)
 				 */
+				@Override
 				public String getObject(final Component component)
 				{
 					return getCSSClass(message);
@@ -122,6 +124,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isVisible()
 			{
 				return anyMessage();
@@ -177,6 +180,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

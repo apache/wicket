@@ -117,6 +117,7 @@ class ModelChange extends Change
 	/**
 	 * @see wicket.version.undo.Change#undo()
 	 */
+	@Override
 	public void undo()
 	{
 		if (log.isDebugEnabled())
@@ -131,6 +132,7 @@ class ModelChange extends Change
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "ModelChange[component: " + component.getPath() + "]";

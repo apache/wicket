@@ -106,6 +106,7 @@ public abstract class SimplePageAuthorizationStrategy extends AbstractPageAuthor
 	/**
 	 * @see wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy#isPageAuthorized(java.lang.Class)
 	 */
+	@Override
 	protected boolean isPageAuthorized(final Class pageClass)
 	{
 		if (instanceOf(pageClass, securePageSuperType))

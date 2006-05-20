@@ -56,6 +56,7 @@ public class EmailAddressPatternValidator extends PatternValidator
 	/**
 	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 	 */
+	@Override
 	protected String resourceKey(FormComponent formComponent)
 	{
 		return "EmailAddressPatternValidator";

@@ -132,6 +132,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	/**
 	 * @see java.util.Map#clear()
 	 */
+	@Override
 	public final void clear()
 	{
 		checkMutability();
@@ -412,6 +413,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	/**
 	 * @see java.util.Map#put(K, V)
 	 */
+	@Override
 	public V put(final K key, final V value)
 	{
 		checkMutability();
@@ -463,6 +465,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
+	@Override
 	public void putAll(final Map<? extends K, ? extends V> map)
 	{
 		checkMutability();
@@ -472,6 +475,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
+	@Override
 	public V remove(final Object key)
 	{
 		checkMutability();
@@ -510,6 +514,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	 * @return String representation of map consistent with tag attribute style
 	 *         of markup elements, for example: a="x" b="y" c="z"
 	 */
+	@Override
 	public String toString()
 	{
 		final StringBuffer buffer = new StringBuffer();

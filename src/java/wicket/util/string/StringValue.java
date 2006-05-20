@@ -691,6 +691,7 @@ public class StringValue implements Serializable
 	/**
 	 * @return The string value
 	 */
+	@Override
 	public final String toString()
 	{
 		return text;

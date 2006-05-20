@@ -158,6 +158,7 @@ public class WicketTag extends ComponentTag
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
+	@Override
 	public ComponentTag mutable()
 	{
 		if (xmlTag.isMutable())

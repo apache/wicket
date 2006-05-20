@@ -141,6 +141,7 @@ public class SubmitLink extends Button
 	 * @inheritDoc
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		// If we're disabled
@@ -204,6 +205,7 @@ public class SubmitLink extends Button
 	/**
 	 * @return the Form for which this submit link submits
 	 */
+	@Override
 	public final Form getForm()
 	{
 		if (form == null)

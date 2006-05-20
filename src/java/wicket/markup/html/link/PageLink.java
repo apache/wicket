@@ -128,6 +128,7 @@ public class PageLink extends Link
 	 * 
 	 * @see wicket.markup.html.link.Link#linksTo(wicket.Page)
 	 */
+	@Override
 	public boolean linksTo(final Page page)
 	{
 		return page.getClass() == pageLink.getPageIdentity();
@@ -140,6 +141,7 @@ public class PageLink extends Link
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// Set page source's page as response page

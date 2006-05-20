@@ -100,6 +100,7 @@ abstract class AbstractTime extends AbstractTimeValue
 	 * 
 	 * @return This time as a formatted string
 	 */
+	@Override
 	public String toString()
 	{
 		return toTimeString();

@@ -64,6 +64,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 		/**
 		 * @see Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			StringBuffer sb = new StringBuffer("Binding(");
@@ -137,6 +138,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 	/**
 	 * @see wicket.model.CompoundPropertyModel#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();
@@ -148,6 +150,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 	/**
 	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
+	@Override
 	protected String propertyExpression(final Component component)
 	{
 		final Binding binding = getBinding(component);
@@ -165,6 +168,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 	/**
 	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
 	 */
+	@Override
 	protected Class propertyType(final Component component)
 	{
 		final Binding binding = getBinding(component);
@@ -192,6 +196,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 	/**
 	 * @see wicket.model.AbstractDetachableModel#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());

@@ -101,6 +101,7 @@ public class WebResponse extends Response
 	/**
 	 * Closes response output.
 	 */
+	@Override
 	public void close()
 	{
 		// NOTE: Servlet container will close the response output stream
@@ -114,6 +115,7 @@ public class WebResponse extends Response
 	 *            The URL to encode
 	 * @return The encoded url
 	 */
+	@Override
 	public CharSequence encodeURL(CharSequence url)
 	{
 		if (httpServletResponse != null && url != null)
@@ -136,6 +138,7 @@ public class WebResponse extends Response
 	/**
 	 * @see wicket.Response#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream()
 	{
 		try
@@ -153,6 +156,7 @@ public class WebResponse extends Response
 	 * 
 	 * @return True if this response is going to redirect the user agent
 	 */
+	@Override
 	public final boolean isRedirect()
 	{
 		return redirect;
@@ -164,6 +168,7 @@ public class WebResponse extends Response
 	 * @param url
 	 *            The URL to redirect to
 	 */
+	@Override
 	public void redirect(final String url)
 	{
 		if (!redirect)
@@ -204,6 +209,7 @@ public class WebResponse extends Response
 	 * @param mimeType
 	 *            The mime type
 	 */
+	@Override
 	public final void setContentType(final String mimeType)
 	{
 		httpServletResponse.setContentType(mimeType);
@@ -212,6 +218,7 @@ public class WebResponse extends Response
 	/**
 	 * @see wicket.Response#setContentLength(long)
 	 */
+	@Override
 	public void setContentLength(long length)
 	{
 		httpServletResponse.setContentLength((int)length);
@@ -220,6 +227,7 @@ public class WebResponse extends Response
 	/**
 	 * @see wicket.Response#setLastModifiedTime(wicket.util.time.Time)
 	 */
+	@Override
 	public void setLastModifiedTime(Time time)
 	{
 		if (time != null && time.getMilliseconds() != -1)
@@ -240,6 +248,7 @@ public class WebResponse extends Response
 	 * @param locale
 	 *            The locale use for mapping the character encoding
 	 */
+	@Override
 	public final void setLocale(final Locale locale)
 	{
 		httpServletResponse.setLocale(locale);
@@ -251,6 +260,7 @@ public class WebResponse extends Response
 	 * @param string
 	 *            The string to write
 	 */
+	@Override
 	public void write(final CharSequence string)
 	{
 		if (string instanceof AppendingStringBuffer)

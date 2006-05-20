@@ -450,7 +450,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				try
 				{
-					final Class<? extends Page> clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
+					final Class<? extends Page> clazz = defaultClassResolver.resolveClass(className);
 					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters, pathInfo.anchor);
 				}
 				catch (WicketRuntimeException ex)
@@ -464,7 +464,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
 						&& page.getMarkupStream().isMergedMarkup())
 				{
-					Class<? extends Page> clazz = (Class<? extends Page>)container.getMarkupStream().getTag().getMarkupClass();
+					Class<? extends Page> clazz = container.getMarkupStream().getTag().getMarkupClass();
 					if (clazz != null)
 					{
 						// Href is relative. Resolve the url given relative to the
@@ -473,7 +473,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	
 						try
 						{
-							clazz = (Class<? extends Page>)defaultClassResolver.resolveClass(className);
+							clazz = defaultClassResolver.resolveClass(className);
 							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters(), pathInfo.anchor);
 						}
 						catch (WicketRuntimeException ex)
@@ -552,6 +552,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * 
 		 * @see wicket.markup.html.link.BookmarkablePageLink#getURL()
 		 */
+		@Override
 		protected CharSequence getURL()
 		{
 			CharSequence url = super.getURL();
@@ -566,6 +567,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		/**
 		 * @see wicket.MarkupContainer#isTransparentResolver()
 		 */
+		@Override
 		public boolean isTransparentResolver()
 		{
 			return true;
@@ -597,6 +599,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		/**
 		 * @see wicket.MarkupContainer#isTransparentResolver()
 		 */
+		@Override
 		public boolean isTransparentResolver()
 		{
 			return true;
@@ -648,6 +651,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *            the component tag
 		 * @see wicket.Component#onComponentTag(ComponentTag)
 		 */
+		@Override
 		protected final void onComponentTag(final ComponentTag tag)
 		{
 			// Default handling for tag
@@ -667,6 +671,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		/**
 		 * @see wicket.MarkupContainer#isTransparentResolver()
 		 */
+		@Override
 		public boolean isTransparentResolver()
 		{
 			return true;

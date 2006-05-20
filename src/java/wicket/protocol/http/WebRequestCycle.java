@@ -79,6 +79,7 @@ public class WebRequestCycle extends RequestCycle
 	 * 
 	 * @see wicket.RequestCycle#getProcessor()
 	 */
+	@Override
 	public IRequestCycleProcessor getProcessor()
 	{
 		return ((WebApplication)getApplication()).getRequestCycleProcessor();
@@ -118,6 +119,7 @@ public class WebRequestCycle extends RequestCycle
 	 * @param page
 	 *            The page to redirect to
 	 */
+	@Override
 	public final void redirectTo(final Page page)
 	{
 		String redirectUrl = null;
@@ -135,6 +137,7 @@ public class WebRequestCycle extends RequestCycle
 				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
 				final WebResponse redirectResponse = new WebResponse(servletResponse)
 				{
+					@Override
 					public CharSequence encodeURL(CharSequence url) 
 					{
 						return currentResponse.encodeURL(url);
@@ -211,6 +214,7 @@ public class WebRequestCycle extends RequestCycle
 	/**
 	 * @see wicket.RequestCycle#newClientInfo()
 	 */
+	@Override
 	protected ClientInfo newClientInfo()
 	{
 		return new WebClientInfo(this);

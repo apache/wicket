@@ -79,6 +79,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * <tt>IOException</tt>.
 	 * @throws IOException in case an I/O error occurs
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		// nop
@@ -131,6 +132,7 @@ public class ByteArrayOutputStream extends OutputStream
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return new String(toByteArray());
@@ -150,6 +152,7 @@ public class ByteArrayOutputStream extends OutputStream
 	/**
 	 * @see java.io.OutputStream#write(byte[], int, int)
 	 */
+	@Override
 	public synchronized void write(byte[] b, int off, int len)
 	{
 		if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length)
@@ -182,6 +185,7 @@ public class ByteArrayOutputStream extends OutputStream
 	 * Calls the write(byte[]) method.
 	 * @see java.io.OutputStream#write(int)
 	 */
+	@Override
 	public synchronized void write(int b)
 	{
 		write(new byte[] { (byte)b }, 0, 1);

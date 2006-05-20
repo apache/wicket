@@ -185,6 +185,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -194,6 +195,7 @@ public class ListChoice extends DropDownChoice
 	/**
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return true;

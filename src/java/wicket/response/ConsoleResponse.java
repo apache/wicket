@@ -49,7 +49,8 @@ public class ConsoleResponse extends Response
     /**
      * @see wicket.Response#write(CharSequence)
      */
-    public void write(CharSequence string)
+    @Override
+	public void write(CharSequence string)
     {
         System.out.print(string);
     }
@@ -57,6 +58,7 @@ public class ConsoleResponse extends Response
 	/**
 	 * @see wicket.Response#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream()
 	{
 		return System.out;

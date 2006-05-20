@@ -78,6 +78,7 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	 *            the index the link points to
 	 * @return the ajaxified page number link.
 	 */
+	@Override
 	protected PagingNavigationLink newPagingNavigationLink(String id, IPageable pageable,
 			int pageIndex)
 	{

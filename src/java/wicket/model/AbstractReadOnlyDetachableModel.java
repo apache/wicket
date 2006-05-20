@@ -39,6 +39,7 @@ public abstract class AbstractReadOnlyDetachableModel extends AbstractDetachable
 	 *            The object to set into the model
 	 * @throws UnsupportedOperationException
 	 */
+	@Override
 	protected final void onSetObject(final Component component, final Object object)
 	{
 		throw new UnsupportedOperationException("Model " + getClass()
@@ -48,6 +49,7 @@ public abstract class AbstractReadOnlyDetachableModel extends AbstractDetachable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return super.toString();

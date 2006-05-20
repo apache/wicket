@@ -53,6 +53,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 		super(form, event);
 	}
 
+	@Override
 	protected void onSubmit(final AjaxRequestTarget target)
 	{
 		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor()

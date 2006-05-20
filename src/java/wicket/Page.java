@@ -30,7 +30,6 @@ import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
@@ -286,6 +285,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 *             It isn't called anymore and made final so that people see
 	 *             what must be changed.
 	 */
+	@Deprecated
 	public final boolean checkAccess()
 	{
 		return true;
@@ -294,6 +294,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	/**
 	 * @see wicket.MarkupContainer#internalDetach()
 	 */
+	@Override
 	public void internalDetach()
 	{
 		try
@@ -312,6 +313,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	/**
 	 * Detaches any attached models referenced by this page.
 	 */
+	@Override
 	public void detachModels()
 	{
 		// visit all this page's children to detach the models
@@ -493,6 +495,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	/**
 	 * @see wicket.Component#getId()
 	 */
+	@Override
 	public final String getId()
 	{
 		return Integer.toString(numericId);
@@ -542,6 +545,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	/**
 	 * @return Size of this page in bytes
 	 */
+	@Override
 	public final long getSizeInBytes()
 	{
 		this.pageMap = null;
@@ -740,6 +744,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 * 
 	 * @return String representation of this container
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Page class = " + getClass().getName() + ", id = " + getId() + "]";
@@ -795,6 +800,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 * 
 	 * @see wicket.Component#internalOnDetach()
 	 */
+	@Override
 	protected final void internalOnDetach()
 	{
 		if (log.isDebugEnabled())
@@ -822,6 +828,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 * 
 	 * @see wicket.Component#internalOnModelChanged()
 	 */
+	@Override
 	protected final void internalOnModelChanged()
 	{
 		visitChildren(new Component.IVisitor()
@@ -852,6 +859,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 * 
 	 * @param markupStream
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Set page's associated markup stream
@@ -967,6 +975,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	/**
 	 * @return Returns true if this page can be seen as stateless so it won't go into the session 
 	 */
+	@Override
 	public final boolean isStateless()
 	{
 		if(stateless == null)

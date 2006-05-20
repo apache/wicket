@@ -113,6 +113,7 @@ public class BookmarkablePageLink<V> extends Link<V>
 	 *            the page
 	 * @see wicket.markup.html.link.Link#linksTo(wicket.Page)
 	 */
+	@Override
 	public boolean linksTo(final Page page)
 	{
 		return page.getClass() == pageClass;
@@ -125,6 +126,7 @@ public class BookmarkablePageLink<V> extends Link<V>
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		// Bookmarkable links do not have a click handler.
@@ -193,6 +195,7 @@ public class BookmarkablePageLink<V> extends Link<V>
 	 * @return The URL that this link links to
 	 * @see wicket.markup.html.link.Link#getURL()
 	 */
+	@Override
 	protected CharSequence getURL()
 	{
 		if (pageMapName != null && getPopupSettings() != null)

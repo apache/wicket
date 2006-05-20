@@ -205,6 +205,7 @@ public abstract class AbstractTree extends Panel
 	 * 
 	 * @return the current tree model as a string
 	 */
+	@Override
 	public final String toString()
 	{
 		StringBuffer b = new StringBuffer("-- TREE MODEL --\n");

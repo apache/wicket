@@ -150,6 +150,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof ResourceStreamRequestTarget)
@@ -164,6 +165,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "ResourceStreamRequestTarget".hashCode();
@@ -175,6 +177,7 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[ResourceStreamRequestTarget@" + hashCode() + " resourceStream=" + resourceStream

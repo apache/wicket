@@ -85,7 +85,8 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
      * 
      * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
      */
-    protected void onComponentTag(final ComponentTag tag)
+    @Override
+	protected void onComponentTag(final ComponentTag tag)
     {
     	if (tag.isOpenClose())
     	{
@@ -102,7 +103,8 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
      * 
      * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
      */
-    protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+    @Override
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
     {
         // Render the associated markup
         renderAssociatedMarkup("panel",
@@ -120,7 +122,8 @@ public class Panel extends WebMarkupContainerWithAssociatedMarkup
      * 
      * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
      */
-    public void renderHead(HtmlHeaderContainer container)
+    @Override
+	public void renderHead(HtmlHeaderContainer container)
     {
     	this.renderHeadFromAssociatedMarkupFile(container);
     	super.renderHead(container);

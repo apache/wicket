@@ -79,6 +79,7 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	 *            The variable
 	 * @return The value
 	 */
+	@Override
 	protected String getValue(final String variableName)
 	{
 		Object value = PropertyResolver.getValue(variableName, model);

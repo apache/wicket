@@ -177,6 +177,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @see wicket.Application#getApplicationKey()
 	 */
+	@Override
 	public final String getApplicationKey()
 	{
 		if (applicationKey == null)
@@ -320,6 +321,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
 	 */
+	@Override
 	public void logEventTarget(IRequestTarget target)
 	{
 		super.logEventTarget(target);
@@ -333,6 +335,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
 	 */
+	@Override
 	public void logResponseTarget(IRequestTarget target)
 	{
 		super.logResponseTarget(target);
@@ -422,6 +425,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @see wicket.Application#getSessionFactory()
 	 */
+	@Override
 	protected ISessionFactory getSessionFactory()
 	{
 		return this.sessionFactory;
@@ -447,6 +451,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * set. <strong>Use this method for any application setup instead of the
 	 * constructor.</strong>
 	 */
+	@Override
 	protected void init()
 	{
 	}
@@ -454,6 +459,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
+	@Override
 	protected void internalDestroy()
 	{
 		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher();
@@ -478,6 +484,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * parameter is also set, then resources in that folder will be polled for
 	 * changes.
 	 */
+	@Override
 	protected void internalInit()
 	{
 		super.internalInit();
@@ -564,6 +571,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @see wicket.Application#newSessionStore()
 	 */
+	@Override
 	protected ISessionStore newSessionStore()
 	{
 		return new SecondLevelCacheSessionStore(new FileStore());

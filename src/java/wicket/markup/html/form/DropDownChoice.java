@@ -149,6 +149,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 	 *			  Tag to modify
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");

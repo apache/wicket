@@ -98,6 +98,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@Override
 	protected Object convertValue(String[] paths) throws ConversionException
 	{
 		List<Object> collection = new ArrayList<Object>();
@@ -150,6 +151,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 		Collection<?> collection = (Collection<?>)getModelObject();
@@ -172,6 +174,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return false;

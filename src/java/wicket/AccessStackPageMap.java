@@ -74,6 +74,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 		/**
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
+		@Override
 		public boolean equals(Object obj)
 		{
 			if (obj instanceof Access)
@@ -107,6 +108,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return id + (version << 16);
@@ -115,6 +117,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "[Access id=" + id + ", version=" + version + "]";
@@ -137,6 +140,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 	/**
 	 * Removes all pages from this map
 	 */
+	@Override
 	public final void clear()
 	{
 		super.clear();
@@ -189,6 +193,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 	 * @param entry
 	 *            The entry to remove
 	 */
+	@Override
 	public final void removeEntry(final IPageMapEntry entry)
 	{
 		// Remove entry from session
@@ -222,6 +227,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 	 *            The version to get
 	 * @return Any page having the given id
 	 */
+	@Override
 	protected final Page get(final int id, int versionNumber)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)getSession().getAttribute(attributeForId(id));
@@ -279,6 +285,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 	 * @param page
 	 *            The page to put into this map
 	 */
+	@Override
 	protected final void put(final Page page)
 	{
 		// Page only goes into session if it is stateless

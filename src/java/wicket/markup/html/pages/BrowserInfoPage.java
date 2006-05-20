@@ -148,7 +148,7 @@ public class BrowserInfoPage extends WebPage
 		meta.add(new AttributeModifier("content", true, new Model("0; url=" + url)));
 		add(meta);
 		WebMarkupContainer link = new WebMarkupContainer("link");
-		link.add(new AttributeModifier("href", true, new Model((Serializable)url)));
+		link.add(new AttributeModifier("href", true, new Model(url)));
 		add(link);
 		add(new PostBackForm("postback"));
 	}
@@ -212,6 +212,7 @@ public class BrowserInfoPage extends WebPage
 		/**
 		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		protected void onSubmit()
 		{
 			ClientPropertiesBean propertiesBean = (ClientPropertiesBean)getModelObject();
@@ -258,6 +259,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

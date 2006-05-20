@@ -54,6 +54,7 @@ public final class IntegerConverter extends AbstractIntegerConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	@Override
 	protected Class getTargetType()
 	{
 		return Integer.class;

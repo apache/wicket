@@ -192,6 +192,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * 
 	 * @return Markup type for HTML
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "html";
@@ -200,6 +201,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see wicket.Page#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
@@ -310,6 +312,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 * 
 	 * @see wicket.Component#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		// This code can not go into HtmlHeaderContainer as
@@ -455,6 +458,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 						/**
 						 * @see wicket.model.Model#getObject(wicket.Component)
 						 */
+						@Override
 						public String getObject(Component component)
 						{
 							Application application = Application.get();

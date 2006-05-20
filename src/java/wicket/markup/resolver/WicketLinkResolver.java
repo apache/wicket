@@ -68,6 +68,7 @@ public class WicketLinkResolver implements IComponentResolver
 						/**
 						 * @see wicket.MarkupContainer#isTransparentResolver()
 						 */
+						@Override
 						public boolean isTransparentResolver()
 						{
 							return true;

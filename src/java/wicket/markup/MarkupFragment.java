@@ -66,6 +66,7 @@ public class MarkupFragment
 	/**
 	 * @return String representation of markup list
 	 */
+	@Override
 	public final String toString()
 	{
 		final AppendingStringBuffer buf = new AppendingStringBuffer(400);

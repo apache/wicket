@@ -93,6 +93,7 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 	 * 
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		onClick(null);

@@ -128,7 +128,8 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  public boolean equals(Object obj)
+  @Override
+public boolean equals(Object obj)
   {
     if (obj instanceof SharedResourceRequestTarget)
     {
@@ -141,7 +142,8 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
   /**
    * @see java.lang.Object#hashCode()
    */
-  public int hashCode()
+  @Override
+public int hashCode()
   {
     int result = "SharedResourceRequestTarget".hashCode();
     result += getRequestParameters().getResourceKey().hashCode();
@@ -151,7 +153,8 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
   /**
    * @see java.lang.Object#toString()
    */
-  public String toString()
+  @Override
+public String toString()
   {
     return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey=" +
       getRequestParameters().getResourceKey() + "]";

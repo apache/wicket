@@ -136,6 +136,7 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		boolean equal = false;
@@ -160,6 +161,7 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = "WebErrorCodeResponseTarget".hashCode();
@@ -171,6 +173,7 @@ public final class WebErrorCodeResponseTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[WebErrorCodeResponseTarget@" + hashCode() + " errorCode=" + getErrorCode()

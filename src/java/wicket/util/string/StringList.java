@@ -284,9 +284,10 @@ public final class StringList extends AbstractStringList
 	 * @return The string at the index
 	 * @throws IndexOutOfBoundsException
 	 */
+	@Override
 	public String get(final int index)
 	{
-		return (String)strings.get(index);
+		return strings.get(index);
 	}
 
 	/**
@@ -302,6 +303,7 @@ public final class StringList extends AbstractStringList
 	 * 
 	 * @return Typesafe string iterator
 	 */
+	@Override
 	public IStringIterator iterator()
 	{
 		return new IStringIterator()
@@ -339,7 +341,7 @@ public final class StringList extends AbstractStringList
 	 */
 	public void remove(final int index)
 	{
-		String string = (String)strings.remove(index);
+		String string = strings.remove(index);
 		totalLength = totalLength - string.length();
 	}
 
@@ -354,6 +356,7 @@ public final class StringList extends AbstractStringList
 	/**
 	 * @return The number of strings in this list.
 	 */
+	@Override
 	public int size()
 	{
 		return strings.size();
@@ -372,14 +375,16 @@ public final class StringList extends AbstractStringList
 	 * 
 	 * @return The string array
 	 */
+	@Override
 	public String[] toArray()
 	{
-		return (String[])strings.toArray(new String[size()]);
+		return strings.toArray(new String[size()]);
 	}
 
 	/**
 	 * @return The total length of all strings in this list.
 	 */
+	@Override
 	public int totalLength()
 	{
 		return totalLength;

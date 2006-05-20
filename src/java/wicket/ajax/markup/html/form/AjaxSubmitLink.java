@@ -53,11 +53,13 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxSubmitLink.this.onSubmit(target, form);
 			}
 			
+			@Override
 			protected CharSequence getEventHandler()
 			{
 				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
@@ -66,6 +68,7 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);

@@ -109,6 +109,7 @@ public abstract class Loop extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#internalOnAttach()
 	 */
+	@Override
 	protected void internalOnAttach()
 	{
 		// Remove any previous loop contents
@@ -147,6 +148,7 @@ public abstract class Loop extends WebMarkupContainer
 	 * 
 	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
+	@Override
 	protected final void onRender(final MarkupStream markupStream)
 	{
 		// Save position in markup stream

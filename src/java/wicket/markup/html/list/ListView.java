@@ -167,6 +167,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @deprecated Use {@link #getReuseItems()} instead
 	 */
 	//TODO Post 1.2: Remove
+	@Deprecated
 	public boolean getOptimizeItemRemoval()
 	{
 		return getReuseItems();
@@ -256,6 +257,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 			/**
 			 * @see wicket.Component#onAttach()
 			 */
+			@Override
 			protected void onAttach()
 			{
 				setAutoEnable(false);
@@ -268,6 +270,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				final int index = getList().indexOf(item.getModelObject());
@@ -279,6 +282,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 
 						final int oldIndex = index;
 
+						@Override
 						public void undo()
 						{
 							Collections.swap(getList(), oldIndex + 1, oldIndex);
@@ -311,6 +315,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 			/**
 			 * @see wicket.Component#onAttach()
 			 */
+			@Override
 			protected void onAttach()
 			{
 				setAutoEnable(false);
@@ -323,6 +328,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				final int index = getList().indexOf(item.getModelObject());
@@ -335,6 +341,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 
 						final int oldIndex = index;
 
+						@Override
 						public void undo()
 						{
 							Collections.swap(getList(), oldIndex - 1, oldIndex);
@@ -367,6 +374,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				addStateChange(new Change()
@@ -376,6 +384,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 					final V removedObject = item.getModelObject();
 					final int oldIndex = getList().indexOf(item.getModelObject());
 
+					@Override
 					public void undo()
 					{
 						getList().add(oldIndex, removedObject);
@@ -407,6 +416,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @deprecated Use {@link #setReuseItems(boolean)} instead
 	 */
 	//TODO Post 1.2: Remove
+	@Deprecated
 	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
 		return setReuseItems(optimizeItemRemoval);
@@ -483,7 +493,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 */
 	public Component setList(List<V> list)
 	{
-		return setModel(new Model((Serializable)list));
+		return setModel(new Model(list));
 	}
 
 	/**
@@ -529,6 +539,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	/**
 	 * @see wicket.MarkupContainer#internalOnAttach()
 	 */
+	@Override
 	protected void internalOnAttach()
 	{
 		// Get number of items to be displayed
@@ -614,6 +625,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * 
 	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Save position in markup stream

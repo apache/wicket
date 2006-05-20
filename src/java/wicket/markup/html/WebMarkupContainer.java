@@ -53,6 +53,7 @@ public class WebMarkupContainer<V> extends MarkupContainer<V>
 	 * 
 	 * @return Markup type of HTML
 	 */
+	@Override
 	public final String getMarkupType()
 	{
 		return "html";

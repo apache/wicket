@@ -57,6 +57,7 @@ public final class SelectedPathReplacementModel extends AbstractReadOnlyModel
 	/**
 	 * @see wicket.model.IModel#getObject(Component)
 	 */
+	@Override
 	public Object getObject(final Component component)
 	{
 		TreePath path = new TreePath(node.getPath());

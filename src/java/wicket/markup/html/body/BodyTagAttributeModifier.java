@@ -157,6 +157,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 	 * @see wicket.AttributeModifier#newValue(java.lang.String,
 	 *      java.lang.String)
 	 */
+	@Override
 	protected String newValue(final String currentValue, final String replacementValue)
 	{
 		// If no behavior owner has been provided, than behave as if this
@@ -165,7 +166,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 		{
 			// Get the owner of the attribute modifier (e.g. the Panel, not the
 			// Body)
-			final Component behaviorOwner = (Component)componentReference.get();
+			final Component behaviorOwner = componentReference.get();
 
 			// If case the components memory has been GCed already, than disable
 			// the attribute modifier and return the attribute value unchanged.

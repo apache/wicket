@@ -64,6 +64,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		/**
 		 * @see wicket.Component#isVisible()
 		 */
+		@Override
 		public boolean isVisible()
 		{
 			return visible;

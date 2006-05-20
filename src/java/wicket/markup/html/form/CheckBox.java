@@ -124,6 +124,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "input");
@@ -176,6 +177,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see FormComponent#supportsPersistence()
 	 */
+	@Override
 	protected final boolean supportsPersistence()
 	{
 		return true;
@@ -185,6 +187,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@Override
 	protected Object convertValue(String[] value)
 	{
 		String tmp = value != null && value.length > 0?value[0]:null;

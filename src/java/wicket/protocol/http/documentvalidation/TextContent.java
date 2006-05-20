@@ -52,7 +52,8 @@ public class TextContent implements DocumentElement
      * 
      * @return The string
      */
-    public String toString()
+    @Override
+	public String toString()
     {
         return "[text = '" + value + "']";
     }

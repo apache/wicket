@@ -155,6 +155,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 *            the component tag
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "iframe");

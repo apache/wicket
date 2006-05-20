@@ -536,6 +536,7 @@ public abstract class Application
 	 * @deprecated will be made private after 1.2
 	 */
 	// TODO Post 1.2: Make private
+	@Deprecated
 	public Settings getSettings()
 	{
 		if (!settingsAccessible)

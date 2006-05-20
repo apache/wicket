@@ -66,6 +66,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @param hostComponent
 	 *            the component to bind to
 	 */
+	@Override
 	public final void bind(final Component hostComponent)
 	{
 		if (hostComponent == null)
@@ -149,6 +150,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	public final void onComponentTag(final Component component, final ComponentTag tag)
 	{
 		onComponentTag(tag);
@@ -157,6 +159,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	/**
 	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
 	 */
+	@Override
 	public final void onRendered(final Component hostComponent)
 	{
 		onComponentRendered();
@@ -165,6 +168,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	/**
 	 * @see wicket.behavior.AbstractBehavior#cleanup()
 	 */
+	@Override
 	public void cleanup()
 	{
 		headContribHolder.set(null);

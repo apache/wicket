@@ -61,6 +61,7 @@ public abstract class VariableInterpolator
 	 * 
 	 * @return The interpolated string
 	 */
+	@Override
 	public String toString()
 	{
 		// Result buffer

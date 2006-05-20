@@ -75,6 +75,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
+	@Override
 	public final IModel getNestedModel()
 	{
 		return null;
@@ -91,6 +92,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
+	@Override
 	public final Object onGetObject(final Component component)
 	{
 		if (messages == null)
@@ -143,6 +145,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onAttach()
 	 */
+	@Override
 	protected void onAttach()
 	{
 	}
@@ -150,6 +153,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onDetach()
 	 */
+	@Override
 	protected void onDetach()
 	{
 		messages = null;
@@ -159,6 +163,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
 	 *      java.lang.Object)
 	 */
+	@Override
 	protected void onSetObject(Component component, Object object)
 	{
 	}

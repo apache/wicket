@@ -60,6 +60,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return string.toString();
@@ -68,6 +69,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
+	@Override
 	protected String getString()
 	{
 		return toString();
@@ -76,6 +78,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		return getString();

@@ -83,6 +83,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @param b The byte to be written.
 	 * @exception IOException if an error occurs.
 	 */
+	@Override
 	public void write(int b) throws IOException
 	{
 		checkThreshold(1);
@@ -97,6 +98,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @param b The array of bytes to be written.
 	 * @exception IOException if an error occurs.
 	 */
+	@Override
 	public void write(byte b[]) throws IOException
 	{
 		checkThreshold(b.length);
@@ -113,6 +115,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * @param len The number of bytes to write.
 	 * @exception IOException if an error occurs.
 	 */
+	@Override
 	public void write(byte b[], int off, int len) throws IOException
 	{
 		checkThreshold(len);
@@ -125,6 +128,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * Flushes this output stream and forces any buffered output bytes to be written out.
 	 * @exception IOException if an error occurs.
 	 */
+	@Override
 	public void flush() throws IOException
 	{
 		getStream().flush();
@@ -136,6 +140,7 @@ public abstract class ThresholdingOutputStream extends OutputStream
 	 * stream.
 	 * @exception IOException if an error occurs.
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		try

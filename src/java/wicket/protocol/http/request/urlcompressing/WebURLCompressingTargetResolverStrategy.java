@@ -80,6 +80,7 @@ public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTarge
 	 * @param requestParameters
 	 * @return The RequestTarget that was resolved
 	 */
+	@Override
 	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
 			final Page page, final String componentPath, String interfaceName,
 			final RequestParameters requestParameters)

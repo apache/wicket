@@ -223,6 +223,7 @@ public final class MiniMap implements Map, Serializable
 	{
 		return new AbstractSet()
 		{
+			@Override
 			public Iterator iterator()
 			{
 				return new Iterator()
@@ -252,6 +253,7 @@ public final class MiniMap implements Map, Serializable
 				};
 			}
 
+			@Override
 			public int size()
 			{
 				return size;
@@ -266,6 +268,7 @@ public final class MiniMap implements Map, Serializable
 	{
 		return new AbstractList()
 		{
+			@Override
 			public Object get(final int index)
 			{
 				int keyIndex = nextKey(0);
@@ -278,6 +281,7 @@ public final class MiniMap implements Map, Serializable
 				return values[keyIndex];
 			}
 
+			@Override
 			public int size()
 			{
 				return size;
@@ -292,6 +296,7 @@ public final class MiniMap implements Map, Serializable
 	{
 		return new AbstractSet()
 		{
+			@Override
 			public Iterator iterator()
 			{
 				return new Iterator()
@@ -341,6 +346,7 @@ public final class MiniMap implements Map, Serializable
 				};
 			}
 
+			@Override
 			public int size()
 			{
 				return size;

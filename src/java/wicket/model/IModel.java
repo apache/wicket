@@ -79,7 +79,7 @@ public interface IModel<V> extends IDetachable
 	 * 
 	 * @return The nested model object.
 	 */
-	IModel<V> getNestedModel();
+	IModel getNestedModel();
 
 	/**
 	 * Gets the model object.

@@ -54,6 +54,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		super(mountPath, bookmarkablePageClass, pageMapName);
 	}
 
+	@Override
 	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
 		int i = 0;
@@ -79,6 +80,7 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		}
 	}
 
+	@Override
 	protected ValueMap<String, Object> decodeParameters(String urlFragment, Map<String,? extends Object> urlParameters)
 	{
 		PageParameters<String, Object> params = new PageParameters<String, Object>();

@@ -103,6 +103,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
@@ -126,6 +127,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	/**
 	 * @see wicket.Component#onRender(MarkupStream)
 	 */
+	@Override
 	protected final void onRender(final MarkupStream markupStream)
 	{
 		if (this.transformBodyOnly == false)

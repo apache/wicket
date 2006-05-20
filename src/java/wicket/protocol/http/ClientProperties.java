@@ -490,6 +490,7 @@ public class ClientProperties implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "ClientProperties: " + data.toString();

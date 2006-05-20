@@ -41,6 +41,7 @@ public class AccessDeniedPage extends WebPage
 	/**
 	 * @see wicket.markup.html.WebPage#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
@@ -49,6 +50,7 @@ public class AccessDeniedPage extends WebPage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;
@@ -57,6 +59,7 @@ public class AccessDeniedPage extends WebPage
 	/**
 	 * @see wicket.Page#isErrorPage()
 	 */
+	@Override
 	public boolean isErrorPage()
 	{
 		return true;

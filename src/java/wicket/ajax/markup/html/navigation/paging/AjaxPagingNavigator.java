@@ -84,6 +84,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            the increment
 	 * @return the increment link
 	 */
+	@Override
 	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
 	{
 		return new AjaxPagingNavigationIncrementLink(id, pageable, increment);
@@ -101,6 +102,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            the page to jump to
 	 * @return the pagenumber link
 	 */
+	@Override
 	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
 	{
 		return new AjaxPagingNavigationLink(id, pageable, pageNumber);
@@ -116,6 +118,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 *            The label provider for the link text.
 	 * @return the navigation object
 	 */
+	@Override
 	protected PagingNavigation newNavigation(final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{

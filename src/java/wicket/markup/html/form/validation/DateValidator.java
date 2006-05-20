@@ -144,6 +144,7 @@ public abstract class DateValidator extends AbstractValidator
 		/**
 		 * @see wicket.markup.html.form.validation.DateValidator#onValidate(wicket.markup.html.form.FormComponent, Date)
 		 */
+		@Override
 		public void onValidate(FormComponent formComponent, Date value)
 		{
             if(value != null)
@@ -155,7 +156,8 @@ public abstract class DateValidator extends AbstractValidator
             }
 		}
         
-        protected Map<String, Serializable> messageModel(FormComponent formComponent)
+        @Override
+		protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
             final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", minimum);
@@ -166,7 +168,8 @@ public abstract class DateValidator extends AbstractValidator
         /**
          * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
          */
-        protected String resourceKey(FormComponent formComponent)
+        @Override
+		protected String resourceKey(FormComponent formComponent)
         {
         	return "DateValidator.range";
         }
@@ -185,7 +188,8 @@ public abstract class DateValidator extends AbstractValidator
         /**
          * @see wicket.markup.html.form.validation.DateValidator#onValidate(wicket.markup.html.form.FormComponent, Date)
          */
-        public void onValidate(FormComponent formComponent, Date value)
+        @Override
+		public void onValidate(FormComponent formComponent, Date value)
         {
             if(value != null)
             {
@@ -196,7 +200,8 @@ public abstract class DateValidator extends AbstractValidator
             }
         }
         
-        protected Map<String, Serializable> messageModel(FormComponent formComponent)
+        @Override
+		protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
             final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("minimum", minimum);
@@ -206,7 +211,8 @@ public abstract class DateValidator extends AbstractValidator
         /**
          * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
          */
-        protected String resourceKey(FormComponent formComponent)
+        @Override
+		protected String resourceKey(FormComponent formComponent)
         {
             return "DateValidator.minimum";
         }
@@ -225,7 +231,8 @@ public abstract class DateValidator extends AbstractValidator
         /**
          * @see wicket.markup.html.form.validation.DateValidator#onValidate(wicket.markup.html.form.FormComponent, Date)
          */
-        public void onValidate(FormComponent formComponent, Date value)
+        @Override
+		public void onValidate(FormComponent formComponent, Date value)
         {
             if(value != null)
             {
@@ -236,7 +243,8 @@ public abstract class DateValidator extends AbstractValidator
             }
         }
         
-        protected Map<String, Serializable> messageModel(FormComponent formComponent)
+        @Override
+		protected Map<String, Serializable> messageModel(FormComponent formComponent)
         {
             final Map<String, Serializable> map = super.messageModel(formComponent);
             map.put("maximum", maximum);
@@ -246,7 +254,8 @@ public abstract class DateValidator extends AbstractValidator
         /**
          * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
          */
-        protected String resourceKey(FormComponent formComponent)
+        @Override
+		protected String resourceKey(FormComponent formComponent)
         {
             return "DateValidator.maximum";
         }

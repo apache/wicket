@@ -92,6 +92,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
+	@Override
 	protected String getString()
 	{
 		return buffer.toString();
@@ -100,6 +101,7 @@ public class StringBufferResourceStream extends AbstractStringResourceStream
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		return getString();

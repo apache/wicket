@@ -57,6 +57,7 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	/**
 	 * @see wicket.MarkupContainer#isTransparentResolver()
 	 */
+	@Override
 	public boolean isTransparentResolver()
 	{
 		return true;

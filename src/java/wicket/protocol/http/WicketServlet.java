@@ -136,6 +136,7 @@ public class WicketServlet extends HttpServlet
 	 *             Thrown if something goes wrong during request handling
 	 * @throws IOException
 	 */
+	@Override
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
@@ -252,6 +253,7 @@ public class WicketServlet extends HttpServlet
 	 *             Thrown if something goes wrong during request handling
 	 * @throws IOException
 	 */
+	@Override
 	public final void doPost(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
@@ -261,6 +263,7 @@ public class WicketServlet extends HttpServlet
 	/**
 	 * Servlet initialization
 	 */
+	@Override
 	public void init()
 	{
 		IWebApplicationFactory factory = getApplicationFactory();
@@ -306,6 +309,7 @@ public class WicketServlet extends HttpServlet
 	/**
 	 * Servlet cleanup.
 	 */
+	@Override
 	public void destroy()
 	{
 		this.webApplication.internalDestroy();
@@ -369,6 +373,7 @@ public class WicketServlet extends HttpServlet
 	/**
 	 * @see javax.servlet.http.HttpServlet#getLastModified(javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	protected long getLastModified(final HttpServletRequest servletRequest)
 	{
 		final String pathInfo = servletRequest.getPathInfo();

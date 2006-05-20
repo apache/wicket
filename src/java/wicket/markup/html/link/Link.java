@@ -167,6 +167,7 @@ public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkList
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
+	@Override
 	public boolean isEnabled()
 	{
 		// If we're auto-enabling
@@ -279,6 +280,7 @@ public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkList
 	 *             {@link #getOnClickScript(CharSequence)} shortly. Please
 	 *             override that method instead.
 	 */
+	@Deprecated
 	protected String getOnClickScript(final String url)
 	{
 		return null;
@@ -307,6 +309,7 @@ public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkList
 	/**
 	 * @see wicket.Component#internalOnAttach()
 	 */
+	@Override
 	protected void internalOnAttach()
 	{
 		// Set default for before/after link text
@@ -337,6 +340,7 @@ public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkList
 	 *            the component tag
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		// Default handling for tag
@@ -420,6 +424,7 @@ public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkList
 	 *            the open part of this tag
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{

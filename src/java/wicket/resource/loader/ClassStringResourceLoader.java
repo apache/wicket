@@ -57,6 +57,7 @@ public class ClassStringResourceLoader extends AbstractStringResourceLoader
 	/**
 	 * @inheritDoc
 	 */
+	@Override
 	public String loadStringResource(final Class clazz, final String key,
 			final Locale locale, final String style)
 	{

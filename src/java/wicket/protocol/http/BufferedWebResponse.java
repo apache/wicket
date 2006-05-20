@@ -57,6 +57,7 @@ public class BufferedWebResponse extends WebResponse
      * Flushes the response buffer by doing a redirect or writing out the buffer.
      * NOTE: The servlet container will close the response output stream.
 	 */
+	@Override
 	public void close()
 	{
         // If a redirection was specified
@@ -81,6 +82,7 @@ public class BufferedWebResponse extends WebResponse
 	 * @param url
 	 *            The URL to redirect to
 	 */
+	@Override
 	public final void redirect(final String url)
 	{
         if (redirectURL != null)
@@ -96,6 +98,7 @@ public class BufferedWebResponse extends WebResponse
 	 * @param string
 	 *            The string to write
 	 */
+	@Override
 	public void write(final CharSequence string)
 	{
 		buffer.append(string);

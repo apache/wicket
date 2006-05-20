@@ -79,6 +79,7 @@ public class TextField<V> extends AbstractTextComponent<V>
 	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		// Must be attached to an input tag

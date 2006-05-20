@@ -94,6 +94,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof ComponentResourceRequestTarget)
@@ -107,6 +108,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = getClass().hashCode();
@@ -118,6 +120,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())

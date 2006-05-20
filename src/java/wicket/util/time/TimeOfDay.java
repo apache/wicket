@@ -371,6 +371,7 @@ public final class TimeOfDay extends AbstractTime
 	/**
 	 * @see Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		final int second = second();

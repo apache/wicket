@@ -126,6 +126,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#encodeUrl(java.lang.String)
 	 * @deprecated
 	 */
+	@Deprecated
 	public String encodeUrl(String url)
 	{
 		isOpen();
@@ -136,6 +137,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 * @see javax.servlet.http.HttpServletResponse#encodeRedirectUrl(java.lang.String)
 	 * @deprecated
 	 */
+	@Deprecated
 	public String encodeRedirectUrl(String url)
 	{
 		isOpen();
@@ -290,6 +292,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 	 *      java.lang.String)
 	 * @deprecated
 	 */
+	@Deprecated
 	public void setStatus(int sc, String sm)
 	{
 		isOpen();

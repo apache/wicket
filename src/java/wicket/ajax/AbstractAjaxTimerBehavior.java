@@ -53,6 +53,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * 
 	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
 	 */
+	@Override
 	protected void onBind()
 	{
 		super.onBind();
@@ -61,6 +62,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	/**
 	 * @see wicket.behavior.AbstractAjaxBehavior#onRenderHeadContribution(wicket.Response)
 	 */
+	@Override
 	protected void onRenderHeadContribution(final Response response)
 	{
 		super.onRenderHeadContribution(response);
@@ -88,6 +90,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 * 
 	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#respond(wicket.ajax.AjaxRequestTarget)
 	 */
+	@Override
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);

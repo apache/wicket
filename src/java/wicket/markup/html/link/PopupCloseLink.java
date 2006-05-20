@@ -62,6 +62,7 @@ public class PopupCloseLink extends Link
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// Remove the popup's page map from the session

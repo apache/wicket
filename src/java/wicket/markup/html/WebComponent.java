@@ -56,6 +56,7 @@ public class WebComponent<V> extends Component<V>
 	 * 
 	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		renderComponent(markupStream);

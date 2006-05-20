@@ -54,11 +54,13 @@ public abstract class AjaxSubmitButton extends WebComponent
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				AjaxSubmitButton.this.onSubmit(target, form);
 			}
 			
+			@Override
 			protected CharSequence getEventHandler()
 			{
 				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
@@ -68,6 +70,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		checkComponentTag(tag, "input");

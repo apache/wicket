@@ -104,6 +104,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		// We are able to automatically add <head> to the page if it is
@@ -234,6 +235,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	/**
 	 * @see wicket.MarkupContainer#isTransparentResolver()
 	 */
+	@Override
 	public boolean isTransparentResolver()
 	{
 		return true;
@@ -275,6 +277,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		return true;
 	}
 
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();

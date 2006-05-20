@@ -92,6 +92,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	/**
 	 * @see wicket.behavior.AbstractBehavior#cleanup()
 	 */
+	@Override
 	public final void cleanup()
 	{
 		// clean up thread

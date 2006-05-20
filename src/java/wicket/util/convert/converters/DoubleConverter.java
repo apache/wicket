@@ -55,6 +55,7 @@ public final class DoubleConverter extends AbstractDecimalConverter
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
+	@Override
 	protected Class getTargetType()
 	{
 		return Double.class;

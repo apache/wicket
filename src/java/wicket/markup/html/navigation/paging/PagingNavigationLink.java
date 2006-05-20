@@ -61,6 +61,7 @@ public class PagingNavigationLink extends Link
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		pageable.setCurrentPage(getPageNumber());
@@ -123,6 +124,7 @@ public class PagingNavigationLink extends Link
 	 * @return True if this link links to the given page
 	 * @see wicket.markup.html.link.PageLink#linksTo(wicket.Page)
 	 */
+	@Override
 	public final boolean linksTo(final Page page)
 	{
 		return getPageNumber() == pageable.getCurrentPage();

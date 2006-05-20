@@ -182,6 +182,7 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see FormComponent#getModelValue()
 	 */
+	@Override
 	public final String getModelValue()
 	{
 		// Get the list of selected values
@@ -206,6 +207,7 @@ public class ListMultipleChoice extends AbstractChoice
 	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int,
 	 *      String)
 	 */
+	@Override
 	protected final boolean isSelected(Object choice, int index, String selected)
 	{
 		// Have a value at all?
@@ -228,6 +230,7 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see wicket.Component#onComponentTag(ComponentTag)
 	 */
+	@Override
 	protected final void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -242,6 +245,7 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@Override
 	protected Object convertValue(String[] ids) throws ConversionException
 	{
 		ArrayList selectedValues = new ArrayList();
@@ -273,6 +277,7 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see FormComponent#updateModel()
 	 */
+	@Override
 	public final void updateModel()
 	{
 		Collection selectedValues = (Collection)getModelObject();

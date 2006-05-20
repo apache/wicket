@@ -56,6 +56,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Servlet context path
 	 */
+	@Override
 	public String getContextPath()
 	{
 		return httpServletRequest.getContextPath();
@@ -69,6 +70,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return the preferred <code>Locale</code> for the client
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return httpServletRequest.getLocale();
@@ -81,6 +83,7 @@ public class ServletWebRequest extends WebRequest
 	 *            Parameter name
 	 * @return Parameter value
 	 */
+	@Override
 	public String getParameter(final String key)
 	{
 		return httpServletRequest.getParameter(key);
@@ -91,6 +94,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Map of parameters
 	 */
+	@Override
 	public Map<String, ? extends Object> getParameterMap()
 	{
 		final Map<String, Object> map = new HashMap<String, Object>();
@@ -120,6 +124,7 @@ public class ServletWebRequest extends WebRequest
 	 *            Parameter name
 	 * @return Parameter values
 	 */
+	@Override
 	public String[] getParameters(final String key)
 	{
 		return httpServletRequest.getParameterValues(key);
@@ -130,6 +135,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Any servlet path info
 	 */
+	@Override
 	public String getPath()
 	{
 		return httpServletRequest.getPathInfo();
@@ -140,6 +146,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Servlet path
 	 */
+	@Override
 	public String getServletPath()
 	{
 		return httpServletRequest.getServletPath();
@@ -150,6 +157,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return the wrapped http serlvet request object.
 	 */
+	@Override
 	public final HttpServletRequest getHttpServletRequest()
 	{
 		return httpServletRequest;
@@ -161,6 +169,7 @@ public class ServletWebRequest extends WebRequest
 	 * 
 	 * @return Request URL
 	 */
+	@Override
 	public String getRelativeURL()
 	{
 		/*
@@ -202,6 +211,7 @@ public class ServletWebRequest extends WebRequest
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[method = " + httpServletRequest.getMethod() + ", protocol = "
@@ -219,6 +229,7 @@ public class ServletWebRequest extends WebRequest
 	/**
 	 * @see wicket.protocol.http.WebRequest#newMultipartWebRequest(wicket.util.lang.Bytes)
 	 */
+	@Override
 	public WebRequest newMultipartWebRequest(Bytes maxsize)
 	{
 		try

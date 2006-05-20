@@ -120,6 +120,7 @@ public class NonCachingImage extends Image
 	/**
 	 * @see wicket.markup.html.image.Image#onComponentTag(wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
