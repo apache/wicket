@@ -30,11 +30,11 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-extensions</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-extensions</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-extensions</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-extensions</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-extensions</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-extensions</url>
 	</scm>
-
+		
 	<mailingLists>
 		<mailingList>
 			<name>Wicket Announcements List</name>
