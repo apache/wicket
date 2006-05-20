@@ -25,6 +25,9 @@ import wicket.PageParameters;
  * Renders a stable link which can be cached in a web browser and used at a
  * later time.
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  */
 public class BookmarkablePageLink<V> extends Link<V>

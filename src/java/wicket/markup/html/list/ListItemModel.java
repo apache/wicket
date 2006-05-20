@@ -23,6 +23,10 @@ import wicket.model.IModel;
 
 /**
  * Model for list items.
+ * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  */
 public class ListItemModel<V> extends AbstractDetachableModel<V>
 {

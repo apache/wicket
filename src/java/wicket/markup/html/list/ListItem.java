@@ -23,6 +23,9 @@ import wicket.model.IModel;
 /**
  * Container that holds components in a ListView.
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  */
 public class ListItem<V> extends WebMarkupContainer<V>

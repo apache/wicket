@@ -49,8 +49,10 @@ import wicket.util.string.Strings;
  * </pre>
  * 
  * @author Juergen Donnerstag
+ * 
+ * @param <V> 
  */
-public final class PageView extends Panel
+public final class PageView<V> extends Panel<V>
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -88,7 +90,7 @@ public final class PageView extends Panel
 		});
 		
 		// Create the table containing the list the components
-		add(new ListView("components", data)
+		add(new ListView<ComponentData>("components", data)
 		{
 			private static final long serialVersionUID = 1L;
 			
@@ -96,9 +98,9 @@ public final class PageView extends Panel
 			 * Populate the table with Wicket elements
 			 */
 			@Override
-			protected void populateItem(final ListItem listItem)
+			protected void populateItem(final ListItem<ComponentData> listItem)
 			{
-				final ComponentData componentData = (ComponentData)listItem.getModelObject();
+				final ComponentData componentData = listItem.getModelObject();
 
 				listItem.add(new Label("row", Integer.toString(listItem.getIndex() + 1)));
 				listItem.add(new Label("path", componentData.path));
@@ -116,11 +118,11 @@ public final class PageView extends Panel
 	 * @param page
 	 * @return List of component data objects
 	 */
-	private List<ComponentData> getComponentData(final Page page)
+	private List<ComponentData> getComponentData(final Page<?> page)
 	{
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
-		page.visitChildren(new IVisitor()
+		page.visitChildren(new IVisitor<Component>()
 		{
 			public Object component(final Component component)
 			{

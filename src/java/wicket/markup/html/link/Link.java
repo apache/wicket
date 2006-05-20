@@ -71,6 +71,9 @@ import wicket.util.string.Strings;
  *              }
  * </pre>
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */

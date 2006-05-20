@@ -21,6 +21,9 @@ package wicket.model;
  * AbstractModel is an adapter base class for implementing models which have no
  * detach logic.
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractModel<V> implements IModel<V>

@@ -119,6 +119,9 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * call setPersistent(true) on the form component.
  * </p>
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius

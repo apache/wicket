@@ -129,6 +129,9 @@ import wicket.version.undo.UndoPageVersionManager;
  * @see wicket.version.IPageVersionManager
  * @see wicket.version.undo.UndoPageVersionManager
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -181,7 +184,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	private transient Boolean stateless = Boolean.TRUE;
 
 	/** Version manager for this page */
-	private IPageVersionManager versionManager;
+	private IPageVersionManager<V> versionManager;
 
 	/**
 	 * Constructor.
@@ -201,7 +204,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IModel model)
+	protected Page(final IModel<V> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -232,7 +235,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final PageMap pageMap, final IModel model)
+	protected Page(final PageMap pageMap, final IModel<V> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -317,7 +320,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	public void detachModels()
 	{
 		// visit all this page's children to detach the models
-		visitChildren(new IVisitor()
+		visitChildren(new IVisitor<Component>()
 		{
 			public Object component(Component component)
 			{
@@ -372,7 +375,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 		// First, give priority to IFeedback instances, as they have to
 		// collect their messages before components like ListViews
 		// remove any child components
-		visitChildren(IFeedback.class, new IVisitor()
+		visitChildren(IFeedback.class, new IVisitor<Component>()
 		{
 			public Object component(Component component)
 			{
@@ -394,7 +397,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 		// or negative as a temporary boolean in the components, and when a
 		// authorization exception is thrown it will block the rendering of this
 		// page
-		visitChildren(new IVisitor()
+		visitChildren(new IVisitor<Component>()
 		{
 			public Object component(final Component component)
 			{
@@ -591,7 +594,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
-				final Page page;
+				final Page<V> page;
 				if (versionNumber != LATEST_VERSION)
 				{
 					page = versionManager.getVersion(versionNumber);
@@ -633,7 +636,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("Page " + getId() + " (version " + getCurrentVersionNumber() + ")");
-		visitChildren(new IVisitor()
+		visitChildren(new IVisitor<Component>()
 		{
 			public Object component(Component component)
 			{
@@ -695,16 +698,16 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 		}
 
 		// Visit all children which are an instance of formClass
-		visitChildren(formClass, new IVisitor()
+		visitChildren(formClass, new IVisitor<Component<?>>()
 		{
-			public Object component(final Component component)
+			public Object component(final Component<?> component)
 			{
 				// They must be of type Form as well
 				if (component instanceof Form)
 				{
 					// Delete persistet FormComponent data and disable
 					// persistence
-					((Form)component).removePersistentFormComponentValues(disablePersistence);
+					((Form<?>)component).removePersistentFormComponentValues(disablePersistence);
 				}
 				return CONTINUE_TRAVERSAL;
 			}
@@ -831,7 +834,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	@Override
 	protected final void internalOnModelChanged()
 	{
-		visitChildren(new Component.IVisitor()
+		visitChildren(new Component.IVisitor<Component>()
 		{
 			public Object component(final Component component)
 			{
@@ -848,10 +851,10 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	/**
 	 * @return Factory method that creates a version manager for this Page
 	 */
-	protected IPageVersionManager newVersionManager()
+	protected IPageVersionManager<V> newVersionManager()
 	{
 		final IPageSettings settings = getSession().getApplication().getPageSettings();
-		return new UndoPageVersionManager(this, settings.getMaxPageVersions());
+		return new UndoPageVersionManager<V>(this, settings.getMaxPageVersions());
 	}
 
 	/**
@@ -980,9 +983,9 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	{
 		if(stateless == null)
 		{
-			Object returnValue = visitChildren(Component.class, new IVisitor<Component>()
+			Object returnValue = visitChildren(Component.class, new IVisitor<Component<?>>()
 			{
-				public Object component(Component component)
+				public Object component(Component<?> component)
 				{
 					if(!component.isStateless()) return false;
 					return CONTINUE_TRAVERSAL;
@@ -1012,10 +1015,10 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	final void setFormComponentValuesFromCookies()
 	{
 		// Visit all Forms contained in the page
-		visitChildren(Form.class, new Component.IVisitor()
+		visitChildren(Form.class, new Component.IVisitor<Form>()
 		{
 			// For each FormComponent found on the Page (not Form)
-			public Object component(final Component component)
+			public Object component(final Form component)
 			{
 				((Form)component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;
@@ -1077,7 +1080,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 *            The page itself if it was a full page render or the container
 	 *            that was rendered standalone
 	 */
-	private final void checkRendering(final MarkupContainer renderedContainer)
+	private final void checkRendering(final MarkupContainer<?> renderedContainer)
 	{
 		// If the application wants component uses checked and
 		// the response is not a redirect
@@ -1087,7 +1090,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 			final Count unrenderedComponents = new Count();
 			final List<Component> unrenderedAutoComponents = new ArrayList<Component>();
 			final StringBuffer buffer = new StringBuffer();
-			renderedContainer.visitChildren(new IVisitor()
+			renderedContainer.visitChildren(new IVisitor<Component>()
 			{
 				public Object component(final Component component)
 				{

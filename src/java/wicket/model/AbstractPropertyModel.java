@@ -28,6 +28,9 @@ import wicket.util.string.Strings;
  * 
  * @see wicket.model.AbstractDetachableModel
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke

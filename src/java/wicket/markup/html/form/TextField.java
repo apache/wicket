@@ -23,6 +23,9 @@ import wicket.model.IModel;
 /**
  * A simple text field.
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  */
 public class TextField<V> extends AbstractTextComponent<V>

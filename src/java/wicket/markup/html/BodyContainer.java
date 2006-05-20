@@ -77,7 +77,7 @@ public final class BodyContainer implements Serializable
 	@Deprecated
 	public final BodyContainer addOnLoadModifier(final String value)
 	{
-		final Model model = new Model(value);
+		final Model<String> model = new Model<String>(value);
 		final Component bodyContainer = page.get(id);
 
 		// TODO Post 1.2: Move all attribute modifier into a separate package
@@ -116,7 +116,7 @@ public final class BodyContainer implements Serializable
 	@Deprecated
 	public final BodyContainer addOnUnLoadModifier(final String value)
 	{
-		final IModel model = new Model(value);
+		final IModel<String> model = new Model<String>(value);
 		final Component bodyContainer = page.get(id);
 		bodyContainer.add(new AppendingAttributeModifier("onunload", model));
 		return this;
@@ -132,7 +132,7 @@ public final class BodyContainer implements Serializable
 	 * @deprecated use {@link #addOnUnLoadModifier(IModel, Component)} instead
 	 */
 	@Deprecated
-	public final BodyContainer addOnUnLoadModifier(final IModel model)
+	public final BodyContainer addOnUnLoadModifier(final IModel<?> model)
 	{
 		final Component bodyContainer = page.get(id);
 		bodyContainer.add(new AppendingAttributeModifier("onunload", model));
@@ -140,9 +140,12 @@ public final class BodyContainer implements Serializable
 	}
 
 	/**
+	 * @param <V>
+	 *            Type of model object this attribute modifier holds
+	 * 
 	 * Little helper
 	 */
-	public static class AppendingAttributeModifier extends AttributeModifier
+	public static class AppendingAttributeModifier<V> extends AttributeModifier<V>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -152,7 +155,7 @@ public final class BodyContainer implements Serializable
 		 * @param attribute
 		 * @param replaceModel
 		 */
-		public AppendingAttributeModifier(final String attribute, IModel replaceModel)
+		public AppendingAttributeModifier(final String attribute, IModel<V> replaceModel)
 		{
 			super(attribute, true, replaceModel);
 		}

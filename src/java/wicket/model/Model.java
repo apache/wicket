@@ -31,6 +31,9 @@ import wicket.Component;
  * session. If you have large objects to store, consider using
  * {@link AbstractDetachableModel}instead of this class.
  * 
+ * @param <V>
+ *            Type of model object this model holds
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
@@ -64,9 +67,9 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	 *            The Map, which may or may not be Serializable
 	 * @return A Model object wrapping the Map
 	 */
-	public static Model<Map> valueOf(final Map map)
+	public static Model<Map<String, Serializable>> valueOf(final Map<String, Serializable> map)
 	{
-		return new Model<Map>(map instanceof Serializable ? map : new HashMap(map));
+		return new Model<Map<String, Serializable>>(map instanceof Serializable ? map : new HashMap<String, Serializable>(map));
 	}
 
 	/**
@@ -74,9 +77,9 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	 *            The List, which may or may not be Serializable
 	 * @return A Model object wrapping the List
 	 */
-	public static Model<Serializable> valueOf(final List list)
+	public static Model<List<Serializable>> valueOf(final List<Serializable> list)
 	{
-		return new Model<Serializable>(list instanceof Serializable ? (Serializable)list : new ArrayList(list));
+		return new Model<List<Serializable>>(list instanceof Serializable ? list : new ArrayList<Serializable>(list));
 	}
 
 	/**

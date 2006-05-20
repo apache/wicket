@@ -77,6 +77,9 @@ import wicket.version.undo.Change;
  * is false.
  * </p>
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Johan Compagner
@@ -493,7 +496,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 */
 	public Component setList(List<V> list)
 	{
-		return setModel(new Model(list));
+		return setModel(new Model<List<V>>(list));
 	}
 
 	/**
@@ -578,7 +581,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 				final int index = firstIndex + i;
 
 				// If this component does not already exist, populate it
-				ListItem item = (ListItem)get(Integer.toString(index));
+				ListItem<V> item = (ListItem)get(Integer.toString(index));
 				if (item == null)
 				{
 					// Create item for index
@@ -677,7 +680,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 *            The item to populate
 	 */
-	protected abstract void populateItem(final ListItem item);
+	protected abstract void populateItem(final ListItem<V> item);
 
 	/**
 	 * Render a single item.

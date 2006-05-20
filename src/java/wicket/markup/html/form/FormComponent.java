@@ -67,6 +67,9 @@ import wicket.version.undo.Change;
  * <li>${label}: the label of the component</li>
  * </ul>
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner

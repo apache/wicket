@@ -28,6 +28,9 @@ import wicket.model.IModel;
  * 
  * @see wicket.markup.html.WebMarkupContainer
  * 
+ * @param <V>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  * @author Eelco Hillenius
