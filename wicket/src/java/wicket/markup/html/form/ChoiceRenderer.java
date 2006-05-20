@@ -55,7 +55,7 @@ import wicket.util.lang.PropertyResolver;
  * 
  * @author jcompagner
  */
-public class ChoiceRenderer implements IChoiceRenderer
+public class ChoiceRenderer<V> implements IChoiceRenderer<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -110,10 +110,12 @@ public class ChoiceRenderer implements IChoiceRenderer
 		this.idExpression = idExpression;
 	}
 
+
+	
 	/**
 	 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 	 */
-	public Object getDisplayValue(Object object)
+	public Object getDisplayValue(V object)
 	{
 		Object returnValue = object;
 		if ((displayExpression != null) && (object != null))
@@ -133,7 +135,7 @@ public class ChoiceRenderer implements IChoiceRenderer
 	 * @see wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object,
 	 *      int)
 	 */
-	public String getIdValue(Object object, int index)
+	public String getIdValue(V object, int index)
 	{
 		if (idExpression == null)
 		{

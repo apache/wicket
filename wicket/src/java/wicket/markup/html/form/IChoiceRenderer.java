@@ -27,7 +27,7 @@ import java.io.Serializable;
  * 
  * @author jcompagner
  */
-public interface IChoiceRenderer extends Serializable
+public interface IChoiceRenderer<V> extends Serializable
 {
 	/**
 	 * Get the value for displaying to an end user.
@@ -36,7 +36,7 @@ public interface IChoiceRenderer extends Serializable
 	 *            the actual object
 	 * @return the value meant for displaying to an end user
 	 */
-	Object getDisplayValue(Object object);
+	Object getDisplayValue(V object);
 
 	/**
 	 * This method is called to get the id value of an object (used as the value
@@ -50,5 +50,5 @@ public interface IChoiceRenderer extends Serializable
 	 *            The index of the object in the choices list.
 	 * @return String
 	 */
-	String getIdValue(Object object, int index);
+	String getIdValue(V object, int index);
 }
