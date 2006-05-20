@@ -80,8 +80,7 @@ public class UploadProgressBar extends Panel
 		 */
 		public void init(Application application)
 		{
-			PackageResource.bind(application, ComponentInitializer.class,
-					PackageResource.EXTENSION_JS);
+			PackageResource.bind(application, ComponentInitializer.class,"progressbar.js");
 
 			// register the upload status resource
 			Application.get().getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());
