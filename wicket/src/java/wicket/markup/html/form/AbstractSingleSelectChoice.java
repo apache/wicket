@@ -29,7 +29,7 @@ import wicket.util.string.AppendingStringBuffer;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-abstract class AbstractSingleSelectChoice<V> extends AbstractChoice<V>
+abstract class AbstractSingleSelectChoice<V> extends AbstractChoice<V,V>
 {
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
