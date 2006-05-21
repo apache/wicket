@@ -16,6 +16,7 @@
  */
 package wicket.markup.html.form;
 
+import java.util.Collection;
 import java.util.List;
 
 import wicket.Page;
@@ -55,7 +56,7 @@ import wicket.version.undo.Change;
  * @author Gwyn Evans
  * @author Igor Vaynberg (ivaynberg)
  */
-public class CheckBoxMultipleChoice extends ListMultipleChoice
+public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -153,7 +154,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @see wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String, java.util.List)
 	 */
-	public CheckBoxMultipleChoice(final String id, final List choices)
+	public CheckBoxMultipleChoice(final String id, final List<V> choices)
 	{
 		super(id, choices);
 	}
@@ -171,8 +172,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @see AbstractChoice#AbstractChoice(String,
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(final String id, final List choices,
-			final IChoiceRenderer renderer)
+	public CheckBoxMultipleChoice(final String id, final List<V> choices,
+			final IChoiceRenderer<V> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -190,7 +191,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
 	 *      java.util.List)
 	 */
-	public CheckBoxMultipleChoice(final String id, IModel model, final List choices)
+	public CheckBoxMultipleChoice(final String id, IModel<Collection<V>> model, final List<V> choices)
 	{
 		super(id, model, choices);
 	}
@@ -210,7 +211,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(final String id, IModel model, final List choices,
+	public CheckBoxMultipleChoice(final String id, IModel<Collection<V>> model, final List<V> choices,
 			final IChoiceRenderer renderer)
 	{
 		super(id, model, choices, renderer);
@@ -226,7 +227,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @see wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel choices)
+	public CheckBoxMultipleChoice(String id, IModel<List<V>> choices)
 	{
 		super(id, choices);
 	}
@@ -245,7 +246,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *      wicket.model.IModel,wicket.model.IModel)
 	 * @see wicket.Component#Component(String, wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel model, IModel choices)
+	public CheckBoxMultipleChoice(String id, IModel<Collection<V>> model, IModel<List<V>> choices)
 	{
 		super(id, model, choices);
 	}
@@ -263,7 +264,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 * @see wicket.Component#Component(String)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel choices, IChoiceRenderer renderer)
+	public CheckBoxMultipleChoice(String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
 		super(id, choices, renderer);
 	}
@@ -285,7 +286,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public CheckBoxMultipleChoice(String id, IModel<Collection<V>> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
 		super(id, model, choices, renderer);
 	}
@@ -351,7 +352,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 			final ComponentTag openTag)
 	{
 		// Iterate through choices
-		final List choices = getChoices();
+		final List<V> choices = getChoices();
 
 		// Buffer to hold generated body
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(70*(choices.size()+1));
@@ -363,7 +364,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
-			final Object choice = choices.get(index);
+			final V choice = choices.get(index);
 
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
 			Class objectClass = displayValue == null?null:displayValue.getClass();
