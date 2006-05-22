@@ -107,7 +107,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 					+ Page.class.getName());
 		}
 		this.pageClass = pageClass;
-		this.pageParameters = pageParameters;
+		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
 		this.pageMapName = pageMapName;
 	}
 
@@ -116,7 +116,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
-		if(page != null)
+		if (page != null)
 		{
 			page.internalDetach();
 		}
@@ -149,9 +149,10 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		}
 		return equal;
 	}
-	
+
 	/**
-	 * @return The page that was created, null if the response did not happen yet
+	 * @return The page that was created, null if the response did not happen
+	 *         yet
 	 */
 	public final Page getPage()
 	{
@@ -204,7 +205,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			page = getPage(requestCycle);
 		}
 	}
-	
+
 	/**
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
@@ -215,7 +216,8 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 			if (requestCycle.getRedirect())
 			{
 				IRequestCycleProcessor processor = requestCycle.getProcessor();
-				String redirectUrl = processor.getRequestCodingStrategy().encode(requestCycle,this).toString();
+				String redirectUrl = processor.getRequestCodingStrategy()
+						.encode(requestCycle, this).toString();
 				requestCycle.getResponse().redirect(redirectUrl);
 			}
 			else
