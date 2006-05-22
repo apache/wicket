@@ -29,6 +29,19 @@ public interface ISessionFactory
 	 * Creates a new session
 	 * 
 	 * @return The session
+	 * 
+	 * @deprecated
 	 */
 	Session newSession();
+	
+	/**
+	 * Creates a new session
+	 * 
+	 * @param request The request that will create this session.
+	 * 
+	 * @return The session
+	 * 
+	 * @since 2.0
+	 */
+	Session newSession(Request request);
 }

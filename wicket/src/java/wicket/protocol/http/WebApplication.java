@@ -443,6 +443,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 	
 	/**
+	 * @see wicket.ISessionFactory#newSession(wicket.Request)
+	 */
+	public Session newSession(Request request)
+	{
+		return newSession();
+	}
+	
+	/**
 	 * Initialize; if you need the wicket servlet for initialization, e.g.
 	 * because you want to read an initParameter from web.xml or you want to
 	 * read a resource from the servlet's context path, you can override this
@@ -615,7 +623,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 		if (session == null)
 		{
 			// Create session using session factory
-			session = getSessionFactory().newSession();
+			session = getSessionFactory().newSession(request);
 
 			// Set the client Locale for this session
 			session.setLocale(request.getLocale());
