@@ -60,29 +60,18 @@
 		</section>
 		<section name="Latest News">
 			<subsection
-				name="May 14th, 2006 - New examples available">
+				name="May 22nd, 2006 - Wicket 1.2 available">
 				<p>
-					We have created two new examples giving a quick introduction
-					to new Wicket 1.2 features. Here are the links to the articles:
-				</p>
-				<ul>
-					<li><a href="ExampleAjaxCounter.html">Ajax Counter example</a></li>
-					<li><a href="ExampleUsingFragments.html">Using fragments example</a></li>
-				</ul>
-			</subsection>
-			<subsection
-				name="May 14th, 2006 - Wicket 1.2-rc4 available">
-				<p>
-					The
-					<a href="http://wicketframework.org">Wicket</a>
-					project has released the fourth release candidate of the
-					1.2 effort. We expect this to be the final candidate and
-					if no serious bugs are found we will release 1.2 final
-					later this week.
+					The	<a href="http://wicketframework.org">Wicket</a>
+					project has released Wicket 1.2. Wicket is a Java component based web application 
+					framework licensed under the open source Apache 2 license. Wicket allows Java developers to
+					create highly dynamic web applications using plain Java and HTML.
 				</p>
 				<p>
-					This is our fourth release candidate of the Wicket 1.2
-					version. Major features of Wicket 1.2 include:
+					This is the third major release of the Wicket web framework and marks a major milestone after 7 months
+					of hard labor by the core team of developers and the users of the framework.
+					This release has been anticipated for several months and sports many major
+					new features and improvements over previous releases. Major features of Wicket 1.2 include:
 				</p>
 				<ul>
 					<li>
@@ -108,6 +97,13 @@
 						Improved and simplified internationalization
 						(i18n) support, using &lt;wicket:message&gt;,
 						better resource bundle lookup strategy
+					</li>
+					<li>
+						Out of the box default resource bundles for many
+						languages, including
+						English, German, Spanish, Portugese, French, 
+						Hungarian, Dutch, Finnish, Danish, Swedish, Japanese, 
+						Chinese, Italian, Bulgarian and Farzi (Iranian).
 					</li>
 					<li>
 						Multiple form component validation, validate two
@@ -167,9 +163,9 @@
 					<li>Numerous bug fixes and minor improvements</li>
 				</ul>
 				<p>
-					The upcoming final Wicket 1.2 release will be a
-					major landmark in the history of Wicket and is
-					highly anticipated.
+					Wicket runs on any application server supporting the servlet 
+					API version 2.3 and higher, and will work on Java 1.4 SDK's 
+					or newer.
 				</p>
 				<p>
 					We have tried to keep API changes to a minimum, but
@@ -186,13 +182,23 @@
 					</a>
 				</p>
 				<p>
-					This is the fourth release candidate. All our unit tests
-					work and we have fixed numerous bugs in the last weeks. We
-					expect this release to become the final release candidate,
-					and hope no big issues will surface. Please help us iron 
-					out the last bugs by downloading and testing this release 
-					candidate!
+					The Wicket 1.2 release is a highly anticipated 
+					major landmark in the history of Wicket. The core
+					development team wishes to extend their gratitude to
+					all users who helped build and test this release. Enjoy
+					and have fun!
 				</p>
+			</subsection>
+			<subsection
+				name="May 14th, 2006 - New examples available">
+				<p>
+					We have created two new examples giving a quick introduction
+					to new Wicket 1.2 features. Here are the links to the articles:
+				</p>
+				<ul>
+					<li><a href="ExampleAjaxCounter.html">Ajax Counter example</a></li>
+					<li><a href="ExampleUsingFragments.html">Using fragments example</a></li>
+				</ul>
 			</subsection>
 			<p>
 				See
