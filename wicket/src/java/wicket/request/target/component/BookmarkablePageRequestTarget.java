@@ -107,7 +107,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 					+ Page.class.getName());
 		}
 		this.pageClass = pageClass;
-		this.pageParameters = pageParameters;
+		this.pageParameters = (pageParameters == null) ? new PageParameters() : pageParameters;
 		this.pageMapName = pageMapName;
 	}
 
