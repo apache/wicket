@@ -38,7 +38,6 @@ import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.util.resource.IResourceStream;
