@@ -23,6 +23,7 @@ import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.lang.Objects;
 
 /**
  * A simple header contributor that just spits out the string it is constructed
@@ -47,6 +48,9 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 
 		/** The contribution as a model that returns a plain string. */
 		private final IModel contribution;
+
+		/** Temp var for the actual contribution. */
+		private transient String contributionAsString;
 
 		/**
 		 * Construct.
@@ -97,7 +101,8 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		 */
 		public int hashCode()
 		{
-			return contribution.hashCode();
+			Object object = contribution.getObject(null);
+			return (object != null) ? object.hashCode() : 0;
 		}
 
 		/**
@@ -107,7 +112,9 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		{
 			if (obj instanceof StringContributor)
 			{
-				return ((StringContributor)obj).equals(this);
+				Object thisContrib = contribution.getObject(null);
+				Object thatContrib = ((StringContributor)obj).contribution.getObject(null);
+				return Objects.equal(thisContrib, thatContrib);
 			}
 			return false;
 		}
