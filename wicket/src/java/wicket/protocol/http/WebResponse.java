@@ -83,7 +83,21 @@ public class WebResponse extends Response
 	{
 		getHttpServletResponse().addCookie(cookie);
 	}
-
+	
+	/**
+	 * Convenience method for clearing a cookie.
+	 * 
+	 * @param cookie 
+	 *            The cookie to set
+	 * @see WebResponse#addCookie(Cookie)
+	 */
+	public void clearCookie(final Cookie cookie)
+	{
+		cookie.setMaxAge(0);
+		cookie.setValue(null);
+		addCookie(cookie);
+	}
+	
 	/**
 	 * Closes response output.
 	 */
