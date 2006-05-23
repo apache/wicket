@@ -6,6 +6,8 @@
 	<property name="src.main.dir" value="src/java" />
 	<property name="src.test.dir" value="src/test" />
 	
+	<property name="src.java.version" value="1.4" />
+	
 	<property name="lib.dir" value="lib" />
 
 	<property name="build.dir" value="target" />
@@ -32,7 +34,8 @@
 	<target name="compile" depends="init" description="o Compiles the Java sources">
 		<mkdir dir="${build.main.classes}" />
 		<javac destdir="${build.main.classes}" 
-			target="1.4" 
+			target="${src.java.version}"
+			source="${src.java.version}"
 			debug="true"
 			deprecation="true"
 			optimize="false"
@@ -53,7 +56,8 @@
 	<target name="test-compile" depends="compile" description="o Compiles the test sources">
 		<mkdir dir="${build.test.classes}" />
 		<javac destdir="${build.test.classes}" 
-			target="1.4" 
+			target="${src.java.version}"
+			source="${src.java.version}"
 			debug="true"
 			deprecation="true"
 			optimize="false"
@@ -78,7 +82,7 @@
 	<target name="test" depends="test-compile" description="o Runs the unit tests">
 		<mkdir dir="${build.test.reports}" />
 
-		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" forkmode="batch" haltonerror="true">
+		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" forkmode="once" haltonerror="true">
 			<sysproperty key="basedir" value="."></sysproperty>
 			<formatter type="xml" />
 			<formatter type="plain" usefile="false" />
@@ -90,6 +94,7 @@
 			<batchtest todir="${build.test.reports}">
 				<fileset dir="${src.test.dir}">
 					<include name="**/*Test.java"></include>
+					<exclude name="**/Abstract*.java"></exclude>
 				</fileset>
 			</batchtest>
 		</junit>
