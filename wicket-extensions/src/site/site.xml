@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Maven">
+<project name="Wicket Extensions">
 	<bannerLeft>
 		<name>Wicket</name>
 		<src>http://wicket.sourceforge.net/images/logo.png</src>
