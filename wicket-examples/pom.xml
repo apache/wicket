@@ -6,7 +6,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-examples</artifactId>
 	<packaging>war</packaging>
-	<version>1.2-rc4</version>
+	<version>1.2</version>
 	<name>Wicket Examples</name>
 	<description>Examples displaying a component reference and several componens in action.</description>
 	<url>http://wicket.sourceforge.net/</url>
@@ -47,14 +47,14 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
-			<version>1.2-rc4</version>
+			<version>1.2</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>1.2-rc4</version>
+			<version>1.2</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -184,7 +184,9 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
-					<descriptor>${basedir}/src/assembly/bin.xml</descriptor>
+					<descriptors>
+						<descriptor>src/assembly/bin.xml</descriptor>
+					</descriptors>
 					<finalName>${artifactId}-${version}</finalName>
 					<outputDirectory>target/distributions</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
@@ -209,7 +211,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<configuration>
-					<templateDirectory>file:src/site/template/</templateDirectory>
+					<templateDirectory>src/site/template/</templateDirectory>
 					<template>wicket-site.vm</template>
 				</configuration>
 			</plugin>
