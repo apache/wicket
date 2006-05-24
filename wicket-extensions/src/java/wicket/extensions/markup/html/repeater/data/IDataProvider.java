@@ -57,10 +57,8 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * TODO 2.0: directly extend {@link IDetachable}
- * 
  */
-public interface IDataProvider extends Serializable
+public interface IDataProvider<V> extends IDetachable
 {
 	/**
 	 * Gets an iterator for the subset of total data
@@ -72,7 +70,7 @@ public interface IDataProvider extends Serializable
 	 * 
 	 * @return iterator capable of iterating over {first, first+count} items
 	 */
-	Iterator iterator(int first, int count);
+	Iterator<V> iterator(int first, int count);
 
 	/**
 	 * Gets total number of items in the collection represented by the
@@ -92,6 +90,6 @@ public interface IDataProvider extends Serializable
 	 * 
 	 * @return the model representation of the object
 	 */
-	IModel model(Object object);
+	IModel<V> model(V object);
 
 }
