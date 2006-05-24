@@ -18,6 +18,8 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.MarkupContainer;
+
 /**
  * Mock page for testing.
  *
@@ -30,14 +32,14 @@ public class InlinePanel_4 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public InlinePanel_4(final String id) 
+	public InlinePanel_4(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
 
-		Fragment panel1 = new Fragment("myPanel1", "frag1");
+		Fragment panel1 = new Fragment(this,"myPanel1", "frag1");
 		add(panel1);
 
-		Fragment panel2 = new Fragment("myPanel2", "frag2");
+		Fragment panel2 = new Fragment(this,"myPanel2", "frag2");
 		add(panel2);
 	}
 }

@@ -20,6 +20,7 @@ package wicket.ajax;
 
 import java.io.Serializable;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;

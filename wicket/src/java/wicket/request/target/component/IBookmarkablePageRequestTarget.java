@@ -42,7 +42,7 @@ public interface IBookmarkablePageRequestTarget extends IRequestTarget, IEventPr
 	 * 
 	 * @return the page parameters or null
 	 */
-	PageParameters<String,Object> getPageParameters();
+	PageParameters getPageParameters();
 
 	/**
 	 * Gets the optional page map name.

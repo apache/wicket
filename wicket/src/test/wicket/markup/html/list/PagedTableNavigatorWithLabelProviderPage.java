@@ -60,14 +60,14 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 		list.add("fourteen");
 		
 		final int pageSize = 2;
-		final PageableListView listview = new PageableListView("table", list, pageSize)
+		final PageableListView listview = new PageableListView(this,"table", list, pageSize)
 		{
 			private static final long serialVersionUID = 1L;
 			
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label("txt", txt));
+				listItem.add(new Label(listItem,"txt", txt));
 			}
 		};
 
@@ -90,7 +90,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 
 
 		add(listview);
-		add(new PagingNavigator("navigator", listview,labelProvider));
+		add(new PagingNavigator(this,"navigator", listview,labelProvider));
 	}
 	/**
 	 * @see wicket.Component#isVersioned()

@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.image;
 
+import wicket.MarkupContainer;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
@@ -45,9 +46,9 @@ public class NonCachingImage extends Image
 	 * @param id
 	 * @param model
 	 */
-	public NonCachingImage(String id, IModel model)
+	public NonCachingImage(MarkupContainer<?> parent,String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -58,9 +59,9 @@ public class NonCachingImage extends Image
 	 * @param id
 	 * @param imageResource
 	 */
-	public NonCachingImage(String id, Resource imageResource)
+	public NonCachingImage(MarkupContainer<?> parent,String id, Resource imageResource)
 	{
-		super(id, imageResource);
+		super(parent,id, imageResource);
 	}
 
 	/**
@@ -72,10 +73,10 @@ public class NonCachingImage extends Image
 	 * @param resourceReference
 	 * @param resourceParameters
 	 */
-	public NonCachingImage(String id, ResourceReference resourceReference,
+	public NonCachingImage(MarkupContainer<?> parent,String id, ResourceReference resourceReference,
 			ValueMap resourceParameters)
 	{
-		super(id, resourceReference, resourceParameters);
+		super(parent,id, resourceReference, resourceParameters);
 	}
 
 	/**
@@ -86,9 +87,9 @@ public class NonCachingImage extends Image
 	 * @param id
 	 * @param resourceReference
 	 */
-	public NonCachingImage(String id, ResourceReference resourceReference)
+	public NonCachingImage(MarkupContainer<?> parent,String id, ResourceReference resourceReference)
 	{
-		super(id, resourceReference);
+		super(parent,id, resourceReference);
 	}
 
 	/**
@@ -100,9 +101,9 @@ public class NonCachingImage extends Image
 	 * @param id
 	 * @param string
 	 */
-	public NonCachingImage(String id, String string)
+	public NonCachingImage(MarkupContainer<?> parent,String id, String string)
 	{
-		super(id, string);
+		super(parent,id, string);
 	}
 
 	/**
@@ -112,9 +113,9 @@ public class NonCachingImage extends Image
 	 * 
 	 * @param id
 	 */
-	public NonCachingImage(String id)
+	public NonCachingImage(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**

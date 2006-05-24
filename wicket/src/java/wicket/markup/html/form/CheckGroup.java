@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -55,7 +56,7 @@ import wicket.util.convert.ConversionException;
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class CheckGroup extends FormComponent implements IOnChangeListener
+public class CheckGroup<V> extends FormComponent<Collection<V>> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -65,9 +66,9 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 * @param id
 	 *            component id
 	 */
-	public CheckGroup(String id)
+	public CheckGroup(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 		setRenderBodyOnly(true);
 	}
 
@@ -81,17 +82,17 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 *            collection to be used as the model
 	 * 
 	 */
-	public CheckGroup(String id, Collection collection)
+	public CheckGroup(MarkupContainer parent,String id, Collection<V> collection)
 	{
-		this(id, new Model<Collection>(collection));
+		this(parent,id, new Model<Collection<V>>(collection));
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public CheckGroup(String id, IModel<Collection> model)
+	public CheckGroup(MarkupContainer parent,String id, IModel<Collection<V>> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		setRenderBodyOnly(true);
 	}
 
@@ -99,9 +100,9 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
-	protected Object convertValue(String[] paths) throws ConversionException
+	protected Collection<V> convertValue(String[] paths) throws ConversionException
 	{
-		List<Object> collection = new ArrayList<Object>();
+		List<V> collection = new ArrayList<V>();
 
 		/*
 		 * if the input is null we do not need to do anything since the model
@@ -125,7 +126,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 					path = path.substring(getPath().length() + 1);
 
 					// retrieve the selected checkbox component
-					Check checkbox = (Check)get(path);
+					Check<V> checkbox = (Check)get(path);
 
 					if (checkbox == null)
 					{
@@ -154,10 +155,10 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	@Override
 	public void updateModel()
 	{
-		Collection<?> collection = (Collection<?>)getModelObject();
+		Collection<V> collection = (Collection<V>)getModelObject();
 		if (collection == null)
 		{
-			collection = (Collection<?>)getConvertedInput();
+			collection = (Collection<V>)getConvertedInput();
 			setModelObject(collection);
 		}
 		else

@@ -40,21 +40,21 @@ public class AjaxPage2 extends WebPage
 	{
 		super();
 
-		myBorder = new BoxBorder("pageLayout");
+		myBorder = new BoxBorder(this,"pageLayout");
 		myBorder.setTransparentResolver(true);
 		add(myBorder);
 
-		ajaxLabel = new Label("ajaxLabel", "AAAAAAA");
+		ajaxLabel = new Label(this,"ajaxLabel", "AAAAAAA");
 		ajaxLabel.setOutputMarkupId(true);
 		add(ajaxLabel);
 
-		add(new AjaxLink("ajaxLink")
+		add(new AjaxLink(this,"ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
 			public void onClick(final AjaxRequestTarget target)
 			{
-				Label ajaxLabel2 = new Label("ajaxLabel", "BBBBBBB");
+				Label ajaxLabel2 = new Label(ajaxLabel.getParent(),"ajaxLabel", "BBBBBBB");
 				ajaxLabel2.setOutputMarkupId(true);
 				ajaxLabel.getParent().replace(ajaxLabel2);
 				if (target != null)

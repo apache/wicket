@@ -36,7 +36,7 @@ public class PanelPage_2 extends WebPage
 	 */
 	public PanelPage_2() 
 	{
-	    Panel panel = new SimplePanel_2("myPanel");
+	    Panel panel = new SimplePanel_2(this,"myPanel");
 	    add(panel);
     }
 }

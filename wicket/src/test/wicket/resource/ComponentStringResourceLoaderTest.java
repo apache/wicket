@@ -55,11 +55,11 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	 */
 	public void testLoaderUnknownResources()
 	{
-		Component c = new DummyComponent("hello", application)
+		DummyPage page = new DummyPage();
+		Component c = new DummyComponent(page,"hello", application)
 		{
 			private static final long serialVersionUID = 1L;
 		};
-		DummyPage page = new DummyPage();
 		page.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
 		Assert.assertNull("Missing resource should return null", loader.loadStringResource(c.getClass(), "test.string.bad",
@@ -115,9 +115,9 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	public void testMultiLevelEmbeddedComponentLoadFromComponent()
 	{
 		DummyPage p = new DummyPage();
-		Panel panel = new Panel("panel");
+		Panel panel = new Panel(p,"panel");
 		p.add(panel);
-		DummyComponent c = new DummyComponent("hello", application);
+		DummyComponent c = new DummyComponent(panel,"hello", application);
 		panel.add(c);
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
 		Assert.assertEquals("Valid resourse string should be found", "Component string", loader

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -35,9 +36,9 @@ public class TextField<V> extends AbstractTextComponent<V>
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public TextField(final String id)
+	public TextField(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -46,18 +47,18 @@ public class TextField<V> extends AbstractTextComponent<V>
 	 * @param type
 	 *            Type for field validation
 	 */
-	public TextField(final String id, final Class type)
+	public TextField(MarkupContainer parent, final String id, final Class type)
 	{
-		super(id);
+		super(parent,id);
 		setType(type);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextField(final String id, final IModel object)
+	public TextField(MarkupContainer parent, final String id, final IModel object)
 	{
-		super(id, object);
+		super(parent,id, object);
 	}
 
 	/**
@@ -69,9 +70,9 @@ public class TextField<V> extends AbstractTextComponent<V>
 	 *            The type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextField(final String id, IModel model, Class type)
+	public TextField(MarkupContainer parent, final String id, IModel model, Class type)
 	{
-		super(id, model);
+		super(parent,id, model);
 		setType(type);
 	}
 

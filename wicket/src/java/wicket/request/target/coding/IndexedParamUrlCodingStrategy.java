@@ -81,9 +81,9 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	}
 
 	@Override
-	protected ValueMap<String, Object> decodeParameters(String urlFragment, Map<String,? extends Object> urlParameters)
+	protected ValueMap decodeParameters(String urlFragment, Map<String,? extends Object> urlParameters)
 	{
-		PageParameters<String, Object> params = new PageParameters<String, Object>();
+		PageParameters params = new PageParameters();
 		if (urlFragment == null)
 		{
 			return params;

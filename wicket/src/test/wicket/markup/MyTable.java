@@ -21,6 +21,7 @@ package wicket.markup;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -39,15 +40,15 @@ public class MyTable extends ListView
      * Construct.
      * @param id
      */
-    public MyTable(final String id)
+    public MyTable(MarkupContainer<?> parent,final String id)
     {
-        super(id, new Model(null));
+        super(parent,id, new Model(null));
     }
 
     protected void populateItem(ListItem listItem)
     {
         String txt = (String)listItem.getModelObject();
-        listItem.add(new Label("txt", txt));
+        listItem.add(new Label(listItem,"txt", txt));
     }
 
     /**

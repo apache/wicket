@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.html.link.Link;
 
@@ -49,10 +50,10 @@ public class PagingNavigationLink extends Link
 	 *            The page number in the PageableListView that this link links
 	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
-	public PagingNavigationLink(final String id,
+	public PagingNavigationLink(MarkupContainer<?> parent,final String id,
 			final IPageable pageable, final int pageNumber)
 	{
-		super(id);
+		super(parent,id);
 		setAutoEnable(true);
 		this.pageNumber = pageNumber;
 		this.pageable = pageable;

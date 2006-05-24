@@ -193,7 +193,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
-		super(null);
+		super();
 		init();
 	}
 
@@ -208,7 +208,8 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
-		super(null, model);
+		super();
+		setModel(model);
 		init();
 	}
 
@@ -222,7 +223,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
-		super(null);
+		super();
 		init(pageMap);
 	}
 
@@ -239,7 +240,8 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
-		super(null, model);
+		super();
+		setModel(model);
 		init(pageMap);
 	}
 

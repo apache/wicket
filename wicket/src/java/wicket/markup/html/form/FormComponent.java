@@ -33,6 +33,7 @@ import java.util.Map;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Localizer;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -203,9 +204,9 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FormComponent(final String id)
+	public FormComponent(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		// the form decides whether form components are versioned or not
 		// see Form.setVersioned
@@ -215,9 +216,9 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FormComponent(final String id, IModel model)
+	public FormComponent(MarkupContainer<?> parent,final String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		// the form decides whether form components are versioned or not
 		// see Form.setVersioned

@@ -34,6 +34,6 @@ public class SimplePage_10 extends WebPage
 	 */
 	public SimplePage_10()
 	{
-		add(new SimplePanel("myPanel").setVisible(false));
+		add(new SimplePanel(this,"myPanel").setVisible(false));
 	}
 }

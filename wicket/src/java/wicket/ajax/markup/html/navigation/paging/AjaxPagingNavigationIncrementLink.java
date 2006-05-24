@@ -18,6 +18,7 @@
  */
 package wicket.ajax.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.IAjaxLink;
 import wicket.markup.html.navigation.paging.IPageable;
@@ -61,10 +62,10 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 	 * @param increment
 	 *            increment by
 	 */
-	public AjaxPagingNavigationIncrementLink(final String id, final IPageable pageable,
+	public AjaxPagingNavigationIncrementLink(MarkupContainer parent, final String id, final IPageable pageable,
 			final int increment)
 	{
-		super(id, pageable, increment);
+		super(parent,id, pageable, increment);
 		add(new AjaxPagingNavigationBehavior(this, pageable, "onclick"));
 
 		setOutputMarkupId(true);

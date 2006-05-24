@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.persistence;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -42,9 +43,9 @@ public class CookieValuePersisterTestPage extends WebPage
 	{
 
 		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
 		add(feedback);
-		add(new TestForm("form"));
+		add(new TestForm(this,"form"));
 	}
 
 	/**
@@ -61,11 +62,11 @@ public class CookieValuePersisterTestPage extends WebPage
 		 * @param id
 		 *            Name of form
 		 */
-		public TestForm(final String id)
+		public TestForm(MarkupContainer parent,final String id)
 		{
-			super(id);
+			super(parent,id);
 
-			add(new TextField("input", new Model("test")));
+			add(new TextField(this,"input", new Model("test")));
 		}
 
 		/**

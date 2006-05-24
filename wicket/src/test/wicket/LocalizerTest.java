@@ -140,7 +140,7 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testInComponentConstructor()
 	{
-		Component myComponent = new MyLabel("myLabel");
+		Component myComponent = new MyLabel(new EmptyPage(),"myLabel");
 	}
 
 	/**
@@ -173,9 +173,9 @@ public class LocalizerTest extends WicketTestCase
 		 * 
 		 * @param id
 		 */
-		public MyLabel(final String id)
+		public MyLabel(MarkupContainer parent,final String id)
 		{
-			super(id);
+			super(parent,id);
 
 			Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 

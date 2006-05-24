@@ -77,7 +77,7 @@ public class AuthorizationTest extends TestCase
 		WicketTester app = new WicketTester()
 		{
 		};
-		WebComponent c = new WebComponent("test");
+		WebComponent c = new WebComponent(new EmptyPage(),"test");
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class AuthorizationTest extends TestCase
 		});
 		try
 		{
-			WebComponent c = new WebComponent("test");
+			WebComponent c = new WebComponent(new EmptyPage(),"test");
 			// bad: authorization should have failed
 			fail("authorization check failed to throw an exception");
 		}
@@ -235,7 +235,7 @@ public class AuthorizationTest extends TestCase
 			return true;
 		}
 	}
-
+	
 	/**
 	 * Test page for authentication tests.
 	 */
@@ -252,8 +252,8 @@ public class AuthorizationTest extends TestCase
 		 */
 		public AuthTestPage1()
 		{
-			add(new Label("label", "wicked!"));
-			add(new TestForm("form"));
+			add(new Label(this,"label", "wicked!"));
+			add(new TestForm(this,"form"));
 
 		}
 
@@ -287,11 +287,11 @@ public class AuthorizationTest extends TestCase
 			 * 
 			 * @param id
 			 */
-			public TestForm(String id)
+			public TestForm(MarkupContainer parent,String id)
 			{
-				super(id);
+				super(parent,id);
 				setModel(new CompoundPropertyModel(input = new Input()));
-				add(new TextField("stringInput"));
+				add(new TextField(this,"stringInput"));
 			}
 
 			/**

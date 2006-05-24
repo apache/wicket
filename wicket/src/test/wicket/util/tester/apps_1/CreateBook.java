@@ -17,6 +17,7 @@
  */
 package wicket.util.tester.apps_1;
 
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
@@ -39,7 +40,7 @@ public class CreateBook extends WebPage
 	 */
 	public CreateBook()
 	{
-		add(new CreateForm("createForm"));
+		add(new CreateForm(this,"createForm"));
 	}
 
 	/**
@@ -54,14 +55,14 @@ public class CreateBook extends WebPage
 		 * 
 		 * @param id
 		 */
-		public CreateForm(String id)
+		public CreateForm(MarkupContainer<?> parent, String id)
 		{
-			super(id);
+			super(parent,id);
 
 			// label model here comes from java
-			add(new RequiredTextField("id", new PropertyModel(book, "id")).setLabel(new Model("id")));
+			add(new RequiredTextField(this,"id", new PropertyModel(book, "id")).setLabel(new Model("id")));
 			// label model here comes from CreateBook.properties
-			add(new RequiredTextField("name", new PropertyModel(book, "name")));
+			add(new RequiredTextField(this,"name", new PropertyModel(book, "name")));
 		}
 
 		/**

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -32,27 +33,27 @@ public class RequiredTextField extends TextField
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public RequiredTextField(final String id)
+	public RequiredTextField(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 		setRequired(true);
 	}
 
 	/**
 	 * @see TextField#TextField(String, Class)
 	 */
-	public RequiredTextField(final String id, final Class type)
+	public RequiredTextField(MarkupContainer parent, final String id, final Class type)
 	{
-		super(id, type);
+		super(parent,id, type);
 		setRequired(true);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(final String id, final IModel model)
+	public RequiredTextField(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		setRequired(true);
 	}
 
@@ -65,9 +66,9 @@ public class RequiredTextField extends TextField
 	 *            The type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public RequiredTextField(final String id, IModel model, Class type)
+	public RequiredTextField(MarkupContainer parent, final String id, IModel model, Class type)
 	{
-		super(id, model, type);
+		super(parent,id, model, type);
 		setRequired(true);
 	}
 }

@@ -38,7 +38,7 @@ public class HeaderSectionBasePage_12 extends WebPage
 	public HeaderSectionBasePage_12()
 	{
         // Create border and add it to the page
-        border = new HeaderSectionBorder("border");
+        border = new HeaderSectionBorder(this,"border");
         border.setTransparentResolver(true);
         super.add(border);   
 	}

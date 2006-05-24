@@ -43,7 +43,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	private final String pageMapName;
 
 	/** optional page parameters. */
-	private final PageParameters<String,Object> pageParameters;
+	private final PageParameters pageParameters;
 
 	/**
 	 * Construct.
@@ -64,7 +64,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 * @param pageParameters
 	 *            optional page parameters
 	 */
-	public BookmarkablePageRequestTarget(Class<? extends Page> pageClass, PageParameters<String,Object> pageParameters)
+	public BookmarkablePageRequestTarget(Class<? extends Page> pageClass, PageParameters pageParameters)
 	{
 		this(null, pageClass, pageParameters);
 	}
@@ -94,7 +94,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            optional page parameters
 	 */
 	public BookmarkablePageRequestTarget(String pageMapName, Class<? extends Page> pageClass,
-			PageParameters<String, Object> pageParameters)
+			PageParameters pageParameters)
 	{
 		if (pageClass == null)
 		{
@@ -178,7 +178,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	/**
 	 * @see wicket.request.target.component.IBookmarkablePageRequestTarget#getPageParameters()
 	 */
-	public final PageParameters<String,Object> getPageParameters()
+	public final PageParameters getPageParameters()
 	{
 		return pageParameters;
 	}

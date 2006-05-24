@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.link;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -56,9 +57,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(final String id, final String href, final String label)
+	public ExternalLink(MarkupContainer<?> parent,final String id, final String href, final String label)
 	{
-		super(id);
+		super(parent,id);
 
 		this.href = (href != null ? new Model(href) : null);
 		this.label = (label != null ? new Model(label) : null);
@@ -72,9 +73,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(final String id, final String href)
+	public ExternalLink(MarkupContainer<?> parent,final String id, final String href)
 	{
-		this(id, href, null);
+		this(parent,id, href, null);
 	}
 
 	/**
@@ -87,9 +88,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(final String id, final IModel href, final IModel label)
+	public ExternalLink(MarkupContainer<?> parent,final String id, final IModel href, final IModel label)
 	{
-		super(id);
+		super(parent,id);
 
 		this.href = href;
 		this.label = label;
@@ -103,9 +104,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(final String id, final IModel href)
+	public ExternalLink(MarkupContainer<?> parent,final String id, final IModel href)
 	{
-		this(id, href, null);
+		this(parent,id, href, null);
 	}
 
 	/**

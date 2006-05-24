@@ -127,7 +127,7 @@ public class ComponentTag extends MarkupElement
 	 * @see wicket.markup.parser.XmlTag#getAttributes()
 	 * @return The tag#s attributes
 	 */
-	public final ValueMap<String,CharSequence> getAttributes()
+	public final ValueMap getAttributes()
 	{
 		return xmlTag.getAttributes();
 	}

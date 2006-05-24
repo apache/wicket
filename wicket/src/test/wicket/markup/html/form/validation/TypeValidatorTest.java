@@ -20,6 +20,7 @@ package wicket.markup.html.form.validation;
 
 import java.util.Date;
 
+import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.WicketTestCase;
 import wicket.markup.html.form.Form;
@@ -46,9 +47,9 @@ public class TypeValidatorTest extends WicketTestCase
 		 * 
 		 * @param id
 		 */
-		public DateField(String id)
+		public DateField(MarkupContainer<?> parent, String id)
 		{
-			super(id, Date.class);
+			super(parent,id, Date.class);
 		}
 		
 		/**
@@ -108,8 +109,8 @@ public class TypeValidatorTest extends WicketTestCase
 
 		MockPage page = new MockPage();
 
-		Form form = new Form("form", new CompoundPropertyModel(new Person()));
-		DateField dateField = new DateField("birthdate");
+		Form form = new Form(page,"form", new CompoundPropertyModel(new Person()));
+		DateField dateField = new DateField(form,"birthdate");
 		form.add(dateField);
 		page.add(form);
 

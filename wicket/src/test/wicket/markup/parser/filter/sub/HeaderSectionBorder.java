@@ -18,6 +18,7 @@
  */
 package wicket.markup.parser.filter.sub;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 
 /**
@@ -32,9 +33,9 @@ public class HeaderSectionBorder extends Border
      * Constructor
      * @param id The id of this component
      */
-    public HeaderSectionBorder(final String id)
+    public HeaderSectionBorder(MarkupContainer parent,final String id)
     {
-        super(id);
+        super(parent,id);
     }
 }
 

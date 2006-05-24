@@ -57,7 +57,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class ValueMap<K,V> extends HashMap<K,V>
+public class ValueMap extends HashMap<String,Object>
 {
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();
@@ -80,7 +80,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	 * @param map
 	 *            The map to copy
 	 */
-	public ValueMap(final Map<? extends K, ? extends V> map)
+	public ValueMap(final Map<? extends String, ? extends Object> map)
 	{
 		super.putAll(map);
 	}
@@ -124,7 +124,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 			if (parser.matches())
 			{
 				// Succeeded. Put key and value into map
-				put((K)parser.getKey(), (V)parser.getValue());
+				put(parser.getKey(), parser.getValue());
 			}
 			else
 			{
@@ -419,7 +419,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	 * @see java.util.Map#put(K, V)
 	 */
 	@Override
-	public V put(final K key, final V value)
+	public Object put(final String key, final Object value)
 	{
 		checkMutability();
 		return super.put(key, value);
@@ -443,7 +443,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 		final Object o = get(key);
 		if (o == null)
 		{
-			return put((K)key, (V)value);
+			return put(key, value);
 		}
 		else if (o.getClass().isArray())
 		{
@@ -459,11 +459,11 @@ public class ValueMap<K,V> extends HashMap<K,V>
 			}
 			destArray[length] = value;
 
-			return put((K)key, (V)destArray);
+			return put(key, destArray);
 		}
 		else
 		{
-			return put((K)key, (V)new String[] { o.toString(), value });
+			return put(key, new String[] { o.toString(), value });
 		}
 	}
 
@@ -471,7 +471,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
 	@Override
-	public void putAll(final Map<? extends K, ? extends V> map)
+	public void putAll(final Map<? extends String, ? extends Object> map)
 	{
 		checkMutability();
 		super.putAll(map);
@@ -481,7 +481,7 @@ public class ValueMap<K,V> extends HashMap<K,V>
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
 	@Override
-	public V remove(final Object key)
+	public Object remove(final Object key)
 	{
 		checkMutability();
 		return super.remove(key);

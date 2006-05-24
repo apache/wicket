@@ -51,9 +51,9 @@ public class ContextPathPage extends WebPage
 	 */
 	public ContextPathPage()
 	{
-		add(new BookmarkablePageLink("bookmarkablelink",ContextPathPage.class));
-		add(new ResourceLink("resourcelink",new ByteArrayResource("test/test", new byte[10])));
-		add(new Link("onclick")
+		add(new BookmarkablePageLink(this,"bookmarkablelink",ContextPathPage.class));
+		add(new ResourceLink(this,"resourcelink",new ByteArrayResource("test/test", new byte[10])));
+		add(new Link(this,"onclick")
 		{
 			private static final long serialVersionUID = 1L;
 

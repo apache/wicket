@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.IResourceListener;
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebResource;
@@ -44,9 +45,9 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public ImageButton(String id)
+	public ImageButton(MarkupContainer parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -58,9 +59,9 @@ public class ImageButton extends Button implements IResourceListener
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public ImageButton(final String id, final WebResource imageResource)
+	public ImageButton(MarkupContainer parent, final String id, final WebResource imageResource)
 	{
-		super(id);
+		super(parent,id);
 		this.localizedImageResource.setResource(imageResource);
 	}
 
@@ -72,9 +73,9 @@ public class ImageButton extends Button implements IResourceListener
 	 * @param resourceReference
 	 *            The shared image resource
 	 */
-	public ImageButton(final String id, final ResourceReference resourceReference)
+	public ImageButton(MarkupContainer parent, final String id, final ResourceReference resourceReference)
 	{
-		super(id);
+		super(parent,id);
 		localizedImageResource.setResourceReference(resourceReference);
 	}
 
@@ -86,9 +87,9 @@ public class ImageButton extends Button implements IResourceListener
 	 * @param label
 	 *            The button label
 	 */
-	public ImageButton(final String id, final String label)
+	public ImageButton(MarkupContainer parent, final String id, final String label)
 	{
-		this(id, new DefaultButtonImageResource(label));
+		this(parent,id, new DefaultButtonImageResource(label));
 	}
 
 	/**

@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -65,15 +66,15 @@ public final class PageView<V> extends Panel<V>
 	 *            The page to be analyzed
 	 * @see Component#Component(String)
 	 */
-	public PageView(final String id, final Page page)
+	public PageView(MarkupContainer<?> parent,final String id, final Page page)
 	{
-		super(id);
+		super(parent,id);
 		
 		// Create an empty list. It'll be filled later
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		// Name of page
-		add(new Label("info", page == null ? "[Stateless Page]" : page.toString()));
+		add(new Label(this,"info", page == null ? "[Stateless Page]" : page.toString()));
 
 		// Get the components data and fill and sort the list
 		data.clear();
@@ -90,7 +91,7 @@ public final class PageView<V> extends Panel<V>
 		});
 		
 		// Create the table containing the list the components
-		add(new ListView<ComponentData>("components", data)
+		add(new ListView<ComponentData>(this,"components", data)
 		{
 			private static final long serialVersionUID = 1L;
 			
@@ -102,11 +103,11 @@ public final class PageView<V> extends Panel<V>
 			{
 				final ComponentData componentData = listItem.getModelObject();
 
-				listItem.add(new Label("row", Integer.toString(listItem.getIndex() + 1)));
-				listItem.add(new Label("path", componentData.path));
-				listItem.add(new Label("size", Bytes.bytes(componentData.size).toString()));
-				listItem.add(new Label("type", componentData.type));
-				listItem.add(new Label("model", componentData.value));
+				listItem.add(new Label(listItem,"row", Integer.toString(listItem.getIndex() + 1)));
+				listItem.add(new Label(listItem,"path", componentData.path));
+				listItem.add(new Label(listItem,"size", Bytes.bytes(componentData.size).toString()));
+				listItem.add(new Label(listItem,"type", componentData.type));
+				listItem.add(new Label(listItem,"model", componentData.value));
 			}
 		});
 	}

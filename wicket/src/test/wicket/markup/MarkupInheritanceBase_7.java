@@ -38,8 +38,8 @@ public class MarkupInheritanceBase_7 extends WebPage
 	 */
 	public MarkupInheritanceBase_7()
 	{
-		add(new Label("label1", new PropertyModel(this, "counter")));
-		add(new Link("link")
+		add(new Label(this,"label1", new PropertyModel(this, "counter")));
+		add(new Link(this,"link")
 		{
 			private static final long serialVersionUID = 1L;
 

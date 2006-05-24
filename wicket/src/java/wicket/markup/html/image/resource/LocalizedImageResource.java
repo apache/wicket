@@ -88,7 +88,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	private ResourceReference resourceReference;
 
 	/** The resource parameters */
-	private ValueMap<String, Object> resourceParameters;
+	private ValueMap resourceParameters;
 
 	/** The locale of the image resource */
 	private transient Locale locale;
@@ -217,7 +217,7 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	 * @param resourceParameters 
 	 * 			  The resource parameters for the shared resource
 	 */
-	public final void setResourceReference(final ResourceReference resourceReference,final ValueMap<String, Object> resourceParameters)
+	public final void setResourceReference(final ResourceReference resourceReference,final ValueMap resourceParameters)
 	{
 		resourceKind = Boolean.FALSE;
 		this.resourceReference = resourceReference;

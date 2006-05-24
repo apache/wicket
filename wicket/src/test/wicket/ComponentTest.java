@@ -17,7 +17,6 @@
  */
 package wicket;
 
-import wicket.WicketTestCase;
 
 /**
  * Test for ajax handler.

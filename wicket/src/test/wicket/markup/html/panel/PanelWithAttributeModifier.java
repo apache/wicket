@@ -19,6 +19,7 @@
 package wicket.markup.html.panel;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.model.Model;
 
 /**
@@ -34,9 +35,9 @@ public class PanelWithAttributeModifier extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public PanelWithAttributeModifier(final String id) 
+	public PanelWithAttributeModifier(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
 	    add(new AttributeModifier("class", true, new Model("test")));
     }
 }

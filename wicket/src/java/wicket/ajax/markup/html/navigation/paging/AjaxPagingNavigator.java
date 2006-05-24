@@ -17,6 +17,7 @@
  */
 package wicket.ajax.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.navigation.paging.IPagingLabelProvider;
@@ -50,9 +51,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @param pageable
 	 *            The pageable component the page links are referring to.
 	 */
-	public AjaxPagingNavigator(final String id, final IPageable pageable)
+	public AjaxPagingNavigator(MarkupContainer parent, final String id, final IPageable pageable)
 	{
-		this(id, pageable, null);
+		this(parent,id, pageable, null);
 	}
 
 	/**
@@ -65,10 +66,10 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @param labelProvider
 	 *            The label provider for the link text.
 	 */
-	public AjaxPagingNavigator(final String id, final IPageable pageable,
+	public AjaxPagingNavigator(MarkupContainer parent, final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		super(id, pageable, labelProvider);
+		super(parent,id, pageable, labelProvider);
 		setOutputMarkupId(true);
 	}
 
@@ -85,9 +86,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the increment link
 	 */
 	@Override
-	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	protected Link newPagingNavigationIncrementLink(MarkupContainer parent,String id, IPageable pageable, int increment)
 	{
-		return new AjaxPagingNavigationIncrementLink(id, pageable, increment);
+		return new AjaxPagingNavigationIncrementLink(parent,id, pageable, increment);
 	}
 
 	/**
@@ -103,9 +104,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the pagenumber link
 	 */
 	@Override
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected Link newPagingNavigationLink(MarkupContainer parent,String id, IPageable pageable, int pageNumber)
 	{
-		return new AjaxPagingNavigationLink(id, pageable, pageNumber);
+		return new AjaxPagingNavigationLink(parent,id, pageable, pageNumber);
 	}
 
 	/**
@@ -119,10 +120,10 @@ public class AjaxPagingNavigator extends PagingNavigator
 	 * @return the navigation object
 	 */
 	@Override
-	protected PagingNavigation newNavigation(final IPageable pageable,
+	protected PagingNavigation newNavigation(MarkupContainer parent,final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		return new AjaxPagingNavigation("navigation", pageable, labelProvider);
+		return new AjaxPagingNavigation(parent,"navigation", pageable, labelProvider);
 	}
 
 }

@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.EmptyPage;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 
@@ -41,7 +42,7 @@ public class PrimitiveTypeRequiredTest extends WicketTestCase
 	 */
 	public void testPrimitiveClass() throws Exception
 	{
-		TextField tf = new TextField("test", int.class);
+		TextField tf = new TextField(new EmptyPage(),"test", int.class);
 		assertTrue(tf.isRequired());
 		
 		try

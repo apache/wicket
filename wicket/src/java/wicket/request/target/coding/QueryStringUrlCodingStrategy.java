@@ -157,9 +157,9 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * @return Parameters
 	 */
 	@Override
-	protected ValueMap<String,Object> decodeParameters(String fragment, Map<String,? extends Object> passedParameters)
+	protected ValueMap decodeParameters(String fragment, Map<String,? extends Object> passedParameters)
 	{
-		ValueMap<String,Object> parameters = new ValueMap<String,Object>();
+		ValueMap parameters = new ValueMap();
 
 		if (passedParameters != null)
 		{

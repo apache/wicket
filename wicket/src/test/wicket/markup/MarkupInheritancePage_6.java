@@ -33,6 +33,6 @@ public class MarkupInheritancePage_6 extends WebPage
 	 */
 	public MarkupInheritancePage_6()
 	{
-		add(new MarkupInheritanceExtensionPanel_6("panel"));
+		add(new MarkupInheritanceExtensionPanel_6(this,"panel"));
 	}
 }

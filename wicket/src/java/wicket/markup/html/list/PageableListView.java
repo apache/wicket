@@ -19,6 +19,7 @@ package wicket.markup.html.list;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
@@ -48,9 +49,9 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(final String id, final IModel model, int rowsPerPage)
+	public PageableListView(MarkupContainer<?> parent,final String id, final IModel model, int rowsPerPage)
 	{
-		super(id, model);
+		super(parent,id, model);
 		this.rowsPerPage = rowsPerPage;
 	}
 
@@ -66,9 +67,9 @@ public abstract class PageableListView extends ListView implements IPageable
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(final String id, final List list, final int rowsPerPage)
+	public PageableListView(MarkupContainer<?> parent,final String id, final List list, final int rowsPerPage)
 	{
-		super(id, list);
+		super(parent,id, list);
 		this.rowsPerPage = rowsPerPage;
 	}
 

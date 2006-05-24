@@ -17,6 +17,7 @@
  */
 package wicket.ajax.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.markup.html.form.CheckBox;
@@ -38,9 +39,9 @@ public abstract class AjaxCheckBox extends CheckBox
 	 * 
 	 * @param id
 	 */
-	public AjaxCheckBox(final String id)
+	public AjaxCheckBox(MarkupContainer parent, final String id)
 	{
-		this(id, null);
+		this(parent,id, null);
 	}
 
 	/**
@@ -49,9 +50,9 @@ public abstract class AjaxCheckBox extends CheckBox
 	 * @param id
 	 * @param model
 	 */
-	public AjaxCheckBox(final String id, final IModel model)
+	public AjaxCheckBox(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		
 		setOutputMarkupId(true);
 

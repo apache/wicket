@@ -18,6 +18,7 @@
 package wicket.markup.html.link;
 
 import wicket.Application;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
@@ -108,17 +109,17 @@ public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkList
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public Link(final String id)
+	public Link(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Link(final String id, IModel object)
+	public Link(MarkupContainer<?> parent,final String id, IModel object)
 	{
-		super(id, object);
+		super(parent,id, object);
 	}
 
 	/**

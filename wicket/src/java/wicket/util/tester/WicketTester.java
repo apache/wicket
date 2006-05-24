@@ -300,10 +300,10 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Render a panel from <code>Panel(String id)</code> constructor.
+	 * Render a panel from <code>Panel(MarkupContainer parent,String id)</code> constructor.
 	 * 
 	 * @param panelClass
-	 *            a test panel class with <code>Panel(String id)</code>
+	 *            a test panel class with <code>Panel(MarkupContainer parent,String id)</code>
 	 *            constructor
 	 * @return Panel rendered panel
 	 */

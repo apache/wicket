@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 
@@ -38,9 +39,9 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 * @param fc
 	 *            form component
 	 */
-	public SimpleFormComponentLabel(String id, FormComponent fc)
+	public SimpleFormComponentLabel(MarkupContainer<?> parent,String id, FormComponent fc)
 	{
-		super(id, fc);
+		super(parent,id, fc);
 		if (fc.getLabel() == null)
 		{
 			throw new IllegalStateException("Provided form component does not have a label set. "

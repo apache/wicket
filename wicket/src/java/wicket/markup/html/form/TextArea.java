@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -33,17 +34,17 @@ public class TextArea extends AbstractTextComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public TextArea(final String id)
+	public TextArea(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public TextArea(final String id, final IModel model)
+	public TextArea(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

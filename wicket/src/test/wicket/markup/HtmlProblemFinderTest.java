@@ -18,9 +18,9 @@
 package wicket.markup;
 
 
+import wicket.WicketTestCase;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.filter.HtmlProblemFinder;
-import wicket.WicketTestCase;
 
 /**
  * @author Juergen Donnerstag

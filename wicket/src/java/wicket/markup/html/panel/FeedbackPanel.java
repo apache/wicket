@@ -24,6 +24,7 @@ import java.util.List;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessagesModel;
 import wicket.feedback.IFeedback;
@@ -65,9 +66,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 		/**
 		 * @see wicket.Component#Component(String)
 		 */
-		public MessageListView(final String id)
+		public MessageListView(MarkupContainer parent, final String id)
 		{
-			super(id);
+			super(parent,id);
 			setModel(newFeedbackMessagesModel());
 		}
 
@@ -97,7 +98,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				}
 			};
 
-			final Label label = new Label("message", message.getMessage());
+			final Label label = new Label(listItem,"message", message.getMessage());
 			label.setEscapeModelStrings(getEscapeMessages());
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
@@ -109,18 +110,18 @@ public class FeedbackPanel extends Panel implements IFeedback
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FeedbackPanel(final String id)
+	public FeedbackPanel(MarkupContainer parent, final String id)
 	{
-		this(id, null);
+		this(parent,id, null);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FeedbackPanel(final String id, IFeedbackMessageFilter filter)
+	public FeedbackPanel(MarkupContainer parent, final String id, IFeedbackMessageFilter filter)
 	{
-		super(id);
-		WebMarkupContainer messagesContainer = new WebMarkupContainer("feedbackul")
+		super(parent,id);
+		WebMarkupContainer messagesContainer = new WebMarkupContainer(this,"feedbackul")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -131,7 +132,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 			}
 		};
 		add(messagesContainer);
-		this.messageListView = new MessageListView("messages");
+		this.messageListView = new MessageListView(messagesContainer,"messages");
 		messageListView.setVersioned(false);
 		messagesContainer.add(messageListView);
 		

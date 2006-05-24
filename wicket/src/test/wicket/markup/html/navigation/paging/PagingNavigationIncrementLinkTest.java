@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import wicket.EmptyPage;
+
 
 /**
  * Testcase for the navigation increment link.
@@ -55,7 +57,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberPositive()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("", mock, 1);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, 1);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -70,7 +72,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberNegative()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("", mock, -1);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, -1);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -88,7 +90,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberTwo()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("", mock, 2);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, 2);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -109,7 +111,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testIsFirstLastPage()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink("", mock, 0);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, 0);
 
 		pagecount = 0;
 		currentpage = 0;

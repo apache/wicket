@@ -31,8 +31,8 @@ public class TestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Panel panel1 = new Panel1("panel");
-	private final Panel panel2 = new Panel2("panel");
+	private final Panel panel1 = new Panel1(this,"panel");
+	private final Panel panel2 = new Panel2(this,"panel");
 	private Panel current;
 	
 	/**
@@ -43,7 +43,7 @@ public class TestPage extends WebPage
 		this.current = panel1;
 		add(current);
 		
-		add(new PageLink("link", new IPageLink()
+		add(new PageLink(this,"link", new IPageLink()
 				{
 					private static final long serialVersionUID = 1L;
 

@@ -43,11 +43,11 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 	 */
 	public AbstractCheckGroupTestPage(List list) {
 		
-		Form form=new Form("form");
-		CheckGroup group=new CheckGroup("group", new Model((Serializable)list));
-		WebMarkupContainer container=new WebMarkupContainer("container");
-		Check check1=new Check("check1", new Model("check1"));
-		Check check2=new Check("check2", new Model("check2"));
+		Form form=new Form(this,"form");
+		CheckGroup group=new CheckGroup(form,"group", new Model((Serializable)list));
+		WebMarkupContainer container=new WebMarkupContainer(group,"container");
+		Check check1=new Check(group,"check1", new Model("check1"));
+		Check check2=new Check(container,"check2", new Model("check2"));
 		
 		
 		add(form);

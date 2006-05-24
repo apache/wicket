@@ -18,6 +18,8 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.MarkupContainer;
+
 
 
 /**
@@ -33,8 +35,8 @@ public class SimplePanel_1 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public SimplePanel_1(final String id) 
+	public SimplePanel_1(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
     }
 }

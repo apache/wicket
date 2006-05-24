@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import wicket.EmptyPage;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
@@ -114,10 +115,10 @@ public class CheckGroupTest extends WicketTestCase
 		List list = new ArrayList();
 		Model model = new Model((Serializable)list);
 
-		final CheckGroup group2 = new CheckGroup("group2", model);
+		final CheckGroup group2 = new CheckGroup(new EmptyPage(),"group2", model);
 		assertTrue(group2.getModelObject() == list);
 
-		final CheckGroup group3 = new CheckGroup("group3", list);
+		final CheckGroup group3 = new CheckGroup(new EmptyPage(),"group3", list);
 		assertTrue(group3.getModelObject() == list);
 
 
@@ -129,14 +130,14 @@ public class CheckGroupTest extends WicketTestCase
 
 		// create component hierarchy
 
-		final Form form = new Form("form", new CompoundPropertyModel(modelObject));
+		final Form form = new Form(page,"form", new CompoundPropertyModel(modelObject));
 
-		final CheckGroup group = new CheckGroup("prop1");
+		final CheckGroup group = new CheckGroup(form,"prop1");
 
-		final WebMarkupContainer container = new WebMarkupContainer("container");
+		final WebMarkupContainer container = new WebMarkupContainer(group,"container");
 
-		final Check choice1 = new Check("check1", new Model(check1));
-		final Check choice2 = new Check("prop2");
+		final Check choice1 = new Check(container,"check1", new Model(check1));
+		final Check choice2 = new Check(group,"prop2");
 
 		page.add(form);
 		form.add(group);

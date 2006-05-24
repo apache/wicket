@@ -20,6 +20,8 @@ package wicket.resource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -209,14 +211,20 @@ public class PropertiesFactory implements IPropertiesFactory
 		}
 		else
 		{
-			ValueMap strings = ValueMap.EMPTY_MAP;
+			ValueMap strings = null;
 
 			try
 			{
 				try
 				{
 					properties.load(new BufferedInputStream(resourceStream.getInputStream()));
-					strings = new ValueMap(properties);
+					strings = new ValueMap();
+					Enumeration<?> enumeration = properties.propertyNames();
+					while (enumeration.hasMoreElements())
+					{
+						String property = (String)enumeration.nextElement();
+						strings.put(property, properties.getProperty(property));
+					}
 				}
 				finally
 				{

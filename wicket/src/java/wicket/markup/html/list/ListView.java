@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
@@ -106,17 +107,17 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public ListView(final String id)
+	public ListView(MarkupContainer<?> parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final IModel<List<V>> model)
+	public ListView(MarkupContainer<?> parent,final String id, final IModel<List<V>> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 
 		if (model == null)
 		{
@@ -136,9 +137,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(final String id, final List<V> list)
+	public ListView(MarkupContainer<?> parent,final String id, final List<V> list)
 	{
-		this(id, new Model<List<V>>(list));
+		this(parent,id, new Model<List<V>>(list));
 	}
 
 	/**
@@ -251,9 +252,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveDownLink(final String id, final ListItem<V> item)
+	public final Link moveDownLink(MarkupContainer parent, final String id, final ListItem<V> item)
 	{
-		return new Link(id)
+		return new Link(item,id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -309,9 +310,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveUpLink(final String id, final ListItem<V> item)
+	public final Link moveUpLink(MarkupContainer parent, final String id, final ListItem<V> item)
 	{
-		return new Link(id)
+		return new Link(item,id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -368,9 +369,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link removeLink(final String id, final ListItem<V> item)
+	public final Link removeLink(MarkupContainer parent, final String id, final ListItem<V> item)
 	{
-		return new Link(id)
+		return new Link(item,id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -610,7 +611,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 */
 	protected ListItem<V> newItem(final int index)
 	{
-		return new ListItem<V>(index, getListItemModel(getModel(), index));
+		return new ListItem<V>(this,index, getListItemModel(getModel(), index));
 	}
 
 	/**

@@ -17,6 +17,9 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.MarkupContainer;
+import wicket.Page;
+
 
 /**
  * @author ivaynberg
@@ -31,13 +34,10 @@ public class InlineTestPanel extends Panel
 	 * @param id
 	 * @param child
 	 */
-	public InlineTestPanel(String id, Fragment child)
+	public InlineTestPanel(MarkupContainer<?> parent, String id, Page page)
 	{
-		super(id);
-		if (child == null || !"child".equals(child.getId()))
-		{
-			throw new IllegalArgumentException();
-		}
+		super(parent,id);
+		Fragment child = new Fragment(this,"child", "child-frag", page);
 		add(child);
 	}
 }

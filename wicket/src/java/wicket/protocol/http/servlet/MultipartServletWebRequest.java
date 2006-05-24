@@ -19,6 +19,7 @@ package wicket.protocol.http.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +48,10 @@ import wicket.util.value.ValueMap;
 public class MultipartServletWebRequest extends ServletWebRequest implements IMultipartWebRequest
 {
 	/** Map of file items. */
-	private final ValueMap<String, FileItem> files = new ValueMap<String, FileItem>();
+	private final HashMap<String, FileItem> files = new HashMap<String, FileItem>();
 
 	/** Map of parameters. */
-	private final ValueMap<String, Object> parameters = new ValueMap<String, Object>();
+	private final ValueMap parameters = new ValueMap();
 
 
 	/**
@@ -196,7 +197,7 @@ public class MultipartServletWebRequest extends ServletWebRequest implements IMu
 	/**
 	 * @return Returns the files.
 	 */
-	public Map<String, FileItem> getFiles()
+	public Map getFiles()
 	{
 		return files;
 	}

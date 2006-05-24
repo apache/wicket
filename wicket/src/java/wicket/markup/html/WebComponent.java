@@ -18,6 +18,7 @@
 package wicket.markup.html;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
 
@@ -42,17 +43,17 @@ public class WebComponent<V> extends Component<V>
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebComponent(final String id)
+	public WebComponent(MarkupContainer<?> parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see Component#Component(String, IModel)
 	 */
-	public WebComponent(final String id, final IModel<V> model)
+	public WebComponent(MarkupContainer<?> parent, final String id, final IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

@@ -17,6 +17,7 @@
  */
 package wicket.ajax.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.IAjaxLink;
 import wicket.markup.html.navigation.paging.IPageable;
@@ -44,9 +45,9 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	 *            The page number in the PageableListView that this link links
 	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
-	public AjaxPagingNavigationLink(final String id, final IPageable pageable, final int pageNumber)
+	public AjaxPagingNavigationLink(MarkupContainer parent, final String id, final IPageable pageable, final int pageNumber)
 	{
-		super(id, pageable, pageNumber);
+		super(parent,id, pageable, pageNumber);
 		add(new AjaxPagingNavigationBehavior(this, pageable, "onclick"));
 		setOutputMarkupId(true);
 	}

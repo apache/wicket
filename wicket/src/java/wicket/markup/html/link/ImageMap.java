@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -274,9 +275,9 @@ public final class ImageMap extends WebMarkupContainer
 	 * @param id
 	 *            See Component
 	 */
-	public ImageMap(final String id)
+	public ImageMap(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**

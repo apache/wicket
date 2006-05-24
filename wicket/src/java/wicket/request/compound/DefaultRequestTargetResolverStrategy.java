@@ -273,7 +273,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 		try
 		{
-			PageParameters<String, Object> params = new PageParameters<String,Object>(requestParameters.getParameters());
+			PageParameters params = new PageParameters(requestParameters.getParameters());
 			if(requestParameters.getBookmarkableFormName() != null)
 			{
 				return new BookmarkableFormPageRequestTarget(requestParameters.getPageMapName(), pageClass,
@@ -311,7 +311,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// Get the home page class
 			Class<? extends Page> homePageClass = application.getHomePage();
 
-			PageParameters<String,Object> parameters = new PageParameters<String,Object>(requestParameters.getParameters());
+			PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			// and create a dummy target for looking up whether the home page is
 			// mounted
 			BookmarkablePageRequestTarget homepageTarget = null;

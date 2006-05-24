@@ -19,6 +19,7 @@ package wicket.markup.html.form.upload;
 
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.Request;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.FormComponent;
@@ -45,9 +46,9 @@ public class FileUploadField extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FileUploadField(final String id)
+	public FileUploadField(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -56,9 +57,9 @@ public class FileUploadField extends FormComponent
 	 * @param model
 	 *            See Component
 	 */
-	public FileUploadField(final String id, IModel model)
+	public FileUploadField(MarkupContainer parent, final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		hasExplicitModel = true;
 	}
 

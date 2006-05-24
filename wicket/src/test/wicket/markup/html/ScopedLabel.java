@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import wicket.MarkupContainer;
 import wicket.markup.IScopedComponent;
 import wicket.markup.html.basic.Label;
 import wicket.model.IModel;
@@ -33,26 +34,26 @@ public class ScopedLabel extends Label implements IScopedComponent
 	 * @param id
 	 * @param model
 	 */
-	public ScopedLabel(String id, IModel model)
+	public ScopedLabel(MarkupContainer<?> parent, String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
 	 * @param id
 	 * @param label
 	 */
-	public ScopedLabel(String id, String label)
+	public ScopedLabel(MarkupContainer<?> parent, String id, String label)
 	{
-		super(id, label);
+		super(parent,id, label);
 	}
 
 	/**
 	 * @param id
 	 */
-	public ScopedLabel(String id)
+	public ScopedLabel(MarkupContainer<?> parent, String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -44,25 +45,25 @@ import wicket.util.convert.ConversionException;
  * @author Sven Meier (svenmeier)
  * 
  */
-public class RadioGroup extends FormComponent implements IOnChangeListener
+public class RadioGroup<V> extends FormComponent<V> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public RadioGroup(String id)
+	public RadioGroup(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 		setRenderBodyOnly(true);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public RadioGroup(String id, IModel model)
+	public RadioGroup(MarkupContainer<?> parent,String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		setRenderBodyOnly(true);
 	}
 
@@ -88,7 +89,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
-	protected Object convertValue(String[] input) throws ConversionException
+	protected V convertValue(String[] input) throws ConversionException
 	{
 		if (input != null && input.length > 0)
 		{
@@ -100,7 +101,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 			String path = input[0].substring(getPath().length() + 1);
 
 			// retrieve the selected single radio choice component
-			Radio choice = (Radio)get(path);
+			Radio<V> choice = (Radio)get(path);
 
 			if (choice == null)
 			{

@@ -19,6 +19,7 @@ package wicket.markup.html.form;
 import java.util.Collection;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -139,9 +140,9 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 * @see wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String)
 	 */
-	public CheckBoxMultipleChoice(final String id)
+	public CheckBoxMultipleChoice(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -154,9 +155,9 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 * @see wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String, java.util.List)
 	 */
-	public CheckBoxMultipleChoice(final String id, final List<V> choices)
+	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, final List<V> choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
@@ -172,10 +173,10 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 * @see AbstractChoice#AbstractChoice(String,
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(final String id, final List<V> choices,
+	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, final List<V> choices,
 			final IChoiceRenderer<V> renderer)
 	{
-		super(id, choices, renderer);
+		super(parent,id, choices, renderer);
 	}
 
 	/**
@@ -191,9 +192,9 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
 	 *      java.util.List)
 	 */
-	public CheckBoxMultipleChoice(final String id, IModel<Collection<V>> model, final List<V> choices)
+	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<V>> model, final List<V> choices)
 	{
-		super(id, model, choices);
+		super(parent,id, model, choices);
 	}
 
 	/**
@@ -211,10 +212,10 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(final String id, IModel<Collection<V>> model, final List<V> choices,
+	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<V>> model, final List<V> choices,
 			final IChoiceRenderer renderer)
 	{
-		super(id, model, choices, renderer);
+		super(parent,id, model, choices, renderer);
 	}
 
 	/**
@@ -227,9 +228,9 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 * @see wicket.Component#Component(String)
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<List<V>> choices)
+	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<List<V>> choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
@@ -246,9 +247,9 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 *      wicket.model.IModel,wicket.model.IModel)
 	 * @see wicket.Component#Component(String, wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<Collection<V>> model, IModel<List<V>> choices)
+	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<Collection<V>> model, IModel<List<V>> choices)
 	{
-		super(id, model, choices);
+		super(parent,id, model, choices);
 	}
 
 	/**
@@ -264,9 +265,9 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 * @see wicket.Component#Component(String)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
-		super(id, choices, renderer);
+		super(parent,id, choices, renderer);
 	}
 
 
@@ -286,9 +287,9 @@ public class CheckBoxMultipleChoice<V> extends ListMultipleChoice<V>
 	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(String id, IModel<Collection<V>> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<Collection<V>> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
-		super(id, model, choices, renderer);
+		super(parent,id, model, choices, renderer);
 	}
 
 	/**

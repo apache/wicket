@@ -18,6 +18,7 @@
  */
 package wicket.markup.parser.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.link.ExternalLink;
 import wicket.markup.html.panel.Panel;
 
@@ -35,9 +36,9 @@ public class HeaderSectionPanel_2 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public HeaderSectionPanel_2(final String id) 
+	public HeaderSectionPanel_2(MarkupContainer parent,final String id) 
 	{
-	    super(id);
-	    add(new ExternalLink("cssHref", "myStyle.css"));
+	    super(parent,id);
+	    add(new ExternalLink(this,"cssHref", "myStyle.css"));
     }
 }

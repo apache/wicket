@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.link;
 
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -41,7 +42,7 @@ public class BookmarkablePageLink<V> extends Link<V>
 	private String pageMapName = null;
 
 	/** The parameters to pass to the class constructor when instantiated. */
-	private final PageParameters<String,Object> parameters;
+	private final PageParameters parameters;
 
 	/**
 	 * Constructor.
@@ -51,9 +52,9 @@ public class BookmarkablePageLink<V> extends Link<V>
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass)
+	public BookmarkablePageLink(MarkupContainer<?> parent,final String id, final Class<? extends Page> pageClass)
 	{
-		this(id, pageClass, new PageParameters<String,Object>());
+		this(parent, id, pageClass, new PageParameters());
 	}
 
 	/**
@@ -67,10 +68,10 @@ public class BookmarkablePageLink<V> extends Link<V>
 	 *            The parameters to pass to the new page when the link is
 	 *            clicked
 	 */
-	public BookmarkablePageLink(final String id, final Class<? extends Page> pageClass,
-			final PageParameters<String,Object> parameters)
+	public BookmarkablePageLink(MarkupContainer<?> parent,final String id, final Class<? extends Page> pageClass,
+			final PageParameters parameters)
 	{
-		super(id);
+		super(parent,id);
 		if (pageClass == null)
 		{
 			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");

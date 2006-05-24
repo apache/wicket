@@ -609,7 +609,7 @@ public abstract class RequestCycle
 	 *            The page parameters that gets appended to the bookmarkable
 	 *            url,
 	 */
-	public final void setResponsePage(final Class<? extends Page> pageClass, final PageParameters<String,Object> pageParameters)
+	public final void setResponsePage(final Class<? extends Page> pageClass, final PageParameters pageParameters)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
 		setRequestTarget(target);
@@ -710,7 +710,7 @@ public abstract class RequestCycle
 	 *            The parameters to pass to the resource.
 	 * @return The url for the shared resource
 	 */
-	public final CharSequence urlFor(final ResourceReference resourceReference, ValueMap<String, Object> parameters)
+	public final CharSequence urlFor(final ResourceReference resourceReference, ValueMap parameters)
 	{
 		RequestParameters requestParameters = new RequestParameters();
 		requestParameters.setResourceKey(resourceReference.getSharedResourceKey());
@@ -735,7 +735,7 @@ public abstract class RequestCycle
 	 * @return Bookmarkable URL to page
 	 */
 	public final CharSequence urlFor(final PageMap pageMap, final Class<? extends Page> pageClass,
-			final PageParameters<String, Object> parameters)
+			final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
 				? PageMap.DEFAULT_NAME

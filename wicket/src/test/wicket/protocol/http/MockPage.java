@@ -39,14 +39,14 @@ public class MockPage extends WebPage {
 	 */
 	public MockPage() {
         // Action link counts link clicks
-        final Link actionLink = new Link("actionLink") {
+        final Link actionLink = new Link(this,"actionLink") {
 			private static final long serialVersionUID = 1L;
 
 			public void onClick() {
                 linkClickCount++;
             }
         };
-        actionLink.add(new Label("linkClickCount", new PropertyModel(this, "linkClickCount")));
+        actionLink.add(new Label(actionLink,"linkClickCount", new PropertyModel(this, "linkClickCount")));
         add(actionLink);
     }
 

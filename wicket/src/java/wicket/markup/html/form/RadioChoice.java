@@ -19,6 +19,7 @@ package wicket.markup.html.form;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -144,9 +145,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.Component#Component(String)
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public RadioChoice(final String id)
+	public RadioChoice(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -159,9 +160,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.Component#Component(String)
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public RadioChoice(final String id, final List choices)
+	public RadioChoice(MarkupContainer<?> parent, final String id, final List choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
@@ -177,9 +178,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, final List choices, final IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, final String id, final List choices, final IChoiceRenderer renderer)
 	{
-		super(id, choices, renderer);
+		super(parent,id, choices, renderer);
 	}
 
 	/**
@@ -195,9 +196,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, List)
 	 */
-	public RadioChoice(final String id, IModel model, final List choices)
+	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices)
 	{
-		super(id, model, choices);
+		super(parent,id, model, choices);
 	}
 
 	/**
@@ -215,10 +216,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, List,IChoiceRenderer)
 	 */
-	public RadioChoice(final String id, IModel model, final List choices,
+	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices,
 			final IChoiceRenderer renderer)
 	{
-		super(id, model, choices, renderer);
+		super(parent,id, model, choices, renderer);
 	}
 
 	/**
@@ -232,9 +233,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel)
 	 */
-	public RadioChoice(String id, IModel choices)
+	public RadioChoice(MarkupContainer parent,String id, IModel choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
@@ -251,9 +252,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      IModel,IModel)
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public RadioChoice(String id, IModel model, IModel choices)
+	public RadioChoice(MarkupContainer parent,String id, IModel model, IModel choices)
 	{
-		super(id, model, choices);
+		super(parent,id, model, choices);
 	}
 
 	/**
@@ -269,9 +270,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      IModel,IChoiceRenderer)
 	 * @see wicket.Component#Component(String)
 	 */
-	public RadioChoice(String id, IModel choices, IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent,String id, IModel choices, IChoiceRenderer renderer)
 	{
-		super(id, choices, renderer);
+		super(parent,id, choices, renderer);
 	}
 
 
@@ -291,9 +292,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public RadioChoice(String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent,String id, IModel model, IModel choices, IChoiceRenderer renderer)
 	{
-		super(id, model, choices, renderer);
+		super(parent,id, model, choices, renderer);
 	}
 
 	/**

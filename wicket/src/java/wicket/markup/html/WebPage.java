@@ -30,6 +30,7 @@ import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
+import wicket.MarkupContainer;
 import wicket.MetaDataKey;
 import wicket.Page;
 import wicket.PageMap;
@@ -226,9 +227,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 *            Name of link
 	 * @return Link to home page for this application
 	 */
-	protected final BookmarkablePageLink homePageLink(final String id)
+	protected final BookmarkablePageLink homePageLink(MarkupContainer<?> parent, final String id)
 	{
-		return new BookmarkablePageLink(id, getApplication().getHomePage());
+		return new BookmarkablePageLink(parent,id, getApplication().getHomePage());
 	}
 
 	/**
@@ -257,7 +258,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 						// name
 						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
 						{
-							add(new HtmlBodyContainer(tag.getId()));
+							add(new HtmlBodyContainer(this,tag.getId()));
 						}
 						// remember the id of the tag
 						bodyContainer = new BodyContainer(this, tag.getId());

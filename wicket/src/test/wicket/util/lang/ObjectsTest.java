@@ -2,6 +2,7 @@ package wicket.util.lang;
 
 import java.io.Serializable;
 
+import wicket.EmptyPage;
 import wicket.WicketTestCase;
 import wicket.markup.html.form.TextField;
 import wicket.model.Model;
@@ -89,7 +90,7 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testComponentClone()
 	{
-		PropertyModel pm = new PropertyModel(new TextField("test", new Model("test")),
+		PropertyModel pm = new PropertyModel(new TextField(new EmptyPage(),"test", new Model("test")),
 				"modelObject");
 		PropertyModel pm2 = (PropertyModel)Objects.cloneModel(pm);
 		assertTrue(pm.getObject(null) == pm2.getObject(null));

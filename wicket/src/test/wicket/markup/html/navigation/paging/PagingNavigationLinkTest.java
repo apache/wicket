@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import wicket.EmptyPage;
+
 /**
  * Tests the PagingNavigationLink.
  * 
@@ -54,7 +56,7 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 */
 	public void testGetPageNumber_1()
 	{
-		PagingNavigationLink link = new PagingNavigationLink("id", mock, 0);
+		PagingNavigationLink link = new PagingNavigationLink(new EmptyPage(),"id", mock, 0);
 		
 		currentpage = 0;
 		pagecount = 0;
@@ -79,7 +81,7 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 */
 	public void testGetPageNumber_2()
 	{
-		PagingNavigationLink link = new PagingNavigationLink("id", mock, 2);
+		PagingNavigationLink link = new PagingNavigationLink(new EmptyPage(),"id", mock, 2);
 		
 		currentpage = 0;
 		pagecount = 0;
@@ -104,7 +106,7 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 */
 	public void testGetPageNumber_3()
 	{
-		PagingNavigationLink link = new PagingNavigationLink("id", mock, -1);
+		PagingNavigationLink link = new PagingNavigationLink(new EmptyPage(),"id", mock, -1);
 		
 		currentpage = 0;
 		pagecount = 0;
@@ -129,7 +131,7 @@ public class PagingNavigationLinkTest extends AbstractPagingNavigationTest
 	 */
 	public void testLinksTo()
 	{
-		PagingNavigationLink link = new PagingNavigationLink("id", mock, -1);
+		PagingNavigationLink link = new PagingNavigationLink(new EmptyPage(),"id", mock, -1);
 		
 		currentpage = 0;
 		pagecount = 0;

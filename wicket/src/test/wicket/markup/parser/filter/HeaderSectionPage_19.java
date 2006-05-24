@@ -36,6 +36,6 @@ public class HeaderSectionPage_19 extends WebPage
 	public HeaderSectionPage_19() 
 	{
 	    // for the test: the panel must the same id as the panels header contribution
-		add(new HeaderSectionPanel_19("foo"));
+		add(new HeaderSectionPanel_19(this,"foo"));
     }
 }

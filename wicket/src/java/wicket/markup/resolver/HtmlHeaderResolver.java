@@ -77,7 +77,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 		{
 			// Create a special header component which will gather additional
 			// input the <head> from 'contributors'.
-			final WebMarkupContainer header = new HtmlHeaderContainer(
+			final WebMarkupContainer header = new HtmlHeaderContainer(container,
 					HtmlHeaderSectionHandler.HEADER_ID);
 			container.autoAdd(header);
 
@@ -93,13 +93,14 @@ public class HtmlHeaderResolver implements IComponentResolver
 		    {
 				// Create a special header component which will gather additional
 				// input the <head> from 'contributors'.
-				final MarkupContainer header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
+				final MarkupContainer header = new HtmlHeaderContainer(container,HtmlHeaderSectionHandler.HEADER_ID);
+				container.autoAdd(header);
 				
 				// It is <wicket:head>. Because they do not provide any additional
 				// functionality they are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				final WebMarkupContainer header2 = new WebMarkupContainer(
+				final WebMarkupContainer header2 = new WebMarkupContainer(header,
 						HtmlHeaderSectionHandler.HEADER_ID)
 						{
 							private static final long serialVersionUID = 1L;
@@ -114,7 +115,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 				
 				header.add(header2);
 				
-				container.autoAdd(header);
 		    }
 		    else if (container instanceof HtmlHeaderContainer)
 		    {
@@ -122,7 +122,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// functionality there are merely a means of surrounding relevant
 				// markup. Thus we simply create a WebMarkupContainer to handle
 				// the tag.
-				final WebMarkupContainer header = new WebMarkupContainer(
+				final WebMarkupContainer header = new WebMarkupContainer(container,
 						HtmlHeaderSectionHandler.HEADER_ID)
 						{
 							private static final long serialVersionUID = 1L;

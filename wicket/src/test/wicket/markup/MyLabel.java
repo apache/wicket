@@ -18,6 +18,7 @@
  */
 package wicket.markup;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebComponent;
 
 /**
@@ -35,9 +36,9 @@ public class MyLabel extends WebComponent
      * Construct.
      * @param id
      */
-    public MyLabel(final String id)
+    public MyLabel(MarkupContainer<?> parent,final String id)
     {
-        super(id);
+        super(parent,id);
     }
 
     /**

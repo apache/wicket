@@ -19,9 +19,6 @@
 package wicket.markup.html.form;
 
 import wicket.markup.html.WebPage;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.Radio;
-import wicket.markup.html.form.RadioGroup;
 
 /**
  * Test page for checking markup of radiogroups.
@@ -38,10 +35,10 @@ public class RadioGroupTestPage3 extends WebPage
 	 */
 	public RadioGroupTestPage3()
 	{
-		Form form = new Form("form");
-		RadioGroup radio = new RadioGroup("radio");
-		radio.add(new Radio("check1"));
-		radio.add(new Radio("check2"));
+		Form form = new Form(this,"form");
+		RadioGroup radio = new RadioGroup(form,"radio");
+		radio.add(new Radio(radio,"check1"));
+		radio.add(new Radio(radio,"check2"));
 		form.add(radio);
 		add(form);
 	}

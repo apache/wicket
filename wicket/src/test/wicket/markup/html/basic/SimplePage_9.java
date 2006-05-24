@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.basic;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 
@@ -36,7 +37,7 @@ public class SimplePage_9 extends WebPage
 	 */
 	public SimplePage_9() 
 	{
-		add(new TestContainer("test"));
+		add(new TestContainer(this,"test"));
 	}
 
 	/**
@@ -50,10 +51,10 @@ public class SimplePage_9 extends WebPage
 		 * Construct.
 		 * @param id
 		 */
-		public TestContainer(String id)
+		public TestContainer(MarkupContainer<?> parent,String id)
 		{
-			super(id);
-			add(new Label("test", "myTest"));
+			super(parent,id);
+			add(new Label(this,"test", "myTest"));
 		}
 	}
 }

@@ -38,12 +38,12 @@ public class MyMockPage extends WebPage
 	 */
 	public MyMockPage()
 	{
-		final Form form = new Form("form");
+		final Form form = new Form(this,"form");
 		add(form);
 
 		String[] choices = { "choice1", "choice2" };
-		drop1 = new DropDownChoice("drop1", Arrays.asList(choices));
-		drop2 = new DropDownChoice("drop2", Arrays.asList(choices));
+		drop1 = new DropDownChoice(form,"drop1", Arrays.asList(choices));
+		drop2 = new DropDownChoice(form,"drop2", Arrays.asList(choices));
 		
 		drop1.setNullValid(true);
 		drop2.setNullValid(true);

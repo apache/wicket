@@ -35,7 +35,7 @@ public class InternalErrorPage extends WebPage
 	 */
 	public InternalErrorPage()
 	{
-		add(homePageLink("homePageLink"));
+		add(homePageLink(this,"homePageLink"));
 	}
 
 	/**

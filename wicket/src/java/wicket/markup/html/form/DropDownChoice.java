@@ -19,6 +19,7 @@ package wicket.markup.html.form;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -62,74 +63,74 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public DropDownChoice(final String id)
+	public DropDownChoice(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(final String id, final List<V> choices)
+	public DropDownChoice(MarkupContainer parent, final String id, final List<V> choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, final List<V> data, final IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent, final String id, final List<V> data, final IChoiceRenderer<V> renderer)
 	{
-		super(id,data, renderer);
+		super(parent,id,data, renderer);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(final String id, IModel<V> model, final List<V> choices)
+	public DropDownChoice(MarkupContainer parent, final String id, IModel<V> model, final List<V> choices)
 	{
-		super(id, model, choices);
+		super(parent,id, model, choices);
 	}
 	
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public DropDownChoice(final String id, IModel<V> model, final List<V> data, final IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent, final String id, IModel<V> model, final List<V> data, final IChoiceRenderer<V> renderer)
 	{
-		super(id, model,data, renderer);
+		super(parent,id, model,data, renderer);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public DropDownChoice(String id, IModel<List<V>> choices)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<List<V>> choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public DropDownChoice(String id, IModel<V> model, IModel<List<V>> choices)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<V> model, IModel<List<V>> choices)
 	{
-		super(id, model, choices);
+		super(parent,id, model, choices);
 	}
 	
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
-		super(id, choices, renderer);
+		super(parent,id, choices, renderer);
 	}
 
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(String id, IModel<V> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<V> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
-		super(id, model, choices, renderer);
+		super(parent,id, model, choices, renderer);
 	}
 	
 	/**

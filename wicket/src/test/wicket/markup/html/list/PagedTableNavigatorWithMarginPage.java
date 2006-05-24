@@ -21,6 +21,7 @@ package wicket.markup.html.list;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.IPageable;
@@ -59,28 +60,29 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 		list.add("thirteen");
 		list.add("fourteen");
 
-		PageableListView table = new PageableListView("table", list, 2)
+		PageableListView table = new PageableListView(this,"table", list, 2)
 		{
 			private static final long serialVersionUID = 1L;
 
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label("txt", txt));
+				listItem.add(new Label(listItem,"txt", txt));
 			}
 		};
 
 		add(table);
-		add(new PagingNavigator("navigator", table)
+		add(new PagingNavigator(this,"navigator", table)
         {
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * @see wicket.markup.html.navigation.paging.PagingNavigator#newNavigation(wicket.markup.html.navigation.paging.IPageable, wicket.markup.html.navigation.paging.IPagingLabelProvider)
 			 */
-			protected PagingNavigation newNavigation(IPageable pageable, IPagingLabelProvider labelProvider)
+			@Override
+			protected PagingNavigation newNavigation(MarkupContainer parent, IPageable pageable, IPagingLabelProvider labelProvider)
 			{
-                PagingNavigation nav = new PagingNavigation("navigation", pageable);
+                PagingNavigation nav = new PagingNavigation(parent,"navigation", pageable);
                 nav.setMargin(2);
                 if (nav.getViewSize() > 5)
                 {

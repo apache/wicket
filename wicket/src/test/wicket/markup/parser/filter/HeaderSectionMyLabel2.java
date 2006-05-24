@@ -18,6 +18,7 @@
  */
 package wicket.markup.parser.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.Model;
@@ -37,9 +38,9 @@ public class HeaderSectionMyLabel2 extends Label
 	 * @param id
 	 * @param label
 	 */
-	public HeaderSectionMyLabel2(final String id, final String label) 
+	public HeaderSectionMyLabel2(MarkupContainer<?> parent, final String id, final String label) 
 	{
-	    super(id, new Model(label));
+	    super(parent,id, new Model(label));
     }
 
 	/**

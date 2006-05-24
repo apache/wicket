@@ -443,17 +443,29 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	public static final Action RENDER = new Action(Action.RENDER);
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED1 = 0x0100;
+	protected static final int FLAG_RESERVED1 = 0x0100;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED2 = 0x0200;
+	protected static final int FLAG_RESERVED2 = 0x0200;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED3 = 0x0400;
+	protected static final int FLAG_RESERVED3 = 0x0400;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED4 = 0x0800;
+	protected static final int FLAG_RESERVED4 = 0x0800;
 
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED5 = 0x10000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED6 = 0x20000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED7 = 0x40000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED8 = 0x80000;
+	
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -473,19 +485,19 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	};
 
 	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
+	private static final int FLAG_AUTO = 0x0001;
 
 	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
+	private static final int FLAG_ENABLED = 0x0080;
 
 	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+	private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
 
 	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
 	/**
 	 * Internal indicator of whether this component may be rendered given the
@@ -494,26 +506,32 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * component (otherwise we would end up with a half rendered page in the
 	 * buffer)
 	 */
-	private static final short FLAG_IS_RENDER_ALLOWED = 0x2000;
+	private static final int FLAG_IS_RENDER_ALLOWED = 0x2000;
 
 	/** Boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
+	private static final int FLAG_IS_RENDERED_ONCE = 0x1000;
 
 	/**
 	 * Whether or not the component should print out its markup id into the id
 	 * attribute
 	 */
-	private static final short FLAG_OUTPUT_MARKUP_ID = 0x4000;
+	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
+
+	/**
+	 * Whether or not the component should print out its markup id into the id
+	 * attribute
+	 */
+	protected static final int FLAG_REMOVED_FROM_PARENT = 0x8000;
 
 	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
 
 
 	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
+	private static final int FLAG_VERSIONED = 0x0008;
 
 	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
+	private static final int FLAG_VISIBLE = 0x0010;
 
 	/** Log. */
 	private static Log log = LogFactory.getLog(Component.class);
@@ -529,7 +547,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	private List<IBehavior> behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
+	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
 			| FLAG_IS_RENDER_ALLOWED;
 
 	/** Component id. */
@@ -554,17 +572,46 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	int markupIndex = -1;
 
 	/**
+	 * package scope Constructor, only used by pages. 
+	 * 
+	 * @param parent 
+	 * 			  The parent of this component.
+	 * @param id
+	 *            The non-null id of this component.
+	 * @throws WicketRuntimeException
+	 *             Thrown if the component has been given a null id.
+	 */
+	Component()
+	{
+		if (!(this instanceof Page))
+		{
+			throw new WicketRuntimeException("component without a parent is not allowed, default constructor can only be called by a page");
+		}
+		getApplication().notifyComponentInstantiationListeners(this);
+	}
+
+	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This is the minimal constructor of component. It does not register a
 	 * model.
 	 * 
+	 * @param parent 
+	 * 			  The parent of this component.
 	 * @param id
-	 *            The non-null id of this component
+	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
-	public Component(final String id)
+	public Component(MarkupContainer<?> parent, final String id)
 	{
+		if(parent == null)
+		{
+			if (!(this instanceof Page))
+			{
+				throw new WicketRuntimeException("component without a parent is not allowed.");
+			}
+		}
+		this.parent = parent;
 		setId(id);
 		getApplication().notifyComponentInstantiationListeners(this);
 	}
@@ -573,6 +620,8 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This constructor includes a model.
 	 * 
+	 * @param parent 
+	 * 			  The parent of this component.
 	 * @param id
 	 *            The non-null id of this component
 	 * @param model
@@ -581,11 +630,26 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
-	public Component(final String id, final IModel<V> model)
+	public Component(MarkupContainer<?> parent, final String id, final IModel<V> model)
 	{
+		if(parent == null)
+		{
+			if (!(this instanceof Page))
+			{
+				throw new WicketRuntimeException("component without a parent is not allowed.");
+			}
+		}
+		this.parent = parent;
 		setId(id);
+		this.model = model;
+		// If a compound model is explicitly set on this component
+		if (model instanceof ICompoundModel)
+		{
+			// we need to remember this for getModelObject()
+			setFlag(FLAG_HAS_ROOT_MODEL, true);
+		}
 		getApplication().notifyComponentInstantiationListeners(this);
-		setModel(model);
+
 	}
 
 	/**
@@ -881,10 +945,10 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @return markup attributes
 	 */
-	public final ValueMap<String, CharSequence> getMarkupAttributes()
+	public final ValueMap getMarkupAttributes()
 	{
 		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
-		ValueMap<String, CharSequence> attrs = new ValueMap<String, CharSequence>(markupStream
+		ValueMap attrs = new ValueMap(markupStream
 				.getTag().getAttributes());
 		attrs.makeImmutable();
 		return attrs;
@@ -1376,7 +1440,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		Component component = this;
 		while (component != null)
 		{
-			if (component.isRenderAllowed() && component.isVisible())
+			if (component.isRenderAllowed() && component.isVisible() && component.getFlag(FLAG_REMOVED_FROM_PARENT) == false)
 			{
 				component = component.getParent();
 			}
@@ -2012,7 +2076,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
 	public final void setResponsePage(final Class<? extends Page> cls,
-			PageParameters<String, Object> parameters)
+			PageParameters parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -2153,7 +2217,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @return Bookmarkable URL to page
 	 */
 	public final CharSequence urlFor(final Class<? extends Page> pageClass,
-			final PageParameters<String, Object> parameters)
+			final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(getPage().getPageMap(), pageClass, parameters);
 	}
@@ -2192,7 +2256,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @return Bookmarkable URL to page
 	 */
 	public final CharSequence urlFor(final PageMap pageMap, final Class<? extends Page> pageClass,
-			final PageParameters<String, Object> parameters)
+			final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);
 	}
@@ -2402,7 +2466,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *            The flag to test
 	 * @return True if the flag is set
 	 */
-	protected final boolean getFlag(final short flag)
+	protected final boolean getFlag(final int flag)
 	{
 		return (this.flags & flag) != 0;
 	}
@@ -2772,7 +2836,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final void setFlag(final short flag, final boolean set)
+	protected final void setFlag(final int flag, final boolean set)
 	{
 		if (set)
 		{
@@ -2904,7 +2968,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @param auto
 	 *            True to put component into auto-add mode
 	 */
-	final void setAuto(final boolean auto)
+	public final void setAuto(final boolean auto)
 	{
 		setFlag(FLAG_AUTO, auto);
 	}
@@ -2930,7 +2994,6 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @param parent
 	 *            The parent container
-	 */
 	final void setParent(final MarkupContainer parent)
 	{
 		if (this.parent != null && log.isDebugEnabled())
@@ -2939,6 +3002,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		}
 		this.parent = parent;
 	}
+	 */
 
 	/**
 	 * Sets the render allowed flag.

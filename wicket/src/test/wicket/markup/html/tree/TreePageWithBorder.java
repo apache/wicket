@@ -59,7 +59,7 @@ public class TreePageWithBorder extends BorderedPage
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		MyTree tree = new MyTree("tree", treeModel);
+		MyTree tree = new MyTree(this,"tree", treeModel);
 		add(tree);
 	}
 

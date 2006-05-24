@@ -25,8 +25,10 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
@@ -60,7 +62,7 @@ public class MockHttpServletResponse implements HttpServletResponse
 
     private String errorMessage = null;
 
-    private final ValueMap<String, List<String>> headers = new ValueMap<String, List<String>>();
+    private final Map<String, List<String>> headers = new HashMap<String, List<String>>();
 
     private Locale locale = null;
 

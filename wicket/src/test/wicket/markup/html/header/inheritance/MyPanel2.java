@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.header.inheritance;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -36,8 +37,8 @@ public class MyPanel2 extends Panel
 	 * @param id
 	 *            component identifier
 	 */
-	public MyPanel2(String id)
+	public MyPanel2(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

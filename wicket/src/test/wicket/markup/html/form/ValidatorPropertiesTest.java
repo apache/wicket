@@ -20,7 +20,6 @@ package wicket.markup.html.form;
 import java.util.MissingResourceException;
 
 import junit.framework.TestCase;
-import wicket.markup.html.form.Form;
 import wicket.properties.MyTesterApplication;
 import wicket.properties.TestPage;
 import wicket.protocol.http.WebRequestCycle;

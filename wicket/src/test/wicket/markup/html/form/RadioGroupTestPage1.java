@@ -38,11 +38,11 @@ public class RadioGroupTestPage1 extends WebPage
 	 * Constructor
 	 */
 	public RadioGroupTestPage1() {
-		Form form=new Form("form");
-		RadioGroup group=new RadioGroup("group", new Model("radio2"));
-		WebMarkupContainer container=new WebMarkupContainer("container");
-		Radio radio1=new Radio("radio1", new Model("radio1"));
-		Radio radio2=new Radio("radio2", new Model("radio2"));
+		Form form=new Form(this,"form");
+		RadioGroup group=new RadioGroup(form,"group", new Model("radio2"));
+		WebMarkupContainer container=new WebMarkupContainer(group,"container");
+		Radio radio1=new Radio(group,"radio1", new Model("radio1"));
+		Radio radio2=new Radio(container,"radio2", new Model("radio2"));
 		
 		
 		add(form);

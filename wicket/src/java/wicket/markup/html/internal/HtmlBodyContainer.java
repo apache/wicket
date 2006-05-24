@@ -18,6 +18,7 @@
 package wicket.markup.html.internal;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
@@ -49,9 +50,9 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	 * 
 	 * @see Component#Component(String)
 	 */
-	public HtmlBodyContainer(final String id)
+	public HtmlBodyContainer(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**

@@ -17,6 +17,7 @@
  */
 package wicket.properties;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.Form;
 
 /**
@@ -31,8 +32,8 @@ public class TestForm extends Form
 	 * Construct.
 	 * @param id
 	 */
-	public TestForm(final String id)
+	public TestForm(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

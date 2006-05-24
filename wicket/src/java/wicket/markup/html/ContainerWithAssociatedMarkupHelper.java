@@ -19,6 +19,7 @@ package wicket.markup.html;
 
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
@@ -95,7 +96,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				markupClass = markupStream.getContainerClass();
 			}
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(markupClass, markupStream
+			final HeaderPartContainer headerPart = getHeaderPart(htmlContainer,markupClass, markupStream
 					.getCurrentIndex());
 			if (headerPart != null)
 			{
@@ -200,7 +201,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * @return the header part for this panel/border or null if it doesn't have
 	 *         a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(final Class markupClass, final int index)
+	private final HeaderPartContainer getHeaderPart(MarkupContainer<?> parent,final Class markupClass, final int index)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
@@ -226,7 +227,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// it
 				String scope = wTag.getAttributes().getString(
 						markupStream.getWicketNamespace() + ":scope");
-				final HeaderPartContainer headerContainer = this.container.newHeaderPartContainer(
+				final HeaderPartContainer headerContainer = this.container.newHeaderPartContainer(parent,
 						headerId, scope);
 				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);

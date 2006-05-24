@@ -18,6 +18,7 @@
 
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -44,9 +45,9 @@ public class CheckGroupSelector extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public CheckGroupSelector(String id)
+	public CheckGroupSelector(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	@Override

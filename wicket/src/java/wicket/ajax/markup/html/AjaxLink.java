@@ -17,6 +17,7 @@
  */
 package wicket.ajax.markup.html;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
@@ -40,9 +41,9 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 	 * 
 	 * @param id
 	 */
-	public AjaxLink(final String id)
+	public AjaxLink(MarkupContainer parent, final String id)
 	{
-		this(id, null);
+		this(parent,id, null);
 	}
 
 	/**
@@ -51,9 +52,9 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 	 * @param id
 	 * @param model
 	 */
-	public AjaxLink(final String id, final IModel model)
+	public AjaxLink(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 
 		add(new AjaxEventBehavior("href")
 		{

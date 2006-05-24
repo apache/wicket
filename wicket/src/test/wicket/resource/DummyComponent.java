@@ -19,6 +19,7 @@ package wicket.resource;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 
 /**
@@ -26,7 +27,7 @@ import wicket.markup.MarkupStream;
  * 
  * @author Chris Turner
  */
-public class DummyComponent extends Component
+public class DummyComponent<V> extends Component<V>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,9 +39,9 @@ public class DummyComponent extends Component
 	 * @param application
 	 *            The application for this component
 	 */
-	public DummyComponent(final String name, final Application application)
+	public DummyComponent(MarkupContainer<?> parent, final String name, final Application application)
 	{
-		super(name);
+		super(parent,name);
 	}
 
 	/**

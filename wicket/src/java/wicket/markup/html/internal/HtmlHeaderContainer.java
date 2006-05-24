@@ -85,9 +85,9 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * 
 	 * @see Component#Component(String)
 	 */
-	public HtmlHeaderContainer(final String id)
+	public HtmlHeaderContainer(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 
 		// We will render the tags manually, because if no component asked to
 		// contribute to the header, the tags will not be printed either.

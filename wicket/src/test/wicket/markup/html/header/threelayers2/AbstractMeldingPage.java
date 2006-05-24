@@ -33,6 +33,6 @@ public abstract class AbstractMeldingPage extends AbstractSecurePage
 	 */
 	public AbstractMeldingPage()
 	{
-		add(new Label("foo", "FooBar"));
+		add(new Label(this,"foo", "FooBar"));
 	}
 }

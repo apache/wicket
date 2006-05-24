@@ -19,6 +19,7 @@ package wicket.markup.transformer;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -57,10 +58,10 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @param xslFilePath
 	 *            XSL input file path
 	 */
-	public XsltOutputTransformerContainer(final String id, final IModel model,
+	public XsltOutputTransformerContainer(MarkupContainer<?> parent, final String id, final IModel model,
 			final String xslFilePath)
 	{
-		super(id);
+		super(parent,id);
 
 		this.xslFile = xslFilePath;
 
@@ -80,9 +81,9 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public XsltOutputTransformerContainer(final String id, final IModel model)
+	public XsltOutputTransformerContainer(MarkupContainer<?> parent, final String id, final IModel model)
 	{
-		this(id, model, null);
+		this(parent,id, model, null);
 	}
 
 	/**
@@ -90,9 +91,9 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.Component#Component(String)
 	 */
-	public XsltOutputTransformerContainer(final String id)
+	public XsltOutputTransformerContainer(MarkupContainer<?> parent, final String id)
 	{
-		this(id, null, null);
+		this(parent,id, null, null);
 	}
 
 	/**

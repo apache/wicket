@@ -19,6 +19,7 @@ package wicket.markup.html.form;
 import java.util.Collection;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -35,7 +36,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class Check extends WebMarkupContainer
+public class Check<V> extends WebMarkupContainer<V>
 {
 	/**
 	 * 
@@ -48,17 +49,17 @@ public class Check extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public Check(String id)
+	public Check(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Check(String id, IModel model)
+	public Check(MarkupContainer<?> parent,String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 

@@ -20,6 +20,7 @@ package wicket.markup.html.form;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -53,18 +54,18 @@ public class PasswordTextField extends TextField
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public PasswordTextField(final String id)
+	public PasswordTextField(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 		setRequired(true);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public PasswordTextField(final String id, IModel model)
+	public PasswordTextField(MarkupContainer parent, final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		setRequired(true);
 	}
 

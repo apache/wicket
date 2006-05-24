@@ -18,6 +18,7 @@
  */
 package wicket.ajax.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
@@ -45,9 +46,9 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 * @param id
 	 * @param form
 	 */
-	public AjaxSubmitButton(String id, final Form form)
+	public AjaxSubmitButton(MarkupContainer<?> parent,String id, final Form form)
 	{
-		super(id);
+		super(parent,id);
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{

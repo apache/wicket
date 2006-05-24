@@ -38,7 +38,7 @@ public class BookmarkableFormPageRequestTarget extends BookmarkablePageRequestTa
 	 * @param pageParameters
 	 * @param formName 
 	 */
-	public BookmarkableFormPageRequestTarget(String pageMapName, Class<? extends Page> pageClass, PageParameters<String, Object> pageParameters, String formName)
+	public BookmarkableFormPageRequestTarget(String pageMapName, Class<? extends Page> pageClass, PageParameters pageParameters, String formName)
 	{
 		super(pageMapName, pageClass, pageParameters);
 		this.formName = formName;

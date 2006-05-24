@@ -19,9 +19,9 @@
 package wicket.ajax;
 
 import wicket.Application;
+import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
-import wicket.Page;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
 import wicket.settings.IAjaxSettings;

@@ -169,7 +169,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		private final String path;
 
 		/** The optional page parameters. */
-		private final PageParameters<String,Object> pageParameters;
+		private final PageParameters pageParameters;
 
 		/** The extension if any. */
 		private final String extension;
@@ -197,7 +197,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (queryStringPos != -1)
 			{
 				final String queryString = reference.substring(queryStringPos + 1);
-				pageParameters = new PageParameters<String,Object>(new ValueMap<String,String>(queryString, "&"));
+				pageParameters = new PageParameters(new ValueMap(queryString, "&"));
 				infoPath = reference.substring(0, queryStringPos);
 			}
 			else
@@ -264,7 +264,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * Gets pageParameters.
 		 * @return pageParameters
 		 */
-		public final PageParameters<String,Object> getPageParameters()
+		public final PageParameters getPageParameters()
 		{
 			return pageParameters;
 		}
@@ -369,7 +369,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				}
 
 				// Create the component implementing the link
-				PackageResourceReferenceAutolink autoLink = new PackageResourceReferenceAutolink(
+				PackageResourceReferenceAutolink autoLink = new PackageResourceReferenceAutolink(container,
 						autoId, clazz, pathInfo.reference);
 				if (autoLink.resourceReference != null)
 				{
@@ -451,7 +451,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				try
 				{
 					final Class<? extends Page> clazz = defaultClassResolver.resolveClass(className);
-					return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.pageParameters, pathInfo.anchor);
+					return new AutolinkBookmarkablePageLink(container,autoId, clazz, pathInfo.pageParameters, pathInfo.anchor);
 				}
 				catch (WicketRuntimeException ex)
 				{
@@ -474,7 +474,7 @@ public final class AutoLinkResolver implements IComponentResolver
 						try
 						{
 							clazz = defaultClassResolver.resolveClass(className);
-							return new AutolinkBookmarkablePageLink(autoId, clazz, pathInfo.getPageParameters(), pathInfo.anchor);
+							return new AutolinkBookmarkablePageLink(container,autoId, clazz, pathInfo.getPageParameters(), pathInfo.anchor);
 						}
 						catch (WicketRuntimeException ex)
 						{
@@ -540,10 +540,10 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param parameters
 		 * @param anchor
 		 */
-		public AutolinkBookmarkablePageLink(final String id, final Class<? extends Page> pageClass,
-				final PageParameters<String,Object> parameters, final String anchor)
+		public AutolinkBookmarkablePageLink(MarkupContainer parent, final String id, final Class<? extends Page> pageClass,
+				final PageParameters parameters, final String anchor)
 		{
-			super(id, pageClass, parameters);
+			super(parent,id, pageClass, parameters);
 			this.anchor = anchor;
 			setAutoEnable(true);
 		}
@@ -591,9 +591,9 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param id
 		 * @param href
 		 */
-		public AutolinkExternalLink(final String id, final String href)
+		public AutolinkExternalLink(MarkupContainer<?> parent,final String id, final String href)
 		{
-			super(id, href);
+			super(parent,id, href);
 		}
 
 		/**
@@ -612,7 +612,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
 	 * know where to add the component to.
 	 */
-	private final static class PackageResourceReferenceAutolink extends WebMarkupContainer
+	private final static class PackageResourceReferenceAutolink<V> extends WebMarkupContainer<V>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -624,10 +624,10 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param clazz
 		 * @param href
 		 */
-		public PackageResourceReferenceAutolink(final String id, final Class clazz,
+		public PackageResourceReferenceAutolink(MarkupContainer<?> parent,final String id, final Class clazz,
 				final String href)
 		{
-			super(id);
+			super(parent,id);
 
 			// Check whether it is a valid resource reference
 			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
@@ -778,7 +778,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			// resolving didn't have the desired result or there was no delegate
 			// found; fallback on the default resolving which is a simple
 			// component that leaves the tag unchanged
-			autoComponent = new AutolinkExternalLink(autoId, pathInfo.reference);
+			autoComponent = new AutolinkExternalLink(container,autoId, pathInfo.reference);
 		}
 
 		return autoComponent;

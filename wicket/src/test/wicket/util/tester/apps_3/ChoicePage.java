@@ -80,24 +80,24 @@ public class ChoicePage extends WebPage
 	{
 		ChoiceRenderer bookChoiceRenderer = new ChoiceRenderer("name", "id");
 
-		Form form = new Form("choiceForm");
+		Form form = new Form(this,"choiceForm");
 		add(form);
 
 		form.setModel(new CompoundPropertyModel(this));
 
 		// single select family
-		form.add(new DropDownChoice("dropDownChoice", candidateChoices, bookChoiceRenderer));
-		form.add(new ListChoice("listChoice", candidateChoices, bookChoiceRenderer).setMaxRows(4));
-		form.add(new RadioChoice("radioChoice", candidateChoices, bookChoiceRenderer));
-		form.add(newRadioGroup(candidateChoices));
+		form.add(new DropDownChoice(form,"dropDownChoice", candidateChoices, bookChoiceRenderer));
+		form.add(new ListChoice(form,"listChoice", candidateChoices, bookChoiceRenderer).setMaxRows(4));
+		form.add(new RadioChoice(form,"radioChoice", candidateChoices, bookChoiceRenderer));
+		form.add(newRadioGroup(form,candidateChoices));
 
 		// mulitple select family
-		form.add(new ListMultipleChoice("listMultipleChoice", candidateChoices, bookChoiceRenderer)
+		form.add(new ListMultipleChoice(form,"listMultipleChoice", candidateChoices, bookChoiceRenderer)
 				.setMaxRows(4));
-		form.add(new CheckBoxMultipleChoice("checkBoxMultipleChoice", candidateChoices,
+		form.add(new CheckBoxMultipleChoice(form,"checkBoxMultipleChoice", candidateChoices,
 				bookChoiceRenderer));
-		form.add(newCheckGroup(candidateChoices));
-		form.add(new Button("anotherButton")
+		form.add(newCheckGroup(form,candidateChoices));
+		form.add(new Button(form,"anotherButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -108,16 +108,16 @@ public class ChoicePage extends WebPage
 		});
 	}
 
-	private CheckGroup newCheckGroup(List candidateChoices)
+	private CheckGroup newCheckGroup(Form parent,List candidateChoices)
 	{
-		CheckGroup checkGroupComponent = new CheckGroup("checkGroup");
-		ListView listView = new ListView("loop", candidateChoices)
+		CheckGroup checkGroupComponent = new CheckGroup(parent,"checkGroup");
+		ListView listView = new ListView(checkGroupComponent,"loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;
 
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Check("check", new Model((Book)item.getModelObject())));
+				item.add(new Check(item,"check", new Model((Book)item.getModelObject())));
 			}
 
 		};
@@ -125,16 +125,16 @@ public class ChoicePage extends WebPage
 		return checkGroupComponent;
 	}
 
-	private RadioGroup newRadioGroup(List candidateChoices)
+	private RadioGroup newRadioGroup(Form parent,List candidateChoices)
 	{
-		RadioGroup radioGroupComponent = new RadioGroup("radioGroup");
-		ListView listView = new ListView("loop", candidateChoices)
+		RadioGroup radioGroupComponent = new RadioGroup(parent,"radioGroup");
+		ListView listView = new ListView(radioGroupComponent,"loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;
 
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Radio("radio", new Model((Book)item.getModelObject())));
+				item.add(new Radio(item,"radio", new Model((Book)item.getModelObject())));
 			}
 
 		};

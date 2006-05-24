@@ -22,6 +22,7 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -111,9 +112,9 @@ public class Include extends WebComponent
 	 * @param id
 	 *            component id
 	 */
-	public Include(final String id)
+	public Include(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -124,9 +125,9 @@ public class Include extends WebComponent
 	 * @param model
 	 *            the model
 	 */
-	public Include(String id, IModel model)
+	public Include(MarkupContainer<?> parent,String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -137,9 +138,9 @@ public class Include extends WebComponent
 	 * @param modelObject
 	 *            the model object (will be wrapped in a model)
 	 */
-	public Include(String id, String modelObject)
+	public Include(MarkupContainer<?> parent,String id, String modelObject)
 	{
-		super(id, new Model(modelObject));
+		super(parent,id, new Model(modelObject));
 	}
 
 	/**

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.basic;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -45,9 +46,9 @@ public class MultiLineLabel extends WebComponent
 	 *            See Component
 	 * @see Label#Label(String)
 	 */
-	public MultiLineLabel(final String id)
+	public MultiLineLabel(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 	
 	/**
@@ -60,17 +61,17 @@ public class MultiLineLabel extends WebComponent
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MultiLineLabel(final String id, String label)
+	public MultiLineLabel(MarkupContainer parent, final String id, String label)
 	{
-		this(id, new Model(label));
+		this(parent,id, new Model(label));
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MultiLineLabel(final String id, IModel model)
+	public MultiLineLabel(MarkupContainer parent, final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

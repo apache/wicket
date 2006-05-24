@@ -17,6 +17,7 @@
  */
 package wicket.util.tester;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.link.Link;
 
@@ -38,7 +39,7 @@ public class DummyHomePage extends WebPage
 	 */
 	public DummyHomePage()
 	{
-		testPageLink = new TestLink("testPage");
+		testPageLink = new TestLink(this,"testPage");
 		add(testPageLink);
 	}
 
@@ -71,9 +72,9 @@ public class DummyHomePage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public TestLink(String id)
+		public TestLink(MarkupContainer<?> parent,String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 
 		/**

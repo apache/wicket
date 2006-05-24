@@ -115,18 +115,18 @@ public class RadioGroupTest extends WicketTestCase
 
 		// create component hierarchy
 
-		final Form form = new Form("form", new CompoundPropertyModel(modelObject));
+		final Form form = new Form(page,"form", new CompoundPropertyModel(modelObject));
 
-		final RadioGroup group = new RadioGroup("prop1");
+		final RadioGroup group = new RadioGroup(form,"prop1");
 
-		final WebMarkupContainer container = new WebMarkupContainer("container");
+		final WebMarkupContainer container = new WebMarkupContainer(group,"container");
 
-		final Radio choice1 = new Radio("radio1", new Model(radio1));
-		final Radio choice2 = new Radio("prop2");
+		final Radio choice1 = new Radio(container,"radio1", new Model(radio1));
+		final Radio choice2 = new Radio(group,"prop2");
 
-		final RadioGroup group2 = new RadioGroup("group2", model);
+		final RadioGroup group2 = new RadioGroup(form,"group2", model);
 
-		final Radio choice3 = new Radio("radio3", new Model(radio1));
+		final Radio choice3 = new Radio(group2,"radio3", new Model(radio1));
 
 		page.add(form);
 		form.add(group);
