@@ -27,9 +27,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-cattr-examples</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-cattr-examples</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-spring-cattr-examples</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-cattr-examples</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-cattr-examples</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-spring-cattr-examples</url>
 	</scm>
 
 	<mailingLists>
