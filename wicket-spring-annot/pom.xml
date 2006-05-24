@@ -6,9 +6,10 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-spring-annot</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Spring Integration through Annotations</name>
 	<description>Spring integration in your Wicket web applications using annotations. Requires Java 5. See the examples project for usecases.</description>
+	<url>http://wicket.sourceforge.net/spring</url>
 	<organization>
 		<name>Wicket developers</name>
 		<url>http://wicket.sourceforge.net</url>
@@ -27,9 +28,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-annot</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-annot</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-spring-annot</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-annot</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-annot</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-spring-annot</url>
 	</scm>
 
 	<mailingLists>
@@ -69,7 +70,7 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
-			<version>1.2</version>
+			<version>1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
