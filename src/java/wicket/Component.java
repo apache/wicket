@@ -851,7 +851,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @return The locale for the session holding this component
 	 * @see Component#getSession()
 	 */
-	public final Locale getLocale()
+	public Locale getLocale()
 	{
 		return getSession().getLocale();
 	}
