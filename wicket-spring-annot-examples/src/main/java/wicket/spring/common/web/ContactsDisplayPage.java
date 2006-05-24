@@ -42,7 +42,7 @@ public abstract class ContactsDisplayPage extends BasePage {
 		cols[2] = new PropertyColumn(new Model("home phone"), "homePhone");
 		cols[3] = new PropertyColumn(new Model("cell phone"), "cellPhone");
 
-		add(new DefaultDataTable("contacts", Arrays.asList(cols), getDataProvider(), 5));
+		add(new DefaultDataTable(this,"contacts", Arrays.asList(cols), getDataProvider(), 5));
 	}
 
 	protected abstract SortableDataProvider getDataProvider();

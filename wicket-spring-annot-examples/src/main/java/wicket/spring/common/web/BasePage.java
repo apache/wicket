@@ -32,6 +32,6 @@ import wicket.markup.html.link.BookmarkablePageLink;
  */
 public class BasePage extends WebPage {
 	public BasePage() {
-		add(new BookmarkablePageLink("home-link", HomePage.class));
+		add(new BookmarkablePageLink(this,"home-link", HomePage.class));
 	}
 }
