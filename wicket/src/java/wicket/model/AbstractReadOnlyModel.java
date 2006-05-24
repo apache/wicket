@@ -26,13 +26,13 @@ import wicket.Component;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public abstract class AbstractReadOnlyModel extends AbstractModel
+public abstract class AbstractReadOnlyModel<V> extends AbstractModel<V>
 {
 
 	/**
 	 * @see IModel#getObject(Component)
 	 */
-	public abstract Object getObject(Component component);
+	public abstract V getObject(Component component);
 
 	/**
 	 * This default implementation of setObject unconditionally throws an
@@ -45,7 +45,7 @@ public abstract class AbstractReadOnlyModel extends AbstractModel
 	 *            The object to set into the model
 	 * @throws UnsupportedOperationException
 	 */
-	public final void setObject(final Component component, final Object object)
+	public final void setObject(final Component component, final V object)
 	{
 		throw new UnsupportedOperationException("Model " + getClass()
 				+ " does not support setObject(Object)");
