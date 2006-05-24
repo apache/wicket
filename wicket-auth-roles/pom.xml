@@ -6,7 +6,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-auth-roles</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Auth Roles</name>
 	<description>
 		Wicket Authorization Integration Based on roles, metadata and annotations. This project requires Java 5.
@@ -33,9 +33,9 @@
 
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-auth-roles</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-auth-roles</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-auth-roles</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-auth-roles</url>
 	</scm>
 
 	<mailingLists>
@@ -87,7 +87,7 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
-			<version>1.2</version>
+			<version>1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
