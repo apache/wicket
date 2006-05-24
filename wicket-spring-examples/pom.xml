@@ -5,7 +5,7 @@
     <groupId>wicket</groupId>
     <artifactId>wicket-spring-examples</artifactId>
     <packaging>war</packaging>
-    <version>1.2</version>
+    <version>1.2-SNAPSHOT</version>
     <name>Wicket Spring Integration Examples</name>
 	<url>http://wicket.sourceforge.net/spring</url>
 	<inceptionYear>2005</inceptionYear>
@@ -28,9 +28,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-examples</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring-examples</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-spring-examples</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-examples</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-examples</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-spring-examples</url>
 	</scm>
 
 	<mailingLists>
@@ -78,13 +78,13 @@
         <dependency>
             <groupId>wicket</groupId>
             <artifactId>wicket-spring</artifactId>
-            <version>1.2</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>wicket</groupId>
             <artifactId>wicket-extensions</artifactId>
-            <version>1.2</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         
  		<dependency>

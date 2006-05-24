@@ -6,7 +6,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-auth-roles-examples</artifactId>
 	<packaging>war</packaging>
-	<version>1.2</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Authorization Roles examples</name>
 	<description>
 		Examples project for the Wicket authorization based on roles. Requires Java 1.5
@@ -32,9 +32,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles-examples</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-auth-roles-exampls</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-auth-roles-examples</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-auth-roles-examples</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-auth-roles-exampls</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-auth-roles-examples</url>
 	</scm>
 
 	<mailingLists>
@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-auth-roles</artifactId>
-			<version>1.2</version>
+			<version>1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
