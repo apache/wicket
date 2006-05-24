@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
@@ -75,25 +76,25 @@ public class UploadPage extends WicketExamplePage
 		uploadFolder.mkdirs();
 
 		// Create feedback panels
-		final FeedbackPanel uploadFeedback = new FeedbackPanel("uploadFeedback");
+		final FeedbackPanel uploadFeedback = new FeedbackPanel(this,"uploadFeedback");
 
 		// Add uploadFeedback to the page itself
 		add(uploadFeedback);
 
 		// Add simple upload form, which is hooked up to its feedback panel by
 		// virtue of that panel being nested in the form.
-		final FileUploadForm simpleUploadForm = new FileUploadForm("simpleUpload");
+		final FileUploadForm simpleUploadForm = new FileUploadForm(this,"simpleUpload");
 		add(simpleUploadForm);
 
 		// Add folder view
-		add(new Label("dir", uploadFolder.getAbsolutePath()));
+		add(new Label(this,"dir", uploadFolder.getAbsolutePath()));
 		files.addAll(Arrays.asList(uploadFolder.listFiles()));
-		fileListView = new FileListView("fileList", files);
+		fileListView = new FileListView(this,"fileList", files);
 		add(fileListView);
 
 		// Add upload form with ajax progress bar
-		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm("ajax-simpleUpload");
-		ajaxSimpleUploadForm.add(new UploadProgressBar("progress", ajaxSimpleUploadForm));
+		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm(this,"ajax-simpleUpload");
+		ajaxSimpleUploadForm.add(new UploadProgressBar(ajaxSimpleUploadForm,"progress", ajaxSimpleUploadForm));
 		add(ajaxSimpleUploadForm);
 
 	}
@@ -139,15 +140,15 @@ public class UploadPage extends WicketExamplePage
 		 * @param name
 		 *            Component name
 		 */
-		public FileUploadForm(String name)
+		public FileUploadForm(MarkupContainer<?> parent,String name)
 		{
-			super(name);
+			super(parent,name);
 
 			// set this form to multipart mode (allways needed for uploads!)
 			setMultiPart(true);
 
 			// Add one file input field
-			add(fileUploadField = new FileUploadField("fileInput"));
+			add(fileUploadField = new FileUploadField(this,"fileInput"));
 
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));
@@ -198,9 +199,9 @@ public class UploadPage extends WicketExamplePage
 		 * @param files
 		 *            The file list model
 		 */
-		public FileListView(String name, final List files)
+		public FileListView(MarkupContainer<?> parent,String name, final List files)
 		{
-			super(name, files);
+			super(parent,name, files);
 		}
 
 		/**
@@ -209,8 +210,8 @@ public class UploadPage extends WicketExamplePage
 		protected void populateItem(ListItem listItem)
 		{
 			final File file = (File)listItem.getModelObject();
-			listItem.add(new Label("file", file.getName()));
-			listItem.add(new Link("delete")
+			listItem.add(new Label(listItem,"file", file.getName()));
+			listItem.add(new Link(listItem,"delete")
 			{
 				public void onClick()
 				{

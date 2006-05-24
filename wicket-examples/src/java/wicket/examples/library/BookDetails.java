@@ -20,6 +20,7 @@ package wicket.examples.library;
 import java.util.Iterator;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
@@ -56,12 +57,12 @@ public final class BookDetails extends AuthenticatedWebPage
 	{
 		Model bookModel = new Model(book);
 
-		add(new Label("title", book.getTitle()));
-		add(new Label("author", book.getAuthor()));
-		add(new Label("fiction", Boolean.toString(book.getFiction())));
-		add(BookDetails.link("companion", book.getCompanionBook(), getLocalizer().getString(
+		add(new Label(this,"title", book.getTitle()));
+		add(new Label(this,"author", book.getAuthor()));
+		add(new Label(this,"fiction", Boolean.toString(book.getFiction())));
+		add(BookDetails.link(this,"companion", book.getCompanionBook(), getLocalizer().getString(
 				"noBookTitle", this)));
-		add(BookDetails.link("related", book.getRelatedBook(), getLocalizer().getString(
+		add(BookDetails.link(this,"related", book.getRelatedBook(), getLocalizer().getString(
 				"noBookTitle", this)));
 
 		String writingStyles;
@@ -86,13 +87,13 @@ public final class BookDetails extends AuthenticatedWebPage
 			writingStyles = getLocalizer().getString("noWritingStyles", this);
 		}
 
-		Label writingStylesLabel = new Label("writingStyles", writingStyles);
+		Label writingStylesLabel = new Label(this,"writingStyles", writingStyles);
 
 		final AttributeModifier italic = new AttributeModifier("class", new Model("italic"));
 		italic.setEnabled(!hasStyles);
 
 		add(writingStylesLabel.add(italic));
-		add(EditBook.link("edit", book.getId()));
+		add(EditBook.link(this,"edit", book.getId()));
 	}
 
 	/**
@@ -106,19 +107,19 @@ public final class BookDetails extends AuthenticatedWebPage
 	 *            The title to show if book is null
 	 * @return The external page link
 	 */
-	public static BookmarkablePageLink link(final String name, final Book book,
+	public static BookmarkablePageLink link(MarkupContainer<?> parent,final String name, final Book book,
 			final String noBookTitle)
 	{
-		final BookmarkablePageLink link = new BookmarkablePageLink(name, BookDetails.class);
+		final BookmarkablePageLink link = new BookmarkablePageLink(parent,name, BookDetails.class);
 
 		if (book != null)
 		{
 			link.setParameter("id", book.getId());
-			link.add(new Label("title", new Model(book)));
+			link.add(new Label(link,"title", new Model(book)));
 		}
 		else
 		{
-			link.add(new Label("title", noBookTitle));
+			link.add(new Label(link,"title", noBookTitle));
 			link.setEnabled(false);
 		}
 

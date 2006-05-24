@@ -99,13 +99,13 @@ public class ChoicePage extends BasePage
 
 		};
 
-		Form form = new Form("form");
+		Form form = new Form(this,"form");
 		add(form);
 
-		final DropDownChoice makes = new DropDownChoice("makes", new PropertyModel(this,
+		final DropDownChoice makes = new DropDownChoice(form,"makes", new PropertyModel(this,
 				"selectedMake"), makeChoices);
 
-		final DropDownChoice models = new DropDownChoice("models", new Model(), modelChoices);
+		final DropDownChoice models = new DropDownChoice(form,"models", new Model(), modelChoices);
 		models.setOutputMarkupId(true);
 
 		form.add(makes);

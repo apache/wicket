@@ -32,6 +32,6 @@ public class HelloWorld extends WicketExamplePage
 	 */
 	public HelloWorld()
 	{
-		add(new Label("message", "Hello World!"));
+		add(new Label(this,"message", "Hello World!"));
 	}
 }

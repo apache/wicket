@@ -67,9 +67,9 @@ public class RequestsPage extends WebPage
 	 */
 	public RequestsPage(final SessionData sessionData)
 	{
-		add(new Image("bug"));
+		add(new Image(this,"bug"));
 		
-		add(new SessionView("session", sessionData.getSession()));
+		add(new SessionView(this,"session", sessionData.getSession()));
 		
 		Model requestsModel = new Model()
 		{
@@ -80,7 +80,7 @@ public class RequestsPage extends WebPage
 				return new ArrayList(sessionData.getRequests());
 			}
 		};
-		PageableListView listView = new PageableListView("requests",requestsModel,50)
+		PageableListView listView = new PageableListView(this,"requests",requestsModel,50)
 		{
 			private static final long serialVersionUID = 1L;
 			
@@ -89,7 +89,7 @@ public class RequestsPage extends WebPage
 			protected void populateItem(ListItem item) 
 			{
 				RequestData rd = (RequestData)item.getModelObject();
-				Label startDate = new Label("startDate",new Model(rd.getStartDate()))
+				Label startDate = new Label(item,"startDate",new Model(rd.getStartDate()))
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -114,15 +114,15 @@ public class RequestsPage extends WebPage
 					}
 				};
 				item.add( startDate );
-				item.add( new Label("timeTaken",new Model(rd.getTimeTaken())));
-				item.add( new Label("eventTarget",new Model(rd.getEventTargert())) );
-				item.add( new Label("responseTarget",new Model(rd.getResponseTarget())) );
-				item.add( new Label("alteredObjects",new Model(rd.getAlteredObjects())).setEscapeModelStrings(false) );
+				item.add( new Label(item,"timeTaken",new Model(rd.getTimeTaken())));
+				item.add( new Label(item,"eventTarget",new Model(rd.getEventTargert())) );
+				item.add( new Label(item,"responseTarget",new Model(rd.getResponseTarget())) );
+				item.add( new Label(item,"alteredObjects",new Model(rd.getAlteredObjects())).setEscapeModelStrings(false) );
 			}
 		};
 		add(listView);
 		
-		PagingNavigator navigator = new PagingNavigator("navigator",listView);
+		PagingNavigator navigator = new PagingNavigator(this,"navigator",listView);
 		add(navigator);
 	}
 }

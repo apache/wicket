@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 
@@ -40,9 +41,9 @@ public class Clock extends Label
 	 * @param tz
 	 *            Timezone
 	 */
-	public Clock(String id, TimeZone tz)
+	public Clock(MarkupContainer parent,final String id, TimeZone tz)
 	{
-		super(id, new ClockModel(tz));
+		super(parent,id, new ClockModel(tz));
 
 	}
 

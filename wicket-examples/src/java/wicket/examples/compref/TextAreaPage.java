@@ -40,11 +40,11 @@ public class TextAreaPage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -54,7 +54,7 @@ public class TextAreaPage extends WicketExamplePage
 		add(form);
 
 		// add a text area component that uses Input's 'text' property.
-		form.add(new TextArea("text"));
+		form.add(new TextArea(form,"text"));
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -80,7 +80,7 @@ public class TextAreaPage extends WicketExamplePage
 		String html = "<textarea wicket:id=\"text\" rows=\"6\" cols=\"20\">Input comes here</textarea>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a text area component that uses the model object's 'text' property.\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextArea(\"text\"));";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 	}
 
 }

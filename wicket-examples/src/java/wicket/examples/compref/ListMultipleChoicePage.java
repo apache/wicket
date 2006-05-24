@@ -52,11 +52,11 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -71,10 +71,10 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		// list for the available options.
 		// Note that our model here holds a Collection, as we need to store
 		// multiple values too
-		ListMultipleChoice listChoice = new ListMultipleChoice("sites", SITES);
+		ListMultipleChoice listChoice = new ListMultipleChoice(form,"sites", SITES);
 		form.add(listChoice);
 
-		listChoice = new ListMultipleChoice("choices", MANY_CHOICES).setMaxRows(5);
+		listChoice = new ListMultipleChoice(form,"choices", MANY_CHOICES).setMaxRows(5);
 		form.add(listChoice);
 	}
 
@@ -137,7 +137,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new ListMultipleChoice(\"choices\", MANY_CHOICES).setMaxRows(5);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 }

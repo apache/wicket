@@ -18,6 +18,7 @@
 package wicket.examples.debug;
 
 import wicket.Application;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
@@ -39,26 +40,26 @@ public final class ApplicationView extends Panel
 	 * @param application
 	 *            The application to view
 	 */
-	public ApplicationView(final String id, final Application application)
+	public ApplicationView(MarkupContainer parent,final String id, final Application application)
 	{
-		super(id);
+		super(parent,id);
 
 		// Basic attributes
-		add(new Label("name", application.getName()));
-		add(new Label("componentUseCheck", ""
+		add(new Label(this,"name", application.getName()));
+		add(new Label(this,"componentUseCheck", ""
 				+ application.getDebugSettings().getComponentUseCheck()));
-		add(new Label("compressWhitespace", ""
+		add(new Label(this,"compressWhitespace", ""
 				+ application.getMarkupSettings().getCompressWhitespace()));
-		add(new Label("defaultLocale", "" + application.getApplicationSettings().getDefaultLocale()));
-		add(new Label("maxPageVersions", "" + application.getPageSettings().getMaxPageVersions()));
-		add(new Label("stripComments", "" + application.getMarkupSettings().getStripComments()));
-		add(new Label("stripWicketTags", "" + application.getMarkupSettings().getStripWicketTags()));
-		add(new Label("bufferResponse", ""
+		add(new Label(this,"defaultLocale", "" + application.getApplicationSettings().getDefaultLocale()));
+		add(new Label(this,"maxPageVersions", "" + application.getPageSettings().getMaxPageVersions()));
+		add(new Label(this,"stripComments", "" + application.getMarkupSettings().getStripComments()));
+		add(new Label(this,"stripWicketTags", "" + application.getMarkupSettings().getStripWicketTags()));
+		add(new Label(this,"bufferResponse", ""
 				+ application.getRequestCycleSettings().getBufferResponse()));
-		add(new Label("resourcePollFrequency", ""
+		add(new Label(this,"resourcePollFrequency", ""
 				+ application.getResourceSettings().getResourcePollFrequency()));
-		add(new Label("versionPages", "" + application.getPageSettings().getVersionPagesByDefault()));
-		add(new Label("pageMapEvictionStrategy", ""
+		add(new Label(this,"versionPages", "" + application.getPageSettings().getVersionPagesByDefault()));
+		add(new Label(this,"pageMapEvictionStrategy", ""
 				+ application.getSessionSettings().getPageMapEvictionStrategy()));
 	}
 }

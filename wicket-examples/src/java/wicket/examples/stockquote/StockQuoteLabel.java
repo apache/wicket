@@ -1,5 +1,6 @@
 package wicket.examples.stockquote;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -27,9 +28,9 @@ public class StockQuoteLabel extends WebComponent
 	 * @param id
 	 *            See Component
 	 */
-	public StockQuoteLabel(String id)
+	public StockQuoteLabel(MarkupContainer parent, String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -43,17 +44,17 @@ public class StockQuoteLabel extends WebComponent
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public StockQuoteLabel(String id, String symbol)
+	public StockQuoteLabel(MarkupContainer parent,final String id, String symbol)
 	{
-		super(id, new Model(symbol));
+		super(parent,id, new Model(symbol));
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public StockQuoteLabel(String id, IModel model)
+	public StockQuoteLabel(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

@@ -70,8 +70,8 @@ public class Page5 extends WicketExamplePage
 			}
 		}
 
-		add(new Label("p1", p1));
-		add(new Label("p2", p2));
+		add(new Label(this,"p1", p1));
+		add(new Label(this,"p2", p2));
 
 		String newP1 = String.valueOf(random.nextInt());
 		String newP2 = String.valueOf(random.nextInt());
@@ -80,8 +80,8 @@ public class Page5 extends WicketExamplePage
 		params.put("param1", newP1);
 		params.put("param2", newP2);
 
-		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", Page5.class, params);
+		BookmarkablePageLink link = new BookmarkablePageLink(this,"refreshLink", Page5.class, params);
 		add(link);
-		add(new BookmarkablePageLink("homeLink", Home.class));
+		add(new BookmarkablePageLink(this,"homeLink", Home.class));
 	}
 }

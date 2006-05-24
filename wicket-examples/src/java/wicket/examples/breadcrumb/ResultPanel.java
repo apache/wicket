@@ -18,6 +18,7 @@
  */
 package wicket.examples.breadcrumb;
 
+import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import wicket.markup.html.basic.Label;
@@ -37,16 +38,16 @@ public class ResultPanel extends BreadCrumbPanel
 	 * @param result
 	 *            The 'result' to display as a label
 	 */
-	public ResultPanel(final String id, final IBreadCrumbModel breadCrumbModel, String result)
+	public ResultPanel(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel, String result)
 	{
-		super(id, breadCrumbModel);
+		super(parent,id, breadCrumbModel);
 
 		if (result == null || "".equals(result.trim()))
 		{
 			result = "(hey, you didn't even provide some input!)";
 		}
 
-		add(new Label("result", result));
+		add(new Label(this,"result", result));
 	}
 
 	/**

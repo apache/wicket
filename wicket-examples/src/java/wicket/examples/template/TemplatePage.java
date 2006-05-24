@@ -42,9 +42,9 @@ public abstract class TemplatePage extends WicketExamplePage
 	 */
 	public TemplatePage()
 	{
-		add(new Label("title", new PropertyModel(this, "pageTitle")));
-		add(currentBanner = new Banner1("ad"));
-		add(new Link("changeAdLink")
+		add(new Label(this,"title", new PropertyModel(this, "pageTitle")));
+		add(currentBanner = new Banner1(this,"ad"));
+		add(new Link(this,"changeAdLink")
 		{
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
@@ -53,16 +53,16 @@ public abstract class TemplatePage extends WicketExamplePage
 			{
 				if (currentBanner.getClass() == Banner1.class)
 				{
-					TemplatePage.this.replace(currentBanner = new Banner2("ad"));
+					TemplatePage.this.replace(currentBanner = new Banner2(TemplatePage.this,"ad"));
 				}
 				else
 				{
-					TemplatePage.this.replace(currentBanner = new Banner1("ad"));
+					TemplatePage.this.replace(currentBanner = new Banner1(TemplatePage.this,"ad"));
 				}
 			}
 		});
-		add(new BookmarkablePageLink("page1Link", Page1.class));
-		add(new BookmarkablePageLink("page2Link", Page2.class));
+		add(new BookmarkablePageLink(this,"page1Link", Page1.class));
+		add(new BookmarkablePageLink(this,"page2Link", Page2.class));
 	}
 
 	/**

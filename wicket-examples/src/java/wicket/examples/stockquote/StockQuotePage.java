@@ -40,10 +40,10 @@ public class StockQuotePage extends WicketExamplePage
 	{
 		// code for the first example, directly using the
 		// stock quote component.
-		add(new StockQuoteLabel("stockIBM", "IBM"));
+		add(new StockQuoteLabel(this,"stockIBM", "IBM"));
 
 		// use the second example component
-		add(new StockQuoteLabel2("stock2IBM", "IBM"));
+		add(new StockQuoteLabel2(this,"stock2IBM", "IBM"));
 
 		// code for second example: using a form for selecting the
 		// symbol of the stock quote.
@@ -53,15 +53,15 @@ public class StockQuotePage extends WicketExamplePage
 		final IModel model = new PropertyModel(quote, "symbol");
 
 		// form holding the input field.
-		final Form form = new Form("form");
+		final Form form = new Form(this,"form");
 		add(form);
-		form.add(new TextField("symbol", model));
+		form.add(new TextField(this,"symbol", model));
 
 		// labels for displaying the chosen symbol
-		add(new Label("symbol", model));
+		add(new Label(this,"symbol", model));
 
 		// and its quote
-		add(new StockQuoteLabel("quote", model));
+		add(new StockQuoteLabel(this,"quote", model));
 	}
 
 	/**

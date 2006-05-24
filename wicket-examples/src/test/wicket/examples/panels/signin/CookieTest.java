@@ -80,7 +80,7 @@ public class CookieTest extends TestCase
 		final ISecuritySettings settings = application.getSecuritySettings();
 		settings.setCryptFactory(new NoCryptFactory());
 
-		this.panel = new SignInPanel("panel")
+		this.panel = new SignInPanel(page,"panel")
 		{
 			public boolean signIn(final String username, final String password)
 			{

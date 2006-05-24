@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -54,16 +55,16 @@ public final class GuestBook extends WicketExamplePage
 	public GuestBook()
 	{
 		// Add comment form
-		add(new CommentForm("commentForm"));
+		add(new CommentForm(this,"commentForm"));
 
 		// Add commentListView of existing comments
-		add(commentListView = new ListView("comments", commentList)
+		add(commentListView = new ListView(this,"comments", commentList)
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final Comment comment = (Comment)listItem.getModelObject();
-				listItem.add(new Label("date", new Model(comment.getDate())));
-				listItem.add(new MultiLineLabel("text", comment.getText()));
+				listItem.add(new Label(listItem,"date", new Model(comment.getDate())));
+				listItem.add(new MultiLineLabel(listItem,"text", comment.getText()));
 			}
 		}).setVersioned(false);
 	}
@@ -81,13 +82,13 @@ public final class GuestBook extends WicketExamplePage
 		 * @param id
 		 *            The name of this component
 		 */
-		public CommentForm(final String id)
+		public CommentForm(MarkupContainer parent,final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel(new Comment()));
+			super(parent,id, new CompoundPropertyModel(new Comment()));
 
 			// Add text entry widget
-			add(new TextArea("text"));
+			add(new TextArea(this,"text"));
 		}
 
 		/**

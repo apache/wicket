@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.AjaxCallDecorator;
@@ -45,22 +46,22 @@ public class GuestBook extends BasePage
 	public GuestBook()
 	{
 		// Add comment form
-		CommentForm commentForm = new CommentForm("commentForm");
+		CommentForm commentForm = new CommentForm(this,"commentForm");
 		add(commentForm);
 
 		// the WebMarkupContainer is used to update the listview in an ajax call
-		comments = new WebMarkupContainer("comments");
+		comments = new WebMarkupContainer(this,"comments");
 		add(comments.setOutputMarkupId(true));
 		
 		// Add commentListView of existing comments
-		comments.add(commentListView = new ListView("comments", new PropertyModel(this,
+		comments.add(commentListView = new ListView(comments,"comments", new PropertyModel(this,
 				"commentList"))
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final Comment comment = (Comment)listItem.getModelObject();
-				listItem.add(new Label("date", new Model(comment.getDate())));
-				listItem.add(new MultiLineLabel("text", comment.getText()));
+				listItem.add(new Label(listItem,"date", new Model(comment.getDate())));
+				listItem.add(new MultiLineLabel(listItem,"text", comment.getText()));
 			}
 		});
 		
@@ -110,13 +111,13 @@ public class GuestBook extends BasePage
 		 * @param id
 		 *            The name of this component
 		 */
-		public CommentForm(final String id)
+		public CommentForm(MarkupContainer parent,final String id)
 		{
 			// Construct form with no validation listener
-			super(id, new CompoundPropertyModel(new Comment()));
+			super(parent,id, new CompoundPropertyModel(new Comment()));
 
 			// Add text entry widget
-			text = new TextArea("text").setOutputMarkupId(true);
+			text = new TextArea(this,"text").setOutputMarkupId(true);
 			add(text);
 		}
 

@@ -53,11 +53,11 @@ public class TextFieldPage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -68,7 +68,7 @@ public class TextFieldPage extends WicketExamplePage
 
 		// add a simple text field that uses Input's 'text' property. Nothing
 		// can go wrong here
-		form.add(new TextField("text"));
+		form.add(new TextField(form,"text"));
 
 		// here we add a text field that uses Input's 'integer' property.
 		// Something could go
@@ -93,7 +93,7 @@ public class TextFieldPage extends WicketExamplePage
 		// with key 'form.integer.TypeValidator'. Read more about how this works
 		// in the javadocs
 		// of AbstractValidator
-		form.add(new TextField("integer", Integer.class));
+		form.add(new TextField(form,"integer", Integer.class));
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -143,7 +143,7 @@ public class TextFieldPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// with key 'form.integer.TypeValidator'. Read more about how this works in the javadocs\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// of AbstractValidator\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextField(\"integer\", Integer.class));";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 

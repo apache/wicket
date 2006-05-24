@@ -20,6 +20,7 @@ package wicket.examples.displaytag.list;
 import java.util.Collections;
 import java.util.Comparator;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.link.Link;
@@ -50,16 +51,16 @@ public abstract class SortableListViewHeader extends Border
 	 * @param group
 	 *            The group of headers the new one will be added to
 	 */
-	public SortableListViewHeader(final String id, final SortableListViewHeaderGroup group)
+	public SortableListViewHeader(MarkupContainer parent,final String id, final SortableListViewHeaderGroup group)
 	{
-		super(id);
+		super(parent,id);
 
 		// Default to descending.
 		this.ascending = false;
 		this.group = group;
 
 		// If user clicks on the header, sorting will reverse
-		add(new Link("actionLink")
+		add(new Link(this,"actionLink")
 		{
 			public void onClick()
 			{

@@ -44,21 +44,21 @@ public final class Home extends AuthenticatedWebPage
 	{
 		// Add table of books
 		final PageableListView listView;
-		add(listView = new PageableListView("books", new PropertyModel(this, "books"), 4)
+		add(listView = new PageableListView(this,"books", new PropertyModel(this, "books"), 4)
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final Book book = (Book)listItem.getModelObject();
-				listItem.add(BookDetails.link("details", book, getLocalizer().getString(
+				listItem.add(BookDetails.link(listItem,"details", book, getLocalizer().getString(
 						"noBookTitle", this)));
-				listItem.add(new Label("author", new Model(book)));
-				listItem.add(moveUpLink("moveUp", listItem));
-				listItem.add(moveDownLink("moveDown", listItem));
-				listItem.add(removeLink("remove", listItem));
-				listItem.add(EditBook.link("edit", book.getId()));
+				listItem.add(new Label(listItem,"author", new Model(book)));
+				listItem.add(moveUpLink(listItem,"moveUp", listItem));
+				listItem.add(moveDownLink(listItem,"moveDown", listItem));
+				listItem.add(removeLink(listItem,"remove", listItem));
+				listItem.add(EditBook.link(listItem,"edit", book.getId()));
 			}
 		});
-		add(new PagingNavigator("navigator", listView));
+		add(new PagingNavigator(this,"navigator", listView));
 	}
 
 	/**

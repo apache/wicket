@@ -54,7 +54,7 @@ public class RefreshingPage extends BasePage
 		}
 
 		// create the refreshing view
-		RefreshingView view = new RefreshingView("view")
+		RefreshingView view = new RefreshingView(this,"view")
 		{
 			/**
 			 * Return an iterator over models for items in the view
@@ -67,13 +67,13 @@ public class RefreshingPage extends BasePage
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new Label("itemid", item.getId()));
-				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+				item.add(new Label(item,"itemid", item.getId()));
+				item.add(new ActionPanel(item,"actions", item.getModel()));
+				item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
+				item.add(new Label(item,"firstname", contact.getFirstName()));
+				item.add(new Label(item,"lastname", contact.getLastName()));
+				item.add(new Label(item,"homephone", contact.getHomePhone()));
+				item.add(new Label(item,"cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
@@ -87,7 +87,7 @@ public class RefreshingPage extends BasePage
 
 		add(view);
 
-		add(new Link("refreshLink")
+		add(new Link(this,"refreshLink")
 		{
 			public void onClick()
 			{

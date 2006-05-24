@@ -19,11 +19,14 @@ package wicket.examples.signin2;
 
 import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
+import wicket.examples.hangman.HangmanApplication;
+import wicket.examples.hangman.HangmanSession;
 import wicket.protocol.http.request.CryptedUrlWebRequestCodingStrategy;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
@@ -84,6 +87,10 @@ public final class SignIn2Application extends WicketExampleApplication
 		return new ISessionFactory()
 		{
 			public Session newSession()
+			{
+				return new SignIn2Session(SignIn2Application.this);
+			}
+			public Session newSession(Request request)
 			{
 				return new SignIn2Session(SignIn2Application.this);
 			}

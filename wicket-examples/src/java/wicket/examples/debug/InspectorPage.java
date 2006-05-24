@@ -46,8 +46,8 @@ public final class InspectorPage extends WebPage
 	 */
 	public InspectorPage(final PageParameters parameters)
 	{
-		add(new ApplicationView("application", Application.get()));
-		add(new SessionView("session", Session.get()));
+		add(new ApplicationView(this,"application", Application.get()));
+		add(new SessionView(this,"session", Session.get()));
 		IPageMapEntry entry = null;
 		try
 		{
@@ -57,10 +57,10 @@ public final class InspectorPage extends WebPage
 		{
 			// Ignore
 		}
-		add(new PageView("page", entry == null ? null : entry.getPage()));
-		add(new Image("bug"));
-		add(new BookmarkablePageLink("allsessions",LiveSessionsPage.class));
-		add(new Label("wicketVersion", getApplication().getFrameworkSettings().getVersion()));
+		add(new PageView(this,"page", entry == null ? null : entry.getPage()));
+		add(new Image(this,"bug"));
+		add(new BookmarkablePageLink(this,"allsessions",LiveSessionsPage.class));
+		add(new Label(this,"wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}
 	
 	/**

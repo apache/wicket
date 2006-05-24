@@ -45,13 +45,13 @@ public class ExampleImpObjects extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add table of existing comments
-		add(new SimpleListView("rows", data)
+		add(new SimpleListView(this,"rows", data)
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 				final int row = listItem.getIndex() + 1;
-				listItem.add(new Label("rowNumber", String.valueOf(row)));
+				listItem.add(new Label(listItem,"rowNumber", String.valueOf(row)));
 			}
 		});
 	}

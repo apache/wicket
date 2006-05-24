@@ -34,11 +34,11 @@ public class ButtonPage extends WicketExamplePage
 	public ButtonPage()
 	{
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -46,7 +46,7 @@ public class ButtonPage extends WicketExamplePage
 			}
 		};
 
-		Button button1 = new Button("button1")
+		Button button1 = new Button(form,"button1")
 		{
 			protected void onSubmit()
 			{
@@ -55,7 +55,7 @@ public class ButtonPage extends WicketExamplePage
 		};
 		form.add(button1);
 
-		Button button2 = new Button("button2")
+		Button button2 = new Button(form,"button2")
 		{
 			protected void onSubmit()
 			{
@@ -101,7 +101,7 @@ public class ButtonPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(button2);\n"
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(form);";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 }

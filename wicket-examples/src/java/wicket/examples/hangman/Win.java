@@ -33,9 +33,9 @@ public class Win extends HangmanPage
 	 */
 	public Win()
 	{
-		add(new Label("guessesRemaining", Integer.toString(getGame().getGuessesRemaining())));
-		add(new Label("currentWord", getGame().getWord().asString()));
-		add(new Link("playAgain")
+		add(new Label(this,"guessesRemaining", Integer.toString(getGame().getGuessesRemaining())));
+		add(new Label(this,"currentWord", getGame().getWord().asString()));
+		add(new Link(this,"playAgain")
 		{
 			public void onClick()
 			{

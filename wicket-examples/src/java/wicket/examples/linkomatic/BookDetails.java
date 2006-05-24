@@ -35,6 +35,6 @@ public final class BookDetails extends WicketExamplePage
 	 */
 	public BookDetails(final Book book)
 	{
-		add(new Label("title", book.getTitle()));
+		add(new Label(this,"title", book.getTitle()));
 	}
 }

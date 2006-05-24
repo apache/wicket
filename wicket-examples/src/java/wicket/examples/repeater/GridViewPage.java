@@ -38,18 +38,18 @@ public class GridViewPage extends BasePage
 	public GridViewPage()
 	{
 		IDataProvider dataProvider = new ContactDataProvider();
-		GridView gridView = new GridView("rows", dataProvider)
+		GridView gridView = new GridView(this,"rows", dataProvider)
 		{
 			protected void populateItem(Item item)
 			{
 				final Contact contact = (Contact)item.getModelObject();
-				item.add(new Label("firstName", contact.getFirstName() + " "
+				item.add(new Label(item,"firstName", contact.getFirstName() + " "
 						+ contact.getLastName()));
 			}
 
 			protected void populateEmptyItem(Item item)
 			{
-				item.add(new Label("firstName", "*empty*"));
+				item.add(new Label(item,"firstName", "*empty*"));
 			}
 		};
 
@@ -57,6 +57,6 @@ public class GridViewPage extends BasePage
 		gridView.setColumns(3);
 
 		add(gridView);
-		add(new PagingNavigator("navigator", gridView));
+		add(new PagingNavigator(this,"navigator", gridView));
 	}
 }

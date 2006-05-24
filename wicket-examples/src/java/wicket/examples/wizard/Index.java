@@ -18,6 +18,7 @@
  */
 package wicket.examples.wizard;
 
+import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.link.Link;
 
@@ -50,9 +51,9 @@ public class Index extends WicketExamplePage
 		 * @param wizardClass
 		 *            Class of the wizard to instantiate
 		 */
-		public WizardLink(String id, Class wizardClass)
+		public WizardLink(MarkupContainer parent,final String id, Class wizardClass)
 		{
-			super(id);
+			super(parent,id);
 			this.wizardClass = wizardClass;
 		}
 
@@ -70,8 +71,8 @@ public class Index extends WicketExamplePage
 	 */
 	public Index()
 	{
-		add(new WizardLink("staticWizardLink", StaticWizard.class));
-		add(new WizardLink("staticWizardWithPanelsLink", StaticWizardWithPanels.class));
-		add(new WizardLink("newUserWizardLink", NewUserWizard.class));
+		add(new WizardLink(this,"staticWizardLink", StaticWizard.class));
+		add(new WizardLink(this,"staticWizardWithPanelsLink", StaticWizardWithPanels.class));
+		add(new WizardLink(this,"newUserWizardLink", NewUserWizard.class));
 	}
 }

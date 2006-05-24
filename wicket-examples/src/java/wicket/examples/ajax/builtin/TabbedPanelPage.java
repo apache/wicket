@@ -20,6 +20,7 @@ package wicket.examples.ajax.builtin;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.extensions.ajax.markup.html.tabs.AjaxTabbedPanel;
 import wicket.extensions.markup.html.tabs.AbstractTab;
 import wicket.markup.html.panel.Panel;
@@ -41,29 +42,29 @@ public class TabbedPanelPage extends BasePage
 		List tabs = new ArrayList();
 		tabs.add(new AbstractTab(new Model("first tab"))
 		{
-			public Panel getPanel(String panelId)
+			public Panel getPanel(MarkupContainer<?> parent,String panelId)
 			{
-				return new TabPanel1(panelId);
+				return new TabPanel1(parent,panelId);
 			}
 		});
 
 		tabs.add(new AbstractTab(new Model("second tab"))
 		{
-			public Panel getPanel(String panelId)
+			public Panel getPanel(MarkupContainer<?> parent,String panelId)
 			{
-				return new TabPanel2(panelId);
+				return new TabPanel2(parent,panelId);
 			}
 		});
 
 		tabs.add(new AbstractTab(new Model("third tab"))
 		{
-			public Panel getPanel(String panelId)
+			public Panel getPanel(MarkupContainer<?> parent,String panelId)
 			{
-				return new TabPanel3(panelId);
+				return new TabPanel3(parent,panelId);
 			}
 		});
 
-		add(new AjaxTabbedPanel("tabs", tabs));
+		add(new AjaxTabbedPanel(this,"tabs", tabs));
 	}
 
 	/**
@@ -77,9 +78,9 @@ public class TabbedPanelPage extends BasePage
 		 * @param id
 		 *            component id
 		 */
-		public TabPanel1(String id)
+		public TabPanel1(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	};
 
@@ -94,9 +95,9 @@ public class TabbedPanelPage extends BasePage
 		 * @param id
 		 *            component id
 		 */
-		public TabPanel2(String id)
+		public TabPanel2(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	};
 
@@ -111,9 +112,9 @@ public class TabbedPanelPage extends BasePage
 		 * @param id
 		 *            component id
 		 */
-		public TabPanel3(String id)
+		public TabPanel3(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	};
 }

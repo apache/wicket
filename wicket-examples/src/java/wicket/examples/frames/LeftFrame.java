@@ -17,6 +17,7 @@
  */
 package wicket.examples.frames;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.link.Link;
 
@@ -58,9 +59,9 @@ public class LeftFrame extends WebPage
 		 * @param bodyFrame
 		 * @param pageClass
 		 */
-		public ChangeFramePageLink(String id, BodyFrame bodyFrame, Class pageClass)
+		public ChangeFramePageLink(MarkupContainer parent,final String id, BodyFrame bodyFrame, Class pageClass)
 		{
-			super(id);
+			super(parent,id);
 			this.bodyFrame = bodyFrame;
 			this.pageClass = pageClass;
 		}
@@ -86,8 +87,8 @@ public class LeftFrame extends WebPage
 	 */
 	public LeftFrame(BodyFrame index)
 	{
-		add(new ChangeFramePageLink("linkToPage1", index, Page1.class));
-		add(new ChangeFramePageLink("linkToPage2", index, Page2.class));
+		add(new ChangeFramePageLink(this,"linkToPage1", index, Page1.class));
+		add(new ChangeFramePageLink(this,"linkToPage2", index, Page2.class));
 	}
 
 	/**

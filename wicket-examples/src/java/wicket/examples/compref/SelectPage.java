@@ -60,11 +60,11 @@ public class SelectPage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -73,14 +73,14 @@ public class SelectPage extends WicketExamplePage
 		};
 		add(form);
 
-		Select site = new Select("site");
+		Select site = new Select(form,"site");
 		form.add(site);
-		site.add(new SelectOption("site1", new Model("tss")));
-		site.add(new SelectOption("site2", new Model("jl")));
-		site.add(new SelectOption("site3", new Model("sd")));
-		site.add(new SelectOption("site4", new Model("bn")));
+		site.add(new SelectOption(site,"site1", new Model("tss")));
+		site.add(new SelectOption(site,"site2", new Model("jl")));
+		site.add(new SelectOption(site,"site3", new Model("sd")));
+		site.add(new SelectOption(site,"site4", new Model("bn")));
 
-		Select choices = new Select("choices");
+		Select choices = new Select(form,"choices");
 		form.add(choices);
 		IOptionRenderer renderer = new IOptionRenderer()
 		{
@@ -96,7 +96,7 @@ public class SelectPage extends WicketExamplePage
 			}
 
 		};
-		choices.add(new SelectOptions("manychoices", new Model((Serializable)MANY_CHOICES),
+		choices.add(new SelectOptions(choices,"manychoices", new Model((Serializable)MANY_CHOICES),
 				renderer));
 
 	}
@@ -165,7 +165,7 @@ public class SelectPage extends WicketExamplePage
 		html = "SEE INSIDE FOR NOW";
 		code = "SEE INSIDE FOR NOW";
 
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 }

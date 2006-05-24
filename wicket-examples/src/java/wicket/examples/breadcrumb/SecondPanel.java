@@ -18,6 +18,7 @@
  */
 package wicket.examples.breadcrumb;
 
+import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanelLink;
@@ -46,23 +47,23 @@ public class SecondPanel extends BreadCrumbPanel
 		 * @param id
 		 *            The component id
 		 */
-		public InputForm(String id)
+		public InputForm(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 			setModel(new CompoundPropertyModel(this));
-			add(new TextField("input"));
-			add(new Button("normalButton"));
+			add(new TextField(this,"input"));
+			add(new Button(this,"normalButton"));
 
-			add(new Button("nextButton")
+			add(new Button(this,"nextButton")
 			{
 				protected void onSubmit()
 				{
 					activate(new IBreadCrumbPanelFactory()
 					{
-						public BreadCrumbPanel create(String componentId,
+						public BreadCrumbPanel create(MarkupContainer<?> parent,String componentId,
 								IBreadCrumbModel breadCrumbModel)
 						{
-							return new ResultPanel(componentId, breadCrumbModel, input);
+							return new ResultPanel(parent,componentId, breadCrumbModel, input);
 						}
 					});
 				}
@@ -97,14 +98,14 @@ public class SecondPanel extends BreadCrumbPanel
 	 * @param id
 	 * @param breadCrumbModel
 	 */
-	public SecondPanel(final String id, final IBreadCrumbModel breadCrumbModel)
+	public SecondPanel(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel)
 	{
-		super(id, breadCrumbModel);
+		super(parent,id, breadCrumbModel);
 
-		add(new BreadCrumbPanelLink("linkToThird", this, ThirdPanel.class));
-		add(new BreadCrumbPanelLink("linkToFourth", this, FourthPanel.class));
+		add(new BreadCrumbPanelLink(this,"linkToThird", this, ThirdPanel.class));
+		add(new BreadCrumbPanelLink(this,"linkToFourth", this, FourthPanel.class));
 
-		add(new InputForm("form"));
+		add(new InputForm(this,"form"));
 	}
 
 	/**

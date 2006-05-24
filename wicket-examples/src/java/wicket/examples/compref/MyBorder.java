@@ -16,6 +16,7 @@
  */
 package wicket.examples.compref;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 
 /**
@@ -31,8 +32,8 @@ class MyBorder extends Border
 	 * @param id
 	 *            component id
 	 */
-	public MyBorder(String id)
+	public MyBorder(MarkupContainer parent, String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

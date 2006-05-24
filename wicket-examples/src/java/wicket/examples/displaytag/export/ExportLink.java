@@ -19,6 +19,7 @@ package wicket.examples.displaytag.export;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
 
 /**
@@ -38,9 +39,9 @@ public class ExportLink extends Link
 	 * @param data
 	 * @param exportView
 	 */
-	public ExportLink(final String id, final List data, final BaseExportView exportView)
+	public ExportLink(MarkupContainer parent,final String id, final List data, final BaseExportView exportView)
 	{
-		super(id);
+		super(parent,id);
 		this.data = data;
 		this.exportView = exportView;
 	}

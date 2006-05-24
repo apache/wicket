@@ -36,6 +36,6 @@ public class Page3 extends WicketExamplePage
 	 */
 	public Page3(PageParameters parameters)
 	{
-		add(new Label("id", parameters.getString("id")));
+		add(new Label(this,"id", parameters.getString("id")));
 	}
 }

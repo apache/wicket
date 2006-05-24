@@ -43,6 +43,6 @@ public class DataGridPage extends BasePage
 		columns[3] = new PropertyPopulator("homePhone");
 		columns[4] = new PropertyPopulator("cellPhone");
 
-		add(new DataGridView("rows", columns, new SortableContactDataProvider()));
+		add(new DataGridView(this,"rows", columns, new SortableContactDataProvider()));
 	}
 }

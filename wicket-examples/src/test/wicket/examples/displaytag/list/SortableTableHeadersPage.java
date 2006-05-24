@@ -56,19 +56,19 @@ public class SortableTableHeadersPage extends WebPage
 		addUser(list, 8, "Name-dca", "mail-8");
 		addUser(list, 9, "Name-eaa", "mail-9");
 
-		ListView table = new ListView("table", list)
+		ListView table = new ListView(this,"table", list)
 		{
 			protected void populateItem(ListItem listItem)
 			{
 				User user = (User)listItem.getModelObject();
-				listItem.add(new Label("id", new PropertyModel(user, "id")));
-				listItem.add(new Label("name", new PropertyModel(user, "name")));
-				listItem.add(new Label("email", new PropertyModel(user, "email")));
+				listItem.add(new Label(listItem,"id", new PropertyModel(user, "id")));
+				listItem.add(new Label(listItem,"name", new PropertyModel(user, "name")));
+				listItem.add(new Label(listItem,"email", new PropertyModel(user, "email")));
 			}
 		};
 
 		add(table);
-		add(new SortableListViewHeaders("header", table)
+		add(new SortableListViewHeaders(this,"header", table)
 		{
 			/*
 			 * If object does not support equals()

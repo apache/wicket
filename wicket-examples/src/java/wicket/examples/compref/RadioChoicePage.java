@@ -46,11 +46,11 @@ public class RadioChoicePage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -63,7 +63,7 @@ public class RadioChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		form.add(new RadioChoice("site", SITES));
+		form.add(new RadioChoice(form,"site", SITES));
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -94,7 +94,7 @@ public class RadioChoicePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// Add a radio choice component that uses the model object's 'site' property to designate the\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// current selection, and that uses the SITES list for the available options.\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new RadioChoice(\"site\", SITES));";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 

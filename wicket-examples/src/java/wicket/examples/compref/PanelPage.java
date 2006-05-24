@@ -30,7 +30,7 @@ public class PanelPage extends WicketExamplePage
 	 */
 	public PanelPage()
 	{
-		add(new MyPanel("panel"));
+		add(new MyPanel(this,"panel"));
 	}
 
 	protected void explain()
@@ -40,6 +40,6 @@ public class PanelPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new MyPanel(\"panel\"));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 	}
 }

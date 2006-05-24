@@ -18,6 +18,7 @@
  */
 package wicket.examples.wizard;
 
+import wicket.MarkupContainer;
 import wicket.extensions.wizard.StaticContentStep;
 import wicket.extensions.wizard.Wizard;
 import wicket.extensions.wizard.WizardModel;
@@ -42,9 +43,9 @@ public class StaticWizard extends Wizard
 	 * @param id
 	 *            The component id
 	 */
-	public StaticWizard(String id)
+	public StaticWizard(MarkupContainer parent, String id)
 	{
-		super(id);
+		super(parent,id);
 
 		// create a model with the stupidest steps you can think of
 		WizardModel model = new WizardModel();

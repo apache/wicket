@@ -67,19 +67,19 @@ public class LinksPage extends BasePage
 	 */
 	public LinksPage()
 	{
-		final Label c1 = new Label("c1", new PropertyModel(this, "counter1"));
+		final Label c1 = new Label(this,"c1", new PropertyModel(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label("c2", new PropertyModel(this, "counter2"));
+		final Label c2 = new Label(this,"c2", new PropertyModel(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		final Label c3 = new Label("c3", new PropertyModel(this, "counter3"));
+		final Label c3 = new Label(this,"c3", new PropertyModel(this, "counter3"));
 		c3.setOutputMarkupId(true);
 		add(c3);
 
-		add(new AjaxLink("c1-link")
+		add(new AjaxLink(this,"c1-link")
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -88,7 +88,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxFallbackLink("c2-link")
+		add(new AjaxFallbackLink(this,"c2-link")
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -104,7 +104,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new IndicatingAjaxLink("c3-link")
+		add(new IndicatingAjaxLink(this,"c3-link")
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -122,7 +122,7 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink("success-link")
+		add(new AjaxLink(this,"success-link")
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -150,7 +150,7 @@ public class LinksPage extends BasePage
 			};
 		});
 		
-		add(new AjaxLink("failure-link")
+		add(new AjaxLink(this,"failure-link")
 		{
 			public void onClick(AjaxRequestTarget target)
 			{

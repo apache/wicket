@@ -21,6 +21,7 @@ package wicket.examples.displaytag;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.examples.displaytag.list.SortableListViewHeader;
 import wicket.examples.displaytag.list.SortableListViewHeaders;
 import wicket.examples.displaytag.utils.ListObject;
@@ -53,20 +54,20 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 	 * @param list
 	 *            List of data to display
 	 */
-	public SortablePageableDisplaytagTableComponent(final String id, final List list)
+	public SortablePageableDisplaytagTableComponent(MarkupContainer parent,final String id, final List list)
 	{
-		super(id);
+		super(parent,id);
 
 		// Get an internal copy of the model data
 		this.data = new ArrayList();
 		this.data.addAll(list);
 
 		// Add a table
-		final SimplePageableListView table = new SimplePageableListView("rows", list, 10);
+		final SimplePageableListView table = new SimplePageableListView(this,"rows", list, 10);
 		add(table);
 
 		// Add a sortable header to the table
-		add(new SortableListViewHeaders("header", table)
+		add(new SortableListViewHeaders(this,"header", table)
 		{
 			protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
 			{
@@ -104,16 +105,16 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 		});
 
 		// Add a headline
-		add(new TableHeaderLabel("headline", table));
+		add(new TableHeaderLabel(this,"headline", table));
 
 		// Add navigation
-		add(new PagingNavigation("navigation", table));
+		add(new PagingNavigation(this,"navigation", table));
 
 		// Add some navigation links
-		add(new PagingNavigationLink("first", table, 0));
-		add(new PagingNavigationIncrementLink("prev", table, -1));
-		add(new PagingNavigationIncrementLink("next", table, 1));
-		add(new PagingNavigationLink("last", table, table.getPageCount() - 1));
+		add(new PagingNavigationLink(this,"first", table, 0));
+		add(new PagingNavigationIncrementLink(this,"prev", table, -1));
+		add(new PagingNavigationIncrementLink(this,"next", table, 1));
+		add(new PagingNavigationLink(this,"last", table, table.getPageCount() - 1));
 	}
 
 	/**
@@ -128,9 +129,9 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 		 * @param id
 		 * @param table
 		 */
-		public TableHeaderLabel(final String id, final PageableListView table)
+		public TableHeaderLabel(MarkupContainer parent,final String id, final PageableListView table)
 		{
-			super(id, (IModel)null);
+			super(parent,id, (IModel)null);
 			this.listView = table;
 		}
 

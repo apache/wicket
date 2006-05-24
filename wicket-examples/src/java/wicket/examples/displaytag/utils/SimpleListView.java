@@ -53,9 +53,9 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @param id
 	 * @param data
 	 */
-	public SimpleListView(final String id, final List data)
+	public SimpleListView(MarkupContainer parent,final String id, final List data)
 	{
-		super(id, data);
+		super(parent,id, data);
 	}
 
 	/**
@@ -64,9 +64,9 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @param id
 	 * @param model
 	 */
-	public SimpleListView(final String id, final IModel model)
+	public SimpleListView(MarkupContainer parent,final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 */
 	protected ListItem newItem(final int index)
 	{
-		return new SimpleListListItem(index, getListItemModel(getModel(), index));
+		return new SimpleListListItem(this,index, getListItemModel(getModel(), index));
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		container.autoAdd(newLabel(tag.getId()));
+		container.autoAdd(newLabel(container,tag.getId()));
 		return true;
 	}
 
@@ -132,9 +132,9 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @param id
 	 * @return Usually a Label like component
 	 */
-	protected Component newLabel(final String id)
+	protected Component newLabel(MarkupContainer parent,final String id)
 	{
-		return new Label(id);
+		return new Label(parent,id);
 	}
 
 	/**
@@ -159,9 +159,9 @@ public class SimpleListView extends ListView implements IComponentResolver
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(final int index, final IModel model)
+		public SimpleListListItem(MarkupContainer<?> parent,final int index, final IModel model)
 		{
-			super(index, model);
+			super(parent,index, model);
 		}
 
 		protected void onComponentTag(final ComponentTag tag)

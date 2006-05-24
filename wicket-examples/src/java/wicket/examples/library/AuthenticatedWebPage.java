@@ -42,7 +42,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	public AuthenticatedWebPage()
 	{
 		// Create border and add it to the page
-		border = new LibraryApplicationBorder("border");
+		border = new LibraryApplicationBorder(this,"border");
 		border.setTransparentResolver(true);
 		super.add(border);
 

@@ -35,7 +35,7 @@ public class ClockPage extends BasePage
 	public ClockPage()
 	{
 		// add the clock component
-		Clock clock = new Clock("clock", TimeZone.getTimeZone("America/Los_Angeles"));
+		Clock clock = new Clock(this,"clock", TimeZone.getTimeZone("America/Los_Angeles"));
 		add(clock);
 
 		// add the ajax behavior which will keep updating the component every 5

@@ -17,6 +17,7 @@
  */
 package wicket.examples.repeater;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
@@ -37,7 +38,7 @@ public class BasePage extends ExamplePage
 	 */
 	public BasePage()
 	{
-		add(new Label("selectedLabel", new PropertyModel(this, "selectedContactLabel")));
+		add(new Label(this,"selectedLabel", new PropertyModel(this, "selectedContactLabel")));
 	}
 
 	/**
@@ -66,10 +67,10 @@ public class BasePage extends ExamplePage
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(String id, IModel model)
+		public ActionPanel(MarkupContainer parent,final String id, IModel model)
 		{
-			super(id, model);
-			add(new Link("select")
+			super(parent,id, model);
+			add(new Link(this,"select")
 			{
 				public void onClick()
 				{

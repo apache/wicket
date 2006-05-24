@@ -62,11 +62,11 @@ public class Home extends WicketExamplePage
 		l1.add("test 1.3");
 
 		// construct the panel
-		add(new NestedList("nestedList", l1));
+		add(new NestedList(this,"nestedList", l1));
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		Tree tree = new Tree("tree", treeModel)
+		Tree tree = new Tree(this,"tree", treeModel)
 		{
 			protected String getNodeLabel(DefaultMutableTreeNode node)
 			{
@@ -78,11 +78,11 @@ public class Home extends WicketExamplePage
 		add(tree);
 
 		// and another one
-		Tree tree2 = new MyTree("tree2", treeModel);
+		Tree tree2 = new MyTree(this,"tree2", treeModel);
 		add(tree2);
 
 		// and yet another one
-		Tree tree3 = new AnotherTree("tree3", treeModel);
+		Tree tree3 = new AnotherTree(this,"tree3", treeModel);
 		add(tree3);
 	}
 

@@ -18,6 +18,7 @@
  */
 package wicket.examples.wizard;
 
+import wicket.MarkupContainer;
 import wicket.extensions.wizard.StaticContentStep;
 import wicket.extensions.wizard.Wizard;
 import wicket.extensions.wizard.WizardModel;
@@ -45,9 +46,9 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step1()
+		public Step1(MarkupContainer<?> parent)
 		{
-			super("One", "The first step");
+			super(parent,"One", "The first step");
 		}
 	}
 
@@ -59,9 +60,9 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step2()
+		public Step2(MarkupContainer<?> parent)
 		{
-			super("One", "The first step");
+			super(parent,"One", "The first step");
 		}
 	}
 
@@ -73,9 +74,9 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step3()
+		public Step3(MarkupContainer<?> parent)
 		{
-			super("One", "The first step");
+			super(parent,"One", "The first step");
 		}
 	}
 
@@ -85,9 +86,9 @@ public class StaticWizardWithPanels extends Wizard
 	 * @param id
 	 *            The component id
 	 */
-	public StaticWizardWithPanels(String id)
+	public StaticWizardWithPanels(MarkupContainer parent, String id)
 	{
-		super(id);
+		super(parent,id);
 
 		// create a model with a couple of custom panels
 		// still not that spectacular, but at least it

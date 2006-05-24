@@ -16,6 +16,7 @@
  */
 package wicket.examples.template;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -31,9 +32,9 @@ public class Panel1 extends TemplatePanel
 	 * @param id
 	 *            component id
 	 */
-	public Panel1(String id)
+	public Panel1(MarkupContainer parent, String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -44,9 +45,9 @@ public class Panel1 extends TemplatePanel
 	 * @param model
 	 *            the model
 	 */
-	public Panel1(String id, IModel model)
+	public Panel1(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 }

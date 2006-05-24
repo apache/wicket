@@ -48,14 +48,14 @@ public class ExampleCheckbox extends Displaytag
 		List data = new TestList(6, false);
 
 		// Add table of existing comments
-		add(new SimpleListView("rows", data)
+		add(new SimpleListView(this,"rows", data)
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				listItem.add(new CheckBox("activ", new Model(new Boolean(value.isActive()))));
-				listItem.add(new TextField("comment", new Model(value.getStatus())));
+				listItem.add(new CheckBox(listItem,"activ", new Model(new Boolean(value.isActive()))));
+				listItem.add(new TextField(listItem,"comment", new Model(value.getStatus())));
 			}
 		});
 	}

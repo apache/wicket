@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import wicket.AccessStackPageMap;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -55,13 +56,13 @@ public final class PageMapView extends Panel
 	 * @param pageMap
 	 *            Page map to show
 	 */
-	public PageMapView(final String id, final PageMap pageMap)
+	public PageMapView(MarkupContainer parent,final String id, final PageMap pageMap)
 	{
-		super(id);
+		super(parent,id);
 
 		// Basic attributes
-		add(new Label("name", pageMap.getName() == null ? "null" : pageMap.getName()));
-		add(new Label("size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
+		add(new Label(this,"name", pageMap.getName() == null ? "null" : pageMap.getName()));
+		add(new Label(this,"size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
 
 		// Get entry accesses 
 		final ArrayListStack accessStack;
@@ -78,7 +79,7 @@ public final class PageMapView extends Panel
 		Collections.reverse(reversedAccessStack);
 
 		// Create the table containing the list the components
-		add(new ListView("accesses", reversedAccessStack)
+		add(new ListView(this,"accesses", reversedAccessStack)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -91,10 +92,10 @@ public final class PageMapView extends Panel
 				IPageMapEntry entry = pageMap.getEntry(access.getId());
 				PageParameters parameters = new PageParameters();
 				parameters.put("pageId", "" + entry.getNumericId());
-				Link link = new BookmarkablePageLink("link", InspectorPage.class, parameters);
-				link.add(new Label("id", "" + entry.getNumericId()));
+				Link link = new BookmarkablePageLink(listItem,"link", InspectorPage.class, parameters);
+				link.add(new Label(link,"id", "" + entry.getNumericId()));
 				listItem.add(link);
-				listItem.add(new Label("class", "" + entry.getClass().getName()));
+				listItem.add(new Label(listItem,"class", "" + entry.getClass().getName()));
 				long size;
 				int versions;
 				if (entry instanceof Page)
@@ -109,10 +110,10 @@ public final class PageMapView extends Panel
 					size = Objects.sizeof(entry);
 					versions = 0;
 				}
-				listItem.add(new Label("access", "" + (accessStack.size() - listItem.getIndex())));
-				listItem.add(new Label("version", "" + access.getVersion()));
-				listItem.add(new Label("versions", "" + versions));
-				listItem.add(new Label("size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
+				listItem.add(new Label(listItem,"access", "" + (accessStack.size() - listItem.getIndex())));
+				listItem.add(new Label(listItem,"version", "" + access.getVersion()));
+				listItem.add(new Label(listItem,"versions", "" + versions));
+				listItem.add(new Label(listItem,"size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
 			}
 		});
 	}

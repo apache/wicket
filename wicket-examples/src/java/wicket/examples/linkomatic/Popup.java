@@ -32,6 +32,6 @@ public class Popup extends WicketExamplePage
 	 */
 	public Popup()
 	{
-		add(new PopupCloseLink("close"));
+		add(new PopupCloseLink(this,"close"));
 	}
 }

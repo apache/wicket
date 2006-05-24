@@ -19,6 +19,7 @@ package wicket.examples.repeater;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
@@ -56,9 +57,9 @@ public class OIRPage extends BasePage
 		 * @param index
 		 * @param model
 		 */
-		public HighlitableDataItem(String id, int index, IModel model)
+		public HighlitableDataItem(MarkupContainer parent,final String id, int index, IModel model)
 		{
-			super(id, index, model);
+			super(parent,id, index, model);
 			add(new AttributeModifier("style", true, new Model("background-color:#80b6ed;"))
 			{
 				public boolean isEnabled()
@@ -76,13 +77,13 @@ public class OIRPage extends BasePage
 	{
 		SortableContactDataProvider dp = new SortableContactDataProvider();
 
-		final DataView dataView = new DataView("oir", dp)
+		final DataView dataView = new DataView(this,"oir", dp)
 		{
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Link("toggleHighlite")
+				item.add(new ActionPanel(item,"actions", item.getModel()));
+				item.add(new Link(item,"toggleHighlite")
 				{
 					public void onClick()
 					{
@@ -90,11 +91,11 @@ public class OIRPage extends BasePage
 						hitem.toggleHighlite();
 					}
 				});
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+				item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
+				item.add(new Label(item,"firstname", contact.getFirstName()));
+				item.add(new Label(item,"lastname", contact.getLastName()));
+				item.add(new Label(item,"homephone", contact.getHomePhone()));
+				item.add(new Label(item,"cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
@@ -105,16 +106,16 @@ public class OIRPage extends BasePage
 				}));
 			}
 
-			protected Item newItem(String id, int index, IModel model)
+			protected Item newItem(MarkupContainer parent,final String id, int index, IModel model)
 			{
-				return new HighlitableDataItem(id, index, model);
+				return new HighlitableDataItem(parent,id, index, model);
 			}
 		};
 
 		dataView.setItemsPerPage(8);
 		dataView.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
 
-		add(new OrderByBorder("orderByFirstName", "firstName", dp)
+		add(new OrderByBorder(this,"orderByFirstName", "firstName", dp)
 		{
 			protected void onSortChanged()
 			{
@@ -122,7 +123,7 @@ public class OIRPage extends BasePage
 			}
 		});
 
-		add(new OrderByBorder("orderByLastName", "lastName", dp)
+		add(new OrderByBorder(this,"orderByLastName", "lastName", dp)
 		{
 			protected void onSortChanged()
 			{
@@ -131,6 +132,6 @@ public class OIRPage extends BasePage
 		});
 
 		add(dataView);
-		add(new PagingNavigator("navigator", dataView));
+		add(new PagingNavigator(this,"navigator", dataView));
 	}
 }

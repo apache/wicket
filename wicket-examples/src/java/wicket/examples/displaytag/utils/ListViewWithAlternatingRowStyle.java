@@ -20,6 +20,7 @@ package wicket.examples.displaytag.utils;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -40,9 +41,9 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	 * @param id
 	 * @param data
 	 */
-	public ListViewWithAlternatingRowStyle(final String id, final List data)
+	public ListViewWithAlternatingRowStyle(MarkupContainer parent,final String id, final List data)
 	{
-		super(id, data);
+		super(parent,id, data);
 	}
 
 	/**
@@ -51,9 +52,9 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	 * @param id
 	 * @param model
 	 */
-	public ListViewWithAlternatingRowStyle(final String id, final IModel model)
+	public ListViewWithAlternatingRowStyle(MarkupContainer parent,final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -69,7 +70,7 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	 */
 	protected ListItem newItem(final int index)
 	{
-		return new ListItem(index, getListItemModel(getModel(), index))
+		return new ListItem(this,index, getListItemModel(getModel(), index))
 		{
 			protected void onComponentTag(final ComponentTag tag)
 			{

@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.image.Image;
@@ -57,9 +58,9 @@ public class MyTree extends Tree
 	 * @param model
 	 *            the tree model
 	 */
-	public MyTree(String id, TreeModel model)
+	public MyTree(MarkupContainer parent,final String id, TreeModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -83,17 +84,17 @@ public class MyTree extends Tree
 	/**
 	 * @see wicket.markup.html.tree.Tree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected Image getNodeImage(final DefaultMutableTreeNode node)
+	protected Image getNodeImage(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
 	{
 		if (node.isLeaf())
 		{
-			Image img = new Image(NODE_IMAGE_NAME, nodeImage);
+			Image img = new Image(parent,NODE_IMAGE_NAME, nodeImage);
 			return img;
 		}
 		else
 		{
 			// we want the image to be dynamic, yet resolve to a static image.
-			return new Image(NODE_IMAGE_NAME)
+			return new Image(parent,NODE_IMAGE_NAME)
 			{
 				protected ResourceReference getImageResourceReference()
 				{

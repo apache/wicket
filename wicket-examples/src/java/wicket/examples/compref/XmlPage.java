@@ -20,6 +20,7 @@ package wicket.examples.compref;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -37,7 +38,7 @@ public class XmlPage extends WebPage
 	 */
 	public XmlPage()
 	{
-		add(new PersonsListView("persons", ComponentReferenceApplication.getPersons()));
+		add(new PersonsListView(this,"persons", ComponentReferenceApplication.getPersons()));
 	}
 
 	/**
@@ -59,16 +60,16 @@ public class XmlPage extends WebPage
 		 * @param list
 		 *            the model
 		 */
-		public PersonsListView(String id, List list)
+		public PersonsListView(MarkupContainer parent,final String id, List list)
 		{
-			super(id, list);
+			super(parent,id, list);
 		}
 
 		protected void populateItem(ListItem item)
 		{
 			Person person = (Person)item.getModelObject();
-			item.add(new Label("firstName", person.getName()));
-			item.add(new Label("lastName", person.getLastName()));
+			item.add(new Label(item,"firstName", person.getName()));
+			item.add(new Label(item,"lastName", person.getLastName()));
 		}
 	}
 }

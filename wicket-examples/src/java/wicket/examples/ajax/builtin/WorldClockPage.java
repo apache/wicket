@@ -37,11 +37,11 @@ public class WorldClockPage extends BasePage
 	public WorldClockPage()
 	{
 		// create clock components for different timezones
-		final Clock la = new Clock("la", TimeZone.getTimeZone("America/Los_Angeles"));
-		final Clock ny = new Clock("ny", TimeZone.getTimeZone("America/New_York"));
-		final Clock moscow = new Clock("moscow", TimeZone.getTimeZone("Europe/Moscow"));
-		final Clock prague = new Clock("prague", TimeZone.getTimeZone("Europe/Prague"));
-		final Clock london = new Clock("london", TimeZone.getTimeZone("Europe/London"));
+		final Clock la = new Clock(this,"la", TimeZone.getTimeZone("America/Los_Angeles"));
+		final Clock ny = new Clock(this,"ny", TimeZone.getTimeZone("America/New_York"));
+		final Clock moscow = new Clock(this,"moscow", TimeZone.getTimeZone("Europe/Moscow"));
+		final Clock prague = new Clock(this,"prague", TimeZone.getTimeZone("Europe/Prague"));
+		final Clock london = new Clock(this,"london", TimeZone.getTimeZone("Europe/London"));
 
 		// make components print out id attrs so they can be updated via ajax
 		la.setOutputMarkupId(true);

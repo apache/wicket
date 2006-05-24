@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
@@ -44,7 +45,7 @@ public class LinkPage extends WicketExamplePage
 
 		// add a link which, when clicked, increases our counter
 		// when a link is clicked, its onClick method is called
-		Link link1 = new Link("link1")
+		Link link1 = new Link(this,"link1")
 		{
 			public void onClick()
 			{
@@ -55,7 +56,7 @@ public class LinkPage extends WicketExamplePage
 
 		// add a counter label to the link so that we can display it in the body
 		// of the link
-		link1.add(new Label("label1", new Model()
+		link1.add(new Label(link1,"label1", new Model()
 		{
 			public Object getObject(Component component)
 			{
@@ -82,11 +83,11 @@ public class LinkPage extends WicketExamplePage
 			 * 
 			 * @param id
 			 */
-			public CustomLink(String id)
+			public CustomLink(MarkupContainer parent, String id)
 			{
-				super(id);
+				super(parent,id);
 				count2 = new ClickCount();
-				add(new ClickCountLabel("label2", count2));
+				add(new ClickCountLabel(this,"label2", count2));
 			}
 
 			public void onClick()
@@ -94,7 +95,7 @@ public class LinkPage extends WicketExamplePage
 				count2.clicks++;
 			}
 		}
-		add(new CustomLink("link2"));
+		add(new CustomLink(this,"link2"));
 
 		// and if we know we are going to attach it to a <input type="button>
 		// tag, we shouldn't
@@ -108,9 +109,9 @@ public class LinkPage extends WicketExamplePage
 			 * 
 			 * @param id
 			 */
-			public ButtonLink(String id)
+			public ButtonLink(MarkupContainer parent, String id)
 			{
-				super(id);
+				super(parent,id);
 				count3 = new ClickCount();
 				add(new AttributeModifier("value", new Model()
 				{
@@ -131,7 +132,7 @@ public class LinkPage extends WicketExamplePage
 				count3.clicks++;
 			}
 		}
-		add(new ButtonLink("link3"));
+		add(new ButtonLink(this,"link3"));
 	}
 
 	/**
@@ -156,11 +157,11 @@ public class LinkPage extends WicketExamplePage
 		 * @param clickCount
 		 *            the count object
 		 */
-		public ClickCountLabel(String id, final ClickCount clickCount)
+		public ClickCountLabel(MarkupContainer parent,final String id, final ClickCount clickCount)
 		{
 			// call super with a simple annonymous class model that displays the
 			// current number of clicks
-			super(id, new Model()
+			super(parent,id, new Model()
 			{
 				public Object getObject(Component component)
 				{
@@ -173,7 +174,7 @@ public class LinkPage extends WicketExamplePage
 	// ----------
 
 	final ClickCount count1 = new ClickCount(); // simple counter object
-	Link link1 = new Link("link1")
+	Link link1 = new Link(this,"link1")
 	{
 		public void onClick()
 		{
@@ -199,7 +200,7 @@ public class LinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(link1);";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 

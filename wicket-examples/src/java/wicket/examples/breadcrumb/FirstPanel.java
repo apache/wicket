@@ -18,6 +18,7 @@
  */
 package wicket.examples.breadcrumb;
 
+import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanelLink;
@@ -35,10 +36,10 @@ public class FirstPanel extends BreadCrumbPanel
 	 * @param id
 	 * @param breadCrumbModel
 	 */
-	public FirstPanel(final String id, final IBreadCrumbModel breadCrumbModel)
+	public FirstPanel(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel)
 	{
-		super(id, breadCrumbModel);
-		add(new BreadCrumbPanelLink("linkToSecond", this, SecondPanel.class));
+		super(parent,id, breadCrumbModel);
+		add(new BreadCrumbPanelLink(this,"linkToSecond", this, SecondPanel.class));
 	}
 
 	/**

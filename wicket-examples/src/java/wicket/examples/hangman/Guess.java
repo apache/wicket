@@ -40,10 +40,10 @@ public class Guess extends HangmanPage
 	public Guess()
 	{
 		// Components for displaying the guesses remaining & the hangman
-		add(new Label("guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
+		add(new Label(this,"guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label("word", new Model()
+		add(new Label(this,"word", new Model()
 		{
 			public Object getObject(wicket.Component component)
 			{
@@ -52,12 +52,12 @@ public class Guess extends HangmanPage
 		}));
 
 		// Show the game's letters
-		add(new ListView("letters", getGame().getLetters())
+		add(new ListView(this,"letters", getGame().getLetters())
 		{
 			protected void populateItem(final ListItem listItem)
 			{
 				final Letter letter = (Letter)listItem.getModelObject();
-				final Link link = new Link("letter")
+				final Link link = new Link(listItem,"letter")
 				{
 					protected void onBeginRequest()
 					{
@@ -91,7 +91,7 @@ public class Guess extends HangmanPage
 				link
 						.add(new AttributeModifier("id", true, new Model("letter_"
 								+ letter.asString())));
-				link.add(new Image("image", letter.getSharedImageResource()));
+				link.add(new Image(link,"image", letter.getSharedImageResource()));
 				listItem.add(link);
 			}
 		});

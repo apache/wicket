@@ -50,7 +50,7 @@ public class ExamplePse extends Displaytag
 		final ReportList data = new ReportList();
 
 		// Add the table
-		final SimplePageableListView table = new SimplePageableListView("rows", data, 10)
+		final SimplePageableListView table = new SimplePageableListView(this,"rows", data, 10)
 		{
 			// Groups: value must be equal
 			private ReportableListObject previousValue = null;
@@ -68,14 +68,14 @@ public class ExamplePse extends Displaytag
 				if (previousValue != null)
 				{
 					boolean equal = value.getCity().equals(previousValue.getCity());
-					listItem.add(new Label("city", equal ? "" : value.getCity()));
+					listItem.add(new Label(listItem,"city", equal ? "" : value.getCity()));
 
 					equal &= value.getProject().equals(previousValue.getProject());
-					listItem.add(new Label("project", equal ? "" : value.getProject()));
+					listItem.add(new Label(listItem,"project", equal ? "" : value.getProject()));
 				}
 
 				// Not included in grouping
-				listItem.add(new Label("hours", Double.toString(value.getAmount())));
+				listItem.add(new Label(listItem,"hours", Double.toString(value.getAmount())));
 
 				// remember the current value for the next row
 				previousValue = value;
@@ -85,7 +85,7 @@ public class ExamplePse extends Displaytag
 		add(table);
 
 		// Add the sortable header and define how to sort the different columns
-		add(new SortableListViewHeaders("header", table)
+		add(new SortableListViewHeaders(this,"header", table)
 		{
 			protected Comparable getObjectToCompare(final SortableListViewHeader header,
 					final Object object)
@@ -105,11 +105,11 @@ public class ExamplePse extends Displaytag
 		});
 
 		// Add a table navigator
-		add(new MyPageableListViewNavigator("pageTableNav", table));
+		add(new MyPageableListViewNavigator(this,"pageTableNav", table));
 
 		// Add export links
-		add(new ExportLink("exportCsv", data, new CsvView(data, true, false, false)));
-		add(new ExportLink("exportExcel", data, new ExcelView(data, true, false, false)));
-		add(new ExportLink("exportXml", data, new XmlView(data, true, false, false)));
+		add(new ExportLink(this,"exportCsv", data, new CsvView(data, true, false, false)));
+		add(new ExportLink(this,"exportExcel", data, new ExcelView(data, true, false, false)));
+		add(new ExportLink(this,"exportXml", data, new XmlView(data, true, false, false)));
 	}
 }

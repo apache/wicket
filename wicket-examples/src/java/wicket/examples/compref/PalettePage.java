@@ -27,11 +27,11 @@ public class PalettePage extends WicketExamplePage
 		List persons = ComponentReferenceApplication.getPersons();
 		IChoiceRenderer renderer = new ChoiceRenderer("fullName", "fullName");
 
-		final Palette palette = new Palette("palette", new Model(new ArrayList()), new Model(
+		final Palette palette = new Palette(form,"palette", new Model(new ArrayList()), new Model(
 				(Serializable)persons), renderer, 10, true);
 
 
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -42,7 +42,7 @@ public class PalettePage extends WicketExamplePage
 		add(form);
 		form.add(palette);
 
-		add(new FeedbackPanel("feedback"));
+		add(new FeedbackPanel(this,"feedback"));
 	}
 
 	protected void explain()
@@ -55,6 +55,6 @@ public class PalettePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;IChoiceRenderer renderer = new ChoiceRenderer(\"fullName\", \"fullName\");<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new Model(new ArrayList()), new Model(<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Serializable)persons), renderer, 10, true);<br/>";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 	}
 }

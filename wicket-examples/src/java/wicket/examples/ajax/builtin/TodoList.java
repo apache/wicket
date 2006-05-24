@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.form.AjaxCheckBox;
@@ -104,21 +105,21 @@ public class TodoList extends BasePage
 		 * @param id
 		 *            the component identifier.
 		 */
-		public TodoItemsContainer(String id)
+		public TodoItemsContainer(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 
 			// let wicket generate a markup-id so the contents can be
 			// updated through an AJAX call.
 			setOutputMarkupId(true);
 
 			// add the listview to the container
-			add(new ListView("item", items)
+			add(new ListView(this,"item", items)
 			{
 				protected void populateItem(ListItem item)
 				{
 					// add an AJAX checkbox to the item
-					item.add(new AjaxCheckBox("check",
+					item.add(new AjaxCheckBox(item,"check",
 							new PropertyModel(item.getModel(), "checked"))
 					{
 						protected void onUpdate(AjaxRequestTarget target)
@@ -130,7 +131,7 @@ public class TodoList extends BasePage
 						}
 					});
 					// display the text of the todo item
-					item.add(new Label("text", new PropertyModel(item.getModel(), "text")));
+					item.add(new Label(item,"text", new PropertyModel(item.getModel(), "text")));
 				}
 			});
 		}
@@ -148,9 +149,9 @@ public class TodoList extends BasePage
 		private final class AddTodoLink extends AjaxFallbackLink
 		{
 			/** Constructor. */
-			private AddTodoLink(String id)
+			private AddTodoLink(MarkupContainer parent, String id)
 			{
-				super(id);
+				super(parent,id);
 			}
 
 			/**
@@ -188,9 +189,9 @@ public class TodoList extends BasePage
 			 * @param id
 			 *            component id
 			 */
-			public RemoveCompletedTodosLink(String id)
+			public RemoveCompletedTodosLink(MarkupContainer parent, String id)
 			{
-				super(id);
+				super(parent,id);
 			}
 
 			/**
@@ -227,12 +228,12 @@ public class TodoList extends BasePage
 			 * @param id
 			 *            the component id.
 			 */
-			public AddTodoForm(String id)
+			public AddTodoForm(MarkupContainer parent, String id)
 			{
-				super(id, new CompoundPropertyModel(new TodoItem()));
+				super(parent,id, new CompoundPropertyModel(new TodoItem()));
 				setOutputMarkupId(true);
-				add(new TextField("text"));
-				add(new AjaxSubmitButton("add", this)
+				add(new TextField(this,"text"));
+				add(new AjaxSubmitButton(this,"add", this)
 				{
 					protected void onSubmit(AjaxRequestTarget target, Form form)
 					{
@@ -244,7 +245,7 @@ public class TodoList extends BasePage
 					}
 				});
 				
-				add(new AjaxSubmitButton("cancel", this)
+				add(new AjaxSubmitButton(this,"cancel", this)
 				{
 					public void onSubmit(AjaxRequestTarget target, Form form)
 					{
@@ -271,15 +272,15 @@ public class TodoList extends BasePage
 		 * @param id
 		 *            the component id.
 		 */
-		public AddItemsContainer(String id)
+		public AddItemsContainer(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 			// let wicket generate a markup-id so the contents can be
 			// updated through an AJAX call.
 			setOutputMarkupId(true);
-			add(new AddTodoLink("link"));
-			add(new RemoveCompletedTodosLink("remove"));
-			add(new AddTodoForm("form"));
+			add(new AddTodoLink(this,"link"));
+			add(new RemoveCompletedTodosLink(this,"remove"));
+			add(new AddTodoForm(this,"form"));
 		}
 
 		/**
@@ -378,10 +379,10 @@ public class TodoList extends BasePage
 	public TodoList()
 	{
 		// add the listview container for the todo items.
-		showItems = new TodoItemsContainer("showItems");
+		showItems = new TodoItemsContainer(this,"showItems");
 		add(showItems);
 
 		// add the add container for the todo items.
-		add(new AddItemsContainer("addItems"));
+		add(new AddItemsContainer(this,"addItems"));
 	}
 }

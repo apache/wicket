@@ -21,6 +21,7 @@ package wicket.examples.wizard;
 import java.util.Arrays;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.extensions.wizard.StaticContentStep;
 import wicket.extensions.wizard.Wizard;
 import wicket.extensions.wizard.WizardModel;
@@ -56,9 +57,9 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public ConfirmationStep()
+		public ConfirmationStep(MarkupContainer<?> parent)
 		{
-			super(true);
+			super(parent,true);
 			IModel userModel = new Model(user);
 			setTitleModel(new ResourceModel("confirmation.title"));
 			setSummaryModel(new StringResourceModel("confirmation.summary", this, userModel));
@@ -74,14 +75,14 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserDetailsStep()
+		public UserDetailsStep(MarkupContainer<?> parent)
 		{
-			super(new ResourceModel("userdetails.title"), null);
+			super(parent,new ResourceModel("userdetails.title"), null);
 			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model(user)));
-			add(new RequiredTextField("user.firstName"));
-			add(new RequiredTextField("user.lastName"));
-			add(new TextField("user.department"));
-			add(new CheckBox("assignRoles"));
+			add(new RequiredTextField(this,"user.firstName"));
+			add(new RequiredTextField(this,"user.lastName"));
+			add(new TextField(this,"user.department"));
+			add(new CheckBox(this,"assignRoles"));
 		}
 	}
 
@@ -93,11 +94,11 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserNameStep()
+		public UserNameStep(MarkupContainer<?> parent)
 		{
-			super(new ResourceModel("username.title"), new ResourceModel("username.summary"));
-			add(new RequiredTextField("user.userName"));
-			add(new RequiredTextField("user.email").add(EmailAddressPatternValidator.getInstance()));
+			super(parent,new ResourceModel("username.title"), new ResourceModel("username.summary"));
+			add(new RequiredTextField(this,"user.userName"));
+			add(new RequiredTextField(this,"user.email").add(EmailAddressPatternValidator.getInstance()));
 		}
 	}
 
@@ -109,11 +110,11 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserRolesStep()
+		public UserRolesStep(MarkupContainer<?> parent)
 		{
-			super(new ResourceModel("userroles.title"), null);
+			super(parent,new ResourceModel("userroles.title"), null);
 			setSummaryModel(new StringResourceModel("userroles.summary", this, new Model(user)));
-			add(new ListMultipleChoice("user.roles", allRoles));
+			add(new ListMultipleChoice(this,"user.roles", allRoles));
 		}
 
 		/**
@@ -141,9 +142,9 @@ public class NewUserWizard extends Wizard
 	 * @param id
 	 *            The component id
 	 */
-	public NewUserWizard(String id)
+	public NewUserWizard(MarkupContainer parent, String id)
 	{
-		super(id);
+		super(parent,id);
 
 		// create a blank user
 		user = new User();

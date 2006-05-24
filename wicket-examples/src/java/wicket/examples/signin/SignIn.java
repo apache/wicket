@@ -17,6 +17,7 @@
  */
 package wicket.examples.signin;
 
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
@@ -50,13 +51,13 @@ public final class SignIn extends WicketExamplePage
 	public SignIn(final PageParameters parameters)
 	{
 		// Create feedback panel and add to page
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
+		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
 
 		add(feedback);
 
 		// Add sign-in form to page, passing feedback panel as validation error
 		// handler
-		add(new SignInForm("signInForm"));
+		add(new SignInForm(this,"signInForm"));
 	}
 
 	/**
@@ -75,13 +76,13 @@ public final class SignIn extends WicketExamplePage
 		 * @param id
 		 *            id of the form component
 		 */
-		public SignInForm(final String id)
+		public SignInForm(MarkupContainer parent,final String id)
 		{
-			super(id);
+			super(parent,id);
 
 			// Attach textfield components that edit properties map model
-			add(new TextField("username", new PropertyModel(properties, "username")));
-			add(new PasswordTextField("password", new PropertyModel(properties, "password")));
+			add(new TextField(this,"username", new PropertyModel(properties, "username")));
+			add(new PasswordTextField(this,"password", new PropertyModel(properties, "password")));
 		}
 
 		/**

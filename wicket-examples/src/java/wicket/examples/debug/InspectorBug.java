@@ -17,6 +17,7 @@
  */
 package wicket.examples.debug;
 
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.image.Image;
@@ -42,13 +43,13 @@ public final class InspectorBug extends Panel
 	 * @param page
 	 *            Page to inspect
 	 */
-	public InspectorBug(final String id, final WebPage page)
+	public InspectorBug(MarkupContainer parent,final String id, final WebPage page)
 	{
-		super(id);
+		super(parent,id);
 		PageParameters parameters = new PageParameters();
 		parameters.put("pageId", page.getId());
-		Link link =  new BookmarkablePageLink("link", InspectorPage.class, parameters);
-		link.add(new Image("bug"));
+		Link link =  new BookmarkablePageLink(this,"link", InspectorPage.class, parameters);
+		link.add(new Image(link,"bug"));
 		add(link);
 	}
 }

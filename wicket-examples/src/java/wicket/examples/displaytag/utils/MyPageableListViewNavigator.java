@@ -17,6 +17,7 @@
  */
 package wicket.examples.displaytag.utils;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
@@ -37,12 +38,12 @@ public class MyPageableListViewNavigator extends PagingNavigator
 	 * @param id
 	 * @param pageableListView
 	 */
-	public MyPageableListViewNavigator(final String id, final PageableListView pageableListView)
+	public MyPageableListViewNavigator(MarkupContainer parent,final String id, final PageableListView pageableListView)
 	{
-		super(id, pageableListView);
+		super(parent,id, pageableListView);
 
 		this.pageableListView = pageableListView;
-		add(new Label("headline", new PropertyModel(this, "headlineText")));
+		add(new Label(this,"headline", new PropertyModel(this, "headlineText")));
 	}
 
 	/**

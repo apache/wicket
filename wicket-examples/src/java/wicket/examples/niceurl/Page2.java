@@ -51,8 +51,8 @@ public class Page2 extends WicketExamplePage
 			p2 = parameters.getString("param2");
 		}
 
-		add(new Label("p1", p1));
-		add(new Label("p2", p2));
+		add(new Label(this,"p1", p1));
+		add(new Label(this,"p2", p2));
 
 		String newP1 = String.valueOf(random.nextInt());
 		String newP2 = String.valueOf(random.nextInt());
@@ -61,9 +61,9 @@ public class Page2 extends WicketExamplePage
 		params.put("param1", newP1 + " " + newP2);
 		params.put("param2", newP2 + " " + newP1);
 
-		BookmarkablePageLink link = new BookmarkablePageLink("refreshLink", Page2.class, params);
+		BookmarkablePageLink link = new BookmarkablePageLink(this,"refreshLink", Page2.class, params);
 		add(link);
 
-		add(new BookmarkablePageLink("homeLink", Home.class));
+		add(new BookmarkablePageLink(this,"homeLink", Home.class));
 	}
 }

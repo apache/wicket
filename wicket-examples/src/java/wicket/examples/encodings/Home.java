@@ -43,7 +43,7 @@ public class Home extends WicketExamplePage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Label("message", "Hello world! Test: הצü"));
+		add(new Label(this,"message", "Hello world! Test: הצü"));
 	}
 
 	/**

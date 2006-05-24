@@ -17,6 +17,7 @@
  */
 package wicket.examples.compref;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.MultiLineLabel;
 import wicket.markup.html.panel.Panel;
 
@@ -33,10 +34,10 @@ class ExplainPanel extends Panel
 	 * @param html
 	 * @param code
 	 */
-	public ExplainPanel(String html, String code)
+	public ExplainPanel(MarkupContainer<?> parent,String html, String code)
 	{
-		super("explainPanel");
-		add(new MultiLineLabel("html", html));
-		add(new MultiLineLabel("code", code).setEscapeModelStrings(false));
+		super(parent,"explainPanel");
+		add(new MultiLineLabel(this,"html", html));
+		add(new MultiLineLabel(this,"code", code).setEscapeModelStrings(false));
 	}
 }

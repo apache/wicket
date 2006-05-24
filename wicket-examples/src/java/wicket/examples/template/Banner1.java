@@ -16,6 +16,7 @@
  */
 package wicket.examples.template;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -30,9 +31,9 @@ public class Banner1 extends Banner
 	 * 
 	 * @param id
 	 */
-	public Banner1(String id)
+	public Banner1(MarkupContainer parent, String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -41,8 +42,8 @@ public class Banner1 extends Banner
 	 * @param id
 	 * @param model
 	 */
-	public Banner1(String id, IModel model)
+	public Banner1(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 }

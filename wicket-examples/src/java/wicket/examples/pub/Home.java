@@ -44,7 +44,7 @@ public final class Home extends WicketExamplePage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Image("beer"));
+		add(new Image(this,"beer"));
 
 		// create a dummy object to serve as our substitution model
 		ValueMap map = new ValueMap();
@@ -60,39 +60,39 @@ public final class Home extends WicketExamplePage
 		StringResourceModel labelModel = new StringResourceModel("salutation", this, new Model(map));
 
 		// Add the label with the dynamic model
-		add(new Label("salutation", labelModel));
+		add(new Label(this,"salutation", labelModel));
 
 		// Add a couple of links to be able to play around with the session
 		// locale
-		add(new Link("goCanadian")
+		add(new Link(this,"goCanadian")
 		{
 			public void onClick()
 			{
 				getSession().setLocale(Locale.CANADA);
 			}
 		});
-		add(new Link("goUS")
+		add(new Link(this,"goUS")
 		{
 			public void onClick()
 			{
 				getSession().setLocale(Locale.US);
 			}
 		});
-		add(new Link("goDutch")
+		add(new Link(this,"goDutch")
 		{
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("nl", "NL"));
 			}
 		});
-		add(new Link("goGerman")
+		add(new Link(this,"goGerman")
 		{
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("de", "DE"));
 			}
 		});
-		add(new Link("goChinese")
+		add(new Link(this,"goChinese")
 		{
 			public void onClick()
 			{

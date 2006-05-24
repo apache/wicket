@@ -70,15 +70,15 @@ public class EffectsPage extends BasePage
 	 */
 	public EffectsPage()
 	{
-		final Label c1 = new Label("c1", new PropertyModel(this, "counter1"));
+		final Label c1 = new Label(this,"c1", new PropertyModel(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label("c2", new PropertyModel(this, "counter2"));
+		final Label c2 = new Label(this,"c2", new PropertyModel(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		add(new AjaxLink("c1-link")
+		add(new AjaxLink(this,"c1-link")
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -88,7 +88,7 @@ public class EffectsPage extends BasePage
 			}
 		});
 
-		add(new AjaxFallbackLink("c2-link")
+		add(new AjaxFallbackLink(this,"c2-link")
 		{
 			public void onClick(AjaxRequestTarget target)
 			{

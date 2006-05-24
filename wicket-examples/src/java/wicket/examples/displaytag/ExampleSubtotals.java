@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
@@ -71,13 +72,13 @@ public class ExampleSubtotals extends Displaytag
 		// add the table
 		List groupList = new ArrayList();
 		groupList.addAll(groups.keySet());
-		add(new ListView("border", groupList)
+		add(new ListView(this,"border", groupList)
 		{
 			private int startIndex = 0;
 
 			public void populateItem(final ListItem listItem)
 			{
-				SubtotalTable subtable = new SubtotalTable("rows", data);
+				SubtotalTable subtable = new SubtotalTable(listItem,"rows", data);
 				subtable.setStartIndex(startIndex);
 
 				String group = listItem.getModelObjectAsString();
@@ -86,8 +87,8 @@ public class ExampleSubtotals extends Displaytag
 				startIndex += size;
 
 				listItem.add(subtable);
-				listItem.add(new Label("name", new PropertyModel(subtable, "group1")));
-				listItem.add(new Label("value", new PropertyModel(subtable, "subtotal")));
+				listItem.add(new Label(listItem,"name", new PropertyModel(subtable, "group1")));
+				listItem.add(new Label(listItem,"value", new PropertyModel(subtable, "subtotal")));
 			}
 		});
 	}
@@ -108,9 +109,9 @@ public class ExampleSubtotals extends Displaytag
 		 * @param id
 		 * @param data
 		 */
-		public SubtotalTable(final String id, final List data)
+		public SubtotalTable(MarkupContainer parent,final String id, final List data)
 		{
-			super(id, data);
+			super(parent,id, data);
 		}
 
 		/**
@@ -138,13 +139,13 @@ public class ExampleSubtotals extends Displaytag
 
 			if (previousValue != null)
 			{
-				listItem.add(new Label("city", ""));
+				listItem.add(new Label(listItem,"city", ""));
 
 				boolean equal = value.getProject().equals(previousValue.getProject());
-				listItem.add(new Label("project", equal ? "" : value.getProject()));
+				listItem.add(new Label(listItem,"project", equal ? "" : value.getProject()));
 			}
 
-			listItem.add(new Label("hours", Double.toString(value.getAmount())));
+			listItem.add(new Label(listItem,"hours", Double.toString(value.getAmount())));
 
 			subtotal += value.getAmount();
 			previousValue = value;

@@ -16,6 +16,7 @@
  */
 package wicket.examples.compref;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
@@ -32,10 +33,10 @@ class MyPanel extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public MyPanel(String id)
+	public MyPanel(MarkupContainer parent, String id)
 	{
-		super(id);
-		add(new Label("label", "yep, this is from a component proper"));
-		add(new AnotherPanel("otherPanel"));
+		super(parent,id);
+		add(new Label(this,"label", "yep, this is from a component proper"));
+		add(new AnotherPanel(this,"otherPanel"));
 	}
 }

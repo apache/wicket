@@ -20,6 +20,7 @@ package wicket.examples.displaytag;
 import java.util.List;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.SimpleListView;
@@ -47,24 +48,24 @@ public class ExampleAutolink extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add table
-		add(new SimpleListView("rows", data)
+		add(new SimpleListView(this,"rows", data)
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				listItem.add(new Label("id", Integer.toString(value.getId())));
-				listItem.add(new SmartLinkLabel("email", value.getEmail()));
-				listItem.add(new SmartLinkLabel("url", value.getUrl()));
+				listItem.add(new Label(listItem,"id", Integer.toString(value.getId())));
+				listItem.add(new SmartLinkLabel(listItem,"email", value.getEmail()));
+				listItem.add(new SmartLinkLabel(listItem,"url", value.getUrl()));
 			}
 		});
 
 		// Add table
-		add(new SimpleListView("rows2", data)
+		add(new SimpleListView(this,"rows2", data)
 		{
-			protected Component newLabel(String id)
+			protected Component newLabel(MarkupContainer parent, String id)
 			{
-				return new SmartLinkLabel(id);
+				return new SmartLinkLabel(parent,id);
 			}
 		});
 	}

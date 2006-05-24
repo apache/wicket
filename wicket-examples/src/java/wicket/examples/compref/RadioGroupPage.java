@@ -24,8 +24,8 @@ public class RadioGroupPage extends WicketExamplePage
 	public RadioGroupPage()
 	{
 
-		final RadioGroup group = new RadioGroup("group", new Model());
-		Form form = new Form("form")
+		final RadioGroup group = new RadioGroup(form,"group", new Model());
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -36,21 +36,21 @@ public class RadioGroupPage extends WicketExamplePage
 		add(form);
 		form.add(group);
 
-		ListView persons = new ListView("persons", ComponentReferenceApplication.getPersons())
+		ListView persons = new ListView(group,"persons", ComponentReferenceApplication.getPersons())
 		{
 
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Radio("radio", item.getModel()));
-				item.add(new Label("name", new PropertyModel(item.getModel(), "name")));
-				item.add(new Label("lastName", new PropertyModel(item.getModel(), "lastName")));
+				item.add(new Radio(item,"radio", item.getModel()));
+				item.add(new Label(item,"name", new PropertyModel(item.getModel(), "name")));
+				item.add(new Label(item,"lastName", new PropertyModel(item.getModel(), "lastName")));
 			}
 
 		};
 
 		group.add(persons);
 
-		add(new FeedbackPanel("feedback"));
+		add(new FeedbackPanel(this,"feedback"));
 	}
 
 	protected void explain()
@@ -72,6 +72,6 @@ public class RadioGroupPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"lastName\", new PropertyModel(item.getModel(), \"lastName\")));<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;};<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;group.add(persons);<br/>";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 	}
 }

@@ -36,7 +36,7 @@ public final class SignIn extends WicketExamplePage
 	 */
 	public SignIn(final PageParameters parameters)
 	{
-		add(new SignInPanel("signInPanel")
+		add(new SignInPanel(this,"signInPanel")
 		{
 			public boolean signIn(final String username, final String password)
 			{

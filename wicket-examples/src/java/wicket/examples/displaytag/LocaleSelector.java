@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.link.Link;
@@ -44,15 +45,15 @@ public class LocaleSelector extends Panel
 	 * 
 	 * @param id
 	 */
-	public LocaleSelector(final String id)
+	public LocaleSelector(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 
 		// Dropdown for selecting locale
-		add(new LocaleDropDownChoice("localeSelect"));
+		add(new LocaleDropDownChoice(this,"localeSelect"));
 
 		// Link to return to default locale
-		add(new Link("defaultLocaleLink")
+		add(new Link(this,"defaultLocaleLink")
 		{
 			public void onClick()
 			{
@@ -88,9 +89,9 @@ public class LocaleSelector extends Panel
 		 * @param id
 		 *            component id
 		 */
-		public LocaleDropDownChoice(String id)
+		public LocaleDropDownChoice(MarkupContainer parent, String id)
 		{
-			super(id, LOCALES, new LocaleChoiceRenderer());
+			super(parent,id, LOCALES, new LocaleChoiceRenderer());
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput

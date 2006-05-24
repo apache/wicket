@@ -56,9 +56,9 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * @param data
 	 * @param rowsPerPage
 	 */
-	public SimplePageableListView(final String id, final List data, final int rowsPerPage)
+	public SimplePageableListView(MarkupContainer parent,final String id, final List data, final int rowsPerPage)
 	{
-		super(id, data, rowsPerPage);
+		super(parent,id, data, rowsPerPage);
 	}
 
 	/**
@@ -68,9 +68,9 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * @param model
 	 * @param rowsPerPage
 	 */
-	public SimplePageableListView(final String id, final IModel model, final int rowsPerPage)
+	public SimplePageableListView(MarkupContainer parent,final String id, final IModel model, final int rowsPerPage)
 	{
-		super(id, model, rowsPerPage);
+		super(parent,id, model, rowsPerPage);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 */
 	protected ListItem newItem(final int index)
 	{
-		return new SimpleListListItem(index, getListItemModel(getModel(), index));
+		return new SimpleListListItem(this,index, getListItemModel(getModel(), index));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		container.autoAdd(newLabel(tag.getId()));
+		container.autoAdd(newLabel(container,tag.getId()));
 		return true;
 	}
 
@@ -136,9 +136,9 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * @param id
 	 * @return Usually a Label like component
 	 */
-	protected Component newLabel(final String id)
+	protected Component newLabel(MarkupContainer parent,final String id)
 	{
-		return new Label(id);
+		return new Label(parent,id);
 	}
 
 	/**
@@ -169,12 +169,12 @@ public class SimplePageableListView extends PageableListView implements ICompone
 		 * @param id
 		 * @return Label
 		 */
-		public static Label getInstance(final String id)
+		public static Label getInstance(MarkupContainer parent,final String id)
 		{
 			Label label = (Label)idToLabel.get(id);
 			if (label == null)
 			{
-				label = new Label(id);
+				label = new Label(parent,id);
 				idToLabel.put(id, label);
 			}
 
@@ -196,9 +196,9 @@ public class SimplePageableListView extends PageableListView implements ICompone
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(final int index, final IModel model)
+		public SimpleListListItem(MarkupContainer<?> parent,final int index, final IModel model)
 		{
-			super(index, model);
+			super(parent,index, model);
 		}
 
 		protected void onComponentTag(final ComponentTag tag)

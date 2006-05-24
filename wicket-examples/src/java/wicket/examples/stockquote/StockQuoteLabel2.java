@@ -1,6 +1,7 @@
 package wicket.examples.stockquote;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 
@@ -22,9 +23,9 @@ public class StockQuoteLabel2 extends Label
 	 * @param symbol
 	 *            the symbol to look up
 	 */
-	public StockQuoteLabel2(String id, final String symbol)
+	public StockQuoteLabel2(MarkupContainer parent,final String id, final String symbol)
 	{
-		super(id, new AbstractReadOnlyModel()
+		super(parent,id, new AbstractReadOnlyModel()
 		{
 			/**
 			 * Gets the stockquote for the given symbol.

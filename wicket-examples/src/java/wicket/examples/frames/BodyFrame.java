@@ -70,12 +70,12 @@ public class BodyFrame extends WebPage
 		CharSequence leftFrameSrc = encoder.encode(cycle, new PageRequestTarget(leftFrame));
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
-		WebComponent leftFrameTag = new WebComponent("leftFrame");
+		WebComponent leftFrameTag = new WebComponent(this,"leftFrame");
 		leftFrameTag.add(new AttributeModifier("src", new Model((Serializable)leftFrameSrc)));
 		add(leftFrameTag);
 
 		// make a simple component for the right frame tag
-		WebComponent rightFrameTag = new WebComponent("rightFrame");
+		WebComponent rightFrameTag = new WebComponent(this,"rightFrame");
 		// and this time, set a model which retrieves the url to the currently
 		// set frame class in the frame target
 		rightFrameTag.add(new AttributeModifier("src", new FrameModel()));

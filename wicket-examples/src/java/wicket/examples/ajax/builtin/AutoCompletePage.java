@@ -40,10 +40,10 @@ public class AutoCompletePage extends BasePage
 	 */
 	public AutoCompletePage()
 	{
-		Form form = new Form("form");
+		Form form = new Form(this,"form");
 		add(form);
 
-		form.add(new AutoCompleteTextField("ac", new Model(""))
+		form.add(new AutoCompleteTextField(form,"ac", new Model(""))
 		{
 			protected Iterator getChoices(String input)
 			{

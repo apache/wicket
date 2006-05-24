@@ -37,6 +37,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
@@ -346,14 +347,14 @@ public class SourcesPage extends WebPage
 		 * @param id
 		 *            the component identifier
 		 */
-		public FilesBrowser(String id)
+		public FilesBrowser(MarkupContainer parent, String id)
 		{
-			super(id);
-			ListView lv = new ListView("file", new PackagedResourcesModel())
+			super(parent,id);
+			ListView lv = new ListView(this,"file", new PackagedResourcesModel())
 			{
 				protected void populateItem(ListItem item)
 				{
-					AjaxFallbackLink link = new AjaxFallbackLink("link", item.getModel())
+					AjaxFallbackLink link = new AjaxFallbackLink(item,"link", item.getModel())
 					{
 						public void onClick(AjaxRequestTarget target)
 						{
@@ -362,7 +363,7 @@ public class SourcesPage extends WebPage
 							target.addComponent(filename);
 						}
 					};
-					link.add(new Label("name", item.getModelObjectAsString()));
+					link.add(new Label(link,"name", item.getModelObjectAsString()));
 					item.add(link);
 				}
 			};
@@ -382,10 +383,10 @@ public class SourcesPage extends WebPage
 		 * @param id
 		 *            the component id
 		 */
-		public CodePanel(String id)
+		public CodePanel(MarkupContainer parent, String id)
 		{
-			super(id);
-			Label code = new Label("code", new SourceModel());
+			super(parent,id);
+			Label code = new Label(this,"code", new SourceModel());
 			code.setEscapeModelStrings(true);
 			code.setOutputMarkupId(true);
 			add(code);
@@ -448,12 +449,12 @@ public class SourcesPage extends WebPage
 	{
 		this.page = page;
 
-		filename = new Label("filename", new PropertyModel(this, "name"));
+		filename = new Label(this,"filename", new PropertyModel(this, "name"));
 		filename.setOutputMarkupId(true);
 		add(filename);
-		codePanel = new CodePanel("codepanel").setOutputMarkupId(true);
+		codePanel = new CodePanel(this,"codepanel").setOutputMarkupId(true);
 		add(codePanel);
-		add(new FilesBrowser("filespanel"));
-		add(new PopupCloseLink("close"));
+		add(new FilesBrowser(this,"filespanel"));
+		add(new PopupCloseLink(this,"close"));
 	}
 }

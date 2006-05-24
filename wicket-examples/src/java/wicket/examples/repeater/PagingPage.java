@@ -41,18 +41,18 @@ public class PagingPage extends BasePage
 	 */
 	public PagingPage()
 	{
-		DataView dataView = new DataView("pageable", new ContactDataProvider())
+		DataView dataView = new DataView(this,"pageable", new ContactDataProvider())
 		{
 
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+				item.add(new ActionPanel(item,"actions", item.getModel()));
+				item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
+				item.add(new Label(item,"firstname", contact.getFirstName()));
+				item.add(new Label(item,"lastname", contact.getLastName()));
+				item.add(new Label(item,"homephone", contact.getHomePhone()));
+				item.add(new Label(item,"cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
@@ -67,6 +67,6 @@ public class PagingPage extends BasePage
 		dataView.setItemsPerPage(8);
 		add(dataView);
 
-		add(new PagingNavigator("navigator", dataView));
+		add(new PagingNavigator(this,"navigator", dataView));
 	}
 }

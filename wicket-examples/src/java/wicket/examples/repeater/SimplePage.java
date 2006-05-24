@@ -38,17 +38,17 @@ public class SimplePage extends BasePage
 	 */
 	public SimplePage()
 	{
-		add(new DataView("simple", new ContactDataProvider())
+		add(new DataView(this,"simple", new ContactDataProvider())
 		{
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel("actions", item.getModel()));
-				item.add(new Label("contactid", String.valueOf(contact.getId())));
-				item.add(new Label("firstname", contact.getFirstName()));
-				item.add(new Label("lastname", contact.getLastName()));
-				item.add(new Label("homephone", contact.getHomePhone()));
-				item.add(new Label("cellphone", contact.getCellPhone()));
+				item.add(new ActionPanel(item,"actions", item.getModel()));
+				item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
+				item.add(new Label(item,"firstname", contact.getFirstName()));
+				item.add(new Label(item,"lastname", contact.getLastName()));
+				item.add(new Label(item,"homephone", contact.getHomePhone()));
+				item.add(new Label(item,"cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{

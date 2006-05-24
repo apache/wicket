@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
@@ -52,18 +53,18 @@ public class AnotherTree extends Tree
 	 * @param model
 	 *            the tree model
 	 */
-	public AnotherTree(String id, TreeModel model)
+	public AnotherTree(MarkupContainer parent,final String id, TreeModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
 	 * @see wicket.markup.html.tree.Tree#newNodePanel(java.lang.String,
 	 *      javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected Component newNodePanel(String panelId, DefaultMutableTreeNode node)
+	protected Component newNodePanel(MarkupContainer<?> parent, String panelId, DefaultMutableTreeNode node)
 	{
-		return new Node(panelId, node);
+		return new Node(parent,panelId, node);
 	}
 
 	/**
@@ -79,14 +80,14 @@ public class AnotherTree extends Tree
 		 * @param node
 		 *            The tree node for this panel
 		 */
-		public Node(String panelId, final DefaultMutableTreeNode node)
+		public Node(MarkupContainer<?> parent,String panelId, final DefaultMutableTreeNode node)
 		{
-			super(panelId);
+			super(parent,panelId);
 
 			Object userObject = node.getUserObject();
 
 			// create a link for expanding and collapsing the node
-			final Link junctionLink = new Link("junctionLink")
+			final Link junctionLink = new Link(this,"junctionLink")
 			{
 				public void onClick()
 				{
@@ -110,10 +111,10 @@ public class AnotherTree extends Tree
 			{
 				junctionLabel = (isExpanded(node)) ? "[-]" : "[+]";
 			}
-			junctionLink.add(new Label("junctionLabel", junctionLabelModel));
+			junctionLink.add(new Label(junctionLink,"junctionLabel", junctionLabelModel));
 
 			// create a link for selecting a node
-			final Link nodeLink = new Link("nodeLink")
+			final Link nodeLink = new Link(this,"nodeLink")
 			{
 				public void onClick()
 				{
@@ -121,7 +122,7 @@ public class AnotherTree extends Tree
 				}
 			};
 			String label = (userObject instanceof List) ? "" : String.valueOf(node.getUserObject());
-			nodeLink.add(new Label("label", label));
+			nodeLink.add(new Label(nodeLink,"label", label));
 			add(nodeLink);
 		}
 	}

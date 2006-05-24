@@ -17,6 +17,7 @@
  */
 package wicket.examples.navomatic;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.border.BoxBorder;
 
@@ -33,10 +34,10 @@ public class NavomaticBorder extends Border
 	 * @param id
 	 *            The id of this component
 	 */
-	public NavomaticBorder(final String id)
+	public NavomaticBorder(MarkupContainer parent,final String id)
 	{
-		super(id);
-		add(new BoxBorder("navigationBorder"));
-		add(new BoxBorder("bodyBorder"));
+		super(parent,id);
+		add(new BoxBorder(this,"navigationBorder"));
+		add(new BoxBorder(this,"bodyBorder"));
 	}
 }

@@ -42,7 +42,7 @@ public class ExampleTwoTables extends Displaytag
 		final List data2 = new ArrayList();
 		data2.addAll(data1);
 
-		add(new SortablePageableDisplaytagTableComponent("table1", data1));
-		add(new SortablePageableDisplaytagTableComponent("table2", data2));
+		add(new SortablePageableDisplaytagTableComponent(this,"table1", data1));
+		add(new SortablePageableDisplaytagTableComponent(this,"table2", data2));
 	}
 }

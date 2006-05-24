@@ -53,11 +53,11 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form("form")
+		Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -68,10 +68,10 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 
 		// add a couple of checkbox multiple choice components, notice the model
 		// used is a compound model set on the page
-		CheckBoxMultipleChoice listChoice = new CheckBoxMultipleChoice("sites", SITES);
+		CheckBoxMultipleChoice listChoice = new CheckBoxMultipleChoice(form,"sites", SITES);
 		form.add(listChoice);
 
-		listChoice = new CheckBoxMultipleChoice("choices", MANY_CHOICES);
+		listChoice = new CheckBoxMultipleChoice(form,"choices", MANY_CHOICES);
 		form.add(listChoice);
 	}
 
@@ -127,7 +127,7 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new CheckBoxMultipleChoice(\"choices\", MANY_CHOICES);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 }

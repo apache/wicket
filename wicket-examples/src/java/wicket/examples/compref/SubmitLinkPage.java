@@ -34,14 +34,14 @@ public class SubmitLinkPage extends WicketExamplePage
 	public SubmitLinkPage()
 	{
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 		add(feedbackPanel);
 
 		// Add a form with 2 SubmitLinks that can be called
-		Form form = new Form("form");
+		Form form = new Form(this,"form");
 		add(form);
 
-		SubmitLink internal = new SubmitLink("internal")
+		SubmitLink internal = new SubmitLink(form,"internal")
 		{
 			protected void onSubmit()
 			{
@@ -50,7 +50,7 @@ public class SubmitLinkPage extends WicketExamplePage
 		};
 		form.add(internal);
 
-		SubmitLink external = new SubmitLink("external", form)
+		SubmitLink external = new SubmitLink(this,"external", form)
 		{
 			protected void onSubmit()
 			{
@@ -82,7 +82,7 @@ public class SubmitLinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(external);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(html, code));
+		add(new ExplainPanel(this,html, code));
 
 	}
 }

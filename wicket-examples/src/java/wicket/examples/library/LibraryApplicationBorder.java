@@ -17,6 +17,7 @@
  */
 package wicket.examples.library;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.border.BoxBorder;
 
@@ -33,9 +34,9 @@ public class LibraryApplicationBorder extends Border
 	 * @param id
 	 *            The id of this component
 	 */
-	public LibraryApplicationBorder(final String id)
+	public LibraryApplicationBorder(MarkupContainer parent,final String id)
 	{
-		super(id);
-		add(new BoxBorder("boxBorder"));
+		super(parent,id);
+		add(new BoxBorder(this,"boxBorder"));
 	}
 }

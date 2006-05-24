@@ -36,13 +36,13 @@ public class Home extends WicketExamplePage
 	public Home()
 	{
 		// references to single mounts
-		add(new BookmarkablePageLink("page1Link", Page1.class));
-		add(new BookmarkablePageLink("page2Link", Page2.class));
+		add(new BookmarkablePageLink(this,"page1Link", Page1.class));
+		add(new BookmarkablePageLink(this,"page2Link", Page2.class));
 
 		// references to package mounts
-		add(new BookmarkablePageLink("page3Link", Page3.class));
-		add(new BookmarkablePageLink("page4Link", Page4.class));
-		add(new BookmarkablePageLink("page5Link", Page5.class));
+		add(new BookmarkablePageLink(this,"page3Link", Page3.class));
+		add(new BookmarkablePageLink(this,"page4Link", Page4.class));
+		add(new BookmarkablePageLink(this,"page5Link", Page5.class));
 	}
 
 	/**

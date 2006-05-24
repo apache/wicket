@@ -47,24 +47,24 @@ public class ExampleDecorator extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add table
-		add(new SimpleListView("rows", data)
+		add(new SimpleListView(this,"rows", data)
 		{
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
 				listItem
-						.add(new Label("date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
+						.add(new Label(listItem,"date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
 
 				final DecimalFormat format = new DecimalFormat("$ #,##0.00");
-				listItem.add(new Label("money", format.format(value.getMoney())));
+				listItem.add(new Label(listItem,"money", format.format(value.getMoney())));
 			}
 		});
 
 		// Dropdown for selecting locale
-		add(new LocaleSelector("localeSelector"));
+		add(new LocaleSelector(this,"localeSelector"));
 
 		// Add table
-		add(new SimpleListView("rows2", data));
+		add(new SimpleListView(this,"rows2", data));
 	}
 }

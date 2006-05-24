@@ -20,6 +20,7 @@ package wicket.examples.displaytag;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
@@ -69,10 +70,10 @@ public class ExampleSubsets extends Displaytag
 	 */
 	private ListView newTable(final String id, final List data)
 	{
-		Fragment panel = new Fragment(id, "tableFrag");
+		Fragment panel = new Fragment(this,id, "tableFrag");
 		add(panel);
 
-		ListView table = new SimpleListView("rows", data);
+		ListView table = new SimpleListView(panel,"rows", data);
 		panel.add(table);
 
 		return table;

@@ -54,9 +54,9 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	 * @param listView
 	 *            the underlying ListView
 	 */
-	public SortableListViewHeaders(final String id, final ListView listView)
+	public SortableListViewHeaders(MarkupContainer parent,final String id, final ListView listView)
 	{
-		super(id);
+		super(parent,id);
 
 		this.group = new SortableListViewHeaderGroup(this, listView);
 	}
@@ -106,7 +106,7 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 			final String componentId = tag.getId();
 			if ((componentId != null) && (get(componentId) == null))
 			{
-				autoAdd(new SortableListViewHeader(componentId, group)
+				autoAdd(new SortableListViewHeader(this,componentId, group)
 				{
 					protected int compareTo(final Object o1, final Object o2)
 					{
