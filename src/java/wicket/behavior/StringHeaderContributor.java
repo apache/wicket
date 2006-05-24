@@ -23,6 +23,7 @@ import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.lang.Objects;
 
 /**
  * A simple header contributor that just spits out the string it is constructed
@@ -32,11 +33,6 @@ import wicket.model.Model;
  */
 public class StringHeaderContributor extends AbstractHeaderContributor
 {
-	private static final long serialVersionUID = 1L;
-
-	/** the contributor instance. */
-	private final StringContributor contributor;
-
 	/**
 	 * Simply writes out the string it was constructed with whenever it is
 	 * called for a header contribution.
@@ -48,21 +44,8 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/** The contribution as a model that returns a plain string. */
 		private final IModel contribution;
 
-		/**
-		 * Construct.
-		 * 
-		 * @param contribution
-		 *            The contribution as a plain string
-		 */
-		public StringContributor(String contribution)
-		{
-			if (contribution == null)
-			{
-				throw new IllegalArgumentException("argument contribition must be not null");
-			}
-
-			this.contribution = new Model(contribution);
-		}
+		/** Temp var for the actual contribution. */
+		private transient String contributionAsString;
 
 		/**
 		 * Construct.
@@ -81,6 +64,47 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		}
 
 		/**
+		 * Construct.
+		 * 
+		 * @param contribution
+		 *            The contribution as a plain string
+		 */
+		public StringContributor(String contribution)
+		{
+			if (contribution == null)
+			{
+				throw new IllegalArgumentException("argument contribition must be not null");
+			}
+
+			this.contribution = new Model<String>(contribution);
+		}
+
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (obj instanceof StringContributor)
+			{
+				Object thisContrib = contribution.getObject(null);
+				Object thatContrib = ((StringContributor)obj).contribution.getObject(null);
+				return Objects.equal(thisContrib, thatContrib);
+			}
+			return false;
+		}
+
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode()
+		{
+			Object object = contribution.getObject(null);
+			return (object != null) ? object.hashCode() : 0;
+		}
+
+		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
 		public void renderHead(Response response)
@@ -93,28 +117,6 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		}
 
 		/**
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode()
-		{
-			return contribution.hashCode();
-		}
-
-		/**
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals(Object obj)
-		{
-			if (obj instanceof StringContributor)
-			{
-				return ((StringContributor)obj).equals(this);
-			}
-			return false;
-		}
-
-		/**
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -122,6 +124,22 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		{
 			return "StringContributor[contribution=" + contribution + "]";
 		}
+	}
+
+	private static final long serialVersionUID = 1L;
+
+	/** the contributor instance. */
+	private final StringContributor contributor;
+
+	/**
+	 * Construct.
+	 * 
+	 * @param contribution
+	 *            header contribution as a model that returns a plain string
+	 */
+	public StringHeaderContributor(IModel contribution)
+	{
+		contributor = new StringContributor(contribution);
 	}
 
 	/**
@@ -136,14 +154,12 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * Construct.
-	 * 
-	 * @param contribution
-	 *            header contribution as a model that returns a plain string
+	 * @see wicket.behavior.AbstractBehavior#detachModel(wicket.Component)
 	 */
-	public StringHeaderContributor(IModel contribution)
+	@Override
+	public void detachModel(Component component)
 	{
-		contributor = new StringContributor(contribution);
+		contributor.contribution.detach();
 	}
 
 	/**
@@ -153,15 +169,6 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	public final IHeaderContributor[] getHeaderContributors()
 	{
 		return new IHeaderContributor[] { contributor };
-	}
-
-	/**
-	 * @see wicket.behavior.AbstractBehavior#detachModel(wicket.Component)
-	 */
-	@Override
-	public void detachModel(Component component)
-	{
-		contributor.contribution.detach();
 	}
 
 	/**
