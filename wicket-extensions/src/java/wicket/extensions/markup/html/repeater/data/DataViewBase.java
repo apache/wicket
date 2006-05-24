@@ -138,9 +138,6 @@ public abstract class DataViewBase extends AbstractPageableView
 	protected void onDetach()
 	{
 		super.onDetach();
-		if (dataProvider instanceof IDetachable)
-		{
-			((IDetachable)dataProvider).detach();
-		}
+		dataProvider.detach();
 	}
 }
