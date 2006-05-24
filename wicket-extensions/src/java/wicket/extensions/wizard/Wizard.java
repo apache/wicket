@@ -23,6 +23,7 @@ import java.util.Iterator;
 import wicket.Application;
 import wicket.Component;
 import wicket.IInitializer;
+import wicket.MarkupContainer;
 import wicket.behavior.HeaderContributor;
 import wicket.feedback.ContainerFeedbackMessageFilter;
 import wicket.markup.html.PackageResource;
@@ -104,7 +105,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * Construct. Adds the default style.
 	 * <p>
 	 * If you override this class, it makes sense to call this constructor
-	 * (super(id)), then - in your constructor - construct a transition model
+	 * (super(parent,id)), then - in your constructor - construct a transition model
 	 * and then call {@link #init(IWizardModel)} to initialize the wizard.
 	 * </p>
 	 * <p>
@@ -114,16 +115,16 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param id
 	 *            The component model
 	 */
-	public Wizard(String id)
+	public Wizard(MarkupContainer parent,final String id)
 	{
-		this(id, true);
+		this(parent,id, true);
 	}
 
 	/**
 	 * Construct.
 	 * <p>
 	 * If you override this class, it makes sense to call this constructor
-	 * (super(id)), then - in your constructor - construct a transition model
+	 * (super(parent,id)), then - in your constructor - construct a transition model
 	 * and then call {@link #init(IWizardModel)} to initialize the wizard.
 	 * </p>
 	 * <p>
@@ -135,9 +136,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param addDefaultCssStyle
 	 *            Whether to add the {@link #addDefaultCssStyle() default style}
 	 */
-	public Wizard(String id, boolean addDefaultCssStyle)
+	public Wizard(MarkupContainer parent,final String id, boolean addDefaultCssStyle)
 	{
-		super(id);
+		super(parent,id);
 
 		if (addDefaultCssStyle)
 		{
@@ -156,9 +157,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param wizardModel
 	 *            The transitions model
 	 */
-	public Wizard(String id, IWizardModel wizardModel)
+	public Wizard(MarkupContainer parent,final String id, IWizardModel wizardModel)
 	{
-		this(id, wizardModel, true);
+		this(parent,id, wizardModel, true);
 	}
 
 	/**
@@ -174,9 +175,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * @param addDefaultCssStyle
 	 *            Whether to add the {@link #addDefaultCssStyle() default style}
 	 */
-	public Wizard(String id, IWizardModel wizardModel, boolean addDefaultCssStyle)
+	public Wizard(MarkupContainer parent,final String id, IWizardModel wizardModel, boolean addDefaultCssStyle)
 	{
-		super(id);
+		super(parent,id);
 
 		init(wizardModel);
 
@@ -233,8 +234,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	public void onActiveStepChanged(IWizardStep newStep)
 	{
 		this.activeStep = newStep;
-		form.replace(activeStep.getView(VIEW_ID, this, this));
-		form.replace(activeStep.getHeader(HEADER_ID, this, this));
+		form.replace(activeStep.getView(form,VIEW_ID, this));
+		form.replace(activeStep.getHeader(form,HEADER_ID, this));
 	}
 
 	/**
@@ -256,15 +257,15 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		this.wizardModel = wizardModel;
 
-		form = new Form("form");
+		form = new Form(this,"form");
 		add(form);
 		// dummy view to be replaced
-		form.add(new WebMarkupContainer(HEADER_ID));
-		form.add(newFeedbackPanel(FEEDBACK_ID));
+		form.add(new WebMarkupContainer(form,HEADER_ID));
+		form.add(newFeedbackPanel(form,FEEDBACK_ID));
 		// add dummy view; will be replaced on initialization
-		form.add(new WebMarkupContainer(VIEW_ID));
-		form.add(newButtonBar(BUTTONS_ID));
-		form.add(newOverviewBar(OVERVIEW_ID));
+		form.add(new WebMarkupContainer(form,VIEW_ID));
+		form.add(newButtonBar(form,BUTTONS_ID));
+		form.add(newOverviewBar(form,OVERVIEW_ID));
 
 		wizardModel.addListener(this);
 
@@ -286,9 +287,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new button bar
 	 */
-	protected Component newButtonBar(String id)
+	protected Component newButtonBar(MarkupContainer parent,final String id)
 	{
-		return new WizardButtonBar(id, this);
+		return new WizardButtonBar(parent,id, this);
 	}
 
 	/**
@@ -300,9 +301,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new feedback panel
 	 */
-	protected FeedbackPanel newFeedbackPanel(String id)
+	protected FeedbackPanel newFeedbackPanel(MarkupContainer parent,final String id)
 	{
-		return new FeedbackPanel(id, new ContainerFeedbackMessageFilter(this));
+		return new FeedbackPanel(parent,id, new ContainerFeedbackMessageFilter(this));
 	}
 
 	/**
@@ -314,11 +315,11 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * 
 	 * @return A new ovewview bar
 	 */
-	protected Component newOverviewBar(String id)
+	protected Component newOverviewBar(MarkupContainer parent,final String id)
 	{
 		// return a dummy component by default as we don't have an overview
 		// component
-		return new WebMarkupContainer(id).setVisible(false);
+		return new WebMarkupContainer(parent,id).setVisible(false);
 	}
 
 	/**

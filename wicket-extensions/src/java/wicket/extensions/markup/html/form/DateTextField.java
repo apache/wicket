@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.TextField;
 import wicket.model.IModel;
 import wicket.util.convert.IConverter;
@@ -46,9 +47,9 @@ public class DateTextField extends TextField
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public DateTextField(String id)
+	public DateTextField(MarkupContainer parent,final String id)
 	{
-		super(id, Date.class);
+		super(parent,id, Date.class);
 	}
 
 	/**
@@ -60,9 +61,9 @@ public class DateTextField extends TextField
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public DateTextField(String id, IModel object)
+	public DateTextField(MarkupContainer parent,final String id, IModel object)
 	{
-		super(id, object, Date.class);
+		super(parent,id, object, Date.class);
 	}
 
 	/**
@@ -74,9 +75,9 @@ public class DateTextField extends TextField
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public DateTextField(String id, String datePattern)
+	public DateTextField(MarkupContainer parent,final String id, String datePattern)
 	{
-		super(id, Date.class);
+		super(parent,id, Date.class);
 		this.dateFormat = new SimpleDateFormat(datePattern);
 		this.converter = new DateConverter()
 		{
@@ -102,9 +103,9 @@ public class DateTextField extends TextField
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public DateTextField(String id, IModel object, String datePattern)
+	public DateTextField(MarkupContainer parent,final String id, IModel object, String datePattern)
 	{
-		this(id,datePattern);
+		this(parent,id,datePattern);
 		setModel(object);
 	}
 

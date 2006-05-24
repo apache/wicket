@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.MarkupContainer;
+
 /**
  * Models a cancel button in the wizard. When pressed, it calls
  * {@link IWizardStep#applyState()} on the active wizard step, and then
@@ -37,9 +39,9 @@ public final class FinishButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public FinishButton(String id, Wizard wizard)
+	public FinishButton(MarkupContainer parent,final String id, Wizard wizard)
 	{
-		super(id, wizard, "wicket.extensions.wizard.finish");
+		super(parent,id, wizard, "wicket.extensions.wizard.finish");
 	}
 
 	/**

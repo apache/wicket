@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.MarkupContainer;
+
 /**
  * Models a cancel button in the wizard. When pressed, it calls
  * {@link Wizard#onCancel()} which should do the real work.
@@ -36,9 +38,9 @@ public final class CancelButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public CancelButton(String id, IWizard wizard)
+	public CancelButton(MarkupContainer parent,final String id, IWizard wizard)
 	{
-		super(id, wizard, "wicket.extensions.wizard.cancel");
+		super(parent,id, wizard, "wicket.extensions.wizard.cancel");
 		setDefaultFormProcessing(false);
 	}
 

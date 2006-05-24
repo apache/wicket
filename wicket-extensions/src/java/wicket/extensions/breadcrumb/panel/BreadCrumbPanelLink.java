@@ -18,6 +18,7 @@
  */
 package wicket.extensions.breadcrumb.panel;
 
+import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.BreadCrumbLink;
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 import wicket.extensions.breadcrumb.IBreadCrumbParticipant;
@@ -51,9 +52,9 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            {@link BreadCrumbPanel}, and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
-	public BreadCrumbPanelLink(final String id, final BreadCrumbPanel caller, final Class panelClass)
+	public BreadCrumbPanelLink(MarkupContainer parent,final String id, final BreadCrumbPanel caller, final Class panelClass)
 	{
-		this(id, caller.getBreadCrumbModel(), new BreadCrumbPanelFactory(panelClass));
+		this(parent,id, caller.getBreadCrumbModel(), new BreadCrumbPanelFactory(panelClass));
 	}
 
 	/**
@@ -68,10 +69,10 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            {@link BreadCrumbPanel}, and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
-	public BreadCrumbPanelLink(final String id, final IBreadCrumbModel breadCrumbModel,
+	public BreadCrumbPanelLink(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel,
 			final Class panelClass)
 	{
-		this(id, breadCrumbModel, new BreadCrumbPanelFactory(panelClass));
+		this(parent,id, breadCrumbModel, new BreadCrumbPanelFactory(panelClass));
 	}
 
 	/**
@@ -84,10 +85,10 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @param breadCrumbPanelFactory
 	 *            The factory to create bread crumb panels
 	 */
-	public BreadCrumbPanelLink(final String id, final IBreadCrumbModel breadCrumbModel,
+	public BreadCrumbPanelLink(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel,
 			final IBreadCrumbPanelFactory breadCrumbPanelFactory)
 	{
-		super(id, breadCrumbModel);
+		super(parent,id, breadCrumbModel);
 
 		if (breadCrumbModel == null)
 		{

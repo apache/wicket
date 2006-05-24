@@ -17,6 +17,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
@@ -94,22 +95,22 @@ public class DataTable extends Panel implements IPageable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(String id, IColumn[] columns, IDataProvider dataProvider, int rowsPerPage)
+	public DataTable(MarkupContainer parent,final String id, IColumn[] columns, IDataProvider dataProvider, int rowsPerPage)
 	{
-		super(id);
+		super(parent,id);
 
 		this.columns = columns;
 
-		datagrid = new DataGridView("rows", columns, dataProvider)
+		datagrid = new DataGridView(this,"rows", columns, dataProvider)
 		{
 			private static final long serialVersionUID = 1L;
 
-			protected Item newRowItem(String id, int index, IModel model)
+			protected Item newRowItem(final String id, int index, IModel model)
 			{
 				return DataTable.this.newRowItem(id, index, model);
 			}
 
-			protected Item newCellItem(String id, int index, IModel model)
+			protected Item newCellItem(final String id, int index, IModel model)
 			{
 				return DataTable.this.newCellItem(id, index, model);
 			}
@@ -117,7 +118,7 @@ public class DataTable extends Panel implements IPageable
 		datagrid.setRowsPerPage(rowsPerPage);
 		add(datagrid);
 
-		topToolbars = new RepeatingView("topToolbars")
+		topToolbars = new RepeatingView(this,"topToolbars")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -128,7 +129,7 @@ public class DataTable extends Panel implements IPageable
 
 		};
 
-		bottomToolbars = new RepeatingView("bottomToolbars")
+		bottomToolbars = new RepeatingView(this,"bottomToolbars")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -191,7 +192,7 @@ public class DataTable extends Panel implements IPageable
 		}
 
 		// create a container item for the toolbar (required by repeating view)
-		WebMarkupContainer item = new WebMarkupContainer(container.newChildId());
+		WebMarkupContainer item = new WebMarkupContainer(container,container.newChildId());
 		item.setRenderBodyOnly(true);
 		item.add(toolbar);
 
@@ -255,7 +256,7 @@ public class DataTable extends Panel implements IPageable
 	 */
 	protected Item newRowItem(final String id, int index, final IModel model)
 	{
-		return new Item(id, index, model);
+		return new Item(this,id, index, model);
 	}
 
 	/**
@@ -275,7 +276,7 @@ public class DataTable extends Panel implements IPageable
 	 */
 	protected Item newCellItem(final String id, int index, final IModel model)
 	{
-		return new Item(id, index, model);
+		return new Item(this,id, index, model);
 	}
 
 	/**

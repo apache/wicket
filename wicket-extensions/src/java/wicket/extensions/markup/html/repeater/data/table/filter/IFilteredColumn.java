@@ -19,6 +19,7 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
 
 /**
@@ -46,6 +47,6 @@ public interface IFilteredColumn extends IColumn
 	 * @return component that will be used to represent a filter for this
 	 *         column, or null if no such component is desired
 	 */
-	Component getFilter(String componentId, FilterForm form);
+	Component getFilter(MarkupContainer<?> parent,String componentId, FilterForm form);
 
 }

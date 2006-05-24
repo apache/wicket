@@ -1,5 +1,6 @@
 package wicket.extensions.ajax.markup.html;
 
+import wicket.MarkupContainer;
 import wicket.ajax.IAjaxIndicatorAware;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.model.IModel;
@@ -22,9 +23,9 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink implem
 	 * Constructor
 	 * @param id
 	 */
-	public IndicatingAjaxFallbackLink(String id)
+	public IndicatingAjaxFallbackLink(MarkupContainer parent,final String id)
 	{
-		this(id, null);
+		this(parent,id, null);
 	}
 
 	/**
@@ -32,9 +33,9 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink implem
 	 * @param id
 	 * @param model
 	 */
-	public IndicatingAjaxFallbackLink(String id, IModel model)
+	public IndicatingAjaxFallbackLink(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		add(indicatorAppender);
 	}
 

@@ -1,6 +1,7 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
@@ -41,9 +42,9 @@ public class TextFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @see wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm form)
+	public Component getFilter(MarkupContainer<?> parent,String componentId, FilterForm form)
 	{
-		return new TextFilter(componentId, getFilterModel(form), form);
+		return new TextFilter(parent,componentId, getFilterModel(form), form);
 	}
 
 	/**

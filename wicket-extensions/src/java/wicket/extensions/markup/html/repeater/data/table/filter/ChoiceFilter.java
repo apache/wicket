@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.IChoiceRenderer;
@@ -50,10 +51,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
+	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, IModel choices,
 			boolean autoSubmit)
 	{
-		this(id, model, form, choices, defaultRenderer, autoSubmit);
+		this(parent,id, model, form, choices, defaultRenderer, autoSubmit);
 	}
 
 	/**
@@ -63,10 +64,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, List choices,
+	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, List choices,
 			boolean autoSubmit)
 	{
-		this(id, model, form, new Model((Serializable)choices), defaultRenderer, autoSubmit);
+		this(parent,id, model, form, new Model((Serializable)choices), defaultRenderer, autoSubmit);
 	}
 
 	/**
@@ -77,10 +78,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param renderer
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, List choices,
+	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, List choices,
 			IChoiceRenderer renderer, boolean autoSubmit)
 	{
-		this(id, model, form, new Model((Serializable)choices), renderer, autoSubmit);
+		this(parent,id, model, form, new Model((Serializable)choices), renderer, autoSubmit);
 	}
 
 
@@ -99,12 +100,12 @@ public class ChoiceFilter extends AbstractFilter
 	 *            if true this filter will submit the form on selection change
 	 * @see DropDownChoice
 	 */
-	public ChoiceFilter(String id, IModel model, FilterForm form, IModel choices,
+	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, IModel choices,
 			IChoiceRenderer renderer, boolean autoSubmit)
 	{
-		super(id, form);
+		super(parent,id, form);
 
-		choice = new DropDownChoice("filter", model, choices, renderer);
+		choice = new DropDownChoice(this,"filter", model, choices, renderer);
 		choice.setNullValid(true);
 		
 		if (autoSubmit)

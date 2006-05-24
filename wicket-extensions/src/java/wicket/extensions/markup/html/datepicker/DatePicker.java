@@ -22,6 +22,7 @@ import java.util.Date;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -125,9 +126,9 @@ public class DatePicker extends Panel
 		 * @param resourceReference
 		 *            button icon reference
 		 */
-		public TriggerButton(final String id, final wicket.ResourceReference resourceReference)
+		public TriggerButton(MarkupContainer parent,final String id, final wicket.ResourceReference resourceReference)
 		{
-			super(id);
+			super(parent,id);
 			add(new PathAttributeModifier("id", this));
 			IModel srcReplacement = new Model()
 			{
@@ -155,9 +156,9 @@ public class DatePicker extends Panel
 		 * @param id
 		 *            component id
 		 */
-		public InitScript(String id)
+		public InitScript(MarkupContainer parent,final String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 
 		/**
@@ -190,9 +191,9 @@ public class DatePicker extends Panel
 	 * @param target
 	 *            the receiving component
 	 */
-	public DatePicker(String id, Component target)
+	public DatePicker(MarkupContainer parent,final String id, Component target)
 	{
-		this(id, target, new DatePickerSettings());
+		this(parent,id, target, new DatePickerSettings());
 	}
 
 	/**
@@ -205,9 +206,9 @@ public class DatePicker extends Panel
 	 * @param target
 	 *            the receiving component
 	 */
-	public DatePicker(String id, Component label, Component target)
+	public DatePicker(MarkupContainer parent,final String id, Component label, Component target)
 	{
-		this(id, label, target, new DatePickerSettings());
+		this(parent,id, label, target, new DatePickerSettings());
 	}
 
 	/**
@@ -220,9 +221,9 @@ public class DatePicker extends Panel
 	 * @param settings
 	 *            datepicker properties
 	 */
-	public DatePicker(final String id, final Component target, final DatePickerSettings settings)
+	public DatePicker(MarkupContainer parent,final String id, final Component target, final DatePickerSettings settings)
 	{
-		this(id, null, target, settings);
+		this(parent,id, null, target, settings);
 	}
 
 	/**
@@ -237,10 +238,10 @@ public class DatePicker extends Panel
 	 * @param settings
 	 *            datepicker properties
 	 */
-	public DatePicker(final String id, final Component label, final Component target,
+	public DatePicker(MarkupContainer parent,final String id, final Component label, final Component target,
 			final DatePickerSettings settings)
 	{
-		super(id);
+		super(parent,id);
 
 		if (settings == null)
 		{
@@ -262,11 +263,11 @@ public class DatePicker extends Panel
 		{
 			label.add(new PathAttributeModifier("for", target));
 		}
-		add(triggerButton = new TriggerButton("trigger", settings.getIcon()));
-		add(new InitScript("script"));
-		add(new JavaScriptReference("calendarMain", DatePicker.class, "calendar.js"));
-		add(new JavaScriptReference("calendarSetup", DatePicker.class, "calendar-setup.js"));
-		add(new JavaScriptReference("calendarLanguage", new Model()
+		add(triggerButton = new TriggerButton(this,"trigger", settings.getIcon()));
+		add(new InitScript(this,"script"));
+		add(new JavaScriptReference(this,"calendarMain", DatePicker.class, "calendar.js"));
+		add(new JavaScriptReference(this,"calendarSetup", DatePicker.class, "calendar-setup.js"));
+		add(new JavaScriptReference(this,"calendarLanguage", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -275,7 +276,7 @@ public class DatePicker extends Panel
 				return settings.getLanguage(DatePicker.this.getLocale());
 			}
 		}));
-		add(new StyleSheetReference("calendarStyle", settings.getStyle()));
+		add(new StyleSheetReference(this,"calendarStyle", settings.getStyle()));
 	}
 	
 	/**

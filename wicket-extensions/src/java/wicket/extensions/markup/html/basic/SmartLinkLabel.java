@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.basic;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
@@ -59,25 +60,25 @@ public final class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String, String)
 	 */
-	public SmartLinkLabel(String name, String label)
+	public SmartLinkLabel(MarkupContainer<?> parent,String name, String label)
 	{
-		super(name, label);
+		super(parent,name, label);
 	}
 
 	/**
 	 * @see Label#Label(String, IModel)
 	 */
-	public SmartLinkLabel(String name, IModel model)
+	public SmartLinkLabel(MarkupContainer<?> parent,String name, IModel model)
 	{
-		super(name, model);
+		super(parent,name, model);
 	}
 
 	/**
 	 * @see Label#Label(String)
 	 */
-	public SmartLinkLabel(String name)
+	public SmartLinkLabel(MarkupContainer<?> parent,String name)
 	{
-		super(name);
+		super(parent,name);
 	}
 
 	/**

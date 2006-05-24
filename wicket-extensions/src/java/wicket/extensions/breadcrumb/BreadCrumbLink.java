@@ -18,6 +18,7 @@
  */
 package wicket.extensions.breadcrumb;
 
+import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import wicket.markup.html.link.Link;
 import wicket.version.undo.Change;
@@ -51,9 +52,9 @@ public abstract class BreadCrumbLink extends Link
 	 * @param breadCrumbModel
 	 *            The bread crumb model
 	 */
-	public BreadCrumbLink(String id, IBreadCrumbModel breadCrumbModel)
+	public BreadCrumbLink(MarkupContainer parent,final String id, IBreadCrumbModel breadCrumbModel)
 	{
-		super(id);
+		super(parent,id);
 		this.breadCrumbModel = breadCrumbModel;
 	}
 

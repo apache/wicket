@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.form.select;
 import java.util.Collection;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -42,17 +43,17 @@ public class SelectOption extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public SelectOption(String id)
+	public SelectOption(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public SelectOption(String id, IModel model)
+	public SelectOption(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 

@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.MarkupContainer;
+
 /**
  * Models a previous button in the wizard. When pressed, it moves the wizard
  * state to the previous step of the model by calling
@@ -37,9 +39,9 @@ public final class PreviousButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public PreviousButton(String id, Wizard wizard)
+	public PreviousButton(MarkupContainer parent,final String id, Wizard wizard)
 	{
-		super(id, wizard, "wicket.extensions.wizard.previous");
+		super(parent,id, wizard, "wicket.extensions.wizard.previous");
 		setDefaultFormProcessing(false);
 	}
 

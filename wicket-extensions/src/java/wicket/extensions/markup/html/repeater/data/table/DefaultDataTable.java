@@ -19,6 +19,7 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.extensions.markup.html.repeater.refreshing.OddEvenItem;
 import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
@@ -56,10 +57,10 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final List/* <IColumn> */columns,
+	public DefaultDataTable(MarkupContainer parent,final String id, final List/* <IColumn> */columns,
 			SortableDataProvider dataProvider, int rowsPerPage)
 	{
-		this(id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
+		this(parent,id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
 	}
 
 	/**
@@ -74,19 +75,19 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(String id, final IColumn[] columns, SortableDataProvider dataProvider,
+	public DefaultDataTable(MarkupContainer parent,final String id, final IColumn[] columns, SortableDataProvider dataProvider,
 			int rowsPerPage)
 	{
-		super(id, columns, dataProvider, rowsPerPage);
+		super(parent,id, columns, dataProvider, rowsPerPage);
 
 		addTopToolbar(new NavigationToolbar(this));
 		addTopToolbar(new HeadersToolbar(this, dataProvider));
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
 
-	protected Item newRowItem(String id, int index, IModel model)
+	protected Item newRowItem(final String id, int index, IModel model)
 	{
-		return new OddEvenItem(id, index, model);
+		return new OddEvenItem(this,id, index, model);
 	}
 
 }

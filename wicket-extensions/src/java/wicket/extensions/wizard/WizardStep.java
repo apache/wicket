@@ -19,6 +19,7 @@
 package wicket.extensions.wizard;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
@@ -86,11 +87,11 @@ public class WizardStep extends Panel implements IWizardStep
 		 * @param wizard
 		 *            The containing wizard
 		 */
-		public Header(final String id, final IWizard wizard)
+		public Header(MarkupContainer parent,final String id, final IWizard wizard)
 		{
-			super(id);
+			super(parent,id);
 			setModel(new CompoundPropertyModel(wizard));
-			add(new Label("title", new AbstractReadOnlyModel()
+			add(new Label(this,"title", new AbstractReadOnlyModel()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -99,7 +100,7 @@ public class WizardStep extends Panel implements IWizardStep
 					return getTitle();
 				}
 			}).setEscapeModelStrings(false));
-			add(new Label("summary", new AbstractReadOnlyModel()
+			add(new Label(this,"summary", new AbstractReadOnlyModel()
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -133,9 +134,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * Construct without a title and a summary. Useful for when you provide a
 	 * custom header by overiding {@link #getHeader(String, Component, Wizard)}.
 	 */
-	public WizardStep()
+	public WizardStep(MarkupContainer<?> parent)
 	{
-		super(Wizard.VIEW_ID);
+		super(parent,Wizard.VIEW_ID);
 	}
 
 	/**
@@ -148,9 +149,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(IModel title, IModel summary)
+	public WizardStep(MarkupContainer<?> parent,IModel title, IModel summary)
 	{
-		this(title, summary, null);
+		this(parent,title, summary, null);
 	}
 
 	/**
@@ -165,9 +166,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(IModel title, IModel summary, IModel model)
+	public WizardStep(MarkupContainer<?> parent,IModel title, IModel summary, IModel model)
 	{
-		super(Wizard.VIEW_ID, model);
+		super(parent,Wizard.VIEW_ID, model);
 
 		this.title = title;
 		this.summary = summary;
@@ -183,9 +184,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(String title, String summary)
+	public WizardStep(MarkupContainer<?> parent,String title, String summary)
 	{
-		this(title, summary, null);
+		this(parent,title, summary, null);
 	}
 
 	/**
@@ -200,9 +201,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(String title, String summary, IModel model)
+	public WizardStep(MarkupContainer<?> parent,String title, String summary, IModel model)
 	{
-		this(new Model(title), new Model(summary), null);
+		this(parent,new Model(title), new Model(summary), null);
 	}
 
 	/**
@@ -217,9 +218,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @see wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
 	 *      wicket.Component, wicket.extensions.wizard.Wizard)
 	 */
-	public Component getHeader(String id, Component parent, IWizard wizard)
+	public Component getHeader(MarkupContainer parent,final String id, IWizard wizard)
 	{
-		return new Header(id, wizard);
+		return new Header(parent,id, wizard);
 	}
 
 	/**
@@ -248,7 +249,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @see wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
 	 *      wicket.Component, wicket.extensions.wizard.Wizard)
 	 */
-	public Component getView(String id, Component parent, IWizard wizard)
+	public Component getView(MarkupContainer parent,final String id, IWizard wizard)
 	{
 		return this;
 	}

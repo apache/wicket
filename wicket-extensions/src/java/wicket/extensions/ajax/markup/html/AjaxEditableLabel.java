@@ -1,5 +1,6 @@
 package wicket.extensions.ajax.markup.html;
 
+import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.ajax.AjaxEventBehavior;
@@ -37,9 +38,9 @@ public class AjaxEditableLabel extends Panel
 	 * 
 	 * @param id
 	 */
-	public AjaxEditableLabel(String id)
+	public AjaxEditableLabel(MarkupContainer parent,final String id)
 	{
-		this(id, null);
+		this(parent,id, null);
 	}
 
 	/**
@@ -48,16 +49,16 @@ public class AjaxEditableLabel extends Panel
 	 * @param id
 	 * @param model
 	 */
-	public AjaxEditableLabel(String id, IModel model)
+	public AjaxEditableLabel(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id);
+		super(parent,id);
 		setOutputMarkupId(true);
 
-		label = new Label("label", model);
+		label = new Label(this,"label", model);
 		label.setOutputMarkupId(true);
 		label.add(new LabeAjaxBehavior("onClick"));
 
-		editor = new TextField("editor", model);
+		editor = new TextField(this,"editor", model);
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior());

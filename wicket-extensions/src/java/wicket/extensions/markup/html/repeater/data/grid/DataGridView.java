@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.data.grid;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
 
 /**
@@ -77,9 +78,9 @@ public class DataGridView extends AbstractDataGridView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(String id, List/* <ICellPopulator> */populators, IDataProvider dataProvider)
+	public DataGridView(MarkupContainer parent,final String id, List/* <ICellPopulator> */populators, IDataProvider dataProvider)
 	{
-		super(id, (ICellPopulator[])populators.toArray(new ICellPopulator[populators.size()]),
+		super(parent,id, (ICellPopulator[])populators.toArray(new ICellPopulator[populators.size()]),
 				dataProvider);
 	}
 
@@ -96,9 +97,9 @@ public class DataGridView extends AbstractDataGridView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(String id, ICellPopulator[] populators, IDataProvider dataProvider)
+	public DataGridView(MarkupContainer parent,final String id, ICellPopulator[] populators, IDataProvider dataProvider)
 	{
-		super(id, populators, dataProvider);
+		super(parent,id, populators, dataProvider);
 	}
 
 	/**

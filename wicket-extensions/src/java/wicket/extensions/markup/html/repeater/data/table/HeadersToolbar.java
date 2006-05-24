@@ -17,6 +17,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
@@ -44,11 +45,11 @@ public class HeadersToolbar extends AbstractToolbar
 	 *            locator for the ISortState implementation used by sortable
 	 *            headers
 	 */
-	public HeadersToolbar(final DataTable table, final ISortStateLocator stateLocator)
+	public HeadersToolbar(MarkupContainer<?> parent,final DataTable table, final ISortStateLocator stateLocator)
 	{
-		super(table);
+		super(parent,table);
 
-		RepeatingView headers = new RepeatingView("headers");
+		RepeatingView headers = new RepeatingView(this,"headers");
 		add(headers);
 		IColumn[] cols = table.getColumns();
 
@@ -57,14 +58,14 @@ public class HeadersToolbar extends AbstractToolbar
 			// TODO Post 1.2: General: Is this extra component really necessary? can we
 			// not simply use the repeater's body without the need for the id in
 			// the markup?
-			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
+			WebMarkupContainer item = new WebMarkupContainer(headers,headers.newChildId());
 			headers.add(item);
 
 			IColumn column = cols[i];
 			WebMarkupContainer header = null;
 			if (column.isSortable())
 			{
-				header = new OrderByBorder("header", column.getSortProperty(), stateLocator)
+				header = new OrderByBorder(item,"header", column.getSortProperty(), stateLocator)
 				{
 
 					private static final long serialVersionUID = 1L;
@@ -78,11 +79,11 @@ public class HeadersToolbar extends AbstractToolbar
 			}
 			else
 			{
-				header = new WebMarkupContainer("header");
+				header = new WebMarkupContainer(item,"header");
 			}
 			item.add(header);
 			item.setRenderBodyOnly(true);
-			header.add(column.getHeader("label"));
+			header.add(column.getHeader(header,"label"));
 		}
 
 	}

@@ -19,6 +19,7 @@ package wicket.extensions.markup.html.repeater.data;
 
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.pageable.AbstractPageableView;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.navigation.paging.IPageable;
@@ -49,9 +50,9 @@ public abstract class DataViewBase extends AbstractPageableView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataViewBase(String id, IDataProvider dataProvider)
+	public DataViewBase(MarkupContainer parent,final String id, IDataProvider dataProvider)
 	{
-		super(id);
+		super(parent,id);
 		if (dataProvider == null)
 		{
 			throw new IllegalArgumentException("argument [dataProvider] cannot be null");

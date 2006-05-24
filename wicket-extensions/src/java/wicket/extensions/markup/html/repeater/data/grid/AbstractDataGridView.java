@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.data.grid;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.extensions.markup.html.repeater.data.DataViewBase;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
@@ -61,9 +62,9 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public AbstractDataGridView(String id, ICellPopulator[] populators, IDataProvider dataProvider)
+	public AbstractDataGridView(MarkupContainer parent,final String id, ICellPopulator[] populators, IDataProvider dataProvider)
 	{
-		super(id, dataProvider);
+		super(parent,id, dataProvider);
 
 		this.populators = populators;
 	}
@@ -104,7 +105,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 		// TODO Post 1.2: General: Does this need to be a refreshing view? since the rows
 		// is a refreshing view this will be recreated anyways. maybe can se
 		// orderedrepeatingview instead to simplify.
-		item.add(new RefreshingView(CELL_REPEATER_ID)
+		item.add(new RefreshingView(item,CELL_REPEATER_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -127,7 +128,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 			}
 
-			protected Item newItem(String id, int index, IModel model)
+			protected Item newItem(final String id, int index, IModel model)
 			{
 				return newCellItem(id, index, model);
 			}
@@ -140,7 +141,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 		return populators;
 	}
 
-	protected final Item newItem(String id, int index, IModel model)
+	protected final Item newItem(MarkupContainer parent,final String id, int index, IModel model)
 	{
 		return newRowItem(id, index, model);
 	}
@@ -163,7 +164,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 */
 	protected Item newRowItem(final String id, int index, final IModel model)
 	{
-		return new Item(id, index, model);
+		return new Item(this,id, index, model);
 	}
 
 	/**
@@ -183,7 +184,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 */
 	protected Item newCellItem(final String id, int index, final IModel model)
 	{
-		return new Item(id, index, model);
+		return new Item(this,id, index, model);
 	}
 
 }

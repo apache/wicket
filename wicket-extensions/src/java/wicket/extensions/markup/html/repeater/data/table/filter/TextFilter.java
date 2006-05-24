@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.TextField;
 import wicket.model.IModel;
 
@@ -43,10 +44,10 @@ public class TextFilter extends AbstractFilter
 	 * @param form
 	 *            filter form this filter will be added to
 	 */
-	public TextFilter(String id, IModel model, FilterForm form)
+	public TextFilter(MarkupContainer parent,final String id, IModel model, FilterForm form)
 	{
-		super(id, form);
-		filter = new TextField("filter", model);
+		super(parent,id, form);
+		filter = new TextField(this,"filter", model);
 		enableFocusTracking(filter);
 		add(filter);
 	}

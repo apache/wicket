@@ -1,6 +1,7 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.PagingNavigator;
@@ -26,18 +27,18 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public NavigationToolbar(final DataTable table)
+	public NavigationToolbar(MarkupContainer<?> parent,final DataTable table)
 	{
-		super(table);
+		super(parent,table);
 		this.table=table;
 		
-		WebMarkupContainer span = new WebMarkupContainer("span");
+		WebMarkupContainer span = new WebMarkupContainer(this,"span");
 		add(span);
 		span.add(new AttributeModifier("colspan", true, new Model(String
 				.valueOf(table.getColumns().length))));
 
-		span.add(newPagingNavigator("navigator", table));
-		span.add(newNavigatorLabel("navigatorLabel", table));
+		span.add(newPagingNavigator(span,"navigator", table));
+		span.add(newNavigatorLabel(span,"navigatorLabel", table));
 	}
 	
 	
@@ -51,9 +52,9 @@ public class NavigationToolbar extends AbstractToolbar
 	 *            dataview used by datatable
 	 * @return paging navigator that will be used to navigate the data table
 	 */
-	protected PagingNavigator newPagingNavigator(String navigatorId, final DataTable table)
+	protected PagingNavigator newPagingNavigator(MarkupContainer<?> parent, String navigatorId, final DataTable table)
 	{
-		return new PagingNavigator(navigatorId, table);
+		return new PagingNavigator(parent,navigatorId, table);
 	}
 
 	/**
@@ -67,9 +68,9 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @return navigator label that will be used to navigate the data table
 	 * 
 	 */
-	protected WebComponent newNavigatorLabel(String navigatorId, final DataTable table)
+	protected WebComponent newNavigatorLabel(MarkupContainer<?> parent,String navigatorId, final DataTable table)
 	{
-		return new NavigatorLabel(navigatorId, table);
+		return new NavigatorLabel(parent,navigatorId, table);
 	}
 
 	/**

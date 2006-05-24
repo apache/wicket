@@ -4,6 +4,7 @@ import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.IInitializer;
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
@@ -32,21 +33,21 @@ public class UploadProgressBar extends Panel
 	 * @param id
 	 * @param form
 	 */
-	public UploadProgressBar(String id, final Form form)
+	public UploadProgressBar(MarkupContainer parent,final String id, final Form form)
 	{
-		super(id);
+		super(parent,id);
 		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
 
-		add(new JavaScriptReference("javascript", JS_PROGRESSBAR));
+		add(new JavaScriptReference(this,"javascript", JS_PROGRESSBAR));
 
 
-		final WebMarkupContainer barDiv = new WebMarkupContainer("bar");
+		final WebMarkupContainer barDiv = new WebMarkupContainer(this,"bar");
 		barDiv.setOutputMarkupId(true);
 		add(barDiv);
 
-		final WebMarkupContainer statusDiv = new WebMarkupContainer("status");
+		final WebMarkupContainer statusDiv = new WebMarkupContainer(this,"status");
 		statusDiv.setOutputMarkupId(true);
 		add(statusDiv);
 

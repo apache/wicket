@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.tabs;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 
@@ -60,11 +61,11 @@ public class PanelCachingTab implements ITab
 	/**
 	 * @see wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
 	 */
-	public Panel getPanel(final String panelId)
+	public Panel getPanel(MarkupContainer<?> parent, final String panelId)
 	{
 		if (panel == null)
 		{
-			panel = delegate.getPanel(panelId);
+			panel = delegate.getPanel(parent,panelId);
 		}
 		return panel;
 	}

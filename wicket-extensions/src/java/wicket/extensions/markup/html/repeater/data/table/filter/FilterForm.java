@@ -19,6 +19,7 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
@@ -47,13 +48,13 @@ public class FilterForm extends Form
 	 * @param locator
 	 *            filter state locator
 	 */
-	public FilterForm(String id, IFilterStateLocator locator)
+	public FilterForm(MarkupContainer parent,final String id, IFilterStateLocator locator)
 	{
-		super(id, new FilterStateModel(locator));
+		super(parent,id, new FilterStateModel(locator));
 
 		this.locator = locator;
 
-		hidden = new HiddenField("focus-tracker", new Model());
+		hidden = new HiddenField(this,"focus-tracker", new Model());
 
 		hidden.add(new AbstractBehavior()
 		{

@@ -17,6 +17,7 @@
  */
 package wicket.extensions.markup.html.repeater.data;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 
 
@@ -71,9 +72,9 @@ public abstract class DataView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataView(String id, IDataProvider dataProvider)
+	public DataView(MarkupContainer parent,final String id, IDataProvider dataProvider)
 	{
-		super(id, dataProvider);
+		super(parent,id, dataProvider);
 	}
 
 	/**
@@ -84,9 +85,9 @@ public abstract class DataView extends DataViewBase
 	 * @param itemsPerPage
 	 *            items per page
 	 */
-	public DataView(String id, IDataProvider dataProvider, int itemsPerPage)
+	public DataView(MarkupContainer parent,final String id, IDataProvider dataProvider, int itemsPerPage)
 	{
-		super(id, dataProvider);
+		super(parent,id, dataProvider);
 		setItemsPerPage(itemsPerPage);
 	}
 

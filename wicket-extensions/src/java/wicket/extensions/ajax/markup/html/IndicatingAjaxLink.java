@@ -1,5 +1,6 @@
 package wicket.extensions.ajax.markup.html;
 
+import wicket.MarkupContainer;
 import wicket.ajax.IAjaxIndicatorAware;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.model.IModel;
@@ -21,9 +22,9 @@ public abstract class IndicatingAjaxLink extends AjaxLink implements IAjaxIndica
 	 * Constructor
 	 * @param id
 	 */
-	public IndicatingAjaxLink(String id)
+	public IndicatingAjaxLink(MarkupContainer parent,final String id)
 	{
-		this(id, null);
+		this(parent,id, null);
 	}
 
 	/**
@@ -31,9 +32,9 @@ public abstract class IndicatingAjaxLink extends AjaxLink implements IAjaxIndica
 	 * @param id
 	 * @param model
 	 */
-	public IndicatingAjaxLink(String id, IModel model)
+	public IndicatingAjaxLink(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		add(indicatorAppender);
 	}
 

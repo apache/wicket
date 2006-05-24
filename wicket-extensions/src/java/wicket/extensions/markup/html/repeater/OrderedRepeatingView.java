@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -55,15 +56,15 @@ public class OrderedRepeatingView extends RepeatingView
 	private List order = new ArrayList();
 
 	/** @see Component#Component(String) */
-	public OrderedRepeatingView(String id)
+	public OrderedRepeatingView(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/** @see Component#Component(String, IModel) */
-	public OrderedRepeatingView(String id, IModel model)
+	public OrderedRepeatingView(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 }

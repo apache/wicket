@@ -18,6 +18,7 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -46,13 +47,13 @@ public class WizardButtonBar extends Panel
 	 * @param wizard
 	 *            The containing wizard
 	 */
-	public WizardButtonBar(String id, Wizard wizard)
+	public WizardButtonBar(MarkupContainer parent,final String id, Wizard wizard)
 	{
-		super(id);
-		add(new PreviousButton("previous", wizard));
-		add(new NextButton("next", wizard));
-		add(new LastButton("last", wizard));
-		add(new CancelButton("cancel", wizard));
-		add(new FinishButton("finish", wizard));
+		super(parent,id);
+		add(new PreviousButton(this,"previous", wizard));
+		add(new NextButton(this,"next", wizard));
+		add(new LastButton(this,"last", wizard));
+		add(new CancelButton(this,"cancel", wizard));
+		add(new FinishButton(this,"finish", wizard));
 	}
 }

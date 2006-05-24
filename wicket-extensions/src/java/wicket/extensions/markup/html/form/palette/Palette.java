@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.form.palette.component.Choices;
 import wicket.extensions.markup.html.form.palette.component.Recorder;
 import wicket.extensions.markup.html.form.palette.component.Selection;
@@ -115,10 +116,10 @@ public class Palette extends Panel
 	 * @param allowOrder
 	 *            allow user to move selections up and down
 	 */
-	public Palette(String id, IModel model, IModel choicesModel, IChoiceRenderer choiceRenderer,
+	public Palette(MarkupContainer parent,final String id, IModel model, IModel choicesModel, IChoiceRenderer choiceRenderer,
 			int rows, boolean allowOrder)
 	{
-		super(id, model);
+		super(parent,id, model);
 
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
@@ -159,7 +160,7 @@ public class Palette extends Panel
 				return urlFor(javascript);
 			};
 		};
-		WebMarkupContainer javascript = new WebMarkupContainer("javascript");
+		WebMarkupContainer javascript = new WebMarkupContainer(this,"javascript");
 		javascript.add(new AttributeModifier("src", true, srcReplacement));
 		add(javascript);
 	}
@@ -190,7 +191,7 @@ public class Palette extends Panel
 	private Recorder newRecorderComponent()
 	{
 		// create component that will keep track of selections
-		return new Recorder("recorder", this)
+		return new Recorder(this,"recorder", this)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -216,7 +217,7 @@ public class Palette extends Panel
 	 */
 	protected Component newAvailableHeader(String componentId)
 	{
-		return new Label(componentId, "Available");
+		return new Label(this,componentId, "Available");
 	}
 
 	/**
@@ -227,7 +228,7 @@ public class Palette extends Panel
 	 */
 	protected Component newSelectedHeader(String componentId)
 	{
-		return new Label(componentId, "Selected");
+		return new Label(this,componentId, "Selected");
 	}
 
 	/**
@@ -237,16 +238,17 @@ public class Palette extends Panel
 	 */
 	protected Component newDownComponent()
 	{
-		return new WebMarkupContainer("moveDownButton")
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected void onComponentTag(ComponentTag tag)
-			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getDownOnClickJS());
-			}
-		}.add(new Image("image", downImage));
+		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this,"moveDownButton")
+				{
+					private static final long serialVersionUID = 1L;
+		
+					protected void onComponentTag(ComponentTag tag)
+					{
+						super.onComponentTag(tag);
+						tag.getAttributes().put("onclick", Palette.this.getDownOnClickJS());
+					}
+				};
+		return webMarkupContainer.add(new Image(webMarkupContainer,"image", downImage));
 	}
 
 	/**
@@ -256,16 +258,17 @@ public class Palette extends Panel
 	 */
 	protected Component newUpComponent()
 	{
-		return new WebMarkupContainer("moveUpButton")
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected void onComponentTag(ComponentTag tag)
-			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getUpOnClickJS());
-			}
-		}.add(new Image("image", upImage));
+		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this,"moveUpButton")
+				{
+					private static final long serialVersionUID = 1L;
+		
+					protected void onComponentTag(ComponentTag tag)
+					{
+						super.onComponentTag(tag);
+						tag.getAttributes().put("onclick", Palette.this.getUpOnClickJS());
+					}
+				};
+		return webMarkupContainer.add(new Image(webMarkupContainer,"image", upImage));
 	}
 
 	/**
@@ -275,16 +278,17 @@ public class Palette extends Panel
 	 */
 	protected Component newRemoveComponent()
 	{
-		return new WebMarkupContainer("removeButton")
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected void onComponentTag(ComponentTag tag)
-			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getRemoveOnClickJS());
-			}
-		}.add(new Image("image", removeImage));
+		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this,"removeButton")
+				{
+					private static final long serialVersionUID = 1L;
+		
+					protected void onComponentTag(ComponentTag tag)
+					{
+						super.onComponentTag(tag);
+						tag.getAttributes().put("onclick", Palette.this.getRemoveOnClickJS());
+					}
+				};
+		return webMarkupContainer.add(new Image(webMarkupContainer,"image", removeImage));
 	}
 
 	/**
@@ -294,17 +298,18 @@ public class Palette extends Panel
 	 */
 	protected Component newAddComponent()
 	{
-		return new WebMarkupContainer("addButton")
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected void onComponentTag(ComponentTag tag)
-			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("onclick", Palette.this.getAddOnClickJS());
-				tag.getAttributes().put("ondblclick", Palette.this.getRemoveOnClickJS());
-			}
-		}.add(new Image("image", addImage));
+		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this,"addButton")
+				{
+					private static final long serialVersionUID = 1L;
+		
+					protected void onComponentTag(ComponentTag tag)
+					{
+						super.onComponentTag(tag);
+						tag.getAttributes().put("onclick", Palette.this.getAddOnClickJS());
+						tag.getAttributes().put("ondblclick", Palette.this.getRemoveOnClickJS());
+					}
+				};
+		return webMarkupContainer.add(new Image(webMarkupContainer,"image", addImage));
 	}
 
 	/**
@@ -314,7 +319,7 @@ public class Palette extends Panel
 	 */
 	protected Component newSelectionComponent()
 	{
-		return new Selection("selection", this);
+		return new Selection(this,"selection", this);
 	}
 
 	/**
@@ -324,7 +329,7 @@ public class Palette extends Panel
 	 */
 	protected Component newChoicesComponent()
 	{
-		return new Choices("choices", this);
+		return new Choices(this,"choices", this);
 	}
 
 	private Component getChoicesComponent()

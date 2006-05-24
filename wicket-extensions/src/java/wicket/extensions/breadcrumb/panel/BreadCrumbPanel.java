@@ -72,9 +72,9 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * @param breadCrumbModel
 	 *            The bread crumb model
 	 */
-	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel)
+	public BreadCrumbPanel(MarkupContainer parent,final String id, IBreadCrumbModel breadCrumbModel)
 	{
-		super(id);
+		super(parent,id);
 		this.breadCrumbModel = breadCrumbModel;
 	}
 
@@ -88,9 +88,9 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 * @param model
 	 *            The model
 	 */
-	public BreadCrumbPanel(String id, IBreadCrumbModel breadCrumbModel, IModel model)
+	public BreadCrumbPanel(MarkupContainer parent,final String id, IBreadCrumbModel breadCrumbModel, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		this.breadCrumbModel = breadCrumbModel;
 	}
 

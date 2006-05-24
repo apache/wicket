@@ -1,5 +1,6 @@
 package wicket.extensions.markup.html.repeater.refreshing;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -26,9 +27,9 @@ public class OddEvenItem extends Item
 	 * @param model
 	 *            item model
 	 */
-	public OddEvenItem(String id, int index, IModel model)
+	public OddEvenItem(MarkupContainer parent,final String id, int index, IModel model)
 	{
-		super(id, index, model);
+		super(parent,id, index, model);
 	}
 
 	protected void onComponentTag(ComponentTag tag)

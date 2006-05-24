@@ -65,9 +65,9 @@ public abstract class GridView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public GridView(String id, IDataProvider dataProvider)
+	public GridView(MarkupContainer parent,final String id, IDataProvider dataProvider)
 	{
-		super(id, dataProvider);
+		super(parent,id, dataProvider);
 	}
 
 
@@ -206,7 +206,7 @@ public abstract class GridView extends DataViewBase
 			{
 				// Build a row
 				Item rowItem = newRowItem(newChildId(), row);
-				RepeatingView rowView = new RepeatingView("cols");
+				RepeatingView rowView = new RepeatingView(rowItem,"cols");
 				rowItem.add(rowView);
 				add(rowItem);
 
@@ -268,9 +268,9 @@ public abstract class GridView extends DataViewBase
 	 * @param index
 	 * @return created item
 	 */
-	protected Item newEmptyItem(String id, int index)
+	protected Item newEmptyItem(final String id, int index)
 	{
-		return new Item(id, index, null);
+		return new Item(this,id, index, null);
 	}
 
 	/**
@@ -280,9 +280,9 @@ public abstract class GridView extends DataViewBase
 	 * @param index
 	 * @return created Item
 	 */
-	protected Item newRowItem(String id, int index)
+	protected Item newRowItem(final String id, int index)
 	{
-		return new Item(id, index, null);
+		return new Item(this,id, index, null);
 	}
 
 	/**

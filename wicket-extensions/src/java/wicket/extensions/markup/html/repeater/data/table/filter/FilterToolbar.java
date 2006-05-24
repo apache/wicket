@@ -19,6 +19,7 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import wicket.extensions.markup.html.repeater.data.table.DataTable;
@@ -50,9 +51,9 @@ public class FilterToolbar extends AbstractToolbar
 	 *            locator responsible for finding object used to store filter's
 	 *            state
 	 */
-	public FilterToolbar(final DataTable table, final IFilterStateLocator stateLocator)
+	public FilterToolbar(MarkupContainer<?> parent,final DataTable table, final IFilterStateLocator stateLocator)
 	{
-		super(table);
+		super(parent,table);
 
 		if (table == null)
 		{
@@ -65,7 +66,7 @@ public class FilterToolbar extends AbstractToolbar
 
 		// create the form used to contain all filter components
 
-		final FilterForm form = new FilterForm("filter-form", stateLocator)
+		final FilterForm form = new FilterForm(this,"filter-form", stateLocator)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -78,7 +79,7 @@ public class FilterToolbar extends AbstractToolbar
 
 		// add javascript to restore focus to a filter component
 
-		add(new WebMarkupContainer("focus-restore")
+		add(new WebMarkupContainer(this,"focus-restore")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -92,13 +93,13 @@ public class FilterToolbar extends AbstractToolbar
 
 		// populate the toolbar with components provided by filtered columns
 
-		RepeatingView filters = new RepeatingView("filters");
+		RepeatingView filters = new RepeatingView(form,"filters");
 		form.add(filters);
 
 		IColumn[] cols = table.getColumns();
 		for (int i = 0; i < cols.length; i++)
 		{
-			WebMarkupContainer item = new WebMarkupContainer(filters.newChildId());
+			WebMarkupContainer item = new WebMarkupContainer(filters,filters.newChildId());
 			item.setRenderBodyOnly(true);
 
 			IColumn col = cols[i];
@@ -107,12 +108,12 @@ public class FilterToolbar extends AbstractToolbar
 			if (col instanceof IFilteredColumn)
 			{
 				IFilteredColumn filteredCol = (IFilteredColumn)col;
-				filter = filteredCol.getFilter(FILTER_COMPONENT_ID, form);
+				filter = filteredCol.getFilter(item,FILTER_COMPONENT_ID, form);
 			}
 
 			if (filter == null)
 			{
-				filter = new NoFilter(FILTER_COMPONENT_ID);
+				filter = new NoFilter(item,FILTER_COMPONENT_ID);
 			}
 			else
 			{

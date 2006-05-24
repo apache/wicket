@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 
@@ -40,9 +41,9 @@ public class NavigatorLabel extends Label
 	 * @param table
 	 *            dataview
 	 */
-	public NavigatorLabel(final String id, final DataTable table)
+	public NavigatorLabel(MarkupContainer parent,final String id, final DataTable table)
 	{
-		super(id, new AbstractReadOnlyModel()
+		super(parent,id, new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
 

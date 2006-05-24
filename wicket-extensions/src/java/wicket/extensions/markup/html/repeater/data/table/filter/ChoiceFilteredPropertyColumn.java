@@ -1,6 +1,7 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
@@ -50,9 +51,9 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @see wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(String componentId, FilterForm form)
+	public Component getFilter(MarkupContainer<?> parent, String componentId, FilterForm form)
 	{
-		ChoiceFilter filter = new ChoiceFilter(componentId, getFilterModel(form), form,
+		ChoiceFilter filter = new ChoiceFilter(parent,componentId, getFilterModel(form), form,
 				filterChoices, enableAutoSubmit());
 
 		IChoiceRenderer renderer = getChoiceRenderer();

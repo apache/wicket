@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.form.palette.Palette;
 import wicket.markup.html.form.HiddenField;
 import wicket.markup.html.form.IChoiceRenderer;
@@ -44,9 +45,9 @@ public class Recorder extends HiddenField
 	 * @param palette
 	 *            parent palette object
 	 */
-	public Recorder(String id, Palette palette)
+	public Recorder(MarkupContainer parent,final String id, Palette palette)
 	{
-		super(id);
+		super(parent,id);
 		this.palette = palette;
 
 		// construct the model string based on selection collection

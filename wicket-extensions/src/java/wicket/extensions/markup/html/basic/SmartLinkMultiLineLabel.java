@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.basic;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -46,17 +47,17 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, String)
 	 */
-	public SmartLinkMultiLineLabel(String name, String label)
+	public SmartLinkMultiLineLabel(MarkupContainer<?> parent,String name, String label)
 	{
-		this(name, new Model(label));
+		this(parent,name, new Model(label));
 	}
 
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, IModel)
 	 */
-	public SmartLinkMultiLineLabel(String name, IModel model)
+	public SmartLinkMultiLineLabel(MarkupContainer<?> parent,String name, IModel model)
 	{
-		super(name, model);
+		super(parent,name, model);
 	}
 
     /**

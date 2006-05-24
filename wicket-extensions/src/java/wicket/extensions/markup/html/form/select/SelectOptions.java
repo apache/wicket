@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.markup.ComponentTag;
@@ -31,9 +32,9 @@ public class SelectOptions extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(String id, IModel model, IOptionRenderer renderer)
+	public SelectOptions(MarkupContainer parent,final String id, IModel model, IOptionRenderer renderer)
 	{
-		super(id, model);
+		super(parent,id, model);
 		this.renderer = renderer;
 		setRenderBodyOnly(true);
 	}
@@ -45,9 +46,9 @@ public class SelectOptions extends RepeatingView
 	 * @param elements 
 	 * @param renderer
 	 */
-	public SelectOptions(String id, Collection elements, IOptionRenderer renderer)
+	public SelectOptions(MarkupContainer parent,final String id, Collection elements, IOptionRenderer renderer)
 	{
-		this(id, new Model((Serializable)elements), renderer);
+		this(parent,id, new Model((Serializable)elements), renderer);
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class SelectOptions extends RepeatingView
 				while (it.hasNext())
 				{
 					// we need a container to represent a row in repeater
-					WebMarkupContainer row = new WebMarkupContainer(newChildId());
+					WebMarkupContainer row = new WebMarkupContainer(this,newChildId());
 					row.setRenderBodyOnly(true);
 					add(row);
 
@@ -92,7 +93,7 @@ public class SelectOptions extends RepeatingView
 					Object value = it.next();
 					String text = renderer.getDisplayValue(value);
 					IModel model = renderer.getModel(value);
-					row.add(new SimpleSelectOption("option", model, text));
+					row.add(new SimpleSelectOption(row,"option", model, text));
 				}
 			}
 		}
@@ -108,9 +109,9 @@ public class SelectOptions extends RepeatingView
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(String id, IModel model, String text)
+		public SimpleSelectOption(MarkupContainer parent,final String id, IModel model, String text)
 		{
-			super(id, model);
+			super(parent,id, model);
 			this.text = text;
 		}
 

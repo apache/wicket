@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
@@ -40,9 +41,9 @@ public class AbstractFilter extends Panel
 	 * @param form
 	 *            filter form of the filter toolbar
 	 */
-	public AbstractFilter(String id, FilterForm form)
+	public AbstractFilter(MarkupContainer parent,final String id, FilterForm form)
 	{
-		super(id);
+		super(parent,id);
 		this.form = form;
 	}
 

@@ -18,6 +18,7 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 
 /**
@@ -37,7 +38,7 @@ public interface IColumn extends ICellPopulator
 	 * 
 	 * @return component that will be used as the header for the column
 	 */
-	Component getHeader(String componentId);
+	Component getHeader(MarkupContainer<?> parent, String componentId);
 
 	/**
 	 * Returns the name of the property that this header sorts. If null is

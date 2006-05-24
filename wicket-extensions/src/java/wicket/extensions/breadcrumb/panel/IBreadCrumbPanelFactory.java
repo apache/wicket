@@ -20,6 +20,7 @@ package wicket.extensions.breadcrumb.panel;
 
 import java.io.Serializable;
 
+import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.IBreadCrumbModel;
 
 /**
@@ -39,5 +40,5 @@ public interface IBreadCrumbPanelFactory extends Serializable
 	 *            The bread crumb model
 	 * @return A new bread crumb panel instance
 	 */
-	BreadCrumbPanel create(String componentId, IBreadCrumbModel breadCrumbModel);
+	BreadCrumbPanel create(MarkupContainer<?> parent,String componentId, IBreadCrumbModel breadCrumbModel);
 }

@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AttributeAppender;
 import wicket.behavior.SimpleAttributeModifier;
@@ -27,6 +28,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.Loop;
+import wicket.markup.html.list.Loop.LoopItem;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
 
@@ -97,9 +99,9 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(String id, List tabs)
+	public TabbedPanel(MarkupContainer parent,final String id, List tabs)
 	{
-		super(id, new Model(new Integer(-1)));
+		super(parent,id, new Model(new Integer(-1)));
 
 		if (tabs == null)
 		{
@@ -115,7 +117,7 @@ public class TabbedPanel extends Panel
 		this.tabs = tabs;
 
 		// add the loop used to generate tab names
-		add(new Loop("tabs", tabs.size())
+		add(new Loop(this,"tabs", tabs.size())
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -125,9 +127,9 @@ public class TabbedPanel extends Panel
 				final ITab tab = ((ITab)TabbedPanel.this.tabs.get(index));
 				final int selected = getSelectedTab();
 
-				final WebMarkupContainer titleLink = newLink("link", index);
+				final WebMarkupContainer titleLink = newLink(item,"link", index);
 
-				titleLink.add(new Label("title", tab.getTitle()));
+				titleLink.add(new Label(titleLink,"title", tab.getTitle()));
 				item.add(titleLink);
 
 				item.add(new SimpleAttributeModifier("class", "selected")
@@ -188,9 +190,9 @@ public class TabbedPanel extends Panel
 	 *            clicked. See {@link #setSelectedTab(int)}.
 	 * @return created link component
 	 */
-	protected WebMarkupContainer newLink(String linkId, final int index)
+	protected WebMarkupContainer newLink(MarkupContainer<?> parent,String linkId, final int index)
 	{
-		return new Link(linkId)
+		return new Link(parent,linkId)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -219,7 +221,7 @@ public class TabbedPanel extends Panel
 
 		ITab tab = (ITab)tabs.get(index);
 
-		Panel panel = tab.getPanel(TAB_PANEL_ID);
+		Panel panel = tab.getPanel(this,TAB_PANEL_ID);
 
 		if (panel == null)
 		{

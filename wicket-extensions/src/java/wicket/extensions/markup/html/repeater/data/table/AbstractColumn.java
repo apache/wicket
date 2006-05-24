@@ -19,6 +19,7 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.IModel;
 
@@ -80,9 +81,9 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(java.lang.String)
 	 */
-	public Component getHeader(String componentId)
+	public Component getHeader(MarkupContainer<?> parent, String componentId)
 	{
-		return new Label(componentId, getDisplayModel());
+		return new Label(parent,componentId, getDisplayModel());
 	}
 
 

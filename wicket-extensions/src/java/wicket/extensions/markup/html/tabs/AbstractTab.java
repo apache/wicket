@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.tabs;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 
@@ -56,5 +57,5 @@ public abstract class AbstractTab implements ITab
 	/**
 	 * @see wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
 	 */
-	public abstract Panel getPanel(final String panelId);
+	public abstract Panel getPanel(MarkupContainer<?> parent,final String panelId);
 }

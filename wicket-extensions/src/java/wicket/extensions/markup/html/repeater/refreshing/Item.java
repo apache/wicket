@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.Comparator;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
@@ -49,9 +50,9 @@ public class Item extends WebMarkupContainer
 	 * @param model
 	 *            model for this item
 	 */
-	public Item(final String id, int index, final IModel model)
+	public Item(MarkupContainer parent,final String id, int index, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		this.index = index;
 	}
 

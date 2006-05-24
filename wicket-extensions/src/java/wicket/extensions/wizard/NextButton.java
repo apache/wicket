@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.MarkupContainer;
+
 
 /**
  * Models a next button in the wizard. When pressed, it calls
@@ -37,9 +39,9 @@ public final class NextButton extends WizardButton
 	 * @param id
 	 * @param wizard
 	 */
-	public NextButton(String id, Wizard wizard)
+	public NextButton(MarkupContainer parent,final String id, Wizard wizard)
 	{
-		super(id, wizard, "wicket.extensions.wizard.next");
+		super(parent,id, wizard, "wicket.extensions.wizard.next");
 	}
 
 	/**

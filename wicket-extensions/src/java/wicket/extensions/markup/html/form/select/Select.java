@@ -19,6 +19,7 @@ package wicket.extensions.markup.html.form.select;
 
 import java.util.Collection;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.FormComponent;
@@ -51,17 +52,17 @@ public class Select extends FormComponent
 	 * @param id
 	 *            component id
 	 */
-	public Select(String id)
+	public Select(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Select(String id, IModel model)
+	public Select(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

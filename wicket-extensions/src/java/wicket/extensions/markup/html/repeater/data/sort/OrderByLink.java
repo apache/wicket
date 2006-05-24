@@ -22,6 +22,7 @@ import java.io.Serializable;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.AbstractModel;
 import wicket.model.IModel;
@@ -59,9 +60,9 @@ public class OrderByLink extends Link
 	 *            locator used to locate sort state object that this will use to
 	 *            read/write state of sorted properties
 	 */
-	public OrderByLink(String id, String property, ISortStateLocator stateLocator)
+	public OrderByLink(MarkupContainer parent,final String id, String property, ISortStateLocator stateLocator)
 	{
-		this(id, property, stateLocator, DefaultCssProvider.getInstance());
+		this(parent,id, property, stateLocator, DefaultCssProvider.getInstance());
 	}
 
 	/**
@@ -84,10 +85,10 @@ public class OrderByLink extends Link
 	 * @see OrderByLink.ICssProvider
 	 * 
 	 */
-	public OrderByLink(String id, String property, ISortStateLocator stateLocator,
+	public OrderByLink(MarkupContainer parent,final String id, String property, ISortStateLocator stateLocator,
 			ICssProvider cssProvider)
 	{
-		super(id);
+		super(parent,id);
 
 		if (cssProvider == null)
 		{

@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 
 /**
@@ -51,11 +52,11 @@ public class OrderByBorder extends Border
 	 *            see
 	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 */
-	public OrderByBorder(String id, String property, ISortStateLocator stateLocator,
+	public OrderByBorder(MarkupContainer parent,final String id, String property, ISortStateLocator stateLocator,
 			OrderByLink.ICssProvider cssProvider)
 	{
-		super(id);
-		OrderByLink link = new OrderByLink("orderByLink", property, stateLocator,
+		super(parent,id);
+		OrderByLink link = new OrderByLink(this,"orderByLink", property, stateLocator,
 				OrderByLink.VoidCssProvider.getInstance()) {
 			
 			private static final long serialVersionUID = 1L;
@@ -89,9 +90,9 @@ public class OrderByBorder extends Border
 	 *            see
 	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
 	 */
-	public OrderByBorder(String id, String property, ISortStateLocator stateLocator)
+	public OrderByBorder(MarkupContainer parent,final String id, String property, ISortStateLocator stateLocator)
 	{
-		this(id, property, stateLocator, OrderByLink.DefaultCssProvider.getInstance());
+		this(parent,id, property, stateLocator, OrderByLink.DefaultCssProvider.getInstance());
 	}
 
 }

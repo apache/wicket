@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
@@ -46,9 +47,9 @@ public class GoFilter extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public GoFilter(String id)
+	public GoFilter(MarkupContainer parent,final String id)
 	{
-		this(id, defaultGoModel);
+		this(parent,id, defaultGoModel);
 	}
 
 	/**
@@ -59,11 +60,11 @@ public class GoFilter extends Panel
 	 * @param goModel
 	 *            model for the button's text
 	 */
-	public GoFilter(String id, IModel goModel)
+	public GoFilter(MarkupContainer parent,final String id, IModel goModel)
 	{
-		super(id);
+		super(parent,id);
 
-		go = new Button("go", goModel)
+		go = new Button(this,"go", goModel)
 		{
 			private static final long serialVersionUID = 1L;
 

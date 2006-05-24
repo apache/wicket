@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
@@ -60,9 +61,9 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public NoRecordsToolbar(final DataTable table)
+	public NoRecordsToolbar(MarkupContainer<?> parent,final DataTable table)
 	{
-		this(table, DEFAULT_MESSAGE_MODEL);
+		this(parent,table, DEFAULT_MESSAGE_MODEL);
 	}
 
 	/**
@@ -72,15 +73,15 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 *            model that will be used to display the "no records found"
 	 *            message
 	 */
-	public NoRecordsToolbar(final DataTable table, IModel messageModel)
+	public NoRecordsToolbar(MarkupContainer<?> parent,final DataTable table, IModel messageModel)
 	{
-		super(table);
-		WebMarkupContainer td = new WebMarkupContainer("td");
+		super(parent,table);
+		WebMarkupContainer td = new WebMarkupContainer(this,"td");
 		add(td);
 
 		td.add(new AttributeModifier("colspan", true, new Model(String
 				.valueOf(table.getColumns().length))));
-		td.add(new Label("msg", messageModel));
+		td.add(new Label(td,"msg", messageModel));
 	}
 
 	/**

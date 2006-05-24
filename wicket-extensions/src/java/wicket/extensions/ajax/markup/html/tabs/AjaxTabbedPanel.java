@@ -2,6 +2,7 @@ package wicket.extensions.ajax.markup.html.tabs;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.extensions.markup.html.tabs.TabbedPanel;
@@ -24,15 +25,15 @@ public class AjaxTabbedPanel extends TabbedPanel
 	 * @param id
 	 * @param tabs
 	 */
-	public AjaxTabbedPanel(String id, List tabs)
+	public AjaxTabbedPanel(MarkupContainer parent,final String id, List tabs)
 	{
-		super(id, tabs);
+		super(parent,id, tabs);
 		setOutputMarkupId(true);
 	}
 
-	protected WebMarkupContainer newLink(String linkId, final int index)
+	protected WebMarkupContainer newLink(MarkupContainer<?> parent,String linkId, final int index)
 	{
-		return new AjaxFallbackLink(linkId)
+		return new AjaxFallbackLink(parent,linkId)
 		{
 
 			private static final long serialVersionUID = 1L;

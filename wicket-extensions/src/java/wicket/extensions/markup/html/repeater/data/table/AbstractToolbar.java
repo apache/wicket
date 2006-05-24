@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 
@@ -43,9 +44,9 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(IModel model, DataTable table)
+	public AbstractToolbar(MarkupContainer<?> parent, IModel model, DataTable table)
 	{
-		super(DataTable.TOOLBAR_COMPONENT_ID, model);
+		super(parent,DataTable.TOOLBAR_COMPONENT_ID, model);
 		this.table = table;
 	}
 
@@ -55,9 +56,9 @@ public abstract class AbstractToolbar extends Panel
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(DataTable table)
+	public AbstractToolbar(MarkupContainer<?> parent,DataTable table)
 	{
-		super(DataTable.TOOLBAR_COMPONENT_ID);
+		super(parent,DataTable.TOOLBAR_COMPONENT_ID);
 		this.table = table;
 	}
 

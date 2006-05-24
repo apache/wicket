@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.util.ModelIteratorAdapter;
 import wicket.model.IModel;
@@ -69,9 +70,9 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param id
 	 *            component id
 	 */
-	public RefreshingView(String id)
+	public RefreshingView(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -82,9 +83,9 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param model
 	 *            model
 	 */
-	public RefreshingView(String id, IModel model)
+	public RefreshingView(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -166,7 +167,7 @@ public abstract class RefreshingView extends RepeatingView
 	 */
 	protected Item newItem(final String id, int index, final IModel model)
 	{
-		return new Item(id, index, model);
+		return new Item(this,id, index, model);
 	}
 
 	/**

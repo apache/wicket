@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.MarkupContainer;
+
 /**
  * Models a 'last' button in the wizard. When pressed, it calls
  * {@link IWizardStep#applyState()} on the active wizard step, and then moves to
@@ -37,9 +39,9 @@ public final class LastButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public LastButton(String id, Wizard wizard)
+	public LastButton(MarkupContainer parent,final String id, Wizard wizard)
 	{
-		super(id, wizard, "wicket.extensions.wizard.last");
+		super(parent,id, wizard, "wicket.extensions.wizard.last");
 	}
 
 	/**

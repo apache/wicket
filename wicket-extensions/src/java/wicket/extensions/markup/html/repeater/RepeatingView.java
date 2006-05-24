@@ -21,6 +21,7 @@ package wicket.extensions.markup.html.repeater;
 import java.util.Iterator;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -71,15 +72,15 @@ public class RepeatingView extends WebMarkupContainer
 	private long childIdCounter = 0;
 
 	/** @see Component#Component(String) */
-	public RepeatingView(String id)
+	public RepeatingView(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/** @see Component#Component(String, IModel) */
-	public RepeatingView(String id, IModel model)
+	public RepeatingView(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

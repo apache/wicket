@@ -19,6 +19,7 @@ package wicket.extensions.markup.html.form.palette.component;
 
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.form.palette.Palette;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -49,9 +50,9 @@ public abstract class AbstractOptions extends FormComponent
 	 * @param palette
 	 *            parent palette
 	 */
-	public AbstractOptions(String id, Palette palette)
+	public AbstractOptions(MarkupContainer parent,final String id, Palette palette)
 	{
-		super(id);
+		super(parent,id);
 		this.palette = palette;
 	}
 

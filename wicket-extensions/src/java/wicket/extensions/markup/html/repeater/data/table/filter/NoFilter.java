@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -35,8 +36,8 @@ public class NoFilter extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public NoFilter(String id)
+	public NoFilter(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

@@ -18,6 +18,7 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.Button;
 import wicket.model.ResourceModel;
 
@@ -49,9 +50,9 @@ public abstract class WizardButton extends Button
 	 * @param labelResourceKey
 	 *            The resource key of the button's label
 	 */
-	public WizardButton(String id, IWizard wizard, String labelResourceKey)
+	public WizardButton(MarkupContainer parent,final String id, IWizard wizard, String labelResourceKey)
 	{
-		super(id, new ResourceModel(labelResourceKey));
+		super(parent,id, new ResourceModel(labelResourceKey));
 		this.wizard = wizard;
 	}
 

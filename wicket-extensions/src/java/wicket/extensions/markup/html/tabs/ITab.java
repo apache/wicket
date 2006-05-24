@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.tabs;
 
 import java.io.Serializable;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 
@@ -45,5 +46,5 @@ public interface ITab extends Serializable
 	 *            returned panel MUST have this id
 	 * @return a Panel object that will be placed as the content panel
 	 */
-	Panel getPanel(final String panelId);
+	Panel getPanel(MarkupContainer<?> parent,final String panelId);
 }

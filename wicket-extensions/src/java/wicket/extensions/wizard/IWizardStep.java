@@ -21,6 +21,7 @@ package wicket.extensions.wizard;
 import java.io.Serializable;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 
 /**
  * Models one step in a wizard, and is the equivalent of one panel in a wizard
@@ -61,7 +62,7 @@ public interface IWizardStep extends Serializable
 	 *            The wizard component the header will be placed on
 	 * @return The header component
 	 */
-	Component getHeader(String id, Component parent, IWizard wizard);
+	Component getHeader(MarkupContainer parent,final String id, IWizard wizard);
 
 	/**
 	 * Returns the current view this step is displaying. This component will be
@@ -77,7 +78,7 @@ public interface IWizardStep extends Serializable
 	 *            The wizard component the header will be placed on
 	 * @return The current view of the step.
 	 */
-	Component getView(String id, Component parent, IWizard wizard);
+	Component getView(MarkupContainer parent,final String id, IWizard wizard);
 
 	/**
 	 * Initializes this step with the model it will belong to.

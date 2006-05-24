@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.form.palette.component;
 
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.form.palette.Palette;
 import wicket.markup.ComponentTag;
 import wicket.util.value.ValueMap;
@@ -41,9 +42,9 @@ public class Selection extends AbstractOptions
 	 * @param id component id
 	 * @param palette parent palette
 	 */
-	public Selection(String id, Palette palette)
+	public Selection(MarkupContainer parent,final String id, Palette palette)
 	{
-		super(id, palette);
+		super(parent,id, palette);
 	}
 
 	protected void onComponentTag(ComponentTag tag)

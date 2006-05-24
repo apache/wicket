@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.form.Button;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -50,9 +51,9 @@ public class GoAndClearFilter extends GoFilter
 	 * @param form
 	 *            filter form of the filter toolbar
 	 */
-	public GoAndClearFilter(String id, FilterForm form)
+	public GoAndClearFilter(MarkupContainer parent,final String id, FilterForm form)
 	{
-		this(id, form, defaultGoModel, defaultClearModel);
+		this(parent,id, form, defaultGoModel, defaultClearModel);
 	}
 
 	/**
@@ -67,13 +68,13 @@ public class GoAndClearFilter extends GoFilter
 	 * @param clearModel
 	 *            model for the label of the 'clear' button
 	 */
-	public GoAndClearFilter(String id, FilterForm form, IModel goModel, IModel clearModel)
+	public GoAndClearFilter(MarkupContainer parent,final String id, FilterForm form, IModel goModel, IModel clearModel)
 	{
-		super(id, goModel);
+		super(parent,id, goModel);
 
 		originalState = Objects.cloneModel(form.getModelObject());
 
-		clear = new Button("clear", clearModel)
+		clear = new Button(this,"clear", clearModel)
 		{
 			private static final long serialVersionUID = 1L;
 

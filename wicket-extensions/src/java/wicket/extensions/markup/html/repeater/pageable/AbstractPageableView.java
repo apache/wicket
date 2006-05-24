@@ -21,6 +21,7 @@ package wicket.extensions.markup.html.repeater.pageable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.model.IModel;
@@ -35,7 +36,7 @@ import wicket.version.undo.Change;
  * iterator that returns models for items in the current page. The
  * AbstractPageableView builds the items that will be rendered by looping over
  * the models and calling the
- * <code>newItem(String id, int index, IModel model)</code> to generate the
+ * <code>newItem(MarkupContainer parent,final String id, int index, IModel model)</code> to generate the
  * child item container followed by <code>populateItem(Component item)</code>
  * to let the user populate the newly created item container with with custom
  * components.
@@ -71,17 +72,17 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 
 	/** @see wicket.Component#Component(String, IModel) */
-	public AbstractPageableView(String id, IModel model)
+	public AbstractPageableView(MarkupContainer parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		clearCachedItemCount();
 	}
 
 
 	/** @see wicket.Component#Component(String) */
-	public AbstractPageableView(String id)
+	public AbstractPageableView(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 		clearCachedItemCount();
 	}
 
