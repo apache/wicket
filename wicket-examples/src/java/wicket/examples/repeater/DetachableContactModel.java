@@ -28,7 +28,7 @@ import wicket.model.IModel;
  * @author igor
  * 
  */
-public class DetachableContactModel extends AbstractReadOnlyDetachableModel
+public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Contact>
 {
 	private long id;
 	private transient Contact contact;
@@ -80,7 +80,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel
 		contact = null;
 	}
 
-	protected Object onGetObject(Component component)
+	protected Contact onGetObject(Component component)
 	{
 		return contact;
 	}

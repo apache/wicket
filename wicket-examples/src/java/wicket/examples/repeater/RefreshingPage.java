@@ -50,7 +50,7 @@ public class RefreshingPage extends BasePage
 		Iterator it = dp.iterator(0, 10);
 		while (it.hasNext())
 		{
-			contacts.add(dp.model(it.next()));
+			contacts.add(dp.model((Contact)it.next()));
 		}
 
 		// create the refreshing view

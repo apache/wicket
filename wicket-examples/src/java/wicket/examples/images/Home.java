@@ -26,6 +26,7 @@ import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.image.Image;
+import wicket.markup.html.image.NonCachingImage;
 import wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.image.resource.RenderedDynamicImageResource;
@@ -70,7 +71,7 @@ public final class Home extends WicketExamplePage
 		add(new Image("okButton", getOkButtonImage()));
 
 		// Add cancel button image
-		add(new Image("cancelButton", new ResourceReference("cancelButton")));
+		add(new NonCachingImage("cancelButton", new ResourceReference("cancelButton")));
 	}
 
 	final ResourceReference getOkButtonImage()

@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * @author igor
  * 
  */
-public class ContactDataProvider implements IDataProvider
+public class ContactDataProvider implements IDataProvider<Contact>
 {
 	protected ContactsDatabase getContactsDB()
 	{
@@ -66,9 +66,18 @@ public class ContactDataProvider implements IDataProvider
 	 * 
 	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
-	public IModel model(Object object)
+	public IModel<Contact> model(Contact object)
 	{
-		return new DetachableContactModel((Contact)object);
+		return new DetachableContactModel(object);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+		
 	}
 
 }
