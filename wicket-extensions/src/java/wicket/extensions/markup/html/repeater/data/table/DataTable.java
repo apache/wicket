@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -41,7 +41,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *           &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *                    &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -84,6 +84,29 @@ public class DataTable extends Panel implements IPageable
 	private final RepeatingView bottomToolbars;
 
 	/**
+	 * Factory used to create toolbars
+	 * 
+	 * @author ivaynberg
+	 * 
+	 */
+	public static interface IToolbarFactory
+	{
+		/**
+		 * Used to create a new toolbar
+		 * 
+		 * @param parent
+		 *            parent component for the toolbar
+		 * @param id
+		 *            component id for the toolbar
+		 * @param dataTable
+		 *            datatable instance that this toolbar belongs to
+		 * @return created toolbar
+		 */
+		AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable);
+	}
+
+
+	/**
 	 * Constructor
 	 * 
 	 * @param id
@@ -95,13 +118,14 @@ public class DataTable extends Panel implements IPageable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(MarkupContainer parent,final String id, IColumn[] columns, IDataProvider dataProvider, int rowsPerPage)
+	public DataTable(MarkupContainer parent, final String id, IColumn[] columns,
+			IDataProvider dataProvider, int rowsPerPage)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		this.columns = columns;
 
-		datagrid = new DataGridView(this,"rows", columns, dataProvider)
+		datagrid = new DataGridView(this, "rows", columns, dataProvider)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -118,7 +142,7 @@ public class DataTable extends Panel implements IPageable
 		datagrid.setRowsPerPage(rowsPerPage);
 		add(datagrid);
 
-		topToolbars = new RepeatingView(this,"topToolbars")
+		topToolbars = new RepeatingView(this, "topToolbars")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -129,7 +153,7 @@ public class DataTable extends Panel implements IPageable
 
 		};
 
-		bottomToolbars = new RepeatingView(this,"bottomToolbars")
+		bottomToolbars = new RepeatingView(this, "bottomToolbars")
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -155,31 +179,44 @@ public class DataTable extends Panel implements IPageable
 	/**
 	 * Adds a toolbar to the datatable that will be displayed before the data
 	 * 
-	 * @param toolbar
-	 *            toolbar to be added
+	 * @param toolbarFactory
+	 *            toolbar factory used to create the desired toolbar
 	 * 
 	 * @see AbstractToolbar
 	 */
-	public void addTopToolbar(AbstractToolbar toolbar)
+	public void addTopToolbar(IToolbarFactory toolbarFactory)
 	{
-		addToolbar(toolbar, topToolbars);
+		addToolbar(toolbarFactory, topToolbars);
 	}
 
 	/**
 	 * Adds a toolbar to the datatable that will be displayed after the data
 	 * 
-	 * @param toolbar
-	 *            toolbar to be added
+	 * @param toolbarFactory
+	 *            toolbar factory used to create the desired toolbar
 	 * 
 	 * @see AbstractToolbar
 	 */
-	public void addBottomToolbar(AbstractToolbar toolbar)
+	public void addBottomToolbar(IToolbarFactory toolbarFactory)
 	{
-		addToolbar(toolbar, bottomToolbars);
+		addToolbar(toolbarFactory, bottomToolbars);
 	}
 
-	private void addToolbar(AbstractToolbar toolbar, RepeatingView container)
+	private void addToolbar(IToolbarFactory toolbarFactory, RepeatingView container)
 	{
+		if (toolbarFactory == null)
+		{
+			throw new IllegalArgumentException("argument [toolbarFactory] cannot be null");
+		}
+
+		// create a container item for the toolbar (required by repeating view)
+		WebMarkupContainer item = new WebMarkupContainer(container, container.newChildId());
+		container.add(item);
+		item.setRenderBodyOnly(true);
+
+		AbstractToolbar toolbar = toolbarFactory.newToolbar(item, TOOLBAR_COMPONENT_ID, this);
+		item.add(toolbar);
+
 		if (toolbar == null)
 		{
 			throw new IllegalArgumentException("argument [toolbar] cannot be null");
@@ -191,12 +228,7 @@ public class DataTable extends Panel implements IPageable
 					"Toolbar must have component id equal to AbstractDataTable.TOOLBAR_COMPONENT_ID");
 		}
 
-		// create a container item for the toolbar (required by repeating view)
-		WebMarkupContainer item = new WebMarkupContainer(container,container.newChildId());
-		item.setRenderBodyOnly(true);
-		item.add(toolbar);
 
-		container.add(item);
 	}
 
 	/**
@@ -256,7 +288,7 @@ public class DataTable extends Panel implements IPageable
 	 */
 	protected Item newRowItem(final String id, int index, final IModel model)
 	{
-		return new Item(this,id, index, model);
+		return new Item(this, id, index, model);
 	}
 
 	/**
@@ -276,7 +308,7 @@ public class DataTable extends Panel implements IPageable
 	 */
 	protected Item newCellItem(final String id, int index, final IModel model)
 	{
-		return new Item(this,id, index, model);
+		return new Item(this, id, index, model);
 	}
 
 	/**

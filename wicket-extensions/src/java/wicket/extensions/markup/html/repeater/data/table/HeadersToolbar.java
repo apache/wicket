@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id: HeadersToolbar.java 5840 2006-05-24 13:49:09 -0700 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -21,6 +21,7 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
+import wicket.extensions.markup.html.repeater.data.table.DataTable.IToolbarFactory;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
@@ -36,8 +37,14 @@ public class HeadersToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
+
 	/**
 	 * Constructor
+	 * 
+	 * @param parent
+	 *            parent component
+	 * @param id
+	 *            component id
 	 * 
 	 * @param table
 	 *            data table this toolbar will be attached to
@@ -45,27 +52,29 @@ public class HeadersToolbar extends AbstractToolbar
 	 *            locator for the ISortState implementation used by sortable
 	 *            headers
 	 */
-	public HeadersToolbar(MarkupContainer<?> parent,final DataTable table, final ISortStateLocator stateLocator)
+	public HeadersToolbar(MarkupContainer parent, final String id, final DataTable table,
+			final ISortStateLocator stateLocator)
 	{
-		super(parent,table);
+		super(parent, id, table);
 
-		RepeatingView headers = new RepeatingView(this,"headers");
+		RepeatingView headers = new RepeatingView(this, "headers");
 		add(headers);
 		IColumn[] cols = table.getColumns();
 
 		for (int i = 0; i < cols.length; i++)
 		{
-			// TODO Post 1.2: General: Is this extra component really necessary? can we
+			// TODO Post 1.2: General: Is this extra component really necessary?
+			// can we
 			// not simply use the repeater's body without the need for the id in
 			// the markup?
-			WebMarkupContainer item = new WebMarkupContainer(headers,headers.newChildId());
+			WebMarkupContainer item = new WebMarkupContainer(headers, headers.newChildId());
 			headers.add(item);
 
 			IColumn column = cols[i];
 			WebMarkupContainer header = null;
 			if (column.isSortable())
 			{
-				header = new OrderByBorder(item,"header", column.getSortProperty(), stateLocator)
+				header = new OrderByBorder(item, "header", column.getSortProperty(), stateLocator)
 				{
 
 					private static final long serialVersionUID = 1L;
@@ -79,13 +88,14 @@ public class HeadersToolbar extends AbstractToolbar
 			}
 			else
 			{
-				header = new WebMarkupContainer(item,"header");
+				header = new WebMarkupContainer(item, "header");
 			}
 			item.add(header);
 			item.setRenderBodyOnly(true);
-			header.add(column.getHeader(header,"label"));
+			header.add(column.getHeader(header, "label"));
 		}
 
 	}
+
 
 }

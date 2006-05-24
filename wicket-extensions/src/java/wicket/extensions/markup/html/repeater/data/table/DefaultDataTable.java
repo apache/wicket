@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DefaultDataTable.java 5840 2006-05-24 13:49:09 -0700 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 13:49:09 -0700 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -57,10 +58,11 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(MarkupContainer parent,final String id, final List/* <IColumn> */columns,
-			SortableDataProvider dataProvider, int rowsPerPage)
+	public DefaultDataTable(MarkupContainer parent, final String id,
+			final List/* <IColumn> */columns, SortableDataProvider dataProvider, int rowsPerPage)
 	{
-		this(parent,id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider, rowsPerPage);
+		this(parent, id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider,
+				rowsPerPage);
 	}
 
 	/**
@@ -75,19 +77,55 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(MarkupContainer parent,final String id, final IColumn[] columns, SortableDataProvider dataProvider,
-			int rowsPerPage)
+	public DefaultDataTable(MarkupContainer parent, final String id, final IColumn[] columns,
+			final SortableDataProvider dataProvider, int rowsPerPage)
 	{
-		super(parent,id, columns, dataProvider, rowsPerPage);
+		super(parent, id, columns, dataProvider, rowsPerPage);
 
-		addTopToolbar(new NavigationToolbar(this));
-		addTopToolbar(new HeadersToolbar(this, dataProvider));
-		addBottomToolbar(new NoRecordsToolbar(this));
+		addTopToolbar(new IToolbarFactory()
+		{
+
+			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
+			{
+				return new NavigationToolbar(parent, id, dataTable);
+			}
+
+		});
+
+		addTopToolbar(new IToolbarFactory()
+		{
+
+			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
+			{
+				return new NavigationToolbar(parent, id, dataTable);
+			}
+
+		});
+
+		addTopToolbar(new IToolbarFactory()
+		{
+
+			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
+			{
+				return new HeadersToolbar(parent, id, dataTable, dataProvider);
+			}
+
+		});
+
+		addBottomToolbar(new IToolbarFactory()
+		{
+
+			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
+			{
+				return new NoRecordsToolbar(parent, id, dataTable);
+			}
+
+		});
 	}
 
 	protected Item newRowItem(final String id, int index, IModel model)
 	{
-		return new OddEvenItem(this,id, index, model);
+		return new OddEvenItem(this, id, index, model);
 	}
 
 }
