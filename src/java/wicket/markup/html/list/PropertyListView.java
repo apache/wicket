@@ -19,6 +19,7 @@ package wicket.markup.html.list;
 
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.model.BoundCompoundPropertyModel;
 import wicket.model.IModel;
 
@@ -29,7 +30,7 @@ import wicket.model.IModel;
  * 
  * @author Nathan Hamblen
  */
-public abstract class PropertyListView extends ListView
+public abstract class PropertyListView<V> extends ListView<V>
 {
 	/**
 	 * Construct without model, assume bound externally.
@@ -37,9 +38,9 @@ public abstract class PropertyListView extends ListView
 	 * @param id
 	 *            Wicket id
 	 */
-	public PropertyListView(final String id)
+	public PropertyListView(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -50,9 +51,9 @@ public abstract class PropertyListView extends ListView
 	 * @param model
 	 *            wrapping a List
 	 */
-	public PropertyListView(final String id, final IModel model)
+	public PropertyListView(MarkupContainer<?> parent,final String id, final IModel<List<V>> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -65,9 +66,9 @@ public abstract class PropertyListView extends ListView
 	 * @param list
 	 *            unmodeled List
 	 */
-	public PropertyListView(final String id, final List list)
+	public PropertyListView(MarkupContainer<?> parent,final String id, final List<V> list)
 	{
-		super(id, list);
+		super(parent,id, list);
 	}
 
 	/**

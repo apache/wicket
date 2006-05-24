@@ -47,7 +47,7 @@ public class RestartResponseException extends AbstractRestartResponseException
 	 * @param params
 	 *            bookmarkable page parameters
 	 */
-	public RestartResponseException(Class<? extends Page> pageClass, PageParameters<String,Object> params)
+	public RestartResponseException(Class<? extends Page> pageClass, PageParameters params)
 	{
 		RequestCycle.get().setResponsePage(pageClass, params);
 	}

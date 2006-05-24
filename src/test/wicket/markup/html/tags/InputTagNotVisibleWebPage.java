@@ -35,8 +35,8 @@ public class InputTagNotVisibleWebPage extends WebPage
 	 */
 	public InputTagNotVisibleWebPage()
 	{
-		Form form = new Form("form");
-		form.add(new TextField("input").setVisible(false));
+		Form form = new Form(this,"form");
+		form.add(new TextField(form,"input").setVisible(false));
 		add(form);
 	}
 }

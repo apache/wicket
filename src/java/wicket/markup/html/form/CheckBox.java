@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -50,17 +51,17 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public CheckBox(final String id)
+	public CheckBox(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public CheckBox(final String id, IModel model)
+	public CheckBox(MarkupContainer parent, final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

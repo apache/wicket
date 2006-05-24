@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.link;
 
+import wicket.MarkupContainer;
 import wicket.Page;
 
 /**
@@ -47,9 +48,9 @@ public class PageLink extends Link
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(final String id, final Class c)
+	public PageLink(MarkupContainer<?> parent,final String id, final Class c)
 	{
-		super(id);
+		super(parent,id);
 
 		// Ensure that c is a subclass of Page
 		if (!Page.class.isAssignableFrom(c))
@@ -81,9 +82,9 @@ public class PageLink extends Link
 	 * @param id  See component
 	 * @param page The page
 	 */
-	public PageLink(final String id, final Page page)
+	public PageLink(MarkupContainer<?> parent,final String id, final Page page)
 	{
-	    super(id);
+	    super(parent,id);
 
 		this.pageLink = new IPageLink()
 		{
@@ -116,9 +117,9 @@ public class PageLink extends Link
 	 *            linked to if and when this hyperlink is clicked at a later
 	 *            time.
 	 */
-	public PageLink(final String id, final IPageLink pageLink)
+	public PageLink(MarkupContainer<?> parent,final String id, final IPageLink pageLink)
 	{
-		super(id);
+		super(parent,id);
 		this.pageLink = pageLink;
 	}
 

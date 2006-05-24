@@ -29,6 +29,7 @@ import javax.swing.tree.TreePath;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.behavior.HeaderContributor;
@@ -82,14 +83,14 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @param node
 		 *            The tree node for this panel
 		 */
-		public DefaultNodePanel(String panelId, Tree tree, DefaultMutableTreeNode node)
+		public DefaultNodePanel(MarkupContainer<?> parent, String panelId, Tree tree, DefaultMutableTreeNode node)
 		{
-			super(panelId);
+			super(parent,panelId);
 			// create a link for expanding and collapsing the node
-			Link expandCollapsLink = tree.createJunctionLink(node);
+			Link expandCollapsLink = tree.createJunctionLink(this,node);
 			add(expandCollapsLink);
 			// create a link for selecting a node
-			Link selectLink = tree.createNodeLink(node);
+			Link selectLink = tree.createNodeLink(this,node);
 			add(selectLink);
 		}
 	}
@@ -109,9 +110,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @param size
 		 *            size of loop
 		 */
-		public SpacerList(String id, int size)
+		public SpacerList(MarkupContainer parent,String id, int size)
 		{
-			super(id, size);
+			super(parent,id, size);
 		}
 
 		/**
@@ -137,9 +138,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @param name
 		 *            name of the component
 		 */
-		public TreePathsListView(String name)
+		public TreePathsListView(MarkupContainer<?> parent,String name)
 		{
-			super(name, treePathsModel);
+			super(parent,name, treePathsModel);
 		}
 
 		/**
@@ -161,7 +162,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 			// create a list item that is smart enough to determine whether
 			// it should be displayed or not
-			return new ListItem(index, listItemModel)
+			return new ListItem(this,index, listItemModel)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -190,10 +191,10 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 			// add spacers
 			int level = node.getLevel();
-			listItem.add(new SpacerList("spacers", level));
+			listItem.add(new SpacerList(listItem,"spacers", level));
 
 			// add node panel
-			Component nodePanel = newNodePanel("node", node);
+			Component nodePanel = newNodePanel(listItem,"node", node);
 			if (nodePanel == null)
 			{
 				throw new WicketRuntimeException("node panel must be not-null");
@@ -361,11 +362,11 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * @param model
 	 *            the underlying tree model
 	 */
-	public Tree(final String id, final TreeModel model)
+	public Tree(MarkupContainer parent, final String id, final TreeModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		this.treePathsModel = new TreePathsModel();
-		add(treePathsListView = createTreePathsListView());
+		add(treePathsListView = createTreePathsListView(this));
 
 		PackageResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
@@ -380,11 +381,11 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * @param treeState
 	 *            treeState that holds the underlying tree model
 	 */
-	public Tree(String id, TreeState treeState)
+	public Tree(MarkupContainer parent,String id, TreeState treeState)
 	{
-		super(id, treeState);
+		super(parent,id, treeState);
 		this.treePathsModel = new TreePathsModel();
-		add(treePathsListView = createTreePathsListView());
+		add(treePathsListView = createTreePathsListView(this));
 
 		PackageResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
@@ -475,7 +476,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super.setTreeModel(treeModel);
 		this.treePathsModel = new TreePathsModel();
-		treePathsListView = createTreePathsListView();
+		treePathsListView = createTreePathsListView(this);
 		replace(treePathsListView);
 	}
 
@@ -490,7 +491,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super.setTreeState(treeState);
 		this.treePathsModel = new TreePathsModel();
-		treePathsListView = createTreePathsListView();
+		treePathsListView = createTreePathsListView(this);
 		replace(treePathsListView);
 	}
 
@@ -569,9 +570,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the node
 	 * @return link for expanding/ collapsing the tree
 	 */
-	protected Link createJunctionLink(final DefaultMutableTreeNode node)
+	protected Link createJunctionLink(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
 	{
-		final Link junctionLink = new Link("junctionLink")
+		final Link junctionLink = new Link(parent,"junctionLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -581,7 +582,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 				junctionLinkClicked(node);
 			}
 		};
-		junctionLink.add(getJunctionImage(node));
+		junctionLink.add(getJunctionImage(junctionLink,node));
 		return junctionLink;
 	}
 
@@ -592,9 +593,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the model of the node
 	 * @return link for selection
 	 */
-	protected Link createNodeLink(final DefaultMutableTreeNode node)
+	protected Link createNodeLink(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
 	{
-		final Link nodeLink = new Link("nodeLink")
+		final Link nodeLink = new Link(parent,"nodeLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -604,8 +605,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 				nodeLinkClicked(node);
 			}
 		};
-		nodeLink.add(getNodeImage(node));
-		nodeLink.add(new Label("label", getNodeLabel(node)));
+		nodeLink.add(getNodeImage(nodeLink,node));
+		nodeLink.add(new Label(nodeLink,"label", getNodeLabel(node)));
 		return nodeLink;
 	}
 
@@ -614,9 +615,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * 
 	 * @return the tree paths list view
 	 */
-	protected final TreePathsListView createTreePathsListView()
+	protected final TreePathsListView createTreePathsListView(MarkupContainer<?> parent)
 	{
-		final TreePathsListView treePaths = new TreePathsListView("tree");
+		final TreePathsListView treePaths = new TreePathsListView(parent,"tree");
 		return treePaths;
 	}
 
@@ -657,13 +658,13 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the tree node
 	 * @return the image for the junction
 	 */
-	protected Image getJunctionImage(final DefaultMutableTreeNode node)
+	protected Image getJunctionImage(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
 	{
 		if (!node.isLeaf())
 		{
 			// we want the image to be dynamically, yet resolving to a static
 			// image.
-			return new Image(JUNCTION_IMAGE_NAME)
+			return new Image(parent,JUNCTION_IMAGE_NAME)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -683,7 +684,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		}
 		else
 		{
-			return new Image(JUNCTION_IMAGE_NAME, BLANK);
+			return new Image(parent,JUNCTION_IMAGE_NAME, BLANK);
 		}
 	}
 
@@ -696,9 +697,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the tree node
 	 * @return the image for the node
 	 */
-	protected Image getNodeImage(final DefaultMutableTreeNode node)
+	protected Image getNodeImage(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
 	{
-		return new Image(NODE_IMAGE_NAME, BLANK);
+		return new Image(parent,NODE_IMAGE_NAME, BLANK);
 	}
 
 	/**
@@ -768,9 +769,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the tree node for the panel
 	 * @return a new Panel
 	 */
-	protected Component newNodePanel(String panelId, DefaultMutableTreeNode node)
+	protected Component newNodePanel(MarkupContainer<?> parent,String panelId, DefaultMutableTreeNode node)
 	{
-		return new DefaultNodePanel(panelId, this, node);
+		return new DefaultNodePanel(parent,panelId, this, node);
 	}
 
 	/**

@@ -61,7 +61,7 @@ public class WicketLinkResolver implements IComponentResolver
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
 				final String id = "_link_" + container.getPage().getAutoIndex();
-				final Component component = new WebMarkupContainer(id)
+				final Component component = new WebMarkupContainer(container,id)
 					{
 						private static final long serialVersionUID = 1L;
 

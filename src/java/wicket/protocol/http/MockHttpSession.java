@@ -37,7 +37,7 @@ public class MockHttpSession implements HttpSession, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private final ValueMap<String, Object> attributes = new ValueMap<String, Object>();
+	private final ValueMap attributes = new ValueMap();
 
     private final ServletContext context;
 

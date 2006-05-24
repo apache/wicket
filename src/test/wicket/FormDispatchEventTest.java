@@ -18,8 +18,6 @@ package wicket;
 
 import java.util.ArrayList;
 
-import wicket.IRedirectListener;
-import wicket.RequestCycle;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IOnChangeListener;
@@ -35,9 +33,9 @@ public class FormDispatchEventTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		private MyForm(String id)
+		private MyForm(MarkupContainer<?> parent,String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 
 		protected void onSubmit()
@@ -73,9 +71,10 @@ public class FormDispatchEventTest extends WicketTestCase
 	 */
 	public void testDropDownEvent() throws Exception
 	{
-		MyForm form = new MyForm("form");
+		MockPage page = new MockPage();
+		MyForm form = new MyForm(page,"form");
 
-		DropDownChoice dropDown = new DropDownChoice("dropdown",new Model(), new ArrayList())
+		DropDownChoice dropDown = new DropDownChoice(form,"dropdown",new Model(), new ArrayList())
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -96,7 +95,6 @@ public class FormDispatchEventTest extends WicketTestCase
 
 		form.add(dropDown);
 
-		MockPage page = new MockPage();
 		page.add(form);
 
 		application.setupRequestAndResponse();

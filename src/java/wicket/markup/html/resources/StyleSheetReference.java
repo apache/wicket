@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.resources;
 
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -39,9 +40,9 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * root for gettting the resource
 	 * @param file reference as a string
 	 */
-	public StyleSheetReference(String id, Class referer, String file)
+	public StyleSheetReference(MarkupContainer<?> parent,String id, Class referer, String file)
 	{
-		super(id, referer, file, "href");
+		super(parent,id, referer, file, "href");
 	}
 
 	/**
@@ -52,9 +53,9 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * @param file reference. The model must provide an instance
 	 * 		of {@link String}
 	 */
-	public StyleSheetReference(String id, Class referer, IModel<String> file)
+	public StyleSheetReference(MarkupContainer parent,String id, Class referer, IModel<String> file)
 	{
-		super(id, referer, file, "href");
+		super(parent,id, referer, file, "href");
 	}
 
 	/**
@@ -62,9 +63,9 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * @param id component id
 	 * @param resourceReference resource reference
 	 */
-	public StyleSheetReference(String id, ResourceReference resourceReference)
+	public StyleSheetReference(MarkupContainer parent,String id, ResourceReference resourceReference)
 	{
-		super(id, resourceReference, "href");
+		super(parent,id, resourceReference, "href");
 	}
 
 	/**
@@ -73,9 +74,9 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * @param resourceReference resource reference.  The model must provide an instance
 	 * 		of {@link ResourceReference}
 	 */
-	public StyleSheetReference(String id, IModel<ResourceReference> resourceReference)
+	public StyleSheetReference(MarkupContainer parent,String id, IModel<ResourceReference> resourceReference)
 	{
-		super(id, resourceReference, "href");
+		super(parent,id, resourceReference, "href");
 	}
 
 	/**
@@ -86,7 +87,7 @@ public final class StyleSheetReference extends PackagedResourceReference
 	{
 		// Must be attached to a style tag
 		checkComponentTag(tag, "link");
-		ValueMap<String,CharSequence> attributes = tag.getAttributes();
+		ValueMap attributes = tag.getAttributes();
 		attributes.put("rel", "stylesheet");
 		attributes.put("type", "text/css");
 	}

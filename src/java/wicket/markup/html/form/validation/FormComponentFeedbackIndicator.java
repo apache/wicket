@@ -18,6 +18,7 @@
 package wicket.markup.html.form.validation;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.feedback.ComponentFeedbackMessageFilter;
 import wicket.feedback.IFeedback;
 import wicket.feedback.IFeedbackMessageFilter;
@@ -47,17 +48,17 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	 * @param id
 	 *            See Component
 	 */
-	public FormComponentFeedbackIndicator(final String id)
+	public FormComponentFeedbackIndicator(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FormComponentFeedbackIndicator(final String id, IModel model)
+	public FormComponentFeedbackIndicator(MarkupContainer<?> parent,final String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

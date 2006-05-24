@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
 import wicket.util.string.Strings;
@@ -34,18 +35,18 @@ public abstract class AbstractTextComponent<V> extends FormComponent<V>
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractTextComponent(String id)
+	public AbstractTextComponent(MarkupContainer parent,String id)
 	{
-		super(id);
+		super(parent,id);
 		setConvertEmptyInputStringToNull(true);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	AbstractTextComponent(final String id, final IModel model)
+	AbstractTextComponent(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 		setConvertEmptyInputStringToNull(true);
 	}
 

@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
@@ -71,17 +72,17 @@ public class Panel<V> extends WebMarkupContainerWithAssociatedMarkup<V>
 	/**
      * @see wicket.Component#Component(String)
      */
-    public Panel(final String id)
+    public Panel(MarkupContainer<?> parent,final String id)
     {
-        super(id);
+        super(parent,id);
     }
     
     /**
      * @see wicket.Component#Component(String, IModel)
      */
-    public Panel(final String id, final IModel<V> model)
+    public Panel(MarkupContainer<?> parent,final String id, final IModel<V> model)
     {
-        super(id, model);
+        super(parent,id, model);
     }    
 
     /**

@@ -18,6 +18,7 @@
 package wicket.markup.html.form;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -35,7 +36,7 @@ import wicket.util.lang.Objects;
  * @author Sven Meier (svenmeier)
  * 
  */
-public class Radio extends WebMarkupContainer
+public class Radio<V> extends WebMarkupContainer<V>
 {
 	private static final String ATTR_DISABLED = "disabled";
 	/**
@@ -47,17 +48,17 @@ public class Radio extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public Radio(String id)
+	public Radio(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Radio(String id, IModel model)
+	public Radio(MarkupContainer<?> parent,String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 

@@ -20,6 +20,7 @@ package wicket.markup.html.resources;
 import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
@@ -48,10 +49,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final Class referer, final String file,
+	public PackagedResourceReference(MarkupContainer parent, final String id, final Class referer, final String file,
 			final String attributeToReplace)
 	{
-		this(id, referer, new Model<String>(file), attributeToReplace);
+		this(parent,id, referer, new Model<String>(file), attributeToReplace);
 	}
 
 	/**
@@ -68,10 +69,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final Class referer, final IModel<String> file,
+	public PackagedResourceReference(MarkupContainer parent, final String id, final Class referer, final IModel<String> file,
 			final String attributeToReplace)
 	{
-		super(id);
+		super(parent,id);
 
 		if (referer == null)
 		{
@@ -119,10 +120,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final ResourceReference resourceReference,
+	public PackagedResourceReference(MarkupContainer parent, final String id, final ResourceReference resourceReference,
 			final String attributeToReplace)
 	{
-		this(id, new Model<ResourceReference>(resourceReference), attributeToReplace);
+		this(parent,id, new Model<ResourceReference>(resourceReference), attributeToReplace);
 	}
 
 	/**
@@ -136,10 +137,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(final String id, final IModel<ResourceReference> resourceReference,
+	public PackagedResourceReference(MarkupContainer parent, final String id, final IModel<ResourceReference> resourceReference,
 			final String attributeToReplace)
 	{
-		super(id);
+		super(parent,id);
 
 		if (resourceReference == null)
 		{

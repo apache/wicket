@@ -21,6 +21,7 @@ package wicket.markup.html.list;
 import java.util.ArrayList;
 
 import junit.framework.TestCase;
+import wicket.EmptyPage;
 import wicket.model.Model;
 import wicket.protocol.http.MockWebApplication;
 
@@ -56,7 +57,7 @@ public class ListViewTest extends TestCase
 			modelList.add(new Integer(i));
 		}
 
-		return new ListView("listView", new Model(modelList))
+		return new ListView(new EmptyPage(),"listView", new Model(modelList))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -116,7 +117,7 @@ public class ListViewTest extends TestCase
 		// null tables are a special case used for table navigation
 		// bar, where there is no underlying model necessary, as
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
-		lv = new ListView("listView", new Model(null))
+		lv = new ListView(new EmptyPage(),"listView", new Model(null))
 		{
 			private static final long serialVersionUID = 1L;
 			

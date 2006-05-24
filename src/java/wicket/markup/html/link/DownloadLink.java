@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import wicket.IRequestTarget;
+import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.protocol.http.WebResponse;
 import wicket.util.io.Streams;
@@ -63,9 +64,9 @@ public class DownloadLink extends Link
 	 * @param file
 	 *            file to stream to client
 	 */
-	public DownloadLink(String id, File file)
+	public DownloadLink(MarkupContainer<?> parent,String id, File file)
 	{
-		super(id);
+		super(parent,id);
 		if (file == null)
 		{
 			throw new IllegalArgumentException("file cannot be null");
@@ -84,9 +85,9 @@ public class DownloadLink extends Link
 	 * @param fileName
 	 *            name of the file
 	 */
-	public DownloadLink(String id, File file, String fileName)
+	public DownloadLink(MarkupContainer<?> parent,String id, File file, String fileName)
 	{
-		super(id);
+		super(parent,id);
 		if (file == null)
 		{
 			throw new IllegalArgumentException("file cannot be null");

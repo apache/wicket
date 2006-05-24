@@ -37,6 +37,6 @@ public class WicketNamespace_4 extends WebPage
 	 */
 	public WicketNamespace_4() 
 	{
-	    add(new Label("label", "my label test"));
+	    add(new Label(this,"label", "my label test"));
     }
 }

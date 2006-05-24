@@ -38,7 +38,7 @@ public class TestPage_1 extends WebPage
 	 */
 	public TestPage_1()
 	{
-		add(new WebComponent("comp")
+		add(new WebComponent(this,"comp")
 		{
 			private static final long serialVersionUID = 1L;
 	

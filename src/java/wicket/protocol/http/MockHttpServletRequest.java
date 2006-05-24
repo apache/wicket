@@ -76,7 +76,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	/** The application */
 	private final Application application;
 
-	private final ValueMap<String, Object> attributes = new ValueMap<String, Object>();
+	private final ValueMap attributes = new ValueMap();
 
 	private String authType;
 
@@ -86,11 +86,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final List<Cookie> cookies = new ArrayList<Cookie>();
 
-	private final ValueMap<String,List<String>> headers = new ValueMap<String,List<String>>();
+	private final Map<String,List<String>> headers = new HashMap<String,List<String>>();
 
 	private String method;
 
-	private final ValueMap<String, Object> parameters = new ValueMap<String, Object>();
+	private final ValueMap parameters = new ValueMap();
 
 	private String path;
 

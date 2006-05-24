@@ -51,9 +51,9 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * 
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractOutputTransformerContainer(final String id)
+	public AbstractOutputTransformerContainer(MarkupContainer<?> parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -61,9 +61,9 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractOutputTransformerContainer(final String id, final IModel model)
+	public AbstractOutputTransformerContainer(MarkupContainer<?> parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

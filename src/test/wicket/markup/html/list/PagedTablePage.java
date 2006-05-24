@@ -44,19 +44,19 @@ public class PagedTablePage extends WebPage
 		list.add("one");
 		list.add("two");
 		list.add("three");
-		PageableListView table = new PageableListView("table", list, 2)
+		PageableListView table = new PageableListView(this,"table", list, 2)
 		{
 			private static final long serialVersionUID = 1L;
 			
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label("txt", txt));
+				listItem.add(new Label(listItem,"txt", txt));
 			}
 		};
 
 		add(table);
- 		PagingNavigation navigation = new PagingNavigation("navigation", table);
+ 		PagingNavigation navigation = new PagingNavigation(this,"navigation", table);
 		add(navigation);
 	}
 }

@@ -42,17 +42,17 @@ public class WebMarkupContainerWithAssociatedMarkup<V> extends WebMarkupContaine
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(final String id)
+	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(final String id, IModel<V> model)
+	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer<?> parent,final String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -86,9 +86,9 @@ public class WebMarkupContainerWithAssociatedMarkup<V> extends WebMarkupContaine
 	 * @param scope The default scope of the header
 	 * @return The new HeaderPartContainer
 	 */
-	public HeaderPartContainer newHeaderPartContainer(final String id, final String scope)
+	public HeaderPartContainer newHeaderPartContainer(MarkupContainer parent, final String id, final String scope)
 	{
-		return new HeaderPartContainer(id, this, scope);
+		return new HeaderPartContainer(parent,id, this, scope);
 	}
 
 	/**
@@ -116,10 +116,10 @@ public class WebMarkupContainerWithAssociatedMarkup<V> extends WebMarkupContaine
 		 * @param scope
 		 *            The scope of the wicket:head tag
 		 */
-		public HeaderPartContainer(final String id, final MarkupContainer container,
+		public HeaderPartContainer(MarkupContainer<?> parent,final String id, final MarkupContainer container,
 				final String scope)
 		{
-			super(id);
+			super(parent,id);
 			this.container = container;
 			this.scope = scope;
 		}

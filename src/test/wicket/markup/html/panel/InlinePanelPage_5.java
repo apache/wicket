@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebPage;
 
@@ -35,8 +36,8 @@ public class InlinePanelPage_5 extends WebPage
 	 */
 	public InlinePanelPage_5()
 	{
-		add(new FragmentWithAssociatedMarkupStream("myPanel1", "frag1"));
-		add(new FragmentWithAssociatedMarkupStream("myPanel2", "frag2"));
+		add(new FragmentWithAssociatedMarkupStream(this,"myPanel1", "frag1"));
+		add(new FragmentWithAssociatedMarkupStream(this,"myPanel2", "frag2"));
 	}
 
 	/**
@@ -53,9 +54,9 @@ public class InlinePanelPage_5 extends WebPage
 		 * @param id
 		 * @param markupId
 		 */
-		public FragmentWithAssociatedMarkupStream(final String id, final String markupId)
+		public FragmentWithAssociatedMarkupStream(MarkupContainer<?> parent, final String id, final String markupId)
 		{
-			super(id, markupId);
+			super(parent,id, markupId);
 		}
 
 		protected MarkupStream chooseMarkupStream(MarkupStream markupStream)

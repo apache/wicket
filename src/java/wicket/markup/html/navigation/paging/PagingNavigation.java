@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.Loop;
 import wicket.version.undo.Change;
@@ -187,9 +188,9 @@ public class PagingNavigation extends Loop
 	 * @param pageable
 	 *            The underlying pageable component to navigate
 	 */
-	public PagingNavigation(final String id, final IPageable pageable)
+	public PagingNavigation(MarkupContainer<?> parent,final String id, final IPageable pageable)
 	{
-		this(id, pageable, null);
+		this(parent,id, pageable, null);
 	}
 
 	/**
@@ -203,10 +204,10 @@ public class PagingNavigation extends Loop
 	 *            The label provider for the text that the links should be
 	 *            displaying.
 	 */
-	public PagingNavigation(final String id, final IPageable pageable,
+	public PagingNavigation(MarkupContainer<?> parent,final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		super(id, pageable.getPageCount());
+		super(parent,id, pageable.getPageCount());
 		this.pageable = pageable;
 		this.labelProvider = labelProvider;
 		startIndex = 0;
@@ -320,7 +321,7 @@ public class PagingNavigation extends Loop
 		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
-		final PagingNavigationLink link = newPagingNavigationLink("pageLink", pageable, pageIndex);
+		final PagingNavigationLink link = newPagingNavigationLink(loopItem,"pageLink", pageable, pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -333,7 +334,7 @@ public class PagingNavigation extends Loop
 		{
 			label = String.valueOf(pageIndex + 1);
 		}
-		link.add(new Label("pageNumber", label));
+		link.add(new Label(link,"pageNumber", label));
 	}
 
 	/**
@@ -347,10 +348,10 @@ public class PagingNavigation extends Loop
 	 *            the page index the link points to
 	 * @return the page navigation link.
 	 */
-	protected PagingNavigationLink newPagingNavigationLink(String id, IPageable pageable,
+	protected PagingNavigationLink newPagingNavigationLink(MarkupContainer parent,String id, IPageable pageable,
 			int pageIndex)
 	{
-		return new PagingNavigationLink(id, pageable, pageIndex);
+		return new PagingNavigationLink(parent,id, pageable, pageIndex);
 	}
 
 	/**

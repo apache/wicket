@@ -33,7 +33,7 @@ public class MarkupInheritanceBase_11 extends MarkupInheritanceBaseBase_11
 	public MarkupInheritanceBase_11() 
 	{
 		super();
-	    add(new Label("label3", "base label 3"));
-	    add(new Label("label4", "base label 4"));
+	    add(new Label(this,"label3", "base label 3"));
+	    add(new Label(this,"label4", "base label 4"));
     }
 }

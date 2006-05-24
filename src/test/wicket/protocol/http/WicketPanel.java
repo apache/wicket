@@ -18,6 +18,7 @@
  */
 package wicket.protocol.http;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 
@@ -34,8 +35,8 @@ public class WicketPanel extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public WicketPanel(final String id) 
+	public WicketPanel(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
     }
 }

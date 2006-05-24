@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 
@@ -41,9 +42,9 @@ public class FormComponentLabel extends WebMarkupContainer
 	 * @param fc
 	 *            form component that this label represents
 	 */
-	public FormComponentLabel(String id, FormComponent fc)
+	public FormComponentLabel(MarkupContainer<?> parent,String id, FormComponent fc)
 	{
-		super(id);
+		super(parent,id);
 		this.fc = fc;
 		fc.setOutputMarkupId(true);
 	}

@@ -111,19 +111,34 @@ public abstract class MarkupContainer<V> extends Component<V>
 	private transient MarkupStream markupStream;
 
 	/**
+	 * package scope Constructor, only used by pages. 
+	 * 
+	 * @param parent 
+	 * 			  The parent of this component.
+	 * @param id
+	 *            The non-null id of this component.
+	 * @throws WicketRuntimeException
+	 *             Thrown if the component has been given a null id.
+	 */
+	MarkupContainer()
+	{
+		super();
+	}
+	
+	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public MarkupContainer(final String id)
+	public MarkupContainer(MarkupContainer<?> parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MarkupContainer(final String id, IModel<V> model)
+	public MarkupContainer(MarkupContainer<?> parent, final String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -159,7 +174,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 			throw new IllegalArgumentException(exceptionMessage("A child with id '" + child.getId()
 					+ "' already exists"));
 		}
-
+		child.setFlag(FLAG_REMOVED_FROM_PARENT, false);
 		return this;
 	}
 
@@ -458,8 +473,11 @@ public abstract class MarkupContainer<V> extends Component<V>
 			throw new IllegalArgumentException("argument component may not be null");
 		}
 
-		children_remove(component);
-		removedComponent(component);
+		if(children_remove(component) != null)
+		{
+			component.setFlag(FLAG_REMOVED_FROM_PARENT, true);
+			removedComponent(component);
+		}
 	}
 
 	/**
@@ -507,13 +525,13 @@ public abstract class MarkupContainer<V> extends Component<V>
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
-					int size = children_size();
-					for (int i = 0; i < size; i++)
-					{
-						// Get next child
-						final Component child = children_get(i);
-						child.setParent(MarkupContainer.this);
-					}
+//					int size = children_size();
+//					for (int i = 0; i < size; i++)
+//					{
+//						// Get next child
+//						final Component child = children_get(i);
+//						child.setParent(MarkupContainer.this);
+//					}
 				}
 
 				@Override
@@ -525,17 +543,17 @@ public abstract class MarkupContainer<V> extends Component<V>
 			});
 
 			// Loop through child components
-			int size = children_size();
-			for (int i = 0; i < size; i++)
-			{
-				// Get next child
-				final Component child = children_get(i);
-
-				// Do not call remove() because the state change would than be
-				// recorded twice.
-				child.detachModel();
-				child.setParent(null);
-			}
+//			int size = children_size();
+//			for (int i = 0; i < size; i++)
+//			{
+//				// Get next child
+//				final Component child = children_get(i);
+//
+//				// Do not call remove() because the state change would than be
+//				// recorded twice.
+//				child.detachModel();
+//				child.setParent(null);
+//			}
 
 			this.children = null;
 		}
@@ -607,7 +625,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 			log.debug("Replacing " + child.getId() + " in " + this);
 		}
 
-		if (child.getParent() != this)
+		if (child.getParent() == this)
 		{
 			// Add to map
 			final Component replaced = put(child);
@@ -625,6 +643,8 @@ public abstract class MarkupContainer<V> extends Component<V>
 
 			// The position of the associated markup remains the same
 			child.markupIndex = replaced.markupIndex;
+			
+			replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true);
 		}
 
 		return this;
@@ -1030,17 +1050,13 @@ public abstract class MarkupContainer<V> extends Component<V>
 		// Check for degenerate case
 		if (component == this)
 		{
-			throw new IllegalArgumentException("Component can't be added to itself");
+			throw new IllegalArgumentException("Component " + component+" can't be added to itself");
 		}
 
-		MarkupContainer parent = component.getParent();
-		if (parent != null)
+		if(component.getParent() != this)
 		{
-			parent.remove(component);
+			throw new IllegalArgumentException("Component " + component+" can't be added to another parent " + component.getParent() + " then " + this);
 		}
-
-		// Set child's parent
-		component.setParent(this);
 
 		// Tell the page a component was added
 		final Page page = findPage();
@@ -1236,7 +1252,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 		{
 			throw new IndexOutOfBoundsException();
 		}
-		return replaced;
+		return replaced != child?replaced:null;
 	}
 
 	private final int children_size()
@@ -1315,7 +1331,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 		// Detach model
 		component.detachModels();
 		// Component is removed
-		component.setParent(null);
+		//component.setParent(null);
 	}
 
 	/**

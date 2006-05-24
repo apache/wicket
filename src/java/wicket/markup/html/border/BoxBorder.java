@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.border;
 
+import wicket.MarkupContainer;
+
 /**
  * A very simple border component that draws a thin black line around its
  * children.
@@ -30,9 +32,9 @@ public final class BoxBorder extends Border
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public BoxBorder(final String id)
+	public BoxBorder(MarkupContainer<?> parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }
 

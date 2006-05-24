@@ -21,6 +21,7 @@ package wicket.markup.html.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -55,9 +56,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            See Component
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id)
+	public AbstractChoice(MarkupContainer<?> parent,final String id)
 	{
-		this(id, new Model<List<E>>(new ArrayList<E>()), new ChoiceRenderer<E>());
+		this(parent,id, new Model<List<E>>(new ArrayList<E>()), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -69,9 +70,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final List<E> choices)
+	public AbstractChoice(MarkupContainer<?> parent,final String id, final List<E> choices)
 	{
-		this(id, new Model<List<E>>(choices), new ChoiceRenderer<E>());
+		this(parent,id, new Model<List<E>>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -85,9 +86,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final List<E> choices, final IChoiceRenderer<E> renderer)
+	public AbstractChoice(MarkupContainer<?> parent,final String id, final List<E> choices, final IChoiceRenderer<E> renderer)
 	{
-		this(id, new Model<List<E>>(choices), renderer);
+		this(parent,id, new Model<List<E>>(choices), renderer);
 	}
 
 	/**
@@ -101,9 +102,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel<M> model, final List<E> choices)
+	public AbstractChoice(MarkupContainer<?> parent,final String id, IModel<M> model, final List<E> choices)
 	{
-		this(id, model, new Model<List<E>>(choices), new ChoiceRenderer<E>());
+		this(parent,id, model, new Model<List<E>>(choices), new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -119,10 +120,10 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The rendering engine
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel<M> model, final List<E> choices,
+	public AbstractChoice(MarkupContainer<?> parent,final String id, IModel<M> model, final List<E> choices,
 			final IChoiceRenderer<E> renderer)
 	{
-		this(id, model, new Model<List<E>>(choices), renderer);
+		this(parent,id, model, new Model<List<E>>(choices), renderer);
 	}
 
 	/**
@@ -134,9 +135,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IModel<List<E>> choices)
+	public AbstractChoice(MarkupContainer<?> parent,final String id, final IModel<List<E>> choices)
 	{
-		this(id, choices, new ChoiceRenderer<E>());
+		this(parent,id, choices, new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -150,10 +151,10 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String)
 	 */
-	public AbstractChoice(final String id, final IModel<List<E>> choices,
+	public AbstractChoice(MarkupContainer<?> parent,final String id, final IModel<List<E>> choices,
 			final IChoiceRenderer<E> renderer)
 	{
-		super(id);
+		super(parent,id);
 		this.choices = choices;
 		this.renderer = renderer;
 	}
@@ -169,9 +170,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The collection of choices in the dropdown
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel<M> model, final IModel<List<E>> choices)
+	public AbstractChoice(MarkupContainer<?> parent,final String id, IModel<M> model, final IModel<List<E>> choices)
 	{
-		this(id, model, choices, new ChoiceRenderer<E>());
+		this(parent,id, model, choices, new ChoiceRenderer<E>());
 	}
 
 	/**
@@ -187,10 +188,10 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 *            The drop down choices
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public AbstractChoice(final String id, IModel<M> model, final IModel<List<E>> choices,
+	public AbstractChoice(MarkupContainer<?> parent,final String id, IModel<M> model, final IModel<List<E>> choices,
 			final IChoiceRenderer<E> renderer)
 	{
-		super(id, model);
+		super(parent,id, model);
 		this.choices = choices;
 		this.renderer = renderer;
 	}

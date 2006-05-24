@@ -1,6 +1,7 @@
 package wicket.markup.html.panel;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.feedback.ComponentFeedbackMessageFilter;
 
 /**
@@ -21,8 +22,8 @@ public class ComponentFeedbackPanel extends FeedbackPanel
 	 * @param id the component id.
 	 * @param filter the component for which the messages need to be filtered.
 	 */
-	public ComponentFeedbackPanel(String id, Component filter)
+	public ComponentFeedbackPanel(MarkupContainer<?> parent,String id, Component filter)
 	{
-		super(id, new ComponentFeedbackMessageFilter(filter));
+		super(parent,id, new ComponentFeedbackMessageFilter(filter));
 	}
 }

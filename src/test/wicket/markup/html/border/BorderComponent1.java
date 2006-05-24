@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.border;
 
+import wicket.MarkupContainer;
+
 
 /**
  * Test the component: PageView
@@ -30,8 +32,8 @@ public class BorderComponent1 extends Border
 	/**
 	 * @param id
 	 */
-	public BorderComponent1(String id)
+	public BorderComponent1(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

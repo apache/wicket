@@ -34,7 +34,7 @@ public abstract class AbstractTest14WebPage extends WebPage
 	public AbstractTest14WebPage()
 	{
 		// Create border and add it to the page
-		border = new HeaderSectionBorder_2("border");
+		border = new HeaderSectionBorder_2(this,"border");
 		border.setTransparentResolver(true);
 		super.add(border);
 	}

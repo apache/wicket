@@ -35,9 +35,8 @@ public class InlinePanelPage_3 extends WebPage
 	public InlinePanelPage_3()
 	{
 		// tell the fragment that this page is the one that contains its markup
-		Fragment child = new Fragment("child", "child-frag", this);
 
-		InlineTestPanel p = new InlineTestPanel("test-panel", child);
+		InlineTestPanel p = new InlineTestPanel(this,"test-panel",this);
 		add(p);
 	}
 }

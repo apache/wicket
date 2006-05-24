@@ -37,12 +37,12 @@ public class AjaxLinkWithBorderPage extends WebPage
 	 */
 	public AjaxLinkWithBorderPage()
 	{
-		add(new AjaxTestBorder("border").setTransparentResolver(true));
+		add(new AjaxTestBorder(this,"border").setTransparentResolver(true));
 		
-		final Label label = new Label("ajaxLabel", new PropertyModel(this, "labelText"));
+		final Label label = new Label(this,"ajaxLabel", new PropertyModel(this, "labelText"));
 		label.setOutputMarkupId(true);
 		add(label);
-		add(new AjaxLink("ajaxLink")
+		add(new AjaxLink(this,"ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

@@ -35,6 +35,6 @@ public class HeaderSectionPage_15 extends WebPage
 	 */
 	public HeaderSectionPage_15() 
 	{
-		add(new HeaderSectionPanel_5("myPanel"));
+		add(new HeaderSectionPanel_5(this,"myPanel"));
     }
 }

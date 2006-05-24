@@ -19,7 +19,7 @@ public class SimpleResponsePageClass extends WebPage
      * simple test page with a class response page 
      */
     public SimpleResponsePageClass() {
-        Form form = new Form("form") {
+        Form form = new Form(this,"form") {
         	private static final long serialVersionUID = 1L;
             protected void onSubmit() {
                 //use Page "class"

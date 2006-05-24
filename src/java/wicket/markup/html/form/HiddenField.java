@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -31,7 +32,7 @@ import wicket.model.IModel;
  * 
  * @author Cameron Braid
  */
-public class HiddenField extends TextField
+public class HiddenField<V> extends TextField<V>
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -39,9 +40,9 @@ public class HiddenField extends TextField
 	 * Construct.
 	 * @param id component id
 	 */
-	public HiddenField(String id)
+	public HiddenField(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -49,9 +50,9 @@ public class HiddenField extends TextField
 	 * @param id component id
 	 * @param type the type to use when updating the model for this text field
 	 */
-	public HiddenField(String id, Class type)
+	public HiddenField(MarkupContainer<?> parent,String id, Class type)
 	{
-		super(id, type);
+		super(parent,id, type);
 	}
 
 	/**
@@ -60,9 +61,9 @@ public class HiddenField extends TextField
 	 * @param type the type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public HiddenField(String id, IModel model, Class type)
+	public HiddenField(MarkupContainer<?> parent,String id, IModel<V> model, Class type)
 	{
-		super(id, model, type);
+		super(parent,id, model, type);
 	}
 
 	/**
@@ -70,9 +71,9 @@ public class HiddenField extends TextField
 	 * @param id see Component
 	 * @param model the model
 	 */
-	public HiddenField(String id, IModel model)
+	public HiddenField(MarkupContainer<?> parent,String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 

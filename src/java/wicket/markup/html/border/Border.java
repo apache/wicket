@@ -114,17 +114,17 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public Border(final String id)
+	public Border(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Border(final String id, final IModel model)
+	public Border(MarkupContainer<?> parent,final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

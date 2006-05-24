@@ -31,8 +31,8 @@ public class MockHomePage extends WebPage
 	public MockHomePage()
 	{
 		super();
-		add(new Label("label", "this page is secured"));
-		add(new PageLink("link", PageA.class));
+		add(new Label(this,"label", "this page is secured"));
+		add(new PageLink(this,"link", PageA.class));
 	}
 
 	/**

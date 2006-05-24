@@ -26,7 +26,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
@@ -63,12 +65,12 @@ public class MockServletContext implements ServletContext
 
 	private Application application;
 
-	private ValueMap<String, Object> attributes = new ValueMap<String, Object>();
+	private Map<String, Object> attributes = new HashMap<String, Object>();
 
-	private ValueMap<String, String> initParameters = new ValueMap<String, String>();
+	private ValueMap initParameters = new ValueMap();
 
 	/** Map of mime types */
-	private final ValueMap<String, String> mimeTypes = new ValueMap<String, String>();
+	private final ValueMap mimeTypes = new ValueMap();
 
 	private File webappRoot;
 

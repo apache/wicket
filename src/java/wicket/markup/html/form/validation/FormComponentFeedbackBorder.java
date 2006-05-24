@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form.validation;
 
+import wicket.MarkupContainer;
 import wicket.feedback.ContainerFeedbackMessageFilter;
 import wicket.feedback.IFeedback;
 import wicket.feedback.IFeedbackMessageFilter;
@@ -56,9 +57,9 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		 * @param id
 		 *            component id
 		 */
-		public ErrorIndicator(String id)
+		public ErrorIndicator(MarkupContainer<?> parent,String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 
 		/**
@@ -77,10 +78,10 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	 * @param id
 	 *            See Component
 	 */
-	public FormComponentFeedbackBorder(final String id)
+	public FormComponentFeedbackBorder(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
-		add(new ErrorIndicator("errorIndicator"));
+		super(parent,id);
+		add(new ErrorIndicator(this,"errorIndicator"));
 	}
 
 	/**

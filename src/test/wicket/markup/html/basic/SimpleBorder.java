@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.basic;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 
 
@@ -34,9 +35,9 @@ public class SimpleBorder extends Border
 	 * Construct.
 	 * @param id
 	 */
-	public SimpleBorder(final String id) 
+	public SimpleBorder(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
 	    setRenderBodyOnly(true);
     }
 }

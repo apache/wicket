@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
@@ -70,17 +71,17 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
 	 */
-	public ListMultipleChoice(final String id)
+	public ListMultipleChoice(MarkupContainer parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListMultipleChoice(final String id, final List<V> choices)
+	public ListMultipleChoice(MarkupContainer parent, final String id, final List<V> choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
@@ -94,9 +95,9 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 *            the maximum number of visible rows.
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListMultipleChoice(final String id, final List<V> choices, final int maxRows)
+	public ListMultipleChoice(MarkupContainer parent, final String id, final List<V> choices, final int maxRows)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 		this.maxRows = maxRows;
 	}
 
@@ -104,55 +105,55 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(final String id, final List<V> choices, final IChoiceRenderer<V> renderer)
+	public ListMultipleChoice(MarkupContainer parent, final String id, final List<V> choices, final IChoiceRenderer<V> renderer)
 	{
-		super(id, choices, renderer);
+		super(parent,id, choices, renderer);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, List)
 	 */
-	public ListMultipleChoice(final String id, IModel<Collection<V>> object, final List<V> choices)
+	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<V>> object, final List<V> choices)
 	{
-		super(id, object, choices);
+		super(parent,id, object, choices);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, List,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(final String id, IModel<Collection<V>> object, final List<V> choices,
+	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<V>> object, final List<V> choices,
 			final IChoiceRenderer<V> renderer)
 	{
-		super(id, object, choices, renderer);
+		super(parent,id, object, choices, renderer);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel)
 	 */
-	public ListMultipleChoice(String id, IModel<List<V>> choices)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<V>> choices)
 	{
-		super(id, choices);
+		super(parent,id, choices);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IModel)
 	 */
-	public ListMultipleChoice(String id, IModel<Collection<V>> model, IModel<List<V>> choices)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<V>> model, IModel<List<V>> choices)
 	{
-		super(id, model, choices);
+		super(parent,id, model, choices);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
-		super(id, choices, renderer);
+		super(parent,id, choices, renderer);
 	}
 
 
@@ -160,9 +161,9 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(String id, IModel<Collection<V>> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<V>> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
 	{
-		super(id, model, choices, renderer);
+		super(parent,id, model, choices, renderer);
 	}
 
 

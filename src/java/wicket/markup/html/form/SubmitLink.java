@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -72,9 +73,9 @@ public class SubmitLink extends Button
 	 * @param id
 	 *            The id of the submitlink.
 	 */
-	public SubmitLink(String id)
+	public SubmitLink(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -86,9 +87,9 @@ public class SubmitLink extends Button
 	 *            The model for this submitlink, It won't be used by the submit
 	 *            link itself, but it can be used for keeping state
 	 */
-	public SubmitLink(String id, IModel model)
+	public SubmitLink(MarkupContainer parent,String id, IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 
@@ -107,9 +108,9 @@ public class SubmitLink extends Button
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(String id, Form form)
+	public SubmitLink(MarkupContainer parent,String id, Form form)
 	{
-		super(id);
+		super(parent,id);
 		this.form = form;
 	}
 
@@ -131,9 +132,9 @@ public class SubmitLink extends Button
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(String id, IModel model, Form form)
+	public SubmitLink(MarkupContainer parent,String id, IModel model, Form form)
 	{
-		super(id);
+		super(parent,id);
 		this.form = form;
 	}
 

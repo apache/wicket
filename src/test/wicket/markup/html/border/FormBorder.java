@@ -37,11 +37,11 @@ public class FormBorder extends Border
 	 * 
 	 * @param id
 	 */
-	public FormBorder(final String id)
+	public FormBorder(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 		
-		this.form = new Form("myForm");
+		this.form = new Form(this,"myForm");
 		add(this.form);
 	}
 	

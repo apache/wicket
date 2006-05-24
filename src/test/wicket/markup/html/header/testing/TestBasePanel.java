@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.header.testing;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -30,8 +31,8 @@ public class TestBasePanel extends Panel
 	/**
 	 * Construct.
 	 */
-	public TestBasePanel()
+	public TestBasePanel(MarkupContainer<?> parent)
 	{
-		super("panel");
+		super(parent,"panel");
 	}
 }

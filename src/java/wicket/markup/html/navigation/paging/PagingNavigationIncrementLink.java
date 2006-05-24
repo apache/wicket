@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.html.link.Link;
 
@@ -58,10 +59,10 @@ public class PagingNavigationIncrementLink extends Link
 	 * @param increment
 	 *            increment by
 	 */
-	public PagingNavigationIncrementLink(final String id, final IPageable pageable,
+	public PagingNavigationIncrementLink(MarkupContainer<?> parent,final String id, final IPageable pageable,
 			final int increment)
 	{
-		super(id);
+		super(parent,id);
 		setAutoEnable(true);
 		this.increment = increment;
 		this.pageable = pageable;

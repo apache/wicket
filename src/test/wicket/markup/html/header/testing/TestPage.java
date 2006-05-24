@@ -32,6 +32,6 @@ public class TestPage extends WebPage
 	 */
 	public TestPage()
 	{
-		add(new TestExtendedPanel());
+		add(new TestExtendedPanel(this));
 	}
 }

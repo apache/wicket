@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.header.testing;
 
+import wicket.MarkupContainer;
+
 /**
  * 
  * @author Juergen Donnerstag
@@ -28,7 +30,8 @@ public class TestExtendedPanel extends TestBasePanel
 	/**
 	 * Construct.
 	 */
-	public TestExtendedPanel()
+	public TestExtendedPanel(MarkupContainer<?> parent)
 	{
+		super(parent);
 	}
 }

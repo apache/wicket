@@ -34,6 +34,6 @@ public class HeaderSectionPage_9 extends WebPage
 	 */
 	public HeaderSectionPage_9()
 	{
-		add(new HeaderSectionPanel_2("panel"));
+		add(new HeaderSectionPanel_2(this,"panel"));
 	}
 }

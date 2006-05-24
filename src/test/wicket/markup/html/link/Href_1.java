@@ -36,7 +36,7 @@ public class Href_1 extends WebPage
 	 */
 	public Href_1() 
 	{
-	    add(new WebMarkupContainer("link1"));
-	    add(new WebMarkupContainer("link2"));
+	    add(new WebMarkupContainer(this,"link1"));
+	    add(new WebMarkupContainer(this,"link2"));
     }
 }

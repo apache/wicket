@@ -17,6 +17,7 @@
  */
 package wicket.ajax.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import wicket.markup.html.navigation.paging.PagingNavigationLink;
@@ -45,9 +46,9 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	 * @param pageable
 	 *            The underlying pageable component to navigate
 	 */
-	public AjaxPagingNavigation(final String id, final IPageable pageable)
+	public AjaxPagingNavigation(MarkupContainer parent, final String id, final IPageable pageable)
 	{
-		this(id, pageable, null);
+		this(parent,id, pageable, null);
 	}
 
 	/**
@@ -61,10 +62,10 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	 *            The label provider for the text that the links should be
 	 *            displaying.
 	 */
-	public AjaxPagingNavigation(final String id, final IPageable pageable,
+	public AjaxPagingNavigation(MarkupContainer parent, final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		super(id, pageable, labelProvider);
+		super(parent,id, pageable, labelProvider);
 	}
 
 	/**
@@ -79,9 +80,9 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	 * @return the ajaxified page number link.
 	 */
 	@Override
-	protected PagingNavigationLink newPagingNavigationLink(String id, IPageable pageable,
+	protected PagingNavigationLink newPagingNavigationLink(MarkupContainer parent,String id, IPageable pageable,
 			int pageIndex)
 	{
-		return new AjaxPagingNavigationLink(id, pageable, pageIndex);
+		return new AjaxPagingNavigationLink(parent,id, pageable, pageIndex);
 	}
 }

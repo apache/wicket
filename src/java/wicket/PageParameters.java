@@ -34,14 +34,9 @@ import wicket.util.value.ValueMap;
  * since the URL is stable across sessions and can be stored in a browser's
  * bookmark database.
  * 
- * @param <K>
- * 			The key type the map holds.
- * @param <V>
- * 			The value type the map holds.
- *  
  * @author Jonathan Locke
  */
-public final class PageParameters<K,V> extends ValueMap<K,V>
+public final class PageParameters extends ValueMap
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +59,7 @@ public final class PageParameters<K,V> extends ValueMap<K,V>
 	 *            The map to copy
 	 * @see ValueMap#ValueMap(java.util.Map)
 	 */
-	public PageParameters(final Map<? extends K, ? extends V> parameterMap)
+	public PageParameters(final Map<? extends String, ? extends Object> parameterMap)
 	{
 		super(parameterMap);
 	}
@@ -121,14 +116,14 @@ public final class PageParameters<K,V> extends ValueMap<K,V>
 				final String key = pair.substring(0, pos).trim();
 				final String value = pair.substring(pos + 1).trim();
 
-				put((K)key, (V)value);
+				put(key, value);
 			}
 			else
 			{
 				final String key = pair.trim();
 				final String value = null;
 
-				put((K)key, (V)value);
+				put(key, value);
 			}
 		}
 	}

@@ -173,8 +173,9 @@ public final class AutoComponentResolver implements IComponentResolver
         try
         {
             final Constructor constructor = componentClass
-                    .getConstructor(new Class[] { String.class });
-            component = (Component)constructor.newInstance(new Object[] { componentId });
+                    .getConstructor(new Class[] {MarkupContainer.class, String.class });
+            component = (Component)constructor.newInstance(new Object[] { container,componentId });
+            component.setAuto(true);
         }
         catch (NoSuchMethodException e)
         {

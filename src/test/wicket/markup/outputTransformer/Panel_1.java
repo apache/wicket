@@ -18,6 +18,7 @@
  */
 package wicket.markup.outputTransformer;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
@@ -35,11 +36,11 @@ public class Panel_1 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public Panel_1(final String id) 
+	public Panel_1(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
 	    setRenderBodyOnly(true);
 	    
-	    add(new Label("label", "mein Label"));
+	    add(new Label(this,"label", "mein Label"));
     }
 }

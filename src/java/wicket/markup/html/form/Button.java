@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
@@ -70,9 +71,9 @@ public class Button extends FormComponent
 	 * 
 	 * @see wicket.Component#Component(String)
 	 */
-	public Button(String id)
+	public Button(MarkupContainer parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -89,9 +90,9 @@ public class Button extends FormComponent
 	 *            markup attribute value, don't provide a model, or let it
 	 *            return an empty string.
 	 */
-	public Button(final String id, final IModel model)
+	public Button(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

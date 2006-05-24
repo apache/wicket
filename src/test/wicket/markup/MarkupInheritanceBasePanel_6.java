@@ -18,6 +18,7 @@
  */
 package wicket.markup;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
@@ -32,11 +33,11 @@ public class MarkupInheritanceBasePanel_6 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public MarkupInheritanceBasePanel_6(final String id)
+	public MarkupInheritanceBasePanel_6(MarkupContainer<?> parent,final String id)
 	{
-	    super(id);
+	    super(parent,id);
 	    
-		add(new Label("panelLabel1", "label 1"));
-		add(new Label("panelLabel2", "label 2"));
+		add(new Label(this,"panelLabel1", "label 1"));
+		add(new Label(this,"panelLabel2", "label 2"));
 	}
 }

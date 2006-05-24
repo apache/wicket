@@ -22,14 +22,10 @@ import java.util.Map;
 /**
  * ValueMap for attributes.
  * 
- * @param <K>
- * 			The key type the map holds.
- * @param <V>
- * 			The value type the map holds.
  * 
  * @author Eelco Hillenius
  */
-public final class AttributeMap<K,V> extends ValueMap<K,V>
+public final class AttributeMap extends ValueMap
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +43,7 @@ public final class AttributeMap<K,V> extends ValueMap<K,V>
 	 * @param map
 	 *            Map to be copied
 	 */
-	public AttributeMap(Map<? extends K, ? extends V> map)
+	public AttributeMap(Map map)
 	{
 		super(map);
 	}

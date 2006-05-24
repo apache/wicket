@@ -50,22 +50,22 @@ public class IncrementalTableNavigationPage extends WebPage
 		list.add("seven");
 		list.add("eight");
 
-		PageableListView table = new PageableListView("table", list, 2)
+		PageableListView table = new PageableListView(this,"table", list, 2)
 		{
 			private static final long serialVersionUID = 1L;
 
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label("txt", txt));
+				listItem.add(new Label(listItem,"txt", txt));
 			}
 		};
 
 		add(table);
-		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink(
+		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink(this,
 				"prev", table, -1);
 		add(prev);
-		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink(
+		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink(this,
 				"nextNext", table, +2);
 		add(nextNext);
 	}

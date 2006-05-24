@@ -17,6 +17,7 @@
  */
 package wicket.markup.html;
 
+import wicket.MarkupContainer;
 import wicket.markup.IScopedComponent;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
@@ -33,17 +34,17 @@ public abstract class ScopedLink extends Link implements IScopedComponent
 	 * @param id
 	 * @param object
 	 */
-	public ScopedLink(String id, IModel object)
+	public ScopedLink(MarkupContainer<?> parent,String id, IModel object)
 	{
-		super(id, object);
+		super(parent,id, object);
 	}
 
 	/**
 	 * @param id
 	 */
-	public ScopedLink(String id)
+	public ScopedLink(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**

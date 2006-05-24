@@ -18,6 +18,7 @@
  */
 package wicket.markup.parser.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
@@ -39,9 +40,9 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	 * @param id
 	 * @param label
 	 */
-	public HeaderSectionMyLabel(final String id, final String label) 
+	public HeaderSectionMyLabel(MarkupContainer<?> parent,final String id, final String label) 
 	{
-	    super(id, new Model(label));
+	    super(parent,id, new Model(label));
     }
 
 	/**

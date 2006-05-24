@@ -52,7 +52,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	{
 		if ("test".equals(tag.getId()))
 		{
-			autoAdd(new Label("test", "TEST")
+			autoAdd(new Label(this,"test", "TEST")
 			{
 				private static final long serialVersionUID = 1L;
 

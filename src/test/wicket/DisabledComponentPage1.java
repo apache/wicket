@@ -36,7 +36,7 @@ public class DisabledComponentPage1 extends WebPage
 	 */
 	public DisabledComponentPage1()
 	{
-		link = new Link("link")
+		link = new Link(this,"link")
 		{
 			private static final long serialVersionUID = 1L;
 

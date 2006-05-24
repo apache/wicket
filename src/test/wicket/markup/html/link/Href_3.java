@@ -37,7 +37,7 @@ public class Href_3 extends WebPage
 	 */
 	public Href_3() 
 	{
-	    add(new WebMarkupContainer("link1"));
-	    add(new WebMarkupContainer("link2").setVisible(false));
+	    add(new WebMarkupContainer(this,"link1"));
+	    add(new WebMarkupContainer(this,"link2").setVisible(false));
     }
 }

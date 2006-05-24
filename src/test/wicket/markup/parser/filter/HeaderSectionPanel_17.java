@@ -18,6 +18,7 @@
  */
 package wicket.markup.parser.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
@@ -35,11 +36,11 @@ public class HeaderSectionPanel_17 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public HeaderSectionPanel_17(final String id) 
+	public HeaderSectionPanel_17(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
 	    
 	    // for the test: the label must the same id as the panel
-	    add(new Label("foo", "Mein Test"));
+	    add(new Label(this,"foo", "Mein Test"));
     }
 }

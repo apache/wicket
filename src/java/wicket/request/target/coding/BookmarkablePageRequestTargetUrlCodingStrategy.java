@@ -77,13 +77,13 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 		url.append(getMountPath());
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
-		PageParameters<String, Object> pageParameters = target.getPageParameters();
+		PageParameters pageParameters = target.getPageParameters();
 		String pagemap = pageMapName != null?pageMapName: target.getPageMapName();
 		if(pagemap != null)
 		{
 			if(pageParameters == null)
 			{
-				pageParameters = new PageParameters<String, Object>();
+				pageParameters = new PageParameters();
 			}
 			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
 		}
@@ -97,7 +97,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		final String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
-		final PageParameters<String,Object> parameters = new PageParameters<String,Object>(decodeParameters(parametersFragment, requestParameters.getParameters()));
+		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
 		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);
 

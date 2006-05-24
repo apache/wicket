@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.link;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.model.IModel;
 
@@ -43,9 +44,9 @@ public class PopupCloseLink extends Link
 	 * 
 	 * @param id
 	 */
-	public PopupCloseLink(String id)
+	public PopupCloseLink(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -54,9 +55,9 @@ public class PopupCloseLink extends Link
 	 * @param id
 	 * @param object
 	 */
-	public PopupCloseLink(String id, IModel object)
+	public PopupCloseLink(MarkupContainer<?> parent,String id, IModel object)
 	{
-		super(id, object);
+		super(parent,id, object);
 	}
 	
 	/**

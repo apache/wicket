@@ -18,6 +18,7 @@
  */
 package wicket.ajax.markup.html;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
@@ -44,9 +45,9 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	 * 
 	 * @param id
 	 */
-	public AjaxFallbackLink(final String id)
+	public AjaxFallbackLink(MarkupContainer parent, final String id)
 	{
-		this(id, null);
+		this(parent,id, null);
 	}
 
 	/**
@@ -55,9 +56,9 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	 * @param id
 	 * @param model
 	 */
-	public AjaxFallbackLink(final String id, final IModel model)
+	public AjaxFallbackLink(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 
 		add(new AjaxEventBehavior("onclick")
 		{

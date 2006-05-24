@@ -18,6 +18,7 @@
 package wicket.markup.html.link;
 
 import wicket.IResourceListener;
+import wicket.MarkupContainer;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.util.value.ValueMap;
@@ -38,7 +39,7 @@ public class ResourceLink extends Link implements IResourceListener
 	private final Resource resource;
 
 	/** The resource parameters */
-	private final ValueMap<String, Object> resourceParameters;
+	private final ValueMap resourceParameters;
 
 
 	/**
@@ -57,9 +58,9 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resourceReference
 	 *            The shared resource to link to
 	 */
-	public ResourceLink(final String id, final ResourceReference resourceReference)
+	public ResourceLink(MarkupContainer<?> parent,final String id, final ResourceReference resourceReference)
 	{
-		this(id, resourceReference, null);
+		this(parent,id, resourceReference, null);
 	}
 
 	/**
@@ -80,10 +81,10 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resourceParameters
 	 *            The resource parameters
 	 */
-	public ResourceLink(final String id, final ResourceReference resourceReference,
-			ValueMap<String,Object> resourceParameters)
+	public ResourceLink(MarkupContainer<?> parent,final String id, final ResourceReference resourceReference,
+			ValueMap resourceParameters)
 	{
-		super(id);
+		super(parent,id);
 		this.resourceReference = resourceReference;
 		this.resourceParameters = resourceParameters;
 		this.resource = null;
@@ -101,9 +102,9 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resource
 	 *            The resource
 	 */
-	public ResourceLink(final String id, final Resource resource)
+	public ResourceLink(MarkupContainer<?> parent,final String id, final Resource resource)
 	{
-		super(id);
+		super(parent,id);
 		this.resource = resource;
 		this.resourceReference = null;
 		this.resourceParameters = null;

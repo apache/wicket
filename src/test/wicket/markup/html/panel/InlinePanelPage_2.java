@@ -35,9 +35,9 @@ public class InlinePanelPage_2 extends WebPage
 	 */
 	public InlinePanelPage_2()
 	{
-		Fragment panel1 = new Fragment("myPanel1", "frag1");
+		Fragment panel1 = new Fragment(this,"myPanel1", "frag1");
 		add(panel1);
 
-		panel1.add(new Label("label1", "my label text"));
+		panel1.add(new Label(panel1,"label1", "my label text"));
 	}
 }

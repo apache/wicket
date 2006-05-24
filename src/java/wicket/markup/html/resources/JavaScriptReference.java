@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.resources;
 
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -39,9 +40,9 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * root for gettting the resource
 	 * @param file reference as a string
 	 */
-	public JavaScriptReference(String id, Class referer, String file)
+	public JavaScriptReference(MarkupContainer<?> parent,String id, Class referer, String file)
 	{
-		super(id, referer, file, "src");
+		super(parent,id, referer, file, "src");
 	}
 
 	/**
@@ -52,9 +53,9 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * @param file reference as a string. The model must provide an instance
 	 * 		of {@link String}
 	 */
-	public JavaScriptReference(String id, Class referer, IModel<String> file)
+	public JavaScriptReference(MarkupContainer parent,String id, Class referer, IModel<String> file)
 	{
-		super(id, referer, file, "src");
+		super(parent,id, referer, file, "src");
 	}
 	
 	/**
@@ -62,9 +63,9 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * @param id component id
 	 * @param resourceReference resource reference
 	 */
-	public JavaScriptReference(String id, ResourceReference resourceReference)
+	public JavaScriptReference(MarkupContainer parent,String id, ResourceReference resourceReference)
 	{
-		super(id, resourceReference, "src");
+		super(parent,id, resourceReference, "src");
 	}
 
 	/**
@@ -73,9 +74,9 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * @param resourceReference resource reference. The model must provide an instance
 	 * 		of {@link ResourceReference}
 	 */
-	public JavaScriptReference(String id, IModel<ResourceReference> resourceReference)
+	public JavaScriptReference(MarkupContainer parent,String id, IModel<ResourceReference> resourceReference)
 	{
-		super(id, resourceReference, "src");
+		super(parent,id, resourceReference, "src");
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class JavaScriptReference extends PackagedResourceReference
 	{
 		// Must be attached to a script tag
 		checkComponentTag(tag, "script");
-		ValueMap<String,CharSequence> attributes = tag.getAttributes();
+		ValueMap attributes = tag.getAttributes();
 		attributes.put("type", "text/javascript");
 	}
 }

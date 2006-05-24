@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 
@@ -45,9 +46,9 @@ public class PagingNavigator extends Panel
 	 * @param pageable
 	 *            The pageable component the page links are referring to.
 	 */
-	public PagingNavigator(final String id, final IPageable pageable)
+	public PagingNavigator(MarkupContainer parent, final String id, final IPageable pageable)
 	{
-		this(id, pageable, null);
+		this(parent,id, pageable, null);
 	}
 
 	/**
@@ -60,21 +61,21 @@ public class PagingNavigator extends Panel
 	 * @param labelProvider
 	 *            The label provider for the link text.
 	 */
-	public PagingNavigator(final String id, final IPageable pageable,
+	public PagingNavigator(MarkupContainer parent, final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		super(id);
+		super(parent,id);
 
 
 		// Get the navigation bar and add it to the hierarchy
-		this.pagingNavigation = newNavigation(pageable, labelProvider);
+		this.pagingNavigation = newNavigation(this,pageable, labelProvider);
 		add(pagingNavigation);
 
 		// Add additional page links
-		add(newPagingNavigationLink("first", pageable, 0));
-		add(newPagingNavigationIncrementLink("prev", pageable, -1));
-		add(newPagingNavigationIncrementLink("next", pageable, 1));
-		add(newPagingNavigationLink("last", pageable, -1));
+		add(newPagingNavigationLink(this,"first", pageable, 0));
+		add(newPagingNavigationIncrementLink(this,"prev", pageable, -1));
+		add(newPagingNavigationIncrementLink(this,"next", pageable, 1));
+		add(newPagingNavigationLink(this,"last", pageable, -1));
 	}
 
 	/**
@@ -89,9 +90,9 @@ public class PagingNavigator extends Panel
 	 *            the increment
 	 * @return the increment link
 	 */
-	protected Link newPagingNavigationIncrementLink(String id, IPageable pageable, int increment)
+	protected Link newPagingNavigationIncrementLink(MarkupContainer parent,String id, IPageable pageable, int increment)
 	{
-		return new PagingNavigationIncrementLink(id, pageable, increment);
+		return new PagingNavigationIncrementLink(parent,id, pageable, increment);
 	}
 
 	/**
@@ -106,9 +107,9 @@ public class PagingNavigator extends Panel
 	 *            the page to jump to
 	 * @return the pagenumber link
 	 */
-	protected Link newPagingNavigationLink(String id, IPageable pageable, int pageNumber)
+	protected Link newPagingNavigationLink(MarkupContainer parent,String id, IPageable pageable, int pageNumber)
 	{
-		return new PagingNavigationLink(id, pageable, pageNumber);
+		return new PagingNavigationLink(parent,id, pageable, pageNumber);
 	}
 
 	/**
@@ -121,10 +122,10 @@ public class PagingNavigator extends Panel
 	 *            The label provider for the link text.
 	 * @return the navigation object
 	 */
-	protected PagingNavigation newNavigation(final IPageable pageable,
+	protected PagingNavigation newNavigation(MarkupContainer parent,final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		return new PagingNavigation("navigation", pageable, labelProvider);
+		return new PagingNavigation(parent,"navigation", pageable, labelProvider);
 	}
 
 	/**

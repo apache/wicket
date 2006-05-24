@@ -20,7 +20,6 @@ package wicket;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
-import wicket.Page;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.util.tester.ITestPageSource;
@@ -63,7 +62,7 @@ public class TesterTest extends TestCase {
 		 * Construct.
 		 */
 		public MyPage() {
-            add(new Label("label") {
+            add(new Label(this,"label") {
 
             	private static final long serialVersionUID = 1L;
 

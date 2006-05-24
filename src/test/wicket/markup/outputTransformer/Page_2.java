@@ -47,14 +47,14 @@ public class Page_2 extends WebPage
 	 */
 	public Page_2() 
 	{
-		add(new Label("myLabel", "Test Label"));
+		add(new Label(this,"myLabel", "Test Label"));
 		
-	    MarkupContainer container = new NoopOutputTransformerContainer("test");
+	    MarkupContainer container = new NoopOutputTransformerContainer(this,"test");
 	    
 	    add(container);
-	    container.add(new Label("myLabel2", "Test Label2"));
+	    container.add(new Label(container,"myLabel2", "Test Label2"));
 
-	    MarkupContainer panelContainer = new AbstractOutputTransformerContainer("test2")
+	    MarkupContainer panelContainer = new AbstractOutputTransformerContainer(this,"test2")
 	    {
 			private static final long serialVersionUID = 1L;
 
@@ -66,11 +66,11 @@ public class Page_2 extends WebPage
 	    };
 
 	    add(panelContainer);
-	    Panel panel = new Panel_1("myPanel");
+	    Panel panel = new Panel_1(panelContainer,"myPanel");
 	    panel.setRenderBodyOnly(true);
 	    panelContainer.add(panel);
 
-	    MarkupContainer borderContainer = new AbstractOutputTransformerContainer("test3")
+	    MarkupContainer borderContainer = new AbstractOutputTransformerContainer(this,"test3")
 	    {
 			private static final long serialVersionUID = 1L;
 
@@ -82,10 +82,10 @@ public class Page_2 extends WebPage
 	    };
 
 	    add(borderContainer);
-	    Border border = new SimpleBorder("myBorder");
+	    Border border = new SimpleBorder(borderContainer,"myBorder");
 	    borderContainer.add(border);
 
-	    Border border2 = new SimpleBorder("myBorder2");
+	    Border border2 = new SimpleBorder(this,"myBorder2");
 	    border2.setRenderBodyOnly(false);
 	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
 	    add(border2);

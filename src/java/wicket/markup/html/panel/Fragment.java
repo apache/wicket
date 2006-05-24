@@ -71,9 +71,9 @@ public class Fragment extends WebMarkupContainer
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
 	 */
-	public Fragment(final String id, final String markupId)
+	public Fragment(MarkupContainer parent, final String id, final String markupId)
 	{
-		this(id, markupId, null, null);
+		this(parent,id, markupId, null, null);
 	}
 
 	/**
@@ -88,9 +88,9 @@ public class Fragment extends WebMarkupContainer
 	 * @param model
 	 *            The model for this fragment
 	 */
-	public Fragment(final String id, final String markupId, final IModel model)
+	public Fragment(MarkupContainer parent, final String id, final String markupId, final IModel model)
 	{
-		this(id, markupId, null, model);
+		this(parent,id, markupId, null, model);
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class Fragment extends WebMarkupContainer
 	 * @param markupProvider
 	 *            The component whose markup contains the fragment's markup
 	 */
-	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider)
+	public Fragment(MarkupContainer parent, final String id, final String markupId, final MarkupContainer markupProvider)
 	{
-		this(id, markupId, markupProvider, null);
+		this(parent,id, markupId, markupProvider, null);
 	}
 
 	/**
@@ -124,10 +124,10 @@ public class Fragment extends WebMarkupContainer
 	 * @param model
 	 *            The model for this fragment
 	 */
-	public Fragment(final String id, final String markupId, final MarkupContainer markupProvider,
+	public Fragment(MarkupContainer parent, final String id, final String markupId, final MarkupContainer markupProvider,
 			final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 
 		if (markupId == null)
 		{

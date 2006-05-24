@@ -25,6 +25,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -48,9 +49,9 @@ public abstract class AbstractTree extends Panel
 	 * @param model
 	 *            the underlying tree model
 	 */
-	public AbstractTree(final String id, final TreeModel model)
+	public AbstractTree(MarkupContainer parent, final String id, final TreeModel model)
 	{
-		super(id);
+		super(parent,id);
 		this.treeState = newTreeState(model);
 	}
 
@@ -63,9 +64,9 @@ public abstract class AbstractTree extends Panel
 	 * @param treeState
 	 *            treeState that holds the underlying tree model
 	 */
-	public AbstractTree(final String id, final TreeState treeState)
+	public AbstractTree(MarkupContainer parent, final String id, final TreeState treeState)
 	{
-		super(id);
+		super(parent,id);
 		this.treeState = treeState;
 	}
 

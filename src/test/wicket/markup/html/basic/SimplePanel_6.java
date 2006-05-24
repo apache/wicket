@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.basic;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 
@@ -35,10 +36,10 @@ public class SimplePanel_6 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public SimplePanel_6(final String id) 
+	public SimplePanel_6(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
 	    
-	    add(new WebMarkupContainer("container"));
+	    add(new WebMarkupContainer(this,"container"));
     }
 }

@@ -37,12 +37,12 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 	 */
 	public BorderRenderWrappedTestPage_1()
 	{
-		 BoxBorder border = new BoxBorder("box");
+		 BoxBorder border = new BoxBorder(this,"box");
 		 border.setBorderBodyVisible(false);
 
 		 add(border);
 		 
-	     border.add(new TextField("text"));
-	     border.add(new Image("img"));	
+	     border.add(new TextField(border,"text"));
+	     border.add(new Image(border,"img"));	
 	}
 }

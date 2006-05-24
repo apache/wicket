@@ -91,12 +91,12 @@ public class WicketMessageResolver implements IComponentResolver
 				Component component = null;
 				if ((value != null) && (value.trim().length() > 0))
 				{
-					component = new MyLabel(id, value);
+					component = new MyLabel(container,id, value);
 				}
 				else
 				{
 					log.info("No value found for message key: " + messageKey);
-					component = new WebMarkupContainer(id);
+					component = new WebMarkupContainer(container,id);
 				}
 
 				component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
@@ -126,9 +126,9 @@ public class WicketMessageResolver implements IComponentResolver
 		 * @param id
 		 * @param value
 		 */
-		public MyLabel(final String id, final String value)
+		public MyLabel(MarkupContainer<?> parent,final String id, final String value)
 		{
-			super(id, value);
+			super(parent,id, value);
 		}
 
 		/**

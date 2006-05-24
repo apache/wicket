@@ -18,6 +18,7 @@
  */
 package wicket.markup.parser.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 
@@ -34,8 +35,8 @@ public class HeaderSectionPanel_4 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public HeaderSectionPanel_4(final String id) 
+	public HeaderSectionPanel_4(MarkupContainer parent,final String id) 
 	{
-	    super(id);
+	    super(parent,id);
     }
 }

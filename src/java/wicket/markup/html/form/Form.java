@@ -214,9 +214,9 @@ public class Form<V> extends WebMarkupContainer<V> implements IFormSubmitListene
 	 * @param id
 	 *            See Component
 	 */
-	public Form(final String id)
+	public Form(MarkupContainer<?> parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -226,9 +226,9 @@ public class Form<V> extends WebMarkupContainer<V> implements IFormSubmitListene
 	 *            See Component
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Form(final String id, IModel model)
+	public Form(MarkupContainer<?> parent,final String id, IModel<V> model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**
@@ -832,7 +832,7 @@ public class Form<V> extends WebMarkupContainer<V> implements IFormSubmitListene
 				if(page.getClass().getConstructor((Class[])null) != null ||
 						page.getClass().getConstructor(new Class[] {PageParameters.class}) != null)
 				{
-					PageParameters<String, Object> pp = new PageParameters<String, Object>();
+					PageParameters pp = new PageParameters();
 					pp.add(WebRequestCodingStrategy.BOOKMARKABLE_FORM_PARAMETER_NAME, getPageRelativePath());
 					tag.put("action", urlFor(page.getClass(), pp));
 					addAction = false;

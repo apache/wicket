@@ -18,6 +18,7 @@
 package wicket.markup.transformer;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -35,9 +36,9 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.Component#Component(String)
 	 */
-	public NoopOutputTransformerContainer(final String id)
+	public NoopOutputTransformerContainer(MarkupContainer<?> parent, final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 
 	/**
@@ -45,9 +46,9 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public NoopOutputTransformerContainer(final String id, final IModel model)
+	public NoopOutputTransformerContainer(MarkupContainer<?> parent, final String id, final IModel model)
 	{
-		super(id, model);
+		super(parent,id, model);
 	}
 
 	/**

@@ -20,6 +20,7 @@ package wicket.markup.html.list;
 
 import java.util.ArrayList;
 
+import wicket.EmptyPage;
 import wicket.WicketTestCase;
 import wicket.model.Model;
 
@@ -53,7 +54,7 @@ public class TableTest extends WicketTestCase
 			modelList.add(new Integer(i));
 		}
 
-		return new PageableListView("table", new Model(modelList), pageSize)
+		return new PageableListView(new EmptyPage(),"table", new Model(modelList), pageSize)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -110,7 +111,7 @@ public class TableTest extends WicketTestCase
 		// null tables are a special case used for table navigation
 		// bar, where there is no underlying model necessary, as
 		// listItem.getIndex() is equal to the required listItem.getModelObject()
-		table = new PageableListView("table", new Model(null), 10)
+		table = new PageableListView(new EmptyPage(),"table", new Model(null), 10)
 		{
 			private static final long serialVersionUID = 1L;
 

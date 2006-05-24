@@ -35,7 +35,7 @@ public class AccessDeniedPage extends WebPage
 	 */
 	public AccessDeniedPage()
 	{
-		add(homePageLink("homePageLink"));
+		add(homePageLink(this,"homePageLink"));
 	}
 
 	/**

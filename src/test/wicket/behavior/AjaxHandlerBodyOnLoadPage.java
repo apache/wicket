@@ -39,7 +39,7 @@ public class AjaxHandlerBodyOnLoadPage extends WebPage
 	{
 		getBodyContainer().addOnLoadModifier("function1();", null);
 
-		MarkupContainer panel = new WebMarkupContainer("panel");
+		MarkupContainer panel = new WebMarkupContainer(this,"panel");
 		panel.add(new AbstractAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;

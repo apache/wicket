@@ -17,6 +17,7 @@
  */
 package wicket.ajax.markup.html.componentMap;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 
@@ -34,11 +35,11 @@ public class SimpleTestPanelBase extends Panel
 	 * 
 	 * @param name
 	 */
-	public SimpleTestPanelBase(String name)
+	public SimpleTestPanelBase(MarkupContainer<?> parent,String name)
 	{
-		super(name);
+		super(parent,name);
 
-		baseSpan = new WebMarkupContainer("baseSpan");
+		baseSpan = new WebMarkupContainer(this,"baseSpan");
 		add(baseSpan);
 	}
 }

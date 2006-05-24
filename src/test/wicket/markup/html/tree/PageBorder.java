@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.tree;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 
 /**
@@ -30,8 +31,8 @@ public final class PageBorder extends Border
 	 * Constructor.
 	 * @param id component naam
 	 */
-	public PageBorder(final String id)
+	public PageBorder(MarkupContainer parent,final String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

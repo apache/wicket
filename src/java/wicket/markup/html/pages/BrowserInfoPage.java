@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.markup.html.WebComponent;
@@ -141,16 +142,16 @@ public class BrowserInfoPage extends WebPage
 	 */
 	private final void initComps()
 	{
-		WebComponent meta = new WebComponent("meta");
-		PageParameters<String,Object> parameters = new PageParameters<String,Object>();
+		WebComponent meta = new WebComponent(this,"meta");
+		PageParameters parameters = new PageParameters();
 		parameters.put("cto", continueTo);
 		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class, parameters));
 		meta.add(new AttributeModifier("content", true, new Model("0; url=" + url)));
 		add(meta);
-		WebMarkupContainer link = new WebMarkupContainer("link");
+		WebMarkupContainer link = new WebMarkupContainer(this,"link");
 		link.add(new AttributeModifier("href", true, new Model(url)));
 		add(link);
-		add(new PostBackForm("postback"));
+		add(new PostBackForm(this,"postback"));
 	}
 
 	/**
@@ -191,22 +192,22 @@ public class BrowserInfoPage extends WebPage
 		 * @param id
 		 *            component id
 		 */
-		public PostBackForm(String id)
+		public PostBackForm(MarkupContainer<?> parent,String id)
 		{
-			super(id, new CompoundPropertyModel(new ClientPropertiesBean()));
+			super(parent,id, new CompoundPropertyModel(new ClientPropertiesBean()));
 
-			add(new TextField("navigatorAppName"));
-			add(new TextField("navigatorAppVersion"));
-			add(new TextField("navigatorAppCodeName"));
-			add(new TextField("navigatorCookieEnabled"));
-			add(new TextField("navigatorJavaEnabled"));
-			add(new TextField("navigatorLanguage"));
-			add(new TextField("navigatorPlatform"));
-			add(new TextField("navigatorUserAgent"));
-			add(new TextField("screenWidth"));
-			add(new TextField("screenHeight"));
-			add(new TextField("screenColorDepth"));
-			add(new TextField("utcOffset"));
+			add(new TextField(this,"navigatorAppName"));
+			add(new TextField(this,"navigatorAppVersion"));
+			add(new TextField(this,"navigatorAppCodeName"));
+			add(new TextField(this,"navigatorCookieEnabled"));
+			add(new TextField(this,"navigatorJavaEnabled"));
+			add(new TextField(this,"navigatorLanguage"));
+			add(new TextField(this,"navigatorPlatform"));
+			add(new TextField(this,"navigatorUserAgent"));
+			add(new TextField(this,"screenWidth"));
+			add(new TextField(this,"screenHeight"));
+			add(new TextField(this,"screenColorDepth"));
+			add(new TextField(this,"utcOffset"));
 		}
 
 		/**

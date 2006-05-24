@@ -17,6 +17,7 @@
  */
 package wicket.ajax.markup.html.ajaxLink;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.border.Border;
 
 /**
@@ -30,8 +31,8 @@ public class AjaxTestBorder extends Border
 	 * Construct.
 	 * @param id
 	 */
-	public AjaxTestBorder(String id)
+	public AjaxTestBorder(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

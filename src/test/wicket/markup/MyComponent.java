@@ -18,6 +18,7 @@
  */
 package wicket.markup;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.Model;
 
@@ -47,9 +48,9 @@ public class MyComponent extends WebMarkupContainer
 	 * 
 	 * @param id
 	 */
-	public MyComponent(final String id)
+	public MyComponent(MarkupContainer<?> parent,final String id)
 	{
-		super(id, new Model(""));
+		super(parent,id, new Model(""));
 	}
 
 	/**

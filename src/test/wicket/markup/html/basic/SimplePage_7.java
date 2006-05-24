@@ -35,6 +35,6 @@ public class SimplePage_7 extends WebPage
 	 */
 	public SimplePage_7() 
 	{
-		add(new Label("message", "here it goes"));
+		add(new Label(this,"message", "here it goes"));
     }
 }

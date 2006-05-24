@@ -3,6 +3,7 @@ package wicket.model;
 import java.util.Properties;
 
 import wicket.Component;
+import wicket.EmptyPage;
 import wicket.WicketTestCase;
 import wicket.markup.html.basic.Label;
 
@@ -124,7 +125,7 @@ public class ModelToStringTest extends WicketTestCase
 				+ innerPOJO + "]:bindings=[]";
 		assertEquals(expected, pojoProperty.toString());
 
-		Component component1 = pojoProperty.bind(new Label("label"), Integer.class);
+		Component component1 = pojoProperty.bind(new Label(new EmptyPage(),"label"), Integer.class);
 		expected = "Model:classname=[wicket.model.BoundCompoundPropertyModel]:attached=false:nestedModel=["
 				+ innerPOJO
 				+ "]:bindings=[Binding(:component=["

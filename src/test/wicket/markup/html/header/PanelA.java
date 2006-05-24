@@ -17,6 +17,8 @@
  */
 package wicket.markup.html.header;
 
+import wicket.MarkupContainer;
+
 /**
  * 
  * @author Matheus
@@ -30,8 +32,8 @@ public class PanelA extends BasePanel
 	 * 
 	 * @param id
 	 */
-	public PanelA(String id)
+	public PanelA(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

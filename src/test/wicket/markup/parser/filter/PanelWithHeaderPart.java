@@ -3,6 +3,7 @@
  */
 package wicket.markup.parser.filter;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.resources.JavaScriptReference;
@@ -19,13 +20,13 @@ public class PanelWithHeaderPart extends Panel
 	/**
 	 * @param id
 	 */
-	public PanelWithHeaderPart(String id)
+	public PanelWithHeaderPart(MarkupContainer<?> parent,String id)
 	{
-		super(id);
+		super(parent,id);
 		
-		add(new Label("body"));
-		add(new StyleSheetReference("testlink", PanelWithHeaderPart.class,"test.css"));
-		add(new JavaScriptReference("testscript", PanelWithHeaderPart.class, "test.js"));
+		add(new Label(this,"body"));
+		add(new StyleSheetReference(this,"testlink", PanelWithHeaderPart.class,"test.css"));
+		add(new JavaScriptReference(this,"testscript", PanelWithHeaderPart.class, "test.js"));
 		
 	}
 

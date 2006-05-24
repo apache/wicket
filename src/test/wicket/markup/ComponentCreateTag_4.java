@@ -41,7 +41,7 @@ public class ComponentCreateTag_4 extends WebPage
 	    // the label contained in <wicket:component> to that specific
 	    // component. You rather add it to its parent, which in this
 	    // case is the page.
-	    add(new Label("txt1", "Demo 1"));
-	    add(new Label("txt2", "Demo 2"));
+	    add(new Label(this,"txt1", "Demo 1"));
+	    add(new Label(this,"txt2", "Demo 2"));
     }
 }
