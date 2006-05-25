@@ -78,7 +78,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Link extends WebMarkupContainer<Object> implements ILinkListener
+public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
