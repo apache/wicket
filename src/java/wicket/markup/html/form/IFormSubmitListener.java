@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IFormSubmitListener.java 4381 2006-02-13 04:10:14 +0000 (Mon, 13 Feb
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-02-13 04:10:14 +0000
+ * (Mon, 13 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,8 +29,9 @@ import wicket.RequestListenerInterface;
 public interface IFormSubmitListener extends IRequestListener
 {
 	/** Listener interface */
-	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(IFormSubmitListener.class);
-	
+	public static final RequestListenerInterface INTERFACE = new RequestListenerInterface(
+			IFormSubmitListener.class);
+
 	/**
 	 * Called when a form is submitted
 	 */

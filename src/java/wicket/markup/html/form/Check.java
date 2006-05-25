@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,24 +43,24 @@ public class Check<T> extends WebMarkupContainer<T>
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final String ATTR_DISABLED = "disabled";
 
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
-	public Check(MarkupContainer parent,String id)
+	public Check(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
-	public Check(MarkupContainer parent,String id, IModel<T> model)
+	public Check(MarkupContainer parent, String id, IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 
@@ -97,14 +98,18 @@ public class Check<T> extends WebMarkupContainer<T>
 		Collection collection = (Collection)group.getModelObject();
 
 		// check for npe in group's model object
-		if (collection==null) {
-			throw new WicketRuntimeException("CheckGroup ["+group.getPath()+"] contains a null model object, must be an object of type java.util.Collection");
+		if (collection == null)
+		{
+			throw new WicketRuntimeException(
+					"CheckGroup ["
+							+ group.getPath()
+							+ "] contains a null model object, must be an object of type java.util.Collection");
 		}
-		
-		if(group.hasRawInput())
+
+		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if(rawInput != null && rawInput.indexOf(path) != -1)
+			if (rawInput != null && rawInput.indexOf(path) != -1)
 			{
 				tag.put("checked", "checked");
 			}
@@ -113,7 +118,7 @@ public class Check<T> extends WebMarkupContainer<T>
 		{
 			tag.put("checked", "checked");
 		}
-		
+
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
@@ -122,21 +127,23 @@ public class Check<T> extends WebMarkupContainer<T>
 			try
 			{
 				Form form = group.getForm();
-				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			catch (WicketRuntimeException ex)
 			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
+				// NOTE: do not encode the url as that would give invalid
+				// JavaScript
 				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}
-		
-		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+
+		if (!isActionAuthorized(ENABLE) || !isEnabled())
+		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 
-		
+
 	}
 
 

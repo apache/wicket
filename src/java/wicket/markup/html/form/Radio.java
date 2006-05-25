@@ -26,7 +26,8 @@ import wicket.model.IModel;
 import wicket.util.lang.Objects;
 
 /**
- * Component representing a single radio choice in a wicket.markup.html.form.RadioGroup.
+ * Component representing a single radio choice in a
+ * wicket.markup.html.form.RadioGroup.
  * 
  * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
  * 
@@ -48,17 +49,17 @@ public class Radio<T> extends WebMarkupContainer<T>
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
-	public Radio(MarkupContainer parent,String id)
+	public Radio(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
-	public Radio(MarkupContainer parent,String id, IModel<T> model)
+	public Radio(MarkupContainer parent, String id, IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 
@@ -93,10 +94,10 @@ public class Radio<T> extends WebMarkupContainer<T>
 
 		// compare the model objects of the group and self, if the same add the
 		// checked attribute, first check if there was a raw input on the group.
-		if(group.hasRawInput())
+		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if(rawInput != null && rawInput.equals(path))
+			if (rawInput != null && rawInput.equals(path))
 			{
 				tag.put("checked", "checked");
 			}
@@ -114,18 +115,20 @@ public class Radio<T> extends WebMarkupContainer<T>
 			try
 			{
 				Form form = group.getForm();
-				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			catch (WicketRuntimeException ex)
 			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
+				// NOTE: do not encode the url as that would give invalid
+				// JavaScript
 				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}
-		
-		
-		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+
+
+		if (!isActionAuthorized(ENABLE) || !isEnabled())
+		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 	}

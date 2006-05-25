@@ -1,6 +1,7 @@
 /*
  * $Id: CookieValuePersisterSettings.java,v 1.1 2005/01/26 01:41:18
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-01-03 20:19:49 +0000 (Tue,
+ * 03 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -158,5 +159,3 @@ public class CookieValuePersisterSettings
 		this.version = version;
 	}
 }
-
-

@@ -38,7 +38,7 @@ import wicket.model.IModel;
 public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The message filter for this indicator component */
 	private IFeedbackMessageFilter filter;
 
@@ -48,17 +48,17 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	 * @param id
 	 *            See Component
 	 */
-	public FormComponentFeedbackIndicator(MarkupContainer parent,final String id)
+	public FormComponentFeedbackIndicator(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public FormComponentFeedbackIndicator(MarkupContainer parent,final String id, IModel model)
+	public FormComponentFeedbackIndicator(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**

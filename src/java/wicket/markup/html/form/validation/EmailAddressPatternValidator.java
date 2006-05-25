@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: EmailAddressPatternValidator.java 5791 2006-05-20 00:32:57 +0000 (Sat,
+ * 20 May 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000
+ * (Sat, 20 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,26 +32,27 @@ import wicket.markup.html.form.FormComponent;
 public class EmailAddressPatternValidator extends PatternValidator
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Singleton instance */
 	private static final EmailAddressPatternValidator instance = new EmailAddressPatternValidator();
-	
-	
+
+
 	/**
 	 * @return Instance of emailadress validator
-	 */	
-	public static  EmailAddressPatternValidator getInstance()
+	 */
+	public static EmailAddressPatternValidator getInstance()
 	{
 		return instance;
 	}
-	
+
 	/**
 	 * Protected constructor to force use of static singleton accessor method.
 	 * Or override it to implement resourceKey(Component)
 	 */
 	protected EmailAddressPatternValidator()
 	{
-		super("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$", Pattern.CASE_INSENSITIVE);
+		super("^[_a-z0-9-]+(\\.[_a-z0-9-]+)*@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,3})$",
+				Pattern.CASE_INSENSITIVE);
 	}
 
 	/**

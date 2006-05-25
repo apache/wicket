@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IntegerValidator.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,13 +32,14 @@ import wicket.util.string.Strings;
  * numbers.
  * 
  * @author Jonathan Locke
- * @deprecated @see {@link NumberValidator}
+ * @deprecated
+ * @see {@link NumberValidator}
  */
 @Deprecated
 public class IntegerValidator extends StringValidator
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Validator that ensures int value.
 	 */
@@ -119,7 +121,9 @@ public class IntegerValidator extends StringValidator
 	 * Validates the given form component. Ensures that the form component has a
 	 * numeric value. If min and max arguments are given, this validator also
 	 * ensures the value is in bounds.
-	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent, java.lang.String)
+	 * 
+	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
+	 *      java.lang.String)
 	 */
 	@Override
 	public final void onValidate(FormComponent formComponent, String value)
@@ -135,7 +139,7 @@ public class IntegerValidator extends StringValidator
 				// Check range
 				if (longValue < min || longValue > max)
 				{
-                    error(formComponent);
+					error(formComponent);
 				}
 			}
 			catch (NumberFormatException e)
@@ -144,7 +148,7 @@ public class IntegerValidator extends StringValidator
 			}
 		}
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.form.validation.AbstractValidator#messageModel(wicket.markup.html.form.FormComponent)
 	 */
@@ -152,9 +156,9 @@ public class IntegerValidator extends StringValidator
 	protected Map<String, Serializable> messageModel(FormComponent formComponent)
 	{
 		final Map<String, Serializable> map = super.messageModel(formComponent);
-        map.put("min", new Long(min));
-        map.put("max", new Long(max));
-        return map;
+		map.put("min", new Long(min));
+		map.put("max", new Long(max));
+		return map;
 	}
 
 	/**

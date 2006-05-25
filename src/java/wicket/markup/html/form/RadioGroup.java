@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RadioGroup.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,18 +53,18 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
-	public RadioGroup(MarkupContainer parent,String id)
+	public RadioGroup(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 		setRenderBodyOnly(true);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
-	public RadioGroup(MarkupContainer parent,String id, IModel<T> model)
+	public RadioGroup(MarkupContainer parent, String id, IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		setRenderBodyOnly(true);
 	}
 
@@ -71,20 +72,20 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	{
 		return false;
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#isStateless()
 	 */
 	@Override
 	protected boolean isStateless()
 	{
-		if(wantOnSelectionChangedNotifications())
+		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}
 		return super.isStateless();
-	}	
-	
+	}
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
@@ -107,21 +108,21 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 			{
 				throw new WicketRuntimeException(
 						"submitted http post value ["
-						+ path
-						+ "] for RadioGroup component ["
-						+ getPath()
-						+ "] is illegal because it does not contain relative path to a Radio componnet. "
-						+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+								+ path
+								+ "] for RadioGroup component ["
+								+ getPath()
+								+ "] is illegal because it does not contain relative path to a Radio componnet. "
+								+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 			}
 
-			
+
 			// assign the value of the group's model
 			return choice.getModelObject();
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * Called when a selection changes.
 	 */
@@ -142,16 +143,17 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *			  The newly selected object of the backing model NOTE this is
-	 *			  the same as you would get by calling getModelObject() if the
-	 *			  new selection were current
+	 *            The newly selected object of the backing model NOTE this is
+	 *            the same as you would get by calling getModelObject() if the
+	 *            new selection were current
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
 	}
-	
+
 	/**
 	 * Radio group does not support persistence through cookies
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
 	@Override

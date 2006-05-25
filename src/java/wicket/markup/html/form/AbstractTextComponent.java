@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractTextComponent.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,9 +36,9 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public AbstractTextComponent(MarkupContainer parent,String id)
+	public AbstractTextComponent(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 		setConvertEmptyInputStringToNull(true);
 	}
 
@@ -46,7 +47,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	 */
 	AbstractTextComponent(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		setConvertEmptyInputStringToNull(true);
 	}
 
@@ -97,15 +98,15 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	{
 		return true;
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
 	protected T convertValue(String[] value) throws ConversionException
 	{
-		String tmp = value != null && value.length > 0?value[0]:null;
-		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
+		String tmp = value != null && value.length > 0 ? value[0] : null;
+		if (getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))
 		{
 			return null;
 		}

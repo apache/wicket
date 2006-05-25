@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CustomValidator.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,7 +25,7 @@ package wicket.markup.html.form.validation;
  * 
  * @author Jonathan Locke
  * 
- * @deprecated Users should use {@link StringValidator} directly 
+ * @deprecated Users should use {@link StringValidator} directly
  */
 @Deprecated
 public abstract class CustomValidator extends StringValidator

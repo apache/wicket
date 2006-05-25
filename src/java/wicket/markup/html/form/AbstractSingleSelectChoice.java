@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractSingleSelectChoice.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu,
+ * 25 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,7 +31,7 @@ import wicket.util.string.AppendingStringBuffer;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T> 
+abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 {
 	/** String to display when the selected value is null and nullValid is false. */
 	private static final String CHOOSE_ONE = "Choose One";
@@ -45,17 +46,17 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T>
 	/**
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,final String id)
+	public AbstractSingleSelectChoice(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, List)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, final List<T> choices)
+	public AbstractSingleSelectChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
@@ -64,18 +65,19 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T>
 	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, List ,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, final List<T> data,
+	public AbstractSingleSelectChoice(MarkupContainer parent, final String id, final List<T> data,
 			final IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, data, renderer);
+		super(parent, id, data, renderer);
 	}
 
 	/**
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, IModel<T> model, final List<T> data)
+	public AbstractSingleSelectChoice(MarkupContainer parent, final String id, IModel<T> model,
+			final List<T> data)
 	{
-		super(parent,id, model, data);
+		super(parent, id, model, data);
 	}
 
 	/**
@@ -85,37 +87,39 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T>
 	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List, IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, IModel<T> model, final List<T> data,
-			final IChoiceRenderer<T> renderer)
+	public AbstractSingleSelectChoice(MarkupContainer parent, final String id, IModel<T> model,
+			final List<T> data, final IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, model, data, renderer);
+		super(parent, id, model, data, renderer);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
+	public AbstractSingleSelectChoice(MarkupContainer parent, String id, IModel<List<T>> choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IModel)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices)
+	public AbstractSingleSelectChoice(MarkupContainer parent, String id, IModel<T> model,
+			IModel<List<T>> choices)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, model, choices);
 	}
 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public AbstractSingleSelectChoice(MarkupContainer parent, String id, IModel<List<T>> choices,
+			IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, choices, renderer);
+		super(parent, id, choices, renderer);
 	}
 
 
@@ -123,10 +127,10 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices,
-			IChoiceRenderer<T> renderer)
+	public AbstractSingleSelectChoice(MarkupContainer parent, String id, IModel<T> model,
+			IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, model, choices, renderer);
+		super(parent, id, model, choices, renderer);
 	}
 
 	/**
@@ -172,7 +176,7 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T>
 	@Override
 	protected final T convertValue(final String[] value)
 	{
-		String tmp = value != null && value.length > 0?value[0]:null;
+		String tmp = value != null && value.length > 0 ? value[0] : null;
 		List<T> choices = getChoices();
 		for (int index = 0; index < choices.size(); index++)
 		{
@@ -187,16 +191,18 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T>
 	}
 
 	/**
-	 * The localizer will be ask for the property to display
-	 * Depending on if null is allowed or not it will ask for:
+	 * The localizer will be ask for the property to display Depending on if
+	 * null is allowed or not it will ask for:
 	 * 
 	 * <ul>
-	 * <li>nullValid: when null is valid and by default it will show an empty string as a choice.</li>
-	 * <li>null: when null is not a valid choice and it will make a choice with "Choose One"</li>
+	 * <li>nullValid: when null is valid and by default it will show an empty
+	 * string as a choice.</li>
+	 * <li>null: when null is not a valid choice and it will make a choice with
+	 * "Choose One"</li>
 	 * </ul>
 	 * 
-	 * The choice for null is valid will always be returned. The choice when null is not valid
-	 * will only be returned if the selected object is null.
+	 * The choice for null is valid will always be returned. The choice when
+	 * null is not valid will only be returned if the selected object is null.
 	 * 
 	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
 	 */
@@ -234,8 +240,8 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T,T>
 			{
 				// Force the user to pick a non-null value
 				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
-				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">").append(option).append(
-						"</option>");
+				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">")
+						.append(option).append("</option>");
 			}
 		}
 		return "";

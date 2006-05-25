@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,13 +32,13 @@ import wicket.model.IModel;
 public class TextField<T> extends AbstractTextComponent<T>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public TextField(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 */
 	public TextField(MarkupContainer parent, final String id, final Class type)
 	{
-		super(parent,id);
+		super(parent, id);
 		setType(type);
 	}
 
@@ -58,7 +58,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 */
 	public TextField(MarkupContainer parent, final String id, final IModel object)
 	{
-		super(parent,id, object);
+		super(parent, id, object);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 */
 	public TextField(MarkupContainer parent, final String id, IModel model, Class type)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		setType(type);
 	}
 
@@ -91,13 +91,13 @@ public class TextField<T> extends AbstractTextComponent<T>
 
 		// check for text type
 		String inputType = getInputType();
-		if(inputType != null)
+		if (inputType != null)
 		{
 			checkComponentTagAttribute(tag, "type", inputType);
 		}
 		else
 		{
-			if(tag.getAttributes().containsKey("type"))
+			if (tag.getAttributes().containsKey("type"))
 			{
 				checkComponentTagAttribute(tag, "type", "text");
 			}
@@ -105,14 +105,14 @@ public class TextField<T> extends AbstractTextComponent<T>
 
 		// No validation errors
 		tag.put("value", getValue());
-		
+
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
 
 	/**
-	 * Subclass should override this method if this textfields mappes on a different
-	 * input type as text. Like PasswordField or HiddenField.
+	 * Subclass should override this method if this textfields mappes on a
+	 * different input type as text. Like PasswordField or HiddenField.
 	 * 
 	 * @return The input type of this textfield, default is 'text'
 	 */

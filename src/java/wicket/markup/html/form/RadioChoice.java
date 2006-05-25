@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.40 $ $Date$
+ * $Id: RadioChoice.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -44,10 +45,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *  &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- * 	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
- * 	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
- *  &lt;/span&gt;
+ *   &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *  	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
+ *  	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
+ *   &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -107,6 +108,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 		/**
 		 * Construct.
+		 * 
 		 * @param prevSuffix
 		 */
 		PrefixChange(String prevSuffix)
@@ -147,7 +149,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 */
 	public RadioChoice(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -162,7 +164,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 */
 	public RadioChoice(MarkupContainer parent, final String id, final List choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
@@ -178,9 +180,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      List,IChoiceRenderer)
 	 */
-	public RadioChoice(MarkupContainer parent, final String id, final List choices, final IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, final String id, final List choices,
+			final IChoiceRenderer renderer)
 	{
-		super(parent,id, choices, renderer);
+		super(parent, id, choices, renderer);
 	}
 
 	/**
@@ -198,7 +201,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 */
 	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, model, choices);
 	}
 
 	/**
@@ -219,7 +222,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices,
 			final IChoiceRenderer renderer)
 	{
-		super(parent,id, model, choices, renderer);
+		super(parent, id, model, choices, renderer);
 	}
 
 	/**
@@ -233,9 +236,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel)
 	 */
-	public RadioChoice(MarkupContainer parent,String id, IModel choices)
+	public RadioChoice(MarkupContainer parent, String id, IModel choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
@@ -252,9 +255,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      IModel,IModel)
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public RadioChoice(MarkupContainer parent,String id, IModel model, IModel choices)
+	public RadioChoice(MarkupContainer parent, String id, IModel model, IModel choices)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, model, choices);
 	}
 
 	/**
@@ -270,9 +273,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      IModel,IChoiceRenderer)
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public RadioChoice(MarkupContainer parent,String id, IModel choices, IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, String id, IModel choices, IChoiceRenderer renderer)
 	{
-		super(parent,id, choices, renderer);
+		super(parent, id, choices, renderer);
 	}
 
 
@@ -292,9 +295,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public RadioChoice(MarkupContainer parent,String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, String id, IModel model, IModel choices,
+			IChoiceRenderer renderer)
 	{
-		super(parent,id, model, choices, renderer);
+		super(parent, id, model, choices, renderer);
 	}
 
 	/**
@@ -339,19 +343,19 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	{
 		return false;
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#isStateless()
 	 */
 	@Override
 	protected boolean isStateless()
 	{
-		if(wantOnSelectionChangedNotifications())
+		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}
 		return super.isStateless();
-	}	
+	}
 
 	/**
 	 * @return Prefix to use before choice
@@ -414,9 +418,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	{
 		// Iterate through choices
 		final List choices = getChoices();
-		
+
 		// Buffer to hold generated body
-		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size()+1) * 70);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() + 1) * 70);
 
 		// The selected value
 		final String selected = getValue();
@@ -428,9 +432,10 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 			final Object choice = choices.get(index);
 
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
-			Class objectClass = displayValue == null?null:displayValue.getClass();
+			Class objectClass = displayValue == null ? null : displayValue.getClass();
 			// Get label for choice
-			final String label = getConverter(objectClass).convertToString(displayValue, getLocale());
+			final String label = getConverter(objectClass).convertToString(displayValue,
+					getLocale());
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know
@@ -445,9 +450,11 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add radio tag
-				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"radio\"").append(
-						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
-						id).append("\" id=\"").append(idAttr).append("\"");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
+						" type=\"radio\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
+						.append(" value=\"").append(id).append("\" id=\"").append(idAttr).append(
+								"\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?
@@ -458,14 +465,16 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 					try
 					{
 						Form form = getForm();
-						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(";\"");
+						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(
+								";\"");
 					}
 					catch (WicketRuntimeException ex)
 					{
-						// NOTE: do not encode the url as that would give invalid
+						// NOTE: do not encode the url as that would give
+						// invalid
 						// JavaScript
-						buffer.append(" onclick=\"").append(url).append("&" + getInputName()).append("=").append(
-								id).append("';\"");
+						buffer.append(" onclick=\"").append(url).append("&" + getInputName())
+								.append("=").append(id).append("';\"");
 					}
 				}
 
@@ -473,12 +482,13 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 				// Add label for radio button
 				String display = label;
-				if(localizeDisplayValues())
+				if (localizeDisplayValues())
 				{
 					display = getLocalizer().getString(label, this, label);
 				}
 				CharSequence escaped = Strings.escapeMarkup(display, false, true);
-				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append("</label>");
+				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append(
+						"</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SubmitLink.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,28 +34,28 @@ import wicket.model.IModel;
  * </p>
  * 
  * <pre>
- *             Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
- *             f.add(new TextField(&quot;value1&quot;));
- *             f.add(new SubmitLink(&quot;link1&quot;) {
- *                 protected void onSubmit() {
- *                     System.out.println(&quot;Link1 was clicked, value1 is: &quot;
- *                             + mod.getValue1());
- *                 };
- *             });
- *             add(new SubmitLink(&quot;link2&quot;,f) {
- *                 protected void onSubmit() {
- *                     System.out.println(&quot;Link2 was clicked, value1 is: &quot;
- *                             + mod.getValue1());
- *                 };
- *             });
- *      
- *          &lt;form wicket:id=&quot;linkForm&quot; &gt;
- *             &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
- *             &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
- *             &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
- *         &lt;/form&gt;
- *           &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
- *         
+ *              Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
+ *              f.add(new TextField(&quot;value1&quot;));
+ *              f.add(new SubmitLink(&quot;link1&quot;) {
+ *                  protected void onSubmit() {
+ *                      System.out.println(&quot;Link1 was clicked, value1 is: &quot;
+ *                              + mod.getValue1());
+ *                  };
+ *              });
+ *              add(new SubmitLink(&quot;link2&quot;,f) {
+ *                  protected void onSubmit() {
+ *                      System.out.println(&quot;Link2 was clicked, value1 is: &quot;
+ *                              + mod.getValue1());
+ *                  };
+ *              });
+ *       
+ *           &lt;form wicket:id=&quot;linkForm&quot; &gt;
+ *              &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
+ *              &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
+ *              &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
+ *          &lt;/form&gt;
+ *            &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
+ *          
  * </pre>
  * 
  * @author chris
@@ -73,9 +74,9 @@ public class SubmitLink extends Button
 	 * @param id
 	 *            The id of the submitlink.
 	 */
-	public SubmitLink(MarkupContainer parent,String id)
+	public SubmitLink(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -87,9 +88,9 @@ public class SubmitLink extends Button
 	 *            The model for this submitlink, It won't be used by the submit
 	 *            link itself, but it can be used for keeping state
 	 */
-	public SubmitLink(MarkupContainer parent,String id, IModel model)
+	public SubmitLink(MarkupContainer parent, String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 
@@ -108,9 +109,9 @@ public class SubmitLink extends Button
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(MarkupContainer parent,String id, Form form)
+	public SubmitLink(MarkupContainer parent, String id, Form form)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.form = form;
 	}
 
@@ -132,9 +133,9 @@ public class SubmitLink extends Button
 	 * @param form
 	 *            The form which this submitlink must submit.
 	 */
-	public SubmitLink(MarkupContainer parent,String id, IModel model, Form form)
+	public SubmitLink(MarkupContainer parent, String id, IModel model, Form form)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.form = form;
 	}
 

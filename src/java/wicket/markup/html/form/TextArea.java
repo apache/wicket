@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.21 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,13 +30,13 @@ import wicket.model.IModel;
 public class TextArea extends AbstractTextComponent
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public TextArea(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class TextArea extends AbstractTextComponent
 	 */
 	public TextArea(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**

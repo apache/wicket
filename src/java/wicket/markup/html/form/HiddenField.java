@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,58 +20,71 @@ import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
- * TextField doesn't permit the html <input type='hidden'> so this is a simple subclass to allow this
+ * TextField doesn't permit the html <input type='hidden'> so this is a simple
+ * subclass to allow this
  * 
- * A HiddenField is useful when you have a javascript based component that updates the form state.
- * Either 
+ * A HiddenField is useful when you have a javascript based component that
+ * updates the form state. Either
  * 
- * 1) add a AttributeModified to set the id attribute, then use document.getElementById(id), or
- * 2) lookup the field name=getPath() within the form  
+ * 1) add a AttributeModified to set the id attribute, then use
+ * document.getElementById(id), or 2) lookup the field name=getPath() within the
+ * form
  * 
  * @author Cameron Braid
  */
 public class HiddenField<T> extends TextField<T>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
-	 * @param id component id
+	 * 
+	 * @param id
+	 *            component id
 	 */
-	public HiddenField(MarkupContainer parent,String id)
+	public HiddenField(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param type the type to use when updating the model for this text field
+	 * 
+	 * @param id
+	 *            component id
+	 * @param type
+	 *            the type to use when updating the model for this text field
 	 */
-	public HiddenField(MarkupContainer parent,String id, Class type)
+	public HiddenField(MarkupContainer parent, String id, Class type)
 	{
-		super(parent,id, type);
+		super(parent, id, type);
 	}
 
 	/**
-	 * @param id component id
-	 * @param model the model
-	 * @param type the type to use when updating the model for this text field
+	 * @param id
+	 *            component id
+	 * @param model
+	 *            the model
+	 * @param type
+	 *            the type to use when updating the model for this text field
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public HiddenField(MarkupContainer parent,String id, IModel<T> model, Class type)
+	public HiddenField(MarkupContainer parent, String id, IModel<T> model, Class type)
 	{
-		super(parent,id, model, type);
+		super(parent, id, model, type);
 	}
 
 	/**
 	 * Construct.
-	 * @param id see Component
-	 * @param model the model
+	 * 
+	 * @param id
+	 *            see Component
+	 * @param model
+	 *            the model
 	 */
-	public HiddenField(MarkupContainer parent,String id, IModel<T> model)
+	public HiddenField(MarkupContainer parent, String id, IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 

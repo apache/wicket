@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PatternValidator.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,8 +42,8 @@ import wicket.util.string.Strings;
  * to combine into complex patterns. They are also more readable and more
  * reusable. See {@link wicket.util.parse.metapattern.MetaPattern}for details.
  * <p>
- * The error message will be generated with the
- * key "PatternValidator" and the messages keys that can be used are:
+ * The error message will be generated with the key "PatternValidator" and the
+ * messages keys that can be used are:
  * <ul>
  * <li>${pattern}: the pattern which failed to match</li>
  * <li>${input}: the input the user did give</li>
@@ -59,7 +60,7 @@ import wicket.util.string.Strings;
 public class PatternValidator extends StringValidator
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The regexp pattern. */
 	private final Pattern pattern;
 
@@ -111,7 +112,7 @@ public class PatternValidator extends StringValidator
 
 	/**
 	 * Validates the set pattern.
-	 *
+	 * 
 	 * @see StringValidator#onValidate(wicket.markup.html.form.FormComponent,String)
 	 */
 	@Override
@@ -137,7 +138,7 @@ public class PatternValidator extends StringValidator
 		return pattern;
 	}
 
-	
+
 	@Override
 	protected Map<String, Serializable> messageModel(FormComponent formComponent)
 	{
@@ -145,7 +146,7 @@ public class PatternValidator extends StringValidator
 		map.put("pattern", pattern);
 		return map;
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 	 */
@@ -154,7 +155,7 @@ public class PatternValidator extends StringValidator
 	{
 		return "PatternValidator";
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
