@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id: DoubleConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,21 +36,22 @@ public final class DoubleConverter extends AbstractDecimalConverter
 	 * The singleton instance for a double converter
 	 */
 	public static final IConverter INSTANCE = new DoubleConverter();
-	
+
 	/**
 	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.Object,Locale)
 	 */
 	public Object convertToObject(final String value, Locale locale)
 	{
-        final Number number = parse(value,-Double.MAX_VALUE, Double.MAX_VALUE,locale);
-        //Double.MIN is the smallest nonzero positive number, not the largest negative number
+		final Number number = parse(value, -Double.MAX_VALUE, Double.MAX_VALUE, locale);
+		// Double.MIN is the smallest nonzero positive number, not the largest
+		// negative number
 
-        if (number == null)
-        {
-        	return null;
-        }
+		if (number == null)
+		{
+			return null;
+		}
 
-        return new Double(number.doubleValue());
+		return new Double(number.doubleValue());
 	}
 
 	/**

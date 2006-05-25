@@ -1,14 +1,15 @@
 /*
  * $Id: ComponentStringResourceLoader.java,v 1.5 2005/01/19 08:07:57
- * jonathanlocke Exp $ $Revision$ $Date$
- *
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-04-17 20:02:21 +0000 (Mon,
+ * 17 Apr 2006) $
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -72,17 +73,19 @@ import wicket.util.value.ValueMap;
  * In addition to the above search order, each key will be pre-pended with the
  * relative path of the current component related to the component that is being
  * searched. E.g. assume a component hierarchy like page1.form1.input1 and your
- * are requesting a key named 'RequiredValidator'. Wicket will search the property
- * in the following order:
+ * are requesting a key named 'RequiredValidator'. Wicket will search the
+ * property in the following order:
+ * 
  * <pre>
- *    page1.properties => form1.input1.RequiredValidator
- *    page1.properties => RequiredValidator
- *    form1.properties => input1.RequiredValidator
- *    form1.properties => RequiredValidator
- *    input1.properties => RequiredValidator
- *    myApplication.properties => page1.form1.input1.RequiredValidator
- *    myApplication.properties => RequiredValidator
+ *     page1.properties =&gt; form1.input1.RequiredValidator
+ *     page1.properties =&gt; RequiredValidator
+ *     form1.properties =&gt; input1.RequiredValidator
+ *     form1.properties =&gt; RequiredValidator
+ *     input1.properties =&gt; RequiredValidator
+ *     myApplication.properties =&gt; page1.form1.input1.RequiredValidator
+ *     myApplication.properties =&gt; RequiredValidator
  * </pre>
+ * 
  * <p>
  * In addition to the above search order, each component that is being searched
  * for a resource also includes the resources from any parent classes that it
@@ -100,7 +103,7 @@ import wicket.util.value.ValueMap;
  * @author Chris Turner
  * @author Juergen Donnerstag
  */
-public abstract class AbstractStringResourceLoader  implements IStringResourceLoader
+public abstract class AbstractStringResourceLoader implements IStringResourceLoader
 {
 	/** Log. */
 	private static final Log log = LogFactory.getLog(AbstractStringResourceLoader.class);
@@ -136,14 +139,14 @@ public abstract class AbstractStringResourceLoader  implements IStringResourceLo
 	 *            the strings from (see {@link wicket.Session})
 	 * @return The string resource value or null if resource not found
 	 */
-	public String loadStringResource(Class clazz, final String key,
-			final Locale locale, final String style)
+	public String loadStringResource(Class clazz, final String key, final Locale locale,
+			final String style)
 	{
 		if (clazz == null)
 		{
 			return null;
 		}
-		
+
 		String value = null;
 		while (true)
 		{
@@ -153,7 +156,7 @@ public abstract class AbstractStringResourceLoader  implements IStringResourceLo
 			if (props != null)
 			{
 				ValueMap strings = props.getAll();
-	
+
 				// Lookup value
 				if (log.isDebugEnabled())
 				{
@@ -166,16 +169,16 @@ public abstract class AbstractStringResourceLoader  implements IStringResourceLo
 					{
 						log.debug("Found resource from: " + props + "; key: " + key);
 					}
-	
+
 					break;
 				}
 			}
-			
+
 			if (isStopResourceSearch(clazz))
 			{
 				break;
 			}
-			
+
 			// Move to the next superclass
 			clazz = clazz.getSuperclass();
 		}
@@ -199,7 +202,8 @@ public abstract class AbstractStringResourceLoader  implements IStringResourceLo
 	 */
 	protected Properties getProperties(final Class clazz, final Locale locale, final String style)
 	{
-		return application.getResourceSettings().getPropertiesFactory().get(application, clazz, style, locale);
+		return application.getResourceSettings().getPropertiesFactory().get(application, clazz,
+				style, locale);
 	}
 
 	/**

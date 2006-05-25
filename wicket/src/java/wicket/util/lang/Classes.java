@@ -94,11 +94,11 @@ public final class Classes
 		final String methodName = "set" + name;
 		final Method[] methods = object.getClass().getMethods();
 		Method method = null;
-		for (int i = 0; i < methods.length; i++)
+		for (Method element : methods)
 		{
-			if (methods[i].getName().equalsIgnoreCase(methodName))
+			if (element.getName().equalsIgnoreCase(methodName))
 			{
-				method = methods[i];
+				method = element;
 			}
 		}
 

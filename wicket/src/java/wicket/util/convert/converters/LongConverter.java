@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: LongConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,18 +36,18 @@ public final class LongConverter extends AbstractIntegerConverter
 	 * The singleton instance for a long converter
 	 */
 	public static final IConverter INSTANCE = new LongConverter();
-	
+
 	/**
 	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
 	public Object convertToObject(final String value, Locale locale)
 	{
-		final Number number = parse(value, Long.MIN_VALUE, Long.MAX_VALUE,locale);
+		final Number number = parse(value, Long.MIN_VALUE, Long.MAX_VALUE, locale);
 
-        if (number == null)
-        {
-        	return null;
-        }
+		if (number == null)
+		{
+			return null;
+		}
 
 		return new Long(number.longValue());
 	}

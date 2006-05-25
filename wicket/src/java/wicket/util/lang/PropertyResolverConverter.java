@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,13 +30,14 @@ import wicket.util.convert.IConverter;
 public class PropertyResolverConverter implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	private final ICoverterLocator converterSupplier;
 	private final Locale locale;
 
 	/**
 	 * Construct.
+	 * 
 	 * @param converterSupplier
 	 * @param locale
 	 */
@@ -45,7 +46,7 @@ public class PropertyResolverConverter implements Serializable
 		this.converterSupplier = converterSupplier;
 		this.locale = locale;
 	}
-	
+
 	/**
 	 * @param object
 	 * @param clz
@@ -53,17 +54,20 @@ public class PropertyResolverConverter implements Serializable
 	 */
 	public Object convert(Object object, Class<?> clz)
 	{
-		if(object == null) return null;
-		if(clz.isAssignableFrom(object.getClass()))
+		if (object == null)
+		{
+			return null;
+		}
+		if (clz.isAssignableFrom(object.getClass()))
 		{
 			return object;
 		}
 		IConverter converter = converterSupplier.getConverter(clz);
-		if(object instanceof String)
+		if (object instanceof String)
 		{
 			return converter.convertToObject((String)object, locale);
 		}
-		else if(clz == String.class)
+		else if (clz == String.class)
 		{
 			return converter.convertToString(object, locale);
 		}

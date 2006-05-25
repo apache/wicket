@@ -1,6 +1,7 @@
 /*
  * $Id: ComponentStringResourceLoader.java,v 1.5 2005/01/19 08:07:57
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +21,6 @@ package wicket.resource;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -83,10 +83,11 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * @see wicket.resource.IPropertiesFactory#get(wicket.Application, java.lang.Class, java.lang.String, java.util.Locale)
+	 * @see wicket.resource.IPropertiesFactory#get(wicket.Application,
+	 *      java.lang.Class, java.lang.String, java.util.Locale)
 	 */
-	public Properties get(final Application application, final Class clazz,
-			final String style, final Locale locale)
+	public Properties get(final Application application, final Class clazz, final String style,
+			final Locale locale)
 	{
 		final String key = createResourceKey(clazz, locale, style);
 		Properties props = (Properties)propertiesCache.get(key);
@@ -120,7 +121,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	{
 		return this.propertiesCache;
 	}
-	
+
 	/**
 	 * @see wicket.resource.IPropertiesFactory#clearCache()
 	 */
@@ -162,7 +163,7 @@ public class PropertiesFactory implements IPropertiesFactory
 			buffer.append(locale.getLanguage());
 			if (c || (l && v))
 			{
-				// This may just append '_' 
+				// This may just append '_'
 				buffer.append('_').append(locale.getCountry());
 			}
 			if (v && (l || c))
@@ -278,12 +279,14 @@ public class PropertiesFactory implements IPropertiesFactory
 			{
 				public void onChange()
 				{
-					log.info("A properties files has changed. Remove all entries from the cache. Resource: "
+					log
+							.info("A properties files has changed. Remove all entries from the cache. Resource: "
 									+ resourceStream);
 
 					// Clear the whole cache as associated localized files may
-					// be affected and may need reloading as well. We make it 
-					// easy. Usually the watcher is activ in dev mode only anyway.
+					// be affected and may need reloading as well. We make it
+					// easy. Usually the watcher is activ in dev mode only
+					// anyway.
 					clearCache();
 
 					// Inform all listeners

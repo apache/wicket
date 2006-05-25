@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.6 $ $Date$
+ * $Id: DateConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,14 +32,14 @@ public class DateConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The date format to use for the specific locales (used as the key)*/
+	/** The date format to use for the specific locales (used as the key) */
 	private final Map<Locale, DateFormat> dateFormats = new HashMap<Locale, DateFormat>();
 
-	/** 
-     * Specify whether or not date/time parsing is to be lenient.  With
-     * lenient parsing, the parser may use heuristics to interpret inputs that
-     * do not precisely match this object's format.  With strict parsing,
-     * inputs must match the object's format.
+	/**
+	 * Specify whether or not date/time parsing is to be lenient. With lenient
+	 * parsing, the parser may use heuristics to interpret inputs that do not
+	 * precisely match this object's format. With strict parsing, inputs must
+	 * match the object's format.
 	 */
 	private final boolean lenient;
 
@@ -54,10 +54,12 @@ public class DateConverter extends AbstractConverter
 
 	/**
 	 * Construct.
-	 * @param lenient when true, parsing is lenient. With
-     * lenient parsing, the parser may use heuristics to interpret inputs that
-     * do not precisely match this object's format.  With strict parsing,
-     * inputs must match the object's format.
+	 * 
+	 * @param lenient
+	 *            when true, parsing is lenient. With lenient parsing, the
+	 *            parser may use heuristics to interpret inputs that do not
+	 *            precisely match this object's format. With strict parsing,
+	 *            inputs must match the object's format.
 	 */
 	public DateConverter(boolean lenient)
 	{
@@ -70,11 +72,12 @@ public class DateConverter extends AbstractConverter
 	 */
 	public Object convertToObject(final String value, Locale locale)
 	{
-        return parse(getDateFormat(locale), value,locale);
+		return parse(getDateFormat(locale), value, locale);
 	}
-	
+
 	/**
-	 * @see wicket.util.convert.IConverter#convertToString(java.lang.String, Locale)
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.String,
+	 *      Locale)
 	 */
 	@Override
 	public String convertToString(final Object value, Locale locale)
@@ -89,7 +92,7 @@ public class DateConverter extends AbstractConverter
 
 
 	/**
-	 * @param locale 
+	 * @param locale
 	 * @return Returns the date format.
 	 */
 	public DateFormat getDateFormat(Locale locale)
@@ -105,13 +108,13 @@ public class DateConverter extends AbstractConverter
 	}
 
 	/**
-	 * @param locale 
+	 * @param locale
 	 * @param dateFormat
 	 *            The dateFormat to set.
 	 */
 	public void setDateFormat(final Locale locale, final DateFormat dateFormat)
 	{
-		this.dateFormats.put(locale,dateFormat);
+		this.dateFormats.put(locale, dateFormat);
 	}
 
 	/**

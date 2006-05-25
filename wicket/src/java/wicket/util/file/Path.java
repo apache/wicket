@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +20,6 @@ package wicket.util.file;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import wicket.util.string.StringList;
@@ -61,9 +60,9 @@ public final class Path implements IResourcePath
 	 */
 	public Path(final Folder[] folders)
 	{
-		for (int i = 0; i < folders.length; i++)
+		for (Folder element : folders)
 		{
-			add(folders[i]);
+			add(element);
 		}
 	}
 
@@ -100,9 +99,8 @@ public final class Path implements IResourcePath
 	 */
 	public URL find(final String pathname)
 	{
-		for (final Iterator<Folder> iterator = folders.iterator(); iterator.hasNext();)
+		for (Folder folder : folders)
 		{
-			final Folder folder = iterator.next();
 			final File file = new File(folder, pathname);
 
 			if (file.exists())

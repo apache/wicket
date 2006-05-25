@@ -20,8 +20,9 @@ import wicket.util.convert.ICoverterLocatorFactory;
  * You can set property homePageRenderStrategy to choose from different ways the
  * home page url shows up in your browser.
  * <p>
- * <b>A CoverterLocator Factory </b>- By overriding getConverterFactory(), you can
- * provide your own factory which creates locale sensitive CoverterLocator instances.
+ * <b>A CoverterLocator Factory </b>- By overriding getConverterFactory(), you
+ * can provide your own factory which creates locale sensitive CoverterLocator
+ * instances.
  * 
  * @author Jonathan Locke
  */
@@ -48,13 +49,13 @@ public interface IApplicationSettings
 	 * @return the converter factory
 	 */
 	ICoverterLocatorFactory getConverterSupplierFactory();
-	
+
 	/**
 	 * Gets context path to use for absolute path generation. For example an
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *     appserver.com/context mapped to webserver/ (context path should be '/')
+	 *      appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * @return The context path
@@ -102,7 +103,7 @@ public interface IApplicationSettings
 	 */
 	void setClassResolver(final IClassResolver defaultClassResolver);
 
-	
+
 	/**
 	 * Sets the CoverterLocatorFactory
 	 * 
@@ -115,7 +116,7 @@ public interface IApplicationSettings
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *     appserver.com/context mapped to webserver/ (context path should be '/')
+	 *      appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * This method can be called in the init phase of the application with the

@@ -216,7 +216,8 @@ public final class Settings
 	private String responseRequestEncoding = "UTF-8";
 
 	/** Chain of string resource loaders to use */
-	private List<IStringResourceLoader> stringResourceLoaders = new ArrayList<IStringResourceLoader>(4);
+	private List<IStringResourceLoader> stringResourceLoaders = new ArrayList<IStringResourceLoader>(
+			4);
 
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
@@ -236,7 +237,10 @@ public final class Settings
 	/** The context path that should be used for url prefixing */
 	private String contextPath;
 
-	/** Whether Wicket should try to support multiple windows transparently, true by default. */
+	/**
+	 * Whether Wicket should try to support multiple windows transparently, true
+	 * by default.
+	 */
 	private boolean automaticMultiWindowSupport = true;
 
 	/**
@@ -277,7 +281,8 @@ public final class Settings
 		this.application = application;
 		this.markupParserFactory = new MarkupParserFactory(application);
 		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
-		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application.getClass()));
+		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application
+				.getClass()));
 	}
 
 	/**
@@ -430,7 +435,7 @@ public final class Settings
 	 */
 	public ICoverterLocatorFactory getConverterSupplierFactory()
 	{
-		if(converterFactory == null)
+		if (converterFactory == null)
 		{
 			converterFactory = new CoverterLocatorFactory();
 		}
@@ -1151,6 +1156,6 @@ public final class Settings
 		{
 			implVersion = pkg.getImplementationVersion();
 		}
-		return Strings.isEmpty(implVersion)?"n/a":implVersion;
+		return Strings.isEmpty(implVersion) ? "n/a" : implVersion;
 	}
 }

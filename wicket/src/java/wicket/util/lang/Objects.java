@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -68,8 +68,8 @@ public abstract class Objects
 	{
 		private HashMap<String, Object> replacedComponents;
 
-		private ReplaceObjectOutputStream(OutputStream out, HashMap<String, Object> replacedComponents)
-				throws IOException
+		private ReplaceObjectOutputStream(OutputStream out,
+				HashMap<String, Object> replacedComponents) throws IOException
 		{
 			super(out);
 			this.replacedComponents = replacedComponents;
@@ -273,12 +273,15 @@ public abstract class Objects
 			ObjectInputStream ois = null;
 			try
 			{
-				ois  = new ObjectInputStream(in);
+				ois = new ObjectInputStream(in);
 				return ois.readObject();
 			}
 			finally
 			{
-				if(ois != null) ois.close();
+				if (ois != null)
+				{
+					ois.close();
+				}
 			}
 		}
 		catch (ClassNotFoundException e)
@@ -295,9 +298,9 @@ public abstract class Objects
 
 	/**
 	 * Makes a deep clone of an object by serializing and deserializing it. The
-	 * object must be fully serializable to be cloned.
-	 * This method will not clone wicket Components, it will just reuse those instances
-	 * so that the complete component tree is not copied over only the model data.
+	 * object must be fully serializable to be cloned. This method will not
+	 * clone wicket Components, it will just reuse those instances so that the
+	 * complete component tree is not copied over only the model data.
 	 * 
 	 * @param object
 	 *            The object to clone
@@ -430,7 +433,7 @@ public abstract class Objects
 									+ v1.getClass().getName() + " and " + v2.getClass().getName());
 						}
 					}
-				// else fall through
+					// else fall through
 				case FLOAT :
 				case DOUBLE :
 					double dv1 = doubleValue(v1),
@@ -795,8 +798,8 @@ public abstract class Objects
 				// equivalence
 				result = (object1 != null)
 						&& (object2 != null)
-						&& ((compareWithConversion(object1, object2) == 0) || 
-								object1.equals(object2));
+						&& ((compareWithConversion(object1, object2) == 0) || object1
+								.equals(object2));
 			}
 		}
 		return result;
@@ -860,13 +863,13 @@ public abstract class Objects
 				{
 					return new Float(value);
 				}
-			// else fall through:
+				// else fall through:
 			case DOUBLE :
 				if (value == value)
 				{
 					return new Double(value);
 				}
-			// else fall through:
+				// else fall through:
 			case LONG :
 				return new Long(value);
 
@@ -901,7 +904,10 @@ public abstract class Objects
 			}
 			finally
 			{
-				if(oos != null) oos.close();
+				if (oos != null)
+				{
+					oos.close();
+				}
 			}
 			return out.toByteArray();
 		}

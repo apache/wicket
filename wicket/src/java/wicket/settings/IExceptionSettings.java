@@ -23,20 +23,21 @@ public interface IExceptionSettings
 	 * shown when an unexpected exception is thrown.
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_EXCEPTION_PAGE");
+			"SHOW_EXCEPTION_PAGE");
 
 	/**
 	 * Indicates a generic internal error page should be shown when an
 	 * unexpected exception is thrown.
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_INTERNAL_ERROR_PAGE");
+			"SHOW_INTERNAL_ERROR_PAGE");
 	/**
 	 * Indicates that no exception page should be shown when an unexpected
 	 * exception is thrown.
 	 */
 	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_NO_EXCEPTION_PAGE");
+			"SHOW_NO_EXCEPTION_PAGE");
+
 	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
 	 */

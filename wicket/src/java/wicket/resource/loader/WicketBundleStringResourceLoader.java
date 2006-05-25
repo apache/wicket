@@ -27,22 +27,24 @@ import wicket.Application;
  * in the sense that once a proper properties files has been found but it does
  * not contain the key you are looking for, Wicket will not continue iterating
  * over the remaing properties file for the same class to check any of these
- * contain the key. 
- * The reason why Java's BundleResource can not be used is because with Wicket
- * the locale, the style and the variation must be evaluated as well. 
+ * contain the key. The reason why Java's BundleResource can not be used is
+ * because with Wicket the locale, the style and the variation must be evaluated
+ * as well.
  * <p>
  * E.g.
+ * 
  * <pre>
- * 1) Application_myskin_fi.properties
- *      message1=AAAAAAAAA
- * 2) Application_myskin.properties
- *      message2=BBBBBBBB
- * 3) Application.properties
- *      message3=CCCCCCC
+ *  1) Application_myskin_fi.properties
+ *       message1=AAAAAAAAA
+ *  2) Application_myskin.properties
+ *       message2=BBBBBBBB
+ *  3) Application.properties
+ *       message3=CCCCCCC
  * </pre>
+ * 
  * Component.getString("message3") should correctly read from file 3.
  * 
- * TODO Post 1.2: This should become Wicket's default behavior 
+ * TODO Post 1.2: This should become Wicket's default behavior
  * 
  * @author Marco Geier
  * @author Juergen Donnerstag
@@ -66,6 +68,7 @@ public class WicketBundleStringResourceLoader extends ClassStringResourceLoader
 	 * @see wicket.resource.loader.ClassStringResourceLoader#loadStringResource(java.lang.Class,
 	 *      java.lang.String, java.util.Locale, java.lang.String)
 	 */
+	@Override
 	public String loadStringResource(Class clazz, String key, Locale locale, String style)
 	{
 		String value = super.loadStringResource(clazz, key, locale, style);

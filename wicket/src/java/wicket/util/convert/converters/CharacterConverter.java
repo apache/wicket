@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CharacterConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +36,7 @@ public final class CharacterConverter extends AbstractConverter
 	 * The singleton instance for a character converter
 	 */
 	public static final IConverter INSTANCE = new CharacterConverter();
-	
+
 	/**
 	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
@@ -51,7 +52,7 @@ public final class CharacterConverter extends AbstractConverter
 		{
 			return new Character(value.toString().charAt(0));
 		}
-		throw newConversionException("Cannot convert '" + value + "' to Character", value,locale);
+		throw newConversionException("Cannot convert '" + value + "' to Character", value, locale);
 	}
 
 	/**

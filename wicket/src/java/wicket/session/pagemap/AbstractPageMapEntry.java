@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractPageMapEntry.java 3849 2006-01-17 13:53:59 +0000 (Tue, 17 Jan
+ * 2006) joco01 $ $Revision$ $Date: 2006-01-17 13:53:59 +0000 (Tue, 17
+ * Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

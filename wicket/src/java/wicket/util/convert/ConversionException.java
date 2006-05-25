@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ConversionException.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -88,7 +89,7 @@ public final class ConversionException extends RuntimeException
 	{
 		return converter;
 	}
-    
+
 	/**
 	 * Get the used format.
 	 * 
@@ -167,7 +168,7 @@ public final class ConversionException extends RuntimeException
 		this.locale = locale;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the tried value.
 	 * 

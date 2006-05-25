@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id: CoverterLocator.java 5775 2006-05-19 18:00:21 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -80,49 +80,52 @@ public class CoverterLocator implements ICoverterLocator
 	private class DefaultConverter implements IConverter
 	{
 		private Class type;
-		
+
 		/**
 		 * Construct.
+		 * 
 		 * @param type
 		 */
 		public DefaultConverter(Class type)
 		{
 			this.type = type;
 		}
-		
+
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
-		 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
+		 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+		 *      java.util.Locale)
 		 */
 		public Object convertToObject(String value, Locale locale)
 		{
-			if(value == null)
+			if (value == null)
 			{
 				return null;
 			}
-			if("".equals(value))
+			if ("".equals(value))
 			{
-				if(type == String.class)
+				if (type == String.class)
 				{
 					return "";
 				}
 				return null;
 			}
-			
+
 			return Objects.convertValue(value, type);
 		}
 
 		/**
-		 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, java.util.Locale)
+		 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+		 *      java.util.Locale)
 		 */
 		public String convertToString(Object value, Locale locale)
 		{
-			if(value == null || "".equals(value))
+			if (value == null || "".equals(value))
 			{
 				return null;
 			}
-			
+
 			return (String)Objects.convertValue(value, String.class);
 		}
 	};
@@ -149,7 +152,8 @@ public class CoverterLocator implements ICoverterLocator
 		set(Short.TYPE, ShortConverter.INSTANCE);
 		set(Short.class, ShortConverter.INSTANCE);
 		set(Date.class, new DateConverter());
-		// TODO convert to string will go fine, but what about to object? It will make a java.util.Date
+		// TODO convert to string will go fine, but what about to object? It
+		// will make a java.util.Date
 		set(java.sql.Date.class, new DateConverter());
 	}
 
@@ -158,7 +162,7 @@ public class CoverterLocator implements ICoverterLocator
 	 * 
 	 * @param type
 	 *            Class to get the converter for.
-	 *            
+	 * 
 	 * @return The converter for the given type
 	 * 
 	 * @see wicket.util.convert.IConverter#convert(java.lang.Object,
@@ -181,7 +185,7 @@ public class CoverterLocator implements ICoverterLocator
 		}
 		return converter;
 	}
-	
+
 	/**
 	 * Gets the type converter that is registered for class c.
 	 * 

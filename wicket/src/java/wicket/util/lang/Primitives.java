@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id: Primitives.java 1115 2005-02-22 17:48:25 +0000 (Tue, 22 Feb 2005)
+ * jonathanlocke $ $Revision$ $Date: 2005-02-22 17:48:25 +0000 (Tue, 22
+ * Feb 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

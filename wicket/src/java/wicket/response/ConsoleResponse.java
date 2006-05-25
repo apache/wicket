@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ConsoleResponse.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,32 +29,32 @@ import wicket.Response;
  */
 public class ConsoleResponse extends Response
 {
-    /** The one and only instance */
-    private static final ConsoleResponse instance = new ConsoleResponse();
+	/** The one and only instance */
+	private static final ConsoleResponse instance = new ConsoleResponse();
 
-    /**
-     * @return The one and only instance of NullResponse
-     */
-    public static final ConsoleResponse getInstance()
-    {
-        return instance;
-    }
+	/**
+	 * @return The one and only instance of NullResponse
+	 */
+	public static final ConsoleResponse getInstance()
+	{
+		return instance;
+	}
 
-    /**
-     * Private constructor to force use of static factory method
-     */
-    private ConsoleResponse()
-    {
-    }
+	/**
+	 * Private constructor to force use of static factory method
+	 */
+	private ConsoleResponse()
+	{
+	}
 
-    /**
-     * @see wicket.Response#write(CharSequence)
-     */
-    @Override
+	/**
+	 * @see wicket.Response#write(CharSequence)
+	 */
+	@Override
 	public void write(CharSequence string)
-    {
-        System.out.print(string);
-    }
+	{
+		System.out.print(string);
+	}
 
 	/**
 	 * @see wicket.Response#getOutputStream()
@@ -64,5 +65,3 @@ public class ConsoleResponse extends Response
 		return System.out;
 	}
 }
-
-

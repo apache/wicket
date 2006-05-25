@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,8 +21,8 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
- * General purpose data type converter.  An object that implements this
- * interface can convert objects from one class to another.
+ * General purpose data type converter. An object that implements this interface
+ * can convert objects from one class to another.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -34,19 +34,20 @@ public interface IConverter extends Serializable
 	 * 
 	 * @param value
 	 *            The string value to convert
-	 * @param locale 
-	 * 			  The locale used to convert the value
+	 * @param locale
+	 *            The locale used to convert the value
 	 * @return The converted value
 	 */
 	Object convertToObject(String value, Locale locale);
-	
+
 	/**
 	 * Converts the given value to a string.
 	 * 
 	 * @param value
 	 *            The value to convert
-	 * @param locale TODO
-	 *            
+	 * @param locale
+	 *            TODO
+	 * 
 	 * @return The converted string value
 	 */
 	String convertToString(Object value, Locale locale);

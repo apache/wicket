@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IStringResourceLoader.java 4553 2006-02-18 09:11:19 +0000 (Sat, 18 Feb
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-02-18 09:11:19 +0000 (Sat,
+ * 18 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,30 +43,30 @@ import java.util.Locale;
  */
 public interface IStringResourceLoader
 {
-    /**
-     * Get the string resource for the given combination of component class,
-     * resource key, locale and style. The component is provided used to allow
-     * implementation of component specific resource loading (e.g. per page or
-     * per reusable component). It also allows the resource loader
-     * implementation to get access to the application settings and the root
-     * application object if necessary. The key should be a String containing a
-     * lookup key into a resource bundle. The locale should contain the locale
-     * of the current operation so that the appopriate set of resources can be
-     * selected. The style allows the set of resources to select to be varied by
-     * skin/brand.
-     * 
-     * @param clazz
-     *            The class to get the string resource for
-     * @param key
-     *            The key to obtain the string for
-     * @param locale
-     *            The locale identifying the resource set to select the strings
-     *            from
-     * @param style
-     *            The (optional) style identifying the resource set to select
-     *            the strings from (see {@link wicket.Session})
-     * @return The string resource value or null if the resource could not be
-     *         loaded by this loader
-     */
-    String loadStringResource(Class clazz, String key, Locale locale, String style);
+	/**
+	 * Get the string resource for the given combination of component class,
+	 * resource key, locale and style. The component is provided used to allow
+	 * implementation of component specific resource loading (e.g. per page or
+	 * per reusable component). It also allows the resource loader
+	 * implementation to get access to the application settings and the root
+	 * application object if necessary. The key should be a String containing a
+	 * lookup key into a resource bundle. The locale should contain the locale
+	 * of the current operation so that the appopriate set of resources can be
+	 * selected. The style allows the set of resources to select to be varied by
+	 * skin/brand.
+	 * 
+	 * @param clazz
+	 *            The class to get the string resource for
+	 * @param key
+	 *            The key to obtain the string for
+	 * @param locale
+	 *            The locale identifying the resource set to select the strings
+	 *            from
+	 * @param style
+	 *            The (optional) style identifying the resource set to select
+	 *            the strings from (see {@link wicket.Session})
+	 * @return The string resource value or null if the resource could not be
+	 *         loaded by this loader
+	 */
+	String loadStringResource(Class clazz, String key, Locale locale, String style);
 }
