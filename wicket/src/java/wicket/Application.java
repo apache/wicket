@@ -127,7 +127,8 @@ public abstract class Application
 	 * be retrieved even without being in a request/ being set in the thread
 	 * local (we need that e.g. for when we are in a destruction thread).
 	 */
-	private static final Map<String, Application> applicationKeyToApplication = new HashMap<String, Application>(1);
+	private static final Map<String, Application> applicationKeyToApplication = new HashMap<String, Application>(
+			1);
 
 	/** Thread local holder of the application object. */
 	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
@@ -269,10 +270,9 @@ public abstract class Application
 			throw new IllegalArgumentException("argument listener may not be null");
 		}
 
-		// if an instance of this listener is already present ignore this call
-		for (int i = 0; i < componentInstantiationListeners.length; i++)
+		for (IComponentInstantiationListener element : componentInstantiationListeners)
 		{
-			if (listener == componentInstantiationListeners[i])
+			if (listener == element)
 			{
 				return;
 			}

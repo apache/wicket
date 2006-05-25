@@ -273,7 +273,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/**
 	 * Generic component visitor interface for component traversals.
-	 * @param <T>  The type of the component where a visitor walks over.
+	 * 
+	 * @param <T>
+	 *            The type of the component where a visitor walks over.
 	 */
 	public static interface IVisitor<T extends Component>
 	{
@@ -471,7 +473,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
-	
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -578,10 +580,10 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	int markupIndex = -1;
 
 	/**
-	 * package scope Constructor, only used by pages. 
+	 * package scope Constructor, only used by pages.
 	 * 
-	 * @param parent 
-	 * 			  The parent of this component.
+	 * @param parent
+	 *            The parent of this component.
 	 * @param id
 	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
@@ -591,7 +593,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	{
 		if (!(this instanceof Page))
 		{
-			throw new WicketRuntimeException("component without a parent is not allowed, default constructor can only be called by a page");
+			throw new WicketRuntimeException(
+					"component without a parent is not allowed, default constructor can only be called by a page");
 		}
 		getApplication().notifyComponentInstantiationListeners(this);
 	}
@@ -601,8 +604,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * This is the minimal constructor of component. It does not register a
 	 * model.
 	 * 
-	 * @param parent 
-	 * 			  The parent of this component.
+	 * @param parent
+	 *            The parent of this component.
 	 * @param id
 	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
@@ -610,15 +613,15 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	public Component(MarkupContainer parent, final String id)
 	{
-		this(parent,id,null);
+		this(parent, id, null);
 	}
 
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This constructor includes a model.
 	 * 
-	 * @param parent 
-	 * 			  The parent of this component.
+	 * @param parent
+	 *            The parent of this component.
 	 * @param id
 	 *            The non-null id of this component
 	 * @param model
@@ -630,7 +633,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	@SuppressWarnings("null")
 	public Component(MarkupContainer parent, final String id, final IModel<T> model)
 	{
-		if(parent == null)
+		if (parent == null)
 		{
 			if (!(this instanceof Page))
 			{
@@ -647,7 +650,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			setFlag(FLAG_HAS_ROOT_MODEL, true);
 		}
 		getApplication().notifyComponentInstantiationListeners(this);
-		if(id.startsWith(AUTO_COMPONENT_PREFIX))
+		if (id.startsWith(AUTO_COMPONENT_PREFIX))
 		{
 			parent.autoAdd(this);
 		}
@@ -657,22 +660,23 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		}
 	}
 
-	
+
 	/**
-	 * This method should be called when a component with is auto added
-	 * to a container (having the prefix Component.AUTO_COMPONENT_PREFIX)
-	 * it will render the component.
+	 * This method should be called when a component with is auto added to a
+	 * container (having the prefix Component.AUTO_COMPONENT_PREFIX) it will
+	 * render the component.
 	 */
 	public final void autoAdded()
 	{
-		if(getId().startsWith(AUTO_COMPONENT_PREFIX))
+		if (getId().startsWith(AUTO_COMPONENT_PREFIX))
 		{
 			internalAttach();
 			render();
 		}
 		else
 		{
-			throw new WicketRuntimeException("Can't call auto added on a component that is not auto added.");
+			throw new WicketRuntimeException(
+					"Can't call auto added on a component that is not auto added.");
 		}
 	}
 
@@ -681,9 +685,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	public final Component reattach()
 	{
-		if(getFlag(FLAG_REMOVED_FROM_PARENT) == true)
+		if (getFlag(FLAG_REMOVED_FROM_PARENT) == true)
 		{
-			if(id.startsWith(AUTO_COMPONENT_PREFIX))
+			if (id.startsWith(AUTO_COMPONENT_PREFIX))
 			{
 				parent.autoAdd(this);
 			}
@@ -694,7 +698,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Adds an behavior modifier to the component.
 	 * 
@@ -756,9 +760,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		// Also detach models from any contained attribute modifiers
 		if (behaviors != null)
 		{
-			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
+			for (IBehavior behavior : behaviors)
 			{
-				IBehavior behavior = i.next();
 				behavior.detachModel(this);
 			}
 		}
@@ -991,8 +994,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	public final ValueMap getMarkupAttributes()
 	{
 		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
-		ValueMap attrs = new ValueMap(markupStream
-				.getTag().getAttributes());
+		ValueMap attrs = new ValueMap(markupStream.getTag().getAttributes());
 		attrs.makeImmutable();
 		return attrs;
 	}
@@ -1483,7 +1485,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		Component component = this;
 		while (component != null)
 		{
-			if (component.isRenderAllowed() && component.isVisible() && component.getFlag(FLAG_REMOVED_FROM_PARENT) == false)
+			if (component.isRenderAllowed() && component.isVisible()
+					&& component.getFlag(FLAG_REMOVED_FROM_PARENT) == false)
 			{
 				component = component.getParent();
 			}
@@ -1648,9 +1651,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				// behavior to clean up
 				if (behaviors != null)
 				{
-					for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
+					for (IBehavior behavior : behaviors)
 					{
-						IBehavior behavior = i.next();
 						try
 						{
 							behavior.exception(this, ex);
@@ -1822,7 +1824,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		catch (RuntimeException re)
 		{
 			if (re instanceof WicketRuntimeException || re instanceof AbortException)
+			{
 				throw re;
+			}
 			throw new WicketRuntimeException("Exception in rendering component: " + this, re);
 		}
 	}
@@ -1843,9 +1847,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 		if (behaviors != null)
 		{
-			for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
+			for (IBehavior behavior : behaviors)
 			{
-				IBehavior behavior = i.next();
 				behavior.rendered(this);
 			}
 		}
@@ -2118,8 +2121,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 *            The parameters for thsi bookmarkable page.
 	 * @see RequestCycle#setResponsePage(Class, PageParameters)
 	 */
-	public final void setResponsePage(final Class<? extends Page> cls,
-			PageParameters parameters)
+	public final void setResponsePage(final Class<? extends Page> cls, PageParameters parameters)
 	{
 		getRequestCycle().setResponsePage(cls, parameters);
 	}
@@ -2490,10 +2492,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		}
 
 		List<IBehavior> subset = new ArrayList<IBehavior>(behaviors.size()); // avoid
-																				// growing
-		for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
+		for (IBehavior behavior : behaviors)
 		{
-			IBehavior behavior = i.next();
 			if (type.isAssignableFrom(behavior.getClass()))
 			{
 				subset.add(behavior);
@@ -2797,10 +2797,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			{
 				tag = tag.mutable();
 
-				for (Iterator<IBehavior> i = behaviors.iterator(); i.hasNext();)
+				for (IBehavior behavior : behaviors)
 				{
-					IBehavior behavior = i.next();
-
 					// Components may reject some behavior components
 					if (isBehaviorAccepted(behavior))
 					{
@@ -3036,15 +3034,10 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * Sets the parent of a component.
 	 * 
 	 * @param parent
-	 *            The parent container
-	final void setParent(final MarkupContainer parent)
-	{
-		if (this.parent != null && log.isDebugEnabled())
-		{
-			log.debug("Replacing parent " + this.parent + " with " + parent);
-		}
-		this.parent = parent;
-	}
+	 *            The parent container final void setParent(final
+	 *            MarkupContainer parent) { if (this.parent != null &&
+	 *            log.isDebugEnabled()) { log.debug("Replacing parent " +
+	 *            this.parent + " with " + parent); } this.parent = parent; }
 	 */
 
 	/**
