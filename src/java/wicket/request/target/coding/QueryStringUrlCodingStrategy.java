@@ -85,7 +85,8 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * @param bookmarkablePageClass
 	 *            the class of the mounted page
 	 */
-	public QueryStringUrlCodingStrategy(final String mountPath, final Class<? extends Page> bookmarkablePageClass)
+	public QueryStringUrlCodingStrategy(final String mountPath,
+			final Class<? extends Page> bookmarkablePageClass)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 	}
@@ -157,7 +158,8 @@ public class QueryStringUrlCodingStrategy extends BookmarkablePageRequestTargetU
 	 * @return Parameters
 	 */
 	@Override
-	protected ValueMap decodeParameters(String fragment, Map<String,? extends Object> passedParameters)
+	protected ValueMap decodeParameters(String fragment,
+			Map<String, ? extends Object> passedParameters)
 	{
 		ValueMap parameters = new ValueMap();
 

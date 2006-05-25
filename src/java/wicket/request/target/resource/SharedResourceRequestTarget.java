@@ -33,89 +33,94 @@ import wicket.request.RequestParameters;
 /**
  * Default implementation of {@link ISharedResourceRequestTarget}. Target that
  * denotes a shared {@link wicket.Resource}.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 {
-  /** Logging object */
-  private static final Log log = LogFactory.getLog(SharedResourceRequestTarget.class);
+	/** Logging object */
+	private static final Log log = LogFactory.getLog(SharedResourceRequestTarget.class);
 
-  private final RequestParameters requestParameters;
+	private final RequestParameters requestParameters;
 
 
-  /**
-   * Construct.
-   *
-   * @param requestParameters the request parameters
-   */
-  public SharedResourceRequestTarget(RequestParameters requestParameters)
-  {
-    this.requestParameters = requestParameters;
-    if (requestParameters==null)
-      throw new IllegalArgumentException("requestParameters may not be null");
-    else if (requestParameters.getResourceKey()==null)
-      throw new IllegalArgumentException("requestParameters.getResourceKey() " +
-        "may not be null");
-  }
+	/**
+	 * Construct.
+	 * 
+	 * @param requestParameters
+	 *            the request parameters
+	 */
+	public SharedResourceRequestTarget(RequestParameters requestParameters)
+	{
+		this.requestParameters = requestParameters;
+		if (requestParameters == null)
+		{
+			throw new IllegalArgumentException("requestParameters may not be null");
+		}
+		else if (requestParameters.getResourceKey() == null)
+		{
+			throw new IllegalArgumentException("requestParameters.getResourceKey() "
+					+ "may not be null");
+		}
+	}
 
-  /**
-   * Respond by looking up the shared resource and delegating the actual
-   * response to that resource.
-   *
-   * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
-   */
-  public void respond(RequestCycle requestCycle)
-  {
-    SharedResources sharedResources = requestCycle.getApplication().getSharedResources();
-    final String resourceKey = getRequestParameters().getResourceKey();
-    Resource resource = sharedResources.get(resourceKey);
-    if (resource == null)
-    {
-      Response response = requestCycle.getResponse();
-      if(response instanceof WebResponse)
-      {
-        ((WebResponse)response).getHttpServletResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
-        log.error("shared resource " + resourceKey + " not found");
-        return;
-      }
-      else
-      {
-        throw new WicketRuntimeException("shared resource " + resourceKey +
-          " not found");
-      }
-    }
+	/**
+	 * Respond by looking up the shared resource and delegating the actual
+	 * response to that resource.
+	 * 
+	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
+	 */
+	public void respond(RequestCycle requestCycle)
+	{
+		SharedResources sharedResources = requestCycle.getApplication().getSharedResources();
+		final String resourceKey = getRequestParameters().getResourceKey();
+		Resource resource = sharedResources.get(resourceKey);
+		if (resource == null)
+		{
+			Response response = requestCycle.getResponse();
+			if (response instanceof WebResponse)
+			{
+				((WebResponse)response).getHttpServletResponse().setStatus(
+						HttpServletResponse.SC_NOT_FOUND);
+				log.error("shared resource " + resourceKey + " not found");
+				return;
+			}
+			else
+			{
+				throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
+			}
+		}
 
-    if (requestParameters != null)
-    {
-      resource.setParameters(requestParameters.getParameters());
-    }
+		if (requestParameters != null)
+		{
+			resource.setParameters(requestParameters.getParameters());
+		}
 
-    resource.onResourceRequested();
-  }
+		resource.onResourceRequested();
+	}
 
-  /**
-   * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
-   */
-  public void detach(RequestCycle requestCycle)
-  {
-  }
+	/**
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
+	 */
+	public void detach(RequestCycle requestCycle)
+	{
+	}
 
-  /**
-   * @see wicket.IRequestTarget#getLock(RequestCycle)
-   */
-  public Object getLock(RequestCycle requestCycle)
-  {
-    return null;
-  }
+	/**
+	 * @see wicket.IRequestTarget#getLock(RequestCycle)
+	 */
+	public Object getLock(RequestCycle requestCycle)
+	{
+		return null;
+	}
 
-  /**
-   * @see wicket.request.target.resource.ISharedResourceRequestTarget#getRequestParameters()
-   */
-  public final RequestParameters getRequestParameters()
-  {
-    return requestParameters;
-  }
+	/**
+	 * @see wicket.request.target.resource.ISharedResourceRequestTarget#getRequestParameters()
+	 */
+	public final RequestParameters getRequestParameters()
+	{
+		return requestParameters;
+	}
 
 	/**
 	 * @see wicket.request.target.resource.ISharedResourceRequestTarget#getResourceKey()
@@ -124,39 +129,40 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	{
 		return requestParameters.getResourceKey();
 	}
-	
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-public boolean equals(Object obj)
-  {
-    if (obj instanceof SharedResourceRequestTarget)
-    {
-      SharedResourceRequestTarget that = (SharedResourceRequestTarget)obj;
-      return getRequestParameters().getResourceKey().equals(that.getRequestParameters().getResourceKey());
-    }
-    return false;
-  }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-public int hashCode()
-  {
-    int result = "SharedResourceRequestTarget".hashCode();
-    result += getRequestParameters().getResourceKey().hashCode();
-    return 17 * result;
-  }
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof SharedResourceRequestTarget)
+		{
+			SharedResourceRequestTarget that = (SharedResourceRequestTarget)obj;
+			return getRequestParameters().getResourceKey().equals(
+					that.getRequestParameters().getResourceKey());
+		}
+		return false;
+	}
 
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-public String toString()
-  {
-    return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey=" +
-      getRequestParameters().getResourceKey() + "]";
-  }
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		int result = "SharedResourceRequestTarget".hashCode();
+		result += getRequestParameters().getResourceKey().hashCode();
+		return 17 * result;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "[SharedResourceRequestTarget@" + hashCode() + ", resourceKey="
+				+ getRequestParameters().getResourceKey() + "]";
+	}
 }

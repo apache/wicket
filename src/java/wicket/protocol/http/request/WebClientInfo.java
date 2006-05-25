@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: WebClientInfo.java 3361 2005-12-06 08:12:26 +0000 (Tue, 06 Dec 2005)
+ * eelco12 $ $Revision$ $Date: 2005-12-06 08:12:26 +0000 (Tue, 06 Dec
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

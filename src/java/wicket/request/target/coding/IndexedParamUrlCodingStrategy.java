@@ -33,7 +33,8 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	 * @param bookmarkablePageClass
 	 *            class of mounted page
 	 */
-	public IndexedParamUrlCodingStrategy(String mountPath, Class<? extends Page> bookmarkablePageClass)
+	public IndexedParamUrlCodingStrategy(String mountPath,
+			Class<? extends Page> bookmarkablePageClass)
 	{
 		super(mountPath, bookmarkablePageClass, PageMap.DEFAULT_NAME);
 	}
@@ -48,8 +49,8 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	 * @param pageMapName
 	 *            name of pagemap
 	 */
-	public IndexedParamUrlCodingStrategy(String mountPath, Class<? extends Page> bookmarkablePageClass,
-			String pageMapName)
+	public IndexedParamUrlCodingStrategy(String mountPath,
+			Class<? extends Page> bookmarkablePageClass, String pageMapName)
 	{
 		super(mountPath, bookmarkablePageClass, pageMapName);
 	}
@@ -64,12 +65,13 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			url.append("/").append(urlEncode(value));
 			i++;
 		}
-		
+
 		String pageMap = (String)parameters.get(WebRequestCodingStrategy.PAGEMAP);
-		if(pageMap != null)
+		if (pageMap != null)
 		{
 			i++;
-			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncode(pageMap));
+			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
+					urlEncode(pageMap));
 		}
 
 		if (i != parameters.size())
@@ -81,7 +83,8 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 	}
 
 	@Override
-	protected ValueMap decodeParameters(String urlFragment, Map<String,? extends Object> urlParameters)
+	protected ValueMap decodeParameters(String urlFragment,
+			Map<String, ? extends Object> urlParameters)
 	{
 		PageParameters params = new PageParameters();
 		if (urlFragment == null)
@@ -96,10 +99,10 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		String[] parts = urlFragment.split("/");
 		for (int i = 0; i < parts.length; i++)
 		{
-			if(WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
 			{
 				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP,parts[i]);
+				params.put(WebRequestCodingStrategy.PAGEMAP, parts[i]);
 			}
 			else
 			{

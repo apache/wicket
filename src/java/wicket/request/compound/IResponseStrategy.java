@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: IResponseStrategy.java 3448 2005-12-19 11:44:19 +0000 (Mon, 19 Dec 2005)
+ * eelco12 $ $Revision$ $Date: 2005-12-19 11:44:19 +0000 (Mon, 19 Dec
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

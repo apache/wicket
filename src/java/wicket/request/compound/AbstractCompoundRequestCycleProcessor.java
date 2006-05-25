@@ -1,6 +1,7 @@
 /*
  * $Id: AbstractCompoundRequestCycleProcessor.java,v 1.2 2005/11/25 22:03:33
- * eelco12 Exp $ $Revision$ $Date$
+ * eelco12 Exp $ $Revision$ $Date: 2005-12-19 11:44:19 +0000 (Mon, 19 Dec
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MockHttpServletRequest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -86,7 +87,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final List<Cookie> cookies = new ArrayList<Cookie>();
 
-	private final Map<String,List<String>> headers = new HashMap<String,List<String>>();
+	private final Map<String, List<String>> headers = new HashMap<String, List<String>>();
 
 	private String method;
 
@@ -227,7 +228,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Cookie[] getCookies()
 	{
-		if(cookies.size() == 0)
+		if (cookies.size() == 0)
 		{
 			return null;
 		}
@@ -457,7 +458,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			return new String[0];
 		}
-		
+
 		if (value instanceof String[])
 		{
 			return (String[])value;
@@ -873,9 +874,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setCookies(final Cookie[] theCookies)
 	{
 		cookies.clear();
-		for (int i = 0; i < theCookies.length; i++)
+		for (Cookie element : theCookies)
 		{
-			cookies.add(theCookies[i]);
+			cookies.add(element);
 		}
 	}
 
@@ -909,7 +910,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 * @param parameters
 	 *            the parameters to set
 	 */
-	public void setParameters(final Map<String,Object> parameters)
+	public void setParameters(final Map<String, Object> parameters)
 	{
 		this.parameters.putAll(parameters);
 	}
@@ -924,50 +925,49 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		this.path = path;
 	}
-	
+
 	/**
-	 * Set the complete url for this request.
-	 * The url will be analized.
+	 * Set the complete url for this request. The url will be analized.
 	 * 
 	 * @param url
 	 */
 	public void setURL(String url)
 	{
-		if(url.startsWith("http://"))
+		if (url.startsWith("http://"))
 		{
 			int index = url.indexOf("/", 7);
 			url = url.substring(index);
 		}
-		if(url.startsWith(getContextPath()))
+		if (url.startsWith(getContextPath()))
 		{
 			url = url.substring(getContextPath().length());
 		}
-		if(url.startsWith(getServletPath()))
+		if (url.startsWith(getServletPath()))
 		{
 			url = url.substring(getServletPath().length());
 		}
-		
+
 		int index = url.indexOf("?");
-		if(index == -1)
+		if (index == -1)
 		{
 			path = url;
 		}
 		else
 		{
 			path = url.substring(0, index);
-			
-			String queryString = url.substring(index+1);
-			StringTokenizer st = new StringTokenizer(queryString,"&");
-			while(st.hasMoreTokens())
+
+			String queryString = url.substring(index + 1);
+			StringTokenizer st = new StringTokenizer(queryString, "&");
+			while (st.hasMoreTokens())
 			{
 				String token = st.nextToken();
 				int tmp = token.indexOf("=");
-				if(tmp != -1)
+				if (tmp != -1)
 				{
-					setParameter(token.substring(0,tmp), token.substring(tmp+1));
+					setParameter(token.substring(0, tmp), token.substring(tmp + 1));
 				}
 			}
-			
+
 		}
 	}
 
@@ -983,7 +983,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setRequestToBookmarkablePage(final Page page, final Map<String, String> params)
 	{
 		parameters.putAll(params);
-		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass().getName());
+		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
+				.getName());
 	}
 
 	/**
@@ -999,7 +1000,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (component instanceof BookmarkablePageLink)
 		{
 			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName + ':' + clazz.getName());
+			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
+					+ ':' + clazz.getName());
 		}
 		else
 		{
@@ -1028,11 +1030,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 			else
 			{
 				throw new IllegalArgumentException(
-						"The component class doesn't seem to implement any of the known *Listener Interfaces: " 
-						+ component.getClass());
+						"The component class doesn't seem to implement any of the known *Listener Interfaces: "
+								+ component.getClass());
 			}
 
-			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.simpleName(clazz));
+			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':'
+					+ component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':'
+					+ Classes.simpleName(clazz));
 		}
 	}
 
@@ -1074,14 +1078,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			Map<Component, String> diff = new HashMap<Component, String>();
 			diff.putAll(values);
-			
+
 			Iterator<String> iter = valuesApplied.keySet().iterator();
 			while (iter.hasNext())
 			{
 				diff.remove(iter.next());
 			}
-			
-			log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
+
+			log
+					.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
 							+ diff.keySet());
 		}
 	}
@@ -1099,9 +1104,9 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		final String paramPart = redirect.substring(redirect.indexOf('?') + 1);
 		final String[] paramTuples = paramPart.split("&");
-		for (int t = 0; t < paramTuples.length; t++)
+		for (String element : paramTuples)
 		{
-			final String[] bits = paramTuples[t].split("=");
+			final String[] bits = element.split("=");
 			if (bits.length == 2)
 			{
 				try

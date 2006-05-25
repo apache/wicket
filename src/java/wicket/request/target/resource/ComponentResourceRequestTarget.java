@@ -66,8 +66,8 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 		catch (Exception e)
 		{
 			throw new WicketRuntimeException("method " + listener.getName() + " of "
-					+ listener.getMethod().getDeclaringClass() + " targetted at component " + component
-					+ " threw an exception", e);
+					+ listener.getMethod().getDeclaringClass() + " targetted at component "
+					+ component + " threw an exception", e);
 		}
 		finally
 		{

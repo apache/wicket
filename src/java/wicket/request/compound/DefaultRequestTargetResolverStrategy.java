@@ -274,15 +274,15 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			if(requestParameters.getBookmarkableFormName() != null)
+			if (requestParameters.getBookmarkableFormName() != null)
 			{
-				return new BookmarkableFormPageRequestTarget(requestParameters.getPageMapName(), pageClass,
-						params,requestParameters.getBookmarkableFormName());
+				return new BookmarkableFormPageRequestTarget(requestParameters.getPageMapName(),
+						pageClass, params, requestParameters.getBookmarkableFormName());
 			}
 			else
 			{
-				return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(), pageClass,
-						params);
+				return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
+						pageClass, params);
 			}
 		}
 		catch (RuntimeException e)
@@ -315,9 +315,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// and create a dummy target for looking up whether the home page is
 			// mounted
 			BookmarkablePageRequestTarget homepageTarget = null;
-			if(requestParameters.getBookmarkableFormName() != null)
+			if (requestParameters.getBookmarkableFormName() != null)
 			{
-				homepageTarget = new BookmarkableFormPageRequestTarget(null,homePageClass, parameters,requestParameters.getBookmarkableFormName());
+				homepageTarget = new BookmarkableFormPageRequestTarget(null, homePageClass,
+						parameters, requestParameters.getBookmarkableFormName());
 			}
 			else
 			{
@@ -325,7 +326,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 				IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
 						.getRequestCodingStrategy();
 				CharSequence path = requestCodingStrategy.pathForTarget(homepageTarget);
-	
+
 				if (path != null)
 				{
 					// The home page was mounted at the given path.

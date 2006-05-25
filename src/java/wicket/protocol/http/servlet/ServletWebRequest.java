@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -104,7 +102,7 @@ public class ServletWebRequest extends WebRequest
 		{
 			final String name = (String)enumeration.nextElement();
 			String[] parameterValues = httpServletRequest.getParameterValues(name);
-			if(parameterValues.length == 1)
+			if (parameterValues.length == 1)
 			{
 				map.put(name, parameterValues[0]);
 			}

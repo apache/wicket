@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BufferedWebResponse.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -54,26 +55,27 @@ public class BufferedWebResponse extends WebResponse
 	}
 
 	/**
-     * Flushes the response buffer by doing a redirect or writing out the buffer.
-     * NOTE: The servlet container will close the response output stream.
+	 * Flushes the response buffer by doing a redirect or writing out the
+	 * buffer. NOTE: The servlet container will close the response output
+	 * stream.
 	 */
 	@Override
 	public void close()
 	{
-        // If a redirection was specified
-        if (redirectURL != null)
-        {
-            // actually redirect
-            super.redirect(redirectURL);
-        }
-        else
-        {
-            // Write the buffer to the response stream
-            if (buffer.length() != 0)
-            {
-                super.write(buffer);
-            }
-        }
+		// If a redirection was specified
+		if (redirectURL != null)
+		{
+			// actually redirect
+			super.redirect(redirectURL);
+		}
+		else
+		{
+			// Write the buffer to the response stream
+			if (buffer.length() != 0)
+			{
+				super.write(buffer);
+			}
+		}
 	}
 
 	/**
@@ -85,10 +87,11 @@ public class BufferedWebResponse extends WebResponse
 	@Override
 	public final void redirect(final String url)
 	{
-        if (redirectURL != null)
-        {
-        	throw new WicketRuntimeException("Already redirecting to '" + redirectURL + "'. Cannot redirect more than once");
-        }
+		if (redirectURL != null)
+		{
+			throw new WicketRuntimeException("Already redirecting to '" + redirectURL
+					+ "'. Cannot redirect more than once");
+		}
 		this.redirectURL = url;
 	}
 
@@ -105,14 +108,14 @@ public class BufferedWebResponse extends WebResponse
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. 
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.
 	 */
 	public final void filter()
 	{
-        if (redirectURL == null && buffer.length() != 0)
-        {
-        	this.buffer = filter(buffer);
+		if (redirectURL == null && buffer.length() != 0)
+		{
+			this.buffer = filter(buffer);
 
-        }
+		}
 	}
 }

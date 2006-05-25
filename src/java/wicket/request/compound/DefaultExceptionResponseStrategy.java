@@ -68,17 +68,21 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		{
 			requestCycle.setResponsePage(override);
 		}
-		else if(e instanceof AuthorizationException)
+		else if (e instanceof AuthorizationException)
 		{
-			// are authorization exceptions always thrown before the real render?
-			// else we need to make a page (see below) or set it hard to a redirect.
-			Class accessDeniedPageClass = application.getApplicationSettings().getAccessDeniedPage();
+			// are authorization exceptions always thrown before the real
+			// render?
+			// else we need to make a page (see below) or set it hard to a
+			// redirect.
+			Class accessDeniedPageClass = application.getApplicationSettings()
+					.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
-			Class internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();
+			Class internalErrorPageClass = application.getApplicationSettings()
+					.getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass

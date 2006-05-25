@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: IWebApplicationFactory.java 4710 2006-03-02 08:46:15 +0000 (Thu, 02 Mar
+ * 2006) eelco12 $ $Revision$ $Date: 2006-03-02 08:46:15 +0000 (Thu, 02
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,12 +23,12 @@ package wicket.protocol.http;
  * Configure your webapplication to use this factory in web.xml like:
  * 
  * <pre>
- *  
- *     &lt;init-param&gt;
- *       &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *         &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *     &lt;/init-param&gt;
  *   
+ *      &lt;init-param&gt;
+ *        &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *          &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *      &lt;/init-param&gt;
+ *    
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)

@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: AbstractReadOnlyModel.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,8 +21,8 @@ package wicket.model;
 import wicket.Component;
 
 /**
- * AbstractReadOnlyModel is an adapter base class for implementing models which have no
- * detach logic and are read-only.
+ * AbstractReadOnlyModel is an adapter base class for implementing models which
+ * have no detach logic and are read-only.
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */

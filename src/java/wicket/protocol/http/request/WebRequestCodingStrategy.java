@@ -150,11 +150,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		addInterfaceParameters(request, parameters);
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
-		
+
 		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
 		parameters.setBookmarkableFormName(request.getParameter(BOOKMARKABLE_FORM_PARAMETER_NAME));
 
-		Map<String,? extends Object> map = request.getParameterMap();
+		Map<String, ? extends Object> map = request.getParameterMap();
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext())
 		{
@@ -351,7 +351,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
 			if (components.length != 2)
 			{
-				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: " + requestString + ", expected: 'pageMapName:pageClassName'");
+				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: "
+						+ requestString + ", expected: 'pageMapName:pageClassName'");
 			}
 
 			// Extract any pagemap name
@@ -530,9 +531,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)
 		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			for (Object element : parameters.keySet())
 			{
-				final String key = (String)iterator.next();
+				final String key = (String)element;
 				final String value = parameters.getString(key);
 				if (value != null)
 				{
@@ -762,7 +763,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				String path = request.getServletPath();
 				if (path != null && !path.equals(""))
 				{
-					if(!buffer.endsWith("/") && !path.startsWith("/")) buffer.append("/");
+					if (!buffer.endsWith("/") && !path.startsWith("/"))
+					{
+						buffer.append("/");
+					}
 					buffer.append(path);
 				}
 			}

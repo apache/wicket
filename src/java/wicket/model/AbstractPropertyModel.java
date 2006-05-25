@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractPropertyModel.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -178,21 +179,22 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 					if (propertyType != null && component != null)
 					{
 						// convert the String to the right type
-						object = (T)component.getConverter(propertyType).convertToObject(string, component.getLocale());
+						object = (T)component.getConverter(propertyType).convertToObject(string,
+								component.getLocale());
 					}
 				}
 			}
 
 			PropertyResolverConverter prc = null;
-			if(component != null)
+			if (component != null)
 			{
-				prc = new PropertyResolverConverter(component,component.getLocale());
+				prc = new PropertyResolverConverter(component, component.getLocale());
 			}
 			else
 			{
-				prc = new PropertyResolverConverter(Session.get(),Session.get().getLocale());
+				prc = new PropertyResolverConverter(Session.get(), Session.get().getLocale());
 			}
-			
+
 			PropertyResolver.setValue(expression, modelObject, object, prc);
 		}
 	}

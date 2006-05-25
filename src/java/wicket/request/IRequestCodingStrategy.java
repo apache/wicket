@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: IRequestCodingStrategy.java 5231 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
+ * 2006) joco01 $ $Revision$ $Date: 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,8 +24,8 @@ import wicket.RequestCycle;
 
 /**
  * Implementations of this interface are responsible for digesting the incoming
- * request and creating a suitable {@link wicket.request.RequestParameters} object
- * for it, as well as creating url representations for request targets.
+ * request and creating a suitable {@link wicket.request.RequestParameters}
+ * object for it, as well as creating url representations for request targets.
  * 
  * @author Eelco Hillenius
  */

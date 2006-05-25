@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IEventProcessorStrategy.java 4520 2006-02-17 07:33:23 +0000 (Fri, 17 Feb
+ * 2006) eelco12 $ $Revision$ $Date: 2006-02-17 07:33:23 +0000 (Fri, 17
+ * Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

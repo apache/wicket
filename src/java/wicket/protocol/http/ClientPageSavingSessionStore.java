@@ -48,7 +48,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	private static final Log log = LogFactory.getLog(ClientPageSavingSessionStore.class);
 
 	private ThreadLocal<Map<String, Object>> pages = new ThreadLocal<Map<String, Object>>();
-	
+
 	/**
 	 * Construct.
 	 */
@@ -65,14 +65,14 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	private Map<String, Object> getStore(Request request)
 	{
 		Map<String, Object> map = pages.get();
-		if(map == null)
+		if (map == null)
 		{
 			map = new HashMap<String, Object>();
 			pages.set(map);
 		}
 		return map;
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.AbstractHttpSessionStore#onBeginRequest(wicket.Request)
 	 */
@@ -82,7 +82,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 		Map<String, Object> map = getStore(request);
 
 		String wicketState = request.getParameter("wicketState");
-		if(wicketState != null)
+		if (wicketState != null)
 		{
 			byte[] bytes = Base64.decodeBase64(wicketState.getBytes());
 			ByteArrayInputStream in = new ByteArrayInputStream(bytes);
@@ -100,9 +100,9 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 				throw new RuntimeException(ex);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.AbstractHttpSessionStore#onEndRequest(wicket.Request)
 	 */
@@ -121,7 +121,10 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	{
 		Map<String, Object> store = getStore(request);
 		Object o = store.get(name);
-		if(o == null) return super.getAttribute(request, name);
+		if (o == null)
+		{
+			return super.getAttribute(request, name);
+		}
 		return o;
 	}
 
@@ -144,7 +147,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	public final void removeAttribute(Request request, String name)
 	{
 		Map<String, Object> store = getStore(request);
-		if(store.remove(name) == null)
+		if (store.remove(name) == null)
 		{
 			super.removeAttribute(request, name);
 		}
@@ -157,9 +160,10 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	@Override
 	public final void setAttribute(Request request, String name, Object value)
 	{
-		if(value instanceof Page)
+		if (value instanceof Page)
 		{
-			// set the page to none versioning. this is not needed for client page saving.
+			// set the page to none versioning. this is not needed for client
+			// page saving.
 			((Page)value).setVersioned(false);
 			Map<String, Object> store = getStore(request);
 			store.put(name, value);
@@ -169,9 +173,10 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 			super.setAttribute(request, name, value);
 		}
 	}
-	
+
 	/**
-	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String, wicket.Session)
+	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String,
+	 *      wicket.Session)
 	 */
 	@Override
 	public PageMap createPageMap(String name, Session session)
@@ -188,6 +193,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 
 		/**
 		 * Construct.
+		 * 
 		 * @param name
 		 * @param session
 		 */
@@ -212,12 +218,14 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 		protected Page get(int id, int versionNumber)
 		{
 			RequestCycle rc = RequestCycle.get();
-			if(rc != null)
+			if (rc != null)
 			{
-				final IPageMapEntry entry = (IPageMapEntry)Application.get().getSessionStore().getAttribute(rc.getRequest(),attributeForId(id));
-				if(entry != null)
+				final IPageMapEntry entry = (IPageMapEntry)Application.get().getSessionStore()
+						.getAttribute(rc.getRequest(), attributeForId(id));
+				if (entry != null)
 				{
-					// version should be able to be ignored.. but calling it anyway
+					// version should be able to be ignored.. but calling it
+					// anyway
 					return entry.getPage().getVersion(versionNumber);
 				}
 			}
@@ -237,24 +245,28 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 		 */
 		public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 		{
-			ClientPageSavingSessionStore sessionStore = (ClientPageSavingSessionStore)Application.get().getSessionStore();
+			ClientPageSavingSessionStore sessionStore = (ClientPageSavingSessionStore)Application
+					.get().getSessionStore();
 			IRequestTarget rt = RequestCycle.get().getRequestTarget();
-			
+
 			int index = responseBuffer.indexOf("<head>");
 			int bodyIndex = responseBuffer.indexOf("</body>");
-			if(index != -1 && bodyIndex != -1)
+			if (index != -1 && bodyIndex != -1)
 			{
 				Page page = null;
-				if(rt instanceof IPageRequestTarget)
+				if (rt instanceof IPageRequestTarget)
 				{
-					page = ((IPageRequestTarget)rt).getPage();	
+					page = ((IPageRequestTarget)rt).getPage();
 				}
-				else if(rt instanceof BookmarkablePageRequestTarget)
+				else if (rt instanceof BookmarkablePageRequestTarget)
 				{
 					page = ((BookmarkablePageRequestTarget)rt).getPage();
 				}
-				
-				if(page == null || page.isStateless()) return responseBuffer;
+
+				if (page == null || page.isStateless())
+				{
+					return responseBuffer;
+				}
 				page.detachModels();
 				String encodedState;
 				try
@@ -272,14 +284,15 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 				{
 					throw new WicketRuntimeException("Internal error serializing object", e);
 				}
-				AppendingStringBuffer response = new AppendingStringBuffer(encodedState.length() + 100);
+				AppendingStringBuffer response = new AppendingStringBuffer(
+						encodedState.length() + 100);
 				response.append(JavascriptUtils.SCRIPT_OPEN_TAG);
 				response.append("\n");
 				response.append("var wicketState = '");
 				response.append(encodedState);
 				response.append("';\n");
 				response.append(JavascriptUtils.SCRIPT_CLOSE_TAG);
-				
+
 				final AppendingStringBuffer forms = new AppendingStringBuffer(64);
 				forms.append(JavascriptUtils.SCRIPT_OPEN_TAG);
 				page.visitChildren(Form.class, new IVisitor()

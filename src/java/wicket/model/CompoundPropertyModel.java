@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CompoundPropertyModel.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,9 +57,9 @@ public class CompoundPropertyModel<T> extends AbstractPropertyModel<T> implement
 	{
 		if (component == null)
 		{
-		    return null;
+			return null;
 		}
-		
+
 		return component.getId();
 	}
 

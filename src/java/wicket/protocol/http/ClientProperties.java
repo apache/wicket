@@ -410,7 +410,7 @@ public class ClientProperties implements Serializable
 	 */
 	public String[] getPropertyNames()
 	{
-		return (String[])data.keySet().toArray(new String[data.size()]);
+		return data.keySet().toArray(new String[data.size()]);
 	}
 
 	/**
@@ -514,6 +514,7 @@ public class ClientProperties implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "ClientProperties: " + data.toString();
