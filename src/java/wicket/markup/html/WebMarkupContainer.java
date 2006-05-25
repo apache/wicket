@@ -36,7 +36,7 @@ public class WebMarkupContainer<T> extends MarkupContainer<T>
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @see Component#Component(String)
+	 * @see Component#Component(MarkupContainer,String)
 	 */
 	public WebMarkupContainer(MarkupContainer parent, final String id)
 	{
@@ -44,7 +44,7 @@ public class WebMarkupContainer<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public WebMarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
 	{

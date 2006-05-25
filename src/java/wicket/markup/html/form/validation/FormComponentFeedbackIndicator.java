@@ -54,7 +54,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public FormComponentFeedbackIndicator(MarkupContainer parent,final String id, IModel model)
 	{

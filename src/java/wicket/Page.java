@@ -202,7 +202,7 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 	 * 
 	 * @param model
 	 *            See Component
-	 * @see Component#Component(String, IModel)
+	 * @see Component#Component(MarkupContainer,String, IModel)
 	 */
 	protected Page(final IModel<T> model)
 	{
@@ -234,7 +234,7 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 	 *            the name of the page map to put this page in
 	 * @param model
 	 *            See Component
-	 * @see Component#Component(String, IModel)
+	 * @see Component#Component(MarkupContainer,String, IModel)
 	 */
 	protected Page(final PageMap pageMap, final IModel<T> model)
 	{

@@ -142,8 +142,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * 
 	 * @param id
 	 *            See Component
-	 * @see wicket.Component#Component(String)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String)
 	 */
 	public RadioChoice(MarkupContainer parent, final String id)
 	{
@@ -157,8 +157,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
 	 */
 	public RadioChoice(MarkupContainer parent, final String id, final List choices)
 	{
@@ -174,8 +174,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            The rendering engine
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      List,IChoiceRenderer)
 	 */
 	public RadioChoice(MarkupContainer parent, final String id, final List choices, final IChoiceRenderer renderer)
@@ -192,8 +192,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String, IModel)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List)
 	 */
 	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices)
@@ -212,8 +212,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see wicket.Component#Component(String, IModel)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List,IChoiceRenderer)
 	 */
 	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices,
@@ -229,8 +229,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel)
 	 */
 	public RadioChoice(MarkupContainer parent,String id, IModel choices)
@@ -248,9 +248,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IModel)
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public RadioChoice(MarkupContainer parent,String id, IModel model, IModel choices)
 	{
@@ -266,9 +266,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IChoiceRenderer)
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public RadioChoice(MarkupContainer parent,String id, IModel choices, IChoiceRenderer renderer)
 	{
@@ -288,8 +288,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see wicket.Component#Component(String, IModel)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
 	public RadioChoice(MarkupContainer parent,String id, IModel model, IModel choices, IChoiceRenderer renderer)

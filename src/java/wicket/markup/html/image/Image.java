@@ -50,7 +50,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * resources) Or if you have a value attribute in your tag for which the
 	 * image factory can make an image.
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public Image(MarkupContainer parent,final String id)
 	{
@@ -123,7 +123,7 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Image(MarkupContainer parent,final String id, final IModel model)
 	{
@@ -135,7 +135,7 @@ public class Image extends WebComponent implements IResourceListener
 	 *            See Component
 	 * @param string
 	 *            Name of image
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Image(MarkupContainer parent,final String id, final String string)
 	{

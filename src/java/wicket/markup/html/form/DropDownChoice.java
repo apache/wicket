@@ -61,7 +61,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String)
 	 */
 	public DropDownChoice(MarkupContainer parent, final String id)
 	{
@@ -69,7 +69,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
 	 */
 	public DropDownChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
@@ -77,7 +77,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List,IChoiceRenderer)
 	 */
 	public DropDownChoice(MarkupContainer parent, final String id, final List<T> data, final IChoiceRenderer<T> renderer)
 	{
@@ -85,7 +85,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List)
 	 */
 	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> choices)
 	{
@@ -93,7 +93,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List, IChoiceRenderer)
 	 */
 	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> data, final IChoiceRenderer<T> renderer)
 	{
@@ -101,7 +101,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel)
 	 */
 	public DropDownChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
 	{
@@ -109,7 +109,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel,IModel)
 	 */
 	public DropDownChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices)
 	{
@@ -117,7 +117,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 	
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel,IChoiceRenderer)
 	 */
 	public DropDownChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
@@ -126,7 +126,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, IModel,IChoiceRenderer)
 	 */
 	public DropDownChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{

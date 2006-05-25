@@ -44,7 +44,7 @@ public class FileUploadField extends FormComponent
 	private boolean hasExplicitModel;
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public FileUploadField(MarkupContainer parent, final String id)
 	{

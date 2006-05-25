@@ -33,7 +33,7 @@ import wicket.util.string.Strings;
 public abstract class AbstractTextComponent<T> extends FormComponent<T>
 {
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public AbstractTextComponent(MarkupContainer parent,String id)
 	{
@@ -42,7 +42,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	AbstractTextComponent(MarkupContainer parent, final String id, final IModel model)
 	{

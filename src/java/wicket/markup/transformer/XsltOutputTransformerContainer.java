@@ -53,7 +53,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * Instead of using the default mechanism to determine the associated XSL
 	 * file, it is given by the user.
 	 * 
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 * 
 	 * @param xslFilePath
 	 *            XSL input file path
@@ -79,7 +79,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public XsltOutputTransformerContainer(MarkupContainer parent, final String id, final IModel model)
 	{
@@ -89,7 +89,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public XsltOutputTransformerContainer(MarkupContainer parent, final String id)
 	{

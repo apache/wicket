@@ -52,7 +52,7 @@ public class PasswordTextField extends TextField
 	private boolean resetPassword = true;
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public PasswordTextField(MarkupContainer parent, final String id)
 	{
@@ -61,7 +61,7 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public PasswordTextField(MarkupContainer parent, final String id, IModel model)
 	{

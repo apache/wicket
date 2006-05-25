@@ -64,7 +64,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * @see wicket.Component#Component(String)
+		 * @see wicket.Component#Component(MarkupContainer,String)
 		 */
 		public MessageListView(MarkupContainer parent, final String id)
 		{
@@ -108,7 +108,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public FeedbackPanel(MarkupContainer parent, final String id)
 	{
@@ -116,7 +116,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public FeedbackPanel(MarkupContainer parent, final String id, IFeedbackMessageFilter filter)
 	{

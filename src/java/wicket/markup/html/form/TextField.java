@@ -34,7 +34,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public TextField(MarkupContainer parent, final String id)
 	{
@@ -54,7 +54,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public TextField(MarkupContainer parent, final String id, final IModel object)
 	{
@@ -68,7 +68,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 *            See Component
 	 * @param type
 	 *            The type to use when updating the model for this text field
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public TextField(MarkupContainer parent, final String id, IModel model, Class type)
 	{

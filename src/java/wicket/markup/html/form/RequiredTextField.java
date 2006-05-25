@@ -31,7 +31,7 @@ public class RequiredTextField extends TextField
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id)
 	{
@@ -40,7 +40,7 @@ public class RequiredTextField extends TextField
 	}
 
 	/**
-	 * @see TextField#TextField(String, Class)
+	 * @see TextField#TextField(MarkupContainer,String, Class)
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id, final Class type)
 	{
@@ -49,7 +49,7 @@ public class RequiredTextField extends TextField
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id, final IModel model)
 	{
@@ -64,7 +64,7 @@ public class RequiredTextField extends TextField
 	 *            See Component
 	 * @param type
 	 *            The type to use when updating the model for this text field
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id, IModel model, Class type)
 	{

@@ -95,7 +95,7 @@ public class Label<T> extends WebComponent<T>
 	 * @param label
 	 *            The label text
 	 * 
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Label(MarkupContainer parent, final String id, String label)
 	{

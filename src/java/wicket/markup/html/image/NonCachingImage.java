@@ -41,7 +41,7 @@ public class NonCachingImage extends Image
 	/**
 	 * Construct.
 	 * 
-	 * @see Image#Image(String, IModel)
+	 * @see Image#Image(MarkupContainer,String, IModel)
 	 * 
 	 * @param id
 	 * @param model

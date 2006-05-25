@@ -224,7 +224,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 *            See Component
 	 * @param model
 	 *            See Component
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Form(MarkupContainer parent,final String id, IModel<T> model)
 	{

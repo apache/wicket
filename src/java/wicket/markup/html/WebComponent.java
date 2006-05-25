@@ -41,7 +41,7 @@ public class WebComponent<T> extends Component<T>
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see Component#Component(String)
+	 * @see Component#Component(MarkupContainer,String)
 	 */
 	public WebComponent(MarkupContainer parent, final String id)
 	{
@@ -49,7 +49,7 @@ public class WebComponent<T> extends Component<T>
 	}
 
 	/**
-	 * @see Component#Component(String, IModel)
+	 * @see Component#Component(MarkupContainer,String, IModel)
 	 */
 	public WebComponent(MarkupContainer parent, final String id, final IModel<T> model)
 	{

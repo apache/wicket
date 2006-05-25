@@ -107,7 +107,7 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	private PopupSettings popupSettings = null;
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public Link(MarkupContainer parent,final String id)
 	{
@@ -115,7 +115,7 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Link(MarkupContainer parent,final String id, IModel object)
 	{
