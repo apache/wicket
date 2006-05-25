@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractResourceStreamLocator.java 3918 2006-01-20 18:53:50 +0000 (Fri,
+ * 20 Jan 2006) joco01 $ $Revision$ $Date: 2006-01-20 18:53:50 +0000
+ * (Fri, 20 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -89,7 +90,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 				extension = "." + extension;
 			}
 		}
-		
+
 		// 1. Try style, locale and extension
 		if (style != null && locale != null)
 		{

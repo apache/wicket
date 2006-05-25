@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,7 +51,7 @@ public final class Task
 
 	/** The log to give to the user's code. */
 	private transient Log log = null;
-	
+
 	/** The name of this task. */
 	private final String name;
 
@@ -105,7 +105,7 @@ public final class Task
 						{
 							log.debug("Run the job: " + code.toString());
 						}
-						
+
 						try
 						{
 							// Run the user's code
@@ -113,10 +113,9 @@ public final class Task
 						}
 						catch (Exception e)
 						{
-							log.error("Unhandled exception thrown by user code in task " 
-									+ name, e);
+							log.error("Unhandled exception thrown by user code in task " + name, e);
 						}
-						
+
 						if (log.isDebugEnabled())
 						{
 							log.debug("Finished with job: " + code.toString());
@@ -221,7 +220,7 @@ public final class Task
 	}
 
 	/**
-	 * Will stop the task as soon as it does have that opportunity  
+	 * Will stop the task as soon as it does have that opportunity
 	 */
 	public void stop()
 	{

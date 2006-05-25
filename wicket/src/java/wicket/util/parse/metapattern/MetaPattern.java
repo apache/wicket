@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MetaPattern.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -162,7 +163,8 @@ public class MetaPattern
 	public static final MetaPattern INTEGER = new MetaPattern("-?\\d+");
 
 	/** Constant for a floating point number. */
-	public static final MetaPattern FLOATING_POINT_NUMBER = new MetaPattern("-?\\d+\\.?\\d*|-?\\.\\d+");
+	public static final MetaPattern FLOATING_POINT_NUMBER = new MetaPattern(
+			"-?\\d+\\.?\\d*|-?\\.\\d+");
 
 	/** Constant for a positive integer. */
 	public static final MetaPattern POSITIVE_INTEGER = new MetaPattern("\\d+");

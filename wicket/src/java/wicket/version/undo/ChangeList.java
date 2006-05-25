@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,7 +43,9 @@ class ChangeList implements Serializable
 
 	/**
 	 * A component was added.
-	 * @param component the added component
+	 * 
+	 * @param component
+	 *            the added component
 	 */
 	void componentAdded(Component component)
 	{
@@ -52,7 +54,9 @@ class ChangeList implements Serializable
 
 	/**
 	 * A model is about to change.
-	 * @param component the component of which the model changed
+	 * 
+	 * @param component
+	 *            the component of which the model changed
 	 */
 	void componentModelChanging(Component component)
 	{
@@ -61,7 +65,9 @@ class ChangeList implements Serializable
 
 	/**
 	 * The state of a component is about to change.
-	 * @param change the change object
+	 * 
+	 * @param change
+	 *            the change object
 	 */
 	void componentStateChanging(Change change)
 	{
@@ -75,7 +81,9 @@ class ChangeList implements Serializable
 
 	/**
 	 * A component was removed from its parent.
-	 * @param component the component that was removed
+	 * 
+	 * @param component
+	 *            the component that was removed
 	 */
 	void componentRemoved(Component component)
 	{
@@ -93,7 +101,7 @@ class ChangeList implements Serializable
 			changes.get(i).undo();
 		}
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -102,5 +110,5 @@ class ChangeList implements Serializable
 	{
 		return changes.toString();
 	}
-	
+
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IntegerGroup.java 1492 2005-03-29 07:03:48 +0000 (Tue, 29 Mar 2005)
+ * jonathanlocke $ $Revision$ $Date: 2005-03-29 07:03:48 +0000 (Tue, 29
+ * Mar 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,7 +47,7 @@ public final class IntegerGroup extends Group
 	 * pattern in base 10.
 	 * 
 	 * @param pattern
-	 *			  The capturing pattern
+	 *            The capturing pattern
 	 */
 	public IntegerGroup(final MetaPattern pattern)
 	{
@@ -58,9 +59,9 @@ public final class IntegerGroup extends Group
 	 * pattern in the given radix.
 	 * 
 	 * @param pattern
-	 *			  The capturing pattern
+	 *            The capturing pattern
 	 * @param radix
-	 *			  The radix to use when parsing captured Strings
+	 *            The radix to use when parsing captured Strings
 	 */
 	public IntegerGroup(final MetaPattern pattern, final int radix)
 	{
@@ -70,7 +71,7 @@ public final class IntegerGroup extends Group
 
 	/**
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @return The value
 	 * @see IntegerGroup#getInt(Matcher, int)
 	 */
@@ -84,10 +85,10 @@ public final class IntegerGroup extends Group
 	 * IntegerGroup's radix is used in the conversion.
 	 * 
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @param defaultValue
-	 *			  The default value to use if this group is omitted because it
-	 *			  is optional
+	 *            The default value to use if this group is omitted because it
+	 *            is optional
 	 * @return The parsed int value
 	 */
 	public int getInt(final Matcher matcher, final int defaultValue)
@@ -98,7 +99,7 @@ public final class IntegerGroup extends Group
 
 	/**
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @return The value
 	 * @see IntegerGroup#getLong(Matcher)
 	 */
@@ -112,10 +113,10 @@ public final class IntegerGroup extends Group
 	 * IntegerGroup's radix is used in the conversion. parsing radix.
 	 * 
 	 * @param defaultValue
-	 *			  The default value to use if this group is omitted because it
-	 *			  is optional
+	 *            The default value to use if this group is omitted because it
+	 *            is optional
 	 * @param matcher
-	 *			  The matcher
+	 *            The matcher
 	 * @return The parsed long value
 	 */
 	public long getLong(final Matcher matcher, final long defaultValue)

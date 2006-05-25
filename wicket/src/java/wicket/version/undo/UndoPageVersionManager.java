@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: UndoPageVersionManager.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,7 +51,7 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 
 	/** The current version number */
 	private int currentVersionNumber = 0;
-	
+
 	/** Maximum number of most-recent versions to keep */
 	private final int maxVersions;
 
@@ -123,7 +124,7 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 	{
 		// Push change list onto stack
 		changeListStack.push(changeList);
-		
+
 		// If stack is overfull, remove oldest entry
 		if (getVersions() > maxVersions)
 		{
@@ -138,7 +139,7 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 			log.debug("Version " + currentVersionNumber + " for page " + page + " stored");
 		}
 	}
-	
+
 	/**
 	 * Expires an old version
 	 */
@@ -204,9 +205,9 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 			log.debug("UNDO: rollback " + page + " to version " + currentVersionNumber);
 		}
 
-		if(changeListStack.isEmpty())
+		if (changeListStack.isEmpty())
 		{
-		    return false;
+			return false;
 		}
 
 		// Pop off top change list

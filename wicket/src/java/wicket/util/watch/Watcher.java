@@ -32,7 +32,7 @@ import wicket.util.listener.IChangeListener;
 public final class Watcher
 {
 	/** Maps objects to change listener sets */
-	private final Map<Object, Entry> keyToEntry  = new ConcurrentHashMap<Object, Entry>();
+	private final Map<Object, Entry> keyToEntry = new ConcurrentHashMap<Object, Entry>();
 
 	// Class for holding entries to watch
 	private static final class Entry

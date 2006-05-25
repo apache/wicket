@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DummyHomePage.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,7 +40,7 @@ public class DummyHomePage extends WebPage
 	 */
 	public DummyHomePage()
 	{
-		testPageLink = new TestLink(this,"testPage");
+		testPageLink = new TestLink(this, "testPage");
 		add(testPageLink);
 	}
 
@@ -72,9 +73,9 @@ public class DummyHomePage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public TestLink(MarkupContainer parent,String id)
+		public TestLink(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
 		/**

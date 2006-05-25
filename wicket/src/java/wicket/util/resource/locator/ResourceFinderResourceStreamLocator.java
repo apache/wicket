@@ -1,6 +1,7 @@
 /*
  * $Id: ResourceFinderResourceStreamLocator.java,v 1.6 2006/01/02 07:13:35
- * jdonnerstag Exp $ $Revision$ $Date$
+ * jdonnerstag Exp $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

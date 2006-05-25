@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id: FileResourceStream.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,7 +28,7 @@ import wicket.util.file.File;
 import wicket.util.time.Time;
 
 /**
- * A FileResourceStream is an IResource implementation for files. 
+ * A FileResourceStream is an IResource implementation for files.
  * 
  * @see wicket.util.resource.IResourceStream
  * @see wicket.util.watch.IModifiable
@@ -69,7 +70,8 @@ public class FileResourceStream extends AbstractResourceStream
 	}
 
 	/**
-	 * @return The content type of this resource, such as "image/jpeg" or "text/html"
+	 * @return The content type of this resource, such as "image/jpeg" or
+	 *         "text/html"
 	 */
 	public String getContentType()
 	{
@@ -98,7 +100,8 @@ public class FileResourceStream extends AbstractResourceStream
 			}
 			catch (FileNotFoundException e)
 			{
-				throw new ResourceStreamNotFoundException("Resource " + file + " could not be found", e);
+				throw new ResourceStreamNotFoundException("Resource " + file
+						+ " could not be found", e);
 			}
 		}
 

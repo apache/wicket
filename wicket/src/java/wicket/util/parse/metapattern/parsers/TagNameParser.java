@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: TagNameParser.java 3164 2005-11-09 19:59:03 +0000 (Wed, 09 Nov 2005)
+ * jdonnerstag $ $Revision$ $Date: 2005-11-09 19:59:03 +0000 (Wed, 09 Nov
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

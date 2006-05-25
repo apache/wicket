@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -62,8 +60,7 @@ public final class CompoundResourceStreamLocator implements IResourceStreamLocat
 		Iterator<IResourceStreamLocator> iter = locators.iterator();
 		while (iter.hasNext())
 		{
-			IResourceStream resource = iter.next().locate(clazz, path,
-					style, locale, extension);
+			IResourceStream resource = iter.next().locate(clazz, path, style, locale, extension);
 			if (resource != null)
 			{
 				return resource;

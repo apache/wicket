@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ModificationWatcher.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,7 +57,7 @@ public final class ModificationWatcher
 
 		// The set of listeners to call when the modifiable changes
 		final ChangeListenerSet listeners = new ChangeListenerSet();
-		
+
 		// The modifiable thing
 		IModifiable modifiable;
 	}
@@ -87,7 +88,8 @@ public final class ModificationWatcher
 	 *            The modifiable thing to monitor
 	 * @param listener
 	 *            The listener to call if the modifiable is modified
-	 * @return <tt>true</tt> if the set did not already contain the specified element.
+	 * @return <tt>true</tt> if the set did not already contain the specified
+	 *         element.
 	 */
 	public final boolean add(final IModifiable modifiable, final IChangeListener listener)
 	{
@@ -114,7 +116,7 @@ public final class ModificationWatcher
 				// The IModifiable is not returning a valid lastModifiedTime
 				log.info("Cannot track modifications to resource " + modifiable);
 			}
-			
+
 			return true;
 		}
 		else
@@ -133,13 +135,13 @@ public final class ModificationWatcher
 	public IModifiable remove(final IModifiable modifiable)
 	{
 		final Entry entry = modifiableToEntry.remove(modifiable);
-		if(entry != null)
+		if (entry != null)
 		{
 			return entry.modifiable;
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Start watching at a given polling rate
 	 * 
@@ -159,8 +161,8 @@ public final class ModificationWatcher
 				// concurrent
 				// modification problems without the associated liveness issues
 				// of holding a lock while potentially polling file times!
-				for (final Iterator<Entry> iterator = new ArrayList<Entry>(modifiableToEntry.values()).iterator(); iterator
-						.hasNext();)
+				for (final Iterator<Entry> iterator = new ArrayList<Entry>(modifiableToEntry
+						.values()).iterator(); iterator.hasNext();)
 				{
 					// Get next entry
 					final Entry entry = iterator.next();
@@ -183,11 +185,11 @@ public final class ModificationWatcher
 	}
 
 	/**
-	 *  stops the modification watcher from watching.
+	 * stops the modification watcher from watching.
 	 */
 	public void destroy()
 	{
-		if(task != null)
+		if (task != null)
 		{
 			task.stop();
 		}

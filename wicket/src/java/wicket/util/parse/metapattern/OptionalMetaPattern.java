@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: OptionalMetaPattern.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,7 +22,8 @@ import java.util.List;
 
 /**
  * Makes any MetaPattern optional by enclosing the pattern in an optionality
- * expression.	The expression will be something equivalent to "(?:&lt;pattern&gt;)?".
+ * expression. The expression will be something equivalent to
+ * "(?:&lt;pattern&gt;)?".
  * 
  * @author Jonathan Locke
  */
@@ -41,7 +43,7 @@ public final class OptionalMetaPattern extends MetaPattern
 	 * Constructor
 	 * 
 	 * @param pattern
-	 *			  MetaPattern to make optional
+	 *            MetaPattern to make optional
 	 */
 	public OptionalMetaPattern(final MetaPattern pattern)
 	{

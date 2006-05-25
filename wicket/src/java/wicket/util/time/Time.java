@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-01-04 01:28:14 -0800 (Wed, 04 Jan 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -244,7 +244,8 @@ public final class Time extends AbstractTime
 
 	/**
 	 * @return Amount of time that has elapsed since this time
-	 * @throws IllegalStateException Thrown if this time is in the future
+	 * @throws IllegalStateException
+	 *             Thrown if this time is in the future
 	 */
 	public Duration elapsedSince()
 	{

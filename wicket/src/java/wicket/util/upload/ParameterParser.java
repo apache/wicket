@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: ParameterParser.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -137,9 +137,9 @@ public class ParameterParser
 	private boolean isOneOf(char ch, final char[] charray)
 	{
 		boolean result = false;
-		for (int i = 0; i < charray.length; i++)
+		for (char element : charray)
 		{
-			if (ch == charray[i])
+			if (ch == element)
 			{
 				result = true;
 				break;

@@ -1,6 +1,7 @@
 /*
  * $Id: IntegerVariableAssignmentParser.java,v 1.6 2005/01/15 19:24:02
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2005-02-22 17:48:25 +0000 (Tue,
+ * 22 Feb 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
