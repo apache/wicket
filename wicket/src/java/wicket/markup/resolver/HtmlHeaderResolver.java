@@ -79,7 +79,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 			// input the <head> from 'contributors'.
 			final WebMarkupContainer header = new HtmlHeaderContainer(container,
 					HtmlHeaderSectionHandler.HEADER_ID);
-			container.autoAdd(header);
+			header.autoAdded();
 
 			// Yes, we handled the tag
 			return true;
@@ -94,7 +94,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				// Create a special header component which will gather additional
 				// input the <head> from 'contributors'.
 				final MarkupContainer header = new HtmlHeaderContainer(container,HtmlHeaderSectionHandler.HEADER_ID);
-				container.autoAdd(header);
+				
 				
 				// It is <wicket:head>. Because they do not provide any additional
 				// functionality they are merely a means of surrounding relevant
@@ -114,6 +114,8 @@ public class HtmlHeaderResolver implements IComponentResolver
 				header2.setRenderBodyOnly(true);
 				
 				header.add(header2);
+				
+				header.autoAdded();
 				
 		    }
 		    else if (container instanceof HtmlHeaderContainer)
@@ -137,7 +139,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 	
 				try
 				{
-					container.autoAdd(header);
+					header.autoAdded();
 				}
 				catch (IllegalArgumentException ex)
 				{

@@ -87,7 +87,7 @@ public class WicketMessageResolver implements IComponentResolver
 				final String value = container.getApplication().getResourceSettings().getLocalizer()
 						.getString(messageKey, container, "");
 
-				final String id = "_message_" + container.getPage().getAutoIndex();
+				final String id = Component.AUTO_COMPONENT_PREFIX + "_message_" + container.getPage().getAutoIndex();
 				Component component = null;
 				if ((value != null) && (value.trim().length() > 0))
 				{
@@ -102,7 +102,7 @@ public class WicketMessageResolver implements IComponentResolver
 				component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
 						.getStripWicketTags());
 
-				container.autoAdd(component);
+				component.autoAdded();
 
 				// Yes, we handled the tag
 				return true;

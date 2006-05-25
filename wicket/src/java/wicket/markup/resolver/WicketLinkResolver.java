@@ -60,7 +60,7 @@ public class WicketLinkResolver implements IComponentResolver
 			WicketTag wtag = (WicketTag) tag;
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
-				final String id = "_link_" + container.getPage().getAutoIndex();
+				final String id = Component.AUTO_COMPONENT_PREFIX + "_link_" + container.getPage().getAutoIndex();
 				final Component component = new WebMarkupContainer(container,id)
 					{
 						private static final long serialVersionUID = 1L;
@@ -75,7 +75,7 @@ public class WicketLinkResolver implements IComponentResolver
 						}
 					};
 				
-				container.autoAdd(component);
+				component.autoAdded();
 	
 				// Yes, we handled the tag
 				return true;

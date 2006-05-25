@@ -169,12 +169,16 @@ public abstract class MarkupContainer<V> extends Component<V>
 
 		// Add to map
 		addedComponent(child);
-		if (put(child) != null)
-		{
-			throw new IllegalArgumentException(exceptionMessage("A child with id '" + child.getId()
-					+ "' already exists"));
-		}
+		Component replaced = put(child);
 		child.setFlag(FLAG_REMOVED_FROM_PARENT, false);
+		if(replaced != null)
+		{
+			replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true);
+			removedComponent(replaced);
+			// The position of the associated markup remains the same
+			child.markupIndex = replaced.markupIndex;
+			
+		}
 		return this;
 	}
 
@@ -194,27 +198,13 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * 
 	 * @param component
 	 *            The component to add
-	 * @return True, if component has been added
 	 */
-	public final boolean autoAdd(final Component component)
+	final void autoAdd(final Component component)
 	{
-		if (component == null)
-		{
-			throw new IllegalArgumentException("argument component may not be null");
-		}
-
-		/* Replace strategy */
-		if (get(component.getId()) != null)
-		{
-			this.remove(component);
-		}
 		component.setAuto(true);
 		add(component);
-		component.internalAttach();
-		component.render();
-		return true;
 	}
-
+	
 	/**
 	 * @param component
 	 *            The component to check
@@ -612,7 +602,6 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @throws IllegalArgumentException
 	 *             Thrown if there was no child with the same id.
 	 * @return This
-	 */
 	public final MarkupContainer replace(final Component<?> child)
 	{
 		if (child == null)
@@ -649,6 +638,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 
 		return this;
 	}
+	 */
 
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)

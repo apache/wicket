@@ -19,6 +19,7 @@ package wicket.markup.html;
 
 import java.util.Iterator;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
@@ -105,7 +106,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// to the page or any other container in the hierachy.
 				if (htmlContainer.okToRenderComponent(headerPart.getScope(), headerPart.getId()))
 				{
-					htmlContainer.autoAdd(headerPart);
+					headerPart.autoAdded();
 
 					// Check if the Panel/Border requires some <body
 					// onload=".."> attribute to be copied to the page's body
@@ -126,7 +127,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 					try
 					{
 						container.getRequestCycle().setResponse(NullResponse.getInstance());
-						htmlContainer.autoAdd(headerPart);
+						headerPart.autoAdded();
 					}
 					finally
 					{
@@ -220,7 +221,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// found <wicket:head>
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
-				final String headerId = "_" + Classes.simpleName(markupClass)
+				final String headerId = Component.AUTO_COMPONENT_PREFIX + Classes.simpleName(markupClass)
 						+ this.container.getVariation() + "Header" + index;
 
 				// Create the header container and associate the markup with

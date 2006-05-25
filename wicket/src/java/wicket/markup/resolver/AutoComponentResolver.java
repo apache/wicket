@@ -97,7 +97,7 @@ public final class AutoComponentResolver implements IComponentResolver
                     try
                     {
 	                    // 2. Add it to the hierarchy and render it
-	                    container.autoAdd(component);
+                    	component.autoAdded();
                     }
                     finally
                     {
@@ -151,7 +151,14 @@ public final class AutoComponentResolver implements IComponentResolver
         String componentId = tag.getNameAttribute();
         if (componentId == null)
         {
-            componentId = "anonymous-" + container.getPage().getAutoIndex();
+            componentId = Component.AUTO_COMPONENT_PREFIX + container.getPage().getAutoIndex();
+        }
+        else
+        {
+        	// TODO can we just alter the name???? We have to prefix it.
+        	componentId = Component.AUTO_COMPONENT_PREFIX + componentId;
+        	// Can i set it??
+        	//tag.setId(componentId);
         }
 
         // Get the component class name
@@ -175,7 +182,6 @@ public final class AutoComponentResolver implements IComponentResolver
             final Constructor constructor = componentClass
                     .getConstructor(new Class[] {MarkupContainer.class, String.class });
             component = (Component)constructor.newInstance(new Object[] { container,componentId });
-            component.setAuto(true);
         }
         catch (NoSuchMethodException e)
         {

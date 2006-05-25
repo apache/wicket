@@ -20,6 +20,7 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.List;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -41,7 +42,7 @@ import wicket.markup.parser.XmlTag;
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 {
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
-	public static final String HEADER_ID = "_header";
+	public static final String HEADER_ID = Component.AUTO_COMPONENT_PREFIX + "_header";
 
 	/** True if <head> has been found already */
 	private boolean foundHead = false;
