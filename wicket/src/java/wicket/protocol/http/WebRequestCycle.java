@@ -22,9 +22,13 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.AbortException;
 import wicket.IRedirectListener;
+import wicket.MetaDataKey;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.RestartResponseAtInterceptPageException;
+import wicket.Session;
+import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCycleProcessor;
@@ -48,6 +52,11 @@ public class WebRequestCycle extends RequestCycle
 {
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
+
+	private static final MetaDataKey BROWSER_WAS_POLLED_KEY = new MetaDataKey(Boolean.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -217,6 +226,22 @@ public class WebRequestCycle extends RequestCycle
 	@Override
 	protected ClientInfo newClientInfo()
 	{
+		if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
+		{
+			Session session = getSession();
+			if (session.getMetaData(BROWSER_WAS_POLLED_KEY) == null)
+			{
+				// we haven't done the redirect yet; record that we will be
+				// doing that now and redirect
+				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
+				throw new RestartResponseAtInterceptPageException(new BrowserInfoPage(getRequest()
+						.getURL()));
+			}
+			// if we get here, the redirect already has been done; clear
+			// the meta data entry; we don't need it any longer is the client
+			// info object will be cached too
+			session.setMetaData(BROWSER_WAS_POLLED_KEY, (Boolean)null);
+		}
 		return new WebClientInfo(this);
 	}
 }
