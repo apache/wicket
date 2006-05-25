@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.67 $ $Date$
+ * $Id: AccessStackPageMap.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,15 +51,15 @@ import wicket.util.collections.ArrayListStack;
 public final class AccessStackPageMap extends PageMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(AccessStackPageMap.class);
-	
+
 
 	/** Stack of entry accesses by id */
-	private final ArrayListStack/* <Access> */<Access>accessStack = new ArrayListStack<Access>(8);
+	private final ArrayListStack/* <Access> */<Access> accessStack = new ArrayListStack<Access>(8);
 
-	
+
 	/**
 	 * Holds information about a pagemap access
 	 * 
@@ -134,7 +135,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 	 */
 	public AccessStackPageMap(final String name, final Session session)
 	{
-		super(name,session);
+		super(name, session);
 	}
 
 	/**
@@ -201,7 +202,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 		synchronized (session)
 		{
 			session.removeAttribute(attributeForId(entry.getNumericId()));
-	
+
 			// Remove page from acccess stack
 			final Iterator<Access> stack = accessStack.iterator();
 			while (stack.hasNext())
@@ -212,7 +213,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 					stack.remove();
 				}
 			}
-	
+
 			// Let the session know we changed the pagemap
 			dirty();
 		}
@@ -250,10 +251,10 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 			final Page version = page.getVersion(versionNumber);
 
 			// Entry has been accessed
-			//pushAccess(entry);
+			// pushAccess(entry);
 			// Entry has been accessed
 			access(entry, versionOf(entry));
-			
+
 
 			// Is the requested version available?
 			if (version != null)
@@ -300,8 +301,8 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 
 			// Store entry in session
 			final String attribute = attributeForId(entry.getNumericId());
-			
-			if(session.getAttribute(attribute) == null)
+
+			if (session.getAttribute(attribute) == null)
 			{
 				// Set attribute if it is a new page, so that it will exists
 				// already for other threads that can come on the same time.
@@ -329,7 +330,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 		// See if the version being accessed is already in the stack
 		boolean add = true;
 		int id = entry.getNumericId();
-		for (int i = accessStack.size()-1; i >=0 ; i--)
+		for (int i = accessStack.size() - 1; i >= 0; i--)
 		{
 			final Access access = accessStack.get(i);
 
@@ -357,7 +358,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 						if (topPage.getVersions() > 1)
 						{
 							// Remove version the top access version (-1)
-							topPage.getVersion(topAccess.getVersion()-1);
+							topPage.getVersion(topAccess.getVersion() - 1);
 						}
 						else
 						{
@@ -411,9 +412,9 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 		final Access access = new Access();
 		access.id = entry.getNumericId();
 		access.version = versionOf(entry);
-		if(accessStack.size() > 0)
+		if (accessStack.size() > 0)
 		{
-			if(peekAccess().equals(access))
+			if (peekAccess().equals(access))
 			{
 				return;
 			}

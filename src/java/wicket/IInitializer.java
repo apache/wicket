@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IInitializer.java 4597 2006-02-21 22:08:11 +0000 (Tue, 21 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-21 22:08:11 +0000 (Tue, 21 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

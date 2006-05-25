@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AttributeModifier.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -64,7 +65,7 @@ import wicket.util.value.ValueMap;
  * 
  * @param <T>
  *            Type of model object this atribute modifier holds
- *            
+ * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
@@ -172,7 +173,8 @@ public class AttributeModifier<T> extends AbstractBehavior implements Serializab
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public AttributeModifier(final String attribute, final String pattern, final IModel<T> replaceModel)
+	public AttributeModifier(final String attribute, final String pattern,
+			final IModel<T> replaceModel)
 	{
 		this(attribute, pattern, false, replaceModel);
 	}
