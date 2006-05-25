@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,17 +15,15 @@
  * the License.
  */
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
+ * $Id$ $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -45,18 +41,19 @@ import wicket.resource.ByteArrayResource;
 public class ContextPathPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 */
 	public ContextPathPage()
 	{
-		add(new BookmarkablePageLink(this,"bookmarkablelink",ContextPathPage.class));
-		add(new ResourceLink(this,"resourcelink",new ByteArrayResource("test/test", new byte[10])));
-		add(new Link(this,"onclick")
+		add(new BookmarkablePageLink(this, "bookmarkablelink", ContextPathPage.class));
+		add(new ResourceLink(this, "resourcelink", new ByteArrayResource("test/test", new byte[10])));
+		add(new Link(this, "onclick")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				// ignore

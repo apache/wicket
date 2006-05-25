@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,31 +38,31 @@ public class TestPage extends WebPage
 	 */
 	public TestPage()
 	{
-		add(new Label(this,"label"));
+		add(new Label(this, "label"));
 
-		Form form1 = new Form(this,"form1");
+		Form form1 = new Form(this, "form1");
 		add(form1);
-		form1.add(new MyTextField(form1,"text1", "input-1"));
-		form1.add(new MyTextField(form1,"text2", "input-2"));
-		form1.add(new MyTextField(form1,"text7", "input-3"));
+		form1.add(new MyTextField(form1, "text1", "input-1"));
+		form1.add(new MyTextField(form1, "text2", "input-2"));
+		form1.add(new MyTextField(form1, "text7", "input-3"));
 
-		Form form2 = new TestForm(this,"form2");
+		Form form2 = new TestForm(this, "form2");
 		add(form2);
 
-		Panel panel1 = new Panel(form2,"panel1");
+		Panel panel1 = new Panel(form2, "panel1");
 		form2.add(panel1);
-		panel1.add(new MyTextField(panel1,"text3", "input-3"));
-		panel1.add(new MyTextField(panel1,"text4", "input-4"));
+		panel1.add(new MyTextField(panel1, "text3", "input-3"));
+		panel1.add(new MyTextField(panel1, "text4", "input-4"));
 
-		Panel panel2 = new TestPanel(form2,"panel2");
+		Panel panel2 = new TestPanel(form2, "panel2");
 		form2.add(panel2);
-		panel2.add(new MyTextField(panel2,"text5", "input-5"));
-		panel2.add(new MyTextField(panel2,"text6", "input-6"));
-		panel2.add(new MyTextField(panel2,"text8", "input-8"));
-		panel2.add(new MyTextField(panel2,"text9", "input-9"));
-		panel2.add(new MyTextField(panel2,"text10", "input-10"));
-		panel2.add(new MyTextField(panel2,"text11", "input-11"));
-		panel2.add(new MyTextField(panel2,"text12", "input-12"));
+		panel2.add(new MyTextField(panel2, "text5", "input-5"));
+		panel2.add(new MyTextField(panel2, "text6", "input-6"));
+		panel2.add(new MyTextField(panel2, "text8", "input-8"));
+		panel2.add(new MyTextField(panel2, "text9", "input-9"));
+		panel2.add(new MyTextField(panel2, "text10", "input-10"));
+		panel2.add(new MyTextField(panel2, "text11", "input-11"));
+		panel2.add(new MyTextField(panel2, "text12", "input-12"));
 	}
 
 	/**
@@ -188,9 +188,9 @@ public class TestPage extends WebPage
 		 * @param id
 		 * @param input
 		 */
-		public MyTextField(MarkupContainer parent,final String id, final String input)
+		public MyTextField(MarkupContainer parent, final String id, final String input)
 		{
-			super(parent,id);
+			super(parent, id);
 			this.input = input;
 
 			setRequired(true);
@@ -199,6 +199,7 @@ public class TestPage extends WebPage
 		/**
 		 * @see wicket.markup.html.form.FormComponent#getInput()
 		 */
+		@Override
 		public String getInput()
 		{
 			return input;

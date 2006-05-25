@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: BytesTest.java 3618 2006-01-04 09:28:14 +0000 (Wed, 04 Jan 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-01-04 09:28:14 +0000 (Wed, 04 Jan
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.util.size;
 
@@ -41,6 +41,7 @@ public final class BytesTest extends TestCase
 	/**
 	 * Save the default locale.
 	 */
+	@Override
 	public void setUp()
 	{
 		defaultLocale = Locale.getDefault();
@@ -49,6 +50,7 @@ public final class BytesTest extends TestCase
 	/**
 	 * Restore the default locale.
 	 */
+	@Override
 	public void tearDown()
 	{
 		Locale.setDefault(defaultLocale);

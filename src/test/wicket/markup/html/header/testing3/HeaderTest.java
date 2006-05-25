@@ -27,6 +27,7 @@ public class HeaderTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public HeaderTest(String name)
@@ -36,13 +37,14 @@ public class HeaderTest extends WicketTestCase
 
 	/**
 	 * Replace a Panel which has a body onLoad modifier
+	 * 
 	 * @throws Exception
 	 */
 	public void test_1() throws Exception
 	{
 		executeTest(TestPage.class, "TestPage_ExpectedResult-1.html");
 		TestPage page = (TestPage)application.getLastRenderedPage();
-		
+
 		executedListener(TestPage.class, page.get("link"), "TestPage_ExpectedResult-2.html");
 	}
 }

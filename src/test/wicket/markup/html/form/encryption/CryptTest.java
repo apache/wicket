@@ -1,11 +1,12 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CryptTest.java 5485 2006-04-21 18:10:55 +0000 (Fri, 21 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-21 18:10:55 +0000 (Fri, 21 Apr
+ * 2006) $
  * 
- * ======================================================================== 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may 
- * not use this file except in compliance with the License. You may obtain 
- * a copy of the License at
+ * ========================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -27,15 +28,15 @@ import wicket.util.crypt.SunJceCrypt;
  */
 public class CryptTest extends WicketTestCase
 {
-    /**
-     * Construct.
-     * 
-     * @param name
-     */
-    public CryptTest(String name)
-    {
-	super(name);
-    }
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public CryptTest(String name)
+	{
+		super(name);
+	}
 
 	/**
 	 * 
@@ -66,7 +67,7 @@ public class CryptTest extends WicketTestCase
 				final String text = "abcdefghijkABC: A test which creates a '/' and/or a '+'";
 				final String expectedDefaultEncrypted = "g+N/AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd+go0P+0kuIe6UvAYP7dlzx+9mfmPaMQ5lCk=";
 				final String expectedUrlSafeEncrypted = "g*N-AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd*go0P*0kuIe6UvAYP7dlzx*9mfmPaMQ5lCk";
-				
+
 				assertEquals(expectedDefaultEncrypted, crypt.encrypt(text));
 				assertEquals(text, crypt.decrypt(expectedDefaultEncrypted));
 				assertEquals(expectedUrlSafeEncrypted, crypt.encryptUrlSafe(text));
@@ -75,7 +76,7 @@ public class CryptTest extends WicketTestCase
 		}
 		catch (Exception ex)
 		{
-		    // fails on JVMs without security provider (e.g. seems to be on
+			// fails on JVMs without security provider (e.g. seems to be on
 			// MAC in US)
 		}
 	}

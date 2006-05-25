@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RadioGroupTestPage1.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,6 +25,7 @@ import wicket.model.Model;
 
 /**
  * Tests rendering of the RadioGroup and Radio components
+ * 
  * @author igor
  */
 public class RadioGroupTestPage1 extends WebPage
@@ -33,18 +35,19 @@ public class RadioGroupTestPage1 extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+
 	/**
 	 * Constructor
 	 */
-	public RadioGroupTestPage1() {
-		Form form=new Form(this,"form");
-		RadioGroup group=new RadioGroup(form,"group", new Model("radio2"));
-		WebMarkupContainer container=new WebMarkupContainer(group,"container");
-		Radio radio1=new Radio(group,"radio1", new Model("radio1"));
-		Radio radio2=new Radio(container,"radio2", new Model("radio2"));
-		
-		
+	public RadioGroupTestPage1()
+	{
+		Form form = new Form(this, "form");
+		RadioGroup group = new RadioGroup(form, "group", new Model("radio2"));
+		WebMarkupContainer container = new WebMarkupContainer(group, "container");
+		Radio radio1 = new Radio(group, "radio1", new Model("radio1"));
+		Radio radio2 = new Radio(container, "radio2", new Model("radio2"));
+
+
 		add(form);
 		form.add(group);
 		group.add(radio1);

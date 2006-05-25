@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ========================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,14 +37,14 @@ public class FormBorder extends Border
 	 * 
 	 * @param id
 	 */
-	public FormBorder(MarkupContainer parent,final String id)
+	public FormBorder(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
-		
-		this.form = new Form(this,"myForm");
+		super(parent, id);
+
+		this.form = new Form(this, "myForm");
 		add(this.form);
 	}
-	
+
 	/**
 	 * 
 	 * @param child

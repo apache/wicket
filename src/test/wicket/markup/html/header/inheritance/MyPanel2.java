@@ -37,8 +37,8 @@ public class MyPanel2 extends Panel
 	 * @param id
 	 *            component identifier
 	 */
-	public MyPanel2(MarkupContainer parent,String id)
+	public MyPanel2(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

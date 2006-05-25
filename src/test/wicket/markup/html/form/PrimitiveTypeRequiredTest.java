@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,31 +30,32 @@ public class PrimitiveTypeRequiredTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public PrimitiveTypeRequiredTest(String name)
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
 	public void testPrimitiveClass() throws Exception
 	{
-		TextField tf = new TextField(new EmptyPage(),"test", int.class);
+		TextField tf = new TextField(new EmptyPage(), "test", int.class);
 		assertTrue(tf.isRequired());
-		
+
 		try
 		{
 			tf.setRequired(false);
 			fail("Required can't be false for a primitive class type");
-		} 
-		catch(WicketRuntimeException wre)
+		}
+		catch (WicketRuntimeException wre)
 		{
 			// igore should happen
 		}
-		
+
 	}
 
 }

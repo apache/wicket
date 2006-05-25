@@ -39,6 +39,7 @@ public class PropertiesTest extends WicketTestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new MyApplication();
@@ -85,6 +86,7 @@ public class PropertiesTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public String getVariation()
 			{
 				return "mystyle";

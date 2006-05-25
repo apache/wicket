@@ -33,6 +33,6 @@ public abstract class AbstractSecurePage extends AbstractBasePage
 	 */
 	public AbstractSecurePage()
 	{
-		add(new Label(this,"username", "Pietje Puk"));
+		add(new Label(this, "username", "Pietje Puk"));
 	}
 }

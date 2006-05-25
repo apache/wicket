@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: MyComponent.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup;
 
@@ -30,7 +30,7 @@ import wicket.model.Model;
 public class MyComponent extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private int intParam;
 	private Integer integerParam;
 	private long long1Param;
@@ -40,7 +40,7 @@ public class MyComponent extends WebMarkupContainer
 	private double double1Param;
 	private Double double2Param;
 	private String hexParam;
-	//private Date dateParam;
+	// private Date dateParam;
 	private String dateParam;
 
 	/**
@@ -48,9 +48,9 @@ public class MyComponent extends WebMarkupContainer
 	 * 
 	 * @param id
 	 */
-	public MyComponent(MarkupContainer parent,final String id)
+	public MyComponent(MarkupContainer parent, final String id)
 	{
-		super(parent,id, new Model(""));
+		super(parent, id, new Model(""));
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class MyComponent extends WebMarkupContainer
 	 * 
 	 * @param param
 	 */
-	//public void setDateParam(final Date param)
+	// public void setDateParam(final Date param)
 	public void setDateParam(final String param)
 	{
 		this.dateParam = param;
@@ -153,27 +153,29 @@ public class MyComponent extends WebMarkupContainer
 	{
 		this.hexParam = param;
 	}
-	
+
 	/**
-	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		StringBuffer str = new StringBuffer();
-		
-	    str.append("intParam: " + intParam + "<br/>");
-	    str.append("integerParam: " + integerParam.toString() + "<br/>");
-	    str.append("long1Param: " + long1Param + "<br/>");
-	    str.append("long2Param: " + long2Param.toString() + "<br/>");
-	    str.append("float1Param: " + float1Param + "<br/>");
-	    str.append("float2Param: " + float2Param.toString() + "<br/>");
-	    str.append("double1Param: " + double1Param + "<br/>");
-	    str.append("double2Param: " + double2Param.toString() + "<br/>");
-	    str.append("dateParam: " + dateParam + "<br/>");
-	    str.append("hexParam: " + hexParam + "<br/>");
-	    
-	    getResponse().write(str);
-	    
+
+		str.append("intParam: " + intParam + "<br/>");
+		str.append("integerParam: " + integerParam.toString() + "<br/>");
+		str.append("long1Param: " + long1Param + "<br/>");
+		str.append("long2Param: " + long2Param.toString() + "<br/>");
+		str.append("float1Param: " + float1Param + "<br/>");
+		str.append("float2Param: " + float2Param.toString() + "<br/>");
+		str.append("double1Param: " + double1Param + "<br/>");
+		str.append("double2Param: " + double2Param.toString() + "<br/>");
+		str.append("dateParam: " + dateParam + "<br/>");
+		str.append("hexParam: " + hexParam + "<br/>");
+
+		getResponse().write(str);
+
 		super.onComponentTagBody(markupStream, openTag);
 	}
 }

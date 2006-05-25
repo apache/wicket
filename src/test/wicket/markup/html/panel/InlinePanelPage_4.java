@@ -1,6 +1,6 @@
 /*
- * $Id: InlinePanelPage_1.java 5227 2006-04-01 21:57:15Z jdonnerstag $ $Revision:
- * 4550 $ $Date: 2006-04-01 23:57:15 +0200 (Sa, 01 Apr 2006) $
+ * $Id: InlinePanelPage_1.java 5227 2006-04-01 21:57:15Z jdonnerstag $
+ * $Revision$ $Date: 2006-04-01 23:57:15 +0200 (Sa, 01 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,6 +34,6 @@ public class InlinePanelPage_4 extends WebPage
 	 */
 	public InlinePanelPage_4()
 	{
-		add(new InlinePanel_4(this,"myPanel"));
+		add(new InlinePanel_4(this, "myPanel"));
 	}
 }

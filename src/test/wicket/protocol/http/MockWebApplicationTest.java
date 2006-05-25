@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MockWebApplicationTest.java 5135 2006-03-26 10:21:04 +0000 (Sun, 26 Mar
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-03-26 10:21:04 +0000 (Sun,
+ * 26 Mar 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,6 +45,7 @@ public class MockWebApplicationTest extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -95,7 +97,8 @@ public class MockWebApplicationTest extends TestCase
 		 */
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult2.html"));
+		assertTrue(DiffUtil
+				.validatePage(document, this.getClass(), "MockPage_expectedResult2.html"));
 
 		// Inspect the page & model
 		p = (MockPage)application.getLastRenderedPage();

@@ -1,6 +1,6 @@
 /*
- * $Id: TestPage_1.java 4126 2006-02-04 09:51:46Z jdonnerstag $
- * $Revision: 4126 $ $Date: 2006-02-04 10:51:46 +0100 (za, 04 feb 2006) $
+ * $Id: TestPage_1.java 4126 2006-02-04 09:51:46Z jdonnerstag $ $Revision: 4126 $
+ * $Date: 2006-02-04 10:51:46 +0100 (za, 04 feb 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,15 +36,16 @@ public class DisabledComponentPage1 extends WebPage
 	 */
 	public DisabledComponentPage1()
 	{
-		link = new Link(this,"link")
+		link = new Link(this, "link")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				setResponsePage(new DisabledComponentPage2());
 			}
-			
+
 		};
 		add(link);
 	}

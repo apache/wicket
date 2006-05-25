@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: PagedTableTest.java 5131 2006-03-26 10:12:04 +0000 (Sun, 26 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-26 10:12:04 +0000 (Sun, 26 Mar
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.list;
 
@@ -42,7 +42,9 @@ public class PagedTableTest extends TestCase
 
 	/**
 	 * Construct.
-	 * @param name name of test
+	 * 
+	 * @param name
+	 *            name of test
 	 */
 	public PagedTableTest(String name)
 	{
@@ -51,6 +53,7 @@ public class PagedTableTest extends TestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
@@ -68,12 +71,15 @@ public class PagedTableTest extends TestCase
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
 		document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "PagedTablePageExpectedResult.html"));
+		assertTrue(DiffUtil.validatePage(document, this.getClass(),
+				"PagedTablePageExpectedResult.html"));
 	}
 
 	/**
 	 * Validates page 1 of paged table.
-	 * @param document The document
+	 * 
+	 * @param document
+	 *            The document
 	 * @return The validation result
 	 */
 	private boolean validatePage1(String document)
@@ -93,15 +99,16 @@ public class PagedTableTest extends TestCase
 				.addExpectedChild(new TextContent("one"))));
 		ulTable.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
 				.addExpectedChild(new TextContent("two"))));
-		// note that we DO NOT expect the third element as this is not on the current page
+		// note that we DO NOT expect the third element as this is not on the
+		// current page
 		body.addExpectedChild(ulTable);
 
 		Tag ulNav = new Tag("ul");
 		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("span")
 				.addExpectedChild(new Tag("em").addExpectedChild(new Tag("span")
 						.addExpectedChild(new TextContent("1"))))));
-		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a").addExpectedChild(new Tag(
-				"span").addExpectedChild(new TextContent("2")))));
+		ulNav.addExpectedChild(new Tag("li").addExpectedChild(new Tag("a")
+				.addExpectedChild(new Tag("span").addExpectedChild(new TextContent("2")))));
 
 		body.addExpectedChild(ulNav);
 

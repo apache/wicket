@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PagingNavigationIncrementLinkTest.java 5844 2006-05-24 20:53:56 +0000
+ * (Wed, 24 May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56
+ * +0000 (Wed, 24 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,6 +47,7 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 		super.setUp();
@@ -57,7 +59,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberPositive()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, 1);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(), "",
+				mock, 1);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -72,7 +75,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberNegative()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, -1);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(), "",
+				mock, -1);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -90,7 +94,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testGetPageNumberTwo()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, 2);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(), "",
+				mock, 2);
 		assertEquals(0, link.getPageNumber());
 		pagecount = 1;
 		assertEquals(0, link.getPageNumber());
@@ -111,7 +116,8 @@ public class PagingNavigationIncrementLinkTest extends AbstractPagingNavigationT
 	 */
 	public void testIsFirstLastPage()
 	{
-		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(),"", mock, 0);
+		PagingNavigationIncrementLink link = new PagingNavigationIncrementLink(new EmptyPage(), "",
+				mock, 0);
 
 		pagecount = 0;
 		currentpage = 0;

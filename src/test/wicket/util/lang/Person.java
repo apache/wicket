@@ -36,7 +36,7 @@ public class Person
 
 	/** */
 	public Address address2;
-	
+
 	private Country country;
 
 	private Map addressMap;
@@ -44,7 +44,7 @@ public class Person
 	private List addressList;
 
 	private Address[] addressArray;
-	
+
 	private int age;
 
 	/**

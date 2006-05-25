@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ResourceTest.java 5231 2006-04-01 23:34:49 +0000 (Sat, 01 Apr 2006)
+ * joco01 $ $Revision$ $Date: 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -65,7 +66,8 @@ public class ResourceTest extends TestCase
 	public void createAndTestResource(Path sourcePath, String style, Locale locale, String extension)
 	{
 		IResourceStreamLocator locator = new CompoundResourceStreamLocator(sourcePath);
-		IResourceStream resource = locator.locate(this.getClass(), this.getClass().getName().replace('.', '/'),style, locale, "txt");
+		IResourceStream resource = locator.locate(this.getClass(), this.getClass().getName()
+				.replace('.', '/'), style, locale, "txt");
 		compareFilename(resource, extension);
 	}
 
@@ -113,7 +115,8 @@ public class ResourceTest extends TestCase
 
 		// Determine source path
 		IResourceStreamLocator locator = new ClassLoaderResourceStreamLocator();
-		IResourceStream resource = locator.locate(getClass(),this.getClass().getName().replace('.', '/'), null, null, "txt");
+		IResourceStream resource = locator.locate(getClass(), this.getClass().getName().replace(
+				'.', '/'), null, null, "txt");
 		String path = getPath(resource);
 		path = Strings.beforeLastPathComponent(path, '/') + "/sourcePath";
 
@@ -123,6 +126,7 @@ public class ResourceTest extends TestCase
 
 	/**
 	 * Compares the given name with the resource.
+	 * 
 	 * @param resource
 	 * @param name
 	 */
@@ -133,10 +137,10 @@ public class ResourceTest extends TestCase
 		String filename = Strings.replaceAll(this.getClass().getName(), ".", "/").toString();
 		filename += name + ".txt";
 		String resourcePath = getPath(resource);
-		
+
 		if (!resourcePath.endsWith(filename))
 		{
-			
+
 			filename = Strings.afterLast(filename, '/');
 			resourcePath = Strings.afterLast(resourcePath, '/');
 			assertEquals("Did not find resource", filename, resourcePath);
@@ -145,7 +149,9 @@ public class ResourceTest extends TestCase
 
 	/**
 	 * Gets the path of the resource as a string.
-	 * @param resource the resource
+	 * 
+	 * @param resource
+	 *            the resource
 	 * @return the path of the resource as a string
 	 */
 	private String getPath(IResourceStream resource)

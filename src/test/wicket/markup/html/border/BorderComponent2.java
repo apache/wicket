@@ -1,11 +1,12 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BorderComponent2.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
- * ======================================================================== 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may 
- * not use this file except in compliance with the License. You may obtain 
- * a copy of the License at
+ * ========================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -32,8 +33,8 @@ public class BorderComponent2 extends Border
 	/**
 	 * @param id
 	 */
-	public BorderComponent2(MarkupContainer parent,String id)
+	public BorderComponent2(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

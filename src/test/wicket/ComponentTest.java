@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: ComponentTest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,13 +20,14 @@ package wicket;
 
 /**
  * Test for ajax handler.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class ComponentTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public ComponentTest(String name)
@@ -39,6 +40,6 @@ public class ComponentTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
+		executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
 	}
 }

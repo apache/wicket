@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: TreePage.java 3749 2006-01-14 00:54:30 +0000 (Sat, 14 Jan 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-01-14 00:54:30 +0000 (Sat, 14 Jan
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,9 +24,9 @@ package wicket.markup.html.tree;
 public class TreePage extends AbstractTreePage
 {
 	private static final long serialVersionUID = 1L;
+
 	/**
-	 * Constructor.
-	 *  Page parameters
+	 * Constructor. Page parameters
 	 */
 	public TreePage()
 	{

@@ -11,7 +11,7 @@ import wicket.markup.html.resources.StyleSheetReference;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class PanelWithHeaderPart extends Panel
 {
@@ -20,14 +20,14 @@ public class PanelWithHeaderPart extends Panel
 	/**
 	 * @param id
 	 */
-	public PanelWithHeaderPart(MarkupContainer parent,String id)
+	public PanelWithHeaderPart(MarkupContainer parent, String id)
 	{
-		super(parent,id);
-		
-		add(new Label(this,"body"));
-		add(new StyleSheetReference(this,"testlink", PanelWithHeaderPart.class,"test.css"));
-		add(new JavaScriptReference(this,"testscript", PanelWithHeaderPart.class, "test.js"));
-		
+		super(parent, id);
+
+		add(new Label(this, "body"));
+		add(new StyleSheetReference(this, "testlink", PanelWithHeaderPart.class, "test.css"));
+		add(new JavaScriptReference(this, "testscript", PanelWithHeaderPart.class, "test.js"));
+
 	}
 
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.12 $ $Date$
+ * $Id: StringsTest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -141,8 +142,8 @@ public final class StringsTest extends TestCase
 		assertEquals("&#0000;", Strings.escapeMarkup("&#0000;").toString());
 
 		assertEquals("&amp;amp;", Strings.escapeMarkup("&amp;").toString());
-		assertEquals("&lt; &gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings
-				.escapeMarkup("< >&\"'?:;{}[]-_+=()*^%$#@!~`").toString());
+		assertEquals("&lt; &gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup(
+				"< >&\"'?:;{}[]-_+=()*^%$#@!~`").toString());
 		assertEquals("&lt;&nbsp;&gt;&amp;&quot;&#039;?:;{}[]-_+=()*^%$#@!~`", Strings.escapeMarkup(
 				"< >&\"'?:;{}[]-_+=()*^%$#@!~`", true).toString());
 	}
@@ -156,7 +157,8 @@ public final class StringsTest extends TestCase
 		assertEquals("", Strings.escapeMarkup("", true).toString());
 
 		assertEquals("\n \t", Strings.escapeMarkup("\n \t", false).toString());
-		assertEquals("\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Strings.escapeMarkup("\n \t", true).toString());
+		assertEquals("\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", Strings.escapeMarkup("\n \t", true)
+				.toString());
 		assertEquals("  ", Strings.escapeMarkup("  ", false).toString());
 		assertEquals("&nbsp;&nbsp;", Strings.escapeMarkup("  ", true).toString());
 	}
@@ -408,14 +410,15 @@ public final class StringsTest extends TestCase
 		assertEquals("<p>abc<br/></p>", Strings.toMultilineMarkup("abc\n").toString());
 		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\ndef").toString());
 		assertEquals("<p>abc<br/>def</p>", Strings.toMultilineMarkup("abc\r\ndef").toString());
-		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi").toString());
+		assertEquals("<p>abc<br/>def<br/>ghi</p>", Strings.toMultilineMarkup("abc\ndef\nghi")
+				.toString());
 
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings
-				.toMultilineMarkup("abc\n\ndef\n\nghi").toString());
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings
-				.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi").toString());
-		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings
-				.toMultilineMarkup("abc\r\n\r\ndef\r\n\r\nghi\n\n").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup(
+				"abc\n\ndef\n\nghi").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p>", Strings.toMultilineMarkup(
+				"abc\r\n\r\ndef\r\n\r\nghi").toString());
+		assertEquals("<p>abc</p><p>def</p><p>ghi</p><p></p>", Strings.toMultilineMarkup(
+				"abc\r\n\r\ndef\r\n\r\nghi\n\n").toString());
 
 		assertEquals("<p>\\n</p>", Strings.toMultilineMarkup("\\n").toString());
 		assertEquals("<p>a\\nbc</p>", Strings.toMultilineMarkup("a\\nbc").toString());
@@ -441,7 +444,7 @@ public final class StringsTest extends TestCase
 			assertEquals("Root cause:", before);
 		}
 	}
-	
+
 	/**
 	 * Test the toString(throwable)
 	 */

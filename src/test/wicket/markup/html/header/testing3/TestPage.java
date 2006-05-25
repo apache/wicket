@@ -31,34 +31,34 @@ public class TestPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private final Panel panel1 = new Panel1(this,"panel");
-	private final Panel panel2 = new Panel2(this,"panel");
+	private final Panel panel1 = new Panel1(this, "panel");
+	private final Panel panel2 = new Panel2(this, "panel");
 	private Panel current;
-	
+
 	/**
 	 * Construct.
 	 */
 	public TestPage()
 	{
 		this.current = (Panel)panel1.reattach();
-		
-		add(new PageLink(this,"link", new IPageLink()
-				{
-					private static final long serialVersionUID = 1L;
 
-					public Page getPage()
-					{
-						replacePanel();
-						return TestPage.this;
-					}
+		add(new PageLink(this, "link", new IPageLink()
+		{
+			private static final long serialVersionUID = 1L;
 
-					public Class getPageIdentity()
-					{
-						return TestPage.this.getClass();
-					}
-				}));
+			public Page getPage()
+			{
+				replacePanel();
+				return TestPage.this;
+			}
+
+			public Class getPageIdentity()
+			{
+				return TestPage.this.getClass();
+			}
+		}));
 	}
-	
+
 	/**
 	 * 
 	 */

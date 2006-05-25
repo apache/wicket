@@ -37,6 +37,7 @@ public class Test extends TestCase
 		final IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
 				RedirectPage.class, LoginPage.class)
 		{
+			@Override
 			protected boolean isAuthorized()
 			{
 				return false;

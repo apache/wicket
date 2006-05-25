@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: IncrementalTableNavigationTest.java 5131 2006-03-26 10:12:04 +0000 (Sun,
+ * 26 Mar 2006) jdonnerstag $ $Revision$ $Date: 2006-03-26 10:12:04 +0000
+ * (Sun, 26 Mar 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.list;
 
@@ -30,7 +30,9 @@ public class IncrementalTableNavigationTest extends WicketTestCase
 {
 	/**
 	 * Construct.
-	 * @param name name of test
+	 * 
+	 * @param name
+	 *            name of test
 	 */
 	public IncrementalTableNavigationTest(String name)
 	{
@@ -39,17 +41,21 @@ public class IncrementalTableNavigationTest extends WicketTestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
 	{
-		executeTest(IncrementalTableNavigationPage.class, "IncrementalTableNavigationPage_ExpectedResult_1.html");
+		executeTest(IncrementalTableNavigationPage.class,
+				"IncrementalTableNavigationPage_ExpectedResult_1.html");
 
 		Page page = application.getLastRenderedPage();
 		Link link = (Link)page.get("nextNext");
-		executedListener(IncrementalTableNavigationPage.class, link, "IncrementalTableNavigationPage_ExpectedResult_1-1.html");
+		executedListener(IncrementalTableNavigationPage.class, link,
+				"IncrementalTableNavigationPage_ExpectedResult_1-1.html");
 
 		link = (Link)page.get("prev");
-		executedListener(IncrementalTableNavigationPage.class, link, "IncrementalTableNavigationPage_ExpectedResult_1-2.html");
+		executedListener(IncrementalTableNavigationPage.class, link,
+				"IncrementalTableNavigationPage_ExpectedResult_1-2.html");
 	}
 }

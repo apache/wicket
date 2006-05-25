@@ -29,7 +29,7 @@ import wicket.markup.html.border.BoxBorder;
 public class AjaxPage2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Label ajaxLabel;
 	private BoxBorder myBorder;
 
@@ -40,21 +40,22 @@ public class AjaxPage2 extends WebPage
 	{
 		super();
 
-		myBorder = new BoxBorder(this,"pageLayout");
+		myBorder = new BoxBorder(this, "pageLayout");
 		myBorder.setTransparentResolver(true);
 		add(myBorder);
 
-		ajaxLabel = new Label(this,"ajaxLabel", "AAAAAAA");
+		ajaxLabel = new Label(this, "ajaxLabel", "AAAAAAA");
 		ajaxLabel.setOutputMarkupId(true);
 		add(ajaxLabel);
 
-		add(new AjaxLink(this,"ajaxLink")
+		add(new AjaxLink(this, "ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(final AjaxRequestTarget target)
 			{
-				Label ajaxLabel2 = new Label(ajaxLabel.getParent(),"ajaxLabel", "BBBBBBB");
+				Label ajaxLabel2 = new Label(ajaxLabel.getParent(), "ajaxLabel", "BBBBBBB");
 				ajaxLabel2.setOutputMarkupId(true);
 				if (target != null)
 				{

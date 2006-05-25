@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxLinkWithBorderPage.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -29,7 +30,7 @@ import wicket.model.PropertyModel;
 public class AjaxLinkWithBorderPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String labelText = "UpdateMe";
 
 	/**
@@ -37,15 +38,16 @@ public class AjaxLinkWithBorderPage extends WebPage
 	 */
 	public AjaxLinkWithBorderPage()
 	{
-		add(new AjaxTestBorder(this,"border").setTransparentResolver(true));
-		
-		final Label label = new Label(this,"ajaxLabel", new PropertyModel(this, "labelText"));
+		add(new AjaxTestBorder(this, "border").setTransparentResolver(true));
+
+		final Label label = new Label(this, "ajaxLabel", new PropertyModel(this, "labelText"));
 		label.setOutputMarkupId(true);
 		add(label);
-		add(new AjaxLink(this,"ajaxLink")
+		add(new AjaxLink(this, "ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				labelText = "Updated!";

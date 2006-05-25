@@ -53,10 +53,11 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	{
 		if ("test".equals(tag.getId()))
 		{
-			Label label = new Label(this,Component.AUTO_COMPONENT_PREFIX + "test", "TEST")
+			Label label = new Label(this, Component.AUTO_COMPONENT_PREFIX + "test", "TEST")
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected void onEndRequest()
 				{
 					onEndRequestWasCalledOnAutoAddedComponent = true;

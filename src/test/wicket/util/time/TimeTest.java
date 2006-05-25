@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.6 $ $Date$
+ * $Id: TimeTest.java 4508 2006-02-16 23:14:18 +0000 (Thu, 16 Feb 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-02-16 23:14:18 +0000 (Thu, 16
+ * Feb 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,8 +41,9 @@ public final class TimeTest extends TestCase
 		final Time start = Time.now();
 
 		// TODO Post 1.2: Bug: Eelco mentioned this test fails on his computer
-		// from time to time.  I have seen this and it's very weird -- Jonathan
-		// Assert.assertTrue(Time.now().after(start) || Time.now().equals(start));
+		// from time to time. I have seen this and it's very weird -- Jonathan
+		// Assert.assertTrue(Time.now().after(start) ||
+		// Time.now().equals(start));
 
 		final Time birthday = Time.parseDate("1966.06.01");
 

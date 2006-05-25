@@ -26,7 +26,8 @@ import wicket.markup.resolver.ScopedComponentResolver;
  */
 public class ScopedComponentResolverTest extends WicketTestCase
 {
-	// private static Log log = LogFactory.getLog(ScopedComponentResolverTest.class);
+	// private static Log log =
+	// LogFactory.getLog(ScopedComponentResolverTest.class);
 
 	/**
 	 * Create the test.
@@ -38,7 +39,8 @@ public class ScopedComponentResolverTest extends WicketTestCase
 	{
 		super(name);
 	}
-	
+
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -50,6 +52,6 @@ public class ScopedComponentResolverTest extends WicketTestCase
 	 */
 	public void testRenderHomePage() throws Exception
 	{
-	    executeTest(ScopedPage.class, "ScopedPageExpectedResult.html");
+		executeTest(ScopedPage.class, "ScopedPageExpectedResult.html");
 	}
 }

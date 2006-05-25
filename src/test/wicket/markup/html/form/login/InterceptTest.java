@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: InterceptTest.java 4689 2006-03-01 15:22:39 +0000 (Wed, 01 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-01 15:22:39 +0000 (Wed, 01 Mar
+ * 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2005, Topicus B.V. All rights reserved.
@@ -41,6 +43,7 @@ public class InterceptTest extends TestCase
 	/**
 	 * @see TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -52,6 +55,7 @@ public class InterceptTest extends TestCase
 	/**
 	 * @see TestCase#tearDown()
 	 */
+	@Override
 	protected void tearDown() throws Exception
 	{
 		super.tearDown();
@@ -69,7 +73,8 @@ public class InterceptTest extends TestCase
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(loginPage.getForm());
-		application.getServletRequest().setParameter(loginPage.getTextField().getInputName(), "admin");
+		application.getServletRequest().setParameter(loginPage.getTextField().getInputName(),
+				"admin");
 		application.processRequestCycle();
 
 		// continueToInterceptPage seems to return the same call, causing it to
@@ -77,7 +82,8 @@ public class InterceptTest extends TestCase
 		assertEquals(application.getHomePage(), application.getLastRenderedPage().getClass());
 
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(application.getLastRenderedPage().get("link"));
+		application.getServletRequest().setRequestToComponent(
+				application.getLastRenderedPage().get("link"));
 		application.processRequestCycle();
 		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
 	}
@@ -92,16 +98,17 @@ public class InterceptTest extends TestCase
 		application.processRequestCycle();
 		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
 		assertEquals(application.getLoginPage(), loginPage.getClass());
-		
+
 		// bypass form completely to login but continue to intercept page
 		application.setupRequestAndResponse();
 		WebRequestCycle requestCycle = application.createRequestCycle();
 		assertTrue(((MockLoginPage)application.getLastRenderedPage()).login("admin"));
 		application.processRequestCycle(requestCycle);
 		assertEquals(application.getHomePage(), application.getLastRenderedPage().getClass());
-		
+
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(application.getLastRenderedPage().get("link"));
+		application.getServletRequest().setRequestToComponent(
+				application.getLastRenderedPage().get("link"));
 		application.processRequestCycle();
 		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
 	}
@@ -136,6 +143,7 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @see wicket.ISessionFactory#newSession()
 		 */
+		@Override
 		public Session newSession()
 		{
 			return new MySession(this);
@@ -145,6 +153,7 @@ public class InterceptTest extends TestCase
 		 * 
 		 * @see wicket.Application#getSessionFactory()
 		 */
+		@Override
 		protected ISessionFactory getSessionFactory()
 		{
 			return this;

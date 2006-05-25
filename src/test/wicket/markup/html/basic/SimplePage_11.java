@@ -1,6 +1,6 @@
 /*
- * $Id: SimplePage_10.java 3749 2006-01-14 00:54:30Z ivaynberg $
- * $Revision$ $Date: 2006-01-14 01:54:30 +0100 (Sa, 14 Jan 2006) $
+ * $Id: SimplePage_10.java 3749 2006-01-14 00:54:30Z ivaynberg $ $Revision$
+ * $Date: 2006-01-14 01:54:30 +0100 (Sa, 14 Jan 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -34,15 +34,15 @@ public class SimplePage_11 extends WebPage
 	 */
 	public SimplePage_11()
 	{
-		add(new Label(this,"panel", "panel"));
-		add(new Label(this,"border", "border"));
-		add(new Label(this,"body", "body"));
-		add(new Label(this,"child", "child"));
-		add(new Label(this,"extend", "extend"));
-		add(new Label(this,"message", "message"));
-		add(new Label(this,"component", "component"));
-		add(new Label(this,"id", "id"));
-		add(new Label(this,"head", "head"));
-		add(new Label(this,"fragment", "fragment"));
+		add(new Label(this, "panel", "panel"));
+		add(new Label(this, "border", "border"));
+		add(new Label(this, "body", "body"));
+		add(new Label(this, "child", "child"));
+		add(new Label(this, "extend", "extend"));
+		add(new Label(this, "message", "message"));
+		add(new Label(this, "component", "component"));
+		add(new Label(this, "id", "id"));
+		add(new Label(this, "head", "head"));
+		add(new Label(this, "fragment", "fragment"));
 	}
 }

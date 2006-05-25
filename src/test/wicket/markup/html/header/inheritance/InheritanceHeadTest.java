@@ -78,12 +78,13 @@ public class InheritanceHeadTest extends WicketTestCase
 			/**
 			 * @see wicket.protocol.http.WebApplication#newSession()
 			 */
+			@Override
 			public Session newSession()
 			{
 				return new WebSession(this).setStyle("myStyle");
 			}
 		};
-		
+
 		executeTest(ConcretePage2.class, "ExpectedResult3.html");
 	}
 }

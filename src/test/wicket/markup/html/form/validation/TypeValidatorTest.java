@@ -49,13 +49,15 @@ public class TypeValidatorTest extends WicketTestCase
 		 */
 		public DateField(MarkupContainer parent, String id)
 		{
-			super(parent,id, Date.class);
+			super(parent, id, Date.class);
 		}
-		
+
 		/**
 		 * Test method with mock input.
+		 * 
 		 * @see wicket.markup.html.form.FormComponent#getInput()
 		 */
+		@Override
 		public String getInput()
 		{
 			return "01/01/2001";
@@ -109,8 +111,8 @@ public class TypeValidatorTest extends WicketTestCase
 
 		MockPage page = new MockPage();
 
-		Form form = new Form(page,"form", new CompoundPropertyModel(new Person()));
-		DateField dateField = new DateField(form,"birthdate");
+		Form form = new Form(page, "form", new CompoundPropertyModel(new Person()));
+		DateField dateField = new DateField(form, "birthdate");
 		form.add(dateField);
 		page.add(form);
 

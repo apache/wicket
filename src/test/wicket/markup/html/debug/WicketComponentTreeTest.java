@@ -1,11 +1,12 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketComponentTreeTest.java 4507 2006-02-16 22:51:20 +0000 (Thu, 16 Feb
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-02-16 22:51:20 +0000
+ * (Thu, 16 Feb 2006) $
  * 
- * ======================================================================== 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may 
- * not use this file except in compliance with the License. You may obtain 
- * a copy of the License at
+ * ========================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -26,7 +27,8 @@ import wicket.WicketTestCase;
  */
 public class WicketComponentTreeTest extends WicketTestCase
 {
-	// private static Log log = LogFactory.getLog(WicketComponentTreeTest.class);
+	// private static Log log =
+	// LogFactory.getLog(WicketComponentTreeTest.class);
 
 	/**
 	 * Create the test.
@@ -41,10 +43,12 @@ public class WicketComponentTreeTest extends WicketTestCase
 
 	/**
 	 * Test a simply page containing the debug component
+	 * 
 	 * @throws Exception
 	 */
 	public void test1() throws Exception
 	{
-		this.executeTest(WicketComponentTreeTestPage.class, "WicketComponentTreeTestPage_ExpectedResult.html");
+		this.executeTest(WicketComponentTreeTestPage.class,
+				"WicketComponentTreeTestPage_ExpectedResult.html");
 	}
 }

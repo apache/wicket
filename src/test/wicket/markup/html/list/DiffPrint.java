@@ -1,37 +1,29 @@
 /*
- * $Log$
- * Revision 1.2  2006/02/23 22:17:44  jdonnerstag
- * used eclipse 3.2M5 clean up wizard
- *
- * Revision 1.1  2005/01/26 09:27:54  eelco12
- * refactoring:
- * package rename table -> list
- * rename *Table* -> (Pageable)ListView
- *
- * Revision 1.4  2005/01/23 17:15:53  jdonnerstag
- * javadoc
- *
- * Revision 1.3  2005/01/16 20:21:25  jonathanlocke
- * *** empty log message ***
- *
- * Revision 1.2  2004/12/28 12:27:18  eelco12
- * javadoc fixes (to stop Eclipse from complaining)
- *
- * Revision 1.1  2004/12/19 17:19:41  eelco12
- * package rename
- *
- * Revision 1.1  2004/11/29 22:10:28  jdonnerstag
- * replaced Table with ListView
- * Revision 1.5 2004/01/29 02:35:35 stuart Test for out
- * of bounds exception in UnifiedPrint.print_hunk. Add setOutput() to
- * DiffPrint.Base.
+ * $Log$ Revision 1.2 2006/02/23 22:17:44 jdonnerstag used eclipse 3.2M5 clean
+ * up wizard
+ * 
+ * Revision 1.1 2005/01/26 09:27:54 eelco12 refactoring: package rename table ->
+ * list rename *Table* -> (Pageable)ListView
+ * 
+ * Revision 1.4 2005/01/23 17:15:53 jdonnerstag javadoc
+ * 
+ * Revision 1.3 2005/01/16 20:21:25 jonathanlocke *** empty log message ***
+ * 
+ * Revision 1.2 2004/12/28 12:27:18 eelco12 javadoc fixes (to stop Eclipse from
+ * complaining)
+ * 
+ * Revision 1.1 2004/12/19 17:19:41 eelco12 package rename
+ * 
+ * Revision 1.1 2004/11/29 22:10:28 jdonnerstag replaced Table with ListView
+ * Revision 1.5 2004/01/29 02:35:35 stuart Test for out of bounds exception in
+ * UnifiedPrint.print_hunk. Add setOutput() to DiffPrint.Base.
  * 
  * Revision 1.4 2003/04/22 01:50:47 stuart add Unified format diff
  * 
  * Revision 1.3 2003/04/22 01:00:32 stuart added context diff format
  * 
  * Revision 1.2 2000/03/02 16:59:54 stuart add GPL
- *  
+ * 
  */
 
 package wicket.markup.html.list;
@@ -60,27 +52,31 @@ interface UnaryPredicate
 
 /**
  * A simple framework for printing change lists produced by <code>Diff</code>.
- * @author Stuart D. Gathman Copyright (C) 2000 Business Management Systems, Inc.
+ * 
+ * @author Stuart D. Gathman Copyright (C) 2000 Business Management Systems,
+ *         Inc.
  *         <p>
- *         This program is free software; you can redistribute it and/or modify it under
- *         the terms of the GNU General Public License as published by the Free Software
- *         Foundation; either version 1, or (at your option) any later version.
+ *         This program is free software; you can redistribute it and/or modify
+ *         it under the terms of the GNU General Public License as published by
+ *         the Free Software Foundation; either version 1, or (at your option)
+ *         any later version.
  *         <p>
- *         This program is distributed in the hope that it will be useful, but WITHOUT ANY
- *         WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- *         PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *         This program is distributed in the hope that it will be useful, but
+ *         WITHOUT ANY WARRANTY; without even the implied warranty of
+ *         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *         General Public License for more details.
  *         <p>
- *         You should have received a copy of the GNU General Public License along with
- *         this program; if not, write to the Free Software Foundation, Inc., 675 Mass
- *         Ave, Cambridge, MA 02139, USA.
+ *         You should have received a copy of the GNU General Public License
+ *         along with this program; if not, write to the Free Software
+ *         Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
 public class DiffPrint
 {
 	/**
-	 * A Base class for printing edit scripts produced by Diff. This class divides the
-	 * change list into "hunks", and calls <code>print_hunk</code> for each hunk. Various
-	 * utility methods are provided as well.
+	 * A Base class for printing edit scripts produced by Diff. This class
+	 * divides the change list into "hunks", and calls <code>print_hunk</code>
+	 * for each hunk. Various utility methods are provided as well.
 	 */
 	public static abstract class Base
 	{
@@ -112,8 +108,8 @@ public class DiffPrint
 		}
 
 		/**
-		 * Set to ignore certain kinds of lines when printing an edit script. For example,
-		 * ignoring blank lines or comments.
+		 * Set to ignore certain kinds of lines when printing an edit script.
+		 * For example, ignoring blank lines or comments.
 		 */
 		protected UnaryPredicate ignore = null;
 
@@ -123,9 +119,11 @@ public class DiffPrint
 		protected Object[] file0, file1;
 
 		/**
-		 * Divide SCRIPT into pieces by calling HUNKFUN and print each piece with PRINTFUN.
-		 * Both functions take one arg, an edit script. PRINTFUN takes a subscript which
-		 * belongs together (with a null link at the end) and prints it.
+		 * Divide SCRIPT into pieces by calling HUNKFUN and print each piece
+		 * with PRINTFUN. Both functions take one arg, an edit script. PRINTFUN
+		 * takes a subscript which belongs together (with a null link at the
+		 * end) and prints it.
+		 * 
 		 * @param script
 		 */
 		public void print_script(Diff.change script)
@@ -142,8 +140,8 @@ public class DiffPrint
 				end = hunkfun(next);
 
 				/*
-				 * Disconnect them from the rest of the changes, making them a hunk, and
-				 * remember the rest for next iteration.
+				 * Disconnect them from the rest of the changes, making them a
+				 * hunk, and remember the rest for next iteration.
 				 */
 				next = end.link;
 				end.link = null;
@@ -160,8 +158,9 @@ public class DiffPrint
 		}
 
 		/**
-		 * Called with the tail of the script and returns the last link that belongs
-		 * together with the start of the tail.
+		 * Called with the tail of the script and returns the last link that
+		 * belongs together with the start of the tail.
+		 * 
 		 * @param hunk
 		 * @return change
 		 */
@@ -174,14 +173,16 @@ public class DiffPrint
 		protected int first0, last0, first1, last1, deletes, inserts;
 
 		/**
-		 * Look at a hunk of edit script and report the range of lines in each file that it
-		 * applies to. HUNK is the start of the hunk, which is a chain of `struct change'.
-		 * The first and last line numbers of file 0 are stored in *FIRST0 and *LAST0, and
-		 * likewise for file 1 in *FIRST1 and *LAST1. Note that these are internal line
-		 * numbers that count from 0. If no lines from file 0 are deleted, then FIRST0 is
-		 * LAST0+1. Also set *DELETES nonzero if any lines of file 0 are deleted and set
-		 * *INSERTS nonzero if any lines of file 1 are inserted. If only ignorable lines are
-		 * inserted or deleted, both are set to 0.
+		 * Look at a hunk of edit script and report the range of lines in each
+		 * file that it applies to. HUNK is the start of the hunk, which is a
+		 * chain of `struct change'. The first and last line numbers of file 0
+		 * are stored in *FIRST0 and *LAST0, and likewise for file 1 in *FIRST1
+		 * and *LAST1. Note that these are internal line numbers that count from
+		 * 0. If no lines from file 0 are deleted, then FIRST0 is LAST0+1. Also
+		 * set *DELETES nonzero if any lines of file 0 are deleted and set
+		 * *INSERTS nonzero if any lines of file 1 are inserted. If only
+		 * ignorable lines are inserted or deleted, both are set to 0.
+		 * 
 		 * @param hunk
 		 */
 
@@ -225,8 +226,8 @@ public class DiffPrint
 			last1 = l1;
 
 			/*
-			 * If all inserted or deleted lines are ignorable, tell the caller to ignore this
-			 * hunk.
+			 * If all inserted or deleted lines are ignorable, tell the caller
+			 * to ignore this hunk.
 			 */
 
 			if (!nontrivial)
@@ -240,8 +241,11 @@ public class DiffPrint
 
 		/**
 		 * Print the script header which identifies the files compared.
-		 * @param filea file a
-		 * @param fileb file b
+		 * 
+		 * @param filea
+		 *            file a
+		 * @param fileb
+		 *            file b
 		 */
 		protected void print_header(String filea, String fileb)
 		{
@@ -256,9 +260,11 @@ public class DiffPrint
 		}
 
 		/**
-		 * Print a pair of line numbers with SEPCHAR, translated for file FILE. If the two
-		 * numbers are identical, print just one number. Args A and B are internal line
-		 * numbers. We print the translated (real) line numbers.
+		 * Print a pair of line numbers with SEPCHAR, translated for file FILE.
+		 * If the two numbers are identical, print just one number. Args A and B
+		 * are internal line numbers. We print the translated (real) line
+		 * numbers.
+		 * 
 		 * @param sepchar
 		 * @param a
 		 * @param b
@@ -267,8 +273,9 @@ public class DiffPrint
 		protected void print_number_range(char sepchar, int a, int b)
 		{
 			/*
-			 * Note: we can have B < A in the case of a range of no lines. In this case, we
-			 * should print the line number before the range, which is B.
+			 * Note: we can have B < A in the case of a range of no lines. In
+			 * this case, we should print the line number before the range,
+			 * which is B.
 			 */
 			if (++b > ++a)
 			{
@@ -310,6 +317,7 @@ public class DiffPrint
 
 		/**
 		 * Construct.
+		 * 
 		 * @param a
 		 * @param b
 		 */
@@ -319,11 +327,13 @@ public class DiffPrint
 		}
 
 		/**
-		 * Print a hunk of a normal diff. This is a contiguous portion of a complete edit
-		 * script, describing changes in consecutive lines.
+		 * Print a hunk of a normal diff. This is a contiguous portion of a
+		 * complete edit script, describing changes in consecutive lines.
+		 * 
 		 * @param hunk
 		 */
 
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 
@@ -366,15 +376,16 @@ public class DiffPrint
 	}
 
 	/**
-	 * Prints an edit script in a format suitable for input to <code>ed</code>. The edit
-	 * script must be generated with the reverse option to be useful as actual
-	 * <code>ed</code> input.
+	 * Prints an edit script in a format suitable for input to <code>ed</code>.
+	 * The edit script must be generated with the reverse option to be useful as
+	 * actual <code>ed</code> input.
 	 */
 	public static class EdPrint extends Base
 	{
 
 		/**
 		 * Construct.
+		 * 
 		 * @param a
 		 * @param b
 		 */
@@ -385,8 +396,10 @@ public class DiffPrint
 
 		/**
 		 * Print a hunk of an ed diff.
+		 * 
 		 * @param hunk
 		 */
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 
@@ -415,9 +428,10 @@ public class DiffPrint
 					inserting = true;
 
 					/*
-					 * If the file's line is just a dot, it would confuse `ed'. So output it
-					 * with a double dot, and set the flag LEADING_DOT so that we will output
-					 * another ed-command later to change the double dot into a single dot.
+					 * If the file's line is just a dot, it would confuse `ed'.
+					 * So output it with a double dot, and set the flag
+					 * LEADING_DOT so that we will output another ed-command
+					 * later to change the double dot into a single dot.
 					 */
 
 					if (".".equals(file1[i]))
@@ -445,8 +459,8 @@ public class DiffPrint
 	}
 
 	/**
-	 * Prints an edit script in context diff format. This and its 'unified' variation is
-	 * used for source code patches.
+	 * Prints an edit script in context diff format. This and its 'unified'
+	 * variation is used for source code patches.
 	 */
 	public static class ContextPrint extends Base
 	{
@@ -455,6 +469,7 @@ public class DiffPrint
 
 		/**
 		 * Construct.
+		 * 
 		 * @param a
 		 * @param b
 		 */
@@ -476,8 +491,8 @@ public class DiffPrint
 						+ ' '
 						+ inf.getPath()
 						+ '\t'
-						+ new SimpleDateFormat("yyyy.MM.dd HH:mm:ss")
-								.format(new Date(inf.lastModified())));
+						+ new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(inf
+								.lastModified())));
 			}
 			else
 			{
@@ -490,6 +505,7 @@ public class DiffPrint
 		 * @see wicket.markup.html.list.DiffPrint.Base#print_header(java.lang.String,
 		 *      java.lang.String)
 		 */
+		@Override
 		public void print_header(String filea, String fileb)
 		{
 			print_context_label("***", new File(filea), filea);
@@ -498,6 +514,7 @@ public class DiffPrint
 
 		/**
 		 * If function_regexp defined, search for start of function.
+		 * 
 		 * @param lines
 		 * @param start
 		 * @return allways null
@@ -517,6 +534,7 @@ public class DiffPrint
 			}
 		}
 
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 
@@ -539,8 +557,8 @@ public class DiffPrint
 			outfile.print("***************");
 
 			/*
-			 * If we looked for and found a function this is part of, include its name in the
-			 * header of the diff section.
+			 * If we looked for and found a function this is part of, include
+			 * its name in the header of the diff section.
 			 */
 			print_function(file0, first0);
 
@@ -556,7 +574,8 @@ public class DiffPrint
 				for (int i = first0; i <= last0; i++)
 				{
 					/*
-					 * Skip past changes that apply (in file 0) only to lines before line I.
+					 * Skip past changes that apply (in file 0) only to lines
+					 * before line I.
 					 */
 
 					while (next != null && next.line0 + next.deleted <= i)
@@ -570,8 +589,9 @@ public class DiffPrint
 					if (next != null && next.line0 <= i)
 					{
 						/*
-						 * The change NEXT covers this line. If lines were inserted here in file
-						 * 1, this is "changed". Otherwise it is "deleted".
+						 * The change NEXT covers this line. If lines were
+						 * inserted here in file 1, this is "changed". Otherwise
+						 * it is "deleted".
 						 */
 						prefix = (next.inserted > 0) ? "!" : "-";
 					}
@@ -591,7 +611,8 @@ public class DiffPrint
 				for (int i = first1; i <= last1; i++)
 				{
 					/*
-					 * Skip past changes that apply (in file 1) only to lines before line I.
+					 * Skip past changes that apply (in file 1) only to lines
+					 * before line I.
 					 */
 
 					while (next != null && next.line1 + next.inserted <= i)
@@ -605,8 +626,9 @@ public class DiffPrint
 					if (next != null && next.line1 <= i)
 					{
 						/*
-						 * The change NEXT covers this line. If lines were deleted here in file
-						 * 0, this is "changed". Otherwise it is "inserted".
+						 * The change NEXT covers this line. If lines were
+						 * deleted here in file 0, this is "changed". Otherwise
+						 * it is "inserted".
 						 */
 						prefix = (next.deleted > 0) ? "!" : "+";
 					}
@@ -618,14 +640,15 @@ public class DiffPrint
 	}
 
 	/**
-	 * Prints an edit script in context diff format. This and its 'unified' variation is
-	 * used for source code patches.
+	 * Prints an edit script in context diff format. This and its 'unified'
+	 * variation is used for source code patches.
 	 */
 	public static class UnifiedPrint extends ContextPrint
 	{
 
 		/**
 		 * Construct.
+		 * 
 		 * @param a
 		 * @param b
 		 */
@@ -638,6 +661,7 @@ public class DiffPrint
 		 * @see wicket.markup.html.list.DiffPrint.ContextPrint#print_header(java.lang.String,
 		 *      java.lang.String)
 		 */
+		@Override
 		public void print_header(String filea, String fileb)
 		{
 			print_context_label("---", new File(filea), filea);
@@ -649,8 +673,9 @@ public class DiffPrint
 			// translate_range (file, a, b, &trans_a, &trans_b);
 
 			/*
-			 * Note: we can have B < A in the case of a range of no lines. In this case, we
-			 * should print the line number before the range, which is B.
+			 * Note: we can have B < A in the case of a range of no lines. In
+			 * this case, we should print the line number before the range,
+			 * which is B.
 			 */
 			if (b < a)
 			{
@@ -662,6 +687,7 @@ public class DiffPrint
 			}
 		}
 
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 			/* Determine range of line numbers involved in each file. */
@@ -686,8 +712,8 @@ public class DiffPrint
 			outfile.print(" @@");
 
 			/*
-			 * If we looked for and found a function this is part of, include its name in the
-			 * header of the diff section.
+			 * If we looked for and found a function this is part of, include
+			 * its name in the header of the diff section.
 			 */
 			print_function(file0, first0);
 
@@ -701,7 +727,8 @@ public class DiffPrint
 			{
 
 				/*
-				 * If the line isn't a difference, output the context from file 0.
+				 * If the line isn't a difference, output the context from file
+				 * 0.
 				 */
 
 				if (next == null || i < next.line0)
@@ -742,11 +769,13 @@ public class DiffPrint
 	}
 
 	/**
-	 * Read a text file into an array of String. This provides basic diff functionality. A
-	 * more advanced diff utility will use specialized objects to represent the text lines,
-	 * with options to, for example, convert sequences of whitespace to a single space for
-	 * comparison purposes.
-	 * @param file the file to read
+	 * Read a text file into an array of String. This provides basic diff
+	 * functionality. A more advanced diff utility will use specialized objects
+	 * to represent the text lines, with options to, for example, convert
+	 * sequences of whitespace to a single space for comparison purposes.
+	 * 
+	 * @param file
+	 *            the file to read
 	 * @return the file contents as a string
 	 * @throws IOException
 	 */

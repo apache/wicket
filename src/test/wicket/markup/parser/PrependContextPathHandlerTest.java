@@ -39,6 +39,7 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -52,7 +53,7 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 	{
 		executeTest(Page_1.class, "PageExpectedResult_1.html");
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
@@ -79,5 +80,5 @@ public class PrependContextPathHandlerTest extends WicketTestCase
 		application.getApplicationSettings().setContextPath("/other");
 		executeTest(Page_2.class, "Page2ExpectedResult.html");
 	}
-	
+
 }

@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,19 +28,21 @@ public class BookmarkableHomePageLinksTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public BookmarkableHomePageLinksTest(String name)
 	{
 		super(name);
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
 	public void testTestLinks() throws Exception
 	{
-		executeTest(BookmarkableHomePageLinksPage.class, "BookmarkableHomePageLinksPage_result.html");
+		executeTest(BookmarkableHomePageLinksPage.class,
+				"BookmarkableHomePageLinksPage_result.html");
 	}
 
 }

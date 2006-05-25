@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,7 +27,7 @@ import java.io.Serializable;
 public class Book implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	private String id;
 	private String name;
 
@@ -41,7 +41,7 @@ public class Book implements Serializable
 		this.id = id;
 		this.name = name;
 	}
-	
+
 	/**
 	 * 
 	 * @return string

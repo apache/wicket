@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketTesterTest.java 5336 2006-04-11 09:42:12 +0000 (Tue, 11 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-11 09:42:12 +0000 (Tue, 11 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -105,7 +106,7 @@ public class WicketTesterTest extends TestCase
 		// TODO Post 1.2: General: No longer a valid test
 		// tester.assertExpirePreviousPage();
 	}
-	
+
 	/**
 	 * 
 	 * @throws Exception
@@ -130,7 +131,7 @@ public class WicketTesterTest extends TestCase
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
 	}
-	
+
 	/**
 	 * 
 	 * @throws Exception

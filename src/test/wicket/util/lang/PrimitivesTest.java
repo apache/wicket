@@ -34,6 +34,7 @@ public class PrimitivesTest extends TestCase
 		/**
 		 * @see java.lang.Object#hashCode()
 		 */
+		@Override
 		public int hashCode()
 		{
 			return Primitives.hashCode(value);
@@ -48,6 +49,7 @@ public class PrimitivesTest extends TestCase
 	/**
 	 * Creates the objects for the tests.
 	 */
+	@Override
 	public void setUp()
 	{
 		eq1 = new HashCodeObject(26);

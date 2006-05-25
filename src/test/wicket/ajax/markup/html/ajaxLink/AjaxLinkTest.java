@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxLinkTest.java 5167 2006-03-29 19:12:08 +0000 (Wed, 29 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-29 19:12:08 +0000 (Wed, 29 Mar
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -56,8 +57,8 @@ public class AjaxLinkTest extends WicketTestCase
 
 		Page page = application.getLastRenderedPage();
 		Component ajaxLink = page.get("ajaxLink");
-		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior) ajaxLink.getBehaviors().get(0); 
-		
+		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
+
 		executedBehavior(AjaxPage2.class, behavior, "AjaxLinkWithBorderPage-1ExpectedResult.html");
 	}
 
@@ -71,8 +72,8 @@ public class AjaxLinkTest extends WicketTestCase
 
 		Page page = application.getLastRenderedPage();
 		Component ajaxLink = page.get("ajaxLink");
-		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior) ajaxLink.getBehaviors().get(0); 
-		
+		AbstractAjaxBehavior behavior = (AbstractAjaxBehavior)ajaxLink.getBehaviors().get(0);
+
 		executedBehavior(AjaxPage2.class, behavior, "AjaxPage2-1_ExpectedResult.html");
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxTestBorder.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -29,10 +30,11 @@ public class AjaxTestBorder extends Border
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public AjaxTestBorder(MarkupContainer parent,String id)
+	public AjaxTestBorder(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

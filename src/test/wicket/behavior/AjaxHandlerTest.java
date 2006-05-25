@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: AjaxHandlerTest.java 4078 2006-02-02 18:17:19 +0000 (Thu, 02 Feb 2006)
+ * eelco12 $ $Revision$ $Date: 2006-02-02 18:17:19 +0000 (Thu, 02 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,13 +22,14 @@ import wicket.WicketTestCase;
 
 /**
  * Test for ajax handler.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class AjaxHandlerTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public AjaxHandlerTest(String name)
@@ -40,6 +42,6 @@ public class AjaxHandlerTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(AjaxHandlerBodyOnLoadPage.class, "AjaxHandlerBodyOnLoadPageExpectedResult.html");
+		executeTest(AjaxHandlerBodyOnLoadPage.class, "AjaxHandlerBodyOnLoadPageExpectedResult.html");
 	}
 }

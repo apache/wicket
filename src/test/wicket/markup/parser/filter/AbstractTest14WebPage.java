@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractTest14WebPage.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -34,7 +35,7 @@ public abstract class AbstractTest14WebPage extends WebPage
 	public AbstractTest14WebPage()
 	{
 		// Create border and add it to the page
-		border = new HeaderSectionBorder_2(this,"border");
+		border = new HeaderSectionBorder_2(this, "border");
 		border.setTransparentResolver(true);
 		super.add(border);
 	}

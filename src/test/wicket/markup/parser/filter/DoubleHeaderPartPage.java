@@ -8,7 +8,7 @@ import wicket.markup.html.basic.Label;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class DoubleHeaderPartPage extends WebPage
 {
@@ -19,8 +19,8 @@ public class DoubleHeaderPartPage extends WebPage
 	 */
 	public DoubleHeaderPartPage()
 	{
-		add(new Label(this,"title","Header Part Test"));
-		add(new PanelWithHeaderPart(this,"panelwithheadercomponents1"));
-		add(new PanelWithHeaderPart(this,"panelwithheadercomponents2"));
+		add(new Label(this, "title", "Header Part Test"));
+		add(new PanelWithHeaderPart(this, "panelwithheadercomponents1"));
+		add(new PanelWithHeaderPart(this, "panelwithheadercomponents2"));
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CheckGroupTestPage4.java 3034 2005-10-21 07:34:47 +0000 (Fri, 21 Oct
+ * 2005) ivaynberg $ $Revision$ $Date: 2005-10-21 07:34:47 +0000 (Fri, 21
+ * Oct 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,7 +34,7 @@ public class CheckGroupTestPage4 extends AbstractCheckGroupTestPage
 	 */
 	public CheckGroupTestPage4()
 	{
-		super(Arrays.asList(new String[] { "check1", "check2"}));
+		super(Arrays.asList(new String[] { "check1", "check2" }));
 
 	}
 

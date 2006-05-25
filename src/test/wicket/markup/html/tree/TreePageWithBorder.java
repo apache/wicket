@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,8 +36,7 @@ public class TreePageWithBorder extends BorderedPage
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor.
-	 *  Page parameters
+	 * Constructor. Page parameters
 	 */
 	public TreePageWithBorder()
 	{
@@ -59,13 +57,15 @@ public class TreePageWithBorder extends BorderedPage
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		MyTree tree = new MyTree(this,"tree", treeModel);
+		MyTree tree = new MyTree(this, "tree", treeModel);
 		add(tree);
 	}
 
 	/**
 	 * Convert the nested lists to a tree model
-	 * @param list the list
+	 * 
+	 * @param list
+	 *            the list
 	 * @return tree model
 	 */
 	private TreeModel convertToTreeModel(List list)
@@ -79,8 +79,11 @@ public class TreePageWithBorder extends BorderedPage
 
 	/**
 	 * Add a sublist to the parent.
-	 * @param parent the parent
-	 * @param sub the sub list
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @param sub
+	 *            the sub list
 	 */
 	private void add(DefaultMutableTreeNode parent, List sub)
 	{

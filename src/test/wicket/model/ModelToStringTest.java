@@ -14,6 +14,7 @@ public class ModelToStringTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public ModelToStringTest(String name)
@@ -125,7 +126,8 @@ public class ModelToStringTest extends WicketTestCase
 				+ innerPOJO + "]:bindings=[]";
 		assertEquals(expected, pojoProperty.toString());
 
-		Component component1 = pojoProperty.bind(new Label(new EmptyPage(),"label"), Integer.class);
+		Component component1 = pojoProperty
+				.bind(new Label(new EmptyPage(), "label"), Integer.class);
 		expected = "Model:classname=[wicket.model.BoundCompoundPropertyModel]:attached=false:nestedModel=["
 				+ innerPOJO
 				+ "]:bindings=[Binding(:component=["
@@ -144,6 +146,7 @@ public class ModelToStringTest extends WicketTestCase
 		/**
 		 * @see AbstractReadOnlyModel#getObject(Component)
 		 */
+		@Override
 		public Object getObject(Component component)
 		{
 			return "FOO";
@@ -171,19 +174,23 @@ public class ModelToStringTest extends WicketTestCase
 		 * @return <code>null</code>
 		 * @see Model#getNestedModel()
 		 */
+		@Override
 		public IModel getNestedModel()
 		{
 			return null;
 		}
 
+		@Override
 		protected void onAttach()
 		{
 		}
 
+		@Override
 		protected void onDetach()
 		{
 		}
 
+		@Override
 		protected Object onGetObject(Component component)
 		{
 			return null;
@@ -205,6 +212,7 @@ public class ModelToStringTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		protected Object load()
 		{
 			return "foo";

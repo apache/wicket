@@ -32,18 +32,18 @@ public class EmailPage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	private String email;
-	
+
 	/**
 	 * Construct
 	 * 
 	 */
 	public EmailPage()
 	{
-		Form form = new Form(this,"form");
+		Form form = new Form(this, "form");
 		form.setModel(new CompoundPropertyModel(this));
 		add(form);
 
-		TextField email = new TextField(form,"email");
+		TextField email = new TextField(form, "email");
 		email.add(EmailAddressPatternValidator.getInstance());
 		form.add(email);
 	}

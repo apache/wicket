@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision$
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision$ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,36 +29,36 @@ import junit.framework.TestCase;
 public class XmlReaderTest extends TestCase
 {
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void test_1() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_1.html"), null);
 		assertNull(reader.getEncoding());
-		
+
 		BufferedReader bufReader = new BufferedReader(reader);
 		assertEquals("Zeile 1", bufReader.readLine());
-		
+
 		assertNull(bufReader.readLine());
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void test_2() throws Exception
 	{
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_2.html"), null);
 		assertNull(reader.getEncoding());
-		
+
 		BufferedReader bufReader = new BufferedReader(reader);
 		assertEquals("<html>", bufReader.readLine());
 		assertEquals("<body>", bufReader.readLine());
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void test_3() throws Exception
@@ -66,15 +66,15 @@ public class XmlReaderTest extends TestCase
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_3.html"), null);
 		assertNull(reader.getEncoding());
 		assertEquals("<?xml?>", reader.getXmlDeclaration());
-		
+
 		BufferedReader bufReader = new BufferedReader(reader);
 		assertEquals("", bufReader.readLine().trim());
 		assertEquals("<html>", bufReader.readLine());
 		assertNull(bufReader.readLine());
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void test_4() throws Exception
@@ -82,15 +82,15 @@ public class XmlReaderTest extends TestCase
 		XmlReader reader = new XmlReader(this.getClass().getResourceAsStream("test_4.html"), null);
 		assertNull(reader.getEncoding());
 		assertEquals("<?xml version=\"1.0\" ?>", reader.getXmlDeclaration());
-		
+
 		BufferedReader bufReader = new BufferedReader(reader);
 		assertEquals("", bufReader.readLine().trim());
 		assertEquals("<html>", bufReader.readLine());
 		assertNull(bufReader.readLine());
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void test_5() throws Exception
@@ -104,9 +104,9 @@ public class XmlReaderTest extends TestCase
 		assertEquals("<html>", bufReader.readLine());
 		assertNull(bufReader.readLine());
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void test_6() throws Exception
@@ -120,9 +120,9 @@ public class XmlReaderTest extends TestCase
 		assertEquals("<html>", bufReader.readLine());
 		assertNull(bufReader.readLine());
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @throws Exception
 	 */
 	public void test_7() throws Exception

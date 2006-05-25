@@ -36,7 +36,7 @@ public class ScopedLabel extends Label implements IScopedComponent
 	 */
 	public ScopedLabel(MarkupContainer parent, String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class ScopedLabel extends Label implements IScopedComponent
 	 */
 	public ScopedLabel(MarkupContainer parent, String id, String label)
 	{
-		super(parent,id, label);
+		super(parent, id, label);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class ScopedLabel extends Label implements IScopedComponent
 	 */
 	public ScopedLabel(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**

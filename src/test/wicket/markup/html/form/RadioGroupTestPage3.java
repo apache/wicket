@@ -35,10 +35,10 @@ public class RadioGroupTestPage3 extends WebPage
 	 */
 	public RadioGroupTestPage3()
 	{
-		Form form = new Form(this,"form");
-		RadioGroup radio = new RadioGroup(form,"radio");
-		radio.add(new Radio(radio,"check1"));
-		radio.add(new Radio(radio,"check2"));
+		Form form = new Form(this, "form");
+		RadioGroup radio = new RadioGroup(form, "radio");
+		radio.add(new Radio(radio, "check1"));
+		radio.add(new Radio(radio, "check2"));
 		form.add(radio);
 		add(form);
 	}

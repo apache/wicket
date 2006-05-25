@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SimpleTestPanel.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,11 +41,11 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 	 * 
 	 * @param name
 	 */
-	public SimpleTestPanel(MarkupContainer parent,String name)
+	public SimpleTestPanel(MarkupContainer parent, String name)
 	{
-		super(parent,name);
+		super(parent, name);
 
-		Label ajaxLabel = new Label(baseSpan,"linja1", new PropertyModel(this, "count"));
+		Label ajaxLabel = new Label(baseSpan, "linja1", new PropertyModel(this, "count"));
 		this.timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
 
 		ajaxLabel.add(timer);
@@ -59,7 +60,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 	{
 		return this.timer;
 	}
-	
+
 	/**
 	 * @return Count
 	 */

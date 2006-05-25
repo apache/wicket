@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: AbstractPagingNavigationTest.java 4634 2006-02-26 00:23:20 +0000 (Sun,
+ * 26 Feb 2006) dashorst $ $Revision$ $Date: 2006-02-26 00:23:20 +0000
+ * (Sun, 26 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,9 +21,9 @@ package wicket.markup.html.navigation.paging;
 import wicket.WicketTestCase;
 
 /**
- * Base class for testing the navigation links, supplies a mock object
- * for exercizing the links.
- *
+ * Base class for testing the navigation links, supplies a mock object for
+ * exercizing the links.
+ * 
  * @author Martijn Dashorst
  */
 public abstract class AbstractPagingNavigationTest extends WicketTestCase
@@ -79,6 +79,7 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public AbstractPagingNavigationTest(String name)

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketTestCase.java 5366 2006-04-13 20:38:37 +0000 (Thu, 13 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-13 20:38:37 +0000 (Thu, 13 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -46,6 +47,7 @@ public abstract class WicketTestCase extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new WicketTester(null);
@@ -87,7 +89,7 @@ public abstract class WicketTestCase extends TestCase
 			final String filename) throws Exception
 	{
 		assertNotNull(component);
-		
+
 		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath()
 				+ " ===");
 
@@ -99,7 +101,7 @@ public abstract class WicketTestCase extends TestCase
 		String document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
 	}
-	
+
 	/**
 	 * 
 	 * @param pageClass
@@ -111,14 +113,15 @@ public abstract class WicketTestCase extends TestCase
 			final String filename) throws Exception
 	{
 		assertNotNull(behavior);
-		
+
 		System.out.println("=== " + pageClass.getName() + " : " + behavior.toString() + " ===");
-		
+
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
-		application.getServletRequest().setRequestToRedirectString(behavior.getCallbackUrl(false).toString());
+		application.getServletRequest().setRequestToRedirectString(
+				behavior.getCallbackUrl(false).toString());
 		application.processRequestCycle(cycle);
-	
+
 		String document = application.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
 	}

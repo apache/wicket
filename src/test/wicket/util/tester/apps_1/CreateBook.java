@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id: CreateBook.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,7 +41,7 @@ public class CreateBook extends WebPage
 	 */
 	public CreateBook()
 	{
-		add(new CreateForm(this,"createForm"));
+		add(new CreateForm(this, "createForm"));
 	}
 
 	/**
@@ -57,17 +58,19 @@ public class CreateBook extends WebPage
 		 */
 		public CreateForm(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 
 			// label model here comes from java
-			add(new RequiredTextField(this,"id", new PropertyModel(book, "id")).setLabel(new Model("id")));
+			add(new RequiredTextField(this, "id", new PropertyModel(book, "id"))
+					.setLabel(new Model("id")));
 			// label model here comes from CreateBook.properties
-			add(new RequiredTextField(this,"name", new PropertyModel(book, "name")));
+			add(new RequiredTextField(this, "name", new PropertyModel(book, "name")));
 		}
 
 		/**
 		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public void onSubmit()
 		{
 			try

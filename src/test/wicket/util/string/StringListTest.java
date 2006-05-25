@@ -275,14 +275,14 @@ public class StringListTest extends TestCase
 		assertTrue(list.contains("a"));
 		assertTrue(list.contains("aa"));
 	}
-	
+
 	/**
 	 * Tests the tokenize method.
 	 */
-	public void testTokenize() 
+	public void testTokenize()
 	{
 		isEmptyList(StringList.tokenize(""));
-		
+
 		checkStringList(1, "[a]", StringList.tokenize("a"));
 		checkStringList(2, "[a, a]", StringList.tokenize("a a"));
 		checkStringList(2, "[a, a]", StringList.tokenize("a, a"));
@@ -292,10 +292,10 @@ public class StringListTest extends TestCase
 		checkStringList(3, "[a, b, c]", StringList.tokenize("a, b, c"));
 
 		isEmptyList(StringList.tokenize("", ""));
-		
+
 		checkStringList(1, "[a]", StringList.tokenize("a", ""));
 		checkStringList(1, "[a a]", StringList.tokenize("a a", ""));
-		
+
 		checkStringList(2, "[a, a]", StringList.tokenize("a        a", " "));
 		checkStringList(2, "[a, a]", StringList.tokenize("axxxxxxxxa", "x"));
 		checkStringList(2, "[a, a]", StringList.tokenize("axxyyyxxxa", "xyy"));

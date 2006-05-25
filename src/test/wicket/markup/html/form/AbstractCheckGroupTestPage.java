@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractCheckGroupTestPage.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +28,7 @@ import wicket.model.Model;
 
 /**
  * Tests rendering of the CheckGroup and Check components
+ * 
  * @author igor
  */
 public abstract class AbstractCheckGroupTestPage extends WebPage
@@ -36,20 +38,22 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+
 	/**
 	 * Constructor
-	 * @param list 
+	 * 
+	 * @param list
 	 */
-	public AbstractCheckGroupTestPage(List list) {
-		
-		Form form=new Form(this,"form");
-		CheckGroup group=new CheckGroup(form,"group", new Model((Serializable)list));
-		WebMarkupContainer container=new WebMarkupContainer(group,"container");
-		Check check1=new Check(group,"check1", new Model("check1"));
-		Check check2=new Check(container,"check2", new Model("check2"));
-		
-		
+	public AbstractCheckGroupTestPage(List list)
+	{
+
+		Form form = new Form(this, "form");
+		CheckGroup group = new CheckGroup(form, "group", new Model(list));
+		WebMarkupContainer container = new WebMarkupContainer(group, "container");
+		Check check1 = new Check(group, "check1", new Model("check1"));
+		Check check2 = new Check(container, "check2", new Model("check2"));
+
+
 		add(form);
 		form.add(group);
 		group.add(check1);

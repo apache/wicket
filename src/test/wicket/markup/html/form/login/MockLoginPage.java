@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: MockLoginPage.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * ====================================================================
  * Copyright (c) 2005, Topicus B.V. All rights reserved.
  */
@@ -38,17 +38,18 @@ public class MockLoginPage extends WebPage
 	public MockLoginPage()
 	{
 		super();
-		add(new Label(this,"label", "welcome please login"));
-		add(form = new Form(this,"form")
+		add(new Label(this, "label", "welcome please login"));
+		add(form = new Form(this, "form")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit()
 			{
 				login(get("username").getModelObjectAsString().toString());
 			}
 		});
-		form.add(textField = new TextField(form,"username", new Model()));
+		form.add(textField = new TextField(form, "username", new Model()));
 	}
 
 	/**

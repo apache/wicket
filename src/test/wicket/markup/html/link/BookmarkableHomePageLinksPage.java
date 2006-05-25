@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,16 +29,18 @@ import wicket.markup.html.WebPage;
 public class BookmarkableHomePageLinksPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	/**
 	 * Construct.
 	 */
 	public BookmarkableHomePageLinksPage()
 	{
-		add(new BookmarkablePageLink(this,"defaulthompage",Application.get().getHomePage()));
-		add(new BookmarkablePageLink(this,"defaulthompagewithparams",Application.get().getHomePage(),new PageParameters("param1=1,param2=test")));
-		add(new BookmarkablePageLink(this,"defaulthompagewithpagemap",Application.get().getHomePage()).setPageMap(PageMap.forName("testpagemap")));
+		add(new BookmarkablePageLink(this, "defaulthompage", Application.get().getHomePage()));
+		add(new BookmarkablePageLink(this, "defaulthompagewithparams", Application.get()
+				.getHomePage(), new PageParameters("param1=1,param2=test")));
+		add(new BookmarkablePageLink(this, "defaulthompagewithpagemap", Application.get()
+				.getHomePage()).setPageMap(PageMap.forName("testpagemap")));
 	}
 
 }

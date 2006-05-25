@@ -18,6 +18,7 @@ public class BytesTest extends TestCase
 	/**
 	 * Save the default locale.
 	 */
+	@Override
 	public void setUp()
 	{
 		defaultLocale = Locale.getDefault();
@@ -29,6 +30,7 @@ public class BytesTest extends TestCase
 	/**
 	 * Restore the default locale.
 	 */
+	@Override
 	public void tearDown()
 	{
 		Locale.setDefault(defaultLocale);
