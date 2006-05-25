@@ -204,9 +204,9 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public FormComponent(MarkupContainer parent,final String id)
+	public FormComponent(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		// the form decides whether form components are versioned or not
 		// see Form.setVersioned
@@ -216,9 +216,9 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public FormComponent(MarkupContainer parent,final String id, IModel<T> model)
+	public FormComponent(MarkupContainer parent, final String id, IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		// the form decides whether form components are versioned or not
 		// see Form.setVersioned
@@ -584,7 +584,8 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	{
 		if (!checkRequired())
 		{
-			error(Collections.singletonList("RequiredValidator"), new HashMap<String, Serializable>());
+			error(Collections.singletonList("RequiredValidator"),
+					new HashMap<String, Serializable>());
 		}
 	}
 
@@ -800,7 +801,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 * @return The values in the request for this component
 	 * @deprecated Use {@link #getInputAsArray()} instead
 	 */
-	//TODO Post 1.2: remove
+	// TODO Post 1.2: remove
 	@Deprecated
 	protected final String[] inputAsStringArray()
 	{
@@ -1017,7 +1018,9 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	{
 		this.type = type;
 		if (type != null && type.isPrimitive())
+		{
 			setRequired(true);
+		}
 		return this;
 	}
 
@@ -1104,7 +1107,8 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			}
 		}
 
-		final IModel<HashMap<String, Object>> argsModel = new Model<HashMap<String, Object>>(fullArgs);
+		final IModel<HashMap<String, Object>> argsModel = new Model<HashMap<String, Object>>(
+				fullArgs);
 
 		// iterate through keys in order they were provided
 

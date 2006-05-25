@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ImageButton.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,18 +37,18 @@ import wicket.markup.html.image.resource.LocalizedImageResource;
 public class ImageButton extends Button implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	// private static final Log log = LogFactory.getLog(ImageButton.class);
-	
+
 	/** The image resource this image component references */
 	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public ImageButton(MarkupContainer parent,String id)
+	public ImageButton(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -61,7 +62,7 @@ public class ImageButton extends Button implements IResourceListener
 	 */
 	public ImageButton(MarkupContainer parent, final String id, final WebResource imageResource)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.localizedImageResource.setResource(imageResource);
 	}
 
@@ -73,9 +74,10 @@ public class ImageButton extends Button implements IResourceListener
 	 * @param resourceReference
 	 *            The shared image resource
 	 */
-	public ImageButton(MarkupContainer parent, final String id, final ResourceReference resourceReference)
+	public ImageButton(MarkupContainer parent, final String id,
+			final ResourceReference resourceReference)
 	{
-		super(parent,id);
+		super(parent, id);
 		localizedImageResource.setResourceReference(resourceReference);
 	}
 
@@ -89,7 +91,7 @@ public class ImageButton extends Button implements IResourceListener
 	 */
 	public ImageButton(MarkupContainer parent, final String id, final String label)
 	{
-		this(parent,id, new DefaultButtonImageResource(label));
+		this(parent, id, new DefaultButtonImageResource(label));
 	}
 
 	/**
@@ -115,7 +117,7 @@ public class ImageButton extends Button implements IResourceListener
 		super.onComponentTag(tag);
 		localizedImageResource.setSrcAttribute(tag);
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.form.Button#isStateless()
 	 */

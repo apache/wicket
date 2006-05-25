@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4703 $ $Date$
+ * $Id: AbstractValidator.java 5798 2006-05-20 15:55:29 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 15:55:29 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -91,9 +92,12 @@ public abstract class AbstractValidator implements IValidator
 	 * @param map
 	 *            The model for variable interpolation
 	 */
-	public void error(final FormComponent formComponent, final String resourceKey, final Map<String, Serializable> map)
+	public void error(final FormComponent formComponent, final String resourceKey,
+			final Map<String, Serializable> map)
 	{
-		error(formComponent, resourceKey, (map == null) ? new Model<Map<String, Serializable>>() : Model.valueOf(map));
+		error(formComponent, resourceKey, (map == null)
+				? new Model<Map<String, Serializable>>()
+				: Model.valueOf(map));
 	}
 
 	/**
@@ -107,28 +111,30 @@ public abstract class AbstractValidator implements IValidator
 	 */
 	public void error(final FormComponent formComponent, final Map<String, Serializable> map)
 	{
-		error(formComponent, resourceKey(formComponent), (map == null) ? new Model<Map<String, Serializable>>() : Model
-				.valueOf(map));
+		error(formComponent, resourceKey(formComponent), (map == null)
+				? new Model<Map<String, Serializable>>()
+				: Model.valueOf(map));
 	}
 
 	/**
 	 * Returns a formatted validation error message for a given component. The
 	 * error message is retrieved from a message bundle associated with the page
 	 * in which this validator is contained using the given resource key. The
-	 * resourceModel is used for variable interpolation. If that one is null
-	 * the default one is created from messageModel(formComponent)
+	 * resourceModel is used for variable interpolation. If that one is null the
+	 * default one is created from messageModel(formComponent)
 	 * 
 	 * @param formComponent
 	 *            form component
 	 * @param resourceKey
 	 *            The resource key to use
 	 * @param resourceModel
-	 *            The model for variable interpolation, it needs to have a map inside it.
+	 *            The model for variable interpolation, it needs to have a map
+	 *            inside it.
 	 */
 	public void error(final FormComponent<?> formComponent, final String resourceKey,
 			IModel<Map<String, Serializable>> resourceModel)
 	{
-		if(resourceModel == null)
+		if (resourceModel == null)
 		{
 			resourceModel = Model.valueOf(messageModel(formComponent));
 		}
@@ -150,7 +156,7 @@ public abstract class AbstractValidator implements IValidator
 			keys.add(defaultKey);
 		}
 
-		Map<String, Serializable> args = (Map<String, Serializable>)resourceModel.getObject(formComponent);
+		Map<String, Serializable> args = resourceModel.getObject(formComponent);
 
 		formComponent.error(keys, args);
 	}

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: CheckGroup.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -66,9 +67,9 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 * @param id
 	 *            component id
 	 */
-	public CheckGroup(MarkupContainer parent,String id)
+	public CheckGroup(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 		setRenderBodyOnly(true);
 	}
 
@@ -82,17 +83,17 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 *            collection to be used as the model
 	 * 
 	 */
-	public CheckGroup(MarkupContainer parent,String id, Collection<T> collection)
+	public CheckGroup(MarkupContainer parent, String id, Collection<T> collection)
 	{
-		this(parent,id, new Model<Collection<T>>(collection));
+		this(parent, id, new Model<Collection<T>>(collection));
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
-	public CheckGroup(MarkupContainer parent,String id, IModel<Collection<T>> model)
+	public CheckGroup(MarkupContainer parent, String id, IModel<Collection<T>> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		setRenderBodyOnly(true);
 	}
 
@@ -111,9 +112,9 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 
 		if (paths != null && paths.length > 0)
 		{
-			for (int i = 0; i < paths.length; i++)
+			for (String element : paths)
 			{
-				String path = paths[i];
+				String path = element;
 
 				if (path != null)
 				{
@@ -155,17 +156,17 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	@Override
 	public void updateModel()
 	{
-		Collection<T> collection = (Collection<T>)getModelObject();
+		Collection<T> collection = getModelObject();
 		if (collection == null)
 		{
-			collection = (Collection<T>)getConvertedInput();
+			collection = getConvertedInput();
 			setModelObject(collection);
 		}
 		else
 		{
 			modelChanging();
 			collection.clear();
-			collection.addAll((Collection)getConvertedInput());
+			collection.addAll(getConvertedInput());
 			modelChanged();
 		}
 	}
@@ -188,7 +189,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	{
 		convert();
 		updateModel();
-		onSelectionChanged((Collection)getModelObject());
+		onSelectionChanged(getModelObject());
 	}
 
 	/**
@@ -220,14 +221,14 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	{
 		return false;
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#isStateless()
 	 */
 	@Override
 	protected boolean isStateless()
 	{
-		if(wantOnSelectionChangedNotifications())
+		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}

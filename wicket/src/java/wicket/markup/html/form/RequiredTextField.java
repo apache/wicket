@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RequiredTextField.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,13 +30,13 @@ import wicket.model.IModel;
 public class RequiredTextField extends TextField
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 		setRequired(true);
 	}
 
@@ -44,7 +45,7 @@ public class RequiredTextField extends TextField
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id, final Class type)
 	{
-		super(parent,id, type);
+		super(parent, id, type);
 		setRequired(true);
 	}
 
@@ -53,7 +54,7 @@ public class RequiredTextField extends TextField
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		setRequired(true);
 	}
 
@@ -68,7 +69,7 @@ public class RequiredTextField extends TextField
 	 */
 	public RequiredTextField(MarkupContainer parent, final String id, IModel model, Class type)
 	{
-		super(parent,id, model, type);
+		super(parent, id, model, type);
 		setRequired(true);
 	}
 }

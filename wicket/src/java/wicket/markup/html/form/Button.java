@@ -71,9 +71,9 @@ public class Button extends FormComponent
 	 * 
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public Button(MarkupContainer parent,String id)
+	public Button(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class Button extends FormComponent
 	 */
 	public Button(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -226,16 +226,16 @@ public class Button extends FormComponent
 	protected void onSubmit()
 	{
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#isStateless()
 	 */
 	@Override
 	protected boolean isStateless()
 	{
-		// call the on click script. If that generated a url to the page 
+		// call the on click script. If that generated a url to the page
 		// then the page is now not stateless anymore.
 		getOnClickScript();
 		return super.isStateless();
-	}	
+	}
 }

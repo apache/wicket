@@ -43,10 +43,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *   &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *  	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
- *  	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
- *   &lt;/span&gt;
+ *    &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *   	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
+ *   	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
+ *    &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -103,6 +103,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 
 		/**
 		 * Construct.
+		 * 
 		 * @param prevSuffix
 		 */
 		PrefixChange(String prevSuffix)
@@ -142,7 +143,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -157,7 +158,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
@@ -176,7 +177,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, final List<T> choices,
 			final IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, choices, renderer);
+		super(parent, id, choices, renderer);
 	}
 
 	/**
@@ -192,9 +193,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel,
 	 *      java.util.List)
 	 */
-	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> model, final List<T> choices)
+	public CheckBoxMultipleChoice(MarkupContainer parent, final String id,
+			IModel<Collection<T>> model, final List<T> choices)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, model, choices);
 	}
 
 	/**
@@ -212,10 +214,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel,
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> model, final List<T> choices,
-			final IChoiceRenderer renderer)
+	public CheckBoxMultipleChoice(MarkupContainer parent, final String id,
+			IModel<Collection<T>> model, final List<T> choices, final IChoiceRenderer renderer)
 	{
-		super(parent,id, model, choices, renderer);
+		super(parent, id, model, choices, renderer);
 	}
 
 	/**
@@ -228,9 +230,9 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
+	public CheckBoxMultipleChoice(MarkupContainer parent, String id, IModel<List<T>> choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
@@ -247,9 +249,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      wicket.model.IModel,wicket.model.IModel)
 	 * @see wicket.Component#Component(MarkupContainer,String, wicket.model.IModel)
 	 */
-	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices)
+	public CheckBoxMultipleChoice(MarkupContainer parent, String id, IModel<Collection<T>> model,
+			IModel<List<T>> choices)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, model, choices);
 	}
 
 	/**
@@ -265,9 +268,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public CheckBoxMultipleChoice(MarkupContainer parent, String id, IModel<List<T>> choices,
+			IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, choices, renderer);
+		super(parent, id, choices, renderer);
 	}
 
 
@@ -287,9 +291,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel,
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 */
-	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public CheckBoxMultipleChoice(MarkupContainer parent, String id, IModel<Collection<T>> model,
+			IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, model, choices, renderer);
+		super(parent, id, model, choices, renderer);
 	}
 
 	/**
@@ -356,11 +361,11 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 		final List<T> choices = getChoices();
 
 		// Buffer to hold generated body
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(70*(choices.size()+1));
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(70 * (choices.size() + 1));
 
 		// Value of this choice
 		final String selected = getValue();
-		
+
 		// Loop through choices
 		for (int index = 0; index < choices.size(); index++)
 		{
@@ -368,9 +373,10 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 			final T choice = choices.get(index);
 
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
-			Class objectClass = displayValue == null?null:displayValue.getClass();
+			Class objectClass = displayValue == null ? null : displayValue.getClass();
 			// Get label for choice
-			final String label = getConverter(objectClass).convertToString(displayValue, getLocale());
+			final String label = getConverter(objectClass).convertToString(displayValue,
+					getLocale());
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know
@@ -385,13 +391,15 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add checkbox element
-				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"checkbox\"").append(
-						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
-						id).append("\" id=\"").append(idAttr).append("\"/>");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
+						" type=\"checkbox\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
+						.append(" value=\"").append(id).append("\" id=\"").append(idAttr).append(
+								"\"/>");
 
 				// Add label for checkbox
 				String display = label;
-				if(localizeDisplayValues())
+				if (localizeDisplayValues())
 				{
 					display = getLocalizer().getString(label, this, label);
 				}

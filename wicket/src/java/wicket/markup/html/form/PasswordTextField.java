@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3618 $ $Date$
+ * $Id: PasswordTextField.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,7 +57,7 @@ public class PasswordTextField extends TextField
 	 */
 	public PasswordTextField(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 		setRequired(true);
 	}
 
@@ -65,7 +66,7 @@ public class PasswordTextField extends TextField
 	 */
 	public PasswordTextField(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		setRequired(true);
 	}
 
@@ -91,11 +92,12 @@ public class PasswordTextField extends TextField
 	public final String getModelValue()
 	{
 		final String value = getModelObjectAsString();
-		if(value != null)
+		if (value != null)
 		{
 			try
 			{
-				// TODO kept for backwards compatibility. Replace with encryptUrlSafe after 1.2
+				// TODO kept for backwards compatibility. Replace with
+				// encryptUrlSafe after 1.2
 				return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(
 						value);
 			}
@@ -131,11 +133,12 @@ public class PasswordTextField extends TextField
 	@Override
 	public final void setModelValue(String[] valueArray)
 	{
-		String value = valueArray != null && valueArray.length > 0? valueArray[0]: null;
+		String value = valueArray != null && valueArray.length > 0 ? valueArray[0] : null;
 		String decryptedValue;
 		try
 		{
-			// TODO kept for backwards compatibility. Replace with decryptUrlSafe after 1.2
+			// TODO kept for backwards compatibility. Replace with
+			// decryptUrlSafe after 1.2
 			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
 					.decrypt(value);
 		}
@@ -161,11 +164,11 @@ public class PasswordTextField extends TextField
 		super.onComponentTag(tag);
 		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
 	}
-	
+
 	@Override
 	protected String getInputType()
 	{
 		return "password";
 	}
-	
+
 }

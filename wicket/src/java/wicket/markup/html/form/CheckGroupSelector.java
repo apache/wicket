@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CheckGroupSelector.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,13 +25,13 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
- * Selects and unselects all Check components under the same
- * CheckGroup as itself. Selection toggling is accomplished by generating an
- * onclick javascript event handler.
+ * Selects and unselects all Check components under the same CheckGroup as
+ * itself. Selection toggling is accomplished by generating an onclick
+ * javascript event handler.
  * 
  * @see wicket.markup.html.form.CheckGroup
  * @see wicket.markup.html.form.Check
-
+ * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
@@ -45,9 +46,9 @@ public class CheckGroupSelector<T> extends WebMarkupContainer<T>
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
-	public CheckGroupSelector(MarkupContainer parent,String id)
+	public CheckGroupSelector(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	@Override

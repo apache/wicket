@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id: FileUploadField.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,8 +31,7 @@ import wicket.util.upload.FileItem;
  * Form component that corresponds to a &lt;input type=&quot;file&quot;&gt;.
  * When a FileInput component is nested in a
  * {@link wicket.markup.html.form.Form}, that has multipart == true, its model
- * is updated with the {@link wicket.util.upload.FileItem}for this
- * component.
+ * is updated with the {@link wicket.util.upload.FileItem}for this component.
  * 
  * @author Eelco Hillenius
  */
@@ -48,7 +47,7 @@ public class FileUploadField extends FormComponent
 	 */
 	public FileUploadField(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class FileUploadField extends FormComponent
 	 */
 	public FileUploadField(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		hasExplicitModel = true;
 	}
 
@@ -70,7 +69,7 @@ public class FileUploadField extends FormComponent
 	{
 		// Get request
 		final Request request = getRequest();
-		
+
 		// If we successfully installed a multipart request
 		if (request instanceof IMultipartWebRequest)
 		{
@@ -86,7 +85,7 @@ public class FileUploadField extends FormComponent
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
@@ -109,8 +108,8 @@ public class FileUploadField extends FormComponent
 			setModelObject(getFileUpload());
 		}
 	}
-	
-	
+
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#getInputAsArray()
 	 */
@@ -118,9 +117,13 @@ public class FileUploadField extends FormComponent
 	public String[] getInputAsArray()
 	{
 		FileUpload fu = getFileUpload();
-		if(fu != null) return new String[] {fu.getClientFileName()};
+		if (fu != null)
+		{
+			return new String[] { fu.getClientFileName() };
+		}
 		return null;
 	}
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#isMultiPart()
 	 */
@@ -129,7 +132,7 @@ public class FileUploadField extends FormComponent
 	{
 		return true;
 	}
-	
+
 	/**
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */

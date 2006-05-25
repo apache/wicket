@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CookieValuePersister.java 5763 2006-05-19 09:29:03 +0000 (Fri, 19 May
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-05-19 09:29:03 +0000
+ * (Fri, 19 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,7 +38,7 @@ import wicket.util.time.Time;
 public class CookieValuePersister implements IValuePersister
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Logging */
 	private final static Log log = LogFactory.getLog(CookieValuePersister.class);
 
@@ -51,9 +52,9 @@ public class CookieValuePersister implements IValuePersister
 		{
 			clear(cookie);
 			if (log.isDebugEnabled())
-            {
+			{
 				log.debug("Cookie for " + component + " removed");
-            }
+			}
 		}
 	}
 
@@ -83,22 +84,23 @@ public class CookieValuePersister implements IValuePersister
 		final String value = component.getValue();
 
 		Cookie cookie = getCookie(component);
-		if (cookie == null) 
+		if (cookie == null)
 		{
 			cookie = new Cookie(name, value == null ? "" : value);
 		}
-		else 
+		else
 		{
 			cookie.setValue(value == null ? "" : value);
 		}
 		cookie.setSecure(false);
 		cookie.setMaxAge(getSettings().getMaxAge());
-		
+
 		save(cookie);
 	}
-	
+
 	/**
-	 * @param component Component to get name for
+	 * @param component
+	 *            Component to get name for
 	 * @return The name of the component.
 	 */
 	protected String getName(final FormComponent component)
@@ -160,10 +162,8 @@ public class CookieValuePersister implements IValuePersister
 		Cookie[] cookies = getCookies();
 		if (cookies != null)
 		{
-			for (int i = 0; i < cookies.length; i++)
+			for (Cookie cookie : cookies)
 			{
-				Cookie cookie = cookies[i];
-
 				// Names must match and Value must not be empty
 				if (cookie.getName().equals(name))
 				{
@@ -190,25 +190,25 @@ public class CookieValuePersister implements IValuePersister
 
 		return null;
 	}
-    
-    /**
-     * Gets any cookies for request.
-     * 
-     * @return Any cookies for this request
-     */
-    private Cookie[] getCookies()
-    {
-        try
-        {
-            return getWebRequest().getCookies();
-        }
-        catch (NullPointerException ex)
-        {
-            // Ignore any app server problem here
-        }
 
-        return new Cookie[0];
-    }
+	/**
+	 * Gets any cookies for request.
+	 * 
+	 * @return Any cookies for this request
+	 */
+	private Cookie[] getCookies()
+	{
+		try
+		{
+			return getWebRequest().getCookies();
+		}
+		catch (NullPointerException ex)
+		{
+			// Ignore any app server problem here
+		}
+
+		return new Cookie[0];
+	}
 
 	/**
 	 * Persister defaults are maintained centrally by the Application.
@@ -217,7 +217,8 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	private CookieValuePersisterSettings getSettings()
 	{
-		return RequestCycle.get().getApplication().getSecuritySettings().getCookieValuePersisterSettings();
+		return RequestCycle.get().getApplication().getSecuritySettings()
+				.getCookieValuePersisterSettings();
 	}
 
 	/**
@@ -253,33 +254,33 @@ public class CookieValuePersister implements IValuePersister
 		{
 			return null;
 		}
-        else
-        {
-            final String comment = getSettings().getComment();
-    		if (comment != null)
-    		{
-    			cookie.setComment(comment);
-    		}
-    
-            final String domain = getSettings().getDomain();
-    		if (domain != null)
-    		{
-    			cookie.setDomain(domain);
-    		}
-    
+		else
+		{
+			final String comment = getSettings().getComment();
+			if (comment != null)
+			{
+				cookie.setComment(comment);
+			}
+
+			final String domain = getSettings().getDomain();
+			if (domain != null)
+			{
+				cookie.setDomain(domain);
+			}
+
 			cookie.setPath(getWebRequest().getContextPath());
 
-    		cookie.setVersion(getSettings().getVersion());
-    		cookie.setSecure(getSettings().getSecure());
+			cookie.setVersion(getSettings().getVersion());
+			cookie.setSecure(getSettings().getSecure());
 
-    		getWebResponse().addCookie(cookie);
-    
-    		if (log.isDebugEnabled())
-    		{
-    			log.debug("saved: " + cookieToDebugString(cookie));
-    		}
-    
-    		return cookie;
-        }
+			getWebResponse().addCookie(cookie);
+
+			if (log.isDebugEnabled())
+			{
+				log.debug("saved: " + cookieToDebugString(cookie));
+			}
+
+			return cookie;
+		}
 	}
 }

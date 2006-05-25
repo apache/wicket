@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: StringValidator.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

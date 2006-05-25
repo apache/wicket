@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FormComponentLabel.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,9 +43,9 @@ public class FormComponentLabel extends WebMarkupContainer
 	 * @param fc
 	 *            form component that this label represents
 	 */
-	public FormComponentLabel(MarkupContainer parent,String id, FormComponent fc)
+	public FormComponentLabel(MarkupContainer parent, String id, FormComponent fc)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.fc = fc;
 		fc.setOutputMarkupId(true);
 	}

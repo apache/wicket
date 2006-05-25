@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: ChoiceRenderer.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -79,8 +79,8 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 
 	/**
 	 * Construct. When you use this constructor, the display value will be
-	 * determined by executing the given property expression on the list object, and
-	 * the id will be based on the list index. The display value will be
+	 * determined by executing the given property expression on the list object,
+	 * and the id will be based on the list index. The display value will be
 	 * calculated by the given property expression
 	 * 
 	 * @param displayExpression
@@ -95,8 +95,8 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 
 	/**
 	 * Construct. When you use this constructor, both the id and the display
-	 * value will be determined by executing the given property expressions on the
-	 * list object.
+	 * value will be determined by executing the given property expressions on
+	 * the list object.
 	 * 
 	 * @param displayExpression
 	 *            A property expression to get the display value
@@ -111,7 +111,6 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 	}
 
 
-	
 	/**
 	 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(V)
 	 */

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RequiredValidator.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -63,7 +64,7 @@ public class RequiredValidator extends AbstractValidator
 	{
 		onValidate(component, component.getInput());
 	}
-	
+
 	/**
 	 * Validates whether the input value is not-null or empty. Validation is
 	 * only executed when the component is enabled. If the value is null and the
@@ -71,8 +72,10 @@ public class RequiredValidator extends AbstractValidator
 	 * that is interpreted as the component being disabled too. If that is the
 	 * case, validation will not be executed.
 	 * 
-	 * @param formComponent The form component that is checked 
-	 * @param value The input value of the formcomponent (not converted value)
+	 * @param formComponent
+	 *            The form component that is checked
+	 * @param value
+	 *            The input value of the formcomponent (not converted value)
 	 * 
 	 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
 	 *      java.lang.String)

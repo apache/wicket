@@ -57,9 +57,9 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		 * @param id
 		 *            component id
 		 */
-		public ErrorIndicator(MarkupContainer parent,String id)
+		public ErrorIndicator(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
 		/**
@@ -78,10 +78,10 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	 * @param id
 	 *            See Component
 	 */
-	public FormComponentFeedbackBorder(MarkupContainer parent,final String id)
+	public FormComponentFeedbackBorder(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
-		add(new ErrorIndicator(this,"errorIndicator"));
+		super(parent, id);
+		add(new ErrorIndicator(this, "errorIndicator"));
 	}
 
 	/**

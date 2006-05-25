@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SimpleFormComponentLabel.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25
+ * May 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu,
+ * 25 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,9 +40,9 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 * @param fc
 	 *            form component
 	 */
-	public SimpleFormComponentLabel(MarkupContainer parent,String id, FormComponent fc)
+	public SimpleFormComponentLabel(MarkupContainer parent, String id, FormComponent fc)
 	{
-		super(parent,id, fc);
+		super(parent, id, fc);
 		if (fc.getLabel() == null)
 		{
 			throw new IllegalStateException("Provided form component does not have a label set. "

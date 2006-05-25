@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: IFormValidator.java 5701 2006-05-09 06:15:24 +0000 (Tue, 09 May 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-05-09 06:15:24 +0000 (Tue, 09 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

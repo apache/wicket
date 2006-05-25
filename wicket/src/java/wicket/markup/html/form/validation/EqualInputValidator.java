@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: EqualInputValidator.java 5703 2006-05-09 06:22:08 +0000 (Tue, 09 May
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-05-09 06:22:08 +0000 (Tue, 09
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,8 +26,8 @@ import wicket.util.lang.Objects;
 
 /**
  * Validates that the input of two form components is identical. Errors are
- * reported on the second form component with key 'EqualInputValidator' and
- * the variables:
+ * reported on the second form component with key 'EqualInputValidator' and the
+ * variables:
  * <ul>
  * <li>${input(n)}: the user's input</li>
  * <li>${name}: the name of the component</li>
