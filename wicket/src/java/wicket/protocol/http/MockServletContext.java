@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MockServletContext.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -265,7 +266,7 @@ public class MockServletContext implements ServletContext
 		{
 			name = name.substring(1);
 		}
-		
+
 		File f = new File(webappRoot, name);
 		if (!f.exists())
 		{
@@ -324,7 +325,7 @@ public class MockServletContext implements ServletContext
 		{
 			name = name.substring(1);
 		}
-		
+
 		File f = new File(webappRoot, name);
 		if (!f.exists())
 		{
@@ -356,7 +357,7 @@ public class MockServletContext implements ServletContext
 		{
 			name = name.substring(1);
 		}
-		
+
 		File f = new File(webappRoot, name);
 		if (!f.exists())
 		{
@@ -410,15 +411,15 @@ public class MockServletContext implements ServletContext
 		}
 
 		File current = webappRoot;
-		for (int i = 0; i < elements.length; i++)
+		for (String element : elements)
 		{
 			File[] files = current.listFiles();
 			boolean match = false;
-			for (int f = 0; f < files.length; f++)
+			for (File element0 : files)
 			{
-				if (files[f].getName().equals(elements[i]) && files[f].isDirectory())
+				if (element0.getName().equals(element) && element0.isDirectory())
 				{
-					current = files[f];
+					current = element0;
 					match = true;
 					break;
 				}
@@ -432,10 +433,10 @@ public class MockServletContext implements ServletContext
 		File[] files = current.listFiles();
 		Set<String> result = new HashSet<String>();
 		int stripLength = webappRoot.getPath().length();
-		for (int f = 0; f < files.length; f++)
+		for (File element : files)
 		{
-			String s = files[f].getPath().substring(stripLength).replace('\\', '/');
-			if (files[f].isDirectory())
+			String s = element.getPath().substring(stripLength).replace('\\', '/');
+			if (element.isDirectory())
 			{
 				s = s + "/";
 			}

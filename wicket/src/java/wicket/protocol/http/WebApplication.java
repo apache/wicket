@@ -71,11 +71,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *    public void init()
- *    {
- *        String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *        URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *        ...
+ *     public void init()
+ *     {
+ *         String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *         URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *         ...
  * </pre>
  * 
  * @see WicketServlet
@@ -101,7 +101,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
 	 */
-	private final Map<String, Map<String, BufferedHttpServletResponse> > bufferedResponses = new HashMap<String, Map<String, BufferedHttpServletResponse> >();
+	private final Map<String, Map<String, BufferedHttpServletResponse>> bufferedResponses = new HashMap<String, Map<String, BufferedHttpServletResponse>>();
 
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
@@ -430,10 +430,10 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		return this.sessionFactory;
 	}
-	
+
 	/**
-	 * Create new Wicket Session object. Note, this method is not called
-	 * if you registered your own ISessionFactory with the Application.
+	 * Create new Wicket Session object. Note, this method is not called if you
+	 * registered your own ISessionFactory with the Application.
 	 * 
 	 * @see wicket.ISessionFactory#newSession()
 	 */
@@ -441,7 +441,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		return new WebSession(WebApplication.this);
 	}
-	
+
 	/**
 	 * @see wicket.ISessionFactory#newSession(wicket.Request)
 	 */
@@ -449,7 +449,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		return newSession();
 	}
-	
+
 	/**
 	 * Initialize; if you need the wicket servlet for initialization, e.g.
 	 * because you want to read an initParameter from web.xml or you want to
@@ -471,7 +471,10 @@ public abstract class WebApplication extends Application implements ISessionFact
 	protected void internalDestroy()
 	{
 		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher();
-		if(resourceWatcher != null) resourceWatcher.destroy();
+		if (resourceWatcher != null)
+		{
+			resourceWatcher.destroy();
+		}
 		super.internalDestroy();
 		bufferedResponses.clear();
 		// destroy the resource watcher
@@ -598,7 +601,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 	final void addBufferedResponse(String sessionId, String bufferId,
 			BufferedHttpServletResponse renderedResponse)
 	{
-		Map<String, BufferedHttpServletResponse> responsesPerSession = bufferedResponses.get(sessionId);
+		Map<String, BufferedHttpServletResponse> responsesPerSession = bufferedResponses
+				.get(sessionId);
 		if (responsesPerSession == null)
 		{
 			responsesPerSession = new MostRecentlyUsedMap<String, BufferedHttpServletResponse>(4);

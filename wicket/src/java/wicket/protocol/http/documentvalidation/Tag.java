@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,113 +31,113 @@ import java.util.Set;
  */
 public class Tag implements DocumentElement
 {
-    private Map expectedAttributes = new HashMap();
+	private Map expectedAttributes = new HashMap();
 
-    private List expectedChildren = new ArrayList();
+	private List expectedChildren = new ArrayList();
 
-    private Set illegalAttributes = new HashSet();
+	private Set illegalAttributes = new HashSet();
 
-    private String tag;
+	private String tag;
 
-    /**
-     * Create the tag element.
-     * 
-     * @param tag
-     *            The tag name
-     */
-    public Tag(final String tag)
-    {
-        this.tag = tag.toLowerCase();
-    }
+	/**
+	 * Create the tag element.
+	 * 
+	 * @param tag
+	 *            The tag name
+	 */
+	public Tag(final String tag)
+	{
+		this.tag = tag.toLowerCase();
+	}
 
-    /**
-     * Add an expected attribute to this tag. The second parameter is a regexp
-     * pattern on which to match the value of the tag.
-     * 
-     * @param name
-     *            The name of the attribute
-     * @param pattern
-     *            The pattern to match
-     */
-    public void addExpectedAttribute(final String name, final String pattern)
-    {
-        expectedAttributes.put(name.toLowerCase(), pattern);
-    }
+	/**
+	 * Add an expected attribute to this tag. The second parameter is a regexp
+	 * pattern on which to match the value of the tag.
+	 * 
+	 * @param name
+	 *            The name of the attribute
+	 * @param pattern
+	 *            The pattern to match
+	 */
+	public void addExpectedAttribute(final String name, final String pattern)
+	{
+		expectedAttributes.put(name.toLowerCase(), pattern);
+	}
 
-    /**
-     * Add an expected child to this tag. Children must be added in the order
-     * they are expected to appear.
-     * 
-     * @param e
-     *            The element to add
-     * @return This
-     */
-    public Tag addExpectedChild(final DocumentElement e)
-    {
-        expectedChildren.add(e);
-        return this;
-    }
+	/**
+	 * Add an expected child to this tag. Children must be added in the order
+	 * they are expected to appear.
+	 * 
+	 * @param e
+	 *            The element to add
+	 * @return This
+	 */
+	public Tag addExpectedChild(final DocumentElement e)
+	{
+		expectedChildren.add(e);
+		return this;
+	}
 
-    /**
-     * Add the name of an attribute that is NOT expected for this tag.
-     * 
-     * @param name
-     *            The name of the attribute
-     */
-    public void addIllegalAttribute(final String name)
-    {
-        illegalAttributes.add(name.toLowerCase());
-    }
+	/**
+	 * Add the name of an attribute that is NOT expected for this tag.
+	 * 
+	 * @param name
+	 *            The name of the attribute
+	 */
+	public void addIllegalAttribute(final String name)
+	{
+		illegalAttributes.add(name.toLowerCase());
+	}
 
-    /**
-     * Get the map of expected attributes.
-     * 
-     * @return The expected attribute map
-     */
-    public Map getExpectedAttributes()
-    {
-        return expectedAttributes;
-    }
+	/**
+	 * Get the map of expected attributes.
+	 * 
+	 * @return The expected attribute map
+	 */
+	public Map getExpectedAttributes()
+	{
+		return expectedAttributes;
+	}
 
-    /**
-     * Get the list of expected children.
-     * 
-     * @return The expected children
-     */
-    public List getExpectedChildren()
-    {
-        return expectedChildren;
-    }
+	/**
+	 * Get the list of expected children.
+	 * 
+	 * @return The expected children
+	 */
+	public List getExpectedChildren()
+	{
+		return expectedChildren;
+	}
 
-    /**
-     * Get the set of illegal attributes.
-     * 
-     * @return The illegal attributes
-     */
-    public Set getIllegalAttributes()
-    {
-        return illegalAttributes;
-    }
+	/**
+	 * Get the set of illegal attributes.
+	 * 
+	 * @return The illegal attributes
+	 */
+	public Set getIllegalAttributes()
+	{
+		return illegalAttributes;
+	}
 
-    /**
-     * Get the tag that this element represents.
-     * 
-     * @return The tag
-     */
-    public String getTag()
-    {
-        return tag;
-    }
+	/**
+	 * Get the tag that this element represents.
+	 * 
+	 * @return The tag
+	 */
+	public String getTag()
+	{
+		return tag;
+	}
 
-    /**
-     * Output a descriptive string.
-     * 
-     * @return The string
-     */
-    @Override
+	/**
+	 * Output a descriptive string.
+	 * 
+	 * @return The string
+	 */
+	@Override
 	public String toString()
-    {
-        return "[tag = '" + tag + "']";
-    }
+	{
+		return "[tag = '" + tag + "']";
+	}
 
 }

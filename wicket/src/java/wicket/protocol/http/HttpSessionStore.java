@@ -91,7 +91,8 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request, java.lang.String)
+	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request,
+	 *      java.lang.String)
 	 */
 	public Object getAttribute(Request request, String name)
 	{
@@ -166,10 +167,11 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String, wicket.Session)
+	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
+	 *      wicket.Session)
 	 */
 	public PageMap createPageMap(String name, Session session)
 	{
-		return new AccessStackPageMap(name,session);
+		return new AccessStackPageMap(name, session);
 	}
 }

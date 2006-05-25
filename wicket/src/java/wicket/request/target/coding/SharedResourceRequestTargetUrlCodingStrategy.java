@@ -57,7 +57,8 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
 				getMountPath().length());
-		final ValueMap parameters = decodeParameters(parametersFragment, requestParameters.getParameters());
+		final ValueMap parameters = decodeParameters(parametersFragment, requestParameters
+				.getParameters());
 
 		requestParameters.setParameters(parameters);
 		requestParameters.setResourceKey(resourceKey);
@@ -75,7 +76,9 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 			return target.getRequestParameters().getResourceKey().equals(resourceKey);
 		}
 		else
+		{
 			return false;
+		}
 	}
 
 	/**

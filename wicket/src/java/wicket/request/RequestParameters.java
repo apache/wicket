@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RequestParameters.java 5798 2006-05-20 15:55:29 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 15:55:29 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -67,12 +68,12 @@ public class RequestParameters implements Serializable
 
 	/** any bookmarkable page class. */
 	private String bookmarkablePageClass;
-	
-	/** bookmarkable form name*/
+
+	/** bookmarkable form name */
 	private String bookmarkableFormName;
-	
+
 	/** free-to-use map of non-reserved parameters. */
-	private Map<String,? extends Object> parameters;
+	private Map<String, ? extends Object> parameters;
 
 	/** any resource key. */
 	private String resourceKey;
@@ -206,7 +207,7 @@ public class RequestParameters implements Serializable
 	 * 
 	 * @return free-to-use map of non-reserved parameters
 	 */
-	public Map<String,? extends Object> getParameters()
+	public Map<String, ? extends Object> getParameters()
 	{
 		return parameters;
 	}
@@ -217,7 +218,7 @@ public class RequestParameters implements Serializable
 	 * @param parameters
 	 *            free-to-use map of non-reserved parameters
 	 */
-	public void setParameters(Map<String,? extends Object> parameters)
+	public void setParameters(Map<String, ? extends Object> parameters)
 	{
 		this.parameters = parameters;
 	}
@@ -339,7 +340,9 @@ public class RequestParameters implements Serializable
 	}
 
 	/**
-	 * Gets the bookmarkable form name if this was a request from a bookmarkable form.
+	 * Gets the bookmarkable form name if this was a request from a bookmarkable
+	 * form.
+	 * 
 	 * @return String the bookmarkable form name
 	 */
 	public String getBookmarkableFormName()

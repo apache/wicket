@@ -86,7 +86,8 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 *            query string parameters
 	 * @return Parameters created from the url fragment and query string
 	 */
-	protected ValueMap decodeParameters(String urlFragment, Map<String,? extends Object> urlParameters)
+	protected ValueMap decodeParameters(String urlFragment,
+			Map<String, ? extends Object> urlParameters)
 	{
 		// Hack off any leading slash
 		if (urlFragment.startsWith("/"))

@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,36 +39,39 @@ public class FileStore implements IStore
 {
 	/** log. */
 	protected static Log log = LogFactory.getLog(FileStore.class);
-	
+
 	private File workDir;
+
 	/**
 	 * Construct.
 	 */
 	public FileStore()
 	{
-		workDir = (File)((WebApplication)Application.get()).getWicketServlet().getServletContext().getAttribute("javax.servlet.context.tempdir");
+		workDir = (File)((WebApplication)Application.get()).getWicketServlet().getServletContext()
+				.getAttribute("javax.servlet.context.tempdir");
 	}
-	
+
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#getPage(java.lang.String, int, int)
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#getPage(java.lang.String,
+	 *      int, int)
 	 */
 	public Page getPage(String sessionId, int id, int versionNumber)
 	{
 		File sessionDir = new File(workDir, sessionId);
-		if(sessionDir.exists())
+		if (sessionDir.exists())
 		{
 			File pageFile = getPageFile(id, versionNumber, sessionDir);
-			if(pageFile.exists())
+			if (pageFile.exists())
 			{
 				FileInputStream fis = null;
 				try
 				{
-					byte[] pageData = null; 
+					byte[] pageData = null;
 					fis = new FileInputStream(pageFile);
 					int length = (int)pageFile.length();
 					ByteBuffer bb = ByteBuffer.allocate(length);
 					fis.getChannel().read(bb);
-					if(bb.hasArray())
+					if (bb.hasArray())
 					{
 						pageData = bb.array();
 					}
@@ -77,20 +80,23 @@ public class FileStore implements IStore
 						pageData = new byte[length];
 						bb.get(pageData);
 					}
-					
+
 					Page page = (Page)Objects.byteArrayToObject(pageData);
 					return page.getVersion(versionNumber);
-				} 
+				}
 				catch (Exception e)
 				{
-					log.debug("Error loading page " + id + " with version " + versionNumber + " for the sessionid " + sessionId + " from disc", e);
+					log.debug("Error loading page " + id + " with version " + versionNumber
+							+ " for the sessionid " + sessionId + " from disc", e);
 				}
 				finally
 				{
 					try
 					{
-						if(fis != null)
+						if (fis != null)
+						{
 							fis.close();
+						}
 					}
 					catch (IOException ex)
 					{
@@ -110,34 +116,39 @@ public class FileStore implements IStore
 	 */
 	private File getPageFile(int id, int versionNumber, File sessionDir)
 	{
-		return new File(sessionDir,Application.get().getApplicationKey() + "-page-" + id + "-version-" + versionNumber);
+		return new File(sessionDir, Application.get().getApplicationKey() + "-page-" + id
+				+ "-version-" + versionNumber);
 	}
 
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#removePage(java.lang.String, wicket.Page)
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#removePage(java.lang.String,
+	 *      wicket.Page)
 	 */
 	public void removePage(String sessionId, Page page)
 	{
 		File sessionDir = new File(workDir, sessionId);
-		if(sessionDir.exists())
+		if (sessionDir.exists())
 		{
-			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
-			if(pageFile.exists())
+			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(),
+					sessionDir);
+			if (pageFile.exists())
 			{
 				pageFile.delete();
 			}
-		}		
+		}
 	}
 
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#storePage(java.lang.String, wicket.Page)
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#storePage(java.lang.String,
+	 *      wicket.Page)
 	 */
 	public void storePage(String sessionId, Page page)
 	{
 		File sessionDir = new File(workDir, sessionId);
 		sessionDir.mkdirs();
 		File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
-		// TODO check can this be called everytime at this place? Putting should be called after the rendering so it should be ok. 
+		// TODO check can this be called everytime at this place? Putting should
+		// be called after the rendering so it should be ok.
 		page.detachModels();
 		byte[] bytes = Objects.objectToByteArray(page);
 		FileOutputStream fos = null;
@@ -149,21 +160,25 @@ public class FileStore implements IStore
 		}
 		catch (Exception e)
 		{
-			log.debug("Error saving page " + page.getId() + " with version " + page.getCurrentVersionNumber() + " for the sessionid " + sessionId + " from disc", e);
+			log.debug("Error saving page " + page.getId() + " with version "
+					+ page.getCurrentVersionNumber() + " for the sessionid " + sessionId
+					+ " from disc", e);
 		}
 		finally
 		{
 			try
 			{
-				if(fos != null)
+				if (fos != null)
+				{
 					fos.close();
+				}
 			}
 			catch (IOException ex)
 			{
 				// ignore
 			}
 		}
-		
+
 	}
 
 	/**
@@ -172,14 +187,17 @@ public class FileStore implements IStore
 	public void unbind(String sessionId)
 	{
 		File sessionDir = new File(workDir, sessionId);
-		if(sessionDir.exists());
+		if (sessionDir.exists())
+		{
+			;
+		}
 		{
 			File[] files = sessionDir.listFiles();
-			if(files != null)
+			if (files != null)
 			{
-				for (int i = 0; i < files.length; i++)
+				for (File element : files)
 				{
-					files[i].delete();
+					element.delete();
 				}
 			}
 			sessionDir.delete();

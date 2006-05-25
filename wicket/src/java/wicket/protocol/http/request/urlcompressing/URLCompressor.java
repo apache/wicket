@@ -35,9 +35,9 @@ import wicket.util.collections.IntHashMap.Entry;
  * {@link WebURLCompressingTargetResolverStrategy}
  * 
  * To use the 2 strategies you have to create your own
- * {@link CompoundRequestCycleProcessor} in your
- * application's newRequestCycleProcessor() method, which should be overridden
- * and implemented like this:
+ * {@link CompoundRequestCycleProcessor} in your application's
+ * newRequestCycleProcessor() method, which should be overridden and implemented
+ * like this:
  * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
@@ -59,7 +59,7 @@ public class URLCompressor implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	private transient ReferenceQueue queue = new ReferenceQueue();
-	
+
 	private transient IntHashMap directComponentRefs = new IntHashMap(); // uid->component/interface
 
 	private int uid = 1;

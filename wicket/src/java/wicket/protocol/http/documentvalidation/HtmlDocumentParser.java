@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: HtmlDocumentParser.java 5231 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
+ * 2006) joco01 $ $Revision$ $Date: 2006-04-01 23:34:49 +0000 (Sat, 01
+ * Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -162,9 +163,9 @@ public class HtmlDocumentParser
 		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ").toString();
 		attributeString = Strings.replaceAll(attributeString, " = ", "=").toString();
 		String[] attributeElements = attributeString.split(" ");
-		for (int i = 0; i < attributeElements.length; i++)
+		for (String element : attributeElements)
 		{
-			String[] bits = attributeElements[i].split("=");
+			String[] bits = element.split("=");
 			if (bits.length == 1)
 			{
 				m.put(bits[0].trim().toLowerCase(), "");

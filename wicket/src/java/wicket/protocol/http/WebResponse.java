@@ -83,11 +83,11 @@ public class WebResponse extends Response
 	{
 		getHttpServletResponse().addCookie(cookie);
 	}
-	
+
 	/**
 	 * Convenience method for clearing a cookie.
 	 * 
-	 * @param cookie 
+	 * @param cookie
 	 *            The cookie to set
 	 * @see WebResponse#addCookie(Cookie)
 	 */
@@ -97,7 +97,7 @@ public class WebResponse extends Response
 		cookie.setValue(null);
 		addCookie(cookie);
 	}
-	
+
 	/**
 	 * Closes response output.
 	 */
@@ -346,6 +346,6 @@ public class WebResponse extends Response
 	public void setAttachmentHeader(String filename)
 	{
 		setHeader("Content-Disposition", "attachment"
-				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename+"\"") : ""));
+				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
 	}
 }

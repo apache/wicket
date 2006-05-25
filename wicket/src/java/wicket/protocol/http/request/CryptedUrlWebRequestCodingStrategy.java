@@ -240,8 +240,8 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 			try
 			{
-				secureParam = URLDecoder.decode(secureParam, Application
-						.get().getRequestCycleSettings().getResponseRequestEncoding());
+				secureParam = URLDecoder.decode(secureParam, Application.get()
+						.getRequestCycleSettings().getResponseRequestEncoding());
 			}
 			catch (UnsupportedEncodingException ex)
 			{

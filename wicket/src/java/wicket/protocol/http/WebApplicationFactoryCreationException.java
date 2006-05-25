@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: WebApplicationFactoryCreationException.java 3573 2006-01-01 23:08:47
+ * +0000 (Sun, 01 Jan 2006) jonathanlocke $ $Revision$ $Date: 2006-01-01
+ * 23:08:47 +0000 (Sun, 01 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

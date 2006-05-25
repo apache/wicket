@@ -41,7 +41,8 @@ public interface IRequestTargetResolverStrategy
 	 *            of possible optional parameters that can be translated from
 	 *            e.g. servlet request parameters
 	 * @return the root component
-	 * @see AbstractCompoundRequestCycleProcessor#resolve(RequestCycle, RequestParameters)
+	 * @see AbstractCompoundRequestCycleProcessor#resolve(RequestCycle,
+	 *      RequestParameters)
 	 */
 	IRequestTarget resolve(RequestCycle requestCycle, RequestParameters requestParameters);
 }

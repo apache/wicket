@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IRequestCycleProcessor.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,10 +42,10 @@ import wicket.RequestCycle;
  * requesting client. Typically, the actual response handling is to be (or
  * delegated) by the request target implementation, but different strategies
  * might do as they seem fit. </li>
- * <li> {@link #respond(RuntimeException, RequestCycle)} is called whenever an uncaught
- * exception occurs during the event handling or response phase so that an
- * appropriate exception response can be generated. This method is guaranteed to
- * be called whenever such an exception happens, but will never be called
+ * <li> {@link #respond(RuntimeException, RequestCycle)} is called whenever an
+ * uncaught exception occurs during the event handling or response phase so that
+ * an appropriate exception response can be generated. This method is guaranteed
+ * to be called whenever such an exception happens, but will never be called
  * otherwise. </li>
  * </ul>
  * </p>

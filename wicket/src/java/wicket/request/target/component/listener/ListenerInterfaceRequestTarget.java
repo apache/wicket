@@ -71,6 +71,6 @@ public class ListenerInterfaceRequestTarget extends AbstractListenerInterfaceReq
 	public final void processEvents(final RequestCycle requestCycle)
 	{
 		onProcessEvents(requestCycle);
-		getRequestListenerInterface().invoke(getPage(), getTarget()); 
+		getRequestListenerInterface().invoke(getPage(), getTarget());
 	}
 }

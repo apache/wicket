@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,18 +32,21 @@ import wicket.util.string.AppendingStringBuffer;
 
 
 /**
- * Use this CodingStategy with the {@link WebURLCompressingTargetResolverStrategy} to 
- * minimize the wicket:interface urls. The component path and the interface name
- * will be removed from the url and only an uid will be inserted into the url.
+ * Use this CodingStategy with the
+ * {@link WebURLCompressingTargetResolverStrategy} to minimize the
+ * wicket:interface urls. The component path and the interface name will be
+ * removed from the url and only an uid will be inserted into the url.
  * 
- * To use this url compressing behaviour you must override the 
- * {@link WebApplication}'s newRequestCycleProcessor() method. To make a request cycle
- * processor with this CodingStrategy and the {@link WebURLCompressingTargetResolverStrategy}
+ * To use this url compressing behaviour you must override the
+ * {@link WebApplication}'s newRequestCycleProcessor() method. To make a
+ * request cycle processor with this CodingStrategy and the
+ * {@link WebURLCompressingTargetResolverStrategy}
  * 
  * <pre>
  * protected IRequestCycleProcessor newRequestCycleProcessor()
  * {
- *   return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),new WebURLCompressingTargetResolverStrategy(),null,null,null);
+ * 	return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
+ * 			new WebURLCompressingTargetResolverStrategy(), null, null, null);
  * }
  * </pre>
  * 
@@ -93,7 +96,8 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 		{
 			url.append(page.getId());
 			url.append(Component.PATH_SEPARATOR);
-			url.append(((WebPage)page).getUrlCompressor().getUIDForComponentAndInterface(component,listenerName));
+			url.append(((WebPage)page).getUrlCompressor().getUIDForComponentAndInterface(component,
+					listenerName));
 			listenerName = null;
 		}
 		else

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BoundCompoundPropertyModel.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu,
+ * 25 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -131,7 +132,8 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	 *            The type of the property
 	 * @return The component, for convenience in adding components
 	 */
-	public Component bind(final Component component, final String propertyExpression, final Class type)
+	public Component bind(final Component component, final String propertyExpression,
+			final Class type)
 	{
 		// Add new binding
 		bindings.add(new Binding(component, propertyExpression, type));

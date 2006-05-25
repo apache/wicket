@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: StringResourceModel.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -88,15 +89,15 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * In its simplest form, the model can be used as follows:
  * 
  * <pre>
- * 
- *            public MyPage extends WebPage 
- *            {
- *                public MyPage(final PageParameters parameters) 
- *                {
- *                    add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
- *                }
- *            }
  *  
+ *             public MyPage extends WebPage 
+ *             {
+ *                 public MyPage(final PageParameters parameters) 
+ *                 {
+ *                     add(new Label(&quot;username&quot;, new StringResourceModel(&quot;label.username&quot;, this, null)));
+ *                 }
+ *             }
+ *   
  * </pre>
  * 
  * Where the resource bundle for the page contains the entry
@@ -108,17 +109,17 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * property expression:
  * 
  * <pre>
- * 
- *            public MyPage extends WebPage 
- *            {
- *                public MyPage(final PageParameters parameters) 
- *                {
- *                    WeatherStation ws = new WeatherStation();
- *                    add(new Label(&quot;weatherMessage&quot;,
- *                                  new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
- *                }
- *            }
  *  
+ *             public MyPage extends WebPage 
+ *             {
+ *                 public MyPage(final PageParameters parameters) 
+ *                 {
+ *                     WeatherStation ws = new WeatherStation();
+ *                     add(new Label(&quot;weatherMessage&quot;,
+ *                                   new StringResourceModel(&quot;weather.${currentStatus}&quot;, this, new Model(ws)));
+ *                 }
+ *             }
+ *   
  * </pre>
  * 
  * Which will call the WeatherStation.getCurrentStatus() method each time the
@@ -126,12 +127,12 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * contains the entries:
  * 
  * <pre>
- * 
- *            weather.sunny=Don't forget sunscreen!
- *            weather.raining=You might need an umberella
- *            weather.snowing=Got your skis?
- *            weather.overcast=Best take a coat to be safe
  *  
+ *             weather.sunny=Don't forget sunscreen!
+ *             weather.raining=You might need an umberella
+ *             weather.snowing=Got your skis?
+ *             weather.overcast=Best take a coat to be safe
+ *   
  * </pre>
  * 
  * <p>
@@ -141,25 +142,25 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * is substituted via the model:
  * 
  * <pre>
- * 
  *  
  *   
  *    
  *     
- *            public MyPage extends WebPage 
- *            {
- *                public MyPage(final PageParameters parameters) 
- *                {
- *                    WeatherStation ws = new WeatherStation();
- *                    add(new Label(&quot;weatherMessage&quot;,
- *                                  new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
- *                }
- *            }
+ *      
+ *             public MyPage extends WebPage 
+ *             {
+ *                 public MyPage(final PageParameters parameters) 
+ *                 {
+ *                     WeatherStation ws = new WeatherStation();
+ *                     add(new Label(&quot;weatherMessage&quot;,
+ *                                   new StringResourceModel(&quot;weather.message&quot;, this, new Model(ws)));
+ *                 }
+ *             }
+ *       
  *      
  *     
  *    
  *   
- *  
  * </pre>
  * 
  * Where the resource bundle contains the entry
@@ -173,51 +174,51 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * powerful use of the string resource model:
  * 
  * <pre>
- * 
  *  
  *   
  *    
  *     
- *            public MyPage extends WebPage 
- *            {
- *                public MyPage(final PageParameters parameters) 
- *                {
- *                    WeatherStation ws = new WeatherStation();
- *                    Model model = new Model(ws);
- *                    add(new Label(&quot;weatherMessage&quot;,
- *                              new StringResourceModel(
- *                                  &quot;weather.detail&quot;, this, model,
- *                                  new Object[] 
- *                                  {
- *                                      new Date(),
- *                                      new PropertyModel(model, &quot;currentStatus&quot;),
- *                                      new PropertyModel(model, &quot;currentTemperature&quot;),
- *                                      new PropertyModel(model, &quot;units&quot;)
- *                                  }));
- *                }
- *            }
+ *      
+ *             public MyPage extends WebPage 
+ *             {
+ *                 public MyPage(final PageParameters parameters) 
+ *                 {
+ *                     WeatherStation ws = new WeatherStation();
+ *                     Model model = new Model(ws);
+ *                     add(new Label(&quot;weatherMessage&quot;,
+ *                               new StringResourceModel(
+ *                                   &quot;weather.detail&quot;, this, model,
+ *                                   new Object[] 
+ *                                   {
+ *                                       new Date(),
+ *                                       new PropertyModel(model, &quot;currentStatus&quot;),
+ *                                       new PropertyModel(model, &quot;currentTemperature&quot;),
+ *                                       new PropertyModel(model, &quot;units&quot;)
+ *                                   }));
+ *                 }
+ *             }
+ *       
  *      
  *     
  *    
  *   
- *  
  * </pre>
  * 
  * And where the resource bundle entry is:
  * 
  * <pre>
- * 
  *  
  *   
  *    
  *     
- *            weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
- *                           and the weather to be {1}
+ *      
+ *             weather.detail=The report for {0,date}, shows the temparature as {2,number,###.##} {3} \
+ *                            and the weather to be {1}
+ *       
  *      
  *     
  *    
  *   
- *  
  * </pre>
  * 
  * @author Chris Turner

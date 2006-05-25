@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CompoundRequestCycleProcessor.java 5791 2006-05-20 00:32:57 +0000 (Sat,
+ * 20 May 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000
+ * (Sat, 20 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -247,10 +248,10 @@ public class CompoundRequestCycleProcessor extends AbstractCompoundRequestCycleP
 
 	/**
 	 * Overridable factory method for creating the request encoder. Called by
-	 * {@link #getRequestCodingStrategy()}. <strong>as there is no generic default for
-	 * the request encoder, this method throws an exception by default. You
-	 * either have to provide an instance as a constructor argument, or override
-	 * this method or {@link #getRequestCodingStrategy()}</strong>.
+	 * {@link #getRequestCodingStrategy()}. <strong>as there is no generic
+	 * default for the request encoder, this method throws an exception by
+	 * default. You either have to provide an instance as a constructor
+	 * argument, or override this method or {@link #getRequestCodingStrategy()}</strong>.
 	 * 
 	 * @return a new target resolver instance
 	 */

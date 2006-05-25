@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,38 +24,38 @@ package wicket.protocol.http.documentvalidation;
  */
 public class Comment implements DocumentElement
 {
-    /** The text for this HTML comment */
-    private String text;
+	/** The text for this HTML comment */
+	private String text;
 
-    /**
-     * Create the comment.
-     * 
-     * @param text
-     *            The text for the comment
-     */
-    public Comment(final String text)
-    {
-        this.text = text;
-    }
+	/**
+	 * Create the comment.
+	 * 
+	 * @param text
+	 *            The text for the comment
+	 */
+	public Comment(final String text)
+	{
+		this.text = text;
+	}
 
-    /**
-     * Get the comment text.
-     * 
-     * @return The text
-     */
-    public String getText()
-    {
-        return text;
-    }
+	/**
+	 * Get the comment text.
+	 * 
+	 * @return The text
+	 */
+	public String getText()
+	{
+		return text;
+	}
 
-    /**
-     * Output a descriptive string.
-     * 
-     * @return The string
-     */
-    @Override
+	/**
+	 * Output a descriptive string.
+	 * 
+	 * @return The string
+	 */
+	@Override
 	public String toString()
-    {
-        return "[comment = '" + text + "']";
-    }
+	{
+		return "[comment = '" + text + "']";
+	}
 }

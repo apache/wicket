@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.11 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,7 +37,7 @@ import wicket.Component;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class Model<T /* extends Serializable*/> extends AbstractModel<T>
+public class Model<T /* extends Serializable */> extends AbstractModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -69,7 +69,9 @@ public class Model<T /* extends Serializable*/> extends AbstractModel<T>
 	 */
 	public static Model<Map<String, Serializable>> valueOf(final Map<String, Serializable> map)
 	{
-		return new Model<Map<String, Serializable>>(map instanceof Serializable ? map : new HashMap<String, Serializable>(map));
+		return new Model<Map<String, Serializable>>(map instanceof Serializable
+				? map
+				: new HashMap<String, Serializable>(map));
 	}
 
 	/**
@@ -79,7 +81,9 @@ public class Model<T /* extends Serializable*/> extends AbstractModel<T>
 	 */
 	public static Model<List<Serializable>> valueOf(final List<Serializable> list)
 	{
-		return new Model<List<Serializable>>(list instanceof Serializable ? list : new ArrayList<Serializable>(list));
+		return new Model<List<Serializable>>(list instanceof Serializable
+				? list
+				: new ArrayList<Serializable>(list));
 	}
 
 	/**

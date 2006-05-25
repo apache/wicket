@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.85 $ $Date$
+ * $Id: WebRequestCycle.java 5849 2006-05-25 01:11:26 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 01:11:26 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -143,11 +144,12 @@ public class WebRequestCycle extends RequestCycle
 			try
 			{
 				// create the redirect response.
-				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
+				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(
+						currentResponse.getHttpServletResponse());
 				final WebResponse redirectResponse = new WebResponse(servletResponse)
 				{
 					@Override
-					public CharSequence encodeURL(CharSequence url) 
+					public CharSequence encodeURL(CharSequence url)
 					{
 						return currentResponse.encodeURL(url);
 					};
@@ -174,25 +176,32 @@ public class WebRequestCycle extends RequestCycle
 				}
 				else if (servletResponse.getContentLength() > 0)
 				{
-					// call filter() so that any filters can process the response
+					// call filter() so that any filters can process the
+					// response
 					servletResponse.filter(currentResponse);
 
-					// Set the final character encoding before  calling close
+					// Set the final character encoding before calling close
 					servletResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
-					// close it so that the reponse is fixed and encoded from here on.
+					// close it so that the reponse is fixed and encoded from
+					// here on.
 					servletResponse.close();
 
 					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 					int index = redirectUrl.indexOf("?");
-					String sessionId = getWebRequest().getHttpServletRequest().getSession(true).getId();
-					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl.substring(index+1), servletResponse);
+					String sessionId = getWebRequest().getHttpServletRequest().getSession(true)
+							.getId();
+					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl
+							.substring(index + 1), servletResponse);
 				}
 			}
 			catch (RuntimeException ex)
 			{
 				// re-assign the original response
 				setResponse(currentResponse);
-				if(ex instanceof AbortException) throw ex;
+				if (ex instanceof AbortException)
+				{
+					throw ex;
+				}
 				log.error(ex.getMessage(), ex);
 				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);
@@ -202,7 +211,7 @@ public class WebRequestCycle extends RequestCycle
 		else
 		{
 			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
-			
+
 			// Redirect page can touch its models already (via for example the
 			// constructors)
 			page.internalDetach();
@@ -212,10 +221,11 @@ public class WebRequestCycle extends RequestCycle
 		{
 			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 		}
-		
-		// Always touch the page again so that a redirect listener makes a page statefull and adds it to the pagemap
+
+		// Always touch the page again so that a redirect listener makes a page
+		// statefull and adds it to the pagemap
 		session.touch(page);
-		
+
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}

@@ -106,7 +106,7 @@ public class MockWebApplication extends WebApplication
 	private WebRequest wicketRequest;
 
 	/** Parameters to be set on the next request. */
-	private Map<String,Object> parametersForNextRequest = new HashMap<String,Object>();
+	private Map<String, Object> parametersForNextRequest = new HashMap<String, Object>();
 
 	/** Response. */
 	private WebResponse wicketResponse;
@@ -163,10 +163,10 @@ public class MockWebApplication extends WebApplication
 		// Call internal init method of web application for default
 		// initialisation
 		this.internalInit();
-		
+
 		// Call init method of web application
 		this.init();
-		
+
 		// We initialize components here rather than in the constructor or
 		// in the internal init, because in the init method class aliases
 		// can be added, that would be used in installing resources in the
@@ -185,7 +185,7 @@ public class MockWebApplication extends WebApplication
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		getPageSettings().setAutomaticMultiWindowSupport(false);
-		
+
 		createRequestCycle();
 	}
 
@@ -416,7 +416,7 @@ public class MockWebApplication extends WebApplication
 	 * 
 	 * @return the parameters to be set on the next request
 	 */
-	public Map<String,Object> getParametersForNextRequest()
+	public Map<String, Object> getParametersForNextRequest()
 	{
 		return parametersForNextRequest;
 	}
@@ -427,7 +427,7 @@ public class MockWebApplication extends WebApplication
 	 * @param parametersForNextRequest
 	 *            the parameters to be set on the next request
 	 */
-	public void setParametersForNextRequest(Map<String,Object> parametersForNextRequest)
+	public void setParametersForNextRequest(Map<String, Object> parametersForNextRequest)
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
 	}

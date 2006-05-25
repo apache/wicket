@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,13 +46,15 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 		/**
 		 * Construct.
+		 * 
 		 * @param name
 		 * @param session
 		 */
 		private SecondLevelCachePageMap(String name, Session session)
 		{
 			super(name, session);
-			// don't have to have multi window support, all pages should be able to be resolved.
+			// don't have to have multi window support, all pages should be able
+			// to be resolved.
 			Application.get().getPageSettings().setAutomaticMultiWindowSupport(false);
 		}
 
@@ -65,7 +67,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		@Override
 		protected void put(Page page)
 		{
-			if(lastPage != page)
+			if (lastPage != page)
 			{
 				lastPage = page;
 				dirty();
@@ -76,14 +78,17 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		@Override
 		protected Page get(int id, int versionNumber)
 		{
-			if(lastPage != null && lastPage.getNumericId() == id)
+			if (lastPage != null && lastPage.getNumericId() == id)
 			{
 				Page page = lastPage.getVersion(versionNumber);
-				if(page != null) return page;
+				if (page != null)
+				{
+					return page;
+				}
 			}
-			return getStore().getPage(getSession().getId(), id,versionNumber);
+			return getStore().getPage(getSession().getId(), id, versionNumber);
 		}
-		
+
 		private IStore getStore()
 		{
 			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
@@ -97,21 +102,21 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 
 		/**
-		 * @param sessionId 
+		 * @param sessionId
 		 * @param page
 		 */
 		void storePage(String sessionId, Page page);
 
 		/**
-		 * @param sessionId 
+		 * @param sessionId
 		 * @param id
 		 * @param versionNumber
-		 * @return The page 
+		 * @return The page
 		 */
 		Page getPage(String sessionId, int id, int versionNumber);
 
 		/**
-		 * @param sessionId 
+		 * @param sessionId
 		 * @param page
 		 */
 		void removePage(String sessionId, Page page);
@@ -120,75 +125,84 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		 * @param sessionId
 		 */
 		void unbind(String sessionId);
-		
+
 	}
 
 	private IStore cachingStore;
 
 	/**
 	 * Construct.
-	 * @param store 
+	 * 
+	 * @param store
 	 */
 	public SecondLevelCacheSessionStore(final IStore store)
 	{
 		this.cachingStore = new IStore()
 		{
 			Map<String, SoftReference<Map<String, SoftReference<Page>>>> sessionMap = new ConcurrentHashMap<String, SoftReference<Map<String, SoftReference<Page>>>>();
-			
+
 			public void unbind(String sessionId)
 			{
 				sessionMap.remove(sessionId);
 				store.unbind(sessionId);
 			}
-		
+
 			public void removePage(String sessionId, Page page)
 			{
 				SoftReference sr = sessionMap.get(sessionId);
-				if(sr != null)
+				if (sr != null)
 				{
 					Map map = (Map)sr.get();
-					if(map != null)
+					if (map != null)
 					{
 						map.remove(page.getId());
 					}
 				}
 				store.removePage(sessionId, page);
 			}
-		
+
 			public Page getPage(String sessionId, int id, int versionNumber)
 			{
 				SoftReference sr = sessionMap.get(sessionId);
-				if(sr != null)
+				if (sr != null)
 				{
 					Map map = (Map)sr.get();
-					if(map != null)
+					if (map != null)
 					{
 						SoftReference sr2 = (SoftReference)map.get(Integer.toString(id));
-						if(sr2 != null)
+						if (sr2 != null)
 						{
 							Page page = (Page)sr2.get();
-							if(page != null) page = page.getVersion(versionNumber);
-							if(page != null) return page;
+							if (page != null)
+							{
+								page = page.getVersion(versionNumber);
+							}
+							if (page != null)
+							{
+								return page;
+							}
 						}
 					}
 				}
 				return store.getPage(sessionId, id, versionNumber);
 			}
-		
+
 			public void storePage(String sessionId, Page page)
 			{
 				Map<String, SoftReference<Page>> pageMap = null;
 				SoftReference<Map<String, SoftReference<Page>>> sr = sessionMap.get(sessionId);
-				if(sr == null || (pageMap = sr.get()) == null)
+				if (sr == null || (pageMap = sr.get()) == null)
 				{
 					pageMap = new ConcurrentHashMap<String, SoftReference<Page>>();
-					sessionMap.put(sessionId, new SoftReference<Map<String, SoftReference<Page>>>(pageMap));
+					sessionMap.put(sessionId, new SoftReference<Map<String, SoftReference<Page>>>(
+							pageMap));
 				}
 				pageMap.put(page.getId(), new SoftReference<Page>(page));
 				store.storePage(sessionId, page);
 			}
 		};
 	}
+
 	/**
 	 * @see wicket.session.ISessionStore#setAttribute(wicket.Request,
 	 *      java.lang.String, java.lang.Object)
@@ -197,7 +211,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	public final void setAttribute(Request request, String name, Object value)
 	{
 		// ignore all pages, they are stored through the pagemap
-		if( !(value instanceof Page) )
+		if (!(value instanceof Page))
 		{
 			super.setAttribute(request, name, value);
 		}
@@ -211,7 +225,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 		getStore().unbind(sessionId);
 	}
-	
+
 	/**
 	 * @return The store to use
 	 */
@@ -219,9 +233,10 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 		return cachingStore;
 	}
-	
+
 	/**
-	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String, wicket.Session)
+	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String,
+	 *      wicket.Session)
 	 */
 	@Override
 	public PageMap createPageMap(String name, Session session)

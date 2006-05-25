@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,12 +33,14 @@ public class BookmarkableFormPageRequestTarget extends BookmarkablePageRequestTa
 
 	/**
 	 * Construct.
+	 * 
 	 * @param pageMapName
 	 * @param pageClass
 	 * @param pageParameters
-	 * @param formName 
+	 * @param formName
 	 */
-	public BookmarkableFormPageRequestTarget(String pageMapName, Class<? extends Page> pageClass, PageParameters pageParameters, String formName)
+	public BookmarkableFormPageRequestTarget(String pageMapName, Class<? extends Page> pageClass,
+			PageParameters pageParameters, String formName)
 	{
 		super(pageMapName, pageClass, pageParameters);
 		this.formName = formName;
@@ -52,12 +54,12 @@ public class BookmarkableFormPageRequestTarget extends BookmarkablePageRequestTa
 	{
 		Page page = getPage(requestCycle);
 		Form form = (Form)page.get(formName);
-		if(form != null)
+		if (form != null)
 		{
 			form.onFormSubmitted();
 		}
 	}
-	
+
 	/**
 	 * @see wicket.request.target.component.BookmarkablePageRequestTarget#respond(wicket.RequestCycle)
 	 */

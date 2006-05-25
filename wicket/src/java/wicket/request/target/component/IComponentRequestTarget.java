@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IComponentRequestTarget.java 4387 2006-02-13 05:23:54 +0000 (Mon, 13 Feb
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-02-13 05:23:54 +0000
+ * (Mon, 13 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

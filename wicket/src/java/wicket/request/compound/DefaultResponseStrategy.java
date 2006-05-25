@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: DefaultResponseStrategy.java 4773 2006-03-06 01:08:33 +0000 (Mon, 06 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-06 01:08:33 +0000 (Mon, 06
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
