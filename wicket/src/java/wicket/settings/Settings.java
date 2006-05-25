@@ -41,6 +41,7 @@ import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
+import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.protocol.http.WebRequest;
@@ -241,6 +242,15 @@ public final class Settings
 
 	/** Whether Wicket should try to support multiple windows transparently, true by default. */
 	private boolean automaticMultiWindowSupport = true;
+
+	/**
+	 * Whether Wicket should try to get extensive client info by redirecting to
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
+	 * method is used by the default implementation of {@link #newClientInfo()},
+	 * so if that method is overriden, there is no guarantee this method will be
+	 * taken into account. False by default.
+	 */
+	private boolean gatherExtendedBrowserInfo = false;
 
 	/** Authorizer for component instantiations */
 	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
@@ -477,6 +487,14 @@ public final class Settings
 	public String getDefaultMarkupEncoding()
 	{
 		return defaultMarkupEncoding;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestCycleSettings#getGatherExtendedBrowserInfo()
+	 */
+	public boolean getGatherExtendedBrowserInfo()
+	{
+		return gatherExtendedBrowserInfo;
 	}
 
 	/**
@@ -865,6 +883,14 @@ public final class Settings
 	public void setDefaultMarkupEncoding(final String encoding)
 	{
 		this.defaultMarkupEncoding = encoding;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestCycleSettings#setGatherExtendedBrowserInfo(boolean)
+	 */
+	public void setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo)
+	{
+		this.gatherExtendedBrowserInfo = gatherExtendedBrowserInfo;
 	}
 
 	/**
