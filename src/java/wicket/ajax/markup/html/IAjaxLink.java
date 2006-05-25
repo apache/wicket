@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: IAjaxLink.java 5125 2006-03-25 19:42:10 +0000 (Sat, 25 Mar 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-03-25 19:42:10 +0000 (Sat, 25 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

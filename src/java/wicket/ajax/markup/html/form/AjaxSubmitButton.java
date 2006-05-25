@@ -46,9 +46,9 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 * @param id
 	 * @param form
 	 */
-	public AjaxSubmitButton(MarkupContainer parent,String id, final Form form)
+	public AjaxSubmitButton(MarkupContainer parent, String id, final Form form)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
@@ -60,7 +60,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 			{
 				AjaxSubmitButton.this.onSubmit(target, form);
 			}
-			
+
 			@Override
 			protected CharSequence getEventHandler()
 			{
@@ -77,11 +77,12 @@ public abstract class AjaxSubmitButton extends WebComponent
 		checkComponentTag(tag, "input");
 
 		final String type = tag.getAttributes().getString("type");
-		if (!"button".equals(type) && !"image".equals(type)&&!"submit".equals(type))
+		if (!"button".equals(type) && !"image".equals(type) && !"submit".equals(type))
 		{
 			findMarkupStream().throwMarkupException(
 					"Component " + getId() + " must be applied to a tag with 'type'"
-							+ " attribute matching 'submit', 'button' or 'image', not '" + type + "'");
+							+ " attribute matching 'submit', 'button' or 'image', not '" + type
+							+ "'");
 		}
 
 		super.onComponentTag(tag);
@@ -91,7 +92,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 * Listener method invoked on form submit
 	 * 
 	 * @param target
-	 * @param form 
+	 * @param form
 	 */
 	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
 

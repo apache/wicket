@@ -284,7 +284,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			throw new IllegalArgumentException("throttleDelay cannot be null");
 		}
 
-		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId).append("', ").append(
-				throttleDelay.getMilliseconds()).append(", function() { ").append(script).append("});");
+		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId).append(
+				"', ").append(throttleDelay.getMilliseconds()).append(", function() { ").append(
+				script).append("});");
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxPagingNavigation.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -48,7 +49,7 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	 */
 	public AjaxPagingNavigation(MarkupContainer parent, final String id, final IPageable pageable)
 	{
-		this(parent,id, pageable, null);
+		this(parent, id, pageable, null);
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	public AjaxPagingNavigation(MarkupContainer parent, final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		super(parent,id, pageable, labelProvider);
+		super(parent, id, pageable, labelProvider);
 	}
 
 	/**
@@ -80,9 +81,9 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	 * @return the ajaxified page number link.
 	 */
 	@Override
-	protected PagingNavigationLink newPagingNavigationLink(MarkupContainer parent,String id, IPageable pageable,
-			int pageIndex)
+	protected PagingNavigationLink newPagingNavigationLink(MarkupContainer parent, String id,
+			IPageable pageable, int pageIndex)
 	{
-		return new AjaxPagingNavigationLink(parent,id, pageable, pageIndex);
+		return new AjaxPagingNavigationLink(parent, id, pageable, pageIndex);
 	}
 }

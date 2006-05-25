@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,7 +43,7 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 	 */
 	public AjaxLink(MarkupContainer parent, final String id)
 	{
-		this(parent,id, null);
+		this(parent, id, null);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 	 */
 	public AjaxLink(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 
 		add(new AjaxEventBehavior("href")
 		{

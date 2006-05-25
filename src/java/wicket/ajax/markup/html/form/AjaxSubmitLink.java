@@ -45,9 +45,9 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	 * @param id
 	 * @param form
 	 */
-	public AjaxSubmitLink(MarkupContainer parent,String id, final Form form)
+	public AjaxSubmitLink(MarkupContainer parent, String id, final Form form)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
@@ -59,7 +59,7 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 			{
 				AjaxSubmitLink.this.onSubmit(target, form);
 			}
-			
+
 			@Override
 			protected CharSequence getEventHandler()
 			{
@@ -81,7 +81,7 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	 * Listener method invoked on form submit
 	 * 
 	 * @param target
-	 * @param form 
+	 * @param form
 	 */
 	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
 
