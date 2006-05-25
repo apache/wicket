@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.internal;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -52,7 +53,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 	{
 		if ("test".equals(tag.getId()))
 		{
-			autoAdd(new Label(this,"test", "TEST")
+			Label label = new Label(this,Component.AUTO_COMPONENT_PREFIX + "test", "TEST")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -60,7 +61,8 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 				{
 					onEndRequestWasCalledOnAutoAddedComponent = true;
 				}
-			});
+			};
+			label.autoAdded();
 			return true;
 		}
 		return false;

@@ -442,6 +442,12 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 */
 	public static final Action RENDER = new Action(Action.RENDER);
 
+	/**
+	 * This prefix should be used when making auto add components.
+	 */
+	public static final String AUTO_COMPONENT_PREFIX = "<auto>-";
+
+
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED1 = 0x0100;
 
@@ -604,16 +610,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 */
 	public Component(MarkupContainer<?> parent, final String id)
 	{
-		if(parent == null)
-		{
-			if (!(this instanceof Page))
-			{
-				throw new WicketRuntimeException("component without a parent is not allowed.");
-			}
-		}
-		this.parent = parent;
-		setId(id);
-		getApplication().notifyComponentInstantiationListeners(this);
+		this(parent,id,null);
 	}
 
 	/**
@@ -630,6 +627,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
+	@SuppressWarnings("null")
 	public Component(MarkupContainer<?> parent, final String id, final IModel<V> model)
 	{
 		if(parent == null)
@@ -649,9 +647,54 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 			setFlag(FLAG_HAS_ROOT_MODEL, true);
 		}
 		getApplication().notifyComponentInstantiationListeners(this);
-
+		if(id.startsWith(AUTO_COMPONENT_PREFIX))
+		{
+			parent.autoAdd(this);
+		}
+		else
+		{
+			parent.add(this);
+		}
 	}
 
+	
+	/**
+	 * This method should be called when a component with is auto added
+	 * to a container (having the prefix Component.AUTO_COMPONENT_PREFIX)
+	 * it will render the component.
+	 */
+	public final void autoAdded()
+	{
+		if(getId().startsWith(AUTO_COMPONENT_PREFIX))
+		{
+			internalAttach();
+			render();
+		}
+		else
+		{
+			throw new WicketRuntimeException("Can't call auto added on a component that is not auto added.");
+		}
+	}
+
+	/**
+	 * Reattach this component to its parent.
+	 */
+	public final Component reattach()
+	{
+		if(getFlag(FLAG_REMOVED_FROM_PARENT) == true)
+		{
+			if(id.startsWith(AUTO_COMPONENT_PREFIX))
+			{
+				parent.autoAdd(this);
+			}
+			else
+			{
+				parent.add(this);
+			}
+		}
+		return this;
+	}
+	
 	/**
 	 * Adds an behavior modifier to the component.
 	 * 
@@ -2968,7 +3011,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @param auto
 	 *            True to put component into auto-add mode
 	 */
-	public final void setAuto(final boolean auto)
+	final void setAuto(final boolean auto)
 	{
 		setFlag(FLAG_AUTO, auto);
 	}

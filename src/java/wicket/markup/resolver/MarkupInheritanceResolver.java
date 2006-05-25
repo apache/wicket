@@ -17,6 +17,7 @@
  */
 package wicket.markup.resolver;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -63,14 +64,16 @@ public class MarkupInheritanceResolver implements IComponentResolver
 			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(container,wicketTag.getId()));
+				// TODO we just have to prefix it i with a AUTO prefix.. Can this be done? Shoult the wicketTag id first be altered? 
+				new TransparentWebMarkupContainer(container,Component.AUTO_COMPONENT_PREFIX + wicketTag.getId()).autoAdded();
 			    return true;
 			}
 			
 			// It must be <wicket:child...>
 			if (wicketTag.isChildTag())
 			{
-				container.autoAdd(new TransparentWebMarkupContainer(container,wicketTag.getId()));
+				// TODO we just have to prefix it i with a AUTO prefix.. Can this be done? Shoult the wicketTag id first be altered?
+				new TransparentWebMarkupContainer(container,Component.AUTO_COMPONENT_PREFIX + wicketTag.getId()).autoAdded();
 			    return true;
 			}
 		}

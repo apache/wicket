@@ -56,7 +56,6 @@ public class AjaxPage2 extends WebPage
 			{
 				Label ajaxLabel2 = new Label(ajaxLabel.getParent(),"ajaxLabel", "BBBBBBB");
 				ajaxLabel2.setOutputMarkupId(true);
-				ajaxLabel.getParent().replace(ajaxLabel2);
 				if (target != null)
 				{
 					target.addComponent(ajaxLabel2, "ajaxLabel");

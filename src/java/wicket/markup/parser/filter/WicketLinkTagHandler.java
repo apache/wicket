@@ -20,6 +20,7 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -49,7 +50,7 @@ import wicket.util.string.Strings;
 public class WicketLinkTagHandler extends AbstractMarkupFilter
 {
 	/** The id of autolink components */
-	public static final String AUTOLINK_ID = "_autolink_";
+	public static final String AUTOLINK_ID = Component.AUTO_COMPONENT_PREFIX + "_autolink_";
 
 	static
 	{

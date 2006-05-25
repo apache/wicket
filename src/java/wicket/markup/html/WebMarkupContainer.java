@@ -38,7 +38,7 @@ public class WebMarkupContainer<V> extends MarkupContainer<V>
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebMarkupContainer(MarkupContainer<?> parent, final String id)
+	public WebMarkupContainer(MarkupContainer parent, final String id)
 	{
 		super(parent,id);
 	}
@@ -46,7 +46,7 @@ public class WebMarkupContainer<V> extends MarkupContainer<V>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainer(MarkupContainer<?> parent, final String id, IModel<V> model)
+	public WebMarkupContainer(MarkupContainer parent, final String id, IModel<V> model)
 	{
 		super(parent,id, model);
 	}

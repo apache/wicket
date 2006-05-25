@@ -477,7 +477,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 		super.setTreeModel(treeModel);
 		this.treePathsModel = new TreePathsModel();
 		treePathsListView = createTreePathsListView(this);
-		replace(treePathsListView);
 	}
 
 	/**
@@ -492,7 +491,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 		super.setTreeState(treeState);
 		this.treePathsModel = new TreePathsModel();
 		treePathsListView = createTreePathsListView(this);
-		replace(treePathsListView);
 	}
 
 	/**
