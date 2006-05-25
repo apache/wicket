@@ -93,14 +93,15 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param id
 		 *            Component id
 		 */
-		public BreadCrumbsListView(MarkupContainer parent,final String id)
+		public BreadCrumbsListView(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 			setReuseItems(false);
 			setModel(new LoadableDetachableModel()
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected Object load()
 				{
 					// save a copy
@@ -138,6 +139,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see wicket.markup.html.list.ListView#internalOnAttach()
 		 */
+		@Override
 		protected void internalOnAttach()
 		{
 			if (dirty)
@@ -151,6 +153,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see wicket.Component#onBeforeRender()
 		 */
+		@Override
 		protected void onBeforeRender()
 		{
 			// it this point, we can't change the hierarchy anymore
@@ -160,12 +163,13 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
+		@Override
 		protected void populateItem(ListItem item)
 		{
 			int index = item.getIndex();
 			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item
 					.getModelObject();
-			item.add(newBreadCrumbComponent(item,"crumb", index, size, breadCrumbParticipant));
+			item.add(newBreadCrumbComponent(item, "crumb", index, size, breadCrumbParticipant));
 		}
 
 		/**
@@ -211,16 +215,18 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		 * @param enableLink
 		 *            Whether the link should be enabled
 		 */
-		public BreadCrumbComponent(MarkupContainer parent,final String id, int index, IBreadCrumbModel breadCrumbModel,
+		public BreadCrumbComponent(MarkupContainer parent, final String id, int index,
+				IBreadCrumbModel breadCrumbModel,
 				final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
 		{
-			super(parent,id);
-			add(new Label(this,"sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
+			super(parent, id);
+			add(new Label(this, "sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
 					.setRenderBodyOnly(true));
-			BreadCrumbLink link = new BreadCrumbLink(this,"link", breadCrumbModel)
+			BreadCrumbLink link = new BreadCrumbLink(this, "link", breadCrumbModel)
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected IBreadCrumbParticipant getParticipant(String componentId)
 				{
 					return breadCrumbParticipant;
@@ -228,7 +234,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			};
 			link.setEnabled(enableLink);
 			add(link);
-			link.add(new Label(link,"label", breadCrumbParticipant.getTitle()).setRenderBodyOnly(true));
+			link.add(new Label(link, "label", breadCrumbParticipant.getTitle())
+					.setRenderBodyOnly(true));
 		}
 	}
 
@@ -249,9 +256,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 * @param id
 	 *            Component id
 	 */
-	public BreadCrumbBar(MarkupContainer parent,final String id)
+	public BreadCrumbBar(MarkupContainer parent, final String id)
 	{
-		this(parent,id, true);
+		this(parent, id, true);
 	}
 
 	/**
@@ -263,11 +270,11 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 *            Whether the {@link #addDefaultCssStyle() default style} should
 	 *            be added
 	 */
-	public BreadCrumbBar(MarkupContainer parent,final String id, boolean addDefaultCssStyle)
+	public BreadCrumbBar(MarkupContainer parent, final String id, boolean addDefaultCssStyle)
 	{
-		super(parent,id);
+		super(parent, id);
 
-		BreadCrumbsListView breadCrumbsListView = new BreadCrumbsListView(this,"crumbs");
+		BreadCrumbsListView breadCrumbsListView = new BreadCrumbsListView(this, "crumbs");
 		addListener(breadCrumbsListView);
 		add(breadCrumbsListView);
 
@@ -418,10 +425,10 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 *            the bread crumb
 	 * @return A new bread crumb component
 	 */
-	protected Component newBreadCrumbComponent(MarkupContainer parent,final String id, int index, int total,
-			IBreadCrumbParticipant breadCrumbParticipant)
+	protected Component newBreadCrumbComponent(MarkupContainer parent, final String id, int index,
+			int total, IBreadCrumbParticipant breadCrumbParticipant)
 	{
 		boolean enableLink = getEnableLinkToCurrent() || (index < (total - 1));
-		return new BreadCrumbComponent(parent,id, index, this, breadCrumbParticipant, enableLink);
+		return new BreadCrumbComponent(parent, id, index, this, breadCrumbParticipant, enableLink);
 	}
 }

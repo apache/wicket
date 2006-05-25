@@ -53,7 +53,7 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 */
 	public Component getFilter(MarkupContainer parent, String componentId, FilterForm form)
 	{
-		ChoiceFilter filter = new ChoiceFilter(parent,componentId, getFilterModel(form), form,
+		ChoiceFilter filter = new ChoiceFilter(parent, componentId, getFilterModel(form), form,
 				filterChoices, enableAutoSubmit());
 
 		IChoiceRenderer renderer = getChoiceRenderer();

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SmartLinkLabel.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -60,31 +61,32 @@ public final class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(MarkupContainer,String, String)
 	 */
-	public SmartLinkLabel(MarkupContainer parent,String name, String label)
+	public SmartLinkLabel(MarkupContainer parent, String name, String label)
 	{
-		super(parent,name, label);
+		super(parent, name, label);
 	}
 
 	/**
 	 * @see Label#Label(MarkupContainer,String, IModel)
 	 */
-	public SmartLinkLabel(MarkupContainer parent,String name, IModel model)
+	public SmartLinkLabel(MarkupContainer parent, String name, IModel model)
 	{
-		super(parent,name, model);
+		super(parent, name, model);
 	}
 
 	/**
 	 * @see Label#Label(MarkupContainer,String)
 	 */
-	public SmartLinkLabel(MarkupContainer parent,String name)
+	public SmartLinkLabel(MarkupContainer parent, String name)
 	{
-		super(parent,name);
+		super(parent, name);
 	}
 
 	/**
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, smartLink(getModelObjectAsString()));
@@ -113,5 +115,3 @@ public final class SmartLinkLabel extends Label
 		return work;
 	}
 }
-
-

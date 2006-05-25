@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,22 +52,23 @@ public class Select extends FormComponent
 	 * @param id
 	 *            component id
 	 */
-	public Select(MarkupContainer parent,final String id)
+	public Select(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
-	public Select(MarkupContainer parent,final String id, IModel model)
+	public Select(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
 	 * @see FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 		Object object = getModelObject();
@@ -109,9 +110,9 @@ public class Select extends FormComponent
 								+ "] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
 			}
 
-			for (int i = 0; i < paths.length; i++)
+			for (String element : paths)
 			{
-				String path = paths[i];
+				String path = element;
 
 				if (path != null)
 				{

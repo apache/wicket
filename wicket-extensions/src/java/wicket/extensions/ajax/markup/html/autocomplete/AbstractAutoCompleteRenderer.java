@@ -29,7 +29,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 							+ object.toString());
 		}
 		textValue = textValue.replaceAll("\\\"", "&quot;");
-		
+
 		response.write("<li textvalue=\"" + textValue + "\">");
 		renderChoice(object, response);
 		response.write("</li>");

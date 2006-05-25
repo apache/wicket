@@ -32,9 +32,10 @@ public class SelectOptions extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(MarkupContainer parent,final String id, IModel model, IOptionRenderer renderer)
+	public SelectOptions(MarkupContainer parent, final String id, IModel model,
+			IOptionRenderer renderer)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		this.renderer = renderer;
 		setRenderBodyOnly(true);
 	}
@@ -43,12 +44,13 @@ public class SelectOptions extends RepeatingView
 	 * Constructor
 	 * 
 	 * @param id
-	 * @param elements 
+	 * @param elements
 	 * @param renderer
 	 */
-	public SelectOptions(MarkupContainer parent,final String id, Collection elements, IOptionRenderer renderer)
+	public SelectOptions(MarkupContainer parent, final String id, Collection elements,
+			IOptionRenderer renderer)
 	{
-		this(parent,id, new Model((Serializable)elements), renderer);
+		this(parent, id, new Model(elements), renderer);
 	}
 
 	/**
@@ -63,6 +65,7 @@ public class SelectOptions extends RepeatingView
 		return this;
 	}
 
+	@Override
 	protected void onBeginRequest()
 	{
 		if (size() == 0 || recreateChoices)
@@ -76,7 +79,8 @@ public class SelectOptions extends RepeatingView
 			{
 				if (!(modelObject instanceof Collection))
 				{
-					throw new WicketRuntimeException("Model object " + modelObject + " not a collection");
+					throw new WicketRuntimeException("Model object " + modelObject
+							+ " not a collection");
 				}
 
 				// iterator over model objects for SelectOption components
@@ -85,7 +89,7 @@ public class SelectOptions extends RepeatingView
 				while (it.hasNext())
 				{
 					// we need a container to represent a row in repeater
-					WebMarkupContainer row = new WebMarkupContainer(this,newChildId());
+					WebMarkupContainer row = new WebMarkupContainer(this, newChildId());
 					row.setRenderBodyOnly(true);
 					add(row);
 
@@ -93,7 +97,7 @@ public class SelectOptions extends RepeatingView
 					Object value = it.next();
 					String text = renderer.getDisplayValue(value);
 					IModel model = renderer.getModel(value);
-					row.add(new SimpleSelectOption(row,"option", model, text));
+					row.add(new SimpleSelectOption(row, "option", model, text));
 				}
 			}
 		}
@@ -109,12 +113,13 @@ public class SelectOptions extends RepeatingView
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(MarkupContainer parent,final String id, IModel model, String text)
+		public SimpleSelectOption(MarkupContainer parent, final String id, IModel model, String text)
 		{
-			super(parent,id, model);
+			super(parent, id, model);
 			this.text = text;
 		}
 
+		@Override
 		protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 		{
 			replaceComponentTagBody(markupStream, openTag, text);

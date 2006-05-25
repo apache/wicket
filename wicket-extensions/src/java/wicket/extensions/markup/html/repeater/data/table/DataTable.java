@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DataTable.java 5847 2006-05-24 23:52:28 +0000 (Wed, 24 May 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-05-24 23:52:28 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -41,7 +42,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *                    &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *                     &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -129,11 +130,13 @@ public class DataTable extends Panel implements IPageable
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Item newRowItem(final String id, int index, IModel model)
 			{
 				return DataTable.this.newRowItem(id, index, model);
 			}
 
+			@Override
 			protected Item newCellItem(final String id, int index, IModel model)
 			{
 				return DataTable.this.newCellItem(id, index, model);
@@ -146,6 +149,7 @@ public class DataTable extends Panel implements IPageable
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isVisible()
 			{
 				return size() > 0;
@@ -158,6 +162,7 @@ public class DataTable extends Panel implements IPageable
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public boolean isVisible()
 			{
 				return size() > 0;

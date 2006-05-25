@@ -1,6 +1,7 @@
 /*
  * $Id: HeadersToolbar.java 5840 2006-05-24 13:49:09 -0700 (Wed, 24 May 2006)
- * joco01 $ $Revision$ $Date$
+ * joco01 $ $Revision$ $Date: 2006-05-24 23:52:28 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -21,7 +22,6 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import wicket.extensions.markup.html.repeater.data.table.DataTable.IToolbarFactory;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
@@ -61,7 +61,7 @@ public class HeadersToolbar extends AbstractToolbar
 		add(headers);
 		IColumn[] cols = table.getColumns();
 
-		for (int i = 0; i < cols.length; i++)
+		for (IColumn column : cols)
 		{
 			// TODO Post 1.2: General: Is this extra component really necessary?
 			// can we
@@ -70,7 +70,6 @@ public class HeadersToolbar extends AbstractToolbar
 			WebMarkupContainer item = new WebMarkupContainer(headers, headers.newChildId());
 			headers.add(item);
 
-			IColumn column = cols[i];
 			WebMarkupContainer header = null;
 			if (column.isSortable())
 			{
@@ -79,6 +78,7 @@ public class HeadersToolbar extends AbstractToolbar
 
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					protected void onSortChanged()
 					{
 						table.setCurrentPage(0);

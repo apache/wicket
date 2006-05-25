@@ -109,7 +109,10 @@ public class UploadInfo implements Serializable
 	 */
 	public int getPercentageComplete()
 	{
-		if (totalBytes==0) return 100;
+		if (totalBytes == 0)
+		{
+			return 100;
+		}
 		return (int)(((double)bytesUploaded / (double)totalBytes) * 100);
 
 	}

@@ -22,6 +22,7 @@ class UploadStatusResource extends DynamicWebResource
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected ResourceState getResourceState()
 	{
 		return new UploadResourceState();
@@ -56,12 +57,13 @@ class UploadStatusResource extends DynamicWebResource
 						+ "|" + info.getTotalBytesString() + "|" + info.getTransferRateString()
 						+ "|" + info.getRemainingTimeString();
 			}
-			status="<html>|"+status+"|</html>";
+			status = "<html>|" + status + "|</html>";
 		}
 
 		/**
 		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getContentType()
 		 */
+		@Override
 		public String getContentType()
 		{
 			return "text/plain";
@@ -70,6 +72,7 @@ class UploadStatusResource extends DynamicWebResource
 		/**
 		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getLength()
 		 */
+		@Override
 		public int getLength()
 		{
 			return status.length();
@@ -78,6 +81,7 @@ class UploadStatusResource extends DynamicWebResource
 		/**
 		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getData()
 		 */
+		@Override
 		public byte[] getData()
 		{
 			return status.getBytes();

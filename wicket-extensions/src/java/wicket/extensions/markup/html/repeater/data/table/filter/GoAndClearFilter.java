@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: GoAndClearFilter.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
@@ -51,9 +51,9 @@ public class GoAndClearFilter extends GoFilter
 	 * @param form
 	 *            filter form of the filter toolbar
 	 */
-	public GoAndClearFilter(MarkupContainer parent,final String id, FilterForm form)
+	public GoAndClearFilter(MarkupContainer parent, final String id, FilterForm form)
 	{
-		this(parent,id, form, defaultGoModel, defaultClearModel);
+		this(parent, id, form, defaultGoModel, defaultClearModel);
 	}
 
 	/**
@@ -68,16 +68,18 @@ public class GoAndClearFilter extends GoFilter
 	 * @param clearModel
 	 *            model for the label of the 'clear' button
 	 */
-	public GoAndClearFilter(MarkupContainer parent,final String id, FilterForm form, IModel goModel, IModel clearModel)
+	public GoAndClearFilter(MarkupContainer parent, final String id, FilterForm form,
+			IModel goModel, IModel clearModel)
 	{
-		super(parent,id, goModel);
+		super(parent, id, goModel);
 
 		originalState = Objects.cloneModel(form.getModelObject());
 
-		clear = new Button(this,"clear", clearModel)
+		clear = new Button(this, "clear", clearModel)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit()
 			{
 				onClearSubmit(this);
@@ -105,7 +107,8 @@ public class GoAndClearFilter extends GoFilter
 	 *            the 'clear' button
 	 * 
 	 */
-	protected void onClearSubmit(Button button) {
+	protected void onClearSubmit(Button button)
+	{
 		button.getForm().setModelObject(Objects.cloneModel(originalState));
 	}
 

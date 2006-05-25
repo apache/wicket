@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -33,13 +33,13 @@ import wicket.version.undo.Change;
  * Example
  * 
  * <pre>
- *   &lt;tbody&gt;
- *     &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
- *       &lt;td wicket:id=&quot;cols&quot;&gt;
- *         &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
- *       &lt;/td&gt;
- *     &lt;/tr&gt;
- *   &lt;/tbody&gt;  
+ *    &lt;tbody&gt;
+ *      &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
+ *        &lt;td wicket:id=&quot;cols&quot;&gt;
+ *          &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
+ *        &lt;/td&gt;
+ *      &lt;/tr&gt;
+ *    &lt;/tbody&gt;  
  * </pre>
  * 
  * and in java:
@@ -65,9 +65,9 @@ public abstract class GridView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public GridView(MarkupContainer parent,final String id, IDataProvider dataProvider)
+	public GridView(MarkupContainer parent, final String id, IDataProvider dataProvider)
 	{
-		super(parent,id, dataProvider);
+		super(parent, id, dataProvider);
 	}
 
 
@@ -103,11 +103,13 @@ public abstract class GridView extends DataViewBase
 
 					final int old = columns;
 
+					@Override
 					public void undo()
 					{
 						columns = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "GridViewColumnsChange[component: " + getPath()
@@ -153,11 +155,13 @@ public abstract class GridView extends DataViewBase
 
 					final int old = GridView.this.rows;
 
+					@Override
 					public void undo()
 					{
 						GridView.this.rows = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "GridViewRowsChange[component: " + getPath() + ", removed rows: "
@@ -168,7 +172,8 @@ public abstract class GridView extends DataViewBase
 			this.rows = rows;
 		}
 
-		// TODO Post 1.2: Performance: Can this be moved into the this.rows != rows if
+		// TODO Post 1.2: Performance: Can this be moved into the this.rows !=
+		// rows if
 		// block for optimization?
 		updateItemsPerPage();
 		return this;
@@ -194,6 +199,7 @@ public abstract class GridView extends DataViewBase
 	}
 
 
+	@Override
 	protected void addItems(Iterator items)
 	{
 		if (items.hasNext())
@@ -206,7 +212,7 @@ public abstract class GridView extends DataViewBase
 			{
 				// Build a row
 				Item rowItem = newRowItem(newChildId(), row);
-				RepeatingView rowView = new RepeatingView(rowItem,"cols");
+				RepeatingView rowView = new RepeatingView(rowItem, "cols");
 				rowItem.add(rowView);
 				add(rowItem);
 
@@ -246,6 +252,7 @@ public abstract class GridView extends DataViewBase
 	/**
 	 * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#getItems()
 	 */
+	@Override
 	public Iterator getItems()
 	{
 		return new ItemsIterator(iterator());
@@ -270,7 +277,7 @@ public abstract class GridView extends DataViewBase
 	 */
 	protected Item newEmptyItem(final String id, int index)
 	{
-		return new Item(this,id, index, null);
+		return new Item(this, id, index, null);
 	}
 
 	/**
@@ -282,7 +289,7 @@ public abstract class GridView extends DataViewBase
 	 */
 	protected Item newRowItem(final String id, int index)
 	{
-		return new Item(this,id, index, null);
+		return new Item(this, id, index, null);
 	}
 
 	/**

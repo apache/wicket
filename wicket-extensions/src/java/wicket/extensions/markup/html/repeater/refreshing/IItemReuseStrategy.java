@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3843 $ $Date$
+ * $Id: IItemReuseStrategy.java 5679 2006-05-07 18:16:52 +0000 (Sun, 07 May
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-05-07 18:16:52 +0000 (Sun, 07
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this

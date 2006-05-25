@@ -118,9 +118,13 @@ public class WizardModel implements IWizardModel
 	public void add(IWizardStep step)
 	{
 		if (step instanceof ICondition)
+		{
 			add(step, (ICondition)step);
+		}
 		else
+		{
 			add(step, TRUE);
+		}
 	}
 
 	/**
@@ -314,7 +318,6 @@ public class WizardModel implements IWizardModel
 		{
 			return;
 		}
-		IWizardStep old = this.activeStep;
 		this.activeStep = step;
 
 		fireActiveStepChanged(step);

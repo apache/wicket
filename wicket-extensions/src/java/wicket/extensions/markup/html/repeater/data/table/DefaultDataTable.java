@@ -92,8 +92,9 @@ public class DefaultDataTable extends DataTable
 
 		});
 
-		// TODO ivaynberg: this is rediculous, would be better to have a onPopulateTopToolbars() callback
-		
+		// TODO ivaynberg: this is rediculous, would be better to have a
+		// onPopulateTopToolbars() callback
+
 		addTopToolbar(new IToolbarFactory()
 		{
 
@@ -125,6 +126,7 @@ public class DefaultDataTable extends DataTable
 		});
 	}
 
+	@Override
 	protected Item newRowItem(final String id, int index, IModel model)
 	{
 		return new OddEvenItem(this, id, index, model);

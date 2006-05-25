@@ -77,6 +77,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		/**
 		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
 		 */
+		@Override
 		public IModel getNestedModel()
 		{
 			return null;
@@ -85,6 +86,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		/**
 		 * @see wicket.model.AbstractDetachableModel#onAttach()
 		 */
+		@Override
 		protected void onAttach()
 		{
 		}
@@ -92,6 +94,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		/**
 		 * @see wicket.model.AbstractDetachableModel#onDetach()
 		 */
+		@Override
 		protected void onDetach()
 		{
 			if (variablesModel != null)
@@ -103,6 +106,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		/**
 		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 		 */
+		@Override
 		protected Object onGetObject(Component component)
 		{
 			if (variablesModel != null)

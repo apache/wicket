@@ -2,7 +2,6 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.AttributeModifier;
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.repeater.data.table.DataTable.IToolbarFactory;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.PagingNavigator;
@@ -87,6 +86,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 * 
 	 * @see wicket.Component#isVisible()
 	 */
+	@Override
 	public boolean isVisible()
 	{
 		return table.getRowCount() > 0 && table.getRowsPerPage() < Integer.MAX_VALUE;

@@ -23,8 +23,8 @@ public class Recorder extends HiddenField
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final String[] EMPTY_IDS=new String[0];
-	
+	private static final String[] EMPTY_IDS = new String[0];
+
 	/** conviniently maintained array of selected ids */
 	private String[] ids;
 
@@ -45,9 +45,9 @@ public class Recorder extends HiddenField
 	 * @param palette
 	 *            parent palette object
 	 */
-	public Recorder(MarkupContainer parent,final String id, Palette palette)
+	public Recorder(MarkupContainer parent, final String id, Palette palette)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.palette = palette;
 
 		// construct the model string based on selection collection
@@ -69,7 +69,8 @@ public class Recorder extends HiddenField
 		updateIds(modelString);
 	}
 
-	
+
+	@Override
 	protected void onValid()
 	{
 		super.onValid();
@@ -89,13 +90,13 @@ public class Recorder extends HiddenField
 		}
 
 		List selected = new ArrayList(ids.length);
-		for (int i = 0; i < ids.length; i++)
+		for (String element : ids)
 		{
 			Iterator it = getPalette().getChoices().iterator();
 			while (it.hasNext())
 			{
 				final Object choice = it.next();
-				if (renderer.getIdValue(choice, 0).equals(ids[i]))
+				if (renderer.getIdValue(choice, 0).equals(element))
 				{
 					selected.add(choice);
 					break;
@@ -125,9 +126,9 @@ public class Recorder extends HiddenField
 			final Object choice = it.next();
 			final String choiceId = renderer.getIdValue(choice, 0);
 			boolean selected = false;
-			for (int i = 0; i < ids.length; i++)
+			for (String element : ids)
 			{
-				if (ids[i].equals(choiceId))
+				if (element.equals(choiceId))
 				{
 					selected = true;
 					break;
@@ -142,6 +143,7 @@ public class Recorder extends HiddenField
 	}
 
 
+	@Override
 	protected void onInvalid()
 	{
 		super.onInvalid();
@@ -153,10 +155,14 @@ public class Recorder extends HiddenField
 		updateIds(getValue());
 	}
 
-	private void updateIds(String value) {
-		if (Strings.isEmpty(value)) {
-			ids=EMPTY_IDS;
-		} else {
+	private void updateIds(String value)
+	{
+		if (Strings.isEmpty(value))
+		{
+			ids = EMPTY_IDS;
+		}
+		else
+		{
 			ids = value.split(",");
 		}
 	}

@@ -27,11 +27,12 @@ public class OddEvenItem extends Item
 	 * @param model
 	 *            item model
 	 */
-	public OddEvenItem(MarkupContainer parent,final String id, int index, IModel model)
+	public OddEvenItem(MarkupContainer parent, final String id, int index, IModel model)
 	{
-		super(parent,id, index, model);
+		super(parent, id, index, model);
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractDataGridView.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -62,9 +63,10 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public AbstractDataGridView(MarkupContainer parent,final String id, ICellPopulator[] populators, IDataProvider dataProvider)
+	public AbstractDataGridView(MarkupContainer parent, final String id,
+			ICellPopulator[] populators, IDataProvider dataProvider)
 	{
-		super(parent,id, dataProvider);
+		super(parent, id, dataProvider);
 
 		this.populators = populators;
 	}
@@ -83,9 +85,10 @@ public abstract class AbstractDataGridView extends DataViewBase
 			populatorsIteratorCache = new ArrayIteratorAdapter(internalGetPopulators())
 			{
 
+				@Override
 				protected IModel model(Object object)
 				{
-					return new Model((Serializable)object);
+					return new Model(object);
 				}
 
 			};
@@ -98,22 +101,26 @@ public abstract class AbstractDataGridView extends DataViewBase
 	}
 
 
+	@Override
 	protected final void populateItem(Item item)
 	{
 		final IModel rowModel = item.getModel();
 
-		// TODO Post 1.2: General: Does this need to be a refreshing view? since the rows
+		// TODO Post 1.2: General: Does this need to be a refreshing view? since
+		// the rows
 		// is a refreshing view this will be recreated anyways. maybe can se
 		// orderedrepeatingview instead to simplify.
-		item.add(new RefreshingView(item,CELL_REPEATER_ID)
+		item.add(new RefreshingView(item, CELL_REPEATER_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Iterator getItemModels()
 			{
 				return getPopulatorsIterator();
 			}
 
+			@Override
 			protected void populateItem(Item item)
 			{
 				final ICellPopulator populator = (ICellPopulator)item.getModelObject();
@@ -121,13 +128,16 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 				if (item.get("cell") == null)
 				{
-					throw new WicketRuntimeException(populator.getClass().getName()
-							+ ".populateItem() failed to add a component with id [" + CELL_ITEM_ID
-							+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
+					throw new WicketRuntimeException(
+							populator.getClass().getName()
+									+ ".populateItem() failed to add a component with id ["
+									+ CELL_ITEM_ID
+									+ "] to the provided [cellItem] object. Make sure you call add() on cellItem ( cellItem.add(new MyComponent(componentId, rowModel) )");
 				}
 
 			}
 
+			@Override
 			protected Item newItem(final String id, int index, IModel model)
 			{
 				return newCellItem(id, index, model);
@@ -141,7 +151,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 		return populators;
 	}
 
-	protected final Item newItem(MarkupContainer parent,final String id, int index, IModel model)
+	protected final Item newItem(MarkupContainer parent, final String id, int index, IModel model)
 	{
 		return newRowItem(id, index, model);
 	}
@@ -164,7 +174,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 */
 	protected Item newRowItem(final String id, int index, final IModel model)
 	{
-		return new Item(this,id, index, model);
+		return new Item(this, id, index, model);
 	}
 
 	/**
@@ -184,7 +194,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 */
 	protected Item newCellItem(final String id, int index, final IModel model)
 	{
-		return new Item(this,id, index, model);
+		return new Item(this, id, index, model);
 	}
 
 }

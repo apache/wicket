@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: OrderedRepeatingView.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -45,6 +46,7 @@ import wicket.model.IModel;
  * TODO Post 1.2: Remove this class
  * 
  */
+@Deprecated
 public class OrderedRepeatingView extends RepeatingView
 {
 	/**
@@ -56,15 +58,15 @@ public class OrderedRepeatingView extends RepeatingView
 	private List order = new ArrayList();
 
 	/** @see Component#Component(MarkupContainer,String) */
-	public OrderedRepeatingView(MarkupContainer parent,final String id)
+	public OrderedRepeatingView(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/** @see Component#Component(MarkupContainer,String, IModel) */
-	public OrderedRepeatingView(MarkupContainer parent,final String id, IModel model)
+	public OrderedRepeatingView(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 }

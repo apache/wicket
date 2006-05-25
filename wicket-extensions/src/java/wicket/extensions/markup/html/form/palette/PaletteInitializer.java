@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PaletteInitializer.java 4268 2006-02-10 06:57:04 +0000 (Fri, 10 Feb
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-02-10 06:57:04 +0000 (Fri, 10
+ * Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,14 +25,15 @@ import wicket.markup.html.PackageResource;
 
 /**
  * Initializes palette-related resources
+ * 
  * @see IInitializer
  * @author Igor Vaynberg ( ivaynberg )
- *
+ * 
  */
 public class PaletteInitializer implements IInitializer
 {
 
-	/** 
+	/**
 	 * @see wicket.IInitializer#init(wicket.Application)
 	 */
 	public void init(Application application)

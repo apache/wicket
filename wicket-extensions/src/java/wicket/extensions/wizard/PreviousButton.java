@@ -39,15 +39,16 @@ public final class PreviousButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public PreviousButton(MarkupContainer parent,final String id, Wizard wizard)
+	public PreviousButton(MarkupContainer parent, final String id, Wizard wizard)
 	{
-		super(parent,id, wizard, "wicket.extensions.wizard.previous");
+		super(parent, id, wizard, "wicket.extensions.wizard.previous");
 		setDefaultFormProcessing(false);
 	}
 
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		return getWizardModel().isPreviousAvailable();
@@ -56,6 +57,7 @@ public final class PreviousButton extends WizardButton
 	/**
 	 * @see wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		getWizardModel().previous();

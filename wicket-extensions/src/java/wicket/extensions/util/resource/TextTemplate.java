@@ -74,6 +74,7 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		return getString();
@@ -84,5 +85,6 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 * 
 	 * @return The string resource
 	 */
+	@Override
 	public abstract String getString();
 }

@@ -39,14 +39,15 @@ public final class LastButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public LastButton(MarkupContainer parent,final String id, Wizard wizard)
+	public LastButton(MarkupContainer parent, final String id, Wizard wizard)
 	{
-		super(parent,id, wizard, "wicket.extensions.wizard.last");
+		super(parent, id, wizard, "wicket.extensions.wizard.last");
 	}
 
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		return getWizardModel().isLastAvailable();
@@ -55,6 +56,7 @@ public final class LastButton extends WizardButton
 	/**
 	 * @see wicket.Component#isVisible()
 	 */
+	@Override
 	public final boolean isVisible()
 	{
 		return getWizardModel().isLastVisible();
@@ -63,6 +65,7 @@ public final class LastButton extends WizardButton
 	/**
 	 * @see wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();

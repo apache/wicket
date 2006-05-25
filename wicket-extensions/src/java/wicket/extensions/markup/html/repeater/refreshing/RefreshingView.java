@@ -70,9 +70,9 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param id
 	 *            component id
 	 */
-	public RefreshingView(MarkupContainer parent,final String id)
+	public RefreshingView(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -83,15 +83,16 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param model
 	 *            model
 	 */
-	public RefreshingView(MarkupContainer parent,final String id, IModel model)
+	public RefreshingView(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
 	 * Refresh the items in the view. Delegates the creation of items to the
 	 * selected item reuse strategy
 	 */
+	@Override
 	protected void internalOnAttach()
 	{
 		super.internalOnAttach();
@@ -167,7 +168,7 @@ public abstract class RefreshingView extends RepeatingView
 	 */
 	protected Item newItem(final String id, int index, final IModel model)
 	{
-		return new Item(this,id, index, model);
+		return new Item(this, id, index, model);
 	}
 
 	/**
@@ -239,11 +240,13 @@ public abstract class RefreshingView extends RepeatingView
 
 					private final IItemReuseStrategy old = itemReuseStrategy;
 
+					@Override
 					public void undo()
 					{
 						itemReuseStrategy = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "ItemsReuseStrategyChange[component: " + getPath() + ", reuse: "

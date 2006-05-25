@@ -52,15 +52,16 @@ public abstract class BreadCrumbLink extends Link
 	 * @param breadCrumbModel
 	 *            The bread crumb model
 	 */
-	public BreadCrumbLink(MarkupContainer parent,final String id, IBreadCrumbModel breadCrumbModel)
+	public BreadCrumbLink(MarkupContainer parent, final String id, IBreadCrumbModel breadCrumbModel)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.breadCrumbModel = breadCrumbModel;
 	}
 
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		// get the currently active particpant
@@ -79,6 +80,7 @@ public abstract class BreadCrumbLink extends Link
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void undo()
 			{
 				breadCrumbModel.setActive(active);

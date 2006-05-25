@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,15 +36,18 @@ public class Choices extends AbstractOptions
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param id component id
-	 * @param palette parent palette
+	 * @param id
+	 *            component id
+	 * @param palette
+	 *            parent palette
 	 */
-	public Choices(MarkupContainer parent,final String id, Palette palette)
+	public Choices(MarkupContainer parent, final String id, Palette palette)
 	{
-		super(parent,id, palette);
+		super(parent, id, palette);
 	}
 
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
@@ -53,10 +57,11 @@ public class Choices extends AbstractOptions
 		{
 			attrs.put("onFocus", onFocus);
 		}
-		
-		tag.getAttributes().put("ondblclick", getPalette().getAddOnClickJS()); 
+
+		tag.getAttributes().put("ondblclick", getPalette().getAddOnClickJS());
 	}
 
+	@Override
 	protected Iterator getOptionsIterator()
 	{
 		return getPalette().getUnselectedChoices();

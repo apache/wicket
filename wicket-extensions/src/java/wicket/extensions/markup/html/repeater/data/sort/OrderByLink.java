@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: OrderByLink.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.sort;
 
@@ -60,9 +60,10 @@ public class OrderByLink extends Link
 	 *            locator used to locate sort state object that this will use to
 	 *            read/write state of sorted properties
 	 */
-	public OrderByLink(MarkupContainer parent,final String id, String property, ISortStateLocator stateLocator)
+	public OrderByLink(MarkupContainer parent, final String id, String property,
+			ISortStateLocator stateLocator)
 	{
-		this(parent,id, property, stateLocator, DefaultCssProvider.getInstance());
+		this(parent, id, property, stateLocator, DefaultCssProvider.getInstance());
 	}
 
 	/**
@@ -85,10 +86,10 @@ public class OrderByLink extends Link
 	 * @see OrderByLink.ICssProvider
 	 * 
 	 */
-	public OrderByLink(MarkupContainer parent,final String id, String property, ISortStateLocator stateLocator,
-			ICssProvider cssProvider)
+	public OrderByLink(MarkupContainer parent, final String id, String property,
+			ISortStateLocator stateLocator, ICssProvider cssProvider)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		if (cssProvider == null)
 		{
@@ -108,6 +109,7 @@ public class OrderByLink extends Link
 	/**
 	 * @see wicket.markup.html.link.Link
 	 */
+	@Override
 	public final void onClick()
 	{
 		sort();
@@ -162,6 +164,7 @@ public class OrderByLink extends Link
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
+		@Override
 		public void undo()
 		{
 			stateLocator.setSortState(old);
@@ -170,6 +173,7 @@ public class OrderByLink extends Link
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "[StateOrderChange old=" + old.toString() + "]";
@@ -200,6 +204,7 @@ public class OrderByLink extends Link
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public IModel getNestedModel()
 				{
 					return null;
@@ -224,6 +229,7 @@ public class OrderByLink extends Link
 		/**
 		 * @see wicket.AttributeModifier#isEnabled()
 		 */
+		@Override
 		public boolean isEnabled()
 		{
 			return getReplaceModel().getObject(null) != null;

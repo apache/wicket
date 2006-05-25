@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: AbstractPageableView.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24
+ * May 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.pageable;
 
@@ -36,10 +36,10 @@ import wicket.version.undo.Change;
  * iterator that returns models for items in the current page. The
  * AbstractPageableView builds the items that will be rendered by looping over
  * the models and calling the
- * <code>newItem(MarkupContainer parent,final String id, int index, IModel model)</code> to generate the
- * child item container followed by <code>populateItem(Component item)</code>
- * to let the user populate the newly created item container with with custom
- * components.
+ * <code>newItem(MarkupContainer parent,final String id, int index, IModel model)</code>
+ * to generate the child item container followed by
+ * <code>populateItem(Component item)</code> to let the user populate the
+ * newly created item container with with custom components.
  * </p>
  * 
  * @see wicket.extensions.markup.html.repeater.refreshing.RefreshingView
@@ -72,17 +72,17 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 
 	/** @see wicket.Component#Component(MarkupContainer,String, IModel) */
-	public AbstractPageableView(MarkupContainer parent,final String id, IModel model)
+	public AbstractPageableView(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		clearCachedItemCount();
 	}
 
 
 	/** @see wicket.Component#Component(MarkupContainer,String) */
-	public AbstractPageableView(MarkupContainer parent,final String id)
+	public AbstractPageableView(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 		clearCachedItemCount();
 	}
 
@@ -93,6 +93,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	 * 
 	 * @return iterator over models for items in the current page
 	 */
+	@Override
 	protected Iterator getItemModels()
 	{
 		int offset = getViewOffset();
@@ -106,6 +107,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	}
 
 
+	@Override
 	protected void internalOnDetach()
 	{
 		super.internalOnDetach();
@@ -188,11 +190,13 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 					final int old = itemsPerPage;
 
+					@Override
 					public void undo()
 					{
 						itemsPerPage = old;
 					}
 
+					@Override
 					public String toString()
 					{
 						return "ItemsPerPageChange[component: " + getPath() + ", itemsPerPage: "
@@ -271,22 +275,25 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 
 		if (currentPage != page)
 		{
-			if (isVersioned()) {
+			if (isVersioned())
+			{
 				addStateChange(new Change()
 				{
 					private static final long serialVersionUID = 1L;
-	
+
 					private final int old = currentPage;
-	
+
+					@Override
 					public void undo()
 					{
 						currentPage = old;
 					}
-	
+
+					@Override
 					public String toString()
 					{
-						return "CurrentPageChange[component: " + getPath() + ", currentPage: " + old
-								+ "]";
+						return "CurrentPageChange[component: " + getPath() + ", currentPage: "
+								+ old + "]";
 					}
 				});
 

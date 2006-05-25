@@ -46,6 +46,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 	{
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public Object getObject(Component component)
 		{
 			return component.getLocalizer().getString("datatable.no-records-found", component,
@@ -92,9 +93,10 @@ public class NoRecordsToolbar extends AbstractToolbar
 	 * 
 	 * @see wicket.Component#isVisible()
 	 */
+	@Override
 	public boolean isVisible()
 	{
 		return getTable().getRowCount() == 0;
 	}
-	
+
 }

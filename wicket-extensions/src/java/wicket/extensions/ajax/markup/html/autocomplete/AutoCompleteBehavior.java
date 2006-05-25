@@ -40,6 +40,7 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	}
 
 
+	@Override
 	protected final void onRequest(final String val, RequestCycle requestCycle)
 	{
 		IRequestTarget target = new IRequestTarget()
@@ -72,9 +73,9 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	}
 
 	/**
-	 * Callback method that should return an iterator over all possiblet
-	 * choice objects. These objects will be passed to the renderer to generate
-	 * output. Usually it is enough to return an iterator over strings.
+	 * Callback method that should return an iterator over all possiblet choice
+	 * objects. These objects will be passed to the renderer to generate output.
+	 * Usually it is enough to return an iterator over strings.
 	 * 
 	 * @param input
 	 *            current input

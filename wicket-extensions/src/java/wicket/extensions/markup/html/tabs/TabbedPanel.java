@@ -28,7 +28,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.Loop;
-import wicket.markup.html.list.Loop.LoopItem;
 import wicket.markup.html.panel.Panel;
 import wicket.model.Model;
 
@@ -39,32 +38,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
+ *                          
+ *                          List tabs=new ArrayList();
+ *                          
+ *                          tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
  *                         
- *                         List tabs=new ArrayList();
+ *                          public Panel getPanel(String panelId)
+ *                          {
+ *                          return new TabPanel1(panelId);
+ *                          }
+ *                          
+ *                          });
  *                         
- *                         tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *                        
- *                         public Panel getPanel(String panelId)
- *                         {
- *                         return new TabPanel1(panelId);
- *                         }
+ *                          tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
  *                         
- *                         });
- *                        
- *                         tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *                        
- *                         public Panel getPanel(String panelId)
- *                         {
- *                         return new TabPanel2(panelId);
- *                         }
+ *                          public Panel getPanel(String panelId)
+ *                          {
+ *                          return new TabPanel2(panelId);
+ *                          }
+ *                          
+ *                          });
  *                         
- *                         });
- *                        
- *                         add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *                     
- *                         
- *                         &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *                     
+ *                          add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *                      
+ *                          
+ *                          &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *                      
  * </pre>
  * 
  * </p>
@@ -99,9 +98,9 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(MarkupContainer parent,final String id, List tabs)
+	public TabbedPanel(MarkupContainer parent, final String id, List tabs)
 	{
-		super(parent,id, new Model(new Integer(-1)));
+		super(parent, id, new Model(new Integer(-1)));
 
 		if (tabs == null)
 		{
@@ -117,25 +116,27 @@ public class TabbedPanel extends Panel
 		this.tabs = tabs;
 
 		// add the loop used to generate tab names
-		add(new Loop(this,"tabs", tabs.size())
+		add(new Loop(this, "tabs", tabs.size())
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void populateItem(LoopItem item)
 			{
 				final int index = item.getIteration();
 				final ITab tab = ((ITab)TabbedPanel.this.tabs.get(index));
 				final int selected = getSelectedTab();
 
-				final WebMarkupContainer titleLink = newLink(item,"link", index);
+				final WebMarkupContainer titleLink = newLink(item, "link", index);
 
-				titleLink.add(new Label(titleLink,"title", tab.getTitle()));
+				titleLink.add(new Label(titleLink, "title", tab.getTitle()));
 				item.add(titleLink);
 
 				item.add(new SimpleAttributeModifier("class", "selected")
 				{
 					private static final long serialVersionUID = 1L;
 
+					@Override
 					public boolean isEnabled()
 					{
 						return index == selected;
@@ -163,7 +164,7 @@ public class TabbedPanel extends Panel
 	 * component with id: title will be added for you by the tabbed panel.
 	 * 
 	 * <pre>
-	 *    &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
+	 *     &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
 	 * </pre>
 	 * 
 	 * Example implementation:
@@ -190,12 +191,13 @@ public class TabbedPanel extends Panel
 	 *            clicked. See {@link #setSelectedTab(int)}.
 	 * @return created link component
 	 */
-	protected WebMarkupContainer newLink(MarkupContainer parent,String linkId, final int index)
+	protected WebMarkupContainer newLink(MarkupContainer parent, String linkId, final int index)
 	{
-		return new Link(parent,linkId)
+		return new Link(parent, linkId)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick()
 			{
 				setSelectedTab(index);
@@ -221,7 +223,7 @@ public class TabbedPanel extends Panel
 
 		ITab tab = (ITab)tabs.get(index);
 
-		Panel panel = tab.getPanel(this,TAB_PANEL_ID);
+		Panel panel = tab.getPanel(this, TAB_PANEL_ID);
 
 		if (panel == null)
 		{

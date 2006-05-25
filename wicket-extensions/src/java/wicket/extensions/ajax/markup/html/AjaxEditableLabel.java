@@ -38,9 +38,9 @@ public class AjaxEditableLabel extends Panel
 	 * 
 	 * @param id
 	 */
-	public AjaxEditableLabel(MarkupContainer parent,final String id)
+	public AjaxEditableLabel(MarkupContainer parent, final String id)
 	{
-		this(parent,id, null);
+		this(parent, id, null);
 	}
 
 	/**
@@ -49,16 +49,16 @@ public class AjaxEditableLabel extends Panel
 	 * @param id
 	 * @param model
 	 */
-	public AjaxEditableLabel(MarkupContainer parent,final String id, IModel model)
+	public AjaxEditableLabel(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id);
+		super(parent, id);
 		setOutputMarkupId(true);
 
-		label = new Label(this,"label", model);
+		label = new Label(this, "label", model);
 		label.setOutputMarkupId(true);
 		label.add(new LabeAjaxBehavior("onClick"));
 
-		editor = new TextField(this,"editor", model);
+		editor = new TextField(this, "editor", model);
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior());
@@ -81,6 +81,7 @@ public class AjaxEditableLabel extends Panel
 			super(event);
 		}
 
+		@Override
 		protected void onEvent(AjaxRequestTarget target)
 		{
 			label.setVisible(false);
@@ -112,6 +113,7 @@ public class AjaxEditableLabel extends Panel
 		{
 		}
 
+		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
 			super.onComponentTag(tag);
@@ -130,6 +132,7 @@ public class AjaxEditableLabel extends Panel
 
 		}
 
+		@Override
 		protected void respond(AjaxRequestTarget target)
 		{
 			RequestCycle rc = RequestCycle.get();

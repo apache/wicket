@@ -39,14 +39,15 @@ public final class FinishButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public FinishButton(MarkupContainer parent,final String id, Wizard wizard)
+	public FinishButton(MarkupContainer parent, final String id, Wizard wizard)
 	{
-		super(parent,id, wizard, "wicket.extensions.wizard.finish");
+		super(parent, id, wizard, "wicket.extensions.wizard.finish");
 	}
 
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		IWizardStep activeStep = getWizardModel().getActiveStep();
@@ -56,6 +57,7 @@ public final class FinishButton extends WizardButton
 	/**
 	 * @see wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();

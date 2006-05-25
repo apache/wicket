@@ -25,9 +25,9 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param id
 	 * @param type
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id, Class type)
+	public AutoCompleteTextField(MarkupContainer parent, final String id, Class type)
 	{
-		this(parent,id, (IModel)null, type);
+		this(parent, id, (IModel)null, type);
 	}
 
 	/**
@@ -35,9 +35,9 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param model
 	 * @param type
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id, IModel model, Class type)
+	public AutoCompleteTextField(MarkupContainer parent, final String id, IModel model, Class type)
 	{
-		this(parent,id, model, type, StringAutoCompleteRenderer.INSTANCE);
+		this(parent, id, model, type, StringAutoCompleteRenderer.INSTANCE);
 
 	}
 
@@ -45,17 +45,17 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param id
 	 * @param object
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id, IModel object)
+	public AutoCompleteTextField(MarkupContainer parent, final String id, IModel object)
 	{
-		this(parent,id, object, (Class)null);
+		this(parent, id, object, (Class)null);
 	}
 
 	/**
 	 * @param id
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id)
+	public AutoCompleteTextField(MarkupContainer parent, final String id)
 	{
-		this(parent,id, (IModel)null);
+		this(parent, id, (IModel)null);
 
 	}
 
@@ -63,9 +63,10 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param id
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(MarkupContainer parent, final String id,
+			IAutoCompleteRenderer renderer)
 	{
-		this(parent,id, (IModel)null, renderer);
+		this(parent, id, (IModel)null, renderer);
 	}
 
 	/**
@@ -73,9 +74,10 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param type
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id, Class type, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(MarkupContainer parent, final String id, Class type,
+			IAutoCompleteRenderer renderer)
 	{
-		this(parent,id, null, type, renderer);
+		this(parent, id, null, type, renderer);
 	}
 
 	/**
@@ -83,9 +85,10 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param model
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id, IModel model, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(MarkupContainer parent, final String id, IModel model,
+			IAutoCompleteRenderer renderer)
 	{
-		this(parent,id, model, (Class)null, renderer);
+		this(parent, id, model, (Class)null, renderer);
 	}
 
 	/**
@@ -94,15 +97,17 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @param type
 	 * @param renderer
 	 */
-	public AutoCompleteTextField(MarkupContainer parent,final String id, IModel model, Class type, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(MarkupContainer parent, final String id, IModel model, Class type,
+			IAutoCompleteRenderer renderer)
 	{
-		super(parent,id, model, type);
+		super(parent, id, model, type);
 
 		add(new AutoCompleteBehavior(renderer)
 		{
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Iterator getChoices(String input)
 			{
 				return AutoCompleteTextField.this.getChoices(input);

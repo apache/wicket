@@ -39,14 +39,15 @@ public final class NextButton extends WizardButton
 	 * @param id
 	 * @param wizard
 	 */
-	public NextButton(MarkupContainer parent,final String id, Wizard wizard)
+	public NextButton(MarkupContainer parent, final String id, Wizard wizard)
 	{
-		super(parent,id, wizard, "wicket.extensions.wizard.next");
+		super(parent, id, wizard, "wicket.extensions.wizard.next");
 	}
 
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		IWizardModel wizardModel = getWizardModel();
@@ -56,6 +57,7 @@ public final class NextButton extends WizardButton
 	/**
 	 * @see wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		IWizardModel wizardModel = getWizardModel();
@@ -80,6 +82,7 @@ public final class NextButton extends WizardButton
 	/**
 	 * @see wicket.Component#onAttach()
 	 */
+	@Override
 	protected final void onAttach()
 	{
 		// TODO after the constructor change we can do this in the constructor

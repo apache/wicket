@@ -50,6 +50,7 @@ public class UploadWebRequest extends ServletWebRequest
 	/**
 	 * @see wicket.protocol.http.WebRequest#newMultipartWebRequest(wicket.util.lang.Bytes)
 	 */
+	@Override
 	public WebRequest newMultipartWebRequest(Bytes maxsize)
 	{
 		try
@@ -84,11 +85,13 @@ public class UploadWebRequest extends ServletWebRequest
 			}
 		}
 
+		@Override
 		protected boolean wantUploadProgressUpdates()
 		{
 			return true;
 		}
 
+		@Override
 		protected void onUploadStarted(int totalBytes)
 		{
 			UploadInfo info = new UploadInfo(totalBytes);
@@ -98,6 +101,7 @@ public class UploadWebRequest extends ServletWebRequest
 			setUploadInfo(request, info);
 		}
 
+		@Override
 		protected void onUploadUpdate(int bytesUploaded, int total)
 		{
 			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest())
@@ -113,6 +117,7 @@ public class UploadWebRequest extends ServletWebRequest
 			setUploadInfo(request, info);
 		}
 
+		@Override
 		protected void onUploadCompleted()
 		{
 			HttpServletRequest request = ((WebRequest)RequestCycle.get().getRequest())

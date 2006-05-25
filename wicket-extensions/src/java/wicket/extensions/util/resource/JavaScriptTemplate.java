@@ -50,6 +50,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	/**
 	 * @see wicket.extensions.util.resource.TextTemplateDecorator#getBeforeTemplateContents()
 	 */
+	@Override
 	public String getBeforeTemplateContents()
 	{
 		return JAVASCRIPT_START_TAG;
@@ -58,6 +59,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	/**
 	 * @see wicket.extensions.util.resource.TextTemplateDecorator#getAfterTemplateContents()
 	 */
+	@Override
 	public String getAfterTemplateContents()
 	{
 		return JAVASCRIPT_END_TAG;

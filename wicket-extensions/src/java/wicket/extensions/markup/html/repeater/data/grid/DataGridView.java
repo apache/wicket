@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: DataGridView.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.grid;
 
@@ -30,13 +30,13 @@ import wicket.extensions.markup.html.repeater.data.IDataProvider;
  * Example:
  * 
  * <pre>
- *           &lt;table&gt;
- *             &lt;tr wicket:id=&quot;rows&quot;&gt;
- *               &lt;td wicket:id=&quot;cells&quot;&gt;
- *                 &lt;span wicket:id=&quot;cell&quot;&gt; &lt;/span&gt;
- *               &lt;/td&gt;
- *             &lt;/tr&gt;
- *           &lt;/table&gt;
+ *            &lt;table&gt;
+ *              &lt;tr wicket:id=&quot;rows&quot;&gt;
+ *                &lt;td wicket:id=&quot;cells&quot;&gt;
+ *                  &lt;span wicket:id=&quot;cell&quot;&gt; &lt;/span&gt;
+ *                &lt;/td&gt;
+ *              &lt;/tr&gt;
+ *            &lt;/table&gt;
  * </pre>
  * 
  * <p>
@@ -78,10 +78,11 @@ public class DataGridView extends AbstractDataGridView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(MarkupContainer parent,final String id, List/* <ICellPopulator> */populators, IDataProvider dataProvider)
+	public DataGridView(MarkupContainer parent, final String id,
+			List/* <ICellPopulator> */populators, IDataProvider dataProvider)
 	{
-		super(parent,id, (ICellPopulator[])populators.toArray(new ICellPopulator[populators.size()]),
-				dataProvider);
+		super(parent, id, (ICellPopulator[])populators
+				.toArray(new ICellPopulator[populators.size()]), dataProvider);
 	}
 
 	/**
@@ -97,9 +98,10 @@ public class DataGridView extends AbstractDataGridView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataGridView(MarkupContainer parent,final String id, ICellPopulator[] populators, IDataProvider dataProvider)
+	public DataGridView(MarkupContainer parent, final String id, ICellPopulator[] populators,
+			IDataProvider dataProvider)
 	{
-		super(parent,id, populators, dataProvider);
+		super(parent, id, populators, dataProvider);
 	}
 
 	/**

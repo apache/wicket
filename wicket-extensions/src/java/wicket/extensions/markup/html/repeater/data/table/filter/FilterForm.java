@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
@@ -48,18 +47,19 @@ public class FilterForm extends Form
 	 * @param locator
 	 *            filter state locator
 	 */
-	public FilterForm(MarkupContainer parent,final String id, IFilterStateLocator locator)
+	public FilterForm(MarkupContainer parent, final String id, IFilterStateLocator locator)
 	{
-		super(parent,id, new FilterStateModel(locator));
+		super(parent, id, new FilterStateModel(locator));
 
 		this.locator = locator;
 
-		hidden = new HiddenField(this,"focus-tracker", new Model());
+		hidden = new HiddenField(this, "focus-tracker", new Model());
 
 		hidden.add(new AbstractBehavior()
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
 				tag.put("id", getFocusTrackerFieldCssId());
@@ -100,6 +100,7 @@ public class FilterForm extends Form
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onComponentTag(Component component, ComponentTag tag)
 			{
 				tag.put("id", component.getPageRelativePath());
@@ -120,7 +121,7 @@ public class FilterForm extends Form
 	 * work.
 	 * 
 	 * @param component
-	 *            component to 
+	 *            component to
 	 * @return the javascript focus handler necessary to notify the form of
 	 *         focus tracking changes on the component
 	 */
@@ -161,6 +162,7 @@ public class FilterForm extends Form
 		/**
 		 * @see wicket.model.IModel#getNestedModel()
 		 */
+		@Override
 		public IModel getNestedModel()
 		{
 			return null;

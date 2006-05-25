@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.data;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import wicket.model.IDetachable;
@@ -35,20 +34,20 @@ import wicket.model.IModel;
  * Example:
  * 
  * <pre>
- *         class UsersProvider implements IDataProvider() {
- *           
- *           Iterator iterator(int first, int count) {
- *             ((MyApplication)Application.get()).getUserDao().iterator(first, count);
- *           }
- *           
- *           int size() {
- *             ((MyApplication)Application.get()).getUserDao().getCount();
- *           }
- *           
- *           IModel model(Object object) {
- *             return new DetachableUserModel((User)object);
- *           }
- *         }
+ *          class UsersProvider implements IDataProvider() {
+ *            
+ *            Iterator iterator(int first, int count) {
+ *              ((MyApplication)Application.get()).getUserDao().iterator(first, count);
+ *            }
+ *            
+ *            int size() {
+ *              ((MyApplication)Application.get()).getUserDao().getCount();
+ *            }
+ *            
+ *            IModel model(Object object) {
+ *              return new DetachableUserModel((User)object);
+ *            }
+ *          }
  * </pre>
  * 
  * @see DataViewBase

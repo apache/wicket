@@ -40,5 +40,6 @@ public interface IBreadCrumbPanelFactory extends Serializable
 	 *            The bread crumb model
 	 * @return A new bread crumb panel instance
 	 */
-	BreadCrumbPanel create(MarkupContainer parent,String componentId, IBreadCrumbModel breadCrumbModel);
+	BreadCrumbPanel create(MarkupContainer parent, String componentId,
+			IBreadCrumbModel breadCrumbModel);
 }

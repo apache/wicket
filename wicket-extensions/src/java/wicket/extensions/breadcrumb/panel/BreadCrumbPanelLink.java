@@ -52,9 +52,10 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            {@link BreadCrumbPanel}, and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
-	public BreadCrumbPanelLink(MarkupContainer parent,final String id, final BreadCrumbPanel caller, final Class panelClass)
+	public BreadCrumbPanelLink(MarkupContainer parent, final String id,
+			final BreadCrumbPanel caller, final Class panelClass)
 	{
-		this(parent,id, caller.getBreadCrumbModel(), new BreadCrumbPanelFactory(panelClass));
+		this(parent, id, caller.getBreadCrumbModel(), new BreadCrumbPanelFactory(panelClass));
 	}
 
 	/**
@@ -69,10 +70,10 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 *            {@link BreadCrumbPanel}, and must have constructor
 	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
 	 */
-	public BreadCrumbPanelLink(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel,
-			final Class panelClass)
+	public BreadCrumbPanelLink(MarkupContainer parent, final String id,
+			final IBreadCrumbModel breadCrumbModel, final Class panelClass)
 	{
-		this(parent,id, breadCrumbModel, new BreadCrumbPanelFactory(panelClass));
+		this(parent, id, breadCrumbModel, new BreadCrumbPanelFactory(panelClass));
 	}
 
 	/**
@@ -85,10 +86,11 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @param breadCrumbPanelFactory
 	 *            The factory to create bread crumb panels
 	 */
-	public BreadCrumbPanelLink(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel,
+	public BreadCrumbPanelLink(MarkupContainer parent, final String id,
+			final IBreadCrumbModel breadCrumbModel,
 			final IBreadCrumbPanelFactory breadCrumbPanelFactory)
 	{
-		super(parent,id, breadCrumbModel);
+		super(parent, id, breadCrumbModel);
 
 		if (breadCrumbModel == null)
 		{
@@ -109,6 +111,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * 
 	 * @see wicket.extensions.breadcrumb.BreadCrumbLink#getParticipant(java.lang.String)
 	 */
+	@Override
 	protected final IBreadCrumbParticipant getParticipant(String componentId)
 	{
 		return breadCrumbPanelFactory.create(componentId, breadCrumbModel);

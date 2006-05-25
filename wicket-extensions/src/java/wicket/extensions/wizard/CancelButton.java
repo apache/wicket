@@ -38,15 +38,16 @@ public final class CancelButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public CancelButton(MarkupContainer parent,final String id, IWizard wizard)
+	public CancelButton(MarkupContainer parent, final String id, IWizard wizard)
 	{
-		super(parent,id, wizard, "wicket.extensions.wizard.cancel");
+		super(parent, id, wizard, "wicket.extensions.wizard.cancel");
 		setDefaultFormProcessing(false);
 	}
 
 	/**
 	 * @see wicket.Component#isEnabled()
 	 */
+	@Override
 	public final boolean isEnabled()
 	{
 		return true;
@@ -55,6 +56,7 @@ public final class CancelButton extends WizardButton
 	/**
 	 * @see wicket.Component#isVisible()
 	 */
+	@Override
 	public final boolean isVisible()
 	{
 		return getWizardModel().isCancelVisible();
@@ -63,6 +65,7 @@ public final class CancelButton extends WizardButton
 	/**
 	 * @see wicket.extensions.wizard.WizardButton#onClick()
 	 */
+	@Override
 	public final void onClick()
 	{
 		getWizardModel().cancel();

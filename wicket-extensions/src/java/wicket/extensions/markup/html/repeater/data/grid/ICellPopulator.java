@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: ICellPopulator.java 3399 2005-12-09 07:43:11 +0000 (Fri, 09 Dec 2005)
+ * ivaynberg $ $Revision$ $Date: 2005-12-09 07:43:11 +0000 (Fri, 09 Dec
+ * 2005) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.grid;
 
@@ -33,11 +33,12 @@ import wicket.model.IModel;
  * <pre>
  * class NamePopulator implements ICellPopulator
  * {
- * void populateItem(final Item cellItem, final String componentId, final IModel rowModel) {
- *       User user=(User)rowModel.getObject(cellItem);
- *       String name=user.getFirstName()+&quot; &quot;+user.getLastName();
- *       cellItem.add(new Label(componentId, name);
- *     }}
+ * 	void populateItem(final Item cellItem, final String componentId, final IModel rowModel) {
+ *        User user=(User)rowModel.getObject(cellItem);
+ *        String name=user.getFirstName()+&quot; &quot;+user.getLastName();
+ *        cellItem.add(new Label(componentId, name);
+ *      }
+ * }
  * </pre>
  * 
  * In this example the IDataProvider assigned to the DataGridView retrieves User

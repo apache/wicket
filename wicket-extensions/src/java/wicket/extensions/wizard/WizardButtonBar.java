@@ -47,13 +47,13 @@ public class WizardButtonBar extends Panel
 	 * @param wizard
 	 *            The containing wizard
 	 */
-	public WizardButtonBar(MarkupContainer parent,final String id, Wizard wizard)
+	public WizardButtonBar(MarkupContainer parent, final String id, Wizard wizard)
 	{
-		super(parent,id);
-		add(new PreviousButton(this,"previous", wizard));
-		add(new NextButton(this,"next", wizard));
-		add(new LastButton(this,"last", wizard));
-		add(new CancelButton(this,"cancel", wizard));
-		add(new FinishButton(this,"finish", wizard));
+		super(parent, id);
+		add(new PreviousButton(this, "previous", wizard));
+		add(new NextButton(this, "next", wizard));
+		add(new LastButton(this, "last", wizard));
+		add(new CancelButton(this, "cancel", wizard));
+		add(new FinishButton(this, "finish", wizard));
 	}
 }

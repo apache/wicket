@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: SelectOption.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,7 +32,7 @@ import wicket.util.lang.Objects;
  * Component representing a single <code>&lt;option&gt;</code> html element
  * 
  * TODO Post 1.2: General: Example
- *  
+ * 
  * @see Select
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
@@ -43,17 +44,17 @@ public class SelectOption extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
-	public SelectOption(MarkupContainer parent,final String id)
+	public SelectOption(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
-	public SelectOption(MarkupContainer parent,final String id, IModel model)
+	public SelectOption(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 
@@ -62,6 +63,7 @@ public class SelectOption extends WebMarkupContainer
 	 * @param tag
 	 *            the abstraction representing html tag of this component
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 
@@ -80,25 +82,32 @@ public class SelectOption extends WebMarkupContainer
 		// assign name and value
 		tag.put("value", getPath());
 
-		// check if the model collection of the select contains the model object.
+		// check if the model collection of the select contains the model
+		// object.
 		// if it does mark the option as selected
-		Object selected=select.getModelObject();
+		Object selected = select.getModelObject();
 
-		boolean isSelected=false;
-		
-		Object value=getModelObject();
-		
-		if (selected!=null && selected instanceof Collection) {
-			
-			if (value instanceof Collection) {
-				isSelected=selected.equals(value);
-			} else {
-				isSelected=((Collection)selected).contains(value);
+		boolean isSelected = false;
+
+		Object value = getModelObject();
+
+		if (selected != null && selected instanceof Collection)
+		{
+
+			if (value instanceof Collection)
+			{
+				isSelected = selected.equals(value);
 			}
-		} else {
-			isSelected=Objects.equal(selected,value);
+			else
+			{
+				isSelected = ((Collection)selected).contains(value);
+			}
 		}
-		
+		else
+		{
+			isSelected = Objects.equal(selected, value);
+		}
+
 		if (isSelected)
 		{
 			tag.put("selected", "true");

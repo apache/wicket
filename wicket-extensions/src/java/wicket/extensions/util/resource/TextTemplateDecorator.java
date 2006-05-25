@@ -61,6 +61,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 *         and {@link #getAfterTemplateContents()}.
 	 * @see wicket.extensions.util.resource.TextTemplate#asString()
 	 */
+	@Override
 	public String asString()
 	{
 		StringBuffer b = new StringBuffer();
@@ -75,6 +76,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 *         and {@link #getAfterTemplateContents()}.
 	 * @see wicket.extensions.util.resource.TextTemplate#asString(java.util.Map)
 	 */
+	@Override
 	public String asString(Map variables)
 	{
 		StringBuffer b = new StringBuffer();
@@ -88,7 +90,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * Gets the string to put before the actual template contents, e.g.
 	 * 
 	 * <pre>
-	 *    &lt;script type=&quot;text/javascript&quot;&gt;
+	 *     &lt;script type=&quot;text/javascript&quot;&gt;
 	 * </pre>
 	 * 
 	 * @return The string to put before the actual template contents
@@ -99,7 +101,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * Gets the string to put after the actual template contents, e.g.
 	 * 
 	 * <pre>
-	 *    &lt;/script&gt;
+	 *     &lt;/script&gt;
 	 * </pre>
 	 * 
 	 * @return The string to put after the actual template contents
@@ -109,6 +111,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#close()
 	 */
+	@Override
 	public void close() throws IOException
 	{
 		decorated.close();
@@ -117,6 +120,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		return decorated.equals(obj);
@@ -125,6 +129,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#getContentType()
 	 */
+	@Override
 	public String getContentType()
 	{
 		return decorated.getContentType();
@@ -133,6 +138,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#getInputStream()
 	 */
+	@Override
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return decorated.getInputStream();
@@ -141,6 +147,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#getLocale()
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return decorated.getLocale();
@@ -149,6 +156,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return decorated.hashCode();
@@ -157,6 +165,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#lastModifiedTime()
 	 */
+	@Override
 	public Time lastModifiedTime()
 	{
 		return decorated.lastModifiedTime();
@@ -173,6 +182,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#setCharset(java.nio.charset.Charset)
 	 */
+	@Override
 	public void setCharset(Charset charset)
 	{
 		decorated.setCharset(charset);
@@ -181,6 +191,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#setLastModified(wicket.util.time.Time)
 	 */
+	@Override
 	public void setLastModified(Time lastModified)
 	{
 		decorated.setLastModified(lastModified);
@@ -189,6 +200,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#setLocale(java.util.Locale)
 	 */
+	@Override
 	public void setLocale(Locale locale)
 	{
 		decorated.setLocale(locale);
@@ -197,6 +209,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see wicket.extensions.util.resource.TextTemplate#getString()
 	 */
+	@Override
 	public String getString()
 	{
 		return decorated.getString();
@@ -205,6 +218,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return decorated.toString();

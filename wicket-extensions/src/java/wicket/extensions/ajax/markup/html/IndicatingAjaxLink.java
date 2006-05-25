@@ -20,21 +20,23 @@ public abstract class IndicatingAjaxLink extends AjaxLink implements IAjaxIndica
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 */
-	public IndicatingAjaxLink(MarkupContainer parent,final String id)
+	public IndicatingAjaxLink(MarkupContainer parent, final String id)
 	{
-		this(parent,id, null);
+		this(parent, id, null);
 	}
 
 	/**
 	 * Constructor
+	 * 
 	 * @param id
 	 * @param model
 	 */
-	public IndicatingAjaxLink(MarkupContainer parent,final String id, IModel model)
+	public IndicatingAjaxLink(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		add(indicatorAppender);
 	}
 

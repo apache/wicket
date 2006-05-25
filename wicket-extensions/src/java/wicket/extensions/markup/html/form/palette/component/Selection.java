@@ -39,30 +39,35 @@ public class Selection extends AbstractOptions
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param id component id
-	 * @param palette parent palette
+	 * @param id
+	 *            component id
+	 * @param palette
+	 *            parent palette
 	 */
-	public Selection(MarkupContainer parent,final String id, Palette palette)
+	public Selection(MarkupContainer parent, final String id, Palette palette)
 	{
-		super(parent,id, palette);
+		super(parent, id, palette);
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		ValueMap attrs=tag.getAttributes();
-		
-		String onFocus=getPalette().getSelectionOnFocusJS();
-		if (onFocus!=null) {
+		ValueMap attrs = tag.getAttributes();
+
+		String onFocus = getPalette().getSelectionOnFocusJS();
+		if (onFocus != null)
+		{
 			attrs.put("onFocus", onFocus);
 		}
-		
-		tag.getAttributes().put("ondblclick", getPalette().getRemoveOnClickJS()); 
+
+		tag.getAttributes().put("ondblclick", getPalette().getRemoveOnClickJS());
 	}
-	
+
+	@Override
 	protected Iterator getOptionsIterator()
 	{
 		return getPalette().getSelectedChoices();
 	}
-	
+
 }

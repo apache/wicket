@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: ThumbnailImageResource.java 5151 2006-03-28 11:50:28 +0000 (Tue, 28 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-28 11:50:28 +0000 (Tue, 28
+ * Mar 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.image.resource;
 
@@ -35,11 +35,11 @@ import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
 /**
- * Image resource that dynamically scales the given original resource to a thumbnail.
- * It is scaled either using the given maxSize as width or height, depending on
- * its shape. If both the width and height are less than maxSize, no scaling is
- * performed.
- *
+ * Image resource that dynamically scales the given original resource to a
+ * thumbnail. It is scaled either using the given maxSize as width or height,
+ * depending on its shape. If both the width and height are less than maxSize,
+ * no scaling is performed.
+ * 
  * @author Eelco Hillenius
  */
 public class ThumbnailImageResource extends DynamicImageResource
@@ -64,8 +64,11 @@ public class ThumbnailImageResource extends DynamicImageResource
 
 	/**
 	 * Construct.
-	 * @param unscaledImageResource the unscaled, original image resource. Must be not null
-	 * @param maxSize maximum size (width or height) for resize operation
+	 * 
+	 * @param unscaledImageResource
+	 *            the unscaled, original image resource. Must be not null
+	 * @param maxSize
+	 *            maximum size (width or height) for resize operation
 	 */
 	public ThumbnailImageResource(WebResource unscaledImageResource, int maxSize)
 	{
@@ -81,6 +84,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	/**
 	 * @return The image data for this dynamic image
 	 */
+	@Override
 	protected byte[] getImageData()
 	{
 		if (thumbnail == null)
@@ -88,12 +92,13 @@ public class ThumbnailImageResource extends DynamicImageResource
 			final BufferedImage image = getScaledImageInstance();
 			thumbnail = toImageData(image);
 			setLastModifiedTime(Time.now());
-		} 
+		}
 		return thumbnail;
 	}
 
 	/**
 	 * get resized image instance.
+	 * 
 	 * @return BufferedImage
 	 */
 	protected final BufferedImage getScaledImageInstance()
@@ -122,14 +127,21 @@ public class ThumbnailImageResource extends DynamicImageResource
 		{
 			if (is != null)
 			{
-				try { is.close(); } catch (IOException e) { log.error(e.getMessage(), e); }
+				try
+				{
+					is.close();
+				}
+				catch (IOException e)
+				{
+					log.error(e.getMessage(), e);
+				}
 			}
 		}
 
 		int originalWidth = originalImage.getWidth();
 		int originalHeight = originalImage.getHeight();
 
-		if (originalWidth > maxSize  || originalHeight > maxSize)
+		if (originalWidth > maxSize || originalHeight > maxSize)
 		{
 			final int newWidth;
 			final int newHeight;
@@ -160,17 +172,20 @@ public class ThumbnailImageResource extends DynamicImageResource
 
 	/**
 	 * Sets hint(s) for the scale operation.
-	 * @param scaleHints hint(s) for the scale operation
+	 * 
+	 * @param scaleHints
+	 *            hint(s) for the scale operation
 	 */
 	public synchronized final void setScaleHints(int scaleHints)
 	{
 		this.scaleHints = scaleHints;
 		invalidate();
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.DynamicWebResource#invalidate()
 	 */
+	@Override
 	public synchronized void invalidate()
 	{
 		thumbnail = null;

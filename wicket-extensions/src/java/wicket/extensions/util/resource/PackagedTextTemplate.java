@@ -179,6 +179,7 @@ public class PackagedTextTemplate extends TextTemplate
 	/**
 	 * @see wicket.util.resource.AbstractStringResourceStream#getString()
 	 */
+	@Override
 	public String getString()
 	{
 		return buffer.toString();

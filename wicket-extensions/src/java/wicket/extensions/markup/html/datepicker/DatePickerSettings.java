@@ -63,7 +63,9 @@ public class DatePickerSettings implements Serializable
 			try
 			{
 				if (resourceAsStream != null)
+				{
 					resourceAsStream.close();
+				}
 			}
 			catch (IOException ex)
 			{
@@ -195,12 +197,12 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param locale
 	 *            the current locale
-	 * @param format 
+	 * @param format
 	 * @return the properties as a script
 	 */
 	public String toScript(Locale locale, String format)
 	{
-		if(format != null)
+		if (format != null)
 		{
 			boolean showTime = false;
 			String timeFormat = "24";
@@ -209,80 +211,80 @@ public class DatePickerSettings implements Serializable
 			for (int i = 0; i < format.length(); i++)
 			{
 				char ch = format.charAt(i);
-				if(ch == 'd')
+				if (ch == 'd')
 				{
-					if(prev != 'd')
+					if (prev != 'd')
 					{
 						sb.append("%d");
 					}
 					prev = ch;
 				}
-				else if(ch == 'M')
+				else if (ch == 'M')
 				{
-					if(prev != 'M')
+					if (prev != 'M')
 					{
 						sb.append("%m");
 					}
 					prev = ch;
 				}
-				else if(ch == 'y')
+				else if (ch == 'y')
 				{
-					if(prev != 'y')
+					if (prev != 'y')
 					{
 						sb.append("%Y");
 					}
 					prev = ch;
 				}
-				else if(ch == 'H')
+				else if (ch == 'H')
 				{
 					showTime = true;
-					if(prev != 'H')
+					if (prev != 'H')
 					{
 						sb.append("%H");
 					}
 					prev = ch;
 				}
-				else if(ch == 'h')
+				else if (ch == 'h')
 				{
-					timeFormat = "12"; 
+					timeFormat = "12";
 					showTime = true;
-					if(prev != 'h')
+					if (prev != 'h')
 					{
 						sb.append("%I");
 					}
 					prev = ch;
 				}
-				else if(ch == 'm')
+				else if (ch == 'm')
 				{
 					showTime = true;
-					if(prev != 'm')
+					if (prev != 'm')
 					{
 						sb.append("%M");
 					}
 					prev = ch;
 				}
-				else if(ch == 's')
+				else if (ch == 's')
 				{
 					showTime = true;
-					if(prev != 's')
+					if (prev != 's')
 					{
 						sb.append("%S");
 					}
 					prev = ch;
 				}
-				else if(ch == 'a')
+				else if (ch == 'a')
 				{
-					if(prev != 'a')
+					if (prev != 'a')
 					{
 						sb.append("%P");
 					}
 					prev = ch;
 				}
-				else if("GwWDFEkKSzZ".indexOf(ch) != -1)
+				else if ("GwWDFEkKSzZ".indexOf(ch) != -1)
 				{
 					prev = 0;
 				}
-				else if(prev != 0)
+				else if (prev != 0)
 				{
 					sb.append(ch);
 				}
@@ -598,9 +600,11 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param ifFormat
 	 *            the data format
-	 *  
-	 *  @deprecated The format is extracted from the java datefomatter format string
+	 * 
+	 * @deprecated The format is extracted from the java datefomatter format
+	 *             string
 	 */
+	@Deprecated
 	public void setIfFormat(String ifFormat)
 	{
 		this.ifFormat = ifFormat;
@@ -663,9 +667,11 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param showsTime
 	 *            showsTime
-	 *            
-	 *  @deprecated The format is extracted from the java datefomatter format string
+	 * 
+	 * @deprecated The format is extracted from the java datefomatter format
+	 *             string
 	 */
+	@Deprecated
 	public void setShowsTime(boolean showsTime)
 	{
 		this.showsTime = showsTime;
@@ -686,9 +692,11 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @param timeFormat
 	 *            timeFormat
-	 *            
-	 *  @deprecated The format is extracted from the java datefomatter format string
+	 * 
+	 * @deprecated The format is extracted from the java datefomatter format
+	 *             string
 	 */
+	@Deprecated
 	public void setTimeFormat(String timeFormat)
 	{
 		this.timeFormat = timeFormat;

@@ -33,21 +33,21 @@ public class UploadProgressBar extends Panel
 	 * @param id
 	 * @param form
 	 */
-	public UploadProgressBar(MarkupContainer parent,final String id, final Form form)
+	public UploadProgressBar(MarkupContainer parent, final String id, final Form form)
 	{
-		super(parent,id);
+		super(parent, id);
 		setOutputMarkupId(true);
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
 
-		add(new JavaScriptReference(this,"javascript", JS_PROGRESSBAR));
+		add(new JavaScriptReference(this, "javascript", JS_PROGRESSBAR));
 
 
-		final WebMarkupContainer barDiv = new WebMarkupContainer(this,"bar");
+		final WebMarkupContainer barDiv = new WebMarkupContainer(this, "bar");
 		barDiv.setOutputMarkupId(true);
 		add(barDiv);
 
-		final WebMarkupContainer statusDiv = new WebMarkupContainer(this,"status");
+		final WebMarkupContainer statusDiv = new WebMarkupContainer(this, "status");
 		statusDiv.setOutputMarkupId(true);
 		add(statusDiv);
 
@@ -60,6 +60,7 @@ public class UploadProgressBar extends Panel
 			private static final long serialVersionUID = 1L;
 
 
+			@Override
 			public Object getObject(Component component)
 			{
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
@@ -81,7 +82,7 @@ public class UploadProgressBar extends Panel
 		 */
 		public void init(Application application)
 		{
-			PackageResource.bind(application, ComponentInitializer.class,"progressbar.js");
+			PackageResource.bind(application, ComponentInitializer.class, "progressbar.js");
 
 			// register the upload status resource
 			Application.get().getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());

@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: ChoiceFilter.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
@@ -51,10 +51,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, IModel choices,
-			boolean autoSubmit)
+	public ChoiceFilter(MarkupContainer parent, final String id, IModel model, FilterForm form,
+			IModel choices, boolean autoSubmit)
 	{
-		this(parent,id, model, form, choices, defaultRenderer, autoSubmit);
+		this(parent, id, model, form, choices, defaultRenderer, autoSubmit);
 	}
 
 	/**
@@ -64,10 +64,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param choices
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, List choices,
-			boolean autoSubmit)
+	public ChoiceFilter(MarkupContainer parent, final String id, IModel model, FilterForm form,
+			List choices, boolean autoSubmit)
 	{
-		this(parent,id, model, form, new Model((Serializable)choices), defaultRenderer, autoSubmit);
+		this(parent, id, model, form, new Model(choices), defaultRenderer, autoSubmit);
 	}
 
 	/**
@@ -78,10 +78,10 @@ public class ChoiceFilter extends AbstractFilter
 	 * @param renderer
 	 * @param autoSubmit
 	 */
-	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, List choices,
-			IChoiceRenderer renderer, boolean autoSubmit)
+	public ChoiceFilter(MarkupContainer parent, final String id, IModel model, FilterForm form,
+			List choices, IChoiceRenderer renderer, boolean autoSubmit)
 	{
-		this(parent,id, model, form, new Model((Serializable)choices), renderer, autoSubmit);
+		this(parent, id, model, form, new Model(choices), renderer, autoSubmit);
 	}
 
 
@@ -100,20 +100,20 @@ public class ChoiceFilter extends AbstractFilter
 	 *            if true this filter will submit the form on selection change
 	 * @see DropDownChoice
 	 */
-	public ChoiceFilter(MarkupContainer parent,final String id, IModel model, FilterForm form, IModel choices,
-			IChoiceRenderer renderer, boolean autoSubmit)
+	public ChoiceFilter(MarkupContainer parent, final String id, IModel model, FilterForm form,
+			IModel choices, IChoiceRenderer renderer, boolean autoSubmit)
 	{
-		super(parent,id, form);
+		super(parent, id, form);
 
-		choice = new DropDownChoice(this,"filter", model, choices, renderer);
+		choice = new DropDownChoice(this, "filter", model, choices, renderer);
 		choice.setNullValid(true);
-		
+
 		if (autoSubmit)
 		{
 			choice.add(new AttributeModifier("onchange", true, new Model("this.form.submit();")));
 		}
 		enableFocusTracking(choice);
-		
+
 		add(choice);
 	}
 
@@ -125,5 +125,5 @@ public class ChoiceFilter extends AbstractFilter
 	{
 		return choice;
 	}
-	
+
 }

@@ -45,6 +45,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	/**
 	 * @see wicket.behavior.AbstractBehavior#onRendered(wicket.Component)
 	 */
+	@Override
 	public void onRendered(Component component)
 	{
 		final Response r = component.getResponse();
@@ -90,6 +91,7 @@ public class WicketAjaxIndicatorAppender extends AbstractBehavior
 	/**
 	 * @see wicket.behavior.AbstractBehavior#bind(wicket.Component)
 	 */
+	@Override
 	public final void bind(Component component)
 	{
 		this.component = component;

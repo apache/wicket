@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: FilterToolbar.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
@@ -51,9 +51,10 @@ public class FilterToolbar extends AbstractToolbar
 	 *            locator responsible for finding object used to store filter's
 	 *            state
 	 */
-	public FilterToolbar(MarkupContainer parent, String id, final DataTable table, final IFilterStateLocator stateLocator)
+	public FilterToolbar(MarkupContainer parent, String id, final DataTable table,
+			final IFilterStateLocator stateLocator)
 	{
-		super(parent,id, table);
+		super(parent, id, table);
 
 		if (table == null)
 		{
@@ -66,10 +67,11 @@ public class FilterToolbar extends AbstractToolbar
 
 		// create the form used to contain all filter components
 
-		final FilterForm form = new FilterForm(this,"filter-form", stateLocator)
+		final FilterForm form = new FilterForm(this, "filter-form", stateLocator)
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSubmit()
 			{
 				table.setCurrentPage(0);
@@ -79,41 +81,42 @@ public class FilterToolbar extends AbstractToolbar
 
 		// add javascript to restore focus to a filter component
 
-		add(new WebMarkupContainer(this,"focus-restore")
+		add(new WebMarkupContainer(this, "focus-restore")
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
-				AppendingStringBuffer script = new AppendingStringBuffer("<script>_filter_focus_restore('").append(
-						form.getFocusTrackerFieldCssId()).append("');</script>");
+				AppendingStringBuffer script = new AppendingStringBuffer(
+						"<script>_filter_focus_restore('").append(form.getFocusTrackerFieldCssId())
+						.append("');</script>");
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
 		});
 
 		// populate the toolbar with components provided by filtered columns
 
-		RepeatingView filters = new RepeatingView(form,"filters");
+		RepeatingView filters = new RepeatingView(form, "filters");
 		form.add(filters);
 
 		IColumn[] cols = table.getColumns();
-		for (int i = 0; i < cols.length; i++)
+		for (IColumn col : cols)
 		{
-			WebMarkupContainer item = new WebMarkupContainer(filters,filters.newChildId());
+			WebMarkupContainer item = new WebMarkupContainer(filters, filters.newChildId());
 			item.setRenderBodyOnly(true);
 
-			IColumn col = cols[i];
 			Component filter = null;
 
 			if (col instanceof IFilteredColumn)
 			{
 				IFilteredColumn filteredCol = (IFilteredColumn)col;
-				filter = filteredCol.getFilter(item,FILTER_COMPONENT_ID, form);
+				filter = filteredCol.getFilter(item, FILTER_COMPONENT_ID, form);
 			}
 
 			if (filter == null)
 			{
-				filter = new NoFilter(item,FILTER_COMPONENT_ID);
+				filter = new NoFilter(item, FILTER_COMPONENT_ID);
 			}
 			else
 			{

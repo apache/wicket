@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: DataViewBase.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -23,7 +24,6 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.pageable.AbstractPageableView;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.navigation.paging.IPageable;
-import wicket.model.IDetachable;
 
 /**
  * Base class for data views.
@@ -50,9 +50,9 @@ public abstract class DataViewBase extends AbstractPageableView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataViewBase(MarkupContainer parent,final String id, IDataProvider dataProvider)
+	public DataViewBase(MarkupContainer parent, final String id, IDataProvider dataProvider)
 	{
-		super(parent,id);
+		super(parent, id);
 		if (dataProvider == null)
 		{
 			throw new IllegalArgumentException("argument [dataProvider] cannot be null");
@@ -69,6 +69,7 @@ public abstract class DataViewBase extends AbstractPageableView
 	}
 
 
+	@Override
 	protected final Iterator getItemModels(int offset, int count)
 	{
 		return new ModelIterator(internalGetDataProvider(), offset, count);
@@ -131,11 +132,13 @@ public abstract class DataViewBase extends AbstractPageableView
 		}
 	}
 
+	@Override
 	protected final int internalGetItemCount()
 	{
 		return internalGetDataProvider().size();
 	}
 
+	@Override
 	protected void onDetach()
 	{
 		super.onDetach();

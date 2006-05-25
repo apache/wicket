@@ -50,9 +50,10 @@ public abstract class WizardButton extends Button
 	 * @param labelResourceKey
 	 *            The resource key of the button's label
 	 */
-	public WizardButton(MarkupContainer parent,final String id, IWizard wizard, String labelResourceKey)
+	public WizardButton(MarkupContainer parent, final String id, IWizard wizard,
+			String labelResourceKey)
 	{
-		super(parent,id, new ResourceModel(labelResourceKey));
+		super(parent, id, new ResourceModel(labelResourceKey));
 		this.wizard = wizard;
 	}
 
@@ -84,6 +85,7 @@ public abstract class WizardButton extends Button
 	/**
 	 * @see wicket.markup.html.form.Button#onSubmit()
 	 */
+	@Override
 	protected final void onSubmit()
 	{
 		onClick();

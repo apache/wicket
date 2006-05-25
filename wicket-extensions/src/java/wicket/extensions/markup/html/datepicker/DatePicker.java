@@ -53,8 +53,8 @@ import wicket.util.string.AppendingStringBuffer;
  * (html)
  * 
  * <pre>
- *        &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
- *        &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
+ *         &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *         &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
  * 
  * </p>
@@ -101,6 +101,7 @@ public class DatePicker extends Panel
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public Object getObject(Component component)
 				{
 					// do this lazily, so we know for sure we have the whole
@@ -126,14 +127,16 @@ public class DatePicker extends Panel
 		 * @param resourceReference
 		 *            button icon reference
 		 */
-		public TriggerButton(MarkupContainer parent,final String id, final wicket.ResourceReference resourceReference)
+		public TriggerButton(MarkupContainer parent, final String id,
+				final wicket.ResourceReference resourceReference)
 		{
-			super(parent,id);
+			super(parent, id);
 			add(new PathAttributeModifier("id", this));
 			IModel srcReplacement = new Model()
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public Object getObject(Component component)
 				{
 					return urlFor(resourceReference);
@@ -156,15 +159,16 @@ public class DatePicker extends Panel
 		 * @param id
 		 *            component id
 		 */
-		public InitScript(MarkupContainer parent,final String id)
+		public InitScript(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
 		/**
 		 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 		 *      wicket.markup.ComponentTag)
 		 */
+		@Override
 		protected void onComponentTagBody(final MarkupStream markupStream,
 				final ComponentTag openTag)
 		{
@@ -191,9 +195,9 @@ public class DatePicker extends Panel
 	 * @param target
 	 *            the receiving component
 	 */
-	public DatePicker(MarkupContainer parent,final String id, Component target)
+	public DatePicker(MarkupContainer parent, final String id, Component target)
 	{
-		this(parent,id, target, new DatePickerSettings());
+		this(parent, id, target, new DatePickerSettings());
 	}
 
 	/**
@@ -206,9 +210,9 @@ public class DatePicker extends Panel
 	 * @param target
 	 *            the receiving component
 	 */
-	public DatePicker(MarkupContainer parent,final String id, Component label, Component target)
+	public DatePicker(MarkupContainer parent, final String id, Component label, Component target)
 	{
-		this(parent,id, label, target, new DatePickerSettings());
+		this(parent, id, label, target, new DatePickerSettings());
 	}
 
 	/**
@@ -221,9 +225,10 @@ public class DatePicker extends Panel
 	 * @param settings
 	 *            datepicker properties
 	 */
-	public DatePicker(MarkupContainer parent,final String id, final Component target, final DatePickerSettings settings)
+	public DatePicker(MarkupContainer parent, final String id, final Component target,
+			final DatePickerSettings settings)
 	{
-		this(parent,id, null, target, settings);
+		this(parent, id, null, target, settings);
 	}
 
 	/**
@@ -238,10 +243,10 @@ public class DatePicker extends Panel
 	 * @param settings
 	 *            datepicker properties
 	 */
-	public DatePicker(MarkupContainer parent,final String id, final Component label, final Component target,
-			final DatePickerSettings settings)
+	public DatePicker(MarkupContainer parent, final String id, final Component label,
+			final Component target, final DatePickerSettings settings)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		if (settings == null)
 		{
@@ -263,25 +268,27 @@ public class DatePicker extends Panel
 		{
 			label.add(new PathAttributeModifier("for", target));
 		}
-		add(triggerButton = new TriggerButton(this,"trigger", settings.getIcon()));
-		add(new InitScript(this,"script"));
-		add(new JavaScriptReference(this,"calendarMain", DatePicker.class, "calendar.js"));
-		add(new JavaScriptReference(this,"calendarSetup", DatePicker.class, "calendar-setup.js"));
-		add(new JavaScriptReference(this,"calendarLanguage", new Model()
+		add(triggerButton = new TriggerButton(this, "trigger", settings.getIcon()));
+		add(new InitScript(this, "script"));
+		add(new JavaScriptReference(this, "calendarMain", DatePicker.class, "calendar.js"));
+		add(new JavaScriptReference(this, "calendarSetup", DatePicker.class, "calendar-setup.js"));
+		add(new JavaScriptReference(this, "calendarLanguage", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public Object getObject(Component component)
 			{
 				return settings.getLanguage(DatePicker.this.getLocale());
 			}
 		}));
-		add(new StyleSheetReference(this,"calendarStyle", settings.getStyle()));
+		add(new StyleSheetReference(this, "calendarStyle", settings.getStyle()));
 	}
-	
+
 	/**
-	 * Sets the date converter to use for generating the javascript format string.
-	 * If this is not set or set to null the default DateConverter will be used.
+	 * Sets the date converter to use for generating the javascript format
+	 * string. If this is not set or set to null the default DateConverter will
+	 * be used.
 	 * 
 	 * @param dateConverter
 	 */
@@ -301,24 +308,27 @@ public class DatePicker extends Panel
 		AppendingStringBuffer b = new AppendingStringBuffer("\nCalendar.setup(\n{");
 		b.append("\n\t\tinputField : \"").append(targetId).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
-		
+
 		String pattern = null;
-		if(dateConverter == null)
+		if (dateConverter == null)
 		{
 			// TODO this should be much easier and nicer to do in 2.0
 			IConverter typeConverter = target.getConverter(Date.class);
-			if(typeConverter instanceof DateConverter)
+			if (typeConverter instanceof DateConverter)
 			{
 				dateConverter = (DateConverter)typeConverter;
 			}
-			if(dateConverter == null) dateConverter = new DateConverter();
+			if (dateConverter == null)
+			{
+				dateConverter = new DateConverter();
+			}
 		}
 		DateFormat df = dateConverter.getDateFormat(target.getLocale());
-		if(df instanceof SimpleDateFormat)
+		if (df instanceof SimpleDateFormat)
 		{
 			pattern = ((SimpleDateFormat)df).toPattern();
 		}
-		b.append(settings.toScript(target.getLocale(),pattern));
+		b.append(settings.toScript(target.getLocale(), pattern));
 		int last = b.length() - 1;
 		if (',' == b.charAt(last))
 		{

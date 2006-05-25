@@ -69,12 +69,14 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * @see wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory#create(java.lang.String,
 	 *      wicket.extensions.breadcrumb.IBreadCrumbModel)
 	 */
-	public final BreadCrumbPanel create(MarkupContainer parent, String componentId, IBreadCrumbModel breadCrumbModel)
+	public final BreadCrumbPanel create(MarkupContainer parent, String componentId,
+			IBreadCrumbModel breadCrumbModel)
 	{
 		Constructor ctor = getConstructor();
 		try
 		{
-			return (BreadCrumbPanel)ctor.newInstance(new Object[] { parent,componentId, breadCrumbModel });
+			return (BreadCrumbPanel)ctor.newInstance(new Object[] { parent, componentId,
+					breadCrumbModel });
 		}
 		catch (Exception e)
 		{
@@ -91,8 +93,8 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	{
 		try
 		{
-			Constructor ctor = panelClass.getConstructor(new Class[] { MarkupContainer.class, String.class,
-					IBreadCrumbModel.class });
+			Constructor ctor = panelClass.getConstructor(new Class[] { MarkupContainer.class,
+					String.class, IBreadCrumbModel.class });
 			return ctor;
 		}
 		catch (SecurityException e)

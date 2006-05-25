@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractOptions.java 5840 2006-05-24 20:49:09 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:49:09 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,14 +51,15 @@ public abstract class AbstractOptions extends FormComponent
 	 * @param palette
 	 *            parent palette
 	 */
-	public AbstractOptions(MarkupContainer parent,final String id, Palette palette)
+	public AbstractOptions(MarkupContainer parent, final String id, Palette palette)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.palette = palette;
 	}
 
 	protected abstract Iterator getOptionsIterator();
 
+	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
@@ -69,8 +71,8 @@ public abstract class AbstractOptions extends FormComponent
 			final Object choice = options.next();
 			String id = renderer.getIdValue(choice, 0);
 			Object displayValue = renderer.getDisplayValue(choice);
-			Class displayClass = displayValue == null?null:displayValue.getClass();
-			String value = (String)getConverter(displayClass).convertToString(displayValue, getLocale());
+			Class displayClass = displayValue == null ? null : displayValue.getClass();
+			String value = getConverter(displayClass).convertToString(displayValue, getLocale());
 			value = getLocalizer().getString(id + "." + value, this, value);
 
 			buffer.append("\n<option value=\"").append(id).append("\">").append(value).append(
@@ -82,6 +84,7 @@ public abstract class AbstractOptions extends FormComponent
 		replaceComponentTagBody(markupStream, openTag, buffer);
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");
@@ -99,6 +102,7 @@ public abstract class AbstractOptions extends FormComponent
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 	}
