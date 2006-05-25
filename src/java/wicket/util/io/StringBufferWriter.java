@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,7 +51,7 @@ public class StringBufferWriter extends Writer
 	{
 		this.buffer = buffer;
 	}
-	
+
 	/**
 	 * Writers the char to the buffer
 	 * 
@@ -96,7 +95,7 @@ public class StringBufferWriter extends Writer
 	@Override
 	public void write(String string, int offset, int length)
 	{
-		buffer.append(string.substring(offset, offset+length));
+		buffer.append(string.substring(offset, offset + length));
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -250,9 +250,9 @@ public final class Folder extends File
 	{
 		final File[] files = getFiles();
 		boolean success = true;
-		for (int i = 0; i < files.length; i++)
+		for (File element : files)
 		{
-			success = files[i].remove() && success;
+			success = element.remove() && success;
 		}
 		return success;
 	}
@@ -268,9 +268,9 @@ public final class Folder extends File
 	{
 		final Folder[] folders = getFolders();
 		boolean success = true;
-		for (int i = 0; i < folders.length; i++)
+		for (Folder element : folders)
 		{
-			success = folders[i].remove() && success;
+			success = element.remove() && success;
 		}
 		success = removeFiles() && success;
 		return folder.delete() && success;

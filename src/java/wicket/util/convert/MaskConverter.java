@@ -32,8 +32,8 @@ import wicket.WicketRuntimeException;
 /**
  * A converter that takes a mask into account. It is specifically meant for
  * overrides on individual components, that provide their own converter by
- * returning it from {@link Component#getConverter(Object)}. It uses an instance of
- * {@link MaskFormatter} to delegate the masking and unmasking to.
+ * returning it from {@link Component#getConverter(Object)}. It uses an
+ * instance of {@link MaskFormatter} to delegate the masking and unmasking to.
  * <p>
  * The following characters can be specified (adopted from the MaskFormatter
  * documentation):
@@ -163,7 +163,8 @@ public class MaskConverter implements IConverter
 	 * Converts the value to a string using
 	 * {@link MaskFormatter#valueToString(Object)}.
 	 * 
-	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      Locale)
 	 */
 	public String convertToString(Object value, Locale locale)
 	{
@@ -181,7 +182,8 @@ public class MaskConverter implements IConverter
 	 * Converts a string to an object using
 	 * {@link MaskFormatter#stringToValue(String)}.
 	 * 
-	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String, Locale)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      Locale)
 	 */
 	public Object convertToObject(String value, Locale locale)
 	{

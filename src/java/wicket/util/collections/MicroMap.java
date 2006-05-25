@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,13 +31,13 @@ import java.util.Set;
  * many containers hold only a single component.
  * 
  * @param <K>
- * 			The key type the map holds.
+ *            The key type the map holds.
  * @param <T>
- * 			The value type the map holds.
+ *            The value type the map holds.
  * 
  * @author Jonathan Locke
  */
-public final class MicroMap<K,T>  implements Map<K,T> , Serializable
+public final class MicroMap<K, T> implements Map<K, T>, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -176,15 +176,16 @@ public final class MicroMap<K,T>  implements Map<K,T> , Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public void putAll(final Map<? extends K, ? extends T>  map)
+	public void putAll(final Map<? extends K, ? extends T> map)
 	{
 		if (map.size() <= MAX_ENTRIES)
 		{
-			Iterator<? extends Map.Entry<? extends K, ? extends T> > i = map.entrySet().iterator();
-	        if( i.hasNext() ) {
-	            Map.Entry<? extends K, ? extends T>  e = i.next();
-	            put(e.getKey(), e.getValue());
-	        }
+			Iterator<? extends Map.Entry<? extends K, ? extends T>> i = map.entrySet().iterator();
+			if (i.hasNext())
+			{
+				Map.Entry<? extends K, ? extends T> e = i.next();
+				put(e.getKey(), e.getValue());
+			}
 		}
 		else
 		{
@@ -266,25 +267,25 @@ public final class MicroMap<K,T>  implements Map<K,T> , Serializable
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
-	public Set<Map.Entry<K, T> > entrySet()
+	public Set<Map.Entry<K, T>> entrySet()
 	{
-		return new AbstractSet<Map.Entry<K,T> >()
+		return new AbstractSet<Map.Entry<K, T>>()
 		{
 			@Override
-			public Iterator<Map.Entry<K,T> > iterator()
+			public Iterator<Map.Entry<K, T>> iterator()
 			{
-				return new Iterator<Map.Entry<K,T> >()
+				return new Iterator<Map.Entry<K, T>>()
 				{
 					public boolean hasNext()
 					{
 						return index < MicroMap.this.size();
 					}
 
-					public Map.Entry<K,T>  next()
+					public Map.Entry<K, T> next()
 					{
 						index++;
 
-						return new Map.Entry<K,T> ()
+						return new Map.Entry<K, T>()
 						{
 							public K getKey()
 							{

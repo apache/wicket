@@ -1,6 +1,7 @@
 /*
  * $Id: ComponentStringResourceLoader.java,v 1.5 2005/01/19 08:07:57
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat,
+ * 20 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,7 +23,7 @@ import wicket.util.value.ValueMap;
 /**
  * Reloadable properties. It is not a 100% replacement for java.util.Properties
  * as it does not provide the same interface. But is serves kind of the same
- * purpose with Wicket specific features. 
+ * purpose with Wicket specific features.
  * 
  * @author Juergen Donnerstag
  */
@@ -30,7 +31,6 @@ public class Properties
 {
 	/** Log. */
 	// private static final Log log = LogFactory.getLog(Properties.class);
-
 	/** The resource key for the properties file */
 	private final String key;
 
@@ -50,7 +50,7 @@ public class Properties
 		this.key = key;
 		this.strings = strings;
 	}
-	
+
 	/**
 	 * Get all values from the properties file
 	 * 
@@ -60,7 +60,7 @@ public class Properties
 	{
 		return strings;
 	}
-	
+
 	/**
 	 * Get the property message identified by 'key'
 	 * 
@@ -71,7 +71,7 @@ public class Properties
 	{
 		return strings.getString(key);
 	}
-	
+
 	/**
 	 * 
 	 * @see java.lang.Object#toString()

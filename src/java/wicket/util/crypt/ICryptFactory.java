@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: ICryptFactory.java 3618 2006-01-04 09:28:14 +0000 (Wed, 04 Jan 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-01-04 09:28:14 +0000 (Wed, 04 Jan
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ListenerSet.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,7 +19,6 @@
 package wicket.util.listener;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -38,8 +38,8 @@ public abstract class ListenerSet
 	 * 
 	 * @param listener
 	 *            The listener to add
-	 * @return  <tt>true</tt> if the set did not already contain the specified
-     * listener.
+	 * @return <tt>true</tt> if the set did not already contain the specified
+	 *         listener.
 	 */
 	public boolean add(final IListener listener)
 	{
@@ -54,10 +54,9 @@ public abstract class ListenerSet
 		// Create a stable copy for iterating over
 		final Set<IListener> copy = new HashSet<IListener>(listeners);
 
-		// Notify all listeners that the file changed
-		for (final Iterator<IListener> iterator = copy.iterator(); iterator.hasNext();)
+		for (IListener listener : copy)
 		{
-			notifyListener(iterator.next());
+			notifyListener(listener);
 		}
 	}
 

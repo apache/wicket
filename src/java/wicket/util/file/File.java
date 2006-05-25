@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: File.java 5672 2006-05-05 22:50:59 +0000 (Fri, 05 May 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-05-05 22:50:59 +0000 (Fri, 05
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

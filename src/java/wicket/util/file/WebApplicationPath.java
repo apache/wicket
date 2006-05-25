@@ -16,11 +16,9 @@
  */
 package wicket.util.file;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -63,7 +61,7 @@ public final class WebApplicationPath implements IResourcePath
 		final Folder f = new Folder(folder);
 		if (f.exists())
 		{
-			folders.add(f);			
+			folders.add(f);
 		}
 		else
 		{
@@ -88,9 +86,9 @@ public final class WebApplicationPath implements IResourcePath
 	 */
 	public URL find(final String pathname)
 	{
-		for (final Iterator<Comparable> iterator = folders.iterator(); iterator.hasNext();)
+		for (Comparable comparable : folders)
 		{
-			Folder folder = (Folder)iterator.next();
+			Folder folder = (Folder)comparable;
 			File file = new File(folder, pathname);
 			if (file.exists())
 			{
@@ -104,9 +102,9 @@ public final class WebApplicationPath implements IResourcePath
 				}
 			}
 		}
-		for (final Iterator<Comparable> iterator = webappPaths.iterator(); iterator.hasNext();)
+		for (Comparable comparable : webappPaths)
 		{
-			final String path = (String)iterator.next();
+			final String path = (String)comparable;
 			try
 			{
 				final URL file = servletContext.getResource(path + pathname);

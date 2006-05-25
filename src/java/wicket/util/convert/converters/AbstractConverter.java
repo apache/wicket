@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id: AbstractConverter.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,8 +38,8 @@ public abstract class AbstractConverter implements IConverter
 	 *            The format to use
 	 * @param value
 	 *            The object to parse
-	 * @param locale 
-	 * 			  The locale to use to parse.
+	 * @param locale
+	 *            The locale to use to parse.
 	 * @return The object
 	 * @throws ConversionException
 	 *             Thrown if parsing fails
@@ -68,7 +68,8 @@ public abstract class AbstractConverter implements IConverter
 	 *            The locale
 	 * @return The ConversionException
 	 */
-	protected ConversionException newConversionException(final String message, final Object value, Locale locale)
+	protected ConversionException newConversionException(final String message, final Object value,
+			Locale locale)
 	{
 		return new ConversionException(message).setSourceValue(value)
 				.setTargetType(getTargetType()).setConverter(this).setLocale(locale);
@@ -78,17 +79,18 @@ public abstract class AbstractConverter implements IConverter
 	 * @return The target type of this type converter
 	 */
 	protected abstract Class getTargetType();
-	
+
 	/**
-	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, Locale)
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      Locale)
 	 */
 	public String convertToString(Object value, Locale locale)
 	{
-		if(value == null)
+		if (value == null)
 		{
 			return null;
 		}
 		return value.toString();
 	}
-	
+
 }

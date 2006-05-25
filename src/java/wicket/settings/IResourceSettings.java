@@ -114,7 +114,7 @@ public interface IResourceSettings
 	 * @return PropertiesFactory
 	 */
 	IPropertiesFactory getPropertiesFactory();
-	
+
 	/**
 	 * @param name
 	 *            Name of the factory to get

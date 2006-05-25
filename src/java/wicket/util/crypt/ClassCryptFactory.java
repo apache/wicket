@@ -37,7 +37,7 @@ public class ClassCryptFactory implements ICryptFactory
 		}
 
 		this.cryptClass = cryptClass;
-		this.encryptionKey=encryptionKey;
+		this.encryptionKey = encryptionKey;
 	}
 
 	/**

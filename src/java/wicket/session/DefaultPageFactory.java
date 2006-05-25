@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DefaultPageFactory.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -166,9 +167,9 @@ public final class DefaultPageFactory implements IPageFactory
 		catch (InvocationTargetException e)
 		{
 			// honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbortException || 
-					e.getTargetException() instanceof AuthorizationException ||
-						e.getTargetException() instanceof MarkupException)
+			if (e.getTargetException() instanceof AbortException
+					|| e.getTargetException() instanceof AuthorizationException
+					|| e.getTargetException() instanceof MarkupException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}

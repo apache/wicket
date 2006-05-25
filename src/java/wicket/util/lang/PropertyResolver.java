@@ -60,7 +60,8 @@ import wicket.util.string.Strings;
  */
 public class PropertyResolver
 {
-	private final static Map<Class<? extends Object>, Map<String, IGetAndSet>> classesToGetAndSetters = new ConcurrentHashMap<Class<? extends Object>, Map<String, IGetAndSet>>(64);
+	private final static Map<Class<? extends Object>, Map<String, IGetAndSet>> classesToGetAndSetters = new ConcurrentHashMap<Class<? extends Object>, Map<String, IGetAndSet>>(
+			64);
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PropertyResolver.class);
@@ -132,13 +133,15 @@ public class PropertyResolver
 			throw new WicketRuntimeException("Null object returned for expression: " + expression
 					+ " for setting value: " + value + " on: " + object);
 		}
-		setter.setValue(value, converter == null ? new PropertyResolverConverter(Session.get(),Session.get().getLocale()) : converter);
+		setter.setValue(value, converter == null ? new PropertyResolverConverter(Session.get(),
+				Session.get().getLocale()) : converter);
 	}
 
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
 	{
-		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[").toString();
+		final String expressionBracketsSeperated = Strings.replaceAll(expression, "[", ".[")
+				.toString();
 		int index = expressionBracketsSeperated.indexOf('.');
 		int lastIndex = 0;
 		Object value = object;
@@ -257,7 +260,8 @@ public class PropertyResolver
 						else
 						{
 							throw new WicketRuntimeException("The expression '" + exp
-									+ "' is neither an index nor is it a method for the list " + clz);
+									+ "' is neither an index nor is it a method for the list "
+									+ clz);
 						}
 					}
 				}
@@ -475,7 +479,8 @@ public class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public void setValue(final Object object, final Object value, PropertyResolverConverter converter);
+		public void setValue(final Object object, final Object value,
+				PropertyResolverConverter converter);
 
 	}
 
@@ -811,7 +816,8 @@ public class PropertyResolver
 		 * @param value
 		 * @param converter
 		 */
-		public final void setValue(final Object object, final Object value, PropertyResolverConverter converter)
+		public final void setValue(final Object object, final Object value,
+				PropertyResolverConverter converter)
 		{
 			if (setMethod == null)
 			{
@@ -820,17 +826,20 @@ public class PropertyResolver
 			if (setMethod != null)
 			{
 				Object converted = converter.convert(value, getMethod.getReturnType());
-				if ( converted == null)
+				if (converted == null)
 				{
-					if( value != null )
+					if (value != null)
 					{
-						throw new ConversionException("Can't convert value: " + value + " to class: "
-								+ getMethod.getReturnType() + " for setting it on " + object);
+						throw new ConversionException("Can't convert value: " + value
+								+ " to class: " + getMethod.getReturnType() + " for setting it on "
+								+ object);
 					}
-					else if( getMethod.getReturnType().isPrimitive() )
+					else if (getMethod.getReturnType().isPrimitive())
 					{
-						throw new ConversionException("Can't convert null value to a primitive class: "
-								+ getMethod.getReturnType() + " for setting it on " + object);
+						throw new ConversionException(
+								"Can't convert null value to a primitive class: "
+										+ getMethod.getReturnType() + " for setting it on "
+										+ object);
 					}
 				}
 				try

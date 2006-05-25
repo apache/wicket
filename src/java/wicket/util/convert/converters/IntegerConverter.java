@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IntegerConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +36,7 @@ public final class IntegerConverter extends AbstractIntegerConverter
 	 * The singleton instance for a integer converter
 	 */
 	public static final IConverter INSTANCE = new IntegerConverter();
-	
+
 	/**
 	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
@@ -43,10 +44,10 @@ public final class IntegerConverter extends AbstractIntegerConverter
 	{
 		final Number number = parse(value, Integer.MIN_VALUE, Integer.MAX_VALUE, locale);
 
-        if (number == null)
-        {
-        	return null;
-        }
+		if (number == null)
+		{
+			return null;
+		}
 
 		return new Integer(number.intValue());
 	}

@@ -1,6 +1,7 @@
 /*
  * $Id: ApplicationStringResourceLoader.java,v 1.5 2005/01/19 08:07:57
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat,
+ * 20 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,9 +24,9 @@ import wicket.Application;
 
 /**
  * This string resource loader attempts to find a single resource bundle that
- * has the same name and location as the clazz. If this bundle is found
- * then strings are obtained from here. This implementation is fully aware of
- * both locale and style values when trying to obtain the appropriate bundle.
+ * has the same name and location as the clazz. If this bundle is found then
+ * strings are obtained from here. This implementation is fully aware of both
+ * locale and style values when trying to obtain the appropriate bundle.
  * 
  * @author Chris Turner
  * @author Juergen Donnerstag
@@ -46,7 +47,7 @@ public class ClassStringResourceLoader extends AbstractStringResourceLoader
 	public ClassStringResourceLoader(final Application application, final Class clazz)
 	{
 		super(application);
-		
+
 		if (clazz == null)
 		{
 			throw new IllegalArgumentException("Parameter 'clazz' must not be null");
@@ -58,9 +59,9 @@ public class ClassStringResourceLoader extends AbstractStringResourceLoader
 	 * @inheritDoc
 	 */
 	@Override
-	public String loadStringResource(final Class clazz, final String key,
-			final Locale locale, final String style)
+	public String loadStringResource(final Class clazz, final String key, final Locale locale,
+			final String style)
 	{
-		 return super.loadStringResource(this.clazz, key, locale, style);
+		return super.loadStringResource(this.clazz, key, locale, style);
 	}
 }

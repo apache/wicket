@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BooleanConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -49,7 +50,7 @@ public final class BooleanConverter extends AbstractConverter
 		}
 		catch (StringValueConversionException e)
 		{
-			throw newConversionException("Cannot convert '" + value + "' to Boolean", value,locale);
+			throw newConversionException("Cannot convert '" + value + "' to Boolean", value, locale);
 		}
 	}
 

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: CachingSunJceCryptFactory.java 3623 2006-01-04 10:19:18 +0000 (Wed, 04
+ * Jan 2006) jdonnerstag $ $Revision$ $Date: 2006-01-04 10:19:18 +0000
+ * (Wed, 04 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: TrivialCrypt.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +21,7 @@ package wicket.util.crypt;
 import java.security.GeneralSecurityException;
 
 /**
- * THIS CLASS IS FOR TESTING PURPOSES ONLY.  DO NOT USE IT IN PRODUCTION CODE!
+ * THIS CLASS IS FOR TESTING PURPOSES ONLY. DO NOT USE IT IN PRODUCTION CODE!
  * 
  * @author Jonathan Locke
  */
@@ -48,4 +49,3 @@ public class TrivialCrypt extends AbstractCrypt
 		return result;
 	}
 }
-

@@ -32,9 +32,9 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	/** The date format to use */
 	private Map<Locale, NumberFormat> numberFormats = new HashMap<Locale, NumberFormat>();
 
-	
+
 	/**
-	 * @param locale 
+	 * @param locale
 	 * @return Returns the numberFormat.
 	 */
 	@Override
@@ -50,13 +50,13 @@ public abstract class AbstractDecimalConverter extends AbstractNumberConverter
 	}
 
 	/**
-	 * @param locale 
-	 * 			  The Locale that was used for this NumberFormat
+	 * @param locale
+	 *            The Locale that was used for this NumberFormat
 	 * @param numberFormat
 	 *            The numberFormat to set.
 	 */
 	public final void setNumberFormat(final Locale locale, final NumberFormat numberFormat)
 	{
-		numberFormats.put(locale,numberFormat);
+		numberFormats.put(locale, numberFormat);
 	}
 }

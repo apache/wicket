@@ -40,5 +40,5 @@ public abstract class AbstractIntegerConverter extends AbstractNumberConverter
 		numberFormat.setGroupingUsed(false);
 		return numberFormat;
 	}
-	
+
 }

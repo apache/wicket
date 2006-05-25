@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id: ByteConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,22 +36,22 @@ public final class ByteConverter extends AbstractIntegerConverter
 	 * The singleton instance for a byte converter
 	 */
 	public static final IConverter INSTANCE = new ByteConverter();
-	
+
 	/**
 	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,Locale)
 	 */
-    public Object convertToObject(final String value, Locale locale)
-    {
-        final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE,locale);
+	public Object convertToObject(final String value, Locale locale)
+	{
+		final Number number = parse(value, Byte.MIN_VALUE, Byte.MAX_VALUE, locale);
 
-        if (number == null)
-        {
-        	return null;
-        }
+		if (number == null)
+		{
+			return null;
+		}
 
-        return new Byte(number.byteValue());
-    }
-    
+		return new Byte(number.byteValue());
+	}
+
 	/**
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */

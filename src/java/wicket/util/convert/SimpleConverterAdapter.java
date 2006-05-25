@@ -31,9 +31,9 @@ import wicket.Component;
  * null).
  * <p>
  * Note, this class is specifically meant for providing custom converters per
- * component by overriding {@link Component#getConverter(Object)}. It is less usefull
- * for application scoped converters; registering {@link ITypeConverter}s with
- * an instance of {@link CoverterLocator} is a better choice for that.
+ * component by overriding {@link Component#getConverter(Object)}. It is less
+ * usefull for application scoped converters; registering {@link ITypeConverter}s
+ * with an instance of {@link CoverterLocator} is a better choice for that.
  * </p>
  * <p>
  * <strong>WARNING. Due to a current limitation as a result of how
@@ -83,22 +83,25 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String, java.util.Locale)
+	 * @see wicket.util.convert.IConverter#convertToObject(java.lang.String,
+	 *      java.util.Locale)
 	 */
 	public Object convertToObject(String value, Locale locale)
 	{
 		setLocale(locale);
 		return toObject(value);
 	}
-	
+
 	/**
-	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object, java.util.Locale)
+	 * @see wicket.util.convert.IConverter#convertToString(java.lang.Object,
+	 *      java.util.Locale)
 	 */
 	public String convertToString(Object value, Locale locale)
 	{
 		setLocale(locale);
 		return toString(value);
 	}
+
 	/**
 	 * Convert the given value to a string.
 	 * 

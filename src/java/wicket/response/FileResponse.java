@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FileResponse.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,7 +42,7 @@ public final class FileResponse extends Response
 
 	/** Output stream to write to */
 	private OutputStream out;
-	
+
 	/** Output PrintWriter to write to */
 	private PrintWriter printWriter;
 
@@ -97,7 +98,7 @@ public final class FileResponse extends Response
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new WicketRuntimeException("Unable to get output stream to file " + file, e);			
+			throw new WicketRuntimeException("Unable to get output stream to file " + file, e);
 		}
 	}
 

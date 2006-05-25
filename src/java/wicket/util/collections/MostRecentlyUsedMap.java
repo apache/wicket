@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MostRecentlyUsedMap.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,25 +26,25 @@ import java.util.Map;
  * are expired when the map exceeds that maximum size.
  * 
  * @param <K>
- * 			The key type the map holds.
+ *            The key type the map holds.
  * @param <T>
- * 			The value type the map holds.
+ *            The value type the map holds.
  * 
  * @author Jonathan Locke
  */
-public class MostRecentlyUsedMap<K,T>  extends LinkedHashMap<K,T> 
+public class MostRecentlyUsedMap<K, T> extends LinkedHashMap<K, T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Value most recently removed from map */
 	T removedValue;
-	
+
 	/** Maximum number of entries allowed in this map */
 	private int maxEntries;
 
 	/**
 	 * Constructor
-	 *  
+	 * 
 	 * @param maxEntries
 	 *            Maximum number of entries allowed in the map
 	 */
@@ -55,10 +56,10 @@ public class MostRecentlyUsedMap<K,T>  extends LinkedHashMap<K,T>
 		{
 			throw new IllegalArgumentException("Must have at least one entry");
 		}
-		
+
 		this.maxEntries = maxEntries;
 	}
-	
+
 	/**
 	 * @return Returns the removedValue.
 	 */
@@ -66,15 +67,16 @@ public class MostRecentlyUsedMap<K,T>  extends LinkedHashMap<K,T>
 	{
 		return removedValue;
 	}
-	
+
 	/**
 	 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
 	 */
 	@Override
-	protected boolean removeEldestEntry(final Map.Entry<K,T>  eldest)
+	protected boolean removeEldestEntry(final Map.Entry<K, T> eldest)
 	{
 		final boolean remove = size() > maxEntries;
-		// when it should be removed remember the oldest value that will be removed
+		// when it should be removed remember the oldest value that will be
+		// removed
 		if (remove)
 		{
 			this.removedValue = eldest.getValue();

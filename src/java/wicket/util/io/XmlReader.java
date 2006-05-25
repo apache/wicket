@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -119,7 +119,7 @@ public final class XmlReader extends Reader
 		final int readAheadSize = 80;
 		this.inputStream.mark(readAheadSize);
 
-		// read-ahead the input stream and check if it starts with <?xml..?>. 
+		// read-ahead the input stream and check if it starts with <?xml..?>.
 		if (getXmlDeclaration(this.inputStream, readAheadSize))
 		{
 			// If yes than determine the encoding from the xml decl
@@ -130,7 +130,7 @@ public final class XmlReader extends Reader
 			// If not, reset the input stream to the begining of the file
 			this.inputStream.reset();
 		}
-		
+
 		if (this.encoding == null)
 		{
 			// Use JVM default
@@ -146,7 +146,8 @@ public final class XmlReader extends Reader
 	/**
 	 * Determine the encoding from the xml decl.
 	 * 
-	 * @param string The xmlDecl string
+	 * @param string
+	 *            The xmlDecl string
 	 * @return The encoding. Null, if not found
 	 */
 	private final String determineEncoding(final String string)
@@ -177,7 +178,7 @@ public final class XmlReader extends Reader
 	/**
 	 * Read-ahead the input stream (markup file). If the first line contains
 	 * &lt;?xml...?&gt;, than remember the xml decl for later to determine the
-	 * encoding. 
+	 * encoding.
 	 * <p>
 	 * The xml decl will not be forwarded to the user.
 	 * 

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractCrypt.java 5460 2006-04-18 22:03:12 +0000 (Tue, 18 Apr 2006)
+ * dashorst $ $Revision$ $Date: 2006-04-18 22:03:12 +0000 (Tue, 18 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

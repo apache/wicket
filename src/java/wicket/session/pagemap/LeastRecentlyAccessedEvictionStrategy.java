@@ -1,6 +1,7 @@
 /*
  * $Id: LeastRecentlyAccessedEvictionStrategy.java,v 1.1 2005/12/29 05:30:24
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat,
+ * 20 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -55,7 +56,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	 */
 	public void evict(final PageMap pageMap)
 	{
-		if(pageMap instanceof AccessStackPageMap)
+		if (pageMap instanceof AccessStackPageMap)
 		{
 			synchronized (Session.get())
 			{
@@ -64,14 +65,15 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 				if (accessPM.getVersions() > maxVersions)
 				{
 					// Remove oldest entry from access stack
-					final AccessStackPageMap.Access oldestAccess = accessPM.getAccessStack().remove(0);
+					final AccessStackPageMap.Access oldestAccess = accessPM.getAccessStack()
+							.remove(0);
 					final IPageMapEntry oldestEntry = pageMap.getEntry(oldestAccess.getId());
-		
+
 					// If entry is a page (cannot be null if we're evicting)
 					if (oldestEntry instanceof Page)
 					{
 						Page page = (Page)oldestEntry;
-		
+
 						// If there is more than one version of this page
 						if (page.getVersions() > 1)
 						{
@@ -86,8 +88,10 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 					}
 					else
 					{
-						// If oldestEntry is not an instance of Page, then it is some
-						// custom, user-defined IPageMapEntry class and cannot contain
+						// If oldestEntry is not an instance of Page, then it is
+						// some
+						// custom, user-defined IPageMapEntry class and cannot
+						// contain
 						// versioning information, so we just remove the entry.
 						if (oldestEntry != null)
 						{

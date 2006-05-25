@@ -1,6 +1,7 @@
 /*
  * $Id: ApplicationStringResourceLoader.java,v 1.5 2005/01/19 08:07:57
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-04-26 21:35:33 +0000 (Wed,
+ * 26 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,7 +29,8 @@ import wicket.Application;
  * @author Chris Turner
  * @author Juergen Donnerstag
  * 
- * TODO Post 1.2: remove it. It doesn't provide any value compared to ClassStringResourceLoader
+ * TODO Post 1.2: remove it. It doesn't provide any value compared to
+ * ClassStringResourceLoader
  */
 public class ApplicationStringResourceLoader extends ClassStringResourceLoader
 {
