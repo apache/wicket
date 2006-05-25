@@ -27,13 +27,13 @@ public class PanelA extends BasePanel
 {
 	private static final long serialVersionUID = 1L;
 
-	/** 
-	 * Creates a new instance of PanelA 
+	/**
+	 * Creates a new instance of PanelA
 	 * 
 	 * @param id
 	 */
-	public PanelA(MarkupContainer parent,String id)
+	public PanelA(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

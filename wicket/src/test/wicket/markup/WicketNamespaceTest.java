@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: WicketNamespaceTest.java 4507 2006-02-16 22:51:20 +0000 (Thu, 16 Feb
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-02-16 22:51:20 +0000
+ * (Thu, 16 Feb 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup;
 
@@ -46,7 +46,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(WicketNamespace_1.class, "WicketNamespaceExpectedResult_1.html");
+		executeTest(WicketNamespace_1.class, "WicketNamespaceExpectedResult_1.html");
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-	    executeTest(WicketNamespace_2.class, "WicketNamespaceExpectedResult_2.html");
+		executeTest(WicketNamespace_2.class, "WicketNamespaceExpectedResult_2.html");
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-	    executeTest(WicketNamespace_3.class, "WicketNamespaceExpectedResult_3.html");
+		executeTest(WicketNamespace_3.class, "WicketNamespaceExpectedResult_3.html");
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
-	    executeTest(WicketNamespace_4.class, "WicketNamespaceExpectedResult_4.html");
+		executeTest(WicketNamespace_4.class, "WicketNamespaceExpectedResult_4.html");
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_5() throws Exception
 	{
-	    executeTest(WicketNamespace_5.class, "WicketNamespaceExpectedResult_5.html");
+		executeTest(WicketNamespace_5.class, "WicketNamespaceExpectedResult_5.html");
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class WicketNamespaceTest extends TestCase
 	 */
 	public void testRenderHomePage_6() throws Exception
 	{
-	    executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
+		executeTest(WicketNamespace_6.class, "WicketNamespaceExpectedResult_6.html");
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class WicketNamespaceTest extends TestCase
 	public void executeTest(final Class pageClass, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
-		
+
 		application = new MockWebApplication(null);
 		application.setHomePage(pageClass);
 

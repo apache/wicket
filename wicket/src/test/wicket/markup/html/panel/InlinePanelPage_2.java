@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4550 $ $Date$
+ * $Id: InlinePanelPage_2.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,9 +36,9 @@ public class InlinePanelPage_2 extends WebPage
 	 */
 	public InlinePanelPage_2()
 	{
-		Fragment panel1 = new Fragment(this,"myPanel1", "frag1");
+		Fragment panel1 = new Fragment(this, "myPanel1", "frag1");
 		add(panel1);
 
-		panel1.add(new Label(panel1,"label1", "my label text"));
+		panel1.add(new Label(panel1, "label1", "my label text"));
 	}
 }

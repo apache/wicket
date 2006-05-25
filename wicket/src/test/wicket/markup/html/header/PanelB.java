@@ -32,8 +32,8 @@ public class PanelB extends BasePanel
 	 * 
 	 * @param id
 	 */
-	public PanelB(MarkupContainer parent,String id)
+	public PanelB(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

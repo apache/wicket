@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: AttributeAppenderTest.java 4372 2006-02-13 00:16:32 +0000 (Mon, 13 Feb
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-02-13 00:16:32 +0000
+ * (Mon, 13 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,9 +21,9 @@ package wicket.behavior;
 import junit.framework.TestCase;
 
 /**
- * Tests the attribute appender. Performs only the tests on the actual
- * added functionality to the attribute modifier.
- *
+ * Tests the attribute appender. Performs only the tests on the actual added
+ * functionality to the attribute modifier.
+ * 
  * @author Martijn Dashorst
  */
 public class AttributeAppenderTest extends TestCase
@@ -31,7 +31,8 @@ public class AttributeAppenderTest extends TestCase
 	/**
 	 * Test
 	 */
-	public void testNewValue1() {
+	public void testNewValue1()
+	{
 		AttributeAppender appender = new AttributeAppender("", null, " ");
 		assertEquals("oldvalue newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));
@@ -41,7 +42,8 @@ public class AttributeAppenderTest extends TestCase
 	/**
 	 * Test
 	 */
-	public void testNewValue2() {
+	public void testNewValue2()
+	{
 		AttributeAppender appender = new AttributeAppender("", null, ";");
 		assertEquals("oldvalue;newvalue", appender.newValue("oldvalue", "newvalue"));
 		assertEquals("newvalue", appender.newValue("", "newvalue"));

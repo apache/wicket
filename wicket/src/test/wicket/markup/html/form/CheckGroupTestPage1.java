@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CheckGroupTestPage1.java 3038 2005-10-21 18:53:28 +0000 (Fri, 21 Oct
+ * 2005) ivaynberg $ $Revision$ $Date: 2005-10-21 18:53:28 +0000 (Fri, 21
+ * Oct 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4550 $ $Date$
+ * $Id: InlineTestPanel.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,8 +37,8 @@ public class InlineTestPanel extends Panel
 	 */
 	public InlineTestPanel(MarkupContainer parent, String id, Page page)
 	{
-		super(parent,id);
-		Fragment child = new Fragment(this,"child", "child-frag", page);
+		super(parent, id);
+		Fragment child = new Fragment(this, "child", "child-frag", page);
 		add(child);
 	}
 }

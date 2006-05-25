@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id: CheckGroupTest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -113,12 +113,12 @@ public class CheckGroupTest extends WicketTestCase
 
 		// test model constructors
 		List list = new ArrayList();
-		Model model = new Model((Serializable)list);
+		Model model = new Model(list);
 
-		final CheckGroup group2 = new CheckGroup(new EmptyPage(),"group2", model);
+		final CheckGroup group2 = new CheckGroup(new EmptyPage(), "group2", model);
 		assertTrue(group2.getModelObject() == list);
 
-		final CheckGroup group3 = new CheckGroup(new EmptyPage(),"group3", list);
+		final CheckGroup group3 = new CheckGroup(new EmptyPage(), "group3", list);
 		assertTrue(group3.getModelObject() == list);
 
 
@@ -130,14 +130,14 @@ public class CheckGroupTest extends WicketTestCase
 
 		// create component hierarchy
 
-		final Form form = new Form(page,"form", new CompoundPropertyModel(modelObject));
+		final Form form = new Form(page, "form", new CompoundPropertyModel(modelObject));
 
-		final CheckGroup group = new CheckGroup(form,"prop1");
+		final CheckGroup group = new CheckGroup(form, "prop1");
 
-		final WebMarkupContainer container = new WebMarkupContainer(group,"container");
+		final WebMarkupContainer container = new WebMarkupContainer(group, "container");
 
-		final Check choice1 = new Check(container,"check1", new Model(check1));
-		final Check choice2 = new Check(group,"prop2");
+		final Check choice1 = new Check(container, "check1", new Model(check1));
+		final Check choice2 = new Check(group, "prop2");
 
 		page.add(form);
 		form.add(group);

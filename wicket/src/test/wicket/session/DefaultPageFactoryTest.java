@@ -25,13 +25,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage1()
 		{
-			throw new AbstractRestartResponseException() {
+			throw new AbstractRestartResponseException()
+			{
 
 				/**
 				 * 
 				 */
 				private static final long serialVersionUID = 1L;
-				
+
 			};
 		}
 	}
@@ -50,13 +51,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage2(PageParameters params)
 		{
-			throw new AbstractRestartResponseException() {
+			throw new AbstractRestartResponseException()
+			{
 
 				/**
 				 * 
 				 */
 				private static final long serialVersionUID = 1L;
-				
+
 			};
 		}
 
@@ -74,13 +76,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3()
 		{
-			throw new AbstractRestartResponseException() {
+			throw new AbstractRestartResponseException()
+			{
 
 				/**
 				 * 
 				 */
 				private static final long serialVersionUID = 1L;
-				
+
 			};
 		}
 
@@ -91,13 +94,14 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		 */
 		public AbortAndRespondPage3(PageParameters params)
 		{
-			throw new AbstractRestartResponseException() {
+			throw new AbstractRestartResponseException()
+			{
 
 				/**
 				 * 
 				 */
 				private static final long serialVersionUID = 1L;
-				
+
 			};
 		}
 

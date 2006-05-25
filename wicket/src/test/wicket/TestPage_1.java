@@ -38,16 +38,18 @@ public class TestPage_1 extends WebPage
 	 */
 	public TestPage_1()
 	{
-		add(new WebComponent(this,"comp")
+		add(new WebComponent(this, "comp")
 		{
 			private static final long serialVersionUID = 1L;
-	
+
+			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
 				tag.setType(XmlTag.OPEN);
 				super.onComponentTag(tag);
 			}
-			
+
+			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 			{
 				replaceComponentTagBody(markupStream, openTag, "body");

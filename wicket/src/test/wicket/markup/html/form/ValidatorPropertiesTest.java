@@ -1,6 +1,5 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,11 +38,11 @@ public class ValidatorPropertiesTest extends TestCase
 		WicketTester tester = new MyTesterApplication();
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
-		
+
 		TestPage page = new TestPage();
 		Form form = (Form)page.get("form1");
 		assertNotNull(form);
-		
+
 		page.getText1().setInput("");
 		page.getText1().validateRequired();
 		page.getText2().setInput("");
@@ -68,24 +67,28 @@ public class ValidatorPropertiesTest extends TestCase
 		page.getText11().validateRequired();
 		page.getText12().setInput("");
 		page.getText12().validateRequired();
-		
+
 		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage());
 		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage());
 		assertEquals("ok: text3333 is missing", page.getText3().getFeedbackMessage().getMessage());
 		assertEquals("ok: Text4Label is missing", page.getText4().getFeedbackMessage().getMessage());
 		assertEquals("ok: text is missing", page.getText5().getFeedbackMessage().getMessage());
-		assertEquals("Default message: text6 required", page.getText6().getFeedbackMessage().getMessage());
-		assertEquals("input for text7-Label is missing", page.getText7().getFeedbackMessage().getMessage());
-		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage().getMessage());
+		assertEquals("Default message: text6 required", page.getText6().getFeedbackMessage()
+				.getMessage());
+		assertEquals("input for text7-Label is missing", page.getText7().getFeedbackMessage()
+				.getMessage());
+		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage()
+				.getMessage());
 		assertEquals("found it in panel", page.getText9().getFeedbackMessage().getMessage());
 		assertEquals("found it in form", page.getText10().getFeedbackMessage().getMessage());
 		assertEquals("found it in page", page.getText11().getFeedbackMessage().getMessage());
 		assertEquals("found it in page", page.getText12().getFeedbackMessage().getMessage());
-		
+
 		// Test caching
-		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage().getMessage());
+		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage()
+				.getMessage());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -95,11 +98,11 @@ public class ValidatorPropertiesTest extends TestCase
 		tester.getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
-		
+
 		String str = tester.getResourceSettings().getLocalizer().getString("XXX", null);
 		assertEquals("[Warning: String resource for 'XXX' not found]", str);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -109,7 +112,7 @@ public class ValidatorPropertiesTest extends TestCase
 		tester.getResourceSettings().setThrowExceptionOnMissingResource(true);
 		tester.setupRequestAndResponse();
 		WebRequestCycle cycle = tester.createRequestCycle();
-		
+
 		boolean hit = false;
 		try
 		{

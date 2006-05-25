@@ -1,6 +1,5 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,12 +22,12 @@ package wicket.util.lang;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class Country
 {
 	private final String name;
-	
+
 	/**
 	 * @param name
 	 */
@@ -36,7 +35,7 @@ public class Country
 	{
 		this.name = name;
 	}
-	
+
 	/**
 	 * @return The name
 	 */

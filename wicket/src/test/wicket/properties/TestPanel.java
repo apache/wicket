@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,10 +30,11 @@ public class TestPanel extends Panel
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public TestPanel(MarkupContainer parent,final String id)
+	public TestPanel(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

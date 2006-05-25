@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: SimpleTestPanelTest.java 5231 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
+ * 2006) joco01 $ $Revision$ $Date: 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -24,13 +25,14 @@ import wicket.protocol.http.WebRequestCycle;
 
 /**
  * Test for ajax handler.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class SimpleTestPanelTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public SimpleTestPanelTest(String name)
@@ -43,19 +45,21 @@ public class SimpleTestPanelTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-	    executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
-	    
+		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
+
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
-		
+
 		Page page = application.getLastRenderedPage();
-	    String url = ((SimpleTestPanel)page.get("testPanel")).getTimeBehavior().getCallbackUrl().toString();
+		String url = ((SimpleTestPanel)page.get("testPanel")).getTimeBehavior().getCallbackUrl()
+				.toString();
 		application.getServletRequest().setRequestToRedirectString(url);
 
 		application.processRequestCycle(cycle);
 
 		// Validate the document
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, SimpleTestPage.class, "SimpleTestPageExpectedResult-1.html"));
+		assertTrue(DiffUtil.validatePage(document, SimpleTestPage.class,
+				"SimpleTestPageExpectedResult-1.html"));
 	}
 }

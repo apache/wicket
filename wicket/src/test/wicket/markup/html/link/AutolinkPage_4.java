@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AutolinkPage_4.java 3749 2006-01-14 00:54:30 +0000 (Sat, 14 Jan 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-01-14 00:54:30 +0000 (Sat, 14 Jan
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this

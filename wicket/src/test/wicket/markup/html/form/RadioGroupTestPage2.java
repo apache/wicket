@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RadioGroupTestPage2.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,11 +41,11 @@ public class RadioGroupTestPage2 extends WebPage
 	 */
 	public RadioGroupTestPage2()
 	{
-		Form form = new Form(this,"form");
-		RadioGroup group = new RadioGroup(form,"group", new Model("radio2"));
-		WebMarkupContainer container = new WebMarkupContainer(group,"container");
-		Radio radio1 = new Radio(group,"radio1", new Model("radio1"));
-		Radio radio2 = new Radio(form,"radio2", new Model("radio2"));
+		Form form = new Form(this, "form");
+		RadioGroup group = new RadioGroup(form, "group", new Model("radio2"));
+		WebMarkupContainer container = new WebMarkupContainer(group, "container");
+		Radio radio1 = new Radio(group, "radio1", new Model("radio1"));
+		Radio radio2 = new Radio(form, "radio2", new Model("radio2"));
 
 
 		add(form);

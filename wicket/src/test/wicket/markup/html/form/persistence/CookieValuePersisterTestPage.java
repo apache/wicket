@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CookieValuePersisterTestPage.java 5844 2006-05-24 20:53:56 +0000 (Wed,
+ * 24 May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000
+ * (Wed, 24 May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -43,9 +44,9 @@ public class CookieValuePersisterTestPage extends WebPage
 	{
 
 		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
+		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 		add(feedback);
-		add(new TestForm(this,"form"));
+		add(new TestForm(this, "form"));
 	}
 
 	/**
@@ -62,16 +63,17 @@ public class CookieValuePersisterTestPage extends WebPage
 		 * @param id
 		 *            Name of form
 		 */
-		public TestForm(MarkupContainer parent,final String id)
+		public TestForm(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 
-			add(new TextField(this,"input", new Model("test")));
+			add(new TextField(this, "input", new Model("test")));
 		}
 
 		/**
 		 * Dummy
 		 */
+		@Override
 		public final void onSubmit()
 		{
 		}

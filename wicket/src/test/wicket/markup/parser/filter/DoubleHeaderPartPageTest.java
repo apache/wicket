@@ -7,7 +7,7 @@ import wicket.WicketTestCase;
 
 /**
  * @author jcompagner
- *
+ * 
  */
 public class DoubleHeaderPartPageTest extends WicketTestCase
 {
@@ -25,7 +25,7 @@ public class DoubleHeaderPartPageTest extends WicketTestCase
 	 */
 	public void testRenderHeaderPartPage() throws Exception
 	{
-	    executeTest(DoubleHeaderPartPage.class, "DoubleHeaderPartPageExpectedResult.html");
+		executeTest(DoubleHeaderPartPage.class, "DoubleHeaderPartPageExpectedResult.html");
 	}
-	
+
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: PanelTest.java 5687 2006-05-08 13:00:54 +0000 (Mon, 08 May 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-05-08 13:00:54 +0000 (Mon, 08 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this

@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: AttributeModifierComponentTest.java 3644 2006-01-04 21:03:58 +0000 (Wed,
+ * 04 Jan 2006) ivaynberg $ $Revision$ $Date: 2006-01-04 21:03:58 +0000
+ * (Wed, 04 Jan 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket;
 
@@ -30,10 +30,12 @@ import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
 
 /**
- * This set of tests builds a sample application for testing the dynamic modicication of
- * attributes in both component tags and also in raw markup. The tests contained here
- * represent testing on one specific area of functionality of the Component class. It is
- * expected that separate test cases will be added to test other facets of Components.
+ * This set of tests builds a sample application for testing the dynamic
+ * modicication of attributes in both component tags and also in raw markup. The
+ * tests contained here represent testing on one specific area of functionality
+ * of the Component class. It is expected that separate test cases will be added
+ * to test other facets of Components.
+ * 
  * @author Chris Turner
  */
 public class AttributeModifierComponentTest extends TestCase
@@ -44,17 +46,22 @@ public class AttributeModifierComponentTest extends TestCase
 
 	/**
 	 * Create a test case instance.
-	 * @param name The name of the test being run
+	 * 
+	 * @param name
+	 *            The name of the test being run
 	 */
 	public AttributeModifierComponentTest(final String name)
 	{
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null) {
+		application = new MockWebApplication(null)
+		{
+			@Override
 			public Class getHomePage()
 			{
 				return AttributeModifierComponentPage.class;
@@ -79,7 +86,9 @@ public class AttributeModifierComponentTest extends TestCase
 
 	/**
 	 * Helper method to validate the returned XML document.
-	 * @param document The document
+	 * 
+	 * @param document
+	 *            The document
 	 * @return The validation result
 	 */
 	private boolean validateDocument(String document)

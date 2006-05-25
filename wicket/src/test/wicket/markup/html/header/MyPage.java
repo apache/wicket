@@ -32,7 +32,7 @@ public class MyPage extends WebPage
 	 */
 	public MyPage()
 	{
-		add(new PanelA(this,"panelA"));
-		add(new PanelB(this,"panelB"));
+		add(new PanelA(this, "panelA"));
+		add(new PanelB(this, "panelB"));
 	}
 }

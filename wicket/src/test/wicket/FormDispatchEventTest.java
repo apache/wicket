@@ -33,18 +33,19 @@ public class FormDispatchEventTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		private MyForm(MarkupContainer parent,String id)
+		private MyForm(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
+		@Override
 		protected void onSubmit()
 		{
-			submit= true;
+			submit = true;
 		}
-		
+
 		/**
-		 * @param name 
+		 * @param name
 		 * @return The hidden field id of the form
 		 */
 		public String getHiddenField(String name)
@@ -72,12 +73,13 @@ public class FormDispatchEventTest extends WicketTestCase
 	public void testDropDownEvent() throws Exception
 	{
 		MockPage page = new MockPage();
-		MyForm form = new MyForm(page,"form");
+		MyForm form = new MyForm(page, "form");
 
-		DropDownChoice dropDown = new DropDownChoice(form,"dropdown",new Model(), new ArrayList())
+		DropDownChoice dropDown = new DropDownChoice(form, "dropdown", new Model(), new ArrayList())
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSelectionChanged(Object newSelection)
 			{
 				selection = true;
@@ -86,6 +88,7 @@ public class FormDispatchEventTest extends WicketTestCase
 			/**
 			 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 			 */
+			@Override
 			protected boolean wantOnSelectionChangedNotifications()
 			{
 				return true;
@@ -107,7 +110,8 @@ public class FormDispatchEventTest extends WicketTestCase
 		form.onFormSubmitted();
 		assertTrue("form should should set value ", submit);
 
-		application.getServletRequest().setParameter(form.getHiddenField(Form.HIDDEN_FIELD_FAKE_SUBMIT),
+		application.getServletRequest().setParameter(
+				form.getHiddenField(Form.HIDDEN_FIELD_FAKE_SUBMIT),
 				dropDown.urlFor(IOnChangeListener.INTERFACE).toString());
 
 		form.onFormSubmitted();

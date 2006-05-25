@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,7 +29,7 @@ import wicket.markup.html.form.Form;
 public class MyMockPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	DropDownChoice drop1;
 	DropDownChoice drop2;
 
@@ -38,16 +38,16 @@ public class MyMockPage extends WebPage
 	 */
 	public MyMockPage()
 	{
-		final Form form = new Form(this,"form");
+		final Form form = new Form(this, "form");
 		add(form);
 
 		String[] choices = { "choice1", "choice2" };
-		drop1 = new DropDownChoice(form,"drop1", Arrays.asList(choices));
-		drop2 = new DropDownChoice(form,"drop2", Arrays.asList(choices));
-		
+		drop1 = new DropDownChoice(form, "drop1", Arrays.asList(choices));
+		drop2 = new DropDownChoice(form, "drop2", Arrays.asList(choices));
+
 		drop1.setNullValid(true);
 		drop2.setNullValid(true);
-		
+
 		form.add(drop1);
 		form.add(drop2);
 	}

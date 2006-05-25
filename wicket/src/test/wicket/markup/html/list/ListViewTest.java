@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: ListViewTest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.list;
 
@@ -27,6 +27,7 @@ import wicket.protocol.http.MockWebApplication;
 
 /**
  * Test for ListView
+ * 
  * @author Juergen Donnerstag
  */
 public class ListViewTest extends TestCase
@@ -34,6 +35,7 @@ public class ListViewTest extends TestCase
 	/** Use a mock application to handle Link-clicked event */
 	private static MockWebApplication application;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -46,7 +48,9 @@ public class ListViewTest extends TestCase
 
 	/**
 	 * Create a predefined ListView
-	 * @param modelListSize # of elements to go into the list
+	 * 
+	 * @param modelListSize #
+	 *            of elements to go into the list
 	 * @return list view
 	 */
 	private ListView createListView(final int modelListSize)
@@ -57,10 +61,11 @@ public class ListViewTest extends TestCase
 			modelList.add(new Integer(i));
 		}
 
-		return new ListView(new EmptyPage(),"listView", new Model(modelList))
+		return new ListView(new EmptyPage(), "listView", new Model(modelList))
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				// do nothing
@@ -105,7 +110,7 @@ public class ListViewTest extends TestCase
 	}
 
 	/**
-	 *
+	 * 
 	 */
 	public void testEmptyListView()
 	{
@@ -116,11 +121,13 @@ public class ListViewTest extends TestCase
 
 		// null tables are a special case used for table navigation
 		// bar, where there is no underlying model necessary, as
-		// listItem.getIndex() is equal to the required listItem.getModelObject()
-		lv = new ListView(new EmptyPage(),"listView", new Model(null))
+		// listItem.getIndex() is equal to the required
+		// listItem.getModelObject()
+		lv = new ListView(new EmptyPage(), "listView", new Model(null))
 		{
 			private static final long serialVersionUID = 1L;
-			
+
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				// do nothing

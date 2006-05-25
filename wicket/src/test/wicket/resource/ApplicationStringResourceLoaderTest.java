@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: ApplicationStringResourceLoaderTest.java 5443 2006-04-17 20:02:21 +0000
+ * (Mon, 17 Apr 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 20:02:21
+ * +0000 (Mon, 17 Apr 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.resource;
 
@@ -27,6 +27,7 @@ import wicket.resource.loader.IStringResourceLoader;
 
 /**
  * Tests for the <code>ApplicationStringResourceLoader</code> class.
+ * 
  * @author Chris Turner
  */
 public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTestBase
@@ -34,7 +35,9 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 
 	/**
 	 * Create the test case.
-	 * @param message The test name
+	 * 
+	 * @param message
+	 *            The test name
 	 */
 	public ApplicationStringResourceLoaderTest(String message)
 	{
@@ -43,8 +46,10 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 
 	/**
 	 * Return the loader instance
+	 * 
 	 * @return The loader instance to test
 	 */
+	@Override
 	protected IStringResourceLoader createLoader()
 	{
 		return new ClassStringResourceLoader(application, application.getClass());
@@ -53,11 +58,12 @@ public class ApplicationStringResourceLoaderTest extends StringResourceLoaderTes
 	/**
 	 * @see wicket.resource.StringResourceLoaderTestBase#testLoaderUnknownResources()
 	 */
+	@Override
 	public void testLoaderUnknownResources()
 	{
 		MockWebApplication app = new MockWebApplication(null);
 		IStringResourceLoader loader = new ClassStringResourceLoader(app, app.getClass());
-		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(component.getClass(),
-				"test.string", Locale.getDefault(), null));
+		Assert.assertNull("Unknown resource should return null", loader.loadStringResource(
+				component.getClass(), "test.string", Locale.getDefault(), null));
 	}
 }

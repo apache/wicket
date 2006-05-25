@@ -1,11 +1,12 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CookieValuePersisterTest.java 5384 2006-04-15 11:40:39 +0000 (Sat, 15
+ * Apr 2006) joco01 $ $Revision$ $Date: 2006-04-15 11:40:39 +0000 (Sat,
+ * 15 Apr 2006) $
  * 
- * ==================================================================== 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may 
- * not use this file except in compliance with the License. You may obtain 
- * a copy of the License at
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -58,6 +59,7 @@ public class CookieValuePersisterTest extends TestCase
 {
 	private MockWebApplication application;
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -108,7 +110,8 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals(cycle.getWebRequest().getContextPath(),((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals(cycle.getWebRequest().getContextPath(), ((Cookie)getResponseCookies(cycle)
+				.get(0)).getPath());
 
 		// To clear in the context of cookies means to add a special cookie
 		// (maxAge=0) to the response, provided a cookie with
@@ -119,9 +122,11 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals(cycle.getWebRequest().getContextPath(),((Cookie)getResponseCookies(cycle).get(0)).getPath());
+		assertEquals(cycle.getWebRequest().getContextPath(), ((Cookie)getResponseCookies(cycle)
+				.get(0)).getPath());
 
-		// Try to load it. Because there is no Cookie matching the textfield's name
+		// Try to load it. Because there is no Cookie matching the textfield's
+		// name
 		// it remains unchanged
 		persister.load(textField);
 		assertEquals("test", textField.getModelObjectAsString());

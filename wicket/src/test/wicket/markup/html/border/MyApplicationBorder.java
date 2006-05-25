@@ -2,10 +2,10 @@
  * $Id: BorderComponent1.java 3557 2006-01-01 07:34:05Z jonathanlocke $
  * $Revision$ $Date: 2006-01-01 08:34:05 +0100 (So, 01 Jan 2006) $
  * 
- * ======================================================================== 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may 
- * not use this file except in compliance with the License. You may obtain 
- * a copy of the License at
+ * ========================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -32,11 +32,11 @@ public class MyApplicationBorder extends Border
 	/**
 	 * @param id
 	 */
-	public MyApplicationBorder(MarkupContainer parent,final String id)
+	public MyApplicationBorder(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
-		
-		Border border = new BoxBorder(this,"boxBorder");
+		super(parent, id);
+
+		Border border = new BoxBorder(this, "boxBorder");
 		add(border);
 	}
 }

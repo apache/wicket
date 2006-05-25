@@ -33,8 +33,8 @@ public class Panel1 extends Panel
 	 * 
 	 * @param id
 	 */
-	public Panel1(MarkupContainer parent,final String id)
+	public Panel1(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

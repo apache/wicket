@@ -1,37 +1,36 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: PageParametersTest.java 5368 2006-04-13 21:54:15 +0000 (Thu, 13 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-13 21:54:15 +0000 (Thu,
+ * 13 Apr 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket;
 
 import junit.framework.TestCase;
 
 /**
- * Unit test for the PageParameters, introduced for bug
- * [ 1213889 ] PageParameter keyValuePair disallows negatives.
+ * Unit test for the PageParameters, introduced for bug [ 1213889 ]
+ * PageParameter keyValuePair disallows negatives.
  * 
  * @author Martijn Dashorst
  */
 public class PageParametersTest extends TestCase
 {
 	/**
-	 * Parsing of negative numbers on the right side of the assignment
-	 * didn't work, as the minus character was not part of the word
-	 * pattern.
+	 * Parsing of negative numbers on the right side of the assignment didn't
+	 * work, as the minus character was not part of the word pattern.
 	 */
 	public void testNegativeNumberParameter()
 	{
@@ -76,7 +75,7 @@ public class PageParametersTest extends TestCase
 			PageParameters parameters = new PageParameters("=test");
 			fail("Expected an exception: invalid URL parameter");
 		}
-		catch(IllegalArgumentException ex)
+		catch (IllegalArgumentException ex)
 		{
 			// ok; expected
 		}

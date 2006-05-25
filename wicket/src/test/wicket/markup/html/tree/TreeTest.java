@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.14 $ $Date$
+ * $Id: TreeTest.java 4680 2006-02-28 21:11:40 +0000 (Tue, 28 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-28 21:11:40 +0000 (Tue, 28 Feb
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -54,9 +55,8 @@ public class TreeTest extends WicketTestCase
 	{
 		executeTest(TreePage.class, "TreePageExpectedResult_1.html");
 
-		executedListener(TreePage.class, 
-				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
-				"TreePageExpectedResult_1-1.html");
+		executedListener(TreePage.class, application.getLastRenderedPage().get(
+				"tree:tree:3:node:junctionLink"), "TreePageExpectedResult_1-1.html");
 	}
 
 	/**
@@ -69,9 +69,8 @@ public class TreeTest extends WicketTestCase
 	{
 		executeTest(TreePageWithBorder.class, "TreePageWithBorderExpectedResult_1.html");
 
-		executedListener(TreePageWithBorder.class, 
-				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
-				"TreePageWithBorderExpectedResult_1-1.html");
+		executedListener(TreePageWithBorder.class, application.getLastRenderedPage().get(
+				"tree:tree:3:node:junctionLink"), "TreePageWithBorderExpectedResult_1-1.html");
 	}
 
 	/**
@@ -84,8 +83,7 @@ public class TreeTest extends WicketTestCase
 	{
 		executeTest(TreePageNoWicketHeadTag.class, "TreePageNoWicketHeadTagExpectedResult_1.html");
 
-		executedListener(TreePageNoWicketHeadTag.class, 
-				application.getLastRenderedPage().get("tree:tree:3:node:junctionLink"), 
-				"TreePageNoWicketHeadTagExpectedResult_1-1.html");
+		executedListener(TreePageNoWicketHeadTag.class, application.getLastRenderedPage().get(
+				"tree:tree:3:node:junctionLink"), "TreePageNoWicketHeadTagExpectedResult_1-1.html");
 	}
 }

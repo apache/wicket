@@ -29,6 +29,7 @@ public class HtmlHeaderContainerTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public HtmlHeaderContainerTest(String name)

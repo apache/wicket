@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: SimpleTableTest.java 4308 2006-02-11 20:39:22 +0000 (Sat, 11 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-11 20:39:22 +0000 (Sat, 11 Feb
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.list;
 
@@ -29,6 +29,7 @@ public class SimpleTableTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param arg0
 	 */
 	public SimpleTableTest(String arg0)
@@ -38,6 +39,7 @@ public class SimpleTableTest extends WicketTestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testSimpleTable_1() throws Exception
@@ -45,17 +47,19 @@ public class SimpleTableTest extends WicketTestCase
 		executeTest(SimpleTablePage_1.class, "SimpleTablePageExpectedResult_1.html");
 
 		// Does re-render do as well ??
-	    ListView view = (ListView)application.getLastRenderedPage().get("table");
-	    assertNotNull(view);
+		ListView view = (ListView)application.getLastRenderedPage().get("table");
+		assertNotNull(view);
 		application.processRequestCycle(view);
 		String document = application.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+		assertEquals(
+				"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>",
+				document);
 
 		// Does re-render do as well ??
-	    ListItem item = (ListItem)application.getLastRenderedPage().get("table:0");
-	    assertNotNull(item);
+		ListItem item = (ListItem)application.getLastRenderedPage().get("table:0");
+		assertNotNull(item);
 		application.processRequestCycle(item);
 		document = application.getServletResponse().getDocument();
 		assertNotNull(document);
@@ -63,8 +67,8 @@ public class SimpleTableTest extends WicketTestCase
 		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li>", document);
 
 		// Does re-render do as well ??
-	    Label label = (Label)application.getLastRenderedPage().get("table:1:txt");
-	    assertNotNull(label);
+		Label label = (Label)application.getLastRenderedPage().get("table:1:txt");
+		assertNotNull(label);
 		application.processRequestCycle(label);
 		document = application.getServletResponse().getDocument();
 		assertNotNull(document);
@@ -74,6 +78,7 @@ public class SimpleTableTest extends WicketTestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testSimpleTable_2() throws Exception
@@ -81,21 +86,25 @@ public class SimpleTableTest extends WicketTestCase
 		executeTest(SimpleTablePage_2.class, "SimpleTablePageExpectedResult_2.html");
 
 		// Does re-render do as well ??
-	    ListView view = (ListView)application.getLastRenderedPage().get("table");
-	    assertNotNull(view);
+		ListView view = (ListView)application.getLastRenderedPage().get("table");
+		assertNotNull(view);
 		application.processRequestCycle(view);
 		String document = application.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+		assertEquals(
+				"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>",
+				document);
 
 		// Does re-render do as well ??
-	    view = (ListView)application.getLastRenderedPage().get("table");
-	    assertNotNull(view);
+		view = (ListView)application.getLastRenderedPage().get("table");
+		assertNotNull(view);
 		application.processRequestCycle(view);
 		document = application.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
-		assertEquals("<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>", document);
+		assertEquals(
+				"<li wicket:id=\"table\"><span wicket:id=\"txt\">one</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">two</span></li><li wicket:id=\"table\"><span wicket:id=\"txt\">three</span></li>",
+				document);
 	}
 }

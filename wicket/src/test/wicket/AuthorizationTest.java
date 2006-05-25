@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AuthorizationTest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -62,6 +63,7 @@ public class AuthorizationTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -77,7 +79,7 @@ public class AuthorizationTest extends TestCase
 		WicketTester app = new WicketTester()
 		{
 		};
-		WebComponent c = new WebComponent(new EmptyPage(),"test");
+		WebComponent c = new WebComponent(new EmptyPage(), "test");
 	}
 
 	/**
@@ -91,6 +93,7 @@ public class AuthorizationTest extends TestCase
 		WicketTester app = new WicketTester();
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
+			@Override
 			public boolean isInstantiationAuthorized(Class c)
 			{
 				return false;
@@ -98,7 +101,7 @@ public class AuthorizationTest extends TestCase
 		});
 		try
 		{
-			WebComponent c = new WebComponent(new EmptyPage(),"test");
+			WebComponent c = new WebComponent(new EmptyPage(), "test");
 			// bad: authorization should have failed
 			fail("authorization check failed to throw an exception");
 		}
@@ -137,6 +140,7 @@ public class AuthorizationTest extends TestCase
 			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
 			 *      wicket.authorization.Action)
 			 */
+			@Override
 			public boolean isActionAuthorized(Component component, Action action)
 			{
 				if (action == Component.RENDER && component instanceof Label)
@@ -184,8 +188,10 @@ public class AuthorizationTest extends TestCase
 		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
-			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component, wicket.authorization.Action)
+			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
+			 *      wicket.authorization.Action)
 			 */
+			@Override
 			public boolean isActionAuthorized(Component c, Action action)
 			{
 				if (action == Component.ENABLE && c instanceof TextField
@@ -235,7 +241,7 @@ public class AuthorizationTest extends TestCase
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Test page for authentication tests.
 	 */
@@ -252,8 +258,8 @@ public class AuthorizationTest extends TestCase
 		 */
 		public AuthTestPage1()
 		{
-			add(new Label(this,"label", "wicked!"));
-			add(new TestForm(this,"form"));
+			add(new Label(this, "label", "wicked!"));
+			add(new TestForm(this, "form"));
 
 		}
 
@@ -287,16 +293,17 @@ public class AuthorizationTest extends TestCase
 			 * 
 			 * @param id
 			 */
-			public TestForm(MarkupContainer parent,String id)
+			public TestForm(MarkupContainer parent, String id)
 			{
-				super(parent,id);
+				super(parent, id);
 				setModel(new CompoundPropertyModel(input = new Input()));
-				add(new TextField(this,"stringInput"));
+				add(new TextField(this, "stringInput"));
 			}
 
 			/**
 			 * @see wicket.markup.html.form.Form#onSubmit()
 			 */
+			@Override
 			protected void onSubmit()
 			{
 				submitted = true;

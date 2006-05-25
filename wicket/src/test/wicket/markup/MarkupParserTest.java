@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MarkupParserTest.java 5662 2006-05-05 18:12:51 +0000 (Fri, 05 May 2006)
+ * jannehietamaki $ $Revision$ $Date: 2006-05-05 18:12:51 +0000 (Fri, 05
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -312,10 +313,14 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
-		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
-		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
-		parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
+		parser
+				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+		parser
+				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
+		parser
+				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
+		parser
+				.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
 	}
 
 	/**
@@ -380,11 +385,11 @@ public final class MarkupParserTest extends WicketTestCase
 		ComponentTag t = (ComponentTag)markup.get(0);
 		assertEquals(t.getId(), "span");
 		assertEquals(t.getPath(), null);
-		
+
 		t = (ComponentTag)markup.get(1);
 		assertEquals(t.getId(), "img");
 		assertEquals(t.getPath(), "span");
-		
+
 		t = (ComponentTag)markup.get(2);
 		assertEquals(t.getId(), "span2");
 		assertEquals(t.getPath(), "span");

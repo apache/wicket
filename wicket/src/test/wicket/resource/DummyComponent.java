@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.13 $ $Date$
+ * $Id: DummyComponent.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -41,13 +42,14 @@ public class DummyComponent<T> extends Component<T>
 	 */
 	public DummyComponent(MarkupContainer parent, final String name, final Application application)
 	{
-		super(parent,name);
+		super(parent, name);
 	}
 
 	/**
 	 * 
 	 * @see wicket.Component#onRender(wicket.markup.MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 	}

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.15 $ $Date$
+ * $Id: LocalizerTest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -54,6 +55,7 @@ public class LocalizerTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new DummyApplication();
@@ -140,7 +142,7 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testInComponentConstructor()
 	{
-		Component myComponent = new MyLabel(new EmptyPage(),"myLabel");
+		Component myComponent = new MyLabel(new EmptyPage(), "myLabel");
 	}
 
 	/**
@@ -156,7 +158,7 @@ public class LocalizerTest extends WicketTestCase
 		Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 		String drop1 = localizer.getString("null", page.drop1);
 		String drop2 = localizer.getString("null", page.drop2);
-		
+
 		assertEquals("value 1", drop1);
 		assertEquals("value 2", drop2);
 	}
@@ -173,9 +175,9 @@ public class LocalizerTest extends WicketTestCase
 		 * 
 		 * @param id
 		 */
-		public MyLabel(MarkupContainer parent,final String id)
+		public MyLabel(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 
 			Localizer localizer = Application.get().getResourceSettings().getLocalizer();
 

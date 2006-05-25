@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: ConvertersTest.java 5774 2006-05-19 17:58:23 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-19 17:58:23 +0000 (Fri, 19 May
+ * 2006) $
  * 
  * ================================================================================
  * Copyright (c) All rechten voorbehouden.
@@ -50,17 +51,22 @@ public final class ConvertersTest extends TestCase
 	public void testConversion()
 	{
 		final ICoverterLocator converter = new CoverterLocator();
-		assertEquals("7", converter.getConverter(Integer.class).convertToString(new Integer(7), Locale.US));
-		assertEquals("7.1", converter.getConverter(Double.class).convertToString(new Double(7.1), Locale.US));
-		assertEquals("7,1", converter.getConverter(Double.class).convertToString(new Double(7.1), DUTCH_LOCALE));
+		assertEquals("7", converter.getConverter(Integer.class).convertToString(new Integer(7),
+				Locale.US));
+		assertEquals("7.1", converter.getConverter(Double.class).convertToString(new Double(7.1),
+				Locale.US));
+		assertEquals("7,1", converter.getConverter(Double.class).convertToString(new Double(7.1),
+				DUTCH_LOCALE));
 
 		Calendar cal = Calendar.getInstance(DUTCH_LOCALE);
 		cal.clear();
 		cal.set(2002, Calendar.OCTOBER, 24);
 		Date date = cal.getTime();
 
-		assertEquals(date, converter.getConverter(Date.class).convertToObject("24-10-02", DUTCH_LOCALE));
-		assertEquals("24-10-02", converter.getConverter(Date.class).convertToString(date, DUTCH_LOCALE));
+		assertEquals(date, converter.getConverter(Date.class).convertToObject("24-10-02",
+				DUTCH_LOCALE));
+		assertEquals("24-10-02", converter.getConverter(Date.class).convertToString(date,
+				DUTCH_LOCALE));
 
 		// empty strings should return null, NOT throw NPEs
 		assertNull(converter.getConverter(Integer.class).convertToObject("", Locale.US));
@@ -71,7 +77,8 @@ public final class ConvertersTest extends TestCase
 		assertNull(converter.getConverter(Short.class).convertToObject("", Locale.US));
 		assertNull(converter.getConverter(Date.class).convertToObject("", Locale.US));
 		assertNull(converter.getConverter(Double.class).convertToObject("", Locale.US));
-		assertEquals(Boolean.FALSE, converter.getConverter(Boolean.class).convertToObject("", Locale.US));
+		assertEquals(Boolean.FALSE, converter.getConverter(Boolean.class).convertToObject("",
+				Locale.US));
 		assertNotNull(converter.getConverter(String.class).convertToObject("", Locale.US));
 	}
 
@@ -83,10 +90,8 @@ public final class ConvertersTest extends TestCase
 		BooleanConverter booleanConverter = new BooleanConverter();
 		assertEquals("true", booleanConverter.convertToString(Boolean.TRUE, Locale.getDefault()));
 		assertEquals("false", booleanConverter.convertToString(Boolean.FALSE, Locale.getDefault()));
-		assertEquals(Boolean.TRUE, booleanConverter.convertToObject("true", Locale
-				.getDefault()));
-		assertEquals(Boolean.FALSE, booleanConverter.convertToObject("false", Locale
-				.getDefault()));
+		assertEquals(Boolean.TRUE, booleanConverter.convertToObject("true", Locale.getDefault()));
+		assertEquals(Boolean.FALSE, booleanConverter.convertToObject("false", Locale.getDefault()));
 		try
 		{
 			booleanConverter.convertToObject("whatever", Locale.getDefault());
@@ -238,7 +243,7 @@ public final class ConvertersTest extends TestCase
 		assertEquals("10", converter.convertToString(new Long(10), Locale.US));
 		try
 		{
-			converter.convertToObject("whatever",Locale.US);
+			converter.convertToObject("whatever", Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
@@ -247,7 +252,7 @@ public final class ConvertersTest extends TestCase
 		}
 		try
 		{
-			converter.convertToObject("10whatever",Locale.US);
+			converter.convertToObject("10whatever", Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
@@ -256,7 +261,7 @@ public final class ConvertersTest extends TestCase
 		}
 		try
 		{
-			converter.convertToObject("" + Long.MAX_VALUE + "0",Locale.US);
+			converter.convertToObject("" + Long.MAX_VALUE + "0", Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
@@ -315,14 +320,14 @@ public final class ConvertersTest extends TestCase
 		Date date = cal.getTime();
 
 		assertEquals("24-10-02", converter.convertToString(date, DUTCH_LOCALE));
-		assertEquals(date, converter.convertToObject("24-10-02",DUTCH_LOCALE));
+		assertEquals(date, converter.convertToObject("24-10-02", DUTCH_LOCALE));
 
 		assertEquals("10/24/02", converter.convertToString(date, Locale.US));
-		assertEquals(date, converter.convertToObject("10/24/02",Locale.US));
+		assertEquals(date, converter.convertToObject("10/24/02", Locale.US));
 
 		try
 		{
-			converter.convertToObject("whatever",Locale.US);
+			converter.convertToObject("whatever", Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)
@@ -331,7 +336,7 @@ public final class ConvertersTest extends TestCase
 		}
 		try
 		{
-			converter.convertToObject("10/24/02whatever",Locale.US);
+			converter.convertToObject("10/24/02whatever", Locale.US);
 			fail("Conversion should have thrown an exception");
 		}
 		catch (ConversionException e)

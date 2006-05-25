@@ -1,20 +1,19 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Revision$ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.outputTransformer;
 
@@ -34,10 +33,10 @@ import wicket.model.Model;
 
 /**
  * Mock page for testing.
- *
+ * 
  * @author Chris Turner
  */
-public class Page_2 extends WebPage 
+public class Page_2 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,51 +44,53 @@ public class Page_2 extends WebPage
 	 * Construct.
 	 * 
 	 */
-	public Page_2() 
+	public Page_2()
 	{
-		add(new Label(this,"myLabel", "Test Label"));
-		
-	    MarkupContainer container = new NoopOutputTransformerContainer(this,"test");
-	    
-	    add(container);
-	    container.add(new Label(container,"myLabel2", "Test Label2"));
+		add(new Label(this, "myLabel", "Test Label"));
 
-	    MarkupContainer panelContainer = new AbstractOutputTransformerContainer(this,"test2")
-	    {
+		MarkupContainer container = new NoopOutputTransformerContainer(this, "test");
+
+		add(container);
+		container.add(new Label(container, "myLabel2", "Test Label2"));
+
+		MarkupContainer panelContainer = new AbstractOutputTransformerContainer(this, "test2")
+		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public CharSequence transform(Component component, String output)
 			{
 				// replace the generated String
 				return "Whatever";
 			}
-	    };
+		};
 
-	    add(panelContainer);
-	    Panel panel = new Panel_1(panelContainer,"myPanel");
-	    panel.setRenderBodyOnly(true);
-	    panelContainer.add(panel);
+		add(panelContainer);
+		Panel panel = new Panel_1(panelContainer, "myPanel");
+		panel.setRenderBodyOnly(true);
+		panelContainer.add(panel);
 
-	    MarkupContainer borderContainer = new AbstractOutputTransformerContainer(this,"test3")
-	    {
+		MarkupContainer borderContainer = new AbstractOutputTransformerContainer(this, "test3")
+		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public CharSequence transform(Component component, String output)
 			{
 				// Convert all text to uppercase
 				return output.toUpperCase();
 			}
-	    };
+		};
 
-	    add(borderContainer);
-	    Border border = new SimpleBorder(borderContainer,"myBorder");
-	    borderContainer.add(border);
+		add(borderContainer);
+		Border border = new SimpleBorder(borderContainer, "myBorder");
+		borderContainer.add(border);
 
-	    Border border2 = new SimpleBorder(this,"myBorder2");
-	    border2.setRenderBodyOnly(false);
-	    border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-	    add(border2);
-	    
-	    border2.add(new XsltTransfomerBehavior());
-    }
+		Border border2 = new SimpleBorder(this, "myBorder2");
+		border2.setRenderBodyOnly(false);
+		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		add(border2);
+
+		border2.add(new XsltTransfomerBehavior());
+	}
 }

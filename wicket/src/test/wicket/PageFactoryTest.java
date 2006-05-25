@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: PageFactoryTest.java 3607 2006-01-03 07:31:29 +0000 (Tue, 03 Jan 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-01-03 07:31:29 +0000 (Tue, 03
+ * Jan 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket;
 
@@ -39,6 +39,7 @@ public class PageFactoryTest extends WicketTestCase
 		super(message);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -92,16 +93,16 @@ public class PageFactoryTest extends WicketTestCase
 		assertEquals(MyPage5.class, factory.newPage(MyPage5.class).getClass());
 
 		// String: Illegal String parameter constructor only
-		e = null; 
-		try 
-		{ 
-		    factory.newPage(String.class).getClass(); 
-		} 
-		catch (ClassCastException ex) 
-		{ 
-		    e = ex; 
+		e = null;
+		try
+		{
+			factory.newPage(String.class).getClass();
 		}
-		
+		catch (ClassCastException ex)
+		{
+			e = ex;
+		}
+
 		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
 	}
 
@@ -154,15 +155,15 @@ public class PageFactoryTest extends WicketTestCase
 
 		// String: Illegal String parameter constructor only
 		e = null;
-		try 
-		{ 
-		    factory.newPage(String.class, new PageParameters()).getClass(); 
-		} 
-		catch (ClassCastException ex) 
-		{ 
-		    e = ex; 
-		} 
-		
+		try
+		{
+			factory.newPage(String.class, new PageParameters()).getClass();
+		}
+		catch (ClassCastException ex)
+		{
+			e = ex;
+		}
+
 		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
 	}
 }

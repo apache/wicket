@@ -1,7 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
- * ====================================================================
+ * $Id: MockHomePage.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $ ====================================================================
  * Copyright (c) 2005, Topicus B.V. All rights reserved.
  */
 
@@ -31,8 +31,8 @@ public class MockHomePage extends WebPage
 	public MockHomePage()
 	{
 		super();
-		add(new Label(this,"label", "this page is secured"));
-		add(new PageLink(this,"link", PageA.class));
+		add(new Label(this, "label", "this page is secured"));
+		add(new PageLink(this, "link", PageA.class));
 	}
 
 	/**

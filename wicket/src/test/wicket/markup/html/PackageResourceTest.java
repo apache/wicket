@@ -55,6 +55,7 @@ public class PackageResourceTest extends TestCase
 	/**
 	 * @see junit.framework.TestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new MockWebApplication(null);
@@ -83,7 +84,8 @@ public class PackageResourceTest extends TestCase
 	public void testBindGlobPackageResource() throws Exception
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
-		PackageResource.bind(application, PackageResourceTest.class, Pattern.compile(".*\\.js"), false);
+		PackageResource.bind(application, PackageResourceTest.class, Pattern.compile(".*\\.js"),
+				false);
 		assertNotNull("resource packaged3.js should be available as a packaged resource",
 				sharedResources.get(PackageResourceTest.class, "packaged3.js", null, null, true));
 		assertNotNull("resource packaged4.js should be available as a packaged resource",

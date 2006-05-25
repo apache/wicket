@@ -41,6 +41,7 @@ public class FormTesterTest extends WicketTestCase
 
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public FormTesterTest(String name)
@@ -48,6 +49,7 @@ public class FormTesterTest extends WicketTestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();

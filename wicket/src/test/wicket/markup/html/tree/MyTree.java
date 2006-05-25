@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,17 +33,20 @@ import wicket.markup.html.image.Image;
 
 /**
  * tree implementation.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class MyTree extends Tree
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final ResourceReference folderOpen = new PackageResourceReference(Application.get(), MyTree.class, "folderopen.gif");
-	private static final ResourceReference folder = new PackageResourceReference(Application.get(), MyTree.class, "folder.gif");
-	private static final ResourceReference nodeImage = new PackageResourceReference(Application.get(), MyTree.class, "node.gif");
-	
+	private static final ResourceReference folderOpen = new PackageResourceReference(Application
+			.get(), MyTree.class, "folderopen.gif");
+	private static final ResourceReference folder = new PackageResourceReference(Application.get(),
+			MyTree.class, "folder.gif");
+	private static final ResourceReference nodeImage = new PackageResourceReference(Application
+			.get(), MyTree.class, "node.gif");
+
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
 
@@ -55,14 +58,15 @@ public class MyTree extends Tree
 	 * @param model
 	 *            the tree model
 	 */
-	public MyTree(MarkupContainer parent,String id, TreeModel model)
+	public MyTree(MarkupContainer parent, String id, TreeModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
 	 * @see wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
+	@Override
 	protected void junctionLinkClicked(DefaultMutableTreeNode node)
 	{
 		super.junctionLinkClicked(node);
@@ -72,6 +76,7 @@ public class MyTree extends Tree
 	/**
 	 * @see wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
+	@Override
 	protected void nodeLinkClicked(DefaultMutableTreeNode node)
 	{
 		super.nodeLinkClicked(node);
@@ -82,20 +87,21 @@ public class MyTree extends Tree
 	 * @see wicket.markup.html.tree.Tree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
-	protected Image getNodeImage(MarkupContainer parent,final DefaultMutableTreeNode node)
+	protected Image getNodeImage(MarkupContainer parent, final DefaultMutableTreeNode node)
 	{
 		if (node.isLeaf())
 		{
-			Image img = new Image(parent,NODE_IMAGE_NAME, nodeImage);
+			Image img = new Image(parent, NODE_IMAGE_NAME, nodeImage);
 			return img;
 		}
 		else
 		{
 			// we want the image to be dynamic, yet resolve to a static image.
-			return new Image(parent,NODE_IMAGE_NAME)
+			return new Image(parent, NODE_IMAGE_NAME)
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				protected ResourceReference getImageResourceReference()
 				{
 					if (isExpanded(node))
@@ -114,6 +120,7 @@ public class MyTree extends Tree
 	/**
 	 * @see wicket.markup.html.tree.Tree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
 	 */
+	@Override
 	protected String getNodeLabel(DefaultMutableTreeNode node)
 	{
 		Object userObject = node.getUserObject();

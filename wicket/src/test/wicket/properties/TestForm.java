@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,10 +30,11 @@ public class TestForm extends Form
 
 	/**
 	 * Construct.
+	 * 
 	 * @param id
 	 */
-	public TestForm(MarkupContainer parent,final String id)
+	public TestForm(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

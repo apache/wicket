@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: StringResourceModelTest.java 5336 2006-04-11 09:42:12 +0000 (Tue, 11 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-11 09:42:12 +0000 (Tue,
+ * 11 Apr 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.model;
 
@@ -34,6 +34,7 @@ import wicket.resource.loader.BundleStringResourceLoader;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
+ * 
  * @author Chris Turner
  */
 public class StringResourceModelTest extends TestCase
@@ -49,13 +50,16 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * Create the test case.
-	 * @param name The test name
+	 * 
+	 * @param name
+	 *            The test name
 	 */
 	public StringResourceModelTest(String name)
 	{
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -69,7 +73,7 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public void testGetSimpleResource()
 	{
@@ -81,7 +85,7 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public void testNullResourceKey()
 	{
@@ -98,7 +102,7 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public void testGetSimpleResourceWithKeySubstitution()
 	{
@@ -113,7 +117,7 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public void testGetPropertySubstitutedResource()
 	{
@@ -127,7 +131,7 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public void testSubstitutionParametersResource()
 	{
@@ -137,22 +141,22 @@ public class StringResourceModelTest extends TestCase
 				"The report for {0,date,medium}, shows the temparature as {2,number,###.##} {3} and the weather to be {1}",
 				page.getLocale());
 		StringResourceModel model = new StringResourceModel("weather.detail", page, wsModel,
-				new Object[] {cal.getTime(), "${currentStatus}",
+				new Object[] { cal.getTime(), "${currentStatus}",
 						new PropertyModel(wsModel, "currentTemperature"),
-						new PropertyModel(wsModel, "units")});
-		String expected = format.format(new Object[] {cal.getTime(), "sunny", new Double(25.7),
-				"\u00B0C"});
+						new PropertyModel(wsModel, "units") });
+		String expected = format.format(new Object[] { cal.getTime(), "sunny", new Double(25.7),
+				"\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 		ws.setCurrentStatus("raining");
 		ws.setCurrentTemperature(11.568);
-		expected = format.format(new Object[] {cal.getTime(), "raining", new Double(11.568),
-				"\u00B0C"});
+		expected = format.format(new Object[] { cal.getTime(), "raining", new Double(11.568),
+				"\u00B0C" });
 		Assert.assertEquals("Text should be as expected", expected, model.getString());
 	}
 
 	/**
 	 * 
-	 *
+	 * 
 	 */
 	public void testUninitialisedLocalizer()
 	{
@@ -192,8 +196,8 @@ public class StringResourceModelTest extends TestCase
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
-				application.getWicketRequest(), application.getWicketResponse());
+		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(), application
+				.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
@@ -210,22 +214,26 @@ public class StringResourceModelTest extends TestCase
 			private static final long serialVersionUID = 1L;
 
 			private transient WeatherStation station;
-			
+
+			@Override
 			protected void onAttach()
 			{
 				station = new WeatherStation();
 			}
 
+			@Override
 			protected void onDetach()
 			{
 				station = null;
 			}
 
+			@Override
 			protected Object onGetObject(final Component component)
 			{
 				return station;
 			}
 
+			@Override
 			public IModel getNestedModel()
 			{
 				return null;
@@ -233,14 +241,14 @@ public class StringResourceModelTest extends TestCase
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(),
-				application.getWicketRequest(), application.getWicketResponse());
+		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(), application
+				.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getNestedModel().getObject(page));
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...
-		//Assert.assertNull(model.getNestedModel().getObject());
+		// Assert.assertNull(model.getNestedModel().getObject());
 		Assert.assertNull(model.getLocalizer());
 	}
 

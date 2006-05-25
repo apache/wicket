@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SimpleTestPanelBase.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -35,11 +36,11 @@ public class SimpleTestPanelBase extends Panel
 	 * 
 	 * @param name
 	 */
-	public SimpleTestPanelBase(MarkupContainer parent,String name)
+	public SimpleTestPanelBase(MarkupContainer parent, String name)
 	{
-		super(parent,name);
+		super(parent, name);
 
-		baseSpan = new WebMarkupContainer(this,"baseSpan");
+		baseSpan = new WebMarkupContainer(this, "baseSpan");
 		add(baseSpan);
 	}
 }

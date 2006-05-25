@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,8 +36,8 @@ public class ViewBook extends WebPage
 	 */
 	public ViewBook(Book book)
 	{
-		add(new Label(this,"id", new PropertyModel(book, "id")));
-		add(new Label(this,"name", new PropertyModel(book, "name")));
-		add(new BookmarkablePageLink(this,"link", CreateBook.class));
+		add(new Label(this, "id", new PropertyModel(book, "id")));
+		add(new Label(this, "name", new PropertyModel(book, "name")));
+		add(new BookmarkablePageLink(this, "link", CreateBook.class));
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.51 $ $Date$
+ * $Id: SuccessPage.java 2940 2005-10-06 20:37:53 +0000 (Thu, 06 Oct 2005)
+ * jdonnerstag $ $Revision$ $Date: 2005-10-06 20:37:53 +0000 (Thu, 06 Oct
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

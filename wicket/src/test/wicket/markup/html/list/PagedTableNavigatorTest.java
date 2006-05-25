@@ -1,20 +1,20 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id: PagedTableNavigatorTest.java 3764 2006-01-14 17:38:33 +0000 (Sat, 14 Jan
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-01-14 17:38:33 +0000
+ * (Sat, 14 Jan 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.markup.html.list;
 
@@ -41,7 +41,9 @@ public class PagedTableNavigatorTest extends TestCase
 
 	/**
 	 * Construct.
-	 * @param name name of test
+	 * 
+	 * @param name
+	 *            name of test
 	 */
 	public PagedTableNavigatorTest(String name)
 	{
@@ -50,6 +52,7 @@ public class PagedTableNavigatorTest extends TestCase
 
 	/**
 	 * Test simple table behavior.
+	 * 
 	 * @throws Exception
 	 */
 	public void testPagedTable() throws Exception
@@ -187,13 +190,13 @@ public class PagedTableNavigatorTest extends TestCase
 
 		link = (Link)page.get("navigator:last");
 		assertTrue(link.isEnabled());
-		
+
 		// add entries to the model list.
 		List modelData = (List)page.get("table").getModelObject();
 		modelData.add("add-1");
 		modelData.add("add-2");
 		modelData.add("add-3");
-		
+
 		link = (Link)page.get("navigator:first");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
@@ -201,7 +204,7 @@ public class PagedTableNavigatorTest extends TestCase
 		document = application.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorExpectedResult_8.html"));
 	}
-	
+
 	private boolean validatePage(final String document, final String file) throws IOException
 	{
 		return DiffUtil.validatePage(document, this.getClass(), file);

@@ -1,6 +1,8 @@
 /*
- * $Id$ $Revision$ $Date$ ==================================================================== Copyright (c) 2005,
- * Topicus B.V. All rights reserved.
+ * $Id$
+ * $Revision$ $Date$
+ * ====================================================================
+ * Copyright (c) 2005, Topicus B.V. All rights reserved.
  */
 
 package wicket.markup.html.form.login;

@@ -1,6 +1,6 @@
 /*
- * $Id: MyTesterApplication.java 3160 2005-11-09 12:25:11Z jdonnerstag $ $Revision:
- * 1.51 $ $Date: 2005-11-09 13:25:11 +0100 (Mi, 09 Nov 2005) $
+ * $Id: MyTesterApplication.java 3160 2005-11-09 12:25:11Z jdonnerstag $
+ * $Revision$ $Date: 2005-11-09 13:25:11 +0100 (Mi, 09 Nov 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
