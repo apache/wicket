@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractAjaxBehavior.java 5440 2006-04-17 12:07:07 -0700 (Mon, 17 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 12:07:07 -0700 (Mon,
+ * 17 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -92,7 +93,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 */
 	public CharSequence getCallbackUrl()
 	{
-		return getCallbackUrl(true);
+		return getCallbackUrl(true, false);
 	}
 
 	/**
@@ -102,10 +103,14 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 *            if true the url will be encoded to execute on the current page
 	 *            version, otherwise url will be encoded to execute on the
 	 *            latest page version
+	 * @param onlyTargetActivePage
+	 *            if true the callback to this behavior will be ignore if the
+	 *            page is not the last one the user accessed
 	 * 
 	 * @return the url that references this handler
 	 */
-	public final CharSequence getCallbackUrl(final boolean recordPageVersion)
+	public final CharSequence getCallbackUrl(final boolean recordPageVersion,
+			final boolean onlyTargetActivePage)
 	{
 		if (getComponent() == null)
 		{
@@ -136,11 +141,21 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			rli = IUnversionedBehaviorListener.INTERFACE;
 		}
 
-		// TODO Post 1.2: URL encoding strategies are not applied 
-		// And you can not simply call getResponse().encodeUrl() as the URL might
+		// TODO Post 1.2: URL encoding strategies are not applied
+		// And you can not simply call getResponse().encodeUrl() as the URL
+		// might
 		// already be encoded.
-		return new AppendingStringBuffer(getComponent().urlFor(rli)).append('&').append(
-				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME).append('=').append(index);
+		AppendingStringBuffer url = new AppendingStringBuffer(getComponent().urlFor(rli)).append(
+				'&').append(WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME).append('=')
+				.append(index);
+
+		if (onlyTargetActivePage)
+		{
+			url.append("&").append(WebRequestCodingStrategy.IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME)
+					.append("=true");
+		}
+
+		return url;
 	}
 
 	/**
