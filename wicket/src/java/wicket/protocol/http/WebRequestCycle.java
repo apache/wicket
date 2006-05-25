@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.85 $ $Date$
+ * $Id: WebRequestCycle.java 5766 2006-05-19 09:55:48 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-19 09:55:48 +0000 (Fri, 19 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,9 +23,13 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.AbortException;
 import wicket.IRedirectListener;
+import wicket.MetaDataKey;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.RestartResponseAtInterceptPageException;
+import wicket.Session;
+import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCycleProcessor;
@@ -48,6 +53,11 @@ public class WebRequestCycle extends RequestCycle
 {
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
+
+	private static final MetaDataKey BROWSER_WAS_POLLED_KEY = new MetaDataKey(Boolean.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
@@ -132,10 +142,11 @@ public class WebRequestCycle extends RequestCycle
 			try
 			{
 				// create the redirect response.
-				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(currentResponse.getHttpServletResponse());
+				final BufferedHttpServletResponse servletResponse = new BufferedHttpServletResponse(
+						currentResponse.getHttpServletResponse());
 				final WebResponse redirectResponse = new WebResponse(servletResponse)
 				{
-					public CharSequence encodeURL(CharSequence url) 
+					public CharSequence encodeURL(CharSequence url)
 					{
 						return currentResponse.encodeURL(url);
 					};
@@ -162,25 +173,30 @@ public class WebRequestCycle extends RequestCycle
 				}
 				else if (servletResponse.getContentLength() > 0)
 				{
-					// call filter() so that any filters can process the response
+					// call filter() so that any filters can process the
+					// response
 					servletResponse.filter(currentResponse);
 
-					// Set the final character encoding before  calling close
+					// Set the final character encoding before calling close
 					servletResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
-					// close it so that the reponse is fixed and encoded from here on.
+					// close it so that the reponse is fixed and encoded from
+					// here on.
 					servletResponse.close();
 
 					redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 					int index = redirectUrl.indexOf("?");
-					String sessionId = getWebRequest().getHttpServletRequest().getSession(true).getId();
-					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl.substring(index+1), servletResponse);
+					String sessionId = getWebRequest().getHttpServletRequest().getSession(true)
+							.getId();
+					((WebApplication)application).addBufferedResponse(sessionId, redirectUrl
+							.substring(index + 1), servletResponse);
 				}
 			}
 			catch (RuntimeException ex)
 			{
 				// re-assign the original response
 				setResponse(currentResponse);
-				if(ex instanceof AbortException) throw ex;
+				if (ex instanceof AbortException)
+					throw ex;
 				log.error(ex.getMessage(), ex);
 				IRequestCycleProcessor processor = getProcessor();
 				processor.respond(ex, this);
@@ -190,7 +206,7 @@ public class WebRequestCycle extends RequestCycle
 		else
 		{
 			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
-			
+
 			// Redirect page can touch its models already (via for example the
 			// constructors)
 			page.internalDetach();
@@ -200,10 +216,11 @@ public class WebRequestCycle extends RequestCycle
 		{
 			redirectUrl = page.urlFor(IRedirectListener.INTERFACE).toString();
 		}
-		
-		// Always touch the page again so that a redirect listener makes a page statefull and adds it to the pagemap
+
+		// Always touch the page again so that a redirect listener makes a page
+		// statefull and adds it to the pagemap
 		session.touch(page);
-		
+
 		// Redirect to the url for the page
 		response.redirect(redirectUrl);
 	}
@@ -213,6 +230,22 @@ public class WebRequestCycle extends RequestCycle
 	 */
 	protected ClientInfo newClientInfo()
 	{
+		if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
+		{
+			Session session = getSession();
+			if (session.getMetaData(BROWSER_WAS_POLLED_KEY) == null)
+			{
+				// we haven't done the redirect yet; record that we will be
+				// doing that now and redirect
+				session.setMetaData(BROWSER_WAS_POLLED_KEY, Boolean.TRUE);
+				throw new RestartResponseAtInterceptPageException(new BrowserInfoPage(getRequest()
+						.getURL()));
+			}
+			// if we get here, the redirect already has been done; clear
+			// the meta data entry; we don't need it any longer is the client
+			// info object will be cached too
+			session.setMetaData(BROWSER_WAS_POLLED_KEY, (Boolean)null);
+		}
 		return new WebClientInfo(this);
 	}
 }
