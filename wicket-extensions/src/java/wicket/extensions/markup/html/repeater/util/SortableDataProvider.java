@@ -33,7 +33,7 @@ import wicket.model.IDetachable;
  * 
  * @author Igor Vaynberg
  */
-public abstract class SortableDataProvider<V> implements IDataProvider<V>, ISortStateLocator
+public abstract class SortableDataProvider<T> implements IDataProvider<T>, ISortStateLocator
 {
 	private SingleSortState state = new SingleSortState();
 

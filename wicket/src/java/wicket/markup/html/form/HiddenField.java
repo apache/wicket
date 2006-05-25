@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * 
  * @author Cameron Braid
  */
-public class HiddenField<V> extends TextField<V>
+public class HiddenField<T> extends TextField<T>
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -61,7 +61,7 @@ public class HiddenField<V> extends TextField<V>
 	 * @param type the type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public HiddenField(MarkupContainer parent,String id, IModel<V> model, Class type)
+	public HiddenField(MarkupContainer parent,String id, IModel<T> model, Class type)
 	{
 		super(parent,id, model, type);
 	}
@@ -71,7 +71,7 @@ public class HiddenField<V> extends TextField<V>
 	 * @param id see Component
 	 * @param model the model
 	 */
-	public HiddenField(MarkupContainer parent,String id, IModel<V> model)
+	public HiddenField(MarkupContainer parent,String id, IModel<T> model)
 	{
 		super(parent,id, model);
 	}

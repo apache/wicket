@@ -33,19 +33,19 @@ import wicket.model.Model;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class ListDataProvider<V> implements IDataProvider<V>
+public class ListDataProvider<T> implements IDataProvider<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** reference to the list used as dataprovider for the dataview */
-	private List<V> list;
+	private List<T> list;
 
 	/**
 	 * 
 	 * @param list
 	 *            the list used as dataprovider for the dataview
 	 */
-	public ListDataProvider(List<V> list)
+	public ListDataProvider(List<T> list)
 	{
 		if (list == null)
 		{
@@ -58,7 +58,7 @@ public class ListDataProvider<V> implements IDataProvider<V>
 	/**
 	 * @see IDataProvider#iterator(int, int)
 	 */
-	public Iterator<V> iterator(final int first, final int count)
+	public Iterator<T> iterator(final int first, final int count)
 	{
 		return list.listIterator(first);
 	}
@@ -74,7 +74,7 @@ public class ListDataProvider<V> implements IDataProvider<V>
 	/**
 	 * @see IDataProvider#model(Object)
 	 */
-	public IModel<V> model(V object)
+	public IModel<T> model(T object)
 	{
 		return new Model((Serializable)object);
 	}

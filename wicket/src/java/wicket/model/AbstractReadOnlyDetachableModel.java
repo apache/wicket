@@ -26,7 +26,7 @@ import wicket.Component;
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractReadOnlyDetachableModel<V> extends AbstractDetachableModel<V>
+public abstract class AbstractReadOnlyDetachableModel<T> extends AbstractDetachableModel<T>
 {
 	/**
 	 * This default implementation of onSetObject unconditionally throws an
@@ -40,7 +40,7 @@ public abstract class AbstractReadOnlyDetachableModel<V> extends AbstractDetacha
 	 * @throws UnsupportedOperationException
 	 */
 	@Override
-	protected final void onSetObject(final Component component, final V object)
+	protected final void onSetObject(final Component component, final T object)
 	{
 		throw new UnsupportedOperationException("Model " + getClass()
 				+ " does not support setObject(Object)");

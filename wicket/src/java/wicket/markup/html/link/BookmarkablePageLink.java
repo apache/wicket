@@ -26,7 +26,7 @@ import wicket.PageParameters;
  * Renders a stable link which can be cached in a web browser and used at a
  * later time.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke

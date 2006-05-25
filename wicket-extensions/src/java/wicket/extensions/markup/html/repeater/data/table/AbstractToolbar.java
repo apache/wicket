@@ -25,7 +25,7 @@ import wicket.model.IModel;
 /**
  * A base class for data table toolbars
  * 
- * @param <V>
+ * @param <T>
  *            type of model
  * 
  * 
@@ -34,7 +34,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AbstractToolbar<V> extends Panel<V>
+public abstract class AbstractToolbar<T> extends Panel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public abstract class AbstractToolbar<V> extends Panel<V>
 	 * @param table
 	 *            data table this toolbar will be attached to
 	 */
-	public AbstractToolbar(MarkupContainer parent, String id, IModel<V> model, DataTable table)
+	public AbstractToolbar(MarkupContainer parent, String id, IModel<T> model, DataTable table)
 	{
 		super(parent, id, model);
 		this.table = table;

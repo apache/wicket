@@ -26,12 +26,12 @@ import wicket.Component;
  * A compound property model that supports type conversions and property
  * expression bindings.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author Jonathan Locke
  */
-public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
+public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -85,7 +85,7 @@ public class BoundCompoundPropertyModel<V> extends CompoundPropertyModel<V>
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
-	public BoundCompoundPropertyModel(final V model)
+	public BoundCompoundPropertyModel(final T model)
 	{
 		super(model);
 	}

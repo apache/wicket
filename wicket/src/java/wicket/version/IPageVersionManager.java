@@ -42,12 +42,12 @@ import wicket.version.undo.Change;
  * The current version number (the number of the newest available version) of a
  * page can be retrieved by calling getCurrentVersionNumber().
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
  */
-public interface IPageVersionManager<V> extends Serializable
+public interface IPageVersionManager<T> extends Serializable
 {
 	/**
 	 * Called when changes are immediately impending to the Page being managed.
@@ -110,7 +110,7 @@ public interface IPageVersionManager<V> extends Serializable
 	 *            The version of the page to get
 	 * @return The page or null if the version requested is not available
 	 */
-	Page<V> getVersion(int versionNumber);
+	Page<T> getVersion(int versionNumber);
 
 	/**
 	 * @return The number of versions stored in this version manager

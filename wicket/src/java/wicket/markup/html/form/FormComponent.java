@@ -68,7 +68,7 @@ import wicket.version.undo.Change;
  * <li>${label}: the label of the component</li>
  * </ul>
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
@@ -76,7 +76,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class FormComponent<V> extends WebMarkupContainer<V>
+public abstract class FormComponent<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -199,7 +199,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	 */
 	private IModel labelModel = null;
 
-	private transient V convertedInput;
+	private transient T convertedInput;
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -216,7 +216,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FormComponent(MarkupContainer parent,final String id, IModel<V> model)
+	public FormComponent(MarkupContainer parent,final String id, IModel<T> model)
 	{
 		super(parent,id, model);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
@@ -629,7 +629,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 			final IConverter converter = getConverter(type);
 			try
 			{
-				convertedInput = (V)converter.convertToObject(getInput(), getLocale());
+				convertedInput = (T)converter.convertToObject(getInput(), getLocale());
 			}
 			catch (ConversionException e)
 			{
@@ -671,9 +671,9 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	 * @throws ConversionException
 	 *             If input can't be converted
 	 */
-	protected V convertValue(String[] value) throws ConversionException
+	protected T convertValue(String[] value) throws ConversionException
 	{
-		return (V)(value != null && value.length > 0 ? value[0].trim() : null);
+		return (T)(value != null && value.length > 0 ? value[0].trim() : null);
 	}
 
 	/**
@@ -986,7 +986,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	/**
 	 * @return value of input converted into appropriate type if any was set
 	 */
-	public final V getConvertedInput()
+	public final T getConvertedInput()
 	{
 		return convertedInput;
 	}

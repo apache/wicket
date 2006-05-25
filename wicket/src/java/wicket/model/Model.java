@@ -31,18 +31,18 @@ import wicket.Component;
  * session. If you have large objects to store, consider using
  * {@link AbstractDetachableModel}instead of this class.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class Model<V /* extends Serializable*/> extends AbstractModel<V>
+public class Model<T /* extends Serializable*/> extends AbstractModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Backing object. */
-	private V object;
+	private T object;
 
 	/**
 	 * Construct the model without providing an object.
@@ -57,7 +57,7 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	 * @param object
 	 *            The model object proper
 	 */
-	public Model(final V object)
+	public Model(final T object)
 	{
 		setObject(object);
 	}
@@ -94,7 +94,7 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	/**
 	 * @see wicket.model.IModel#getObject(wicket.Component)
 	 */
-	public V getObject(final Component component)
+	public T getObject(final Component component)
 	{
 		return object;
 	}
@@ -107,7 +107,7 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	 *            the model object
 	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public void setObject(final Component component, final V object)
+	public void setObject(final Component component, final T object)
 	{
 		setObject(object);
 	}
@@ -120,7 +120,7 @@ public class Model<V /* extends Serializable*/> extends AbstractModel<V>
 	 *            The serializable model object
 	 * @see wicket.model.IModel#setObject(Component, Object)
 	 */
-	public void setObject(final V object)
+	public void setObject(final T object)
 	{
 		this.object = object;
 	}

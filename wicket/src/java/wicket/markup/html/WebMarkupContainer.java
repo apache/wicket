@@ -25,13 +25,13 @@ import wicket.model.IModel;
  * A container of HTML markup and components. It is very similar to the base
  * class MarkupContainer, except that the markup type is defined to be HTML.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainer<V> extends MarkupContainer<V>
+public class WebMarkupContainer<T> extends MarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -46,7 +46,7 @@ public class WebMarkupContainer<V> extends MarkupContainer<V>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainer(MarkupContainer parent, final String id, IModel<V> model)
+	public WebMarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent,id, model);
 	}

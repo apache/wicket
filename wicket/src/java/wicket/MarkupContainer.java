@@ -87,13 +87,13 @@ import wicket.version.undo.Change;
  * page. Since Page is at the top of the container hierarchy, it is guaranteed
  * that findMarkupStream will always return a valid markup stream.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @see MarkupStream
  * @author Jonathan Locke
  */
-public abstract class MarkupContainer<V> extends Component<V>
+public abstract class MarkupContainer<T> extends Component<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -136,7 +136,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MarkupContainer(MarkupContainer parent, final String id, IModel<V> model)
+	public MarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent,id, model);
 	}
@@ -644,9 +644,9 @@ public abstract class MarkupContainer<V> extends Component<V>
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
 	@Override
-	public Component setModel(final IModel<V> model)
+	public Component setModel(final IModel<T> model)
 	{
-		final IModel<V> previous = getModel();
+		final IModel<T> previous = getModel();
 		super.setModel(model);
 		if (previous instanceof ICompoundModel)
 		{

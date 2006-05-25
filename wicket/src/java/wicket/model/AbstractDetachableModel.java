@@ -31,14 +31,14 @@ import wicket.RequestCycle;
  * called at the end of the request. In effect, attachment and detachment is
  * only done when it is actually needed.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractDetachableModel<V> implements IModel<V>
+public abstract class AbstractDetachableModel<T> implements IModel<T>
 {
 	/** Logger. */
 	private static final Log log = LogFactory.getLog(AbstractDetachableModel.class);
@@ -97,7 +97,7 @@ public abstract class AbstractDetachableModel<V> implements IModel<V>
 	/**
 	 * @see wicket.model.IModel#getObject(Component)
 	 */
-	public final V getObject(final Component component)
+	public final T getObject(final Component component)
 	{
 		attach();
 		return onGetObject(component);
@@ -116,7 +116,7 @@ public abstract class AbstractDetachableModel<V> implements IModel<V>
 	/**
 	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
 	 */
-	public final void setObject(final Component component, final V object)
+	public final void setObject(final Component component, final T object)
 	{
 		attach();
 		onSetObject(component, object);
@@ -154,7 +154,7 @@ public abstract class AbstractDetachableModel<V> implements IModel<V>
 	 *            The component asking for the object
 	 * @return The object
 	 */
-	protected abstract V onGetObject(final Component component);
+	protected abstract T onGetObject(final Component component);
 
 	/**
 	 * Called when setObject is called in order to change the detachable
@@ -166,5 +166,5 @@ public abstract class AbstractDetachableModel<V> implements IModel<V>
 	 * @param object
 	 * 			The new model object
 	 */
-	protected abstract void onSetObject(final Component component, final V object);
+	protected abstract void onSetObject(final Component component, final T object);
 }

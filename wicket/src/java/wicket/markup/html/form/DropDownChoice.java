@@ -56,7 +56,7 @@ import wicket.model.IModel;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements IOnChangeListener
+public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -71,7 +71,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public DropDownChoice(MarkupContainer parent, final String id, final List<V> choices)
+	public DropDownChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
 		super(parent,id, choices);
 	}
@@ -79,7 +79,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List,IChoiceRenderer)
 	 */
-	public DropDownChoice(MarkupContainer parent, final String id, final List<V> data, final IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent, final String id, final List<T> data, final IChoiceRenderer<T> renderer)
 	{
 		super(parent,id,data, renderer);
 	}
@@ -87,7 +87,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public DropDownChoice(MarkupContainer parent, final String id, IModel<V> model, final List<V> choices)
+	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> choices)
 	{
 		super(parent,id, model, choices);
 	}
@@ -95,7 +95,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public DropDownChoice(MarkupContainer parent, final String id, IModel<V> model, final List<V> data, final IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> data, final IChoiceRenderer<T> renderer)
 	{
 		super(parent,id, model,data, renderer);
 	}
@@ -103,7 +103,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<List<V>> choices)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
 	{
 		super(parent,id, choices);
 	}
@@ -111,7 +111,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IModel)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<V> model, IModel<List<V>> choices)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices)
 	{
 		super(parent,id, model, choices);
 	}
@@ -119,7 +119,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(parent,id, choices, renderer);
 	}
@@ -128,7 +128,7 @@ public class DropDownChoice<V> extends AbstractSingleSelectChoice<V> implements 
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, IModel, IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<V> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public DropDownChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(parent,id, model, choices, renderer);
 	}

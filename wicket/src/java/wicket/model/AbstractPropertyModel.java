@@ -28,14 +28,14 @@ import wicket.util.string.Strings;
  * 
  * @see wicket.model.AbstractDetachableModel
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V>
+public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T>
 {
 	/** Any model object (which may or may not implement IModel) */
 	private Object nestedModel;
@@ -120,19 +120,19 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
 	@Override
-	protected V onGetObject(final Component component)
+	protected T onGetObject(final Component component)
 	{
 		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
 		{
 			// Return a meaningful value for an empty property expression
-			return (V)modelObject(component);
+			return (T)modelObject(component);
 		}
 
 		final Object modelObject = modelObject(component);
 		if (modelObject != null)
 		{
-			return (V)PropertyResolver.getValue(expression, modelObject);
+			return (T)PropertyResolver.getValue(expression, modelObject);
 		}
 		return null;
 	}
@@ -147,7 +147,7 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 	 * @see AbstractDetachableModel#onSetObject(Component, Object)
 	 */
 	@Override
-	protected void onSetObject(final Component component, V object)
+	protected void onSetObject(final Component component, T object)
 	{
 		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
@@ -178,7 +178,7 @@ public abstract class AbstractPropertyModel<V> extends AbstractDetachableModel<V
 					if (propertyType != null && component != null)
 					{
 						// convert the String to the right type
-						object = (V)component.getConverter(propertyType).convertToObject(string, component.getLocale());
+						object = (T)component.getConverter(propertyType).convertToObject(string, component.getLocale());
 					}
 				}
 			}

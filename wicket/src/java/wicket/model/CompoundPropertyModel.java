@@ -28,12 +28,12 @@ import wicket.markup.html.form.FormComponent;
  * @see wicket.model.Model
  * @see wicket.model.AbstractDetachableModel
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel<V> extends AbstractPropertyModel<V> implements ICompoundModel<V>
+public class CompoundPropertyModel<T> extends AbstractPropertyModel<T> implements ICompoundModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -43,7 +43,7 @@ public class CompoundPropertyModel<V> extends AbstractPropertyModel<V> implement
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
-	public CompoundPropertyModel(final V model)
+	public CompoundPropertyModel(final T model)
 	{
 		super(model);
 	}

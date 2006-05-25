@@ -68,14 +68,14 @@ import wicket.Component;
  * @see wicket.Component#sameRootModel(wicket.Component)
  * @see wicket.Component#sameRootModel(IModel)
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface IModel<V> extends IDetachable
+public interface IModel<T> extends IDetachable
 {
 	/**
 	 * Gets the nested model.
@@ -92,7 +92,7 @@ public interface IModel<V> extends IDetachable
 	 * 
 	 * @return The model object
 	 */
-	V getObject(final Component component);
+	T getObject(final Component component);
 
 	/**
 	 * Sets the model object.
@@ -103,5 +103,5 @@ public interface IModel<V> extends IDetachable
 	 * @param object
 	 *            The model object
 	 */
-	void setObject(final Component component, final V object);
+	void setObject(final Component component, final T object);
 }

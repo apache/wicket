@@ -82,14 +82,14 @@ import wicket.util.lang.PropertyResolver;
  * @see wicket.model.Model
  * @see wicket.model.AbstractDetachableModel
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class PropertyModel<V> extends AbstractPropertyModel<V>
+public class PropertyModel<T> extends AbstractPropertyModel<T>
 {
 	private static final long serialVersionUID = 1L;
 

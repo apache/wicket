@@ -51,9 +51,9 @@ import wicket.util.string.Strings;
  * 
  * @author Juergen Donnerstag
  * 
- * @param <V> 
+ * @param <T> 
  */
-public final class PageView<V> extends Panel<V>
+public final class PageView<T> extends Panel<T>
 {
 	private static final long serialVersionUID = 1L;
 	

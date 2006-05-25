@@ -52,7 +52,7 @@ import wicket.util.time.Time;
  * 
  * @param <K>
  * 			The key type the map holds.
- * @param <V>
+ * @param <T>
  * 			The value type the map holds.
  * 
  * @author Jonathan Locke
