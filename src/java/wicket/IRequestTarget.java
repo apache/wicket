@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IRequestTarget.java 5045 2006-03-21 00:46:45 +0000 (Tue, 21 Mar 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-03-21 00:46:45 +0000 (Tue, 21
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

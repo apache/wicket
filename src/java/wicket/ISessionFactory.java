@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ISessionFactory.java 5802 2006-05-22 09:46:00 +0000 (Mon, 22 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-22 09:46:00 +0000 (Mon, 22 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,12 +33,14 @@ public interface ISessionFactory
 	 * 
 	 * @deprecated
 	 */
+	@Deprecated
 	Session newSession();
-	
+
 	/**
 	 * Creates a new session
 	 * 
-	 * @param request The request that will create this session.
+	 * @param request
+	 *            The request that will create this session.
 	 * 
 	 * @return The session
 	 * 

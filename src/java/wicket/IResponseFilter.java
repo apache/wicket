@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,11 +20,11 @@ import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A response filter can be added to the
- * {@link wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)} object
- * The will be called from the Buffered Response objects right before they would send it to the
- * real responses. You have to use the
- * {@link wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)}(to true which is the default)
- * for this filtering to work.
+ * {@link wicket.settings.IRequestCycleSettings#addResponseFilter(IResponseFilter)}
+ * object The will be called from the Buffered Response objects right before
+ * they would send it to the real responses. You have to use the
+ * {@link wicket.settings.IRequestCycleSettings#setBufferResponse(boolean)}(to
+ * true which is the default) for this filtering to work.
  * 
  * @author jcompagner
  * 

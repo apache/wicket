@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.8 $ $Date$
+ * $Id: Initializer.java 5372 2006-04-14 12:18:56 +0000 (Fri, 14 Apr 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -62,7 +62,7 @@ public class Initializer implements IInitializer
 
 		// initialize ajax components
 		new AjaxInitializer().init(application);
-		
+
 		PackageResource.bind(application, WebPage.class, "cookies.js");
 	}
 }
