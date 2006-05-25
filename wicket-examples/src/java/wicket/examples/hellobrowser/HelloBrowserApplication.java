@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: HelloBrowserApplication.java 3646 2006-01-04 21:32:14 +0000 (Wed, 04 Jan
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-01-04 21:32:14 +0000 (Wed, 04
+ * Jan 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,14 +18,7 @@
  */
 package wicket.examples.hellobrowser;
 
-import wicket.IRequestCycleFactory;
-import wicket.Request;
-import wicket.RequestCycle;
-import wicket.Response;
-import wicket.Session;
 import wicket.examples.WicketExampleApplication;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebSession;
 
 /**
  * Application class for hello browser example.
@@ -32,8 +26,6 @@ import wicket.protocol.http.WebSession;
  * @author Eelco Hillenius
  */
 public class HelloBrowserApplication extends WicketExampleApplication
-		implements
-			IRequestCycleFactory
 {
 	/**
 	 * Constructor.
@@ -43,27 +35,18 @@ public class HelloBrowserApplication extends WicketExampleApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#getDefaultRequestCycleFactory()
-	 */
-	protected IRequestCycleFactory getDefaultRequestCycleFactory()
-	{
-		return this;
-	}
-
-	/**
-	 * @see wicket.IRequestCycleFactory#newRequestCycle(wicket.Session,
-	 *      wicket.Request, wicket.Response)
-	 */
-	public RequestCycle newRequestCycle(Session session, Request request, Response response)
-	{
-		return new HelloBrowserRequestCycle((WebSession)session, (WebRequest)request, response);
-	}
-
-	/**
 	 * @see wicket.Application#getHomePage()
 	 */
 	public Class getHomePage()
 	{
 		return HelloBrowser.class;
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
+		getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
 	}
 }
