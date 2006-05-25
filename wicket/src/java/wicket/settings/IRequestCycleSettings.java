@@ -4,6 +4,8 @@ import java.util.List;
 
 import wicket.IResponseFilter;
 import wicket.RequestCycle;
+import wicket.markup.html.pages.BrowserInfoPage;
+import wicket.protocol.http.WebRequestCycle;
 import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import wicket.util.lang.EnumeratedType;
 
@@ -149,6 +151,18 @@ public interface IRequestCycleSettings
 	boolean getBufferResponse();
 
 	/**
+	 * Gets whether Wicket should try to get extensive client info by
+	 * redirecting to
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
+	 * method is used by the default implementation of
+	 * {@link WebRequestCycle#newClientInfo()}, so if that method is overriden,
+	 * there is no guarantee this method will be taken into account.
+	 * 
+	 * @return Whether to gather extensive client info
+	 */
+	boolean getGatherExtendedBrowserInfo();
+
+	/**
 	 * Gets in what way the render part of a request is handled.
 	 * 
 	 * @return the render strategy
@@ -182,6 +196,19 @@ public interface IRequestCycleSettings
 	 *            True if this application should buffer responses.
 	 */
 	void setBufferResponse(boolean bufferResponse);
+
+	/**
+	 * Sets whether Wicket should try to get extensive client info by
+	 * redirecting to
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
+	 * method is used by the default implementation of
+	 * {@link WebRequestCycle#newClientInfo()}, so if that method is overriden,
+	 * there is no guarantee this method will be taken into account.
+	 * 
+	 * @param gatherExtendedBrowserInfo
+	 *            Whether to gather extensive client info
+	 */
+	void setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo);
 
 	/**
 	 * Sets in what way the render part of a request is handled. Basically,
