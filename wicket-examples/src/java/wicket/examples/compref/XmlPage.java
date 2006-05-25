@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -38,12 +38,13 @@ public class XmlPage extends WebPage
 	 */
 	public XmlPage()
 	{
-		add(new PersonsListView(this,"persons", ComponentReferenceApplication.getPersons()));
+		add(new PersonsListView(this, "persons", ComponentReferenceApplication.getPersons()));
 	}
 
 	/**
 	 * @see wicket.MarkupContainer#getMarkupType()
 	 */
+	@Override
 	public String getMarkupType()
 	{
 		return "xml";
@@ -60,16 +61,17 @@ public class XmlPage extends WebPage
 		 * @param list
 		 *            the model
 		 */
-		public PersonsListView(MarkupContainer parent,final String id, List list)
+		public PersonsListView(MarkupContainer parent, final String id, List list)
 		{
-			super(parent,id, list);
+			super(parent, id, list);
 		}
 
+		@Override
 		protected void populateItem(ListItem item)
 		{
 			Person person = (Person)item.getModelObject();
-			item.add(new Label(item,"firstName", person.getName()));
-			item.add(new Label(item,"lastName", person.getLastName()));
+			item.add(new Label(item, "firstName", person.getName()));
+			item.add(new Label(item, "lastName", person.getLastName()));
 		}
 	}
 }

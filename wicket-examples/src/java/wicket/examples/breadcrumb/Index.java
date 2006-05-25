@@ -33,9 +33,9 @@ public class Index extends WicketExamplePage
 	 */
 	public Index()
 	{
-		BreadCrumbBar breadCrumbBar = new BreadCrumbBar(this,"breadCrumbBar");
+		BreadCrumbBar breadCrumbBar = new BreadCrumbBar(this, "breadCrumbBar");
 		add(breadCrumbBar);
-		FirstPanel firstPanel = new FirstPanel(this,"panel", breadCrumbBar);
+		FirstPanel firstPanel = new FirstPanel(this, "panel", breadCrumbBar);
 		add(firstPanel);
 		breadCrumbBar.setActive(firstPanel);
 	}

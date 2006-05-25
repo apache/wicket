@@ -45,8 +45,9 @@ public class LinkPage extends WicketExamplePage
 
 		// add a link which, when clicked, increases our counter
 		// when a link is clicked, its onClick method is called
-		Link link1 = new Link(this,"link1")
+		Link link1 = new Link(this, "link1")
 		{
+			@Override
 			public void onClick()
 			{
 				count1.clicks++;
@@ -56,8 +57,9 @@ public class LinkPage extends WicketExamplePage
 
 		// add a counter label to the link so that we can display it in the body
 		// of the link
-		link1.add(new Label(link1,"label1", new Model()
+		link1.add(new Label(link1, "label1", new Model()
 		{
+			@Override
 			public Object getObject(Component component)
 			{
 				return Integer.toString(count1.clicks);
@@ -85,17 +87,18 @@ public class LinkPage extends WicketExamplePage
 			 */
 			public CustomLink(MarkupContainer parent, String id)
 			{
-				super(parent,id);
+				super(parent, id);
 				count2 = new ClickCount();
-				add(new ClickCountLabel(this,"label2", count2));
+				add(new ClickCountLabel(this, "label2", count2));
 			}
 
+			@Override
 			public void onClick()
 			{
 				count2.clicks++;
 			}
 		}
-		add(new CustomLink(this,"link2"));
+		add(new CustomLink(this, "link2"));
 
 		// and if we know we are going to attach it to a <input type="button>
 		// tag, we shouldn't
@@ -111,10 +114,11 @@ public class LinkPage extends WicketExamplePage
 			 */
 			public ButtonLink(MarkupContainer parent, String id)
 			{
-				super(parent,id);
+				super(parent, id);
 				count3 = new ClickCount();
 				add(new AttributeModifier("value", new Model()
 				{
+					@Override
 					public Object getObject(Component component)
 					{
 						// we just replace the whole string. You could use
@@ -127,12 +131,13 @@ public class LinkPage extends WicketExamplePage
 				}));
 			}
 
+			@Override
 			public void onClick()
 			{
 				count3.clicks++;
 			}
 		}
-		add(new ButtonLink(this,"link3"));
+		add(new ButtonLink(this, "link3"));
 	}
 
 	/**
@@ -157,12 +162,13 @@ public class LinkPage extends WicketExamplePage
 		 * @param clickCount
 		 *            the count object
 		 */
-		public ClickCountLabel(MarkupContainer parent,final String id, final ClickCount clickCount)
+		public ClickCountLabel(MarkupContainer parent, final String id, final ClickCount clickCount)
 		{
 			// call super with a simple annonymous class model that displays the
 			// current number of clicks
-			super(parent,id, new Model()
+			super(parent, id, new Model()
 			{
+				@Override
 				public Object getObject(Component component)
 				{
 					return Integer.toString(clickCount.clicks);
@@ -174,8 +180,9 @@ public class LinkPage extends WicketExamplePage
 	// ----------
 
 	final ClickCount count1 = new ClickCount(); // simple counter object
-	Link link1 = new Link(this,"link1")
+	Link link1 = new Link(this, "link1")
 	{
+		@Override
 		public void onClick()
 		{
 			count1.clicks++;
@@ -185,6 +192,7 @@ public class LinkPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<a href=\"#\" wicket:id=\"link1\">this link is clicked <span wicket:id=\"label1\">n</span> times</a>";
@@ -200,7 +208,7 @@ public class LinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(link1);";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 

@@ -67,20 +67,21 @@ public class LinksPage extends BasePage
 	 */
 	public LinksPage()
 	{
-		final Label c1 = new Label(this,"c1", new PropertyModel(this, "counter1"));
+		final Label c1 = new Label(this, "c1", new PropertyModel(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label(this,"c2", new PropertyModel(this, "counter2"));
+		final Label c2 = new Label(this, "c2", new PropertyModel(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		final Label c3 = new Label(this,"c3", new PropertyModel(this, "counter3"));
+		final Label c3 = new Label(this, "c3", new PropertyModel(this, "counter3"));
 		c3.setOutputMarkupId(true);
 		add(c3);
 
-		add(new AjaxLink(this,"c1-link")
+		add(new AjaxLink(this, "c1-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
@@ -88,8 +89,9 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxFallbackLink(this,"c2-link")
+		add(new AjaxFallbackLink(this, "c2-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter2++;
@@ -104,8 +106,9 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new IndicatingAjaxLink(this,"c3-link")
+		add(new IndicatingAjaxLink(this, "c3-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter3++;
@@ -122,26 +125,31 @@ public class LinksPage extends BasePage
 			}
 		});
 
-		add(new AjaxLink(this,"success-link")
+		add(new AjaxLink(this, "success-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 			}
 
+			@Override
 			protected wicket.ajax.IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new AjaxCallDecorator()
 				{
+					@Override
 					public CharSequence decorateOnSuccessScript(CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
+					@Override
 					public CharSequence decorateOnFailureScript(CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
+					@Override
 					public CharSequence decorateScript(CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;
@@ -149,28 +157,33 @@ public class LinksPage extends BasePage
 				};
 			};
 		});
-		
-		add(new AjaxLink(this,"failure-link")
+
+		add(new AjaxLink(this, "failure-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				throw new WicketRuntimeException("Failure link clicked");
 			}
 
+			@Override
 			protected wicket.ajax.IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new AjaxCallDecorator()
 				{
+					@Override
 					public CharSequence decorateOnSuccessScript(CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
+					@Override
 					public CharSequence decorateOnFailureScript(CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
+					@Override
 					public CharSequence decorateScript(CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4812 $ $Date$
+ * $Id: WicketExampleHeader.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,13 +45,15 @@ public final class WicketExampleHeader extends Panel
 	 * @param page
 	 *            The example page
 	 */
-	public WicketExampleHeader(MarkupContainer parent,final String id, String exampleTitle, WebPage page)
+	public WicketExampleHeader(MarkupContainer parent, final String id, String exampleTitle,
+			WebPage page)
 	{
-		super(page,id);
-		add(new InspectorBug(this,"inspector", page));
-		add(new Label(this,"exampleTitle", exampleTitle));
-		Link link = new Link(this,"sources")
+		super(page, id);
+		add(new InspectorBug(this, "inspector", page));
+		add(new Label(this, "exampleTitle", exampleTitle));
+		Link link = new Link(this, "sources")
 		{
+			@Override
 			public void onClick()
 			{
 				setResponsePage(new SourcesPage(getPage().getClass()));

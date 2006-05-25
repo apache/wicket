@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: LibraryApplication.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -42,6 +43,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
@@ -52,6 +54,7 @@ public final class LibraryApplication extends WicketExampleApplication
 		IAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
 				AuthenticatedWebPage.class, SignIn.class)
 		{
+			@Override
 			protected boolean isAuthorized()
 			{
 				// check whether the user is logged on
@@ -65,6 +68,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
+	@Override
 	public ISessionFactory getSessionFactory()
 	{
 		return new ISessionFactory()
@@ -73,6 +77,7 @@ public final class LibraryApplication extends WicketExampleApplication
 			{
 				return new LibrarySession(LibraryApplication.this);
 			}
+
 			public Session newSession(Request request)
 			{
 				return new LibrarySession(LibraryApplication.this);
@@ -83,6 +88,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Home.class;

@@ -46,6 +46,7 @@ public class FormInputApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return FormInput.class;
@@ -54,6 +55,7 @@ public class FormInputApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
@@ -94,6 +96,7 @@ public class FormInputApplication extends WicketExampleApplication
 	 * @see URLCompressor
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
+	@Override
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
 		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),

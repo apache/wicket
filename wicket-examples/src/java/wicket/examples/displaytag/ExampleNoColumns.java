@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1547 $ $Date$
+ * $Id: ExampleNoColumns.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -51,17 +52,18 @@ public class ExampleNoColumns extends Displaytag
 		// the tags class attribute accordingly.
 		// Note: This is not the simplest way Wicket offers to render
 		// lists, but it shows how ListViews work in general.
-		add(new ListViewWithAlternatingRowStyle(this,"entries", data)
+		add(new ListViewWithAlternatingRowStyle(this, "entries", data)
 		{
 			/**
 			 * populateItem() is called for each item of the list. ListItem
 			 * provides, beside the IModel, the current index while iterating
 			 * over the data provided.
 			 */
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
-				listItem.add(new Label(listItem,"entry", value.getName()));
+				listItem.add(new Label(listItem, "entry", value.getName()));
 			}
 		});
 	}

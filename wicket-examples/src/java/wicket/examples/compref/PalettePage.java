@@ -27,12 +27,13 @@ public class PalettePage extends WicketExamplePage
 		List persons = ComponentReferenceApplication.getPersons();
 		IChoiceRenderer renderer = new ChoiceRenderer("fullName", "fullName");
 
-		final Palette palette = new Palette(form,"palette", new Model(new ArrayList()), new Model(
-				(Serializable)persons), renderer, 10, true);
+		final Palette palette = new Palette(form, "palette", new Model(new ArrayList()), new Model(
+				persons), renderer, 10, true);
 
 
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("selected person(s): " + palette.getModelObjectAsString());
@@ -42,9 +43,10 @@ public class PalettePage extends WicketExamplePage
 		add(form);
 		form.add(palette);
 
-		add(new FeedbackPanel(this,"feedback"));
+		add(new FeedbackPanel(this, "feedback"));
 	}
 
+	@Override
 	protected void explain()
 	{
 		String html = "<form wicket:id=\"form\">\n" + "<span wicket:id=\"palette\">\n"
@@ -55,6 +57,6 @@ public class PalettePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;IChoiceRenderer renderer = new ChoiceRenderer(\"fullName\", \"fullName\");<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new Model(new ArrayList()), new Model(<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Serializable)persons), renderer, 10, true);<br/>";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 	}
 }

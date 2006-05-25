@@ -53,9 +53,9 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @param id
 	 * @param data
 	 */
-	public SimpleListView(MarkupContainer parent,final String id, final List data)
+	public SimpleListView(MarkupContainer parent, final String id, final List data)
 	{
-		super(parent,id, data);
+		super(parent, id, data);
 	}
 
 	/**
@@ -64,9 +64,9 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @param id
 	 * @param model
 	 */
-	public SimpleListView(MarkupContainer parent,final String id, final IModel model)
+	public SimpleListView(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -80,9 +80,10 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 *            Index of item
 	 * @return List item
 	 */
+	@Override
 	protected ListItem newItem(final int index)
 	{
-		return new SimpleListListItem(this,index, getListItemModel(getModel(), index));
+		return new SimpleListListItem(this, index, getListItemModel(getModel(), index));
 	}
 
 	/**
@@ -106,6 +107,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @param index
 	 * @return IModel
 	 */
+	@Override
 	protected IModel getListItemModel(final IModel model, final int index)
 	{
 		return new BoundCompoundPropertyModel(super.getListItemModel(model, index));
@@ -123,13 +125,13 @@ public class SimpleListView extends ListView implements IComponentResolver
 			final ComponentTag tag)
 	{
 		String componentId = tag.getId();
-		if((componentId != null) && !componentId.startsWith(Component.AUTO_COMPONENT_PREFIX))
+		if ((componentId != null) && !componentId.startsWith(Component.AUTO_COMPONENT_PREFIX))
 		{
 			componentId = Component.AUTO_COMPONENT_PREFIX + componentId;
 			tag.setId(componentId);
 		}
-		
-		newLabel(container,componentId).autoAdded();
+
+		newLabel(container, componentId).autoAdded();
 		return true;
 	}
 
@@ -139,9 +141,9 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @param id
 	 * @return Usually a Label like component
 	 */
-	protected Component newLabel(MarkupContainer parent,final String id)
+	protected Component newLabel(MarkupContainer parent, final String id)
 	{
-		return new Label(parent,id);
+		return new Label(parent, id);
 	}
 
 	/**
@@ -149,6 +151,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * 
 	 * @param item
 	 */
+	@Override
 	protected void populateItem(final ListItem item)
 	{
 	}
@@ -166,11 +169,12 @@ public class SimpleListView extends ListView implements IComponentResolver
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(MarkupContainer parent,final int index, final IModel model)
+		public SimpleListListItem(MarkupContainer parent, final int index, final IModel model)
 		{
-			super(parent,index, model);
+			super(parent, index, model);
 		}
 
+		@Override
 		protected void onComponentTag(final ComponentTag tag)
 		{
 			// add/modify the attribute controlling the CSS style

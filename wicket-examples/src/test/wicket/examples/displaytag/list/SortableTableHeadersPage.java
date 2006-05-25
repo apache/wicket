@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SortableTableHeadersPage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -56,23 +57,25 @@ public class SortableTableHeadersPage extends WebPage
 		addUser(list, 8, "Name-dca", "mail-8");
 		addUser(list, 9, "Name-eaa", "mail-9");
 
-		ListView table = new ListView(this,"table", list)
+		ListView table = new ListView(this, "table", list)
 		{
+			@Override
 			protected void populateItem(ListItem listItem)
 			{
 				User user = (User)listItem.getModelObject();
-				listItem.add(new Label(listItem,"id", new PropertyModel(user, "id")));
-				listItem.add(new Label(listItem,"name", new PropertyModel(user, "name")));
-				listItem.add(new Label(listItem,"email", new PropertyModel(user, "email")));
+				listItem.add(new Label(listItem, "id", new PropertyModel(user, "id")));
+				listItem.add(new Label(listItem, "name", new PropertyModel(user, "name")));
+				listItem.add(new Label(listItem, "email", new PropertyModel(user, "email")));
 			}
 		};
 
 		add(table);
-		add(new SortableListViewHeaders(this,"header", table)
+		add(new SortableListViewHeaders(this, "header", table)
 		{
 			/*
 			 * If object does not support equals()
 			 */
+			@Override
 			protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
 			{
 				if (header.getId().equals("id"))
@@ -89,6 +92,7 @@ public class SortableTableHeadersPage extends WebPage
 			 * @see SortableListViewHeaders#getObjectToCompare(SortableListViewHeader,
 			 *      java.lang.Object)
 			 */
+			@Override
 			protected Comparable getObjectToCompare(final SortableListViewHeader header,
 					final Object object)
 			{

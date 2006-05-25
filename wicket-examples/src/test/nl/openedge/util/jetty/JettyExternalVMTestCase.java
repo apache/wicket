@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: JettyExternalVMTestCase.java 3905 2006-01-19 20:34:20 +0000 (Thu, 19 Jan
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-01-19 20:34:20 +0000 (Thu,
+ * 19 Jan 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -120,6 +121,7 @@ public abstract class JettyExternalVMTestCase extends AbstractJettyTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 		// first let current test case set up fixture
@@ -163,6 +165,7 @@ public abstract class JettyExternalVMTestCase extends AbstractJettyTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void tearDown() throws Exception
 	{
 		// first let current test case tear down fixture

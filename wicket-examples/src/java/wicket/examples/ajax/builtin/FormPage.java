@@ -51,12 +51,12 @@ public class FormPage extends BasePage
 	public FormPage()
 	{
 		// create feedback panel to show errors
-		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
+		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 		feedback.setOutputMarkupId(true);
 		add(feedback);
 
 		// add form with markup id setter so it can be updated via ajax
-		Form form = new Form(this,"form", new CompoundPropertyModel(bean));
+		Form form = new Form(this, "form", new CompoundPropertyModel(bean));
 		add(form);
 		form.setOutputMarkupId(true);
 
@@ -64,19 +64,19 @@ public class FormPage extends BasePage
 
 		// add form components to the form as usual
 
-		fc = new RequiredTextField(form,"name");
+		fc = new RequiredTextField(form, "name");
 		fc.add(StringValidator.minimumLength(4));
 		fc.setLabel(new ResourceModel("label.name"));
 
 		form.add(fc);
-		form.add(new SimpleFormComponentLabel(form,"name-label", fc));
+		form.add(new SimpleFormComponentLabel(form, "name-label", fc));
 
-		fc = new RequiredTextField(form,"email");
+		fc = new RequiredTextField(form, "email");
 		fc.add(EmailAddressPatternValidator.getInstance());
 		fc.setLabel(new ResourceModel("label.email"));
 
 		form.add(fc);
-		form.add(new SimpleFormComponentLabel(form,"email-label", fc));
+		form.add(new SimpleFormComponentLabel(form, "email-label", fc));
 
 		// attach an ajax validation behavior to all form component's onkeydown
 		// event and throttle it down to once per second
@@ -84,8 +84,9 @@ public class FormPage extends BasePage
 		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeyup", Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
-		form.add(new AjaxSubmitButton(form,"ajax-submit-button", form)
+		form.add(new AjaxSubmitButton(form, "ajax-submit-button", form)
 		{
+			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
 				target.addComponent(feedback);

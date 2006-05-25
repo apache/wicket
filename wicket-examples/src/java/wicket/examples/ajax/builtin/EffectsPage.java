@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: EffectsPage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -70,16 +71,17 @@ public class EffectsPage extends BasePage
 	 */
 	public EffectsPage()
 	{
-		final Label c1 = new Label(this,"c1", new PropertyModel(this, "counter1"));
+		final Label c1 = new Label(this, "c1", new PropertyModel(this, "counter1"));
 		c1.setOutputMarkupId(true);
 		add(c1);
 
-		final Label c2 = new Label(this,"c2", new PropertyModel(this, "counter2"));
+		final Label c2 = new Label(this, "c2", new PropertyModel(this, "counter2"));
 		c2.setOutputMarkupId(true);
 		add(c2);
 
-		add(new AjaxLink(this,"c1-link")
+		add(new AjaxLink(this, "c1-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter1++;
@@ -88,8 +90,9 @@ public class EffectsPage extends BasePage
 			}
 		});
 
-		add(new AjaxFallbackLink(this,"c2-link")
+		add(new AjaxFallbackLink(this, "c2-link")
 		{
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter2++;

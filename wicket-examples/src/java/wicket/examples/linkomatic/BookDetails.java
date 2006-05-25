@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1285 $ $Date$
+ * $Id: BookDetails.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -35,6 +36,6 @@ public final class BookDetails extends WicketExamplePage
 	 */
 	public BookDetails(final Book book)
 	{
-		add(new Label(this,"title", book.getTitle()));
+		add(new Label(this, "title", book.getTitle()));
 	}
 }

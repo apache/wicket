@@ -38,6 +38,7 @@ public class EchoApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Echo.class;

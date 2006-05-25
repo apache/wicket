@@ -35,6 +35,7 @@ public class TemplateApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Page1.class;

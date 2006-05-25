@@ -31,12 +31,13 @@ public class IncludePage extends WicketExamplePage
 	 */
 	public IncludePage()
 	{
-		add(new Include(this,"include", "to_be_included.html"));
+		add(new Include(this, "include", "to_be_included.html"));
 	}
 
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"include\">\n"
@@ -45,6 +46,6 @@ public class IncludePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new Include(\"include\", \"to_be_included.html\"));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 	}
 }

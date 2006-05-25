@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ExampleDecoratorLink.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -51,8 +52,9 @@ public class ExampleDecoratorLink extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add the table
-		add(new ListView(this,"rows", data)
+		add(new ListView(this, "rows", data)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
@@ -61,44 +63,48 @@ public class ExampleDecoratorLink extends Displaytag
 				listItem.add(new AttributeModifier("class", new Model(
 						(listItem.getIndex() % 2) == 0 ? "even" : "odd")));
 
-				BookmarkablePageLink idLink = new BookmarkablePageLink(listItem,"idLink", Page3.class);
+				BookmarkablePageLink idLink = new BookmarkablePageLink(listItem, "idLink",
+						Page3.class);
 				idLink.setParameter("id", value.getId());
-				idLink.add(new Label(idLink,"id", Integer.toString(value.getId())));
+				idLink.add(new Label(idLink, "id", Integer.toString(value.getId())));
 				listItem.add(idLink);
 
-				BookmarkablePageLink emailLink = new BookmarkablePageLink(listItem,"mailLink", Page3.class);
+				BookmarkablePageLink emailLink = new BookmarkablePageLink(listItem, "mailLink",
+						Page3.class);
 				emailLink.setParameter("id", value.getId());
-				emailLink.add(new Label(emailLink,"email", value.getEmail()));
+				emailLink.add(new Label(emailLink, "email", value.getEmail()));
 				listItem.add(emailLink);
 
-				BookmarkablePageLink statusLink = new BookmarkablePageLink(listItem,"statusLink",
+				BookmarkablePageLink statusLink = new BookmarkablePageLink(listItem, "statusLink",
 						Page3.class);
 				statusLink.setParameter("id", value.getId());
-				statusLink.add(new Label(statusLink,"status", value.getStatus()));
+				statusLink.add(new Label(statusLink, "status", value.getStatus()));
 				listItem.add(statusLink);
 			}
 		});
 
 		// Add table of existing comments
-		add(new SimpleListView(this,"rows2", data)
+		add(new SimpleListView(this, "rows2", data)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				BookmarkablePageLink idLink = new BookmarkablePageLink(listItem,"idLink", Page3.class);
+				BookmarkablePageLink idLink = new BookmarkablePageLink(listItem, "idLink",
+						Page3.class);
 				idLink.setParameter("id", value.getId());
-				idLink.add(new Label(idLink,"id", Integer.toString(value.getId())));
+				idLink.add(new Label(idLink, "id", Integer.toString(value.getId())));
 				listItem.add(idLink);
 
-				listItem.add(new BookmarkablePageLink(listItem,"view", Page3.class).setParameter("id",
-						value.getId()).setParameter("action", "view"));
+				listItem.add(new BookmarkablePageLink(listItem, "view", Page3.class).setParameter(
+						"id", value.getId()).setParameter("action", "view"));
 
-				listItem.add(new BookmarkablePageLink(listItem,"edit", Page3.class).setParameter("id",
-						value.getId()).setParameter("action", "edit"));
+				listItem.add(new BookmarkablePageLink(listItem, "edit", Page3.class).setParameter(
+						"id", value.getId()).setParameter("action", "edit"));
 
-				listItem.add(new BookmarkablePageLink(listItem,"delete", Page3.class).setParameter("id",
-						value.getId()).setParameter("action", "delete"));
+				listItem.add(new BookmarkablePageLink(listItem, "delete", Page3.class)
+						.setParameter("id", value.getId()).setParameter("action", "delete"));
 			}
 		});
 	}

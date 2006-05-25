@@ -45,16 +45,17 @@ public class LocaleSelector extends Panel
 	 * 
 	 * @param id
 	 */
-	public LocaleSelector(MarkupContainer parent,final String id)
+	public LocaleSelector(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// Dropdown for selecting locale
-		add(new LocaleDropDownChoice(this,"localeSelect"));
+		add(new LocaleDropDownChoice(this, "localeSelect"));
 
 		// Link to return to default locale
-		add(new Link(this,"defaultLocaleLink")
+		add(new Link(this, "defaultLocaleLink")
 		{
+			@Override
 			public void onClick()
 			{
 				WebRequest request = (WebRequest)getRequest();
@@ -91,7 +92,7 @@ public class LocaleSelector extends Panel
 		 */
 		public LocaleDropDownChoice(MarkupContainer parent, String id)
 		{
-			super(parent,id, LOCALES, new LocaleChoiceRenderer());
+			super(parent, id, LOCALES, new LocaleChoiceRenderer());
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
@@ -101,6 +102,7 @@ public class LocaleSelector extends Panel
 		/**
 		 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
 		 */
+		@Override
 		protected boolean wantOnSelectionChangedNotifications()
 		{
 			// we want roundtrips when a the user selects another item
@@ -110,6 +112,7 @@ public class LocaleSelector extends Panel
 		/**
 		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
+		@Override
 		public void onSelectionChanged(Object newSelection)
 		{
 			// note that we don't have to do anything here, as our property
@@ -134,6 +137,7 @@ public class LocaleSelector extends Panel
 		/**
 		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
+		@Override
 		public Object getDisplayValue(Object object)
 		{
 			Locale locale = (Locale)object;

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1619 $ $Date$
+ * $Id: ExampleTwoTables.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -42,7 +43,7 @@ public class ExampleTwoTables extends Displaytag
 		final List data2 = new ArrayList();
 		data2.addAll(data1);
 
-		add(new SortablePageableDisplaytagTableComponent(this,"table1", data1));
-		add(new SortablePageableDisplaytagTableComponent(this,"table2", data2));
+		add(new SortablePageableDisplaytagTableComponent(this, "table1", data1));
+		add(new SortablePageableDisplaytagTableComponent(this, "table2", data2));
 	}
 }

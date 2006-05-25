@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractJettyDecorator.java 4619 2006-02-23 22:25:06 +0000 (Thu, 23 Feb
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-02-23 22:25:06 +0000 (Thu,
+ * 23 Feb 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and

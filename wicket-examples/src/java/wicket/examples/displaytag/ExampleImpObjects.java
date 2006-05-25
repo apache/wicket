@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ExampleImpObjects.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -45,13 +46,14 @@ public class ExampleImpObjects extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add table of existing comments
-		add(new SimpleListView(this,"rows", data)
+		add(new SimpleListView(this, "rows", data)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 				final int row = listItem.getIndex() + 1;
-				listItem.add(new Label(listItem,"rowNumber", String.valueOf(row)));
+				listItem.add(new Label(listItem, "rowNumber", String.valueOf(row)));
 			}
 		});
 	}

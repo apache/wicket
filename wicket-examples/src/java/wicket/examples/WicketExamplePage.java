@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5110 $ $Date$
+ * $Id: WicketExamplePage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -45,7 +46,8 @@ public class WicketExamplePage extends WebPage
 	{
 		super(model);
 		final String packageName = getClass().getPackage().getName();
-		add(new WicketExampleHeader(this,"mainNavigation", Strings.afterLast(packageName, '.'), this));
+		add(new WicketExampleHeader(this, "mainNavigation", Strings.afterLast(packageName, '.'),
+				this));
 		explain();
 	}
 

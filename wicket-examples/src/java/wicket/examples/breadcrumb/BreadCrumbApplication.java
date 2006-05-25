@@ -30,6 +30,7 @@ public class BreadCrumbApplication extends WebApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Index.class;

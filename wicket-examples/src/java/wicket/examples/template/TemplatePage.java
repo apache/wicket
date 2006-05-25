@@ -42,27 +42,28 @@ public abstract class TemplatePage extends WicketExamplePage
 	 */
 	public TemplatePage()
 	{
-		add(new Label(this,"title", new PropertyModel(this, "pageTitle")));
-		add(currentBanner = new Banner1(this,"ad"));
-		add(new Link(this,"changeAdLink")
+		add(new Label(this, "title", new PropertyModel(this, "pageTitle")));
+		add(currentBanner = new Banner1(this, "ad"));
+		add(new Link(this, "changeAdLink")
 		{
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				if (currentBanner.getClass() == Banner1.class)
 				{
-					new Banner2(TemplatePage.this,"ad");
+					new Banner2(TemplatePage.this, "ad");
 				}
 				else
 				{
-					new Banner1(TemplatePage.this,"ad");
+					new Banner1(TemplatePage.this, "ad");
 				}
 			}
 		});
-		add(new BookmarkablePageLink(this,"page1Link", Page1.class));
-		add(new BookmarkablePageLink(this,"page2Link", Page2.class));
+		add(new BookmarkablePageLink(this, "page1Link", Page1.class));
+		add(new BookmarkablePageLink(this, "page2Link", Page2.class));
 	}
 
 	/**
@@ -89,6 +90,7 @@ public abstract class TemplatePage extends WicketExamplePage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		// TODO Bug: Versioning gives problems... probably has to do with markup

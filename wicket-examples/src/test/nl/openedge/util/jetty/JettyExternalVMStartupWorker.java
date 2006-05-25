@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: JettyExternalVMStartupWorker.java 3905 2006-01-19 20:34:20 +0000 (Thu,
+ * 19 Jan 2006) jdonnerstag $ $Revision$ $Date: 2006-01-19 20:34:20 +0000
+ * (Thu, 19 Jan 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -100,6 +101,7 @@ class JettyExternalVMStartupWorker extends Thread
 	 * 
 	 * @see java.lang.Runnable#run()
 	 */
+	@Override
 	public void run()
 	{
 
@@ -147,9 +149,9 @@ class JettyExternalVMStartupWorker extends Thread
 	private String printCommand(String[] command)
 	{
 		StringBuffer b = new StringBuffer();
-		for (int i = 0; i < command.length; i++)
+		for (String element : command)
 		{
-			b.append(command[i]).append(" ");
+			b.append(element).append(" ");
 		}
 		return b.toString();
 	}

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5389 $ $Date$
+ * $Id: ExampleExport.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -46,11 +47,11 @@ public class ExampleExport extends Displaytag
 		final List data = new TestList(6, false);
 
 		// Add the table
-		add(new SimpleListView(this,"rows", data));
+		add(new SimpleListView(this, "rows", data));
 
 		// Add the export links
-		add(new ExportLink(this,"exportCsv", data, new CsvView(data, true, false, false)));
-		add(new ExportLink(this,"exportExcel", data, new ExcelView(data, true, false, false)));
-		add(new ExportLink(this,"exportXml", data, new XmlView(data, true, false, false)));
+		add(new ExportLink(this, "exportCsv", data, new CsvView(data, true, false, false)));
+		add(new ExportLink(this, "exportExcel", data, new ExcelView(data, true, false, false)));
+		add(new ExportLink(this, "exportXml", data, new XmlView(data, true, false, false)));
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -48,12 +48,13 @@ public final class Home extends WicketExamplePage
 		final ImagesApplication application = (ImagesApplication)getApplication();
 
 		// Image as package resource
-		add(new Image(this,"image2"));
+		add(new Image(this, "image2"));
 
 		// Dynamically created image. Will re-render whenever resource is asked
 		// for.
-		add(new Image(this,"image3", new RenderedDynamicImageResource(100, 100)
+		add(new Image(this, "image3", new RenderedDynamicImageResource(100, 100)
 		{
+			@Override
 			protected boolean render(Graphics2D graphics)
 			{
 				drawCircle(graphics);
@@ -62,22 +63,23 @@ public final class Home extends WicketExamplePage
 		}));
 
 		// Simple model
-		add(new Image(this,"image4", new Model("Image2.gif")));
+		add(new Image(this, "image4", new Model("Image2.gif")));
 
 		// Dynamically created buffered image
-		add(new Image(this,"image5", getImage5Resource()));
+		add(new Image(this, "image5", getImage5Resource()));
 
 		// Add okay button image
-		add(new Image(this,"okButton", getOkButtonImage()));
+		add(new Image(this, "okButton", getOkButtonImage()));
 
 		// Add cancel button image
-		add(new NonCachingImage(this,"cancelButton", new ResourceReference("cancelButton")));
+		add(new NonCachingImage(this, "cancelButton", new ResourceReference("cancelButton")));
 	}
 
 	final ResourceReference getOkButtonImage()
 	{
 		return new ResourceReference("okButton")
 		{
+			@Override
 			protected Resource newResource()
 			{
 				return new DefaultButtonImageResource("Ok");
@@ -92,6 +94,7 @@ public final class Home extends WicketExamplePage
 	{
 		return new ResourceReference(Home.class, "image5")
 		{
+			@Override
 			public Resource newResource()
 			{
 				final BufferedDynamicImageResource resource = new BufferedDynamicImageResource();

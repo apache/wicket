@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3646 $ $Date$
+ * $Id: NestedApplication.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,6 +37,7 @@ public class NestedApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Home.class;

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -38,7 +38,7 @@ public class BasePage extends ExamplePage
 	 */
 	public BasePage()
 	{
-		add(new Label(this,"selectedLabel", new PropertyModel(this, "selectedContactLabel")));
+		add(new Label(this, "selectedLabel", new PropertyModel(this, "selectedContactLabel")));
 	}
 
 	/**
@@ -67,11 +67,12 @@ public class BasePage extends ExamplePage
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(MarkupContainer parent,final String id, IModel model)
+		public ActionPanel(MarkupContainer parent, final String id, IModel model)
 		{
-			super(parent,id, model);
-			add(new Link(this,"select")
+			super(parent, id, model);
+			add(new Link(this, "select")
 			{
+				@Override
 				public void onClick()
 				{
 					BasePage.this.selected = (Contact)getParent().getModelObject();

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -69,6 +69,7 @@ public class CookieTest extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -80,8 +81,9 @@ public class CookieTest extends TestCase
 		final ISecuritySettings settings = application.getSecuritySettings();
 		settings.setCryptFactory(new NoCryptFactory());
 
-		this.panel = new SignInPanel(page,"panel")
+		this.panel = new SignInPanel(page, "panel")
 		{
+			@Override
 			public boolean signIn(final String username, final String password)
 			{
 				return true;

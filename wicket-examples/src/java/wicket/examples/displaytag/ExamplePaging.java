@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4623 $ $Date$
+ * $Id: ExamplePaging.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -55,10 +56,10 @@ public class ExamplePaging extends Displaytag
 		// Add pageable table with alternating row styles. A Label component
 		// is automatically created for each list item.
 		// - The list contains more items than the page
-		final SimplePageableListView table = new SimplePageableListView(this,"rows", data, 10);
+		final SimplePageableListView table = new SimplePageableListView(this, "rows", data, 10);
 
 		add(table);
-		add(new MyPageableListViewNavigator(this,"pageTableNav", table));
+		add(new MyPageableListViewNavigator(this, "pageTableNav", table));
 
 		// =======================================================================
 		// Add pageable table with alternating row styles
@@ -66,29 +67,30 @@ public class ExamplePaging extends Displaytag
 		// - Explicitly create a Label
 		List data2 = new ArrayList();
 		data2.addAll(data.subList(0, 10));
-		final SimplePageableListView table2 = new SimplePageableListView(this,"rows2", data2, 20)
+		final SimplePageableListView table2 = new SimplePageableListView(this, "rows2", data2, 20)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				super.populateItem(listItem);
 
 				final ListObject value = (ListObject)listItem.getModelObject();
-				listItem.add(new Label(listItem,"comments", value.getDescription()));
+				listItem.add(new Label(listItem, "comments", value.getDescription()));
 			}
 		};
 
 		add(table2);
-		add(new MyPageableListViewNavigator(this,"pageTableNav2", table2));
+		add(new MyPageableListViewNavigator(this, "pageTableNav2", table2));
 
 		// =======================================================================
 		// Empty table
 		List data4 = new ArrayList();
-		final SimplePageableListView table4 = new SimplePageableListView(this,"rows4", data4, 10);
+		final SimplePageableListView table4 = new SimplePageableListView(this, "rows4", data4, 10);
 		add(table4);
-		add(new MyPageableListViewNavigator(this,"pageTableNav4", table4));
+		add(new MyPageableListViewNavigator(this, "pageTableNav4", table4));
 
 		// =======================================================================
-		add(new Label(this,"info5", ""));
+		add(new Label(this, "info5", ""));
 
 		final List addRemoveOptions = new ArrayList();
 		addRemoveOptions.add("10");
@@ -102,13 +104,15 @@ public class ExamplePaging extends Displaytag
 		addRemoveOptions.add("-5");
 		addRemoveOptions.add("-10");
 
-		add(new DropDownChoice(this,"addRemove", new Model(null), addRemoveOptions)
+		add(new DropDownChoice(this, "addRemove", new Model(null), addRemoveOptions)
 		{
+			@Override
 			protected boolean wantOnSelectionChangedNotifications()
 			{
 				return true;
 			}
 
+			@Override
 			protected void onSelectionChanged(Object newSelection)
 			{
 				int anz = Integer.parseInt((String)newSelection);
@@ -141,8 +145,8 @@ public class ExamplePaging extends Displaytag
 		});
 
 		List data5 = new ArrayList();
-		final SimplePageableListView table5 = new SimplePageableListView(this,"rows5", data5, 4);
+		final SimplePageableListView table5 = new SimplePageableListView(this, "rows5", data5, 4);
 		add(table5);
-		add(new MyPageableListViewNavigator(this,"pageTableNav5", table5));
+		add(new MyPageableListViewNavigator(this, "pageTableNav5", table5));
 	}
 }

@@ -54,6 +54,7 @@ public class TodoList extends BasePage
 				add(new TextField(this, "text"));
 				add(new AjaxSubmitButton(this, "add", this)
 				{
+					@Override
 					protected void onSubmit(AjaxRequestTarget target, Form form)
 					{
 						// retrieve the todo item
@@ -66,6 +67,7 @@ public class TodoList extends BasePage
 
 				add(new AjaxSubmitButton(this, "cancel", this)
 				{
+					@Override
 					public void onSubmit(AjaxRequestTarget target, Form form)
 					{
 						onCancelTodo(target);
@@ -79,6 +81,7 @@ public class TodoList extends BasePage
 			 * 
 			 * @return true when the form is visible and the link isn't.
 			 */
+			@Override
 			public boolean isVisible()
 			{
 				return !linkVisible;
@@ -100,6 +103,7 @@ public class TodoList extends BasePage
 			 * @return <code>true</code> when the add links is visible and the
 			 *         form isn't.
 			 */
+			@Override
 			public boolean isVisible()
 			{
 				return linkVisible;
@@ -111,6 +115,7 @@ public class TodoList extends BasePage
 			 * @param target
 			 *            the request target.
 			 */
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				onShowForm(target);
@@ -142,6 +147,7 @@ public class TodoList extends BasePage
 			 * @return <code>true</code> when the add links is visible and the
 			 *         form isn't.
 			 */
+			@Override
 			public boolean isVisible()
 			{
 				return linkVisible;
@@ -150,6 +156,7 @@ public class TodoList extends BasePage
 			/**
 			 * @see AjaxFallbackLink#onClick(AjaxRequestTarget)
 			 */
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				onRemoveCompletedTodos(target);
@@ -350,12 +357,14 @@ public class TodoList extends BasePage
 			// add the listview to the container
 			add(new ListView<TodoItem>(this, "item", items)
 			{
+				@Override
 				protected void populateItem(ListItem item)
 				{
 					// add an AJAX checkbox to the item
 					item.add(new AjaxCheckBox(item, "check", new PropertyModel(item.getModel(),
 							"checked"))
 					{
+						@Override
 						protected void onUpdate(AjaxRequestTarget target)
 						{
 							// no need to do anything, the model is updated by

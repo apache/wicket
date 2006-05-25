@@ -30,7 +30,7 @@ public class StockQuoteLabel extends WebComponent
 	 */
 	public StockQuoteLabel(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -44,23 +44,24 @@ public class StockQuoteLabel extends WebComponent
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public StockQuoteLabel(MarkupContainer parent,final String id, String symbol)
+	public StockQuoteLabel(MarkupContainer parent, final String id, String symbol)
 	{
-		super(parent,id, new Model(symbol));
+		super(parent, id, new Model(symbol));
 	}
 
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public StockQuoteLabel(MarkupContainer parent,final String id, IModel model)
+	public StockQuoteLabel(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
 	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
 	 *      wicket.markup.ComponentTag)
 	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		String symbol = getModelObjectAsString();

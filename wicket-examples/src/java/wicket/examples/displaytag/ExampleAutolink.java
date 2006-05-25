@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5244 $ $Date$
+ * $Id: ExampleAutolink.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -48,24 +49,26 @@ public class ExampleAutolink extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add table
-		add(new SimpleListView(this,"rows", data)
+		add(new SimpleListView(this, "rows", data)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				listItem.add(new Label(listItem,"id", Integer.toString(value.getId())));
-				listItem.add(new SmartLinkLabel(listItem,"email", value.getEmail()));
-				listItem.add(new SmartLinkLabel(listItem,"url", value.getUrl()));
+				listItem.add(new Label(listItem, "id", Integer.toString(value.getId())));
+				listItem.add(new SmartLinkLabel(listItem, "email", value.getEmail()));
+				listItem.add(new SmartLinkLabel(listItem, "url", value.getUrl()));
 			}
 		});
 
 		// Add table
-		add(new SimpleListView(this,"rows2", data)
+		add(new SimpleListView(this, "rows2", data)
 		{
+			@Override
 			protected Component newLabel(MarkupContainer parent, String id)
 			{
-				return new SmartLinkLabel(parent,id);
+				return new SmartLinkLabel(parent, id);
 			}
 		});
 	}

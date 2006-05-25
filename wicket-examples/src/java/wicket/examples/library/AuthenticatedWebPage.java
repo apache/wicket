@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4226 $ $Date$
+ * $Id: AuthenticatedWebPage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -42,7 +43,7 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	public AuthenticatedWebPage()
 	{
 		// Create border and add it to the page
-		border = new LibraryApplicationBorder(this,"border");
+		border = new LibraryApplicationBorder(this, "border");
 		border.setTransparentResolver(true);
 		super.add(border);
 

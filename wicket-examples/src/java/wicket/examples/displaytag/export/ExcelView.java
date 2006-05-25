@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: ExcelView.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -43,6 +44,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getMimeType()
 	 * @return "application/vnd.ms-excel"
 	 */
+	@Override
 	public String getMimeType()
 	{
 		return "application/vnd.ms-excel";
@@ -52,6 +54,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getRowStart()
 	 * @return ""
 	 */
+	@Override
 	protected String getRowStart()
 	{
 		return "";
@@ -61,6 +64,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getRowEnd()
 	 * @return "\n"
 	 */
+	@Override
 	protected String getRowEnd()
 	{
 		return "\n";
@@ -70,6 +74,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getCellStart()
 	 * @return ""
 	 */
+	@Override
 	protected String getCellStart()
 	{
 		return "";
@@ -79,6 +84,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getCellEnd()
 	 * @return "\t"
 	 */
+	@Override
 	protected String getCellEnd()
 	{
 		return "\t";
@@ -88,6 +94,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
 	 * @return ""
 	 */
+	@Override
 	protected String getDocumentStart()
 	{
 		return "";
@@ -97,6 +104,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
 	 * @return ""
 	 */
+	@Override
 	protected String getDocumentEnd()
 	{
 		return "";
@@ -106,6 +114,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
 	 * @return false
 	 */
+	@Override
 	protected boolean getAlwaysAppendCellEnd()
 	{
 		return false;
@@ -115,6 +124,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
 	 * @return false
 	 */
+	@Override
 	protected boolean getAlwaysAppendRowEnd()
 	{
 		return false;
@@ -130,6 +140,7 @@ public class ExcelView extends BaseExportView
 	 * 
 	 * @see wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
 	 */
+	@Override
 	protected Object escapeColumnValue(Object value)
 	{
 		if (value != null)

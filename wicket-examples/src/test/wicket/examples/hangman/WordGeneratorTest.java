@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WordGeneratorTest.java 3905 2006-01-19 20:34:20 +0000 (Thu, 19 Jan 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-01-19 20:34:20 +0000 (Thu, 19 Jan
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this

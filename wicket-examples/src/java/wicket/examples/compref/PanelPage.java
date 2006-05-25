@@ -30,9 +30,10 @@ public class PanelPage extends WicketExamplePage
 	 */
 	public PanelPage()
 	{
-		add(new MyPanel(this,"panel"));
+		add(new MyPanel(this, "panel"));
 	}
 
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"panel\">panel contents come here</span>";
@@ -40,6 +41,6 @@ public class PanelPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new MyPanel(\"panel\"));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 	}
 }

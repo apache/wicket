@@ -51,6 +51,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
+	@Override
 	public IResourceStream newMarkupResourceStream(final Class containerClass)
 	{
 		// load a template with a totally different name from this package using

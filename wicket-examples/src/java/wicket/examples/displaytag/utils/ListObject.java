@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: ListObject.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -256,6 +257,7 @@ public class ListObject implements Serializable
 	 * 
 	 * @return String simple representation of the object
 	 */
+	@Override
 	public String toString()
 	{
 		return "ListObject(" + this.id + ")";
@@ -335,6 +337,7 @@ public class ListObject implements Serializable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "name=" + this.itemName + "; email=" + this.itemEmail;

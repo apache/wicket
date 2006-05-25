@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5389 $ $Date$
+ * $Id: ExampleSorting.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -42,15 +43,16 @@ public class ExampleSorting extends Displaytag
 		final List data = new TestList(6, false);
 
 		// Add the table (but no table header)
-		SimpleListView table = new SimpleListView(this,"rows", data);
+		SimpleListView table = new SimpleListView(this, "rows", data);
 		add(table);
 
 		// And this is with a little bit of magic
-		add(new SortableListViewHeaders(this,"header", table)
+		add(new SortableListViewHeaders(this, "header", table)
 		{
 			/**
 			 * If object does not support equals()
 			 */
+			@Override
 			protected int compareTo(final SortableListViewHeader header, final Object o1,
 					final Object o2)
 			{
@@ -68,6 +70,7 @@ public class ExampleSorting extends Displaytag
 			 * @see SortableListViewHeaders#getObjectToCompare(SortableListViewHeader,
 			 *      java.lang.Object)
 			 */
+			@Override
 			protected Comparable getObjectToCompare(final SortableListViewHeader header,
 					final Object object)
 			{

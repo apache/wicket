@@ -38,16 +38,17 @@ public class ResultPanel extends BreadCrumbPanel
 	 * @param result
 	 *            The 'result' to display as a label
 	 */
-	public ResultPanel(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel, String result)
+	public ResultPanel(MarkupContainer parent, final String id,
+			final IBreadCrumbModel breadCrumbModel, String result)
 	{
-		super(parent,id, breadCrumbModel);
+		super(parent, id, breadCrumbModel);
 
 		if (result == null || "".equals(result.trim()))
 		{
 			result = "(hey, you didn't even provide some input!)";
 		}
 
-		add(new Label(this,"result", result));
+		add(new Label(this, "result", result));
 	}
 
 	/**

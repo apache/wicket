@@ -98,6 +98,7 @@ public class UnicodeConverter extends WicketExamplePage
 		/**
 		 * @see wicket.model.IModel#getNestedModel()
 		 */
+		@Override
 		public IModel getNestedModel()
 		{
 			// Return null as we never have to operate as part of a nested model
@@ -110,10 +111,10 @@ public class UnicodeConverter extends WicketExamplePage
 	 */
 	public UnicodeConverter()
 	{
-		Form form = new Form(this,"form", new CompoundPropertyModel(this));
-		form.add(new TextArea(form,"source"));
-		form.add(new DropDownChoice(form,"translationType", translationTypes));
-		form.add(new TextArea(form,"target", new ConverterModel()));
+		Form form = new Form(this, "form", new CompoundPropertyModel(this));
+		form.add(new TextArea(form, "source"));
+		form.add(new DropDownChoice(form, "translationType", translationTypes));
+		form.add(new TextArea(form, "target", new ConverterModel()));
 		add(form);
 	}
 

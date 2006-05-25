@@ -60,6 +60,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 		 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.Class,
 		 *      java.lang.String)
 		 */
+		@Override
 		protected IResourceStream locate(Class clazz, String path)
 		{
 			// Log attempt
@@ -115,6 +116,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Index.class;
@@ -123,6 +125,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	/**
 	 * @see WebApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		// instruct the application to use our custom resource stream locator

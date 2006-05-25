@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5389 $ $Date$
+ * $Id: ExampleCheckbox.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -48,14 +49,16 @@ public class ExampleCheckbox extends Displaytag
 		List data = new TestList(6, false);
 
 		// Add table of existing comments
-		add(new SimpleListView(this,"rows", data)
+		add(new SimpleListView(this, "rows", data)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				listItem.add(new CheckBox(listItem,"activ", new Model(new Boolean(value.isActive()))));
-				listItem.add(new TextField(listItem,"comment", new Model(value.getStatus())));
+				listItem.add(new CheckBox(listItem, "activ", new Model(
+						new Boolean(value.isActive()))));
+				listItem.add(new TextField(listItem, "comment", new Model(value.getStatus())));
 			}
 		});
 	}

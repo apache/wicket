@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.6 $ $Date$
+ * $Id: SignInPanel.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -69,23 +69,24 @@ public abstract class SignInPanel extends Panel
 		 * @param id
 		 *            id of the form component
 		 */
-		public SignInForm(MarkupContainer parent,final String id)
+		public SignInForm(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			add(username = new TextField(this,"username", new PropertyModel(properties, "username")));
-			add(password = new PasswordTextField(this,"password", new PropertyModel(properties,
+			add(username = new TextField(this, "username",
+					new PropertyModel(properties, "username")));
+			add(password = new PasswordTextField(this, "password", new PropertyModel(properties,
 					"password")));
 
 			// MarkupContainer row for remember me checkbox
-			WebMarkupContainer rememberMeRow = new WebMarkupContainer(this,"rememberMeRow");
+			WebMarkupContainer rememberMeRow = new WebMarkupContainer(this, "rememberMeRow");
 			add(rememberMeRow);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox(rememberMeRow,"rememberMe", new PropertyModel(SignInPanel.this,
-					"rememberMe")));
+			rememberMeRow.add(new CheckBox(rememberMeRow, "rememberMe", new PropertyModel(
+					SignInPanel.this, "rememberMe")));
 
 			// Make form values persistent
 			setPersistent(rememberMe);
@@ -97,6 +98,7 @@ public abstract class SignInPanel extends Panel
 		/**
 		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			if (signIn(getUsername(), getPassword()))
@@ -125,9 +127,9 @@ public abstract class SignInPanel extends Panel
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(MarkupContainer parent,final String id)
+	public SignInPanel(MarkupContainer parent, final String id)
 	{
-		this(parent,id, true);
+		this(parent, id, true);
 	}
 
 	/**
@@ -137,19 +139,19 @@ public abstract class SignInPanel extends Panel
 	 *            True if form should include a remember-me checkbox
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(MarkupContainer parent,final String id, final boolean includeRememberMe)
+	public SignInPanel(MarkupContainer parent, final String id, final boolean includeRememberMe)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		this.includeRememberMe = includeRememberMe;
 
 		// Create feedback panel and add to page
-		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
+		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 		add(feedback);
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler
-		add(new SignInForm(this,"signInForm"));
+		add(new SignInForm(this, "signInForm"));
 	}
 
 	/**

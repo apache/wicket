@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3905 $ $Date$
+ * $Id: LogConnector.java 5395 2006-04-16 13:42:28 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:42:28 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -68,6 +69,7 @@ public class LogConnector extends Thread
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
+	@Override
 	public void run()
 	{
 		while (true) // do until break out (like when inputstream closes).

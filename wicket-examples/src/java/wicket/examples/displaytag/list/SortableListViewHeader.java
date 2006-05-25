@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SortableListViewHeader.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -51,17 +52,19 @@ public abstract class SortableListViewHeader extends Border
 	 * @param group
 	 *            The group of headers the new one will be added to
 	 */
-	public SortableListViewHeader(MarkupContainer parent,final String id, final SortableListViewHeaderGroup group)
+	public SortableListViewHeader(MarkupContainer parent, final String id,
+			final SortableListViewHeaderGroup group)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// Default to descending.
 		this.ascending = false;
 		this.group = group;
 
 		// If user clicks on the header, sorting will reverse
-		add(new Link(this,"actionLink")
+		add(new Link(this, "actionLink")
 		{
+			@Override
 			public void onClick()
 			{
 				// call SortableTableHeaders implementation
@@ -135,6 +138,7 @@ public abstract class SortableListViewHeader extends Border
 	 * @param tag
 	 *            The current ComponentTag to handle
 	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		group.handleComponentTag(tag, getCssClass());

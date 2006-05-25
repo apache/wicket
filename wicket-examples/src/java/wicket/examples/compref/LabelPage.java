@@ -37,15 +37,16 @@ public class LabelPage extends WicketExamplePage
 	public LabelPage()
 	{
 		// add a static label
-		add(new Label(this,"staticLabel", "static text"));
+		add(new Label(this, "staticLabel", "static text"));
 
 		// add a dynamic label. For this example, we create an annonymous
 		// subclass
 		// of Model (just because it is less work then directly implementing
 		// IModel)
 		// that returns a new java.util.Date on each invocation
-		add(new Label(this,"dynamicLabel", new Model()
+		add(new Label(this, "dynamicLabel", new Model()
 		{
+			@Override
 			public Object getObject(Component component)
 			{
 				return new Date();
@@ -60,7 +61,7 @@ public class LabelPage extends WicketExamplePage
 		// parameter substitution.
 		StringResourceModel stringResourceModel = new StringResourceModel("label.current.locale",
 				this, null, new Object[] { getLocale() });
-		add(new Label(this,"resourceLabel", stringResourceModel));
+		add(new Label(this, "resourceLabel", stringResourceModel));
 
 		// and here we add a label that contains markup. Normally, this markup
 		// would be converted
@@ -71,7 +72,7 @@ public class LabelPage extends WicketExamplePage
 		// our browser to interpret it as real markup, so we set the
 		// escapeModelString property
 		// to false
-		Label markupLabel = new Label(this,"markupLabel",
+		Label markupLabel = new Label(this, "markupLabel",
 				"now <i>that</i> is a pretty <b>bold</b> statement!");
 		markupLabel.setEscapeModelStrings(false);
 		add(markupLabel);
@@ -80,13 +81,14 @@ public class LabelPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"markupLabel\" class=\"mark\">this text will be replaced</span>";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label markupLabel = new Label(\"markupLabel\", \"now &lt;i&gt;that&lt;/i&gt; is a pretty &lt;b&gt;bold&lt;/b&gt; statement!\");\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;markupLabel.setEscapeModelStrings(false);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(markupLabel);";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 }

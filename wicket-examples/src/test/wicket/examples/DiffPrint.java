@@ -335,6 +335,7 @@ public class DiffPrint
 		 * @param hunk
 		 */
 
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 
@@ -400,6 +401,7 @@ public class DiffPrint
 		 * 
 		 * @param hunk
 		 */
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 
@@ -504,6 +506,7 @@ public class DiffPrint
 		/**
 		 * @see DiffPrint.Base#print_header(java.lang.String, java.lang.String)
 		 */
+		@Override
 		public void print_header(String filea, String fileb)
 		{
 			print_context_label("***", new File(filea), filea);
@@ -532,6 +535,7 @@ public class DiffPrint
 			}
 		}
 
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 
@@ -658,6 +662,7 @@ public class DiffPrint
 		 * @see DiffPrint.ContextPrint#print_header(java.lang.String,
 		 *      java.lang.String)
 		 */
+		@Override
 		public void print_header(String filea, String fileb)
 		{
 			print_context_label("---", new File(filea), filea);
@@ -683,6 +688,7 @@ public class DiffPrint
 			}
 		}
 
+		@Override
 		protected void print_hunk(Diff.change hunk)
 		{
 			/* Determine range of line numbers involved in each file. */

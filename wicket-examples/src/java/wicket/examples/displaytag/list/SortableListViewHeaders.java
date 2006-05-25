@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SortableListViewHeaders.java 5855 2006-05-25 17:26:47 +0000 (Thu, 25 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-25 17:26:47 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -55,9 +56,9 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	 * @param listView
 	 *            the underlying ListView
 	 */
-	public SortableListViewHeaders(MarkupContainer parent,final String id, final ListView listView)
+	public SortableListViewHeaders(MarkupContainer parent, final String id, final ListView listView)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		this.group = new SortableListViewHeaderGroup(this, listView);
 	}
@@ -105,20 +106,22 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 		{
 			// Get component name
 			String componentId = tag.getId();
-			if((componentId != null) && !componentId.startsWith(Component.AUTO_COMPONENT_PREFIX))
+			if ((componentId != null) && !componentId.startsWith(Component.AUTO_COMPONENT_PREFIX))
 			{
 				componentId = Component.AUTO_COMPONENT_PREFIX + componentId;
 				tag.setId(componentId);
 			}
 			if ((componentId != null) && (get(componentId) == null))
 			{
-				SortableListViewHeader slvh = new SortableListViewHeader(this,componentId, group)
+				SortableListViewHeader slvh = new SortableListViewHeader(this, componentId, group)
 				{
+					@Override
 					protected int compareTo(final Object o1, final Object o2)
 					{
 						return SortableListViewHeaders.this.compareTo(this, o1, o2);
 					}
 
+					@Override
 					protected Comparable getObjectToCompare(final Object object)
 					{
 						return SortableListViewHeaders.this.getObjectToCompare(this, object);
@@ -138,6 +141,7 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	 * 
 	 * @see wicket.Component#onRender(MarkupStream)
 	 */
+	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Must be <thead> tag

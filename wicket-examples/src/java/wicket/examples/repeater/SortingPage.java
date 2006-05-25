@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: SortingPage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,20 +45,22 @@ public class SortingPage extends BasePage
 	public SortingPage()
 	{
 		SortableContactDataProvider dp = new SortableContactDataProvider();
-		final DataView dataView = new DataView(this,"sorting", dp)
+		final DataView dataView = new DataView(this, "sorting", dp)
 		{
+			@Override
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel(item,"actions", item.getModel()));
-				item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
-				item.add(new Label(item,"firstname", contact.getFirstName()));
-				item.add(new Label(item,"lastname", contact.getLastName()));
-				item.add(new Label(item,"homephone", contact.getHomePhone()));
-				item.add(new Label(item,"cellphone", contact.getCellPhone()));
+				item.add(new ActionPanel(item, "actions", item.getModel()));
+				item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
+				item.add(new Label(item, "firstname", contact.getFirstName()));
+				item.add(new Label(item, "lastname", contact.getLastName()));
+				item.add(new Label(item, "homephone", contact.getHomePhone()));
+				item.add(new Label(item, "cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
+					@Override
 					public Object getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
@@ -68,16 +71,18 @@ public class SortingPage extends BasePage
 
 		dataView.setItemsPerPage(8);
 
-		add(new OrderByBorder(this,"orderByFirstName", "firstName", dp)
+		add(new OrderByBorder(this, "orderByFirstName", "firstName", dp)
 		{
+			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);
 			}
 		});
 
-		add(new OrderByBorder(this,"orderByLastName", "lastName", dp)
+		add(new OrderByBorder(this, "orderByLastName", "lastName", dp)
 		{
+			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);
@@ -86,6 +91,6 @@ public class SortingPage extends BasePage
 
 		add(dataView);
 
-		add(new PagingNavigator(this,"navigator", dataView));
+		add(new PagingNavigator(this, "navigator", dataView));
 	}
 }

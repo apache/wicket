@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: MediaTypeEnum.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -109,11 +110,11 @@ public final class MediaTypeEnum
 	 */
 	public static MediaTypeEnum fromCode(int key)
 	{
-		for (int i = 0; i < ALL.length; i++)
+		for (MediaTypeEnum element : ALL)
 		{
-			if (key == ALL[i].getCode())
+			if (key == element.getCode())
 			{
-				return ALL[i];
+				return element;
 			}
 		}
 		// lookup failed
@@ -148,11 +149,11 @@ public final class MediaTypeEnum
 	 */
 	public static MediaTypeEnum fromName(String code)
 	{
-		for (int i = 0; i < ALL.length; i++)
+		for (MediaTypeEnum element : ALL)
 		{
-			if (ALL[i].getName().equals(code))
+			if (element.getName().equals(code))
 			{
-				return ALL[i];
+				return element;
 			}
 		}
 		// lookup failed
@@ -174,6 +175,7 @@ public final class MediaTypeEnum
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return getName();
@@ -187,6 +189,7 @@ public final class MediaTypeEnum
 	 *            the object to compare to
 	 * @return hashCode
 	 */
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o)
@@ -200,6 +203,7 @@ public final class MediaTypeEnum
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return new HashCodeBuilder(1188997057, -1289297553).append(this.enumCode).toHashCode();

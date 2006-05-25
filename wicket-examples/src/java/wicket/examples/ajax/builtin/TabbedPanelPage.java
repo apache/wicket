@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4909 $ $Date$
+ * $Id: TabbedPanelPage.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -42,29 +43,32 @@ public class TabbedPanelPage extends BasePage
 		List tabs = new ArrayList();
 		tabs.add(new AbstractTab(new Model("first tab"))
 		{
-			public Panel getPanel(MarkupContainer parent,String panelId)
+			@Override
+			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
-				return new TabPanel1(parent,panelId);
+				return new TabPanel1(parent, panelId);
 			}
 		});
 
 		tabs.add(new AbstractTab(new Model("second tab"))
 		{
-			public Panel getPanel(MarkupContainer parent,String panelId)
+			@Override
+			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
-				return new TabPanel2(parent,panelId);
+				return new TabPanel2(parent, panelId);
 			}
 		});
 
 		tabs.add(new AbstractTab(new Model("third tab"))
 		{
-			public Panel getPanel(MarkupContainer parent,String panelId)
+			@Override
+			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
-				return new TabPanel3(parent,panelId);
+				return new TabPanel3(parent, panelId);
 			}
 		});
 
-		add(new AjaxTabbedPanel(this,"tabs", tabs));
+		add(new AjaxTabbedPanel(this, "tabs", tabs));
 	}
 
 	/**
@@ -80,7 +84,7 @@ public class TabbedPanelPage extends BasePage
 		 */
 		public TabPanel1(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	};
 
@@ -97,7 +101,7 @@ public class TabbedPanelPage extends BasePage
 		 */
 		public TabPanel2(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	};
 
@@ -114,7 +118,7 @@ public class TabbedPanelPage extends BasePage
 		 */
 		public TabPanel3(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	};
 }

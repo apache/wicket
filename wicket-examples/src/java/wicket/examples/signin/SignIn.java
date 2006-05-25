@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -51,13 +51,13 @@ public final class SignIn extends WicketExamplePage
 	public SignIn(final PageParameters parameters)
 	{
 		// Create feedback panel and add to page
-		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
+		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 
 		add(feedback);
 
 		// Add sign-in form to page, passing feedback panel as validation error
 		// handler
-		add(new SignInForm(this,"signInForm"));
+		add(new SignInForm(this, "signInForm"));
 	}
 
 	/**
@@ -76,18 +76,19 @@ public final class SignIn extends WicketExamplePage
 		 * @param id
 		 *            id of the form component
 		 */
-		public SignInForm(MarkupContainer parent,final String id)
+		public SignInForm(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 
 			// Attach textfield components that edit properties map model
-			add(new TextField(this,"username", new PropertyModel(properties, "username")));
-			add(new PasswordTextField(this,"password", new PropertyModel(properties, "password")));
+			add(new TextField(this, "username", new PropertyModel(properties, "username")));
+			add(new PasswordTextField(this, "password", new PropertyModel(properties, "password")));
 		}
 
 		/**
 		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			// Get session info

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-03-04 13:35:30 +0100 (Sa, 04 Mrz 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -70,8 +70,8 @@ public class Page5 extends WicketExamplePage
 			}
 		}
 
-		add(new Label(this,"p1", p1));
-		add(new Label(this,"p2", p2));
+		add(new Label(this, "p1", p1));
+		add(new Label(this, "p2", p2));
 
 		String newP1 = String.valueOf(random.nextInt());
 		String newP2 = String.valueOf(random.nextInt());
@@ -80,8 +80,9 @@ public class Page5 extends WicketExamplePage
 		params.put("param1", newP1);
 		params.put("param2", newP2);
 
-		BookmarkablePageLink link = new BookmarkablePageLink(this,"refreshLink", Page5.class, params);
+		BookmarkablePageLink link = new BookmarkablePageLink(this, "refreshLink", Page5.class,
+				params);
 		add(link);
-		add(new BookmarkablePageLink(this,"homeLink", Home.class));
+		add(new BookmarkablePageLink(this, "homeLink", Home.class));
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4296 $ $Date$
+ * $Id: SignIn2Application.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -25,8 +26,6 @@ import wicket.Session;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
-import wicket.examples.hangman.HangmanApplication;
-import wicket.examples.hangman.HangmanSession;
 import wicket.protocol.http.request.CryptedUrlWebRequestCodingStrategy;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
@@ -49,10 +48,11 @@ public final class SignIn2Application extends WicketExampleApplication
 	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		super.init();
-		
+
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{
 			public boolean isActionAuthorized(Component component, Action action)
@@ -82,6 +82,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
+	@Override
 	public ISessionFactory getSessionFactory()
 	{
 		return new ISessionFactory()
@@ -90,26 +91,28 @@ public final class SignIn2Application extends WicketExampleApplication
 			{
 				return new SignIn2Session(SignIn2Application.this);
 			}
+
 			public Session newSession(Request request)
 			{
 				return new SignIn2Session(SignIn2Application.this);
 			}
 		};
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
+	@Override
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new CompoundRequestCycleProcessor(
-				new CryptedUrlWebRequestCodingStrategy(new WebRequestCodingStrategy()),
-				null, null, null, null);
+		return new CompoundRequestCycleProcessor(new CryptedUrlWebRequestCodingStrategy(
+				new WebRequestCodingStrategy()), null, null, null, null);
 	}
 
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Home.class;

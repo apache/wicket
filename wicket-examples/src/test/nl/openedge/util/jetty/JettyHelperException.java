@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: JettyHelperException.java 3905 2006-01-19 20:34:20 +0000 (Thu, 19 Jan
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-01-19 20:34:20 +0000 (Thu,
+ * 19 Jan 2006) $
  * 
  * ================================================================================
  * Copyright (c) All rechten voorbehouden.

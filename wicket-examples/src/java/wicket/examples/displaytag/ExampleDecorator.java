@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5244 $ $Date$
+ * $Id: ExampleDecorator.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -47,24 +48,25 @@ public class ExampleDecorator extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add table
-		add(new SimpleListView(this,"rows", data)
+		add(new SimpleListView(this, "rows", data)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				listItem
-						.add(new Label(listItem,"date", Time.valueOf(value.getDate()).toString("yyyy-MM-dd")));
+				listItem.add(new Label(listItem, "date", Time.valueOf(value.getDate()).toString(
+						"yyyy-MM-dd")));
 
 				final DecimalFormat format = new DecimalFormat("$ #,##0.00");
-				listItem.add(new Label(listItem,"money", format.format(value.getMoney())));
+				listItem.add(new Label(listItem, "money", format.format(value.getMoney())));
 			}
 		});
 
 		// Dropdown for selecting locale
-		add(new LocaleSelector(this,"localeSelector"));
+		add(new LocaleSelector(this, "localeSelector"));
 
 		// Add table
-		add(new SimpleListView(this,"rows2", data));
+		add(new SimpleListView(this, "rows2", data));
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-04-06 19:51:46 +0200 (Do, 06 Apr 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -47,13 +47,14 @@ public class Index extends WicketExamplePage
 	public Index()
 	{
 		// Add the Ajaxian link to the page...
-		add(new Link(this,"link")
+		add(new Link(this, "link")
 		{
 			/**
 			 * Handles a click on the link. This method is accessed normally
 			 * using a standard http request, but in this example, we use Ajax
 			 * to perform the call.
 			 */
+			@Override
 			public void onClick()
 			{
 				// Increment count
@@ -67,6 +68,7 @@ public class Index extends WicketExamplePage
 			 * Alter the javascript 'onclick' event to emit the Ajax call and
 			 * update the counter label.
 			 */
+			@Override
 			protected String getOnClickScript(String url)
 			{
 				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(
@@ -76,7 +78,7 @@ public class Index extends WicketExamplePage
 		});
 
 		// Add the label
-		add(counter = new Label(this,"counter", new PropertyModel(this, "count")));
+		add(counter = new Label(this, "counter", new PropertyModel(this, "count")));
 	}
 
 	/**

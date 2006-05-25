@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1285 $ $Date$
+ * $Id: BookDetails.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -57,12 +58,12 @@ public final class BookDetails extends AuthenticatedWebPage
 	{
 		Model bookModel = new Model(book);
 
-		add(new Label(this,"title", book.getTitle()));
-		add(new Label(this,"author", book.getAuthor()));
-		add(new Label(this,"fiction", Boolean.toString(book.getFiction())));
-		add(BookDetails.link(this,"companion", book.getCompanionBook(), getLocalizer().getString(
+		add(new Label(this, "title", book.getTitle()));
+		add(new Label(this, "author", book.getAuthor()));
+		add(new Label(this, "fiction", Boolean.toString(book.getFiction())));
+		add(BookDetails.link(this, "companion", book.getCompanionBook(), getLocalizer().getString(
 				"noBookTitle", this)));
-		add(BookDetails.link(this,"related", book.getRelatedBook(), getLocalizer().getString(
+		add(BookDetails.link(this, "related", book.getRelatedBook(), getLocalizer().getString(
 				"noBookTitle", this)));
 
 		String writingStyles;
@@ -87,13 +88,13 @@ public final class BookDetails extends AuthenticatedWebPage
 			writingStyles = getLocalizer().getString("noWritingStyles", this);
 		}
 
-		Label writingStylesLabel = new Label(this,"writingStyles", writingStyles);
+		Label writingStylesLabel = new Label(this, "writingStyles", writingStyles);
 
 		final AttributeModifier italic = new AttributeModifier("class", new Model("italic"));
 		italic.setEnabled(!hasStyles);
 
 		add(writingStylesLabel.add(italic));
-		add(EditBook.link(this,"edit", book.getId()));
+		add(EditBook.link(this, "edit", book.getId()));
 	}
 
 	/**
@@ -107,19 +108,19 @@ public final class BookDetails extends AuthenticatedWebPage
 	 *            The title to show if book is null
 	 * @return The external page link
 	 */
-	public static BookmarkablePageLink link(MarkupContainer parent,final String name, final Book book,
-			final String noBookTitle)
+	public static BookmarkablePageLink link(MarkupContainer parent, final String name,
+			final Book book, final String noBookTitle)
 	{
-		final BookmarkablePageLink link = new BookmarkablePageLink(parent,name, BookDetails.class);
+		final BookmarkablePageLink link = new BookmarkablePageLink(parent, name, BookDetails.class);
 
 		if (book != null)
 		{
 			link.setParameter("id", book.getId());
-			link.add(new Label(link,"title", new Model(book)));
+			link.add(new Label(link, "title", new Model(book)));
 		}
 		else
 		{
-			link.add(new Label(link,"title", noBookTitle));
+			link.add(new Label(link, "title", noBookTitle));
 			link.setEnabled(false);
 		}
 

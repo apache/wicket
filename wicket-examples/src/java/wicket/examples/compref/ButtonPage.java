@@ -34,20 +34,22 @@ public class ButtonPage extends WicketExamplePage
 	public ButtonPage()
 	{
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("Form.onSubmit executed");
 			}
 		};
 
-		Button button1 = new Button(form,"button1")
+		Button button1 = new Button(form, "button1")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("button1.onSubmit executed");
@@ -55,8 +57,9 @@ public class ButtonPage extends WicketExamplePage
 		};
 		form.add(button1);
 
-		Button button2 = new Button(form,"button2")
+		Button button2 = new Button(form, "button2")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("button2.onSubmit executed");
@@ -71,6 +74,7 @@ public class ButtonPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = " <form wicket:id=\"form\">\n"
@@ -101,7 +105,7 @@ public class ButtonPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(button2);\n"
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(form);";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 }

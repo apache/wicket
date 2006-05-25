@@ -26,9 +26,10 @@ public class CheckGroupPage extends WicketExamplePage
 	public CheckGroupPage()
 	{
 
-		final CheckGroup group = new CheckGroup(form,"group", new ArrayList());
-		Form form = new Form(this,"form")
+		final CheckGroup group = new CheckGroup(form, "group", new ArrayList());
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("selected person(s): " + group.getModelObjectAsString());
@@ -37,24 +38,29 @@ public class CheckGroupPage extends WicketExamplePage
 
 		add(form);
 		form.add(group);
-		group.add(new CheckGroupSelector(group,"groupselector"));
-		ListView persons = new ListView(group,"persons", ComponentReferenceApplication.getPersons())
+		group.add(new CheckGroupSelector(group, "groupselector"));
+		ListView persons = new ListView(group, "persons", ComponentReferenceApplication
+				.getPersons())
 		{
 
+			@Override
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Check(item,"checkbox", item.getModel()));
-				item.add(new Label(item,"name", new PropertyModel(item.getModel(), "name")));
-				item.add(new Label(item,"lastName", new PropertyModel(item.getModel(), "lastName")));
+				item.add(new Check(item, "checkbox", item.getModel()));
+				item.add(new Label(item, "name", new PropertyModel(item.getModel(), "name")));
+				item
+						.add(new Label(item, "lastName", new PropertyModel(item.getModel(),
+								"lastName")));
 			}
 
 		};
 
 		group.add(persons);
 
-		add(new FeedbackPanel(this,"feedback"));
+		add(new FeedbackPanel(this, "feedback"));
 	}
 
+	@Override
 	protected void explain()
 	{
 		String html = "<form wicket:id=\"form\">\n"
@@ -77,6 +83,6 @@ public class CheckGroupPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"lastName\", new PropertyModel(item.getModel(), \"lastName\")));<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;};<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;group.add(persons);<br/>";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 	}
 }

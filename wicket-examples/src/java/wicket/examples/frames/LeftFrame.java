@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -59,9 +59,10 @@ public class LeftFrame extends WebPage
 		 * @param bodyFrame
 		 * @param pageClass
 		 */
-		public ChangeFramePageLink(MarkupContainer parent,final String id, BodyFrame bodyFrame, Class pageClass)
+		public ChangeFramePageLink(MarkupContainer parent, final String id, BodyFrame bodyFrame,
+				Class pageClass)
 		{
-			super(parent,id);
+			super(parent, id);
 			this.bodyFrame = bodyFrame;
 			this.pageClass = pageClass;
 		}
@@ -69,6 +70,7 @@ public class LeftFrame extends WebPage
 		/**
 		 * @see wicket.markup.html.link.Link#onClick()
 		 */
+		@Override
 		public void onClick()
 		{
 			// change frame class
@@ -87,8 +89,8 @@ public class LeftFrame extends WebPage
 	 */
 	public LeftFrame(BodyFrame index)
 	{
-		add(new ChangeFramePageLink(this,"linkToPage1", index, Page1.class));
-		add(new ChangeFramePageLink(this,"linkToPage2", index, Page2.class));
+		add(new ChangeFramePageLink(this, "linkToPage1", index, Page1.class));
+		add(new ChangeFramePageLink(this, "linkToPage2", index, Page2.class));
 	}
 
 	/**
@@ -96,6 +98,7 @@ public class LeftFrame extends WebPage
 	 * 
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

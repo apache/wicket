@@ -1,6 +1,7 @@
 /*
- * $Id: InspectorPage.java 5434 2006-04-17 17:24:28 +0000 (ma, 17 apr 2006) jdonnerstag $
- * $Revision: 5434 $ $Date: 2006-04-17 17:24:28 +0000 (ma, 17 apr 2006) $
+ * $Id: InspectorPage.java 5434 2006-04-17 17:24:28 +0000 (ma, 17 apr 2006)
+ * jdonnerstag $ $Revision: 5434 $ $Date: 2006-04-17 17:24:28 +0000 (ma, 17 apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,7 +38,7 @@ import wicket.util.string.StringValueConversionException;
 public final class InspectorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -46,8 +47,8 @@ public final class InspectorPage extends WebPage
 	 */
 	public InspectorPage(final PageParameters parameters)
 	{
-		add(new ApplicationView(this,"application", Application.get()));
-		add(new SessionView(this,"session", Session.get()));
+		add(new ApplicationView(this, "application", Application.get()));
+		add(new SessionView(this, "session", Session.get()));
 		IPageMapEntry entry = null;
 		try
 		{
@@ -57,15 +58,16 @@ public final class InspectorPage extends WebPage
 		{
 			// Ignore
 		}
-		add(new PageView(this,"page", entry == null ? null : entry.getPage()));
-		add(new Image(this,"bug"));
-		add(new BookmarkablePageLink(this,"allsessions",LiveSessionsPage.class));
-		add(new Label(this,"wicketVersion", getApplication().getFrameworkSettings().getVersion()));
+		add(new PageView(this, "page", entry == null ? null : entry.getPage()));
+		add(new Image(this, "bug"));
+		add(new BookmarkablePageLink(this, "allsessions", LiveSessionsPage.class));
+		add(new Label(this, "wicketVersion", getApplication().getFrameworkSettings().getVersion()));
 	}
-	
+
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

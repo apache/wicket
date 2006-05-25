@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MyPageableListViewNavigator.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -38,12 +39,13 @@ public class MyPageableListViewNavigator extends PagingNavigator
 	 * @param id
 	 * @param pageableListView
 	 */
-	public MyPageableListViewNavigator(MarkupContainer parent,final String id, final PageableListView pageableListView)
+	public MyPageableListViewNavigator(MarkupContainer parent, final String id,
+			final PageableListView pageableListView)
 	{
-		super(parent,id, pageableListView);
+		super(parent, id, pageableListView);
 
 		this.pageableListView = pageableListView;
-		add(new Label(this,"headline", new PropertyModel(this, "headlineText")));
+		add(new Label(this, "headline", new PropertyModel(this, "headlineText")));
 	}
 
 	/**

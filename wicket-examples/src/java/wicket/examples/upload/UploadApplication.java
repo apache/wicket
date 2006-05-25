@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5089 $ $Date$
+ * $Id: UploadApplication.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,6 +41,7 @@ public class UploadApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
@@ -49,6 +51,7 @@ public class UploadApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return UploadPage.class;
@@ -57,6 +60,7 @@ public class UploadApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
 	{
 		return new UploadWebRequest(servletRequest);

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: DataTablePage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -47,7 +48,7 @@ public class DataTablePage extends BasePage
 		{
 			public void populateItem(Item cellItem, String componentId, IModel model)
 			{
-				cellItem.add(new ActionPanel(cellItem,componentId, model));
+				cellItem.add(new ActionPanel(cellItem, componentId, model));
 			}
 		});
 
@@ -57,6 +58,6 @@ public class DataTablePage extends BasePage
 		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
 
-		add(new DefaultDataTable(this,"table", columns, new SortableContactDataProvider(), 8));
+		add(new DefaultDataTable(this, "table", columns, new SortableContactDataProvider(), 8));
 	}
 }

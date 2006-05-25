@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2005-08-21 17:11:33 +0200 (So, 21 Aug 2005) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,21 +44,22 @@ public final class Home extends AuthenticatedWebPage
 	{
 		// Add table of books
 		final PageableListView listView;
-		add(listView = new PageableListView(this,"books", new PropertyModel(this, "books"), 4)
+		add(listView = new PageableListView(this, "books", new PropertyModel(this, "books"), 4)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final Book book = (Book)listItem.getModelObject();
-				listItem.add(BookDetails.link(listItem,"details", book, getLocalizer().getString(
+				listItem.add(BookDetails.link(listItem, "details", book, getLocalizer().getString(
 						"noBookTitle", this)));
-				listItem.add(new Label(listItem,"author", new Model(book)));
-				listItem.add(moveUpLink(listItem,"moveUp", listItem));
-				listItem.add(moveDownLink(listItem,"moveDown", listItem));
-				listItem.add(removeLink(listItem,"remove", listItem));
-				listItem.add(EditBook.link(listItem,"edit", book.getId()));
+				listItem.add(new Label(listItem, "author", new Model(book)));
+				listItem.add(moveUpLink(listItem, "moveUp", listItem));
+				listItem.add(moveDownLink(listItem, "moveDown", listItem));
+				listItem.add(removeLink(listItem, "remove", listItem));
+				listItem.add(EditBook.link(listItem, "edit", book.getId()));
 			}
 		});
-		add(new PagingNavigator(this,"navigator", listView));
+		add(new PagingNavigator(this, "navigator", listView));
 	}
 
 	/**

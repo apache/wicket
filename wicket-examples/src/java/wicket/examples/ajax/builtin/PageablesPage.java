@@ -31,19 +31,21 @@ public class PageablesPage extends BasePage
 	 */
 	public PageablesPage()
 	{
-		WebMarkupContainer datacontainer = new WebMarkupContainer(this,"data");
+		WebMarkupContainer datacontainer = new WebMarkupContainer(this, "data");
 		datacontainer.setOutputMarkupId(true);
 		add(datacontainer);
 
-		PageableListView listview = new PageableListView(datacontainer,"rows", Arrays.asList(names), 10)
+		PageableListView listview = new PageableListView(datacontainer, "rows", Arrays
+				.asList(names), 10)
 		{
+			@Override
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Label(item,"name", item.getModelObjectAsString()));
+				item.add(new Label(item, "name", item.getModelObjectAsString()));
 			}
 		};
 
 		datacontainer.add(listview);
-		datacontainer.add(new AjaxPagingNavigator(datacontainer,"navigator", listview));
+		datacontainer.add(new AjaxPagingNavigator(datacontainer, "navigator", listview));
 	}
 }

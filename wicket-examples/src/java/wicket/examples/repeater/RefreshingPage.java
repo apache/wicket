@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3292 $ $Date$
+ * $Id: RefreshingPage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -54,29 +55,32 @@ public class RefreshingPage extends BasePage
 		}
 
 		// create the refreshing view
-		RefreshingView view = new RefreshingView(this,"view")
+		RefreshingView view = new RefreshingView(this, "view")
 		{
 			/**
 			 * Return an iterator over models for items in the view
 			 */
+			@Override
 			protected Iterator getItemModels()
 			{
 				return contacts.iterator();
 			}
 
+			@Override
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new Label(item,"itemid", item.getId()));
-				item.add(new ActionPanel(item,"actions", item.getModel()));
-				item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
-				item.add(new Label(item,"firstname", contact.getFirstName()));
-				item.add(new Label(item,"lastname", contact.getLastName()));
-				item.add(new Label(item,"homephone", contact.getHomePhone()));
-				item.add(new Label(item,"cellphone", contact.getCellPhone()));
+				item.add(new Label(item, "itemid", item.getId()));
+				item.add(new ActionPanel(item, "actions", item.getModel()));
+				item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
+				item.add(new Label(item, "firstname", contact.getFirstName()));
+				item.add(new Label(item, "lastname", contact.getLastName()));
+				item.add(new Label(item, "homephone", contact.getHomePhone()));
+				item.add(new Label(item, "cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
+					@Override
 					public Object getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
@@ -87,8 +91,9 @@ public class RefreshingPage extends BasePage
 
 		add(view);
 
-		add(new Link(this,"refreshLink")
+		add(new Link(this, "refreshLink")
 		{
+			@Override
 			public void onClick()
 			{
 				// noop

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: XmlView.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -43,6 +44,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getRowStart()
 	 */
+	@Override
 	protected String getRowStart()
 	{
 		return "<row>\n";
@@ -51,6 +53,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getRowEnd()
 	 */
+	@Override
 	protected String getRowEnd()
 	{
 		return "</row>\n";
@@ -59,6 +62,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getCellStart()
 	 */
+	@Override
 	protected String getCellStart()
 	{
 		return "<column>";
@@ -67,6 +71,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getCellEnd()
 	 */
+	@Override
 	protected String getCellEnd()
 	{
 		return "</column>\n";
@@ -75,6 +80,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getDocumentStart()
 	 */
+	@Override
 	protected String getDocumentStart()
 	{
 		return "<?xml version=\"1.0\"?>\n<table>\n";
@@ -83,6 +89,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getDocumentEnd()
 	 */
+	@Override
 	protected String getDocumentEnd()
 	{
 		return "</table>\n";
@@ -91,6 +98,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendCellEnd()
 	 */
+	@Override
 	protected boolean getAlwaysAppendCellEnd()
 	{
 		return true;
@@ -99,6 +107,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getAlwaysAppendRowEnd()
 	 */
+	@Override
 	protected boolean getAlwaysAppendRowEnd()
 	{
 		return true;
@@ -107,6 +116,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#getMimeType()
 	 */
+	@Override
 	public String getMimeType()
 	{
 		return "text/xml";
@@ -115,6 +125,7 @@ public class XmlView extends BaseExportView
 	/**
 	 * @see wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
 	 */
+	@Override
 	protected Object escapeColumnValue(Object value)
 	{
 		if (value != null)

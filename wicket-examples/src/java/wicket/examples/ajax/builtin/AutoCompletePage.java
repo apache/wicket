@@ -40,11 +40,12 @@ public class AutoCompletePage extends BasePage
 	 */
 	public AutoCompletePage()
 	{
-		Form form = new Form(this,"form");
+		Form form = new Form(this, "form");
 		add(form);
 
-		form.add(new AutoCompleteTextField(form,"ac", new Model(""))
+		form.add(new AutoCompleteTextField(form, "ac", new Model(""))
 		{
+			@Override
 			protected Iterator getChoices(String input)
 			{
 				if (Strings.isEmpty(input))
@@ -56,9 +57,8 @@ public class AutoCompletePage extends BasePage
 
 				Locale[] locales = Locale.getAvailableLocales();
 
-				for (int i = 0; i < locales.length; i++)
+				for (final Locale locale : locales)
 				{
-					final Locale locale = locales[i];
 					final String country = locale.getDisplayCountry();
 
 					if (country.toUpperCase().startsWith(input.toUpperCase()))

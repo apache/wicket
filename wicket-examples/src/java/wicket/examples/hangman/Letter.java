@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2005-10-02 12:04:34 +0200 (So, 02 Okt 2005) $
+ * $Id: Letter.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2005-10-02 12:04:34 +0200 (So, 02 Okt
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -60,6 +61,7 @@ public class Letter implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object object)
 	{
 		if (object instanceof Letter)
@@ -78,6 +80,7 @@ public class Letter implements Serializable
 		return new ResourceReference(Letter.class, asString()
 				+ (isGuessed() ? "_enabled" : "_disabled"))
 		{
+			@Override
 			protected Resource newResource()
 			{
 				// Lazy loading of shared resource
@@ -103,6 +106,7 @@ public class Letter implements Serializable
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return Primitives.hashCode(letter << (guessed ? 1 : 0));
@@ -127,6 +131,7 @@ public class Letter implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Letter letter = " + letter + ", guessed = " + guessed + "]";

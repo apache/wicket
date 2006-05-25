@@ -40,12 +40,13 @@ public class CheckBoxPage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				if (input.bool.booleanValue())
@@ -62,7 +63,7 @@ public class CheckBoxPage extends WicketExamplePage
 
 		// add a check box component that uses the model object's 'bool'
 		// property.
-		form.add(new CheckBox(form,"bool"));
+		form.add(new CheckBox(form, "bool"));
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -74,6 +75,7 @@ public class CheckBoxPage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "bool = '" + bool + "'";
@@ -83,12 +85,13 @@ public class CheckBoxPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<input type=\"checkbox\" wicket:id=\"bool\" />";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a check box component that uses the model object's 'bool' property.\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new CheckBox(\"bool\"));";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 

@@ -48,7 +48,7 @@ public class StaticWizardWithPanels extends Wizard
 		 */
 		public Step1(MarkupContainer parent)
 		{
-			super(parent,"One", "The first step");
+			super(parent, "One", "The first step");
 		}
 	}
 
@@ -62,7 +62,7 @@ public class StaticWizardWithPanels extends Wizard
 		 */
 		public Step2(MarkupContainer parent)
 		{
-			super(parent,"One", "The first step");
+			super(parent, "One", "The first step");
 		}
 	}
 
@@ -76,7 +76,7 @@ public class StaticWizardWithPanels extends Wizard
 		 */
 		public Step3(MarkupContainer parent)
 		{
-			super(parent,"One", "The first step");
+			super(parent, "One", "The first step");
 		}
 	}
 
@@ -88,7 +88,7 @@ public class StaticWizardWithPanels extends Wizard
 	 */
 	public StaticWizardWithPanels(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// create a model with a couple of custom panels
 		// still not that spectacular, but at least it
@@ -106,6 +106,7 @@ public class StaticWizardWithPanels extends Wizard
 	/**
 	 * @see wicket.extensions.wizard.Wizard#onCancel()
 	 */
+	@Override
 	public void onCancel()
 	{
 		setResponsePage(Index.class);
@@ -114,6 +115,7 @@ public class StaticWizardWithPanels extends Wizard
 	/**
 	 * @see wicket.extensions.wizard.Wizard#onFinish()
 	 */
+	@Override
 	public void onFinish()
 	{
 		setResponsePage(Index.class);

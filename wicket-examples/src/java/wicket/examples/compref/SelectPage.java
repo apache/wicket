@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -60,12 +60,13 @@ public class SelectPage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -73,14 +74,14 @@ public class SelectPage extends WicketExamplePage
 		};
 		add(form);
 
-		Select site = new Select(form,"site");
+		Select site = new Select(form, "site");
 		form.add(site);
-		site.add(new SelectOption(site,"site1", new Model("tss")));
-		site.add(new SelectOption(site,"site2", new Model("jl")));
-		site.add(new SelectOption(site,"site3", new Model("sd")));
-		site.add(new SelectOption(site,"site4", new Model("bn")));
+		site.add(new SelectOption(site, "site1", new Model("tss")));
+		site.add(new SelectOption(site, "site2", new Model("jl")));
+		site.add(new SelectOption(site, "site3", new Model("sd")));
+		site.add(new SelectOption(site, "site4", new Model("bn")));
 
-		Select choices = new Select(form,"choices");
+		Select choices = new Select(form, "choices");
 		form.add(choices);
 		IOptionRenderer renderer = new IOptionRenderer()
 		{
@@ -92,12 +93,11 @@ public class SelectPage extends WicketExamplePage
 
 			public IModel getModel(Object value)
 			{
-				return new Model((Serializable)value);
+				return new Model(value);
 			}
 
 		};
-		choices.add(new SelectOptions(choices,"manychoices", new Model((Serializable)MANY_CHOICES),
-				renderer));
+		choices.add(new SelectOptions(choices, "manychoices", new Model(MANY_CHOICES), renderer));
 
 	}
 
@@ -121,6 +121,7 @@ public class SelectPage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "site = '" + site + "', choices='" + listAsString(choices) + "'";
@@ -144,6 +145,7 @@ public class SelectPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<select wicket:id=\"sites\">\n" + "    <option>site 1</option>\n"
@@ -165,7 +167,7 @@ public class SelectPage extends WicketExamplePage
 		html = "SEE INSIDE FOR NOW";
 		code = "SEE INSIDE FOR NOW";
 
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 }

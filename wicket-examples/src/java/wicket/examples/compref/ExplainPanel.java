@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: ExplainPanel.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,10 +35,10 @@ class ExplainPanel extends Panel
 	 * @param html
 	 * @param code
 	 */
-	public ExplainPanel(MarkupContainer parent,String html, String code)
+	public ExplainPanel(MarkupContainer parent, String html, String code)
 	{
-		super(parent,"explainPanel");
-		add(new MultiLineLabel(this,"html", html));
-		add(new MultiLineLabel(this,"code", code).setEscapeModelStrings(false));
+		super(parent, "explainPanel");
+		add(new MultiLineLabel(this, "html", html));
+		add(new MultiLineLabel(this, "code", code).setEscapeModelStrings(false));
 	}
 }

@@ -40,19 +40,21 @@ public class EditableLabelPage extends BasePage
 	 */
 	public EditableLabelPage()
 	{
-		add(new AjaxEditableLabel(this,"text1", new PropertyModel(this, "text1")));
-		add(new AjaxEditableLabel(this,"text2", new PropertyModel(this, "text2")));
+		add(new AjaxEditableLabel(this, "text1", new PropertyModel(this, "text1")));
+		add(new AjaxEditableLabel(this, "text2", new PropertyModel(this, "text2")));
 
-		add(new Label(this,"refresh-counter", new AbstractReadOnlyModel()
+		add(new Label(this, "refresh-counter", new AbstractReadOnlyModel()
 		{
+			@Override
 			public Object getObject(Component component)
 			{
 				return "" + refreshCounter;
 			}
 		}));
 
-		add(new Link(this,"refresh-link")
+		add(new Link(this, "refresh-link")
 		{
+			@Override
 			public void onClick()
 			{
 				refreshCounter++;

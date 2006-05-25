@@ -34,7 +34,7 @@ public class Panel1 extends TemplatePanel
 	 */
 	public Panel1(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -45,9 +45,9 @@ public class Panel1 extends TemplatePanel
 	 * @param model
 	 *            the model
 	 */
-	public Panel1(MarkupContainer parent,final String id, IModel model)
+	public Panel1(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 }

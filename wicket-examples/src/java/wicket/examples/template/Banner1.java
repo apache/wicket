@@ -33,7 +33,7 @@ public class Banner1 extends Banner
 	 */
 	public Banner1(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -42,8 +42,8 @@ public class Banner1 extends Banner
 	 * @param id
 	 * @param model
 	 */
-	public Banner1(MarkupContainer parent,final String id, IModel model)
+	public Banner1(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 }

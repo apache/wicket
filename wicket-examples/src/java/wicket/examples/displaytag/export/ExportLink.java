@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -39,9 +39,10 @@ public class ExportLink extends Link
 	 * @param data
 	 * @param exportView
 	 */
-	public ExportLink(MarkupContainer parent,final String id, final List data, final BaseExportView exportView)
+	public ExportLink(MarkupContainer parent, final String id, final List data,
+			final BaseExportView exportView)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.data = data;
 		this.exportView = exportView;
 	}
@@ -49,6 +50,7 @@ public class ExportLink extends Link
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */
+	@Override
 	public void onClick()
 	{
 		setResponsePage(new Export(exportView, data));

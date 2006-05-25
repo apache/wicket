@@ -1,6 +1,6 @@
 /*
- * $Id: PageMapView.java 4507 2006-02-16 22:51:20Z jonathanlocke $
- * $Revision: 4507 $ $Date: 2006-02-16 23:51:20 +0100 (do, 16 feb 2006) $
+ * $Id: PageMapView.java 4507 2006-02-16 22:51:20Z jonathanlocke $ $Revision:
+ * 4507 $ $Date: 2006-02-16 23:51:20 +0100 (do, 16 feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,17 +56,17 @@ public final class PageMapView extends Panel
 	 * @param pageMap
 	 *            Page map to show
 	 */
-	public PageMapView(MarkupContainer parent,final String id, final PageMap pageMap)
+	public PageMapView(MarkupContainer parent, final String id, final PageMap pageMap)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// Basic attributes
-		add(new Label(this,"name", pageMap.getName() == null ? "null" : pageMap.getName()));
-		add(new Label(this,"size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
+		add(new Label(this, "name", pageMap.getName() == null ? "null" : pageMap.getName()));
+		add(new Label(this, "size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
 
-		// Get entry accesses 
+		// Get entry accesses
 		final ArrayListStack accessStack;
-		if(pageMap instanceof AccessStackPageMap)
+		if (pageMap instanceof AccessStackPageMap)
 		{
 			accessStack = ((AccessStackPageMap)pageMap).getAccessStack();
 		}
@@ -79,23 +79,25 @@ public final class PageMapView extends Panel
 		Collections.reverse(reversedAccessStack);
 
 		// Create the table containing the list the components
-		add(new ListView(this,"accesses", reversedAccessStack)
+		add(new ListView(this, "accesses", reversedAccessStack)
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * Populate the table with Wicket elements
 			 */
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				final Access access = (Access)listItem.getModelObject();
 				IPageMapEntry entry = pageMap.getEntry(access.getId());
 				PageParameters parameters = new PageParameters();
 				parameters.put("pageId", "" + entry.getNumericId());
-				Link link = new BookmarkablePageLink(listItem,"link", InspectorPage.class, parameters);
-				link.add(new Label(link,"id", "" + entry.getNumericId()));
+				Link link = new BookmarkablePageLink(listItem, "link", InspectorPage.class,
+						parameters);
+				link.add(new Label(link, "id", "" + entry.getNumericId()));
 				listItem.add(link);
-				listItem.add(new Label(listItem,"class", "" + entry.getClass().getName()));
+				listItem.add(new Label(listItem, "class", "" + entry.getClass().getName()));
 				long size;
 				int versions;
 				if (entry instanceof Page)
@@ -110,10 +112,12 @@ public final class PageMapView extends Panel
 					size = Objects.sizeof(entry);
 					versions = 0;
 				}
-				listItem.add(new Label(listItem,"access", "" + (accessStack.size() - listItem.getIndex())));
-				listItem.add(new Label(listItem,"version", "" + access.getVersion()));
-				listItem.add(new Label(listItem,"versions", "" + versions));
-				listItem.add(new Label(listItem,"size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size)));
+				listItem.add(new Label(listItem, "access", ""
+						+ (accessStack.size() - listItem.getIndex())));
+				listItem.add(new Label(listItem, "version", "" + access.getVersion()));
+				listItem.add(new Label(listItem, "versions", "" + versions));
+				listItem.add(new Label(listItem, "size", size == -1 ? "[Unknown]" : ""
+						+ Bytes.bytes(size)));
 			}
 		});
 	}

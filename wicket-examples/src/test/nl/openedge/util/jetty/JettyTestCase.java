@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3905 $ $Date$
+ * $Id: JettyTestCase.java 5395 2006-04-16 13:42:28 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:42:28 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -91,6 +92,7 @@ public abstract class JettyTestCase extends AbstractJettyTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public final void setUp() throws Exception
 	{
 		// first let current test case set up fixture
@@ -120,6 +122,7 @@ public abstract class JettyTestCase extends AbstractJettyTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public final void tearDown() throws Exception
 	{
 		// first let current test case tear down fixture

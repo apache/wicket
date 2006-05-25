@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5389 $ $Date$
+ * $Id: ExampleSubtotals.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -72,13 +73,14 @@ public class ExampleSubtotals extends Displaytag
 		// add the table
 		List groupList = new ArrayList();
 		groupList.addAll(groups.keySet());
-		add(new ListView(this,"border", groupList)
+		add(new ListView(this, "border", groupList)
 		{
 			private int startIndex = 0;
 
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
-				SubtotalTable subtable = new SubtotalTable(listItem,"rows", data);
+				SubtotalTable subtable = new SubtotalTable(listItem, "rows", data);
 				subtable.setStartIndex(startIndex);
 
 				String group = listItem.getModelObjectAsString();
@@ -87,8 +89,8 @@ public class ExampleSubtotals extends Displaytag
 				startIndex += size;
 
 				listItem.add(subtable);
-				listItem.add(new Label(listItem,"name", new PropertyModel(subtable, "group1")));
-				listItem.add(new Label(listItem,"value", new PropertyModel(subtable, "subtotal")));
+				listItem.add(new Label(listItem, "name", new PropertyModel(subtable, "group1")));
+				listItem.add(new Label(listItem, "value", new PropertyModel(subtable, "subtotal")));
 			}
 		});
 	}
@@ -109,9 +111,9 @@ public class ExampleSubtotals extends Displaytag
 		 * @param id
 		 * @param data
 		 */
-		public SubtotalTable(MarkupContainer parent,final String id, final List data)
+		public SubtotalTable(MarkupContainer parent, final String id, final List data)
 		{
-			super(parent,id, data);
+			super(parent, id, data);
 		}
 
 		/**
@@ -133,19 +135,20 @@ public class ExampleSubtotals extends Displaytag
 		/**
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
+		@Override
 		public void populateItem(final ListItem listItem)
 		{
 			final ReportableListObject value = (ReportableListObject)listItem.getModelObject();
 
 			if (previousValue != null)
 			{
-				listItem.add(new Label(listItem,"city", ""));
+				listItem.add(new Label(listItem, "city", ""));
 
 				boolean equal = value.getProject().equals(previousValue.getProject());
-				listItem.add(new Label(listItem,"project", equal ? "" : value.getProject()));
+				listItem.add(new Label(listItem, "project", equal ? "" : value.getProject()));
 			}
 
-			listItem.add(new Label(listItem,"hours", Double.toString(value.getAmount())));
+			listItem.add(new Label(listItem, "hours", Double.toString(value.getAmount())));
 
 			subtotal += value.getAmount();
 			previousValue = value;

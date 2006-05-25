@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4323 $ $Date$
+ * $Id: PrototypeApplication.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun,
+ * 16 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,6 +38,7 @@ public class PrototypeApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
@@ -46,6 +48,7 @@ public class PrototypeApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Index.class;

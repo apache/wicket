@@ -56,6 +56,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
@@ -64,6 +65,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Index.class;

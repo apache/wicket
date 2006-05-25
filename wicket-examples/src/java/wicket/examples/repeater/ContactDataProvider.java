@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ContactDataProvider.java 5832 2006-05-24 05:36:28 +0000 (Wed, 24 May
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-05-24 05:36:28 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -72,12 +73,14 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	}
 
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see wicket.model.IDetachable#detach()
 	 */
 	public void detach()
 	{
-		
+
 	}
 
 }

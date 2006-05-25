@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketExampleApplication.java 5401 2006-04-17 12:38:53 +0000 (Mon, 17
+ * Apr 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 12:38:53 +0000
+ * (Mon, 17 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -47,6 +48,7 @@ public abstract class WicketExampleApplication extends WebApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		// WARNING: DO NOT do this on a real world application unless
@@ -60,7 +62,7 @@ public abstract class WicketExampleApplication extends WebApplication
 		getSecuritySettings().setCryptFactory(
 				new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
 
-		// Disable creation of javascript which jWebUnit (test only) 
+		// Disable creation of javascript which jWebUnit (test only)
 		// doesn't handle properly
 		getPageSettings().setAutomaticMultiWindowSupport(false);
 	}

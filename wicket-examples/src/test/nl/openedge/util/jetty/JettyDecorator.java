@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: JettyDecorator.java 5395 2006-04-16 13:42:28 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:42:28 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -55,21 +56,21 @@ import org.mortbay.jetty.Server;
  * Usage:
  * 
  * <pre>
- *    
- *     ...
- *       public static Test suite() 
- *       {
- *    	    TestSuite suite = new TestSuite();
- *    	    suite.addTest(new JettyDecoratorWithArgsTest(&quot;testPing&quot;));
- *    	    JettyDecorator deco = new JettyDecorator(suite);
- *    	    deco.setPort(8098);
- *    	    deco.setWebappContextRoot(&quot;src/webapp&quot;);
- *    	    deco.setContextPath(&quot;/test&quot;);
- *    	    deco.setUseJettyPlus(false);
- *    	    return deco;
- *       }
- *     ...
  *     
+ *      ...
+ *        public static Test suite() 
+ *        {
+ *     	    TestSuite suite = new TestSuite();
+ *     	    suite.addTest(new JettyDecoratorWithArgsTest(&quot;testPing&quot;));
+ *     	    JettyDecorator deco = new JettyDecorator(suite);
+ *     	    deco.setPort(8098);
+ *     	    deco.setWebappContextRoot(&quot;src/webapp&quot;);
+ *     	    deco.setContextPath(&quot;/test&quot;);
+ *     	    deco.setUseJettyPlus(false);
+ *     	    return deco;
+ *        }
+ *      ...
+ *      
  * </pre>
  * 
  * Jetty will be started before the tests are actually run, and will be stopped
@@ -103,6 +104,7 @@ public class JettyDecorator extends AbstractJettyDecorator
 	 * @throws Exception
 	 * @see junit.extensions.TestSetup#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 		// start Jetty
@@ -124,6 +126,7 @@ public class JettyDecorator extends AbstractJettyDecorator
 	 * 
 	 * @see junit.extensions.TestSetup#tearDown()
 	 */
+	@Override
 	public void tearDown()
 	{
 		log.info("Stopping Jetty");

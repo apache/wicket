@@ -52,12 +52,13 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -71,10 +72,10 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		// list for the available options.
 		// Note that our model here holds a Collection, as we need to store
 		// multiple values too
-		ListMultipleChoice listChoice = new ListMultipleChoice(form,"sites", SITES);
+		ListMultipleChoice listChoice = new ListMultipleChoice(form, "sites", SITES);
 		form.add(listChoice);
 
-		listChoice = new ListMultipleChoice(form,"choices", MANY_CHOICES).setMaxRows(5);
+		listChoice = new ListMultipleChoice(form, "choices", MANY_CHOICES).setMaxRows(5);
 		form.add(listChoice);
 	}
 
@@ -98,6 +99,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "sites = '" + listAsString(sites) + "', choices='" + listAsString(choices) + "'";
@@ -121,6 +123,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<select wicket:id=\"sites\">\n" + "    <option>site 1</option>\n"
@@ -137,7 +140,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new ListMultipleChoice(\"choices\", MANY_CHOICES).setMaxRows(5);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 }

@@ -76,6 +76,7 @@ public final class FormInputModel implements Serializable
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return text;
@@ -373,6 +374,7 @@ public final class FormInputModel implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer b = new StringBuffer();

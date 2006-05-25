@@ -37,6 +37,7 @@ public class UnicodeConverterApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return UnicodeConverter.class;

@@ -59,7 +59,7 @@ public class NewUserWizard extends Wizard
 		 */
 		public ConfirmationStep(MarkupContainer parent)
 		{
-			super(parent,true);
+			super(parent, true);
 			IModel userModel = new Model(user);
 			setTitleModel(new ResourceModel("confirmation.title"));
 			setSummaryModel(new StringResourceModel("confirmation.summary", this, userModel));
@@ -77,12 +77,12 @@ public class NewUserWizard extends Wizard
 		 */
 		public UserDetailsStep(MarkupContainer parent)
 		{
-			super(parent,new ResourceModel("userdetails.title"), null);
+			super(parent, new ResourceModel("userdetails.title"), null);
 			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model(user)));
-			add(new RequiredTextField(this,"user.firstName"));
-			add(new RequiredTextField(this,"user.lastName"));
-			add(new TextField(this,"user.department"));
-			add(new CheckBox(this,"assignRoles"));
+			add(new RequiredTextField(this, "user.firstName"));
+			add(new RequiredTextField(this, "user.lastName"));
+			add(new TextField(this, "user.department"));
+			add(new CheckBox(this, "assignRoles"));
 		}
 	}
 
@@ -96,9 +96,11 @@ public class NewUserWizard extends Wizard
 		 */
 		public UserNameStep(MarkupContainer parent)
 		{
-			super(parent,new ResourceModel("username.title"), new ResourceModel("username.summary"));
-			add(new RequiredTextField(this,"user.userName"));
-			add(new RequiredTextField(this,"user.email").add(EmailAddressPatternValidator.getInstance()));
+			super(parent, new ResourceModel("username.title"),
+					new ResourceModel("username.summary"));
+			add(new RequiredTextField(this, "user.userName"));
+			add(new RequiredTextField(this, "user.email").add(EmailAddressPatternValidator
+					.getInstance()));
 		}
 	}
 
@@ -112,9 +114,9 @@ public class NewUserWizard extends Wizard
 		 */
 		public UserRolesStep(MarkupContainer parent)
 		{
-			super(parent,new ResourceModel("userroles.title"), null);
+			super(parent, new ResourceModel("userroles.title"), null);
 			setSummaryModel(new StringResourceModel("userroles.summary", this, new Model(user)));
-			add(new ListMultipleChoice(this,"user.roles", allRoles));
+			add(new ListMultipleChoice(this, "user.roles", allRoles));
 		}
 
 		/**
@@ -144,7 +146,7 @@ public class NewUserWizard extends Wizard
 	 */
 	public NewUserWizard(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// create a blank user
 		user = new User();
@@ -183,6 +185,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * @see wicket.extensions.wizard.Wizard#onCancel()
 	 */
+	@Override
 	public void onCancel()
 	{
 		setResponsePage(Index.class);
@@ -191,6 +194,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * @see wicket.extensions.wizard.Wizard#onFinish()
 	 */
+	@Override
 	public void onFinish()
 	{
 		setResponsePage(Index.class);

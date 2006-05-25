@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4564 $ $Date$
+ * $Id: NiceUrlApplication.java 5398 2006-04-17 07:26:51 +0000 (Mon, 17 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 07:26:51 +0000 (Mon,
+ * 17 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -39,9 +40,10 @@ public class NiceUrlApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
-		// Disable creation of javascript which jWebUnit (test only) 
+		// Disable creation of javascript which jWebUnit (test only)
 		// doesn't handle properly
 		getPageSettings().setAutomaticMultiWindowSupport(false);
 
@@ -63,6 +65,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Home.class;

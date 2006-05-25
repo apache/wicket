@@ -1,6 +1,6 @@
 /*
- * $Id: InspectorBug.java 3676 2006-01-08 23:23:54Z jonathanlocke $
- * $Revision: 3676 $ $Date: 2006-01-09 00:23:54 +0100 (ma, 09 jan 2006) $
+ * $Id: InspectorBug.java 3676 2006-01-08 23:23:54Z jonathanlocke $ $Revision:
+ * 3676 $ $Date: 2006-01-09 00:23:54 +0100 (ma, 09 jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,13 +43,13 @@ public final class InspectorBug extends Panel
 	 * @param page
 	 *            Page to inspect
 	 */
-	public InspectorBug(MarkupContainer parent,final String id, final WebPage page)
+	public InspectorBug(MarkupContainer parent, final String id, final WebPage page)
 	{
-		super(parent,id);
+		super(parent, id);
 		PageParameters parameters = new PageParameters();
 		parameters.put("pageId", page.getId());
-		Link link =  new BookmarkablePageLink(this,"link", InspectorPage.class, parameters);
-		link.add(new Image(link,"bug"));
+		Link link = new BookmarkablePageLink(this, "link", InspectorPage.class, parameters);
+		link.add(new Image(link, "bug"));
 		add(link);
 	}
 }

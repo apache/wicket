@@ -1,6 +1,6 @@
 /*
- * $Id: SessionView.java 4768 2006-03-06 01:05:00Z joco01 $
- * $Revision: 4768 $ $Date: 2006-03-06 02:05:00 +0100 (ma, 06 mrt 2006) $
+ * $Id: SessionView.java 4768 2006-03-06 01:05:00Z joco01 $ $Revision: 4768 $
+ * $Date: 2006-03-06 02:05:00 +0100 (ma, 06 mrt 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -48,28 +48,30 @@ public final class SessionView extends Panel
 	 *            See Component
 	 * @see Component#Component(String)
 	 */
-	public SessionView(MarkupContainer parent,final String id, final Session session)
+	public SessionView(MarkupContainer parent, final String id, final Session session)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// Basic attributes
-		add(new Label(this,"id", session.getId()));
-		add(new Label(this,"locale", session.getLocale().toString()));
-		add(new Label(this,"style", session.getStyle() == null ? "[None]" : session.getStyle()));
-		add(new Label(this,"size", new Model()
+		add(new Label(this, "id", session.getId()));
+		add(new Label(this, "locale", session.getLocale().toString()));
+		add(new Label(this, "style", session.getStyle() == null ? "[None]" : session.getStyle()));
+		add(new Label(this, "size", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component) 
+			@Override
+			public Object getObject(Component component)
 			{
 				return Bytes.bytes(Objects.sizeof(session));
 			}
 		}));
-		add(new Label(this,"totalSize", new Model()
+		add(new Label(this, "totalSize", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Object getObject(Component component) 
+			@Override
+			public Object getObject(Component component)
 			{
 				return Bytes.bytes(session.getSizeInBytes());
 			}
@@ -79,17 +81,18 @@ public final class SessionView extends Panel
 		final List pagemaps = session.getPageMaps();
 
 		// Create the table containing the list the components
-		add(new ListView(this,"pagemaps", pagemaps)
+		add(new ListView(this, "pagemaps", pagemaps)
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * Populate the table with Wicket elements
 			 */
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				PageMap p = (PageMap)listItem.getModelObject();
-				listItem.add(new PageMapView(listItem,"pagemap", p));
+				listItem.add(new PageMapView(listItem, "pagemap", p));
 			}
 		});
 	}

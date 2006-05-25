@@ -37,9 +37,10 @@ public class TabbedPanelPage extends WicketExamplePage
 		tabs.add(new AbstractTab(new Model("first tab"))
 		{
 
-			public Panel getPanel(MarkupContainer parent,String panelId)
+			@Override
+			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
-				return new TabPanel1(parent,panelId);
+				return new TabPanel1(parent, panelId);
 			}
 
 		});
@@ -47,9 +48,10 @@ public class TabbedPanelPage extends WicketExamplePage
 		tabs.add(new AbstractTab(new Model("second tab"))
 		{
 
-			public Panel getPanel(MarkupContainer parent,String panelId)
+			@Override
+			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
-				return new TabPanel2(parent,panelId);
+				return new TabPanel2(parent, panelId);
 			}
 
 		});
@@ -57,27 +59,28 @@ public class TabbedPanelPage extends WicketExamplePage
 		tabs.add(new AbstractTab(new Model("third tab"))
 		{
 
-			public Panel getPanel(MarkupContainer parent,String panelId)
+			@Override
+			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
-				return new TabPanel3(parent,panelId);
+				return new TabPanel3(parent, panelId);
 			}
 
 		});
 
 		// add the new tabbed panel, attribute modifier only used to switch
 		// between different css variations
-		add(new TabbedPanel(this,"tabs", tabs).add(new AttributeModifier("class", true,
+		add(new TabbedPanel(this, "tabs", tabs).add(new AttributeModifier("class", true,
 				TabbedPanelPage.this.getModel())));
 
 	}
 
 	private void addCssSwitchingLinks()
 	{
-		add(new CssSwitchingLink(this,"var0", "tabpanel"));
-		add(new CssSwitchingLink(this,"var1", "tabpanel1"));
-		add(new CssSwitchingLink(this,"var2", "tabpanel2"));
-		add(new CssSwitchingLink(this,"var3", "tabpanel3"));
-		add(new CssSwitchingLink(this,"var4", "tabpanel4"));
+		add(new CssSwitchingLink(this, "var0", "tabpanel"));
+		add(new CssSwitchingLink(this, "var1", "tabpanel1"));
+		add(new CssSwitchingLink(this, "var2", "tabpanel2"));
+		add(new CssSwitchingLink(this, "var3", "tabpanel3"));
+		add(new CssSwitchingLink(this, "var4", "tabpanel4"));
 	}
 
 	protected class CssSwitchingLink extends Link
@@ -88,15 +91,16 @@ public class TabbedPanelPage extends WicketExamplePage
 		 * @param id
 		 * @param clazz
 		 */
-		public CssSwitchingLink(MarkupContainer parent,final String id, String clazz)
+		public CssSwitchingLink(MarkupContainer parent, final String id, String clazz)
 		{
-			super(parent,id);
+			super(parent, id);
 			this.clazz = clazz;
 		}
 
 		/**
 		 * @see wicket.markup.html.link.Link#onClick()
 		 */
+		@Override
 		public void onClick()
 		{
 			TabbedPanelPage.this.setModelObject(clazz);
@@ -105,6 +109,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		/**
 		 * @see wicket.markup.html.link.Link#isEnabled()
 		 */
+		@Override
 		public boolean isEnabled()
 		{
 			return !TabbedPanelPage.this.getModelObjectAsString().equals(clazz);
@@ -129,7 +134,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		 */
 		public TabPanel1(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
 	};
@@ -151,7 +156,7 @@ public class TabbedPanelPage extends WicketExamplePage
 		 */
 		public TabPanel2(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
 	};
@@ -173,12 +178,13 @@ public class TabbedPanelPage extends WicketExamplePage
 		 */
 		public TabPanel3(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
 	};
 
 
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"tabs\" class=\"tabpanel\">[tabbed panel will be here]</span>\n";
@@ -193,6 +199,6 @@ public class TabbedPanelPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel3(panelId); }<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(new TabbedPanel(\"tabs\", tabs)<br/>";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 	}
 }

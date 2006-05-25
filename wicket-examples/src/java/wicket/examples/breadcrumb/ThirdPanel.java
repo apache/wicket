@@ -35,9 +35,10 @@ public class ThirdPanel extends BreadCrumbPanel
 	 * @param id
 	 * @param breadCrumbModel
 	 */
-	public ThirdPanel(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel)
+	public ThirdPanel(MarkupContainer parent, final String id,
+			final IBreadCrumbModel breadCrumbModel)
 	{
-		super(parent,id, breadCrumbModel);
+		super(parent, id, breadCrumbModel);
 	}
 
 	/**

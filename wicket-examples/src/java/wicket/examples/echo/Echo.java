@@ -44,13 +44,13 @@ public class Echo extends WicketExamplePage
 		PropertyModel messageModel = new PropertyModel(this, "message");
 
 		// The label displays the currently set message
-		add(new Label(this,"msg", messageModel));
+		add(new Label(this, "msg", messageModel));
 
 		// Add a form to change the message. We don't need to do anything
 		// else with this form as the shared model is automatically updated
 		// on form submits
-		Form form = new Form(this,"form");
-		form.add(new TextField(form,"msgInput", messageModel));
+		Form form = new Form(this, "form");
+		form.add(new TextField(form, "msgInput", messageModel));
 		add(form);
 	}
 

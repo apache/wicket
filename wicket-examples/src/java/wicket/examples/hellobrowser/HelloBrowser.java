@@ -57,13 +57,14 @@ public class HelloBrowser extends WicketExamplePage
 		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo())
 				.getProperties();
 
-		add(new Label(this,"clientinfo", properties.toString()));
+		add(new Label(this, "clientinfo", properties.toString()));
 
 		IModel clientTimeModel = new AbstractReadOnlyModel()
 		{
 			/**
 			 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
 			 */
+			@Override
 			public Object getObject(Component component)
 			{
 				TimeZone timeZone = properties.getTimeZone();
@@ -84,6 +85,6 @@ public class HelloBrowser extends WicketExamplePage
 						+ "no idea what your time is";
 			}
 		};
-		add(new Label(this,"clienttime", clientTimeModel));
+		add(new Label(this, "clienttime", clientTimeModel));
 	}
 }

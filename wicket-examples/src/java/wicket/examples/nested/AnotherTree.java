@@ -53,18 +53,20 @@ public class AnotherTree extends Tree
 	 * @param model
 	 *            the tree model
 	 */
-	public AnotherTree(MarkupContainer parent,final String id, TreeModel model)
+	public AnotherTree(MarkupContainer parent, final String id, TreeModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
 	 * @see wicket.markup.html.tree.Tree#newNodePanel(java.lang.String,
 	 *      javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected Component newNodePanel(MarkupContainer parent, String panelId, DefaultMutableTreeNode node)
+	@Override
+	protected Component newNodePanel(MarkupContainer parent, String panelId,
+			DefaultMutableTreeNode node)
 	{
-		return new Node(parent,panelId, node);
+		return new Node(parent, panelId, node);
 	}
 
 	/**
@@ -80,15 +82,16 @@ public class AnotherTree extends Tree
 		 * @param node
 		 *            The tree node for this panel
 		 */
-		public Node(MarkupContainer parent,String panelId, final DefaultMutableTreeNode node)
+		public Node(MarkupContainer parent, String panelId, final DefaultMutableTreeNode node)
 		{
-			super(parent,panelId);
+			super(parent, panelId);
 
 			Object userObject = node.getUserObject();
 
 			// create a link for expanding and collapsing the node
-			final Link junctionLink = new Link(this,"junctionLink")
+			final Link junctionLink = new Link(this, "junctionLink")
 			{
+				@Override
 				public void onClick()
 				{
 					junctionLinkClicked(node);
@@ -101,6 +104,7 @@ public class AnotherTree extends Tree
 			// the label is rendered
 			IModel junctionLabelModel = new AbstractReadOnlyModel()
 			{
+				@Override
 				public Object getObject(Component component)
 				{
 					return (!node.isLeaf()) ? (isExpanded(node)) ? "^" : ">" : "";
@@ -111,18 +115,19 @@ public class AnotherTree extends Tree
 			{
 				junctionLabel = (isExpanded(node)) ? "[-]" : "[+]";
 			}
-			junctionLink.add(new Label(junctionLink,"junctionLabel", junctionLabelModel));
+			junctionLink.add(new Label(junctionLink, "junctionLabel", junctionLabelModel));
 
 			// create a link for selecting a node
-			final Link nodeLink = new Link(this,"nodeLink")
+			final Link nodeLink = new Link(this, "nodeLink")
 			{
+				@Override
 				public void onClick()
 				{
 					nodeLinkClicked(node);
 				}
 			};
 			String label = (userObject instanceof List) ? "" : String.valueOf(node.getUserObject());
-			nodeLink.add(new Label(nodeLink,"label", label));
+			nodeLink.add(new Label(nodeLink, "label", label));
 			add(nodeLink);
 		}
 	}

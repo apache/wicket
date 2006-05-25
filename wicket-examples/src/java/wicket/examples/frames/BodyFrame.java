@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -47,6 +47,7 @@ public class BodyFrame extends WebPage
 		/**
 		 * @see wicket.model.Model#getObject(wicket.Component)
 		 */
+		@Override
 		public Object getObject(Component component)
 		{
 			RequestCycle cycle = getRequestCycle();
@@ -70,12 +71,12 @@ public class BodyFrame extends WebPage
 		CharSequence leftFrameSrc = encoder.encode(cycle, new PageRequestTarget(leftFrame));
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
-		WebComponent leftFrameTag = new WebComponent(this,"leftFrame");
-		leftFrameTag.add(new AttributeModifier("src", new Model((Serializable)leftFrameSrc)));
+		WebComponent leftFrameTag = new WebComponent(this, "leftFrame");
+		leftFrameTag.add(new AttributeModifier("src", new Model(leftFrameSrc)));
 		add(leftFrameTag);
 
 		// make a simple component for the right frame tag
-		WebComponent rightFrameTag = new WebComponent(this,"rightFrame");
+		WebComponent rightFrameTag = new WebComponent(this, "rightFrame");
 		// and this time, set a model which retrieves the url to the currently
 		// set frame class in the frame target
 		rightFrameTag.add(new AttributeModifier("src", new FrameModel()));
@@ -95,6 +96,7 @@ public class BodyFrame extends WebPage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

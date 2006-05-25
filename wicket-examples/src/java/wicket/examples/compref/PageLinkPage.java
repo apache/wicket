@@ -46,7 +46,7 @@ public class PageLinkPage extends WicketExamplePage
 		// anonymous class, which will create the page instance only when
 		// needed.
 
-		add(new PageLink(this,"pageLink", new IPageLink()
+		add(new PageLink(this, "pageLink", new IPageLink()
 		{
 			public Page getPage()
 			{
@@ -78,6 +78,7 @@ public class PageLinkPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<a wicket:id=\"pageLink\">go to our private/ non bookmarkable page</a>";
@@ -89,7 +90,7 @@ public class PageLinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return NonBookmarkablePage.class;\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}));";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2005-10-09 18:17:12 +0200 (So, 09 Okt 2005) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,6 +36,6 @@ public class Page3 extends WicketExamplePage
 	 */
 	public Page3(PageParameters parameters)
 	{
-		add(new Label(this,"bookmarkparameter", parameters.getString("bookmarkparameter")));
+		add(new Label(this, "bookmarkparameter", parameters.getString("bookmarkparameter")));
 	}
 }

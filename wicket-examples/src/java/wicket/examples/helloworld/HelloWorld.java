@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -32,6 +32,6 @@ public class HelloWorld extends WicketExamplePage
 	 */
 	public HelloWorld()
 	{
-		add(new Label(this,"message", "Hello World!"));
+		add(new Label(this, "message", "Hello World!"));
 	}
 }

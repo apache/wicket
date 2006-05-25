@@ -36,10 +36,11 @@ public class FirstPanel extends BreadCrumbPanel
 	 * @param id
 	 * @param breadCrumbModel
 	 */
-	public FirstPanel(MarkupContainer parent,final String id, final IBreadCrumbModel breadCrumbModel)
+	public FirstPanel(MarkupContainer parent, final String id,
+			final IBreadCrumbModel breadCrumbModel)
 	{
-		super(parent,id, breadCrumbModel);
-		add(new BreadCrumbPanelLink(this,"linkToSecond", this, SecondPanel.class));
+		super(parent, id, breadCrumbModel);
+		add(new BreadCrumbPanelLink(this, "linkToSecond", this, SecondPanel.class));
 	}
 
 	/**

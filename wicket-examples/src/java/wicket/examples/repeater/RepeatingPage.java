@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4054 $ $Date$
+ * $Id: RepeatingPage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -42,26 +43,27 @@ public class RepeatingPage extends BasePage
 	{
 		Iterator contacts = new ContactDataProvider().iterator(0, 10);
 
-		RepeatingView repeating = new RepeatingView(this,"repeating");
+		RepeatingView repeating = new RepeatingView(this, "repeating");
 		add(repeating);
 
 		int index = 0;
 		while (contacts.hasNext())
 		{
-			WebMarkupContainer item = new WebMarkupContainer(repeating,repeating.newChildId());
+			WebMarkupContainer item = new WebMarkupContainer(repeating, repeating.newChildId());
 			repeating.add(item);
 			Contact contact = (Contact)contacts.next();
 
-			item.add(new ActionPanel(item,"actions", new DetachableContactModel(contact)));
-			item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
-			item.add(new Label(item,"firstname", contact.getFirstName()));
-			item.add(new Label(item,"lastname", contact.getLastName()));
-			item.add(new Label(item,"homephone", contact.getHomePhone()));
-			item.add(new Label(item,"cellphone", contact.getCellPhone()));
+			item.add(new ActionPanel(item, "actions", new DetachableContactModel(contact)));
+			item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
+			item.add(new Label(item, "firstname", contact.getFirstName()));
+			item.add(new Label(item, "lastname", contact.getLastName()));
+			item.add(new Label(item, "homephone", contact.getHomePhone()));
+			item.add(new Label(item, "cellphone", contact.getCellPhone()));
 
 			final int idx = index;
 			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 			{
+				@Override
 				public Object getObject(Component component)
 				{
 					return (idx % 2 == 1) ? "even" : "odd";

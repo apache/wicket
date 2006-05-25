@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2005-03-25 17:29:01 +0100 (Fr, 25 Mrz 2005) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,8 +36,9 @@ public final class SignIn extends WicketExamplePage
 	 */
 	public SignIn(final PageParameters parameters)
 	{
-		add(new SignInPanel(this,"signInPanel")
+		add(new SignInPanel(this, "signInPanel")
 		{
+			@Override
 			public boolean signIn(final String username, final String password)
 			{
 				// Sign the user in

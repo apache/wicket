@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -57,12 +57,12 @@ public final class EditBook extends AuthenticatedWebPage
 	public EditBook(final Book book)
 	{
 		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
+		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 
 		add(feedback);
 
 		// Add edit book form to page
-		add(new EditBookForm(this,"editBookForm", book));
+		add(new EditBookForm(this, "editBookForm", book));
 	}
 
 	/**
@@ -76,7 +76,7 @@ public final class EditBook extends AuthenticatedWebPage
 	 */
 	public static PageLink link(MarkupContainer parent, final String name, final long id)
 	{
-		return new PageLink(parent,name, new IPageLink()
+		return new PageLink(parent, name, new IPageLink()
 		{
 			public Page getPage()
 			{
@@ -105,30 +105,30 @@ public final class EditBook extends AuthenticatedWebPage
 		 * @param book
 		 *            Book model
 		 */
-		public EditBookForm(MarkupContainer parent,final String id, final Book book)
+		public EditBookForm(MarkupContainer parent, final String id, final Book book)
 		{
-			super(parent,id, new CompoundPropertyModel(book));
+			super(parent, id, new CompoundPropertyModel(book));
 
 			// Create a required text field with a max length of 30 characters
 			// that edits the book's title
 			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(this,
-			"titleFeedback");
-			final TextField title = new TextField(titleFeedback,"title");
+					"titleFeedback");
+			final TextField title = new TextField(titleFeedback, "title");
 			title.setRequired(true);
 			title.add(StringValidator.maximumLength(30));
 			add(titleFeedback);
 			titleFeedback.add(title);
 
 			// Create a required text field that edits the book's author
-			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(this,
-			"authorFeedback");
-			final TextField author = new TextField(authorFeedback,"author");
+			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(
+					this, "authorFeedback");
+			final TextField author = new TextField(authorFeedback, "author");
 			author.setRequired(true);
 			add(authorFeedback);
 			authorFeedback.add(author);
 
 			// Add fiction checkbox
-			add(new CheckBox(this,"fiction"));
+			add(new CheckBox(this, "fiction"));
 
 			// Books is everything but otherBook
 			List books = new ArrayList();
@@ -137,20 +137,21 @@ public final class EditBook extends AuthenticatedWebPage
 			books.remove(otherBook);
 
 			// Add companion book choice
-			add(new DropDownChoice(this,"companionBook", books));
+			add(new DropDownChoice(this, "companionBook", books));
 
 			// Add radio choice test
-			final RadioChoice relatedBook = new RadioChoice(this,"relatedBook", books);
+			final RadioChoice relatedBook = new RadioChoice(this, "relatedBook", books);
 			add(relatedBook);
 
 			// Multi-select among writing styles
-			add(new ListMultipleChoice(this,"writingStyles", EnumeratedType
+			add(new ListMultipleChoice(this, "writingStyles", EnumeratedType
 					.getValues(Book.WritingStyle.class)));
 		}
 
 		/**
 		 * Show the resulting valid edit
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			final RequestCycle cycle = getRequestCycle();

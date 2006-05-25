@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: GridViewPage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -38,18 +39,20 @@ public class GridViewPage extends BasePage
 	public GridViewPage()
 	{
 		IDataProvider dataProvider = new ContactDataProvider();
-		GridView gridView = new GridView(this,"rows", dataProvider)
+		GridView gridView = new GridView(this, "rows", dataProvider)
 		{
+			@Override
 			protected void populateItem(Item item)
 			{
 				final Contact contact = (Contact)item.getModelObject();
-				item.add(new Label(item,"firstName", contact.getFirstName() + " "
+				item.add(new Label(item, "firstName", contact.getFirstName() + " "
 						+ contact.getLastName()));
 			}
 
+			@Override
 			protected void populateEmptyItem(Item item)
 			{
-				item.add(new Label(item,"firstName", "*empty*"));
+				item.add(new Label(item, "firstName", "*empty*"));
 			}
 		};
 
@@ -57,6 +60,6 @@ public class GridViewPage extends BasePage
 		gridView.setColumns(3);
 
 		add(gridView);
-		add(new PagingNavigator(this,"navigator", gridView));
+		add(new PagingNavigator(this, "navigator", gridView));
 	}
 }

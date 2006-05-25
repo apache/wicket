@@ -51,12 +51,13 @@ public class DropDownChoicePage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -73,7 +74,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// represent this null with key: "id + '.null'". In this case, this is
 		// 'site.null'
 		// which can be found in DropDownChoicePage.properties
-		form.add(new DropDownChoice(form,"site", SITES));
+		form.add(new DropDownChoice(form, "site", SITES));
 
 		// Allthough the default behavior of displaying the string
 		// representations of the choices
@@ -84,7 +85,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// like the example below. Don't forget to check out the default
 		// implementation of
 		// IChoiceRenderer, ChoiceRenderer.
-		form.add(new DropDownChoice(form,"integer", INTEGERS, new IChoiceRenderer()
+		form.add(new DropDownChoice(form, "integer", INTEGERS, new IChoiceRenderer()
 		{
 			/**
 			 * Gets the display value that is visible to the end user.
@@ -146,6 +147,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "site = '" + site + "', integer = " + integer;
@@ -155,6 +157,7 @@ public class DropDownChoicePage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<select wicket:id=\"site\">\n" + "    <option>site 1</option>\n"
@@ -190,7 +193,7 @@ public class DropDownChoicePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}));\n" + "}";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 

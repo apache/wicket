@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -44,7 +44,7 @@ public final class Home extends WicketExamplePage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Image(this,"beer"));
+		add(new Image(this, "beer"));
 
 		// create a dummy object to serve as our substitution model
 		ValueMap map = new ValueMap();
@@ -60,40 +60,45 @@ public final class Home extends WicketExamplePage
 		StringResourceModel labelModel = new StringResourceModel("salutation", this, new Model(map));
 
 		// Add the label with the dynamic model
-		add(new Label(this,"salutation", labelModel));
+		add(new Label(this, "salutation", labelModel));
 
 		// Add a couple of links to be able to play around with the session
 		// locale
-		add(new Link(this,"goCanadian")
+		add(new Link(this, "goCanadian")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(Locale.CANADA);
 			}
 		});
-		add(new Link(this,"goUS")
+		add(new Link(this, "goUS")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(Locale.US);
 			}
 		});
-		add(new Link(this,"goDutch")
+		add(new Link(this, "goDutch")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("nl", "NL"));
 			}
 		});
-		add(new Link(this,"goGerman")
+		add(new Link(this, "goGerman")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("de", "DE"));
 			}
 		});
-		add(new Link(this,"goChinese")
+		add(new Link(this, "goChinese")
 		{
+			@Override
 			public void onClick()
 			{
 				getSession().setLocale(new Locale("zh", "CN"));

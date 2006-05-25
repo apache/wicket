@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: NavomaticBorder.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -34,10 +35,10 @@ public class NavomaticBorder extends Border
 	 * @param id
 	 *            The id of this component
 	 */
-	public NavomaticBorder(MarkupContainer parent,final String id)
+	public NavomaticBorder(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
-		add(new BoxBorder(this,"navigationBorder"));
-		add(new BoxBorder(this,"bodyBorder"));
+		super(parent, id);
+		add(new BoxBorder(this, "navigationBorder"));
+		add(new BoxBorder(this, "bodyBorder"));
 	}
 }

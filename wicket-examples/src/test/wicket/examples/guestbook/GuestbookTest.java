@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: GuestbookTest.java 5401 2006-04-17 12:38:53 +0000 (Mon, 17 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-17 12:38:53 +0000 (Mon, 17 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -56,6 +57,7 @@ public class GuestbookTest extends WicketWebTestCase
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 		super.setUp();

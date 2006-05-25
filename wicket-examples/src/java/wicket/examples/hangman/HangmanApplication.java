@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3646 $ $Date$
+ * $Id: HangmanApplication.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,10 +37,11 @@ public class HangmanApplication extends WicketExampleApplication
 	public HangmanApplication()
 	{
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
+	@Override
 	public ISessionFactory getSessionFactory()
 	{
 		return new ISessionFactory()
@@ -48,6 +50,7 @@ public class HangmanApplication extends WicketExampleApplication
 			{
 				return new HangmanSession(HangmanApplication.this);
 			}
+
 			public Session newSession(Request request)
 			{
 				return new HangmanSession(HangmanApplication.this);
@@ -58,6 +61,7 @@ public class HangmanApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Home.class;

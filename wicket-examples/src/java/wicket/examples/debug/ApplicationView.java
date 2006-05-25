@@ -40,26 +40,31 @@ public final class ApplicationView extends Panel
 	 * @param application
 	 *            The application to view
 	 */
-	public ApplicationView(MarkupContainer parent,final String id, final Application application)
+	public ApplicationView(MarkupContainer parent, final String id, final Application application)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// Basic attributes
-		add(new Label(this,"name", application.getName()));
-		add(new Label(this,"componentUseCheck", ""
+		add(new Label(this, "name", application.getName()));
+		add(new Label(this, "componentUseCheck", ""
 				+ application.getDebugSettings().getComponentUseCheck()));
-		add(new Label(this,"compressWhitespace", ""
+		add(new Label(this, "compressWhitespace", ""
 				+ application.getMarkupSettings().getCompressWhitespace()));
-		add(new Label(this,"defaultLocale", "" + application.getApplicationSettings().getDefaultLocale()));
-		add(new Label(this,"maxPageVersions", "" + application.getPageSettings().getMaxPageVersions()));
-		add(new Label(this,"stripComments", "" + application.getMarkupSettings().getStripComments()));
-		add(new Label(this,"stripWicketTags", "" + application.getMarkupSettings().getStripWicketTags()));
-		add(new Label(this,"bufferResponse", ""
+		add(new Label(this, "defaultLocale", ""
+				+ application.getApplicationSettings().getDefaultLocale()));
+		add(new Label(this, "maxPageVersions", ""
+				+ application.getPageSettings().getMaxPageVersions()));
+		add(new Label(this, "stripComments", ""
+				+ application.getMarkupSettings().getStripComments()));
+		add(new Label(this, "stripWicketTags", ""
+				+ application.getMarkupSettings().getStripWicketTags()));
+		add(new Label(this, "bufferResponse", ""
 				+ application.getRequestCycleSettings().getBufferResponse()));
-		add(new Label(this,"resourcePollFrequency", ""
+		add(new Label(this, "resourcePollFrequency", ""
 				+ application.getResourceSettings().getResourcePollFrequency()));
-		add(new Label(this,"versionPages", "" + application.getPageSettings().getVersionPagesByDefault()));
-		add(new Label(this,"pageMapEvictionStrategy", ""
+		add(new Label(this, "versionPages", ""
+				+ application.getPageSettings().getVersionPagesByDefault()));
+		add(new Label(this, "pageMapEvictionStrategy", ""
 				+ application.getSessionSettings().getPageMapEvictionStrategy()));
 	}
 }

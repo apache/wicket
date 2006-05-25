@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2005-11-07 20:59:30 +0100 (Mo, 07 Nov 2005) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,11 +40,12 @@ public class Guess extends HangmanPage
 	public Guess()
 	{
 		// Components for displaying the guesses remaining & the hangman
-		add(new Label(this,"guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
+		add(new Label(this, "guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
 
 		// Components for displaying the current word
-		add(new Label(this,"word", new Model()
+		add(new Label(this, "word", new Model()
 		{
+			@Override
 			public Object getObject(wicket.Component component)
 			{
 				return getGame().getWord().asString(true);
@@ -52,13 +53,15 @@ public class Guess extends HangmanPage
 		}));
 
 		// Show the game's letters
-		add(new ListView(this,"letters", getGame().getLetters())
+		add(new ListView(this, "letters", getGame().getLetters())
 		{
+			@Override
 			protected void populateItem(final ListItem listItem)
 			{
 				final Letter letter = (Letter)listItem.getModelObject();
-				final Link link = new Link(listItem,"letter")
+				final Link link = new Link(listItem, "letter")
 				{
+					@Override
 					protected void onBeginRequest()
 					{
 						// Set enable state of link
@@ -66,6 +69,7 @@ public class Guess extends HangmanPage
 						setEnabled(!letter.isGuessed());
 					}
 
+					@Override
 					public void onClick()
 					{
 						// Guess the letter
@@ -91,7 +95,7 @@ public class Guess extends HangmanPage
 				link
 						.add(new AttributeModifier("id", true, new Model("letter_"
 								+ letter.asString())));
-				link.add(new Image(link,"image", letter.getSharedImageResource()));
+				link.add(new Image(link, "image", letter.getSharedImageResource()));
 				listItem.add(link);
 			}
 		});

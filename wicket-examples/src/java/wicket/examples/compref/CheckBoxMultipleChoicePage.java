@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: CheckBoxMultipleChoicePage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -53,12 +54,13 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -68,10 +70,10 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 
 		// add a couple of checkbox multiple choice components, notice the model
 		// used is a compound model set on the page
-		CheckBoxMultipleChoice listChoice = new CheckBoxMultipleChoice(form,"sites", SITES);
+		CheckBoxMultipleChoice listChoice = new CheckBoxMultipleChoice(form, "sites", SITES);
 		form.add(listChoice);
 
-		listChoice = new CheckBoxMultipleChoice(form,"choices", MANY_CHOICES);
+		listChoice = new CheckBoxMultipleChoice(form, "choices", MANY_CHOICES);
 		form.add(listChoice);
 	}
 
@@ -95,6 +97,7 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "sites = '" + listAsString(sites) + "', choices='" + listAsString(choices) + "'";
@@ -118,6 +121,7 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<span wicket:id=\"sites\">\n" + "</span>\n"
@@ -127,7 +131,7 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new CheckBoxMultipleChoice(\"choices\", MANY_CHOICES);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 }

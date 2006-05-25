@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -33,10 +33,11 @@ public class Win extends HangmanPage
 	 */
 	public Win()
 	{
-		add(new Label(this,"guessesRemaining", Integer.toString(getGame().getGuessesRemaining())));
-		add(new Label(this,"currentWord", getGame().getWord().asString()));
-		add(new Link(this,"playAgain")
+		add(new Label(this, "guessesRemaining", Integer.toString(getGame().getGuessesRemaining())));
+		add(new Label(this, "currentWord", getGame().getWord().asString()));
+		add(new Link(this, "playAgain")
 		{
+			@Override
 			public void onClick()
 			{
 				getGame().newGame();

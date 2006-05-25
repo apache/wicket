@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,13 +43,14 @@ public class Home extends WicketExamplePage
 	 */
 	public Home(final PageParameters parameters)
 	{
-		add(new Label(this,"message", "Hello world! Test: הצü"));
+		add(new Label(this, "message", "Hello world! Test: הצü"));
 	}
 
 	/**
 	 * Because only servlet 2.4 supports web.xml locale-encoding-mapping-list
 	 * deployment descriptors, this is a workaround for servlet 2.3
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		final Locale originalLocale = getSession().getLocale();

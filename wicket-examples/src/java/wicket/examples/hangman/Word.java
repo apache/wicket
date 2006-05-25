@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2005-03-31 15:26:49 +0200 (Do, 31 Mrz 2005) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -80,6 +80,7 @@ public class Word implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(final Object object)
 	{
 		if (object instanceof Word)
@@ -114,6 +115,7 @@ public class Word implements Serializable
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return asString().hashCode();
@@ -138,6 +140,7 @@ public class Word implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Word letters = " + letters + "]";

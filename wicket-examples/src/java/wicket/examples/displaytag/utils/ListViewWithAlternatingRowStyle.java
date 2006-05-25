@@ -41,9 +41,9 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	 * @param id
 	 * @param data
 	 */
-	public ListViewWithAlternatingRowStyle(MarkupContainer parent,final String id, final List data)
+	public ListViewWithAlternatingRowStyle(MarkupContainer parent, final String id, final List data)
 	{
-		super(parent,id, data);
+		super(parent, id, data);
 	}
 
 	/**
@@ -52,9 +52,10 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	 * @param id
 	 * @param model
 	 */
-	public ListViewWithAlternatingRowStyle(MarkupContainer parent,final String id, final IModel model)
+	public ListViewWithAlternatingRowStyle(MarkupContainer parent, final String id,
+			final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -68,10 +69,12 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	 *            Index of item
 	 * @return List item
 	 */
+	@Override
 	protected ListItem newItem(final int index)
 	{
-		return new ListItem(this,index, getListItemModel(getModel(), index))
+		return new ListItem(this, index, getListItemModel(getModel(), index))
 		{
+			@Override
 			protected void onComponentTag(final ComponentTag tag)
 			{
 				// add/modify the attribute controlling the CSS style

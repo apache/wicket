@@ -1,7 +1,5 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,17 +15,15 @@
  * the License.
  */
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
+ * $Id$ $Revision$ $Date$
+ * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -63,42 +59,46 @@ public class RequestsPage extends WebPage
 
 	/**
 	 * Construct.
+	 * 
 	 * @param sessionData
 	 */
 	public RequestsPage(final SessionData sessionData)
 	{
-		add(new Image(this,"bug"));
-		
-		add(new SessionView(this,"session", sessionData.getSession()));
-		
+		add(new Image(this, "bug"));
+
+		add(new SessionView(this, "session", sessionData.getSession()));
+
 		Model requestsModel = new Model()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
+			@Override
 			public Object getObject(Component component)
 			{
 				return new ArrayList(sessionData.getRequests());
 			}
 		};
-		PageableListView listView = new PageableListView(this,"requests",requestsModel,50)
+		PageableListView listView = new PageableListView(this, "requests", requestsModel, 50)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
-			
-			protected void populateItem(ListItem item) 
+
+			@Override
+			protected void populateItem(ListItem item)
 			{
 				RequestData rd = (RequestData)item.getModelObject();
-				Label startDate = new Label(item,"startDate",new Model(rd.getStartDate()))
+				Label startDate = new Label(item, "startDate", new Model(rd.getStartDate()))
 				{
 					private static final long serialVersionUID = 1L;
 
 					/**
 					 * @see wicket.Component#getConverter(Class)
 					 */
+					@Override
 					public IConverter getConverter(Class type)
 					{
-						
+
 						return new DateConverter()
 						{
 							private static final long serialVersionUID = 1L;
@@ -106,6 +106,7 @@ public class RequestsPage extends WebPage
 							/**
 							 * @see wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
 							 */
+							@Override
 							public DateFormat getDateFormat(Locale locale)
 							{
 								return sdf;
@@ -113,16 +114,17 @@ public class RequestsPage extends WebPage
 						};
 					}
 				};
-				item.add( startDate );
-				item.add( new Label(item,"timeTaken",new Model(rd.getTimeTaken())));
-				item.add( new Label(item,"eventTarget",new Model(rd.getEventTargert())) );
-				item.add( new Label(item,"responseTarget",new Model(rd.getResponseTarget())) );
-				item.add( new Label(item,"alteredObjects",new Model(rd.getAlteredObjects())).setEscapeModelStrings(false) );
+				item.add(startDate);
+				item.add(new Label(item, "timeTaken", new Model(rd.getTimeTaken())));
+				item.add(new Label(item, "eventTarget", new Model(rd.getEventTargert())));
+				item.add(new Label(item, "responseTarget", new Model(rd.getResponseTarget())));
+				item.add(new Label(item, "alteredObjects", new Model(rd.getAlteredObjects()))
+						.setEscapeModelStrings(false));
 			}
 		};
 		add(listView);
-		
-		PagingNavigator navigator = new PagingNavigator(this,"navigator",listView);
+
+		PagingNavigator navigator = new PagingNavigator(this, "navigator", listView);
 		add(navigator);
 	}
 }

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DetachableContactModel.java 5832 2006-05-24 05:36:28 +0000 (Wed, 24 May
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-05-24 05:36:28 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -62,11 +63,13 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	/**
 	 * @see wicket.model.AbstractDetachableModel#getNestedModel()
 	 */
+	@Override
 	public IModel getNestedModel()
 	{
 		return null;
 	}
 
+	@Override
 	protected void onAttach()
 	{
 		if (contact == null)
@@ -75,11 +78,13 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 		}
 	}
 
+	@Override
 	protected void onDetach()
 	{
 		contact = null;
 	}
 
+	@Override
 	protected Contact onGetObject(Component component)
 	{
 		return contact;
@@ -88,6 +93,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		return new Long(id).hashCode();
@@ -100,6 +106,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	 * @see wicket.extensions.markup.html.repeater.refreshing.ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof DetachableContactModel)

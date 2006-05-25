@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ExampleNestedTables.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,8 +45,9 @@ public class ExampleNestedTables extends Displaytag
 		List data = new TestList(6, false);
 
 		// straight forward
-		add(new SimpleListView(this,"rows", data)
+		add(new SimpleListView(this, "rows", data)
 		{
+			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
@@ -54,7 +56,7 @@ public class ExampleNestedTables extends Displaytag
 
 				// Just create a new table, which will be put into the current
 				// cell
-				listItem.add(new SimpleListView(listItem,"rows", data2));
+				listItem.add(new SimpleListView(listItem, "rows", data2));
 			}
 		});
 	}

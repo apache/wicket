@@ -34,15 +34,16 @@ public class SubmitLinkPage extends WicketExamplePage
 	public SubmitLinkPage()
 	{
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with 2 SubmitLinks that can be called
-		Form form = new Form(this,"form");
+		Form form = new Form(this, "form");
 		add(form);
 
-		SubmitLink internal = new SubmitLink(form,"internal")
+		SubmitLink internal = new SubmitLink(form, "internal")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("internal onsubmit");
@@ -50,8 +51,9 @@ public class SubmitLinkPage extends WicketExamplePage
 		};
 		form.add(internal);
 
-		SubmitLink external = new SubmitLink(this,"external", form)
+		SubmitLink external = new SubmitLink(this, "external", form)
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("external onsubmit");
@@ -63,6 +65,7 @@ public class SubmitLinkPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<form wicket:id=\"form\">\n"
@@ -82,7 +85,7 @@ public class SubmitLinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(external);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;});\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 }

@@ -34,6 +34,6 @@ class AnotherPanel extends Panel
 	 */
 	public AnotherPanel(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

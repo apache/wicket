@@ -53,12 +53,13 @@ public class TextFieldPage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -68,7 +69,7 @@ public class TextFieldPage extends WicketExamplePage
 
 		// add a simple text field that uses Input's 'text' property. Nothing
 		// can go wrong here
-		form.add(new TextField(form,"text"));
+		form.add(new TextField(form, "text"));
 
 		// here we add a text field that uses Input's 'integer' property.
 		// Something could go
@@ -93,7 +94,7 @@ public class TextFieldPage extends WicketExamplePage
 		// with key 'form.integer.TypeValidator'. Read more about how this works
 		// in the javadocs
 		// of AbstractValidator
-		form.add(new TextField(form,"integer", Integer.class));
+		form.add(new TextField(form, "integer", Integer.class));
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -113,6 +114,7 @@ public class TextFieldPage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "text = '" + text + "', integer = '" + integer + "'";
@@ -122,6 +124,7 @@ public class TextFieldPage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<input type=\"text\" wicket:id=\"text\" />\n"
@@ -143,7 +146,7 @@ public class TextFieldPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// with key 'form.integer.TypeValidator'. Read more about how this works in the javadocs\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;// of AbstractValidator\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new TextField(\"integer\", Integer.class));";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 

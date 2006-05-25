@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-02-12 03:04:38 +0100 (So, 12 Feb 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,9 +41,9 @@ public class Clock extends Label
 	 * @param tz
 	 *            Timezone
 	 */
-	public Clock(MarkupContainer parent,final String id, TimeZone tz)
+	public Clock(MarkupContainer parent, final String id, TimeZone tz)
 	{
-		super(parent,id, new ClockModel(tz));
+		super(parent, id, new ClockModel(tz));
 
 	}
 
@@ -69,6 +69,7 @@ public class Clock extends Label
 		/**
 		 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
 		 */
+		@Override
 		public Object getObject(Component component)
 		{
 			return df.format(new Date());

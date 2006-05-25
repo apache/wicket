@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: StockQuotePage.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,10 +41,10 @@ public class StockQuotePage extends WicketExamplePage
 	{
 		// code for the first example, directly using the
 		// stock quote component.
-		add(new StockQuoteLabel(this,"stockIBM", "IBM"));
+		add(new StockQuoteLabel(this, "stockIBM", "IBM"));
 
 		// use the second example component
-		add(new StockQuoteLabel2(this,"stock2IBM", "IBM"));
+		add(new StockQuoteLabel2(this, "stock2IBM", "IBM"));
 
 		// code for second example: using a form for selecting the
 		// symbol of the stock quote.
@@ -53,15 +54,15 @@ public class StockQuotePage extends WicketExamplePage
 		final IModel model = new PropertyModel(quote, "symbol");
 
 		// form holding the input field.
-		final Form form = new Form(this,"form");
+		final Form form = new Form(this, "form");
 		add(form);
-		form.add(new TextField(this,"symbol", model));
+		form.add(new TextField(this, "symbol", model));
 
 		// labels for displaying the chosen symbol
-		add(new Label(this,"symbol", model));
+		add(new Label(this, "symbol", model));
 
 		// and its quote
-		add(new StockQuoteLabel(this,"quote", model));
+		add(new StockQuoteLabel(this, "quote", model));
 	}
 
 	/**

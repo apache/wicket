@@ -57,10 +57,11 @@ public class GuestBook extends BasePage
 		/**
 		 * Show the resulting valid edit
 		 */
+		@Override
 		public final void onSubmit()
 		{
 			// Construct a copy of the edited comment
-			final Comment comment = (Comment)getModelObject();
+			final Comment comment = getModelObject();
 			final Comment newComment = new Comment(comment);
 
 			// Set date of comment to add
@@ -111,6 +112,7 @@ public class GuestBook extends BasePage
 		comments.add(commentListView = new ListView<Comment>(comments, "comments",
 				new PropertyModel<List<Comment>>(this, "commentList"))
 		{
+			@Override
 			public void populateItem(final ListItem<Comment> listItem)
 			{
 				final Comment comment = listItem.getModelObject();
@@ -128,10 +130,12 @@ public class GuestBook extends BasePage
 		// is do our Ajax specific stuff, like rendering our components.
 		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "onsubmit")
 		{
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new AjaxCallDecorator()
 				{
+					@Override
 					public CharSequence decorateScript(CharSequence script)
 					{
 						return script + "return false;";
@@ -139,6 +143,7 @@ public class GuestBook extends BasePage
 				};
 			}
 
+			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
 				// add the list of components that need to be updated

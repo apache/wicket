@@ -36,6 +36,6 @@ public class Index extends WicketExamplePage
 		// normal link instead of an autolink as it looks a bit weird to refer
 		// to PageWithCustomLoading.html while the template has got a very
 		// different name (CustomLoadedTemplate.html)
-		add(new BookmarkablePageLink(this,"customLoadingPageLink", PageWithCustomLoading.class));
+		add(new BookmarkablePageLink(this, "customLoadingPageLink", PageWithCustomLoading.class));
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -32,6 +32,6 @@ public class Page2 extends WicketExamplePage
 	 */
 	public Page2()
 	{
-		add(new NavomaticBorder(this,"navomaticBorder"));
+		add(new NavomaticBorder(this, "navomaticBorder"));
 	}
 }

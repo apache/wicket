@@ -34,6 +34,6 @@ class MyBorder extends Border
 	 */
 	public MyBorder(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }

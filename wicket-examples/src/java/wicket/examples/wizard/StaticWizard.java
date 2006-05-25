@@ -45,7 +45,7 @@ public class StaticWizard extends Wizard
 	 */
 	public StaticWizard(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// create a model with the stupidest steps you can think of
 		WizardModel model = new WizardModel();
@@ -63,6 +63,7 @@ public class StaticWizard extends Wizard
 	/**
 	 * @see wicket.extensions.wizard.Wizard#onCancel()
 	 */
+	@Override
 	public void onCancel()
 	{
 		setResponsePage(Index.class);
@@ -71,6 +72,7 @@ public class StaticWizard extends Wizard
 	/**
 	 * @see wicket.extensions.wizard.Wizard#onFinish()
 	 */
+	@Override
 	public void onFinish()
 	{
 		setResponsePage(Index.class);

@@ -122,6 +122,7 @@ public class Address implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[Address address=" + address + ", postcode=" + postcode + ", city=" + city

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id: SignInApplication.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -43,6 +43,7 @@ public final class SignInApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
+	@Override
 	protected void init()
 	{
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
@@ -74,6 +75,7 @@ public final class SignInApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
+	@Override
 	public ISessionFactory getSessionFactory()
 	{
 		return new ISessionFactory()
@@ -82,6 +84,7 @@ public final class SignInApplication extends WicketExampleApplication
 			{
 				return new SignInSession(SignInApplication.this);
 			}
+
 			public Session newSession(Request request)
 			{
 				return new SignInSession(SignInApplication.this);
@@ -92,6 +95,7 @@ public final class SignInApplication extends WicketExampleApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
+	@Override
 	public Class getHomePage()
 	{
 		return Home.class;

@@ -46,12 +46,13 @@ public class ListChoicePage extends WicketExamplePage
 		setModel(new CompoundPropertyModel(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
-		Form form = new Form(this,"form")
+		Form form = new Form(this, "form")
 		{
+			@Override
 			protected void onSubmit()
 			{
 				info("input: " + input);
@@ -63,7 +64,7 @@ public class ListChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		ListChoice listChoice = new ListChoice(form,"site", SITES);
+		ListChoice listChoice = new ListChoice(form, "site", SITES);
 		listChoice.setMaxRows(4);
 		form.add(listChoice);
 	}
@@ -77,6 +78,7 @@ public class ListChoicePage extends WicketExamplePage
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "site = '" + site + "'";
@@ -86,6 +88,7 @@ public class ListChoicePage extends WicketExamplePage
 	/**
 	 * Override base method to provide an explanation
 	 */
+	@Override
 	protected void explain()
 	{
 		String html = "<select wicket:id=\"site\">\n" + "    <option>site 1</option>\n"
@@ -97,7 +100,7 @@ public class ListChoicePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListChoice listChoice = new ListChoice(\"site\", SITES);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;listChoice.setMaxRows(4);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(listChoice);";
-		add(new ExplainPanel(this,html, code));
+		add(new ExplainPanel(this, html, code));
 
 	}
 

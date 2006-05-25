@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: JettyExternalVMDecorator.java 3905 2006-01-19 20:34:20 +0000 (Thu, 19
+ * Jan 2006) jdonnerstag $ $Revision$ $Date: 2006-01-19 20:34:20 +0000
+ * (Thu, 19 Jan 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -133,6 +134,7 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	 * @throws Exception
 	 * @see junit.extensions.TestSetup#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 		if (process == null)
@@ -163,6 +165,7 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	 * @throws Exception
 	 * @see junit.extensions.TestSetup#tearDown()
 	 */
+	@Override
 	public void tearDown() throws Exception
 	{
 		JettyHelper.issueStopCommandToMonitor(commKey, host, monitorPort);

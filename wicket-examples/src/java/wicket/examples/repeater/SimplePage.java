@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -38,20 +38,22 @@ public class SimplePage extends BasePage
 	 */
 	public SimplePage()
 	{
-		add(new DataView(this,"simple", new ContactDataProvider())
+		add(new DataView(this, "simple", new ContactDataProvider())
 		{
+			@Override
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel(item,"actions", item.getModel()));
-				item.add(new Label(item,"contactid", String.valueOf(contact.getId())));
-				item.add(new Label(item,"firstname", contact.getFirstName()));
-				item.add(new Label(item,"lastname", contact.getLastName()));
-				item.add(new Label(item,"homephone", contact.getHomePhone()));
-				item.add(new Label(item,"cellphone", contact.getCellPhone()));
+				item.add(new ActionPanel(item, "actions", item.getModel()));
+				item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
+				item.add(new Label(item, "firstname", contact.getFirstName()));
+				item.add(new Label(item, "lastname", contact.getLastName()));
+				item.add(new Label(item, "homephone", contact.getHomePhone()));
+				item.add(new Label(item, "cellphone", contact.getCellPhone()));
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
+					@Override
 					public Object getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";

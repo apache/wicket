@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5214 $ $Date$
+ * $Id: ExampleStyles.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:44:49 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -20,7 +21,6 @@ package wicket.examples.displaytag;
 import java.util.List;
 
 import wicket.AttributeModifier;
-import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
@@ -55,12 +55,12 @@ public class ExampleStyles extends Displaytag
 		addStyleLink("mark");
 
 		// Apply the style to the <table> tag
-		WebMarkupContainer htmlTable = new WebMarkupContainer(this,"htmlTable");
+		WebMarkupContainer htmlTable = new WebMarkupContainer(this, "htmlTable");
 		add(htmlTable);
 		htmlTable.add(new AttributeModifier("class", new Model(parameters.getString("class"))));
 
 		// Add the rows to the list
-		htmlTable.add(new SimpleListView(this,"rows", data));
+		htmlTable.add(new SimpleListView(this, "rows", data));
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ExampleStyles extends Displaytag
 	 */
 	public void addStyleLink(final String id)
 	{
-		add(new BookmarkablePageLink(this,id, this.getClass()).setParameter("class", id).setAutoEnable(
-				false));
+		add(new BookmarkablePageLink(this, id, this.getClass()).setParameter("class", id)
+				.setAutoEnable(false));
 	}
 }
