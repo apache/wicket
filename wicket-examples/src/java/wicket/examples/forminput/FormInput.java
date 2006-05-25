@@ -114,7 +114,7 @@ public class FormInput extends WicketExamplePage
 		 * @param name
 		 *            Component name
 		 */
-		public InputForm(MarkupContainer<?> parent, String name)
+		public InputForm(MarkupContainer parent, String name)
 		{
 			super(parent,name, new CompoundPropertyModel(new FormInputModel()));
 

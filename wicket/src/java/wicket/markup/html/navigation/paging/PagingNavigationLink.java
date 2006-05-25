@@ -50,7 +50,7 @@ public class PagingNavigationLink extends Link
 	 *            The page number in the PageableListView that this link links
 	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
-	public PagingNavigationLink(MarkupContainer<?> parent,final String id,
+	public PagingNavigationLink(MarkupContainer parent,final String id,
 			final IPageable pageable, final int pageNumber)
 	{
 		super(parent,id);

@@ -126,7 +126,7 @@ public class StaticContentStep extends WizardStep
 	 *            If true, any html of the content will be rendered as is.
 	 *            Otherwise, it will be escaped.
 	 */
-	public StaticContentStep(MarkupContainer<?> parent, String title, String summary, String content, boolean allowHtml)
+	public StaticContentStep(MarkupContainer parent, String title, String summary, String content, boolean allowHtml)
 	{
 		this(parent,title, summary, new Model(content), allowHtml);
 	}

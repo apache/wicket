@@ -57,7 +57,7 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public ConfirmationStep(MarkupContainer<?> parent)
+		public ConfirmationStep(MarkupContainer parent)
 		{
 			super(parent,true);
 			IModel userModel = new Model(user);
@@ -75,7 +75,7 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserDetailsStep(MarkupContainer<?> parent)
+		public UserDetailsStep(MarkupContainer parent)
 		{
 			super(parent,new ResourceModel("userdetails.title"), null);
 			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model(user)));
@@ -94,7 +94,7 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserNameStep(MarkupContainer<?> parent)
+		public UserNameStep(MarkupContainer parent)
 		{
 			super(parent,new ResourceModel("username.title"), new ResourceModel("username.summary"));
 			add(new RequiredTextField(this,"user.userName"));
@@ -110,7 +110,7 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserRolesStep(MarkupContainer<?> parent)
+		public UserRolesStep(MarkupContainer parent)
 		{
 			super(parent,new ResourceModel("userroles.title"), null);
 			setSummaryModel(new StringResourceModel("userroles.summary", this, new Model(user)));

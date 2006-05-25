@@ -204,7 +204,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public FormComponent(MarkupContainer<?> parent,final String id)
+	public FormComponent(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
@@ -216,7 +216,7 @@ public abstract class FormComponent<V> extends WebMarkupContainer<V>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FormComponent(MarkupContainer<?> parent,final String id, IModel<V> model)
+	public FormComponent(MarkupContainer parent,final String id, IModel<V> model)
 	{
 		super(parent,id, model);
 		add(new DisabledAttributeModifier(new DisabledAttributeModel()));

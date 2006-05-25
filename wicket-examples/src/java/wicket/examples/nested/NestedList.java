@@ -62,7 +62,7 @@ public final class NestedList extends Panel
 		 *            a list where each element is either a string or another
 		 *            list
 		 */
-		public Rows(MarkupContainer<?> parent,String name, List list)
+		public Rows(MarkupContainer parent,String name, List list)
 		{
 			super(parent,name, list);
 		}

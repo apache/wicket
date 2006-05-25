@@ -160,7 +160,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.Component#Component(String)
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public RadioChoice(MarkupContainer<?> parent, final String id, final List choices)
+	public RadioChoice(MarkupContainer parent, final String id, final List choices)
 	{
 		super(parent,id, choices);
 	}

@@ -49,7 +49,7 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(MarkupContainer<?> parent,final String id, final IModel model, int rowsPerPage)
+	public PageableListView(MarkupContainer parent,final String id, final IModel model, int rowsPerPage)
 	{
 		super(parent,id, model);
 		this.rowsPerPage = rowsPerPage;
@@ -67,7 +67,7 @@ public abstract class PageableListView extends ListView implements IPageable
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(MarkupContainer<?> parent,final String id, final List list, final int rowsPerPage)
+	public PageableListView(MarkupContainer parent,final String id, final List list, final int rowsPerPage)
 	{
 		super(parent,id, list);
 		this.rowsPerPage = rowsPerPage;

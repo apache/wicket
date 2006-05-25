@@ -51,7 +51,7 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @see wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(MarkupContainer<?> parent, String componentId, FilterForm form)
+	public Component getFilter(MarkupContainer parent, String componentId, FilterForm form)
 	{
 		ChoiceFilter filter = new ChoiceFilter(parent,componentId, getFilterModel(form), form,
 				filterChoices, enableAutoSubmit());

@@ -30,7 +30,7 @@ public class TestExtendedPanel extends TestBasePanel
 	/**
 	 * Construct.
 	 */
-	public TestExtendedPanel(MarkupContainer<?> parent)
+	public TestExtendedPanel(MarkupContainer parent)
 	{
 		super(parent);
 	}

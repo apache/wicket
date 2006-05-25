@@ -35,7 +35,7 @@ public class SimpleTestPanelBase extends Panel
 	 * 
 	 * @param name
 	 */
-	public SimpleTestPanelBase(MarkupContainer<?> parent,String name)
+	public SimpleTestPanelBase(MarkupContainer parent,String name)
 	{
 		super(parent,name);
 

@@ -51,7 +51,7 @@ public class FilterToolbar extends AbstractToolbar
 	 *            locator responsible for finding object used to store filter's
 	 *            state
 	 */
-	public FilterToolbar(MarkupContainer<?> parent, String id, final DataTable table, final IFilterStateLocator stateLocator)
+	public FilterToolbar(MarkupContainer parent, String id, final DataTable table, final IFilterStateLocator stateLocator)
 	{
 		super(parent,id, table);
 

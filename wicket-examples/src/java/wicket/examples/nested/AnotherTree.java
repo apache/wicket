@@ -62,7 +62,7 @@ public class AnotherTree extends Tree
 	 * @see wicket.markup.html.tree.Tree#newNodePanel(java.lang.String,
 	 *      javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected Component newNodePanel(MarkupContainer<?> parent, String panelId, DefaultMutableTreeNode node)
+	protected Component newNodePanel(MarkupContainer parent, String panelId, DefaultMutableTreeNode node)
 	{
 		return new Node(parent,panelId, node);
 	}
@@ -80,7 +80,7 @@ public class AnotherTree extends Tree
 		 * @param node
 		 *            The tree node for this panel
 		 */
-		public Node(MarkupContainer<?> parent,String panelId, final DefaultMutableTreeNode node)
+		public Node(MarkupContainer parent,String panelId, final DefaultMutableTreeNode node)
 		{
 			super(parent,panelId);
 

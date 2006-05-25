@@ -47,7 +47,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, String)
 	 */
-	public SmartLinkMultiLineLabel(MarkupContainer<?> parent,String name, String label)
+	public SmartLinkMultiLineLabel(MarkupContainer parent,String name, String label)
 	{
 		this(parent,name, new Model(label));
 	}
@@ -55,7 +55,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(String, IModel)
 	 */
-	public SmartLinkMultiLineLabel(MarkupContainer<?> parent,String name, IModel model)
+	public SmartLinkMultiLineLabel(MarkupContainer parent,String name, IModel model)
 	{
 		super(parent,name, model);
 	}

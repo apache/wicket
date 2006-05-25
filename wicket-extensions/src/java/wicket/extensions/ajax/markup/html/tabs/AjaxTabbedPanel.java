@@ -31,7 +31,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 		setOutputMarkupId(true);
 	}
 
-	protected WebMarkupContainer newLink(MarkupContainer<?> parent,String linkId, final int index)
+	protected WebMarkupContainer newLink(MarkupContainer parent,String linkId, final int index)
 	{
 		return new AjaxFallbackLink(parent,linkId)
 		{

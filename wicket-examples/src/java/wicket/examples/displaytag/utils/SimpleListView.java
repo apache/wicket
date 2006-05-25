@@ -166,7 +166,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(MarkupContainer<?> parent,final int index, final IModel model)
+		public SimpleListListItem(MarkupContainer parent,final int index, final IModel model)
 		{
 			super(parent,index, model);
 		}

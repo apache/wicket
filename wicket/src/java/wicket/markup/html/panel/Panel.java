@@ -72,7 +72,7 @@ public class Panel<V> extends WebMarkupContainerWithAssociatedMarkup<V>
 	/**
      * @see wicket.Component#Component(String)
      */
-    public Panel(MarkupContainer<?> parent,final String id)
+    public Panel(MarkupContainer parent,final String id)
     {
         super(parent,id);
     }
@@ -80,7 +80,7 @@ public class Panel<V> extends WebMarkupContainerWithAssociatedMarkup<V>
     /**
      * @see wicket.Component#Component(String, IModel)
      */
-    public Panel(MarkupContainer<?> parent,final String id, final IModel<V> model)
+    public Panel(MarkupContainer parent,final String id, final IModel<V> model)
     {
         super(parent,id, model);
     }    

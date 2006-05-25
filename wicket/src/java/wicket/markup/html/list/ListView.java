@@ -107,7 +107,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public ListView(MarkupContainer<?> parent, final String id)
+	public ListView(MarkupContainer parent, final String id)
 	{
 		super(parent,id);
 	}
@@ -115,7 +115,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(MarkupContainer<?> parent,final String id, final IModel<List<V>> model)
+	public ListView(MarkupContainer parent,final String id, final IModel<List<V>> model)
 	{
 		super(parent,id, model);
 
@@ -137,7 +137,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(MarkupContainer<?> parent,final String id, final List<V> list)
+	public ListView(MarkupContainer parent,final String id, final List<V> list)
 	{
 		this(parent,id, new Model<List<V>>(list));
 	}

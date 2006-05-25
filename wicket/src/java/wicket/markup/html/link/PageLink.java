@@ -48,7 +48,7 @@ public class PageLink extends Link
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(MarkupContainer<?> parent,final String id, final Class c)
+	public PageLink(MarkupContainer parent,final String id, final Class c)
 	{
 		super(parent,id);
 
@@ -82,7 +82,7 @@ public class PageLink extends Link
 	 * @param id  See component
 	 * @param page The page
 	 */
-	public PageLink(MarkupContainer<?> parent,final String id, final Page page)
+	public PageLink(MarkupContainer parent,final String id, final Page page)
 	{
 	    super(parent,id);
 
@@ -117,7 +117,7 @@ public class PageLink extends Link
 	 *            linked to if and when this hyperlink is clicked at a later
 	 *            time.
 	 */
-	public PageLink(MarkupContainer<?> parent,final String id, final IPageLink pageLink)
+	public PageLink(MarkupContainer parent,final String id, final IPageLink pageLink)
 	{
 		super(parent,id);
 		this.pageLink = pageLink;

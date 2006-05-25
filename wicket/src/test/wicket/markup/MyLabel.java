@@ -36,7 +36,7 @@ public class MyLabel extends WebComponent
      * Construct.
      * @param id
      */
-    public MyLabel(MarkupContainer<?> parent,final String id)
+    public MyLabel(MarkupContainer parent,final String id)
     {
         super(parent,id);
     }

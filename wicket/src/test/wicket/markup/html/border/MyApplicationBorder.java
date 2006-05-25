@@ -32,7 +32,7 @@ public class MyApplicationBorder extends Border
 	/**
 	 * @param id
 	 */
-	public MyApplicationBorder(MarkupContainer<?> parent,final String id)
+	public MyApplicationBorder(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 		

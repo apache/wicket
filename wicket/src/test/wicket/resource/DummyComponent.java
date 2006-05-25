@@ -39,7 +39,7 @@ public class DummyComponent<V> extends Component<V>
 	 * @param application
 	 *            The application for this component
 	 */
-	public DummyComponent(MarkupContainer<?> parent, final String name, final Application application)
+	public DummyComponent(MarkupContainer parent, final String name, final Application application)
 	{
 		super(parent,name);
 	}

@@ -38,7 +38,7 @@ public abstract class PropertyListView<V> extends ListView<V>
 	 * @param id
 	 *            Wicket id
 	 */
-	public PropertyListView(MarkupContainer<?> parent,final String id)
+	public PropertyListView(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
@@ -51,7 +51,7 @@ public abstract class PropertyListView<V> extends ListView<V>
 	 * @param model
 	 *            wrapping a List
 	 */
-	public PropertyListView(MarkupContainer<?> parent,final String id, final IModel<List<V>> model)
+	public PropertyListView(MarkupContainer parent,final String id, final IModel<List<V>> model)
 	{
 		super(parent,id, model);
 	}
@@ -66,7 +66,7 @@ public abstract class PropertyListView<V> extends ListView<V>
 	 * @param list
 	 *            unmodeled List
 	 */
-	public PropertyListView(MarkupContainer<?> parent,final String id, final List<V> list)
+	public PropertyListView(MarkupContainer parent,final String id, final List<V> list)
 	{
 		super(parent,id, list);
 	}

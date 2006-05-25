@@ -275,7 +275,7 @@ public final class ImageMap extends WebMarkupContainer
 	 * @param id
 	 *            See Component
 	 */
-	public ImageMap(MarkupContainer<?> parent,final String id)
+	public ImageMap(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}

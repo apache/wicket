@@ -36,6 +36,7 @@ import wicket.markup.html.link.ResourceLink;
 import wicket.markup.html.pages.RedirectPage;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
+import wicket.model.Model;
 import wicket.model.PropertyModel;
 
 /**
@@ -64,11 +65,14 @@ public class Home extends WicketExamplePage
 				linkClickCount++;
 			}
 		};
+		actionLink.getModel();
+		
+		
 		actionLink.add(new Label(actionLink,"linkClickCount", new PropertyModel(this, "linkClickCount")));
 		add(actionLink);
 
 		// Action link counts link clicks on works with onclick handler
-		final Link actionOnClickLink = new Link(this,"actionOnClickLink")
+		final Link<String> actionOnClickLink = new Link<String>(this,"actionOnClickLink")
 		{
 			public void onClick()
 			{
@@ -76,6 +80,9 @@ public class Home extends WicketExamplePage
 			}
 		};
 
+		Label<String> l = new Label<String>(this, "test", "test");
+		String s = l.getModelObject();
+		
 		add(actionOnClickLink);
 		add(new Label(this,"onClickLinkClickCount", new PropertyModel(this, "onClickLinkClickCount")));
 
@@ -117,10 +124,10 @@ public class Home extends WicketExamplePage
 
 		// Image map link example
 		add(new ImageMap(this,"imageMap").addRectangleLink(0, 0, 100, 100,
-				new BookmarkablePageLink("page1", Page1.class)).addCircleLink(160, 50, 35,
-				new BookmarkablePageLink("page2", Page2.class)).addPolygonLink(
+				new BookmarkablePageLink(this, "page1", Page1.class)).addCircleLink(160, 50, 35,
+				new BookmarkablePageLink(this, "page2", Page2.class)).addPolygonLink(
 				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-				new BookmarkablePageLink("page3", Page3.class)));
+				new BookmarkablePageLink(this, "page3", Page3.class)));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(

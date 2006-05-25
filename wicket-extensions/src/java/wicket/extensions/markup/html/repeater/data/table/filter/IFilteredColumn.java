@@ -47,6 +47,6 @@ public interface IFilteredColumn extends IColumn
 	 * @return component that will be used to represent a filter for this
 	 *         column, or null if no such component is desired
 	 */
-	Component getFilter(MarkupContainer<?> parent,String componentId, FilterForm form);
+	Component getFilter(MarkupContainer parent,String componentId, FilterForm form);
 
 }

@@ -42,7 +42,7 @@ public class TabbedPanelPage extends BasePage
 		List tabs = new ArrayList();
 		tabs.add(new AbstractTab(new Model("first tab"))
 		{
-			public Panel getPanel(MarkupContainer<?> parent,String panelId)
+			public Panel getPanel(MarkupContainer parent,String panelId)
 			{
 				return new TabPanel1(parent,panelId);
 			}
@@ -50,7 +50,7 @@ public class TabbedPanelPage extends BasePage
 
 		tabs.add(new AbstractTab(new Model("second tab"))
 		{
-			public Panel getPanel(MarkupContainer<?> parent,String panelId)
+			public Panel getPanel(MarkupContainer parent,String panelId)
 			{
 				return new TabPanel2(parent,panelId);
 			}
@@ -58,7 +58,7 @@ public class TabbedPanelPage extends BasePage
 
 		tabs.add(new AbstractTab(new Model("third tab"))
 		{
-			public Panel getPanel(MarkupContainer<?> parent,String panelId)
+			public Panel getPanel(MarkupContainer parent,String panelId)
 			{
 				return new TabPanel3(parent,panelId);
 			}

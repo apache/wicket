@@ -66,7 +66,7 @@ public class CheckGroup<V> extends FormComponent<Collection<V>> implements IOnCh
 	 * @param id
 	 *            component id
 	 */
-	public CheckGroup(MarkupContainer<?> parent,String id)
+	public CheckGroup(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 		setRenderBodyOnly(true);

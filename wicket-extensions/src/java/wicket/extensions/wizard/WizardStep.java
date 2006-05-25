@@ -134,7 +134,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * Construct without a title and a summary. Useful for when you provide a
 	 * custom header by overiding {@link #getHeader(String, Component, Wizard)}.
 	 */
-	public WizardStep(MarkupContainer<?> parent)
+	public WizardStep(MarkupContainer parent)
 	{
 		super(parent,Wizard.VIEW_ID);
 	}
@@ -149,7 +149,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(MarkupContainer<?> parent,IModel title, IModel summary)
+	public WizardStep(MarkupContainer parent,IModel title, IModel summary)
 	{
 		this(parent,title, summary, null);
 	}
@@ -166,7 +166,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(MarkupContainer<?> parent,IModel title, IModel summary, IModel model)
+	public WizardStep(MarkupContainer parent,IModel title, IModel summary, IModel model)
 	{
 		super(parent,Wizard.VIEW_ID, model);
 
@@ -184,7 +184,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(MarkupContainer<?> parent,String title, String summary)
+	public WizardStep(MarkupContainer parent,String title, String summary)
 	{
 		this(parent,title, summary, null);
 	}
@@ -201,7 +201,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(MarkupContainer<?> parent,String title, String summary, IModel model)
+	public WizardStep(MarkupContainer parent,String title, String summary, IModel model)
 	{
 		this(parent,new Model(title), new Model(summary), null);
 	}

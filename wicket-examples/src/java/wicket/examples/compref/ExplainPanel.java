@@ -34,7 +34,7 @@ class ExplainPanel extends Panel
 	 * @param html
 	 * @param code
 	 */
-	public ExplainPanel(MarkupContainer<?> parent,String html, String code)
+	public ExplainPanel(MarkupContainer parent,String html, String code)
 	{
 		super(parent,"explainPanel");
 		add(new MultiLineLabel(this,"html", html));

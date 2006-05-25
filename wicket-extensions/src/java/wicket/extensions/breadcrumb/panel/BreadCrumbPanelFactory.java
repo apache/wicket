@@ -69,7 +69,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * @see wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory#create(java.lang.String,
 	 *      wicket.extensions.breadcrumb.IBreadCrumbModel)
 	 */
-	public final BreadCrumbPanel create(MarkupContainer<?> parent, String componentId, IBreadCrumbModel breadCrumbModel)
+	public final BreadCrumbPanel create(MarkupContainer parent, String componentId, IBreadCrumbModel breadCrumbModel)
 	{
 		Constructor ctor = getConstructor();
 		try

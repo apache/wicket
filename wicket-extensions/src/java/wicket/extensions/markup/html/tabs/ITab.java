@@ -46,5 +46,5 @@ public interface ITab extends Serializable
 	 *            returned panel MUST have this id
 	 * @return a Panel object that will be placed as the content panel
 	 */
-	Panel getPanel(MarkupContainer<?> parent,final String panelId);
+	Panel getPanel(MarkupContainer parent,final String panelId);
 }

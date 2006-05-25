@@ -55,7 +55,7 @@ public class CreateBook extends WebPage
 		 * 
 		 * @param id
 		 */
-		public CreateForm(MarkupContainer<?> parent, String id)
+		public CreateForm(MarkupContainer parent, String id)
 		{
 			super(parent,id);
 

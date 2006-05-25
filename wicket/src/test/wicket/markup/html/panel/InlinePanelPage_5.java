@@ -54,7 +54,7 @@ public class InlinePanelPage_5 extends WebPage
 		 * @param id
 		 * @param markupId
 		 */
-		public FragmentWithAssociatedMarkupStream(MarkupContainer<?> parent, final String id, final String markupId)
+		public FragmentWithAssociatedMarkupStream(MarkupContainer parent, final String id, final String markupId)
 		{
 			super(parent,id, markupId);
 		}

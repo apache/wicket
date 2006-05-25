@@ -22,7 +22,7 @@ public class ComponentFeedbackPanel extends FeedbackPanel
 	 * @param id the component id.
 	 * @param filter the component for which the messages need to be filtered.
 	 */
-	public ComponentFeedbackPanel(MarkupContainer<?> parent,String id, Component filter)
+	public ComponentFeedbackPanel(MarkupContainer parent,String id, Component filter)
 	{
 		super(parent,id, new ComponentFeedbackMessageFilter(filter));
 	}

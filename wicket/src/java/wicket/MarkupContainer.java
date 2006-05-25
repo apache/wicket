@@ -128,7 +128,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public MarkupContainer(MarkupContainer<?> parent, final String id)
+	public MarkupContainer(MarkupContainer parent, final String id)
 	{
 		super(parent,id);
 	}
@@ -136,7 +136,7 @@ public abstract class MarkupContainer<V> extends Component<V>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public MarkupContainer(MarkupContainer<?> parent, final String id, IModel<V> model)
+	public MarkupContainer(MarkupContainer parent, final String id, IModel<V> model)
 	{
 		super(parent,id, model);
 	}

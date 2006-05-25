@@ -60,7 +60,7 @@ public class SecondPanel extends BreadCrumbPanel
 				{
 					activate(new IBreadCrumbPanelFactory()
 					{
-						public BreadCrumbPanel create(MarkupContainer<?> parent,String componentId,
+						public BreadCrumbPanel create(MarkupContainer parent,String componentId,
 								IBreadCrumbModel breadCrumbModel)
 						{
 							return new ResultPanel(parent,componentId, breadCrumbModel, input);

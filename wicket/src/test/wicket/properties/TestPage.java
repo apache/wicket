@@ -188,7 +188,7 @@ public class TestPage extends WebPage
 		 * @param id
 		 * @param input
 		 */
-		public MyTextField(MarkupContainer<?> parent,final String id, final String input)
+		public MyTextField(MarkupContainer parent,final String id, final String input)
 		{
 			super(parent,id);
 			this.input = input;

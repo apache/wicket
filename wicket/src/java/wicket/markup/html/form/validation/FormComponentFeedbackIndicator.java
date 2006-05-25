@@ -48,7 +48,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	 * @param id
 	 *            See Component
 	 */
-	public FormComponentFeedbackIndicator(MarkupContainer<?> parent,final String id)
+	public FormComponentFeedbackIndicator(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
@@ -56,7 +56,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public FormComponentFeedbackIndicator(MarkupContainer<?> parent,final String id, IModel model)
+	public FormComponentFeedbackIndicator(MarkupContainer parent,final String id, IModel model)
 	{
 		super(parent,id, model);
 	}

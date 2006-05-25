@@ -44,7 +44,7 @@ public class PopupCloseLink extends Link
 	 * 
 	 * @param id
 	 */
-	public PopupCloseLink(MarkupContainer<?> parent,String id)
+	public PopupCloseLink(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 	}
@@ -55,7 +55,7 @@ public class PopupCloseLink extends Link
 	 * @param id
 	 * @param object
 	 */
-	public PopupCloseLink(MarkupContainer<?> parent,String id, IModel object)
+	public PopupCloseLink(MarkupContainer parent,String id, IModel object)
 	{
 		super(parent,id, object);
 	}

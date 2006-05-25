@@ -40,7 +40,7 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	 * @param id
 	 * @param label
 	 */
-	public HeaderSectionMyLabel(MarkupContainer<?> parent,final String id, final String label) 
+	public HeaderSectionMyLabel(MarkupContainer parent,final String id, final String label) 
 	{
 	    super(parent,id, new Model(label));
     }

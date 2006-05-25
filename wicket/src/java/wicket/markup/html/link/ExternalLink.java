@@ -57,7 +57,7 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(MarkupContainer<?> parent,final String id, final String href, final String label)
+	public ExternalLink(MarkupContainer parent,final String id, final String href, final String label)
 	{
 		super(parent,id);
 
@@ -73,7 +73,7 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(MarkupContainer<?> parent,final String id, final String href)
+	public ExternalLink(MarkupContainer parent,final String id, final String href)
 	{
 		this(parent,id, href, null);
 	}
@@ -88,7 +88,7 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(MarkupContainer<?> parent,final String id, final IModel href, final IModel label)
+	public ExternalLink(MarkupContainer parent,final String id, final IModel href, final IModel label)
 	{
 		super(parent,id);
 
@@ -104,7 +104,7 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(MarkupContainer<?> parent,final String id, final IModel href)
+	public ExternalLink(MarkupContainer parent,final String id, final IModel href)
 	{
 		this(parent,id, href, null);
 	}

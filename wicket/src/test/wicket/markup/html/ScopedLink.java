@@ -34,7 +34,7 @@ public abstract class ScopedLink extends Link implements IScopedComponent
 	 * @param id
 	 * @param object
 	 */
-	public ScopedLink(MarkupContainer<?> parent,String id, IModel object)
+	public ScopedLink(MarkupContainer parent,String id, IModel object)
 	{
 		super(parent,id, object);
 	}
@@ -42,7 +42,7 @@ public abstract class ScopedLink extends Link implements IScopedComponent
 	/**
 	 * @param id
 	 */
-	public ScopedLink(MarkupContainer<?> parent,String id)
+	public ScopedLink(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 	}

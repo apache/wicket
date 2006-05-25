@@ -48,7 +48,7 @@ public class MyComponent extends WebMarkupContainer
 	 * 
 	 * @param id
 	 */
-	public MyComponent(MarkupContainer<?> parent,final String id)
+	public MyComponent(MarkupContainer parent,final String id)
 	{
 		super(parent,id, new Model(""));
 	}

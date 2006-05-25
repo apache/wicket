@@ -20,7 +20,7 @@ public class PanelWithHeaderPart extends Panel
 	/**
 	 * @param id
 	 */
-	public PanelWithHeaderPart(MarkupContainer<?> parent,String id)
+	public PanelWithHeaderPart(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 		

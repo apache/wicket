@@ -190,7 +190,7 @@ public class TabbedPanel extends Panel
 	 *            clicked. See {@link #setSelectedTab(int)}.
 	 * @return created link component
 	 */
-	protected WebMarkupContainer newLink(MarkupContainer<?> parent,String linkId, final int index)
+	protected WebMarkupContainer newLink(MarkupContainer parent,String linkId, final int index)
 	{
 		return new Link(parent,linkId)
 		{

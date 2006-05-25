@@ -43,7 +43,7 @@ public class WebComponent<V> extends Component<V>
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebComponent(MarkupContainer<?> parent, final String id)
+	public WebComponent(MarkupContainer parent, final String id)
 	{
 		super(parent,id);
 	}
@@ -51,7 +51,7 @@ public class WebComponent<V> extends Component<V>
 	/**
 	 * @see Component#Component(String, IModel)
 	 */
-	public WebComponent(MarkupContainer<?> parent, final String id, final IModel<V> model)
+	public WebComponent(MarkupContainer parent, final String id, final IModel<V> model)
 	{
 		super(parent,id, model);
 	}

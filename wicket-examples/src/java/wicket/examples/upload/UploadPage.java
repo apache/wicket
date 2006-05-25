@@ -140,7 +140,7 @@ public class UploadPage extends WicketExamplePage
 		 * @param name
 		 *            Component name
 		 */
-		public FileUploadForm(MarkupContainer<?> parent,String name)
+		public FileUploadForm(MarkupContainer parent,String name)
 		{
 			super(parent,name);
 
@@ -199,7 +199,7 @@ public class UploadPage extends WicketExamplePage
 		 * @param files
 		 *            The file list model
 		 */
-		public FileListView(MarkupContainer<?> parent,String name, final List files)
+		public FileListView(MarkupContainer parent,String name, final List files)
 		{
 			super(parent,name, files);
 		}

@@ -84,7 +84,7 @@ public class MyTree extends Tree
 	/**
 	 * @see wicket.markup.html.tree.Tree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
 	 */
-	protected Image getNodeImage(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
+	protected Image getNodeImage(MarkupContainer parent,final DefaultMutableTreeNode node)
 	{
 		if (node.isLeaf())
 		{

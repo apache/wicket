@@ -40,7 +40,7 @@ public class MyTable extends ListView
      * Construct.
      * @param id
      */
-    public MyTable(MarkupContainer<?> parent,final String id)
+    public MyTable(MarkupContainer parent,final String id)
     {
         super(parent,id, new Model(null));
     }

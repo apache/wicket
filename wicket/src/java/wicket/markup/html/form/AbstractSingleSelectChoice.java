@@ -45,7 +45,7 @@ abstract class AbstractSingleSelectChoice<V> extends AbstractChoice<V,V>
 	/**
 	 * @see AbstractChoice#AbstractChoice(String)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer<?> parent,final String id)
+	public AbstractSingleSelectChoice(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
@@ -53,7 +53,7 @@ abstract class AbstractSingleSelectChoice<V> extends AbstractChoice<V,V>
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, List)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer<?> parent,final String id, final List<V> choices)
+	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, final List<V> choices)
 	{
 		super(parent,id, choices);
 	}
@@ -64,7 +64,7 @@ abstract class AbstractSingleSelectChoice<V> extends AbstractChoice<V,V>
 	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(String, List ,IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer<?> parent,final String id, final List<V> data,
+	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, final List<V> data,
 			final IChoiceRenderer<V> renderer)
 	{
 		super(parent,id, data, renderer);
@@ -73,7 +73,7 @@ abstract class AbstractSingleSelectChoice<V> extends AbstractChoice<V,V>
 	/**
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer<?> parent,final String id, IModel<V> model, final List<V> data)
+	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, IModel<V> model, final List<V> data)
 	{
 		super(parent,id, model, data);
 	}
@@ -85,7 +85,7 @@ abstract class AbstractSingleSelectChoice<V> extends AbstractChoice<V,V>
 	 * @param renderer
 	 * @see AbstractChoice#AbstractChoice(String, IModel, List, IChoiceRenderer)
 	 */
-	public AbstractSingleSelectChoice(MarkupContainer<?> parent,final String id, IModel<V> model, final List<V> data,
+	public AbstractSingleSelectChoice(MarkupContainer parent,final String id, IModel<V> model, final List<V> data,
 			final IChoiceRenderer<V> renderer)
 	{
 		super(parent,id, model, data, renderer);

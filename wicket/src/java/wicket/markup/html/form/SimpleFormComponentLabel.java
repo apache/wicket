@@ -39,7 +39,7 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 * @param fc
 	 *            form component
 	 */
-	public SimpleFormComponentLabel(MarkupContainer<?> parent,String id, FormComponent fc)
+	public SimpleFormComponentLabel(MarkupContainer parent,String id, FormComponent fc)
 	{
 		super(parent,id, fc);
 		if (fc.getLabel() == null)

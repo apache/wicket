@@ -2,7 +2,6 @@ package wicket.examples.ajax.builtin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import wicket.MarkupContainer;
@@ -27,213 +26,33 @@ import wicket.model.PropertyModel;
 public class TodoList extends BasePage
 {
 	/**
-	 * The todo object.
-	 */
-	public static class TodoItem implements Serializable
-	{
-		/** Is the item done? */
-		private boolean checked;
-		
-		/** Description of the item. */
-		private String text;
-
-		/** Constructor. */
-		public TodoItem()
-		{
-		}
-
-		/**
-		 * Copy constructor.
-		 * 
-		 * @param item
-		 *            the item to copy the values from.
-		 */
-		public TodoItem(TodoItem item)
-		{
-			this.text = item.text;
-		}
-
-		/**
-		 * @return Returns the checked property.
-		 */
-		public boolean isChecked()
-		{
-			return checked;
-		}
-
-		/**
-		 * Sets the checked property.
-		 * 
-		 * @param checked
-		 *            The checked property to set.
-		 */
-		public void setChecked(boolean checked)
-		{
-			this.checked = checked;
-		}
-
-		/**
-		 * Gets the description of the item.
-		 * 
-		 * @return Returns the text.
-		 */
-		public String getText()
-		{
-			return text;
-		}
-
-		/**
-		 * Sets the description of the item.
-		 * 
-		 * @param text
-		 *            The text to set.
-		 */
-		public void setText(String text)
-		{
-			this.text = text;
-		}
-	}
-
-	/**
-	 * Container for displaying the todo items in a list.
-	 */
-	public class TodoItemsContainer extends WebMarkupContainer
-	{
-		/**
-		 * Constructor.
-		 * 
-		 * @param id
-		 *            the component identifier.
-		 */
-		public TodoItemsContainer(MarkupContainer parent, String id)
-		{
-			super(parent,id);
-
-			// let wicket generate a markup-id so the contents can be
-			// updated through an AJAX call.
-			setOutputMarkupId(true);
-
-			// add the listview to the container
-			add(new ListView(this,"item", items)
-			{
-				protected void populateItem(ListItem item)
-				{
-					// add an AJAX checkbox to the item
-					item.add(new AjaxCheckBox(item,"check",
-							new PropertyModel(item.getModel(), "checked"))
-					{
-						protected void onUpdate(AjaxRequestTarget target)
-						{
-							// no need to do anything, the model is updated by
-							// itself, and we don't have to re-render a
-							// component (the client already has the correct
-							// state).
-						}
-					});
-					// display the text of the todo item
-					item.add(new Label(item,"text", new PropertyModel(item.getModel(), "text")));
-				}
-			});
-		}
-	}
-
-	/**
 	 * Container for showing either the add link, or the addition form.
 	 */
 	public class AddItemsContainer extends WebMarkupContainer
 	{
-		/** Visibility toggle so that either the link or the form is visible. */
-		private boolean linkVisible = true;
-
-		/** Link for displaying the AddTodo form. */
-		private final class AddTodoLink extends AjaxFallbackLink
-		{
-			/** Constructor. */
-			private AddTodoLink(MarkupContainer parent, String id)
-			{
-				super(parent,id);
-			}
-
-			/**
-			 * onclick handler.
-			 * 
-			 * @param target
-			 *            the request target.
-			 */
-			public void onClick(AjaxRequestTarget target)
-			{
-				onShowForm(target);
-			}
-
-			/**
-			 * Toggles the visibility with the add form.
-			 * 
-			 * @return <code>true</code> when the add links is visible and the
-			 *         form isn't.
-			 */
-			public boolean isVisible()
-			{
-				return linkVisible;
-			}
-		}
-
-		/**
-		 * Link for removing all completed todos from the list, this link
-		 * follows the same visibility rules as the add link.
-		 */
-		private final class RemoveCompletedTodosLink extends AjaxFallbackLink
-		{
-			/**
-			 * Constructor.
-			 * 
-			 * @param id
-			 *            component id
-			 */
-			public RemoveCompletedTodosLink(MarkupContainer parent, String id)
-			{
-				super(parent,id);
-			}
-
-			/**
-			 * @see AjaxFallbackLink#onClick(AjaxRequestTarget)
-			 */
-			public void onClick(AjaxRequestTarget target)
-			{
-				onRemoveCompletedTodos(target);
-			}
-
-			/**
-			 * Toggles the visibility with the add form.
-			 * 
-			 * @return <code>true</code> when the add links is visible and the
-			 *         form isn't.
-			 */
-			public boolean isVisible()
-			{
-				return linkVisible;
-			}
-		}
-		
 		/**
 		 * Displays a form which offers an edit field and two buttons: one for
 		 * adding the todo item, and one for canceling the addition. The
 		 * visibility of this component is mutual exclusive with the visibility
 		 * of the add-link.
 		 */
-		private final class AddTodoForm extends Form
+		private final class AddTodoForm extends Form<TodoItem>
 		{
 			/**
 			 * Constructor.
+			 * 
+			 * @param parent
+			 *            The parent
 			 * 
 			 * @param id
 			 *            the component id.
 			 */
 			public AddTodoForm(MarkupContainer parent, String id)
 			{
-				super(parent,id, new CompoundPropertyModel(new TodoItem()));
+				super(parent, id, new CompoundPropertyModel<TodoItem>(new TodoItem()));
 				setOutputMarkupId(true);
-				add(new TextField(this,"text"));
-				add(new AjaxSubmitButton(this,"add", this)
+				add(new TextField(this, "text"));
+				add(new AjaxSubmitButton(this, "add", this)
 				{
 					protected void onSubmit(AjaxRequestTarget target, Form form)
 					{
@@ -244,8 +63,8 @@ public class TodoList extends BasePage
 						onAdd(item, target);
 					}
 				});
-				
-				add(new AjaxSubmitButton(this,"cancel", this)
+
+				add(new AjaxSubmitButton(this, "cancel", this)
 				{
 					public void onSubmit(AjaxRequestTarget target, Form form)
 					{
@@ -266,57 +85,97 @@ public class TodoList extends BasePage
 			}
 		}
 
+		/** Link for displaying the AddTodo form. */
+		private final class AddTodoLink extends AjaxFallbackLink
+		{
+			/** Constructor. */
+			private AddTodoLink(MarkupContainer parent, String id)
+			{
+				super(parent, id);
+			}
+
+			/**
+			 * Toggles the visibility with the add form.
+			 * 
+			 * @return <code>true</code> when the add links is visible and the
+			 *         form isn't.
+			 */
+			public boolean isVisible()
+			{
+				return linkVisible;
+			}
+
+			/**
+			 * onclick handler.
+			 * 
+			 * @param target
+			 *            the request target.
+			 */
+			public void onClick(AjaxRequestTarget target)
+			{
+				onShowForm(target);
+			}
+		}
+
+		/**
+		 * Link for removing all completed todos from the list, this link
+		 * follows the same visibility rules as the add link.
+		 */
+		private final class RemoveCompletedTodosLink extends AjaxFallbackLink
+		{
+			/**
+			 * Constructor.
+			 * 
+			 * @param parent
+			 * 
+			 * @param id
+			 *            component id
+			 */
+			public RemoveCompletedTodosLink(MarkupContainer parent, String id)
+			{
+				super(parent, id);
+			}
+
+			/**
+			 * Toggles the visibility with the add form.
+			 * 
+			 * @return <code>true</code> when the add links is visible and the
+			 *         form isn't.
+			 */
+			public boolean isVisible()
+			{
+				return linkVisible;
+			}
+
+			/**
+			 * @see AjaxFallbackLink#onClick(AjaxRequestTarget)
+			 */
+			public void onClick(AjaxRequestTarget target)
+			{
+				onRemoveCompletedTodos(target);
+			}
+		}
+
+		/** Visibility toggle so that either the link or the form is visible. */
+		private boolean linkVisible = true;
+
 		/**
 		 * Constructor.
+		 * 
+		 * @param parent
 		 * 
 		 * @param id
 		 *            the component id.
 		 */
 		public AddItemsContainer(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 			// let wicket generate a markup-id so the contents can be
 			// updated through an AJAX call.
 			setOutputMarkupId(true);
-			add(new AddTodoLink(this,"link"));
-			add(new RemoveCompletedTodosLink(this,"remove"));
-			add(new AddTodoForm(this,"form"));
-		}
-
-		/**
-		 * Called then the add link was clicked, shows the form, and hides the
-		 * link.
-		 * 
-		 * @param target
-		 *            the request target.
-		 */
-		void onShowForm(AjaxRequestTarget target)
-		{
-			// toggle the visibility
-			linkVisible = false;
-
-			// redraw the add container.
-			target.addComponent(this);
-		}
-
-		void onRemoveCompletedTodos(AjaxRequestTarget target)
-		{
-			List ready = new ArrayList();
-			for (Iterator iter = items.iterator(); iter.hasNext();)
-			{
-				TodoItem todo = (TodoItem)iter.next();
-				if (todo.isChecked())
-				{
-					ready.add(todo);
-				}
-			}
-			items.removeAll(ready);
-
-			// repaint our panel
-			target.addComponent(this);
-
-			// repaint the listview as there was a new item added.
-			target.addComponent(showItems);
+			add(new AddTodoLink(this, "link"));
+			add(new RemoveCompletedTodosLink(this, "remove"));
+			add(new AddTodoForm(this, "form"));
 		}
 
 		/**
@@ -361,7 +220,161 @@ public class TodoList extends BasePage
 			// repaint the panel.
 			target.addComponent(this);
 		}
+
+		void onRemoveCompletedTodos(AjaxRequestTarget target)
+		{
+			List<TodoItem> ready = new ArrayList<TodoItem>();
+			for (TodoItem todo : items)
+			{
+				if (todo.isChecked())
+				{
+					ready.add(todo);
+				}
+			}
+			items.removeAll(ready);
+
+			// repaint our panel
+			target.addComponent(this);
+
+			// repaint the listview as there was a new item added.
+			target.addComponent(showItems);
+		}
+
+		/**
+		 * Called then the add link was clicked, shows the form, and hides the
+		 * link.
+		 * 
+		 * @param target
+		 *            the request target.
+		 */
+		void onShowForm(AjaxRequestTarget target)
+		{
+			// toggle the visibility
+			linkVisible = false;
+
+			// redraw the add container.
+			target.addComponent(this);
+		}
 	}
+
+	/**
+	 * The todo object.
+	 */
+	public static class TodoItem implements Serializable
+	{
+		/** Is the item done? */
+		private boolean checked;
+
+		/** Description of the item. */
+		private String text;
+
+		/** Constructor. */
+		public TodoItem()
+		{
+		}
+
+		/**
+		 * Copy constructor.
+		 * 
+		 * @param item
+		 *            the item to copy the values from.
+		 */
+		public TodoItem(TodoItem item)
+		{
+			this.text = item.text;
+		}
+
+		/**
+		 * Gets the description of the item.
+		 * 
+		 * @return Returns the text.
+		 */
+		public String getText()
+		{
+			return text;
+		}
+
+		/**
+		 * @return Returns the checked property.
+		 */
+		public boolean isChecked()
+		{
+			return checked;
+		}
+
+		/**
+		 * Sets the checked property.
+		 * 
+		 * @param checked
+		 *            The checked property to set.
+		 */
+		public void setChecked(boolean checked)
+		{
+			this.checked = checked;
+		}
+
+		/**
+		 * Sets the description of the item.
+		 * 
+		 * @param text
+		 *            The text to set.
+		 */
+		public void setText(String text)
+		{
+			this.text = text;
+		}
+	}
+
+	/**
+	 * Container for displaying the todo items in a list.
+	 */
+	public class TodoItemsContainer extends WebMarkupContainer
+	{
+		/**
+		 * Constructor.
+		 * 
+		 * @param parent
+		 *            The parent Component
+		 * 
+		 * @param id
+		 *            the component identifier.
+		 */
+		public TodoItemsContainer(MarkupContainer parent, String id)
+		{
+			super(parent, id);
+
+			// let wicket generate a markup-id so the contents can be
+			// updated through an AJAX call.
+			setOutputMarkupId(true);
+
+			// add the listview to the container
+			add(new ListView<TodoItem>(this, "item", items)
+			{
+				protected void populateItem(ListItem item)
+				{
+					// add an AJAX checkbox to the item
+					item.add(new AjaxCheckBox(item, "check", new PropertyModel(item.getModel(),
+							"checked"))
+					{
+						protected void onUpdate(AjaxRequestTarget target)
+						{
+							// no need to do anything, the model is updated by
+							// itself, and we don't have to re-render a
+							// component (the client already has the correct
+							// state).
+						}
+					});
+					// display the text of the todo item
+					item.add(new Label(item, "text", new PropertyModel(item.getModel(), "text")));
+				}
+			});
+		}
+	}
+
+	/**
+	 * The list of todo items.
+	 */
+	static final List<TodoItem> items = new ArrayList<TodoItem>();
 
 	/**
 	 * Container for redrawing the todo items list with an AJAX call.
@@ -369,20 +382,15 @@ public class TodoList extends BasePage
 	private WebMarkupContainer showItems;
 
 	/**
-	 * The list of todo items.
-	 */
-	static final List items = new ArrayList();
-
-	/**
 	 * Constructor.
 	 */
 	public TodoList()
 	{
 		// add the listview container for the todo items.
-		showItems = new TodoItemsContainer(this,"showItems");
+		showItems = new TodoItemsContainer(this, "showItems");
 		add(showItems);
 
 		// add the add container for the todo items.
-		add(new AddItemsContainer(this,"addItems"));
+		add(new AddItemsContainer(this, "addItems"));
 	}
 }

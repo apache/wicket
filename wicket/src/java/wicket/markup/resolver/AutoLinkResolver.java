@@ -591,7 +591,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param id
 		 * @param href
 		 */
-		public AutolinkExternalLink(MarkupContainer<?> parent,final String id, final String href)
+		public AutolinkExternalLink(MarkupContainer parent,final String id, final String href)
 		{
 			super(parent,id, href);
 		}
@@ -624,7 +624,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param clazz
 		 * @param href
 		 */
-		public PackageResourceReferenceAutolink(MarkupContainer<?> parent,final String id, final Class clazz,
+		public PackageResourceReferenceAutolink(MarkupContainer parent,final String id, final Class clazz,
 				final String href)
 		{
 			super(parent,id);

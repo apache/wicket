@@ -42,7 +42,7 @@ public class TextFilteredPropertyColumn extends FilteredPropertyColumn
 	 * @see wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
 	 *      wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
-	public Component getFilter(MarkupContainer<?> parent,String componentId, FilterForm form)
+	public Component getFilter(MarkupContainer parent,String componentId, FilterForm form)
 	{
 		return new TextFilter(parent,componentId, getFilterModel(form), form);
 	}

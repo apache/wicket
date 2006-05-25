@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.13 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,9 +39,9 @@ import wicket.model.Model;
  * A Label with a dynamic model can be created like this:
  * 
  * <pre>
- * 
- *       add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
- *  
+ *   
+ *         add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
+ *    
  * </pre>
  * 
  * In this case, the Label component will replace the body of the tag it is
@@ -67,23 +67,28 @@ import wicket.model.Model;
  * 
  * @author Jonathan Locke
  */
-public class Label extends WebComponent
+public class Label<V> extends WebComponent<V>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            See Component
 	 */
-	public Label(MarkupContainer<?> parent, final String id)
+	public Label(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
-	
+
 	/**
 	 * Convenience constructor. Same as Label(String, new Model(String))
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * 
 	 * @param id
 	 *            See Component
@@ -92,17 +97,17 @@ public class Label extends WebComponent
 	 * 
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Label(MarkupContainer<?> parent, final String id, String label)
+	public Label(MarkupContainer parent, final String id, String label)
 	{
-		this(parent,id, new Model(label));
+		this(parent, id, new Model<String>(label));
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public Label(MarkupContainer<?> parent, final String id, IModel model)
+	public Label(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**

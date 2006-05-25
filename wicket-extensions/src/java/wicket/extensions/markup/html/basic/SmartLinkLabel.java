@@ -60,7 +60,7 @@ public final class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String, String)
 	 */
-	public SmartLinkLabel(MarkupContainer<?> parent,String name, String label)
+	public SmartLinkLabel(MarkupContainer parent,String name, String label)
 	{
 		super(parent,name, label);
 	}
@@ -68,7 +68,7 @@ public final class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String, IModel)
 	 */
-	public SmartLinkLabel(MarkupContainer<?> parent,String name, IModel model)
+	public SmartLinkLabel(MarkupContainer parent,String name, IModel model)
 	{
 		super(parent,name, model);
 	}
@@ -76,7 +76,7 @@ public final class SmartLinkLabel extends Label
 	/**
 	 * @see Label#Label(String)
 	 */
-	public SmartLinkLabel(MarkupContainer<?> parent,String name)
+	public SmartLinkLabel(MarkupContainer parent,String name)
 	{
 		super(parent,name);
 	}

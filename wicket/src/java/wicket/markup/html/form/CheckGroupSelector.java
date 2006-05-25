@@ -34,7 +34,7 @@ import wicket.markup.html.WebMarkupContainer;
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class CheckGroupSelector extends WebMarkupContainer
+public class CheckGroupSelector<V> extends WebMarkupContainer<V>
 {
 	/**
 	 * 
@@ -45,7 +45,7 @@ public class CheckGroupSelector extends WebMarkupContainer
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public CheckGroupSelector(MarkupContainer<?> parent,String id)
+	public CheckGroupSelector(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 	}

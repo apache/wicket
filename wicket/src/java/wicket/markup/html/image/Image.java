@@ -52,7 +52,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * 
 	 * @see wicket.Component#Component(String)
 	 */
-	public Image(MarkupContainer<?> parent,final String id)
+	public Image(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
@@ -73,7 +73,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param resourceReference
 	 *            The shared image resource
 	 */
-	public Image(MarkupContainer<?> parent,final String id, final ResourceReference resourceReference)
+	public Image(MarkupContainer parent,final String id, final ResourceReference resourceReference)
 	{
 		this(parent,id, resourceReference, null);
 	}
@@ -96,7 +96,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param resourceParameters
 	 *            The resource parameters
 	 */
-	public Image(MarkupContainer<?> parent,final String id, final ResourceReference resourceReference,
+	public Image(MarkupContainer parent,final String id, final ResourceReference resourceReference,
 			ValueMap resourceParameters)
 	{
 		super(parent,id);
@@ -116,7 +116,7 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public Image(MarkupContainer<?> parent,final String id, final Resource imageResource)
+	public Image(MarkupContainer parent,final String id, final Resource imageResource)
 	{
 		super(parent,id);
 		setImageResource(imageResource);
@@ -125,7 +125,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(MarkupContainer<?> parent,final String id, final IModel model)
+	public Image(MarkupContainer parent,final String id, final IModel model)
 	{
 		super(parent,id, model);
 	}
@@ -137,7 +137,7 @@ public class Image extends WebComponent implements IResourceListener
 	 *            Name of image
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Image(MarkupContainer<?> parent,final String id, final String string)
+	public Image(MarkupContainer parent,final String id, final String string)
 	{
 		this(parent,id, new Model(string));
 	}

@@ -202,7 +202,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(MarkupContainer<?> parent,final int index, final IModel model)
+		public SimpleListListItem(MarkupContainer parent,final int index, final IModel model)
 		{
 			super(parent,index, model);
 		}

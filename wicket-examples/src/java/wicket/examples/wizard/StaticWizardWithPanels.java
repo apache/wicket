@@ -46,7 +46,7 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step1(MarkupContainer<?> parent)
+		public Step1(MarkupContainer parent)
 		{
 			super(parent,"One", "The first step");
 		}
@@ -60,7 +60,7 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step2(MarkupContainer<?> parent)
+		public Step2(MarkupContainer parent)
 		{
 			super(parent,"One", "The first step");
 		}
@@ -74,7 +74,7 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step3(MarkupContainer<?> parent)
+		public Step3(MarkupContainer parent)
 		{
 			super(parent,"One", "The first step");
 		}
