@@ -53,11 +53,11 @@ public abstract class TemplatePage extends WicketExamplePage
 			{
 				if (currentBanner.getClass() == Banner1.class)
 				{
-					TemplatePage.this.replace(currentBanner = new Banner2(TemplatePage.this,"ad"));
+					new Banner2(TemplatePage.this,"ad");
 				}
 				else
 				{
-					TemplatePage.this.replace(currentBanner = new Banner1(TemplatePage.this,"ad"));
+					new Banner1(TemplatePage.this,"ad");
 				}
 			}
 		});

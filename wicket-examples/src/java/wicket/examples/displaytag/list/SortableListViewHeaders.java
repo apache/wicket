@@ -20,6 +20,7 @@ package wicket.examples.displaytag.list;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -103,10 +104,15 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 		if (tag.getName().equalsIgnoreCase("th"))
 		{
 			// Get component name
-			final String componentId = tag.getId();
+			String componentId = tag.getId();
+			if((componentId != null) && !componentId.startsWith(Component.AUTO_COMPONENT_PREFIX))
+			{
+				componentId = Component.AUTO_COMPONENT_PREFIX + componentId;
+				tag.setId(componentId);
+			}
 			if ((componentId != null) && (get(componentId) == null))
 			{
-				autoAdd(new SortableListViewHeader(this,componentId, group)
+				SortableListViewHeader slvh = new SortableListViewHeader(this,componentId, group)
 				{
 					protected int compareTo(final Object o1, final Object o2)
 					{
@@ -117,7 +123,8 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 					{
 						return SortableListViewHeaders.this.getObjectToCompare(this, object);
 					}
-				});
+				};
+				slvh.autoAdded();
 				return true;
 			}
 		}

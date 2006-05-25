@@ -122,7 +122,14 @@ public class SimpleListView extends ListView implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		container.autoAdd(newLabel(container,tag.getId()));
+		String componentId = tag.getId();
+		if((componentId != null) && !componentId.startsWith(Component.AUTO_COMPONENT_PREFIX))
+		{
+			componentId = Component.AUTO_COMPONENT_PREFIX + componentId;
+			tag.setId(componentId);
+		}
+		
+		newLabel(container,componentId).autoAdded();
 		return true;
 	}
 
