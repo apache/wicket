@@ -38,7 +38,7 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	 */
 	public NoopOutputTransformerContainer(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -46,14 +46,16 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public NoopOutputTransformerContainer(MarkupContainer parent, final String id, final IModel model)
+	public NoopOutputTransformerContainer(MarkupContainer parent, final String id,
+			final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
 	 * 
-	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component, java.lang.String)
+	 * @see wicket.markup.transformer.ITransformer#transform(wicket.Component,
+	 *      java.lang.String)
 	 */
 	@Override
 	public CharSequence transform(final Component component, final String output)

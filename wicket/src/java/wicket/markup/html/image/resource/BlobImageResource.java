@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: BlobImageResource.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,38 +38,41 @@ import wicket.util.io.Streams;
  */
 public abstract class BlobImageResource extends DynamicImageResource
 {
-  /**
-   * Construct.
-   * @param locale
-   */
-  public BlobImageResource(Locale locale)
-  {
-    super(locale);
-  }
-  
-  /**
-   * Construct.
-   * @param format
-   * @param locale
-   */
-  public BlobImageResource(String format, Locale locale)
-  {
-    super(format, locale);
-  }
-  
-  /**
-   * Construct.
-   * @param format
-   */
-  public BlobImageResource(String format)
-  {
-    super(format);
-  }
-  
-  /**
-   * Construct.
-   */
-  public BlobImageResource()
+	/**
+	 * Construct.
+	 * 
+	 * @param locale
+	 */
+	public BlobImageResource(Locale locale)
+	{
+		super(locale);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param format
+	 * @param locale
+	 */
+	public BlobImageResource(String format, Locale locale)
+	{
+		super(format, locale);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param format
+	 */
+	public BlobImageResource(String format)
+	{
+		super(format);
+	}
+
+	/**
+	 * Construct.
+	 */
+	public BlobImageResource()
 	{
 	}
 
@@ -98,11 +103,11 @@ public abstract class BlobImageResource extends DynamicImageResource
 			throw new WicketRuntimeException("Error while reading image data", e);
 		}
 	}
-    
-  /**
-   * Gets the BLOB (Binary Large OBject) that holds the raw image data.
-   *
-   * @return the BLOB
-   */
-  protected abstract Blob getBlob();
+
+	/**
+	 * Gets the BLOB (Binary Large OBject) that holds the raw image data.
+	 * 
+	 * @return the BLOB
+	 */
+	protected abstract Blob getBlob();
 }

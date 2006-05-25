@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractBehavior.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,7 +32,7 @@ import wicket.markup.ComponentTag;
 public abstract class AbstractBehavior implements IBehavior
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -114,7 +115,7 @@ public abstract class AbstractBehavior implements IBehavior
 	public void cleanup()
 	{
 	}
-	
+
 	/**
 	 * @see wicket.behavior.IBehavior#isStateless()
 	 */

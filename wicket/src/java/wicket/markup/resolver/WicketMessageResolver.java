@@ -43,14 +43,14 @@ import wicket.markup.parser.filter.WicketTagIdentifier;
 public class WicketMessageResolver implements IComponentResolver
 {
 	private static final Log log = LogFactory.getLog(WicketMessageResolver.class);
-	
+
 	static
 	{
 		// register "wicket:message"
 		WicketTagIdentifier.registerWellKnownTagName("message");
 	}
 
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -84,19 +84,20 @@ public class WicketMessageResolver implements IComponentResolver
 							"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 				}
 
-				final String value = container.getApplication().getResourceSettings().getLocalizer()
-						.getString(messageKey, container, "");
+				final String value = container.getApplication().getResourceSettings()
+						.getLocalizer().getString(messageKey, container, "");
 
-				final String id = Component.AUTO_COMPONENT_PREFIX + "_message_" + container.getPage().getAutoIndex();
+				final String id = Component.AUTO_COMPONENT_PREFIX + "_message_"
+						+ container.getPage().getAutoIndex();
 				Component component = null;
 				if ((value != null) && (value.trim().length() > 0))
 				{
-					component = new MyLabel(container,id, value);
+					component = new MyLabel(container, id, value);
 				}
 				else
 				{
 					log.info("No value found for message key: " + messageKey);
-					component = new WebMarkupContainer(container,id);
+					component = new WebMarkupContainer(container, id);
 				}
 
 				component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
@@ -126,9 +127,9 @@ public class WicketMessageResolver implements IComponentResolver
 		 * @param id
 		 * @param value
 		 */
-		public MyLabel(MarkupContainer parent,final String id, final String value)
+		public MyLabel(MarkupContainer parent, final String id, final String value)
 		{
-			super(parent,id, value);
+			super(parent, id, value);
 		}
 
 		/**

@@ -146,7 +146,8 @@ public class MarkupCache
 	 *            container as well (markup inheritance)
 	 * @return Markup resource
 	 */
-	private final Markup getMarkup(final MarkupContainer container, final Class<? extends MarkupContainer> clazz)
+	private final Markup getMarkup(final MarkupContainer container,
+			final Class<? extends MarkupContainer> clazz)
 	{
 		Class<? extends MarkupContainer> containerClass = clazz;
 		if (clazz == null)
@@ -192,7 +193,7 @@ public class MarkupCache
 							markupResource = new MarkupResourceStream(resourceStream,
 									new ContainerInfo(container), containerClass);
 						}
-						
+
 						// load the markup and watch for changes
 						markup = loadMarkupAndWatchForChanges(container, key, markupResource);
 					}
@@ -330,7 +331,8 @@ public class MarkupCache
 	 * @return Key that uniquely identifies any markup that might be associated
 	 *         with this markup container.
 	 */
-	private final CharSequence markupKey(final MarkupContainer container, final Class<? extends MarkupContainer> clazz)
+	private final CharSequence markupKey(final MarkupContainer container,
+			final Class<? extends MarkupContainer> clazz)
 	{
 		final String classname = clazz.getName();
 		final Locale locale = container.getLocale();
@@ -403,7 +405,8 @@ public class MarkupCache
 
 		Class<? extends MarkupContainer> markupClass = markup.getResource().getMarkupClass();
 		// get the base markup
-		final Markup baseMarkup = getMarkup(container, (Class<? extends MarkupContainer>)markupClass.getSuperclass());
+		final Markup baseMarkup = getMarkup(container,
+				(Class<? extends MarkupContainer>)markupClass.getSuperclass());
 
 		if (baseMarkup == Markup.NO_MARKUP)
 		{

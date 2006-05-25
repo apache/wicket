@@ -1,6 +1,7 @@
 /*
  * $Id: BufferedDynamicImageResource.java,v 1.3 2005/03/08 21:12:40
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat,
+ * 20 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,64 +32,67 @@ import java.util.Locale;
  * The format of the image (and therefore the resource's extension) can be
  * specified with setFormat(String). The default format is "PNG" because JPEG is
  * lossy and makes generated images look bad and GIF has patent issues.
- *
+ * 
  * @see wicket.markup.html.image.resource.RenderedDynamicImageResource
  * @author Jonathan Locke
  */
 public class BufferedDynamicImageResource extends DynamicImageResource
 {
-  private static final long serialVersionUID = 1L;
-  
-  /** The byte array holding the contents of the dynamic image */
-  private byte[] imageData;
-  
-  /**
-   * Construct.
-   */
-  public BufferedDynamicImageResource()
-  {
-  }
-  
-  /**
-   * Construct.
-   * @param locale
-   */
-  public BufferedDynamicImageResource(Locale locale)
-  {
-    super(locale);
-  }
-  
-  /**
-   * Construct.
-   * @param format
-   * @param locale
-   */
-  public BufferedDynamicImageResource(String format, Locale locale)
-  {
-    super(format, locale);
-  }
-  
-  /**
-   * Construct.
-   * @param format
-   */
-  public BufferedDynamicImageResource(String format)
-  {
-    super(format);
-  }
-  
-  /**
-   * @param image
-   *            The image to set
-   */
-  public synchronized void setImage(final BufferedImage image)
-  {
-    imageData = toImageData(image);
-  }
-  
-  @Override
-protected byte[] getImageData()
-  {
-    return imageData;
-  }  
+	private static final long serialVersionUID = 1L;
+
+	/** The byte array holding the contents of the dynamic image */
+	private byte[] imageData;
+
+	/**
+	 * Construct.
+	 */
+	public BufferedDynamicImageResource()
+	{
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param locale
+	 */
+	public BufferedDynamicImageResource(Locale locale)
+	{
+		super(locale);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param format
+	 * @param locale
+	 */
+	public BufferedDynamicImageResource(String format, Locale locale)
+	{
+		super(format, locale);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param format
+	 */
+	public BufferedDynamicImageResource(String format)
+	{
+		super(format);
+	}
+
+	/**
+	 * @param image
+	 *            The image to set
+	 */
+	public synchronized void setImage(final BufferedImage image)
+	{
+		imageData = toImageData(image);
+	}
+
+	@Override
+	protected byte[] getImageData()
+	{
+		return imageData;
+	}
 }

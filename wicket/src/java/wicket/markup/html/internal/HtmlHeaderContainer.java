@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5046 $ $Date$
+ * $Id: HtmlHeaderContainer.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -85,9 +86,9 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * 
 	 * @see Component#Component(MarkupContainer,String)
 	 */
-	public HtmlHeaderContainer(MarkupContainer parent,final String id)
+	public HtmlHeaderContainer(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// We will render the tags manually, because if no component asked to
 		// contribute to the header, the tags will not be printed either.
@@ -170,7 +171,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 						char ch = output.charAt(i);
 						if (ch != '\n')
 						{
-							output = output.subSequence(i - 1,output.length());
+							output = output.subSequence(i - 1, output.length());
 							break;
 						}
 					}
@@ -228,7 +229,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 				}
 			}
 		});
-		
+
 		page.renderHead(container);
 	}
 
@@ -257,11 +258,11 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			this.renderedComponentsPerScope = new HashMap<String, List<String>>();
 		}
 
-//		if (scope == null)
-//		{
-//			scope = header.getMarkupStream().getContainerClass().getName();
-//		}
-		
+		// if (scope == null)
+		// {
+		// scope = header.getMarkupStream().getContainerClass().getName();
+		// }
+
 		List<String> componentScope = this.renderedComponentsPerScope.get(scope);
 		if (componentScope == null)
 		{

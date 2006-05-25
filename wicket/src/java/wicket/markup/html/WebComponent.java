@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.15 $ $Date$
+ * $Id: WebComponent.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -45,7 +46,7 @@ public class WebComponent<T> extends Component<T>
 	 */
 	public WebComponent(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class WebComponent<T> extends Component<T>
 	 */
 	public WebComponent(MarkupContainer parent, final String id, final IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**

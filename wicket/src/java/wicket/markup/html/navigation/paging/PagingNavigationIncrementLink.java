@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: PagingNavigationIncrementLink.java 5860 2006-05-25 20:29:28 +0000 (Thu,
+ * 25 May 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000
+ * (Thu, 25 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,9 +27,9 @@ import wicket.markup.html.link.Link;
  * navigation looks like
  * 
  * <pre>
- *    
- *   	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *   	
+ *     
+ *    	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
+ *    	
  * </pre>
  * 
  * <p>
@@ -59,10 +59,10 @@ public class PagingNavigationIncrementLink extends Link
 	 * @param increment
 	 *            increment by
 	 */
-	public PagingNavigationIncrementLink(MarkupContainer parent,final String id, final IPageable pageable,
-			final int increment)
+	public PagingNavigationIncrementLink(MarkupContainer parent, final String id,
+			final IPageable pageable, final int increment)
 	{
-		super(parent,id);
+		super(parent, id);
 		setAutoEnable(true);
 		this.increment = increment;
 		this.pageable = pageable;

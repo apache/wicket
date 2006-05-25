@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WebMarkupContainerWithAssociatedMarkup.java 5861 2006-05-25 20:55:07
+ * +0000 (Thu, 25 May 2006) eelco12 $ $Revision$ $Date: 2006-05-25
+ * 20:55:07 +0000 (Thu, 25 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,21 +39,22 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 
 	/** A utility class which implements the internals */
 	private ContainerWithAssociatedMarkupHelper markupHelper;
-	
+
 	/**
 	 * @see Component#Component(MarkupContainer,String)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent,final String id)
+	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent,final String id, IModel<T> model)
+	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent, final String id,
+			IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -77,18 +79,21 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 
 		markupHelper.renderHeadFromAssociatedMarkupFile(container);
 	}
-	
+
 	/**
 	 * Create a new HeaderPartContainer. Users may wish to do that to
-	 * implemented more sophisticated header scoping stragegies. 
+	 * implemented more sophisticated header scoping stragegies.
 	 * 
-	 * @param id The header component's id
-	 * @param scope The default scope of the header
+	 * @param id
+	 *            The header component's id
+	 * @param scope
+	 *            The default scope of the header
 	 * @return The new HeaderPartContainer
 	 */
-	public HeaderPartContainer newHeaderPartContainer(MarkupContainer parent, final String id, final String scope)
+	public HeaderPartContainer newHeaderPartContainer(MarkupContainer parent, final String id,
+			final String scope)
 	{
-		return new HeaderPartContainer(parent,id, this, scope);
+		return new HeaderPartContainer(parent, id, this, scope);
 	}
 
 	/**
@@ -116,10 +121,10 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 		 * @param scope
 		 *            The scope of the wicket:head tag
 		 */
-		public HeaderPartContainer(MarkupContainer parent,final String id, final MarkupContainer container,
-				final String scope)
+		public HeaderPartContainer(MarkupContainer parent, final String id,
+				final MarkupContainer container, final String scope)
 		{
-			super(parent,id);
+			super(parent, id);
 			this.container = container;
 			this.scope = scope;
 		}

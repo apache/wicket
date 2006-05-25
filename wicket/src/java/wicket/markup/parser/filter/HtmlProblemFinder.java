@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: HtmlProblemFinder.java 4594 2006-02-21 18:20:55 +0000 (Tue, 21 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-21 18:20:55 +0000 (Tue, 21 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,20 +29,21 @@ import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 
 /**
- * This is a markup inline filter which by default is not added to the list
- * of markup filter. It can be added by means of subclassing 
- * Application.newMarkupParser() like 
+ * This is a markup inline filter which by default is not added to the list of
+ * markup filter. It can be added by means of subclassing
+ * Application.newMarkupParser() like
+ * 
  * <pre>
- *     public class MyApplication extends Application
- *     {
- *         ...
- *         public IMarkupFilter[] getAdditionalMarkupHandler()
- *         {
- *             return new IMarkupFilter[] { new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION) };
- *         }
+ *      public class MyApplication extends Application
+ *      {
+ *          ...
+ *          public IMarkupFilter[] getAdditionalMarkupHandler()
+ *          {
+ *              return new IMarkupFilter[] { new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION) };
+ *          }
  * </pre>
  * 
- * The purpose of the filter is to find possible HTML issues and to log a 
+ * The purpose of the filter is to find possible HTML issues and to log a
  * warning.
  * 
  * @author Juergen Donnerstag
@@ -52,20 +54,20 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	private static Log log = LogFactory.getLog(HtmlProblemFinder.class);
 
 	/** Ignore the issue detected */
-	public static final int ERR_INGORE          = 3;
-	
+	public static final int ERR_INGORE = 3;
+
 	/** Log a warning on the issue detected */
-	public static final int ERR_LOG_WARN        = 2;
-	
+	public static final int ERR_LOG_WARN = 2;
+
 	/** Log an error on the issue detected */
-	public static final int ERR_LOG_ERROR       = 1;
-	
+	public static final int ERR_LOG_ERROR = 1;
+
 	/** Throw an exception on the issue detected */
 	public static final int ERR_THROW_EXCEPTION = 0;
-	
+
 	/** Default behavior in case of a potential HTML issue detected */
-	private final int problemEscalation; 
-	    
+	private final int problemEscalation;
+
 	/**
 	 * Construct.
 	 * 
@@ -75,7 +77,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	public HtmlProblemFinder(final int problemEscalation)
 	{
 		super(null);
-		
+
 		this.problemEscalation = problemEscalation;
 	}
 
@@ -97,19 +99,19 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 			return tag;
 		}
 
-		// Make sure some typical and may be tricky problems are detected and 
+		// Make sure some typical and may be tricky problems are detected and
 		// logged.
 		if ("img".equals(tag.getName()) && (tag.isOpen() || tag.isOpenClose()))
-        {
-		    String src = tag.getAttributes().getString("src");
-		    if ((src != null) && (src.trim().length() == 0))
-		    {
-		        escalateWarning("Attribute 'src' should not be empty. Location: ", 
-		                tag);
-		    }
-        }
+		{
+			String src = tag.getAttributes().getString("src");
+			if ((src != null) && (src.trim().length() == 0))
+			{
+				escalateWarning("Attribute 'src' should not be empty. Location: ", tag);
+			}
+		}
 
-		// Some people are using a dot "wicket.xxx" instead of a colon "wicket:xxx"
+		// Some people are using a dot "wicket.xxx" instead of a colon
+		// "wicket:xxx"
 		Iterator iter = tag.getAttributes().keySet().iterator();
 		while (iter.hasNext())
 		{
@@ -119,12 +121,13 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 				key = key.toLowerCase();
 				if (key.startsWith("wicket."))
 				{
-			        escalateWarning("You probably want 'wicket:xxx' rather than 'wicket.xxx'. Location: ", 
-			                tag);
+					escalateWarning(
+							"You probably want 'wicket:xxx' rather than 'wicket.xxx'. Location: ",
+							tag);
 				}
 			}
 		}
-		
+
 		return tag;
 	}
 
@@ -132,27 +135,30 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	 * Handle the issue. Depending the setting either log a warning, an error,
 	 * throw an exception or ignore it.
 	 * 
-	 * @param msg The message
-	 * @param tag The current tag
+	 * @param msg
+	 *            The message
+	 * @param tag
+	 *            The current tag
 	 * @throws ParseException
 	 */
 	private void escalateWarning(final String msg, final ComponentTag tag) throws ParseException
 	{
-	    if (problemEscalation == ERR_LOG_WARN)
-	    {
-	        log.warn(msg + tag.toUserDebugString());
-	    }
-	    else if (problemEscalation == ERR_LOG_ERROR)
-	    {
-	        log.error(msg + tag.toUserDebugString());
-	    }
-	    else if (problemEscalation == ERR_INGORE)
-	    {
-	        // no action required
-	    }
-	    else // if (problemEscalation == ERR_THROW_EXCEPTION)
-	    {
-	        throw new ParseException(msg + tag.toUserDebugString(), tag.getPos());
-	    }
+		if (problemEscalation == ERR_LOG_WARN)
+		{
+			log.warn(msg + tag.toUserDebugString());
+		}
+		else if (problemEscalation == ERR_LOG_ERROR)
+		{
+			log.error(msg + tag.toUserDebugString());
+		}
+		else if (problemEscalation == ERR_INGORE)
+		{
+			// no action required
+		}
+		else
+		// if (problemEscalation == ERR_THROW_EXCEPTION)
+		{
+			throw new ParseException(msg + tag.toUserDebugString(), tag.getPos());
+		}
 	}
 }

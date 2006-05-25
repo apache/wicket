@@ -46,7 +46,7 @@ public class FragmentResolver implements IComponentResolver
 		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("fragment");
 	}
-	
+
 	/**
 	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
 	 *      MarkupStream, ComponentTag)

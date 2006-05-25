@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,14 +28,12 @@ import wicket.MarkupContainer;
 public final class BoxBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public BoxBorder(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 }
-
-

@@ -46,17 +46,17 @@ import wicket.util.string.Strings;
  * And this to your markup:
  * 
  * <pre>
- *  &lt;span wicket:id=&quot;componentTree&quot;/&gt;
+ *   &lt;span wicket:id=&quot;componentTree&quot;/&gt;
  * </pre>
  * 
  * @author Juergen Donnerstag
  * 
- * @param <T> 
+ * @param <T>
  */
 public final class PageView<T> extends Panel<T>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -66,15 +66,15 @@ public final class PageView<T> extends Panel<T>
 	 *            The page to be analyzed
 	 * @see Component#Component(MarkupContainer,String)
 	 */
-	public PageView(MarkupContainer parent,final String id, final Page page)
+	public PageView(MarkupContainer parent, final String id, final Page page)
 	{
-		super(parent,id);
-		
+		super(parent, id);
+
 		// Create an empty list. It'll be filled later
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		// Name of page
-		add(new Label(this,"info", page == null ? "[Stateless Page]" : page.toString()));
+		add(new Label(this, "info", page == null ? "[Stateless Page]" : page.toString()));
 
 		// Get the components data and fill and sort the list
 		data.clear();
@@ -89,12 +89,12 @@ public final class PageView<T> extends Panel<T>
 				return o1.path.compareTo(o2.path);
 			}
 		});
-		
+
 		// Create the table containing the list the components
-		add(new ListView<ComponentData>(this,"components", data)
+		add(new ListView<ComponentData>(this, "components", data)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			/**
 			 * Populate the table with Wicket elements
 			 */
@@ -103,11 +103,12 @@ public final class PageView<T> extends Panel<T>
 			{
 				final ComponentData componentData = listItem.getModelObject();
 
-				listItem.add(new Label(listItem,"row", Integer.toString(listItem.getIndex() + 1)));
-				listItem.add(new Label(listItem,"path", componentData.path));
-				listItem.add(new Label(listItem,"size", Bytes.bytes(componentData.size).toString()));
-				listItem.add(new Label(listItem,"type", componentData.type));
-				listItem.add(new Label(listItem,"model", componentData.value));
+				listItem.add(new Label(listItem, "row", Integer.toString(listItem.getIndex() + 1)));
+				listItem.add(new Label(listItem, "path", componentData.path));
+				listItem
+						.add(new Label(listItem, "size", Bytes.bytes(componentData.size).toString()));
+				listItem.add(new Label(listItem, "type", componentData.type));
+				listItem.add(new Label(listItem, "model", componentData.value));
 			}
 		});
 	}
@@ -127,24 +128,24 @@ public final class PageView<T> extends Panel<T>
 		{
 			public Object component(final Component component)
 			{
-			    if (!component.getPath().startsWith(PageView.this.getPath()))
-			    {
+				if (!component.getPath().startsWith(PageView.this.getPath()))
+				{
 					final ComponentData componentData = new ComponentData();
-	
+
 					// anonymous class? Get the parent's class name
 					String name = component.getClass().getName();
 					if (name.indexOf("$") > 0)
 					{
 						name = component.getClass().getSuperclass().getName();
 					}
-	
+
 					// remove the path component
 					name = Strings.lastPathComponent(name, Component.PATH_SEPARATOR);
-	
+
 					componentData.path = component.getPageRelativePath();
 					componentData.size = component.getSizeInBytes();
 					componentData.type = name;
-					try 
+					try
 					{
 						componentData.value = component.getModelObjectAsString();
 					}
@@ -152,10 +153,10 @@ public final class PageView<T> extends Panel<T>
 					{
 						componentData.value = e.getMessage();
 					}
-						
+
 					data.add(componentData);
-			    }
-			    
+				}
+
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
@@ -171,7 +172,7 @@ public final class PageView<T> extends Panel<T>
 	private class ComponentData implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** Component path. */
 		public String path;
 
@@ -180,7 +181,7 @@ public final class PageView<T> extends Panel<T>
 
 		/** Component value. */
 		public String value;
-		
+
 		/** Size of component in bytes */
 		public long size;
 	}

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -105,11 +105,11 @@ public interface IBehavior extends Serializable
 	 *            the unexpected exception
 	 */
 	void exception(Component component, RuntimeException exception);
-	
-	
+
+
 	/**
-	 * This method returns false if the behaviour generates a callback url
-	 * (for example ajax behaviours)
+	 * This method returns false if the behaviour generates a callback url (for
+	 * example ajax behaviours)
 	 * 
 	 * @return boolean true or false.
 	 */

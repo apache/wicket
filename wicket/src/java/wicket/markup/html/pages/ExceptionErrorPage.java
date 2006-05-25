@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ExceptionErrorPage.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,7 +38,7 @@ import wicket.util.string.Strings;
 public class ExceptionErrorPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-	 
+
 	/** Keep a reference to the root cause. WicketTester will use it */
 	private transient Throwable throwable;
 
@@ -52,9 +53,9 @@ public class ExceptionErrorPage extends WebPage
 	public ExceptionErrorPage(final Throwable throwable, final Page page)
 	{
 		this.throwable = throwable;
-		
+
 		// Add exception label
-		add(new MultiLineLabel(this,"exception", Strings.toString(throwable)));
+		add(new MultiLineLabel(this, "exception", Strings.toString(throwable)));
 
 		// Get values
 		String resource = "";
@@ -73,15 +74,15 @@ public class ExceptionErrorPage extends WebPage
 		}
 
 		// Add container with markup highlighted
-		final WebMarkupContainer markupHighlight = new WebMarkupContainer(this,"markupHighlight");
+		final WebMarkupContainer markupHighlight = new WebMarkupContainer(this, "markupHighlight");
 		// Create markup label
-		final MultiLineLabel markupLabel = new MultiLineLabel(markupHighlight,"markup", markup);
+		final MultiLineLabel markupLabel = new MultiLineLabel(markupHighlight, "markup", markup);
 
 		markupLabel.setEscapeModelStrings(false);
 
 
 		markupHighlight.add(markupLabel);
-		markupHighlight.add(new Label(markupHighlight,"resource", resource));
+		markupHighlight.add(new Label(markupHighlight, "resource", resource));
 		add(markupHighlight);
 
 		// Show container if markup stream is available
@@ -90,14 +91,14 @@ public class ExceptionErrorPage extends WebPage
 		// Show component tree of the page
 		if (page != null)
 		{
-		    add(new PageView(this,"componentTree", page));
+			add(new PageView(this, "componentTree", page));
 		}
 		else
 		{
-		    add(new Label(this,"componentTree", ""));
+			add(new Label(this, "componentTree", ""));
 		}
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.WebPage#configureResponse()
 	 */
@@ -105,15 +106,16 @@ public class ExceptionErrorPage extends WebPage
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);	
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
-	
+
 	/**
 	 * Get access to the exception
 	 * 
 	 * @return The exception
 	 */
-	public Throwable getThrowable() 
+	public Throwable getThrowable()
 	{
 		return throwable;
 	}

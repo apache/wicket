@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: PagingNavigation.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,21 +32,21 @@ import wicket.version.undo.Change;
  * (1..n).
  * 
  * <pre>
- *  
- * 	&lt;td wicket:id=&quot;navigation&quot;&gt;
- * 		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- * 			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
- * 		&lt;/a&gt;
- * 	&lt;/td&gt;
- * 	
+ *   
+ *  	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ *  		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *  			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
+ *  		&lt;/a&gt;
+ *  	&lt;/td&gt;
+ *  	
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
- *  
- * 	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
- * 	
+ *   
+ *  	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+ *  	
  * </pre>
  * 
  * </p>
@@ -76,12 +76,12 @@ import wicket.version.undo.Change;
  * With:
  * 
  * <pre>
- * 	&lt;td wicket:id=&quot;navigation&quot;&gt;
- * 	  &lt;span wicket:id=&quot;separator&quot;/&gt;
- * 	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- * 	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- * 	  &lt;/a&gt;
- * 	&lt;/td&gt;
+ *  	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ *  	  &lt;span wicket:id=&quot;separator&quot;/&gt;
+ *  	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *  	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *  	  &lt;/a&gt;
+ *  	&lt;/td&gt;
  * </pre>
  * 
  * renders like:
@@ -188,9 +188,9 @@ public class PagingNavigation extends Loop
 	 * @param pageable
 	 *            The underlying pageable component to navigate
 	 */
-	public PagingNavigation(MarkupContainer parent,final String id, final IPageable pageable)
+	public PagingNavigation(MarkupContainer parent, final String id, final IPageable pageable)
 	{
-		this(parent,id, pageable, null);
+		this(parent, id, pageable, null);
 	}
 
 	/**
@@ -204,10 +204,10 @@ public class PagingNavigation extends Loop
 	 *            The label provider for the text that the links should be
 	 *            displaying.
 	 */
-	public PagingNavigation(MarkupContainer parent,final String id, final IPageable pageable,
+	public PagingNavigation(MarkupContainer parent, final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
-		super(parent,id, pageable.getPageCount());
+		super(parent, id, pageable.getPageCount());
 		this.pageable = pageable;
 		this.labelProvider = labelProvider;
 		startIndex = 0;
@@ -321,7 +321,8 @@ public class PagingNavigation extends Loop
 		final int pageIndex = getStartIndex() + loopItem.getIteration();
 
 		// Add a page link pointing to the page
-		final PagingNavigationLink link = newPagingNavigationLink(loopItem,"pageLink", pageable, pageIndex);
+		final PagingNavigationLink link = newPagingNavigationLink(loopItem, "pageLink", pageable,
+				pageIndex);
 		loopItem.add(link);
 
 		// Add a page number label to the list which is enclosed by the link
@@ -334,7 +335,7 @@ public class PagingNavigation extends Loop
 		{
 			label = String.valueOf(pageIndex + 1);
 		}
-		link.add(new Label(link,"pageNumber", label));
+		link.add(new Label(link, "pageNumber", label));
 	}
 
 	/**
@@ -348,10 +349,10 @@ public class PagingNavigation extends Loop
 	 *            the page index the link points to
 	 * @return the page navigation link.
 	 */
-	protected PagingNavigationLink newPagingNavigationLink(MarkupContainer parent,String id, IPageable pageable,
-			int pageIndex)
+	protected PagingNavigationLink newPagingNavigationLink(MarkupContainer parent, String id,
+			IPageable pageable, int pageIndex)
 	{
-		return new PagingNavigationLink(parent,id, pageable, pageIndex);
+		return new PagingNavigationLink(parent, id, pageable, pageIndex);
 	}
 
 	/**

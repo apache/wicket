@@ -64,9 +64,9 @@ public class DownloadLink extends Link
 	 * @param file
 	 *            file to stream to client
 	 */
-	public DownloadLink(MarkupContainer parent,String id, File file)
+	public DownloadLink(MarkupContainer parent, String id, File file)
 	{
-		super(parent,id);
+		super(parent, id);
 		if (file == null)
 		{
 			throw new IllegalArgumentException("file cannot be null");
@@ -85,9 +85,9 @@ public class DownloadLink extends Link
 	 * @param fileName
 	 *            name of the file
 	 */
-	public DownloadLink(MarkupContainer parent,String id, File file, String fileName)
+	public DownloadLink(MarkupContainer parent, String id, File file, String fileName)
 	{
-		super(parent,id);
+		super(parent, id);
 		if (file == null)
 		{
 			throw new IllegalArgumentException("file cannot be null");

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BodyOnLoadHandler.java 5385 2006-04-15 14:41:18 +0000 (Sat, 15 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-15 14:41:18 +0000 (Sat, 15 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

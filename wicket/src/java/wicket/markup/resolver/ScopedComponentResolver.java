@@ -30,43 +30,45 @@ import wicket.markup.html.panel.Panel;
  * or Panel and tries to find a component with a matching wicket id, effectivly
  * providing something like scoping for wicket id resolution.
  * <p>
- * Note: This resolver is not activated by default. It has to be added by means of
+ * Note: This resolver is not activated by default. It has to be added by means
+ * of
  * <code>Application.getComponentResolvers().add(new InheritComponentResolver())
  * to be activated.</code>.
  * <p>
  * Example:
+ * 
  * <pre>
  * MyPage()
- * { 
- *    add(new Label("hidden-by-cont1","hidden")); 
- *    add(new Label("global","can be everywhere")); //the intresting case
+ * {
+ * 	add(new Label(&quot;hidden-by-cont1&quot;, &quot;hidden&quot;));
+ * 	add(new Label(&quot;global&quot;, &quot;can be everywhere&quot;)); //the intresting case
  * 
- *    WebMarkupContainer cont1 = new WebMarkupContainer("cont1"); 
- *    add(cont1);
+ * 	WebMarkupContainer cont1 = new WebMarkupContainer(&quot;cont1&quot;);
+ * 	add(cont1);
  * 
- *     cont1.add(new Label("hidden-by-cont1","cont1 hides")); 
- *     cont1.add(new Label("same-id","cont1 same-id"));
+ * 	cont1.add(new Label(&quot;hidden-by-cont1&quot;, &quot;cont1 hides&quot;));
+ * 	cont1.add(new Label(&quot;same-id&quot;, &quot;cont1 same-id&quot;));
  * 
- *     WebMarkupContainer cont2 = new WebMarkupContainer("cont2"); 
- *     add(cont2);
+ * 	WebMarkupContainer cont2 = new WebMarkupContainer(&quot;cont2&quot;);
+ * 	add(cont2);
  * 
- *     cont2.add(new Label("same-id","cont2 same-id")); 
+ * 	cont2.add(new Label(&quot;same-id&quot;, &quot;cont2 same-id&quot;));
  * }
  * </pre>
  * <pre>
- * HTML:
- * <html> 
- * <body> 
- *   <span wicket:id="hidden-by-cont1">Prints: hidden</span> 
- *   <div wicket:id="cont1"> 
- *     <span wicket:id="hidden-by-cont1">Prints: cont1 hides</span>
- *     <span wicket:id="same-id">Prints: cont1 same-id</span> 
- *   </div>
- * 
- *   <div wicket:id="cont2"> 
- *     <span wicket:id="global">Prints: can be everywhere</span>
- *     <span wicket:id="same-id">Prints: cont2 same-id</span> 
- *   </div>
+ *  HTML:
+ *  &lt;html&gt; 
+ *  &lt;body&gt; 
+ *    &lt;span wicket:id=&quot;hidden-by-cont1&quot;&gt;Prints: hidden&lt;/span&gt; 
+ *    &lt;div wicket:id=&quot;cont1&quot;&gt; 
+ *      &lt;span wicket:id=&quot;hidden-by-cont1&quot;&gt;Prints: cont1 hides&lt;/span&gt;
+ *      &lt;span wicket:id=&quot;same-id&quot;&gt;Prints: cont1 same-id&lt;/span&gt; 
+ *    &lt;/div&gt;
+ *  
+ *    &lt;div wicket:id=&quot;cont2&quot;&gt; 
+ *      &lt;span wicket:id=&quot;global&quot;&gt;Prints: can be everywhere&lt;/span&gt;
+ *      &lt;span wicket:id=&quot;same-id&quot;&gt;Prints: cont2 same-id&lt;/span&gt; 
+ *    &lt;/div&gt;
  * </pre>
  * 
  * So you can use the same ids in the same page. If the containing containers

@@ -70,7 +70,9 @@ public abstract class DynamicWebResource extends WebResource
 		public Time lastModifiedTime()
 		{
 			if (lastModifiedTime == null)
+			{
 				lastModifiedTime = Time.now();
+			}
 			return lastModifiedTime;
 		}
 
@@ -88,7 +90,7 @@ public abstract class DynamicWebResource extends WebResource
 	 * The resource locale.
 	 */
 	private Locale locale;
-	
+
 	/**
 	 * Creates a dynamic resource.
 	 */

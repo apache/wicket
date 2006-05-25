@@ -53,7 +53,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 */
 	public AbstractOutputTransformerContainer(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -61,9 +61,10 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * 
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public AbstractOutputTransformerContainer(MarkupContainer parent, final String id, final IModel model)
+	public AbstractOutputTransformerContainer(MarkupContainer parent, final String id,
+			final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -114,7 +115,8 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 				public void run()
 				{
 					// Invoke default execution
-					AbstractOutputTransformerContainer.super.onComponentTagBody(markupStream, openTag);
+					AbstractOutputTransformerContainer.super.onComponentTagBody(markupStream,
+							openTag);
 				}
 			});
 		}
@@ -174,7 +176,8 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 			try
 			{
 				// Tranform the data
-				// TODO post 1.2 transform also just charsequence, is this 1.2 or 1.1??
+				// TODO post 1.2 transform also just charsequence, is this 1.2
+				// or 1.1??
 				CharSequence output = transform(this, response.toString());
 				webResponse.write(output);
 			}

@@ -195,9 +195,9 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 				return currentValue;
 			}
 		}
-		if(currentValue != null && !currentValue.trim().endsWith(";"))
+		if (currentValue != null && !currentValue.trim().endsWith(";"))
 		{
-			return currentValue + ";"+ replacementValue;
+			return currentValue + ";" + replacementValue;
 		}
 		return (currentValue == null ? replacementValue : currentValue + replacementValue);
 	}

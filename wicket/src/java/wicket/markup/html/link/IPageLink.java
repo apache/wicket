@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id: IPageLink.java 3585 2006-01-02 07:37:31 +0000 (Mon, 02 Jan 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-01-02 07:37:31 +0000 (Mon, 02
+ * Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,9 +53,9 @@ public interface IPageLink extends Serializable
 
 	/**
 	 * Gets the class of the destination page, which serves as a form of
-	 * identity that can be used to determine if a link is on the same
-	 * Page that it links to.  When Pages are parameterized, the
-	 * Link.linksTo() method should be overridden instead.
+	 * identity that can be used to determine if a link is on the same Page that
+	 * it links to. When Pages are parameterized, the Link.linksTo() method
+	 * should be overridden instead.
 	 * <p>
 	 * A page's identity is important because links which are on the same page
 	 * that they link to often need to be displayed in a different way to
@@ -69,7 +70,7 @@ public interface IPageLink extends Serializable
 	 * 
 	 * public boolean linksTo(final Page page)
 	 * {
-	 *	   return page.getClass() == pageLink.getPageIdentity();
+	 * 	return page.getClass() == pageLink.getPageIdentity();
 	 * }
 	 * </pre>
 	 * 

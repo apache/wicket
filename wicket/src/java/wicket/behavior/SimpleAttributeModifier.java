@@ -19,7 +19,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 
 	/** The attribute */
 	private String attribute;
-	
+
 	/** The value to set */
 	private String value;
 

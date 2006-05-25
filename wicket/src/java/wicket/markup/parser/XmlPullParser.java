@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4429 $ $Date$
+ * $Id: XmlPullParser.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -165,7 +166,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			// There is no next matching tag
 			return null;
 		}
-		
+
 		// Determine line number
 		this.input.countLinesTo(openBracketIndex);
 
@@ -174,8 +175,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 		if (closeBracketIndex == -1)
 		{
-			throw new ParseException("No matching close bracket at position "
-					+ openBracketIndex, this.input.getPosition());
+			throw new ParseException("No matching close bracket at position " + openBracketIndex,
+					this.input.getPosition());
 		}
 
 		// Get the tagtext between open and close brackets
@@ -210,17 +211,17 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			{
 				// Get index of closing tag and advance past the tag
 				closeBracketIndex = findCloseBracket('>', pos1);
-	
+
 				if (closeBracketIndex == -1)
 				{
 					throw new ParseException("No matching close bracket at position "
 							+ openBracketIndex, this.input.getPosition());
 				}
-	
+
 				// Get the tagtext between open and close brackets
 				tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
 						.toString();
-				
+
 				pos1 = closeBracketIndex + 1;
 			}
 			while (tagText.endsWith("]]") == false);
@@ -293,9 +294,8 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				}
 				else
 				{
-					throw new ParseException("Malformed tag (line "
-							+ this.input.getLineNumber() + ", column "
-							+ this.input.getColumnNumber() + ")", openBracketIndex);
+					throw new ParseException("Malformed tag (line " + this.input.getLineNumber()
+							+ ", column " + this.input.getColumnNumber() + ")", openBracketIndex);
 				}
 			}
 		}

@@ -40,13 +40,13 @@ import wicket.version.undo.Change;
  * <p>
  * 
  * <pre>
- *             &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *            
- *             &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *             &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *              &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *             
+ *              &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *              &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *             add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *              add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -73,7 +73,7 @@ public class Fragment extends WebMarkupContainer
 	 */
 	public Fragment(MarkupContainer parent, final String id, final String markupId)
 	{
-		this(parent,id, markupId, null, null);
+		this(parent, id, markupId, null, null);
 	}
 
 	/**
@@ -88,46 +88,48 @@ public class Fragment extends WebMarkupContainer
 	 * @param model
 	 *            The model for this fragment
 	 */
-	public Fragment(MarkupContainer parent, final String id, final String markupId, final IModel model)
-	{
-		this(parent,id, markupId, null, model);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @see wicket.Component#Component(MarkupContainer,String)
-	 * 
-	 * @param id
-	 *            The component id
-	 * @param markupId
-	 *            The associated id of the associated markup fragment
-	 * @param markupProvider
-	 *            The component whose markup contains the fragment's markup
-	 */
-	public Fragment(MarkupContainer parent, final String id, final String markupId, final MarkupContainer markupProvider)
-	{
-		this(parent,id, markupId, markupProvider, null);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @see wicket.Component#Component(MarkupContainer,String)
-	 * 
-	 * @param id
-	 *            The component id
-	 * @param markupId
-	 *            The associated id of the associated markup fragment
-	 * @param markupProvider
-	 *            The component whose markup contains the fragment's markup
-	 * @param model
-	 *            The model for this fragment
-	 */
-	public Fragment(MarkupContainer parent, final String id, final String markupId, final MarkupContainer markupProvider,
+	public Fragment(MarkupContainer parent, final String id, final String markupId,
 			final IModel model)
 	{
-		super(parent,id, model);
+		this(parent, id, markupId, null, model);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param markupId
+	 *            The associated id of the associated markup fragment
+	 * @param markupProvider
+	 *            The component whose markup contains the fragment's markup
+	 */
+	public Fragment(MarkupContainer parent, final String id, final String markupId,
+			final MarkupContainer markupProvider)
+	{
+		this(parent, id, markupId, markupProvider, null);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * 
+	 * @param id
+	 *            The component id
+	 * @param markupId
+	 *            The associated id of the associated markup fragment
+	 * @param markupProvider
+	 *            The component whose markup contains the fragment's markup
+	 * @param model
+	 *            The model for this fragment
+	 */
+	public Fragment(MarkupContainer parent, final String id, final String markupId,
+			final MarkupContainer markupProvider, final IModel model)
+	{
+		super(parent, id, model);
 
 		if (markupId == null)
 		{

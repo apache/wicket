@@ -1,6 +1,7 @@
 /*
  * $Id: ResourceLink.java 5231 2006-04-02 01:34:49 +0200 (zo, 02 apr 2006)
- * joco01 $ $Revision$ $Date$
+ * joco01 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -58,9 +59,10 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resourceReference
 	 *            The shared resource to link to
 	 */
-	public ResourceLink(MarkupContainer parent,final String id, final ResourceReference resourceReference)
+	public ResourceLink(MarkupContainer parent, final String id,
+			final ResourceReference resourceReference)
 	{
-		this(parent,id, resourceReference, null);
+		this(parent, id, resourceReference, null);
 	}
 
 	/**
@@ -81,10 +83,10 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resourceParameters
 	 *            The resource parameters
 	 */
-	public ResourceLink(MarkupContainer parent,final String id, final ResourceReference resourceReference,
-			ValueMap resourceParameters)
+	public ResourceLink(MarkupContainer parent, final String id,
+			final ResourceReference resourceReference, ValueMap resourceParameters)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.resourceReference = resourceReference;
 		this.resourceParameters = resourceParameters;
 		this.resource = null;
@@ -102,9 +104,9 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resource
 	 *            The resource
 	 */
-	public ResourceLink(MarkupContainer parent,final String id, final Resource resource)
+	public ResourceLink(MarkupContainer parent, final String id, final Resource resource)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.resource = resource;
 		this.resourceReference = null;
 		this.resourceParameters = null;

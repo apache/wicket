@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WebMarkupContainer.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,13 +35,13 @@ import wicket.model.IModel;
 public class WebMarkupContainer<T> extends MarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see Component#Component(MarkupContainer,String)
 	 */
 	public WebMarkupContainer(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class WebMarkupContainer<T> extends MarkupContainer<T>
 	 */
 	public WebMarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**

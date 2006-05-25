@@ -97,8 +97,8 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				markupClass = markupStream.getContainerClass();
 			}
 			// Create a HeaderPartContainer and associate the markup
-			final HeaderPartContainer headerPart = getHeaderPart(htmlContainer,markupClass, markupStream
-					.getCurrentIndex());
+			final HeaderPartContainer headerPart = getHeaderPart(htmlContainer, markupClass,
+					markupStream.getCurrentIndex());
 			if (headerPart != null)
 			{
 				// A component's header section must only be added once,
@@ -176,7 +176,8 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 						// Attach an AttributeModifier to the body container
 						// which appends the new value to the onLoad
 						// attribute
-						container.getWebPage().getBodyContainer().addOnLoadModifier(onLoad, container);
+						container.getWebPage().getBodyContainer().addOnLoadModifier(onLoad,
+								container);
 					}
 
 					// There can only be one body tag
@@ -202,7 +203,8 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * @return the header part for this panel/border or null if it doesn't have
 	 *         a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(MarkupContainer parent,final Class markupClass, final int index)
+	private final HeaderPartContainer getHeaderPart(MarkupContainer parent,
+			final Class markupClass, final int index)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
@@ -221,15 +223,16 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// found <wicket:head>
 				// create a unique id for the HtmlHeaderContainer to be
 				// created
-				final String headerId = Component.AUTO_COMPONENT_PREFIX + Classes.simpleName(markupClass)
-						+ this.container.getVariation() + "Header" + index;
+				final String headerId = Component.AUTO_COMPONENT_PREFIX
+						+ Classes.simpleName(markupClass) + this.container.getVariation()
+						+ "Header" + index;
 
 				// Create the header container and associate the markup with
 				// it
 				String scope = wTag.getAttributes().getString(
 						markupStream.getWicketNamespace() + ":scope");
-				final HeaderPartContainer headerContainer = this.container.newHeaderPartContainer(parent,
-						headerId, scope);
+				final HeaderPartContainer headerContainer = this.container.newHeaderPartContainer(
+						parent, headerId, scope);
 				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);
 

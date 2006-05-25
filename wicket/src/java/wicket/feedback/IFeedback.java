@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: IFeedback.java 2455 2005-08-13 06:10:54 +0000 (Sat, 13 Aug 2005)
+ * jonathanlocke $ $Revision$ $Date: 2005-08-13 06:10:54 +0000 (Sat, 13
+ * Aug 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

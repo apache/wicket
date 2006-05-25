@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: JavaScriptReference.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,7 +26,7 @@ import wicket.util.value.ValueMap;
 
 /**
  * Link to a packaged JavaScript file.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JavaScriptReference extends PackagedResourceReference
@@ -35,48 +35,64 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param referer the class that is refering; is used as the relative
-	 * root for gettting the resource
-	 * @param file reference as a string
+	 * 
+	 * @param id
+	 *            component id
+	 * @param referer
+	 *            the class that is refering; is used as the relative root for
+	 *            gettting the resource
+	 * @param file
+	 *            reference as a string
 	 */
-	public JavaScriptReference(MarkupContainer parent,String id, Class referer, String file)
+	public JavaScriptReference(MarkupContainer parent, String id, Class referer, String file)
 	{
-		super(parent,id, referer, file, "src");
+		super(parent, id, referer, file, "src");
 	}
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param referer the class that is refering; is used as the relative
-	 * root for gettting the resource
-	 * @param file reference as a string. The model must provide an instance
-	 * 		of {@link String}
+	 * 
+	 * @param id
+	 *            component id
+	 * @param referer
+	 *            the class that is refering; is used as the relative root for
+	 *            gettting the resource
+	 * @param file
+	 *            reference as a string. The model must provide an instance of
+	 *            {@link String}
 	 */
-	public JavaScriptReference(MarkupContainer parent,String id, Class referer, IModel<String> file)
+	public JavaScriptReference(MarkupContainer parent, String id, Class referer, IModel<String> file)
 	{
-		super(parent,id, referer, file, "src");
-	}
-	
-	/**
-	 * Construct.
-	 * @param id component id
-	 * @param resourceReference resource reference
-	 */
-	public JavaScriptReference(MarkupContainer parent,String id, ResourceReference resourceReference)
-	{
-		super(parent,id, resourceReference, "src");
+		super(parent, id, referer, file, "src");
 	}
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param resourceReference resource reference. The model must provide an instance
-	 * 		of {@link ResourceReference}
+	 * 
+	 * @param id
+	 *            component id
+	 * @param resourceReference
+	 *            resource reference
 	 */
-	public JavaScriptReference(MarkupContainer parent,String id, IModel<ResourceReference> resourceReference)
+	public JavaScriptReference(MarkupContainer parent, String id,
+			ResourceReference resourceReference)
 	{
-		super(parent,id, resourceReference, "src");
+		super(parent, id, resourceReference, "src");
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
+	 *            component id
+	 * @param resourceReference
+	 *            resource reference. The model must provide an instance of
+	 *            {@link ResourceReference}
+	 */
+	public JavaScriptReference(MarkupContainer parent, String id,
+			IModel<ResourceReference> resourceReference)
+	{
+		super(parent, id, resourceReference, "src");
 	}
 
 	/**

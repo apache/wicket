@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BookmarkablePageLink.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,7 +53,8 @@ public class BookmarkablePageLink extends Link
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(MarkupContainer parent,final String id, final Class<? extends Page> pageClass)
+	public BookmarkablePageLink(MarkupContainer parent, final String id,
+			final Class<? extends Page> pageClass)
 	{
 		this(parent, id, pageClass, new PageParameters());
 	}
@@ -68,10 +70,10 @@ public class BookmarkablePageLink extends Link
 	 *            The parameters to pass to the new page when the link is
 	 *            clicked
 	 */
-	public BookmarkablePageLink(MarkupContainer parent,final String id, final Class<? extends Page> pageClass,
-			final PageParameters parameters)
+	public BookmarkablePageLink(MarkupContainer parent, final String id,
+			final Class<? extends Page> pageClass, final PageParameters parameters)
 	{
-		super(parent,id);
+		super(parent, id);
 		if (pageClass == null)
 		{
 			throw new IllegalArgumentException("Page class for bookmarkable link cannot be null");
@@ -216,14 +218,15 @@ public class BookmarkablePageLink extends Link
 			return urlFor(getPageMap(), pageClass, parameters);
 		}
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.link.Link#isStateless()
 	 */
 	@Override
 	protected boolean isStateless()
 	{
-		// should we test behaviours? Can a bookmarkable link have behaviours that are statefull?
+		// should we test behaviours? Can a bookmarkable link have behaviours
+		// that are statefull?
 		return true;
 	}
 }

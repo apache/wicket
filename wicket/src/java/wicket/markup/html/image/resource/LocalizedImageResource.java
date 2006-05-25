@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: LocalizedImageResource.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -74,10 +75,13 @@ import wicket.util.value.ValueMap;
 public final class LocalizedImageResource implements Serializable, IResourceListener
 {
 	private static final long serialVersionUID = 1L;
-	
-	/** What kind of resource it is. TRUE==Resource is set, FALSE==ResourceReference is set, null none */
+
+	/**
+	 * What kind of resource it is. TRUE==Resource is set,
+	 * FALSE==ResourceReference is set, null none
+	 */
 	private Boolean resourceKind;
-	
+
 	/** The component that is referencing this image resource */
 	private Component component;
 
@@ -211,20 +215,22 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		setResourceReference(resourceReference, null);
 	}
+
 	/**
 	 * @param resourceReference
 	 *            The resource to set.
-	 * @param resourceParameters 
-	 * 			  The resource parameters for the shared resource
+	 * @param resourceParameters
+	 *            The resource parameters for the shared resource
 	 */
-	public final void setResourceReference(final ResourceReference resourceReference,final ValueMap resourceParameters)
+	public final void setResourceReference(final ResourceReference resourceReference,
+			final ValueMap resourceParameters)
 	{
 		resourceKind = Boolean.FALSE;
 		this.resourceReference = resourceReference;
-	    this.resourceParameters = resourceParameters;
+		this.resourceParameters = resourceParameters;
 		bind();
 	}
-	
+
 	/**
 	 * @return If it is stateless (if resource is null)
 	 */
@@ -245,9 +251,9 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		// If locale has changed from the initial locale used to attach image
 		// resource, then we need to reload the resource in the new locale
-		if ( resourceKind == null && 
-				(!Objects.equal(locale, component.getLocale())
-				|| !Objects.equal(style, component.getStyle())))
+		if (resourceKind == null
+				&& (!Objects.equal(locale, component.getLocale()) || !Objects.equal(style,
+						component.getStyle())))
 		{
 			// Get new component locale and style
 			this.locale = component.getLocale();
@@ -259,11 +265,14 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		}
 		else
 		{
-			// TODO post 1.2: should we have support for locale changes when the 
+			// TODO post 1.2: should we have support for locale changes when the
 			// resource reference (or resource??) is set manually..
-			// We should get a new resource reference for the current locale then
-			// that points to the same resource but with another locale if it exists.
-			// something like SharedResource.getResourceReferenceForLocale(resourceReference);
+			// We should get a new resource reference for the current locale
+			// then
+			// that points to the same resource but with another locale if it
+			// exists.
+			// something like
+			// SharedResource.getResourceReferenceForLocale(resourceReference);
 		}
 
 		// Need to load image resource for this component?
@@ -307,7 +316,8 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		}
 
 		// Set the SRC attribute to point to the component or shared resource
-		tag.put("src", Strings.replaceAll(RequestCycle.get().getOriginalResponse().encodeURL(url), "&", "&amp;"));
+		tag.put("src", Strings.replaceAll(RequestCycle.get().getOriginalResponse().encodeURL(url),
+				"&", "&amp;"));
 	}
 
 	/**
@@ -322,7 +332,8 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	private IResourceFactory getResourceFactory(final Application application,
 			final String factoryName)
 	{
-		final IResourceFactory factory = application.getResourceSettings().getResourceFactory(factoryName);
+		final IResourceFactory factory = application.getResourceSettings().getResourceFactory(
+				factoryName);
 
 		// Found factory?
 		if (factory == null)
@@ -347,10 +358,10 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if ((path.indexOf("..") != -1) || (path.indexOf("./") != -1) || (path.indexOf("/.") != -1))
 		{
 			throw new WicketRuntimeException(
-					"The 'src' attribute must not contain any of the following strings: '..', './', '/.': path=" 
-					+ path);
+					"The 'src' attribute must not contain any of the following strings: '..', './', '/.': path="
+							+ path);
 		}
-		
+
 		MarkupContainer parent = component.findParentWithAssociatedMarkup();
 		if (parent instanceof Border)
 		{
@@ -360,14 +371,15 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		this.resourceReference = new ResourceReference(scope, path)
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			/**
 			 * @see wicket.ResourceReference#newResource()
 			 */
 			@Override
 			protected Resource newResource()
 			{
-				PackageResource pr = PackageResource.get(getScope(), getName(), LocalizedImageResource.this.locale, style);
+				PackageResource pr = PackageResource.get(getScope(), getName(),
+						LocalizedImageResource.this.locale, style);
 				locale = pr.getLocale();
 				return pr;
 			}
@@ -392,22 +404,24 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 		if (valueParser.matches())
 		{
 			final String imageReferenceName = valueParser.getImageReferenceName();
-			final String specification = Strings.replaceHtmlEscapeNumber(valueParser.getSpecification());
+			final String specification = Strings.replaceHtmlEscapeNumber(valueParser
+					.getSpecification());
 			final String factoryName = valueParser.getFactoryName();
 			final Application application = component.getApplication();
-			
+
 			// Do we have a reference?
 			if (!Strings.isEmpty(imageReferenceName))
 			{
 				// Is resource already available via the application?
-				if (application.getSharedResources().get(Application.class, imageReferenceName, locale, style, true) == null)
+				if (application.getSharedResources().get(Application.class, imageReferenceName,
+						locale, style, true) == null)
 				{
 					// Resource not available yet, so create it with factory and
 					// share via Application
 					final Resource imageResource = getResourceFactory(application, factoryName)
 							.newResource(specification, locale, style);
-					application.getSharedResources().add(Application.class, imageReferenceName, locale, style,
-							imageResource);
+					application.getSharedResources().add(Application.class, imageReferenceName,
+							locale, style, imageResource);
 				}
 
 				// Create resource reference
@@ -418,8 +432,8 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			}
 			else
 			{
-				this.resource = getResourceFactory(application, factoryName)
-						.newResource(specification, locale, style);
+				this.resource = getResourceFactory(application, factoryName).newResource(
+						specification, locale, style);
 			}
 		}
 		else

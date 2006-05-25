@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5136 $ $Date$
+ * $Id: MarkupParser.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -63,7 +64,10 @@ public class MarkupParser
 	/** Wicket URI */
 	private static final String WICKET_URI = "http://wicket.sourceforge.net";
 
-	/** namespace prefix: e.g. <html xmlns:wicket="http://wicket.sourceforge.net"> */ 
+	/**
+	 * namespace prefix: e.g. <html
+	 * xmlns:wicket="http://wicket.sourceforge.net">
+	 */
 	private static final String XMLNS = "xmlns:";
 
 	/** The XML parser to use */
@@ -103,16 +107,16 @@ public class MarkupParser
 	}
 
 	/**
-	 * Applications which subclass initFilterChain() might also wish to
-	 * access the markup resource stream.  
+	 * Applications which subclass initFilterChain() might also wish to access
+	 * the markup resource stream.
 	 * 
-	 * @return The markup resource stream 
+	 * @return The markup resource stream
 	 */
 	protected MarkupResourceStream getMarkupResourceStream()
 	{
 		return this.markup.getResource();
 	}
-	
+
 	/**
 	 * Create a new markup filter chain and initialize with all default filters
 	 * required.
@@ -247,7 +251,7 @@ public class MarkupParser
 
 		// Initialize the markup filter chain
 		this.markupFilterChain = newFilterChain(autoAddList);
-		
+
 		// Allow subclasses to extend the filter chain
 		initFilterChain();
 

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MultiLineLabel.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,9 +37,9 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public class MultiLineLabel extends WebComponent
-{ 
+{
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Constructor. Same as Label(String).
 	 * 
@@ -48,11 +49,12 @@ public class MultiLineLabel extends WebComponent
 	 */
 	public MultiLineLabel(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
-	
+
 	/**
-	 * Convenience constructor. Same as MultiLineLabel(String, new Model(String))
+	 * Convenience constructor. Same as MultiLineLabel(String, new
+	 * Model(String))
 	 * 
 	 * @param id
 	 *            See Component
@@ -63,7 +65,7 @@ public class MultiLineLabel extends WebComponent
 	 */
 	public MultiLineLabel(MarkupContainer parent, final String id, String label)
 	{
-		this(parent,id, new Model(label));
+		this(parent, id, new Model(label));
 	}
 
 	/**
@@ -71,7 +73,7 @@ public class MultiLineLabel extends WebComponent
 	 */
 	public MultiLineLabel(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**

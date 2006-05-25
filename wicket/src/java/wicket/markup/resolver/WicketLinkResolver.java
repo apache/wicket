@@ -26,9 +26,9 @@ import wicket.markup.html.WebMarkupContainer;
 
 /**
  * This is a tag resolver which handles &lt;wicket:link&gt; tags. Because
- * autolinks are already detected and handled, the only task of this
- * resolver will be to add a "transparent" WebMarkupContainer to 
- * transparently handling child components. 
+ * autolinks are already detected and handled, the only task of this resolver
+ * will be to add a "transparent" WebMarkupContainer to transparently handling
+ * child components.
  * 
  * @author Juergen Donnerstag
  */
@@ -40,8 +40,8 @@ public class WicketLinkResolver implements IComponentResolver
 	 * Try to resolve the tag, then create a component, add it to the container
 	 * and render it.
 	 * 
-	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
-	 *      ComponentTag)
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
+	 *      MarkupStream, ComponentTag)
 	 * 
 	 * @param container
 	 *            The container parsing its markup
@@ -57,26 +57,27 @@ public class WicketLinkResolver implements IComponentResolver
 		// It must be <body onload>
 		if (tag instanceof WicketTag)
 		{
-			WicketTag wtag = (WicketTag) tag;
+			WicketTag wtag = (WicketTag)tag;
 			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
 			{
-				final String id = Component.AUTO_COMPONENT_PREFIX + "_link_" + container.getPage().getAutoIndex();
-				final Component component = new WebMarkupContainer(container,id)
-					{
-						private static final long serialVersionUID = 1L;
+				final String id = Component.AUTO_COMPONENT_PREFIX + "_link_"
+						+ container.getPage().getAutoIndex();
+				final Component component = new WebMarkupContainer(container, id)
+				{
+					private static final long serialVersionUID = 1L;
 
-						/**
-						 * @see wicket.MarkupContainer#isTransparentResolver()
-						 */
-						@Override
-						public boolean isTransparentResolver()
-						{
-							return true;
-						}
-					};
-				
+					/**
+					 * @see wicket.MarkupContainer#isTransparentResolver()
+					 */
+					@Override
+					public boolean isTransparentResolver()
+					{
+						return true;
+					}
+				};
+
 				component.autoAdded();
-	
+
 				// Yes, we handled the tag
 				return true;
 			}

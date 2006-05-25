@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DefaultButtonImageResource.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat,
+ * 20 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,7 +33,7 @@ import java.awt.RenderingHints;
 public class DefaultButtonImageResource extends RenderedDynamicImageResource
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The default height for button images */
 	private static int defaultHeight = 26;
 
@@ -56,7 +57,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 
 	/** The color of the text */
 	private Color textColor = Color.WHITE;
-	
+
 	/** The button label */
 	private final String label;
 
@@ -88,7 +89,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	 */
 	public DefaultButtonImageResource(int width, int height, final String label)
 	{
-		super(width, height,"png");
+		super(width, height, "png");
 		this.label = label;
 		setWidth(width == -1 ? defaultWidth : width);
 		setHeight(height == -1 ? defaultHeight : height);
@@ -106,7 +107,7 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	/**
 	 * @return Returns the arcHeight.
 	 */
-	public synchronized  int getArcHeight()
+	public synchronized int getArcHeight()
 	{
 		return arcHeight;
 	}
@@ -221,14 +222,14 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 	{
 		// Get width and height
 		final int width = getWidth();
-		final int height = getHeight();		
-		
+		final int height = getHeight();
+
 		// Get size of text
 		graphics.setFont(font);
 		final FontMetrics fontMetrics = graphics.getFontMetrics();
 		final int dxText = fontMetrics.stringWidth(label);
 		final int dxMargin = 10;
-		
+
 		// Does text fit with a nice margin?
 		if (dxText > width - dxMargin)
 		{
@@ -241,16 +242,16 @@ public class DefaultButtonImageResource extends RenderedDynamicImageResource
 			// Turn on anti-aliasing
 			graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
-	
+
 			// Draw background
 			graphics.setColor(backgroundColor);
 			graphics.fillRect(0, 0, width, height);
-	
+
 			// Draw round rectangle
 			graphics.setColor(color);
 			graphics.setBackground(backgroundColor);
 			graphics.fillRoundRect(0, 0, width, height, arcWidth, arcHeight);
-			
+
 			// Draw text
 			graphics.setColor(textColor);
 			final int x = (width - dxText) / 2;

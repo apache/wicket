@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PageableListView.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -49,9 +50,10 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(MarkupContainer parent,final String id, final IModel model, int rowsPerPage)
+	public PageableListView(MarkupContainer parent, final String id, final IModel model,
+			int rowsPerPage)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		this.rowsPerPage = rowsPerPage;
 	}
 
@@ -67,9 +69,10 @@ public abstract class PageableListView extends ListView implements IPageable
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(MarkupContainer parent,final String id, final List list, final int rowsPerPage)
+	public PageableListView(MarkupContainer parent, final String id, final List list,
+			final int rowsPerPage)
 	{
-		super(parent,id, list);
+		super(parent, id, list);
 		this.rowsPerPage = rowsPerPage;
 	}
 
@@ -112,7 +115,8 @@ public abstract class PageableListView extends ListView implements IPageable
 	/**
 	 * Sets the maximum number of rows on each page.
 	 * 
-	 * @param rowsPerPage the maximum number of rows on each page.
+	 * @param rowsPerPage
+	 *            the maximum number of rows on each page.
 	 */
 	public final void setRowsPerPage(int rowsPerPage)
 	{
@@ -158,7 +162,7 @@ public abstract class PageableListView extends ListView implements IPageable
 		{
 			currentPage = pageCount - 1;
 		}
-		
+
 		addStateChange(new CurrentPageChange(this.currentPage));
 		this.currentPage = currentPage;
 	}
@@ -168,7 +172,8 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * Prevent users from accidentially using it.
 	 * 
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)
-	 * @throws UnsupportedOperationException always
+	 * @throws UnsupportedOperationException
+	 *             always
 	 */
 	@Override
 	public ListView setStartIndex(int startIndex) throws UnsupportedOperationException
@@ -183,7 +188,8 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * @param size
 	 *            the view size
 	 * @return This
-	 * @throws UnsupportedOperationException always
+	 * @throws UnsupportedOperationException
+	 *             always
 	 * @see wicket.markup.html.list.ListView#setStartIndex(int)
 	 */
 	@Override
@@ -192,25 +198,28 @@ public abstract class PageableListView extends ListView implements IPageable
 		throw new UnsupportedOperationException(
 				"You must not use setViewSize() with PageableListView");
 	}
-	
+
 	/**
 	 * Records the changing of the current page.
 	 */
 	private class CurrentPageChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** the former 'current' page. */
 		private int currentPage;
 
 		/**
 		 * Construct.
-		 * @param currentPage the former 'current' page
+		 * 
+		 * @param currentPage
+		 *            the former 'current' page
 		 */
 		CurrentPageChange(int currentPage)
 		{
 			this.currentPage = currentPage;
 		}
+
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */
@@ -236,18 +245,21 @@ public abstract class PageableListView extends ListView implements IPageable
 	private class RowsPerPageChange extends Change
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** the former nbr of rows per page. */
 		private int rowsPerPage;
 
 		/**
 		 * Construct.
-		 * @param rowsPerPage the former nbr of rows per page
+		 * 
+		 * @param rowsPerPage
+		 *            the former nbr of rows per page
 		 */
 		RowsPerPageChange(int rowsPerPage)
 		{
 			this.rowsPerPage = rowsPerPage;
 		}
+
 		/**
 		 * @see wicket.version.undo.Change#undo()
 		 */

@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: PagingNavigationLink.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,13 +32,13 @@ import wicket.markup.html.link.Link;
 public class PagingNavigationLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The pageable list view. */
 	protected final IPageable pageable;
 
 	/** The page of the PageableListView this link is for. */
 	private final int pageNumber;
-	    
+
 	/**
 	 * Constructor.
 	 * 
@@ -50,10 +50,10 @@ public class PagingNavigationLink extends Link
 	 *            The page number in the PageableListView that this link links
 	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
-	public PagingNavigationLink(MarkupContainer parent,final String id,
-			final IPageable pageable, final int pageNumber)
+	public PagingNavigationLink(MarkupContainer parent, final String id, final IPageable pageable,
+			final int pageNumber)
 	{
-		super(parent,id);
+		super(parent, id);
 		setAutoEnable(true);
 		this.pageNumber = pageNumber;
 		this.pageable = pageable;
@@ -79,12 +79,12 @@ public class PagingNavigationLink extends Link
 	 */
 	public final int getPageNumber()
 	{
-	    int idx = pageNumber;
+		int idx = pageNumber;
 		if (idx < 0)
 		{
 			idx = pageable.getPageCount() + idx;
 		}
-		
+
 		if (idx > (pageable.getPageCount() - 1))
 		{
 			idx = pageable.getPageCount() - 1;
@@ -94,7 +94,7 @@ public class PagingNavigationLink extends Link
 		{
 			idx = 0;
 		}
-		
+
 		return idx;
 	}
 

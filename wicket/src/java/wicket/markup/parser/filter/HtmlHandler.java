@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: HtmlHandler.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -132,7 +132,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				if (mismatch)
 				{
 					top.setHasNoCloseTag(true);
-					
+
 					// Pop any simple tags off the top of the stack
 					while (mismatch && !requiresCloseTag(top.getName()))
 					{
@@ -150,8 +150,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 					if (mismatch)
 					{
 						throw new ParseException("Tag " + top.toUserDebugString()
-								+ " has a mismatched close tag at " + tag.toUserDebugString(), 
-								top.getPos());
+								+ " has a mismatched close tag at " + tag.toUserDebugString(), top
+								.getPos());
 					}
 				}
 

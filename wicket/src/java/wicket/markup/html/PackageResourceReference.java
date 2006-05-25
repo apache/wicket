@@ -72,9 +72,9 @@ public class PackageResourceReference extends ResourceReference
 		setLocale(locale);
 		setStyle(style);
 		bind(application);
-		if(getResource() instanceof PackageResource)
+		if (getResource() instanceof PackageResource)
 		{
-			setLocale( ((PackageResource)getResource()).getLocale());
+			setLocale(((PackageResource)getResource()).getLocale());
 		}
 	}
 

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: AbstractTree.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,13 +52,13 @@ public abstract class AbstractTree extends Panel
 	 */
 	public AbstractTree(MarkupContainer parent, final String id, final TreeModel model)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.treeState = newTreeState(model);
 	}
 
 	/**
-	 * Construct using the given tree state that holds the model to be
-	 * used as the tree model.
+	 * Construct using the given tree state that holds the model to be used as
+	 * the tree model.
 	 * 
 	 * @param id
 	 *            The id of this component
@@ -66,7 +67,7 @@ public abstract class AbstractTree extends Panel
 	 */
 	public AbstractTree(MarkupContainer parent, final String id, final TreeState treeState)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.treeState = treeState;
 	}
 
@@ -193,8 +194,9 @@ public abstract class AbstractTree extends Panel
 
 	/**
 	 * Sets the current tree model.
-	 *
-	 * @param treeModel the tree model to set as the current one
+	 * 
+	 * @param treeModel
+	 *            the tree model to set as the current one
 	 */
 	public void setTreeModel(final TreeModel treeModel)
 	{
@@ -219,12 +221,11 @@ public abstract class AbstractTree extends Panel
 		if (treeModel != null)
 		{
 			StringBuffer tabs = new StringBuffer();
-			DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) treeModel
-					.getRoot();
+			DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)treeModel.getRoot();
 			Enumeration e = rootNode.preorderEnumeration();
 			while (e.hasMoreElements())
 			{
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
 				tabs.delete(0, tabs.length());
 				tabs.append("|");
 				for (int i = 0; i < node.getLevel(); i++)

@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: WebResource.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,7 +31,7 @@ import wicket.protocol.http.WebResponse;
  */
 public abstract class WebResource extends Resource
 {
-	
+
 	/**
 	 * Construct.
 	 */
@@ -38,7 +39,7 @@ public abstract class WebResource extends Resource
 	{
 		super();
 	}
-	
+
 	/**
 	 * @see wicket.Resource#configureResponse(wicket.Response)
 	 */
@@ -52,16 +53,20 @@ public abstract class WebResource extends Resource
 	}
 
 	/**
-	 * Subclasses can override this to set there headers when the resource is being served.
-	 * By default 2 headers will be set if the Resource is cacheable
-	 * <pre>
-	 * response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-	 * response.setHeader("Cache-Control", "max-age=" + 3600);
-	 * </pre>
-	 * So if a resource wants to control this or doesn't want to set this info it should 
-	 * override this method and don't call super.
+	 * Subclasses can override this to set there headers when the resource is
+	 * being served. By default 2 headers will be set if the Resource is
+	 * cacheable
 	 * 
-	 * @param response The WebResponse where set(Date)Header can be called on.
+	 * <pre>
+	 * response.setDateHeader(&quot;Expires&quot;, System.currentTimeMillis() + (3600 * 1000));
+	 * response.setHeader(&quot;Cache-Control&quot;, &quot;max-age=&quot; + 3600);
+	 * </pre>
+	 * 
+	 * So if a resource wants to control this or doesn't want to set this info
+	 * it should override this method and don't call super.
+	 * 
+	 * @param response
+	 *            The WebResponse where set(Date)Header can be called on.
 	 */
 	protected void setHeaders(WebResponse response)
 	{
@@ -69,7 +74,7 @@ public abstract class WebResource extends Resource
 		{
 			// If time is set also set cache headers.
 			response.setDateHeader("Expires", System.currentTimeMillis() + (3600 * 1000));
-			response.setHeader("Cache-Control","max-age=" + 3600);
+			response.setHeader("Cache-Control", "max-age=" + 3600);
 		}
 	}
 }

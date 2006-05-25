@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +19,6 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import wicket.MarkupContainer;
@@ -35,7 +34,7 @@ import wicket.markup.html.WebMarkupContainer;
 public final class ImageMap extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** list of shape links. */
 	private final List<ShapeLink> shapeLinks = new ArrayList<ShapeLink>();
 
@@ -45,7 +44,7 @@ public final class ImageMap extends WebMarkupContainer
 	private static final class CircleLink extends ShapeLink
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** The circle's radius. */
 		private final int radius;
 
@@ -100,7 +99,7 @@ public final class ImageMap extends WebMarkupContainer
 	private static final class PolygonLink extends ShapeLink
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** Its coordinates. */
 		private final int[] coordinates;
 
@@ -275,9 +274,9 @@ public final class ImageMap extends WebMarkupContainer
 	 * @param id
 	 *            See Component
 	 */
-	public ImageMap(MarkupContainer parent,final String id)
+	public ImageMap(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -364,9 +363,8 @@ public final class ImageMap extends WebMarkupContainer
 
 		imageMap.append("\n<map name=\"").append(getPath()).append("\"> ");
 
-		for (Iterator<ShapeLink> iterator = shapeLinks.iterator(); iterator.hasNext();)
+		for (ShapeLink shapeLink : shapeLinks)
 		{
-			final ShapeLink shapeLink = iterator.next();
 			imageMap.append('\n');
 			imageMap.append(shapeLink.toString());
 

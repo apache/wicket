@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketLinkTagHandler.java 5857 2006-05-25 17:27:26 +0000 (Thu, 25 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-25 17:27:26 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -63,7 +64,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 	/** Current status */
 	private boolean autolinking = true;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -109,7 +110,8 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 		// considered for autolinking. This is because it is assumed that Wicket
 		// components like images or all other kind of Wicket Links will handle
 		// it themselves.
-		// Subclass analyzeAutolinkCondition() to implement you own implementation
+		// Subclass analyzeAutolinkCondition() to implement you own
+		// implementation
 		// and register the new tag handler with the markup parser through
 		// Application.newMarkupParser().
 		if ((autolinking == true) && (analyzeAutolinkCondition(tag) == true))
@@ -152,7 +154,8 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 					}
 					catch (StringValueConversionException e)
 					{
-						throw new WicketRuntimeException("Invalid autolink attribute value \"" + autolink + "\"");
+						throw new WicketRuntimeException("Invalid autolink attribute value \""
+								+ autolink + "\"");
 					}
 				}
 				else if (tag.isClose())
@@ -167,26 +170,27 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 		return tag;
 	}
-	
+
 	/**
-	 * Analyze the tag. If return value == true, a autolink component will
-	 * be created. <p>
+	 * Analyze the tag. If return value == true, a autolink component will be
+	 * created.
+	 * <p>
 	 * Subclass analyzeAutolinkCondition() to implement you own implementation
 	 * and register the new tag handler with the markup parser through
 	 * Application.newMarkupParser().
 	 * 
-	 * @param tag The current tag being parsed
+	 * @param tag
+	 *            The current tag being parsed
 	 * @return If true, tag will become auto-component
 	 */
 	protected boolean analyzeAutolinkCondition(final ComponentTag tag)
 	{
 		final String href = tag.getAttributes().getString("href");
-		if ((tag.getId() == null) && (href != null)
-				&& (href.indexOf(":") == -1))
+		if ((tag.getId() == null) && (href != null) && (href.indexOf(":") == -1))
 		{
-		    return true;
+			return true;
 		}
-		
+
 		return false;
 	}
 }

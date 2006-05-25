@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,7 +46,7 @@ public abstract class Loop extends WebMarkupContainer
 	public static final class LoopItem extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/** The iteration number */
 		private final int iteration;
 
@@ -56,9 +56,9 @@ public abstract class Loop extends WebMarkupContainer
 		 * @param iteration
 		 *            The iteration of the loop
 		 */
-		private LoopItem(MarkupContainer parent,final int iteration)
+		private LoopItem(MarkupContainer parent, final int iteration)
 		{
-			super(parent,Integer.toString(iteration));
+			super(parent, Integer.toString(iteration));
 			this.iteration = iteration;
 		}
 
@@ -80,9 +80,9 @@ public abstract class Loop extends WebMarkupContainer
 	 *            max index of the loop
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Loop(MarkupContainer parent,final String id, final int iterations)
+	public Loop(MarkupContainer parent, final String id, final int iterations)
 	{
-		super(parent,id, new Model(new Integer(iterations)));
+		super(parent, id, new Model(new Integer(iterations)));
 	}
 
 	/**
@@ -94,9 +94,9 @@ public abstract class Loop extends WebMarkupContainer
 	 *            Must contain a Integer model object
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Loop(MarkupContainer parent,final String id, final IModel model)
+	public Loop(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -142,7 +142,7 @@ public abstract class Loop extends WebMarkupContainer
 	 */
 	protected LoopItem newItem(int iteration)
 	{
-		return new LoopItem(this,iteration);
+		return new LoopItem(this, iteration);
 	}
 
 	/**

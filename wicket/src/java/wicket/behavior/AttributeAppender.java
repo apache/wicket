@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AttributeAppender.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,7 +29,7 @@ import wicket.util.string.Strings;
  * JavaScript snippets to existing element handlers.
  * 
  * <pre>
- *     &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link&quot; onmouseover=&quot;doSomething()&quot;&gt;
+ *      &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link&quot; onmouseover=&quot;doSomething()&quot;&gt;
  * </pre>
  * 
  * can be modified with these AttributeAppenders:
@@ -41,7 +42,7 @@ import wicket.util.string.Strings;
  * this will result in the following markup:
  * 
  * <pre>
- *     &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link hot&quot; onmouseover=&quot;doSomething();foo();return false;&quot;&gt;
+ *      &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link hot&quot; onmouseover=&quot;doSomething();foo();return false;&quot;&gt;
  * </pre>
  * 
  * @author Martijn Dashorst

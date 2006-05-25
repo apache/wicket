@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractAjaxBehavior.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,7 +47,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** thread local for head contributions. */
 	private static final ThreadLocal<Set<String>> headContribHolder = new ThreadLocal<Set<String>>();
 
@@ -139,8 +140,9 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			rli = IUnversionedBehaviorListener.INTERFACE;
 		}
 
-		// TODO Post 1.2: URL encoding strategies are not applied 
-		// And you can not simply call getResponse().encodeUrl() as the URL might
+		// TODO Post 1.2: URL encoding strategies are not applied
+		// And you can not simply call getResponse().encodeUrl() as the URL
+		// might
 		// already be encoded.
 		return new AppendingStringBuffer(getComponent().urlFor(rli)).append('&').append(
 				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME).append('=').append(index);
@@ -288,7 +290,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	protected void onRenderHeadInitContribution(final Response response)
 	{
 	}
-	
+
 	/**
 	 * @see wicket.behavior.AbstractBehavior#isStateless()
 	 */

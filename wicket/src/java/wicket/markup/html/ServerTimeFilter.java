@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4913 $ $Date$
+ * $Id: ServerTimeFilter.java 5522 2006-04-25 21:45:23 +0000 (Tue, 25 Apr 2006)
+ * joco01 $ $Revision$ $Date: 2006-04-25 21:45:23 +0000 (Tue, 25 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -58,7 +59,7 @@ public class ServerTimeFilter implements IResponseFilter
 			script.append("\n");
 			responseBuffer.insert(index + 6, script);
 		}
-		
+
 		log.info(timeTaken + "ms server time taken for request "
 				+ RequestCycle.get().getRequest().getURL() + " response size: "
 				+ responseBuffer.length());

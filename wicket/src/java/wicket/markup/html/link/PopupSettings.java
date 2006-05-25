@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id: PopupSettings.java 4824 2006-03-08 20:04:37 +0000 (Wed, 08 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-08 20:04:37 +0000 (Wed, 08 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

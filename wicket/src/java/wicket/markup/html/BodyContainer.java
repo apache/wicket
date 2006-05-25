@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5436 $ $Date$
+ * $Id: BodyContainer.java 5861 2006-05-25 20:55:07 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:55:07 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -163,9 +164,9 @@ public final class BodyContainer implements Serializable
 		@Override
 		protected String newValue(final String currentValue, final String replacementValue)
 		{
-			if(currentValue != null && !currentValue.trim().endsWith(";"))
+			if (currentValue != null && !currentValue.trim().endsWith(";"))
 			{
-				return currentValue + ";"+ replacementValue;
+				return currentValue + ";" + replacementValue;
 			}
 			return (currentValue == null ? replacementValue : currentValue + replacementValue);
 		}
@@ -192,7 +193,8 @@ public final class BodyContainer implements Serializable
 	 * @param value
 	 *            The value to append to 'onLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
+	 *            The component which 'owns' the attribute modifier. Null is a
+	 *            allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
@@ -215,7 +217,8 @@ public final class BodyContainer implements Serializable
 	 * @param model
 	 *            The model which holds the value to be appended to 'onLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
+	 *            The component which 'owns' the attribute modifier. Null is a
+	 *            allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
@@ -244,7 +247,8 @@ public final class BodyContainer implements Serializable
 	 * @param value
 	 *            The value to append to 'onUnLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
+	 *            The component which 'owns' the attribute modifier. Null is a
+	 *            allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBehavior which gets called on removal
@@ -267,7 +271,8 @@ public final class BodyContainer implements Serializable
 	 * @param model
 	 *            The model which holds the value to be appended to 'onUnLoad'
 	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier. Null is a allowed value.
+	 *            The component which 'owns' the attribute modifier. Null is a
+	 *            allowed value.
 	 * @return this
 	 * 
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
