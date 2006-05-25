@@ -31,7 +31,7 @@ import wicket.PageParameters;
  * 
  * @author Jonathan Locke
  */
-public class BookmarkablePageLink<V> extends Link<V>
+public class BookmarkablePageLink extends Link
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class BookmarkablePageLink<V> extends Link<V>
 	 * @param pageClass
 	 *            The class of page to link to
 	 */
-	public BookmarkablePageLink(MarkupContainer<?> parent,final String id, final Class<? extends Page> pageClass)
+	public BookmarkablePageLink(MarkupContainer parent,final String id, final Class<? extends Page> pageClass)
 	{
 		this(parent, id, pageClass, new PageParameters());
 	}
@@ -68,7 +68,7 @@ public class BookmarkablePageLink<V> extends Link<V>
 	 *            The parameters to pass to the new page when the link is
 	 *            clicked
 	 */
-	public BookmarkablePageLink(MarkupContainer<?> parent,final String id, final Class<? extends Page> pageClass,
+	public BookmarkablePageLink(MarkupContainer parent,final String id, final Class<? extends Page> pageClass,
 			final PageParameters parameters)
 	{
 		super(parent,id);
