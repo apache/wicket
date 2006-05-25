@@ -1,6 +1,7 @@
 /*
  * $Id: AbstractRestartResponseException.java,v 1.3 2006/02/06 08:37:58
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-03-16 21:22:36 +0000 (Thu,
+ * 16 Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
