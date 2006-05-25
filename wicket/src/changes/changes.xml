@@ -10,6 +10,8 @@
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
+    <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+      <action type="add" dev="Igor Vaynberg">Added Component.replaceWith(Component) to provide better context for errors that arise from replace actions</action>
     <release version="1.2-rc4" date="tbd" description="Wicket 1.2 release candidate 4">
       <action type="add" dev="Juergen Donnerstag" issue="1357511">Markup inheritance extended to support &lt;wicket:child&gt; ... &lt;/wicket:child&gt; as well</action>
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Dzenan Ridjanovic">Added Bosnian/Herzegovinan translation of Application.properties</action>
