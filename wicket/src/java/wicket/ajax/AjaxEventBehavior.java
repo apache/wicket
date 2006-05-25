@@ -20,7 +20,6 @@ package wicket.ajax;
 
 import java.io.Serializable;
 
-import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
@@ -32,12 +31,12 @@ import wicket.util.time.Duration;
  * Example:
  * 
  * <pre>
- *       DropDownChoice choice=new DropDownChoice(...);
- *       choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
- *           protected void onEvent(AjaxRequestTarget target) {
- *               System.out.println(&quot;ajax here!&quot;);
- *           }
- *       }
+ *        DropDownChoice choice=new DropDownChoice(...);
+ *        choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
+ *            protected void onEvent(AjaxRequestTarget target) {
+ *                System.out.println(&quot;ajax here!&quot;);
+ *            }
+ *        }
  * </pre>
  * 
  * This behavior will be linked to the onChange javascript event of the select
@@ -127,7 +126,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	protected CharSequence getCallbackScript(String partialCall, String onSuccessScript,
 			String onFailureScript)
 	{
-		CharSequence script = super.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
+		CharSequence script = super
+				.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
 		final ThrottlingSettings ts = throttlingSettings;
 
 		if (ts != null)

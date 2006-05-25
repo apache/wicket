@@ -92,8 +92,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		target.addComponent(container);
 
 		// find the PagingNavigator parent of this link
-		Component navigator = ((Component<?>)owner)
-				.findParent(AjaxPagingNavigator.class);
+		Component navigator = ((Component<?>)owner).findParent(AjaxPagingNavigator.class);
 
 		if (navigator == null)
 		{
@@ -105,8 +104,9 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		if (navigator != null)
 		{
 
-			if (!(container instanceof MarkupContainer && ((MarkupContainer)container)
-					.contains(navigator, true))) {
+			if (!(container instanceof MarkupContainer && ((MarkupContainer)container).contains(
+					navigator, true)))
+			{
 				target.addComponent(navigator);
 			}
 		}

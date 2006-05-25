@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AjaxPagingNavigationLink.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -45,9 +46,10 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	 *            The page number in the PageableListView that this link links
 	 *            to. Negative pageNumbers are relative to the end of the list.
 	 */
-	public AjaxPagingNavigationLink(MarkupContainer parent, final String id, final IPageable pageable, final int pageNumber)
+	public AjaxPagingNavigationLink(MarkupContainer parent, final String id,
+			final IPageable pageable, final int pageNumber)
 	{
-		super(parent,id, pageable, pageNumber);
+		super(parent, id, pageable, pageNumber);
 		add(new AjaxPagingNavigationBehavior(this, pageable, "onclick"));
 		setOutputMarkupId(true);
 	}

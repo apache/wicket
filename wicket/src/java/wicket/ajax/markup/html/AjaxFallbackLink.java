@@ -47,7 +47,7 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	 */
 	public AjaxFallbackLink(MarkupContainer parent, final String id)
 	{
-		this(parent,id, null);
+		this(parent, id, null);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	 */
 	public AjaxFallbackLink(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 
 		add(new AjaxEventBehavior("onclick")
 		{

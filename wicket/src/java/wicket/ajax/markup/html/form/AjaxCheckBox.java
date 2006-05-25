@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.3 $ $Date$
+ * $Id: AjaxCheckBox.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,7 +41,7 @@ public abstract class AjaxCheckBox extends CheckBox
 	 */
 	public AjaxCheckBox(MarkupContainer parent, final String id)
 	{
-		this(parent,id, null);
+		this(parent, id, null);
 	}
 
 	/**
@@ -52,8 +52,8 @@ public abstract class AjaxCheckBox extends CheckBox
 	 */
 	public AjaxCheckBox(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
-		
+		super(parent, id, model);
+
 		setOutputMarkupId(true);
 
 		add(new AjaxFormComponentUpdatingBehavior("onchange")
