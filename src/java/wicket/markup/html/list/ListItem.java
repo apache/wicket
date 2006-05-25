@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,7 +32,7 @@ import wicket.model.IModel;
 public class ListItem<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The index of the ListItem in the parent ListView */
 	private final int index;
 
@@ -45,9 +45,9 @@ public class ListItem<T> extends WebMarkupContainer<T>
 	 * @param model
 	 *            The model object of the item
 	 */
-	public ListItem(MarkupContainer parent,final int index, final IModel<T> model)
+	public ListItem(MarkupContainer parent, final int index, final IModel<T> model)
 	{
-		super(parent,Integer.toString(index), model);
+		super(parent, Integer.toString(index), model);
 		this.index = index;
 	}
 

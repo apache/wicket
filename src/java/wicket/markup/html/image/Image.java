@@ -52,9 +52,9 @@ public class Image extends WebComponent implements IResourceListener
 	 * 
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public Image(MarkupContainer parent,final String id)
+	public Image(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -73,9 +73,9 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param resourceReference
 	 *            The shared image resource
 	 */
-	public Image(MarkupContainer parent,final String id, final ResourceReference resourceReference)
+	public Image(MarkupContainer parent, final String id, final ResourceReference resourceReference)
 	{
-		this(parent,id, resourceReference, null);
+		this(parent, id, resourceReference, null);
 	}
 
 	/**
@@ -96,11 +96,11 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param resourceParameters
 	 *            The resource parameters
 	 */
-	public Image(MarkupContainer parent,final String id, final ResourceReference resourceReference,
-			ValueMap resourceParameters)
+	public Image(MarkupContainer parent, final String id,
+			final ResourceReference resourceReference, ValueMap resourceParameters)
 	{
-		super(parent,id);
-		setImageResourceReference(resourceReference,resourceParameters);
+		super(parent, id);
+		setImageResourceReference(resourceReference, resourceParameters);
 	}
 
 	/**
@@ -116,18 +116,18 @@ public class Image extends WebComponent implements IResourceListener
 	 * @param imageResource
 	 *            The image resource
 	 */
-	public Image(MarkupContainer parent,final String id, final Resource imageResource)
+	public Image(MarkupContainer parent, final String id, final Resource imageResource)
 	{
-		super(parent,id);
+		super(parent, id);
 		setImageResource(imageResource);
 	}
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Image(MarkupContainer parent,final String id, final IModel model)
+	public Image(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -137,9 +137,9 @@ public class Image extends WebComponent implements IResourceListener
 	 *            Name of image
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Image(MarkupContainer parent,final String id, final String string)
+	public Image(MarkupContainer parent, final String id, final String string)
 	{
-		this(parent,id, new Model(string));
+		this(parent, id, new Model(string));
 	}
 
 	/**
@@ -171,12 +171,13 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @param resourceReference
 	 *            The shared ImageResource to set.
-	 * @param parameters 
-	 * 			  Set the resource parameters for the resource.
+	 * @param parameters
+	 *            Set the resource parameters for the resource.
 	 */
-	public void setImageResourceReference(final ResourceReference resourceReference, final ValueMap parameters)
+	public void setImageResourceReference(final ResourceReference resourceReference,
+			final ValueMap parameters)
 	{
-		this.localizedImageResource.setResourceReference(resourceReference,parameters);
+		this.localizedImageResource.setResourceReference(resourceReference, parameters);
 	}
 
 	/**
@@ -236,6 +237,7 @@ public class Image extends WebComponent implements IResourceListener
 	{
 		return getImageResource() == null && localizedImageResource.isStateless();
 	}
+
 	/**
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */

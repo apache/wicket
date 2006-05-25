@@ -1,6 +1,6 @@
 /*
- * $Id: PagingNavigation.java,v 1.3 2005/02/17 06:13:40 jonathanlocke
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -31,7 +31,7 @@ import wicket.model.IModel;
 public class ListItemModel<T> extends AbstractDetachableModel<T>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	// It is easy and cheap to re-build it if necessary.
 	// Avoid synchronising it in a cluster
 	private transient T object;

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IHeaderContributor.java 5039 2006-03-20 10:11:34 +0000 (Mon, 20 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-20 10:11:34 +0000 (Mon, 20
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

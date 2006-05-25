@@ -92,7 +92,7 @@ public class FeedbackMessage implements Serializable
 		this.message = message;
 		this.level = level;
 	}
-	
+
 	/**
 	 * Gets whether or not this message has been rendered
 	 * 

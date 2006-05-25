@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PopupCloseLink.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,7 +31,7 @@ import wicket.model.IModel;
 public class PopupCloseLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * ClosePopupPage closes the popup window.
 	 */
@@ -44,9 +45,9 @@ public class PopupCloseLink extends Link
 	 * 
 	 * @param id
 	 */
-	public PopupCloseLink(MarkupContainer parent,String id)
+	public PopupCloseLink(MarkupContainer parent, String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -55,11 +56,11 @@ public class PopupCloseLink extends Link
 	 * @param id
 	 * @param object
 	 */
-	public PopupCloseLink(MarkupContainer parent,String id, IModel object)
+	public PopupCloseLink(MarkupContainer parent, String id, IModel object)
 	{
-		super(parent,id, object);
+		super(parent, id, object);
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.link.Link#onClick()
 	 */

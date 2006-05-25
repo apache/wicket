@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FeedbackMessages.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -230,9 +231,8 @@ public final class FeedbackMessages implements Serializable
 	{
 		if (messages != null)
 		{
-			for (Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
+			for (FeedbackMessage message : messages)
 			{
-				FeedbackMessage message = iterator.next();
 				if (message.getReporter() == component)
 				{
 					return message;
@@ -258,9 +258,8 @@ public final class FeedbackMessages implements Serializable
 		else
 		{
 			final List<FeedbackMessage> list = new ArrayList<FeedbackMessage>();
-			for (final Iterator<FeedbackMessage> iterator = messages.iterator(); iterator.hasNext();)
+			for (FeedbackMessage message : messages)
 			{
-				final FeedbackMessage message = iterator.next();
 				if (filter == null || filter.accept(message))
 				{
 					list.add(message);
@@ -294,14 +293,16 @@ public final class FeedbackMessages implements Serializable
 
 	/**
 	 * Adds a message
+	 * 
 	 * @param reporter
 	 * @param message
 	 * @param level
 	 */
-	public final void add(Component reporter, String message, int level) {
+	public final void add(Component reporter, String message, int level)
+	{
 		add(new FeedbackMessage(reporter, message, level));
 	}
-	
+
 	/**
 	 * Adds a message.
 	 * 
@@ -344,7 +345,8 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void trimToSize()
 	{
-		if (messages!=null) {
+		if (messages != null)
+		{
 			messages.trimToSize();
 		}
 	}

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IXmlPullParser.java 4429 2006-02-14 02:23:24 +0000 (Tue, 14 Feb 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-02-14 02:23:24 +0000 (Tue, 14 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

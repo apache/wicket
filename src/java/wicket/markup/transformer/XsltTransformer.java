@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: XsltTransformer.java 3989 2006-01-28 09:09:49 +0000 (Sat, 28 Jan 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-01-28 09:09:49 +0000 (Sat, 28 Jan
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -130,15 +131,15 @@ public class XsltTransformer implements ITransformer
 		String filePath = this.xslFile;
 		if (filePath == null)
 		{
-			filePath = component.findParentWithAssociatedMarkup().getClass()
-				.getPackage().getName().replace('.', '/')
-				+ "/" + component.getId();
+			filePath = component.findParentWithAssociatedMarkup().getClass().getPackage().getName()
+					.replace('.', '/')
+					+ "/" + component.getId();
 		}
-		
-		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator()
-				.locate(getClass(), filePath, component.getStyle(), component.getLocale(),
-						XsltTransformer.extension);
-		
+
+		resourceStream = Application.get().getResourceSettings().getResourceStreamLocator().locate(
+				getClass(), filePath, component.getStyle(), component.getLocale(),
+				XsltTransformer.extension);
+
 		return resourceStream;
 	}
 }

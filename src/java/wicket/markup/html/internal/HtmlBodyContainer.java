@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: HtmlBodyContainer.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,9 +51,9 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	 * 
 	 * @see Component#Component(MarkupContainer,String)
 	 */
-	public HtmlBodyContainer(MarkupContainer parent,final String id)
+	public HtmlBodyContainer(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**

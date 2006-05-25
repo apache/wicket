@@ -310,7 +310,8 @@ public class PackageResource extends WebResource
 	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
 	{
 		final List<PackageResource> resources = new ArrayList<PackageResource>();
-		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/").toString();
+		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
+				.toString();
 		ClassLoader loader = scope.getClassLoader();
 		try
 		{
@@ -342,20 +343,33 @@ public class PackageResource extends WebResource
 					{
 						basedir = new File(uri);
 					}
-					catch(IllegalArgumentException e)
+					catch (IllegalArgumentException e)
 					{
 						log.debug("Can't construct the uri as a file: " + absolutePath);
-						// if this is throwen then the path is not really a file. but could be a zip.
+						// if this is throwen then the path is not really a
+						// file. but could be a zip.
 						String jarZipPart = uri.getSchemeSpecificPart();
-						// lowercased for testing if jar/zip, but leave the real filespec unchanged
+						// lowercased for testing if jar/zip, but leave the real
+						// filespec unchanged
 						String lowerJarZipPart = jarZipPart.toLowerCase();
 						int index = lowerJarZipPart.indexOf(".zip");
-						if(index == -1) index = lowerJarZipPart.indexOf(".jar");
-						if(index == -1) throw e;
-						
-						String filename = jarZipPart.substring(0, index+4); // 4 = len of ".jar" or ".zip"
+						if (index == -1)
+						{
+							index = lowerJarZipPart.indexOf(".jar");
+						}
+						if (index == -1)
+						{
+							throw e;
+						}
+
+						String filename = jarZipPart.substring(0, index + 4); // 4 =
+																				// len
+																				// of
+																				// ".jar"
+																				// or
+																				// ".zip"
 						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
-						JarFile jarFile = new JarFile(filename,false);
+						JarFile jarFile = new JarFile(filename, false);
 						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
 						return resources.toArray(new PackageResource[resources.size()]);
 					}
@@ -382,9 +396,10 @@ public class PackageResource extends WebResource
 	 * @param recurse
 	 * @param resources
 	 * @param packageRef
-	 * @param jf
-=	 */
-	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse, final List<PackageResource> resources, String packageRef, JarFile jf)
+	 * @param jf =
+	 */
+	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse,
+			final List<PackageResource> resources, String packageRef, JarFile jf)
 	{
 		Enumeration enumeration = jf.entries();
 		while (enumeration.hasMoreElements())
@@ -394,8 +409,7 @@ public class PackageResource extends WebResource
 			if (name.startsWith(packageRef))
 			{
 				name = name.substring(packageRef.length() + 1);
-				if (pattern.matcher(name).matches()
-						&& (recurse || (name.indexOf('/') == -1)))
+				if (pattern.matcher(name).matches() && (recurse || (name.indexOf('/') == -1)))
 				{
 					// we add the entry as a package resource
 					resources.add(get(scope, name, null, null));
@@ -445,12 +459,12 @@ public class PackageResource extends WebResource
 	 *            Whether this method should recurse into sub packages
 	 */
 	private static final void addResources(final Class scope, final Pattern pattern,
-			final List<PackageResource> resources, final StringBuffer relativePath, final File dir, boolean recurse)
+			final List<PackageResource> resources, final StringBuffer relativePath, final File dir,
+			boolean recurse)
 	{
 		File[] files = dir.listFiles();
-		for (int i = 0; i < files.length; i++)
+		for (File file : files)
 		{
-			File file = files[i];
 			if (file.isDirectory())
 			{
 				if (recurse)

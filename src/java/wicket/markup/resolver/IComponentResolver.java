@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IComponentResolver.java 3576 2006-01-01 23:19:44 +0000 (Sun, 01 Jan
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-01-01 23:19:44 +0000
+ * (Sun, 01 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,8 +34,8 @@ import wicket.markup.MarkupStream;
 public interface IComponentResolver extends Serializable
 {
 	/**
-	 * Try to resolve the tag, then create a component, add it to the
-	 * container and render it.
+	 * Try to resolve the tag, then create a component, add it to the container
+	 * and render it.
 	 * 
 	 * @param container
 	 *            The container parsing its markup
@@ -42,7 +43,8 @@ public interface IComponentResolver extends Serializable
 	 *            The current markupStream
 	 * @param tag
 	 *            The current component tag while parsing the markup
-	 * @return True if component-id was handled by the resolver, false otherwise.
+	 * @return True if component-id was handled by the resolver, false
+	 *         otherwise.
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag);

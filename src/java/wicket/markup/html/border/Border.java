@@ -44,35 +44,35 @@ import wicket.response.NullResponse;
  * For example, if a border's associated markup looked like this:
  * 
  * <pre>
- *              &lt;html&gt;
- *              &lt;body&gt;
- *                &lt;wicket:border&gt;
- *                    First &lt;wicket:body/&gt; Last
- *                &lt;/wicket:border&gt;
- *              &lt;/body&gt;
- *              &lt;/html&gt;
+ *               &lt;html&gt;
+ *               &lt;body&gt;
+ *                 &lt;wicket:border&gt;
+ *                     First &lt;wicket:body/&gt; Last
+ *                 &lt;/wicket:border&gt;
+ *               &lt;/body&gt;
+ *               &lt;/html&gt;
  * </pre>
  * 
  * And the border was used on a page like this:
  * 
  * <pre>
- *              &lt;html&gt;
- *              &lt;body&gt;
- *                &lt;span wicket:id = &quot;myBorder&quot;&gt;
- *                    Middle
- *                &lt;/span&gt;
- *              &lt;/body&gt;
- *              &lt;/html&gt;
+ *               &lt;html&gt;
+ *               &lt;body&gt;
+ *                 &lt;span wicket:id = &quot;myBorder&quot;&gt;
+ *                     Middle
+ *                 &lt;/span&gt;
+ *               &lt;/body&gt;
+ *               &lt;/html&gt;
  * </pre>
  * 
  * Then the resulting HTML would look like this:
  * 
  * <pre>
- *              &lt;html&gt;
- *              &lt;body&gt;
- *                    First Middle Last
- *              &lt;/body&gt;
- *              &lt;/html&gt;
+ *               &lt;html&gt;
+ *               &lt;body&gt;
+ *                     First Middle Last
+ *               &lt;/body&gt;
+ *               &lt;/html&gt;
  * </pre>
  * 
  * In other words, the body of the myBorder component is substituted into the
@@ -98,7 +98,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		WicketTagIdentifier.registerWellKnownTagName("border");
 		WicketTagIdentifier.registerWellKnownTagName("body");
 	}
-	
+
 	/** Will be true, once the first <wicket:body> has been seen */
 	private transient boolean haveSeenBodyTag = false;
 
@@ -114,17 +114,17 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public Border(MarkupContainer parent,final String id)
+	public Border(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Border(MarkupContainer parent,final String id, final IModel model)
+	public Border(MarkupContainer parent, final String id, final IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -249,8 +249,8 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		// There shall exactly only one body tag per border
 		if (haveSeenBodyTag == false)
 		{
-			markupStream.throwMarkupException(
-					"Didn't find <wicket:body/> tag for the border compoment.");
+			markupStream
+					.throwMarkupException("Didn't find <wicket:body/> tag for the border compoment.");
 		}
 	}
 

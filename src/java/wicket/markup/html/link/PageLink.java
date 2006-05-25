@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.13 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +35,7 @@ import wicket.Page;
 public class PageLink extends Link
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The delayed linking Page source. */
 	private final IPageLink pageLink;
 
@@ -48,9 +48,9 @@ public class PageLink extends Link
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(MarkupContainer parent,final String id, final Class c)
+	public PageLink(MarkupContainer parent, final String id, final Class c)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		// Ensure that c is a subclass of Page
 		if (!Page.class.isAssignableFrom(c))
@@ -61,7 +61,7 @@ public class PageLink extends Link
 		this.pageLink = new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			public Page getPage()
 			{
 				// Create page using page factory
@@ -78,13 +78,15 @@ public class PageLink extends Link
 	/**
 	 * This constructor is ideal if a Page object was passed in from a previous
 	 * Page. Construct a link to the Page.
-	 *
-	 * @param id  See component
-	 * @param page The page
+	 * 
+	 * @param id
+	 *            See component
+	 * @param page
+	 *            The page
 	 */
-	public PageLink(MarkupContainer parent,final String id, final Page page)
+	public PageLink(MarkupContainer parent, final String id, final Page page)
 	{
-	    super(parent,id);
+		super(parent, id);
 
 		this.pageLink = new IPageLink()
 		{
@@ -105,11 +107,11 @@ public class PageLink extends Link
 
 	/**
 	 * This constructor is ideal for constructing pages lazily.
-	 *
+	 * 
 	 * Constructs a link which invokes the getPage() method of the IPageLink
 	 * interface when the link is clicked. Whatever Page objects is returned by
 	 * this method will be rendered back to the user.
-	 *
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageLink
@@ -117,9 +119,9 @@ public class PageLink extends Link
 	 *            linked to if and when this hyperlink is clicked at a later
 	 *            time.
 	 */
-	public PageLink(MarkupContainer parent,final String id, final IPageLink pageLink)
+	public PageLink(MarkupContainer parent, final String id, final IPageLink pageLink)
 	{
-		super(parent,id);
+		super(parent, id);
 		this.pageLink = pageLink;
 	}
 

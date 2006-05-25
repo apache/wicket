@@ -26,8 +26,8 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
- * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags,
- * which are silently ignored, because they have already been processed.
+ * Detect &lt;wicket:extend&gt; and &lt;wicket:child&gt; tags, which are
+ * silently ignored, because they have already been processed.
  * 
  * @author Juergen Donnerstag
  */
@@ -60,21 +60,25 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		if (tag instanceof WicketTag)
 		{
 			final WicketTag wicketTag = (WicketTag)tag;
-			
+
 			// It must be <wicket:extend...>
 			if (wicketTag.isExtendTag())
 			{
-				// TODO we just have to prefix it i with a AUTO prefix.. Can this be done? Shoult the wicketTag id first be altered? 
-				new TransparentWebMarkupContainer(container,Component.AUTO_COMPONENT_PREFIX + wicketTag.getId()).autoAdded();
-			    return true;
+				// TODO we just have to prefix it i with a AUTO prefix.. Can
+				// this be done? Shoult the wicketTag id first be altered?
+				new TransparentWebMarkupContainer(container, Component.AUTO_COMPONENT_PREFIX
+						+ wicketTag.getId()).autoAdded();
+				return true;
 			}
-			
+
 			// It must be <wicket:child...>
 			if (wicketTag.isChildTag())
 			{
-				// TODO we just have to prefix it i with a AUTO prefix.. Can this be done? Shoult the wicketTag id first be altered?
-				new TransparentWebMarkupContainer(container,Component.AUTO_COMPONENT_PREFIX + wicketTag.getId()).autoAdded();
-			    return true;
+				// TODO we just have to prefix it i with a AUTO prefix.. Can
+				// this be done? Shoult the wicketTag id first be altered?
+				new TransparentWebMarkupContainer(container, Component.AUTO_COMPONENT_PREFIX
+						+ wicketTag.getId()).autoAdded();
+				return true;
 			}
 		}
 		// We were not able to handle the componentId
@@ -82,19 +86,19 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	}
 
 	/**
-	 * This is a WebMarkupContainer, except that it is transparent for
-	 * it child components.
+	 * This is a WebMarkupContainer, except that it is transparent for it child
+	 * components.
 	 */
 	private static class TransparentWebMarkupContainer extends WebMarkupContainer
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * @param id
 		 */
 		public TransparentWebMarkupContainer(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 
 		/**

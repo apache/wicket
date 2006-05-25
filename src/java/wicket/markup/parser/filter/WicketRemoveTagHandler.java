@@ -1,6 +1,6 @@
 /*
- * $Id: WicketRemoveTagHandler.java,v 1.4 2005/01/23 17:45:03 jdonnerstag
- * Exp $ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -74,8 +74,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 		}
 
 		// If it is not a remove tag, than we are finished
-		if (!(openTag instanceof WicketTag)
-				|| !((WicketTag)openTag).isRemoveTag())
+		if (!(openTag instanceof WicketTag) || !((WicketTag)openTag).isRemoveTag())
 		{
 			return openTag;
 		}
@@ -102,7 +101,8 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 			// tag, must be it's corresponding close tag.
 			if (closeTag.closes(openTag))
 			{
-				// Component's named with the IGNORE component name will be ignored 
+				// Component's named with the IGNORE component name will be
+				// ignored
 				// by MarkupParser and not added to the Markup.
 				openTag.setId(IGNORE);
 				return openTag;
@@ -113,7 +113,7 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 							+ closeTag.toUserDebugString(), closeTag.getPos());
 		}
 
-		throw new ParseException("Did not find close tag for markup remove region. "
-				+ "Open tag: " + openTag.toUserDebugString(), openTag.getPos());
+		throw new ParseException("Did not find close tag for markup remove region. " + "Open tag: "
+				+ openTag.toUserDebugString(), openTag.getPos());
 	}
 }

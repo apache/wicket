@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ComponentTag.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -67,7 +68,7 @@ public class ComponentTag extends MarkupElement
 
 	/** True, if attributes have been modified or added */
 	private boolean modified = false;
-	
+
 	/**
 	 * In case of inherited markup, the base and the extended markups are merged
 	 * and the information about the tags origin is lost. In some cases like
@@ -482,7 +483,7 @@ public class ComponentTag extends MarkupElement
 
 		return buf;
 	}
-	
+
 	/**
 	 * @see wicket.markup.MarkupElement#toCharSequence()
 	 */
@@ -530,7 +531,7 @@ public class ComponentTag extends MarkupElement
 		}
 
 		response.write(getName());
-		
+
 		String namespacePrefix = null;
 		if (stripWicketAttributes == true)
 		{
@@ -547,7 +548,7 @@ public class ComponentTag extends MarkupElement
 				{
 					continue;
 				}
-				
+
 				if ((namespacePrefix == null) || (key.startsWith(namespacePrefix) == false))
 				{
 					response.write(" ");
@@ -647,7 +648,7 @@ public class ComponentTag extends MarkupElement
 	/**
 	 * True if the HTML tag (e.g. br) has no close tag
 	 * 
-	 * @param hasNoCloseTag 
+	 * @param hasNoCloseTag
 	 */
 	public void setHasNoCloseTag(boolean hasNoCloseTag)
 	{

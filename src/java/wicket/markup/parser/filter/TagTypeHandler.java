@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id: TagTypeHandler.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,8 +30,8 @@ import wicket.util.collections.ArrayListStack;
 
 /**
  * This is a markup inline filter. It identifies tags which are allowed
- * open-close in the markup, but which for Wicket to be processed correctly
- * must be open-body-close.
+ * open-close in the markup, but which for Wicket to be processed correctly must
+ * be open-body-close.
  * 
  * @author Juergen Donnerstag
  */
@@ -93,7 +93,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 			{
 				name = tag.getNamespace() + ":" + tag.getName();
 			}
-			
+
 			// Pop any simple tags off the top of the stack
 			if (requiresOpenBodyCloseTag(name))
 			{
@@ -103,7 +103,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 				closeTag.setName(tag.getName());
 				closeTag.setNamespace(tag.getNamespace());
 				closeTag.closes(tag);
-				
+
 				stack.push(new ComponentTag(closeTag));
 			}
 		}
@@ -116,7 +116,8 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 	 * 
 	 * @param name
 	 *            The tag's name, e.g. a, br, div, etc.
-	 * @return True if this tag must be converted into open-body-close if openClose
+	 * @return True if this tag must be converted into open-body-close if
+	 *         openClose
 	 */
 	public static boolean requiresOpenBodyCloseTag(final String name)
 	{

@@ -98,9 +98,11 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 		if (messages == null)
 		{
 			// Get filtered messages from page where component lives
-			List<FeedbackMessage> pageMessages = component.getPage().getFeedbackMessages().messages(filter);
+			List<FeedbackMessage> pageMessages = component.getPage().getFeedbackMessages()
+					.messages(filter);
 
-			List<FeedbackMessage> sessionMessages = component.getSession().getFeedbackMessages().messages(filter);
+			List<FeedbackMessage> sessionMessages = component.getSession().getFeedbackMessages()
+					.messages(filter);
 
 			messages = new ArrayList<FeedbackMessage>(pageMessages.size() + sessionMessages.size());
 			messages.addAll(pageMessages);

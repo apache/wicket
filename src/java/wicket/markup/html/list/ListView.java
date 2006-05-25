@@ -39,10 +39,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *            &lt;tbody&gt;
- *              &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                  &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *              ...    
+ *             &lt;tbody&gt;
+ *               &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                   &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *               ...    
  * </pre>
  * 
  * <p>
@@ -109,15 +109,15 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 */
 	public ListView(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public ListView(MarkupContainer parent,final String id, final IModel<List<T>> model)
+	public ListView(MarkupContainer parent, final String id, final IModel<List<T>> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 
 		if (model == null)
 		{
@@ -137,9 +137,9 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public ListView(MarkupContainer parent,final String id, final List<T> list)
+	public ListView(MarkupContainer parent, final String id, final List<T> list)
 	{
-		this(parent,id, new Model<List<T>>(list));
+		this(parent, id, new Model<List<T>>(list));
 	}
 
 	/**
@@ -170,7 +170,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 * @return Returns the optimizeItemRemoval.
 	 * @deprecated Use {@link #getReuseItems()} instead
 	 */
-	//TODO Post 1.2: Remove
+	// TODO Post 1.2: Remove
 	@Deprecated
 	public boolean getOptimizeItemRemoval()
 	{
@@ -254,7 +254,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 */
 	public final Link moveDownLink(MarkupContainer parent, final String id, final ListItem<T> item)
 	{
-		return new Link(item,id)
+		return new Link(item, id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -312,7 +312,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 */
 	public final Link moveUpLink(MarkupContainer parent, final String id, final ListItem<T> item)
 	{
-		return new Link(item,id)
+		return new Link(item, id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -371,7 +371,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 */
 	public final Link removeLink(MarkupContainer parent, final String id, final ListItem<T> item)
 	{
-		return new Link(item,id)
+		return new Link(item, id)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -419,7 +419,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 * @return this
 	 * @deprecated Use {@link #setReuseItems(boolean)} instead
 	 */
-	//TODO Post 1.2: Remove
+	// TODO Post 1.2: Remove
 	@Deprecated
 	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
 	{
@@ -611,7 +611,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 */
 	protected ListItem<T> newItem(final int index)
 	{
-		return new ListItem<T>(this,index, getListItemModel(getModel(), index));
+		return new ListItem<T>(this, index, getListItemModel(getModel(), index));
 	}
 
 	/**

@@ -100,7 +100,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		Set/* <Class> */<Class<? extends WebPage>>missingBodyTagsLogged = new HashSet<Class<? extends WebPage>>(1);
+		Set/* <Class> */<Class<? extends WebPage>> missingBodyTagsLogged = new HashSet<Class<? extends WebPage>>(
+				1);
 	}
 
 	/** The resource references used for new window/tab support */
@@ -229,7 +230,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	protected final BookmarkablePageLink homePageLink(MarkupContainer parent, final String id)
 	{
-		return new BookmarkablePageLink(parent,id, getApplication().getHomePage());
+		return new BookmarkablePageLink(parent, id, getApplication().getHomePage());
 	}
 
 	/**
@@ -258,7 +259,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 						// name
 						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
 						{
-							add(new HtmlBodyContainer(this,tag.getId()));
+							add(new HtmlBodyContainer(this, tag.getId()));
 						}
 						// remember the id of the tag
 						bodyContainer = new BodyContainer(this, tag.getId());
@@ -383,9 +384,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			// different page map so that we don't intermangle the history of
 			// those windows
 			final ArrayListStack accessStack;
-			if(getPageMap() instanceof AccessStackPageMap)
+			if (getPageMap() instanceof AccessStackPageMap)
 			{
-				 accessStack = ((AccessStackPageMap)getPageMap()).getAccessStack();
+				accessStack = ((AccessStackPageMap)getPageMap()).getAccessStack();
 			}
 			else
 			{
@@ -438,7 +439,8 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				if (accessStack.size() > initialAccessStackSize)
 				{
 					JavascriptUtils.writeOpenTag(response);
-					response.write("if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
+					response
+							.write("if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
 					response.write(url);
 					response.write("'}");
 					JavascriptUtils.writeCloseTag(response);

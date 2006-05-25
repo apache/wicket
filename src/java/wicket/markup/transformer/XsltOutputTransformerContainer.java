@@ -58,10 +58,10 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @param xslFilePath
 	 *            XSL input file path
 	 */
-	public XsltOutputTransformerContainer(MarkupContainer parent, final String id, final IModel model,
-			final String xslFilePath)
+	public XsltOutputTransformerContainer(MarkupContainer parent, final String id,
+			final IModel model, final String xslFilePath)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		this.xslFile = xslFilePath;
 
@@ -81,9 +81,10 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * 
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public XsltOutputTransformerContainer(MarkupContainer parent, final String id, final IModel model)
+	public XsltOutputTransformerContainer(MarkupContainer parent, final String id,
+			final IModel model)
 	{
-		this(parent,id, model, null);
+		this(parent, id, model, null);
 	}
 
 	/**
@@ -93,7 +94,7 @@ public class XsltOutputTransformerContainer extends AbstractOutputTransformerCon
 	 */
 	public XsltOutputTransformerContainer(MarkupContainer parent, final String id)
 	{
-		this(parent,id, null, null);
+		this(parent, id, null, null);
 	}
 
 	/**

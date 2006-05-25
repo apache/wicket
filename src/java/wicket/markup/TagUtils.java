@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.16 $ $Date$
+ * $Id: TagUtils.java 5040 2006-03-20 12:48:09 +0000 (Mon, 20 Mar 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-03-20 12:48:09 +0000 (Mon, 20 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +20,7 @@ package wicket.markup;
 
 
 /**
- * Some utils to handle tags which otherwise would bloat the Tag AP. 
+ * Some utils to handle tags which otherwise would bloat the Tag AP.
  * 
  * @author Juergen Donnerstag
  */

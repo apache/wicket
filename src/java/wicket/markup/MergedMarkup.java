@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4913 $ $Date$
+ * $Id: MergedMarkup.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -361,7 +362,7 @@ public class MergedMarkup extends Markup
 						"Expected to find </wicket:child> in base markup: " + baseMarkup.toString());
 			}
 		}
-		else if(childTag != null)
+		else if (childTag != null)
 		{
 			// And now all remaining elements from the derived markup.
 			// But first add </wicket:child>
@@ -370,7 +371,7 @@ public class MergedMarkup extends Markup
 			childCloseTag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
 			addMarkupElement(childCloseTag);
 		}
-		
+
 		for (baseIndex++; baseIndex < baseMarkup.size(); baseIndex++)
 		{
 			MarkupElement element = baseMarkup.get(baseIndex);

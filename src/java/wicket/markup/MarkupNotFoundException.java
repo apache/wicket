@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MarkupNotFoundException.java 3059 2005-10-27 11:33:55 +0000 (Thu, 27 Oct
+ * 2005) jdonnerstag $ $Revision$ $Date: 2005-10-27 11:33:55 +0000 (Thu,
+ * 27 Oct 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

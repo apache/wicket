@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: IPagingLabelProvider.java 4710 2006-03-02 08:46:15 +0000 (Thu, 02 Mar
+ * 2006) eelco12 $ $Revision$ $Date: 2006-03-02 08:46:15 +0000 (Thu, 02
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

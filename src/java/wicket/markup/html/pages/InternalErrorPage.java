@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: InternalErrorPage.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +36,7 @@ public class InternalErrorPage extends WebPage
 	 */
 	public InternalErrorPage()
 	{
-		add(homePageLink(this,"homePageLink"));
+		add(homePageLink(this, "homePageLink"));
 	}
 
 	/**
@@ -45,8 +46,10 @@ public class InternalErrorPage extends WebPage
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
+
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PackagedResourceReference.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed,
+ * 24 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -49,10 +50,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(MarkupContainer parent, final String id, final Class referer, final String file,
-			final String attributeToReplace)
+	public PackagedResourceReference(MarkupContainer parent, final String id, final Class referer,
+			final String file, final String attributeToReplace)
 	{
-		this(parent,id, referer, new Model<String>(file), attributeToReplace);
+		this(parent, id, referer, new Model<String>(file), attributeToReplace);
 	}
 
 	/**
@@ -69,10 +70,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(MarkupContainer parent, final String id, final Class referer, final IModel<String> file,
-			final String attributeToReplace)
+	public PackagedResourceReference(MarkupContainer parent, final String id, final Class referer,
+			final IModel<String> file, final String attributeToReplace)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		if (referer == null)
 		{
@@ -101,7 +102,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 							"The model must provide a non-null object (component == " + component
 									+ ")");
 				}
-				String f = component.getConverter(o.getClass()).convertToString(o,getLocale());
+				String f = component.getConverter(o.getClass()).convertToString(o, getLocale());
 				PackageResourceReference ref = new PackageResourceReference(Application.get(),
 						referer, f);
 				return getRequestCycle().urlFor(ref);
@@ -120,10 +121,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(MarkupContainer parent, final String id, final ResourceReference resourceReference,
-			final String attributeToReplace)
+	public PackagedResourceReference(MarkupContainer parent, final String id,
+			final ResourceReference resourceReference, final String attributeToReplace)
 	{
-		this(parent,id, new Model<ResourceReference>(resourceReference), attributeToReplace);
+		this(parent, id, new Model<ResourceReference>(resourceReference), attributeToReplace);
 	}
 
 	/**
@@ -137,10 +138,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param attributeToReplace
 	 *            the attribute to replace of the target tag
 	 */
-	public PackagedResourceReference(MarkupContainer parent, final String id, final IModel<ResourceReference> resourceReference,
-			final String attributeToReplace)
+	public PackagedResourceReference(MarkupContainer parent, final String id,
+			final IModel<ResourceReference> resourceReference, final String attributeToReplace)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		if (resourceReference == null)
 		{
@@ -151,7 +152,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 			throw new IllegalArgumentException("AttributeToReplace may not be null");
 		}
 
-		IModel<CharSequence> srcReplacement = new Model<CharSequence> ()
+		IModel<CharSequence> srcReplacement = new Model<CharSequence>()
 		{
 			private static final long serialVersionUID = 1L;
 

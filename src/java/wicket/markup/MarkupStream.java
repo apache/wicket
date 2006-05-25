@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MarkupStream.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -183,7 +184,8 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Note: 
+	 * Note:
+	 * 
 	 * @return The next markup element in the stream
 	 */
 	public MarkupElement next()
@@ -448,9 +450,9 @@ public final class MarkupStream
 	{
 		return markup.componentTagIterator(0, ComponentTag.class);
 	}
-	
+
 	/**
-	 *
+	 * 
 	 * @return true, if underlying markup has been merged (inheritance)
 	 */
 	public final boolean isMergedMarkup()

@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: ComponentFeedbackMessageFilter.java 3903 2006-01-19 19:57:34 +0000 (Thu,
+ * 19 Jan 2006) joco01 $ $Revision$ $Date: 2006-01-19 19:57:34 +0000
+ * (Thu, 19 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,7 +28,7 @@ import wicket.Component;
 public class ComponentFeedbackMessageFilter implements IFeedbackMessageFilter
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The component to accept feedback messages for */
 	private final Component component;
 

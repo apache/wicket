@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -60,22 +60,22 @@ import wicket.util.resource.UrlResourceStream;
  * Java:
  * 
  * <pre>
- *   ...
- * 	add(new Include(&quot;header&quot;, &quot;header.html&quot;));
- * 	add(new Include(&quot;footer&quot;, &quot;footer.html&quot;));
- *   ...
+ *    ...
+ *  	add(new Include(&quot;header&quot;, &quot;header.html&quot;));
+ *  	add(new Include(&quot;footer&quot;, &quot;footer.html&quot;));
+ *    ...
  * </pre>
  * 
  * Html:
  * 
  * <pre>
- *   ...
- * 	&lt;div&gt;
- * 	 &lt;div wicket:id=&quot;header&quot;&gt;header comes here&lt;/div&gt;
- * 	 &lt;div&gt;I am the body!&lt;/div&gt;
- * 	 &lt;div wicket:id=&quot;footer&quot;&gt;footer comes here&lt;/div&gt;
- * 	&lt;/div&gt;
- *   ...
+ *    ...
+ *  	&lt;div&gt;
+ *  	 &lt;div wicket:id=&quot;header&quot;&gt;header comes here&lt;/div&gt;
+ *  	 &lt;div&gt;I am the body!&lt;/div&gt;
+ *  	 &lt;div wicket:id=&quot;footer&quot;&gt;footer comes here&lt;/div&gt;
+ *  	&lt;/div&gt;
+ *    ...
  * </pre>
  * 
  * </p>
@@ -112,9 +112,9 @@ public class Include extends WebComponent
 	 * @param id
 	 *            component id
 	 */
-	public Include(MarkupContainer parent,final String id)
+	public Include(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -125,9 +125,9 @@ public class Include extends WebComponent
 	 * @param model
 	 *            the model
 	 */
-	public Include(MarkupContainer parent,String id, IModel model)
+	public Include(MarkupContainer parent, String id, IModel model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -138,9 +138,9 @@ public class Include extends WebComponent
 	 * @param modelObject
 	 *            the model object (will be wrapped in a model)
 	 */
-	public Include(MarkupContainer parent,String id, String modelObject)
+	public Include(MarkupContainer parent, String id, String modelObject)
 	{
-		super(parent,id, new Model(modelObject));
+		super(parent, id, new Model(modelObject));
 	}
 
 	/**

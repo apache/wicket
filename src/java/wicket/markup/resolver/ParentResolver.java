@@ -37,11 +37,11 @@ public class ParentResolver implements IComponentResolver
 	 * Try to resolve the tag, then create a component, add it to the container
 	 * and render it.
 	 * <p>
-	 * Note: Special tags like &ltwicket:...&gt> and tags which id start with "_" 
-	 * are not resolved.
+	 * Note: Special tags like &ltwicket:...&gt> and tags which id start with
+	 * "_" are not resolved.
 	 * 
-	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer, MarkupStream,
-	 *      ComponentTag)
+	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
+	 *      MarkupStream, ComponentTag)
 	 */
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
@@ -51,7 +51,7 @@ public class ParentResolver implements IComponentResolver
 		{
 			return false;
 		}
-		
+
 		MarkupContainer parent = container;
 		while ((parent != null) && (parent.isTransparentResolver()))
 		{

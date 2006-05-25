@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ExternalLink.java 5860 2006-05-25 20:29:28 +0000 (Thu, 25 May 2006)
+ * eelco12 $ $Revision$ $Date: 2006-05-25 20:29:28 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -57,9 +58,10 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(MarkupContainer parent,final String id, final String href, final String label)
+	public ExternalLink(MarkupContainer parent, final String id, final String href,
+			final String label)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		this.href = (href != null ? new Model(href) : null);
 		this.label = (label != null ? new Model(label) : null);
@@ -73,9 +75,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(MarkupContainer parent,final String id, final String href)
+	public ExternalLink(MarkupContainer parent, final String id, final String href)
 	{
-		this(parent,id, href, null);
+		this(parent, id, href, null);
 	}
 
 	/**
@@ -88,9 +90,10 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param label
 	 *            the label (body)
 	 */
-	public ExternalLink(MarkupContainer parent,final String id, final IModel href, final IModel label)
+	public ExternalLink(MarkupContainer parent, final String id, final IModel href,
+			final IModel label)
 	{
-		super(parent,id);
+		super(parent, id);
 
 		this.href = href;
 		this.label = label;
@@ -104,9 +107,9 @@ public class ExternalLink extends WebMarkupContainer
 	 * @param href
 	 *            the href attribute to set
 	 */
-	public ExternalLink(MarkupContainer parent,final String id, final IModel href)
+	public ExternalLink(MarkupContainer parent, final String id, final IModel href)
 	{
-		this(parent,id, href, null);
+		this(parent, id, href, null);
 	}
 
 	/**

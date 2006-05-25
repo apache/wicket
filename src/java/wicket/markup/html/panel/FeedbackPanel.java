@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FeedbackPanel.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -68,7 +69,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		 */
 		public MessageListView(MarkupContainer parent, final String id)
 		{
-			super(parent,id);
+			super(parent, id);
 			setModel(newFeedbackMessagesModel());
 		}
 
@@ -98,7 +99,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 				}
 			};
 
-			final Label label = new Label(listItem,"message", message.getMessage());
+			final Label label = new Label(listItem, "message", message.getMessage());
 			label.setEscapeModelStrings(getEscapeMessages());
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
@@ -112,7 +113,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public FeedbackPanel(MarkupContainer parent, final String id)
 	{
-		this(parent,id, null);
+		this(parent, id, null);
 	}
 
 	/**
@@ -120,8 +121,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public FeedbackPanel(MarkupContainer parent, final String id, IFeedbackMessageFilter filter)
 	{
-		super(parent,id);
-		WebMarkupContainer messagesContainer = new WebMarkupContainer(this,"feedbackul")
+		super(parent, id);
+		WebMarkupContainer messagesContainer = new WebMarkupContainer(this, "feedbackul")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -132,17 +133,17 @@ public class FeedbackPanel extends Panel implements IFeedback
 			}
 		};
 		add(messagesContainer);
-		this.messageListView = new MessageListView(messagesContainer,"messages");
+		this.messageListView = new MessageListView(messagesContainer, "messages");
 		messageListView.setVersioned(false);
 		messagesContainer.add(messageListView);
-		
-		if (filter!=null) {
+
+		if (filter != null)
+		{
 			setFilter(filter);
 		}
 	}
 
-	
-	
+
 	/**
 	 * Gets whether model messages should be HTML escaped. Default is true.
 	 * 
@@ -320,5 +321,5 @@ public class FeedbackPanel extends Panel implements IFeedback
 	{
 		return new FeedbackMessagesModel();
 	}
-	
+
 }

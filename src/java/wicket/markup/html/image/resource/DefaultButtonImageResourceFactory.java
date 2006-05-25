@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DefaultButtonImageResourceFactory.java 1450 2005-03-24 21:11:02 +0000
+ * (Thu, 24 Mar 2005) jonathanlocke $ $Revision$ $Date: 2005-03-24
+ * 21:11:02 +0000 (Thu, 24 Mar 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,18 +37,22 @@ import wicket.util.parse.metapattern.parsers.MetaPatternParser;
 public class DefaultButtonImageResourceFactory implements IResourceFactory
 {
 	/**
-	 * @see wicket.IResourceFactory#newResource(java.lang.String, java.util.Locale, java.lang.String)
+	 * @see wicket.IResourceFactory#newResource(java.lang.String,
+	 *      java.util.Locale, java.lang.String)
 	 */
 	public Resource newResource(final String specification, final Locale locale, final String style)
 	{
 		final Parser parser = new Parser(specification);
 		if (parser.matches())
 		{
-			return new DefaultButtonImageResource(parser.getWidth(), parser.getHeight(), parser.getLabel());
+			return new DefaultButtonImageResource(parser.getWidth(), parser.getHeight(), parser
+					.getLabel());
 		}
 		else
 		{
-			throw new WicketRuntimeException("DefaultButtonImageResourceFactory does not recognized the specification " + specification);
+			throw new WicketRuntimeException(
+					"DefaultButtonImageResourceFactory does not recognized the specification "
+							+ specification);
 		}
 	}
 

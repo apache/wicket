@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: ITransformer.java 3764 2006-01-14 17:38:33 +0000 (Sat, 14 Jan 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-01-14 17:38:33 +0000 (Sat, 14
+ * Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
