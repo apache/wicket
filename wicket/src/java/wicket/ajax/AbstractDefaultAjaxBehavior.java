@@ -110,7 +110,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	protected CharSequence getCallbackScript()
 	{
-		return getCallbackScript(true);
+		return getCallbackScript(true, false);
 	}
 
 	/**
@@ -120,11 +120,15 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 *            if true the url will be encoded to execute on the current page
 	 *            version, otherwise url will be encoded to execute on the
 	 *            latest page version
+	 * @param onlyTargetActivePage
+	 *            if true the callback to this behavior will be ignore if the
+	 *            page is not the last one the user accessed
+	 * 
 	 */
-	protected CharSequence getCallbackScript(boolean recordPageVersion)
+	protected CharSequence getCallbackScript(boolean recordPageVersion, boolean onlyTargetActivePage)
 	{
-		return getCallbackScript("wicketAjaxGet('" + getCallbackUrl(recordPageVersion) + "'", null,
-				null);
+		return getCallbackScript("wicketAjaxGet('"
+				+ getCallbackUrl(recordPageVersion, onlyTargetActivePage) + "'", null, null);
 	}
 
 	/**
@@ -281,7 +285,8 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			throw new IllegalArgumentException("throttleDelay cannot be null");
 		}
 
-		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId).append("', ").append(
-				throttleDelay.getMilliseconds()).append(", function() { ").append(script).append("});");
+		return new AppendingStringBuffer("wicketThrottler.throttle( '").append(throttleId).append(
+				"', ").append(throttleDelay.getMilliseconds()).append(", function() { ").append(
+				script).append("});");
 	}
 }
