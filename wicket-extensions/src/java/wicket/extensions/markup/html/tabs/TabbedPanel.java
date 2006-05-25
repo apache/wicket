@@ -239,15 +239,7 @@ public class TabbedPanel extends Panel
 							+ getPath() + "] ITab index [" + index + "]");
 		}
 
-
-		if (get(TAB_PANEL_ID) == null)
-		{
-			add(panel);
-		}
-		else
-		{
-			replace(panel);
-		}
+		panel.reattach();
 	}
 
 	/**

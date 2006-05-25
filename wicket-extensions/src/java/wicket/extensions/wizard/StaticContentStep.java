@@ -170,6 +170,6 @@ public class StaticContentStep extends WizardStep
 	public final void setContentModel(IModel content)
 	{
 		this.content = content;
-		replace(new Label(this,"content", content).setEscapeModelStrings(!allowHtml));
+		new Label(this,"content", content).setEscapeModelStrings(!allowHtml);
 	}
 }
