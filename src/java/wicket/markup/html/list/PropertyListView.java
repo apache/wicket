@@ -30,7 +30,7 @@ import wicket.model.IModel;
  * 
  * @author Nathan Hamblen
  */
-public abstract class PropertyListView<V> extends ListView<V>
+public abstract class PropertyListView<T> extends ListView<T>
 {
 	/**
 	 * Construct without model, assume bound externally.
@@ -51,7 +51,7 @@ public abstract class PropertyListView<V> extends ListView<V>
 	 * @param model
 	 *            wrapping a List
 	 */
-	public PropertyListView(MarkupContainer parent,final String id, final IModel<List<V>> model)
+	public PropertyListView(MarkupContainer parent,final String id, final IModel<List<T>> model)
 	{
 		super(parent,id, model);
 	}
@@ -66,7 +66,7 @@ public abstract class PropertyListView<V> extends ListView<V>
 	 * @param list
 	 *            unmodeled List
 	 */
-	public PropertyListView(MarkupContainer parent,final String id, final List<V> list)
+	public PropertyListView(MarkupContainer parent,final String id, final List<T> list)
 	{
 		super(parent,id, list);
 	}

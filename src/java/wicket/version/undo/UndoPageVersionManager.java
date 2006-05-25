@@ -30,12 +30,12 @@ import wicket.version.IPageVersionManager;
  * which can later be reversed to get back to a given version of the page being
  * managed.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object the page holds.
  * 
  * @author Jonathan Locke
  */
-public class UndoPageVersionManager<V> implements IPageVersionManager<V>
+public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 {
 	/** log. */
 	private static Log log = LogFactory.getLog(UndoPageVersionManager.class);
@@ -55,7 +55,7 @@ public class UndoPageVersionManager<V> implements IPageVersionManager<V>
 	private final int maxVersions;
 
 	/** The page being managed */
-	private final Page<V> page;
+	private final Page<T> page;
 
 	/**
 	 * Constructor
@@ -66,7 +66,7 @@ public class UndoPageVersionManager<V> implements IPageVersionManager<V>
 	 *            The maximum number of versions to maintain before expiring the
 	 *            old versions
 	 */
-	public UndoPageVersionManager(final Page<V> page, final int maxVersions)
+	public UndoPageVersionManager(final Page<T> page, final int maxVersions)
 	{
 		this.page = page;
 		this.maxVersions = maxVersions;
@@ -158,7 +158,7 @@ public class UndoPageVersionManager<V> implements IPageVersionManager<V>
 	/**
 	 * @see wicket.version.IPageVersionManager#getVersion(int)
 	 */
-	public Page<V> getVersion(final int versionNumber)
+	public Page<T> getVersion(final int versionNumber)
 	{
 		// If the requested version is at or before the current version
 		if (versionNumber <= getCurrentVersionNumber())

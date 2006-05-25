@@ -56,7 +56,7 @@ import wicket.util.convert.ConversionException;
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class CheckGroup<V> extends FormComponent<Collection<V>> implements IOnChangeListener
+public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -82,15 +82,15 @@ public class CheckGroup<V> extends FormComponent<Collection<V>> implements IOnCh
 	 *            collection to be used as the model
 	 * 
 	 */
-	public CheckGroup(MarkupContainer parent,String id, Collection<V> collection)
+	public CheckGroup(MarkupContainer parent,String id, Collection<T> collection)
 	{
-		this(parent,id, new Model<Collection<V>>(collection));
+		this(parent,id, new Model<Collection<T>>(collection));
 	}
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public CheckGroup(MarkupContainer parent,String id, IModel<Collection<V>> model)
+	public CheckGroup(MarkupContainer parent,String id, IModel<Collection<T>> model)
 	{
 		super(parent,id, model);
 		setRenderBodyOnly(true);
@@ -100,9 +100,9 @@ public class CheckGroup<V> extends FormComponent<Collection<V>> implements IOnCh
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
-	protected Collection<V> convertValue(String[] paths) throws ConversionException
+	protected Collection<T> convertValue(String[] paths) throws ConversionException
 	{
-		List<V> collection = new ArrayList<V>();
+		List<T> collection = new ArrayList<T>();
 
 		/*
 		 * if the input is null we do not need to do anything since the model
@@ -126,7 +126,7 @@ public class CheckGroup<V> extends FormComponent<Collection<V>> implements IOnCh
 					path = path.substring(getPath().length() + 1);
 
 					// retrieve the selected checkbox component
-					Check<V> checkbox = (Check)get(path);
+					Check<T> checkbox = (Check)get(path);
 
 					if (checkbox == null)
 					{
@@ -155,10 +155,10 @@ public class CheckGroup<V> extends FormComponent<Collection<V>> implements IOnCh
 	@Override
 	public void updateModel()
 	{
-		Collection<V> collection = (Collection<V>)getModelObject();
+		Collection<T> collection = (Collection<T>)getModelObject();
 		if (collection == null)
 		{
-			collection = (Collection<V>)getConvertedInput();
+			collection = (Collection<T>)getConvertedInput();
 			setModelObject(collection);
 		}
 		else

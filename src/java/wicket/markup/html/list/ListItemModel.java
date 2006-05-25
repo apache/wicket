@@ -24,20 +24,20 @@ import wicket.model.IModel;
 /**
  * Model for list items.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  */
-public class ListItemModel<V> extends AbstractDetachableModel<V>
+public class ListItemModel<T> extends AbstractDetachableModel<T>
 {
 	private static final long serialVersionUID = 1L;
 	
 	// It is easy and cheap to re-build it if necessary.
 	// Avoid synchronising it in a cluster
-	private transient V object;
+	private transient T object;
 
 	/** The ListView's list model */
-	private final ListView<V> listView;
+	private final ListView<T> listView;
 
 	/* The list item's index */
 	private final int index;
@@ -50,7 +50,7 @@ public class ListItemModel<V> extends AbstractDetachableModel<V>
 	 * @param index
 	 *            The index of this model
 	 */
-	public ListItemModel(final ListView<V> listView, final int index)
+	public ListItemModel(final ListView<T> listView, final int index)
 	{
 		this.listView = listView;
 		this.index = index;
@@ -61,7 +61,7 @@ public class ListItemModel<V> extends AbstractDetachableModel<V>
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
 	@Override
-	public IModel<V> getNestedModel()
+	public IModel<T> getNestedModel()
 	{
 		return null;
 	}
@@ -89,7 +89,7 @@ public class ListItemModel<V> extends AbstractDetachableModel<V>
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
 	@Override
-	protected V onGetObject(final Component component)
+	protected T onGetObject(final Component component)
 	{
 		return object;
 	}
@@ -99,7 +99,7 @@ public class ListItemModel<V> extends AbstractDetachableModel<V>
 	 *      java.lang.Object)
 	 */
 	@Override
-	protected void onSetObject(final Component component, final V object)
+	protected void onSetObject(final Component component, final T object)
 	{
 		this.object = object;
 	}

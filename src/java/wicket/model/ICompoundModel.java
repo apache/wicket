@@ -31,11 +31,11 @@ package wicket.model;
  * form.add(new TextField(&quot;textfield&quot;));
  * </pre>
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this model holds
  * 
  * @author jcompagner
  */
-public interface ICompoundModel<V> extends IModel<V>
+public interface ICompoundModel<T> extends IModel<T>
 {
 }

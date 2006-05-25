@@ -129,7 +129,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * @see wicket.version.IPageVersionManager
  * @see wicket.version.undo.UndoPageVersionManager
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
@@ -137,7 +137,7 @@ import wicket.version.undo.UndoPageVersionManager;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Page<V> extends MarkupContainer<V> implements IRedirectListener, IPageMapEntry
+public abstract class Page<T> extends MarkupContainer<T> implements IRedirectListener, IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
 
@@ -184,7 +184,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	private transient Boolean stateless = Boolean.TRUE;
 
 	/** Version manager for this page */
-	private IPageVersionManager<V> versionManager;
+	private IPageVersionManager<T> versionManager;
 
 	/**
 	 * Constructor.
@@ -204,7 +204,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final IModel<V> model)
+	protected Page(final IModel<T> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -236,7 +236,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final PageMap pageMap, final IModel<V> model)
+	protected Page(final PageMap pageMap, final IModel<T> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -596,7 +596,7 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 				setFlag(FLAG_TRACK_CHANGES, false);
 
 				// Get page of desired version
-				final Page<V> page;
+				final Page<T> page;
 				if (versionNumber != LATEST_VERSION)
 				{
 					page = versionManager.getVersion(versionNumber);
@@ -853,10 +853,10 @@ public abstract class Page<V> extends MarkupContainer<V> implements IRedirectLis
 	/**
 	 * @return Factory method that creates a version manager for this Page
 	 */
-	protected IPageVersionManager<V> newVersionManager()
+	protected IPageVersionManager<T> newVersionManager()
 	{
 		final IPageSettings settings = getSession().getApplication().getPageSettings();
-		return new UndoPageVersionManager<V>(this, settings.getMaxPageVersions());
+		return new UndoPageVersionManager<T>(this, settings.getMaxPageVersions());
 	}
 
 	/**

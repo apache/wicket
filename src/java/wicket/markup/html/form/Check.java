@@ -36,7 +36,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class Check<V> extends WebMarkupContainer<V>
+public class Check<T> extends WebMarkupContainer<T>
 {
 	/**
 	 * 
@@ -57,7 +57,7 @@ public class Check<V> extends WebMarkupContainer<V>
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Check(MarkupContainer parent,String id, IModel<V> model)
+	public Check(MarkupContainer parent,String id, IModel<T> model)
 	{
 		super(parent,id, model);
 	}

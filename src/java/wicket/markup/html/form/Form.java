@@ -119,7 +119,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * call setPersistent(true) on the form component.
  * </p>
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
@@ -129,7 +129,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public class Form<V> extends WebMarkupContainer<V> implements IFormSubmitListener
+public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListener
 {
 	/**
 	 * The FAKE_SUBMIT hidden field name constant;
@@ -226,7 +226,7 @@ public class Form<V> extends WebMarkupContainer<V> implements IFormSubmitListene
 	 *            See Component
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public Form(MarkupContainer parent,final String id, IModel<V> model)
+	public Form(MarkupContainer parent,final String id, IModel<T> model)
 	{
 		super(parent,id, model);
 	}

@@ -25,12 +25,12 @@ import wicket.util.string.Strings;
 /**
  * Abstract base class for TextArea and TextField.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
  */
-public abstract class AbstractTextComponent<V> extends FormComponent<V>
+public abstract class AbstractTextComponent<T> extends FormComponent<T>
 {
 	/**
 	 * @see wicket.Component#Component(String)
@@ -102,7 +102,7 @@ public abstract class AbstractTextComponent<V> extends FormComponent<V>
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
-	protected V convertValue(String[] value) throws ConversionException
+	protected T convertValue(String[] value) throws ConversionException
 	{
 		String tmp = value != null && value.length > 0?value[0]:null;
 		if(getConvertEmptyInputStringToNull() && Strings.isEmpty(tmp))

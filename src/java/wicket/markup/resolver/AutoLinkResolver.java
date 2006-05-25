@@ -612,7 +612,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
 	 * know where to add the component to.
 	 */
-	private final static class PackageResourceReferenceAutolink<V> extends WebMarkupContainer<V>
+	private final static class PackageResourceReferenceAutolink<T> extends WebMarkupContainer<T>
 	{
 		private static final long serialVersionUID = 1L;
 

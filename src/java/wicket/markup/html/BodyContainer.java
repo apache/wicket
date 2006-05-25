@@ -140,12 +140,12 @@ public final class BodyContainer implements Serializable
 	}
 
 	/**
-	 * @param <V>
+	 * @param <T>
 	 *            Type of model object this attribute modifier holds
 	 * 
 	 * Little helper
 	 */
-	public static class AppendingAttributeModifier<V> extends AttributeModifier<V>
+	public static class AppendingAttributeModifier<T> extends AttributeModifier<T>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -155,7 +155,7 @@ public final class BodyContainer implements Serializable
 		 * @param attribute
 		 * @param replaceModel
 		 */
-		public AppendingAttributeModifier(final String attribute, IModel<V> replaceModel)
+		public AppendingAttributeModifier(final String attribute, IModel<T> replaceModel)
 		{
 			super(attribute, true, replaceModel);
 		}

@@ -26,17 +26,17 @@ import java.util.Map;
  * 
  * @param <K>
  * 			The key type the map holds.
- * @param <V>
+ * @param <T>
  * 			The value type the map holds.
  * 
  * @author Jonathan Locke
  */
-public class MostRecentlyUsedMap<K,V> extends LinkedHashMap<K,V>
+public class MostRecentlyUsedMap<K,T>  extends LinkedHashMap<K,T> 
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Value most recently removed from map */
-	V removedValue;
+	T removedValue;
 	
 	/** Maximum number of entries allowed in this map */
 	private int maxEntries;
@@ -62,7 +62,7 @@ public class MostRecentlyUsedMap<K,V> extends LinkedHashMap<K,V>
 	/**
 	 * @return Returns the removedValue.
 	 */
-	public V getRemovedValue()
+	public T getRemovedValue()
 	{
 		return removedValue;
 	}
@@ -71,7 +71,7 @@ public class MostRecentlyUsedMap<K,V> extends LinkedHashMap<K,V>
 	 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
 	 */
 	@Override
-	protected boolean removeEldestEntry(final Map.Entry<K,V> eldest)
+	protected boolean removeEldestEntry(final Map.Entry<K,T>  eldest)
 	{
 		final boolean remove = size() > maxEntries;
 		// when it should be removed remember the oldest value that will be removed

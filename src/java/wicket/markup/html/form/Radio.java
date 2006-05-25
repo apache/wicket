@@ -36,7 +36,7 @@ import wicket.util.lang.Objects;
  * @author Sven Meier (svenmeier)
  * 
  */
-public class Radio<V> extends WebMarkupContainer<V>
+public class Radio<T> extends WebMarkupContainer<T>
 {
 	private static final String ATTR_DISABLED = "disabled";
 	/**
@@ -56,7 +56,7 @@ public class Radio<V> extends WebMarkupContainer<V>
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Radio(MarkupContainer parent,String id, IModel<V> model)
+	public Radio(MarkupContainer parent,String id, IModel<T> model)
 	{
 		super(parent,id, model);
 	}

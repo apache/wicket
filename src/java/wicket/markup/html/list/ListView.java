@@ -78,7 +78,7 @@ import wicket.version.undo.Change;
  * is false.
  * </p>
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
@@ -86,7 +86,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public abstract class ListView<V> extends WebMarkupContainer<List<V>>
+public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 {
 	/** Index of the first item to show */
 	private int firstIndex = 0;
@@ -115,7 +115,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(MarkupContainer parent,final String id, final IModel<List<V>> model)
+	public ListView(MarkupContainer parent,final String id, final IModel<List<T>> model)
 	{
 		super(parent,id, model);
 
@@ -137,9 +137,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public ListView(MarkupContainer parent,final String id, final List<V> list)
+	public ListView(MarkupContainer parent,final String id, final List<T> list)
 	{
-		this(parent,id, new Model<List<V>>(list));
+		this(parent,id, new Model<List<T>>(list));
 	}
 
 	/**
@@ -149,9 +149,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * 
 	 * @return The list of items in this list view.
 	 */
-	public final List<V> getList()
+	public final List<T> getList()
 	{
-		final List<V> list = getModelObject();
+		final List<T> list = getModelObject();
 		if (list == null)
 		{
 			return Collections.emptyList();
@@ -252,7 +252,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveDownLink(MarkupContainer parent, final String id, final ListItem<V> item)
+	public final Link moveDownLink(MarkupContainer parent, final String id, final ListItem<T> item)
 	{
 		return new Link(item,id)
 		{
@@ -310,7 +310,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link moveUpLink(MarkupContainer parent, final String id, final ListItem<V> item)
+	public final Link moveUpLink(MarkupContainer parent, final String id, final ListItem<T> item)
 	{
 		return new Link(item,id)
 		{
@@ -369,7 +369,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 * @return The link component
 	 */
-	public final Link removeLink(MarkupContainer parent, final String id, final ListItem<V> item)
+	public final Link removeLink(MarkupContainer parent, final String id, final ListItem<T> item)
 	{
 		return new Link(item,id)
 		{
@@ -385,7 +385,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 				{
 					private static final long serialVersionUID = 1L;
 
-					final V removedObject = item.getModelObject();
+					final T removedObject = item.getModelObject();
 					final int oldIndex = getList().indexOf(item.getModelObject());
 
 					@Override
@@ -495,9 +495,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 *            {@link Serializable}.
 	 * @return This for chaining
 	 */
-	public Component setList(List<V> list)
+	public Component setList(List<T> list)
 	{
-		return setModel(new Model<List<V>>(list));
+		return setModel(new Model<List<T>>(list));
 	}
 
 	/**
@@ -511,7 +511,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
 	 */
 	@Override
-	public Component setModel(IModel<List<V>> model)
+	public Component setModel(IModel<List<T>> model)
 	{
 		// remove all children; this has no effect when the list
 		// didn't render before, as in that case the list view
@@ -535,9 +535,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 *            The list item index
 	 * @return The ListItemModel created
 	 */
-	protected IModel<V> getListItemModel(final IModel<List<V>> listViewModel, final int index)
+	protected IModel<T> getListItemModel(final IModel<List<T>> listViewModel, final int index)
 	{
-		return new ListItemModel<V>(this, index);
+		return new ListItemModel<T>(this, index);
 	}
 
 	/**
@@ -582,7 +582,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 				final int index = firstIndex + i;
 
 				// If this component does not already exist, populate it
-				ListItem<V> item = (ListItem)get(Integer.toString(index));
+				ListItem<T> item = (ListItem)get(Integer.toString(index));
 				if (item == null)
 				{
 					// Create item for index
@@ -609,9 +609,9 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param index
 	 * @return ListItem
 	 */
-	protected ListItem<V> newItem(final int index)
+	protected ListItem<T> newItem(final int index)
 	{
-		return new ListItem<V>(this,index, getListItemModel(getModel(), index));
+		return new ListItem<T>(this,index, getListItemModel(getModel(), index));
 	}
 
 	/**
@@ -681,7 +681,7 @@ public abstract class ListView<V> extends WebMarkupContainer<List<V>>
 	 * @param item
 	 *            The item to populate
 	 */
-	protected abstract void populateItem(final ListItem<V> item);
+	protected abstract void populateItem(final ListItem<T> item);
 
 	/**
 	 * Render a single item.

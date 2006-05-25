@@ -24,12 +24,12 @@ import wicket.model.IModel;
 /**
  * A simple text field.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
  */
-public class TextField<V> extends AbstractTextComponent<V>
+public class TextField<T> extends AbstractTextComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 	

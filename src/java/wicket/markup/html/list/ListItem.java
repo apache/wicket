@@ -24,12 +24,12 @@ import wicket.model.IModel;
 /**
  * Container that holds components in a ListView.
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
  */
-public class ListItem<V> extends WebMarkupContainer<V>
+public class ListItem<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -45,7 +45,7 @@ public class ListItem<V> extends WebMarkupContainer<V>
 	 * @param model
 	 *            The model object of the item
 	 */
-	public ListItem(MarkupContainer parent,final int index, final IModel<V> model)
+	public ListItem(MarkupContainer parent,final int index, final IModel<T> model)
 	{
 		super(parent,Integer.toString(index), model);
 		this.index = index;

@@ -37,7 +37,7 @@ import wicket.util.string.Strings;
  * @author Johan Compagner
  * @author Martijn Dashorst
  */
-public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
+public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T> 
 {
 	private static final long serialVersionUID = 1L;
 
@@ -79,7 +79,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListMultipleChoice(MarkupContainer parent, final String id, final List<V> choices)
+	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
 		super(parent,id, choices);
 	}
@@ -95,7 +95,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 *            the maximum number of visible rows.
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
 	 */
-	public ListMultipleChoice(MarkupContainer parent, final String id, final List<V> choices, final int maxRows)
+	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices, final int maxRows)
 	{
 		super(parent,id, choices);
 		this.maxRows = maxRows;
@@ -105,7 +105,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      List,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(MarkupContainer parent, final String id, final List<V> choices, final IChoiceRenderer<V> renderer)
+	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices, final IChoiceRenderer<T> renderer)
 	{
 		super(parent,id, choices, renderer);
 	}
@@ -114,7 +114,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, List)
 	 */
-	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<V>> object, final List<V> choices)
+	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> object, final List<T> choices)
 	{
 		super(parent,id, object, choices);
 	}
@@ -123,8 +123,8 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, List,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<V>> object, final List<V> choices,
-			final IChoiceRenderer<V> renderer)
+	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> object, final List<T> choices,
+			final IChoiceRenderer<T> renderer)
 	{
 		super(parent,id, object, choices, renderer);
 	}
@@ -133,7 +133,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel)
 	 */
-	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<V>> choices)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
 	{
 		super(parent,id, choices);
 	}
@@ -142,7 +142,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IModel)
 	 */
-	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<V>> model, IModel<List<V>> choices)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices)
 	{
 		super(parent,id, model, choices);
 	}
@@ -151,7 +151,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(parent,id, choices, renderer);
 	}
@@ -161,7 +161,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<V>> model, IModel<List<V>> choices, IChoiceRenderer<V> renderer)
+	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(parent,id, model, choices, renderer);
 	}
@@ -186,14 +186,14 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	public final String getModelValue()
 	{
 		// Get the list of selected values
-		final Collection<V> selectedValues = getModelObject();
+		final Collection<T> selectedValues = getModelObject();
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
-			final List<V> choices = getChoices();
-			for (final Iterator<V> iterator = selectedValues.iterator(); iterator.hasNext();)
+			final List<T> choices = getChoices();
+			for (final Iterator<T> iterator = selectedValues.iterator(); iterator.hasNext();)
 			{
-				final V object = iterator.next();
+				final T object = iterator.next();
 
 				int index = choices.indexOf(object);
 				buffer.append(getChoiceRenderer().getIdValue(object, index));
@@ -208,7 +208,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 *      String)
 	 */
 	@Override
-	protected final boolean isSelected(V choice, int index, String selected)
+	protected final boolean isSelected(T choice, int index, String selected)
 	{
 		// Have a value at all?
 		if (selected != null)
@@ -246,15 +246,15 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
-	protected Collection<V> convertValue(String[] ids) throws ConversionException
+	protected Collection<T> convertValue(String[] ids) throws ConversionException
 	{
-		ArrayList<V> selectedValues = new ArrayList<V>();
+		ArrayList<T> selectedValues = new ArrayList<T>();
 
 		// If one or more ids is selected
 		if (ids != null && ids.length > 0 && !Strings.isEmpty(ids[0]))
 		{
 			// Get values that could be selected
-			final List<V> choices = getChoices();
+			final List<T> choices = getChoices();
 
 			// Loop through selected indices
 			for (int i = 0; i < ids.length; i++)
@@ -262,7 +262,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 				for (int index = 0; index < choices.size(); index++)
 				{
 					// Get next choice
-					final V choice = choices.get(index);
+					final T choice = choices.get(index);
 					if (getChoiceRenderer().getIdValue(choice, index).equals(ids[i]))
 					{
 						selectedValues.add(choice);
@@ -279,7 +279,7 @@ public class ListMultipleChoice<V> extends AbstractChoice<Collection<V>, V>
 	 */
 	public final void updateModel()
 	{
-		Collection<V> selectedValues = getModelObject();
+		Collection<T> selectedValues = getModelObject();
 		if (selectedValues != null)
 		{
 			modelChanging();

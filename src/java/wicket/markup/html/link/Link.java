@@ -72,13 +72,13 @@ import wicket.util.string.Strings;
  *              }
  * </pre>
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Link<V> extends WebMarkupContainer<V> implements ILinkListener
+public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 

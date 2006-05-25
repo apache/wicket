@@ -219,7 +219,7 @@ import wicket.version.undo.Change;
  * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page
  * has been rendered at least once by calling doRender().
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
@@ -229,7 +229,7 @@ import wicket.version.undo.Change;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component<V> implements Serializable, ICoverterLocator
+public abstract class Component<T> implements Serializable, ICoverterLocator
 {
 	/**
 	 * Change record of a model.
@@ -239,14 +239,14 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 		private static final long serialVersionUID = 1L;
 
 		/** Former model. */
-		private IModel<V> model;
+		private IModel<T> model;
 
 		/**
 		 * Construct.
 		 * 
 		 * @param model
 		 */
-		public ComponentModelChange(IModel<V> model)
+		public ComponentModelChange(IModel<T> model)
 		{
 			super();
 			this.model = model;
@@ -565,7 +565,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	private MetaDataEntry[] metaData;
 
 	/** The model for this component. */
-	private IModel<V> model;
+	private IModel<T> model;
 
 	/** Any parent container. */
 	private MarkupContainer parent;
@@ -628,7 +628,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *             Thrown if the component has been given a null id.
 	 */
 	@SuppressWarnings("null")
-	public Component(MarkupContainer parent, final String id, final IModel<V> model)
+	public Component(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		if(parent == null)
 		{
@@ -1056,7 +1056,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @return The model
 	 */
-	public IModel<V> getModel()
+	public IModel<T> getModel()
 	{
 		// If model is null
 		if (model == null)
@@ -1074,9 +1074,9 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @return The backing model object
 	 */
-	public final V getModelObject()
+	public final T getModelObject()
 	{
-		final IModel<V> model = getModel();
+		final IModel<T> model = getModel();
 		if (model != null)
 		{
 			// If this component has the root model for a compound model
@@ -1708,7 +1708,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 
 				if (this instanceof MarkupContainer)
 				{
-					MarkupContainer<V> container = (MarkupContainer<V>)this;
+					MarkupContainer<T> container = (MarkupContainer<T>)this;
 
 					// First, give priority to IFeedback instances, as they have
 					// to
@@ -1987,7 +1987,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *            The model
 	 * @return This
 	 */
-	public Component setModel(final IModel<V> model)
+	public Component setModel(final IModel<T> model)
 	{
 		// Detach current model
 		if (this.model != null)
@@ -2021,9 +2021,9 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *            The object to set
 	 * @return This
 	 */
-	public final Component setModelObject(final V object)
+	public final Component setModelObject(final T object)
 	{
-		final IModel<V> model = getModel();
+		final IModel<T> model = getModel();
 
 		// Check whether anything can be set at all
 		if (model == null)
@@ -2534,13 +2534,13 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * 
 	 * @return The model
 	 */
-	protected IModel<V> initModel()
+	protected IModel<T> initModel()
 	{
 		// Search parents for CompoundPropertyModel
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			final IModel<V> model = current.getModel();
+			final IModel<T> model = current.getModel();
 			if (model instanceof ICompoundModel)
 			{
 				// we turn off versioning as we share the model with another
@@ -3064,12 +3064,12 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *            The model
 	 * @return The root object
 	 */
-	private final IModel<V> getRootModel(final IModel<V> model)
+	private final IModel<T> getRootModel(final IModel<T> model)
 	{
-		IModel<V> nestedModelObject = model;
+		IModel<T> nestedModelObject = model;
 		while (true)
 		{
-			final IModel<V> next = nestedModelObject.getNestedModel();
+			final IModel<T> next = nestedModelObject.getNestedModel();
 			if (next == null)
 			{
 				break;

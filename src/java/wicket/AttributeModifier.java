@@ -62,7 +62,7 @@ import wicket.util.value.ValueMap;
  *  };
  * </code>
  * 
- * @param <V>
+ * @param <T>
  *            Type of model object this atribute modifier holds
  *            
  * @author Chris Turner
@@ -71,7 +71,7 @@ import wicket.util.value.ValueMap;
  * @author Martijn Dashorst
  * @author Ralf Ebert
  */
-public class AttributeModifier<V> extends AbstractBehavior implements Serializable
+public class AttributeModifier<T> extends AbstractBehavior implements Serializable
 {
 	/** Marker value to have an attribute without a value added. */
 	public static final String VALUELESS_ATTRIBUTE_ADD = "VA_ADD";
@@ -94,7 +94,7 @@ public class AttributeModifier<V> extends AbstractBehavior implements Serializab
 	private final String pattern;
 
 	/** The model that is to be used for the replacement. */
-	private final IModel<V> replaceModel;
+	private final IModel<T> replaceModel;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model
@@ -109,7 +109,7 @@ public class AttributeModifier<V> extends AbstractBehavior implements Serializab
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
-			final IModel<V> replaceModel)
+			final IModel<T> replaceModel)
 	{
 		this(attribute, null, addAttributeIfNotPresent, replaceModel);
 	}
@@ -123,7 +123,7 @@ public class AttributeModifier<V> extends AbstractBehavior implements Serializab
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public AttributeModifier(final String attribute, final IModel<V> replaceModel)
+	public AttributeModifier(final String attribute, final IModel<T> replaceModel)
 	{
 		this(attribute, null, false, replaceModel);
 	}
@@ -145,7 +145,7 @@ public class AttributeModifier<V> extends AbstractBehavior implements Serializab
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final String pattern,
-			final boolean addAttributeIfNotPresent, final IModel<V> replaceModel)
+			final boolean addAttributeIfNotPresent, final IModel<T> replaceModel)
 	{
 		if (attribute == null)
 		{
@@ -172,7 +172,7 @@ public class AttributeModifier<V> extends AbstractBehavior implements Serializab
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public AttributeModifier(final String attribute, final String pattern, final IModel<V> replaceModel)
+	public AttributeModifier(final String attribute, final String pattern, final IModel<T> replaceModel)
 	{
 		this(attribute, pattern, false, replaceModel);
 	}
@@ -294,7 +294,7 @@ public class AttributeModifier<V> extends AbstractBehavior implements Serializab
 	 * 
 	 * @return the replace model of this attribute modifier
 	 */
-	protected final IModel<V> getReplaceModel()
+	protected final IModel<T> getReplaceModel()
 	{
 		return replaceModel;
 	}

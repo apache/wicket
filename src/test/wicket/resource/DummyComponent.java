@@ -27,7 +27,7 @@ import wicket.markup.MarkupStream;
  * 
  * @author Chris Turner
  */
-public class DummyComponent<V> extends Component<V>
+public class DummyComponent<T> extends Component<T>
 {
 	private static final long serialVersionUID = 1L;
 
