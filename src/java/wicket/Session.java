@@ -94,8 +94,8 @@ import wicket.util.string.Strings;
  * the application (see {@link Application} for details). To discourage
  * non-typesafe access to Session properties, no setProperty() or getProperty()
  * method is provided. In a clustered environment, you should take care to call
- * the dirty() method when you change a property or youre own. This way the 
- * session will be reset again in the http session so that the http session 
+ * the dirty() method when you change a property or youre own. This way the
+ * session will be reset again in the http session so that the http session
  * knows the session is changed.
  * 
  * <li><b>Class Resolver </b>- Sessions have a class resolver (
@@ -164,7 +164,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 	private int autoCreatePageMapCounter = 0;
 
 	/** A linked list for last used pagemap queue */
-	private LinkedList/* <PageMap> */<PageMap>usedPageMaps = new LinkedList<PageMap>();
+	private LinkedList/* <PageMap> */<PageMap> usedPageMaps = new LinkedList<PageMap>();
 
 	/** The session store of this session. */
 	// private transient ISessionStore sessionStore;
@@ -411,7 +411,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 			}
 			usedPages.put(id, Thread.currentThread());
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
-			if(page == null)
+			if (page == null)
 			{
 				usedPages.remove(id);
 				notifyAll();
@@ -506,9 +506,9 @@ public abstract class Session implements Serializable, ICoverterLocator
 	public final List<PageMap> getPageMaps()
 	{
 		final List<PageMap> list = new ArrayList<PageMap>();
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		for (Object element : getAttributeNames())
 		{
-			final String attribute = (String)iterator.next();
+			final String attribute = (String)element;
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
 				list.add((PageMap)getAttribute(attribute));
@@ -523,9 +523,8 @@ public abstract class Session implements Serializable, ICoverterLocator
 	public final long getSizeInBytes()
 	{
 		long size = Objects.sizeof(this);
-		for (final Iterator<PageMap> iterator = getPageMaps().iterator(); iterator.hasNext();)
+		for (PageMap pageMap : getPageMaps())
 		{
-			final PageMap pageMap = iterator.next();
 			size += pageMap.getSizeInBytes();
 		}
 		return size;
@@ -586,7 +585,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 		}
 
 		// Create new page map
-		final PageMap pageMap =getSessionStore().createPageMap(name,this);
+		final PageMap pageMap = getSessionStore().createPageMap(name, this);
 		setAttribute(attributeForPageMapName(name), pageMap);
 		dirty();
 		return pageMap;
@@ -604,8 +603,10 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 *            The response
 	 * @return The new request cycle.
 	 */
-	// FIXME post 1.2 Move to application. We really shouldn't need a session to make request cycles.
-	// see https://sourceforge.net/tracker/?func=detail&atid=684975&aid=1468853&group_id=119783
+	// FIXME post 1.2 Move to application. We really shouldn't need a session to
+	// make request cycles.
+	// see
+	// https://sourceforge.net/tracker/?func=detail&atid=684975&aid=1468853&group_id=119783
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
@@ -671,8 +672,8 @@ public abstract class Session implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * Sets the metadata for this session using the given key. If the
-	 * metadata object is not of the correct type for the metadata key, an
+	 * Sets the metadata for this session using the given key. If the metadata
+	 * object is not of the correct type for the metadata key, an
 	 * IllegalArgumentException will be thrown. For information on creating
 	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
@@ -725,9 +726,9 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 */
 	public final void visitPageMaps(final IPageMapVisitor visitor)
 	{
-		for (final Iterator iterator = getAttributeNames().iterator(); iterator.hasNext();)
+		for (Object element : getAttributeNames())
 		{
-			final String attribute = (String)iterator.next();
+			final String attribute = (String)element;
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
 				visitor.pageMap((PageMap)getAttribute(attribute));
@@ -788,7 +789,9 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 * the current locale. Whenever the locale is changed, the cached value is
 	 * cleared and the converter will be recreated for the new locale on a next
 	 * request.
-	 * @param type TODO
+	 * 
+	 * @param type
+	 *            TODO
 	 * 
 	 * @return the converter
 	 */
@@ -797,8 +800,8 @@ public abstract class Session implements Serializable, ICoverterLocator
 		if (converterSupplier == null)
 		{
 			// Let the factory create a new converter
-			converterSupplier = getApplication().getApplicationSettings().getConverterSupplierFactory()
-					.newConverterSupplier();
+			converterSupplier = getApplication().getApplicationSettings()
+					.getConverterSupplierFactory().newConverterSupplier();
 		}
 		return converterSupplier.getConverter(type);
 	}
@@ -877,7 +880,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 	{
 		if (sessionStore == null)
 		{
-			sessionStore = application.getSessionStore(); 
+			sessionStore = application.getSessionStore();
 		}
 		return sessionStore;
 	}
@@ -914,7 +917,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 			getSessionStore().setAttribute(cycle.getRequest(), name, value);
 			return;
 		}
-		
+
 		throw new WicketRuntimeException("Can not set the attribute. No RequestCycle available");
 	}
 
@@ -958,12 +961,13 @@ public abstract class Session implements Serializable, ICoverterLocator
 					final Page page = (Page)object;
 					if (page.isStateless())
 					{
-						// check, can it be that stateless pages where added to the session?
+						// check, can it be that stateless pages where added to
+						// the session?
 						// and should be removed now?
 						continue;
 					}
 					attribute = page.getPageMap().attributeForId(page.getNumericId());
-					if(getAttribute(attribute) == null)
+					if (getAttribute(attribute) == null)
 					{
 						// page removed by another thread. don't add it again.
 						continue;

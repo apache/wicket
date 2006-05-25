@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ResourceReference.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -86,8 +87,8 @@ public class ResourceReference implements Serializable
 	/**
 	 * Contructs a resource reference with Application.class scope and the given
 	 * name. All resource references constructed with this constructor must have
-	 * unique names since they all have the same Application-wide scope that is the 
-	 * wicket.Application.class
+	 * unique names since they all have the same Application-wide scope that is
+	 * the wicket.Application.class
 	 * 
 	 * @param name
 	 *            The name of the resource

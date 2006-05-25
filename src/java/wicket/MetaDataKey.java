@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MetaDataKey.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,7 +35,7 @@ import java.io.Serializable;
 public abstract class MetaDataKey implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Type of data associated with this key */
 	private Class<?> type;
 
@@ -67,9 +68,8 @@ public abstract class MetaDataKey implements Serializable
 	{
 		if (metaData != null)
 		{
-			for (int i = 0; i < metaData.length; i++)
+			for (MetaDataEntry m : metaData)
 			{
-				MetaDataEntry m = metaData[i];
 				if (equals(m.key))
 				{
 					return m.object;
@@ -92,9 +92,8 @@ public abstract class MetaDataKey implements Serializable
 		boolean set = false;
 		if (metaData != null)
 		{
-			for (int i = 0; i < metaData.length; i++)
+			for (MetaDataEntry m : metaData)
 			{
-				MetaDataEntry m = metaData[i];
 				if (equals(m.key))
 				{
 					m.object = object;
@@ -135,7 +134,7 @@ public abstract class MetaDataKey implements Serializable
 	 */
 	void checkType(final Object object)
 	{
-		if (object != null && !type.isAssignableFrom(object.getClass()) )
+		if (object != null && !type.isAssignableFrom(object.getClass()))
 		{
 			throw new IllegalArgumentException("MetaDataKey " + getClass()
 					+ " requires argument of " + type + ", not " + object.getClass());

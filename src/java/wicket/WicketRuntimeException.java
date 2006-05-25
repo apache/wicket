@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketRuntimeException.java 3601 2006-01-03 03:13:22 +0000 (Tue, 03 Jan
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-01-03 03:13:22 +0000
+ * (Tue, 03 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
