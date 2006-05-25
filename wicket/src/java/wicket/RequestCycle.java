@@ -18,7 +18,6 @@
  */
 package wicket;
 
-import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -229,7 +228,8 @@ public abstract class RequestCycle
 	private boolean redirect;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(3);
+	private transient ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(
+			3);
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
@@ -528,7 +528,8 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// FIXME post 1.2 Robustness: This has to be done after the unit tests are fixed
+		// FIXME post 1.2 Robustness: This has to be done after the unit tests
+		// are fixed
 		// // if we are already responding, we can't change the request target
 		// // as that would either have no effect, or - in case we would set
 		// // the currentStep back to PROCESS_EVENTS, we would have double
@@ -609,7 +610,8 @@ public abstract class RequestCycle
 	 *            The page parameters that gets appended to the bookmarkable
 	 *            url,
 	 */
-	public final void setResponsePage(final Class<? extends Page> pageClass, final PageParameters pageParameters)
+	public final void setResponsePage(final Class<? extends Page> pageClass,
+			final PageParameters pageParameters)
 	{
 		IRequestTarget target = new BookmarkablePageRequestTarget(pageClass, pageParameters);
 		setRequestTarget(target);
@@ -789,12 +791,8 @@ public abstract class RequestCycle
 	 */
 	private void detach()
 	{
-		// clean up target stack; calling detach has effects like
-		// NOTE: don't remove the targets as testing code might need them
-		// furthermore, the targets will be cg-ed with this cycle too
-		for (Iterator<IRequestTarget> iter = requestTargets.iterator(); iter.hasNext();)
+		for (IRequestTarget target : requestTargets)
 		{
-			IRequestTarget target = iter.next();
 			if (target != null)
 			{
 				try

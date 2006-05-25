@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -83,7 +83,7 @@ public abstract class Resource implements IResourceListener
 		// By default all resources are cacheable
 		cacheable = true;
 	}
-	
+
 	/**
 	 * @return Gets the resource to render to the requester
 	 */
@@ -162,7 +162,7 @@ public abstract class Resource implements IResourceListener
 	 * @param parameters
 	 *            Map of query parameters that paramterize this resource
 	 */
-	public final void setParameters(final Map<String,? extends Object> parameters)
+	public final void setParameters(final Map<String, ? extends Object> parameters)
 	{
 		if (parameters == null)
 		{

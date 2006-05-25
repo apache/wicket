@@ -1,6 +1,7 @@
 /*
  * $Id: RestartResponseAtInterceptPageException.java,v 1.10 2006/02/13 00:16:32
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-02-13 09:27:16 +0000 (Mon,
+ * 13 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

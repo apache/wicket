@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-03-16 11:34:01 -0800 (Thu, 16 Mar 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -137,7 +137,10 @@ import wicket.version.undo.UndoPageVersionManager;
  * @author Eelco Hillenius
  * @author Johan Compagner
  */
-public abstract class Page<T> extends MarkupContainer<T> implements IRedirectListener, IPageMapEntry
+public abstract class Page<T> extends MarkupContainer<T>
+		implements
+			IRedirectListener,
+			IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
 
@@ -305,7 +308,7 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 		try
 		{
 			super.internalDetach();
-		} 
+		}
 		catch (RuntimeException re)
 		{
 			throw re;
@@ -315,6 +318,7 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 			getSession().pageDetached(this);
 		}
 	}
+
 	/**
 	 * Detaches any attached models referenced by this page.
 	 */
@@ -387,10 +391,11 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 			}
 		});
 
-		if (this instanceof IFeedback) {
+		if (this instanceof IFeedback)
+		{
 			((IFeedback)this).updateFeedback();
 		}
-		
+
 		// Now, do the initialization for the other components
 		internalAttach();
 
@@ -978,26 +983,30 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 	}
 
 	/**
-	 * @return Returns true if this page can be seen as stateless so it won't go into the session 
+	 * @return Returns true if this page can be seen as stateless so it won't go
+	 *         into the session
 	 */
 	@Override
 	public final boolean isStateless()
 	{
-		if(stateless == null)
+		if (stateless == null)
 		{
 			Object returnValue = visitChildren(Component.class, new IVisitor<Component<?>>()
 			{
 				public Object component(Component<?> component)
 				{
-					if(!component.isStateless()) return false;
+					if (!component.isStateless())
+					{
+						return false;
+					}
 					return CONTINUE_TRAVERSAL;
 				}
 			});
-			if(returnValue == null)
+			if (returnValue == null)
 			{
 				stateless = Boolean.TRUE;
 			}
-			else if(returnValue instanceof Boolean)
+			else if (returnValue instanceof Boolean)
 			{
 				stateless = (Boolean)returnValue;
 			}
@@ -1022,7 +1031,7 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 			// For each FormComponent found on the Page (not Form)
 			public Object component(final Form component)
 			{
-				((Form)component).loadPersistentFormComponentValues();
+				(component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -1041,22 +1050,24 @@ public abstract class Page<T> extends MarkupContainer<T> implements IRedirectLis
 		// Save name for restoring transient
 		this.pageMapName = pageMap.getName();
 	}
-	
-	
+
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
+	 * 
 	 * @param map
 	 */
 	protected final void moveToPageMap(PageMap map)
 	{
-		// TODO post 1.2 shouldn't we remove this page from the pagemap/session if it would be in there?
-		// This should be done if the page was not cloned first, but shouldn't be done if it was cloned..
+		// TODO post 1.2 shouldn't we remove this page from the pagemap/session
+		// if it would be in there?
+		// This should be done if the page was not cloned first, but shouldn't
+		// be done if it was cloned..
 		setPageMap(map);
 		numericId = (short)map.nextId();
 	}
 
-	
 
 	/**
 	 * Checks whether the hierarchy may be changed at all, and throws an

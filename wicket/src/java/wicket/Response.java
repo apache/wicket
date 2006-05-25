@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.6 $ $Date$
+ * $Id: Response.java 5435 2006-04-17 17:25:09 +0000 (Mon, 17 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-17 17:25:09 +0000 (Mon, 17 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,8 +38,8 @@ import wicket.util.time.Time;
  */
 public abstract class Response
 {
-    /** Default encoding of output stream */
-    private String defaultEncoding;
+	/** Default encoding of output stream */
+	private String defaultEncoding;
 
 	/**
 	 * Closes the response output stream
@@ -136,18 +137,17 @@ public abstract class Response
 	}
 
 	/**
-	 * Set the default encoding for the output. 
-	 * Note: It is up to the derived class to make use of the information.
-	 * Class Respsonse simply stores the value, but does not apply
-	 * it anywhere automatically.
+	 * Set the default encoding for the output. Note: It is up to the derived
+	 * class to make use of the information. Class Respsonse simply stores the
+	 * value, but does not apply it anywhere automatically.
 	 * 
 	 * @param encoding
 	 */
 	public void setCharacterEncoding(final String encoding)
 	{
-	    this.defaultEncoding = encoding;
+		this.defaultEncoding = encoding;
 	}
-	
+
 	/**
 	 * Set the content length on the response, if appropriate in the subclass.
 	 * This default implementation does nothing.
@@ -171,15 +171,16 @@ public abstract class Response
 	}
 
 	/**
-	 * Set the contents last modified time, if appropriate in the subclass.
-	 * This default implementation does nothing.
-	 * @param time 
-	 *				The time object 
+	 * Set the contents last modified time, if appropriate in the subclass. This
+	 * default implementation does nothing.
+	 * 
+	 * @param time
+	 *            The time object
 	 */
 	public void setLastModifiedTime(Time time)
 	{
 	}
-	
+
 	/**
 	 * @param locale
 	 *            Locale to use for this response
@@ -187,7 +188,7 @@ public abstract class Response
 	public void setLocale(final Locale locale)
 	{
 	}
-	
+
 	/**
 	 * Writes the given tag to via the write(String) abstract method.
 	 * 

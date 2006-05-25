@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.114 $ $Date$
+ * $Id: MetaDataEntry.java 4418 2006-02-13 22:39:31 +0000 (Mon, 13 Feb 2006)
+ * joco01 $ $Revision$ $Date: 2006-02-13 22:39:31 +0000 (Mon, 13 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

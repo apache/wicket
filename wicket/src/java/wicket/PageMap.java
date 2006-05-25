@@ -1,7 +1,6 @@
 /*
  * $Id:PageMap.java 5583 2006-04-30 22:23:23 +0000 (zo, 30 apr 2006) joco01 $
- * $Revision:5583 $
- * $Date:2006-04-30 22:23:23 +0000 (zo, 30 apr 2006) $
+ * $Revision:5583 $ $Date:2006-04-30 22:23:23 +0000 (zo, 30 apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -84,7 +83,7 @@ public abstract class PageMap implements Serializable
 		public void entry(final IPageMapEntry entry);
 	}
 
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -113,7 +112,7 @@ public abstract class PageMap implements Serializable
 	 */
 	public final IPageMapEntry getEntry(final int id)
 	{
-		return(IPageMapEntry)session.getAttribute(attributeForId(id));
+		return (IPageMapEntry)session.getAttribute(attributeForId(id));
 	}
 
 	/**
@@ -148,7 +147,7 @@ public abstract class PageMap implements Serializable
 		dirty();
 		return this.pageId++;
 	}
-	
+
 	protected final void dirty()
 	{
 		session.dirtyPageMap(this);
@@ -245,7 +244,7 @@ public abstract class PageMap implements Serializable
 		cycle.setRedirect(true);
 		cycle.setResponsePage(page);
 	}
-	
+
 	/**
 	 * Removes all pages from this map
 	 */
@@ -260,7 +259,7 @@ public abstract class PageMap implements Serializable
 			}
 		});
 	}
-	
+
 	/**
 	 * @param session
 	 *            Session to set
@@ -310,20 +309,20 @@ public abstract class PageMap implements Serializable
 		// Remove the pagemap entry from session
 		removeEntry(page.getPageMapEntry());
 	}
-	
+
 	/**
 	 * @param entry
 	 *            The entry to remove
 	 */
 	protected abstract void removeEntry(final IPageMapEntry entry);
-	
+
 	/**
 	 * @param page
 	 *            The page to put into this map
 	 */
 	protected abstract void put(final Page page);
-	
-	
+
+
 	/**
 	 * Retrieves page with given id.
 	 * 
@@ -334,7 +333,7 @@ public abstract class PageMap implements Serializable
 	 * @return Any page having the given id
 	 */
 	protected abstract Page get(final int id, int versionNumber);
-	
+
 	/**
 	 * @return Size of this page map in bytes, including a sum of the sizes of
 	 *         all the pages it contains.
@@ -342,9 +341,9 @@ public abstract class PageMap implements Serializable
 	public final long getSizeInBytes()
 	{
 		long size = Objects.sizeof(this);
-		for (Iterator<Object> iterator = getEntries().iterator(); iterator.hasNext();)
+		for (Object object : getEntries())
 		{
-			IPageMapEntry entry = (IPageMapEntry)iterator.next();
+			IPageMapEntry entry = (IPageMapEntry)object;
 			if (entry instanceof Page)
 			{
 				size += ((Page)entry).getSizeInBytes();
@@ -375,7 +374,7 @@ public abstract class PageMap implements Serializable
 		return list;
 	}
 
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */

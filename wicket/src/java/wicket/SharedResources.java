@@ -171,7 +171,9 @@ public class SharedResources
 		{
 			Resource value = resourceMap.get(key);
 			if (value == null)
+			{
 				resourceMap.put(key, resource);
+			}
 		}
 	}
 
