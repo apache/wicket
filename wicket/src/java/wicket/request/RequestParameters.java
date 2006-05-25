@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: RequestParameters.java 4507 2006-02-16 14:51:20 -0800 (Thu, 16 Feb 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-02-16 14:51:20 -0800 (Thu, 16
+ * Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -52,6 +53,12 @@ public class RequestParameters implements Serializable
 
 	/** any version number; 0 for no version. */
 	private int versionNumber;
+
+	/**
+	 * tells wicket this request should only be processed if the page + version
+	 * specified are pointing to the last page the user accessed
+	 */
+	private boolean onlyProcessIfPathActive = false;
 
 	/** any callable interface name (e.g. {@link ILinkListener}). */
 	private String interfaceName;
@@ -303,6 +310,32 @@ public class RequestParameters implements Serializable
 		this.behaviorId = behaviorId;
 	}
 
+
+	/**
+	 * Gets the only-process-if-path-active flag
+	 * 
+	 * @see #onlyProcessIfPathActive
+	 * 
+	 * @return the only-process-if-path-active flag
+	 */
+	public boolean isOnlyProcessIfPathActive()
+	{
+		return onlyProcessIfPathActive;
+	}
+
+	/**
+	 * Sets the only-process-if-path-active flag
+	 * 
+	 * @param onlyProcessIfPathActive
+	 * 
+	 * @see #onlyProcessIfPathActive
+	 * 
+	 */
+	public void setOnlyProcessIfPathActive(boolean onlyProcessIfPathActive)
+	{
+		this.onlyProcessIfPathActive = onlyProcessIfPathActive;
+	}
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
@@ -330,6 +363,8 @@ public class RequestParameters implements Serializable
 		{
 			b.append(" resourceKey=").append(getResourceKey());
 		}
+		b.append(" onlyProcessIfPathActive=").append(isOnlyProcessIfPathActive());
+		
 		b.append("]");
 		return b.toString();
 	}

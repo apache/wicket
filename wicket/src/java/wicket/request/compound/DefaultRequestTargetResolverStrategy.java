@@ -28,11 +28,13 @@ import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
+import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.PageMap.Access;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
 import wicket.markup.html.INewBrowserWindowListener;
@@ -40,6 +42,7 @@ import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
+import wicket.request.target.basic.EmptyRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ExpiredPageClassRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
@@ -89,7 +92,62 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		final String path = requestParameters.getPath();
 		if (requestParameters.getComponentPath() != null)
 		{
-			return resolveRenderedPage(requestCycle, requestParameters);
+			// we need to check if this request has been flagged as
+			// process-only-if-path-is-active and if so make sure this condition
+			// is met
+
+			// marks whether or not we will be processing this request
+			boolean processRequest = true;
+
+			if (requestParameters.isOnlyProcessIfPathActive())
+			{
+				// this request has indeed been flagged as
+				// process-only-if-path-is-active
+
+				Session session = Session.get();
+				PageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(), false);
+				if (pageMap == null)
+				{
+					// requested pagemap no longer exists - ignore this request
+					processRequest = false;
+				}
+				else
+				{
+					if (pageMap.getAccessStack().size() > 0)
+					{
+						final Access access = (Access)pageMap.getAccessStack().peek();
+
+						final int pageId = Integer.parseInt(Strings.firstPathComponent(
+								requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
+
+						if (pageId != access.getId())
+						{
+							// the page is no longer the active page
+							// - ignore this request
+							processRequest = false;
+						}
+						else
+						{
+							final int version = requestParameters.getVersionNumber();
+							if (version != Page.LATEST_VERSION && version != access.getVersion())
+							{
+								// version is no longer the active version -
+								// ignore this request
+								processRequest = false;
+							}
+						}
+					}
+				}
+			}
+
+			if (processRequest)
+			{
+				return resolveRenderedPage(requestCycle, requestParameters);
+			}
+			else
+			{
+				return EmptyRequestTarget.getInstance();
+			}
 		}
 		// see whether this request points to a bookmarkable page
 		else if (requestParameters.getBookmarkablePageClass() != null)

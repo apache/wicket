@@ -77,6 +77,14 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/** Pagemap parameter constant */
 	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
 
+	/**
+	 * Parameter name that tells decode to ignore this request if the
+	 * page+version encoded in the url is not on top of the stack. The value of
+	 * this parameter is not important, it simply has to be present to enable
+	 * the behavior
+	 */
+	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE + "ignoreIfNotActive";
+
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
 	{
@@ -148,6 +156,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
 		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
+		if (request.getParameter(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME)!=null) {
+			parameters.setOnlyProcessIfPathActive(true);
+		}
+		
 		Map map = request.getParameterMap();
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext())
@@ -345,7 +357,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
 			if (components.length != 2)
 			{
-				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: " + requestString + ", expected: 'pageMapName:pageClassName'");
+				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: "
+						+ requestString + ", expected: 'pageMapName:pageClassName'");
 			}
 
 			// Extract any pagemap name
@@ -756,7 +769,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				String path = request.getServletPath();
 				if (path != null && !path.equals(""))
 				{
-					if(!buffer.endsWith("/") && !path.startsWith("/")) buffer.append("/");
+					if (!buffer.endsWith("/") && !path.startsWith("/"))
+						buffer.append("/");
 					buffer.append(path);
 				}
 			}

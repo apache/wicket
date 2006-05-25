@@ -80,7 +80,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
-		return "setTimeout(function() { " + getCallbackScript(false) + " }, "
+		return "setTimeout(function() { " + getCallbackScript(false, true) + " }, "
 				+ updateInterval.getMilliseconds() + ");";
 	}
 

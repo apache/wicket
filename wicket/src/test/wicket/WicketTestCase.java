@@ -116,7 +116,7 @@ public abstract class WicketTestCase extends TestCase
 		
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
-		application.getServletRequest().setRequestToRedirectString(behavior.getCallbackUrl(false).toString());
+		application.getServletRequest().setRequestToRedirectString(behavior.getCallbackUrl(false, false).toString());
 		application.processRequestCycle(cycle);
 	
 		String document = application.getServletResponse().getDocument();
