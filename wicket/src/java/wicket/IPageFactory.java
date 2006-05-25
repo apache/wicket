@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.18 $ $Date$
+ * $Id: IPageFactory.java 4544 2006-02-17 20:51:27 +0000 (Fri, 17 Feb 2006)
+ * eelco12 $ $Revision$ $Date: 2006-02-17 20:51:27 +0000 (Fri, 17 Feb
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

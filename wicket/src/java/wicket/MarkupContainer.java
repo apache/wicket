@@ -111,10 +111,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 	private transient MarkupStream markupStream;
 
 	/**
-	 * package scope Constructor, only used by pages. 
+	 * package scope Constructor, only used by pages.
 	 * 
-	 * @param parent 
-	 * 			  The parent of this component.
+	 * @param parent
+	 *            The parent of this component.
 	 * @param id
 	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
@@ -124,13 +124,13 @@ public abstract class MarkupContainer<T> extends Component<T>
 	{
 		super();
 	}
-	
+
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public MarkupContainer(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
@@ -138,7 +138,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 */
 	public MarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 	}
 
 	/**
@@ -171,13 +171,13 @@ public abstract class MarkupContainer<T> extends Component<T>
 		addedComponent(child);
 		Component replaced = put(child);
 		child.setFlag(FLAG_REMOVED_FROM_PARENT, false);
-		if(replaced != null)
+		if (replaced != null)
 		{
 			replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true);
 			removedComponent(replaced);
 			// The position of the associated markup remains the same
 			child.markupIndex = replaced.markupIndex;
-			
+
 		}
 		return this;
 	}
@@ -204,7 +204,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		component.setAuto(true);
 		add(component);
 	}
-	
+
 	/**
 	 * @param component
 	 *            The component to check
@@ -278,7 +278,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 		// optimization.
 		if ((child == null) && isTransparentResolver() && (getParent() != null))
 		{
-			// Special tags like "_body", "_panel" must implement IComponentResolver
+			// Special tags like "_body", "_panel" must implement
+			// IComponentResolver
 			// if they want to be transparent.
 			if (path.startsWith("_") == false)
 			{
@@ -367,8 +368,15 @@ public abstract class MarkupContainer<T> extends Component<T>
 		}
 		catch (RuntimeException ex)
 		{
-			if(ex instanceof WicketRuntimeException) throw ex;
-			else throw new WicketRuntimeException("Error attaching this container for rendering: " + this,ex);
+			if (ex instanceof WicketRuntimeException)
+			{
+				throw ex;
+			}
+			else
+			{
+				throw new WicketRuntimeException("Error attaching this container for rendering: "
+						+ this, ex);
+			}
 		}
 	}
 
@@ -463,7 +471,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			throw new IllegalArgumentException("argument component may not be null");
 		}
 
-		if(children_remove(component) != null)
+		if (children_remove(component) != null)
 		{
 			component.setFlag(FLAG_REMOVED_FROM_PARENT, true);
 			removedComponent(component);
@@ -515,13 +523,13 @@ public abstract class MarkupContainer<T> extends Component<T>
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
-//					int size = children_size();
-//					for (int i = 0; i < size; i++)
-//					{
-//						// Get next child
-//						final Component child = children_get(i);
-//						child.setParent(MarkupContainer.this);
-//					}
+					// int size = children_size();
+					// for (int i = 0; i < size; i++)
+					// {
+					// // Get next child
+					// final Component child = children_get(i);
+					// child.setParent(MarkupContainer.this);
+					// }
 				}
 
 				@Override
@@ -533,17 +541,17 @@ public abstract class MarkupContainer<T> extends Component<T>
 			});
 
 			// Loop through child components
-//			int size = children_size();
-//			for (int i = 0; i < size; i++)
-//			{
-//				// Get next child
-//				final Component child = children_get(i);
-//
-//				// Do not call remove() because the state change would than be
-//				// recorded twice.
-//				child.detachModel();
-//				child.setParent(null);
-//			}
+			// int size = children_size();
+			// for (int i = 0; i < size; i++)
+			// {
+			// // Get next child
+			// final Component child = children_get(i);
+			//
+			// // Do not call remove() because the state change would than be
+			// // recorded twice.
+			// child.detachModel();
+			// child.setParent(null);
+			// }
 
 			this.children = null;
 		}
@@ -573,8 +581,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && 
-				(associatedMarkupOpenTag instanceof WicketTag)))
+		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -601,43 +608,27 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            The child
 	 * @throws IllegalArgumentException
 	 *             Thrown if there was no child with the same id.
-	 * @return This
-	public final MarkupContainer replace(final Component<?> child)
-	{
-		if (child == null)
-		{
-			throw new IllegalArgumentException("argument child must be not null");
-		}
-
-		if (log.isDebugEnabled())
-		{
-			log.debug("Replacing " + child.getId() + " in " + this);
-		}
-
-		if (child.getParent() == this)
-		{
-			// Add to map
-			final Component replaced = put(child);
-			addedComponent(child);
-
-			// Look up to make sure it was already in the map
-			if (replaced == null)
-			{
-				throw new WicketRuntimeException(
-						exceptionMessage("Cannot replace a component which has not been added: id='"
-								+ child.getId() + "', component=" + child));
-			}
-
-			removedComponent(replaced);
-
-			// The position of the associated markup remains the same
-			child.markupIndex = replaced.markupIndex;
-			
-			replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true);
-		}
-
-		return this;
-	}
+	 * @return This public final MarkupContainer replace(final Component<?>
+	 *         child) { if (child == null) { throw new
+	 *         IllegalArgumentException("argument child must be not null"); }
+	 * 
+	 * if (log.isDebugEnabled()) { log.debug("Replacing " + child.getId() + " in " +
+	 * this); }
+	 * 
+	 * if (child.getParent() == this) { // Add to map final Component replaced =
+	 * put(child); addedComponent(child);
+	 *  // Look up to make sure it was already in the map if (replaced == null) {
+	 * throw new WicketRuntimeException( exceptionMessage("Cannot replace a
+	 * component which has not been added: id='" + child.getId() + "',
+	 * component=" + child)); }
+	 * 
+	 * removedComponent(replaced);
+	 *  // The position of the associated markup remains the same
+	 * child.markupIndex = replaced.markupIndex;
+	 * 
+	 * replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true); }
+	 * 
+	 * return this; }
 	 */
 
 	/**
@@ -911,7 +902,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 		return null;
 	}
-	
+
 	/**
 	 * Get the markup stream set on this container.
 	 * 
@@ -1040,12 +1031,15 @@ public abstract class MarkupContainer<T> extends Component<T>
 		// Check for degenerate case
 		if (component == this)
 		{
-			throw new IllegalArgumentException("Component " + component+" can't be added to itself");
+			throw new IllegalArgumentException("Component " + component
+					+ " can't be added to itself");
 		}
 
-		if(component.getParent() != this)
+		if (component.getParent() != this)
 		{
-			throw new IllegalArgumentException("Component " + component+" can't be added to another parent " + component.getParent() + " then " + this);
+			throw new IllegalArgumentException("Component " + component
+					+ " can't be added to another parent " + component.getParent() + " then "
+					+ this);
 		}
 
 		// Tell the page a component was added
@@ -1122,11 +1116,11 @@ public abstract class MarkupContainer<T> extends Component<T>
 			if (children != null)
 			{
 				final Component[] components = (Component[])children;
-				for (int i = 0; i < components.length; i++)
+				for (Component element : components)
 				{
-					if (components[i].getId().equals(id))
+					if (element.getId().equals(id))
 					{
-						return components[i];
+						return element;
 					}
 				}
 			}
@@ -1242,7 +1236,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		{
 			throw new IndexOutOfBoundsException();
 		}
-		return replaced != child?replaced:null;
+		return replaced != child ? replaced : null;
 	}
 
 	private final int children_size()
@@ -1321,7 +1315,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		// Detach model
 		component.detachModels();
 		// Component is removed
-		//component.setParent(null);
+		// component.setParent(null);
 	}
 
 	/**
