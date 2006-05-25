@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,10 +38,10 @@ import wicket.util.string.Strings;
 public class Action implements Serializable
 {
 	private static final long serialVersionUID = -1L;
-	
+
 	/** RENDER action name (for consistent name and use in annotations) */
 	public static final String RENDER = "RENDER";
-	
+
 	/** ENABLE action name (for consistent name and use in annotations) */
 	public static final String ENABLE = "ENABLE";
 
@@ -58,7 +58,8 @@ public class Action implements Serializable
 	{
 		if (Strings.isEmpty(name))
 		{
-			throw new IllegalArgumentException("Name argument may not be null, whitespace or the empty string");
+			throw new IllegalArgumentException(
+					"Name argument may not be null, whitespace or the empty string");
 		}
 
 		this.name = name;
@@ -77,7 +78,7 @@ public class Action implements Serializable
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @return The name of this action
 	 */

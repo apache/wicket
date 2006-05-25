@@ -1,6 +1,7 @@
 /*
  * $Id: UnauthorizedInstantiationException.java,v 1.2 2006/01/02 07:15:49
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-02-04 02:34:59 +0000 (Sat,
+ * 04 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

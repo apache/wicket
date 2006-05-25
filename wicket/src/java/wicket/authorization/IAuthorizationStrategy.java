@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IAuthorizationStrategy.java 4415 2006-02-13 10:31:58 +0000 (Mon, 13 Feb
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-02-13 10:31:58 +0000
+ * (Mon, 13 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

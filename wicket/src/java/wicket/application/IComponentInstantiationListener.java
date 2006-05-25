@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IComponentInstantiationListener.java 4233 2006-02-09 01:50:17 +0000
+ * (Thu, 09 Feb 2006) eelco12 $ $Revision$ $Date: 2006-02-09 01:50:17
+ * +0000 (Thu, 09 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

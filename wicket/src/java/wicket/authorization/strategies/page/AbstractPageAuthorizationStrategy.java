@@ -1,6 +1,7 @@
 /*
  * $Id: CompoundAuthorizationStrategy.java,v 1.6 2006/01/14 22:45:04
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri,
+ * 19 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
