@@ -58,7 +58,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * @param c
 	 *            Page class
 	 */
-	public InternalFrame(MarkupContainer<?> parent,final String id, final PageMap pageMap, final Class c)
+	public InternalFrame(MarkupContainer parent,final String id, final PageMap pageMap, final Class c)
 	{
 		this(parent,id, pageMap, new IPageLink()
 		{
@@ -94,7 +94,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * @param page
 	 *            The page
 	 */
-	public InternalFrame(MarkupContainer<?> parent,final String id, final PageMap pageMap, final Page page)
+	public InternalFrame(MarkupContainer parent,final String id, final PageMap pageMap, final Page page)
 	{
 		this(parent,id, pageMap, new IPageLink()
 		{
@@ -130,7 +130,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 *            be contained in the internal frame if and when the content is
 	 *            requested
 	 */
-	public InternalFrame(MarkupContainer<?> parent,final String id, final PageMap pageMap, IPageLink pageLink)
+	public InternalFrame(MarkupContainer parent,final String id, final PageMap pageMap, IPageLink pageLink)
 	{
 		super(parent,id);
 

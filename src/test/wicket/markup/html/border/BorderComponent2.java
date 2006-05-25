@@ -32,7 +32,7 @@ public class BorderComponent2 extends Border
 	/**
 	 * @param id
 	 */
-	public BorderComponent2(MarkupContainer<?> parent,String id)
+	public BorderComponent2(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 	}

@@ -73,7 +73,7 @@ public class SubmitLink extends Button
 	 * @param id
 	 *            The id of the submitlink.
 	 */
-	public SubmitLink(MarkupContainer<?> parent,String id)
+	public SubmitLink(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 	}

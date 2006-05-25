@@ -40,7 +40,7 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 * root for gettting the resource
 	 * @param file reference as a string
 	 */
-	public StyleSheetReference(MarkupContainer<?> parent,String id, Class referer, String file)
+	public StyleSheetReference(MarkupContainer parent,String id, Class referer, String file)
 	{
 		super(parent,id, referer, file, "href");
 	}

@@ -46,7 +46,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 * @param id
 	 * @param form
 	 */
-	public AjaxSubmitButton(MarkupContainer<?> parent,String id, final Form form)
+	public AjaxSubmitButton(MarkupContainer parent,String id, final Form form)
 	{
 		super(parent,id);
 

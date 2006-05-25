@@ -40,7 +40,7 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * root for gettting the resource
 	 * @param file reference as a string
 	 */
-	public JavaScriptReference(MarkupContainer<?> parent,String id, Class referer, String file)
+	public JavaScriptReference(MarkupContainer parent,String id, Class referer, String file)
 	{
 		super(parent,id, referer, file, "src");
 	}

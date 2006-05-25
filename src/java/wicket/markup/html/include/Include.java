@@ -112,7 +112,7 @@ public class Include extends WebComponent
 	 * @param id
 	 *            component id
 	 */
-	public Include(MarkupContainer<?> parent,final String id)
+	public Include(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
@@ -125,7 +125,7 @@ public class Include extends WebComponent
 	 * @param model
 	 *            the model
 	 */
-	public Include(MarkupContainer<?> parent,String id, IModel model)
+	public Include(MarkupContainer parent,String id, IModel model)
 	{
 		super(parent,id, model);
 	}
@@ -138,7 +138,7 @@ public class Include extends WebComponent
 	 * @param modelObject
 	 *            the model object (will be wrapped in a model)
 	 */
-	public Include(MarkupContainer<?> parent,String id, String modelObject)
+	public Include(MarkupContainer parent,String id, String modelObject)
 	{
 		super(parent,id, new Model(modelObject));
 	}

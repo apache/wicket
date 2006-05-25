@@ -40,7 +40,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 	 * 
 	 * @param name
 	 */
-	public SimpleTestPanel(MarkupContainer<?> parent,String name)
+	public SimpleTestPanel(MarkupContainer parent,String name)
 	{
 		super(parent,name);
 

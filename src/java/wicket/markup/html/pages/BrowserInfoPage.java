@@ -372,7 +372,7 @@ public class BrowserInfoPage extends WebPage
 		 * @param id
 		 *            component id
 		 */
-		public PostBackForm(MarkupContainer<?> parent, String id)
+		public PostBackForm(MarkupContainer parent, String id)
 		{
 			super(parent, id, new CompoundPropertyModel(new ClientPropertiesBean()));
 

@@ -47,7 +47,7 @@ public class TypeValidatorTest extends WicketTestCase
 		 * 
 		 * @param id
 		 */
-		public DateField(MarkupContainer<?> parent, String id)
+		public DateField(MarkupContainer parent, String id)
 		{
 			super(parent,id, Date.class);
 		}

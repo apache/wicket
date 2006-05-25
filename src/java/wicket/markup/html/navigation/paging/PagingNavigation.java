@@ -188,7 +188,7 @@ public class PagingNavigation extends Loop
 	 * @param pageable
 	 *            The underlying pageable component to navigate
 	 */
-	public PagingNavigation(MarkupContainer<?> parent,final String id, final IPageable pageable)
+	public PagingNavigation(MarkupContainer parent,final String id, final IPageable pageable)
 	{
 		this(parent,id, pageable, null);
 	}
@@ -204,7 +204,7 @@ public class PagingNavigation extends Loop
 	 *            The label provider for the text that the links should be
 	 *            displaying.
 	 */
-	public PagingNavigation(MarkupContainer<?> parent,final String id, final IPageable pageable,
+	public PagingNavigation(MarkupContainer parent,final String id, final IPageable pageable,
 			final IPagingLabelProvider labelProvider)
 	{
 		super(parent,id, pageable.getPageCount());

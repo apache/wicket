@@ -72,7 +72,7 @@ public class DummyHomePage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public TestLink(MarkupContainer<?> parent,String id)
+		public TestLink(MarkupContainer parent,String id)
 		{
 			super(parent,id);
 		}

@@ -52,7 +52,7 @@ public class RadioGroup<V> extends FormComponent<V> implements IOnChangeListener
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public RadioGroup(MarkupContainer<?> parent,String id)
+	public RadioGroup(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 		setRenderBodyOnly(true);
@@ -61,7 +61,7 @@ public class RadioGroup<V> extends FormComponent<V> implements IOnChangeListener
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public RadioGroup(MarkupContainer<?> parent,String id, IModel<V> model)
+	public RadioGroup(MarkupContainer parent,String id, IModel<V> model)
 	{
 		super(parent,id, model);
 		setRenderBodyOnly(true);

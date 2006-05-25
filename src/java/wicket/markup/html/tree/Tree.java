@@ -83,7 +83,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @param node
 		 *            The tree node for this panel
 		 */
-		public DefaultNodePanel(MarkupContainer<?> parent, String panelId, Tree tree, DefaultMutableTreeNode node)
+		public DefaultNodePanel(MarkupContainer parent, String panelId, Tree tree, DefaultMutableTreeNode node)
 		{
 			super(parent,panelId);
 			// create a link for expanding and collapsing the node
@@ -138,7 +138,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @param name
 		 *            name of the component
 		 */
-		public TreePathsListView(MarkupContainer<?> parent,String name)
+		public TreePathsListView(MarkupContainer parent,String name)
 		{
 			super(parent,name, treePathsModel);
 		}
@@ -568,7 +568,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the node
 	 * @return link for expanding/ collapsing the tree
 	 */
-	protected Link createJunctionLink(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
+	protected Link createJunctionLink(MarkupContainer parent,final DefaultMutableTreeNode node)
 	{
 		final Link junctionLink = new Link(parent,"junctionLink")
 		{
@@ -591,7 +591,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the model of the node
 	 * @return link for selection
 	 */
-	protected Link createNodeLink(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
+	protected Link createNodeLink(MarkupContainer parent,final DefaultMutableTreeNode node)
 	{
 		final Link nodeLink = new Link(parent,"nodeLink")
 		{
@@ -613,7 +613,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * 
 	 * @return the tree paths list view
 	 */
-	protected final TreePathsListView createTreePathsListView(MarkupContainer<?> parent)
+	protected final TreePathsListView createTreePathsListView(MarkupContainer parent)
 	{
 		final TreePathsListView treePaths = new TreePathsListView(parent,"tree");
 		return treePaths;
@@ -656,7 +656,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the tree node
 	 * @return the image for the junction
 	 */
-	protected Image getJunctionImage(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
+	protected Image getJunctionImage(MarkupContainer parent,final DefaultMutableTreeNode node)
 	{
 		if (!node.isLeaf())
 		{
@@ -695,7 +695,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the tree node
 	 * @return the image for the node
 	 */
-	protected Image getNodeImage(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
+	protected Image getNodeImage(MarkupContainer parent,final DefaultMutableTreeNode node)
 	{
 		return new Image(parent,NODE_IMAGE_NAME, BLANK);
 	}
@@ -767,7 +767,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 *            the tree node for the panel
 	 * @return a new Panel
 	 */
-	protected Component newNodePanel(MarkupContainer<?> parent,String panelId, DefaultMutableTreeNode node)
+	protected Component newNodePanel(MarkupContainer parent,String panelId, DefaultMutableTreeNode node)
 	{
 		return new DefaultNodePanel(parent,panelId, this, node);
 	}

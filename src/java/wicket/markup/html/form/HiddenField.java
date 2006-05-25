@@ -40,7 +40,7 @@ public class HiddenField<V> extends TextField<V>
 	 * Construct.
 	 * @param id component id
 	 */
-	public HiddenField(MarkupContainer<?> parent,String id)
+	public HiddenField(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 	}
@@ -50,7 +50,7 @@ public class HiddenField<V> extends TextField<V>
 	 * @param id component id
 	 * @param type the type to use when updating the model for this text field
 	 */
-	public HiddenField(MarkupContainer<?> parent,String id, Class type)
+	public HiddenField(MarkupContainer parent,String id, Class type)
 	{
 		super(parent,id, type);
 	}
@@ -61,7 +61,7 @@ public class HiddenField<V> extends TextField<V>
 	 * @param type the type to use when updating the model for this text field
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public HiddenField(MarkupContainer<?> parent,String id, IModel<V> model, Class type)
+	public HiddenField(MarkupContainer parent,String id, IModel<V> model, Class type)
 	{
 		super(parent,id, model, type);
 	}
@@ -71,7 +71,7 @@ public class HiddenField<V> extends TextField<V>
 	 * @param id see Component
 	 * @param model the model
 	 */
-	public HiddenField(MarkupContainer<?> parent,String id, IModel<V> model)
+	public HiddenField(MarkupContainer parent,String id, IModel<V> model)
 	{
 		super(parent,id, model);
 	}

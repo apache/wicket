@@ -51,7 +51,7 @@ public class SimplePage_9 extends WebPage
 		 * Construct.
 		 * @param id
 		 */
-		public TestContainer(MarkupContainer<?> parent,String id)
+		public TestContainer(MarkupContainer parent,String id)
 		{
 			super(parent,id);
 			add(new Label(this,"test", "myTest"));

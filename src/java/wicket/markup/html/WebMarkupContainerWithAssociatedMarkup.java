@@ -42,7 +42,7 @@ public class WebMarkupContainerWithAssociatedMarkup<V> extends WebMarkupContaine
 	/**
 	 * @see Component#Component(String)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer<?> parent,final String id)
+	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
@@ -50,7 +50,7 @@ public class WebMarkupContainerWithAssociatedMarkup<V> extends WebMarkupContaine
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer<?> parent,final String id, IModel<V> model)
+	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent,final String id, IModel<V> model)
 	{
 		super(parent,id, model);
 	}
@@ -116,7 +116,7 @@ public class WebMarkupContainerWithAssociatedMarkup<V> extends WebMarkupContaine
 		 * @param scope
 		 *            The scope of the wicket:head tag
 		 */
-		public HeaderPartContainer(MarkupContainer<?> parent,final String id, final MarkupContainer container,
+		public HeaderPartContainer(MarkupContainer parent,final String id, final MarkupContainer container,
 				final String scope)
 		{
 			super(parent,id);

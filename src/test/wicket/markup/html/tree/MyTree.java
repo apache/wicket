@@ -55,7 +55,7 @@ public class MyTree extends Tree
 	 * @param model
 	 *            the tree model
 	 */
-	public MyTree(MarkupContainer<?> parent,String id, TreeModel model)
+	public MyTree(MarkupContainer parent,String id, TreeModel model)
 	{
 		super(parent,id, model);
 	}
@@ -82,7 +82,7 @@ public class MyTree extends Tree
 	 * @see wicket.markup.html.tree.Tree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
-	protected Image getNodeImage(MarkupContainer<?> parent,final DefaultMutableTreeNode node)
+	protected Image getNodeImage(MarkupContainer parent,final DefaultMutableTreeNode node)
 	{
 		if (node.isLeaf())
 		{

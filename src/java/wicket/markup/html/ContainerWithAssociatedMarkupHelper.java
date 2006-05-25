@@ -202,7 +202,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * @return the header part for this panel/border or null if it doesn't have
 	 *         a wicket:head tag.
 	 */
-	private final HeaderPartContainer getHeaderPart(MarkupContainer<?> parent,final Class markupClass, final int index)
+	private final HeaderPartContainer getHeaderPart(MarkupContainer parent,final Class markupClass, final int index)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found

@@ -45,7 +45,7 @@ public class ListItem<V> extends WebMarkupContainer<V>
 	 * @param model
 	 *            The model object of the item
 	 */
-	public ListItem(MarkupContainer<?> parent,final int index, final IModel<V> model)
+	public ListItem(MarkupContainer parent,final int index, final IModel<V> model)
 	{
 		super(parent,Integer.toString(index), model);
 		this.index = index;

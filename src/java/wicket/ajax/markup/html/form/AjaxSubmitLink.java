@@ -45,7 +45,7 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	 * @param id
 	 * @param form
 	 */
-	public AjaxSubmitLink(MarkupContainer<?> parent,String id, final Form form)
+	public AjaxSubmitLink(MarkupContainer parent,String id, final Form form)
 	{
 		super(parent,id);
 

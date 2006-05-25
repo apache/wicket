@@ -42,7 +42,7 @@ public class FormComponentLabel extends WebMarkupContainer
 	 * @param fc
 	 *            form component that this label represents
 	 */
-	public FormComponentLabel(MarkupContainer<?> parent,String id, FormComponent fc)
+	public FormComponentLabel(MarkupContainer parent,String id, FormComponent fc)
 	{
 		super(parent,id);
 		this.fc = fc;

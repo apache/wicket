@@ -33,7 +33,7 @@ public class FormDispatchEventTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		private MyForm(MarkupContainer<?> parent,String id)
+		private MyForm(MarkupContainer parent,String id)
 		{
 			super(parent,id);
 		}

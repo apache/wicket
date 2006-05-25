@@ -49,7 +49,7 @@ public class Check<V> extends WebMarkupContainer<V>
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
-	public Check(MarkupContainer<?> parent,String id)
+	public Check(MarkupContainer parent,String id)
 	{
 		super(parent,id);
 	}
@@ -57,7 +57,7 @@ public class Check<V> extends WebMarkupContainer<V>
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
 	 */
-	public Check(MarkupContainer<?> parent,String id, IModel<V> model)
+	public Check(MarkupContainer parent,String id, IModel<V> model)
 	{
 		super(parent,id, model);
 	}

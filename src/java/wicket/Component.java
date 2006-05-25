@@ -608,7 +608,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
-	public Component(MarkupContainer<?> parent, final String id)
+	public Component(MarkupContainer parent, final String id)
 	{
 		this(parent,id,null);
 	}
@@ -628,7 +628,7 @@ public abstract class Component<V> implements Serializable, ICoverterLocator
 	 *             Thrown if the component has been given a null id.
 	 */
 	@SuppressWarnings("null")
-	public Component(MarkupContainer<?> parent, final String id, final IModel<V> model)
+	public Component(MarkupContainer parent, final String id, final IModel<V> model)
 	{
 		if(parent == null)
 		{

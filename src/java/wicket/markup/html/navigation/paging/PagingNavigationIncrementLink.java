@@ -59,7 +59,7 @@ public class PagingNavigationIncrementLink extends Link
 	 * @param increment
 	 *            increment by
 	 */
-	public PagingNavigationIncrementLink(MarkupContainer<?> parent,final String id, final IPageable pageable,
+	public PagingNavigationIncrementLink(MarkupContainer parent,final String id, final IPageable pageable,
 			final int increment)
 	{
 		super(parent,id);

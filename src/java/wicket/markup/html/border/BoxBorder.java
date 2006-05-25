@@ -32,7 +32,7 @@ public final class BoxBorder extends Border
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public BoxBorder(MarkupContainer<?> parent, final String id)
+	public BoxBorder(MarkupContainer parent, final String id)
 	{
 		super(parent,id);
 	}

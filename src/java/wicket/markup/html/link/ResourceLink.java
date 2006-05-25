@@ -58,7 +58,7 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resourceReference
 	 *            The shared resource to link to
 	 */
-	public ResourceLink(MarkupContainer<?> parent,final String id, final ResourceReference resourceReference)
+	public ResourceLink(MarkupContainer parent,final String id, final ResourceReference resourceReference)
 	{
 		this(parent,id, resourceReference, null);
 	}
@@ -81,7 +81,7 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resourceParameters
 	 *            The resource parameters
 	 */
-	public ResourceLink(MarkupContainer<?> parent,final String id, final ResourceReference resourceReference,
+	public ResourceLink(MarkupContainer parent,final String id, final ResourceReference resourceReference,
 			ValueMap resourceParameters)
 	{
 		super(parent,id);
@@ -102,7 +102,7 @@ public class ResourceLink extends Link implements IResourceListener
 	 * @param resource
 	 *            The resource
 	 */
-	public ResourceLink(MarkupContainer<?> parent,final String id, final Resource resource)
+	public ResourceLink(MarkupContainer parent,final String id, final Resource resource)
 	{
 		super(parent,id);
 		this.resource = resource;

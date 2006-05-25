@@ -33,7 +33,7 @@ public class MarkupInheritanceBasePanel_6 extends Panel
 	 * Construct.
 	 * @param id
 	 */
-	public MarkupInheritanceBasePanel_6(MarkupContainer<?> parent,final String id)
+	public MarkupInheritanceBasePanel_6(MarkupContainer parent,final String id)
 	{
 	    super(parent,id);
 	    

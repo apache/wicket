@@ -50,7 +50,7 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	 * 
 	 * @see Component#Component(String)
 	 */
-	public HtmlBodyContainer(MarkupContainer<?> parent,final String id)
+	public HtmlBodyContainer(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
