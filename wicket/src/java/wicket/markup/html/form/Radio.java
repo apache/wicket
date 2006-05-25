@@ -46,7 +46,7 @@ public class Radio<T> extends WebMarkupContainer<T>
 
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
 	public Radio(MarkupContainer parent,String id)
 	{
@@ -54,7 +54,7 @@ public class Radio<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
 	public Radio(MarkupContainer parent,String id, IModel<T> model)
 	{

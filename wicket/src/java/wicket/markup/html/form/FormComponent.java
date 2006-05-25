@@ -202,7 +202,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	private transient T convertedInput;
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public FormComponent(MarkupContainer parent,final String id)
 	{
@@ -214,7 +214,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public FormComponent(MarkupContainer parent,final String id, IModel<T> model)
 	{

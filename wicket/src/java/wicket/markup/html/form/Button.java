@@ -69,7 +69,7 @@ public class Button extends FormComponent
 	 * attribute &quot;value&quot;. Provide a model if you want to set the
 	 * button's label dynamically.
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public Button(MarkupContainer parent,String id)
 	{

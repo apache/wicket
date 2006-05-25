@@ -69,7 +69,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id)
 	{
@@ -77,7 +77,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
@@ -93,7 +93,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 *            list of choices
 	 * @param maxRows
 	 *            the maximum number of visible rows.
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices, final int maxRows)
 	{
@@ -102,7 +102,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      List,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices, final IChoiceRenderer<T> renderer)
@@ -111,7 +111,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> object, final List<T> choices)
@@ -120,7 +120,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> object, final List<T> choices,
@@ -130,7 +130,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel)
 	 */
 	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
@@ -139,7 +139,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IModel)
 	 */
 	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices)
@@ -148,7 +148,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
@@ -158,7 +158,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(String,
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
 	public ListMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices, IChoiceRenderer<T> renderer)

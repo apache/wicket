@@ -43,7 +43,7 @@ public class CheckGroupSelector<T> extends WebMarkupContainer<T>
 
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
 	public CheckGroupSelector(MarkupContainer parent,String id)
 	{

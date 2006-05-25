@@ -32,7 +32,7 @@ public class TextArea extends AbstractTextComponent
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public TextArea(MarkupContainer parent, final String id)
 	{
@@ -40,7 +40,7 @@ public class TextArea extends AbstractTextComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public TextArea(MarkupContainer parent, final String id, final IModel model)
 	{

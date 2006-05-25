@@ -40,7 +40,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	private ContainerWithAssociatedMarkupHelper markupHelper;
 	
 	/**
-	 * @see Component#Component(String)
+	 * @see Component#Component(MarkupContainer,String)
 	 */
 	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent,final String id)
 	{
@@ -48,7 +48,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public WebMarkupContainerWithAssociatedMarkup(MarkupContainer parent,final String id, IModel<T> model)
 	{

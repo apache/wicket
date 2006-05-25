@@ -30,7 +30,7 @@ public final class BoxBorder extends Border
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public BoxBorder(MarkupContainer parent, final String id)
 	{

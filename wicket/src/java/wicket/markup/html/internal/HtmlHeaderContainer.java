@@ -83,7 +83,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	/**
 	 * Construct
 	 * 
-	 * @see Component#Component(String)
+	 * @see Component#Component(MarkupContainer,String)
 	 */
 	public HtmlHeaderContainer(MarkupContainer parent,final String id)
 	{

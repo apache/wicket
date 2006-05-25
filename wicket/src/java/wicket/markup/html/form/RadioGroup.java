@@ -50,7 +50,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
 	public RadioGroup(MarkupContainer parent,String id)
 	{
@@ -59,7 +59,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
 	public RadioGroup(MarkupContainer parent,String id, IModel<T> model)
 	{

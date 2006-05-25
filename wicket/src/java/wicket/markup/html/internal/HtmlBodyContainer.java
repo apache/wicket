@@ -48,7 +48,7 @@ public class HtmlBodyContainer extends WebMarkupContainer
 	/**
 	 * Construct
 	 * 
-	 * @see Component#Component(String)
+	 * @see Component#Component(MarkupContainer,String)
 	 */
 	public HtmlBodyContainer(MarkupContainer parent,final String id)
 	{

@@ -105,7 +105,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	private int viewSize = Integer.MAX_VALUE;
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public ListView(MarkupContainer parent, final String id)
 	{
@@ -113,7 +113,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public ListView(MarkupContainer parent,final String id, final IModel<List<T>> model)
 	{
@@ -135,7 +135,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 *            See Component
 	 * @param list
 	 *            List to cast to Serializable
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public ListView(MarkupContainer parent,final String id, final List<T> list)
 	{

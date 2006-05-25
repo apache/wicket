@@ -64,7 +64,7 @@ public final class PageView<T> extends Panel<T>
 	 *            See Component
 	 * @param page
 	 *            The page to be analyzed
-	 * @see Component#Component(String)
+	 * @see Component#Component(MarkupContainer,String)
 	 */
 	public PageView(MarkupContainer parent,final String id, final Page page)
 	{

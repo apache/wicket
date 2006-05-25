@@ -126,7 +126,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	}
 	
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public MarkupContainer(MarkupContainer parent, final String id)
 	{
@@ -134,7 +134,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public MarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
 	{

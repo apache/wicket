@@ -64,7 +64,7 @@ public class Fragment extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 * 
 	 * @param id
 	 *            The component id
@@ -79,7 +79,7 @@ public class Fragment extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 * 
 	 * @param id
 	 *            The component id
@@ -96,7 +96,7 @@ public class Fragment extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 * 
 	 * @param id
 	 *            The component id
@@ -113,7 +113,7 @@ public class Fragment extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 * 
 	 * @param id
 	 *            The component id

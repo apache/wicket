@@ -78,7 +78,7 @@ public abstract class Loop extends WebMarkupContainer
 	 *            See Component
 	 * @param iterations
 	 *            max index of the loop
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Loop(MarkupContainer parent,final String id, final int iterations)
 	{
@@ -92,7 +92,7 @@ public abstract class Loop extends WebMarkupContainer
 	 *            See Component
 	 * @param model
 	 *            Must contain a Integer model object
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Loop(MarkupContainer parent,final String id, final IModel model)
 	{

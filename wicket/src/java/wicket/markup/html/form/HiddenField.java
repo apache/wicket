@@ -59,7 +59,7 @@ public class HiddenField<T> extends TextField<T>
 	 * @param id component id
 	 * @param model the model
 	 * @param type the type to use when updating the model for this text field
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public HiddenField(MarkupContainer parent,String id, IModel<T> model, Class type)
 	{

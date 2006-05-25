@@ -112,7 +112,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	private boolean bodyVisible = true;
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public Border(MarkupContainer parent,final String id)
 	{
@@ -120,7 +120,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public Border(MarkupContainer parent,final String id, final IModel model)
 	{

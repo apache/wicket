@@ -34,7 +34,7 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public NoopOutputTransformerContainer(MarkupContainer parent, final String id)
 	{
@@ -44,7 +44,7 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	/**
 	 * Construct
 	 * 
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public NoopOutputTransformerContainer(MarkupContainer parent, final String id, final IModel model)
 	{

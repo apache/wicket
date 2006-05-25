@@ -137,8 +137,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 * 
 	 * @param id
 	 *            See Component
-	 * @see wicket.Component#Component(String)
-	 * @see AbstractChoice#AbstractChoice(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id)
 	{
@@ -152,8 +152,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String)
-	 * @see AbstractChoice#AbstractChoice(String, java.util.List)
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, java.util.List)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
@@ -169,8 +169,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            The rendering engine
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String)
-	 * @see AbstractChoice#AbstractChoice(String,
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, final List<T> choices,
@@ -188,8 +188,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String, wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
+	 * @see wicket.Component#Component(MarkupContainer,String, wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel,
 	 *      java.util.List)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> model, final List<T> choices)
@@ -208,8 +208,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see wicket.Component#Component(String, wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
+	 * @see wicket.Component#Component(MarkupContainer,String, wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel,
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id, IModel<Collection<T>> model, final List<T> choices,
@@ -225,8 +225,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            See Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see wicket.Component#Component(String)
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
 	{
@@ -243,9 +243,9 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            Component
 	 * @param choices
 	 *            The collection of choices in the radio choice
-	 * @see AbstractChoice#AbstractChoice(String,
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      wicket.model.IModel,wicket.model.IModel)
-	 * @see wicket.Component#Component(String, wicket.model.IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, wicket.model.IModel)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices)
 	{
@@ -261,9 +261,9 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see AbstractChoice#AbstractChoice(String,
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
@@ -283,8 +283,8 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *            The collection of choices in the radio choice
 	 * @param renderer
 	 *            The rendering engine
-	 * @see wicket.Component#Component(String, wicket.model.IModel)
-	 * @see AbstractChoice#AbstractChoice(String, wicket.model.IModel,
+	 * @see wicket.Component#Component(MarkupContainer,String, wicket.model.IModel)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, wicket.model.IModel,
 	 *      wicket.model.IModel,wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent,String id, IModel<Collection<T>> model, IModel<List<T>> choices, IChoiceRenderer<T> renderer)

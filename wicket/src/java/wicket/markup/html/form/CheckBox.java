@@ -49,7 +49,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public CheckBox(MarkupContainer parent, final String id)
 	{
@@ -57,7 +57,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public CheckBox(MarkupContainer parent, final String id, IModel model)
 	{

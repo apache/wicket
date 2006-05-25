@@ -43,7 +43,7 @@ public class ImageButton extends Button implements IResourceListener
 	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public ImageButton(MarkupContainer parent,String id)
 	{

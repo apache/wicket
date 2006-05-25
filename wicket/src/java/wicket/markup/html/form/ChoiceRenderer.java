@@ -113,7 +113,7 @@ public class ChoiceRenderer<T> implements IChoiceRenderer<T>
 
 	
 	/**
-	 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
+	 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(V)
 	 */
 	public Object getDisplayValue(T object)
 	{

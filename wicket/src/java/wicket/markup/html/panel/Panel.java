@@ -70,7 +70,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	private boolean wasOpenCloseTag = false;
 	
 	/**
-     * @see wicket.Component#Component(String)
+     * @see wicket.Component#Component(MarkupContainer,String)
      */
     public Panel(MarkupContainer parent,final String id)
     {
@@ -78,7 +78,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
     }
     
     /**
-     * @see wicket.Component#Component(String, IModel)
+     * @see wicket.Component#Component(MarkupContainer,String, IModel)
      */
     public Panel(MarkupContainer parent,final String id, final IModel<T> model)
     {
