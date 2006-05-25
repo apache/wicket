@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5260 $ $Date$
+ * $Id: DefaultClassResolver.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,12 +38,13 @@ public final class DefaultClassResolver implements IClassResolver
 	 * stack traces like: java.lang.LinkageError: duplicate class definition:
 	 * 
 	 * <pre>
-	 *   wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 
+	 *    wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 
 	 * </pre>
 	 * 
 	 * This problem has gone since we synchronize the access.
 	 */
-	private ConcurrentHashMap<String, Class> classes = new ConcurrentHashMap<String, Class>(64,0.75f,1);
+	private ConcurrentHashMap<String, Class> classes = new ConcurrentHashMap<String, Class>(64,
+			0.75f, 1);
 
 	/**
 	 * @see wicket.application.IClassResolver#resolveClass(java.lang.String)

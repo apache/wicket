@@ -40,11 +40,11 @@ import wicket.authorization.UnauthorizedInstantiationException;
  * SimplePageAuthorizationStrategy authorizationStrategy = new SimplePageAuthorizationStrategy(
  * 		MySecureWebPage.class, MySignInPage.class)
  * {
- *     protected boolean isAuthorized()
- * 	   {
- * 		   // Authorize access based on user authentication in the session
- * 		   return (((MySession)Session.get()).isSignedIn());
- * 	   }
+ * 	protected boolean isAuthorized()
+ * 	{
+ * 		// Authorize access based on user authentication in the session
+ * 		return (((MySession)Session.get()).isSignedIn());
+ * 	}
  * };
  * 
  * getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);

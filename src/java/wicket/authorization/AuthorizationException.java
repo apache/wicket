@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AuthorizationException.java 3744 2006-01-12 23:57:32 +0000 (Thu, 12 Jan
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-01-12 23:57:32 +0000
+ * (Thu, 12 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

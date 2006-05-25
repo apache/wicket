@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IActionAuthorizer.java 4239 2006-02-09 06:51:31 +0000 (Thu, 09 Feb 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-02-09 06:51:31 +0000 (Thu, 09
+ * Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
