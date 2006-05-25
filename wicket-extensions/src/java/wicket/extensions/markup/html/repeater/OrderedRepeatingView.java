@@ -55,13 +55,13 @@ public class OrderedRepeatingView extends RepeatingView
 	/** List of ids of children components in the order they were added */
 	private List order = new ArrayList();
 
-	/** @see Component#Component(String) */
+	/** @see Component#Component(MarkupContainer,String) */
 	public OrderedRepeatingView(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
 
-	/** @see Component#Component(String, IModel) */
+	/** @see Component#Component(MarkupContainer,String, IModel) */
 	public OrderedRepeatingView(MarkupContainer parent,final String id, IModel model)
 	{
 		super(parent,id, model);

@@ -41,7 +41,7 @@ public class SelectOption extends WebMarkupContainer
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
 	 */
 	public SelectOption(MarkupContainer parent,final String id)
 	{
@@ -49,7 +49,7 @@ public class SelectOption extends WebMarkupContainer
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
 	public SelectOption(MarkupContainer parent,final String id, IModel model)
 	{

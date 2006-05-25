@@ -71,13 +71,13 @@ public class RepeatingView extends WebMarkupContainer
 	/** Counter used for generating unique child component ids. */
 	private long childIdCounter = 0;
 
-	/** @see Component#Component(String) */
+	/** @see Component#Component(MarkupContainer,String) */
 	public RepeatingView(MarkupContainer parent,final String id)
 	{
 		super(parent,id);
 	}
 
-	/** @see Component#Component(String, IModel) */
+	/** @see Component#Component(MarkupContainer,String, IModel) */
 	public RepeatingView(MarkupContainer parent,final String id, IModel model)
 	{
 		super(parent,id, model);

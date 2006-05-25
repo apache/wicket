@@ -71,7 +71,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	private int cachedItemCount;
 
 
-	/** @see wicket.Component#Component(String, IModel) */
+	/** @see wicket.Component#Component(MarkupContainer,String, IModel) */
 	public AbstractPageableView(MarkupContainer parent,final String id, IModel model)
 	{
 		super(parent,id, model);
@@ -79,7 +79,7 @@ public abstract class AbstractPageableView extends RefreshingView implements IPa
 	}
 
 
-	/** @see wicket.Component#Component(String) */
+	/** @see wicket.Component#Component(MarkupContainer,String) */
 	public AbstractPageableView(MarkupContainer parent,final String id)
 	{
 		super(parent,id);

@@ -58,7 +58,7 @@ public final class SmartLinkLabel extends Label
 	private static final String urlReplacePattern = "<a href=\"$0\">$1</a>";
 
 	/**
-	 * @see Label#Label(String, String)
+	 * @see Label#Label(MarkupContainer,String, String)
 	 */
 	public SmartLinkLabel(MarkupContainer parent,String name, String label)
 	{
@@ -66,7 +66,7 @@ public final class SmartLinkLabel extends Label
 	}
 
 	/**
-	 * @see Label#Label(String, IModel)
+	 * @see Label#Label(MarkupContainer,String, IModel)
 	 */
 	public SmartLinkLabel(MarkupContainer parent,String name, IModel model)
 	{
@@ -74,7 +74,7 @@ public final class SmartLinkLabel extends Label
 	}
 
 	/**
-	 * @see Label#Label(String)
+	 * @see Label#Label(MarkupContainer,String)
 	 */
 	public SmartLinkLabel(MarkupContainer parent,String name)
 	{

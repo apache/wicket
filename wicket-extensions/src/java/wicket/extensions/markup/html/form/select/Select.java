@@ -58,7 +58,7 @@ public class Select extends FormComponent
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
 	 */
 	public Select(MarkupContainer parent,final String id, IModel model)
 	{

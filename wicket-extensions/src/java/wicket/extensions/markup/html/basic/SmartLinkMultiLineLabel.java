@@ -45,7 +45,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see MultiLineLabel#MultiLineLabel(String, String)
+	 * @see MultiLineLabel#MultiLineLabel(MarkupContainer,String, String)
 	 */
 	public SmartLinkMultiLineLabel(MarkupContainer parent,String name, String label)
 	{
@@ -53,7 +53,7 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	}
 
 	/**
-	 * @see MultiLineLabel#MultiLineLabel(String, IModel)
+	 * @see MultiLineLabel#MultiLineLabel(MarkupContainer,String, IModel)
 	 */
 	public SmartLinkMultiLineLabel(MarkupContainer parent,String name, IModel model)
 	{
