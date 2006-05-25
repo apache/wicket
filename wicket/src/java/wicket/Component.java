@@ -883,8 +883,8 @@ public abstract class Component implements Serializable
 	 * <p>
 	 * Note: The component must have been added (directly or indirectly) to a
 	 * container with an associated markup file (Page, Panel or Border). This
-	 * TODO post 1.2 this restriction will be implicitly met after implementing 2.0's
-	 * constructor change
+	 * TODO post 1.2 this restriction will be implicitly met after implementing
+	 * 2.0's constructor change
 	 * 
 	 * @return markup id of this component, which is the result of the call to
 	 *         {@link #getPageRelativePath()} where the ':' character (the
@@ -1600,8 +1600,9 @@ public abstract class Component implements Serializable
 						}
 					});
 				}
-				
-				if (this instanceof IFeedback) {
+
+				if (this instanceof IFeedback)
+				{
 					((IFeedback)this).updateFeedback();
 				}
 
@@ -1753,6 +1754,38 @@ public abstract class Component implements Serializable
 			}
 		}
 	}
+
+	/**
+	 * Replaces this component with another. The replacing component must have
+	 * the same component id as this component. This method serves as a shortcut
+	 * to <code>this.getParent().replace(replacement)</code> and provides a
+	 * better context for errors.
+	 * 
+	 * @since 1.2.1
+	 * 
+	 * @param replacement
+	 *            component to replace this one
+	 */
+	public void replaceWith(Component replacement)
+	{
+		if (replacement == null)
+		{
+			throw new IllegalArgumentException("Argument [[replacement]] cannot be null.");
+		}
+		if (!getId().equals(replacement.getId()))
+		{
+			throw new IllegalArgumentException(
+					"Replacement component must have the same id as the component it will replace. Replacement id [["
+							+ replacement.getId() + "]], replaced id [[" + getId() + "]].");
+		}
+		if (parent == null)
+		{
+			throw new IllegalStateException(
+					"This method can only be called on a component that has already been added to its parent.");
+		}
+		parent.replace(replacement);
+	}
+
 
 	/**
 	 * @param component
@@ -2715,10 +2748,9 @@ public abstract class Component implements Serializable
 			if ((markupOpenTag != null) && markupOpenTag.isOpen() && !markupStream.atCloseTag())
 			{
 				// There must be a component in this discarded body
-				markupStream
-						.throwMarkupException("Expected close tag for '" + markupOpenTag + "' Possible attempt to embed component(s) '" + 
-								markupStream.get() + 
-								"' in the body of this component which discards its body");
+				markupStream.throwMarkupException("Expected close tag for '" + markupOpenTag
+						+ "' Possible attempt to embed component(s) '" + markupStream.get()
+						+ "' in the body of this component which discards its body");
 			}
 		}
 	}
