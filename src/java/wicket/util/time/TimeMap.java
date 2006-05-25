@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -56,9 +56,9 @@ public final class TimeMap
 	 */
 	public Object get(final Time time)
 	{
-		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (ITimeFrameSource timeFrameSource : sources.keySet())
 		{
-			final TimeFrame current = iterator.next().getTimeFrame();
+			final TimeFrame current = timeFrameSource.getTimeFrame();
 			if (current.contains(time))
 			{
 				return sources.get(current);
@@ -81,9 +81,9 @@ public final class TimeMap
 	{
 		final TimeFrame timeframe = source.getTimeFrame();
 
-		for (final Iterator<ITimeFrameSource> iterator = sources.keySet().iterator(); iterator.hasNext();)
+		for (ITimeFrameSource timeFrameSource : sources.keySet())
 		{
-			final TimeFrame current = iterator.next().getTimeFrame();
+			final TimeFrame current = timeFrameSource.getTimeFrame();
 
 			if (timeframe.overlaps(current))
 			{

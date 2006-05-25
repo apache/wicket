@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,13 +51,13 @@ import wicket.util.time.Time;
  * string for diagnostics.
  * 
  * @param <K>
- * 			The key type the map holds.
+ *            The key type the map holds.
  * @param <T>
- * 			The value type the map holds.
+ *            The value type the map holds.
  * 
  * @author Jonathan Locke
  */
-public class ValueMap extends HashMap<String,Object>
+public class ValueMap extends HashMap<String, Object>
 {
 	/** An empty ValueMap. */
 	public static final ValueMap EMPTY_MAP = new ValueMap();

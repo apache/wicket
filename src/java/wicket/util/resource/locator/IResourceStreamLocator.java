@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IResourceStreamLocator.java 3906 2006-01-19 20:52:49 +0000 (Thu, 19 Jan
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-01-19 20:52:49 +0000 (Thu,
+ * 19 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

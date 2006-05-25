@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: AbstractStringResourceStream.java 1504 2005-03-31 20:52:56 +0000 (Thu,
+ * 31 Mar 2005) joco01 $ $Revision$ $Date: 2005-03-31 20:52:56 +0000
+ * (Thu, 31 Mar 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,10 +34,10 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 {
 	/** MIME content type */
 	private final String contentType;
-	
+
 	/** The last time this stylesheet was modified */
 	private Time lastModified = null;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -44,12 +45,13 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	{
 		this("text");
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param contentType The mime type of this resource, such as "image/jpeg" or
-	 *         "text/html"
+	 * @param contentType
+	 *            The mime type of this resource, such as "image/jpeg" or
+	 *            "text/html"
 	 */
 	public AbstractStringResourceStream(final String contentType)
 	{
@@ -62,7 +64,7 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 	public void close() throws IOException
 	{
 	}
-	
+
 	/**
 	 * @see wicket.util.resource.IResourceStream#getContentType()
 	 */
@@ -94,24 +96,25 @@ public abstract class AbstractStringResourceStream extends AbstractResourceStrea
 		}
 		return new ByteArrayInputStream(bytes);
 	}
-	
+
 	/**
 	 * @see wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
 	public Time lastModifiedTime()
 	{
 		return lastModified;
-	}	
-	
+	}
+
 	/**
-	 * @param lastModified The lastModified to set.
+	 * @param lastModified
+	 *            The lastModified to set.
 	 */
 	public void setLastModified(Time lastModified)
 	{
 		this.lastModified = lastModified;
 	}
 
-	/** 
+	/**
 	 * @return The string resource
 	 */
 	protected abstract String getString();

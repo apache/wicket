@@ -1403,7 +1403,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * such that: <blockquote>
 	 * 
 	 * <pre>
-	 *       this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
+	 *        this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
 	 * </pre>
 	 * 
 	 * </blockquote> is <code>true</code>.
@@ -1605,8 +1605,8 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	}
 
 	/**
-	 * Tests if this AppendingStringBuffer starts with the specified prefix beginning a
-	 * specified index.
+	 * Tests if this AppendingStringBuffer starts with the specified prefix
+	 * beginning a specified index.
 	 * 
 	 * @param prefix
 	 *            the prefix.
@@ -1652,10 +1652,11 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *            the prefix.
 	 * @return <code>true</code> if the character sequence represented by the
 	 *         argument is a prefix of the character sequence represented by
-	 *         this AppendingStringBuffer; <code>false</code> otherwise. Note also that
-	 *         <code>true</code> will be returned if the argument is an empty
-	 *         string or is equal to this <code>AppendingStringBuffer</code> object as
-	 *         determined by the {@link #equals(Object)} method.
+	 *         this AppendingStringBuffer; <code>false</code> otherwise. Note
+	 *         also that <code>true</code> will be returned if the argument is
+	 *         an empty string or is equal to this
+	 *         <code>AppendingStringBuffer</code> object as determined by the
+	 *         {@link #equals(Object)} method.
 	 * @since 1. 0
 	 */
 	public boolean startsWith(CharSequence prefix)
@@ -1670,10 +1671,11 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 *            the suffix.
 	 * @return <code>true</code> if the character sequence represented by the
 	 *         argument is a suffix of the character sequence represented by
-	 *         this AppendingStringBuffer; <code>false</code> otherwise. Note that the result
-	 *         will be <code>true</code> if the argument is the empty string
-	 *         or is equal to this <code>AppendingStringBuffer</code> object as determined by
-	 *         the {@link #equals(Object)} method.
+	 *         this AppendingStringBuffer; <code>false</code> otherwise. Note
+	 *         that the result will be <code>true</code> if the argument is
+	 *         the empty string or is equal to this
+	 *         <code>AppendingStringBuffer</code> object as determined by the
+	 *         {@link #equals(Object)} method.
 	 */
 	public boolean endsWith(CharSequence suffix)
 	{
@@ -1681,11 +1683,12 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	}
 
 	/**
-	 * Converts to a string representing the data in this AppendingStringBuffer. A new
-	 * <code>String</code> object is allocated and initialized to contain the
-	 * character sequence currently represented by this string buffer. This
-	 * <code>String</code> is then returned. Subsequent changes to the string
-	 * buffer do not affect the contents of the <code>String</code>.
+	 * Converts to a string representing the data in this AppendingStringBuffer.
+	 * A new <code>String</code> object is allocated and initialized to
+	 * contain the character sequence currently represented by this string
+	 * buffer. This <code>String</code> is then returned. Subsequent changes
+	 * to the string buffer do not affect the contents of the
+	 * <code>String</code>.
 	 * <p>
 	 * Implementation advice: This method can be coded so as to create a new
 	 * <code>String</code> object without allocating new memory to hold a copy
@@ -1733,7 +1736,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * Compares this AppendingStringBuffer to the specified object. The result
 	 * is <code>true</code> if and only if the argument is not
 	 * <code>null</code> and is a <code>AppendingStringBuffer</code> object
-	 * or another charsequence object! that represents the same sequence of 
+	 * or another charsequence object! that represents the same sequence of
 	 * characters as this object.
 	 * 
 	 * @param anObject
@@ -1772,7 +1775,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 		{
 			CharSequence sequence = (CharSequence)anObject;
 			int n = count;
-			if(sequence.length() == count)
+			if (sequence.length() == count)
 			{
 				char v1[] = value;
 				int i = 0;
@@ -1794,7 +1797,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * <code>AppendingStringBuffer</code> object is computed as <blockquote>
 	 * 
 	 * <pre>
-	 *    s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
+	 *     s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
 	 * </pre>
 	 * 
 	 * </blockquote> using <code>int</code> arithmetic, where

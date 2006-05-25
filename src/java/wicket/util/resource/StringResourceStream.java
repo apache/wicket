@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id: StringResourceStream.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +20,7 @@ package wicket.util.resource;
 
 
 /**
- * A StringResourceStream is an IResource implementation for strings. 
+ * A StringResourceStream is an IResource implementation for strings.
  * 
  * @see wicket.util.resource.IResourceStream
  * @see wicket.util.watch.IModifiable
@@ -31,7 +32,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 
 	/** The string resource */
 	private final CharSequence string;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -42,14 +43,15 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	{
 		this.string = string;
 	}
-	
+
 	/**
 	 * Construct.
 	 * 
 	 * @param string
 	 *            The resource string
-	 * @param contentType The mime type of this resource, such as "image/jpeg" or
-	 *         "text/html"
+	 * @param contentType
+	 *            The mime type of this resource, such as "image/jpeg" or
+	 *            "text/html"
 	 */
 	public StringResourceStream(final CharSequence string, final String contentType)
 	{
@@ -74,7 +76,7 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	{
 		return toString();
 	}
-	
+
 	/**
 	 * @see wicket.util.resource.AbstractResourceStream#asString()
 	 */
@@ -91,5 +93,5 @@ public final class StringResourceStream extends AbstractStringResourceStream
 	{
 		return string.length();
 	}
-	
+
 }

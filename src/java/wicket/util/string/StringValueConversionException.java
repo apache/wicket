@@ -1,6 +1,7 @@
 /*
  * $Id: StringValueConversionException.java,v 1.4 2005/01/15 19:24:06
- * jonathanlocke Exp $ $Revision$ $Date$
+ * jonathanlocke Exp $ $Revision$ $Date: 2005-10-02 10:06:33 +0000 (Sun,
+ * 02 Oct 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -218,9 +218,9 @@ public class FormTester
 		ChoiceSelector choiceSelector = choiceSelectorFactory
 				.createForMultiple((FormComponent)workingForm.get(formComponentId));
 
-		for (int i = 0; i < indexes.length; i++)
+		for (int element : indexes)
 		{
-			choiceSelector.doSelect(indexes[i]);
+			choiceSelector.doSelect(element);
 		}
 	}
 

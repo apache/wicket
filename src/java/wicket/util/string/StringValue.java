@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: StringValue.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,7 +52,7 @@ public class StringValue implements Serializable
 
 	/** Locale to be used for formatting and parsing. */
 	private final Locale locale;
-	
+
 	/** The underlying string. */
 	private final String text;
 
@@ -292,7 +293,8 @@ public class StringValue implements Serializable
 	 *            What to replace with
 	 * @return This string value with searchFor replaces with replaceWith
 	 */
-	public final CharSequence replaceAll(final CharSequence searchFor, final CharSequence replaceWith)
+	public final CharSequence replaceAll(final CharSequence searchFor,
+			final CharSequence replaceWith)
 	{
 		return Strings.replaceAll(text, searchFor, replaceWith);
 	}

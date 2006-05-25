@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: FileUploadBase.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -249,7 +249,8 @@ public abstract class FileUploadBase
 	 *                if there are problems reading/parsing the request or
 	 *                storing files.
 	 */
-	public List /* FileItem */<FileItem>parseRequest(RequestContext ctx) throws FileUploadException
+	public List /* FileItem */<FileItem> parseRequest(RequestContext ctx)
+			throws FileUploadException
 	{
 		if (ctx == null)
 		{
@@ -417,7 +418,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return The file name for the current <code>encapsulation</code>.
 	 */
-	protected String getFileName(Map /* String, String */<String, String>headers)
+	protected String getFileName(Map /* String, String */<String, String> headers)
 	{
 		String fileName = null;
 		String cd = getHeader(headers, CONTENT_DISPOSITION);
@@ -464,7 +465,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return The field name for the current <code>encapsulation</code>.
 	 */
-	protected String getFieldName(Map /* String, String */<String, String>headers)
+	protected String getFieldName(Map /* String, String */<String, String> headers)
 	{
 		String fieldName = null;
 		String cd = getHeader(headers, CONTENT_DISPOSITION);
@@ -496,7 +497,8 @@ public abstract class FileUploadBase
 	 * 
 	 * @return A newly created <code>FileItem</code> instance.
 	 */
-	protected FileItem createItem(Map /* String, String */<String, String>headers, boolean isFormField)
+	protected FileItem createItem(Map /* String, String */<String, String> headers,
+			boolean isFormField)
 	{
 		return getFileItemFactory().createItem(getFieldName(headers),
 				getHeader(headers, CONTENT_TYPE), isFormField, getFileName(headers));
@@ -517,7 +519,7 @@ public abstract class FileUploadBase
 	 * 
 	 * @return A <code>Map</code> containing the parsed HTTP request headers.
 	 */
-	protected Map /* String, String */<String, String>parseHeaders(String headerPart)
+	protected Map /* String, String */<String, String> parseHeaders(String headerPart)
 	{
 		Map<String, String> headers = new HashMap<String, String>();
 		char[] buffer = new char[MAX_HEADER_SIZE];
@@ -584,7 +586,7 @@ public abstract class FileUploadBase
 	 * @return The value of specified header, or a comma-separated list if there
 	 *         were multiple headers of that name.
 	 */
-	protected final String getHeader(Map /* String, String */<String, String>headers, String name)
+	protected final String getHeader(Map /* String, String */<String, String> headers, String name)
 	{
 		return headers.get(name.toLowerCase());
 	}

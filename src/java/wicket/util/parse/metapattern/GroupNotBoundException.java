@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: GroupNotBoundException.java 2913 2005-10-02 10:06:33 +0000 (Sun, 02 Oct
+ * 2005) joco01 $ $Revision$ $Date: 2005-10-02 10:06:33 +0000 (Sun, 02
+ * Oct 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

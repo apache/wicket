@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.5 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -92,7 +92,7 @@ public class Duration extends AbstractTimeValue
 	private static final long serialVersionUID = 1L;
 
 	/** Constant for maximum duration */
-	public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE); 
+	public static final Duration MAXIMUM = milliseconds(Long.MAX_VALUE);
 
 	/** Constant for no duration. */
 	public static final Duration NONE = milliseconds(0);
@@ -183,7 +183,8 @@ public class Duration extends AbstractTimeValue
 	 * @param start
 	 *            The start time
 	 * @return The elapsed period
-	 * @throws IllegalStateException Thrown if start is in the future
+	 * @throws IllegalStateException
+	 *             Thrown if start is in the future
 	 */
 	public static Duration elapsed(final Time start)
 	{

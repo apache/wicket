@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,7 +46,7 @@ public final class TimeFrame implements ITimeFrameSource
 {
 	/** End of this timeframe */
 	private final Time end;
-	
+
 	/** Begining of this timeframe */
 	private final Time start;
 

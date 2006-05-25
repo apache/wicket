@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -70,7 +70,7 @@ public final class TimeOfDay extends AbstractTime
 
 	/** Constant for noon. */
 	public static final TimeOfDay NOON = time(12, 0, PM);
-	
+
 	/** Typesafe AM/PM enumeration. */
 	public static final class Meridian extends EnumeratedType
 	{

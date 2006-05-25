@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketTester.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -300,10 +301,12 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Render a panel from <code>Panel(MarkupContainer parent,String id)</code> constructor.
+	 * Render a panel from <code>Panel(MarkupContainer parent,String id)</code>
+	 * constructor.
 	 * 
 	 * @param panelClass
-	 *            a test panel class with <code>Panel(MarkupContainer parent,String id)</code>
+	 *            a test panel class with
+	 *            <code>Panel(MarkupContainer parent,String id)</code>
 	 *            constructor
 	 * @return Panel rendered panel
 	 */
@@ -442,9 +445,9 @@ public class WicketTester extends MockWebApplication
 	public void assertComponent(String path, Class<?> expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:"
-				+ Classes.simpleName(expectedComponentClass), expectedComponentClass
-				.isAssignableFrom(component.getClass()));
+		Assert.assertTrue("component '" + Classes.simpleName(component.getClass())
+				+ "' is not type:" + Classes.simpleName(expectedComponentClass),
+				expectedComponentClass.isAssignableFrom(component.getClass()));
 	}
 
 	/**
@@ -461,9 +464,8 @@ public class WicketTester extends MockWebApplication
 			Assert.fail("path: '" + path + "' does no exist for page: "
 					+ Classes.simpleName(getLastRenderedPage().getClass()));
 		}
-		
-		Assert.assertTrue("component '" + path + "' is not visible",
-				component.isVisible());
+
+		Assert.assertTrue("component '" + path + "' is not visible", component.isVisible());
 	}
 
 	/**
@@ -687,8 +689,8 @@ public class WicketTester extends MockWebApplication
 	/**
 	 * assert previous rendered page expired
 	 * 
-	 * TODO Post 1.2: General: This test is no longer valid because it depends on an
-	 * implementation detail that just changed!
+	 * TODO Post 1.2: General: This test is no longer valid because it depends
+	 * on an implementation detail that just changed!
 	 * 
 	 * public void assertExpirePreviousPage() { PageMap pageMap =
 	 * getWicketSession().getPageMap(null); Field internalMapCacheField; try {
@@ -717,10 +719,9 @@ public class WicketTester extends MockWebApplication
 	public void debugComponentTrees()
 	{
 		log.info("debugging ----------------------------------------------");
-		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter
-				.hasNext();)
+		for (Object element : WicketTesterHelper.getComponentData(getLastRenderedPage()))
 		{
-			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)iter.next();
+			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)element;
 			log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
 		}
 	}

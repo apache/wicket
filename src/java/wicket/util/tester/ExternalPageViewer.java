@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ExternalPageViewer.java 5771 2006-05-19 12:04:06 +0000 (Fri, 19 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-19 12:04:06 +0000 (Fri, 19
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +36,9 @@ public class ExternalPageViewer
 {
 	private static final List<String> browserPaths = new ArrayList<String>();
 
-	// TODO Post 1.2: General: We could use JNLP to launch browser (see http://www.croftsoft.com/library/tutorials/browser/), but why not use Swing HTMLArea??
+	// TODO Post 1.2: General: We could use JNLP to launch browser (see
+	// http://www.croftsoft.com/library/tutorials/browser/), but why not use
+	// Swing HTMLArea??
 	static
 	{
 		registerBrowserPath("C:/Program Files/Mozilla Firefox/firefox.exe");
