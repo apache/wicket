@@ -24,9 +24,9 @@ public class PanelWithHeaderPart extends Panel
 	{
 		super(parent, id);
 
-		add(new Label(this, "body"));
-		add(new StyleSheetReference(this, "testlink", PanelWithHeaderPart.class, "test.css"));
-		add(new JavaScriptReference(this, "testscript", PanelWithHeaderPart.class, "test.js"));
+		new Label(this, "body");
+		new StyleSheetReference(this, "testlink", PanelWithHeaderPart.class, "test.css");
+		new JavaScriptReference(this, "testscript", PanelWithHeaderPart.class, "test.js");
 
 	}
 

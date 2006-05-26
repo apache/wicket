@@ -38,12 +38,11 @@ public class AjaxLinkWithBorderPage extends WebPage
 	 */
 	public AjaxLinkWithBorderPage()
 	{
-		add(new AjaxTestBorder(this, "border").setTransparentResolver(true));
+		new AjaxTestBorder(this, "border").setTransparentResolver(true);
 
 		final Label label = new Label(this, "ajaxLabel", new PropertyModel(this, "labelText"));
 		label.setOutputMarkupId(true);
-		add(label);
-		add(new AjaxLink(this, "ajaxLink")
+		new AjaxLink(this, "ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -53,7 +52,7 @@ public class AjaxLinkWithBorderPage extends WebPage
 				labelText = "Updated!";
 				target.addComponent(label);
 			}
-		});
+		};
 	}
 
 	/**

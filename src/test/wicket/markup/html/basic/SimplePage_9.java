@@ -37,7 +37,7 @@ public class SimplePage_9 extends WebPage
 	 */
 	public SimplePage_9()
 	{
-		add(new TestContainer(this, "test"));
+		new TestContainer(this, "test");
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class SimplePage_9 extends WebPage
 		public TestContainer(MarkupContainer parent, String id)
 		{
 			super(parent, id);
-			add(new Label(this, "test", "myTest"));
+			new Label(this, "test", "myTest");
 		}
 	}
 }

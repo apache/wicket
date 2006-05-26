@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -297,7 +297,6 @@ public final class ImageMap extends WebMarkupContainer
 	 */
 	public ImageMap addCircleLink(final int x1, final int y1, final int radius, final Link link)
 	{
-		add(link);
 		shapeLinks.add(new CircleLink(x1, y1, radius, link));
 		return this;
 	}
@@ -313,7 +312,6 @@ public final class ImageMap extends WebMarkupContainer
 	 */
 	public ImageMap addPolygonLink(final int[] coordinates, final Link link)
 	{
-		add(link);
 		shapeLinks.add(new PolygonLink(coordinates, link));
 		return this;
 	}
@@ -335,7 +333,6 @@ public final class ImageMap extends WebMarkupContainer
 	public ImageMap addRectangleLink(final int x1, final int y1, final int x2, final int y2,
 			final Link link)
 	{
-		add(link);
 		shapeLinks.add(new RectangleLink(x1, y1, x2, y2, link));
 		return this;
 	}

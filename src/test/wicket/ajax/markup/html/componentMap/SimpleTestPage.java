@@ -33,6 +33,5 @@ public class SimpleTestPage extends WebPage
 	public SimpleTestPage()
 	{
 		SimpleTestPanel panel = new SimpleTestPanel(this, "testPanel");
-		add(panel);
 	}
 }

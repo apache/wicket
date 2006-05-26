@@ -38,6 +38,5 @@ public class LabelWithoutEscapeMarkupPage extends WebPage
 	{
 		Label label = new Label(this, "label", "test:'\"");
 		label.setEscapeModelStrings(false);
-		add(label);
 	}
 }

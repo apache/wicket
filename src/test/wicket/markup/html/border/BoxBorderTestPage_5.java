@@ -35,6 +35,6 @@ public class BoxBorderTestPage_5 extends WebPage
 	 */
 	public BoxBorderTestPage_5()
 	{
-		add(new MyApplicationBorder(this, "border"));
+		new MyApplicationBorder(this, "border");
 	}
 }

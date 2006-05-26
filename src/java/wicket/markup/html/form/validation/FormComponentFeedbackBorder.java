@@ -87,7 +87,7 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 	public FormComponentFeedbackBorder(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
-		add(new ErrorIndicator(this, "errorIndicator"));
+		new ErrorIndicator(this, "errorIndicator");
 	}
 
 	/**

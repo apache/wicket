@@ -66,7 +66,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label(listItem, "txt", txt));
+				new Label(listItem, "txt", txt);
 			}
 		};
 
@@ -88,8 +88,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 		};
 
 
-		add(listview);
-		add(new PagingNavigator(this, "navigator", listview, labelProvider));
+		new PagingNavigator(this, "navigator", listview, labelProvider);
 	}
 
 	/**

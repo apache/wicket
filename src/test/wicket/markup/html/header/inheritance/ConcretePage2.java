@@ -31,6 +31,6 @@ public class ConcretePage2 extends AbstractPage
 	 */
 	public ConcretePage2()
 	{
-		add(new MyPanel2(this, "panel"));
+		new MyPanel2(this, "panel");
 	}
 }

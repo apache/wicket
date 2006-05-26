@@ -63,6 +63,5 @@ public class AjaxHandlerBodyOnLoadPage extends WebPage
 			}
 		});
 
-		add(panel);
 	}
 }

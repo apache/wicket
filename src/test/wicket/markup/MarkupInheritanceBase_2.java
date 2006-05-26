@@ -34,7 +34,7 @@ public class MarkupInheritanceBase_2 extends WebPage
 	 */
 	public MarkupInheritanceBase_2()
 	{
-		add(new Label(this, "label1", "base label 1"));
-		add(new Label(this, "label2", "base label 2"));
+		new Label(this, "label1", "base label 1");
+		new Label(this, "label2", "base label 2");
 	}
 }

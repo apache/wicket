@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,7 +37,7 @@ import wicket.util.string.Strings;
  * HTML:
  * 
  * <pre>
- *   &lt;input type=&quot;checkbox&quot; wicket:id=&quot;bool&quot; /&gt;
+ *    &lt;input type=&quot;checkbox&quot; wicket:id=&quot;bool&quot; /&gt;
  * </pre>
  * 
  * </p>

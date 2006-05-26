@@ -45,16 +45,10 @@ public class CheckGroupTestPage5 extends WebPage
 		CheckGroup group = new CheckGroup(form, "group", new Model(list));
 		WebMarkupContainer container = new WebMarkupContainer(group, "container");
 		Check check1 = new Check(group, "check1", new Model("check1"));
-		Check check2 = new Check(form, "check2", new Model("check2"));
-
-
-		add(form);
-		form.add(group);
-		group.add(check1);
-		group.add(container);
 		// here we add check2 to the form so it is outside the group - it should
 		// throw an exception when rendering
-		form.add(check2);
+		Check check2 = new Check(form, "check2", new Model("check2"));
+
 	}
 
 	private static final long serialVersionUID = 1L;

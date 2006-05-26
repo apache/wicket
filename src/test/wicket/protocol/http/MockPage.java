@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -50,9 +50,7 @@ public class MockPage extends WebPage
 				linkClickCount++;
 			}
 		};
-		actionLink.add(new Label(actionLink, "linkClickCount", new PropertyModel(this,
-				"linkClickCount")));
-		add(actionLink);
+		new Label(actionLink, "linkClickCount", new PropertyModel(this, "linkClickCount"));
 	}
 
 	/**

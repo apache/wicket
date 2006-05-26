@@ -41,6 +41,6 @@ public class SimplePanel_6 extends Panel
 	{
 		super(parent, id);
 
-		add(new WebMarkupContainer(this, "container"));
+		new WebMarkupContainer(this, "container");
 	}
 }

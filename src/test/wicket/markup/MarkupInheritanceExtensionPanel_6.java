@@ -37,6 +37,6 @@ public class MarkupInheritanceExtensionPanel_6 extends MarkupInheritanceBasePane
 	{
 		super(parent, id);
 
-		add(new Label(this, "extendLabel", "extension label"));
+		new Label(this, "extendLabel", "extension label");
 	}
 }

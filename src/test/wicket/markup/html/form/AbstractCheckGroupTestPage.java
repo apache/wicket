@@ -53,11 +53,5 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 		Check check1 = new Check(group, "check1", new Model("check1"));
 		Check check2 = new Check(container, "check2", new Model("check2"));
 
-
-		add(form);
-		form.add(group);
-		group.add(check1);
-		group.add(container);
-		container.add(check2);
 	}
 }

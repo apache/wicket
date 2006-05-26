@@ -38,8 +38,8 @@ public class MockLoginPage extends WebPage
 	public MockLoginPage()
 	{
 		super();
-		add(new Label(this, "label", "welcome please login"));
-		add(form = new Form(this, "form")
+		new Label(this, "label", "welcome please login");
+		form = new Form(this, "form")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -48,8 +48,8 @@ public class MockLoginPage extends WebPage
 			{
 				login(get("username").getModelObjectAsString().toString());
 			}
-		});
-		form.add(textField = new TextField(form, "username", new Model()));
+		};
+		textField = new TextField(form, "username", new Model());
 	}
 
 	/**

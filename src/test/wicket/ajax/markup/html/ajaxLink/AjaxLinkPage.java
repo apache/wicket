@@ -40,8 +40,7 @@ public class AjaxLinkPage extends WebPage
 	{
 		final Label label = new Label(this, "ajaxLabel", new PropertyModel(this, "labelText"));
 		label.setOutputMarkupId(true);
-		add(label);
-		add(new AjaxLink(this, "ajaxLink")
+		new AjaxLink(this, "ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -51,7 +50,7 @@ public class AjaxLinkPage extends WebPage
 				labelText = "Updated!";
 				target.addComponent(label);
 			}
-		});
+		};
 	}
 
 	/**

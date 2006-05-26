@@ -39,10 +39,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *              &lt;tbody&gt;
- *                &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                    &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                ...    
+ *               &lt;tbody&gt;
+ *                 &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                     &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                 ...    
  * </pre>
  * 
  * <p>
@@ -560,9 +560,6 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 				{
 					// Create item for index
 					item = newItem(index);
-
-					// Add list item
-					add(item);
 
 					// Populate the list item
 					onBeginPopulateItem(item);

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -49,7 +49,7 @@ public class MyTable extends ListView
 	protected void populateItem(ListItem listItem)
 	{
 		String txt = (String)listItem.getModelObject();
-		listItem.add(new Label(listItem, "txt", txt));
+		new Label(listItem, "txt", txt);
 	}
 
 	/**

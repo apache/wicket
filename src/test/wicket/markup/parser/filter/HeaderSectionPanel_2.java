@@ -40,6 +40,6 @@ public class HeaderSectionPanel_2 extends Panel
 	public HeaderSectionPanel_2(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
-		add(new ExternalLink(this, "cssHref", "myStyle.css"));
+		new ExternalLink(this, "cssHref", "myStyle.css");
 	}
 }

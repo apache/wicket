@@ -36,11 +36,11 @@ public class BookmarkableHomePageLinksPage extends WebPage
 	 */
 	public BookmarkableHomePageLinksPage()
 	{
-		add(new BookmarkablePageLink(this, "defaulthompage", Application.get().getHomePage()));
-		add(new BookmarkablePageLink(this, "defaulthompagewithparams", Application.get()
-				.getHomePage(), new PageParameters("param1=1,param2=test")));
-		add(new BookmarkablePageLink(this, "defaulthompagewithpagemap", Application.get()
-				.getHomePage()).setPageMap(PageMap.forName("testpagemap")));
+		new BookmarkablePageLink(this, "defaulthompage", Application.get().getHomePage());
+		new BookmarkablePageLink(this, "defaulthompagewithparams", Application.get().getHomePage(),
+				new PageParameters("param1=1,param2=test"));
+		new BookmarkablePageLink(this, "defaulthompagewithpagemap", Application.get().getHomePage())
+				.setPageMap(PageMap.forName("testpagemap"));
 	}
 
 }

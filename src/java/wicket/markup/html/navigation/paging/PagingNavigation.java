@@ -32,21 +32,21 @@ import wicket.version.undo.Change;
  * (1..n).
  * 
  * <pre>
- *    
- *   	&lt;td wicket:id=&quot;navigation&quot;&gt;
- *   		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *   			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
- *   		&lt;/a&gt;
- *   	&lt;/td&gt;
- *   	
+ *     
+ *    	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ *    		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *    			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
+ *    		&lt;/a&gt;
+ *    	&lt;/td&gt;
+ *    	
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
- *    
- *   	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
- *   	
+ *     
+ *    	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+ *    	
  * </pre>
  * 
  * </p>
@@ -76,12 +76,12 @@ import wicket.version.undo.Change;
  * With:
  * 
  * <pre>
- *   	&lt;td wicket:id=&quot;navigation&quot;&gt;
- *   	  &lt;span wicket:id=&quot;separator&quot;/&gt;
- *   	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- *   	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- *   	  &lt;/a&gt;
- *   	&lt;/td&gt;
+ *    	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ *    	  &lt;span wicket:id=&quot;separator&quot;/&gt;
+ *    	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *    	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *    	  &lt;/a&gt;
+ *    	&lt;/td&gt;
  * </pre>
  * 
  * renders like:
@@ -329,8 +329,6 @@ public class PagingNavigation extends Loop
 		// Add a page link pointing to the page
 		final PagingNavigationLink link = newPagingNavigationLink(loopItem, "pageLink", pageable,
 				pageIndex);
-		loopItem.add(link);
-
 		// Add a page number label to the list which is enclosed by the link
 		String label = "";
 		if (labelProvider != null)
@@ -341,7 +339,7 @@ public class PagingNavigation extends Loop
 		{
 			label = String.valueOf(pageIndex + 1);
 		}
-		link.add(new Label(link, "pageNumber", label));
+		new Label(link, "pageNumber", label);
 	}
 
 	/**

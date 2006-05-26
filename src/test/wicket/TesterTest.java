@@ -75,7 +75,7 @@ public class TesterTest extends TestCase
 		 */
 		public MyPage()
 		{
-			add(new Label(this, "label")
+			new Label(this, "label")
 			{
 
 				private static final long serialVersionUID = 1L;
@@ -85,7 +85,7 @@ public class TesterTest extends TestCase
 				{
 					return false;
 				}
-			});
+			};
 		}
 
 	}

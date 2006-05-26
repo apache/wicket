@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 07:08:28 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -89,10 +89,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 			super(parent, panelId);
 			// create a link for expanding and collapsing the node
 			Link expandCollapsLink = tree.createJunctionLink(this, node);
-			add(expandCollapsLink);
 			// create a link for selecting a node
 			Link selectLink = tree.createNodeLink(this, node);
-			add(selectLink);
 		}
 	}
 
@@ -192,7 +190,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 			// add spacers
 			int level = node.getLevel();
-			listItem.add(new SpacerList(listItem, "spacers", level));
+			new SpacerList(listItem, "spacers", level);
 
 			// add node panel
 			Component nodePanel = newNodePanel(listItem, "node", node);
@@ -204,8 +202,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 			{
 				throw new WicketRuntimeException("panel must have id 'node' assigned");
 			}
-
-			listItem.add(nodePanel);
 
 			// add attr modifier for highlighting the selection
 			listItem.add(new AttributeModifier("class", true, new SelectedPathReplacementModel(
@@ -367,7 +363,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super(parent, id, model);
 		this.treePathsModel = new TreePathsModel();
-		add(treePathsListView = createTreePathsListView(this));
+		treePathsListView = createTreePathsListView(this);
 
 		PackageResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
@@ -386,7 +382,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super(parent, id, treeState);
 		this.treePathsModel = new TreePathsModel();
-		add(treePathsListView = createTreePathsListView(this));
+		treePathsListView = createTreePathsListView(this);
 
 		PackageResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
@@ -542,7 +538,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 				junctionLinkClicked(node);
 			}
 		};
-		junctionLink.add(getJunctionImage(junctionLink, node));
+		getJunctionImage(junctionLink, node);
 		return junctionLink;
 	}
 
@@ -565,8 +561,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 				nodeLinkClicked(node);
 			}
 		};
-		nodeLink.add(getNodeImage(nodeLink, node));
-		nodeLink.add(new Label(nodeLink, "label", getNodeLabel(node)));
+		getNodeImage(nodeLink, node);
+		new Label(nodeLink, "label", getNodeLabel(node));
 		return nodeLink;
 	}
 

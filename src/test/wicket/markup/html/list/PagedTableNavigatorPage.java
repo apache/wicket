@@ -56,12 +56,11 @@ public class PagedTableNavigatorPage extends WebPage
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label(listItem, "txt", txt));
+				new Label(listItem, "txt", txt);
 			}
 		};
 
-		add(table);
-		add(new PagingNavigator(this, "navigator", table));
+		new PagingNavigator(this, "navigator", table);
 	}
 
 	/**

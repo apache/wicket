@@ -51,12 +51,10 @@ public class PagedTablePage extends WebPage
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label(listItem, "txt", txt));
+				new Label(listItem, "txt", txt);
 			}
 		};
 
-		add(table);
 		PagingNavigation navigation = new PagingNavigation(this, "navigation", table);
-		add(navigation);
 	}
 }

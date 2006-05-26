@@ -33,7 +33,7 @@ public class MarkupInheritanceExtension_7 extends MarkupInheritanceBase_7
 	 */
 	public MarkupInheritanceExtension_7()
 	{
-		add(new Label(this, "headerLabel", "my header"));
-		add(new Label(this, "label3", "extension label"));
+		new Label(this, "headerLabel", "my header");
+		new Label(this, "label3", "extension label");
 	}
 }

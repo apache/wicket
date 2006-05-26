@@ -47,6 +47,5 @@ public class DisabledComponentPage1 extends WebPage
 			}
 
 		};
-		add(link);
 	}
 }

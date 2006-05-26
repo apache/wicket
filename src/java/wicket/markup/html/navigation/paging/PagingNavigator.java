@@ -75,13 +75,11 @@ public class PagingNavigator extends Panel
 
 		// Get the navigation bar and add it to the hierarchy
 		this.pagingNavigation = newNavigation(this, pageable, labelProvider);
-		add(pagingNavigation);
-
 		// Add additional page links
-		add(newPagingNavigationLink(this, "first", pageable, 0));
-		add(newPagingNavigationIncrementLink(this, "prev", pageable, -1));
-		add(newPagingNavigationIncrementLink(this, "next", pageable, 1));
-		add(newPagingNavigationLink(this, "last", pageable, -1));
+		newPagingNavigationLink(this, "first", pageable, 0);
+		newPagingNavigationIncrementLink(this, "prev", pageable, -1);
+		newPagingNavigationIncrementLink(this, "next", pageable, 1);
+		newPagingNavigationLink(this, "last", pageable, -1);
 	}
 
 	/**

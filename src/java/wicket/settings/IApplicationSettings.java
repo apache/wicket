@@ -55,7 +55,7 @@ public interface IApplicationSettings
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *       appserver.com/context mapped to webserver/ (context path should be '/')
+	 *        appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * @return The context path
@@ -116,7 +116,7 @@ public interface IApplicationSettings
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *       appserver.com/context mapped to webserver/ (context path should be '/')
+	 *        appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * This method can be called in the init phase of the application with the

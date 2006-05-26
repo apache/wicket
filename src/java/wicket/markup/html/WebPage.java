@@ -262,7 +262,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 						// name
 						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
 						{
-							add(new HtmlBodyContainer(this, tag.getId()));
+							new HtmlBodyContainer(this, tag.getId());
 						}
 						// remember the id of the tag
 						bodyContainer = new BodyContainer(this, tag.getId());

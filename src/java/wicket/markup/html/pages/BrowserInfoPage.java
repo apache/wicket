@@ -377,18 +377,18 @@ public class BrowserInfoPage extends WebPage
 		{
 			super(parent, id, new CompoundPropertyModel(new ClientPropertiesBean()));
 
-			add(new TextField(this, "navigatorAppName"));
-			add(new TextField(this, "navigatorAppVersion"));
-			add(new TextField(this, "navigatorAppCodeName"));
-			add(new TextField(this, "navigatorCookieEnabled"));
-			add(new TextField(this, "navigatorJavaEnabled"));
-			add(new TextField(this, "navigatorLanguage"));
-			add(new TextField(this, "navigatorPlatform"));
-			add(new TextField(this, "navigatorUserAgent"));
-			add(new TextField(this, "screenWidth"));
-			add(new TextField(this, "screenHeight"));
-			add(new TextField(this, "screenColorDepth"));
-			add(new TextField(this, "utcOffset"));
+			new TextField(this, "navigatorAppName");
+			new TextField(this, "navigatorAppVersion");
+			new TextField(this, "navigatorAppCodeName");
+			new TextField(this, "navigatorCookieEnabled");
+			new TextField(this, "navigatorJavaEnabled");
+			new TextField(this, "navigatorLanguage");
+			new TextField(this, "navigatorPlatform");
+			new TextField(this, "navigatorUserAgent");
+			new TextField(this, "screenWidth");
+			new TextField(this, "screenHeight");
+			new TextField(this, "screenColorDepth");
+			new TextField(this, "utcOffset");
 		}
 
 		/**
@@ -535,11 +535,9 @@ public class BrowserInfoPage extends WebPage
 		meta
 				.add(new AttributeModifier<String>("content", true, new Model<String>("0; url="
 						+ url)));
-		add(meta);
 		WebMarkupContainer link = new WebMarkupContainer<Object>(this, "link");
 		link.add(new AttributeModifier<CharSequence>("href", true, new Model<CharSequence>(url)));
-		add(link);
-		add(new PostBackForm(this, "postback"));
+		new PostBackForm(this, "postback");
 	}
 
 	/**

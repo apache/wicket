@@ -41,6 +41,6 @@ public class HeaderSectionPanel_17 extends Panel
 		super(parent, id);
 
 		// for the test: the label must the same id as the panel
-		add(new Label(this, "foo", "Mein Test"));
+		new Label(this, "foo", "Mein Test");
 	}
 }

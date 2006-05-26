@@ -38,7 +38,7 @@ public class AutolinkPage_2 extends WebPage
 	 */
 	public AutolinkPage_2()
 	{
-		add(new Label(this, "myLabel", "Home"));
+		new Label(this, "myLabel", "Home");
 		getSession().setStyle("myStyle");
 		getSession().setLocale(Locale.GERMANY);
 	}

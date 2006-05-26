@@ -40,24 +40,20 @@ public class SimplePage extends WebPage
 	 */
 	public SimplePage()
 	{
-		add(new Label(this, "myLabel", "Test Label"));
+		new Label(this, "myLabel", "Test Label");
 
 		WebMarkupContainer container = new WebMarkupContainer(this, "test");
 		container.setRenderBodyOnly(true);
-		add(container);
 
-		container.add(new Label(container, "myLabel2", "Test Label2"));
+		new Label(container, "myLabel2", "Test Label2");
 
 		Panel panel = new SimplePanel(this, "myPanel");
 		panel.setRenderBodyOnly(true);
-		add(panel);
 
 		Border border = new SimpleBorder(this, "myBorder");
-		add(border);
 
 		Border border2 = new SimpleBorder(this, "myBorder2");
 		border2.setRenderBodyOnly(false);
 		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-		add(border2);
 	}
 }

@@ -45,8 +45,7 @@ public class CookieValuePersisterTestPage extends WebPage
 
 		// Create and add feedback panel to page
 		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
-		add(feedback);
-		add(new TestForm(this, "form"));
+		new TestForm(this, "form");
 	}
 
 	/**
@@ -67,7 +66,7 @@ public class CookieValuePersisterTestPage extends WebPage
 		{
 			super(parent, id);
 
-			add(new TextField(this, "input", new Model("test")));
+			new TextField(this, "input", new Model("test"));
 		}
 
 		/**

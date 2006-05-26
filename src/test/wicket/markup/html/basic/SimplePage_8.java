@@ -37,6 +37,6 @@ public class SimplePage_8 extends WebPage
 	{
 		// One Label, but two <span> tag in the html with the same id => Not
 		// allowed.
-		add(new Label(this, "myLabel", "test-1"));
+		new Label(this, "myLabel", "test-1");
 	}
 }

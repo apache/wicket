@@ -57,16 +57,13 @@ public class IncrementalTableNavigationPage extends WebPage
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label(listItem, "txt", txt));
+				new Label(listItem, "txt", txt);
 			}
 		};
 
-		add(table);
 		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink(this, "prev", table,
 				-1);
-		add(prev);
 		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink(this,
 				"nextNext", table, +2);
-		add(nextNext);
 	}
 }

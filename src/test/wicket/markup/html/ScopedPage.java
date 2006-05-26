@@ -37,9 +37,9 @@ public class ScopedPage extends WebPage
 	public ScopedPage()
 	{
 		super();
-		add(new Label(this, "unscoped", "unscoped"));
+		new Label(this, "unscoped", "unscoped");
 
-		add(new ScopedLabel(this, "clicked", new AbstractReadOnlyModel()
+		new ScopedLabel(this, "clicked", new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -48,11 +48,11 @@ public class ScopedPage extends WebPage
 			{
 				return "Clicked: " + _clicked;
 			}
-		}));
+		});
 
-		add(new ScopedLabel(this, "global", "Global"));
+		new ScopedLabel(this, "global", "Global");
 
-		add(new ScopedLink(this, "globalLink")
+		new ScopedLink(this, "globalLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -61,20 +61,17 @@ public class ScopedPage extends WebPage
 			{
 				_clicked++;
 			}
-		});
+		};
 
 		WebMarkupContainer cont1 = new WebMarkupContainer(this, "cont1");
-		add(cont1);
-		cont1.add(new ScopedLabel(cont1, "localscoped", "Local Scoped"));
-		cont1.add(new Label(cont1, "local", "Local"));
+		new ScopedLabel(cont1, "localscoped", "Local Scoped");
+		new Label(cont1, "local", "Local");
 
 		WebMarkupContainer cont11 = new WebMarkupContainer(cont1, "cont11");
-		cont1.add(cont11);
-		cont11.add(new Label(cont11, "global", " hide global"));
+		new Label(cont11, "global", " hide global");
 
 		WebMarkupContainer cont2 = new WebMarkupContainer(this, "cont2");
-		add(cont2);
-		cont2.add(new Label(cont2, "local", "Local2"));
-		cont2.add(new ScopedLabel(cont2, "localscoped", "Local Scoped"));
+		new Label(cont2, "local", "Local2");
+		new ScopedLabel(cont2, "localscoped", "Local Scoped");
 	}
 }

@@ -43,8 +43,7 @@ public class HeaderSectionPanel_5 extends Panel
 		super(parent, id);
 
 		WebMarkupContainer container = new WebMarkupContainer(this, "aContainer");
-		add(container);
 
-		container.add(new Label(container, "aLabel", "Mein Test"));
+		new Label(container, "aLabel", "Mein Test");
 	}
 }

@@ -36,12 +36,12 @@ public class HeaderSectionPage_6 extends WebPage
 	 */
 	public HeaderSectionPage_6()
 	{
-		add(new HeaderSectionPanel(this, "panel1"));
-		add(new HeaderSectionPanel(this, "panel2"));
-		add(new HeaderSectionPanel(this, "panel3"));
+		new HeaderSectionPanel(this, "panel1");
+		new HeaderSectionPanel(this, "panel2");
+		new HeaderSectionPanel(this, "panel3");
 
-		add(new HeaderSectionBorder(this, "border1"));
-		add(new HeaderSectionBorder(this, "border2"));
-		add(new HeaderSectionBorder(this, "border3"));
+		new HeaderSectionBorder(this, "border1");
+		new HeaderSectionBorder(this, "border2");
+		new HeaderSectionBorder(this, "border3");
 	}
 }

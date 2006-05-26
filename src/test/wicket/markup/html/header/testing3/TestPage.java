@@ -42,7 +42,7 @@ public class TestPage extends WebPage
 	{
 		this.current = (Panel)panel1.reattach();
 
-		add(new PageLink(this, "link", new IPageLink()
+		new PageLink(this, "link", new IPageLink()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -56,7 +56,7 @@ public class TestPage extends WebPage
 			{
 				return TestPage.this.getClass();
 			}
-		}));
+		});
 	}
 
 	/**

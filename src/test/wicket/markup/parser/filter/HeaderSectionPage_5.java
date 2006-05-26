@@ -35,6 +35,6 @@ public class HeaderSectionPage_5 extends WebPage
 	 */
 	public HeaderSectionPage_5()
 	{
-		add(new HeaderSectionBorder(this, "border"));
+		new HeaderSectionBorder(this, "border");
 	}
 }
