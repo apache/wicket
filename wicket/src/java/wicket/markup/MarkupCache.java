@@ -146,7 +146,7 @@ public class MarkupCache
 	 *            container as well (markup inheritance)
 	 * @return Markup resource
 	 */
-	private final Markup getMarkup(final MarkupContainer container,
+	private final Markup getMarkup(final MarkupContainer<?> container,
 			final Class<? extends MarkupContainer> clazz)
 	{
 		Class<? extends MarkupContainer> containerClass = clazz;
