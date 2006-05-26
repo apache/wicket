@@ -796,19 +796,6 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * Gets the request parameters for this component as strings.
-	 * 
-	 * @return The values in the request for this component
-	 * @deprecated Use {@link #getInputAsArray()} instead
-	 */
-	// TODO Post 1.2: remove
-	@Deprecated
-	protected final String[] inputAsStringArray()
-	{
-		return getInputAsArray();
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag

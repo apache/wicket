@@ -168,24 +168,6 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 * validation will not work properly.
 	 * 
 	 * @return Returns the optimizeItemRemoval.
-	 * @deprecated Use {@link #getReuseItems()} instead
-	 */
-	// TODO Post 1.2: Remove
-	@Deprecated
-	public boolean getOptimizeItemRemoval()
-	{
-		return getReuseItems();
-	}
-
-	/**
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
-	 * validation will not work properly.
-	 * 
-	 * @return Returns the optimizeItemRemoval.
 	 */
 	public boolean getReuseItems()
 	{
@@ -404,26 +386,6 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 				ListView.this.modelChanged();
 			}
 		};
-	}
-
-	/**
-	 * If true re-rendering the list view is more efficient if the windows
-	 * doesn't get changed at all or if it gets scrolled (compared to paging).
-	 * But if you modify the listView model object, than you must manually call
-	 * listView.removeAll() in order to rebuild the ListItems. If you nest a
-	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
-	 * validation will not work properly.
-	 * 
-	 * @param optimizeItemRemoval
-	 *            The optimizeItemRemoval to set.
-	 * @return this
-	 * @deprecated Use {@link #setReuseItems(boolean)} instead
-	 */
-	// TODO Post 1.2: Remove
-	@Deprecated
-	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
-	{
-		return setReuseItems(optimizeItemRemoval);
 	}
 
 	/**

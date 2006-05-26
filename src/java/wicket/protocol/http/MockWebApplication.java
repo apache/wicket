@@ -436,7 +436,7 @@ public class MockWebApplication extends WebApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return homePage;
 	}
