@@ -53,18 +53,17 @@ public class LinkPage extends WicketExamplePage
 				count1.clicks++;
 			}
 		};
-		add(link1);
 
 		// add a counter label to the link so that we can display it in the body
 		// of the link
-		link1.add(new Label(link1, "label1", new Model()
+		new Label(link1, "label1", new Model()
 		{
 			@Override
 			public Object getObject(Component component)
 			{
 				return Integer.toString(count1.clicks);
 			}
-		}));
+		});
 
 		// we can attach Link components to any HTML tag we want. If it is an
 		// anchor (<a href...),
@@ -89,7 +88,7 @@ public class LinkPage extends WicketExamplePage
 			{
 				super(parent, id);
 				count2 = new ClickCount();
-				add(new ClickCountLabel(this, "label2", count2));
+				new ClickCountLabel(this, "label2", count2);
 			}
 
 			@Override
@@ -98,7 +97,7 @@ public class LinkPage extends WicketExamplePage
 				count2.clicks++;
 			}
 		}
-		add(new CustomLink(this, "link2"));
+		new CustomLink(this, "link2");
 
 		// and if we know we are going to attach it to a <input type="button>
 		// tag, we shouldn't
@@ -137,7 +136,7 @@ public class LinkPage extends WicketExamplePage
 				count3.clicks++;
 			}
 		}
-		add(new ButtonLink(this, "link3"));
+		new ButtonLink(this, "link3");
 	}
 
 	/**
@@ -208,7 +207,7 @@ public class LinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(link1);";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 
 	}
 

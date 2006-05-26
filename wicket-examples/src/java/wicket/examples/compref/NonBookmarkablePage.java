@@ -46,7 +46,7 @@ public class NonBookmarkablePage extends WebPage
 		// constructor with the Page instance argument, because we allready have
 		// a page instance
 		// at our disposal
-		add(new PageLink(this, "navigateBackLink", referer));
+		new PageLink(this, "navigateBackLink", referer);
 
 		// Note that this would have had the same effect
 		//

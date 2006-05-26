@@ -44,21 +44,19 @@ public class RepeatingPage extends BasePage
 		Iterator contacts = new ContactDataProvider().iterator(0, 10);
 
 		RepeatingView repeating = new RepeatingView(this, "repeating");
-		add(repeating);
 
 		int index = 0;
 		while (contacts.hasNext())
 		{
 			WebMarkupContainer item = new WebMarkupContainer(repeating, repeating.newChildId());
-			repeating.add(item);
 			Contact contact = (Contact)contacts.next();
 
-			item.add(new ActionPanel(item, "actions", new DetachableContactModel(contact)));
-			item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
-			item.add(new Label(item, "firstname", contact.getFirstName()));
-			item.add(new Label(item, "lastname", contact.getLastName()));
-			item.add(new Label(item, "homephone", contact.getHomePhone()));
-			item.add(new Label(item, "cellphone", contact.getCellPhone()));
+			new ActionPanel(item, "actions", new DetachableContactModel(contact));
+			new Label(item, "contactid", String.valueOf(contact.getId()));
+			new Label(item, "firstname", contact.getFirstName());
+			new Label(item, "lastname", contact.getLastName());
+			new Label(item, "homephone", contact.getHomePhone());
+			new Label(item, "cellphone", contact.getCellPhone());
 
 			final int idx = index;
 			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()

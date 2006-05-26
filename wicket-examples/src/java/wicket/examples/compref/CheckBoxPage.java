@@ -41,7 +41,6 @@ public class CheckBoxPage extends WicketExamplePage
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
-		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
 		Form form = new Form(this, "form")
@@ -59,11 +58,10 @@ public class CheckBoxPage extends WicketExamplePage
 				}
 			}
 		};
-		add(form);
 
 		// add a check box component that uses the model object's 'bool'
 		// property.
-		form.add(new CheckBox(form, "bool"));
+		new CheckBox(form, "bool");
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -91,7 +89,7 @@ public class CheckBoxPage extends WicketExamplePage
 		String html = "<input type=\"checkbox\" wicket:id=\"bool\" />";
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;// add a check box component that uses the model object's 'bool' property.\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(new CheckBox(\"bool\"));";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 
 	}
 

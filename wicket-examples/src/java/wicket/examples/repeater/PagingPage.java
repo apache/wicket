@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -48,12 +48,12 @@ public class PagingPage extends BasePage
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel(item, "actions", item.getModel()));
-				item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
-				item.add(new Label(item, "firstname", contact.getFirstName()));
-				item.add(new Label(item, "lastname", contact.getLastName()));
-				item.add(new Label(item, "homephone", contact.getHomePhone()));
-				item.add(new Label(item, "cellphone", contact.getCellPhone()));
+				new ActionPanel(item, "actions", item.getModel());
+				new Label(item, "contactid", String.valueOf(contact.getId()));
+				new Label(item, "firstname", contact.getFirstName());
+				new Label(item, "lastname", contact.getLastName());
+				new Label(item, "homephone", contact.getHomePhone());
+				new Label(item, "cellphone", contact.getCellPhone());
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
@@ -67,8 +67,7 @@ public class PagingPage extends BasePage
 		};
 
 		dataView.setItemsPerPage(8);
-		add(dataView);
 
-		add(new PagingNavigator(this, "navigator", dataView));
+		new PagingNavigator(this, "navigator", dataView);
 	}
 }

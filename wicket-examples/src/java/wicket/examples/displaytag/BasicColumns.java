@@ -50,36 +50,36 @@ public class BasicColumns extends Displaytag
 
 		// ==========================================================================
 		// Add a simple table
-		add(new ListViewWithAlternatingRowStyle(this, "rows", data)
+		new ListViewWithAlternatingRowStyle(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				listItem.add(new Label(listItem, "id", Integer.toString(value.getId())));
-				listItem.add(new Label(listItem, "name", value.getName()));
-				listItem.add(new Label(listItem, "email", value.getEmail()));
-				listItem.add(new Label(listItem, "status", value.getStatus()));
-				listItem.add(new Label(listItem, "comments", value.getDescription()));
+				new Label(listItem, "id", Integer.toString(value.getId()));
+				new Label(listItem, "name", value.getName());
+				new Label(listItem, "email", value.getEmail());
+				new Label(listItem, "status", value.getStatus());
+				new Label(listItem, "comments", value.getDescription());
 			}
-		});
+		};
 
 		// ==========================================================================
 		// Add a simple table but get the model data from a
 		// CompoundPropertyModel
 		// avoiding redundant naming of the label id and the property name.
-		add(new ListViewWithAlternatingRowStyle(this, "rows2", data)
+		new ListViewWithAlternatingRowStyle(this, "rows2", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				// you see. No more model required
-				listItem.add(new Label(listItem, "id"));
-				listItem.add(new Label(listItem, "name"));
-				listItem.add(new Label(listItem, "email"));
-				listItem.add(new Label(listItem, "status"));
-				listItem.add(new Label(listItem, "description"));
+				new Label(listItem, "id");
+				new Label(listItem, "name");
+				new Label(listItem, "email");
+				new Label(listItem, "status");
+				new Label(listItem, "description");
 			}
 
 			// This makes the trick
@@ -88,14 +88,14 @@ public class BasicColumns extends Displaytag
 			{
 				return new CompoundPropertyModel(super.getListItemModel(model, index));
 			}
-		});
+		};
 
 		// ==========================================================================
 		// SimpleListView implements what has been shown in the previous example
 		// plus that if a list item component is missing, it will automatically
 		// be
 		// created for you. Hence, it is even easier
-		add(new SimpleListView(this, "rows3", data)
+		new SimpleListView(this, "rows3", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -107,12 +107,12 @@ public class BasicColumns extends Displaytag
 				// b) you need something else than a Label
 				// c) you need to attach AttributeModifier
 				// d) any other fancy stuff
-				listItem.add(new Label(listItem, "comments", value.getDescription()));
+				new Label(listItem, "comments", value.getDescription());
 			}
-		});
+		};
 
 		// ==========================================================================
 		// It can be that simple to create a list view with multiple column
-		add(new SimpleListView(this, "rows4", data));
+		new SimpleListView(this, "rows4", data);
 	}
 }

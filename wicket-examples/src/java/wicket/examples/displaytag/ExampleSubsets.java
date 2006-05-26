@@ -71,10 +71,8 @@ public class ExampleSubsets extends Displaytag
 	private ListView newTable(final String id, final List data)
 	{
 		Fragment panel = new Fragment(this, id, "tableFrag");
-		add(panel);
 
 		ListView table = new SimpleListView(panel, "rows", data);
-		panel.add(table);
 
 		return table;
 	}

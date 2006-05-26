@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -69,24 +69,22 @@ public class ExamplePse extends Displaytag
 				if (previousValue != null)
 				{
 					boolean equal = value.getCity().equals(previousValue.getCity());
-					listItem.add(new Label(listItem, "city", equal ? "" : value.getCity()));
+					new Label(listItem, "city", equal ? "" : value.getCity());
 
 					equal &= value.getProject().equals(previousValue.getProject());
-					listItem.add(new Label(listItem, "project", equal ? "" : value.getProject()));
+					new Label(listItem, "project", equal ? "" : value.getProject());
 				}
 
 				// Not included in grouping
-				listItem.add(new Label(listItem, "hours", Double.toString(value.getAmount())));
+				new Label(listItem, "hours", Double.toString(value.getAmount()));
 
 				// remember the current value for the next row
 				previousValue = value;
 			}
 		};
 
-		add(table);
-
 		// Add the sortable header and define how to sort the different columns
-		add(new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders(this, "header", table)
 		{
 			@Override
 			protected Comparable getObjectToCompare(final SortableListViewHeader header,
@@ -104,14 +102,14 @@ public class ExamplePse extends Displaytag
 
 				return "";
 			}
-		});
+		};
 
 		// Add a table navigator
-		add(new MyPageableListViewNavigator(this, "pageTableNav", table));
+		new MyPageableListViewNavigator(this, "pageTableNav", table);
 
 		// Add export links
-		add(new ExportLink(this, "exportCsv", data, new CsvView(data, true, false, false)));
-		add(new ExportLink(this, "exportExcel", data, new ExcelView(data, true, false, false)));
-		add(new ExportLink(this, "exportXml", data, new XmlView(data, true, false, false)));
+		new ExportLink(this, "exportCsv", data, new CsvView(data, true, false, false));
+		new ExportLink(this, "exportExcel", data, new ExcelView(data, true, false, false));
+		new ExportLink(this, "exportXml", data, new XmlView(data, true, false, false));
 	}
 }

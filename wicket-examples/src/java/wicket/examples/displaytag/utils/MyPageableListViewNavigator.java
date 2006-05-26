@@ -45,7 +45,7 @@ public class MyPageableListViewNavigator extends PagingNavigator
 		super(parent, id, pageableListView);
 
 		this.pageableListView = pageableListView;
-		add(new Label(this, "headline", new PropertyModel(this, "headlineText")));
+		new Label(this, "headline", new PropertyModel(this, "headlineText"));
 	}
 
 	/**

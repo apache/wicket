@@ -47,7 +47,6 @@ public class ListChoicePage extends WicketExamplePage
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
-		add(feedbackPanel);
 
 		// Add a form with an onSumbit implementation that sets a message
 		Form form = new Form(this, "form")
@@ -58,7 +57,6 @@ public class ListChoicePage extends WicketExamplePage
 				info("input: " + input);
 			}
 		};
-		add(form);
 
 		// Add a list choice component that uses Input's 'site' property to
 		// designate the
@@ -66,7 +64,6 @@ public class ListChoicePage extends WicketExamplePage
 		// options.
 		ListChoice listChoice = new ListChoice(form, "site", SITES);
 		listChoice.setMaxRows(4);
-		form.add(listChoice);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -100,7 +97,7 @@ public class ListChoicePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListChoice listChoice = new ListChoice(\"site\", SITES);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;listChoice.setMaxRows(4);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(listChoice);";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 
 	}
 

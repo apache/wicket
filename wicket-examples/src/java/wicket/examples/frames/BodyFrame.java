@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -73,14 +73,12 @@ public class BodyFrame extends WebPage
 		// hold the url to that frame
 		WebComponent leftFrameTag = new WebComponent(this, "leftFrame");
 		leftFrameTag.add(new AttributeModifier("src", new Model(leftFrameSrc)));
-		add(leftFrameTag);
 
 		// make a simple component for the right frame tag
 		WebComponent rightFrameTag = new WebComponent(this, "rightFrame");
 		// and this time, set a model which retrieves the url to the currently
 		// set frame class in the frame target
 		rightFrameTag.add(new AttributeModifier("src", new FrameModel()));
-		add(rightFrameTag);
 	}
 
 	/**

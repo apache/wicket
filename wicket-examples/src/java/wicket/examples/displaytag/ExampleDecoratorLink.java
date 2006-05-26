@@ -52,7 +52,7 @@ public class ExampleDecoratorLink extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add the table
-		add(new ListView(this, "rows", data)
+		new ListView(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -66,25 +66,22 @@ public class ExampleDecoratorLink extends Displaytag
 				BookmarkablePageLink idLink = new BookmarkablePageLink(listItem, "idLink",
 						Page3.class);
 				idLink.setParameter("id", value.getId());
-				idLink.add(new Label(idLink, "id", Integer.toString(value.getId())));
-				listItem.add(idLink);
+				new Label(idLink, "id", Integer.toString(value.getId()));
 
 				BookmarkablePageLink emailLink = new BookmarkablePageLink(listItem, "mailLink",
 						Page3.class);
 				emailLink.setParameter("id", value.getId());
-				emailLink.add(new Label(emailLink, "email", value.getEmail()));
-				listItem.add(emailLink);
+				new Label(emailLink, "email", value.getEmail());
 
 				BookmarkablePageLink statusLink = new BookmarkablePageLink(listItem, "statusLink",
 						Page3.class);
 				statusLink.setParameter("id", value.getId());
-				statusLink.add(new Label(statusLink, "status", value.getStatus()));
-				listItem.add(statusLink);
+				new Label(statusLink, "status", value.getStatus());
 			}
-		});
+		};
 
 		// Add table of existing comments
-		add(new SimpleListView(this, "rows2", data)
+		new SimpleListView(this, "rows2", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -94,18 +91,17 @@ public class ExampleDecoratorLink extends Displaytag
 				BookmarkablePageLink idLink = new BookmarkablePageLink(listItem, "idLink",
 						Page3.class);
 				idLink.setParameter("id", value.getId());
-				idLink.add(new Label(idLink, "id", Integer.toString(value.getId())));
-				listItem.add(idLink);
+				new Label(idLink, "id", Integer.toString(value.getId()));
 
-				listItem.add(new BookmarkablePageLink(listItem, "view", Page3.class).setParameter(
-						"id", value.getId()).setParameter("action", "view"));
+				new BookmarkablePageLink(listItem, "view", Page3.class).setParameter("id",
+						value.getId()).setParameter("action", "view");
 
-				listItem.add(new BookmarkablePageLink(listItem, "edit", Page3.class).setParameter(
-						"id", value.getId()).setParameter("action", "edit"));
+				new BookmarkablePageLink(listItem, "edit", Page3.class).setParameter("id",
+						value.getId()).setParameter("action", "edit");
 
-				listItem.add(new BookmarkablePageLink(listItem, "delete", Page3.class)
-						.setParameter("id", value.getId()).setParameter("action", "delete"));
+				new BookmarkablePageLink(listItem, "delete", Page3.class).setParameter("id",
+						value.getId()).setParameter("action", "delete");
 			}
-		});
+		};
 	}
 }

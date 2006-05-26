@@ -75,18 +75,16 @@ public abstract class SignInPanel extends Panel
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			add(username = new TextField(this, "username",
-					new PropertyModel(properties, "username")));
-			add(password = new PasswordTextField(this, "password", new PropertyModel(properties,
-					"password")));
+			username = new TextField(this, "username", new PropertyModel(properties, "username"));
+			password = new PasswordTextField(this, "password", new PropertyModel(properties,
+					"password"));
 
 			// MarkupContainer row for remember me checkbox
 			WebMarkupContainer rememberMeRow = new WebMarkupContainer(this, "rememberMeRow");
-			add(rememberMeRow);
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox(rememberMeRow, "rememberMe", new PropertyModel(
-					SignInPanel.this, "rememberMe")));
+			new CheckBox(rememberMeRow, "rememberMe", new PropertyModel(SignInPanel.this,
+					"rememberMe"));
 
 			// Make form values persistent
 			setPersistent(rememberMe);
@@ -147,11 +145,10 @@ public abstract class SignInPanel extends Panel
 
 		// Create feedback panel and add to page
 		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
-		add(feedback);
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler
-		add(new SignInForm(this, "signInForm"));
+		new SignInForm(this, "signInForm");
 	}
 
 	/**

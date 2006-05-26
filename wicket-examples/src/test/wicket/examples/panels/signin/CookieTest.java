@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -106,7 +106,6 @@ public class CookieTest extends TestCase
 				application.getWicketResponse());
 
 		this.page = new MockPage(null);
-		page.add(this.panel);
 
 		WebRequestCycle cycle = new WebRequestCycle(application.getWicketSession(), application
 				.getWicketRequest(), application.getWicketResponse());

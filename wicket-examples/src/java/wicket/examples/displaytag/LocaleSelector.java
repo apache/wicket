@@ -50,10 +50,10 @@ public class LocaleSelector extends Panel
 		super(parent, id);
 
 		// Dropdown for selecting locale
-		add(new LocaleDropDownChoice(this, "localeSelect"));
+		new LocaleDropDownChoice(this, "localeSelect");
 
 		// Link to return to default locale
-		add(new Link(this, "defaultLocaleLink")
+		new Link(this, "defaultLocaleLink")
 		{
 			@Override
 			public void onClick()
@@ -61,7 +61,7 @@ public class LocaleSelector extends Panel
 				WebRequest request = (WebRequest)getRequest();
 				setLocale(request.getLocale());
 			}
-		});
+		};
 	}
 
 	/**

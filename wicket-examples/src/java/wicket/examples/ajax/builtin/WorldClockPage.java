@@ -51,14 +51,6 @@ public class WorldClockPage extends BasePage
 		prague.setOutputMarkupId(true);
 		london.setOutputMarkupId(true);
 
-		// add the components to the container and add a markup id setter to
-		// each component.
-		add(la);
-		add(ny);
-		add(moscow);
-		add(prague);
-		add(london);
-
 		// add the timer behavior to the la component and make it update all
 		// other components as well
 		la.add(new AbstractAjaxTimerBehavior(Duration.seconds(5))

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -46,6 +46,6 @@ public class Home extends HangmanPage
 		{
 			getGame().newGame(5, new WordGenerator(new String[] { word }));
 		}
-		add(new PageLink(this, "start", Guess.class));
+		new PageLink(this, "start", Guess.class);
 	}
 }

@@ -51,8 +51,8 @@ public class TodoList extends BasePage
 			{
 				super(parent, id, new CompoundPropertyModel<TodoItem>(new TodoItem()));
 				setOutputMarkupId(true);
-				add(new TextField(this, "text"));
-				add(new AjaxSubmitButton(this, "add", this)
+				new TextField(this, "text");
+				new AjaxSubmitButton(this, "add", this)
 				{
 					@Override
 					protected void onSubmit(AjaxRequestTarget target, Form form)
@@ -63,16 +63,16 @@ public class TodoList extends BasePage
 						// add the item
 						onAdd(item, target);
 					}
-				});
+				};
 
-				add(new AjaxSubmitButton(this, "cancel", this)
+				new AjaxSubmitButton(this, "cancel", this)
 				{
 					@Override
 					public void onSubmit(AjaxRequestTarget target, Form form)
 					{
 						onCancelTodo(target);
 					}
-				});
+				};
 			}
 
 			/**
@@ -180,9 +180,9 @@ public class TodoList extends BasePage
 			// let wicket generate a markup-id so the contents can be
 			// updated through an AJAX call.
 			setOutputMarkupId(true);
-			add(new AddTodoLink(this, "link"));
-			add(new RemoveCompletedTodosLink(this, "remove"));
-			add(new AddTodoForm(this, "form"));
+			new AddTodoLink(this, "link");
+			new RemoveCompletedTodosLink(this, "remove");
+			new AddTodoForm(this, "form");
 		}
 
 		/**
@@ -355,14 +355,13 @@ public class TodoList extends BasePage
 			setOutputMarkupId(true);
 
 			// add the listview to the container
-			add(new ListView<TodoItem>(this, "item", items)
+			new ListView<TodoItem>(this, "item", items)
 			{
 				@Override
 				protected void populateItem(ListItem item)
 				{
 					// add an AJAX checkbox to the item
-					item.add(new AjaxCheckBox(item, "check", new PropertyModel(item.getModel(),
-							"checked"))
+					new AjaxCheckBox(item, "check", new PropertyModel(item.getModel(), "checked"))
 					{
 						@Override
 						protected void onUpdate(AjaxRequestTarget target)
@@ -372,11 +371,11 @@ public class TodoList extends BasePage
 							// component (the client already has the correct
 							// state).
 						}
-					});
+					};
 					// display the text of the todo item
-					item.add(new Label(item, "text", new PropertyModel(item.getModel(), "text")));
+					new Label(item, "text", new PropertyModel(item.getModel(), "text"));
 				}
-			});
+			};
 		}
 	}
 
@@ -397,9 +396,8 @@ public class TodoList extends BasePage
 	{
 		// add the listview container for the todo items.
 		showItems = new TodoItemsContainer(this, "showItems");
-		add(showItems);
 
 		// add the add container for the todo items.
-		add(new AddItemsContainer(this, "addItems"));
+		new AddItemsContainer(this, "addItems");
 	}
 }

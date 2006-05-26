@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -68,9 +68,7 @@ public class Home extends WicketExamplePage
 		actionLink.getModel();
 
 
-		actionLink.add(new Label(actionLink, "linkClickCount", new PropertyModel(this,
-				"linkClickCount")));
-		add(actionLink);
+		new Label(actionLink, "linkClickCount", new PropertyModel(this, "linkClickCount"));
 
 		// Action link counts link clicks on works with onclick handler
 		final Link<String> actionOnClickLink = new Link<String>(this, "actionOnClickLink")
@@ -85,20 +83,18 @@ public class Home extends WicketExamplePage
 		Label<String> l = new Label<String>(this, "test", "test");
 		String s = l.getModelObject();
 
-		add(actionOnClickLink);
-		add(new Label(this, "onClickLinkClickCount", new PropertyModel(this,
-				"onClickLinkClickCount")));
+		new Label(this, "onClickLinkClickCount", new PropertyModel(this, "onClickLinkClickCount"));
 
 		// Link to Page1 is a simple external page link
-		add(new BookmarkablePageLink(this, "page1Link", Page1.class));
+		new BookmarkablePageLink(this, "page1Link", Page1.class);
 
 		// Link to Page2 is automaticLink, so no code
 		// Link to Page3 is an external link which takes a parameter
-		add(new BookmarkablePageLink(this, "page3Link", Page3.class).setParameter(
-				"bookmarkparameter", "3++2 & 5 € >< space + á"));
+		new BookmarkablePageLink(this, "page3Link", Page3.class).setParameter("bookmarkparameter",
+				"3++2 & 5 € >< space + á");
 
 		// Link to BookDetails page
-		add(new PageLink(this, "bookDetailsLink", new IPageLink()
+		new PageLink(this, "bookDetailsLink", new IPageLink()
 		{
 			public Page getPage()
 			{
@@ -109,10 +105,10 @@ public class Home extends WicketExamplePage
 			{
 				return BookDetails.class;
 			}
-		}));
+		});
 
 		// Delayed link to BookDetails page
-		add(new PageLink(this, "bookDetailsLink2", new IPageLink()
+		new PageLink(this, "bookDetailsLink2", new IPageLink()
 		{
 			public Page getPage()
 			{
@@ -123,42 +119,39 @@ public class Home extends WicketExamplePage
 			{
 				return BookDetails.class;
 			}
-		}));
+		});
 
 		// Image map link example
-		add(new ImageMap(this, "imageMap").addRectangleLink(0, 0, 100, 100,
+		new ImageMap(this, "imageMap").addRectangleLink(0, 0, 100, 100,
 				new BookmarkablePageLink(this, "page1", Page1.class)).addCircleLink(160, 50, 35,
 				new BookmarkablePageLink(this, "page2", Page2.class)).addPolygonLink(
 				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-				new BookmarkablePageLink(this, "page3", Page3.class)));
+				new BookmarkablePageLink(this, "page3", Page3.class));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
 				500).setWidth(500);
-		add(new BookmarkablePageLink(this, "popupLink", Popup.class)
-				.setPopupSettings(popupSettings));
+		new BookmarkablePageLink(this, "popupLink", Popup.class).setPopupSettings(popupSettings);
 
 		// Popup example
-		add(new BookmarkablePageLink(this, "popupButtonLink", Popup.class)
-				.setPopupSettings(popupSettings));
+		new BookmarkablePageLink(this, "popupButtonLink", Popup.class)
+				.setPopupSettings(popupSettings);
 
 		// External site link
-		add(new ExternalLink(this, "google", "http://www.google.com",
-				"Click this link to go to Google"));
+		new ExternalLink(this, "google", "http://www.google.com", "Click this link to go to Google");
 
 		// And that link as a popup
 		PopupSettings googlePopupSettings = new PopupSettings(PopupSettings.RESIZABLE
 				| PopupSettings.SCROLLBARS).setHeight(500).setWidth(700);
-		add(new ExternalLink(this, "googlePopup", "http://www.google.com",
-				"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings));
+		new ExternalLink(this, "googlePopup", "http://www.google.com",
+				"Click this link to go to Google in a popup").setPopupSettings(googlePopupSettings);
 
 		// Shared resource link
-		add(new ResourceLink(this, "cancelButtonLink", new ResourceReference("cancelButton")));
+		new ResourceLink(this, "cancelButtonLink", new ResourceReference("cancelButton"));
 
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
-		add(feedbackPanel);
-		add(new RedirectForm(this, "redirectForm"));
+		new RedirectForm(this, "redirectForm");
 	}
 
 	/**
@@ -179,7 +172,7 @@ public class Home extends WicketExamplePage
 		{
 			super(parent, id);
 			setModel(new CompoundPropertyModel(this));
-			add(new TextField(this, "redirectUrl"));
+			new TextField(this, "redirectUrl");
 		}
 
 		/**

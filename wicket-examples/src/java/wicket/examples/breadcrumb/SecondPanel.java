@@ -51,10 +51,10 @@ public class SecondPanel extends BreadCrumbPanel
 		{
 			super(parent, id);
 			setModel(new CompoundPropertyModel(this));
-			add(new TextField(this, "input"));
-			add(new Button(this, "normalButton"));
+			new TextField(this, "input");
+			new Button(this, "normalButton");
 
-			add(new Button(this, "nextButton")
+			new Button(this, "nextButton")
 			{
 				@Override
 				protected void onSubmit()
@@ -68,7 +68,7 @@ public class SecondPanel extends BreadCrumbPanel
 						}
 					});
 				}
-			});
+			};
 		}
 
 		/**
@@ -104,10 +104,10 @@ public class SecondPanel extends BreadCrumbPanel
 	{
 		super(parent, id, breadCrumbModel);
 
-		add(new BreadCrumbPanelLink(this, "linkToThird", this, ThirdPanel.class));
-		add(new BreadCrumbPanelLink(this, "linkToFourth", this, FourthPanel.class));
+		new BreadCrumbPanelLink(this, "linkToThird", this, ThirdPanel.class);
+		new BreadCrumbPanelLink(this, "linkToFourth", this, FourthPanel.class);
 
-		add(new InputForm(this, "form"));
+		new InputForm(this, "form");
 	}
 
 	/**

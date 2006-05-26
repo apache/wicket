@@ -70,13 +70,13 @@ public class RefreshingPage extends BasePage
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new Label(item, "itemid", item.getId()));
-				item.add(new ActionPanel(item, "actions", item.getModel()));
-				item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
-				item.add(new Label(item, "firstname", contact.getFirstName()));
-				item.add(new Label(item, "lastname", contact.getLastName()));
-				item.add(new Label(item, "homephone", contact.getHomePhone()));
-				item.add(new Label(item, "cellphone", contact.getCellPhone()));
+				new Label(item, "itemid", item.getId());
+				new ActionPanel(item, "actions", item.getModel());
+				new Label(item, "contactid", String.valueOf(contact.getId()));
+				new Label(item, "firstname", contact.getFirstName());
+				new Label(item, "lastname", contact.getLastName());
+				new Label(item, "homephone", contact.getHomePhone());
+				new Label(item, "cellphone", contact.getCellPhone());
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
@@ -89,15 +89,13 @@ public class RefreshingPage extends BasePage
 			}
 		};
 
-		add(view);
-
-		add(new Link(this, "refreshLink")
+		new Link(this, "refreshLink")
 		{
 			@Override
 			public void onClick()
 			{
 				// noop
 			}
-		});
+		};
 	}
 }

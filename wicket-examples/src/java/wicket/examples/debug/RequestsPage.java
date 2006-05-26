@@ -64,9 +64,9 @@ public class RequestsPage extends WebPage
 	 */
 	public RequestsPage(final SessionData sessionData)
 	{
-		add(new Image(this, "bug"));
+		new Image(this, "bug");
 
-		add(new SessionView(this, "session", sessionData.getSession()));
+		new SessionView(this, "session", sessionData.getSession());
 
 		Model requestsModel = new Model()
 		{
@@ -114,17 +114,14 @@ public class RequestsPage extends WebPage
 						};
 					}
 				};
-				item.add(startDate);
-				item.add(new Label(item, "timeTaken", new Model(rd.getTimeTaken())));
-				item.add(new Label(item, "eventTarget", new Model(rd.getEventTargert())));
-				item.add(new Label(item, "responseTarget", new Model(rd.getResponseTarget())));
-				item.add(new Label(item, "alteredObjects", new Model(rd.getAlteredObjects()))
-						.setEscapeModelStrings(false));
+				new Label(item, "timeTaken", new Model(rd.getTimeTaken()));
+				new Label(item, "eventTarget", new Model(rd.getEventTargert()));
+				new Label(item, "responseTarget", new Model(rd.getResponseTarget()));
+				new Label(item, "alteredObjects", new Model(rd.getAlteredObjects()))
+						.setEscapeModelStrings(false);
 			}
 		};
-		add(listView);
 
 		PagingNavigator navigator = new PagingNavigator(this, "navigator", listView);
-		add(navigator);
 	}
 }

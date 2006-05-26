@@ -31,7 +31,7 @@ public class IncludePage extends WicketExamplePage
 	 */
 	public IncludePage()
 	{
-		add(new Include(this, "include", "to_be_included.html"));
+		new Include(this, "include", "to_be_included.html");
 	}
 
 	/**
@@ -46,6 +46,6 @@ public class IncludePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new Include(\"include\", \"to_be_included.html\"));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 	}
 }

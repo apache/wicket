@@ -45,21 +45,19 @@ public class GridViewPage extends BasePage
 			protected void populateItem(Item item)
 			{
 				final Contact contact = (Contact)item.getModelObject();
-				item.add(new Label(item, "firstName", contact.getFirstName() + " "
-						+ contact.getLastName()));
+				new Label(item, "firstName", contact.getFirstName() + " " + contact.getLastName());
 			}
 
 			@Override
 			protected void populateEmptyItem(Item item)
 			{
-				item.add(new Label(item, "firstName", "*empty*"));
+				new Label(item, "firstName", "*empty*");
 			}
 		};
 
 		gridView.setRows(4);
 		gridView.setColumns(3);
 
-		add(gridView);
-		add(new PagingNavigator(this, "navigator", gridView));
+		new PagingNavigator(this, "navigator", gridView);
 	}
 }

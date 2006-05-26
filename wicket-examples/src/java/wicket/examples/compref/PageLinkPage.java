@@ -46,7 +46,7 @@ public class PageLinkPage extends WicketExamplePage
 		// anonymous class, which will create the page instance only when
 		// needed.
 
-		add(new PageLink(this, "pageLink", new IPageLink()
+		new PageLink(this, "pageLink", new IPageLink()
 		{
 			public Page getPage()
 			{
@@ -57,7 +57,7 @@ public class PageLinkPage extends WicketExamplePage
 			{
 				return NonBookmarkablePage.class;
 			}
-		}));
+		});
 
 		// Note that this would have had the same effect, except that the link
 		// wouldn't check
@@ -90,7 +90,7 @@ public class PageLinkPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return NonBookmarkablePage.class;\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}));";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 
 	}
 

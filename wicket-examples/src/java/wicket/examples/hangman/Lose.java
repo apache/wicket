@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -33,8 +33,8 @@ public class Lose extends HangmanPage
 	 */
 	public Lose()
 	{
-		add(new Label(this, "currentWord", getGame().getWord().asString()));
-		add(new Link(this, "playAgain")
+		new Label(this, "currentWord", getGame().getWord().asString());
+		new Link(this, "playAgain")
 		{
 			@Override
 			public void onClick()
@@ -42,7 +42,7 @@ public class Lose extends HangmanPage
 				getGame().newGame();
 				setResponsePage(new Guess());
 			}
-		});
+		};
 	}
 
 }

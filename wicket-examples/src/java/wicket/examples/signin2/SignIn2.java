@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -45,13 +45,13 @@ public final class SignIn2 extends WicketExamplePage
 	 */
 	public SignIn2(final PageParameters parameters)
 	{
-		add(new SignInPanel(this, "signInPanel")
+		new SignInPanel(this, "signInPanel")
 		{
 			@Override
 			public boolean signIn(String username, String password)
 			{
 				return ((SignIn2Session)getSession()).authenticate(username, password);
 			}
-		});
+		};
 	}
 }

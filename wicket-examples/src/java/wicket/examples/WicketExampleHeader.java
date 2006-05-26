@@ -49,8 +49,8 @@ public final class WicketExampleHeader extends Panel
 			WebPage page)
 	{
 		super(page, id);
-		add(new InspectorBug(this, "inspector", page));
-		add(new Label(this, "exampleTitle", exampleTitle));
+		new InspectorBug(this, "inspector", page);
+		new Label(this, "exampleTitle", exampleTitle);
 		Link link = new Link(this, "sources")
 		{
 			@Override
@@ -59,7 +59,6 @@ public final class WicketExampleHeader extends Panel
 				setResponsePage(new SourcesPage(getPage().getClass()));
 			}
 		};
-		add(link);
 
 		PopupSettings settings = new PopupSettings(PageMap.forName("sources"));
 		settings.setWidth(800);

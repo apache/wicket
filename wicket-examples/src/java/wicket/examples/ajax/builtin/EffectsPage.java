@@ -73,13 +73,11 @@ public class EffectsPage extends BasePage
 	{
 		final Label c1 = new Label(this, "c1", new PropertyModel(this, "counter1"));
 		c1.setOutputMarkupId(true);
-		add(c1);
 
 		final Label c2 = new Label(this, "c2", new PropertyModel(this, "counter2"));
 		c2.setOutputMarkupId(true);
-		add(c2);
 
-		add(new AjaxLink(this, "c1-link")
+		new AjaxLink(this, "c1-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -88,9 +86,9 @@ public class EffectsPage extends BasePage
 				target.addComponent(c1);
 				target.addJavascript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
 			}
-		});
+		};
 
-		add(new AjaxFallbackLink(this, "c2-link")
+		new AjaxFallbackLink(this, "c2-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -103,6 +101,6 @@ public class EffectsPage extends BasePage
 				}
 			}
 
-		});
+		};
 	}
 }

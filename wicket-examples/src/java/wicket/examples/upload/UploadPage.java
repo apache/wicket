@@ -78,25 +78,18 @@ public class UploadPage extends WicketExamplePage
 		// Create feedback panels
 		final FeedbackPanel uploadFeedback = new FeedbackPanel(this, "uploadFeedback");
 
-		// Add uploadFeedback to the page itself
-		add(uploadFeedback);
-
 		// Add simple upload form, which is hooked up to its feedback panel by
 		// virtue of that panel being nested in the form.
 		final FileUploadForm simpleUploadForm = new FileUploadForm(this, "simpleUpload");
-		add(simpleUploadForm);
 
 		// Add folder view
-		add(new Label(this, "dir", uploadFolder.getAbsolutePath()));
+		new Label(this, "dir", uploadFolder.getAbsolutePath());
 		files.addAll(Arrays.asList(uploadFolder.listFiles()));
 		fileListView = new FileListView(this, "fileList", files);
-		add(fileListView);
 
 		// Add upload form with ajax progress bar
 		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm(this, "ajax-simpleUpload");
-		ajaxSimpleUploadForm.add(new UploadProgressBar(ajaxSimpleUploadForm, "progress",
-				ajaxSimpleUploadForm));
-		add(ajaxSimpleUploadForm);
+		new UploadProgressBar(ajaxSimpleUploadForm, "progress", ajaxSimpleUploadForm);
 
 	}
 
@@ -149,7 +142,7 @@ public class UploadPage extends WicketExamplePage
 			setMultiPart(true);
 
 			// Add one file input field
-			add(fileUploadField = new FileUploadField(this, "fileInput"));
+			fileUploadField = new FileUploadField(this, "fileInput");
 
 			// Set maximum size to 100K for demo purposes
 			setMaxSize(Bytes.kilobytes(100));
@@ -213,8 +206,8 @@ public class UploadPage extends WicketExamplePage
 		protected void populateItem(ListItem listItem)
 		{
 			final File file = (File)listItem.getModelObject();
-			listItem.add(new Label(listItem, "file", file.getName()));
-			listItem.add(new Link(listItem, "delete")
+			new Label(listItem, "file", file.getName());
+			new Link(listItem, "delete")
 			{
 				@Override
 				public void onClick()
@@ -223,7 +216,7 @@ public class UploadPage extends WicketExamplePage
 					refreshFiles();
 					UploadPage.this.info("Deleted " + file);
 				}
-			});
+			};
 		}
 	}
 }

@@ -53,7 +53,6 @@ public class ListMultipleChoicePage extends WicketExamplePage
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
-		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
 		Form form = new Form(this, "form")
@@ -64,7 +63,6 @@ public class ListMultipleChoicePage extends WicketExamplePage
 				info("input: " + input);
 			}
 		};
-		add(form);
 
 		// Add a multiple list choice component that uses the model object's
 		// 'site'
@@ -73,10 +71,8 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		// Note that our model here holds a Collection, as we need to store
 		// multiple values too
 		ListMultipleChoice listChoice = new ListMultipleChoice(form, "sites", SITES);
-		form.add(listChoice);
 
 		listChoice = new ListMultipleChoice(form, "choices", MANY_CHOICES).setMaxRows(5);
-		form.add(listChoice);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -140,7 +136,7 @@ public class ListMultipleChoicePage extends WicketExamplePage
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;ListMultipleChoice manyChoice = new ListMultipleChoice(\"choices\", MANY_CHOICES).setMaxRows(5);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;form.add(manyChoice);";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 
 	}
 }

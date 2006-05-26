@@ -69,17 +69,14 @@ public class LinksPage extends BasePage
 	{
 		final Label c1 = new Label(this, "c1", new PropertyModel(this, "counter1"));
 		c1.setOutputMarkupId(true);
-		add(c1);
 
 		final Label c2 = new Label(this, "c2", new PropertyModel(this, "counter2"));
 		c2.setOutputMarkupId(true);
-		add(c2);
 
 		final Label c3 = new Label(this, "c3", new PropertyModel(this, "counter3"));
 		c3.setOutputMarkupId(true);
-		add(c3);
 
-		add(new AjaxLink(this, "c1-link")
+		new AjaxLink(this, "c1-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -87,9 +84,9 @@ public class LinksPage extends BasePage
 				counter1++;
 				target.addComponent(c1);
 			}
-		});
+		};
 
-		add(new AjaxFallbackLink(this, "c2-link")
+		new AjaxFallbackLink(this, "c2-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -104,9 +101,9 @@ public class LinksPage extends BasePage
 					target.addComponent(c2);
 				}
 			}
-		});
+		};
 
-		add(new IndicatingAjaxLink(this, "c3-link")
+		new IndicatingAjaxLink(this, "c3-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -123,9 +120,9 @@ public class LinksPage extends BasePage
 					// noop
 				}
 			}
-		});
+		};
 
-		add(new AjaxLink(this, "success-link")
+		new AjaxLink(this, "success-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -156,9 +153,9 @@ public class LinksPage extends BasePage
 					}
 				};
 			};
-		});
+		};
 
-		add(new AjaxLink(this, "failure-link")
+		new AjaxLink(this, "failure-link")
 		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
@@ -190,6 +187,6 @@ public class LinksPage extends BasePage
 					}
 				};
 			};
-		});
+		};
 	}
 }

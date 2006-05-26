@@ -51,12 +51,12 @@ public class SortingPage extends BasePage
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel(item, "actions", item.getModel()));
-				item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
-				item.add(new Label(item, "firstname", contact.getFirstName()));
-				item.add(new Label(item, "lastname", contact.getLastName()));
-				item.add(new Label(item, "homephone", contact.getHomePhone()));
-				item.add(new Label(item, "cellphone", contact.getCellPhone()));
+				new ActionPanel(item, "actions", item.getModel());
+				new Label(item, "contactid", String.valueOf(contact.getId()));
+				new Label(item, "firstname", contact.getFirstName());
+				new Label(item, "lastname", contact.getLastName());
+				new Label(item, "homephone", contact.getHomePhone());
+				new Label(item, "cellphone", contact.getCellPhone());
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
@@ -71,26 +71,25 @@ public class SortingPage extends BasePage
 
 		dataView.setItemsPerPage(8);
 
-		add(new OrderByBorder(this, "orderByFirstName", "firstName", dp)
+		new OrderByBorder(this, "orderByFirstName", "firstName", dp)
 		{
 			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);
 			}
-		});
+		};
 
-		add(new OrderByBorder(this, "orderByLastName", "lastName", dp)
+		new OrderByBorder(this, "orderByLastName", "lastName", dp)
 		{
 			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);
 			}
-		});
+		};
 
-		add(dataView);
 
-		add(new PagingNavigator(this, "navigator", dataView));
+		new PagingNavigator(this, "navigator", dataView);
 	}
 }

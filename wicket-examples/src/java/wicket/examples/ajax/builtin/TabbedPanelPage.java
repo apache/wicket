@@ -68,7 +68,7 @@ public class TabbedPanelPage extends BasePage
 			}
 		});
 
-		add(new AjaxTabbedPanel(this, "tabs", tabs));
+		new AjaxTabbedPanel(this, "tabs", tabs);
 	}
 
 	/**

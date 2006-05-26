@@ -33,8 +33,6 @@ public class BorderPage extends WicketExamplePage
 	{
 		MyBorder border = new MyBorder(this, "border");
 		Label label = new Label(border, "label", "I am the label");
-		border.add(label);
-		add(border);
 	}
 
 	/**
@@ -53,7 +51,7 @@ public class BorderPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border.add(label);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(border);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 
 	}
 

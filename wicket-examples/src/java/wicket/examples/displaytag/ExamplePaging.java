@@ -58,8 +58,7 @@ public class ExamplePaging extends Displaytag
 		// - The list contains more items than the page
 		final SimplePageableListView table = new SimplePageableListView(this, "rows", data, 10);
 
-		add(table);
-		add(new MyPageableListViewNavigator(this, "pageTableNav", table));
+		new MyPageableListViewNavigator(this, "pageTableNav", table);
 
 		// =======================================================================
 		// Add pageable table with alternating row styles
@@ -75,22 +74,20 @@ public class ExamplePaging extends Displaytag
 				super.populateItem(listItem);
 
 				final ListObject value = (ListObject)listItem.getModelObject();
-				listItem.add(new Label(listItem, "comments", value.getDescription()));
+				new Label(listItem, "comments", value.getDescription());
 			}
 		};
 
-		add(table2);
-		add(new MyPageableListViewNavigator(this, "pageTableNav2", table2));
+		new MyPageableListViewNavigator(this, "pageTableNav2", table2);
 
 		// =======================================================================
 		// Empty table
 		List data4 = new ArrayList();
 		final SimplePageableListView table4 = new SimplePageableListView(this, "rows4", data4, 10);
-		add(table4);
-		add(new MyPageableListViewNavigator(this, "pageTableNav4", table4));
+		new MyPageableListViewNavigator(this, "pageTableNav4", table4);
 
 		// =======================================================================
-		add(new Label(this, "info5", ""));
+		new Label(this, "info5", "");
 
 		final List addRemoveOptions = new ArrayList();
 		addRemoveOptions.add("10");
@@ -104,7 +101,7 @@ public class ExamplePaging extends Displaytag
 		addRemoveOptions.add("-5");
 		addRemoveOptions.add("-10");
 
-		add(new DropDownChoice(this, "addRemove", new Model(null), addRemoveOptions)
+		new DropDownChoice(this, "addRemove", new Model(null), addRemoveOptions)
 		{
 			@Override
 			protected boolean wantOnSelectionChangedNotifications()
@@ -142,11 +139,10 @@ public class ExamplePaging extends Displaytag
 					}
 				}
 			}
-		});
+		};
 
 		List data5 = new ArrayList();
 		final SimplePageableListView table5 = new SimplePageableListView(this, "rows5", data5, 4);
-		add(table5);
-		add(new MyPageableListViewNavigator(this, "pageTableNav5", table5));
+		new MyPageableListViewNavigator(this, "pageTableNav5", table5);
 	}
 }

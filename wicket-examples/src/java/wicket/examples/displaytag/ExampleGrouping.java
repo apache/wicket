@@ -44,7 +44,7 @@ public class ExampleGrouping extends Displaytag
 		ReportList data = new ReportList();
 
 		// Add table of existing comments
-		add(new SimpleListView(this, "rows", data)
+		new SimpleListView(this, "rows", data)
 		{
 			// Remember the value from the previous row
 			private ReportableListObject previousValue = null;
@@ -59,18 +59,18 @@ public class ExampleGrouping extends Displaytag
 				if (previousValue != null)
 				{
 					boolean equal = value.getCity().equals(previousValue.getCity());
-					listItem.add(new Label(listItem, "city", equal ? "" : value.getCity()));
+					new Label(listItem, "city", equal ? "" : value.getCity());
 
 					equal &= value.getProject().equals(previousValue.getProject());
-					listItem.add(new Label(listItem, "project", equal ? "" : value.getProject()));
+					new Label(listItem, "project", equal ? "" : value.getProject());
 				}
 
 				// These values are not grouped
-				listItem.add(new Label(listItem, "hours", Double.toString(value.getAmount())));
+				new Label(listItem, "hours", Double.toString(value.getAmount()));
 
 				// Remember current value
 				previousValue = value;
 			}
-		});
+		};
 	}
 }

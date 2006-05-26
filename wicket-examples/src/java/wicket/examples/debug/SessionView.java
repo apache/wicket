@@ -53,10 +53,10 @@ public final class SessionView extends Panel
 		super(parent, id);
 
 		// Basic attributes
-		add(new Label(this, "id", session.getId()));
-		add(new Label(this, "locale", session.getLocale().toString()));
-		add(new Label(this, "style", session.getStyle() == null ? "[None]" : session.getStyle()));
-		add(new Label(this, "size", new Model()
+		new Label(this, "id", session.getId());
+		new Label(this, "locale", session.getLocale().toString());
+		new Label(this, "style", session.getStyle() == null ? "[None]" : session.getStyle());
+		new Label(this, "size", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -65,8 +65,8 @@ public final class SessionView extends Panel
 			{
 				return Bytes.bytes(Objects.sizeof(session));
 			}
-		}));
-		add(new Label(this, "totalSize", new Model()
+		});
+		new Label(this, "totalSize", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -75,13 +75,13 @@ public final class SessionView extends Panel
 			{
 				return Bytes.bytes(session.getSizeInBytes());
 			}
-		}));
+		});
 
 		// Get pagemaps
 		final List pagemaps = session.getPageMaps();
 
 		// Create the table containing the list the components
-		add(new ListView(this, "pagemaps", pagemaps)
+		new ListView(this, "pagemaps", pagemaps)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -92,8 +92,8 @@ public final class SessionView extends Panel
 			protected void populateItem(final ListItem listItem)
 			{
 				PageMap p = (PageMap)listItem.getModelObject();
-				listItem.add(new PageMapView(listItem, "pagemap", p));
+				new PageMapView(listItem, "pagemap", p);
 			}
-		});
+		};
 	}
 }

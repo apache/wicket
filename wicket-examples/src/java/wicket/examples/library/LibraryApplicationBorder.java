@@ -38,6 +38,6 @@ public class LibraryApplicationBorder extends Border
 	public LibraryApplicationBorder(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
-		add(new BoxBorder(this, "boxBorder"));
+		new BoxBorder(this, "boxBorder");
 	}
 }

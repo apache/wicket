@@ -52,7 +52,7 @@ public class ExampleNoColumns extends Displaytag
 		// the tags class attribute accordingly.
 		// Note: This is not the simplest way Wicket offers to render
 		// lists, but it shows how ListViews work in general.
-		add(new ListViewWithAlternatingRowStyle(this, "entries", data)
+		new ListViewWithAlternatingRowStyle(this, "entries", data)
 		{
 			/**
 			 * populateItem() is called for each item of the list. ListItem
@@ -63,8 +63,8 @@ public class ExampleNoColumns extends Displaytag
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
-				listItem.add(new Label(listItem, "entry", value.getName()));
+				new Label(listItem, "entry", value.getName());
 			}
-		});
+		};
 	}
 }

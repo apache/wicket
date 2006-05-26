@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -89,8 +89,8 @@ public class LeftFrame extends WebPage
 	 */
 	public LeftFrame(BodyFrame index)
 	{
-		add(new ChangeFramePageLink(this, "linkToPage1", index, Page1.class));
-		add(new ChangeFramePageLink(this, "linkToPage2", index, Page2.class));
+		new ChangeFramePageLink(this, "linkToPage1", index, Page1.class);
+		new ChangeFramePageLink(this, "linkToPage2", index, Page2.class);
 	}
 
 	/**

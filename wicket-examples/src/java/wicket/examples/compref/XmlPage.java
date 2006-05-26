@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -38,7 +38,7 @@ public class XmlPage extends WebPage
 	 */
 	public XmlPage()
 	{
-		add(new PersonsListView(this, "persons", ComponentReferenceApplication.getPersons()));
+		new PersonsListView(this, "persons", ComponentReferenceApplication.getPersons());
 	}
 
 	/**
@@ -70,8 +70,8 @@ public class XmlPage extends WebPage
 		protected void populateItem(ListItem item)
 		{
 			Person person = (Person)item.getModelObject();
-			item.add(new Label(item, "firstName", person.getName()));
-			item.add(new Label(item, "lastName", person.getLastName()));
+			new Label(item, "firstName", person.getName());
+			new Label(item, "lastName", person.getLastName());
 		}
 	}
 }

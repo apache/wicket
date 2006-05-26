@@ -58,13 +58,13 @@ public final class BookDetails extends AuthenticatedWebPage
 	{
 		Model bookModel = new Model(book);
 
-		add(new Label(this, "title", book.getTitle()));
-		add(new Label(this, "author", book.getAuthor()));
-		add(new Label(this, "fiction", Boolean.toString(book.getFiction())));
-		add(BookDetails.link(this, "companion", book.getCompanionBook(), getLocalizer().getString(
-				"noBookTitle", this)));
-		add(BookDetails.link(this, "related", book.getRelatedBook(), getLocalizer().getString(
-				"noBookTitle", this)));
+		new Label(this, "title", book.getTitle());
+		new Label(this, "author", book.getAuthor());
+		new Label(this, "fiction", Boolean.toString(book.getFiction()));
+		BookDetails.link(this, "companion", book.getCompanionBook(), getLocalizer().getString(
+				"noBookTitle", this));
+		BookDetails.link(this, "related", book.getRelatedBook(), getLocalizer().getString(
+				"noBookTitle", this));
 
 		String writingStyles;
 		final boolean hasStyles = (book.getWritingStyles() != null)
@@ -93,8 +93,8 @@ public final class BookDetails extends AuthenticatedWebPage
 		final AttributeModifier italic = new AttributeModifier("class", new Model("italic"));
 		italic.setEnabled(!hasStyles);
 
-		add(writingStylesLabel.add(italic));
-		add(EditBook.link(this, "edit", book.getId()));
+		writingStylesLabel.add(italic);
+		EditBook.link(this, "edit", book.getId());
 	}
 
 	/**
@@ -116,11 +116,11 @@ public final class BookDetails extends AuthenticatedWebPage
 		if (book != null)
 		{
 			link.setParameter("id", book.getId());
-			link.add(new Label(link, "title", new Model(book)));
+			new Label(link, "title", new Model(book));
 		}
 		else
 		{
-			link.add(new Label(link, "title", noBookTitle));
+			new Label(link, "title", noBookTitle);
 			link.setEnabled(false);
 		}
 

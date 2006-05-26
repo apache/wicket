@@ -61,8 +61,8 @@ public final class PageMapView extends Panel
 		super(parent, id);
 
 		// Basic attributes
-		add(new Label(this, "name", pageMap.getName() == null ? "null" : pageMap.getName()));
-		add(new Label(this, "size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
+		new Label(this, "name", pageMap.getName() == null ? "null" : pageMap.getName());
+		new Label(this, "size", "" + Bytes.bytes(pageMap.getSizeInBytes()));
 
 		// Get entry accesses
 		final ArrayListStack accessStack;
@@ -79,7 +79,7 @@ public final class PageMapView extends Panel
 		Collections.reverse(reversedAccessStack);
 
 		// Create the table containing the list the components
-		add(new ListView(this, "accesses", reversedAccessStack)
+		new ListView(this, "accesses", reversedAccessStack)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -95,9 +95,8 @@ public final class PageMapView extends Panel
 				parameters.put("pageId", "" + entry.getNumericId());
 				Link link = new BookmarkablePageLink(listItem, "link", InspectorPage.class,
 						parameters);
-				link.add(new Label(link, "id", "" + entry.getNumericId()));
-				listItem.add(link);
-				listItem.add(new Label(listItem, "class", "" + entry.getClass().getName()));
+				new Label(link, "id", "" + entry.getNumericId());
+				new Label(listItem, "class", "" + entry.getClass().getName());
 				long size;
 				int versions;
 				if (entry instanceof Page)
@@ -112,13 +111,11 @@ public final class PageMapView extends Panel
 					size = Objects.sizeof(entry);
 					versions = 0;
 				}
-				listItem.add(new Label(listItem, "access", ""
-						+ (accessStack.size() - listItem.getIndex())));
-				listItem.add(new Label(listItem, "version", "" + access.getVersion()));
-				listItem.add(new Label(listItem, "versions", "" + versions));
-				listItem.add(new Label(listItem, "size", size == -1 ? "[Unknown]" : ""
-						+ Bytes.bytes(size)));
+				new Label(listItem, "access", "" + (accessStack.size() - listItem.getIndex()));
+				new Label(listItem, "version", "" + access.getVersion());
+				new Label(listItem, "versions", "" + versions);
+				new Label(listItem, "size", size == -1 ? "[Unknown]" : "" + Bytes.bytes(size));
 			}
-		});
+		};
 	}
 }

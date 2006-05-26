@@ -62,7 +62,7 @@ public abstract class SortableListViewHeader extends Border
 		this.group = group;
 
 		// If user clicks on the header, sorting will reverse
-		add(new Link(this, "actionLink")
+		new Link(this, "actionLink")
 		{
 			@Override
 			public void onClick()
@@ -70,7 +70,7 @@ public abstract class SortableListViewHeader extends Border
 				// call SortableTableHeaders implementation
 				SortableListViewHeader.this.linkClicked();
 			}
-		});
+		};
 	}
 
 	/**

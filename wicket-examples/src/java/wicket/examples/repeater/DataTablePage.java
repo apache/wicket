@@ -48,7 +48,7 @@ public class DataTablePage extends BasePage
 		{
 			public void populateItem(Item cellItem, String componentId, IModel model)
 			{
-				cellItem.add(new ActionPanel(cellItem, componentId, model));
+				new ActionPanel(cellItem, componentId, model);
 			}
 		});
 
@@ -58,6 +58,6 @@ public class DataTablePage extends BasePage
 		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
 		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
 
-		add(new DefaultDataTable(this, "table", columns, new SortableContactDataProvider(), 8));
+		new DefaultDataTable(this, "table", columns, new SortableContactDataProvider(), 8);
 	}
 }

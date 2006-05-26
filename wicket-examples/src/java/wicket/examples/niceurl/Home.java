@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,13 +36,13 @@ public class Home extends WicketExamplePage
 	public Home()
 	{
 		// references to single mounts
-		add(new BookmarkablePageLink(this, "page1Link", Page1.class));
-		add(new BookmarkablePageLink(this, "page2Link", Page2.class));
+		new BookmarkablePageLink(this, "page1Link", Page1.class);
+		new BookmarkablePageLink(this, "page2Link", Page2.class);
 
 		// references to package mounts
-		add(new BookmarkablePageLink(this, "page3Link", Page3.class));
-		add(new BookmarkablePageLink(this, "page4Link", Page4.class));
-		add(new BookmarkablePageLink(this, "page5Link", Page5.class));
+		new BookmarkablePageLink(this, "page3Link", Page3.class);
+		new BookmarkablePageLink(this, "page4Link", Page4.class);
+		new BookmarkablePageLink(this, "page5Link", Page5.class);
 	}
 
 	/**

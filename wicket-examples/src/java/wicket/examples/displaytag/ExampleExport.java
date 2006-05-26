@@ -47,11 +47,11 @@ public class ExampleExport extends Displaytag
 		final List data = new TestList(6, false);
 
 		// Add the table
-		add(new SimpleListView(this, "rows", data));
+		new SimpleListView(this, "rows", data);
 
 		// Add the export links
-		add(new ExportLink(this, "exportCsv", data, new CsvView(data, true, false, false)));
-		add(new ExportLink(this, "exportExcel", data, new ExcelView(data, true, false, false)));
-		add(new ExportLink(this, "exportXml", data, new XmlView(data, true, false, false)));
+		new ExportLink(this, "exportCsv", data, new CsvView(data, true, false, false));
+		new ExportLink(this, "exportExcel", data, new ExcelView(data, true, false, false));
+		new ExportLink(this, "exportXml", data, new XmlView(data, true, false, false));
 	}
 }

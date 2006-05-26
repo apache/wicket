@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -53,11 +53,10 @@ public final class SignIn extends WicketExamplePage
 		// Create feedback panel and add to page
 		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 
-		add(feedback);
 
 		// Add sign-in form to page, passing feedback panel as validation error
 		// handler
-		add(new SignInForm(this, "signInForm"));
+		new SignInForm(this, "signInForm");
 	}
 
 	/**
@@ -81,8 +80,8 @@ public final class SignIn extends WicketExamplePage
 			super(parent, id);
 
 			// Attach textfield components that edit properties map model
-			add(new TextField(this, "username", new PropertyModel(properties, "username")));
-			add(new PasswordTextField(this, "password", new PropertyModel(properties, "password")));
+			new TextField(this, "username", new PropertyModel(properties, "username"));
+			new PasswordTextField(this, "password", new PropertyModel(properties, "password"));
 		}
 
 		/**

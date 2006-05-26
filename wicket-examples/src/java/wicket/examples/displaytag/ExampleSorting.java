@@ -44,10 +44,9 @@ public class ExampleSorting extends Displaytag
 
 		// Add the table (but no table header)
 		SimpleListView table = new SimpleListView(this, "rows", data);
-		add(table);
 
 		// And this is with a little bit of magic
-		add(new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders(this, "header", table)
 		{
 			/**
 			 * If object does not support equals()
@@ -94,6 +93,6 @@ public class ExampleSorting extends Displaytag
 
 				return "";
 			}
-		});
+		};
 	}
 }

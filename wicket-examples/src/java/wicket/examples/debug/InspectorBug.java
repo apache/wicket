@@ -49,7 +49,6 @@ public final class InspectorBug extends Panel
 		PageParameters parameters = new PageParameters();
 		parameters.put("pageId", page.getId());
 		Link link = new BookmarkablePageLink(this, "link", InspectorPage.class, parameters);
-		link.add(new Image(link, "bug"));
-		add(link);
+		new Image(link, "bug");
 	}
 }

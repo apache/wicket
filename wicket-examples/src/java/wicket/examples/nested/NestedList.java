@@ -46,7 +46,7 @@ public final class NestedList extends Panel
 	public NestedList(MarkupContainer parent, final String id, List list)
 	{
 		super(parent, id);
-		add(new Rows(this, "rows", list));
+		new Rows(this, "rows", list);
 	}
 
 	/**
@@ -80,7 +80,6 @@ public final class NestedList extends Panel
 			{
 				// create a panel that renders the sub lis
 				NestedList nested = new NestedList(listItem, "nested", (List)modelObject);
-				listItem.add(nested);
 				// if the current element is a list, we create a dummy row/
 				// label element
 				// as we have to confirm to our HTML definition, and set it's
@@ -88,8 +87,7 @@ public final class NestedList extends Panel
 				// property to false as we do not want LI tags to be rendered.
 				WebMarkupContainer row = new WebMarkupContainer(listItem, "row");
 				row.setVisible(false);
-				row.add(new WebMarkupContainer(row, "label"));
-				listItem.add(row);
+				new WebMarkupContainer(row, "label");
 			}
 			else
 			{
@@ -100,13 +98,11 @@ public final class NestedList extends Panel
 				// property to false to avoid having the UL tag rendered
 				NestedList nested = new NestedList(listItem, "nested", null);
 				nested.setVisible(false);
-				listItem.add(nested);
 				// add the row (with the LI element attached, and the label with
 				// the
 				// row's actual value to display
 				WebMarkupContainer row = new WebMarkupContainer(listItem, "row");
-				row.add(new Label(row, "label", modelObject.toString()));
-				listItem.add(row);
+				new Label(row, "label", modelObject.toString());
 			}
 		}
 	}

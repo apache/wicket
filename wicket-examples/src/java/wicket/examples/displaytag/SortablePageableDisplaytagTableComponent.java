@@ -65,10 +65,9 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 
 		// Add a table
 		final SimplePageableListView table = new SimplePageableListView(this, "rows", list, 10);
-		add(table);
 
 		// Add a sortable header to the table
-		add(new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders(this, "header", table)
 		{
 			@Override
 			protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
@@ -105,19 +104,19 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 
 				return "";
 			}
-		});
+		};
 
 		// Add a headline
-		add(new TableHeaderLabel(this, "headline", table));
+		new TableHeaderLabel(this, "headline", table);
 
 		// Add navigation
-		add(new PagingNavigation(this, "navigation", table));
+		new PagingNavigation(this, "navigation", table);
 
 		// Add some navigation links
-		add(new PagingNavigationLink(this, "first", table, 0));
-		add(new PagingNavigationIncrementLink(this, "prev", table, -1));
-		add(new PagingNavigationIncrementLink(this, "next", table, 1));
-		add(new PagingNavigationLink(this, "last", table, table.getPageCount() - 1));
+		new PagingNavigationLink(this, "first", table, 0);
+		new PagingNavigationIncrementLink(this, "prev", table, -1);
+		new PagingNavigationIncrementLink(this, "next", table, 1);
+		new PagingNavigationLink(this, "last", table, table.getPageCount() - 1);
 	}
 
 	/**

@@ -79,10 +79,10 @@ public class NewUserWizard extends Wizard
 		{
 			super(parent, new ResourceModel("userdetails.title"), null);
 			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model(user)));
-			add(new RequiredTextField(this, "user.firstName"));
-			add(new RequiredTextField(this, "user.lastName"));
-			add(new TextField(this, "user.department"));
-			add(new CheckBox(this, "assignRoles"));
+			new RequiredTextField(this, "user.firstName");
+			new RequiredTextField(this, "user.lastName");
+			new TextField(this, "user.department");
+			new CheckBox(this, "assignRoles");
 		}
 	}
 
@@ -98,9 +98,9 @@ public class NewUserWizard extends Wizard
 		{
 			super(parent, new ResourceModel("username.title"),
 					new ResourceModel("username.summary"));
-			add(new RequiredTextField(this, "user.userName"));
-			add(new RequiredTextField(this, "user.email").add(EmailAddressPatternValidator
-					.getInstance()));
+			new RequiredTextField(this, "user.userName");
+			new RequiredTextField(this, "user.email").add(EmailAddressPatternValidator
+					.getInstance());
 		}
 	}
 
@@ -116,7 +116,7 @@ public class NewUserWizard extends Wizard
 		{
 			super(parent, new ResourceModel("userroles.title"), null);
 			setSummaryModel(new StringResourceModel("userroles.summary", this, new Model(user)));
-			add(new ListMultipleChoice(this, "user.roles", allRoles));
+			new ListMultipleChoice(this, "user.roles", allRoles);
 		}
 
 		/**

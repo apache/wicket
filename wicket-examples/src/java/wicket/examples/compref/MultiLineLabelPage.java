@@ -33,7 +33,7 @@ public class MultiLineLabelPage extends WicketExamplePage
 	{
 		String text = "\nThis is a line.\n" + "And this is another line.\n" + "End of lines.\n";
 
-		add(new MultiLineLabel(this, "multiLineLabel", text));
+		new MultiLineLabel(this, "multiLineLabel", text);
 	}
 
 	/**
@@ -51,6 +51,6 @@ public class MultiLineLabelPage extends WicketExamplePage
 				+ "\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new MultiLineLabel(\"multiLineLabel\", text));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 	}
 }

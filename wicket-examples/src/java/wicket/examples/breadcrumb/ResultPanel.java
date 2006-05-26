@@ -48,7 +48,7 @@ public class ResultPanel extends BreadCrumbPanel
 			result = "(hey, you didn't even provide some input!)";
 		}
 
-		add(new Label(this, "result", result));
+		new Label(this, "result", result);
 	}
 
 	/**

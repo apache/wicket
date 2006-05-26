@@ -57,7 +57,7 @@ public class HelloBrowser extends WicketExamplePage
 		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo())
 				.getProperties();
 
-		add(new Label(this, "clientinfo", properties.toString()));
+		new Label(this, "clientinfo", properties.toString());
 
 		IModel clientTimeModel = new AbstractReadOnlyModel()
 		{
@@ -85,6 +85,6 @@ public class HelloBrowser extends WicketExamplePage
 						+ "no idea what your time is";
 			}
 		};
-		add(new Label(this, "clienttime", clientTimeModel));
+		new Label(this, "clienttime", clientTimeModel);
 	}
 }

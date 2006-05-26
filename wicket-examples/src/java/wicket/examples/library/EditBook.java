@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -59,10 +59,8 @@ public final class EditBook extends AuthenticatedWebPage
 		// Create and add feedback panel to page
 		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 
-		add(feedback);
-
 		// Add edit book form to page
-		add(new EditBookForm(this, "editBookForm", book));
+		new EditBookForm(this, "editBookForm", book);
 	}
 
 	/**
@@ -116,19 +114,15 @@ public final class EditBook extends AuthenticatedWebPage
 			final TextField title = new TextField(titleFeedback, "title");
 			title.setRequired(true);
 			title.add(StringValidator.maximumLength(30));
-			add(titleFeedback);
-			titleFeedback.add(title);
 
 			// Create a required text field that edits the book's author
 			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(
 					this, "authorFeedback");
 			final TextField author = new TextField(authorFeedback, "author");
 			author.setRequired(true);
-			add(authorFeedback);
-			authorFeedback.add(author);
 
 			// Add fiction checkbox
-			add(new CheckBox(this, "fiction"));
+			new CheckBox(this, "fiction");
 
 			// Books is everything but otherBook
 			List books = new ArrayList();
@@ -137,15 +131,14 @@ public final class EditBook extends AuthenticatedWebPage
 			books.remove(otherBook);
 
 			// Add companion book choice
-			add(new DropDownChoice(this, "companionBook", books));
+			new DropDownChoice(this, "companionBook", books);
 
 			// Add radio choice test
 			final RadioChoice relatedBook = new RadioChoice(this, "relatedBook", books);
-			add(relatedBook);
 
 			// Multi-select among writing styles
-			add(new ListMultipleChoice(this, "writingStyles", EnumeratedType
-					.getValues(Book.WritingStyle.class)));
+			new ListMultipleChoice(this, "writingStyles", EnumeratedType
+					.getValues(Book.WritingStyle.class));
 		}
 
 		/**

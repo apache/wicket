@@ -49,27 +49,27 @@ public class ExampleAutolink extends Displaytag
 		List data = new TestList(10, false);
 
 		// Add table
-		add(new SimpleListView(this, "rows", data)
+		new SimpleListView(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				listItem.add(new Label(listItem, "id", Integer.toString(value.getId())));
-				listItem.add(new SmartLinkLabel(listItem, "email", value.getEmail()));
-				listItem.add(new SmartLinkLabel(listItem, "url", value.getUrl()));
+				new Label(listItem, "id", Integer.toString(value.getId()));
+				new SmartLinkLabel(listItem, "email", value.getEmail());
+				new SmartLinkLabel(listItem, "url", value.getUrl());
 			}
-		});
+		};
 
 		// Add table
-		add(new SimpleListView(this, "rows2", data)
+		new SimpleListView(this, "rows2", data)
 		{
 			@Override
 			protected Component newLabel(MarkupContainer parent, String id)
 			{
 				return new SmartLinkLabel(parent, id);
 			}
-		});
+		};
 	}
 }

@@ -40,7 +40,7 @@ public class FirstPanel extends BreadCrumbPanel
 			final IBreadCrumbModel breadCrumbModel)
 	{
 		super(parent, id, breadCrumbModel);
-		add(new BreadCrumbPanelLink(this, "linkToSecond", this, SecondPanel.class));
+		new BreadCrumbPanelLink(this, "linkToSecond", this, SecondPanel.class);
 	}
 
 	/**

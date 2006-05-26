@@ -51,7 +51,6 @@ public class GuestBook extends BasePage
 
 			// Add text entry widget
 			text = new TextArea(this, "text").setOutputMarkupId(true);
-			add(text);
 		}
 
 		/**
@@ -102,24 +101,23 @@ public class GuestBook extends BasePage
 	{
 		// Add comment form
 		CommentForm commentForm = new CommentForm(this, "commentForm");
-		add(commentForm);
 
 		// the WebMarkupContainer is used to update the listview in an ajax call
 		comments = new WebMarkupContainer(this, "comments");
-		add(comments.setOutputMarkupId(true));
+		comments.setOutputMarkupId(true);
 
 		// Add commentListView of existing comments
-		comments.add(commentListView = new ListView<Comment>(comments, "comments",
+		commentListView = new ListView<Comment>(comments, "comments",
 				new PropertyModel<List<Comment>>(this, "commentList"))
 		{
 			@Override
 			public void populateItem(final ListItem<Comment> listItem)
 			{
 				final Comment comment = listItem.getModelObject();
-				listItem.add(new Label(listItem, "date", new Model<Date>(comment.getDate())));
-				listItem.add(new MultiLineLabel(listItem, "text", comment.getText()));
+				new Label(listItem, "date", new Model<Date>(comment.getDate()));
+				new MultiLineLabel(listItem, "text", comment.getText());
 			}
-		});
+		};
 
 		// we need to cancel the standard submit of the form in the onsubmit
 		// handler, otherwise we'll get double submits. To do so, we

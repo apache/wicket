@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -32,6 +32,6 @@ public class Popup extends WicketExamplePage
 	 */
 	public Popup()
 	{
-		add(new PopupCloseLink(this, "close"));
+		new PopupCloseLink(this, "close");
 	}
 }

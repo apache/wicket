@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -55,19 +55,19 @@ public final class GuestBook extends WicketExamplePage
 	public GuestBook()
 	{
 		// Add comment form
-		add(new CommentForm(this, "commentForm"));
+		new CommentForm(this, "commentForm");
 
 		// Add commentListView of existing comments
-		add(commentListView = new ListView(this, "comments", commentList)
+		commentListView = (ListView)new ListView(this, "comments", commentList)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final Comment comment = (Comment)listItem.getModelObject();
-				listItem.add(new Label(listItem, "date", new Model(comment.getDate())));
-				listItem.add(new MultiLineLabel(listItem, "text", comment.getText()));
+				new Label(listItem, "date", new Model(comment.getDate()));
+				new MultiLineLabel(listItem, "text", comment.getText());
 			}
-		}).setVersioned(false);
+		}.setVersioned(false);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public final class GuestBook extends WicketExamplePage
 			super(parent, id, new CompoundPropertyModel(new Comment()));
 
 			// Add text entry widget
-			add(new TextArea(this, "text"));
+			new TextArea(this, "text");
 		}
 
 		/**

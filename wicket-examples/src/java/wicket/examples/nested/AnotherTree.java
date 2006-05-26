@@ -97,7 +97,6 @@ public class AnotherTree extends Tree
 					junctionLinkClicked(node);
 				}
 			};
-			add(junctionLink);
 
 			// we make this a proper model instead of just evaluating the
 			// string, as we want to have the current value everytime
@@ -115,7 +114,7 @@ public class AnotherTree extends Tree
 			{
 				junctionLabel = (isExpanded(node)) ? "[-]" : "[+]";
 			}
-			junctionLink.add(new Label(junctionLink, "junctionLabel", junctionLabelModel));
+			new Label(junctionLink, "junctionLabel", junctionLabelModel);
 
 			// create a link for selecting a node
 			final Link nodeLink = new Link(this, "nodeLink")
@@ -127,8 +126,7 @@ public class AnotherTree extends Tree
 				}
 			};
 			String label = (userObject instanceof List) ? "" : String.valueOf(node.getUserObject());
-			nodeLink.add(new Label(nodeLink, "label", label));
-			add(nodeLink);
+			new Label(nodeLink, "label", label);
 		}
 	}
 }

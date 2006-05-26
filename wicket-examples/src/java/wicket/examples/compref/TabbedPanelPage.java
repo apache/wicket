@@ -69,18 +69,18 @@ public class TabbedPanelPage extends WicketExamplePage
 
 		// add the new tabbed panel, attribute modifier only used to switch
 		// between different css variations
-		add(new TabbedPanel(this, "tabs", tabs).add(new AttributeModifier("class", true,
-				TabbedPanelPage.this.getModel())));
+		new TabbedPanel(this, "tabs", tabs).add(new AttributeModifier("class", true,
+				TabbedPanelPage.this.getModel()));
 
 	}
 
 	private void addCssSwitchingLinks()
 	{
-		add(new CssSwitchingLink(this, "var0", "tabpanel"));
-		add(new CssSwitchingLink(this, "var1", "tabpanel1"));
-		add(new CssSwitchingLink(this, "var2", "tabpanel2"));
-		add(new CssSwitchingLink(this, "var3", "tabpanel3"));
-		add(new CssSwitchingLink(this, "var4", "tabpanel4"));
+		new CssSwitchingLink(this, "var0", "tabpanel");
+		new CssSwitchingLink(this, "var1", "tabpanel1");
+		new CssSwitchingLink(this, "var2", "tabpanel2");
+		new CssSwitchingLink(this, "var3", "tabpanel3");
+		new CssSwitchingLink(this, "var4", "tabpanel4");
 	}
 
 	protected class CssSwitchingLink extends Link
@@ -199,6 +199,6 @@ public class TabbedPanelPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public Panel getPanel(String panelId) { return new TabPanel3(panelId); }<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;});<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;add(new TabbedPanel(\"tabs\", tabs)<br/>";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -84,8 +84,8 @@ public class OIRPage extends BasePage
 			protected void populateItem(final Item item)
 			{
 				Contact contact = (Contact)item.getModelObject();
-				item.add(new ActionPanel(item, "actions", item.getModel()));
-				item.add(new Link(item, "toggleHighlite")
+				new ActionPanel(item, "actions", item.getModel());
+				new Link(item, "toggleHighlite")
 				{
 					@Override
 					public void onClick()
@@ -93,12 +93,12 @@ public class OIRPage extends BasePage
 						HighlitableDataItem hitem = (HighlitableDataItem)item;
 						hitem.toggleHighlite();
 					}
-				});
-				item.add(new Label(item, "contactid", String.valueOf(contact.getId())));
-				item.add(new Label(item, "firstname", contact.getFirstName()));
-				item.add(new Label(item, "lastname", contact.getLastName()));
-				item.add(new Label(item, "homephone", contact.getHomePhone()));
-				item.add(new Label(item, "cellphone", contact.getCellPhone()));
+				};
+				new Label(item, "contactid", String.valueOf(contact.getId()));
+				new Label(item, "firstname", contact.getFirstName());
+				new Label(item, "lastname", contact.getLastName());
+				new Label(item, "homephone", contact.getHomePhone());
+				new Label(item, "cellphone", contact.getCellPhone());
 
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
 				{
@@ -119,25 +119,24 @@ public class OIRPage extends BasePage
 		dataView.setItemsPerPage(8);
 		dataView.setItemReuseStrategy(ReuseIfModelsEqualStrategy.getInstance());
 
-		add(new OrderByBorder(this, "orderByFirstName", "firstName", dp)
+		new OrderByBorder(this, "orderByFirstName", "firstName", dp)
 		{
 			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);
 			}
-		});
+		};
 
-		add(new OrderByBorder(this, "orderByLastName", "lastName", dp)
+		new OrderByBorder(this, "orderByLastName", "lastName", dp)
 		{
 			@Override
 			protected void onSortChanged()
 			{
 				dataView.setCurrentPage(0);
 			}
-		});
+		};
 
-		add(dataView);
-		add(new PagingNavigator(this, "navigator", dataView));
+		new PagingNavigator(this, "navigator", dataView);
 	}
 }

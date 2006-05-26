@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,7 +36,7 @@ public final class SignIn extends WicketExamplePage
 	 */
 	public SignIn(final PageParameters parameters)
 	{
-		add(new SignInPanel(this, "signInPanel")
+		new SignInPanel(this, "signInPanel")
 		{
 			@Override
 			public boolean signIn(final String username, final String password)
@@ -55,7 +55,7 @@ public final class SignIn extends WicketExamplePage
 					return false;
 				}
 			}
-		});
+		};
 	}
 
 	/**

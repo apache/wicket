@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -61,7 +61,6 @@ public class SelectPage extends WicketExamplePage
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
-		add(feedbackPanel);
 
 		// Add a form with an onSubmit implementation that sets a message
 		Form form = new Form(this, "form")
@@ -72,17 +71,14 @@ public class SelectPage extends WicketExamplePage
 				info("input: " + input);
 			}
 		};
-		add(form);
 
 		Select site = new Select(form, "site");
-		form.add(site);
-		site.add(new SelectOption(site, "site1", new Model("tss")));
-		site.add(new SelectOption(site, "site2", new Model("jl")));
-		site.add(new SelectOption(site, "site3", new Model("sd")));
-		site.add(new SelectOption(site, "site4", new Model("bn")));
+		new SelectOption(site, "site1", new Model("tss"));
+		new SelectOption(site, "site2", new Model("jl"));
+		new SelectOption(site, "site3", new Model("sd"));
+		new SelectOption(site, "site4", new Model("bn"));
 
 		Select choices = new Select(form, "choices");
-		form.add(choices);
 		IOptionRenderer renderer = new IOptionRenderer()
 		{
 
@@ -97,7 +93,7 @@ public class SelectPage extends WicketExamplePage
 			}
 
 		};
-		choices.add(new SelectOptions(choices, "manychoices", new Model(MANY_CHOICES), renderer));
+		new SelectOptions(choices, "manychoices", new Model(MANY_CHOICES), renderer);
 
 	}
 
@@ -167,7 +163,7 @@ public class SelectPage extends WicketExamplePage
 		html = "SEE INSIDE FOR NOW";
 		code = "SEE INSIDE FOR NOW";
 
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 
 	}
 }

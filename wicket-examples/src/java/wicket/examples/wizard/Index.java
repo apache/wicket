@@ -72,8 +72,8 @@ public class Index extends WicketExamplePage
 	 */
 	public Index()
 	{
-		add(new WizardLink(this, "staticWizardLink", StaticWizard.class));
-		add(new WizardLink(this, "staticWizardWithPanelsLink", StaticWizardWithPanels.class));
-		add(new WizardLink(this, "newUserWizardLink", NewUserWizard.class));
+		new WizardLink(this, "staticWizardLink", StaticWizard.class);
+		new WizardLink(this, "staticWizardWithPanelsLink", StaticWizardWithPanels.class);
+		new WizardLink(this, "newUserWizardLink", NewUserWizard.class);
 	}
 }

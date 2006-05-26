@@ -308,11 +308,11 @@ public class SourcesPage extends WebPage
 							}
 
 							String filename = jarZipPart.substring(0, index + 4); // 4 =
-																					// len
-																					// of
-																					// ".jar"
-																					// or
-																					// ".zip"
+							// len
+							// of
+							// ".jar"
+							// or
+							// ".zip"
 							log
 									.debug("trying the filename: " + filename
 											+ " to load as a zip/jar.");
@@ -386,11 +386,9 @@ public class SourcesPage extends WebPage
 							target.addComponent(filename);
 						}
 					};
-					link.add(new Label(link, "name", item.getModelObjectAsString()));
-					item.add(link);
+					new Label(link, "name", item.getModelObjectAsString());
 				}
 			};
-			add(lv);
 		}
 	}
 
@@ -412,7 +410,6 @@ public class SourcesPage extends WebPage
 			Label code = new Label(this, "code", new SourceModel());
 			code.setEscapeModelStrings(true);
 			code.setOutputMarkupId(true);
-			add(code);
 		}
 	}
 
@@ -474,10 +471,8 @@ public class SourcesPage extends WebPage
 
 		filename = new Label(this, "filename", new PropertyModel(this, "name"));
 		filename.setOutputMarkupId(true);
-		add(filename);
 		codePanel = new CodePanel(this, "codepanel").setOutputMarkupId(true);
-		add(codePanel);
-		add(new FilesBrowser(this, "filespanel"));
-		add(new PopupCloseLink(this, "close"));
+		new FilesBrowser(this, "filespanel");
+		new PopupCloseLink(this, "close");
 	}
 }

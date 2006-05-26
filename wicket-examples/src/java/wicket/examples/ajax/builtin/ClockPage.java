@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,7 +36,6 @@ public class ClockPage extends BasePage
 	{
 		// add the clock component
 		Clock clock = new Clock(this, "clock", TimeZone.getTimeZone("America/Los_Angeles"));
-		add(clock);
 
 		// add the ajax behavior which will keep updating the component every 5
 		// seconds

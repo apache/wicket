@@ -40,10 +40,7 @@ public class PalettePage extends WicketExamplePage
 			}
 		};
 
-		add(form);
-		form.add(palette);
-
-		add(new FeedbackPanel(this, "feedback"));
+		new FeedbackPanel(this, "feedback");
 	}
 
 	@Override
@@ -57,6 +54,6 @@ public class PalettePage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;IChoiceRenderer renderer = new ChoiceRenderer(\"fullName\", \"fullName\");<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;final Palette palette = new Palette(\"palette\", new Model(new ArrayList()), new Model(<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Serializable)persons), renderer, 10, true);<br/>";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 	}
 }

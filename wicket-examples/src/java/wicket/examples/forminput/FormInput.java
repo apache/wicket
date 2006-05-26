@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -84,8 +84,7 @@ public class FormInput extends WicketExamplePage
 	{
 		// Construct form and feedback panel and hook them up
 		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
-		add(feedback);
-		add(new InputForm(this, "inputForm"));
+		new InputForm(this, "inputForm");
 	}
 
 	/**
@@ -119,10 +118,10 @@ public class FormInput extends WicketExamplePage
 			super(parent, name, new CompoundPropertyModel(new FormInputModel()));
 
 			// Dropdown for selecting locale
-			add(new LocaleDropDownChoice(this, "localeSelect"));
+			new LocaleDropDownChoice(this, "localeSelect");
 
 			// Link to return to default locale
-			add(new Link(this, "defaultLocaleLink")
+			new Link(this, "defaultLocaleLink")
 			{
 				@Override
 				public void onClick()
@@ -130,63 +129,55 @@ public class FormInput extends WicketExamplePage
 					WebRequest request = (WebRequest)getRequest();
 					setLocale(request.getLocale());
 				}
-			});
+			};
 
 			RequiredTextField stringTextField = new RequiredTextField(this, "stringProperty");
 			stringTextField.setLabel(new Model("String"));
-			add(stringTextField);
 			RequiredTextField integerTextField = new RequiredTextField(this, "integerProperty",
 					Integer.class);
-			add(integerTextField.add(NumberValidator.POSITIVE));
-			add(new RequiredTextField(this, "doubleProperty", Double.class));
+			integerTextField.add(NumberValidator.POSITIVE);
+			new RequiredTextField(this, "doubleProperty", Double.class);
 			// we have a component attached to the label here, as we want to
 			// synchronize the
 			// id's of the label, textfield and datepicker. Note that you can
 			// perfectly
 			// do without labels
 			WebMarkupContainer dateLabel = new WebMarkupContainer(this, "dateLabel");
-			add(dateLabel);
 			TextField datePropertyTextField = new TextField(this, "dateProperty", Date.class);
-			add(datePropertyTextField);
-			add(new DatePicker(this, "datePicker", dateLabel, datePropertyTextField));
-			add(new RequiredTextField(this, "integerInRangeProperty", Integer.class)
-					.add(NumberValidator.range(0, 100)));
-			add(new CheckBox(this, "booleanProperty"));
+			new DatePicker(this, "datePicker", dateLabel, datePropertyTextField);
+			new RequiredTextField(this, "integerInRangeProperty", Integer.class)
+					.add(NumberValidator.range(0, 100));
+			new CheckBox(this, "booleanProperty");
 			RadioChoice rc = new RadioChoice(this, "numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
 			rc.setRequired(true);
-			add(rc);
 
 			RadioGroup group = new RadioGroup(this, "numbersGroup");
-			add(group);
 			ListView persons = new ListView(group, "numbers", NUMBERS)
 			{
 				@Override
 				protected void populateItem(ListItem item)
 				{
-					item.add(new Radio(item, "radio", item.getModel()));
-					item.add(new Label(item, "number", item.getModelObjectAsString()));
+					new Radio(item, "radio", item.getModel());
+					new Label(item, "number", item.getModelObjectAsString());
 				};
 			};
-			group.add(persons);
 
 			CheckGroup checks = new CheckGroup(this, "numbersCheckGroup");
-			add(checks);
 			ListView checksList = new ListView(checks, "numbers", NUMBERS)
 			{
 				@Override
 				protected void populateItem(ListItem item)
 				{
-					item.add(new Check(item, "check", item.getModel()));
-					item.add(new Label(item, "number", item.getModelObjectAsString()));
+					new Check(item, "check", item.getModel());
+					new Label(item, "number", item.getModelObjectAsString());
 				};
 			};
-			checks.add(checksList);
 
-			add(new ListMultipleChoice(this, "siteSelection", SITES));
+			new ListMultipleChoice(this, "siteSelection", SITES);
 
 			// TextField using a custom converter.
-			add(new TextField(this, "urlProperty", URL.class)
+			new TextField(this, "urlProperty", URL.class)
 			{
 				public IConverter getConverter()
 				{
@@ -212,22 +203,22 @@ public class FormInput extends WicketExamplePage
 						}
 					};
 				}
-			});
+			};
 
 			// TextField using a mask converter
-			add(new TextField(this, "phoneNumberUS", UsPhoneNumber.class)
+			new TextField(this, "phoneNumberUS", UsPhoneNumber.class)
 			{
 				public IConverter getConverter()
 				{
 					// US telephone number mask
 					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
 				}
-			});
+			};
 
 			// and this is to show we can nest ListViews in Forms too
-			add(new LinesListView(this, "lines"));
+			new LinesListView(this, "lines");
 
-			add(new ImageButton(this, "saveButton"));
+			new ImageButton(this, "saveButton");
 
 			Link link = new Link(this, "resetButtonLink")
 			{
@@ -239,8 +230,7 @@ public class FormInput extends WicketExamplePage
 					InputForm.this.modelChanged();
 				}
 			};
-			link.add(new Image(link, "resetButtonImage"));
-			add(link);
+			new Image(link, "resetButtonImage");
 		}
 
 		/**
@@ -343,7 +333,7 @@ public class FormInput extends WicketExamplePage
 			// add a text field that works on each list item model (returns
 			// objects of
 			// type FormInputModel.Line) using property text.
-			item.add(new TextField(item, "lineEdit", new PropertyModel(item.getModel(), "text")));
+			new TextField(item, "lineEdit", new PropertyModel(item.getModel(), "text"));
 		}
 	}
 }

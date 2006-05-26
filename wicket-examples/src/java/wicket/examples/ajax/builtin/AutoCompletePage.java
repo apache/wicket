@@ -41,9 +41,8 @@ public class AutoCompletePage extends BasePage
 	public AutoCompletePage()
 	{
 		Form form = new Form(this, "form");
-		add(form);
 
-		form.add(new AutoCompleteTextField(form, "ac", new Model(""))
+		new AutoCompleteTextField(form, "ac", new Model(""))
 		{
 			@Override
 			protected Iterator getChoices(String input)
@@ -73,6 +72,6 @@ public class AutoCompletePage extends BasePage
 
 				return choices.iterator();
 			}
-		});
+		};
 	}
 }

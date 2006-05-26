@@ -73,7 +73,7 @@ public class ExampleSubtotals extends Displaytag
 		// add the table
 		List groupList = new ArrayList();
 		groupList.addAll(groups.keySet());
-		add(new ListView(this, "border", groupList)
+		new ListView(this, "border", groupList)
 		{
 			private int startIndex = 0;
 
@@ -88,11 +88,10 @@ public class ExampleSubtotals extends Displaytag
 				subtable.setViewSize(size);
 				startIndex += size;
 
-				listItem.add(subtable);
-				listItem.add(new Label(listItem, "name", new PropertyModel(subtable, "group1")));
-				listItem.add(new Label(listItem, "value", new PropertyModel(subtable, "subtotal")));
+				new Label(listItem, "name", new PropertyModel(subtable, "group1"));
+				new Label(listItem, "value", new PropertyModel(subtable, "subtotal"));
 			}
-		});
+		};
 	}
 
 	/**
@@ -142,13 +141,13 @@ public class ExampleSubtotals extends Displaytag
 
 			if (previousValue != null)
 			{
-				listItem.add(new Label(listItem, "city", ""));
+				new Label(listItem, "city", "");
 
 				boolean equal = value.getProject().equals(previousValue.getProject());
-				listItem.add(new Label(listItem, "project", equal ? "" : value.getProject()));
+				new Label(listItem, "project", equal ? "" : value.getProject());
 			}
 
-			listItem.add(new Label(listItem, "hours", Double.toString(value.getAmount())));
+			new Label(listItem, "hours", Double.toString(value.getAmount()));
 
 			subtotal += value.getAmount();
 			previousValue = value;

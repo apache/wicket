@@ -45,7 +45,7 @@ public class ExampleNestedTables extends Displaytag
 		List data = new TestList(6, false);
 
 		// straight forward
-		add(new SimpleListView(this, "rows", data)
+		new SimpleListView(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -56,8 +56,8 @@ public class ExampleNestedTables extends Displaytag
 
 				// Just create a new table, which will be put into the current
 				// cell
-				listItem.add(new SimpleListView(listItem, "rows", data2));
+				new SimpleListView(listItem, "rows", data2);
 			}
-		});
+		};
 	}
 }

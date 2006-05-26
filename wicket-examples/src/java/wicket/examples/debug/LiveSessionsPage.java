@@ -61,9 +61,9 @@ public class LiveSessionsPage extends WebPage
 	 */
 	public LiveSessionsPage()
 	{
-		add(new Image(this, "bug"));
+		new Image(this, "bug");
 
-		add(new ApplicationView(this, "application", Application.get()));
+		new ApplicationView(this, "application", Application.get());
 
 		Link link = new Link(this, "togglelink")
 		{
@@ -84,7 +84,7 @@ public class LiveSessionsPage extends WebPage
 				}
 			}
 		};
-		link.add(new Label(link, "toggletext", new Model()
+		new Label(link, "toggletext", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -103,9 +103,8 @@ public class LiveSessionsPage extends WebPage
 				}
 			};
 
-		}));
-		add(link);
-		add(new Label(this, "totalSessions", new Model()
+		});
+		new Label(this, "totalSessions", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -114,8 +113,8 @@ public class LiveSessionsPage extends WebPage
 			{
 				return new Integer(getRequestLogger().getTotalCreatedSessions());
 			}
-		}));
-		add(new Label(this, "peakSessions", new Model()
+		});
+		new Label(this, "peakSessions", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -124,8 +123,8 @@ public class LiveSessionsPage extends WebPage
 			{
 				return new Integer(getRequestLogger().getLiveSessions().size());
 			}
-		}));
-		add(new Label(this, "liveSessions", new Model()
+		});
+		new Label(this, "liveSessions", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -134,7 +133,7 @@ public class LiveSessionsPage extends WebPage
 			{
 				return new Integer(getRequestLogger().getPeakSessions());
 			}
-		}));
+		});
 
 		Model sessionModel = new Model()
 		{
@@ -167,20 +166,14 @@ public class LiveSessionsPage extends WebPage
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				link.add(new Label(link, "id", new Model(sd.getId())));
-				item.add(link);
-				item.add(new Label(item, "requestCount", new Model(new Integer(sd.getRequests()
-						.size()))));
-				item.add(new Label(item, "requestsTime", new Model(sd.getRequestsTime())));
-				item
-						.add(new Label(item, "sessionSize", new Model(Bytes.bytes(sd
-								.getSessionSize()))));
+				new Label(link, "id", new Model(sd.getId()));
+				new Label(item, "requestCount", new Model(new Integer(sd.getRequests().size())));
+				new Label(item, "requestsTime", new Model(sd.getRequestsTime()));
+				new Label(item, "sessionSize", new Model(Bytes.bytes(sd.getSessionSize())));
 			}
 		};
-		add(listView);
 
 		PagingNavigator navigator = new PagingNavigator(this, "navigator", listView);
-		add(navigator);
 	}
 
 	RequestLogger getRequestLogger()

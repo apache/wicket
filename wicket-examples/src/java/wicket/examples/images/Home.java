@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -48,11 +48,11 @@ public final class Home extends WicketExamplePage
 		final ImagesApplication application = (ImagesApplication)getApplication();
 
 		// Image as package resource
-		add(new Image(this, "image2"));
+		new Image(this, "image2");
 
 		// Dynamically created image. Will re-render whenever resource is asked
 		// for.
-		add(new Image(this, "image3", new RenderedDynamicImageResource(100, 100)
+		new Image(this, "image3", new RenderedDynamicImageResource(100, 100)
 		{
 			@Override
 			protected boolean render(Graphics2D graphics)
@@ -60,19 +60,19 @@ public final class Home extends WicketExamplePage
 				drawCircle(graphics);
 				return true;
 			}
-		}));
+		});
 
 		// Simple model
-		add(new Image(this, "image4", new Model("Image2.gif")));
+		new Image(this, "image4", new Model("Image2.gif"));
 
 		// Dynamically created buffered image
-		add(new Image(this, "image5", getImage5Resource()));
+		new Image(this, "image5", getImage5Resource());
 
 		// Add okay button image
-		add(new Image(this, "okButton", getOkButtonImage()));
+		new Image(this, "okButton", getOkButtonImage());
 
 		// Add cancel button image
-		add(new NonCachingImage(this, "cancelButton", new ResourceReference("cancelButton")));
+		new NonCachingImage(this, "cancelButton", new ResourceReference("cancelButton"));
 	}
 
 	final ResourceReference getOkButtonImage()

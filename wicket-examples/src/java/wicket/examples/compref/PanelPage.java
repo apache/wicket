@@ -30,7 +30,7 @@ public class PanelPage extends WicketExamplePage
 	 */
 	public PanelPage()
 	{
-		add(new MyPanel(this, "panel"));
+		new MyPanel(this, "panel");
 	}
 
 	@Override
@@ -41,6 +41,6 @@ public class PanelPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(new MyPanel(\"panel\"));\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 	}
 }

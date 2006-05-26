@@ -63,14 +63,13 @@ public class SortableTableHeadersPage extends WebPage
 			protected void populateItem(ListItem listItem)
 			{
 				User user = (User)listItem.getModelObject();
-				listItem.add(new Label(listItem, "id", new PropertyModel(user, "id")));
-				listItem.add(new Label(listItem, "name", new PropertyModel(user, "name")));
-				listItem.add(new Label(listItem, "email", new PropertyModel(user, "email")));
+				new Label(listItem, "id", new PropertyModel(user, "id"));
+				new Label(listItem, "name", new PropertyModel(user, "name"));
+				new Label(listItem, "email", new PropertyModel(user, "email"));
 			}
 		};
 
-		add(table);
-		add(new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders(this, "header", table)
 		{
 			/*
 			 * If object does not support equals()
@@ -108,7 +107,7 @@ public class SortableTableHeadersPage extends WebPage
 
 				return "";
 			}
-		});
+		};
 
 	}
 

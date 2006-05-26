@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -102,16 +102,12 @@ public class ChoicePage extends BasePage
 		};
 
 		Form form = new Form(this, "form");
-		add(form);
 
 		final DropDownChoice makes = new DropDownChoice(form, "makes", new PropertyModel(this,
 				"selectedMake"), makeChoices);
 
 		final DropDownChoice models = new DropDownChoice(form, "models", new Model(), modelChoices);
 		models.setOutputMarkupId(true);
-
-		form.add(makes);
-		form.add(models);
 
 		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")
 		{

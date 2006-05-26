@@ -46,7 +46,6 @@ public class WizardPage extends WicketExamplePage
 		{
 			Constructor ctor = wizardClass.getConstructor(new Class[] { String.class });
 			Wizard wizard = (Wizard)ctor.newInstance(new String[] { "wizard" });
-			add(wizard);
 		}
 		catch (Exception e)
 		{

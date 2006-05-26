@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 07:08:28 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -47,7 +47,7 @@ public class Index extends WicketExamplePage
 	public Index()
 	{
 		// Add the Ajaxian link to the page...
-		add(new Link(this, "link")
+		new Link(this, "link")
 		{
 			/**
 			 * Handles a click on the link. This method is accessed normally
@@ -77,10 +77,10 @@ public class Index extends WicketExamplePage
 						urlFor(ILinkListener.INTERFACE))
 						.append("', {method:'get'}); return false;");
 			}
-		});
+		};
 
 		// Add the label
-		add(counter = new Label(this, "counter", new PropertyModel(this, "count")));
+		counter = new Label(this, "counter", new PropertyModel(this, "count"));
 	}
 
 	/**

@@ -72,11 +72,11 @@ public class BookmarkablePage extends WebPage
 		}
 
 		// Add a label to display the message
-		add(new Label(this, "messageLabel", message));
+		new Label(this, "messageLabel", message);
 
 		// Add a link back. We did not hold any important instance data in
 		// BookMarkabelPageLinkPage,
 		// so navigating to a new instance is just fine
-		add(new BookmarkablePageLink(this, "navigateBackLink", BookmarkablePageLinkPage.class));
+		new BookmarkablePageLink(this, "navigateBackLink", BookmarkablePageLinkPage.class);
 	}
 }

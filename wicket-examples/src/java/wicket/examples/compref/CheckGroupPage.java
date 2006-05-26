@@ -36,9 +36,7 @@ public class CheckGroupPage extends WicketExamplePage
 			}
 		};
 
-		add(form);
-		form.add(group);
-		group.add(new CheckGroupSelector(group, "groupselector"));
+		new CheckGroupSelector(group, "groupselector");
 		ListView persons = new ListView(group, "persons", ComponentReferenceApplication
 				.getPersons())
 		{
@@ -46,18 +44,14 @@ public class CheckGroupPage extends WicketExamplePage
 			@Override
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Check(item, "checkbox", item.getModel()));
-				item.add(new Label(item, "name", new PropertyModel(item.getModel(), "name")));
-				item
-						.add(new Label(item, "lastName", new PropertyModel(item.getModel(),
-								"lastName")));
+				new Check(item, "checkbox", item.getModel());
+				new Label(item, "name", new PropertyModel(item.getModel(), "name"));
+				new Label(item, "lastName", new PropertyModel(item.getModel(), "lastName"));
 			}
 
 		};
 
-		group.add(persons);
-
-		add(new FeedbackPanel(this, "feedback"));
+		new FeedbackPanel(this, "feedback");
 	}
 
 	@Override
@@ -83,6 +77,6 @@ public class CheckGroupPage extends WicketExamplePage
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;item.add(new Label(\"lastName\", new PropertyModel(item.getModel(), \"lastName\")));<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;};<br/>"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;group.add(persons);<br/>";
-		add(new ExplainPanel(this, html, code));
+		new ExplainPanel(this, html, code);
 	}
 }

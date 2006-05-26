@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,20 +40,20 @@ public class Guess extends HangmanPage
 	public Guess()
 	{
 		// Components for displaying the guesses remaining & the hangman
-		add(new Label(this, "guessesRemaining", new PropertyModel(getGame(), "guessesRemaining")));
+		new Label(this, "guessesRemaining", new PropertyModel(getGame(), "guessesRemaining"));
 
 		// Components for displaying the current word
-		add(new Label(this, "word", new Model()
+		new Label(this, "word", new Model()
 		{
 			@Override
 			public Object getObject(wicket.Component component)
 			{
 				return getGame().getWord().asString(true);
 			}
-		}));
+		});
 
 		// Show the game's letters
-		add(new ListView(this, "letters", getGame().getLetters())
+		new ListView(this, "letters", getGame().getLetters())
 		{
 			@Override
 			protected void populateItem(final ListItem listItem)
@@ -95,9 +95,8 @@ public class Guess extends HangmanPage
 				link
 						.add(new AttributeModifier("id", true, new Model("letter_"
 								+ letter.asString())));
-				link.add(new Image(link, "image", letter.getSharedImageResource()));
-				listItem.add(link);
+				new Image(link, "image", letter.getSharedImageResource());
 			}
-		});
+		};
 	}
 }

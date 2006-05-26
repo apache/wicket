@@ -36,7 +36,7 @@ class MyPanel extends Panel
 	public MyPanel(MarkupContainer parent, String id)
 	{
 		super(parent, id);
-		add(new Label(this, "label", "yep, this is from a component proper"));
-		add(new AnotherPanel(this, "otherPanel"));
+		new Label(this, "label", "yep, this is from a component proper");
+		new AnotherPanel(this, "otherPanel");
 	}
 }
