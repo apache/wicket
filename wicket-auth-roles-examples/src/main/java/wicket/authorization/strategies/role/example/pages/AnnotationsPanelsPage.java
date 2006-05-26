@@ -17,6 +17,7 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
+import wicket.MarkupContainer;
 import wicket.authorization.Action;
 import wicket.authorization.strategies.role.Roles;
 import wicket.authorization.strategies.role.annotations.AuthorizeAction;
@@ -35,9 +36,9 @@ public class AnnotationsPanelsPage extends WebPage
 	 */
 	public AnnotationsPanelsPage()
 	{
-		add(new ForAllUsers("forAllUsersPanel"));
-		add(new ForAdminsAndUsers("forAdminsAndUsersPanel"));
-		add(new ForAdmins("forAdminsPanel"));
+		new ForAllUsers(this,"forAllUsersPanel");
+		new ForAdminsAndUsers(this,"forAdminsAndUsersPanel");
+		new ForAdmins(this,"forAdminsPanel");
 	}
 
 	/**
@@ -50,9 +51,9 @@ public class AnnotationsPanelsPage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public ForAllUsers(String id)
+		public ForAllUsers(MarkupContainer parent,String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	}
 
@@ -67,9 +68,9 @@ public class AnnotationsPanelsPage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public ForAdminsAndUsers(String id)
+		public ForAdminsAndUsers(MarkupContainer parent,String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	}
 
@@ -84,9 +85,9 @@ public class AnnotationsPanelsPage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public ForAdmins(String id)
+		public ForAdmins(MarkupContainer parent,String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	}
 }

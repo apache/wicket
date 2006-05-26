@@ -17,6 +17,7 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
+import wicket.MarkupContainer;
 import wicket.authorization.strategies.role.metadata.MetaDataRoleAuthorizationStrategy;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.panel.Panel;
@@ -33,22 +34,19 @@ public class PanelsPage extends WebPage
 	 */
 	public PanelsPage()
 	{
-		ForAllUsers forAllUsers = new ForAllUsers("forAllUsersPanel");
+		ForAllUsers forAllUsers = new ForAllUsers(this,"forAllUsersPanel");
 		// don't have to do anything here; component is by default not protected
-		add(forAllUsers);
 
-		ForAdminsAndUsers forAdminsAndUsers = new ForAdminsAndUsers("forAdminsAndUsersPanel");
-		add(forAdminsAndUsers);
+		ForAdminsAndUsers forAdminsAndUsers = new ForAdminsAndUsers(this,"forAdminsAndUsersPanel");
 		// authorise roles admin and user (and thus deny everyone else) for the
 		// Component.RENDER action
 		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, "ADMIN");
 		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, "USER");
 
-		ForAdmins forAdmins = new ForAdmins("forAdminsPanel");
+		ForAdmins forAdmins = new ForAdmins(this,"forAdminsPanel");
 		// authorise role admin (and thus deny everyone else) for the
 		// Component.RENDER action
 		MetaDataRoleAuthorizationStrategy.authorize(forAdmins, RENDER, "ADMIN");
-		add(forAdmins);
 	}
 
 	/**
@@ -61,9 +59,9 @@ public class PanelsPage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public ForAllUsers(String id)
+		public ForAllUsers(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	}
 
@@ -77,9 +75,9 @@ public class PanelsPage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public ForAdminsAndUsers(String id)
+		public ForAdminsAndUsers(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	}
 
@@ -93,9 +91,9 @@ public class PanelsPage extends WebPage
 		 * 
 		 * @param id
 		 */
-		public ForAdmins(String id)
+		public ForAdmins(MarkupContainer parent, String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	}
 }

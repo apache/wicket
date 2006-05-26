@@ -45,14 +45,14 @@ public class Index extends WebPage
 	 */
 	public Index()
 	{
-		add(new Label("currentUser", new PropertyModel(this, "session.user")));
-		add(new ListView("users", RolesApplication.USERS)
+		new Label(this,"currentUser", new PropertyModel(this, "session.user"));
+		new ListView(this,"users", RolesApplication.USERS)
 		{
 			@Override
 			protected void populateItem(ListItem item)
 			{
 				final User user = (User)item.getModelObject();
-				item.add(new Link("selectUserLink")
+				Link link = new Link(item,"selectUserLink")
 				{
 					@Override
 					public void onClick()
@@ -60,32 +60,33 @@ public class Index extends WebPage
 						RolesSession session = (RolesSession)Session.get();
 						session.setUser(user);
 					}
-				}.add(new Label("userId", new Model(user))));
+				};
+				new Label(link,"userId", new Model(user));
 			}
-		});
+		};
 
 		// pages that are proteced using wicket meta data
-		add(new BookmarkablePageLink("adminBookmarkableLink", AdminBookmarkablePage.class));
-		add(new Link("adminInternalLink")
+		new BookmarkablePageLink(this,"adminBookmarkableLink", AdminBookmarkablePage.class);
+		new Link(this,"adminInternalLink")
 		{
 			@Override
 			public void onClick()
 			{
 				setResponsePage(new AdminInternalPage("foo"));
 			}
-		});
-		add(new BookmarkablePageLink("panelsPageLink", PanelsPage.class));
+		};
+		new BookmarkablePageLink(this,"panelsPageLink", PanelsPage.class);
 
 		// pages that are protected using annotations
-		add(new BookmarkablePageLink("adminAnnotBookmarkableLink", AdminAnnotationsBookmarkablePage.class));
-		add(new Link("adminAnnotInternalLink")
+		new BookmarkablePageLink(this,"adminAnnotBookmarkableLink", AdminAnnotationsBookmarkablePage.class);
+		new Link(this,"adminAnnotInternalLink")
 		{
 			@Override
 			public void onClick()
 			{
 				setResponsePage(new AdminAnnotationsInternalPage("bar"));
 			}
-		});
-		add(new BookmarkablePageLink("panelsAnnotPageLink", AnnotationsPanelsPage.class));
+		};
+		new BookmarkablePageLink(this,"panelsAnnotPageLink", AnnotationsPanelsPage.class);
 	}
 }
