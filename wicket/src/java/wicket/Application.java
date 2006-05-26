@@ -412,7 +412,7 @@ public abstract class Application
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class<? extends Page> getHomePage();
+	public abstract Class getHomePage();
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
