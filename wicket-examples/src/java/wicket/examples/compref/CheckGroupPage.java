@@ -20,13 +20,13 @@ import wicket.model.PropertyModel;
  */
 public class CheckGroupPage extends WicketExamplePage
 {
+	private final CheckGroup group;
+	
 	/**
 	 * Constructor
 	 */
 	public CheckGroupPage()
 	{
-
-		final CheckGroup group = new CheckGroup(form, "group", new ArrayList());
 		Form form = new Form(this, "form")
 		{
 			@Override
@@ -35,6 +35,8 @@ public class CheckGroupPage extends WicketExamplePage
 				info("selected person(s): " + group.getModelObjectAsString());
 			}
 		};
+
+		group = new CheckGroup(form, "group", new ArrayList());
 
 		new CheckGroupSelector(group, "groupselector");
 		ListView persons = new ListView(group, "persons", ComponentReferenceApplication

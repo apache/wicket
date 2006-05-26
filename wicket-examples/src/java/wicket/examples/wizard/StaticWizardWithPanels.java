@@ -95,9 +95,9 @@ public class StaticWizardWithPanels extends Wizard
 		// will give you a hint of how nice it is to
 		// be able to work with custom panels
 		WizardModel model = new WizardModel();
-		model.add(new Step1());
-		model.add(new Step2());
-		model.add(new Step3());
+		model.add(new Step1(this));
+		model.add(new Step2(this));
+		model.add(new Step3(this));
 
 		// initialize the wizard
 		init(model);

@@ -18,21 +18,22 @@ import wicket.model.PropertyModel;
  */
 public class RadioGroupPage extends WicketExamplePage
 {
+	private final RadioGroup group;
+	
 	/**
 	 * Constructor
 	 */
 	public RadioGroupPage()
 	{
-
-		final RadioGroup group = new RadioGroup(form, "group", new Model());
 		Form form = new Form(this, "form")
 		{
 			@Override
 			protected void onSubmit()
 			{
-				info("selected person: " + group.getModelObjectAsString());
+				info("selected person: " + RadioGroupPage.this.group.getModelObjectAsString());
 			}
 		};
+		this.group = new RadioGroup(form, "group", new Model());
 
 		ListView persons = new ListView(group, "persons", ComponentReferenceApplication
 				.getPersons())

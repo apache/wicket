@@ -153,10 +153,10 @@ public class NewUserWizard extends Wizard
 
 		setModel(new CompoundPropertyModel(this));
 		WizardModel model = new WizardModel();
-		model.add(new UserNameStep());
-		model.add(new UserDetailsStep());
-		model.add(new UserRolesStep());
-		model.add(new ConfirmationStep());
+		model.add(new UserNameStep(this));
+		model.add(new UserDetailsStep(this));
+		model.add(new UserRolesStep(this));
+		model.add(new ConfirmationStep(this));
 
 		// initialize the wizard with the wizard model we just built
 		init(model);

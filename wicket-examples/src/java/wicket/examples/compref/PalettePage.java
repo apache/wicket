@@ -19,18 +19,13 @@ import wicket.model.Model;
  */
 public class PalettePage extends WicketExamplePage
 {
+	private final Palette palette;
+	
 	/**
 	 * Constructor
 	 */
 	public PalettePage()
 	{
-		List persons = ComponentReferenceApplication.getPersons();
-		IChoiceRenderer renderer = new ChoiceRenderer("fullName", "fullName");
-
-		final Palette palette = new Palette(form, "palette", new Model(new ArrayList()), new Model(
-				persons), renderer, 10, true);
-
-
 		Form form = new Form(this, "form")
 		{
 			@Override
@@ -41,6 +36,12 @@ public class PalettePage extends WicketExamplePage
 		};
 
 		new FeedbackPanel(this, "feedback");
+		
+		List persons = ComponentReferenceApplication.getPersons();
+		IChoiceRenderer renderer = new ChoiceRenderer("fullName", "fullName");
+
+		this.palette = new Palette(form, "palette", new Model(new ArrayList()), new Model(
+				persons), renderer, 10, true);
 	}
 
 	@Override
