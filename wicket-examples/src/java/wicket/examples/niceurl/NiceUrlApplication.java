@@ -18,6 +18,7 @@
  */
 package wicket.examples.niceurl;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
 import wicket.util.lang.PackageName;
@@ -66,7 +67,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

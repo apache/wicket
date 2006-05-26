@@ -19,6 +19,7 @@
 package wicket.examples.library;
 
 import wicket.ISessionFactory;
+import wicket.Page;
 import wicket.Request;
 import wicket.Session;
 import wicket.authorization.IAuthorizationStrategy;
@@ -89,7 +90,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

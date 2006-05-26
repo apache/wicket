@@ -19,6 +19,7 @@ package wicket.examples.compref;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 
 /**
@@ -66,7 +67,7 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Index.class;
 	}

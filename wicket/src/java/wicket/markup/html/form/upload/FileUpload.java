@@ -74,17 +74,6 @@ public class FileUpload implements Serializable
 	}
 
 	/**
-	 * @return File object for client-side file that was uploaded.
-	 * @deprecated - this method was very counterintuitive. its been replaced by
-	 *             getClientFileName(). see bug 1372481.
-	 */
-	@Deprecated
-	public File getFile()
-	{
-		return new File(item.getName());
-	}
-
-	/**
 	 * @since 1.2
 	 * @return name of uploaded client side file
 	 */

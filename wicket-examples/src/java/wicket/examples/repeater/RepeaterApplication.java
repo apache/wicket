@@ -18,6 +18,7 @@
  */
 package wicket.examples.repeater;
 
+import wicket.Page;
 import wicket.markup.html.ServerAndClientTimeFilter;
 import wicket.protocol.http.WebApplication;
 
@@ -60,7 +61,7 @@ public class RepeaterApplication extends WebApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Index.class;
 	}

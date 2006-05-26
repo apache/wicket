@@ -280,24 +280,10 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	 * @param url
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
-	 * @deprecated this method will be removed by
-	 *             {@link #getOnClickScript(CharSequence)} shortly. Please
-	 *             override that method instead.
-	 */
-	@Deprecated
-	protected String getOnClickScript(final String url)
-	{
-		return null;
-	}
-
-	/**
-	 * @param url
-	 *            The url for the link
-	 * @return Any onClick JavaScript that should be used
 	 */
 	protected CharSequence getOnClickScript(final CharSequence url)
 	{
-		return getOnClickScript(url.toString());
+		return null;
 	}
 
 	/**

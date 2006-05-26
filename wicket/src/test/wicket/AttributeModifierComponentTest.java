@@ -62,7 +62,7 @@ public class AttributeModifierComponentTest extends TestCase
 		application = new MockWebApplication(null)
 		{
 			@Override
-			public Class getHomePage()
+			public Class< ? extends Page> getHomePage() 
 			{
 				return AttributeModifierComponentPage.class;
 			}

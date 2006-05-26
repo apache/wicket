@@ -18,6 +18,7 @@
  */
 package wicket.examples.encodings;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 
 /**
@@ -39,7 +40,7 @@ public class EncodingsApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

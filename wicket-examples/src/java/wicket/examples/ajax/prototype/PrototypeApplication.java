@@ -18,6 +18,7 @@
  */
 package wicket.examples.ajax.prototype;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.ServerAndClientTimeFilter;
 
@@ -49,7 +50,7 @@ public class PrototypeApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Index.class;
 	}

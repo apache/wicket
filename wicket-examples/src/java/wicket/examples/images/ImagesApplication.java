@@ -18,6 +18,7 @@
  */
 package wicket.examples.images;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
@@ -44,7 +45,7 @@ public class ImagesApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

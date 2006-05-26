@@ -18,6 +18,7 @@
  */
 package wicket.examples.breadcrumb;
 
+import wicket.Page;
 import wicket.protocol.http.WebApplication;
 
 /**
@@ -31,7 +32,7 @@ public class BreadCrumbApplication extends WebApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Index.class;
 	}

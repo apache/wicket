@@ -19,6 +19,7 @@
 package wicket.examples.hangman;
 
 import wicket.ISessionFactory;
+import wicket.Page;
 import wicket.Request;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
@@ -62,7 +63,7 @@ public class HangmanApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

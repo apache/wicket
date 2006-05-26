@@ -65,82 +65,6 @@ public final class BodyContainer implements Serializable
 	}
 
 	/**
-	 * Add a new AttributeModifier to the body container which appends the
-	 * 'value' to the onLoad attribute of the body tag.
-	 * <p>
-	 * Note: This method is not suitable for
-	 * 
-	 * @param value
-	 *            The value to append to 'onLoad'
-	 * @return this
-	 * @deprecated use {@link #addOnLoadModifier(String, Component)} instead
-	 */
-	@Deprecated
-	public final BodyContainer addOnLoadModifier(final String value)
-	{
-		final Model<String> model = new Model<String>(value);
-		final Component bodyContainer = page.get(id);
-
-		// TODO Post 1.2: Move all attribute modifier into a separate package
-		// and add an AppendingAttributeModifier to that package
-		bodyContainer.add(new AppendingAttributeModifier("onload", model));
-		return this;
-	}
-
-	/**
-	 * Add a new AttributeModifier to the body container which appends the
-	 * 'value' to the onLoad attribute of the body tag.
-	 * 
-	 * @param model
-	 *            The model that holds the value that must be appended to
-	 *            'onLoad'
-	 * @return this
-	 * @deprecated use {@link #addOnLoadModifier(IModel, Component)} instead
-	 */
-	@Deprecated
-	public final BodyContainer addOnLoadModifier(final IModel model)
-	{
-		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new AppendingAttributeModifier("onload", model));
-		return this;
-	}
-
-	/**
-	 * Add a new AttributeModifier to the body container which appends the
-	 * 'value' to the onUnLoad attribute of the body tag.
-	 * 
-	 * @param value
-	 *            The value to append to 'onUnLoad'
-	 * @return this
-	 * @deprecated use {@link #addOnUnLoadModifier(String, Component)} instead
-	 */
-	@Deprecated
-	public final BodyContainer addOnUnLoadModifier(final String value)
-	{
-		final IModel<String> model = new Model<String>(value);
-		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new AppendingAttributeModifier("onunload", model));
-		return this;
-	}
-
-	/**
-	 * Add a new AttributeModifier to the body container which appends the value
-	 * of the model to the onUnLoad attribute of the body tag.
-	 * 
-	 * @param model
-	 *            The model which holds the value to be appended to 'onUnLoad'
-	 * @return this
-	 * @deprecated use {@link #addOnUnLoadModifier(IModel, Component)} instead
-	 */
-	@Deprecated
-	public final BodyContainer addOnUnLoadModifier(final IModel<?> model)
-	{
-		final Component bodyContainer = page.get(id);
-		bodyContainer.add(new AppendingAttributeModifier("onunload", model));
-		return this;
-	}
-
-	/**
 	 * @param <T>
 	 *            Type of model object this attribute modifier holds
 	 * 
@@ -226,13 +150,14 @@ public final class BodyContainer implements Serializable
 	 */
 	public final BodyContainer addOnLoadModifier(final IModel model, final Component behaviorOwner)
 	{
+		final Component bodyContainer = page.get(id);
 		if (behaviorOwner == null)
 		{
-			return addOnLoadModifier(model);
-		}
+			bodyContainer.add(new AppendingAttributeModifier("onload", model));
+		} else {
 
-		final Component bodyContainer = page.get(id);
 		bodyContainer.add(new BodyTagAttributeModifier("onload", true, model, behaviorOwner));
+		}
 		return this;
 	}
 
@@ -280,13 +205,13 @@ public final class BodyContainer implements Serializable
 	 */
 	public final BodyContainer addOnUnLoadModifier(final IModel model, final Component behaviorOwner)
 	{
+		final Component bodyContainer = page.get(id);
 		if (behaviorOwner == null)
 		{
-			return addOnUnLoadModifier(model);
-		}
-
-		final Component bodyContainer = page.get(id);
+			bodyContainer.add(new AppendingAttributeModifier("onunload", model));
+		} else {
 		bodyContainer.add(new BodyTagAttributeModifier("onunload", true, model, behaviorOwner));
+		}
 		return this;
 	}
 }

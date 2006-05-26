@@ -18,6 +18,7 @@
  */
 package wicket.examples.linkomatic;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 
@@ -40,7 +41,7 @@ public class LinkomaticApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

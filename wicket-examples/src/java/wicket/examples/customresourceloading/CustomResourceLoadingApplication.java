@@ -24,6 +24,7 @@ import java.net.URL;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.examples.WicketExampleApplication;
 import wicket.protocol.http.WebApplication;
@@ -117,7 +118,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Index.class;
 	}

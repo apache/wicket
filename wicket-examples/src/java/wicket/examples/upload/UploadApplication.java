@@ -20,6 +20,7 @@ package wicket.examples.upload;
 
 import javax.servlet.http.HttpServletRequest;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.extensions.ajax.markup.html.form.upload.UploadWebRequest;
 import wicket.protocol.http.WebRequest;
@@ -52,7 +53,7 @@ public class UploadApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return UploadPage.class;
 	}

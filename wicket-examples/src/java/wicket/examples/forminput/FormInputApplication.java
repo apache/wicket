@@ -21,6 +21,7 @@ package wicket.examples.forminput;
 import java.awt.Font;
 import java.util.Locale;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
@@ -47,7 +48,7 @@ public class FormInputApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return FormInput.class;
 	}

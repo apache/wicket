@@ -19,6 +19,7 @@ package wicket.examples.signin;
 
 import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.Page;
 import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
@@ -96,7 +97,7 @@ public final class SignInApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}

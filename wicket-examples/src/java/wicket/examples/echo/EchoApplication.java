@@ -18,6 +18,7 @@
  */
 package wicket.examples.echo;
 
+import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 
 /**
@@ -39,7 +40,7 @@ public class EchoApplication extends WicketExampleApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Echo.class;
 	}
