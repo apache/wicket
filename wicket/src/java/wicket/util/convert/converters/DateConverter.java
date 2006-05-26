@@ -1,6 +1,7 @@
 /*
  * $Id: DateConverter.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
- * joco01 $ $Revision$ $Date$
+ * joco01 $ $Revision$ $Date: 2006-05-25 22:45:15 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

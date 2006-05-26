@@ -64,6 +64,9 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	/**
 	 * Constructor that will create a default model collection
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 */
@@ -77,6 +80,9 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 * Constructor that wraps the provided collection with the
 	 * wicket.model.Model object
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 * @param collection
@@ -89,7 +95,8 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
+	 *      IModel)
 	 */
 	public CheckGroup(MarkupContainer parent, String id, IModel<Collection<T>> model)
 	{

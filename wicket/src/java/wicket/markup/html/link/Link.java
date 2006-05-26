@@ -37,25 +37,25 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *           add(new Link(&quot;myLink&quot;)
- *           {
- *               public void onClick(RequestCycle cycle)
- *               {
- *                   // do something here...  
- *               }
- *           );
+ *            add(new Link(&quot;myLink&quot;)
+ *            {
+ *                public void onClick(RequestCycle cycle)
+ *                {
+ *                    // do something here...  
+ *                }
+ *            );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *           &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *            &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *           &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *            &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -63,13 +63,13 @@ import wicket.util.string.Strings;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *           add(new Link(&quot;link&quot;, listItem.getModel()) 
- *           {
- *               public void onClick() 
- *               {
- *                   MyObject obj = (MyObject)getModelObject();
- *                   setResponsePage(new MyPage(obj.getId(), ... ));
- *               }
+ *            add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *            {
+ *                public void onClick() 
+ *                {
+ *                    MyObject obj = (MyObject)getModelObject();
+ *                    setResponsePage(new MyPage(obj.getId(), ... ));
+ *                }
  * </pre>
  * 
  * @param <T>

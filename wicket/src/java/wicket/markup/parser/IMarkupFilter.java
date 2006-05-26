@@ -58,7 +58,7 @@ public interface IMarkupFilter
 	 * Set parent filter.
 	 * 
 	 * @param parent
-	 *            The next element in the chain
+	 *            The parent of this component The next element in the chain
 	 */
 	void setParent(final IMarkupFilter parent);
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.10 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,24 +30,27 @@ import wicket.model.IModel;
  * A panel is a reusable component that holds markup and other components.
  * <p>
  * Whereas WebMarkupContainer is an inline container like
- * <pre>
- *  ...
- *  &lt;span wicket:id=&quot;xxx&quot;&gt;
- *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
- *    ....
- *  &lt;/span&gt;
- *  ...
- * </pre>
- * a Panel has its own associated markup file and the container content is
- * taken from that file, like:
- * <pre>
- *  &lt;span wicket:id=&quot;mypanel&quot;/&gt;
  * 
- *  TestPanel.html
- *  &lt;wicket:panel&gt;
- *    &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
- *    ....
- *  &lt;/wicket:panel&gt;
+ * <pre>
+ *   ...
+ *   &lt;span wicket:id=&quot;xxx&quot;&gt;
+ *     &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
+ *     ....
+ *   &lt;/span&gt;
+ *   ...
+ * </pre>
+ * 
+ * a Panel has its own associated markup file and the container content is taken
+ * from that file, like:
+ * 
+ * <pre>
+ *   &lt;span wicket:id=&quot;mypanel&quot;/&gt;
+ *  
+ *   TestPanel.html
+ *   &lt;wicket:panel&gt;
+ *     &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
+ *     ....
+ *   &lt;/wicket:panel&gt;
  * </pre>
  * 
  * @param <T>
@@ -65,71 +68,72 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 		// register "wicket:fragement"
 		WicketTagIdentifier.registerWellKnownTagName("panel");
 	}
-	
+
 	/** If if tag was an open-close tag */
 	private boolean wasOpenCloseTag = false;
-	
+
 	/**
-     * @see wicket.Component#Component(MarkupContainer,String)
-     */
-    public Panel(MarkupContainer parent,final String id)
-    {
-        super(parent,id);
-    }
-    
-    /**
-     * @see wicket.Component#Component(MarkupContainer,String, IModel)
-     */
-    public Panel(MarkupContainer parent,final String id, final IModel<T> model)
-    {
-        super(parent,id, model);
-    }    
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 */
+	public Panel(MarkupContainer parent, final String id)
+	{
+		super(parent, id);
+	}
 
-    /**
-     * 
-     * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
-     */
-    @Override
+	/**
+	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
+	 */
+	public Panel(MarkupContainer parent, final String id, final IModel<T> model)
+	{
+		super(parent, id, model);
+	}
+
+	/**
+	 * 
+	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
+	 */
+	@Override
 	protected void onComponentTag(final ComponentTag tag)
-    {
-    	if (tag.isOpenClose())
-    	{
-    		this.wasOpenCloseTag = true;
-    		
-    		// Convert <span wicket:id="myPanel" /> into 
-    		// <span wicket:id="myPanel">...</span>  
-    		tag.setType(XmlTag.OPEN);
-    	}
-    	super.onComponentTag(tag);
-    }
+	{
+		if (tag.isOpenClose())
+		{
+			this.wasOpenCloseTag = true;
 
-    /**
-     * 
-     * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
-     */
-    @Override
+			// Convert <span wicket:id="myPanel" /> into
+			// <span wicket:id="myPanel">...</span>
+			tag.setType(XmlTag.OPEN);
+		}
+		super.onComponentTag(tag);
+	}
+
+	/**
+	 * 
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
+	 */
+	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-    {
-        // Render the associated markup
-        renderAssociatedMarkup("panel",
-                "Markup for a panel component has to contain part '<wicket:panel>'");
+	{
+		// Render the associated markup
+		renderAssociatedMarkup("panel",
+				"Markup for a panel component has to contain part '<wicket:panel>'");
 
-        if (this.wasOpenCloseTag == false)
-        {
+		if (this.wasOpenCloseTag == false)
+		{
 			// Skip any raw markup in the body
 			markupStream.skipRawMarkup();
-        }
-    }
+		}
+	}
 
-    /**
-     * Check the associated markup file for a wicket header tag
-     * 
-     * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
-     */
-    @Override
+	/**
+	 * Check the associated markup file for a wicket header tag
+	 * 
+	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+	 */
+	@Override
 	public void renderHead(HtmlHeaderContainer container)
-    {
-    	this.renderHeadFromAssociatedMarkupFile(container);
-    	super.renderHead(container);
-    }
+	{
+		this.renderHeadFromAssociatedMarkupFile(container);
+		super.renderHead(container);
+	}
 }

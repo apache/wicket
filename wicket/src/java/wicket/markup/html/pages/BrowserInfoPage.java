@@ -368,7 +368,7 @@ public class BrowserInfoPage extends WebPage
 		 * Construct.
 		 * 
 		 * @param parent
-		 *            parent component
+		 *            The parent of this component parent component
 		 * 
 		 * @param id
 		 *            component id

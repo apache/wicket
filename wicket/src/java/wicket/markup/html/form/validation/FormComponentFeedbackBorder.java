@@ -54,6 +54,9 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent of this component
+		 * 
 		 * @param id
 		 *            component id
 		 */
@@ -74,6 +77,9 @@ public class FormComponentFeedbackBorder extends Border implements IFeedback
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

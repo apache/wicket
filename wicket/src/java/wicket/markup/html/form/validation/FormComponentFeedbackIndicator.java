@@ -45,6 +45,9 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 */

@@ -54,7 +54,8 @@ public final class BodyOnLoadHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param parent
-	 *            The next MarkupFilter in the chain
+	 *            The parent of this component The next MarkupFilter in the
+	 *            chain
 	 */
 	public BodyOnLoadHandler(final IMarkupFilter parent)
 	{

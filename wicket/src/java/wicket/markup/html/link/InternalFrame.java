@@ -51,6 +51,9 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * the content of the internal frame is requested. The instantiated Page is
 	 * used to render a response to the user.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageMap
@@ -88,6 +91,9 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * This constructor is ideal if a Page object was passed in from a previous
 	 * Page. Construct an internal frame containing the given Page.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See component
 	 * @param pageMap
@@ -122,6 +128,9 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * IPageLink interface when the content of the internal frame is requested.
 	 * Whatever Page objects is returned by this method will be rendered back to
 	 * the user.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

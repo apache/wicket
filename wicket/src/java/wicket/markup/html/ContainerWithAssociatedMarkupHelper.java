@@ -196,6 +196,9 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * Gets the header part of the Panel/Border. Returns null if it doesn't have
 	 * a header tag.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param index
 	 *            A unique index
 	 * @param markupClass

@@ -43,6 +43,9 @@ public abstract class AjaxSubmitButton extends WebComponent
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 * @param form
 	 */

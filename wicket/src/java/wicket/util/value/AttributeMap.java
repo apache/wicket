@@ -1,6 +1,7 @@
 /*
  * $Id: AttributeMap.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
- * joco01 $ $Revision$ $Date$
+ * joco01 $ $Revision$ $Date: 2006-05-25 22:46:21 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

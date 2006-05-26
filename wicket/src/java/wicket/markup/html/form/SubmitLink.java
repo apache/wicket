@@ -34,28 +34,28 @@ import wicket.model.IModel;
  * </p>
  * 
  * <pre>
- *              Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
- *              f.add(new TextField(&quot;value1&quot;));
- *              f.add(new SubmitLink(&quot;link1&quot;) {
- *                  protected void onSubmit() {
- *                      System.out.println(&quot;Link1 was clicked, value1 is: &quot;
- *                              + mod.getValue1());
- *                  };
- *              });
- *              add(new SubmitLink(&quot;link2&quot;,f) {
- *                  protected void onSubmit() {
- *                      System.out.println(&quot;Link2 was clicked, value1 is: &quot;
- *                              + mod.getValue1());
- *                  };
- *              });
- *       
- *           &lt;form wicket:id=&quot;linkForm&quot; &gt;
- *              &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
- *              &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
- *              &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
- *          &lt;/form&gt;
- *            &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
- *          
+ *               Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
+ *               f.add(new TextField(&quot;value1&quot;));
+ *               f.add(new SubmitLink(&quot;link1&quot;) {
+ *                   protected void onSubmit() {
+ *                       System.out.println(&quot;Link1 was clicked, value1 is: &quot;
+ *                               + mod.getValue1());
+ *                   };
+ *               });
+ *               add(new SubmitLink(&quot;link2&quot;,f) {
+ *                   protected void onSubmit() {
+ *                       System.out.println(&quot;Link2 was clicked, value1 is: &quot;
+ *                               + mod.getValue1());
+ *                   };
+ *               });
+ *        
+ *            &lt;form wicket:id=&quot;linkForm&quot; &gt;
+ *               &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
+ *               &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
+ *               &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
+ *           &lt;/form&gt;
+ *             &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
+ *           
  * </pre>
  * 
  * @author chris
@@ -71,6 +71,9 @@ public class SubmitLink extends Button
 	/**
 	 * With this constructor the SubmitLink must be inside a Form.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            The id of the submitlink.
 	 */
@@ -81,6 +84,9 @@ public class SubmitLink extends Button
 
 	/**
 	 * With this constructor the SubmitLink must be inside a Form.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            The id of the submitlink.
@@ -104,6 +110,9 @@ public class SubmitLink extends Button
 	 * javascript/css id. The markup javascript/css id that can exist will be
 	 * overridden.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            The id of the submitlink.
 	 * @param form
@@ -124,6 +133,9 @@ public class SubmitLink extends Button
 	 * rendered first. Then the {@link Form} will have a generated
 	 * javascript/css id. The markup javascript/css id that can exist will be
 	 * overridden.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            The id of the submitlink.

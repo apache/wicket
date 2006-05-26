@@ -43,6 +43,9 @@ public class MultiLineLabel extends WebComponent
 	/**
 	 * Constructor. Same as Label(String).
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @see Label#Label(String)
@@ -55,6 +58,9 @@ public class MultiLineLabel extends WebComponent
 	/**
 	 * Convenience constructor. Same as MultiLineLabel(String, new
 	 * Model(String))
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

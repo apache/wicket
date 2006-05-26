@@ -56,7 +56,8 @@ public class Check<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
+	 *      IModel)
 	 */
 	public Check(MarkupContainer parent, String id, IModel<T> model)
 	{

@@ -39,6 +39,9 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 */
 	public AjaxLink(MarkupContainer parent, final String id)
@@ -48,6 +51,9 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 * @param model

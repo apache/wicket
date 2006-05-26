@@ -51,6 +51,9 @@ public class ExternalLink extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param href
@@ -70,6 +73,9 @@ public class ExternalLink extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            The name of this component
 	 * @param href
@@ -82,6 +88,9 @@ public class ExternalLink extends WebMarkupContainer
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component
@@ -101,6 +110,9 @@ public class ExternalLink extends WebMarkupContainer
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            The name of this component

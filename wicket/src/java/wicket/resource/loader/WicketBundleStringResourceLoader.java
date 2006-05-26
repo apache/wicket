@@ -34,12 +34,12 @@ import wicket.Application;
  * E.g.
  * 
  * <pre>
- *  1) Application_myskin_fi.properties
- *       message1=AAAAAAAAA
- *  2) Application_myskin.properties
- *       message2=BBBBBBBB
- *  3) Application.properties
- *       message3=CCCCCCC
+ *   1) Application_myskin_fi.properties
+ *        message1=AAAAAAAAA
+ *   2) Application_myskin.properties
+ *        message2=BBBBBBBB
+ *   3) Application.properties
+ *        message3=CCCCCCC
  * </pre>
  * 
  * Component.getString("message3") should correctly read from file 3.

@@ -60,22 +60,22 @@ import wicket.util.resource.UrlResourceStream;
  * Java:
  * 
  * <pre>
- *    ...
- *  	add(new Include(&quot;header&quot;, &quot;header.html&quot;));
- *  	add(new Include(&quot;footer&quot;, &quot;footer.html&quot;));
- *    ...
+ *     ...
+ *   	add(new Include(&quot;header&quot;, &quot;header.html&quot;));
+ *   	add(new Include(&quot;footer&quot;, &quot;footer.html&quot;));
+ *     ...
  * </pre>
  * 
  * Html:
  * 
  * <pre>
- *    ...
- *  	&lt;div&gt;
- *  	 &lt;div wicket:id=&quot;header&quot;&gt;header comes here&lt;/div&gt;
- *  	 &lt;div&gt;I am the body!&lt;/div&gt;
- *  	 &lt;div wicket:id=&quot;footer&quot;&gt;footer comes here&lt;/div&gt;
- *  	&lt;/div&gt;
- *    ...
+ *     ...
+ *   	&lt;div&gt;
+ *   	 &lt;div wicket:id=&quot;header&quot;&gt;header comes here&lt;/div&gt;
+ *   	 &lt;div&gt;I am the body!&lt;/div&gt;
+ *   	 &lt;div wicket:id=&quot;footer&quot;&gt;footer comes here&lt;/div&gt;
+ *   	&lt;/div&gt;
+ *     ...
  * </pre>
  * 
  * </p>
@@ -109,6 +109,9 @@ public class Include extends WebComponent
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 */
@@ -119,6 +122,9 @@ public class Include extends WebComponent
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id
@@ -132,6 +138,9 @@ public class Include extends WebComponent
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id

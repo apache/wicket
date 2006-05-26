@@ -363,11 +363,11 @@ public class PackageResource extends WebResource
 						}
 
 						String filename = jarZipPart.substring(0, index + 4); // 4 =
-																				// len
-																				// of
-																				// ".jar"
-																				// or
-																				// ".zip"
+						// len
+						// of
+						// ".jar"
+						// or
+						// ".zip"
 						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
 						JarFile jarFile = new JarFile(filename, false);
 						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);

@@ -62,7 +62,8 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 * 
 	 * @param tagList
 	 * @param parent
-	 *            The next MarkupFilter in the chain
+	 *            The parent of this component The next MarkupFilter in the
+	 *            chain
 	 */
 	public HtmlHeaderSectionHandler(final List<ComponentTag> tagList, final IMarkupFilter parent)
 	{

@@ -63,7 +63,8 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * @param id
 	 * @param data
 	 * @param renderer
-	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, List ,IChoiceRenderer)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, List
+	 *      ,IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(MarkupContainer parent, final String id, final List<T> data,
 			final IChoiceRenderer<T> renderer)
@@ -85,7 +86,8 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * @param model
 	 * @param data
 	 * @param renderer
-	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List, IChoiceRenderer)
+	 * @see AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List,
+	 *      IChoiceRenderer)
 	 */
 	public AbstractSingleSelectChoice(MarkupContainer parent, final String id, IModel<T> model,
 			final List<T> data, final IChoiceRenderer<T> renderer)

@@ -53,6 +53,9 @@ public abstract class Loop extends WebMarkupContainer
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component
+		 * 
 		 * @param iteration
 		 *            The iteration of the loop
 		 */
@@ -73,6 +76,9 @@ public abstract class Loop extends WebMarkupContainer
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

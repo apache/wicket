@@ -37,7 +37,7 @@ import wicket.util.string.Strings;
  * HTML:
  * 
  * <pre>
- *  &lt;input type=&quot;checkbox&quot; wicket:id=&quot;bool&quot; /&gt;
+ *   &lt;input type=&quot;checkbox&quot; wicket:id=&quot;bool&quot; /&gt;
  * </pre>
  * 
  * </p>

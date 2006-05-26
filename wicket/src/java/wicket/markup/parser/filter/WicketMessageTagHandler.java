@@ -74,7 +74,8 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param parent
-	 *            The next MarkupFilter in the processing chain
+	 *            The parent of this component The next MarkupFilter in the
+	 *            processing chain
 	 * @param containerInfo
 	 *            The container requesting the current markup incl class, style
 	 *            and locale

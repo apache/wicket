@@ -68,6 +68,9 @@ public class Image extends WebComponent implements IResourceListener
 	 * requested from another server, without the rendering of the page, the
 	 * image won't be there and will result in a broken link.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param resourceReference
@@ -88,6 +91,9 @@ public class Image extends WebComponent implements IResourceListener
 	 * IInitializer at application startup. Then if only that resource is
 	 * requested from another server, without the rendering of the page, the
 	 * image won't be there and will result in a broken link.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component
@@ -110,6 +116,9 @@ public class Image extends WebComponent implements IResourceListener
 	 * the ResourceReference constructor has. But this will result in a non
 	 * 'stable' url and the url will have request parameters.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * 
@@ -131,6 +140,8 @@ public class Image extends WebComponent implements IResourceListener
 	}
 
 	/**
+	 * @param parent
+	 *            The parent of this component
 	 * @param id
 	 *            See Component
 	 * @param string

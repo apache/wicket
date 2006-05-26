@@ -19,6 +19,9 @@ public class ComponentFeedbackPanel extends FeedbackPanel
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            the component id.
 	 * @param filter

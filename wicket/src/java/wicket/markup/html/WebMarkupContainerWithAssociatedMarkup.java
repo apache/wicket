@@ -84,6 +84,9 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	 * Create a new HeaderPartContainer. Users may wish to do that to
 	 * implemented more sophisticated header scoping stragegies.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            The header component's id
 	 * @param scope
@@ -113,6 +116,8 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 		private final String scope;
 
 		/**
+		 * @param parent
+		 *            The parent of this component
 		 * @param id
 		 *            The component id
 		 * @param container

@@ -42,6 +42,9 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageable
@@ -54,6 +57,9 @@ public class AjaxPagingNavigation extends wicket.markup.html.navigation.paging.P
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: DropDownChoice.java 5863 2006-05-25 22:04:15 +0000 (Thu, 25 May 2006)
+ * joco01 $ $Revision$ $Date: 2006-05-25 22:04:15 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,28 +29,33 @@ import wicket.model.IModel;
  * A choice implemented as a dropdown menu/list.
  * <p>
  * Java:
+ * 
  * <pre>
- * 	List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
- *
- *	// Add a dropdown choice component that uses Input's 'site' property to designate the
- *	// current selection, and that uses the SITES list for the available options.
- *	// Note that when the selection is null, Wicket will lookup a localized string to
- *	// represent this null with key: "id + '.null'". In this case, this is 'site.null'
- *	// which can be found in DropDownChoicePage.properties
- *	form.add(new DropDownChoice("site", SITES));
+ * List SITES = Arrays.asList(new String[] { &quot;The Server Side&quot;, &quot;Java Lobby&quot;, &quot;Java.Net&quot; });
+ * 
+ * // Add a dropdown choice component that uses Input's 'site' property to designate the
+ * // current selection, and that uses the SITES list for the available options.
+ * // Note that when the selection is null, Wicket will lookup a localized string to
+ * // represent this null with key: &quot;id + '.null'&quot;. In this case, this is 'site.null'
+ * // which can be found in DropDownChoicePage.properties
+ * form.add(new DropDownChoice(&quot;site&quot;, SITES));
  * </pre>
+ * 
  * HTML:
+ * 
  * <pre>
- *	&lt;select wicket:id="site"&gt;
- *		&lt;option&gt;site 1&lt;/option&gt;
- *		&lt;option&gt;site 2&lt;/option&gt;
- *	&lt;/select&gt;
+ * 	&lt;select wicket:id=&quot;site&quot;&gt;
+ * 		&lt;option&gt;site 1&lt;/option&gt;
+ * 		&lt;option&gt;site 2&lt;/option&gt;
+ * 	&lt;/select&gt;
  * </pre>
+ * 
  * </p>
  * 
  * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications()
- * to force server roundtrips on each selection change.
+ * You can can extend this class and override method
+ * wantOnSelectionChangedNotifications() to force server roundtrips on each
+ * selection change.
  * </p>
  * 
  * @author Jonathan Locke
@@ -59,80 +65,94 @@ import wicket.model.IModel;
 public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String)
 	 */
 	public DropDownChoice(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      List)
 	 */
 	public DropDownChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      List,IChoiceRenderer)
 	 */
-	public DropDownChoice(MarkupContainer parent, final String id, final List<T> data, final IChoiceRenderer<T> renderer)
+	public DropDownChoice(MarkupContainer parent, final String id, final List<T> data,
+			final IChoiceRenderer<T> renderer)
 	{
-		super(parent,id,data, renderer);
+		super(parent, id, data, renderer);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel, List)
 	 */
-	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> choices)
+	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model,
+			final List<T> choices)
 	{
-		super(parent,id, model, choices);
-	}
-	
-	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, List, IChoiceRenderer)
-	 */
-	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> data, final IChoiceRenderer<T> renderer)
-	{
-		super(parent,id, model,data, renderer);
+		super(parent, id, model, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel, List, IChoiceRenderer)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<List<T>> choices)
+	public DropDownChoice(MarkupContainer parent, final String id, IModel<T> model,
+			final List<T> data, final IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, choices);
+		super(parent, id, model, data, renderer);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel,IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices)
+	public DropDownChoice(MarkupContainer parent, String id, IModel<List<T>> choices)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, choices);
 	}
-	
+
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel,IModel)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public DropDownChoice(MarkupContainer parent, String id, IModel<T> model,
+			IModel<List<T>> choices)
 	{
-		super(parent,id, choices, renderer);
+		super(parent, id, model, choices);
+	}
+
+	/**
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel,IChoiceRenderer)
+	 */
+	public DropDownChoice(MarkupContainer parent, String id, IModel<List<T>> choices,
+			IChoiceRenderer<T> renderer)
+	{
+		super(parent, id, choices, renderer);
 	}
 
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public DropDownChoice(MarkupContainer parent,String id, IModel<T> model, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public DropDownChoice(MarkupContainer parent, String id, IModel<T> model,
+			IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
-		super(parent,id, model, choices, renderer);
+		super(parent, id, model, choices, renderer);
 	}
-	
+
 	/**
 	 * Called when a selection changes.
 	 */
@@ -147,15 +167,16 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * Processes the component tag.
 	 * 
 	 * @param tag
-	 *			  Tag to modify
+	 *            Tag to modify
 	 * @see wicket.Component#onComponentTag(wicket.markup.ComponentTag)
 	 */
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "select");
-		
-		// Should a roundtrip be made (have onSelectionChanged called) when the selection changed?
+
+		// Should a roundtrip be made (have onSelectionChanged called) when the
+		// selection changed?
 		if (wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
@@ -164,11 +185,12 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 			try
 			{
 				Form form = getForm();
-				tag.put("onchange", form.getJsForInterfaceUrl(url) );
+				tag.put("onchange", form.getJsForInterfaceUrl(url));
 			}
 			catch (WicketRuntimeException ex)
 			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
+				// NOTE: do not encode the url as that would give invalid
+				// JavaScript
 				tag.put("onchange", "location.href='" + url + "&" + getInputName()
 						+ "=' + this.options[this.selectedIndex].value;");
 			}
@@ -187,34 +209,36 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *			  The newly selected object of the backing model NOTE this is
-	 *			  the same as you would get by calling getModelObject() if the
-	 *			  new selection were current
+	 *            The newly selected object of the backing model NOTE this is
+	 *            the same as you would get by calling getModelObject() if the
+	 *            new selection were current
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
 	}
 
 	/**
-	 * Whether this component's onSelectionChanged event handler should called using
-	 * javascript if the selection changes. If true, a roundtrip will be generated with
-	 * each selection change, resulting in the model being updated (of just this component)
-	 * and onSelectionChanged being called. This method returns false by default.
+	 * Whether this component's onSelectionChanged event handler should called
+	 * using javascript if the selection changes. If true, a roundtrip will be
+	 * generated with each selection change, resulting in the model being
+	 * updated (of just this component) and onSelectionChanged being called.
+	 * This method returns false by default.
+	 * 
 	 * @return True if this component's onSelectionChanged event handler should
-	 *			called using javascript if the selection changes
+	 *         called using javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{
 		return false;
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#isStateless()
 	 */
 	@Override
 	protected boolean isStateless()
 	{
-		if(wantOnSelectionChangedNotifications())
+		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}

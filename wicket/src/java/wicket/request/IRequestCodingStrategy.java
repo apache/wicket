@@ -1,7 +1,7 @@
 /*
  * $Id: IRequestCodingStrategy.java 5231 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
- * 2006) joco01 $ $Revision$ $Date: 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
- * 2006) $
+ * 2006) joco01 $ $Revision$ $Date: 2006-04-01 23:34:49 +0000 (Sat, 01
+ * Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
