@@ -27,11 +27,12 @@ import wicket.Response;
  */
 public class JavascriptUtils
 {
+	
 	/** Script open tag */
-	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--//--><![CDATA[//><!--\n";
+	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--/*--><![CDATA[/*><!--*/\n";
 
 	/** Script close tag */
-	public final static String SCRIPT_CLOSE_TAG = "\n//--><!]]></script>\n";
+	public final static String SCRIPT_CLOSE_TAG = "\n/*-->]]>*/</script>\n";
 
 	/** The response object */
 	private Response response;
