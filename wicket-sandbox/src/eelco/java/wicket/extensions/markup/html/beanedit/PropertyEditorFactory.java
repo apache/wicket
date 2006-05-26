@@ -22,6 +22,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.MarkupContainer;
+
 
 /**
  * Default property editor factory.
@@ -46,10 +48,10 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 	{
 		private static final long serialVersionUID = 1L;
 
-		public BeanPropertyEditor newPropertyEditor(String panelId, PropertyMeta propertyMeta,
+		public BeanPropertyEditor newPropertyEditor(MarkupContainer parent,String panelId, PropertyMeta propertyMeta,
 				EditMode editMode)
 		{
-			return new BeanPanel.PropertyInput(panelId, propertyMeta);
+			return new BeanPanel.PropertyInput(parent,panelId, propertyMeta);
 		}
 	};
 
@@ -109,7 +111,7 @@ public class PropertyEditorFactory implements IPropertyEditorFactory
 	 * @see wicket.extensions.markup.html.beanedit.IPropertyEditorFactory#newPropertyEditor(java.lang.String,
 	 *      PropertyMeta, wicket.extensions.markup.html.beanedit.EditMode)
 	 */
-	public BeanPropertyEditor newPropertyEditor(String panelId, PropertyMeta propertyMeta,
+	public BeanPropertyEditor newPropertyEditor(MarkupContainer parent,String panelId, PropertyMeta propertyMeta,
 			EditMode editMode)
 	{
 		return null;

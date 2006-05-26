@@ -35,9 +35,8 @@ public class Home extends WebPage
 	{
 		WizardConfiguration prefWiz = ((WizardApplication)getApplication()).newPreferencesWizard();
 
-		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-		add(feedbackPanel);
+		FeedbackPanel feedbackPanel = new FeedbackPanel(this,"feedback");
 
-		add(new WizardPanel("wizardPanel", prefWiz));
+		new WizardPanel(this,"wizardPanel", prefWiz);
 	}
 }

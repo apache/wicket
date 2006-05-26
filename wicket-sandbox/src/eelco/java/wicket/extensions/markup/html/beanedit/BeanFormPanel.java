@@ -19,6 +19,7 @@ package wicket.extensions.markup.html.beanedit;
 import java.io.Serializable;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
@@ -43,9 +44,9 @@ public class BeanFormPanel extends Panel
 	 * @param bean
 	 *            JavaBean to be edited or displayed
 	 */
-	public BeanFormPanel(String id, Serializable bean)
+	public BeanFormPanel(MarkupContainer parent,String id, Serializable bean)
 	{
-		this(id, new BeanModel(bean));
+		this(parent,id, new BeanModel(bean));
 	}
 
 	/**
@@ -56,11 +57,11 @@ public class BeanFormPanel extends Panel
 	 * @param beanModel
 	 *            model with the JavaBean to be edited or displayed
 	 */
-	public BeanFormPanel(String id, BeanModel beanModel)
+	public BeanFormPanel(MarkupContainer parent,String id, BeanModel beanModel)
 	{
-		super(id, beanModel);
+		super(parent,id, beanModel);
 		setRenderBodyOnly(true);
-		add(new BeanForm("form", beanModel));
+		new BeanForm(this,"form", beanModel);
 	}
 
 	/**
@@ -72,9 +73,9 @@ public class BeanFormPanel extends Panel
 	 *            model with the JavaBean to be edited or displayed
 	 * @return a new instance of bean panel
 	 */
-	protected AbstractBeanPanel newBeanPanel(String panelId, BeanModel beanModel)
+	protected AbstractBeanPanel newBeanPanel(MarkupContainer parent,String panelId, BeanModel beanModel)
 	{
-		return new BeanPanel(panelId, beanModel);
+		return new BeanPanel(parent,panelId, beanModel);
 	}
 
 	/**
@@ -146,12 +147,12 @@ public class BeanFormPanel extends Panel
 		 * @param beanModel
 		 *            model with the JavaBean to be edited or displayed
 		 */
-		public BeanForm(String id, BeanModel beanModel)
+		public BeanForm(MarkupContainer parent,String id, BeanModel beanModel)
 		{
-			super(id, beanModel);
-			add(newBeanPanel("beanPanel", beanModel));
+			super(parent,id, beanModel);
+			newBeanPanel(this,"beanPanel", beanModel);
 
-			Button cancel = new Button("cancel")
+			Button cancel = new Button(this,"cancel")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -163,9 +164,8 @@ public class BeanFormPanel extends Panel
 			cancel.add(new AttributeModifier("value", true, getLabelModelForCancelButton()));
 			cancel.add(new AttributeModifier("class", true, getCSSClassModelForCancelButton()));
 			cancel.setDefaultFormProcessing(true);
-			add(cancel);
 
-			Button save = new Button("save")
+			Button save = new Button(this,"save")
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -176,7 +176,6 @@ public class BeanFormPanel extends Panel
 			};
 			save.add(new AttributeModifier("value", true, getLabelModelForSaveButton()));
 			save.add(new AttributeModifier("class", true, getCSSClassModelForSaveButton()));
-			add(save);
 		}
 	}
 }

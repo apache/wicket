@@ -18,6 +18,8 @@ package wicket.extensions.markup.html.beanedit;
 
 import java.io.Serializable;
 
+import wicket.MarkupContainer;
+
 /**
  * Factory for property editors.
  * 
@@ -36,6 +38,6 @@ public interface IPropertyEditorFactory extends Serializable
 	 *            edit mode
 	 * @return a property editor
 	 */
-	BeanPropertyEditor newPropertyEditor(String panelId, PropertyMeta propertyMeta,
+	BeanPropertyEditor newPropertyEditor(MarkupContainer parent,String panelId, PropertyMeta propertyMeta,
 			EditMode editMode);
 }

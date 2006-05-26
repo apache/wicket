@@ -38,7 +38,7 @@ public final class Home extends WebPage
 	 */
 	public Home()
 	{
-		final Form form = new Form("form")
+		final Form form = new Form(this,"form")
 		{
 			protected void onSubmit()
 			{
@@ -46,10 +46,9 @@ public final class Home extends WebPage
 				System.out.println("Spinner value: " + getSpinnerValue());
 			}
 		};
-		form.add(new Slider("slider", new PropertyModel(Home.this, "sliderValue"), 0, 100));
-		form.add(new NumberSpinner("spinner", new PropertyModel(Home.this, "spinnerValue"),
-				new Integer(0), new Integer(100), new Integer(10)));
-		add(form);
+		new Slider(form,"slider", new PropertyModel(Home.this, "sliderValue"), 0, 100);
+		new NumberSpinner(form,"spinner", new PropertyModel(Home.this, "spinnerValue"),
+				new Integer(0), new Integer(100), new Integer(10));
 	}
 
 	public void setSliderValue(final int value)

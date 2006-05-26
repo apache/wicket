@@ -19,6 +19,7 @@ package wicket.markup.html.applet.sprockets.spinner.number;
 
 import javax.swing.SpinnerNumberModel;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.applet.Sprocket;
 import wicket.model.IModel;
 
@@ -46,9 +47,9 @@ public class NumberSpinner extends Sprocket
 	 * @param stepSize
 	 *            The step size for this spinner
 	 */
-	public NumberSpinner(final String id, final IModel model, final Number minimum, final Number maximum, final Number stepSize)
+	public NumberSpinner(MarkupContainer parent,final String id, final IModel model, final Number minimum, final Number maximum, final Number stepSize)
 	{
-		super(id, model, NumberSpinnerApplet.class);
+		super(parent,id, model, NumberSpinnerApplet.class);
 		appletModel = new SpinnerNumberModel();
 		appletModel.setValue((Comparable)getModelObject());
 		appletModel.setMaximum((Comparable)maximum);
@@ -69,9 +70,9 @@ public class NumberSpinner extends Sprocket
 	 * @param stepSize
 	 *            The step size for this spinner
 	 */
-	public NumberSpinner(final String id, final Number minimum, final Number maximum, final Number stepSize)
+	public NumberSpinner(MarkupContainer parent,final String id, final Number minimum, final Number maximum, final Number stepSize)
 	{
-		super(id, NumberSpinnerApplet.class);
+		super(parent,id, NumberSpinnerApplet.class);
 		appletModel = new SpinnerNumberModel();
 		appletModel.setValue(getModelObject());
 		appletModel.setMaximum((Comparable)maximum);

@@ -17,6 +17,7 @@
 package wicket.examples.wizard.framework;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
@@ -40,9 +41,9 @@ public class WizardPanel extends Panel
 	 * @param configuration
 	 *            wizard configuration object
 	 */
-	public WizardPanel(final String id, WizardConfiguration configuration)
+	public WizardPanel(MarkupContainer parent,final String id, WizardConfiguration configuration)
 	{
-		super(id);
+		super(parent,id);
 
 		if (configuration == null)
 		{
@@ -51,8 +52,7 @@ public class WizardPanel extends Panel
 
 		this.state = configuration.begin();
 
-		WizardForm form = new WizardForm("form");
-		add(form);
+		WizardForm form = new WizardForm(this,"form");
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class WizardPanel extends Panel
 	 *            the id that must be used to create the editor
 	 * @return the editor panel
 	 */
-	protected Panel newEditor(String editorId)
+	protected Panel newEditor(MarkupContainer parent, String editorId)
 	{
 		Node node = state.getCurrentNode();
 		if (node != null)
@@ -84,7 +84,7 @@ public class WizardPanel extends Panel
 			}
 		}
 
-		return new EmptyPanel(editorId);
+		return new EmptyPanel(parent,editorId);
 	}
 
 	/**
@@ -98,13 +98,12 @@ public class WizardPanel extends Panel
 		 * @param id
 		 *            component id
 		 */
-		public WizardForm(String id)
+		public WizardForm(MarkupContainer parent, String id)
 		{
-			super(id);
-			Panel editor = newEditor("editor");
-			add(editor);
+			super(parent,id);
+			Panel editor = newEditor(this,"editor");
 
-			Button previousButton = new Button("previous")
+			Button previousButton = new Button(this,"previous")
 			{
 				protected void onSubmit()
 				{
@@ -114,7 +113,7 @@ public class WizardPanel extends Panel
 						record(current);
 						TransitionLabel result = ((Step)current).previous(WizardForm.this);
 						state.move(result);
-						WizardForm.this.replace(newEditor("editor"));
+						newEditor(WizardForm.this,"editor");
 					}
 				}
 
@@ -125,9 +124,8 @@ public class WizardPanel extends Panel
 					return transitions.exists(current, TransitionLabel.PREVIOUS);
 				}
 			};
-			add(previousButton);
 
-			Button nextButton = new Button("next")
+			Button nextButton = new Button(this,"next")
 			{
 				protected void onSubmit()
 				{
@@ -137,7 +135,7 @@ public class WizardPanel extends Panel
 						record(current);
 						TransitionLabel result = ((Step)current).next(WizardForm.this);
 						state.move(result);
-						WizardForm.this.replace(newEditor("editor"));
+						newEditor(WizardForm.this,"editor");
 					}
 				}
 
@@ -148,9 +146,8 @@ public class WizardPanel extends Panel
 					return transitions.exists(current, TransitionLabel.NEXT);
 				}
 			};
-			add(nextButton);
 
-			Button exitButton = new Button("exit")
+			Button exitButton = new Button(this,"exit")
 			{
 				protected void onSubmit()
 				{
@@ -180,7 +177,6 @@ public class WizardPanel extends Panel
 					return null;
 				}
 			}));
-			add(exitButton);
 		}
 	}
 
@@ -214,9 +210,9 @@ public class WizardPanel extends Panel
 		 * @param id
 		 *            component id
 		 */
-		public EmptyPanel(String id)
+		public EmptyPanel(MarkupContainer parent,String id)
 		{
-			super(id);
+			super(parent,id);
 		}
 	}
 }

@@ -20,7 +20,7 @@ public final class SignIn extends VoicetribeWebPage
      */
     public SignIn()
     {
-        add(new SignInPanel("signInPanel", getVoicetribeWebSession(), true));
-        add(new BookmarkablePageLink("forgotPassword", ForgotPassword.class));
+        new SignInPanel(this,"signInPanel", getVoicetribeWebSession(), true);
+        new BookmarkablePageLink(this,"forgotPassword", ForgotPassword.class);
     }
 }

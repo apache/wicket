@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.applet.sprockets.slider;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.applet.Sprocket;
 import wicket.model.IModel;
 
@@ -42,9 +43,9 @@ public class Slider extends Sprocket
 	 * @param max
 	 *            The maximum value for this slider
 	 */
-	public Slider(final String id, final IModel model, final int min, final int max)
+	public Slider(MarkupContainer parent,final String id, final IModel model, final int min, final int max)
 	{
-		super(id, model, SliderApplet.class);
+		super(parent,id, model, SliderApplet.class);
 		appletModel = new SliderAppletModel();
 		appletModel.min = min;
 		appletModel.max = max;
@@ -62,9 +63,9 @@ public class Slider extends Sprocket
 	 * @param max
 	 *            The maximum value for this slider
 	 */
-	public Slider(final String id, final int min, final int max)
+	public Slider(MarkupContainer parent,final String id, final int min, final int max)
 	{
-		super(id, SliderApplet.class);
+		super(parent,id, SliderApplet.class);
 		appletModel = new SliderAppletModel();
 		appletModel.min = min;
 		appletModel.max = max;

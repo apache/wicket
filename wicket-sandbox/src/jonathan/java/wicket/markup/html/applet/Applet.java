@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.IResourceListener;
+import wicket.MarkupContainer;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
@@ -103,9 +104,9 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 * @param appletClass
 	 *            The class that implement's this applet
 	 */
-	public Applet(final String id, final Class appletClass)
+	public Applet(MarkupContainer parent,final String id, final Class appletClass)
 	{
-		super(id);
+		super(parent,id);
 		addAppletClass(appletClass);
 	}
 
@@ -119,9 +120,9 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 * @param appletClass
 	 *            The class that implements this applet's initialization
 	 */
-	public Applet(final String id, final IModel model, final Class appletClass)
+	public Applet(MarkupContainer parent,final String id, final IModel model, final Class appletClass)
 	{
-		super(id, model);
+		super(parent,id, model);
 		addAppletClass(appletClass);
 	}
 

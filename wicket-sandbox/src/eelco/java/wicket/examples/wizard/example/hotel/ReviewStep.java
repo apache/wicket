@@ -16,6 +16,7 @@
  */
 package wicket.examples.wizard.example.hotel;
 
+import wicket.MarkupContainer;
 import wicket.examples.wizard.framework.TransitionLabel;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
@@ -45,9 +46,9 @@ public class ReviewStep extends AbstractHotelPrefStep
 	/**
 	 * @see wicket.examples.wizard.framework.Step#newEditor(String)
 	 */
-	public Panel newEditor(String id)
+	public Panel newEditor(MarkupContainer parent,String id)
 	{
-		return new Editor(id);
+		return new Editor(parent,id);
 	}
 
 	/**
@@ -101,22 +102,22 @@ public class ReviewStep extends AbstractHotelPrefStep
 		 * @param id
 		 *            component id
 		 */
-		public Editor(String id)
+		public Editor(MarkupContainer parent,String id)
 		{
-			super(id, new CompoundPropertyModel(ReviewStep.this.getModel()));
+			super(parent,id, new CompoundPropertyModel(ReviewStep.this.getModel()));
 
-			add(new CheckBox("wantsWakeUpCall")
+			new CheckBox(this,"wantsWakeUpCall")
 			{
 				protected boolean wantOnSelectionChangedNotifications()
 				{
 					return true;
 				}
-			});
+			};
 
 			// we want to show the wake up call input fields (time) only when
 			// the customer
 			// wants to get a wake up call
-			WebMarkupContainer wakeUpCallContainer = new WebMarkupContainer("wakeUpCallContainer")
+			WebMarkupContainer wakeUpCallContainer = new WebMarkupContainer(this,"wakeUpCallContainer")
 			{
 				public boolean isVisible()
 				{
@@ -124,11 +125,10 @@ public class ReviewStep extends AbstractHotelPrefStep
 				}
 			};
 			// note that required is only checked when the field is visible
-			wakeUpCallContainer.add(new TextField("wakeUpCallHours", Integer.class));
-			wakeUpCallContainer.add(new TextField("wakeUpCallMinutes", Integer.class));
-			add(wakeUpCallContainer);
+			new TextField(wakeUpCallContainer,"wakeUpCallHours", Integer.class);
+			new TextField(wakeUpCallContainer,"wakeUpCallMinutes", Integer.class);
 
-			add(new CheckBox("wantsBreakFast"));
+			new CheckBox(this,"wantsBreakFast");
 		}
 	}
 }

@@ -4,6 +4,7 @@
 
 package wicket.extensions.signin;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -17,9 +18,9 @@ public class SignOutPanel extends Panel
     /**
      * @param id
      */
-    public SignOutPanel(String id)
+    public SignOutPanel(MarkupContainer parent,String id)
     {
-        super(id);
+        super(parent,id);
     }
 
     public boolean signIn(String username, String password)

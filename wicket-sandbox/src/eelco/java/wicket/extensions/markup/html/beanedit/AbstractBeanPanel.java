@@ -18,6 +18,7 @@ package wicket.extensions.markup.html.beanedit;
 
 import java.io.Serializable;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -36,9 +37,9 @@ public abstract class AbstractBeanPanel extends Panel
 	 * @param bean
 	 *            JavaBean to be edited or displayed
 	 */
-	public AbstractBeanPanel(String id, Serializable bean)
+	public AbstractBeanPanel(MarkupContainer parent,String id, Serializable bean)
 	{
-		this(id, new BeanModel(bean));
+		this(parent,id, new BeanModel(bean));
 	}
 
 	/**
@@ -49,9 +50,9 @@ public abstract class AbstractBeanPanel extends Panel
 	 * @param beanModel
 	 *            model with the JavaBean to be edited or displayed
 	 */
-	public AbstractBeanPanel(String id, BeanModel beanModel)
+	public AbstractBeanPanel(MarkupContainer parent,String id, BeanModel beanModel)
 	{
-		super(id, beanModel);
+		super(parent,id, beanModel);
 		if (beanModel == null)
 		{
 			throw new IllegalArgumentException("Argument beanModel must not be null");

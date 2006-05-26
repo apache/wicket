@@ -16,6 +16,7 @@
  */
 package wicket.extensions.markup.html.beanedit;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 
@@ -36,10 +37,10 @@ public class DefaultBeanHeaderPanel extends Panel
 	 * @param beanModel
 	 *            model with the JavaBean to be edited or displayed
 	 */
-	public DefaultBeanHeaderPanel(String id, BeanModel beanModel)
+	public DefaultBeanHeaderPanel(MarkupContainer parent,String id, BeanModel beanModel)
 	{
-		super(id);
-		add(new Label("displayName", new BeanDisplayNameModel(beanModel)));
+		super(parent,id);
+		new Label(this,"displayName", new BeanDisplayNameModel(beanModel));
 		setRenderBodyOnly(true);
 	}
 }

@@ -17,6 +17,7 @@
 package wicket.extensions.markup.html.beanedit;
 
 
+import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -34,8 +35,8 @@ public abstract class BeanPropertyEditor extends Panel
 	 * @param propertyMeta
 	 *            property descriptor
 	 */
-	public BeanPropertyEditor(String id, PropertyMeta propertyMeta)
+	public BeanPropertyEditor(MarkupContainer parent,String id, PropertyMeta propertyMeta)
 	{
-		super(id);
+		super(parent,id);
 	}
 }

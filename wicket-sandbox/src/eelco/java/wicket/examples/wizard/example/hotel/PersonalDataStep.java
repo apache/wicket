@@ -18,6 +18,7 @@ package wicket.examples.wizard.example.hotel;
 
 import java.util.Date;
 
+import wicket.MarkupContainer;
 import wicket.examples.wizard.framework.TransitionLabel;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -48,9 +49,9 @@ public class PersonalDataStep extends AbstractHotelPrefStep
 	/**
 	 * @see wicket.examples.wizard.framework.Step#newEditor(String)
 	 */
-	public Panel newEditor(String id)
+	public Panel newEditor(MarkupContainer parent,String id)
 	{
-		return new Editor(id);
+		return new Editor(parent,id);
 	}
 
 	/**
@@ -106,14 +107,14 @@ public class PersonalDataStep extends AbstractHotelPrefStep
 		 * @param id
 		 *            component id
 		 */
-		public Editor(String id)
+		public Editor(MarkupContainer parent,String id)
 		{
-			super(id, new CompoundPropertyModel(PersonalDataStep.this.getModel()));
+			super(parent,id, new CompoundPropertyModel(PersonalDataStep.this.getModel()));
 
-			add(new TextField("firstName"));
-			add(new TextField("lastName"));
-			add(new TextField("passportNumber"));
-			add(new TextField("dateOfBirth", Date.class));
+			new TextField(this,"firstName");
+			new TextField(this,"lastName");
+			new TextField(this,"passportNumber");
+			new TextField(this,"dateOfBirth", Date.class);
 		}
 	}
 }

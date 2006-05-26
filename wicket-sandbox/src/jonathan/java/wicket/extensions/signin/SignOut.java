@@ -20,6 +20,6 @@ public final class SignOut extends VoicetribeWebPage
      */
     public SignOut()
     {
-        add(new SignOutPanel("signOutPanel"));
+        new SignOutPanel(this,"signOutPanel");
     }
 }

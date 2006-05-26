@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.applet;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -29,13 +30,13 @@ import wicket.model.IModel;
  */
 public class Sprocket extends Applet
 {
-	public Sprocket(final String id, final Class appletClass)
+	public Sprocket(MarkupContainer parent,final String id, final Class appletClass)
 	{
-		super(id, appletClass);
+		super(parent,id, appletClass);
 	}
 
-	public Sprocket(final String id, final IModel model, final Class appletClass)
+	public Sprocket(MarkupContainer parent,final String id, final IModel model, final Class appletClass)
 	{
-		super(id, model, appletClass);
+		super(parent,id, model, appletClass);
 	}
 }

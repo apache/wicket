@@ -5,6 +5,7 @@
 package wicket.extensions.signin;
 
 
+import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
@@ -52,30 +53,26 @@ public class SignInPanel extends Panel
          * @param includeRememberMe
          *            True to include checkbox
          */
-        public SignInForm(final String id, boolean includeRememberMe)
+        public SignInForm(MarkupContainer parent,final String id, boolean includeRememberMe)
         {
-            super(id);
+            super(parent,id);
 
             setModel(new CompoundPropertyModel(this));
 
             // Components working on compound property model
-            usernameTextField = new TextField(idUsername);
-            passwordTextField = new PasswordTextField(idPassword);
-            rememberMeCheckBox = new CheckBox(idRememberMe);
+            usernameTextField = new TextField(this,idUsername);
+            passwordTextField = new PasswordTextField(this,idPassword);
+            final WebMarkupContainer rememberMeRow = new WebMarkupContainer(this,"rememberMeRow");
+            rememberMeRow.setVisible(includeRememberMe);
+            rememberMeCheckBox = new CheckBox(rememberMeRow,idRememberMe);
 
             // Add validators
             usernameTextField.add(EmailAddressPatternValidator.getInstance());
 
             // Add components
-            final WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
-            rememberMeRow.add(rememberMeCheckBox);
-            rememberMeRow.setVisible(includeRememberMe);
-            add(rememberMeRow);
-            add(usernameTextField);
-            add(passwordTextField);
 
             // Add button image
-            add(new ImageButton("signInButton", new ResourceReference("signInButton")));
+            new ImageButton(this,"signInButton", new ResourceReference("signInButton"));
         }
 
         /**
@@ -192,9 +189,9 @@ public class SignInPanel extends Panel
     /**
      * @see wicket.Component#Component(String)
      */
-    public SignInPanel(final String id, final ISignIn signIn)
+    public SignInPanel(MarkupContainer parent,final String id, final ISignIn signIn)
     {
-        this(id, signIn, false);
+        this(parent,id, signIn, false);
     }
 
     /**
@@ -206,10 +203,10 @@ public class SignInPanel extends Panel
      *            True to include remember me functionality using cookie manager
      * @see wicket.Component#Component(String)
      */
-    public SignInPanel(final String id, final ISignIn signIn, final boolean includeRememberMe)
+    public SignInPanel(MarkupContainer parent,final String id, final ISignIn signIn, final boolean includeRememberMe)
     {
-        super(id);
-        add(signInForm = new SignInForm("signInForm", includeRememberMe));
+        super(parent,id);
+        signInForm = new SignInForm(this,"signInForm", includeRememberMe);
         this.signIn = signIn;
     }
 }

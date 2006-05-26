@@ -33,6 +33,6 @@ public final class Home extends WebPage
 	 */
 	public Home()
 	{
-		add(new Applet("sprocket", new Model("foo"), SimpleApplet.class));
+		new Applet(this,"sprocket", new Model("foo"), SimpleApplet.class);
 	}
 }

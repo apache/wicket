@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import wicket.AttributeModifier;
+import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.CheckBox;
@@ -59,9 +60,9 @@ public class BeanPanel extends AbstractBeanPanel
 	 * @param bean
 	 *            JavaBean to be edited or displayed
 	 */
-	public BeanPanel(String id, Serializable bean)
+	public BeanPanel(MarkupContainer parent,String id, Serializable bean)
 	{
-		this(id, new BeanModel(bean));
+		this(parent,id, new BeanModel(bean));
 	}
 
 	/**
@@ -72,17 +73,16 @@ public class BeanPanel extends AbstractBeanPanel
 	 * @param beanModel
 	 *            model with the JavaBean to be edited or displayed
 	 */
-	public BeanPanel(String id, BeanModel beanModel)
+	public BeanPanel(MarkupContainer parent,String id, BeanModel beanModel)
 	{
-		super(id, beanModel);
+		super(parent,id, beanModel);
 		setRenderBodyOnly(true);
-		Panel header = newHeader("header", beanModel);
+		Panel header = newHeader(this,"header", beanModel);
 		if (header == null)
 		{
 			throw new IllegalArgumentException("Header must be not null");
 		}
-		add(header);
-		add(new PropertyList("propertiesList", new BeanPropertiesListModel(beanModel)));
+		new PropertyList(this,"propertiesList", new BeanPropertiesListModel(beanModel));
 	}
 
 	/**
@@ -94,9 +94,9 @@ public class BeanPanel extends AbstractBeanPanel
 	 *            model with the JavaBean to be edited or displayed
 	 * @return the header panel
 	 */
-	protected Panel newHeader(String panelId, BeanModel beanModel)
+	protected Panel newHeader(MarkupContainer parent,String panelId, BeanModel beanModel)
 	{
-		return new DefaultBeanHeaderPanel(panelId, beanModel);
+		return new DefaultBeanHeaderPanel(parent,panelId, beanModel);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class BeanPanel extends AbstractBeanPanel
 	 *            property descriptor
 	 * @return the editor
 	 */
-	protected Panel newPropertyEditor(String panelId, PropertyMeta propertyMeta)
+	protected Panel newPropertyEditor(MarkupContainer parent,String panelId, PropertyMeta propertyMeta)
 	{
 		Class type = propertyMeta.getPropertyType();
 		BeanPropertyEditor editor = findCustomEditor(panelId, propertyMeta);
@@ -121,7 +121,7 @@ public class BeanPanel extends AbstractBeanPanel
 			}
 			else
 			{
-				editor = newDefaultEditor(panelId, propertyMeta);
+				editor = newDefaultEditor(parent,panelId, propertyMeta);
 			}
 		}
 
@@ -159,22 +159,22 @@ public class BeanPanel extends AbstractBeanPanel
 	 *            property descriptor
 	 * @return a property editor
 	 */
-	protected final BeanPropertyEditor newDefaultEditor(final String panelId,
+	protected final BeanPropertyEditor newDefaultEditor(MarkupContainer parent,final String panelId,
 			final PropertyMeta propertyMeta)
 	{
 		BeanPropertyEditor editor;
 		final Class type = propertyMeta.getPropertyType();
 		if (checkAssignableFrom(BOOL_TYPES, type))
 		{
-			editor = new PropertyCheckBox(panelId, propertyMeta);
+			editor = new PropertyCheckBox(parent,panelId, propertyMeta);
 		}
 		if (checkAssignableFrom(BASE_TYPES, type))
 		{
-			editor = new PropertyInput(panelId, propertyMeta);
+			editor = new PropertyInput(parent,panelId, propertyMeta);
 		}
 		else
 		{
-			return new ButtonToMoreDetails(panelId, propertyMeta);
+			return new ButtonToMoreDetails(parent,panelId, propertyMeta);
 		}
 		return editor;
 	}
@@ -282,9 +282,9 @@ public class BeanPanel extends AbstractBeanPanel
 		 * @param model
 		 *            the model
 		 */
-		public PropertyList(String id, BeanPropertiesListModel model)
+		public PropertyList(MarkupContainer parent,String id, BeanPropertiesListModel model)
 		{
-			super(id, model);
+			super(parent,id, model);
 			setReuseItems(true);
 		}
 
@@ -294,13 +294,12 @@ public class BeanPanel extends AbstractBeanPanel
 		protected void populateItem(ListItem item)
 		{
 			PropertyMeta propertyMeta = (PropertyMeta)item.getModelObject();
-			item.add(new Label("displayName", propertyMeta.getDisplayName()));
-			Panel propertyEditor = newPropertyEditor("editor", propertyMeta);
+			new Label(item,"displayName", propertyMeta.getDisplayName());
+			Panel propertyEditor = newPropertyEditor(item,"editor", propertyMeta);
 			if (propertyEditor == null)
 			{
 				throw new IllegalStateException("Value propertyEditor must be not null");
 			}
-			item.add(propertyEditor);
 		}
 	}
 
@@ -319,16 +318,15 @@ public class BeanPanel extends AbstractBeanPanel
 		 * @param propertyMeta
 		 *            property descriptor
 		 */
-		public PropertyInput(String id, final PropertyMeta propertyMeta)
+		public PropertyInput(MarkupContainer parent,String id, final PropertyMeta propertyMeta)
 		{
-			super(id, propertyMeta);
+			super(parent,id, propertyMeta);
 			setRenderBodyOnly(true);
 			Class type = propertyMeta.getPropertyType();
-			TextField valueTextField = new TextField("value", new BeanPropertyModel(propertyMeta),
+			TextField valueTextField = new TextField(this,"value", new BeanPropertyModel(propertyMeta),
 					type);
 			EditModeReplacementModel replacementModel = new EditModeReplacementModel(propertyMeta);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
-			add(valueTextField);
 		}
 	}
 
@@ -347,15 +345,14 @@ public class BeanPanel extends AbstractBeanPanel
 		 * @param propertyMeta
 		 *            property descriptor
 		 */
-		public PropertyCheckBox(String id, final PropertyMeta propertyMeta)
+		public PropertyCheckBox(MarkupContainer parent,String id, final PropertyMeta propertyMeta)
 		{
-			super(id, propertyMeta);
+			super(parent,id, propertyMeta);
 			setRenderBodyOnly(true);
 			Class type = propertyMeta.getPropertyType();
-			CheckBox valueTextField = new CheckBox("value", new BeanPropertyModel(propertyMeta));
+			CheckBox valueTextField = new CheckBox(this,"value", new BeanPropertyModel(propertyMeta));
 			EditModeReplacementModel replacementModel = new EditModeReplacementModel(propertyMeta);
 			valueTextField.add(new AttributeModifier("disabled", true, replacementModel));
-			add(valueTextField);
 		}
 	}
 
@@ -374,17 +371,17 @@ public class BeanPanel extends AbstractBeanPanel
 		 * @param propertyMeta
 		 *            property descriptor
 		 */
-		public ButtonToMoreDetails(String id, final PropertyMeta propertyMeta)
+		public ButtonToMoreDetails(MarkupContainer parent,String id, final PropertyMeta propertyMeta)
 		{
-			super(id, propertyMeta);
-			add(new Link("button")
+			super(parent,id, propertyMeta);
+			new Link(this,"button")
 			{
 				private static final long serialVersionUID = 1L;
 
 				public void onClick()
 				{
 				}
-			});
+			};
 		}
 	}
 }
