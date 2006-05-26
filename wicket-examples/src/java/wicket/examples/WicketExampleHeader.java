@@ -38,6 +38,8 @@ public final class WicketExampleHeader extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            id of the component
 	 * @param exampleTitle

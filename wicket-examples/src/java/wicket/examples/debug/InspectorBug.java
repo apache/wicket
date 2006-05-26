@@ -38,6 +38,8 @@ public final class InspectorBug extends Panel
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            Component id
 	 * @param page

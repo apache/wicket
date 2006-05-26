@@ -88,6 +88,8 @@ public class TabbedPanelPage extends WicketExamplePage
 		private final String clazz;
 
 		/**
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 * @param clazz
 		 */
@@ -129,6 +131,8 @@ public class TabbedPanelPage extends WicketExamplePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 */
@@ -151,6 +155,8 @@ public class TabbedPanelPage extends WicketExamplePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 */
@@ -173,6 +179,8 @@ public class TabbedPanelPage extends WicketExamplePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 */

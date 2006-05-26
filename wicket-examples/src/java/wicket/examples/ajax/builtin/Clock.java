@@ -36,6 +36,8 @@ public class Clock extends Label
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            Component id
 	 * @param tz

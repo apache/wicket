@@ -156,6 +156,8 @@ public class LinkPage extends WicketExamplePage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 * @param clickCount

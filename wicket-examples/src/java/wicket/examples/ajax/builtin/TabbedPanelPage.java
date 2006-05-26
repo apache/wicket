@@ -79,6 +79,8 @@ public class TabbedPanelPage extends BasePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 */
@@ -96,6 +98,8 @@ public class TabbedPanelPage extends BasePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 */
@@ -113,6 +117,8 @@ public class TabbedPanelPage extends BasePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 */

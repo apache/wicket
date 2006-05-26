@@ -44,9 +44,12 @@ public final class SessionView extends Panel
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            See Component
-	 * @see Component#Component(String)
+	 * @param session
+	 * @see Component#Component(MarkupContainer, String)
 	 */
 	public SessionView(MarkupContainer parent, final String id, final Session session)
 	{

@@ -35,6 +35,8 @@ public final class ApplicationView extends Panel
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            Component id
 	 * @param application

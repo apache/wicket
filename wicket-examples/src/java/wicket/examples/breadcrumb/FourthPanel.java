@@ -32,6 +32,8 @@ public class FourthPanel extends BreadCrumbPanel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param breadCrumbModel
 	 */

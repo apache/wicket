@@ -32,6 +32,8 @@ class ExplainPanel extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param html
 	 * @param code
 	 */

@@ -51,6 +51,8 @@ public final class PageMapView extends Panel
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            The component id
 	 * @param pageMap

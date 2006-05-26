@@ -56,6 +56,8 @@ public class XmlPage extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 * @param list
