@@ -105,7 +105,12 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put(event, getEventHandler());
+		
+		// only add the event handler when the component is enabled.
+		if (this.getComponent().isEnabled()) 
+		{
+			tag.put(event, getEventHandler());
+		}
 	}
 
 	/**
