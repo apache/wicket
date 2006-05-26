@@ -24,6 +24,7 @@ import wicket.extensions.ajax.markup.html.form.upload.UploadProgressBar;
 import wicket.extensions.breadcrumb.BreadCrumbBar;
 import wicket.extensions.markup.html.datepicker.DatePickerComponentInitializer;
 import wicket.extensions.markup.html.form.palette.PaletteInitializer;
+import wicket.extensions.rating.RatingPanel;
 import wicket.extensions.wizard.Wizard;
 
 /**
@@ -43,5 +44,6 @@ public class Initializer implements IInitializer
 		new UploadProgressBar.ComponentInitializer().init(application);
 		new Wizard.WizardInitializer().init(application);
 		new BreadCrumbBar.BreadCrumbBarInitializer().init(application);
+		new RatingPanel.RatingPanelInitializer().init(application);
 	}
 }
