@@ -26,9 +26,12 @@ import wicket.model.IModel;
  * Closes a popup window and cleans up any related session page map for the
  * popup.
  * 
+ * @param <T>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  */
-public class PopupCloseLink extends Link
+public class PopupCloseLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -62,7 +65,7 @@ public class PopupCloseLink extends Link
 	 * @param id
 	 * @param object
 	 */
-	public PopupCloseLink(MarkupContainer parent, String id, IModel object)
+	public PopupCloseLink(MarkupContainer parent, String id, IModel<T> object)
 	{
 		super(parent, id, object);
 	}

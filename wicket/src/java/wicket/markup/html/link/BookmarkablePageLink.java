@@ -32,7 +32,7 @@ import wicket.PageParameters;
  * 
  * @author Jonathan Locke
  */
-public class BookmarkablePageLink extends Link
+public class BookmarkablePageLink<T> extends Link<T>
 {
 	private static final long serialVersionUID = 1L;
 
