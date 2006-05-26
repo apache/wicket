@@ -51,10 +51,29 @@ import wicket.model.StringResourceModel;
  * a Double (or Float) value for the rating message, however the rating panel
  * doesn't necessarily have to contain a float or number rating value.
  * <p>
+ * Though not obligatory, you could also supply a value for the number of votes
+ * cast, which allows the component to render a more complete message in the
+ * rating label.
+ * 
+ * <h2>Customizing the rating value and label</h2>
  * To customize the rating value, one should override the
  * {@link #newRatingLabel(String, IModel, IModel)} method and create another
- * label instead, based on the provided models.
- * <p>
+ * label instead, based on the provided models. If you do so, and use another
+ * system of rating than returning a Float or Double, then you should also
+ * customize the rating resource bundle to reflect your message. The default
+ * resource bundle assumes a numeric value for the rating.
+ * 
+ * <h2>Resource bundle</h2>
+ * This component uses two types of messages: rating.simple and rating.complete.
+ * The first message is used when no model is given for the number of cast
+ * votes. The complete message shows the text 'Rating xx.yy from zz votes'.
+ * 
+ * <pre>
+ *      rating.simple=Rated {0,number,#.#}
+ *      rating.complete=Rated {0,number,#.#} from {1,number,#} votes
+ * </pre>
+ * 
+ * <h2>Customizing the star images</h2>
  * To customize the images shown, override the {@link #getActiveStarUrl(int)}
  * and {@link #getInactiveStarUrl(int)} methods. Using the iteration parameter
  * it is possible to use a different image for each star, creating a fade effect
@@ -227,7 +246,8 @@ public abstract class RatingPanel extends Panel
 	 */
 	public RatingPanel(String id, IModel rating, int nrOfStars, boolean addDefaultCssStyle)
 	{
-		this(id, rating, new Model(new Integer(nrOfStars)), null, new Model(Boolean.FALSE), addDefaultCssStyle);
+		this(id, rating, new Model(new Integer(nrOfStars)), null, new Model(Boolean.FALSE),
+				addDefaultCssStyle);
 	}
 
 	/**
@@ -247,9 +267,11 @@ public abstract class RatingPanel extends Panel
 	 * @param addDefaultCssStyle
 	 *            should this component render its own default CSS style?
 	 */
-	public RatingPanel(String id, IModel rating, int nrOfStars, IModel nrOfVotes, boolean addDefaultCssStyle)
+	public RatingPanel(String id, IModel rating, int nrOfStars, IModel nrOfVotes,
+			boolean addDefaultCssStyle)
 	{
-		this(id, rating, new Model(new Integer(nrOfStars)), nrOfVotes, new Model(Boolean.FALSE), addDefaultCssStyle);
+		this(id, rating, new Model(new Integer(nrOfStars)), nrOfVotes, new Model(Boolean.FALSE),
+				addDefaultCssStyle);
 	}
 
 	/**
