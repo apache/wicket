@@ -98,14 +98,14 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	/**
 	 * Activates the {@link BreadCrumbPanel bread crumb panel} that is the
 	 * result of calling
-	 * {@link IBreadCrumbPanelFactory#create(String, IBreadCrumbModel) the create method}
+	 * {@link IBreadCrumbPanelFactory#create(MarkupContainer, String, IBreadCrumbModel) the create method}
 	 * of the bread crumb panel factory.
 	 * 
 	 * @param breadCrumbPanelFactory
 	 */
 	public void activate(IBreadCrumbPanelFactory breadCrumbPanelFactory)
 	{
-		activate(breadCrumbPanelFactory.create(getId(), breadCrumbModel));
+		activate(breadCrumbPanelFactory.create(this, getId(), breadCrumbModel));
 	}
 
 	/**

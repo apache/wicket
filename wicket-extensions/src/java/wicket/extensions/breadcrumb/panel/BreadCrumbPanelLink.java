@@ -114,6 +114,6 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	@Override
 	protected final IBreadCrumbParticipant getParticipant(String componentId)
 	{
-		return breadCrumbPanelFactory.create(componentId, breadCrumbModel);
+		return breadCrumbPanelFactory.create(getParent(), componentId, breadCrumbModel);
 	}
 }
