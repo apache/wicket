@@ -117,7 +117,7 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Link(MarkupContainer parent, final String id, IModel object)
+	public Link(MarkupContainer parent, final String id, IModel<T> object)
 	{
 		super(parent, id, object);
 	}

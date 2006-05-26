@@ -66,8 +66,8 @@ public class ExternalLink extends WebMarkupContainer
 	{
 		super(parent, id);
 
-		this.href = (href != null ? new Model(href) : null);
-		this.label = (label != null ? new Model(label) : null);
+		this.href = (href != null ? new Model<String>(href) : null);
+		this.label = (label != null ? new Model<String>(label) : null);
 	}
 
 	/**
