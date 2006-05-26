@@ -17,6 +17,7 @@
  */
 package wicket.authentication.panel;
 
+import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.authentication.AuthenticatedWebSession;
 import wicket.markup.html.WebMarkupContainer;
@@ -72,23 +73,22 @@ public class SignInPanel extends Panel
 		 * @param id
 		 *            id of the form component
 		 */
-		public SignInForm(final String id)
+		public SignInForm(MarkupContainer parent,final String id)
 		{
-			super(id);
+			super(parent,id);
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			add(username = new TextField("username", new PropertyModel(properties, "username")));
-			add(password = new PasswordTextField("password", new PropertyModel(properties,
-					"password")));
+			username = new TextField(this,"username", new PropertyModel(properties, "username"));
+			password = new PasswordTextField(this,"password", new PropertyModel(properties,
+					"password"));
 
 			// MarkupContainer row for remember me checkbox
-			final WebMarkupContainer rememberMeRow = new WebMarkupContainer("rememberMeRow");
-			add(rememberMeRow);
+			final WebMarkupContainer rememberMeRow = new WebMarkupContainer(this,"rememberMeRow");
 
 			// Add rememberMe checkbox
-			rememberMeRow.add(new CheckBox("rememberMe", new PropertyModel(SignInPanel.this,
-					"rememberMe")));
+			new CheckBox(rememberMeRow,"rememberMe", new PropertyModel(SignInPanel.this,
+					"rememberMe"));
 
 			// Make form values persistent
 			setPersistent(rememberMe);
@@ -125,9 +125,9 @@ public class SignInPanel extends Panel
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(final String id)
+	public SignInPanel(MarkupContainer parent,final String id)
 	{
-		this(id, true);
+		this(parent,id, true);
 	}
 
 	/**
@@ -137,19 +137,18 @@ public class SignInPanel extends Panel
 	 *            True if form should include a remember-me checkbox
 	 * @see wicket.Component#Component(String)
 	 */
-	public SignInPanel(final String id, final boolean includeRememberMe)
+	public SignInPanel(MarkupContainer parent,final String id, final boolean includeRememberMe)
 	{
-		super(id);
+		super(parent,id);
 
 		this.includeRememberMe = includeRememberMe;
 
 		// Create feedback panel and add to page
-		final FeedbackPanel feedback = new FeedbackPanel("feedback");
-		add(feedback);
+		final FeedbackPanel feedback = new FeedbackPanel(this,"feedback");
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler
-		add(new SignInForm("signInForm"));
+		new SignInForm(this,"signInForm");
 	}
 
 	/**
