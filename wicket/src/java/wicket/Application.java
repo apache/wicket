@@ -412,7 +412,7 @@ public abstract class Application
 	 * 
 	 * @return Home page class for this application
 	 */
-	public abstract Class getHomePage();
+	public abstract Class<? extends Page> getHomePage();
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
@@ -533,11 +533,8 @@ public abstract class Application
 	 * @see Application#getResourceSettings()
 	 * @see Application#getSecuritySettings()
 	 * @see Application#getSessionSettings()
-	 * @deprecated will be made private after 1.2
 	 */
-	// TODO Post 1.2: Make private
-	@Deprecated
-	public Settings getSettings()
+	private Settings getSettings()
 	{
 		if (!settingsAccessible)
 		{
