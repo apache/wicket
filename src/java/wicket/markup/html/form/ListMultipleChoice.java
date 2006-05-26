@@ -77,7 +77,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      List)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
@@ -93,7 +94,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 *            list of choices
 	 * @param maxRows
 	 *            the maximum number of visible rows.
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      List)
 	 */
 	public ListMultipleChoice(MarkupContainer parent, final String id, final List<T> choices,
 			final int maxRows)
@@ -209,8 +211,8 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#isSelected(Object,int,
-	 *      String)
+	 * @see wicket.markup.html.form.AbstractChoice#isSelected(java.lang.Object,
+	 *      int, java.lang.String)
 	 */
 	@Override
 	protected final boolean isSelected(T choice, int index, String selected)

@@ -35,6 +35,9 @@ public abstract class PropertyListView<T> extends ListView<T>
 	/**
 	 * Construct without model, assume bound externally.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            Wicket id
 	 */
@@ -45,6 +48,9 @@ public abstract class PropertyListView<T> extends ListView<T>
 
 	/**
 	 * Construct with a model.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            Wicket id
@@ -60,6 +66,9 @@ public abstract class PropertyListView<T> extends ListView<T>
 	 * Construct with a "small," unmodeled List. The object can not be detached
 	 * and will reside in the session, but is convenient for lists of a limited
 	 * size.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            Wicket id

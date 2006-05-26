@@ -43,6 +43,9 @@ public class PageLink extends Link
 	 * Constructs a link that instantiates the given Page class when the link is
 	 * clicked. The instantiated Page is used to render a response to the user.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param c
@@ -79,6 +82,9 @@ public class PageLink extends Link
 	 * This constructor is ideal if a Page object was passed in from a previous
 	 * Page. Construct a link to the Page.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See component
 	 * @param page
@@ -111,6 +117,9 @@ public class PageLink extends Link
 	 * Constructs a link which invokes the getPage() method of the IPageLink
 	 * interface when the link is clicked. Whatever Page objects is returned by
 	 * this method will be rendered back to the user.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

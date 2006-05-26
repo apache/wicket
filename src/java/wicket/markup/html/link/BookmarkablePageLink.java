@@ -48,6 +48,9 @@ public class BookmarkablePageLink extends Link
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            The name of this component
 	 * @param pageClass
@@ -61,6 +64,9 @@ public class BookmarkablePageLink extends Link
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

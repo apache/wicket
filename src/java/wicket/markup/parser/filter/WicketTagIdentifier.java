@@ -56,7 +56,8 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 * @param markup
 	 *            The markup as known by now
 	 * @param parent
-	 *            The next MarkupFilter in the chain
+	 *            The parent of this component The next MarkupFilter in the
+	 *            chain
 	 */
 	public WicketTagIdentifier(final Markup markup, final IMarkupFilter parent)
 	{

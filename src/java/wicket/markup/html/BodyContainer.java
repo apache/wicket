@@ -154,9 +154,11 @@ public final class BodyContainer implements Serializable
 		if (behaviorOwner == null)
 		{
 			bodyContainer.add(new AppendingAttributeModifier("onload", model));
-		} else {
+		}
+		else
+		{
 
-		bodyContainer.add(new BodyTagAttributeModifier("onload", true, model, behaviorOwner));
+			bodyContainer.add(new BodyTagAttributeModifier("onload", true, model, behaviorOwner));
 		}
 		return this;
 	}
@@ -209,8 +211,10 @@ public final class BodyContainer implements Serializable
 		if (behaviorOwner == null)
 		{
 			bodyContainer.add(new AppendingAttributeModifier("onunload", model));
-		} else {
-		bodyContainer.add(new BodyTagAttributeModifier("onunload", true, model, behaviorOwner));
+		}
+		else
+		{
+			bodyContainer.add(new BodyTagAttributeModifier("onunload", true, model, behaviorOwner));
 		}
 		return this;
 	}

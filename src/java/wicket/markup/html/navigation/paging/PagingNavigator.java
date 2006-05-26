@@ -41,6 +41,9 @@ public class PagingNavigator extends Panel
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageable
@@ -53,6 +56,9 @@ public class PagingNavigator extends Panel
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component
@@ -82,6 +88,9 @@ public class PagingNavigator extends Panel
 	 * Create a new increment link. May be subclassed to make use of specialized
 	 * links, e.g. Ajaxian links.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            the link id
 	 * @param pageable
@@ -100,6 +109,9 @@ public class PagingNavigator extends Panel
 	 * Create a new pagenumber link. May be subclassed to make use of
 	 * specialized links, e.g. Ajaxian links.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            the link id
 	 * @param pageable
@@ -117,6 +129,9 @@ public class PagingNavigator extends Panel
 	/**
 	 * Create a new PagingNavigation. May be subclassed to make us of
 	 * specialized PagingNavigation.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param pageable
 	 *            the pageable component

@@ -29,9 +29,9 @@ import wicket.markup.html.navigation.paging.PagingNavigationIncrementLink;
  * list view navigation looks like
  * 
  * <pre>
- *                
- *               	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *               	
+ *                  
+ *                 	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
+ *                 	
  * </pre>
  * 
  * <p>
@@ -54,6 +54,9 @@ public class AjaxPagingNavigationIncrementLink extends PagingNavigationIncrement
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

@@ -32,21 +32,21 @@ import wicket.version.undo.Change;
  * (1..n).
  * 
  * <pre>
- *   
- *  	&lt;td wicket:id=&quot;navigation&quot;&gt;
- *  		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
- *  			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
- *  		&lt;/a&gt;
- *  	&lt;/td&gt;
- *  	
+ *    
+ *   	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ *   		&lt;a wicket:id=&quot;pageLink&quot; href=&quot;SearchCDPage.html&quot;&gt;
+ *   			&lt;span wicket:id=&quot;pageNumber&quot;&gt;1&lt;/&gt;
+ *   		&lt;/a&gt;
+ *   	&lt;/td&gt;
+ *   	
  * </pre>
  * 
  * thus renders like:
  * 
  * <pre>
- *   
- *  	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
- *  	
+ *    
+ *   	1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+ *   	
  * </pre>
  * 
  * </p>
@@ -76,12 +76,12 @@ import wicket.version.undo.Change;
  * With:
  * 
  * <pre>
- *  	&lt;td wicket:id=&quot;navigation&quot;&gt;
- *  	  &lt;span wicket:id=&quot;separator&quot;/&gt;
- *  	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
- *  	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
- *  	  &lt;/a&gt;
- *  	&lt;/td&gt;
+ *   	&lt;td wicket:id=&quot;navigation&quot;&gt;
+ *   	  &lt;span wicket:id=&quot;separator&quot;/&gt;
+ *   	  &lt;a wicket:id=&quot;pageLink&quot; href=&quot;#&quot;&gt;
+ *   	    &lt;span wicket:id=&quot;pageLabel&quot;/&gt;&lt;span wicket:id=&quot;pageNumber&quot;/&gt;
+ *   	  &lt;/a&gt;
+ *   	&lt;/td&gt;
  * </pre>
  * 
  * renders like:
@@ -183,6 +183,9 @@ public class PagingNavigation extends Loop
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageable
@@ -195,6 +198,9 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component
@@ -340,6 +346,9 @@ public class PagingNavigation extends Loop
 
 	/**
 	 * Factory method for creating page number links.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            the component id.

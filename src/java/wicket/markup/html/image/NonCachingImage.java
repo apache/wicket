@@ -54,6 +54,9 @@ public class NonCachingImage extends Image
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @see Image#Image(String, Resource)
 	 * 
 	 * @param id
@@ -66,6 +69,9 @@ public class NonCachingImage extends Image
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @see Image#Image(String, ResourceReference, ValueMap)
 	 * 
@@ -82,6 +88,9 @@ public class NonCachingImage extends Image
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @see Image#Image(String, ResourceReference)
 	 * 
 	 * @param id
@@ -94,6 +103,9 @@ public class NonCachingImage extends Image
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @see Image#Image(String, String)
 	 * 
@@ -108,6 +120,9 @@ public class NonCachingImage extends Image
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @see Image#Image(String)
 	 * 

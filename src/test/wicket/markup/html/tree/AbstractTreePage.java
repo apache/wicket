@@ -79,7 +79,7 @@ public class AbstractTreePage extends WebPage
 	 * Add a sublist to the parent.
 	 * 
 	 * @param parent
-	 *            the parent
+	 *            The parent of this component the parent
 	 * @param sub
 	 *            the sub list
 	 */

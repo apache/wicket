@@ -43,6 +43,9 @@ public class PopupCloseLink extends Link
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 */
 	public PopupCloseLink(MarkupContainer parent, String id)
@@ -52,6 +55,9 @@ public class PopupCloseLink extends Link
 
 	/**
 	 * Constructor
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 * @param object

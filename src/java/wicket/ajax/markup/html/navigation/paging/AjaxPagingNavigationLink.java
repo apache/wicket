@@ -38,6 +38,9 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageable

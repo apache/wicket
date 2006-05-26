@@ -60,7 +60,8 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
+	 *      IModel)
 	 */
 	public RadioGroup(MarkupContainer parent, String id, IModel<T> model)
 	{

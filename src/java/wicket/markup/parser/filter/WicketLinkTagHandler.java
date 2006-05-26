@@ -69,7 +69,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param parent
-	 *            The next element in the chain.
+	 *            The parent of this component The next element in the chain.
 	 */
 	public WicketLinkTagHandler(final IMarkupFilter parent)
 	{

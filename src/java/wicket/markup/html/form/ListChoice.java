@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.8 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,10 +34,10 @@ import wicket.model.IModel;
 public class ListChoice extends DropDownChoice
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
-	
+
 	/** The maximum number of rows to display. */
 	private int maxRows;
 
@@ -55,7 +55,7 @@ public class ListChoice extends DropDownChoice
 	 * Sets the default maximum number of rows to display.
 	 * 
 	 * @param defaultMaxRows
-	 *			  The defaultMaxRows to set.
+	 *            The defaultMaxRows to set.
 	 */
 	protected static void setDefaultMaxRows(final int defaultMaxRows)
 	{
@@ -67,99 +67,109 @@ public class ListChoice extends DropDownChoice
 	 */
 	public ListChoice(MarkupContainer parent, final String id)
 	{
-		super(parent,id);
+		super(parent, id);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      List)
 	 */
 	public ListChoice(MarkupContainer parent, final String id, final List values)
 	{
-		super(parent,id, values);
+		super(parent, id, values);
 	}
 
 	/**
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param choices
-	 *			  The collection of values in the list
+	 *            The collection of values in the list
 	 * @param renderer
-	 * 			  See AbstractChoice 
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List,IChoiceRenderer)
+	 *            See AbstractChoice
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      List,IChoiceRenderer)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final List choices,final IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, final String id, final List choices,
+			final IChoiceRenderer renderer)
 	{
-		super(parent,id, choices,renderer);
+		super(parent, id, choices, renderer);
 	}
 
 	/**
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param model
-	 *			  See Component
+	 *            See Component
 	 * @param choices
-	 *			  The collection of values in the list
+	 *            The collection of values in the list
 	 * @param renderer
-	 * 			  See AbstractChoice 
+	 *            See AbstractChoice
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model, final List choices,final IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, final String id, final IModel model,
+			final List choices, final IChoiceRenderer renderer)
 	{
-		this(parent,id, model, choices,renderer, defaultMaxRows);
+		this(parent, id, model, choices, renderer, defaultMaxRows);
 	}
 
 	/**
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param model
-	 *			  See Component
+	 *            See Component
 	 * @param choices
-	 *			  The collection of values in the list
+	 *            The collection of values in the list
 	 * @param renderer
-	 * 			  See AbstractChoice 
+	 *            See AbstractChoice
 	 * @param maxRows
-	 *			  Maximum number of rows to show
+	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model, final List choices, final IChoiceRenderer renderer, final int maxRows)
+	public ListChoice(MarkupContainer parent, final String id, final IModel model,
+			final List choices, final IChoiceRenderer renderer, final int maxRows)
 	{
-		super(parent,id, model, choices,renderer);
+		super(parent, id, model, choices, renderer);
 		this.maxRows = maxRows;
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel)
 	 */
-	public ListChoice(MarkupContainer parent,String id, IModel choices)
+	public ListChoice(MarkupContainer parent, String id, IModel choices)
 	{
-		super(parent,id, choices);
+		super(parent, id, choices);
 	}
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel,IModel)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel,IModel)
 	 */
-	public ListChoice(MarkupContainer parent,String id, IModel model, IModel choices)
+	public ListChoice(MarkupContainer parent, String id, IModel model, IModel choices)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, model, choices);
 	}
-	
+
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(MarkupContainer parent,String id, IModel choices, IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, String id, IModel choices, IChoiceRenderer renderer)
 	{
-		super(parent,id, choices, renderer);
+		super(parent, id, choices, renderer);
 	}
 
 
 	/**
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, IModel, IModel,IChoiceRenderer)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public ListChoice(MarkupContainer parent,String id, IModel model, IModel choices, IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, String id, IModel model, IModel choices,
+			IChoiceRenderer renderer)
 	{
-		super(parent,id, model, choices, renderer);
+		super(parent, id, model, choices, renderer);
 	}
-	
+
 	/**
 	 * Gets the maximum number of rows to display.
 	 * 
@@ -174,7 +184,7 @@ public class ListChoice extends DropDownChoice
 	 * Sets the maximum number of rows to display.
 	 * 
 	 * @param maxRows
-	 *			  the maximum number of rows to display
+	 *            the maximum number of rows to display
 	 * @return This
 	 */
 	public final ListChoice setMaxRows(int maxRows)
@@ -204,32 +214,34 @@ public class ListChoice extends DropDownChoice
 
 	/**
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param model
-	 *			  See Component
+	 *            See Component
 	 * @param choices
-	 *			  The collection of values in the list
+	 *            The collection of values in the list
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model, final List choices)
+	public ListChoice(MarkupContainer parent, final String id, final IModel model,
+			final List choices)
 	{
-		this(parent,id, model, choices, defaultMaxRows);
+		this(parent, id, model, choices, defaultMaxRows);
 	}
 
 	/**
 	 * @param id
-	 *			  See Component
+	 *            See Component
 	 * @param model
-	 *			  See Component
+	 *            See Component
 	 * @param choices
-	 *			  The collection of values in the list
+	 *            The collection of values in the list
 	 * @param maxRows
-	 *			  Maximum number of rows to show
+	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model, final List choices, final int maxRows)
+	public ListChoice(MarkupContainer parent, final String id, final IModel model,
+			final List choices, final int maxRows)
 	{
-		super(parent,id, model, choices);
+		super(parent, id, model, choices);
 		this.maxRows = maxRows;
 	}
 }

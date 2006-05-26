@@ -45,10 +45,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *   &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *  	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
- *  	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
- *   &lt;/span&gt;
+ *    &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *   	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
+ *   	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
+ *    &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -160,7 +160,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @param choices
 	 *            The collection of choices in the radio choice
 	 * @see wicket.Component#Component(MarkupContainer,String)
-	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String, List)
+	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
+	 *      List)
 	 */
 	public RadioChoice(MarkupContainer parent, final String id, final List choices)
 	{

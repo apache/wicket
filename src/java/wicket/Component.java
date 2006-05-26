@@ -581,7 +581,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * package scope Constructor, only used by pages.
 	 * 
 	 * @param parent
-	 *            The parent of this component.
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
@@ -603,7 +603,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * model.
 	 * 
 	 * @param parent
-	 *            The parent of this component.
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
@@ -619,7 +619,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * This constructor includes a model.
 	 * 
 	 * @param parent
-	 *            The parent of this component.
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            The non-null id of this component
 	 * @param model
@@ -2994,9 +2994,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * Sets the parent of a component.
 	 * 
 	 * @param parent
-	 *            The parent container final void setParent(final
-	 *            MarkupContainer parent) { if (this.parent != null &&
-	 *            log.isDebugEnabled()) { log.debug("Replacing parent " +
+	 *            The parent of this component The parent container final void
+	 *            setParent(final MarkupContainer parent) { if (this.parent !=
+	 *            null && log.isDebugEnabled()) { log.debug("Replacing parent " +
 	 *            this.parent + " with " + parent); } this.parent = parent; }
 	 */
 

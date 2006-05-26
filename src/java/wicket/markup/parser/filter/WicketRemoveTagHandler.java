@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: WicketRemoveTagHandler.java 5871 2006-05-25 22:41:52 +0000 (Thu, 25 May
+ * 2006) eelco12 $ $Revision$ $Date: 2006-05-25 22:41:52 +0000 (Thu, 25
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -48,7 +49,8 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param parent
-	 *            The next MarkupFilter in the processing chain
+	 *            The parent of this component The next MarkupFilter in the
+	 *            processing chain
 	 */
 	public WicketRemoveTagHandler(final IMarkupFilter parent)
 	{

@@ -42,6 +42,8 @@ public class TextField<T> extends AbstractTextComponent<T>
 	}
 
 	/**
+	 * @param parent
+	 *            The parent of this component
 	 * @param id
 	 *            See Component
 	 * @param type

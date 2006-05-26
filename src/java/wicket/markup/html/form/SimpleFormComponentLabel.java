@@ -35,6 +35,9 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 * @param fc

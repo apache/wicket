@@ -43,6 +43,9 @@ public abstract class PageableListView extends ListView implements IPageable
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param model
@@ -60,6 +63,9 @@ public abstract class PageableListView extends ListView implements IPageable
 	/**
 	 * Creates a pagable list view having the given number of rows per page that
 	 * uses the provided object as a simple model.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

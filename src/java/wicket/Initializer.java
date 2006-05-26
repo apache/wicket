@@ -1,6 +1,7 @@
 /*
  * $Id: Initializer.java 5372 2006-04-14 12:18:56 +0000 (Fri, 14 Apr 2006)
- * joco01 $ $Revision$ $Date$
+ * joco01 $ $Revision$ $Date: 2006-05-25 22:32:04 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -44,35 +44,35 @@ import wicket.response.NullResponse;
  * For example, if a border's associated markup looked like this:
  * 
  * <pre>
- *               &lt;html&gt;
- *               &lt;body&gt;
- *                 &lt;wicket:border&gt;
- *                     First &lt;wicket:body/&gt; Last
- *                 &lt;/wicket:border&gt;
- *               &lt;/body&gt;
- *               &lt;/html&gt;
+ *                &lt;html&gt;
+ *                &lt;body&gt;
+ *                  &lt;wicket:border&gt;
+ *                      First &lt;wicket:body/&gt; Last
+ *                  &lt;/wicket:border&gt;
+ *                &lt;/body&gt;
+ *                &lt;/html&gt;
  * </pre>
  * 
  * And the border was used on a page like this:
  * 
  * <pre>
- *               &lt;html&gt;
- *               &lt;body&gt;
- *                 &lt;span wicket:id = &quot;myBorder&quot;&gt;
- *                     Middle
- *                 &lt;/span&gt;
- *               &lt;/body&gt;
- *               &lt;/html&gt;
+ *                &lt;html&gt;
+ *                &lt;body&gt;
+ *                  &lt;span wicket:id = &quot;myBorder&quot;&gt;
+ *                      Middle
+ *                  &lt;/span&gt;
+ *                &lt;/body&gt;
+ *                &lt;/html&gt;
  * </pre>
  * 
  * Then the resulting HTML would look like this:
  * 
  * <pre>
- *               &lt;html&gt;
- *               &lt;body&gt;
- *                     First Middle Last
- *               &lt;/body&gt;
- *               &lt;/html&gt;
+ *                &lt;html&gt;
+ *                &lt;body&gt;
+ *                      First Middle Last
+ *                &lt;/body&gt;
+ *                &lt;/html&gt;
  * </pre>
  * 
  * In other words, the body of the myBorder component is substituted into the

@@ -47,6 +47,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageable
@@ -59,6 +62,9 @@ public class AjaxPagingNavigator extends PagingNavigator
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

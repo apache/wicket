@@ -54,6 +54,9 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * Constructs an image button directly from an image resource.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * 
@@ -69,6 +72,9 @@ public class ImageButton extends Button implements IResourceListener
 	/**
 	 * Constructs an image directly from an image resource.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param resourceReference
@@ -83,6 +89,9 @@ public class ImageButton extends Button implements IResourceListener
 
 	/**
 	 * Constructor
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

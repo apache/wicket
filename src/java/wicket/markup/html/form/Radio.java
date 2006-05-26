@@ -55,7 +55,8 @@ public class Radio<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
+	 *      IModel)
 	 */
 	public Radio(MarkupContainer parent, String id, IModel<T> model)
 	{

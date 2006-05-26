@@ -56,19 +56,19 @@ import wicket.markup.html.panel.Panel;
  * }
  * </pre>
  * <pre>
- *  HTML:
- *  &lt;html&gt; 
- *  &lt;body&gt; 
- *    &lt;span wicket:id=&quot;hidden-by-cont1&quot;&gt;Prints: hidden&lt;/span&gt; 
- *    &lt;div wicket:id=&quot;cont1&quot;&gt; 
- *      &lt;span wicket:id=&quot;hidden-by-cont1&quot;&gt;Prints: cont1 hides&lt;/span&gt;
- *      &lt;span wicket:id=&quot;same-id&quot;&gt;Prints: cont1 same-id&lt;/span&gt; 
- *    &lt;/div&gt;
- *  
- *    &lt;div wicket:id=&quot;cont2&quot;&gt; 
- *      &lt;span wicket:id=&quot;global&quot;&gt;Prints: can be everywhere&lt;/span&gt;
- *      &lt;span wicket:id=&quot;same-id&quot;&gt;Prints: cont2 same-id&lt;/span&gt; 
- *    &lt;/div&gt;
+ *   HTML:
+ *   &lt;html&gt; 
+ *   &lt;body&gt; 
+ *     &lt;span wicket:id=&quot;hidden-by-cont1&quot;&gt;Prints: hidden&lt;/span&gt; 
+ *     &lt;div wicket:id=&quot;cont1&quot;&gt; 
+ *       &lt;span wicket:id=&quot;hidden-by-cont1&quot;&gt;Prints: cont1 hides&lt;/span&gt;
+ *       &lt;span wicket:id=&quot;same-id&quot;&gt;Prints: cont1 same-id&lt;/span&gt; 
+ *     &lt;/div&gt;
+ *   
+ *     &lt;div wicket:id=&quot;cont2&quot;&gt; 
+ *       &lt;span wicket:id=&quot;global&quot;&gt;Prints: can be everywhere&lt;/span&gt;
+ *       &lt;span wicket:id=&quot;same-id&quot;&gt;Prints: cont2 same-id&lt;/span&gt; 
+ *     &lt;/div&gt;
  * </pre>
  * 
  * So you can use the same ids in the same page. If the containing containers

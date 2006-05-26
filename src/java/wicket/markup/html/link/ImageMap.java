@@ -271,6 +271,9 @@ public final class ImageMap extends WebMarkupContainer
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 */

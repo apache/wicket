@@ -36,6 +36,9 @@ public class JavaScriptReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 * @param referer
@@ -51,6 +54,9 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id
@@ -69,6 +75,9 @@ public class JavaScriptReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 * @param resourceReference
@@ -82,6 +91,9 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id

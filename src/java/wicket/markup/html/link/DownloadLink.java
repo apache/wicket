@@ -59,6 +59,9 @@ public class DownloadLink extends Link
 	 * Constructor. File name used will be the result of
 	 * <code>file.getName()</code>
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 * @param file
@@ -77,6 +80,9 @@ public class DownloadLink extends Link
 
 	/**
 	 * Constructor
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id

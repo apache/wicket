@@ -40,6 +40,9 @@ public class ListItem<T> extends WebMarkupContainer<T>
 	 * A constructor which uses the index and the list provided to create a
 	 * ListItem. This constructor is the default one.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param index
 	 *            The index of the item
 	 * @param model

@@ -43,6 +43,9 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 */
 	public AjaxFallbackLink(MarkupContainer parent, final String id)
@@ -52,6 +55,9 @@ public abstract class AjaxFallbackLink extends Link implements IAjaxLink
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 * @param model

@@ -122,7 +122,8 @@ final class MarkupFragmentFinder
 	 * Get component path relativ to the parent container with associated markup
 	 * 
 	 * @param component
-	 * @param parentWithAssociatedMarkup
+	 * @param parent
+	 *            The parent of this componentWithAssociatedMarkup
 	 * @return the relativ path
 	 */
 	private String getComponentRelativePath(final Component component,

@@ -224,6 +224,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * Creates and returns a bookmarkable link to this application's home page.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            Name of link
 	 * @return Link to home page for this application

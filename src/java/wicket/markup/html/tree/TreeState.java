@@ -953,7 +953,7 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		 * a mapping from path to this node.
 		 * 
 		 * @param parent
-		 *            the parent
+		 *            The parent of this component
 		 */
 		@Override
 		public void setParent(MutableTreeNode parent)
@@ -1177,8 +1177,9 @@ public final class TreeState implements Serializable, TreeModelListener, RowMapp
 		/**
 		 * Recreates the receivers path, and all its childrens paths.
 		 * 
-		 * @param parentPath
-		 *            the parent of the path to recreate
+		 * @param parent
+		 *            The parent of this componentPath the parent of the path to
+		 *            recreate
 		 */
 		private void resetChildrenPaths(TreePath parentPath)
 		{

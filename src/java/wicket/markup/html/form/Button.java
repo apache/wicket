@@ -81,6 +81,9 @@ public class Button extends FormComponent
 	 * value attribute of the input/button tag). Use a
 	 * {@link wicket.model.StringResourceModel} for a localized value.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            Component id
 	 * @param model

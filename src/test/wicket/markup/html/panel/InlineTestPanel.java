@@ -32,8 +32,10 @@ public class InlineTestPanel extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * @param id
-	 * @param child
+	 * @param page
 	 */
 	public InlineTestPanel(MarkupContainer parent, String id, Page page)
 	{

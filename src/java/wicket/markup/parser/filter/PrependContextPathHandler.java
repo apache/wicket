@@ -34,13 +34,13 @@ import wicket.markup.parser.AbstractMarkupFilter;
  * Application.newMarkupParser() like
  * 
  * <pre>
- *      public class MyApplication extends Application
- *      {
- *          ...
- *          public IMarkupFilter[] getAdditionalMarkupHandler()
- *          {
- *              return new IMarkupFilter[] { new new PrependContextPathHandler() };
- *          }
+ *       public class MyApplication extends Application
+ *       {
+ *           ...
+ *           public IMarkupFilter[] getAdditionalMarkupHandler()
+ *           {
+ *               return new IMarkupFilter[] { new new PrependContextPathHandler() };
+ *           }
  * </pre>
  * 
  * The purpose of the filter is to prepend the web apps context path to all href
@@ -66,24 +66,24 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	 * should work in most cases, and support the following clustering scheme
 	 * 
 	 * <pre>
-	 *     node1.mydomain.com[/appcontext]
-	 *     node2.mydomain.com[/appcontext]
-	 *     node3.mydomain.com[/appcontext]
+	 *      node1.mydomain.com[/appcontext]
+	 *      node2.mydomain.com[/appcontext]
+	 *      node3.mydomain.com[/appcontext]
 	 * </pre>
 	 * 
 	 * If it is set then you can map to other context like in clusters
 	 * 
 	 * <pre>
-	 *     node1.mydomain.com/mycontext1/
-	 *     node2.mydomain.com/mycontext2/
-	 *     node3.mydomain.com/mycontext3/
-	 *     mydomain.com/mycontext (load balancer)
+	 *      node1.mydomain.com/mycontext1/
+	 *      node2.mydomain.com/mycontext2/
+	 *      node3.mydomain.com/mycontext3/
+	 *      mydomain.com/mycontext (load balancer)
 	 * </pre>
 	 * 
 	 * or as a virtual server (app server and webserver)
 	 * 
 	 * <pre>
-	 *     appserver.com/context mapped to webserver/ (context path should be '/')
+	 *      appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * @param application

@@ -31,12 +31,12 @@ import wicket.util.time.Duration;
  * Example:
  * 
  * <pre>
- *        DropDownChoice choice=new DropDownChoice(...);
- *        choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
- *            protected void onEvent(AjaxRequestTarget target) {
- *                System.out.println(&quot;ajax here!&quot;);
- *            }
- *        }
+ *         DropDownChoice choice=new DropDownChoice(...);
+ *         choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
+ *             protected void onEvent(AjaxRequestTarget target) {
+ *                 System.out.println(&quot;ajax here!&quot;);
+ *             }
+ *         }
  * </pre>
  * 
  * This behavior will be linked to the onChange javascript event of the select

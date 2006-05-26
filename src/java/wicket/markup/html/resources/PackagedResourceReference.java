@@ -40,6 +40,9 @@ public class PackagedResourceReference extends WebMarkupContainer
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 * @param referer
@@ -58,6 +61,9 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id
@@ -114,6 +120,9 @@ public class PackagedResourceReference extends WebMarkupContainer
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 * @param resourceReference
@@ -129,6 +138,9 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id

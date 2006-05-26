@@ -114,7 +114,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * package scope Constructor, only used by pages.
 	 * 
 	 * @param parent
-	 *            The parent of this component.
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
@@ -616,15 +616,13 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * this); }
 	 * 
 	 * if (child.getParent() == this) { // Add to map final Component replaced =
-	 * put(child); addedComponent(child);
-	 *  // Look up to make sure it was already in the map if (replaced == null) {
-	 * throw new WicketRuntimeException( exceptionMessage("Cannot replace a
-	 * component which has not been added: id='" + child.getId() + "',
-	 * component=" + child)); }
+	 * put(child); addedComponent(child); // Look up to make sure it was already
+	 * in the map if (replaced == null) { throw new WicketRuntimeException(
+	 * exceptionMessage("Cannot replace a component which has not been added:
+	 * id='" + child.getId() + "', component=" + child)); }
 	 * 
-	 * removedComponent(replaced);
-	 *  // The position of the associated markup remains the same
-	 * child.markupIndex = replaced.markupIndex;
+	 * removedComponent(replaced); // The position of the associated markup
+	 * remains the same child.markupIndex = replaced.markupIndex;
 	 * 
 	 * replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true); }
 	 * 

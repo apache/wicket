@@ -29,7 +29,7 @@ import wicket.util.string.Strings;
  * JavaScript snippets to existing element handlers.
  * 
  * <pre>
- *      &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link&quot; onmouseover=&quot;doSomething()&quot;&gt;
+ *       &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link&quot; onmouseover=&quot;doSomething()&quot;&gt;
  * </pre>
  * 
  * can be modified with these AttributeAppenders:
@@ -42,7 +42,7 @@ import wicket.util.string.Strings;
  * this will result in the following markup:
  * 
  * <pre>
- *      &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link hot&quot; onmouseover=&quot;doSomething();foo();return false;&quot;&gt;
+ *       &lt;a href=&quot;#&quot; wicket:id=&quot;foo&quot; class=&quot;link hot&quot; onmouseover=&quot;doSomething();foo();return false;&quot;&gt;
  * </pre>
  * 
  * @author Martijn Dashorst

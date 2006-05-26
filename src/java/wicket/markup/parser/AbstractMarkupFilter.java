@@ -34,7 +34,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * Construct.
 	 * 
 	 * @param parent
-	 *            The next element in the chain.
+	 *            The parent of this component The next element in the chain.
 	 */
 	public AbstractMarkupFilter(final IMarkupFilter parent)
 	{
@@ -53,7 +53,7 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * Set new parent.
 	 * 
 	 * @param parent
-	 *            The next element in the chain
+	 *            The parent of this component The next element in the chain
 	 */
 	public final void setParent(final IMarkupFilter parent)
 	{

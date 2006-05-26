@@ -54,6 +54,9 @@ public class ResourceLink extends Link implements IResourceListener
 	 * requested from another server, without the rendering of the page, the
 	 * image won't be there and will result in a broken link.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param resourceReference
@@ -75,6 +78,9 @@ public class ResourceLink extends Link implements IResourceListener
 	 * IInitializer at application startup. Then if only that resource is
 	 * requested from another server, without the rendering of the page, the
 	 * image won't be there and will result in a broken link.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component
@@ -98,6 +104,9 @@ public class ResourceLink extends Link implements IResourceListener
 	 * This one doesn't have the 'non sticky session clustering' problem that
 	 * the ResourceReference constructor has. But this will result in a non
 	 * 'stable' url and that url will have request parameters.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            See Component

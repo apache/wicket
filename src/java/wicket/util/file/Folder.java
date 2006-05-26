@@ -64,7 +64,7 @@ public final class Folder extends File
 	 * Constructor.
 	 * 
 	 * @param parent
-	 *            parent
+	 *            The parent of this component parent
 	 * @param child
 	 *            child
 	 */
@@ -99,7 +99,7 @@ public final class Folder extends File
 	 * Constructor.
 	 * 
 	 * @param parent
-	 *            parent
+	 *            The parent of this component parent
 	 * @param child
 	 *            child
 	 */

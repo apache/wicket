@@ -1,6 +1,7 @@
 /*
  * $Id: CoverterLocator.java 5775 2006-05-19 18:00:21 +0000 (Fri, 19 May 2006)
- * joco01 $ $Revision$ $Date$
+ * joco01 $ $Revision$ $Date: 2006-05-25 22:45:15 +0000 (Thu, 25 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

@@ -39,6 +39,9 @@ public class HiddenField<T> extends TextField<T>
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            component id
 	 */
@@ -49,6 +52,9 @@ public class HiddenField<T> extends TextField<T>
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            component id
@@ -76,6 +82,9 @@ public class HiddenField<T> extends TextField<T>
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component
 	 * 
 	 * @param id
 	 *            see Component

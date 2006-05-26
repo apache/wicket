@@ -42,6 +42,9 @@ public class PagingNavigationLink extends Link
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
 	 * @param id
 	 *            See Component
 	 * @param pageable

@@ -1403,7 +1403,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * such that: <blockquote>
 	 * 
 	 * <pre>
-	 *        this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
+	 *         this.toString().startsWith(str, &lt;i&gt;k&lt;/i&gt;)
 	 * </pre>
 	 * 
 	 * </blockquote> is <code>true</code>.
@@ -1797,7 +1797,7 @@ public final class AppendingStringBuffer implements java.io.Serializable, CharSe
 	 * <code>AppendingStringBuffer</code> object is computed as <blockquote>
 	 * 
 	 * <pre>
-	 *     s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
+	 *      s[0]*31&circ;(n-1) + s[1]*31&circ;(n-2) + ... + s[n-1]
 	 * </pre>
 	 * 
 	 * </blockquote> using <code>int</code> arithmetic, where

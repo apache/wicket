@@ -45,7 +45,7 @@ public class File extends java.io.File implements IModifiable
 	 * Constructor.
 	 * 
 	 * @param parent
-	 *            parent
+	 *            The parent of this component parent
 	 * @param child
 	 *            child
 	 */
@@ -80,7 +80,7 @@ public class File extends java.io.File implements IModifiable
 	 * Constructor.
 	 * 
 	 * @param parent
-	 *            parent
+	 *            The parent of this component parent
 	 * @param child
 	 *            child
 	 */
