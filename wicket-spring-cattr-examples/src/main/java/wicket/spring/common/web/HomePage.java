@@ -30,13 +30,13 @@ import wicket.spring.cattr.web.CommonsAttributePage;
 public class HomePage extends BasePage {
 	public HomePage() {
 
-		add(new Link(this,"commons-attr-link") {
+		new Link(this,"commons-attr-link") {
 
 			public void onClick() {
 				setResponsePage(new CommonsAttributePage());
 			}
 
-		});
+		};
 
 
 	}

@@ -35,14 +35,14 @@ import wicket.model.Model;
 public abstract class ContactsDisplayPage extends BasePage {
 	public ContactsDisplayPage() {
 		IColumn[] cols = new IColumn[4];
-		cols[0] = new PropertyColumn(new Model("first name"), "firstName",
+		cols[0] = new PropertyColumn(new Model<String>("first name"), "firstName",
 				"firstName");
-		cols[1] = new PropertyColumn(new Model("last name"), "lastName",
+		cols[1] = new PropertyColumn(new Model<String>("last name"), "lastName",
 				"lastName");
-		cols[2] = new PropertyColumn(new Model("home phone"), "homePhone");
-		cols[3] = new PropertyColumn(new Model("cell phone"), "cellPhone");
+		cols[2] = new PropertyColumn(new Model<String>("home phone"), "homePhone");
+		cols[3] = new PropertyColumn(new Model<String>("cell phone"), "cellPhone");
 
-		add(new DefaultDataTable(this,"contacts", Arrays.asList(cols), getDataProvider(), 5));
+		new DefaultDataTable(this,"contacts", Arrays.asList(cols), getDataProvider(), 5);
 	}
 
 	protected abstract SortableDataProvider getDataProvider();
