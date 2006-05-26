@@ -23,13 +23,13 @@ import wicket.spring.annot.web.AnnotPage;
 
 public class HomePage extends BasePage {
 	public HomePage() {
-		add(new Link(this,"annot-link") {
+		new Link(this,"annot-link") {
 
 			public void onClick() {
 				setResponsePage(new AnnotPage());
 			}
 
-		});
+		};
 
 	}
 }

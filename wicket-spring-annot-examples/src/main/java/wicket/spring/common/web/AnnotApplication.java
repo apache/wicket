@@ -24,7 +24,7 @@ public class AnnotApplication extends AnnotSpringWebApplication {
 
 
 	@Override
-	public Class getHomePage() {
+	public Class<HomePage> getHomePage() {
 		return HomePage.class;
 	}
 
