@@ -260,14 +260,13 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		this.wizardModel = wizardModel;
 
 		form = new Form(this, "form");
-		add(form);
 		// dummy view to be replaced
-		form.add(new WebMarkupContainer(form, HEADER_ID));
-		form.add(newFeedbackPanel(form, FEEDBACK_ID));
+		new WebMarkupContainer(form, HEADER_ID);
+		newFeedbackPanel(form, FEEDBACK_ID);
 		// add dummy view; will be replaced on initialization
-		form.add(new WebMarkupContainer(form, VIEW_ID));
-		form.add(newButtonBar(form, BUTTONS_ID));
-		form.add(newOverviewBar(form, OVERVIEW_ID));
+		new WebMarkupContainer(form, VIEW_ID);
+		newButtonBar(form, BUTTONS_ID);
+		newOverviewBar(form, OVERVIEW_ID);
 
 		wizardModel.addListener(this);
 

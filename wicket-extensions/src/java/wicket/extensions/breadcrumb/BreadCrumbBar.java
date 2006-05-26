@@ -169,7 +169,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 			int index = item.getIndex();
 			IBreadCrumbParticipant breadCrumbParticipant = (IBreadCrumbParticipant)item
 					.getModelObject();
-			item.add(newBreadCrumbComponent(item, "crumb", index, size, breadCrumbParticipant));
+			newBreadCrumbComponent(item, "crumb", index, size, breadCrumbParticipant);
 		}
 
 		/**
@@ -220,8 +220,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 				final IBreadCrumbParticipant breadCrumbParticipant, boolean enableLink)
 		{
 			super(parent, id);
-			add(new Label(this, "sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
-					.setRenderBodyOnly(true));
+			new Label(this, "sep", (index > 0) ? "/" : "").setEscapeModelStrings(false)
+					.setRenderBodyOnly(true);
 			BreadCrumbLink link = new BreadCrumbLink(this, "link", breadCrumbModel)
 			{
 				private static final long serialVersionUID = 1L;
@@ -233,9 +233,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 				}
 			};
 			link.setEnabled(enableLink);
-			add(link);
-			link.add(new Label(link, "label", breadCrumbParticipant.getTitle())
-					.setRenderBodyOnly(true));
+			new Label(link, "label", breadCrumbParticipant.getTitle()).setRenderBodyOnly(true);
 		}
 	}
 
@@ -276,7 +274,6 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 
 		BreadCrumbsListView breadCrumbsListView = new BreadCrumbsListView(this, "crumbs");
 		addListener(breadCrumbsListView);
-		add(breadCrumbsListView);
 
 		if (addDefaultCssStyle)
 		{

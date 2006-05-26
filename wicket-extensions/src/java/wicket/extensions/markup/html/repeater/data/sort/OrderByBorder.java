@@ -68,7 +68,6 @@ public class OrderByBorder extends Border
 				OrderByBorder.this.onSortChanged();
 			}
 		};
-		add(link);
 		add(new OrderByLink.CssModifier(link, cssProvider));
 	}
 

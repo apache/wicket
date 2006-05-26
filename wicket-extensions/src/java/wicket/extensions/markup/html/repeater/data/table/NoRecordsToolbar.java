@@ -82,10 +82,9 @@ public class NoRecordsToolbar extends AbstractToolbar
 	{
 		super(parent, id, table);
 		WebMarkupContainer td = new WebMarkupContainer(this, "td");
-		add(td);
 
 		td.add(new SimpleAttributeModifier("colspan", String.valueOf(table.getColumns().length)));
-		td.add(new Label(td, "msg", messageModel));
+		new Label(td, "msg", messageModel);
 	}
 
 	/**

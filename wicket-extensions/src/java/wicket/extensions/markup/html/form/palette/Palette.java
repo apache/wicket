@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -125,22 +125,19 @@ public class Palette extends Panel
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
 		recorderComponent = newRecorderComponent();
-		add(recorderComponent);
 
 		choicesComponent = newChoicesComponent();
-		add(choicesComponent);
 
 		selectionComponent = newSelectionComponent();
-		add(selectionComponent);
 
 
-		add(newAddComponent());
-		add(newRemoveComponent());
-		add(newUpComponent().setVisible(allowOrder));
-		add(newDownComponent().setVisible(allowOrder));
+		newAddComponent();
+		newRemoveComponent();
+		newUpComponent().setVisible(allowOrder);
+		newDownComponent().setVisible(allowOrder);
 
-		add(newAvailableHeader(AVAILABLE_HEADER_ID));
-		add(newSelectedHeader(SELECTED_HEADER_ID));
+		newAvailableHeader(AVAILABLE_HEADER_ID);
+		newSelectedHeader(SELECTED_HEADER_ID);
 
 		addJavascript();
 	}
@@ -163,7 +160,6 @@ public class Palette extends Panel
 		};
 		WebMarkupContainer javascript = new WebMarkupContainer(this, "javascript");
 		javascript.add(new AttributeModifier("src", true, srcReplacement));
-		add(javascript);
 	}
 
 
@@ -256,7 +252,7 @@ public class Palette extends Panel
 				tag.getAttributes().put("onclick", Palette.this.getDownOnClickJS());
 			}
 		};
-		return webMarkupContainer.add(new Image(webMarkupContainer, "image", downImage));
+		return new Image(webMarkupContainer, "image", downImage);
 	}
 
 	/**
@@ -277,7 +273,7 @@ public class Palette extends Panel
 				tag.getAttributes().put("onclick", Palette.this.getUpOnClickJS());
 			}
 		};
-		return webMarkupContainer.add(new Image(webMarkupContainer, "image", upImage));
+		return new Image(webMarkupContainer, "image", upImage);
 	}
 
 	/**
@@ -298,7 +294,7 @@ public class Palette extends Panel
 				tag.getAttributes().put("onclick", Palette.this.getRemoveOnClickJS());
 			}
 		};
-		return webMarkupContainer.add(new Image(webMarkupContainer, "image", removeImage));
+		return new Image(webMarkupContainer, "image", removeImage);
 	}
 
 	/**
@@ -320,7 +316,7 @@ public class Palette extends Panel
 				tag.getAttributes().put("ondblclick", Palette.this.getRemoveOnClickJS());
 			}
 		};
-		return webMarkupContainer.add(new Image(webMarkupContainer, "image", addImage));
+		return new Image(webMarkupContainer, "image", addImage);
 	}
 
 	/**

@@ -53,7 +53,7 @@ public class StaticContentStep extends WizardStep
 	{
 		super(parent);
 		this.allowHtml = allowHtml;
-		add(new Label(this, "content", ""));
+		new Label(this, "content", "");
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class StaticContentStep extends WizardStep
 		super(parent, title, summary);
 		this.content = content;
 		this.allowHtml = allowHtml;
-		add(new Label(this, "content", content).setEscapeModelStrings(!allowHtml));
+		new Label(this, "content", content).setEscapeModelStrings(!allowHtml);
 	}
 
 	/**

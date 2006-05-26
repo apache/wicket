@@ -38,32 +38,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
+ *                           
+ *                           List tabs=new ArrayList();
+ *                           
+ *                           tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
  *                          
- *                          List tabs=new ArrayList();
+ *                           public Panel getPanel(String panelId)
+ *                           {
+ *                           return new TabPanel1(panelId);
+ *                           }
+ *                           
+ *                           });
  *                          
- *                          tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *                         
- *                          public Panel getPanel(String panelId)
- *                          {
- *                          return new TabPanel1(panelId);
- *                          }
+ *                           tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
  *                          
- *                          });
- *                         
- *                          tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *                         
- *                          public Panel getPanel(String panelId)
- *                          {
- *                          return new TabPanel2(panelId);
- *                          }
+ *                           public Panel getPanel(String panelId)
+ *                           {
+ *                           return new TabPanel2(panelId);
+ *                           }
+ *                           
+ *                           });
  *                          
- *                          });
- *                         
- *                          add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *                      
- *                          
- *                          &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *                      
+ *                           add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *                       
+ *                           
+ *                           &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *                       
  * </pre>
  * 
  * </p>
@@ -116,7 +116,7 @@ public class TabbedPanel extends Panel
 		this.tabs = tabs;
 
 		// add the loop used to generate tab names
-		add(new Loop(this, "tabs", tabs.size())
+		new Loop(this, "tabs", tabs.size())
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -129,8 +129,7 @@ public class TabbedPanel extends Panel
 
 				final WebMarkupContainer titleLink = newLink(item, "link", index);
 
-				titleLink.add(new Label(titleLink, "title", tab.getTitle()));
-				item.add(titleLink);
+				new Label(titleLink, "title", tab.getTitle());
 
 				item.add(new SimpleAttributeModifier("class", "selected")
 				{
@@ -150,7 +149,7 @@ public class TabbedPanel extends Panel
 
 			}
 
-		});
+		};
 
 		// select the first tab by default
 		setSelectedTab(0);
@@ -164,7 +163,7 @@ public class TabbedPanel extends Panel
 	 * component with id: title will be added for you by the tabbed panel.
 	 * 
 	 * <pre>
-	 *     &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
+	 *      &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
 	 * </pre>
 	 * 
 	 * Example implementation:

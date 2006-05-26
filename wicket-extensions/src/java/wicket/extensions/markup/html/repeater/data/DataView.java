@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -34,10 +34,10 @@ import wicket.markup.html.navigation.paging.IPageable;
  * Example:
  * 
  * <pre>
- *      &lt;tbody&gt;
- *        &lt;tr wicket:id=&quot;rows&quot;&gt;
- *          &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *          ...    
+ *       &lt;tbody&gt;
+ *         &lt;tr wicket:id=&quot;rows&quot;&gt;
+ *           &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *           ...    
  * </pre>
  * 
  * <p>

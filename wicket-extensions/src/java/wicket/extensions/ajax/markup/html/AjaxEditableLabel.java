@@ -63,8 +63,6 @@ public class AjaxEditableLabel extends Panel
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior());
 
-		add(label);
-		add(editor);
 	}
 
 	/**

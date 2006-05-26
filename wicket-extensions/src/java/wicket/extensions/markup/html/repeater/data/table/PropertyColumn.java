@@ -89,7 +89,7 @@ public class PropertyColumn extends AbstractColumn
 	 */
 	public void populateItem(Item item, String componentId, IModel model)
 	{
-		item.add(new Label(item, componentId, createLabelModel(model)));
+		new Label(item, componentId, createLabelModel(model));
 	}
 
 	// TODO Post 1.3: rename embeddedModel to itemModel

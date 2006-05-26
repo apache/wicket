@@ -77,11 +77,10 @@ public class FilterToolbar extends AbstractToolbar
 				table.setCurrentPage(0);
 			}
 		};
-		add(form);
 
 		// add javascript to restore focus to a filter component
 
-		add(new WebMarkupContainer(this, "focus-restore")
+		new WebMarkupContainer(this, "focus-restore")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -93,12 +92,11 @@ public class FilterToolbar extends AbstractToolbar
 						.append("');</script>");
 				replaceComponentTagBody(markupStream, openTag, script);
 			}
-		});
+		};
 
 		// populate the toolbar with components provided by filtered columns
 
 		RepeatingView filters = new RepeatingView(form, "filters");
-		form.add(filters);
 
 		IColumn[] cols = table.getColumns();
 		for (IColumn col : cols)
@@ -130,9 +128,6 @@ public class FilterToolbar extends AbstractToolbar
 				}
 			}
 
-			item.add(filter);
-
-			filters.add(item);
 		}
 
 	}

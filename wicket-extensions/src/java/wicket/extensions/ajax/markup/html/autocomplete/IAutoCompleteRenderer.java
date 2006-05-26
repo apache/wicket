@@ -18,24 +18,24 @@ import wicket.Response;
  * For example:
  * 
  * <pre>
- *  new IAutoCompleteRenderer() {
- *      void renderHead(Response r) { r.write(&quot;
+ *   new IAutoCompleteRenderer() {
+ *       void renderHead(Response r) { r.write(&quot;
  * <ul>
- * &quot;); }
- *      
- *      void render(Object o, Response r) {
- *         // notice the textvalue attribute we define for li element
- *         r.write(&quot;
+ *  &quot;); }
+ *       
+ *       void render(Object o, Response r) {
+ *          // notice the textvalue attribute we define for li element
+ *          r.write(&quot;
  * <li textvalue=\""+o.toString()+"\">
- * &lt;i&gt;&quot;+o.toString()+&quot;&lt;/i&gt;
+ *  &lt;i&gt;&quot;+o.toString()+&quot;&lt;/i&gt;
  * </li>
- * &quot;;
- *      }
- *      
- *      void renderFooter(Response r) { r.write(&quot;
+ *  &quot;;
+ *       }
+ *       
+ *       void renderFooter(Response r) { r.write(&quot;
  * </ul>
- * &quot;); }
- *  }
+ *  &quot;); }
+ *   }
  * </pre>
  * 
  * @since 1.2

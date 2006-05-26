@@ -30,16 +30,16 @@ import java.io.Serializable;
  * Example
  * 
  * <pre>
- *     class UserDataProvider extends SortableDataProvider implements IFilterStateLocator {
- *       private User filterBean=new User;
- *       
- *       public getFilterState() { return filterBean; }
- *       public setFilterState(Object o) { filterBean=(User)o; }
- *       
- *       public Iterator iterate(int start, int count) {
- *         getUserDao().find(start, count, filterBean);
- *       }
- *     }
+ *      class UserDataProvider extends SortableDataProvider implements IFilterStateLocator {
+ *        private User filterBean=new User;
+ *        
+ *        public getFilterState() { return filterBean; }
+ *        public setFilterState(Object o) { filterBean=(User)o; }
+ *        
+ *        public Iterator iterate(int start, int count) {
+ *          getUserDao().find(start, count, filterBean);
+ *        }
+ *      }
  * </pre>
  * 
  * 

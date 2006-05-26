@@ -50,7 +50,8 @@ public class SelectOption extends WebMarkupContainer
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
+	 *      IModel)
 	 */
 	public SelectOption(MarkupContainer parent, final String id, IModel model)
 	{

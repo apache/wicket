@@ -34,10 +34,10 @@ import wicket.model.IModel;
  * class NamePopulator implements ICellPopulator
  * {
  * 	void populateItem(final Item cellItem, final String componentId, final IModel rowModel) {
- *        User user=(User)rowModel.getObject(cellItem);
- *        String name=user.getFirstName()+&quot; &quot;+user.getLastName();
- *        cellItem.add(new Label(componentId, name);
- *      }
+ *         User user=(User)rowModel.getObject(cellItem);
+ *         String name=user.getFirstName()+&quot; &quot;+user.getLastName();
+ *         cellItem.add(new Label(componentId, name);
+ *       }
  * }
  * </pre>
  * 

@@ -38,12 +38,11 @@ public class NavigationToolbar extends AbstractToolbar
 		this.table = table;
 
 		WebMarkupContainer span = new WebMarkupContainer<Object>(this, "span");
-		add(span);
 		span.add(new AttributeModifier<String>("colspan", true, new Model<String>(String
 				.valueOf(table.getColumns().length))));
 
-		span.add(newPagingNavigator(span, "navigator", table));
-		span.add(newNavigatorLabel(span, "navigatorLabel", table));
+		newPagingNavigator(span, "navigator", table);
+		newNavigatorLabel(span, "navigatorLabel", table);
 	}
 
 

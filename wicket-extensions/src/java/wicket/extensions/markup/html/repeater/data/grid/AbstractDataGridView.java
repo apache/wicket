@@ -110,7 +110,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 		// the rows
 		// is a refreshing view this will be recreated anyways. maybe can se
 		// orderedrepeatingview instead to simplify.
-		item.add(new RefreshingView(item, CELL_REPEATER_ID)
+		new RefreshingView(item, CELL_REPEATER_ID)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -143,7 +143,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 				return newCellItem(id, index, model);
 			}
 
-		});
+		};
 	}
 
 	protected final ICellPopulator[] internalGetPopulators()

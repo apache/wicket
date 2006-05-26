@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -33,13 +33,13 @@ import wicket.version.undo.Change;
  * Example
  * 
  * <pre>
- *    &lt;tbody&gt;
- *      &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
- *        &lt;td wicket:id=&quot;cols&quot;&gt;
- *          &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
- *        &lt;/td&gt;
- *      &lt;/tr&gt;
- *    &lt;/tbody&gt;  
+ *     &lt;tbody&gt;
+ *       &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
+ *         &lt;td wicket:id=&quot;cols&quot;&gt;
+ *           &lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;
+ *         &lt;/td&gt;
+ *       &lt;/tr&gt;
+ *     &lt;/tbody&gt;  
  * </pre>
  * 
  * and in java:
@@ -213,8 +213,6 @@ public abstract class GridView extends DataViewBase
 				// Build a row
 				Item rowItem = newRowItem(newChildId(), row);
 				RepeatingView rowView = new RepeatingView(rowItem, "cols");
-				rowItem.add(rowView);
-				add(rowItem);
 
 				// Populate the row
 				for (int index = 0; index < cols; index++)
@@ -229,7 +227,6 @@ public abstract class GridView extends DataViewBase
 						cellItem = newEmptyItem(newChildId(), index);
 						populateEmptyItem(cellItem);
 					}
-					rowView.add(cellItem);
 				}
 
 				// increase row

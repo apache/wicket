@@ -190,7 +190,7 @@ public abstract class RefreshingView extends RepeatingView
 	{
 		while (items.hasNext())
 		{
-			add((Item)items.next());
+			((Item)items.next()).reattach();
 		}
 	}
 

@@ -64,7 +64,7 @@ public class PropertyPopulator implements ICellPopulator
 	 */
 	public void populateItem(Item cellItem, String componentId, IModel rowModel)
 	{
-		cellItem.add(new Label(cellItem, componentId, new PropertyModel(rowModel, property)));
+		new Label(cellItem, componentId, new PropertyModel(rowModel, property));
 	}
 
 }

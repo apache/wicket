@@ -40,16 +40,14 @@ public class UploadProgressBar extends Panel
 		form.setOutputMarkupId(true);
 		setRenderBodyOnly(true);
 
-		add(new JavaScriptReference(this, "javascript", JS_PROGRESSBAR));
+		new JavaScriptReference(this, "javascript", JS_PROGRESSBAR);
 
 
 		final WebMarkupContainer barDiv = new WebMarkupContainer(this, "bar");
 		barDiv.setOutputMarkupId(true);
-		add(barDiv);
 
 		final WebMarkupContainer statusDiv = new WebMarkupContainer(this, "status");
 		statusDiv.setOutputMarkupId(true);
-		add(statusDiv);
 
 		form.add(new AttributeModifier("onsubmit", true, new Model()
 		{

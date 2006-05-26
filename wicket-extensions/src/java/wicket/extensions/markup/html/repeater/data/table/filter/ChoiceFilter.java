@@ -114,7 +114,6 @@ public class ChoiceFilter extends AbstractFilter
 		}
 		enableFocusTracking(choice);
 
-		add(choice);
 	}
 
 	/**

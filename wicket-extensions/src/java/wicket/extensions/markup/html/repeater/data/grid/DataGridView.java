@@ -30,13 +30,13 @@ import wicket.extensions.markup.html.repeater.data.IDataProvider;
  * Example:
  * 
  * <pre>
- *            &lt;table&gt;
- *              &lt;tr wicket:id=&quot;rows&quot;&gt;
- *                &lt;td wicket:id=&quot;cells&quot;&gt;
- *                  &lt;span wicket:id=&quot;cell&quot;&gt; &lt;/span&gt;
- *                &lt;/td&gt;
- *              &lt;/tr&gt;
- *            &lt;/table&gt;
+ *             &lt;table&gt;
+ *               &lt;tr wicket:id=&quot;rows&quot;&gt;
+ *                 &lt;td wicket:id=&quot;cells&quot;&gt;
+ *                   &lt;span wicket:id=&quot;cell&quot;&gt; &lt;/span&gt;
+ *                 &lt;/td&gt;
+ *               &lt;/tr&gt;
+ *             &lt;/table&gt;
  * </pre>
  * 
  * <p>

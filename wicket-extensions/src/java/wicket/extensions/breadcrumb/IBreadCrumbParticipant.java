@@ -28,7 +28,7 @@ import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
  * a bread crumb hierarchy. An example of a bread crumb is:
  * 
  * <pre>
- *      Home &gt; Products &amp; Solutions &gt; Hardware &gt; Desktop Systems
+ *       Home &gt; Products &amp; Solutions &gt; Hardware &gt; Desktop Systems
  * </pre>
  * 
  * In a {@link BreadCrumbPanel panel based implementation}, <tt>Home</tt>,

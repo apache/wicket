@@ -91,13 +91,12 @@ public class SelectOptions extends RepeatingView
 					// we need a container to represent a row in repeater
 					WebMarkupContainer row = new WebMarkupContainer(this, newChildId());
 					row.setRenderBodyOnly(true);
-					add(row);
 
 					// we add our actual SelectOption component to the row
 					Object value = it.next();
 					String text = renderer.getDisplayValue(value);
 					IModel model = renderer.getModel(value);
-					row.add(new SimpleSelectOption(row, "option", model, text));
+					new SimpleSelectOption(row, "option", model, text);
 				}
 			}
 		}

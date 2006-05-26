@@ -58,7 +58,6 @@ public class HeadersToolbar extends AbstractToolbar
 		super(parent, id, table);
 
 		RepeatingView headers = new RepeatingView(this, "headers");
-		add(headers);
 		IColumn[] cols = table.getColumns();
 
 		for (IColumn column : cols)
@@ -68,7 +67,6 @@ public class HeadersToolbar extends AbstractToolbar
 			// not simply use the repeater's body without the need for the id in
 			// the markup?
 			WebMarkupContainer item = new WebMarkupContainer(headers, headers.newChildId());
-			headers.add(item);
 
 			WebMarkupContainer header = null;
 			if (column.isSortable())
@@ -90,9 +88,8 @@ public class HeadersToolbar extends AbstractToolbar
 			{
 				header = new WebMarkupContainer(item, "header");
 			}
-			item.add(header);
 			item.setRenderBodyOnly(true);
-			header.add(column.getHeader(header, "label"));
+			column.getHeader(header, "label");
 		}
 
 	}

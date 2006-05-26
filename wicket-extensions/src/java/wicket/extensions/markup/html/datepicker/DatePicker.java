@@ -53,8 +53,8 @@ import wicket.util.string.AppendingStringBuffer;
  * (html)
  * 
  * <pre>
- *         &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
- *         &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
+ *          &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *          &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
  * 
  * </p>
@@ -268,11 +268,11 @@ public class DatePicker extends Panel
 		{
 			label.add(new PathAttributeModifier("for", target));
 		}
-		add(triggerButton = new TriggerButton(this, "trigger", settings.getIcon()));
-		add(new InitScript(this, "script"));
-		add(new JavaScriptReference(this, "calendarMain", DatePicker.class, "calendar.js"));
-		add(new JavaScriptReference(this, "calendarSetup", DatePicker.class, "calendar-setup.js"));
-		add(new JavaScriptReference(this, "calendarLanguage", new Model()
+		triggerButton = new TriggerButton(this, "trigger", settings.getIcon());
+		new InitScript(this, "script");
+		new JavaScriptReference(this, "calendarMain", DatePicker.class, "calendar.js");
+		new JavaScriptReference(this, "calendarSetup", DatePicker.class, "calendar-setup.js");
+		new JavaScriptReference(this, "calendarLanguage", new Model()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -281,8 +281,8 @@ public class DatePicker extends Panel
 			{
 				return settings.getLanguage(DatePicker.this.getLocale());
 			}
-		}));
-		add(new StyleSheetReference(this, "calendarStyle", settings.getStyle()));
+		});
+		new StyleSheetReference(this, "calendarStyle", settings.getStyle());
 	}
 
 	/**

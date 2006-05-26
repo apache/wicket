@@ -34,13 +34,13 @@ import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
  * like this:
  * 
  * <pre>
- *           Home &gt; Products &amp; Solutions &gt; Hardware &gt; Desktop Systems
+ *            Home &gt; Products &amp; Solutions &gt; Hardware &gt; Desktop Systems
  * </pre>
  * 
  * or
  * 
  * <pre>
- *           World &gt; Europe &gt; The Netherlands &gt; Utrecht
+ *            World &gt; Europe &gt; The Netherlands &gt; Utrecht
  * </pre>
  * 
  * These items would be rendered as links to the corresponding site location.

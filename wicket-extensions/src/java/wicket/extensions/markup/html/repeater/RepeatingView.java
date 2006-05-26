@@ -47,7 +47,7 @@ import wicket.model.IModel;
  * <u>Markup:</u>
  * 
  * <pre>
- *         &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
+ *          &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
  * </p>
@@ -55,7 +55,7 @@ import wicket.model.IModel;
  * <u>Yields:</u>
  * 
  * <pre>
- *         &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
+ *          &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )

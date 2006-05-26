@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -48,7 +48,6 @@ public class TextFilter extends AbstractFilter
 		super(parent, id, form);
 		filter = new TextField(this, "filter", model);
 		enableFocusTracking(filter);
-		add(filter);
 	}
 
 	/**

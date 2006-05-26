@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:54:31 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -58,7 +58,8 @@ public class Select extends FormComponent
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String, IModel)
+	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
+	 *      IModel)
 	 */
 	public Select(MarkupContainer parent, final String id, IModel model)
 	{

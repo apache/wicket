@@ -42,7 +42,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *                     &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *                      &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -143,7 +143,6 @@ public class DataTable extends Panel implements IPageable
 			}
 		};
 		datagrid.setRowsPerPage(rowsPerPage);
-		add(datagrid);
 
 		topToolbars = new RepeatingView(this, "topToolbars")
 		{
@@ -169,8 +168,6 @@ public class DataTable extends Panel implements IPageable
 			}
 		};
 
-		add(topToolbars);
-		add(bottomToolbars);
 	}
 
 	/**
@@ -216,11 +213,9 @@ public class DataTable extends Panel implements IPageable
 
 		// create a container item for the toolbar (required by repeating view)
 		WebMarkupContainer item = new WebMarkupContainer(container, container.newChildId());
-		container.add(item);
 		item.setRenderBodyOnly(true);
 
 		AbstractToolbar toolbar = toolbarFactory.newToolbar(item, TOOLBAR_COMPONENT_ID, this);
-		item.add(toolbar);
 
 		if (toolbar == null)
 		{
