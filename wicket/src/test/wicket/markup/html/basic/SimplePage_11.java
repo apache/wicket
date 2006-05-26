@@ -34,15 +34,15 @@ public class SimplePage_11 extends WebPage
 	 */
 	public SimplePage_11()
 	{
-		add(new Label(this, "panel", "panel"));
-		add(new Label(this, "border", "border"));
-		add(new Label(this, "body", "body"));
-		add(new Label(this, "child", "child"));
-		add(new Label(this, "extend", "extend"));
-		add(new Label(this, "message", "message"));
-		add(new Label(this, "component", "component"));
-		add(new Label(this, "id", "id"));
-		add(new Label(this, "head", "head"));
-		add(new Label(this, "fragment", "fragment"));
+		new Label(this, "panel", "panel");
+		new Label(this, "border", "border");
+		new Label(this, "body", "body");
+		new Label(this, "child", "child");
+		new Label(this, "extend", "extend");
+		new Label(this, "message", "message");
+		new Label(this, "component", "component");
+		new Label(this, "id", "id");
+		new Label(this, "head", "head");
+		new Label(this, "fragment", "fragment");
 	}
 }

@@ -55,7 +55,7 @@ public class ExceptionErrorPage extends WebPage
 		this.throwable = throwable;
 
 		// Add exception label
-		add(new MultiLineLabel(this, "exception", Strings.toString(throwable)));
+		new MultiLineLabel(this, "exception", Strings.toString(throwable));
 
 		// Get values
 		String resource = "";
@@ -80,10 +80,8 @@ public class ExceptionErrorPage extends WebPage
 
 		markupLabel.setEscapeModelStrings(false);
 
+		new Label(markupHighlight, "resource", resource);
 
-		markupHighlight.add(markupLabel);
-		markupHighlight.add(new Label(markupHighlight, "resource", resource));
-		add(markupHighlight);
 
 		// Show container if markup stream is available
 		markupHighlight.setVisible(markupStream != null);
@@ -91,11 +89,11 @@ public class ExceptionErrorPage extends WebPage
 		// Show component tree of the page
 		if (page != null)
 		{
-			add(new PageView(this, "componentTree", page));
+			new PageView(this, "componentTree", page);
 		}
 		else
 		{
-			add(new Label(this, "componentTree", ""));
+			new Label(this, "componentTree", "");
 		}
 	}
 

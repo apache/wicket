@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -133,7 +133,6 @@ public abstract class Loop extends WebMarkupContainer
 				LoopItem item = newItem(iteration);
 
 				// Add and populate item
-				add(item);
 				populateItem(item);
 			}
 		}

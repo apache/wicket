@@ -34,6 +34,6 @@ public class InlinePanelPage_4 extends WebPage
 	 */
 	public InlinePanelPage_4()
 	{
-		add(new InlinePanel_4(this, "myPanel"));
+		new InlinePanel_4(this, "myPanel");
 	}
 }

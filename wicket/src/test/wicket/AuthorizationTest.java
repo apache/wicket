@@ -258,8 +258,8 @@ public class AuthorizationTest extends TestCase
 		 */
 		public AuthTestPage1()
 		{
-			add(new Label(this, "label", "wicked!"));
-			add(new TestForm(this, "form"));
+			new Label(this, "label", "wicked!");
+			new TestForm(this, "form");
 
 		}
 
@@ -297,7 +297,7 @@ public class AuthorizationTest extends TestCase
 			{
 				super(parent, id);
 				setModel(new CompoundPropertyModel(input = new Input()));
-				add(new TextField(this, "stringInput"));
+				new TextField(this, "stringInput");
 			}
 
 			/**

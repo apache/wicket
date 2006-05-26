@@ -37,7 +37,7 @@ public class HeaderSectionPage_9a extends WebPage
 	 */
 	public HeaderSectionPage_9a()
 	{
-		add(new HeaderSectionPanel_2(this, "panel"));
+		new HeaderSectionPanel_2(this, "panel");
 		((MarkupContainer)get("panel")).get("cssHref").setVisible(false);
 	}
 }

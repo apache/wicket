@@ -43,7 +43,6 @@ public class FormBorder extends Border
 		super(parent, id);
 
 		this.form = new Form(this, "myForm");
-		add(this.form);
 	}
 
 	/**
@@ -53,7 +52,6 @@ public class FormBorder extends Border
 	 */
 	public MarkupContainer addToForm(final Component child)
 	{
-		form.add(child);
 		return this;
 	}
 }

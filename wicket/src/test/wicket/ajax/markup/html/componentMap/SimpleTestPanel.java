@@ -49,7 +49,6 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 		this.timer = new AjaxSelfUpdatingTimerBehavior(Duration.seconds(2));
 
 		ajaxLabel.add(timer);
-		baseSpan.add(ajaxLabel);
 	}
 
 	/**

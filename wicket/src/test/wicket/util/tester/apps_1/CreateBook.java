@@ -41,7 +41,7 @@ public class CreateBook extends WebPage
 	 */
 	public CreateBook()
 	{
-		add(new CreateForm(this, "createForm"));
+		new CreateForm(this, "createForm");
 	}
 
 	/**
@@ -61,10 +61,10 @@ public class CreateBook extends WebPage
 			super(parent, id);
 
 			// label model here comes from java
-			add(new RequiredTextField(this, "id", new PropertyModel(book, "id"))
-					.setLabel(new Model("id")));
+			new RequiredTextField(this, "id", new PropertyModel(book, "id")).setLabel(new Model(
+					"id"));
 			// label model here comes from CreateBook.properties
-			add(new RequiredTextField(this, "name", new PropertyModel(book, "name")));
+			new RequiredTextField(this, "name", new PropertyModel(book, "name"));
 		}
 
 		/**

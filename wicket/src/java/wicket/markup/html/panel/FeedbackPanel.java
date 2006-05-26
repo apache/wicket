@@ -104,7 +104,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
-			listItem.add(label);
 		}
 	}
 
@@ -132,10 +131,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 				return anyMessage();
 			}
 		};
-		add(messagesContainer);
 		this.messageListView = new MessageListView(messagesContainer, "messages");
 		messageListView.setVersioned(false);
-		messagesContainer.add(messageListView);
 
 		if (filter != null)
 		{

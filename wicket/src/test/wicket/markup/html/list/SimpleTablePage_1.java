@@ -42,7 +42,7 @@ public class SimpleTablePage_1 extends WebPage
 		list.add("one");
 		list.add("two");
 		list.add("three");
-		add(new ListView(this, "table", list)
+		new ListView(this, "table", list)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -50,8 +50,8 @@ public class SimpleTablePage_1 extends WebPage
 			protected void populateItem(ListItem listItem)
 			{
 				String txt = (String)listItem.getModelObject();
-				listItem.add(new Label(listItem, "txt", txt));
+				new Label(listItem, "txt", txt);
 			}
-		});
+		};
 	}
 }

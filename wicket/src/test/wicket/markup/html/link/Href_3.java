@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:52:19 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -36,7 +36,7 @@ public class Href_3 extends WebPage
 	 */
 	public Href_3()
 	{
-		add(new WebMarkupContainer(this, "link1"));
-		add(new WebMarkupContainer(this, "link2").setVisible(false));
+		new WebMarkupContainer(this, "link1");
+		new WebMarkupContainer(this, "link2").setVisible(false);
 	}
 }

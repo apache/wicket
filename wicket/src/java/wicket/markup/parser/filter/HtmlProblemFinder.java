@@ -34,13 +34,13 @@ import wicket.markup.parser.AbstractMarkupFilter;
  * Application.newMarkupParser() like
  * 
  * <pre>
- *       public class MyApplication extends Application
- *       {
- *           ...
- *           public IMarkupFilter[] getAdditionalMarkupHandler()
- *           {
- *               return new IMarkupFilter[] { new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION) };
- *           }
+ *        public class MyApplication extends Application
+ *        {
+ *            ...
+ *            public IMarkupFilter[] getAdditionalMarkupHandler()
+ *            {
+ *                return new IMarkupFilter[] { new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION) };
+ *            }
  * </pre>
  * 
  * The purpose of the filter is to find possible HTML issues and to log a

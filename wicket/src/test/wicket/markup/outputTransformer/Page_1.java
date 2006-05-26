@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:52:19 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -46,12 +46,11 @@ public class Page_1 extends WebPage
 	 */
 	public Page_1()
 	{
-		add(new Label(this, "myLabel", "Test Label"));
+		new Label(this, "myLabel", "Test Label");
 
 		MarkupContainer container = new NoopOutputTransformerContainer(this, "test");
 
-		add(container);
-		container.add(new Label(container, "myLabel2", "Test Label2"));
+		new Label(container, "myLabel2", "Test Label2");
 
 		MarkupContainer panelContainer = new AbstractOutputTransformerContainer(this, "test2")
 		{
@@ -65,10 +64,8 @@ public class Page_1 extends WebPage
 			}
 		};
 
-		add(panelContainer);
 		Panel panel = new Panel_1(panelContainer, "myPanel");
 		panel.setRenderBodyOnly(true);
-		panelContainer.add(panel);
 
 		MarkupContainer borderContainer = new AbstractOutputTransformerContainer(this, "test3")
 		{
@@ -82,25 +79,19 @@ public class Page_1 extends WebPage
 			}
 		};
 
-		add(borderContainer);
 		Border border = new SimpleBorder(borderContainer, "myBorder");
-		borderContainer.add(border);
 
 		MarkupContainer xsltContainer = new XsltOutputTransformerContainer(this, "test4");
-		add(xsltContainer);
 
 		Border border2 = new SimpleBorder(xsltContainer, "myBorder2");
 		border2.setRenderBodyOnly(false);
 		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-		xsltContainer.add(border2);
 
 		MarkupContainer xsltContainer2 = new XsltOutputTransformerContainer(this, "test5", null,
 				"wicket/markup/outputTransformer/anyName.xsl");
-		add(xsltContainer2);
 
 		Border border3 = new SimpleBorder(xsltContainer2, "myBorder3");
 		border3.setRenderBodyOnly(false);
 		border3.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-		xsltContainer2.add(border3);
 	}
 }

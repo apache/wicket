@@ -59,24 +59,24 @@ import java.io.UnsupportedEncodingException;
  * Here is an exaple of usage of this class.<br>
  * 
  * <pre>
- *        try {
- *            MultipartStream multipartStream = new MultipartStream(input,
- *                                                                  boundary);
- *            boolean nextPart = malitPartStream.skipPreamble();
- *            OutputStream output;
- *            while(nextPart) {
- *                header = chunks.readHeader();
- *                // process headers
- *                // create some output stream
- *                multipartStream.readBodyPart(output);
- *                nextPart = multipartStream.readBoundary();
- *            }
- *        } catch(MultipartStream.MalformedStreamException e) {
- *              // the stream failed to follow required syntax
- *        } catch(IOException) {
- *              // a read or write error occurred
- *        }
- *    
+ *         try {
+ *             MultipartStream multipartStream = new MultipartStream(input,
+ *                                                                   boundary);
+ *             boolean nextPart = malitPartStream.skipPreamble();
+ *             OutputStream output;
+ *             while(nextPart) {
+ *                 header = chunks.readHeader();
+ *                 // process headers
+ *                 // create some output stream
+ *                 multipartStream.readBodyPart(output);
+ *                 nextPart = multipartStream.readBoundary();
+ *             }
+ *         } catch(MultipartStream.MalformedStreamException e) {
+ *               // the stream failed to follow required syntax
+ *         } catch(IOException) {
+ *               // a read or write error occurred
+ *         }
+ *     
  * </pre>
  * 
  * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>

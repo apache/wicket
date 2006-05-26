@@ -140,11 +140,6 @@ public class CheckGroupTest extends WicketTestCase
 		final Check choice1 = new Check(container, "check1", new Model(check1));
 		final Check choice2 = new Check(group, "prop2");
 
-		page.add(form);
-		form.add(group);
-		group.add(container);
-		container.add(choice1);
-		group.add(choice2);
 
 		// test mock form submissions
 

@@ -36,8 +36,8 @@ public class InlinePanelPage_5 extends WebPage
 	 */
 	public InlinePanelPage_5()
 	{
-		add(new FragmentWithAssociatedMarkupStream(this, "myPanel1", "frag1"));
-		add(new FragmentWithAssociatedMarkupStream(this, "myPanel2", "frag2"));
+		new FragmentWithAssociatedMarkupStream(this, "myPanel1", "frag1");
+		new FragmentWithAssociatedMarkupStream(this, "myPanel2", "frag2");
 	}
 
 	/**

@@ -129,14 +129,6 @@ public class RadioGroupTest extends WicketTestCase
 
 		final Radio choice3 = new Radio(group2, "radio3", new Model(radio1));
 
-		page.add(form);
-		form.add(group);
-		group.add(container);
-		container.add(choice1);
-		group.add(choice2);
-		form.add(group2);
-		group2.add(choice3);
-
 		// test mock form submissions
 
 		modelObject.setProp1(radio1);

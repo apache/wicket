@@ -68,7 +68,6 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 		this.application = new DummyApplication();
 		DummyPage page = new DummyPage();
 		this.component = new DummyComponent(page, "test", this.application);
-		page.add(this.component);
 		this.loader = createLoader();
 	}
 

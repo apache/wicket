@@ -41,6 +41,5 @@ public class InlineTestPanel extends Panel
 	{
 		super(parent, id);
 		Fragment child = new Fragment(this, "child", "child-frag", page);
-		add(child);
 	}
 }

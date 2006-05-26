@@ -38,8 +38,8 @@ public class MarkupInheritanceBase_4 extends WebPage
 	 */
 	public MarkupInheritanceBase_4()
 	{
-		add(new Label(this, "label1", new PropertyModel(this, "counter")));
-		add(new Link(this, "link")
+		new Label(this, "label1", new PropertyModel(this, "counter"));
+		new Link(this, "link")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class MarkupInheritanceBase_4 extends WebPage
 			{
 				counter++;
 			}
-		});
+		};
 	}
 
 	/**

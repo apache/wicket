@@ -49,9 +49,9 @@ import wicket.util.lang.PropertyResolver;
  * given person object like this:
  * 
  * <pre>
- *       Person person = getSomePerson();
- *       ...
- *       add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
+ *        Person person = getSomePerson();
+ *        ...
+ *        add(new Label(&quot;myLabel&quot;, new PopertyModel(person, &quot;name&quot;));
  * </pre>
  * 
  * Where 'myLabel' is the name of the component, and 'name' is the property
@@ -63,7 +63,7 @@ import wicket.util.lang.PropertyResolver;
  * updates the name property of a person like this:
  * 
  * <pre>
- *       add(new TextField(&quot;myTextField&quot;, new PropertyModel(person, &quot;name&quot;));
+ *        add(new TextField(&quot;myTextField&quot;, new PropertyModel(person, &quot;name&quot;));
  * </pre>
  * 
  * </p>

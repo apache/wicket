@@ -43,8 +43,7 @@ public class BoxBorderTestPage_3 extends WebPage
 	public BoxBorderTestPage_3()
 	{
 		Border formBorder = new FormBorder(this, "border");
-		add(formBorder);
 
-		formBorder.add(new TextField(formBorder, "name", new PropertyModel(properties, "name")));
+		new TextField(formBorder, "name", new PropertyModel(properties, "name"));
 	}
 }

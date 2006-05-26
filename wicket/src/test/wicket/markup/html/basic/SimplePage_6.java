@@ -37,6 +37,5 @@ public class SimplePage_6 extends WebPage
 	public SimplePage_6()
 	{
 		Panel panel = new SimplePanel_6(this, "myPanel");
-		add(panel);
 	}
 }

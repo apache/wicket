@@ -42,13 +42,11 @@ public class AjaxPage2 extends WebPage
 
 		myBorder = new BoxBorder(this, "pageLayout");
 		myBorder.setTransparentResolver(true);
-		add(myBorder);
 
 		ajaxLabel = new Label(this, "ajaxLabel", "AAAAAAA");
 		ajaxLabel.setOutputMarkupId(true);
-		add(ajaxLabel);
 
-		add(new AjaxLink(this, "ajaxLink")
+		new AjaxLink(this, "ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -62,6 +60,6 @@ public class AjaxPage2 extends WebPage
 					target.addComponent(ajaxLabel2, "ajaxLabel");
 				}
 			}
-		});
+		};
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:52:19 +0200 (vr, 26 mei 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -46,12 +46,11 @@ public class Page_2 extends WebPage
 	 */
 	public Page_2()
 	{
-		add(new Label(this, "myLabel", "Test Label"));
+		new Label(this, "myLabel", "Test Label");
 
 		MarkupContainer container = new NoopOutputTransformerContainer(this, "test");
 
-		add(container);
-		container.add(new Label(container, "myLabel2", "Test Label2"));
+		new Label(container, "myLabel2", "Test Label2");
 
 		MarkupContainer panelContainer = new AbstractOutputTransformerContainer(this, "test2")
 		{
@@ -65,10 +64,8 @@ public class Page_2 extends WebPage
 			}
 		};
 
-		add(panelContainer);
 		Panel panel = new Panel_1(panelContainer, "myPanel");
 		panel.setRenderBodyOnly(true);
-		panelContainer.add(panel);
 
 		MarkupContainer borderContainer = new AbstractOutputTransformerContainer(this, "test3")
 		{
@@ -82,14 +79,11 @@ public class Page_2 extends WebPage
 			}
 		};
 
-		add(borderContainer);
 		Border border = new SimpleBorder(borderContainer, "myBorder");
-		borderContainer.add(border);
 
 		Border border2 = new SimpleBorder(this, "myBorder2");
 		border2.setRenderBodyOnly(false);
 		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
-		add(border2);
 
 		border2.add(new XsltTransfomerBehavior());
 	}

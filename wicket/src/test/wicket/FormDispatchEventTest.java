@@ -96,10 +96,6 @@ public class FormDispatchEventTest extends WicketTestCase
 		};
 
 
-		form.add(dropDown);
-
-		page.add(form);
-
 		application.setupRequestAndResponse();
 		RequestCycle cycle = application.createRequestCycle();
 

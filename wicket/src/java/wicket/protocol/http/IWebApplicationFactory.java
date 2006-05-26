@@ -23,12 +23,12 @@ package wicket.protocol.http;
  * Configure your webapplication to use this factory in web.xml like:
  * 
  * <pre>
- *    
- *       &lt;init-param&gt;
- *         &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *           &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *       &lt;/init-param&gt;
  *     
+ *        &lt;init-param&gt;
+ *          &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *            &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *        &lt;/init-param&gt;
+ *      
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg)

@@ -27,9 +27,9 @@ import wicket.markup.html.link.Link;
  * navigation looks like
  * 
  * <pre>
- *      
- *     	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
- *     	
+ *       
+ *      	 [first / &lt;&lt; / &lt;] 1 | 2 | 3 [&gt; / &gt;&gt; /last]
+ *      	
  * </pre>
  * 
  * <p>

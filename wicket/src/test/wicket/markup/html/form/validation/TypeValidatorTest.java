@@ -113,8 +113,6 @@ public class TypeValidatorTest extends WicketTestCase
 
 		Form form = new Form(page, "form", new CompoundPropertyModel(new Person()));
 		DateField dateField = new DateField(form, "birthdate");
-		form.add(dateField);
-		page.add(form);
 
 		form.onFormSubmitted();
 	}

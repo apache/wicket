@@ -36,6 +36,6 @@ public class HeaderSectionPage_7 extends WebPage
 	 */
 	public HeaderSectionPage_7()
 	{
-		add(new HeaderSectionMyLabel(this, "label", "mein Label"));
+		new HeaderSectionMyLabel(this, "label", "mein Label");
 	}
 }

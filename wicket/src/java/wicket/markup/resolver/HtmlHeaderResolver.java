@@ -116,8 +116,6 @@ public class HtmlHeaderResolver implements IComponentResolver
 				};
 				header2.setRenderBodyOnly(true);
 
-				header.add(header2);
-
 				header.autoAdded();
 
 			}

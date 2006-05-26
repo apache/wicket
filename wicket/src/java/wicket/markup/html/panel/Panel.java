@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,25 +32,25 @@ import wicket.model.IModel;
  * Whereas WebMarkupContainer is an inline container like
  * 
  * <pre>
- *   ...
- *   &lt;span wicket:id=&quot;xxx&quot;&gt;
- *     &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
- *     ....
- *   &lt;/span&gt;
- *   ...
+ *    ...
+ *    &lt;span wicket:id=&quot;xxx&quot;&gt;
+ *      &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
+ *      ....
+ *    &lt;/span&gt;
+ *    ...
  * </pre>
  * 
  * a Panel has its own associated markup file and the container content is taken
  * from that file, like:
  * 
  * <pre>
- *   &lt;span wicket:id=&quot;mypanel&quot;/&gt;
- *  
- *   TestPanel.html
- *   &lt;wicket:panel&gt;
- *     &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
- *     ....
- *   &lt;/wicket:panel&gt;
+ *    &lt;span wicket:id=&quot;mypanel&quot;/&gt;
+ *   
+ *    TestPanel.html
+ *    &lt;wicket:panel&gt;
+ *      &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
+ *      ....
+ *    &lt;/wicket:panel&gt;
  * </pre>
  * 
  * @param <T>

@@ -41,6 +41,5 @@ public class SimpleTestPanelBase extends Panel
 		super(parent, name);
 
 		baseSpan = new WebMarkupContainer(this, "baseSpan");
-		add(baseSpan);
 	}
 }

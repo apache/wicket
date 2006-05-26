@@ -47,45 +47,45 @@ import wicket.Session;
  * <code>/servlet/sessiontest</code>:
  * 
  * <pre>
- *      &lt;filter&gt;
- *        &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
- *        &lt;filter-class&gt;wicket.protocol.http.servlet.WicketSessionFilter&lt;/filter-class&gt;
- *        &lt;init-param&gt;
- *          &lt;param-name&gt;servletPath&lt;/param-name&gt;
- *          &lt;param-value&gt;sessiontest&lt;/param-value&gt;
- *        &lt;/init-param&gt;
- *      &lt;/filter&gt;
- *     
- *      &lt;filter-mapping&gt;
- *        &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
- *        &lt;url-pattern&gt;/servlet/sessiontest&lt;/url-pattern&gt;
- *      &lt;/filter-mapping&gt;
- *     
- *      &lt;servlet&gt;
- *        &lt;servlet-name&gt;SessionApplication&lt;/servlet-name&gt;
- *        &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *        &lt;init-param&gt;
- *          &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *          &lt;param-value&gt;session.SessionApplication&lt;/param-value&gt;
- *        &lt;/init-param&gt;
- *        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *      &lt;/servlet&gt;
- *     
- *      &lt;servlet&gt;
- *        &lt;servlet-name&gt;WicketSessionServlet&lt;/servlet-name&gt;
- *        &lt;servlet-class&gt;session.WicketSessionServlet&lt;/servlet-class&gt;
- *        &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *      &lt;/servlet&gt;
- *     
- *      &lt;servlet-mapping&gt;
- *        &lt;servlet-name&gt;SessionApplication&lt;/servlet-name&gt;
- *        &lt;url-pattern&gt;/sessiontest/*&lt;/url-pattern&gt;
- *      &lt;/servlet-mapping&gt;
- *     
- *      &lt;servlet-mapping&gt;
- *        &lt;servlet-name&gt;WicketSessionServlet&lt;/servlet-name&gt;
- *        &lt;url-pattern&gt;/servlet/sessiontest&lt;/url-pattern&gt;
- *      &lt;/servlet-mapping&gt;
+ *       &lt;filter&gt;
+ *         &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
+ *         &lt;filter-class&gt;wicket.protocol.http.servlet.WicketSessionFilter&lt;/filter-class&gt;
+ *         &lt;init-param&gt;
+ *           &lt;param-name&gt;servletPath&lt;/param-name&gt;
+ *           &lt;param-value&gt;sessiontest&lt;/param-value&gt;
+ *         &lt;/init-param&gt;
+ *       &lt;/filter&gt;
+ *      
+ *       &lt;filter-mapping&gt;
+ *         &lt;filter-name&gt;WicketSessionFilter&lt;/filter-name&gt;
+ *         &lt;url-pattern&gt;/servlet/sessiontest&lt;/url-pattern&gt;
+ *       &lt;/filter-mapping&gt;
+ *      
+ *       &lt;servlet&gt;
+ *         &lt;servlet-name&gt;SessionApplication&lt;/servlet-name&gt;
+ *         &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *         &lt;init-param&gt;
+ *           &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *           &lt;param-value&gt;session.SessionApplication&lt;/param-value&gt;
+ *         &lt;/init-param&gt;
+ *         &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *       &lt;/servlet&gt;
+ *      
+ *       &lt;servlet&gt;
+ *         &lt;servlet-name&gt;WicketSessionServlet&lt;/servlet-name&gt;
+ *         &lt;servlet-class&gt;session.WicketSessionServlet&lt;/servlet-class&gt;
+ *         &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *       &lt;/servlet&gt;
+ *      
+ *       &lt;servlet-mapping&gt;
+ *         &lt;servlet-name&gt;SessionApplication&lt;/servlet-name&gt;
+ *         &lt;url-pattern&gt;/sessiontest/*&lt;/url-pattern&gt;
+ *       &lt;/servlet-mapping&gt;
+ *      
+ *       &lt;servlet-mapping&gt;
+ *         &lt;servlet-name&gt;WicketSessionServlet&lt;/servlet-name&gt;
+ *         &lt;url-pattern&gt;/servlet/sessiontest&lt;/url-pattern&gt;
+ *       &lt;/servlet-mapping&gt;
  * </pre>
  * 
  * After that, you can get to the Wicket session in the usual fashion:

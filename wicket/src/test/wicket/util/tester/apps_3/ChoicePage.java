@@ -81,24 +81,22 @@ public class ChoicePage extends WebPage
 		ChoiceRenderer bookChoiceRenderer = new ChoiceRenderer("name", "id");
 
 		Form form = new Form(this, "choiceForm");
-		add(form);
 
 		form.setModel(new CompoundPropertyModel(this));
 
 		// single select family
-		form.add(new DropDownChoice(form, "dropDownChoice", candidateChoices, bookChoiceRenderer));
-		form.add(new ListChoice(form, "listChoice", candidateChoices, bookChoiceRenderer)
-				.setMaxRows(4));
-		form.add(new RadioChoice(form, "radioChoice", candidateChoices, bookChoiceRenderer));
-		form.add(newRadioGroup(form, candidateChoices));
+		new DropDownChoice(form, "dropDownChoice", candidateChoices, bookChoiceRenderer);
+		new ListChoice(form, "listChoice", candidateChoices, bookChoiceRenderer).setMaxRows(4);
+		new RadioChoice(form, "radioChoice", candidateChoices, bookChoiceRenderer);
+		newRadioGroup(form, candidateChoices);
 
 		// mulitple select family
-		form.add(new ListMultipleChoice(form, "listMultipleChoice", candidateChoices,
-				bookChoiceRenderer).setMaxRows(4));
-		form.add(new CheckBoxMultipleChoice(form, "checkBoxMultipleChoice", candidateChoices,
-				bookChoiceRenderer));
-		form.add(newCheckGroup(form, candidateChoices));
-		form.add(new Button(form, "anotherButton")
+		new ListMultipleChoice(form, "listMultipleChoice", candidateChoices, bookChoiceRenderer)
+				.setMaxRows(4);
+		new CheckBoxMultipleChoice(form, "checkBoxMultipleChoice", candidateChoices,
+				bookChoiceRenderer);
+		newCheckGroup(form, candidateChoices);
+		new Button(form, "anotherButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -107,7 +105,7 @@ public class ChoicePage extends WebPage
 			{
 				anotherButtonPressed = true;
 			}
-		});
+		};
 	}
 
 	private CheckGroup newCheckGroup(Form parent, List candidateChoices)
@@ -120,11 +118,10 @@ public class ChoicePage extends WebPage
 			@Override
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Check(item, "check", new Model(item.getModelObject())));
+				new Check(item, "check", new Model(item.getModelObject()));
 			}
 
 		};
-		checkGroupComponent.add(listView);
 		return checkGroupComponent;
 	}
 
@@ -138,11 +135,10 @@ public class ChoicePage extends WebPage
 			@Override
 			protected void populateItem(ListItem item)
 			{
-				item.add(new Radio(item, "radio", new Model(item.getModelObject())));
+				new Radio(item, "radio", new Model(item.getModelObject()));
 			}
 
 		};
-		radioGroupComponent.add(listView);
 		return radioGroupComponent;
 	}
 }

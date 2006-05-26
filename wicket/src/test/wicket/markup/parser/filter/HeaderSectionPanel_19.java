@@ -40,7 +40,7 @@ public class HeaderSectionPanel_19 extends Panel
 	{
 		super(parent, id);
 
-		add(new Label(this, "foo1", "1111"));
-		add(new Label(this, "foo2", "2222"));
+		new Label(this, "foo1", "1111");
+		new Label(this, "foo2", "2222");
 	}
 }

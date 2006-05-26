@@ -46,12 +46,5 @@ public class RadioGroupTestPage1 extends WebPage
 		WebMarkupContainer container = new WebMarkupContainer(group, "container");
 		Radio radio1 = new Radio(group, "radio1", new Model("radio1"));
 		Radio radio2 = new Radio(container, "radio2", new Model("radio2"));
-
-
-		add(form);
-		form.add(group);
-		group.add(radio1);
-		group.add(container);
-		container.add(radio2);
 	}
 }

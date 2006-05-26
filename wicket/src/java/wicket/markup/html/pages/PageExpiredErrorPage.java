@@ -36,7 +36,7 @@ public class PageExpiredErrorPage extends WebPage
 	 */
 	public PageExpiredErrorPage()
 	{
-		add(homePageLink(this, "homePageLink"));
+		homePageLink(this, "homePageLink");
 	}
 
 	/**

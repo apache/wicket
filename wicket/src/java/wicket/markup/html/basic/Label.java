@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,9 +39,9 @@ import wicket.model.Model;
  * A Label with a dynamic model can be created like this:
  * 
  * <pre>
- *     
- *           add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
  *      
+ *            add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
+ *       
  * </pre>
  * 
  * In this case, the Label component will replace the body of the tag it is

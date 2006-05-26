@@ -31,6 +31,5 @@ public class SimpleResponsePageClass extends WebPage
 				setResponsePage(SimplePage.class, new PageParameters("test=test"));
 			}
 		};
-		add(form);
 	}
 }

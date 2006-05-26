@@ -36,7 +36,7 @@ public class HeaderSectionPage_8 extends WebPage
 	 */
 	public HeaderSectionPage_8()
 	{
-		add(new HeaderSectionPanel(this, "panel"));
-		add(new ExternalLink(this, "cssHref", "myStyle.css"));
+		new HeaderSectionPanel(this, "panel");
+		new ExternalLink(this, "cssHref", "myStyle.css");
 	}
 }

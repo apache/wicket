@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -46,7 +46,7 @@ import wicket.util.string.Strings;
  * And this to your markup:
  * 
  * <pre>
- *    &lt;span wicket:id=&quot;componentTree&quot;/&gt;
+ *     &lt;span wicket:id=&quot;componentTree&quot;/&gt;
  * </pre>
  * 
  * @author Juergen Donnerstag
@@ -74,7 +74,7 @@ public final class PageView<T> extends Panel<T>
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
 		// Name of page
-		add(new Label(this, "info", page == null ? "[Stateless Page]" : page.toString()));
+		new Label(this, "info", page == null ? "[Stateless Page]" : page.toString());
 
 		// Get the components data and fill and sort the list
 		data.clear();
@@ -91,7 +91,7 @@ public final class PageView<T> extends Panel<T>
 		});
 
 		// Create the table containing the list the components
-		add(new ListView<ComponentData>(this, "components", data)
+		new ListView<ComponentData>(this, "components", data)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -103,14 +103,13 @@ public final class PageView<T> extends Panel<T>
 			{
 				final ComponentData componentData = listItem.getModelObject();
 
-				listItem.add(new Label(listItem, "row", Integer.toString(listItem.getIndex() + 1)));
-				listItem.add(new Label(listItem, "path", componentData.path));
-				listItem
-						.add(new Label(listItem, "size", Bytes.bytes(componentData.size).toString()));
-				listItem.add(new Label(listItem, "type", componentData.type));
-				listItem.add(new Label(listItem, "model", componentData.value));
+				new Label(listItem, "row", Integer.toString(listItem.getIndex() + 1));
+				new Label(listItem, "path", componentData.path);
+				new Label(listItem, "size", Bytes.bytes(componentData.size).toString());
+				new Label(listItem, "type", componentData.type);
+				new Label(listItem, "model", componentData.value);
 			}
-		});
+		};
 	}
 
 	/**

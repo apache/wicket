@@ -39,7 +39,7 @@ public class TestPage_1 extends WebPage
 	 */
 	public TestPage_1()
 	{
-		add(new WebComponent(this, "comp")
+		new WebComponent(this, "comp")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -55,6 +55,6 @@ public class TestPage_1 extends WebPage
 			{
 				replaceComponentTagBody(markupStream, openTag, "body");
 			}
-		});
+		};
 	}
 }

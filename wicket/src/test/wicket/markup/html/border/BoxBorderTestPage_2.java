@@ -40,9 +40,8 @@ public class BoxBorderTestPage_2 extends WebPage
 	public BoxBorderTestPage_2()
 	{
 		BoxBorder border = new BoxBorder(this, "box");
-		add(border);
 
-		border.add(new TextField(border, "text"));
-		border.add(new Image(border, "img"));
+		new TextField(border, "text");
+		new Image(border, "img");
 	}
 }

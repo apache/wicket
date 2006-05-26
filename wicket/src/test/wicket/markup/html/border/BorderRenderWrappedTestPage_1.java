@@ -40,9 +40,8 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 		BoxBorder border = new BoxBorder(this, "box");
 		border.setBorderBodyVisible(false);
 
-		add(border);
 
-		border.add(new TextField(border, "text"));
-		border.add(new Image(border, "img"));
+		new TextField(border, "text");
+		new Image(border, "img");
 	}
 }

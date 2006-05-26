@@ -36,9 +36,7 @@ public class InlinePanelPage_1 extends WebPage
 	public InlinePanelPage_1()
 	{
 		Fragment panel1 = new Fragment(this, "myPanel1", "frag1");
-		add(panel1);
 
 		Fragment panel2 = new Fragment(this, "myPanel2", "frag2");
-		add(panel2);
 	}
 }

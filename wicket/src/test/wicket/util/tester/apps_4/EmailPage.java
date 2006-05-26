@@ -41,11 +41,9 @@ public class EmailPage extends WebPage
 	{
 		Form form = new Form(this, "form");
 		form.setModel(new CompoundPropertyModel(this));
-		add(form);
 
 		TextField email = new TextField(form, "email");
 		email.add(EmailAddressPatternValidator.getInstance());
-		form.add(email);
 	}
 
 	/**

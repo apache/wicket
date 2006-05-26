@@ -34,6 +34,5 @@ public abstract class BorderedPage extends WebPage
 	{
 		border = new PageBorder(this, "border");
 		border.setTransparentResolver(true);
-		super.add(border);
 	}
 }

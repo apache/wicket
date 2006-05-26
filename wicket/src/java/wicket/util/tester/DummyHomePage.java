@@ -41,7 +41,6 @@ public class DummyHomePage extends WebPage
 	public DummyHomePage()
 	{
 		testPageLink = new TestLink(this, "testPage");
-		add(testPageLink);
 	}
 
 	/**

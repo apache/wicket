@@ -19,8 +19,8 @@ public class DoubleHeaderPartPage extends WebPage
 	 */
 	public DoubleHeaderPartPage()
 	{
-		add(new Label(this, "title", "Header Part Test"));
-		add(new PanelWithHeaderPart(this, "panelwithheadercomponents1"));
-		add(new PanelWithHeaderPart(this, "panelwithheadercomponents2"));
+		new Label(this, "title", "Header Part Test");
+		new PanelWithHeaderPart(this, "panelwithheadercomponents1");
+		new PanelWithHeaderPart(this, "panelwithheadercomponents2");
 	}
 }

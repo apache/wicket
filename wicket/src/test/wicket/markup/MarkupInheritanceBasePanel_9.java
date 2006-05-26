@@ -38,7 +38,7 @@ public class MarkupInheritanceBasePanel_9 extends Panel
 	{
 		super(parent, id);
 
-		add(new Label(this, "panelLabel1", "label 1"));
-		add(new Label(this, "panelLabel2", "label 2"));
+		new Label(this, "panelLabel1", "label 1");
+		new Label(this, "panelLabel2", "label 2");
 	}
 }

@@ -36,6 +36,6 @@ public class WicketPanelPage extends WebPage
 	 */
 	public WicketPanelPage()
 	{
-		add(new WicketPanel(this, "myPanel"));
+		new WicketPanel(this, "myPanel");
 	}
 }
