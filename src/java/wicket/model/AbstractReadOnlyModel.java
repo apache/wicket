@@ -24,6 +24,9 @@ import wicket.Component;
  * AbstractReadOnlyModel is an adapter base class for implementing models which
  * have no detach logic and are read-only.
  * 
+ * @param <T>
+ *            The Type
+ * 
  * @author Igor Vaynberg ( ivaynberg )
  */
 public abstract class AbstractReadOnlyModel<T> extends AbstractModel<T>
