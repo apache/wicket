@@ -43,7 +43,7 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	 * @param panelClass
 	 *            The class to use for creating instances. Must be of type
 	 *            {@link BreadCrumbPanel}, and must have constructor
-	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
+	 *            {@link BreadCrumbPanel#BreadCrumbPanel(MarkupContainer, String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelFactory(final Class panelClass)
 	{
@@ -66,8 +66,8 @@ public final class BreadCrumbPanelFactory implements IBreadCrumbPanelFactory
 	}
 
 	/**
-	 * @see wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory#create(java.lang.String,
-	 *      wicket.extensions.breadcrumb.IBreadCrumbModel)
+	 * @see wicket.extensions.breadcrumb.panel.IBreadCrumbPanelFactory#create(MarkupContainer,
+	 *      String, wicket.extensions.breadcrumb.IBreadCrumbModel)
 	 */
 	public final BreadCrumbPanel create(MarkupContainer parent, String componentId,
 			IBreadCrumbModel breadCrumbModel)

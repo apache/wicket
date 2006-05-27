@@ -20,7 +20,6 @@ package wicket.extensions.breadcrumb;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,7 +33,8 @@ public final class BreadCrumbModelListenerSupport implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** listeners for bread crumb events. */
-	private final List listeners = new ArrayList(1);
+	private final List<IBreadCrumbModelListener> listeners = new ArrayList<IBreadCrumbModelListener>(
+			1);
 
 	/**
 	 * Adds a bread crumb model listener.
@@ -63,9 +63,8 @@ public final class BreadCrumbModelListenerSupport implements Serializable
 	public final void fireBreadCrumbActivated(IBreadCrumbParticipant previousParticipant,
 			IBreadCrumbParticipant breadCrumbParticipant)
 	{
-		for (Iterator i = listeners.iterator(); i.hasNext();)
+		for (IBreadCrumbModelListener listener : listeners)
 		{
-			IBreadCrumbModelListener listener = (IBreadCrumbModelListener)i.next();
 			listener.breadCrumbActivated(previousParticipant, breadCrumbParticipant);
 		}
 	}
@@ -78,9 +77,8 @@ public final class BreadCrumbModelListenerSupport implements Serializable
 	 */
 	public final void fireBreadCrumbAdded(IBreadCrumbParticipant breadCrumbParticipant)
 	{
-		for (Iterator i = listeners.iterator(); i.hasNext();)
+		for (IBreadCrumbModelListener listener : listeners)
 		{
-			IBreadCrumbModelListener listener = (IBreadCrumbModelListener)i.next();
 			listener.breadCrumbAdded(breadCrumbParticipant);
 		}
 	}
@@ -93,9 +91,8 @@ public final class BreadCrumbModelListenerSupport implements Serializable
 	 */
 	public final void fireBreadCrumbRemoved(IBreadCrumbParticipant breadCrumbParticipant)
 	{
-		for (Iterator i = listeners.iterator(); i.hasNext();)
+		for (IBreadCrumbModelListener listener : listeners)
 		{
-			IBreadCrumbModelListener listener = (IBreadCrumbModelListener)i.next();
 			listener.breadCrumbRemoved(breadCrumbParticipant);
 		}
 	}

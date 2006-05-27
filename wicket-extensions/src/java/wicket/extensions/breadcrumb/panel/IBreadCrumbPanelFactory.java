@@ -27,12 +27,17 @@ import wicket.extensions.breadcrumb.IBreadCrumbModel;
  * Factory interface to enabled defered creation of a bread crumb panel while
  * getting the proper id for creation. Mainly meant for supporting
  * {@link BreadCrumbPanel#activate(IBreadCrumbPanelFactory)}.
+ * 
+ * @author Eelco Hillenius
  */
 public interface IBreadCrumbPanelFactory extends Serializable
 {
 	/**
 	 * Creates a new {@link BreadCrumbPanel bread crumb panel} instance. The
 	 * provided component id must be used when creating the panel.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * 
 	 * @param componentId
 	 *            The component id for the new panel.

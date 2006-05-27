@@ -55,9 +55,12 @@ import wicket.version.undo.Change;
  * bread crumb in the {@link IBreadCrumbModel bread crumb component model}.
  * </p>
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Eelco Hillenius
  */
-public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbParticipant
+public abstract class BreadCrumbPanel<T> extends Panel<T> implements IBreadCrumbParticipant
 {
 	private static final long serialVersionUID = 1L;
 
@@ -66,6 +69,9 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * 
 	 * @param id
 	 *            Component id
@@ -81,6 +87,9 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent component
+	 * 
 	 * @param id
 	 *            Component id
 	 * @param breadCrumbModel
@@ -89,7 +98,7 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 *            The model
 	 */
 	public BreadCrumbPanel(MarkupContainer parent, final String id,
-			IBreadCrumbModel breadCrumbModel, IModel model)
+			IBreadCrumbModel breadCrumbModel, IModel<T> model)
 	{
 		super(parent, id, model);
 		this.breadCrumbModel = breadCrumbModel;
@@ -174,7 +183,10 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	{
 		if (previous != null)
 		{
-			MarkupContainer parent = previous.getComponent().getParent();
+			/* was: 
+			  MarkupContainer parent = previous.getComponent().getParent();
+			  parent.replace(this);
+			*/
 			this.reattach();
 		}
 	}

@@ -42,6 +42,9 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent component
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param caller
@@ -50,7 +53,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @param panelClass
 	 *            The class to use for creating instances. Must be of type
 	 *            {@link BreadCrumbPanel}, and must have constructor
-	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
+	 *            {@link BreadCrumbPanel#BreadCrumbPanel(MarkupContainer, String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelLink(MarkupContainer parent, final String id,
 			final BreadCrumbPanel caller, final Class panelClass)
@@ -61,6 +64,9 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent component
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param breadCrumbModel
@@ -68,7 +74,7 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * @param panelClass
 	 *            The class to use for creating instances. Must be of type
 	 *            {@link BreadCrumbPanel}, and must have constructor
-	 *            {@link BreadCrumbPanel#BreadCrumbPanel(String, IBreadCrumbModel)}
+	 *            {@link BreadCrumbPanel#BreadCrumbPanel(MarkupContainer, String, IBreadCrumbModel)}
 	 */
 	public BreadCrumbPanelLink(MarkupContainer parent, final String id,
 			final IBreadCrumbModel breadCrumbModel, final Class panelClass)
@@ -78,6 +84,9 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * 
 	 * @param id
 	 *            The component id

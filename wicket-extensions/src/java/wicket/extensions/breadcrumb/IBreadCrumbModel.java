@@ -87,7 +87,7 @@ public interface IBreadCrumbModel extends Serializable
 	 * @return The bread crumbs particpants, as list with
 	 *         {@link IBreadCrumbParticipant bread crumb participants}.
 	 */
-	List allBreadCrumbParticipants();
+	List<IBreadCrumbParticipant> allBreadCrumbParticipants();
 
 	/**
 	 * Gets the currently active participant, if any.

@@ -50,7 +50,7 @@ import wicket.model.LoadableDetachableModel;
  * If you want to use this bar for the render logic and the model, but want to
  * provide a different way of rendering you can provide a different bread crumb
  * component by overriding method
- * {@link #newBreadCrumbComponent(String, int, int, IBreadCrumbParticipant)},
+ * {@link #newBreadCrumbComponent(MarkupContainer, String, int, int, IBreadCrumbParticipant)},
  * and you can adjust how the &lt;ul&gt; elements display by providing your own
  * style and don't add the {@link #addDefaultCssStyle() default style} by either
  * calling that or using the constructor that adds that.
@@ -77,7 +77,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * List view for rendering the bread crumbs.
 	 */
-	protected class BreadCrumbsListView extends ListView implements IBreadCrumbModelListener
+	protected class BreadCrumbsListView extends ListView<IBreadCrumbParticipant>
+			implements
+				IBreadCrumbModelListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -90,6 +92,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
+		 * 
 		 * @param id
 		 *            Component id
 		 */
@@ -97,15 +102,16 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		{
 			super(parent, id);
 			setReuseItems(false);
-			setModel(new LoadableDetachableModel()
+			setModel(new LoadableDetachableModel<List<IBreadCrumbParticipant>>()
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected Object load()
+				protected List<IBreadCrumbParticipant> load()
 				{
 					// save a copy
-					List l = new ArrayList(allBreadCrumbParticipants());
+					List<IBreadCrumbParticipant> l = new ArrayList<IBreadCrumbParticipant>(
+							allBreadCrumbParticipants());
 					size = l.size();
 					return l;
 				}
@@ -204,6 +210,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
+		 * 
 		 * @param id
 		 *            Component id
 		 * @param index
@@ -243,13 +252,16 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	private IBreadCrumbParticipant activeParticipant = null;
 
 	/** Holds the current list of crumbs. */
-	private List crumbs = new ArrayList();
+	private List<IBreadCrumbParticipant> crumbs = new ArrayList<IBreadCrumbParticipant>();
 
 	/** listeners utility. */
 	private final BreadCrumbModelListenerSupport listenerSupport = new BreadCrumbModelListenerSupport();
 
 	/**
 	 * Construct. Adds the default style.
+	 * 
+	 * @param parent
+	 *            Parent component
 	 * 
 	 * @param id
 	 *            Component id
@@ -261,6 +273,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * 
 	 * @param id
 	 *            Component id
@@ -303,7 +318,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	/**
 	 * @see wicket.extensions.breadcrumb.IBreadCrumbModel#allBreadCrumbParticipants()
 	 */
-	public final List allBreadCrumbParticipants()
+	public final List<IBreadCrumbParticipant> allBreadCrumbParticipants()
 	{
 		return crumbs;
 	}
@@ -336,7 +351,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 		int i = len;
 		while (i > -1)
 		{
-			IBreadCrumbParticipant temp = (IBreadCrumbParticipant)crumbs.get(i);
+			IBreadCrumbParticipant temp = crumbs.get(i);
 
 			// if we found the bread crumb
 			if (breadCrumbParticipant.equals(temp))
@@ -346,7 +361,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 				while (j > i)
 				{
 					// remove and fire event
-					IBreadCrumbParticipant removed = (IBreadCrumbParticipant)crumbs.remove(j--);
+					IBreadCrumbParticipant removed = crumbs.remove(j--);
 					listenerSupport.fireBreadCrumbRemoved(removed);
 				}
 
@@ -411,6 +426,9 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 * Creates a new bread crumb component. That component will be rendered as
 	 * part of the bread crumbs list (which is a &lt;ul&gt; &lt;li&gt;
 	 * structure).
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * 
 	 * @param id
 	 *            The component id

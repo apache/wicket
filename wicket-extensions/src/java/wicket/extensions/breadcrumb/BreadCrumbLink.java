@@ -47,6 +47,8 @@ public abstract class BreadCrumbLink extends Link
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The link id
 	 * @param breadCrumbModel
