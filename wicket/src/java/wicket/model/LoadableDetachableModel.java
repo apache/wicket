@@ -49,10 +49,13 @@ import wicket.RequestCycle;
  * override those methods, if ever.
  * </p>
  * 
+ * @param <T>
+ *            The Type
+ * 
  * @author Eelco Hillenius
  * @author Igor Vaynberg
  */
-public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
+public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T>
 {
 	/** Logger. */
 	private static final Log log = LogFactory.getLog(LoadableDetachableModel.class);
@@ -61,7 +64,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	private transient boolean attached = false;
 
 	/** temporary, transient object. */
-	private transient Object tempModelObject;
+	private transient T tempModelObject;
 
 	/**
 	 * Construct.
@@ -77,7 +80,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	 * @param object
 	 *            retrieved instance of the detachable object
 	 */
-	public LoadableDetachableModel(Object object)
+	public LoadableDetachableModel(T object)
 	{
 		this.tempModelObject = object;
 		attached = true;
@@ -107,7 +110,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	 * @see wicket.model.IModel#getObject(wicket.Component)
 	 */
 	@Override
-	public Object getObject(Component component)
+	public T getObject(Component component)
 	{
 		if (!attached)
 		{
@@ -152,7 +155,7 @@ public abstract class LoadableDetachableModel extends AbstractReadOnlyModel
 	 * 
 	 * @return the (temporary) model object
 	 */
-	protected abstract Object load();
+	protected abstract T load();
 
 	/**
 	 * Attaches to the current request. Implement this method with custom
