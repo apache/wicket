@@ -160,7 +160,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             operation.
 	 * @return This
 	 */
-	final MarkupContainer add(final Component child)
+	final MarkupContainer add(final Component<T> child)
 	{
 		if (child == null)
 		{

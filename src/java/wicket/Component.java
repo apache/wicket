@@ -680,6 +680,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/**
 	 * Reattach this component to its parent.
+	 * 
+	 * @return This
 	 */
 	public final Component reattach()
 	{
