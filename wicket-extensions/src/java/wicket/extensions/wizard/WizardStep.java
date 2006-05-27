@@ -56,26 +56,28 @@ import wicket.util.string.Strings;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *                       &lt;wicket:panel&gt;
- *                        &lt;table&gt;
- *                         &lt;tr&gt;
- *                          &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                          &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *                         &lt;/tr&gt;
- *                         &lt;tr&gt;
- *                          &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                          &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *                         &lt;/tr&gt;
- *                        &lt;/table&gt;
- *                       &lt;/wicket:panel&gt;
+ *                        &lt;wicket:panel&gt;
+ *                         &lt;table&gt;
+ *                          &lt;tr&gt;
+ *                           &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *                          &lt;/tr&gt;
+ *                          &lt;tr&gt;
+ *                           &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *                          &lt;/tr&gt;
+ *                         &lt;/table&gt;
+ *                        &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
  * 
+ * @param <T>
+ *            The type
  * 
  * @author Eelco Hillenius
  */
-public class WizardStep implements IWizardStep
+public class WizardStep<T> implements IWizardStep
 {
 	/**
 	 * Content panel.
@@ -165,17 +167,17 @@ public class WizardStep implements IWizardStep
 	/**
 	 * Any model of the step.
 	 */
-	private IModel model;
+	private IModel<T> model;
 
 	/**
 	 * A summary of this step, or some usage advice.
 	 */
-	private IModel summary;
+	private IModel<String> summary;
 
 	/**
 	 * The title of this step.
 	 */
-	private IModel title;
+	private IModel<String> title;
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a
@@ -184,7 +186,7 @@ public class WizardStep implements IWizardStep
 	 */
 	public WizardStep()
 	{
-		this((IModel)null, (IModel)null);
+		this((IModel<String>)null, (IModel<String>)null);
 	}
 
 	/**
@@ -197,7 +199,7 @@ public class WizardStep implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(IModel title, IModel summary)
+	public WizardStep(IModel<String> title, IModel<String> summary)
 	{
 		this(title, summary, null);
 	}
@@ -214,7 +216,7 @@ public class WizardStep implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(IModel title, IModel summary, IModel model)
+	public WizardStep(IModel<String> title, IModel<String> summary, IModel<T> model)
 	{
 		this.title = title;
 		this.summary = summary;
@@ -279,7 +281,7 @@ public class WizardStep implements IWizardStep
 	 */
 	public String getSummary()
 	{
-		return (summary != null) ? (String)summary.getObject(null) : (String)null;
+		return (summary != null) ? summary.getObject(null) : (String)null;
 	}
 
 	/**
@@ -289,7 +291,7 @@ public class WizardStep implements IWizardStep
 	 */
 	public String getTitle()
 	{
-		return (title != null) ? (String)title.getObject(null) : (String)null;
+		return (title != null) ? title.getObject(null) : (String)null;
 	}
 
 	/**
@@ -351,7 +353,7 @@ public class WizardStep implements IWizardStep
 	 * @param summary
 	 *            summary
 	 */
-	public final void setSummaryModel(IModel summary)
+	public final void setSummaryModel(IModel<String> summary)
 	{
 		this.summary = summary;
 	}
@@ -362,7 +364,7 @@ public class WizardStep implements IWizardStep
 	 * @param title
 	 *            title
 	 */
-	public final void setTitleModel(IModel title)
+	public final void setTitleModel(IModel<String> title)
 	{
 		this.title = title;
 	}

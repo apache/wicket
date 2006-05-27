@@ -278,9 +278,9 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		wizardModel.addListener(this);
 
-		for (Iterator iter = wizardModel.stepIterator(); iter.hasNext();)
+		for (Iterator<IWizardStep> iter = wizardModel.stepIterator(); iter.hasNext();)
 		{
-			((IWizardStep)iter.next()).init(wizardModel);
+			iter.next().init(wizardModel);
 		}
 
 		// reset model to prepare for action

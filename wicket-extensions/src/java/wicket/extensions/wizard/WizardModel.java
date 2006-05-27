@@ -351,7 +351,7 @@ public class WizardModel implements IWizardModel
 	/**
 	 * @see wicket.extensions.wizard.IWizardModel#stepIterator()
 	 */
-	public final Iterator stepIterator()
+	public final Iterator<IWizardStep> stepIterator()
 	{
 		return steps.iterator();
 	}
@@ -366,9 +366,9 @@ public class WizardModel implements IWizardModel
 	 */
 	protected final boolean allStepsComplete()
 	{
-		for (Iterator iterator = stepIterator(); iterator.hasNext();)
+		for (Iterator<IWizardStep> iterator = stepIterator(); iterator.hasNext();)
 		{
-			if (!((IWizardStep)iterator.next()).isComplete())
+			if (!iterator.next().isComplete())
 			{
 				return false;
 			}
@@ -386,10 +386,10 @@ public class WizardModel implements IWizardModel
 	{
 		for (int i = conditions.size() - 1; i >= 0; i--)
 		{
-			ICondition condition = (ICondition)conditions.get(i);
+			ICondition condition = conditions.get(i);
 			if (condition.evaluate())
 			{
-				return (IWizardStep)steps.get(i);
+				return steps.get(i);
 			}
 		}
 
@@ -407,10 +407,10 @@ public class WizardModel implements IWizardModel
 
 		for (int i = startIndex; i < conditions.size(); i++)
 		{
-			ICondition condition = (ICondition)conditions.get(i);
+			ICondition condition = conditions.get(i);
 			if (condition.evaluate())
 			{
-				return (IWizardStep)steps.get(i);
+				return steps.get(i);
 			}
 		}
 
@@ -425,9 +425,8 @@ public class WizardModel implements IWizardModel
 	 */
 	protected final void fireActiveStepChanged(IWizardStep step)
 	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		for (IWizardModelListener listener : wizardModelListeners)
 		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
 			listener.onActiveStepChanged(step);
 		}
 	}
@@ -437,9 +436,8 @@ public class WizardModel implements IWizardModel
 	 */
 	protected final void fireWizardCancelled()
 	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		for (IWizardModelListener listener : wizardModelListeners)
 		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
 			listener.onCancel();
 		}
 	}
@@ -449,9 +447,8 @@ public class WizardModel implements IWizardModel
 	 */
 	protected final void fireWizardFinished()
 	{
-		for (Iterator i = wizardModelListeners.iterator(); i.hasNext();)
+		for (IWizardModelListener listener : wizardModelListeners)
 		{
-			IWizardModelListener listener = (IWizardModelListener)i.next();
 			listener.onFinish();
 		}
 	}

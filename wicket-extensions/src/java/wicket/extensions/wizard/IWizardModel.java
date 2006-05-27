@@ -170,5 +170,5 @@ public interface IWizardModel extends Serializable
 	 * 
 	 * @return an iterator over all the steps of the model
 	 */
-	Iterator stepIterator();
+	Iterator<IWizardStep> stepIterator();
 }
