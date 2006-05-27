@@ -42,35 +42,10 @@ import wicket.model.Model;
  */
 public final class BodyContainer implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-
-	/** The webpage where the body container is in */
-	private final WebPage page;
-
-	/** The container id */
-	private final String id;
-
 	/**
-	 * Construct.
-	 * 
-	 * @param page
-	 *            The webpage where the body container is in
-	 * @param id
-	 *            The container id
+	 * Helper class
 	 */
-	public BodyContainer(final WebPage page, final String id)
-	{
-		this.page = page;
-		this.id = id;
-	}
-
-	/**
-	 * @param <T>
-	 *            Type of model object this attribute modifier holds
-	 * 
-	 * Little helper
-	 */
-	public static class AppendingAttributeModifier<T> extends AttributeModifier<T>
+	public static class AppendingAttributeModifier extends AttributeModifier
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -80,7 +55,7 @@ public final class BodyContainer implements Serializable
 		 * @param attribute
 		 * @param replaceModel
 		 */
-		public AppendingAttributeModifier(final String attribute, IModel<T> replaceModel)
+		public AppendingAttributeModifier(final String attribute, IModel replaceModel)
 		{
 			super(attribute, true, replaceModel);
 		}
@@ -96,38 +71,26 @@ public final class BodyContainer implements Serializable
 		}
 	}
 
-	/**
-	 * Get the real body container (WebMarkupContainer)
-	 * 
-	 * @return WebMarkupContainer associated with the &lt;body&gt; tag
-	 */
-	public WebMarkupContainer getBodyContainer()
-	{
-		return (WebMarkupContainer)this.page.get(this.id);
-	}
+	private static final long serialVersionUID = 1L;
+
+	/** The container id */
+	private final String id;
+
+	/** The webpage where the body container is in */
+	private final WebPage page;
 
 	/**
-	 * Add a new AttributeModifier to the body container which appends the
-	 * 'value' to the onLoad attribute of the body tag. Remember the component
-	 * which requested to add the modified to the body container. This for
-	 * example is required in cases where on a dynamic page the Component (e.g.
-	 * a Panel) gets removed and/or replaced and the body attribute modifier
-	 * must be removed/replaced as well.
+	 * Construct.
 	 * 
-	 * @param value
-	 *            The value to append to 'onLoad'
-	 * @param behaviorOwner
-	 *            The component which 'owns' the attribute modifier. Null is a
-	 *            allowed value.
-	 * @return this
-	 * 
-	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
-	 *       of the component would be the better solution
+	 * @param page
+	 *            The webpage where the body container is in
+	 * @param id
+	 *            The container id
 	 */
-	public final BodyContainer addOnLoadModifier(final String value, final Component behaviorOwner)
+	public BodyContainer(final WebPage page, final String id)
 	{
-		final IModel model = new Model(value);
-		return addOnLoadModifier(model, behaviorOwner);
+		this.page = page;
+		this.id = id;
 	}
 
 	/**
@@ -165,26 +128,26 @@ public final class BodyContainer implements Serializable
 
 	/**
 	 * Add a new AttributeModifier to the body container which appends the
-	 * 'value' to the onUnLoad attribute of the body tag. Remember the component
+	 * 'value' to the onLoad attribute of the body tag. Remember the component
 	 * which requested to add the modified to the body container. This for
 	 * example is required in cases where on a dynamic page the Component (e.g.
 	 * a Panel) gets removed and/or replaced and the body attribute modifier
 	 * must be removed/replaced as well.
 	 * 
 	 * @param value
-	 *            The value to append to 'onUnLoad'
+	 *            The value to append to 'onLoad'
 	 * @param behaviorOwner
 	 *            The component which 'owns' the attribute modifier. Null is a
 	 *            allowed value.
 	 * @return this
 	 * 
-	 * @TODO Post 1.2: A listener hook on IBehavior which gets called on removal
+	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
-	public final BodyContainer addOnUnLoadModifier(final String value, final Component behaviorOwner)
+	public final BodyContainer addOnLoadModifier(final String value, final Component behaviorOwner)
 	{
-		final IModel model = new Model(value);
-		return addOnUnLoadModifier(model, behaviorOwner);
+		final IModel model = new Model<String>(value);
+		return addOnLoadModifier(model, behaviorOwner);
 	}
 
 	/**
@@ -217,5 +180,39 @@ public final class BodyContainer implements Serializable
 			bodyContainer.add(new BodyTagAttributeModifier("onunload", true, model, behaviorOwner));
 		}
 		return this;
+	}
+
+	/**
+	 * Add a new AttributeModifier to the body container which appends the
+	 * 'value' to the onUnLoad attribute of the body tag. Remember the component
+	 * which requested to add the modified to the body container. This for
+	 * example is required in cases where on a dynamic page the Component (e.g.
+	 * a Panel) gets removed and/or replaced and the body attribute modifier
+	 * must be removed/replaced as well.
+	 * 
+	 * @param value
+	 *            The value to append to 'onUnLoad'
+	 * @param behaviorOwner
+	 *            The component which 'owns' the attribute modifier. Null is a
+	 *            allowed value.
+	 * @return this
+	 * 
+	 * @TODO Post 1.2: A listener hook on IBehavior which gets called on removal
+	 *       of the component would be the better solution
+	 */
+	public final BodyContainer addOnUnLoadModifier(final String value, final Component behaviorOwner)
+	{
+		final IModel model = new Model<String>(value);
+		return addOnUnLoadModifier(model, behaviorOwner);
+	}
+
+	/**
+	 * Get the real body container (WebMarkupContainer)
+	 * 
+	 * @return WebMarkupContainer associated with the &lt;body&gt; tag
+	 */
+	public WebMarkupContainer getBodyContainer()
+	{
+		return (WebMarkupContainer)this.page.get(this.id);
 	}
 }

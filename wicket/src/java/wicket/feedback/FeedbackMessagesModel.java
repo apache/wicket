@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * 
  * @author Eelco Hillenius
  */
-public class FeedbackMessagesModel extends AbstractDetachableModel
+public class FeedbackMessagesModel extends AbstractDetachableModel<List<FeedbackMessage>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -93,7 +93,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
 	@Override
-	public final Object onGetObject(final Component component)
+	public final List<FeedbackMessage> onGetObject(final Component component)
 	{
 		if (messages == null)
 		{
@@ -166,7 +166,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel
 	 *      java.lang.Object)
 	 */
 	@Override
-	protected void onSetObject(Component component, Object object)
+	protected void onSetObject(Component component, List<FeedbackMessage> object)
 	{
 	}
 

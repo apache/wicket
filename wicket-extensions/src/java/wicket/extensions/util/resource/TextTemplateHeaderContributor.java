@@ -39,7 +39,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * This model holds the template and returns the interpolation of the
 	 * template with of any of the
 	 */
-	private static final class TemplateModel extends AbstractReadOnlyDetachableModel
+	private static final class TemplateModel extends AbstractReadOnlyDetachableModel<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -107,7 +107,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 		 */
 		@Override
-		protected Object onGetObject(Component component)
+		protected String onGetObject(Component component)
 		{
 			if (variablesModel != null)
 			{
