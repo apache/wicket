@@ -118,10 +118,11 @@ public class BreadCrumbPanelLink extends BreadCrumbLink
 	 * Uses the set factory for creating a new instance of
 	 * {@link IBreadCrumbParticipant}.
 	 * 
-	 * @see wicket.extensions.breadcrumb.BreadCrumbLink#getParticipant(java.lang.String)
+	 * @see wicket.extensions.breadcrumb.BreadCrumbLink#getParticipant(MarkupContainer,
+	 *      java.lang.String)
 	 */
 	@Override
-	protected final IBreadCrumbParticipant getParticipant(MarkupContainer parent,String componentId)
+	protected final IBreadCrumbParticipant getParticipant(MarkupContainer parent, String componentId)
 	{
 		return breadCrumbPanelFactory.create(parent, componentId, breadCrumbModel);
 	}

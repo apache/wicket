@@ -27,9 +27,9 @@ import wicket.version.undo.Change;
 /**
  * A link that when clicked will set the the active
  * {@link IBreadCrumbParticipant bread crumb participant} to the one that is
- * returned by {@link #getParticipant(String)}. It is used internally by
- * {@link BreadCrumbBar the the bread crumb bar component}, and you can use it
- * for rendering links e.g. with
+ * returned by {@link #getParticipant(MarkupContainer, String)}. It is used
+ * internally by {@link BreadCrumbBar the the bread crumb bar component}, and
+ * you can use it for rendering links e.g. with
  * {@link BreadCrumbPanel bread crumb panel components}.
  * 
  * <p>
@@ -77,7 +77,8 @@ public abstract class BreadCrumbLink extends Link
 
 		Component component = active.getComponent();
 		// get the participant to set as active
-		final IBreadCrumbParticipant participant = getParticipant(component.getParent(),component.getId());
+		final IBreadCrumbParticipant participant = getParticipant(component.getParent(), component
+				.getId());
 
 		// add back button support
 		addStateChange(new Change()
@@ -98,7 +99,8 @@ public abstract class BreadCrumbLink extends Link
 	/**
 	 * Gets the {@link IBreadCrumbParticipant bread crumb participant} to be set
 	 * active when the link is clicked.
-	 * @param parent 
+	 * 
+	 * @param parent
 	 * 
 	 * @param componentId
 	 *            When the participant creates it's own view, it typically
@@ -106,5 +108,6 @@ public abstract class BreadCrumbLink extends Link
 	 *            returned by {@link IBreadCrumbParticipant#getComponent()}.
 	 * @return The bread crumb participant
 	 */
-	protected abstract IBreadCrumbParticipant getParticipant(MarkupContainer parent, String componentId);
+	protected abstract IBreadCrumbParticipant getParticipant(MarkupContainer parent,
+			String componentId);
 }

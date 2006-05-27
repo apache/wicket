@@ -174,21 +174,13 @@ public abstract class BreadCrumbPanel<T> extends Panel<T> implements IBreadCrumb
 	}
 
 	/**
-	 * If the previous participant is not null (and a component, which it should
-	 * be), replace that component on it's parent with this one.
+	 * Activate this panel.
 	 * 
 	 * @see wicket.extensions.breadcrumb.IBreadCrumbParticipant#onActivate(wicket.extensions.breadcrumb.IBreadCrumbParticipant)
 	 */
 	public void onActivate(IBreadCrumbParticipant previous)
 	{
-		if (previous != null)
-		{
-			/* was: 
-			  MarkupContainer parent = previous.getComponent().getParent();
-			  parent.replace(this);
-			*/
-			this.reattach();
-		}
+		this.reattach();
 	}
 
 	/**
