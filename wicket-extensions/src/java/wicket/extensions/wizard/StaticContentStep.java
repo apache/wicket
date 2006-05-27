@@ -18,8 +18,8 @@
  */
 package wicket.extensions.wizard;
 
-import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -49,11 +49,9 @@ public class StaticContentStep extends WizardStep
 	 *            If true, any html of the content will be rendered as is.
 	 *            Otherwise, it will be escaped.
 	 */
-	public StaticContentStep(MarkupContainer< ? > parent, boolean allowHtml)
+	public StaticContentStep(boolean allowHtml)
 	{
-		super(parent);
 		this.allowHtml = allowHtml;
-		new Label(this, "content", "");
 	}
 
 	/**
@@ -69,13 +67,11 @@ public class StaticContentStep extends WizardStep
 	 *            If true, any html of the content will be rendered as is.
 	 *            Otherwise, it will be escaped.
 	 */
-	public StaticContentStep(MarkupContainer< ? > parent, IModel title, IModel summary,
-			IModel content, boolean allowHtml)
+	public StaticContentStep(IModel title, IModel summary, IModel content, boolean allowHtml)
 	{
-		super(parent, title, summary);
+		super(title, summary);
 		this.content = content;
 		this.allowHtml = allowHtml;
-		new Label(this, "content", content).setEscapeModelStrings(!allowHtml);
 	}
 
 	/**
@@ -91,10 +87,9 @@ public class StaticContentStep extends WizardStep
 	 *            If true, any html of the content will be rendered as is.
 	 *            Otherwise, it will be escaped.
 	 */
-	public StaticContentStep(MarkupContainer< ? > parent, IModel title, IModel summary,
-			String content, boolean allowHtml)
+	public StaticContentStep(IModel title, IModel summary, String content, boolean allowHtml)
 	{
-		this(parent, title, summary, new Model(content), allowHtml);
+		this(title, summary, new Model<String>(content), allowHtml);
 	}
 
 	/**
@@ -110,10 +105,9 @@ public class StaticContentStep extends WizardStep
 	 *            If true, any html of the content will be rendered as is.
 	 *            Otherwise, it will be escaped.
 	 */
-	public StaticContentStep(MarkupContainer< ? > parent, String title, String summary,
-			IModel content, boolean allowHtml)
+	public StaticContentStep(String title, String summary, IModel content, boolean allowHtml)
 	{
-		this(parent, new Model(title), new Model(summary), content, allowHtml);
+		this(new Model<String>(title), new Model<String>(summary), content, allowHtml);
 	}
 
 	/**
@@ -129,10 +123,9 @@ public class StaticContentStep extends WizardStep
 	 *            If true, any html of the content will be rendered as is.
 	 *            Otherwise, it will be escaped.
 	 */
-	public StaticContentStep(MarkupContainer parent, String title, String summary, String content,
-			boolean allowHtml)
+	public StaticContentStep(String title, String summary, String content, boolean allowHtml)
 	{
-		this(parent, title, summary, new Model(content), allowHtml);
+		this(title, summary, new Model<String>(content), allowHtml);
 	}
 
 	/**
@@ -152,7 +145,7 @@ public class StaticContentStep extends WizardStep
 	 */
 	public final String getContent()
 	{
-		return (content != null) ? (String)content.getObject(this) : null;
+		return (content != null) ? (String)content.getObject(null) : null;
 	}
 
 	/**
@@ -174,6 +167,14 @@ public class StaticContentStep extends WizardStep
 	public final void setContentModel(IModel content)
 	{
 		this.content = content;
-		new Label(this, "content", content).setEscapeModelStrings(!allowHtml);
+	}
+
+	/**
+	 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
+	 */
+	@Override
+	protected void populate(Panel contentPanel)
+	{
+		new Label(contentPanel, "content", content).setEscapeModelStrings(!allowHtml);
 	}
 }

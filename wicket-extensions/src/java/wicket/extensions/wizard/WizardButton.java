@@ -43,6 +43,8 @@ public abstract class WizardButton extends Button
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param wizard

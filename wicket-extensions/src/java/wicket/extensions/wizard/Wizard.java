@@ -112,6 +112,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * This constructor is not meant for normal clients of this class
 	 * </p>
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The component model
 	 */
@@ -130,6 +132,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * <p>
 	 * This constructor is not meant for normal clients of this class
 	 * </p>
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            The component model
@@ -152,6 +156,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * For most clients, this is typically the right constructor to use.
 	 * </p>
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param wizardModel
@@ -167,6 +173,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * <p>
 	 * For most clients, this is typically the right constructor to use.
 	 * </p>
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            The component id
@@ -283,6 +291,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * Create a new button bar. Clients can override this method to provide a
 	 * custom button bar.
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The id to be used to construct the component
 	 * 
@@ -297,6 +307,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	 * Create a new feedback panel. Clients can override this method to provide
 	 * a custom feedback panel.
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The id to be used to construct the component
 	 * 
@@ -310,6 +322,8 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	/**
 	 * Create a new overview bar. Clients can override this method to provide a
 	 * custom bar.
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            The id to be used to construct the component

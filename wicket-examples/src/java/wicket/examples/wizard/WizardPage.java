@@ -20,6 +20,7 @@ package wicket.examples.wizard;
 
 import java.lang.reflect.Constructor;
 
+import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.wizard.Wizard;
 
@@ -44,8 +45,8 @@ public class WizardPage extends WicketExamplePage
 		}
 		try
 		{
-			Constructor ctor = wizardClass.getConstructor(new Class[] { String.class });
-			Wizard wizard = (Wizard)ctor.newInstance(new String[] { "wizard" });
+			Constructor ctor = wizardClass.getConstructor(new Class[] { MarkupContainer.class, String.class });
+			Wizard wizard = (Wizard)ctor.newInstance(new Object[] { this, "wizard" });
 		}
 		catch (Exception e)
 		{

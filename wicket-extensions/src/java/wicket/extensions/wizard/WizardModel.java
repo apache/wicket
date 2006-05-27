@@ -86,19 +86,20 @@ public class WizardModel implements IWizardModel
 	private boolean cancelVisible = true;
 
 	/** Conditions with steps. */
-	private List conditions = new ArrayList();
+	private List<ICondition> conditions = new ArrayList<ICondition>();
 
 	/** State history. */
-	private final ArrayListStack history = new ArrayListStack();
+	private final ArrayListStack<IWizardStep> history = new ArrayListStack<IWizardStep>();
 
 	/** Whether the last button should be shown at all; false by default. */
 	private boolean lastVisible = false;
 
 	/** The wizard steps. */
-	private List steps = new ArrayList();
+	private List<IWizardStep> steps = new ArrayList<IWizardStep>();
 
 	/** Listeners for {@link IWizardModelListener model events}. */
-	private final List wizardModelListeners = new ArrayList(1);
+	private final List<IWizardModelListener> wizardModelListeners = new ArrayList<IWizardModelListener>(
+			1);
 
 	/**
 	 * Construct.

@@ -37,7 +37,6 @@ import wicket.extensions.wizard.WizardStep;
  */
 public class StaticWizardWithPanels extends Wizard
 {
-
 	/**
 	 * The first step of this wizard.
 	 */
@@ -46,9 +45,9 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step1(MarkupContainer parent)
+		public Step1()
 		{
-			super(parent, "One", "The first step");
+			super("One", "The first step");
 		}
 	}
 
@@ -60,9 +59,9 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step2(MarkupContainer parent)
+		public Step2()
 		{
-			super(parent, "One", "The first step");
+			super("One", "The first step");
 		}
 	}
 
@@ -74,14 +73,16 @@ public class StaticWizardWithPanels extends Wizard
 		/**
 		 * Construct.
 		 */
-		public Step3(MarkupContainer parent)
+		public Step3()
 		{
-			super(parent, "One", "The first step");
+			super("One", "The first step");
 		}
 	}
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            The component id
@@ -95,9 +96,9 @@ public class StaticWizardWithPanels extends Wizard
 		// will give you a hint of how nice it is to
 		// be able to work with custom panels
 		WizardModel model = new WizardModel();
-		model.add(new Step1(this));
-		model.add(new Step2(this));
-		model.add(new Step3(this));
+		model.add(new Step1());
+		model.add(new Step2());
+		model.add(new Step3());
 
 		// initialize the wizard
 		init(model);

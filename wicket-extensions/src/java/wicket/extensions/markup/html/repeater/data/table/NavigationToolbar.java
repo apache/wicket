@@ -50,13 +50,15 @@ public class NavigationToolbar extends AbstractToolbar
 	 * Factory method used to create the paging navigator that will be used by
 	 * the datatable
 	 * 
+	 * @param parent
+	 * 
 	 * @param navigatorId
 	 *            component id the navigator should be created with
 	 * @param table
 	 *            dataview used by datatable
 	 * @return paging navigator that will be used to navigate the data table
 	 */
-	protected PagingNavigator newPagingNavigator(MarkupContainer< ? > parent, String navigatorId,
+	protected PagingNavigator newPagingNavigator(MarkupContainer parent, String navigatorId,
 			final DataTable table)
 	{
 		return new PagingNavigator(parent, navigatorId, table);
@@ -66,6 +68,8 @@ public class NavigationToolbar extends AbstractToolbar
 	 * Factory method used to create the navigator label that will be used by
 	 * the datatable
 	 * 
+	 * @param parent
+	 * 
 	 * @param navigatorId
 	 *            component id navigator label should be created with
 	 * @param table
@@ -73,7 +77,7 @@ public class NavigationToolbar extends AbstractToolbar
 	 * @return navigator label that will be used to navigate the data table
 	 * 
 	 */
-	protected WebComponent newNavigatorLabel(MarkupContainer< ? > parent, String navigatorId,
+	protected WebComponent newNavigatorLabel(MarkupContainer parent, String navigatorId,
 			final DataTable table)
 	{
 		return new NavigatorLabel(parent, navigatorId, table);

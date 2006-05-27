@@ -32,6 +32,7 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
+import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -57,13 +58,13 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public ConfirmationStep(MarkupContainer parent)
+		public ConfirmationStep()
 		{
-			super(parent, true);
-			IModel userModel = new Model(user);
+			super(true);
+			IModel userModel = new Model<User>(user);
 			setTitleModel(new ResourceModel("confirmation.title"));
-			setSummaryModel(new StringResourceModel("confirmation.summary", this, userModel));
-			setContentModel(new StringResourceModel("confirmation.content", this, userModel));
+			setSummaryModel(new StringResourceModel("confirmation.summary", null, userModel));
+			setContentModel(new StringResourceModel("confirmation.content", null, userModel));
 		}
 	}
 
@@ -75,14 +76,23 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserDetailsStep(MarkupContainer parent)
+		public UserDetailsStep()
 		{
-			super(parent, new ResourceModel("userdetails.title"), null);
-			setSummaryModel(new StringResourceModel("userdetails.summary", this, new Model(user)));
-			new RequiredTextField(this, "user.firstName");
-			new RequiredTextField(this, "user.lastName");
-			new TextField(this, "user.department");
-			new CheckBox(this, "assignRoles");
+			super(new ResourceModel("userdetails.title"), null);
+			setSummaryModel(new StringResourceModel("userdetails.summary", null, new Model<User>(
+					user)));
+		}
+
+		/**
+		 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
+		 */
+		@Override
+		protected void populate(Panel contentPanel)
+		{
+			new RequiredTextField(contentPanel, "user.firstName");
+			new RequiredTextField(contentPanel, "user.lastName");
+			new TextField(contentPanel, "user.department");
+			new CheckBox(contentPanel, "assignRoles");
 		}
 	}
 
@@ -94,12 +104,19 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserNameStep(MarkupContainer parent)
+		public UserNameStep()
 		{
-			super(parent, new ResourceModel("username.title"),
-					new ResourceModel("username.summary"));
-			new RequiredTextField(this, "user.userName");
-			new RequiredTextField(this, "user.email").add(EmailAddressPatternValidator
+			super(new ResourceModel("username.title"), new ResourceModel("username.summary"));
+		}
+
+		/**
+		 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
+		 */
+		@Override
+		protected void populate(Panel contentPanel)
+		{
+			new RequiredTextField(contentPanel, "user.userName");
+			new RequiredTextField(contentPanel, "user.email").add(EmailAddressPatternValidator
 					.getInstance());
 		}
 	}
@@ -112,11 +129,11 @@ public class NewUserWizard extends Wizard
 		/**
 		 * Construct.
 		 */
-		public UserRolesStep(MarkupContainer parent)
+		public UserRolesStep()
 		{
-			super(parent, new ResourceModel("userroles.title"), null);
-			setSummaryModel(new StringResourceModel("userroles.summary", this, new Model(user)));
-			new ListMultipleChoice(this, "user.roles", allRoles);
+			super(new ResourceModel("userroles.title"), null);
+			setSummaryModel(new StringResourceModel("userroles.summary", null,
+					new Model<User>(user)));
 		}
 
 		/**
@@ -126,11 +143,20 @@ public class NewUserWizard extends Wizard
 		{
 			return assignRoles;
 		}
+
+		/**
+		 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
+		 */
+		@Override
+		protected void populate(Panel contentPanel)
+		{
+			new ListMultipleChoice<String>(contentPanel, "user.roles", allRoles);
+		}
 	}
 
 	/** cheap ass roles database. */
-	private static final List allRoles = Arrays.asList(new String[] { "admin", "user", "moderator",
-			"joker", "slacker" });
+	private static final List<String> allRoles = Arrays.asList(new String[] { "admin", "user",
+			"moderator", "joker", "slacker" });
 
 	/** Whether the assign roles step should be executed. */
 	private boolean assignRoles = false;
@@ -140,6 +166,8 @@ public class NewUserWizard extends Wizard
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            The component id
@@ -153,10 +181,10 @@ public class NewUserWizard extends Wizard
 
 		setModel(new CompoundPropertyModel(this));
 		WizardModel model = new WizardModel();
-		model.add(new UserNameStep(this));
-		model.add(new UserDetailsStep(this));
-		model.add(new UserRolesStep(this));
-		model.add(new ConfirmationStep(this));
+		model.add(new UserNameStep());
+		model.add(new UserDetailsStep());
+		model.add(new UserRolesStep());
+		model.add(new ConfirmationStep());
 
 		// initialize the wizard with the wizard model we just built
 		init(model);

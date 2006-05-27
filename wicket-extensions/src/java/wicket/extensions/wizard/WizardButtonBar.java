@@ -23,8 +23,8 @@ import wicket.markup.html.panel.Panel;
 
 /**
  * The default bar of button components for wizards. This should be good for 90%
- * of the cases. If not, override {@link Wizard#newButtonBar(String)} and
- * provide your own.
+ * of the cases. If not, override
+ * {@link Wizard#newButtonBar(MarkupContainer, String)} and provide your own.
  * <p>
  * The button bar holds the {@link PreviousButton previous}, [@link NextButton
  * next}, {@link LastButton last}, [@link CancelButton cancel} and
@@ -41,6 +41,8 @@ public class WizardButtonBar extends Panel
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            The component id

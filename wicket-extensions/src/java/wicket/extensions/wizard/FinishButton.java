@@ -34,6 +34,8 @@ public final class FinishButton extends WizardButton
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param wizard

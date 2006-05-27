@@ -424,7 +424,7 @@ public abstract class Objects
 						if ((v1 instanceof Comparable)
 								&& v1.getClass().isAssignableFrom(v2.getClass()))
 						{
-							result = ((Comparable<Object>)v1).compareTo(v2);
+							result = ((Comparable)v1).compareTo(v2);
 							break;
 						}
 						else

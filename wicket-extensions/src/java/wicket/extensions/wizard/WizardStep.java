@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import java.net.URL;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -26,6 +28,9 @@ import wicket.model.AbstractReadOnlyModel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.UrlResourceStream;
+import wicket.util.string.Strings;
 
 /**
  * default implementation of {@link IWizardStep}. It is also a panel, which is
@@ -51,18 +56,18 @@ import wicket.model.Model;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *                &lt;wicket:panel&gt;
- *                 &lt;table&gt;
- *                  &lt;tr&gt;
- *                   &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                   &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *                  &lt;/tr&gt;
- *                  &lt;tr&gt;
- *                   &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                   &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *                  &lt;/tr&gt;
- *                 &lt;/table&gt;
- *                &lt;/wicket:panel&gt;
+ *                      &lt;wicket:panel&gt;
+ *                       &lt;table&gt;
+ *                        &lt;tr&gt;
+ *                         &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *                         &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *                        &lt;/tr&gt;
+ *                        &lt;tr&gt;
+ *                         &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *                         &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *                        &lt;/tr&gt;
+ *                       &lt;/table&gt;
+ *                      &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
@@ -70,17 +75,49 @@ import wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public class WizardStep extends Panel implements IWizardStep
+public class WizardStep implements IWizardStep
 {
 	/**
-	 * Default header for wizards.
+	 * Content panel.
 	 */
-	private final class Header extends Panel
+	private final class Content extends Panel
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
+		 * 
+		 * @param parent
+		 * @param id
+		 * @param wizard
+		 */
+		public Content(MarkupContainer parent, String id, IWizard wizard)
+		{
+			super(parent, id);
+			WizardStep.this.populate(this);
+		}
+
+		/**
+		 * @see wicket.MarkupContainer#newMarkupResourceStream(java.lang.Class)
+		 */
+		@Override
+		public IResourceStream newMarkupResourceStream(final Class containerClass)
+		{
+			return WizardStep.this.newMarkupResourceStream(containerClass);
+		}
+	}
+
+	/**
+	 * Default header for wizards.
+	 */
+	private final class Header extends Panel<IWizard>
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
 		 * 
 		 * @param id
 		 *            The component id
@@ -90,7 +127,7 @@ public class WizardStep extends Panel implements IWizardStep
 		public Header(MarkupContainer parent, final String id, final IWizard wizard)
 		{
 			super(parent, id);
-			setModel(new CompoundPropertyModel(wizard));
+			setModel(new CompoundPropertyModel<IWizard>(wizard));
 			new Label(this, "title", new AbstractReadOnlyModel()
 			{
 				private static final long serialVersionUID = 1L;
@@ -123,6 +160,11 @@ public class WizardStep extends Panel implements IWizardStep
 	private boolean complete;
 
 	/**
+	 * Any model of the step.
+	 */
+	private IModel model;
+
+	/**
 	 * A summary of this step, or some usage advice.
 	 */
 	private IModel summary;
@@ -134,11 +176,12 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a
-	 * custom header by overiding {@link #getHeader(String, Component, Wizard)}.
+	 * custom header by overiding
+	 * {@link #getHeader(MarkupContainer, String, IWizard)}.
 	 */
-	public WizardStep(MarkupContainer parent)
+	public WizardStep()
 	{
-		super(parent, Wizard.VIEW_ID);
+		this((IModel)null, (IModel)null);
 	}
 
 	/**
@@ -151,9 +194,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(MarkupContainer parent, IModel title, IModel summary)
+	public WizardStep(IModel title, IModel summary)
 	{
-		this(parent, title, summary, null);
+		this(title, summary, null);
 	}
 
 	/**
@@ -168,12 +211,11 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(MarkupContainer parent, IModel title, IModel summary, IModel model)
+	public WizardStep(IModel title, IModel summary, IModel model)
 	{
-		super(parent, Wizard.VIEW_ID, model);
-
 		this.title = title;
 		this.summary = summary;
+		this.model = model;
 	}
 
 	/**
@@ -186,9 +228,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            a brief summary of this step or some usage guidelines.
 	 */
-	public WizardStep(MarkupContainer parent, String title, String summary)
+	public WizardStep(String title, String summary)
 	{
-		this(parent, title, summary, null);
+		this(title, summary, null);
 	}
 
 	/**
@@ -203,9 +245,9 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(MarkupContainer parent, String title, String summary, IModel model)
+	public WizardStep(String title, String summary, IModel model)
 	{
-		this(parent, new Model(title), new Model(summary), null);
+		this(new Model<String>(title), new Model<String>(summary), null);
 	}
 
 	/**
@@ -217,8 +259,8 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
-	 * @see wicket.extensions.wizard.IWizardStep#getHeader(java.lang.String,
-	 *      wicket.Component, wicket.extensions.wizard.Wizard)
+	 * @see wicket.extensions.wizard.IWizardStep#getHeader(wicket.MarkupContainer,
+	 *      java.lang.String, wicket.extensions.wizard.IWizard)
 	 */
 	public Component getHeader(MarkupContainer parent, final String id, IWizard wizard)
 	{
@@ -234,7 +276,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public String getSummary()
 	{
-		return (summary != null) ? (String)summary.getObject(this) : (String)null;
+		return (summary != null) ? (String)summary.getObject(null) : (String)null;
 	}
 
 	/**
@@ -244,16 +286,16 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public String getTitle()
 	{
-		return (title != null) ? (String)title.getObject(this) : (String)null;
+		return (title != null) ? (String)title.getObject(null) : (String)null;
 	}
 
 	/**
-	 * @see wicket.extensions.wizard.IWizardStep#getView(java.lang.String,
-	 *      wicket.Component, wicket.extensions.wizard.Wizard)
+	 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
+	 *      java.lang.String, wicket.extensions.wizard.IWizard)
 	 */
 	public Component getView(MarkupContainer parent, final String id, IWizard wizard)
 	{
-		return this;
+		return new Content(parent, id, wizard);
 	}
 
 	/**
@@ -316,5 +358,64 @@ public class WizardStep extends Panel implements IWizardStep
 	public final void setTitleModel(IModel title)
 	{
 		this.title = title;
+	}
+
+	/**
+	 * Locates the markup for the current step. It tries to match the step class
+	 * first, and moves higher up the inheritance hierarchy until something is
+	 * found, possibly arriving at this class. WARNING: don't override unless
+	 * you know what you are doing.
+	 * 
+	 * @param containerClass
+	 *            The container the markup should be associated with
+	 * @return The resource stream for this step
+	 */
+	protected IResourceStream newMarkupResourceStream(final Class containerClass)
+	{
+		return newMarkupResourceStream(getClass(), containerClass);
+	}
+
+	/**
+	 * Populate this step's content panel (e.g. add labels, textfields and
+	 * such).
+	 * 
+	 * @param contentPanel
+	 *            The wizard step's content panel
+	 */
+	protected void populate(Panel contentPanel)
+	{
+
+	}
+
+	/**
+	 * Tries to load the markup stream matching the provided step class.
+	 * 
+	 * @param stepClass
+	 *            The class to match
+	 * @param containerClass
+	 *            The container to associate with
+	 * @return The markup stream or null
+	 */
+	private final IResourceStream newMarkupResourceStream(final Class stepClass,
+			final Class containerClass)
+	{
+		// TODO OPTIMIZE (CACHE)
+		if (!stepClass.equals(WizardStep.class))
+		{
+			String name = Strings.afterLast(stepClass.getName(), '.') + ".html";
+			// try to load template with name of implementing step class;
+			final URL url = stepClass.getResource(name);
+			if (url != null)
+			{
+				return new UrlResourceStream(url);
+			}
+			else
+			{
+				return newMarkupResourceStream(stepClass.getSuperclass(), containerClass);
+			}
+		}
+
+		// not resource was not found
+		return null;
 	}
 }

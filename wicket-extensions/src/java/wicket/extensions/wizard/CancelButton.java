@@ -33,6 +33,8 @@ public final class CancelButton extends WizardButton
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            The component id
 	 * @param wizard
