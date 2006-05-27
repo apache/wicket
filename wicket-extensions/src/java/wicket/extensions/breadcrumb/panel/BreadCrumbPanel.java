@@ -114,7 +114,7 @@ public abstract class BreadCrumbPanel<T> extends Panel<T> implements IBreadCrumb
 	 */
 	public void activate(IBreadCrumbPanelFactory breadCrumbPanelFactory)
 	{
-		activate(breadCrumbPanelFactory.create(this, getId(), breadCrumbModel));
+		activate(breadCrumbPanelFactory.create(this.getParent(), getId(), breadCrumbModel));
 	}
 
 	/**

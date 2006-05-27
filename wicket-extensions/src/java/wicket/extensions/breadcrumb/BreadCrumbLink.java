@@ -18,6 +18,7 @@
  */
 package wicket.extensions.breadcrumb;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.extensions.breadcrumb.panel.BreadCrumbPanel;
 import wicket.markup.html.link.Link;
@@ -74,8 +75,9 @@ public abstract class BreadCrumbLink extends Link
 					+ this + ", you have to have at least one bread crumb in the model");
 		}
 
+		Component component = active.getComponent();
 		// get the participant to set as active
-		final IBreadCrumbParticipant participant = getParticipant(active.getComponent().getId());
+		final IBreadCrumbParticipant participant = getParticipant(component.getParent(),component.getId());
 
 		// add back button support
 		addStateChange(new Change()
@@ -96,6 +98,7 @@ public abstract class BreadCrumbLink extends Link
 	/**
 	 * Gets the {@link IBreadCrumbParticipant bread crumb participant} to be set
 	 * active when the link is clicked.
+	 * @param parent 
 	 * 
 	 * @param componentId
 	 *            When the participant creates it's own view, it typically
@@ -103,5 +106,5 @@ public abstract class BreadCrumbLink extends Link
 	 *            returned by {@link IBreadCrumbParticipant#getComponent()}.
 	 * @return The bread crumb participant
 	 */
-	protected abstract IBreadCrumbParticipant getParticipant(String componentId);
+	protected abstract IBreadCrumbParticipant getParticipant(MarkupContainer parent, String componentId);
 }

@@ -236,7 +236,7 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected IBreadCrumbParticipant getParticipant(String componentId)
+				protected IBreadCrumbParticipant getParticipant(MarkupContainer parent, String componentId)
 				{
 					return breadCrumbParticipant;
 				}
