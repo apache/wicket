@@ -56,18 +56,18 @@ import wicket.util.string.Strings;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *                      &lt;wicket:panel&gt;
- *                       &lt;table&gt;
- *                        &lt;tr&gt;
- *                         &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                         &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *                        &lt;/tr&gt;
- *                        &lt;tr&gt;
- *                         &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                         &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *                        &lt;/tr&gt;
- *                       &lt;/table&gt;
- *                      &lt;/wicket:panel&gt;
+ *                       &lt;wicket:panel&gt;
+ *                        &lt;table&gt;
+ *                         &lt;tr&gt;
+ *                          &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *                          &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *                         &lt;/tr&gt;
+ *                         &lt;tr&gt;
+ *                          &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *                          &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *                         &lt;/tr&gt;
+ *                        &lt;/table&gt;
+ *                       &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
@@ -158,6 +158,9 @@ public class WizardStep implements IWizardStep
 	 * <tt>true</tt> can the wizard progress.
 	 */
 	private boolean complete;
+
+	/** The cached content panel. */
+	private Content content = null;
 
 	/**
 	 * Any model of the step.
@@ -295,7 +298,11 @@ public class WizardStep implements IWizardStep
 	 */
 	public Component getView(MarkupContainer parent, final String id, IWizard wizard)
 	{
-		return new Content(parent, id, wizard);
+		if (content == null)
+		{
+			content = new Content(parent, id, wizard);
+		}
+		return content;
 	}
 
 	/**
@@ -384,7 +391,6 @@ public class WizardStep implements IWizardStep
 	 */
 	protected void populate(Panel contentPanel)
 	{
-
 	}
 
 	/**
@@ -399,7 +405,6 @@ public class WizardStep implements IWizardStep
 	private final IResourceStream newMarkupResourceStream(final Class stepClass,
 			final Class containerClass)
 	{
-		// TODO OPTIMIZE (CACHE)
 		if (!stepClass.equals(WizardStep.class))
 		{
 			String name = Strings.afterLast(stepClass.getName(), '.') + ".html";
