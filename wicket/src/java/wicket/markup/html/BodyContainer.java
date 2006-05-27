@@ -55,7 +55,8 @@ public final class BodyContainer implements Serializable
 		 * @param attribute
 		 * @param replaceModel
 		 */
-		public AppendingAttributeModifier(final String attribute, IModel replaceModel)
+		public AppendingAttributeModifier(final String attribute,
+				IModel<? extends CharSequence> replaceModel)
 		{
 			super(attribute, true, replaceModel);
 		}
@@ -111,7 +112,8 @@ public final class BodyContainer implements Serializable
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
-	public final BodyContainer addOnLoadModifier(final IModel model, final Component behaviorOwner)
+	public final BodyContainer addOnLoadModifier(final IModel<? extends CharSequence> model,
+			final Component behaviorOwner)
 	{
 		final Component bodyContainer = page.get(id);
 		if (behaviorOwner == null)
@@ -146,7 +148,7 @@ public final class BodyContainer implements Serializable
 	 */
 	public final BodyContainer addOnLoadModifier(final String value, final Component behaviorOwner)
 	{
-		final IModel model = new Model<String>(value);
+		final IModel<String> model = new Model<String>(value);
 		return addOnLoadModifier(model, behaviorOwner);
 	}
 
@@ -168,7 +170,8 @@ public final class BodyContainer implements Serializable
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
-	public final BodyContainer addOnUnLoadModifier(final IModel model, final Component behaviorOwner)
+	public final BodyContainer addOnUnLoadModifier(final IModel<? extends CharSequence> model,
+			final Component behaviorOwner)
 	{
 		final Component bodyContainer = page.get(id);
 		if (behaviorOwner == null)
@@ -202,7 +205,7 @@ public final class BodyContainer implements Serializable
 	 */
 	public final BodyContainer addOnUnLoadModifier(final String value, final Component behaviorOwner)
 	{
-		final IModel model = new Model<String>(value);
+		final IModel<String> model = new Model<String>(value);
 		return addOnUnLoadModifier(model, behaviorOwner);
 	}
 
