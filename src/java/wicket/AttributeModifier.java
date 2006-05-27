@@ -92,7 +92,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	private final String pattern;
 
 	/** The model that is to be used for the replacement. */
-	private final IModel replaceModel;
+	private final IModel<? extends CharSequence> replaceModel;
 
 	/**
 	 * Create a new attribute modifier with the given attribute name and model
@@ -107,7 +107,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final boolean addAttributeIfNotPresent,
-			final IModel replaceModel)
+			final IModel<? extends CharSequence> replaceModel)
 	{
 		this(attribute, null, addAttributeIfNotPresent, replaceModel);
 	}
@@ -121,7 +121,8 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 * @param replaceModel
 	 *            The model to replace the value with
 	 */
-	public AttributeModifier(final String attribute, final IModel replaceModel)
+	public AttributeModifier(final String attribute,
+			final IModel<? extends CharSequence> replaceModel)
 	{
 		this(attribute, null, false, replaceModel);
 	}
@@ -143,7 +144,8 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final String pattern,
-			final boolean addAttributeIfNotPresent, final IModel replaceModel)
+			final boolean addAttributeIfNotPresent,
+			final IModel<? extends CharSequence> replaceModel)
 	{
 		if (attribute == null)
 		{
@@ -171,7 +173,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 *            The model to replace the value with
 	 */
 	public AttributeModifier(final String attribute, final String pattern,
-			final IModel replaceModel)
+			final IModel<? extends CharSequence> replaceModel)
 	{
 		this(attribute, pattern, false, replaceModel);
 	}
@@ -293,7 +295,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 * 
 	 * @return the replace model of this attribute modifier
 	 */
-	protected final IModel getReplaceModel()
+	protected final IModel<? extends CharSequence> getReplaceModel()
 	{
 		return replaceModel;
 	}
@@ -316,7 +318,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	}
 
 	/* gets replacement with null check. */
-	private Object getReplacementOrNull(final Component component)
+	private CharSequence getReplacementOrNull(final Component component)
 	{
 		return (replaceModel != null) ? replaceModel.getObject(component) : null;
 	}
