@@ -212,7 +212,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Model for the paths of the tree.
 	 */
-	private final class TreePathsModel extends AbstractReadOnlyDetachableModel
+	private final class TreePathsModel extends AbstractReadOnlyDetachableModel<List<DefaultMutableTreeNode>>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -266,7 +266,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 		 */
 		@Override
-		protected Object onGetObject(Component component)
+		protected List<DefaultMutableTreeNode> onGetObject(Component component)
 		{
 			return paths;
 		}
@@ -353,6 +353,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 	/**
 	 * Constructor.
+	 * @param parent The parent component
 	 * 
 	 * @param id
 	 *            The id of this container
@@ -372,6 +373,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Construct using the given tree state that holds the model to be used as
 	 * the tree model.
+	 * @param parent 
 	 * 
 	 * @param id
 	 *            The id of this container

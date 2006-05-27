@@ -360,7 +360,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * Form for posting JavaScript properties.
 	 */
-	private final class PostBackForm extends Form
+	private final class PostBackForm extends Form<ClientPropertiesBean>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -375,7 +375,8 @@ public class BrowserInfoPage extends WebPage
 		 */
 		public PostBackForm(MarkupContainer parent, String id)
 		{
-			super(parent, id, new CompoundPropertyModel(new ClientPropertiesBean()));
+			super(parent, id, new CompoundPropertyModel<ClientPropertiesBean>(
+					new ClientPropertiesBean()));
 
 			new TextField(this, "navigatorAppName");
 			new TextField(this, "navigatorAppVersion");
@@ -532,11 +533,9 @@ public class BrowserInfoPage extends WebPage
 		parameters.put("cto", continueTo);
 		CharSequence url = urlFor(new BookmarkablePageRequestTarget(BrowserInfoPage.class,
 				parameters));
-		meta
-				.add(new AttributeModifier<String>("content", true, new Model<String>("0; url="
-						+ url)));
+		meta.add(new AttributeModifier("content", true, new Model<String>("0; url=" + url)));
 		WebMarkupContainer link = new WebMarkupContainer<Object>(this, "link");
-		link.add(new AttributeModifier<CharSequence>("href", true, new Model<CharSequence>(url)));
+		link.add(new AttributeModifier("href", true, new Model<CharSequence>(url)));
 		new PostBackForm(this, "postback");
 	}
 
