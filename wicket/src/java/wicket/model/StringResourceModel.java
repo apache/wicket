@@ -223,7 +223,7 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
  * 
  * @author Chris Turner
  */
-public class StringResourceModel extends AbstractReadOnlyDetachableModel<CharSequence>
+public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -483,7 +483,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<CharSeq
 	 * @see AbstractDetachableModel#onGetObject(Component)
 	 */
 	@Override
-	protected final CharSequence onGetObject(final Component component)
+	protected final String onGetObject(final Component component)
 	{
 		return getString();
 	}

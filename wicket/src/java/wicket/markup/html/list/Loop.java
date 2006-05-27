@@ -36,14 +36,14 @@ import wicket.model.Model;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class Loop extends WebMarkupContainer
+public abstract class Loop extends WebMarkupContainer<Integer>
 {
 	/**
 	 * Item container for a Loop iteration.
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public static final class LoopItem extends WebMarkupContainer
+	public static final class LoopItem extends WebMarkupContainer<Integer>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -88,7 +88,7 @@ public abstract class Loop extends WebMarkupContainer
 	 */
 	public Loop(MarkupContainer parent, final String id, final int iterations)
 	{
-		super(parent, id, new Model(new Integer(iterations)));
+		super(parent, id, new Model<Integer>(iterations));
 	}
 
 	/**
@@ -100,7 +100,7 @@ public abstract class Loop extends WebMarkupContainer
 	 *            Must contain a Integer model object
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Loop(MarkupContainer parent, final String id, final IModel model)
+	public Loop(MarkupContainer parent, final String id, final IModel<Integer> model)
 	{
 		super(parent, id, model);
 	}
@@ -110,7 +110,7 @@ public abstract class Loop extends WebMarkupContainer
 	 */
 	public final int getIterations()
 	{
-		return ((Integer)getModelObject()).intValue();
+		return getModelObject();
 	}
 
 	/**

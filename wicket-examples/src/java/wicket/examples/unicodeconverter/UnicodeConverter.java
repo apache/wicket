@@ -63,12 +63,12 @@ public class UnicodeConverter extends WicketExamplePage
 	 * {@link Component#getModelObject()} on the component that holds it, and we
 	 * would have a recent value.
 	 */
-	private final class ConverterModel extends AbstractModel
+	private final class ConverterModel extends AbstractModel<String>
 	{
 		/**
 		 * @see wicket.model.IModel#getObject(wicket.Component)
 		 */
-		public Object getObject(Component component)
+		public String getObject(Component component)
 		{
 			String result;
 			if (TO_ESCAPED_UNICODE.equals(translationType))
@@ -86,7 +86,7 @@ public class UnicodeConverter extends WicketExamplePage
 		 * @see wicket.model.IModel#setObject(wicket.Component,
 		 *      java.lang.Object)
 		 */
-		public void setObject(Component component, Object object)
+		public void setObject(Component component, String object)
 		{
 			// Ignore. We are not interested in updating any value,
 			// and we don't want to throw an exception like

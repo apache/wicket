@@ -36,21 +36,8 @@ public final class StyleSheetReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * 
-	 * @param id
-	 *            component id
-	 * @param referer
-	 *            the class that is refering; is used as the relative root for
-	 *            gettting the resource
-	 * @param file
-	 *            reference as a string
-	 */
-	public StyleSheetReference(MarkupContainer parent, String id, Class referer, String file)
-	{
-		super(parent, id, referer, file, "href");
-	}
-
-	/**
-	 * Construct.
+	 * @param parent
+	 *            The parent
 	 * 
 	 * @param id
 	 *            component id
@@ -69,19 +56,27 @@ public final class StyleSheetReference extends PackagedResourceReference
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent
+	 * 
 	 * @param id
 	 *            component id
-	 * @param resourceReference
-	 *            resource reference
+	 * @param referer
+	 *            the class that is refering; is used as the relative root for
+	 *            gettting the resource
+	 * @param file
+	 *            reference as a string
 	 */
-	public StyleSheetReference(MarkupContainer parent, String id,
-			ResourceReference resourceReference)
+	public StyleSheetReference(MarkupContainer parent, String id, Class referer, String file)
 	{
-		super(parent, id, resourceReference, "href");
+		super(parent, id, referer, file, "href");
 	}
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent
 	 * 
 	 * @param id
 	 *            component id
@@ -91,6 +86,23 @@ public final class StyleSheetReference extends PackagedResourceReference
 	 */
 	public StyleSheetReference(MarkupContainer parent, String id,
 			IModel<ResourceReference> resourceReference)
+	{
+		super(parent, id, resourceReference, "href");
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent
+	 * 
+	 * @param id
+	 *            component id
+	 * @param resourceReference
+	 *            resource reference
+	 */
+	public StyleSheetReference(MarkupContainer parent, String id,
+			ResourceReference resourceReference)
 	{
 		super(parent, id, resourceReference, "href");
 	}

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 07:08:28 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -76,6 +76,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
+		 * 
 		 * @param panelId
 		 *            The component id
 		 * @param tree
@@ -104,6 +107,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
+		 * 
 		 * @param id
 		 *            component id
 		 * @param size
@@ -127,12 +133,15 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * List view for tree paths.
 	 */
-	private final class TreePathsListView extends ListView
+	private final class TreePathsListView extends ListView<DefaultMutableTreeNode>
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
+		 * 
+		 * @param parent
+		 *            The parent component
 		 * 
 		 * @param name
 		 *            name of the component
@@ -155,13 +164,13 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @see wicket.markup.html.list.ListView#newItem(int)
 		 */
 		@Override
-		protected ListItem newItem(final int index)
+		protected ListItem<DefaultMutableTreeNode> newItem(final int index)
 		{
-			IModel listItemModel = getListItemModel(getModel(), index);
+			IModel<DefaultMutableTreeNode> listItemModel = getListItemModel(getModel(), index);
 
 			// create a list item that is smart enough to determine whether
 			// it should be displayed or not
-			return new ListItem(this, index, listItemModel)
+			return new ListItem<DefaultMutableTreeNode>(this, index, listItemModel)
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -183,7 +192,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
 		@Override
-		protected void populateItem(ListItem listItem)
+		protected void populateItem(ListItem<DefaultMutableTreeNode> listItem)
 		{
 			// get the model object which is a tree node
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)listItem.getModelObject();
@@ -212,7 +221,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Model for the paths of the tree.
 	 */
-	private final class TreePathsModel extends AbstractReadOnlyDetachableModel<List<DefaultMutableTreeNode>>
+	private final class TreePathsModel
+			extends
+				AbstractReadOnlyDetachableModel<List<DefaultMutableTreeNode>>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -228,7 +239,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 		@Override
 		public IModel getNestedModel()
 		{
-			// TODO General: Check calls to this method; original: return paths;
 			return null;
 		}
 
@@ -353,7 +363,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 	/**
 	 * Constructor.
-	 * @param parent The parent component
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * 
 	 * @param id
 	 *            The id of this container
@@ -373,7 +385,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Construct using the given tree state that holds the model to be used as
 	 * the tree model.
-	 * @param parent 
+	 * 
+	 * @param parent
 	 * 
 	 * @param id
 	 *            The id of this container
@@ -524,6 +537,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	/**
 	 * Creates a junction link.
 	 * 
+	 * @param parent
+	 *            The parent
+	 * 
 	 * @param node
 	 *            the node
 	 * @return link for expanding/ collapsing the tree
@@ -546,6 +562,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 	/**
 	 * Creates a node link.
+	 * 
+	 * @param parent
+	 *            The parent
 	 * 
 	 * @param node
 	 *            the model of the node
@@ -570,6 +589,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 
 	/**
 	 * Creates the tree paths list view.
+	 * 
+	 * @param parent
+	 *            The parent
 	 * 
 	 * @return the tree paths list view
 	 */
@@ -612,6 +634,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * use the packaged panel (Tree.html), you must name the component using
 	 * JUNCTION_IMAGE_NAME.
 	 * 
+	 * @param parent
+	 *            The parent
+	 * 
 	 * @param node
 	 *            the tree node
 	 * @return the image for the junction
@@ -650,6 +675,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * Get image for a node; used by method createNodeLink. If you use the
 	 * packaged panel (Tree.html), you must name the component using
 	 * NODE_IMAGE_NAME.
+	 * 
+	 * @param parent
+	 *            The parent
 	 * 
 	 * @param node
 	 *            the tree node
@@ -720,6 +748,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * default components on this panel, or extend from NodePanel directly, and
 	 * provide any component structure you like.
 	 * </p>
+	 * 
+	 * @param parent
+	 *            The parent
 	 * 
 	 * @param panelId
 	 *            the id that the panel MUST use

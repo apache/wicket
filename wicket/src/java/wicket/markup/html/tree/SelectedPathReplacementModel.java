@@ -29,7 +29,7 @@ import wicket.model.AbstractReadOnlyModel;
  * 
  * @author Eelco Hillenius
  */
-public final class SelectedPathReplacementModel extends AbstractReadOnlyModel
+public final class SelectedPathReplacementModel extends AbstractReadOnlyModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public final class SelectedPathReplacementModel extends AbstractReadOnlyModel
 	 * @see wicket.model.IModel#getObject(Component)
 	 */
 	@Override
-	public Object getObject(final Component component)
+	public String getObject(final Component component)
 	{
 		TreePath path = new TreePath(node.getPath());
 		TreePath selectedPath = tree.getTreeState().getSelectedPath();

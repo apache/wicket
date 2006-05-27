@@ -68,7 +68,7 @@ public class StringResourceModelTest extends TestCase
 				new BundleStringResourceLoader("wicket.model.StringResourceModelTest"));
 		page = new MockPage();
 		ws = new WeatherStation();
-		wsModel = new Model(ws);
+		wsModel = new Model<WeatherStation>(ws);
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class StringResourceModelTest extends TestCase
 	 */
 	public void testDetachAttachDetachableModel() throws Exception
 	{
-		IModel wsDetachModel = new AbstractReadOnlyDetachableModel()
+		IModel wsDetachModel = new AbstractReadOnlyDetachableModel<WeatherStation>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -228,7 +228,7 @@ public class StringResourceModelTest extends TestCase
 			}
 
 			@Override
-			protected Object onGetObject(final Component component)
+			protected WeatherStation onGetObject(final Component component)
 			{
 				return station;
 			}
