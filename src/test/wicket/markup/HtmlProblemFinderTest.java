@@ -18,7 +18,6 @@
  */
 package wicket.markup;
 
-
 import wicket.WicketTestCase;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.filter.HtmlProblemFinder;
@@ -28,8 +27,6 @@ import wicket.markup.parser.filter.HtmlProblemFinder;
  */
 public class HtmlProblemFinderTest extends WicketTestCase
 {
-
-
 	/**
 	 * Construct.
 	 * 
