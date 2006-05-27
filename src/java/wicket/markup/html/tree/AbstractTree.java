@@ -45,6 +45,9 @@ public abstract class AbstractTree extends Panel
 	 * Construct using the given model as the tree model to use. A new tree
 	 * state will be constructed by calling newTreeState.
 	 * 
+	 * @param parent
+	 *            The parent
+	 * 
 	 * @param id
 	 *            The id of this component
 	 * @param model
@@ -59,6 +62,9 @@ public abstract class AbstractTree extends Panel
 	/**
 	 * Construct using the given tree state that holds the model to be used as
 	 * the tree model.
+	 * 
+	 * @param parent
+	 *            The parent
 	 * 
 	 * @param id
 	 *            The id of this component

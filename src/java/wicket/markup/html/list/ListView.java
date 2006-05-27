@@ -517,6 +517,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 * @see wicket.MarkupContainer#internalOnAttach()
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	protected void internalOnAttach()
 	{
 		// Get number of items to be displayed
@@ -555,7 +556,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 				final int index = firstIndex + i;
 
 				// If this component does not already exist, populate it
-				ListItem<T> item = (ListItem)get(Integer.toString(index));
+				ListItem<T> item = (ListItem<T>)get(Integer.toString(index));
 				if (item == null)
 				{
 					// Create item for index
