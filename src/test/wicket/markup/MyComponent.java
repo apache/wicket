@@ -27,7 +27,7 @@ import wicket.model.Model;
  * 
  * @author Juergen Donnerstag
  */
-public class MyComponent extends WebMarkupContainer
+public class MyComponent extends WebMarkupContainer<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,11 +46,12 @@ public class MyComponent extends WebMarkupContainer
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public MyComponent(MarkupContainer parent, final String id)
 	{
-		super(parent, id, new Model(""));
+		super(parent, id, new Model<String>(""));
 	}
 
 	/**

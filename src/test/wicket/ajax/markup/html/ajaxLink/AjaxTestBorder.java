@@ -31,6 +31,7 @@ public class AjaxTestBorder extends Border
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public AjaxTestBorder(MarkupContainer parent, String id)

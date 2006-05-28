@@ -428,6 +428,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *      java.lang.String,
 		 *      wicket.markup.resolver.AutoLinkResolver.PathInfo)
 		 */
+		@SuppressWarnings("unchecked")
 		public Component newAutoComponent(final MarkupContainer container, final String autoId,
 				PathInfo pathInfo)
 		{
@@ -458,8 +459,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 				try
 				{
-					final Class<? extends Page> clazz = defaultClassResolver
-							.resolveClass(className);
+					final Class clazz = defaultClassResolver.resolveClass(className);
 					return new AutolinkBookmarkablePageLink(container, autoId, clazz,
 							pathInfo.pageParameters, pathInfo.anchor);
 				}
@@ -474,13 +474,11 @@ public final class AutoLinkResolver implements IComponentResolver
 				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
 						&& page.getMarkupStream().isMergedMarkup())
 				{
-					Class<? extends Page> clazz = container.getMarkupStream().getTag()
-							.getMarkupClass();
+					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
 					if (clazz != null)
 					{
 						// Href is relative. Resolve the url given relative to
-						// the
-						// current page
+						// the current page
 						className = Packages.extractPackageName(clazz) + "." + infoPath;
 
 						try
@@ -491,8 +489,8 @@ public final class AutoLinkResolver implements IComponentResolver
 						}
 						catch (WicketRuntimeException ex)
 						{
-							log.warn("Did not find corresponding java class: " + className);
-							// fall through
+							log.warn("Did not find corresponding java class: " + className + "("
+									+ ex.getMessage() + ")");
 						}
 					}
 				}
@@ -545,13 +543,13 @@ public final class AutoLinkResolver implements IComponentResolver
 		/**
 		 * Construct
 		 * 
-		 * @see BookmarkablePageLink#BookmarkablePageLink(String, Class,
-		 *      PageParameters)
-		 * 
+		 * @param parent
 		 * @param id
 		 * @param pageClass
 		 * @param parameters
 		 * @param anchor
+		 * @see BookmarkablePageLink#BookmarkablePageLink(String, Class,
+		 *      PageParameters)
 		 */
 		public AutolinkBookmarkablePageLink(MarkupContainer parent, final String id,
 				final Class<? extends Page> pageClass, final PageParameters parameters,
@@ -602,6 +600,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		/**
 		 * Construct
 		 * 
+		 * @param parent
 		 * @param id
 		 * @param href
 		 */
@@ -625,6 +624,9 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * Autolink component delegate component resolution to their parent
 	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
 	 * know where to add the component to.
+	 * 
+	 * @param <T>
+	 *            The type
 	 */
 	private final static class PackageResourceReferenceAutolink<T> extends WebMarkupContainer<T>
 	{
@@ -634,6 +636,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		private final ResourceReference resourceReference;
 
 		/**
+		 * @param parent
 		 * @param id
 		 * @param clazz
 		 * @param href

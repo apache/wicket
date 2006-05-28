@@ -31,6 +31,7 @@ public class MarkupInheritanceExtensionPanel_9 extends MarkupInheritanceBasePane
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public MarkupInheritanceExtensionPanel_9(MarkupContainer parent, final String id)
