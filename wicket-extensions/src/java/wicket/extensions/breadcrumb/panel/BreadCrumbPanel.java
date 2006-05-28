@@ -180,7 +180,7 @@ public abstract class BreadCrumbPanel<T> extends Panel<T> implements IBreadCrumb
 	 */
 	public void onActivate(IBreadCrumbParticipant previous)
 	{
-		this.reattach();
+		this.reAttach();
 	}
 
 	/**

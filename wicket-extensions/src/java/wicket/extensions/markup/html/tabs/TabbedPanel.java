@@ -240,7 +240,7 @@ public class TabbedPanel extends Panel
 							+ getPath() + "] ITab index [" + index + "]");
 		}
 
-		panel.reattach();
+		panel.reAttach();
 	}
 
 	/**
