@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,7 +18,6 @@
 package wicket.util.time;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**

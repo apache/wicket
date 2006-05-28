@@ -106,8 +106,8 @@ public class WicketTesterHelper
 	 * @param expects
 	 * @param actuals
 	 */
-	public static void assertEquals(final Collection<? extends Object> expects,
-			final Collection<? extends Object> actuals)
+	public static void assertEquals(final Collection<?> expects,
+			final Collection<?> actuals)
 	{
 		if (!expects.containsAll(actuals) || !actuals.containsAll(expects))
 		{

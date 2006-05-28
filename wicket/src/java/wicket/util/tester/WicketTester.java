@@ -500,7 +500,7 @@ public class WicketTester extends MockWebApplication
 	 * @param expectedList
 	 *            expected list in the model of {@link ListView}
 	 */
-	public void assertListView(String path, List<String> expectedList)
+	public void assertListView(String path, List expectedList)
 	{
 		ListView listView = (ListView)getComponentFromLastRenderedPage(path);
 		WicketTesterHelper.assertEquals(expectedList, listView.getList());

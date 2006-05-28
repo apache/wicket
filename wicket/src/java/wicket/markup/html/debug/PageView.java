@@ -123,7 +123,7 @@ public final class PageView<T> extends Panel<T>
 	{
 		final List<ComponentData> data = new ArrayList<ComponentData>();
 
-		page.visitChildren(new IVisitor<Component>()
+		page.visitChildren(new IVisitor()
 		{
 			public Object component(final Component component)
 			{
