@@ -326,7 +326,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	public void detachModels()
 	{
 		// visit all this page's children to detach the models
-		visitChildren(new IVisitor<Component>()
+		visitChildren(new IVisitor()
 		{
 			public Object component(Component component)
 			{
@@ -381,7 +381,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// First, give priority to IFeedback instances, as they have to
 		// collect their messages before components like ListViews
 		// remove any child components
-		visitChildren(IFeedback.class, new IVisitor<Component>()
+		visitChildren(IFeedback.class, new IVisitor()
 		{
 			public Object component(Component component)
 			{
@@ -404,7 +404,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// or negative as a temporary boolean in the components, and when a
 		// authorization exception is thrown it will block the rendering of this
 		// page
-		visitChildren(new IVisitor<Component>()
+		visitChildren(new IVisitor()
 		{
 			public Object component(final Component component)
 			{
@@ -643,7 +643,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	{
 		final StringBuffer buffer = new StringBuffer();
 		buffer.append("Page " + getId() + " (version " + getCurrentVersionNumber() + ")");
-		visitChildren(new IVisitor<Component>()
+		visitChildren(new IVisitor()
 		{
 			public Object component(Component component)
 			{
@@ -705,16 +705,16 @@ public abstract class Page<T> extends MarkupContainer<T>
 		}
 
 		// Visit all children which are an instance of formClass
-		visitChildren(formClass, new IVisitor<Component<?>>()
+		visitChildren(formClass, new IVisitor()
 		{
-			public Object component(final Component<?> component)
+			public Object component(final Component component)
 			{
 				// They must be of type Form as well
 				if (component instanceof Form)
 				{
 					// Delete persistet FormComponent data and disable
 					// persistence
-					((Form<?>)component).removePersistentFormComponentValues(disablePersistence);
+					((Form)component).removePersistentFormComponentValues(disablePersistence);
 				}
 				return CONTINUE_TRAVERSAL;
 			}
@@ -841,7 +841,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	@Override
 	protected final void internalOnModelChanged()
 	{
-		visitChildren(new Component.IVisitor<Component>()
+		visitChildren(new Component.IVisitor()
 		{
 			public Object component(final Component component)
 			{
@@ -991,9 +991,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 	{
 		if (stateless == null)
 		{
-			Object returnValue = visitChildren(Component.class, new IVisitor<Component<?>>()
+			Object returnValue = visitChildren(Component.class, new IVisitor()
 			{
-				public Object component(Component<?> component)
+				public Object component(Component component)
 				{
 					if (!component.isStateless())
 					{
@@ -1026,12 +1026,12 @@ public abstract class Page<T> extends MarkupContainer<T>
 	final void setFormComponentValuesFromCookies()
 	{
 		// Visit all Forms contained in the page
-		visitChildren(Form.class, new Component.IVisitor<Form>()
+		visitChildren(Form.class, new Component.IVisitor()
 		{
 			// For each FormComponent found on the Page (not Form)
-			public Object component(final Form component)
+			public Object component(final Component component)
 			{
-				(component).loadPersistentFormComponentValues();
+				((Form)component).loadPersistentFormComponentValues();
 				return CONTINUE_TRAVERSAL;
 			}
 		});
@@ -1103,7 +1103,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			final Count unrenderedComponents = new Count();
 			final List<Component> unrenderedAutoComponents = new ArrayList<Component>();
 			final StringBuffer buffer = new StringBuffer();
-			renderedContainer.visitChildren(new IVisitor<Component>()
+			renderedContainer.visitChildren(new IVisitor()
 			{
 				public Object component(final Component component)
 				{

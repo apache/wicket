@@ -275,7 +275,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @param <T>
 	 *            The type of the component where a visitor walks over.
 	 */
-	public static interface IVisitor<T extends Component>
+	public static interface IVisitor
 	{
 		/**
 		 * Value to return to continue a traversal.
@@ -303,7 +303,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		 *         should stop. If no return value is useful, the generic
 		 *         non-null value STOP_TRAVERSAL can be used.
 		 */
-		public Object component(T component);
+		public Object component(Component component);
 	}
 
 	/**
@@ -1717,9 +1717,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 					// to
 					// collect their messages before components like ListViews
 					// remove any child components
-					container.visitChildren(IFeedback.class, new IVisitor<Component<?>>()
+					container.visitChildren(IFeedback.class, new IVisitor()
 					{
-						public Object component(Component<?> component)
+						public Object component(Component component)
 						{
 							((IFeedback)component).updateFeedback();
 							component.internalAttach();

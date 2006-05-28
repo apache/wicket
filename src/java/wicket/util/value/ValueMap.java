@@ -50,11 +50,6 @@ import wicket.util.time.Time;
  * The toString() method converts a ValueMap object to a readable key/value
  * string for diagnostics.
  * 
- * @param <K>
- *            The key type the map holds.
- * @param <T>
- *            The value type the map holds.
- * 
  * @author Jonathan Locke
  */
 public class ValueMap extends HashMap<String, Object>

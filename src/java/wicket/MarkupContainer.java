@@ -644,15 +644,14 @@ public abstract class MarkupContainer<T> extends Component<T>
 		super.setModel(model);
 		if (previous instanceof ICompoundModel)
 		{
-			visitChildren(new IVisitor<Component>()
+			visitChildren(new IVisitor()
 			{
-
 				public Object component(Component component)
 				{
 					IModel compModel = component.getModel();
 					if (compModel == previous)
 					{
-						component.setModel(null);
+						component.setModel((IModel)null);
 					}
 					else if (compModel == model)
 					{
@@ -792,7 +791,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
-	public final Object visitChildren(final IVisitor<Component> visitor)
+	public final Object visitChildren(final IVisitor visitor)
 	{
 		return visitChildren(null, visitor);
 	}
@@ -1296,7 +1295,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		// detach children models
 		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer<?>)component).visitChildren(new IVisitor<Component>()
+			((MarkupContainer<?>)component).visitChildren(new IVisitor()
 			{
 				public Object component(Component component)
 				{

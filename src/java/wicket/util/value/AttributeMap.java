@@ -23,7 +23,6 @@ import java.util.Map;
 /**
  * ValueMap for attributes.
  * 
- * 
  * @author Eelco Hillenius
  */
 public final class AttributeMap extends ValueMap
@@ -44,7 +43,7 @@ public final class AttributeMap extends ValueMap
 	 * @param map
 	 *            Map to be copied
 	 */
-	public AttributeMap(Map map)
+	public AttributeMap(Map<String, Object> map)
 	{
 		super(map);
 	}

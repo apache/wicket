@@ -23,17 +23,45 @@ import wicket.markup.html.WebPage;
 import wicket.markup.html.link.Link;
 
 /**
- * A dummy homepage required by WicketTester only
+ * A dummy homepage required by WicketTester only.
  * 
  * @author Ingram Chen
  */
 public class DummyHomePage extends WebPage
 {
+	/**
+	 * Test link.
+	 */
+	public class TestLink extends Link
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
+		 * @param id
+		 */
+		public TestLink(MarkupContainer parent, String id)
+		{
+			super(parent, id);
+		}
+
+		/**
+		 * @see wicket.markup.html.link.Link#onClick()
+		 */
+		@Override
+		public void onClick()
+		{
+			setResponsePage(testPageSource.getTestPage());
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
-	private ITestPageSource testPageSource;
-
 	private Link testPageLink;
+
+	private ITestPageSource testPageSource;
 
 	/**
 	 * Construct
@@ -44,15 +72,7 @@ public class DummyHomePage extends WebPage
 	}
 
 	/**
-	 * 
-	 * @param testPageSource
-	 */
-	public void setTestPageSource(ITestPageSource testPageSource)
-	{
-		this.testPageSource = testPageSource;
-	}
-
-	/**
+	 * Gets test link.
 	 * 
 	 * @return Link
 	 */
@@ -62,28 +82,12 @@ public class DummyHomePage extends WebPage
 	}
 
 	/**
+	 * Sets page source.
 	 * 
+	 * @param testPageSource
 	 */
-	public class TestLink extends Link
+	public void setTestPageSource(ITestPageSource testPageSource)
 	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * 
-		 * @param id
-		 */
-		public TestLink(MarkupContainer parent, String id)
-		{
-			super(parent, id);
-		}
-
-		/**
-		 * 
-		 */
-		@Override
-		public void onClick()
-		{
-			setResponsePage(testPageSource.getTestPage());
-		}
+		this.testPageSource = testPageSource;
 	}
 }
