@@ -683,7 +683,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * 
 	 * @return This
 	 */
-	public final Component reattach()
+	public final Component reAttach()
 	{
 		if (getFlag(FLAG_REMOVED_FROM_PARENT) == true)
 		{

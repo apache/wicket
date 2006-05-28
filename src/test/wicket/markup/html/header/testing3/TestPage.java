@@ -40,7 +40,7 @@ public class TestPage extends WebPage
 	 */
 	public TestPage()
 	{
-		this.current = (Panel)panel1.reattach();
+		this.current = (Panel)panel1.reAttach();
 
 		new PageLink(this, "link", new IPageLink()
 		{
@@ -65,6 +65,6 @@ public class TestPage extends WebPage
 	public void replacePanel()
 	{
 		this.current = (this.current == this.panel1 ? this.panel2 : this.panel1);
-		this.current.reattach();
+		this.current.reAttach();
 	}
 }
