@@ -19,6 +19,7 @@
 package wicket.markup.html.list;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
 import wicket.EmptyPage;
@@ -53,20 +54,21 @@ public class ListViewTest extends TestCase
 	 *            of elements to go into the list
 	 * @return list view
 	 */
-	private ListView createListView(final int modelListSize)
+	private ListView<Integer> createListView(final int modelListSize)
 	{
-		ArrayList modelList = new ArrayList();
+		ArrayList<Integer> modelList = new ArrayList<Integer>();
 		for (int i = 0; i < modelListSize; i++)
 		{
 			modelList.add(new Integer(i));
 		}
 
-		return new ListView(new EmptyPage(), "listView", new Model(modelList))
+		return new ListView<Integer>(new EmptyPage(), "listView", new Model<List<Integer>>(
+				modelList))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(final ListItem listItem)
+			protected void populateItem(final ListItem<Integer> listItem)
 			{
 				// do nothing
 			}
@@ -115,7 +117,7 @@ public class ListViewTest extends TestCase
 	public void testEmptyListView()
 	{
 		// Empty tables
-		ListView lv = createListView(0);
+		ListView<Integer> lv = createListView(0);
 		assertEquals(0, lv.getStartIndex());
 		assertEquals(0, lv.getViewSize());
 
@@ -123,12 +125,12 @@ public class ListViewTest extends TestCase
 		// bar, where there is no underlying model necessary, as
 		// listItem.getIndex() is equal to the required
 		// listItem.getModelObject()
-		lv = new ListView(new EmptyPage(), "listView", new Model(null))
+		lv = new ListView<Integer>(new EmptyPage(), "listView", new Model<List<Integer>>(null))
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void populateItem(final ListItem listItem)
+			protected void populateItem(final ListItem<Integer> listItem)
 			{
 				// do nothing
 			}

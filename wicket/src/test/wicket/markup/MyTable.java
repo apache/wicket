@@ -31,18 +31,19 @@ import wicket.model.Model;
  * 
  * @author Juergen Donnerstag
  */
-public class MyTable extends ListView
+public class MyTable extends ListView<String>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
+	 * @param parent 
 	 * 
 	 * @param id
 	 */
 	public MyTable(MarkupContainer parent, final String id)
 	{
-		super(parent, id, new Model(null));
+		super(parent, id, new Model<List<String>>(null));
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class MyTable extends ListView
 	 */
 	public void setRowsPerPage(final int rows)
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 
 		for (int i = 0; i < rows; i++)
 		{

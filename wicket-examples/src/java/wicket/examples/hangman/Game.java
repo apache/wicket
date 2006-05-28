@@ -39,7 +39,7 @@ public class Game implements Serializable
 	private int guessesRemaining;
 
 	/** The letters */
-	private final List letters = new ArrayList();
+	private final List<Letter> letters = new ArrayList<Letter>();
 
 	/** The word being guessed by the user */
 	private Word word;
@@ -60,7 +60,7 @@ public class Game implements Serializable
 	/**
 	 * @return The letters in the game
 	 */
-	public List getLetters()
+	public List<Letter> getLetters()
 	{
 		return letters;
 	}

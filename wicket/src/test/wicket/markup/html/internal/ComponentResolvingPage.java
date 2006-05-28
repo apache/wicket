@@ -58,7 +58,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void onEndRequest()
+				protected void onAfterRender()
 				{
 					onEndRequestWasCalledOnAutoAddedComponent = true;
 				}

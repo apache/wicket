@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,7 +19,6 @@ package wicket.examples.hangman;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,7 +29,7 @@ import java.util.List;
 public class Word implements Serializable
 {
 	/** The word */
-	final List letters = new ArrayList();
+	final List<Letter> letters = new ArrayList<Letter>();
 
 	/**
 	 * Constructor
@@ -62,9 +61,8 @@ public class Word implements Serializable
 	public String asString(final boolean hideUnguessed)
 	{
 		final StringBuffer buffer = new StringBuffer();
-		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
+		for (Letter letter : letters)
 		{
-			final Letter letter = (Letter)iterator.next();
 			if (hideUnguessed)
 			{
 				buffer.append(letter.isGuessed() ? letter.asString() : "_");
@@ -99,9 +97,8 @@ public class Word implements Serializable
 	public boolean guess(final Letter letter)
 	{
 		boolean correct = false;
-		for (Iterator iterator = letters.iterator(); iterator.hasNext();)
+		for (Letter current : letters)
 		{
-			final Letter current = (Letter)iterator.next();
 			if (current.equals(letter))
 			{
 				current.guess();
@@ -126,9 +123,8 @@ public class Word implements Serializable
 	 */
 	public boolean isGuessed()
 	{
-		for (final Iterator iterator = letters.iterator(); iterator.hasNext();)
+		for (Letter letter : letters)
 		{
-			final Letter letter = (Letter)iterator.next();
 			if (!letter.isGuessed())
 			{
 				return false;

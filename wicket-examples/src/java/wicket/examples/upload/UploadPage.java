@@ -49,75 +49,45 @@ import wicket.util.lang.Bytes;
  */
 public class UploadPage extends WicketExamplePage
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(UploadPage.class);
-
-	/** List of files, model for file table. */
-	private List files = new ArrayList();
-
-	/** Reference to listview for easy access. */
-	private FileListView fileListView;
-
-	/** Upload folder */
-	private Folder uploadFolder;
-
 	/**
-	 * Constructor.
-	 * 
-	 * @param parameters
-	 *            Page parameters
+	 * List view for files in upload folder.
 	 */
-	public UploadPage(final PageParameters parameters)
+	private class FileListView extends ListView<File>
 	{
-		// Set upload folder to tempdir + 'wicket-uploads'.
-		this.uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
-
-		// Ensure folder exists
-		uploadFolder.mkdirs();
-
-		// Create feedback panels
-		final FeedbackPanel uploadFeedback = new FeedbackPanel(this, "uploadFeedback");
-
-		// Add simple upload form, which is hooked up to its feedback panel by
-		// virtue of that panel being nested in the form.
-		final FileUploadForm simpleUploadForm = new FileUploadForm(this, "simpleUpload");
-
-		// Add folder view
-		new Label(this, "dir", uploadFolder.getAbsolutePath());
-		files.addAll(Arrays.asList(uploadFolder.listFiles()));
-		fileListView = new FileListView(this, "fileList", files);
-
-		// Add upload form with ajax progress bar
-		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm(this, "ajax-simpleUpload");
-		new UploadProgressBar(ajaxSimpleUploadForm, "progress", ajaxSimpleUploadForm);
-
-	}
-
-	/**
-	 * Refresh file list.
-	 */
-	private void refreshFiles()
-	{
-		fileListView.modelChanging();
-		files.clear();
-		files.addAll(Arrays.asList(uploadFolder.listFiles()));
-	}
-
-	/**
-	 * Check whether the file allready exists, and if so, try to delete it.
-	 * 
-	 * @param newFile
-	 *            the file to check
-	 */
-	private void checkFileExists(File newFile)
-	{
-		if (newFile.exists())
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
+		 *            The parent
+		 * 
+		 * @param name
+		 *            Component name
+		 * @param files
+		 *            The file list model
+		 */
+		public FileListView(MarkupContainer parent, String name, final List<File> files)
 		{
-			// Try to delete the file
-			if (!Files.remove(newFile))
+			super(parent, name, files);
+		}
+
+		/**
+		 * @see ListView#populateItem(ListItem)
+		 */
+		@Override
+		protected void populateItem(ListItem<File> listItem)
+		{
+			final File file = listItem.getModelObject();
+			new Label(listItem, "file", file.getName());
+			new Link(listItem, "delete")
 			{
-				throw new IllegalStateException("Unable to overwrite " + newFile.getAbsolutePath());
-			}
+				@Override
+				public void onClick()
+				{
+					Files.remove(file);
+					refreshFiles();
+					UploadPage.this.info("Deleted " + file);
+				}
+			};
 		}
 	}
 
@@ -130,6 +100,9 @@ public class UploadPage extends WicketExamplePage
 
 		/**
 		 * Construct.
+		 * 
+		 * @param parent
+		 *            The parent
 		 * 
 		 * @param name
 		 *            Component name
@@ -181,42 +154,75 @@ public class UploadPage extends WicketExamplePage
 		}
 	}
 
-	/**
-	 * List view for files in upload folder.
-	 */
-	private class FileListView extends ListView
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            Component name
-		 * @param files
-		 *            The file list model
-		 */
-		public FileListView(MarkupContainer parent, String name, final List files)
-		{
-			super(parent, name, files);
-		}
+	/** Log. */
+	private static Log log = LogFactory.getLog(UploadPage.class);
 
-		/**
-		 * @see ListView#populateItem(ListItem)
-		 */
-		@Override
-		protected void populateItem(ListItem listItem)
+	/** Reference to listview for easy access. */
+	private FileListView fileListView;
+
+	/** List of files, model for file table. */
+	private List<File> files = new ArrayList<File>();
+
+	/** Upload folder */
+	private Folder uploadFolder;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param parameters
+	 *            Page parameters
+	 */
+	public UploadPage(final PageParameters parameters)
+	{
+		// Set upload folder to tempdir + 'wicket-uploads'.
+		this.uploadFolder = new Folder(System.getProperty("java.io.tmpdir"), "wicket-uploads");
+
+		// Ensure folder exists
+		uploadFolder.mkdirs();
+
+		// Create feedback panels
+		final FeedbackPanel uploadFeedback = new FeedbackPanel(this, "uploadFeedback");
+
+		// Add simple upload form, which is hooked up to its feedback panel by
+		// virtue of that panel being nested in the form.
+		final FileUploadForm simpleUploadForm = new FileUploadForm(this, "simpleUpload");
+
+		// Add folder view
+		new Label(this, "dir", uploadFolder.getAbsolutePath());
+		files.addAll(Arrays.asList(uploadFolder.listFiles()));
+		fileListView = new FileListView(this, "fileList", files);
+
+		// Add upload form with ajax progress bar
+		final FileUploadForm ajaxSimpleUploadForm = new FileUploadForm(this, "ajax-simpleUpload");
+		new UploadProgressBar(ajaxSimpleUploadForm, "progress", ajaxSimpleUploadForm);
+
+	}
+
+	/**
+	 * Check whether the file allready exists, and if so, try to delete it.
+	 * 
+	 * @param newFile
+	 *            the file to check
+	 */
+	private void checkFileExists(File newFile)
+	{
+		if (newFile.exists())
 		{
-			final File file = (File)listItem.getModelObject();
-			new Label(listItem, "file", file.getName());
-			new Link(listItem, "delete")
+			// Try to delete the file
+			if (!Files.remove(newFile))
 			{
-				@Override
-				public void onClick()
-				{
-					Files.remove(file);
-					refreshFiles();
-					UploadPage.this.info("Deleted " + file);
-				}
-			};
+				throw new IllegalStateException("Unable to overwrite " + newFile.getAbsolutePath());
+			}
 		}
+	}
+
+	/**
+	 * Refresh file list.
+	 */
+	private void refreshFiles()
+	{
+		fileListView.modelChanging();
+		files.clear();
+		files.addAll(Arrays.asList(uploadFolder.listFiles()));
 	}
 }

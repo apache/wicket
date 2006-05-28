@@ -60,7 +60,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	/**
 	 * List for messages.
 	 */
-	private final class MessageListView extends ListView
+	private final class MessageListView extends ListView<FeedbackMessage>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -303,9 +303,9 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 * 
 	 * @return the currently collected messages for this panel, possibly empty
 	 */
-	protected final List getCurrentMessages()
+	protected final List<FeedbackMessage> getCurrentMessages()
 	{
-		final List messages = (List)messageListView.getModelObject();
+		final List<FeedbackMessage> messages = messageListView.getModelObject();
 		return Collections.unmodifiableList(messages);
 	}
 

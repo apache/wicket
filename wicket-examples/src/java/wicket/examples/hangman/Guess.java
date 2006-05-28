@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -53,22 +53,14 @@ public class Guess extends HangmanPage
 		});
 
 		// Show the game's letters
-		new ListView(this, "letters", getGame().getLetters())
+		new ListView<Letter>(this, "letters", getGame().getLetters())
 		{
 			@Override
-			protected void populateItem(final ListItem listItem)
+			protected void populateItem(final ListItem<Letter> listItem)
 			{
-				final Letter letter = (Letter)listItem.getModelObject();
+				final Letter letter = listItem.getModelObject();
 				final Link link = new Link(listItem, "letter")
 				{
-					@Override
-					protected void onBeginRequest()
-					{
-						// Set enable state of link
-						setAutoEnable(false);
-						setEnabled(!letter.isGuessed());
-					}
-
 					@Override
 					public void onClick()
 					{
@@ -91,10 +83,17 @@ public class Guess extends HangmanPage
 							// Return to guess page with new state to display
 						}
 					}
+
+					@Override
+					protected void onAttach()
+					{
+						// Set enable state of link
+						setAutoEnable(false);
+						setEnabled(!letter.isGuessed());
+					}
 				};
-				link
-						.add(new AttributeModifier("id", true, new Model("letter_"
-								+ letter.asString())));
+				link.add(new AttributeModifier("id", true, new Model<String>("letter_"
+						+ letter.asString())));
 				new Image(link, "image", letter.getSharedImageResource());
 			}
 		};

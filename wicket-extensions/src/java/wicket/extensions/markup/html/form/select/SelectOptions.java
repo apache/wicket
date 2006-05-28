@@ -1,6 +1,5 @@
 package wicket.extensions.markup.html.form.select;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -66,7 +65,7 @@ public class SelectOptions extends RepeatingView
 	}
 
 	@Override
-	protected void onBeginRequest()
+	protected void onAttach()
 	{
 		if (size() == 0 || recreateChoices)
 		{
