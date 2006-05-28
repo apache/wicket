@@ -124,6 +124,7 @@ public class WicketMessageResolver implements IComponentResolver
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param id
 		 * @param value
 		 */

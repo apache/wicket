@@ -39,6 +39,7 @@ public class SimpleTestPanel extends SimpleTestPanelBase
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param name
 	 */
 	public SimpleTestPanel(MarkupContainer parent, String name)

@@ -284,19 +284,19 @@ public class AuthorizationTest extends TestCase
 		}
 
 		/** test form. */
-		private class TestForm extends Form
+		private class TestForm extends Form<Input>
 		{
 			private static final long serialVersionUID = 1L;
 
 			/**
 			 * Construct.
-			 * 
+			 * @param parent
 			 * @param id
 			 */
 			public TestForm(MarkupContainer parent, String id)
 			{
 				super(parent, id);
-				setModel(new CompoundPropertyModel(input = new Input()));
+				setModel(new CompoundPropertyModel<Input>(input = new Input()));
 				new TextField(this, "stringInput");
 			}
 

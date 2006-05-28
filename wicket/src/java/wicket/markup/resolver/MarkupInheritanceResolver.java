@@ -94,6 +94,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		private static final long serialVersionUID = 1L;
 
 		/**
+		 * @param parent
 		 * @param id
 		 */
 		public TransparentWebMarkupContainer(MarkupContainer parent, final String id)

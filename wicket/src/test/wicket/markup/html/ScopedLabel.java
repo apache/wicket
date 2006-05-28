@@ -31,6 +31,7 @@ public class ScopedLabel extends Label implements IScopedComponent
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * @param parent
 	 * @param id
 	 * @param model
 	 */
@@ -40,6 +41,7 @@ public class ScopedLabel extends Label implements IScopedComponent
 	}
 
 	/**
+	 * @param parent
 	 * @param id
 	 * @param label
 	 */
@@ -49,6 +51,7 @@ public class ScopedLabel extends Label implements IScopedComponent
 	}
 
 	/**
+	 * @param parent
 	 * @param id
 	 */
 	public ScopedLabel(MarkupContainer parent, String id)

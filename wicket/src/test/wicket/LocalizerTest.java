@@ -132,7 +132,7 @@ public class LocalizerTest extends WicketTestCase
 	{
 		ValueMap vm = new ValueMap();
 		vm.put("user", "John Doe");
-		Model model = new Model(vm);
+		Model model = new Model<ValueMap>(vm);
 		Assert.assertEquals("Property substitution should occur", "Welcome, John Doe", localizer
 				.getString("test.substitute", null, model, null, null, null));
 	}
@@ -164,7 +164,7 @@ public class LocalizerTest extends WicketTestCase
 	}
 
 	/**
-	 * 
+	 * Test label.
 	 */
 	public static class MyLabel extends Label
 	{
@@ -173,6 +173,7 @@ public class LocalizerTest extends WicketTestCase
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param id
 		 */
 		public MyLabel(MarkupContainer parent, final String id)
