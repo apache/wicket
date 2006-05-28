@@ -33,6 +33,8 @@ import wicket.model.IModel;
  * Must be attached to an &lt;input type=&quot;checkbox&quot; ... &gt; markup.
  * 
  * @see wicket.markup.html.form.CheckGroup
+ * @param <T>
+ *            The type
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
@@ -143,9 +145,5 @@ public class Check<T> extends WebMarkupContainer<T>
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
-
-
 	}
-
-
 }

@@ -680,6 +680,45 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/**
 	 * Reattach this component to its parent.
+	 * <p>
+	 * Consider the case where you have multiple possibilities of a panel. You
+	 * code could look like (very simplified):
+	 * 
+	 * <pre>
+	 * MyFooPanel p1 = new MyFooPanel(this, &quot;panel&quot;);
+	 * MyBarPanel p2 = new MyBarPanel(this, &quot;panel&quot;);
+	 * </pre>
+	 * 
+	 * where this could be the page or panel or whatever parent the panel is
+	 * added to.
+	 * </p>
+	 * <p>
+	 * In the above example, <code>p2</code> is constructed last, but with the
+	 * same id as <code>p1</code>, so <code>p2</code> would be the 'active'
+	 * one/ the component that will be rendered. When <code>p2</code> is
+	 * added, the component it is added to will recognize that it already had a
+	 * component with the same id (<code>p1</code>), and will replace that
+	 * component with the newer one (<code>p2</code>).
+	 * </p>
+	 * <p>
+	 * Say if you wanted to just pre-create those panels, but set
+	 * <code>p1</code> as the active one, you could call {@link #reAttach()}
+	 * on <code>p1</code>:
+	 * 
+	 * <pre>
+	 * MyFooPanel p1 = new MyFooPanel(this, &quot;panel&quot;);
+	 * MyBarPanel p2 = new MyBarPanel(this, &quot;panel&quot;);
+	 * p1.reAttach();
+	 * </pre>
+	 * 
+	 * which triggers that <code>p1</code> is set as the current child with id <code>panel</code>.
+	 * </p>
+	 * <p>
+	 * As you probably got from the above example, you would typically use {@link #reAttach()}
+	 * when you have previously created components that were replaced (or you suspect that they <i>might</i>
+	 * be replaced... you can always call {@link #reAttach} even if it is the current child)
+	 * but you want to set them as the current one.
+	 * </p>
 	 * 
 	 * @return This
 	 */
@@ -2527,7 +2566,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	protected void internalAttach()
 	{
-		onBeginRequest();
 		onAttach();
 		internalOnAttach();
 	}
@@ -2542,7 +2580,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	{
 		internalOnDetach();
 		onDetach();
-		onEndRequest();
 	}
 
 	/**
@@ -2628,16 +2665,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * Called when a request begins.
-	 * 
-	 * @deprecated use onAttach() instead. This method will be removed in 1.3
-	 */
-	@Deprecated
-	protected void onBeginRequest()
-	{
-	}
-
-	/**
 	 * Processes the component tag.
 	 * 
 	 * @param tag
@@ -2691,22 +2718,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * Called when a request ends.
-	 * 
-	 * @deprecated This method will be removed in Wicket 1.3. It will PROBABLY
-	 *             be replaced by onEndRender or afterRender with different
-	 *             semantics. Instead of calling it after a request is done like
-	 *             is currently the case, that new method will be called after
-	 *             this component is rendered, which is a more precise scope.
-	 *             This semantical change shouldn't have a noticable impact on
-	 *             it's use I believe.
-	 */
-	@Deprecated
-	protected void onEndRequest()
-	{
-	}
-
-	/**
 	 * Called anytime a model is changed after the change has occurred
 	 */
 	protected void onModelChanged()
@@ -2718,18 +2729,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	protected void onModelChanging()
 	{
-	}
-
-	/**
-	 * Implementation that renders this component.
-	 * 
-	 * @deprecated since 1.2 Please implement onRender(MarkupStream) instead
-	 */
-	// TODO Post 1.2: Remove this method?
-	@Deprecated
-	protected final void onRender()
-	{
-		onRender(findMarkupStream());
 	}
 
 	/**
