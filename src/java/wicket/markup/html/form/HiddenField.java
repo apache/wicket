@@ -30,6 +30,9 @@ import wicket.model.IModel;
  * document.getElementById(id), or 2) lookup the field name=getPath() within the
  * form
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Cameron Braid
  */
 public class HiddenField<T> extends TextField<T>

@@ -36,12 +36,13 @@ public class HeaderSectionMyLabel2 extends Label
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 * @param label
 	 */
 	public HeaderSectionMyLabel2(MarkupContainer parent, final String id, final String label)
 	{
-		super(parent, id, new Model(label));
+		super(parent, id, new Model<String>(label));
 	}
 
 	/**

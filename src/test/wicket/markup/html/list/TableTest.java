@@ -18,6 +18,7 @@
 package wicket.markup.html.list;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import wicket.EmptyPage;
 import wicket.WicketTestCase;
@@ -51,13 +52,13 @@ public class TableTest extends WicketTestCase
 	 */
 	private PageableListView createTable(final int modelListSize, final int pageSize)
 	{
-		ArrayList modelList = new ArrayList();
+		List<Integer> modelList = new ArrayList<Integer>();
 		for (int i = 0; i < modelListSize; i++)
 		{
 			modelList.add(new Integer(i));
 		}
 
-		return new PageableListView(new EmptyPage(), "table", new Model(modelList), pageSize)
+		return new PageableListView(new EmptyPage(), "table", new Model<List<Integer>>(modelList), pageSize)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -116,7 +117,7 @@ public class TableTest extends WicketTestCase
 		// bar, where there is no underlying model necessary, as
 		// listItem.getIndex() is equal to the required
 		// listItem.getModelObject()
-		table = new PageableListView(new EmptyPage(), "table", new Model(null), 10)
+		table = new PageableListView(new EmptyPage(), "table", new Model<String>(null), 10)
 		{
 			private static final long serialVersionUID = 1L;
 

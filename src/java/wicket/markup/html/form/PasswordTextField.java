@@ -35,12 +35,12 @@ import wicket.model.IModel;
  * 
  * @author Jonathan Locke
  */
-public class PasswordTextField extends TextField
+public class PasswordTextField extends TextField<String>
 {
-	private static final long serialVersionUID = 1L;
-
 	/** Log. */
 	private static final Log log = LogFactory.getLog(PasswordTextField.class);
+
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Flag indicating whether the contents of the field should be reset each
@@ -71,6 +71,28 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
+	 * @see FormComponent#getModelValue()
+	 */
+	@Override
+	public final String getModelValue()
+	{
+		final String value = getModelObjectAsString();
+		if (value != null)
+		{
+			try
+			{
+				return getApplication().getSecuritySettings().getCryptFactory().newCrypt()
+						.encryptUrlSafe(value);
+			}
+			catch (Exception ex)
+			{
+				log.error("Failed to instantiate encryption object. Continue without encryption");
+			}
+		}
+		return value;
+	}
+
+	/**
 	 * Flag indicating whether the contents of the field should be reset each
 	 * time it is rendered. If <code>true</code>, the contents are emptied
 	 * when the field is rendered. This is useful for login forms. If
@@ -86,27 +108,27 @@ public class PasswordTextField extends TextField
 	}
 
 	/**
-	 * @see FormComponent#getModelValue()
+	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String[])
 	 */
 	@Override
-	public final String getModelValue()
+	public final void setModelValue(String[] valueArray)
 	{
-		final String value = getModelObjectAsString();
-		if (value != null)
+		String value = valueArray != null && valueArray.length > 0 ? valueArray[0] : null;
+		String decryptedValue;
+		try
 		{
-			try
-			{
-				// TODO kept for backwards compatibility. Replace with
-				// encryptUrlSafe after 1.2
-				return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(
-						value);
-			}
-			catch (Exception ex)
-			{
-				log.error("Failed to instantiate encryption object. Continue without encryption");
-			}
+			// TODO kept for backwards compatibility. Replace with
+			// decryptUrlSafe after 1.2
+			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
+					.decryptUrlSafe(value);
 		}
-		return value;
+		catch (Exception ex)
+		{
+			decryptedValue = value;
+			log.error("Failed to instantiate encryption object. Continue without encryption");
+		}
+
+		setModelObject(decryptedValue);
 	}
 
 	/**
@@ -127,28 +149,10 @@ public class PasswordTextField extends TextField
 		return this;
 	}
 
-	/**
-	 * @see wicket.markup.html.form.FormComponent#setModelValue(java.lang.String[])
-	 */
 	@Override
-	public final void setModelValue(String[] valueArray)
+	protected String getInputType()
 	{
-		String value = valueArray != null && valueArray.length > 0 ? valueArray[0] : null;
-		String decryptedValue;
-		try
-		{
-			// TODO kept for backwards compatibility. Replace with
-			// decryptUrlSafe after 1.2
-			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
-					.decrypt(value);
-		}
-		catch (Exception ex)
-		{
-			decryptedValue = value;
-			log.error("Failed to instantiate encryption object. Continue without encryption");
-		}
-
-		setModelObject(decryptedValue);
+		return "password";
 	}
 
 	/**
@@ -163,12 +167,6 @@ public class PasswordTextField extends TextField
 	{
 		super.onComponentTag(tag);
 		tag.put("value", getResetPassword() ? "" : getModelObjectAsString());
-	}
-
-	@Override
-	protected String getInputType()
-	{
-		return "password";
 	}
 
 }

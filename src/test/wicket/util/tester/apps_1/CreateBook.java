@@ -32,18 +32,6 @@ import wicket.model.PropertyModel;
  */
 public class CreateBook extends WebPage
 {
-	private static final long serialVersionUID = 1L;
-
-	private Book book = new Book(null, null);
-
-	/**
-	 * 
-	 */
-	public CreateBook()
-	{
-		new CreateForm(this, "createForm");
-	}
-
 	/**
 	 * 
 	 * @author Juergen Donnerstag
@@ -53,7 +41,9 @@ public class CreateBook extends WebPage
 		private static final long serialVersionUID = 1L;
 
 		/**
+		 * Construct.
 		 * 
+		 * @param parent
 		 * @param id
 		 */
 		public CreateForm(MarkupContainer parent, String id)
@@ -61,8 +51,8 @@ public class CreateBook extends WebPage
 			super(parent, id);
 
 			// label model here comes from java
-			new RequiredTextField(this, "id", new PropertyModel(book, "id")).setLabel(new Model(
-					"id"));
+			new RequiredTextField(this, "id", new PropertyModel(book, "id"))
+					.setLabel(new Model<String>("id"));
 			// label model here comes from CreateBook.properties
 			new RequiredTextField(this, "name", new PropertyModel(book, "name"));
 		}
@@ -76,7 +66,7 @@ public class CreateBook extends WebPage
 			try
 			{
 				Page page = new SuccessPage();
-				page.info(getString("book.save.success", new Model(book)));
+				page.info(getString("book.save.success", new Model<Book>(book)));
 				setResponsePage(page);
 			}
 			finally
@@ -84,5 +74,17 @@ public class CreateBook extends WebPage
 				getPage().getPageMap().remove(getPage());
 			}
 		}
+	}
+
+	private static final long serialVersionUID = 1L;
+
+	private Book book = new Book(null, null);
+
+	/**
+	 * Construct.
+	 */
+	public CreateBook()
+	{
+		new CreateForm(this, "createForm");
 	}
 }

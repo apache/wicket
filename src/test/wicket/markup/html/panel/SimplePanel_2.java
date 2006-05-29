@@ -33,6 +33,7 @@ public class SimplePanel_2 extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public SimplePanel_2(MarkupContainer parent, final String id)

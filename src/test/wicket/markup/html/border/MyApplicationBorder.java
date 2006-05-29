@@ -30,6 +30,9 @@ public class MyApplicationBorder extends Border
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Construct.
+	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public MyApplicationBorder(MarkupContainer parent, final String id)

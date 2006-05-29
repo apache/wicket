@@ -40,17 +40,6 @@ package wicket.util.crypt;
 public interface ICrypt
 {
 	/**
-	 * Decrypts a string.
-	 * 
-	 * @param text
-	 *            the text to decrypt
-	 * @return the decrypted string.
-	 * @deprecated
-	 */
-	@Deprecated
-	String decrypt(final String text);
-
-	/**
 	 * Decrypts a string using URL and filename safe Base64 decoding.
 	 * 
 	 * @param text
@@ -59,16 +48,6 @@ public interface ICrypt
 	 * @since 1.2
 	 */
 	String decryptUrlSafe(final String text);
-
-	/**
-	 * Encrypts a string.
-	 * 
-	 * @param plainText
-	 * @return encrypted string
-	 * @deprecated
-	 */
-	@Deprecated
-	String encrypt(final String plainText);
 
 	/**
 	 * Encrypts a string using URL and filename safe Base64 encoding.

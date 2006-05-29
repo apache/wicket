@@ -85,13 +85,13 @@ public class Page_1 extends WebPage
 
 		Border border2 = new SimpleBorder(xsltContainer, "myBorder2");
 		border2.setRenderBodyOnly(false);
-		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		border2.add(new AttributeModifier("testAttr", true, new Model<String>("myValue")));
 
 		MarkupContainer xsltContainer2 = new XsltOutputTransformerContainer(this, "test5", null,
 				"wicket/markup/outputTransformer/anyName.xsl");
 
 		Border border3 = new SimpleBorder(xsltContainer2, "myBorder3");
 		border3.setRenderBodyOnly(false);
-		border3.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		border3.add(new AttributeModifier("testAttr", true, new Model<String>("myValue")));
 	}
 }

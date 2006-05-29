@@ -23,6 +23,9 @@ import java.io.Serializable;
  * representation from 'display values' which are the values shown to the user
  * of components that use this renderer.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author jcompagner
  */
 public interface IChoiceRenderer<T> extends Serializable

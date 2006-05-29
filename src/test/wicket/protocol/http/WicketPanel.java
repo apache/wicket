@@ -34,6 +34,7 @@ public class WicketPanel extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public WicketPanel(MarkupContainer parent, final String id)

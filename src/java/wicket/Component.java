@@ -271,9 +271,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/**
 	 * Generic component visitor interface for component traversals.
-	 * 
-	 * @param <T>
-	 *            The type of the component where a visitor walks over.
 	 */
 	public static interface IVisitor
 	{
@@ -394,6 +391,11 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
+	 * This prefix should be used when making auto add components.
+	 */
+	public static final String AUTO_COMPONENT_PREFIX = "<auto>-";
+
+	/**
 	 * Action used with IAuthorizationStrategy to determine whether a component
 	 * is allowed to be enabled.
 	 * <p>
@@ -442,11 +444,12 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	public static final Action RENDER = new Action(Action.RENDER);
 
-	/**
-	 * This prefix should be used when making auto add components.
-	 */
-	public static final String AUTO_COMPONENT_PREFIX = "<auto>-";
 
+	/**
+	 * Whether or not the component should print out its markup id into the id
+	 * attribute
+	 */
+	protected static final int FLAG_REMOVED_FROM_PARENT = 0x8000;
 
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED1 = 0x0100;
@@ -523,12 +526,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
 
-	/**
-	 * Whether or not the component should print out its markup id into the id
-	 * attribute
-	 */
-	protected static final int FLAG_REMOVED_FROM_PARENT = 0x8000;
-
 	/** Render tag boolean */
 	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
 
@@ -548,6 +545,13 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	private static final String MARKUP_ID_ATTR_NAME = "id";
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * I really dislike it, but for now we need it. Reason: due to transparent
+	 * containers and IComponentResolver there is guaranteed 1:1 mapping between
+	 * component and markup
+	 */
+	int markupIndex = -1;
 
 	/** List of behaviors to be applied for this Component */
 	private List<IBehavior> behaviors = null;
@@ -569,33 +573,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/** Any parent container. */
 	private MarkupContainer parent;
-
-	/**
-	 * I really dislike it, but for now we need it. Reason: due to transparent
-	 * containers and IComponentResolver there is guaranteed 1:1 mapping between
-	 * component and markup
-	 */
-	int markupIndex = -1;
-
-	/**
-	 * package scope Constructor, only used by pages.
-	 * 
-	 * @param parent
-	 *            The parent of this component The parent of this component.
-	 * @param id
-	 *            The non-null id of this component.
-	 * @throws WicketRuntimeException
-	 *             Thrown if the component has been given a null id.
-	 */
-	Component()
-	{
-		if (!(this instanceof Page))
-		{
-			throw new WicketRuntimeException(
-					"component without a parent is not allowed, default constructor can only be called by a page");
-		}
-		getApplication().notifyComponentInstantiationListeners(this);
-	}
 
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
@@ -658,85 +635,26 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		}
 	}
 
-
 	/**
-	 * This method should be called when a component with is auto added to a
-	 * container (having the prefix Component.AUTO_COMPONENT_PREFIX) it will
-	 * render the component.
+	 * package scope Constructor, only used by pages.
+	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
+	 * @param id
+	 *            The non-null id of this component.
+	 * @throws WicketRuntimeException
+	 *             Thrown if the component has been given a null id.
 	 */
-	public final void autoAdded()
+	Component()
 	{
-		if (getId().startsWith(AUTO_COMPONENT_PREFIX))
-		{
-			internalAttach();
-			render();
-		}
-		else
+		if (!(this instanceof Page))
 		{
 			throw new WicketRuntimeException(
-					"Can't call auto added on a component that is not auto added.");
+					"component without a parent is not allowed, default constructor can only be called by a page");
 		}
+		getApplication().notifyComponentInstantiationListeners(this);
 	}
 
-	/**
-	 * Reattach this component to its parent.
-	 * <p>
-	 * Consider the case where you have multiple possibilities of a panel. You
-	 * code could look like (very simplified):
-	 * 
-	 * <pre>
-	 * MyFooPanel p1 = new MyFooPanel(this, &quot;panel&quot;);
-	 * MyBarPanel p2 = new MyBarPanel(this, &quot;panel&quot;);
-	 * </pre>
-	 * 
-	 * where this could be the page or panel or whatever parent the panel is
-	 * added to.
-	 * </p>
-	 * <p>
-	 * In the above example, <code>p2</code> is constructed last, but with the
-	 * same id as <code>p1</code>, so <code>p2</code> would be the 'active'
-	 * one/ the component that will be rendered. When <code>p2</code> is
-	 * added, the component it is added to will recognize that it already had a
-	 * component with the same id (<code>p1</code>), and will replace that
-	 * component with the newer one (<code>p2</code>).
-	 * </p>
-	 * <p>
-	 * Say if you wanted to just pre-create those panels, but set
-	 * <code>p1</code> as the active one, you could call {@link #reAttach()}
-	 * on <code>p1</code>:
-	 * 
-	 * <pre>
-	 * MyFooPanel p1 = new MyFooPanel(this, &quot;panel&quot;);
-	 * MyBarPanel p2 = new MyBarPanel(this, &quot;panel&quot;);
-	 * p1.reAttach();
-	 * </pre>
-	 * 
-	 * which triggers that <code>p1</code> is set as the current child with id <code>panel</code>.
-	 * </p>
-	 * <p>
-	 * As you probably got from the above example, you would typically use {@link #reAttach()}
-	 * when you have previously created components that were replaced (or you suspect that they <i>might</i>
-	 * be replaced... you can always call {@link #reAttach} even if it is the current child)
-	 * but you want to set them as the current one.
-	 * </p>
-	 * 
-	 * @return This
-	 */
-	public final Component reAttach()
-	{
-		if (getFlag(FLAG_REMOVED_FROM_PARENT) == true)
-		{
-			if (id.startsWith(AUTO_COMPONENT_PREFIX))
-			{
-				parent.autoAdd(this);
-			}
-			else
-			{
-				parent.add(this);
-			}
-		}
-		return this;
-	}
 
 	/**
 	 * Adds an behavior modifier to the component.
@@ -763,6 +681,25 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		// Give handler the opportunity to bind this component
 		behavior.bind(this);
 		return this;
+	}
+
+	/**
+	 * This method should be called when a component with is auto added to a
+	 * container (having the prefix Component.AUTO_COMPONENT_PREFIX) it will
+	 * render the component.
+	 */
+	public final void autoAdded()
+	{
+		if (getId().startsWith(AUTO_COMPONENT_PREFIX))
+		{
+			internalAttach();
+			render();
+		}
+		else
+		{
+			throw new WicketRuntimeException(
+					"Can't call auto added on a component that is not auto added.");
+		}
 	}
 
 	/**
@@ -1554,6 +1491,68 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
+	 * Reattach this component to its parent.
+	 * <p>
+	 * Consider the case where you have multiple possibilities of a panel. You
+	 * code could look like (very simplified):
+	 * 
+	 * <pre>
+	 * MyFooPanel p1 = new MyFooPanel(this, &quot;panel&quot;);
+	 * MyBarPanel p2 = new MyBarPanel(this, &quot;panel&quot;);
+	 * </pre>
+	 * 
+	 * where this could be the page or panel or whatever parent the panel is
+	 * added to.
+	 * </p>
+	 * <p>
+	 * In the above example, <code>p2</code> is constructed last, but with the
+	 * same id as <code>p1</code>, so <code>p2</code> would be the 'active'
+	 * one/ the component that will be rendered. When <code>p2</code> is
+	 * added, the component it is added to will recognize that it already had a
+	 * component with the same id (<code>p1</code>), and will replace that
+	 * component with the newer one (<code>p2</code>).
+	 * </p>
+	 * <p>
+	 * Say if you wanted to just pre-create those panels, but set
+	 * <code>p1</code> as the active one, you could call {@link #reAttach()}
+	 * on <code>p1</code>:
+	 * 
+	 * <pre>
+	 * MyFooPanel p1 = new MyFooPanel(this, &quot;panel&quot;);
+	 * MyBarPanel p2 = new MyBarPanel(this, &quot;panel&quot;);
+	 * p1.reAttach();
+	 * </pre>
+	 * 
+	 * which triggers that <code>p1</code> is set as the current child with id
+	 * <code>panel</code>.
+	 * </p>
+	 * <p>
+	 * As you probably got from the above example, you would typically use
+	 * {@link #reAttach()} when you have previously created components that were
+	 * replaced (or you suspect that they <i>might</i> be replaced... you can
+	 * always call {@link #reAttach} even if it is the current child) but you
+	 * want to set them as the current one.
+	 * </p>
+	 * 
+	 * @return This
+	 */
+	public final Component reAttach()
+	{
+		if (getFlag(FLAG_REMOVED_FROM_PARENT) == true)
+		{
+			if (id.startsWith(AUTO_COMPONENT_PREFIX))
+			{
+				parent.autoAdd(this);
+			}
+			else
+			{
+				parent.add(this);
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Redirects browser to an intermediate page such as a sign-in page. The
 	 * current request's url is saved for future use by method
 	 * continueToOriginalDestination(); Only use this method when you plan to
@@ -1689,6 +1688,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * the component must have been added (directly or indirectly) to a
 	 * container with an associated markup file (Page, Panel or Border).
 	 */
+	@SuppressWarnings("unchecked")
 	public final void renderComponent()
 	{
 		// If this Component is a Page
@@ -1900,6 +1900,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @return True if the given component's model is the same as this
 	 *         component's model.
 	 */
+	@SuppressWarnings("unchecked")
 	public final boolean sameRootModel(final IModel model)
 	{
 		// Get the two models
@@ -2173,40 +2174,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * Traverses all parent components of the given class in this container,
-	 * calling the visitor's visit method at each one.
-	 * 
-	 * @param c
-	 *            Class
-	 * @param visitor
-	 *            The visitor to call at each parent of the given type
-	 * @return First non-null value returned by visitor callback
-	 */
-	public final Object visitParents(final Class c, final IVisitor visitor)
-	{
-		// Start here
-		Component current = this;
-
-		// Walk up containment hierarchy
-		while (current != null)
-		{
-			// Is current an instance of this class?
-			if (c.isInstance(current))
-			{
-				final Object object = visitor.component(current);
-				if (object != IVisitor.CONTINUE_TRAVERSAL)
-				{
-					return object;
-				}
-			}
-
-			// Check parent
-			current = current.getParent();
-		}
-		return null;
-	}
-
-	/**
 	 * Gets the string representation of this component.
 	 * 
 	 * @return The path to this component
@@ -2332,6 +2299,40 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	public final CharSequence urlFor(final ResourceReference resourceReference)
 	{
 		return getRequestCycle().urlFor(resourceReference);
+	}
+
+	/**
+	 * Traverses all parent components of the given class in this container,
+	 * calling the visitor's visit method at each one.
+	 * 
+	 * @param c
+	 *            Class
+	 * @param visitor
+	 *            The visitor to call at each parent of the given type
+	 * @return First non-null value returned by visitor callback
+	 */
+	public final Object visitParents(final Class c, final IVisitor visitor)
+	{
+		// Start here
+		Component current = this;
+
+		// Walk up containment hierarchy
+		while (current != null)
+		{
+			// Is current an instance of this class?
+			if (c.isInstance(current))
+			{
+				final Object object = visitor.component(current);
+				if (object != IVisitor.CONTINUE_TRAVERSAL)
+				{
+					return object;
+				}
+			}
+
+			// Check parent
+			current = current.getParent();
+		}
+		return null;
 	}
 
 	/**
@@ -2641,6 +2642,23 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
+	 * @return if this component is stateless or not.
+	 */
+	protected boolean isStateless()
+	{
+		Iterator<IBehavior> behaviors = getBehaviors().iterator();
+		while (behaviors.hasNext())
+		{
+			IBehavior behavior = behaviors.next();
+			if (!behavior.isStateless())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Called just after a component is rendered.
 	 */
 	protected void onAfterRender()
@@ -2688,23 +2706,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-	}
-
-	/**
-	 * @return if this component is stateless or not.
-	 */
-	protected boolean isStateless()
-	{
-		Iterator<IBehavior> behaviors = getBehaviors().iterator();
-		while (behaviors.hasNext())
-		{
-			IBehavior behavior = behaviors.next();
-			if (!behavior.isStateless())
-			{
-				return false;
-			}
-		}
-		return true;
 	}
 
 	/**

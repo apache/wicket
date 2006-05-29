@@ -31,6 +31,7 @@ public class Panel2 extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public Panel2(MarkupContainer parent, final String id)

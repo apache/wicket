@@ -44,10 +44,10 @@ import wicket.model.IModel;
  * HTML:
  * 
  * <pre>
- *  	&lt;select wicket:id=&quot;site&quot;&gt;
- *  		&lt;option&gt;site 1&lt;/option&gt;
- *  		&lt;option&gt;site 2&lt;/option&gt;
- *  	&lt;/select&gt;
+ *    	&lt;select wicket:id=&quot;site&quot;&gt;
+ *    		&lt;option&gt;site 1&lt;/option&gt;
+ *    		&lt;option&gt;site 2&lt;/option&gt;
+ *    	&lt;/select&gt;
  * </pre>
  * 
  * </p>
@@ -57,6 +57,9 @@ import wicket.model.IModel;
  * wantOnSelectionChangedNotifications() to force server roundtrips on each
  * selection change.
  * </p>
+ * 
+ * @param <T>
+ *            The type
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius

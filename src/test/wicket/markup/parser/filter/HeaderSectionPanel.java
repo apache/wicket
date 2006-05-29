@@ -34,6 +34,7 @@ public class HeaderSectionPanel extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public HeaderSectionPanel(MarkupContainer parent, final String id)

@@ -31,29 +31,20 @@ import wicket.model.Model;
  * 
  * @author Chris Turner
  */
-public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
+public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup<String>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 * @param label
 	 */
 	public HeaderSectionMyLabel(MarkupContainer parent, final String id, final String label)
 	{
-		super(parent, id, new Model(label));
-	}
-
-	/**
-	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
-	 *      wicket.markup.ComponentTag)
-	 */
-	@Override
-	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
-	{
-		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
+		super(parent, id, new Model<String>(label));
 	}
 
 	/**
@@ -67,5 +58,15 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	{
 		this.renderHeadFromAssociatedMarkupFile(container);
 		super.renderHead(container);
+	}
+
+	/**
+	 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
+	 */
+	@Override
+	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
+	{
+		replaceComponentTagBody(markupStream, openTag, getModelObjectAsString());
 	}
 }

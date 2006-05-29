@@ -34,6 +34,7 @@ public class SimplePanel extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public SimplePanel(MarkupContainer parent, final String id)

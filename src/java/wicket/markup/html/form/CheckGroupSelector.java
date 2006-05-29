@@ -29,6 +29,9 @@ import wicket.markup.html.WebMarkupContainer;
  * itself. Selection toggling is accomplished by generating an onclick
  * javascript event handler.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @see wicket.markup.html.form.CheckGroup
  * @see wicket.markup.html.form.Check
  * 

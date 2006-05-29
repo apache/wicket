@@ -33,6 +33,9 @@ import wicket.util.string.Strings;
 /**
  * A multiple choice list component.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Martijn Dashorst
