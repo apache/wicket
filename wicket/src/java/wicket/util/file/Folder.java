@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: Folder.java 5708 2006-05-09 18:46:38 +0000 (Tue, 09 May 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-05-09 18:46:38 +0000 (Tue, 09
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +20,9 @@ package wicket.util.file;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This folder subclass provides some type safety and extensibility for "files"
@@ -35,6 +39,17 @@ public final class Folder extends File
 	 */
 	public static interface FileFilter
 	{
+		/**
+		 * File filter that matches all files
+		 */
+		public static FileFilter ALL_FILES = new FileFilter()
+		{
+			public boolean accept(final File file)
+			{
+				return true;
+			}
+		};
+		
 		/**
 		 * @param file
 		 *            The file to test
@@ -139,15 +154,36 @@ public final class Folder extends File
 	 */
 	public File[] getFiles()
 	{
-		return getFiles(new FileFilter()
-		{
-			public boolean accept(final File file)
-			{
-				return true;
-			}
-		});
+		return getFiles(FileFilter.ALL_FILES);
+	}
+	
+	/**
+	 * @return All files nested within this folder
+	 */
+	public File[] getNestedFiles()
+	{
+		return getNestedFiles(FileFilter.ALL_FILES);		
 	}
 
+	/**
+	 * Gets files in this folder matching a given filter recusively.
+	 * 
+	 * @param filter
+	 *            The filter
+	 * @return The list of files
+	 */
+	public File[] getNestedFiles(final FileFilter filter)
+	{
+		final List files = new ArrayList();
+		files.addAll(Arrays.asList(getFiles(filter)));
+		final Folder[] folders = getFolders();
+		for (int i = 0; i < folders.length; i++)
+		{
+			files.addAll(Arrays.asList(folders[i].getNestedFiles(filter)));
+		}
+		return (File[])files.toArray(new File[files.size()]);
+	}
+	
 	/**
 	 * @param filter
 	 *            File filter

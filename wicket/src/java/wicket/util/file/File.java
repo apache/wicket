@@ -98,6 +98,14 @@ public class File extends java.io.File implements IModifiable
 	{
 		super(uri);
 	}
+	
+	/**
+	 * @return Parent folder
+	 */
+	public Folder getParentFolder()
+	{
+		return new Folder(getParent());
+	}
 
 	/**
 	 * Returns a Time object representing the most recent time this file was
