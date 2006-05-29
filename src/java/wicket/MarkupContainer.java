@@ -160,7 +160,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *             operation.
 	 * @return This
 	 */
-	final MarkupContainer add(final Component child)
+	final MarkupContainer add(final Component<?> child)
 	{
 		if (child == null)
 		{
@@ -638,6 +638,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @see wicket.Component#setModel(wicket.model.IModel)
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public Component setModel(final IModel<T> model)
 	{
 		final IModel<T> previous = getModel();
@@ -651,7 +652,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 					IModel compModel = component.getModel();
 					if (compModel == previous)
 					{
-						component.setModel((IModel)null);
+						component.setModel(null);
 					}
 					else if (compModel == model)
 					{
@@ -876,6 +877,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
+	@SuppressWarnings("unchecked")
 	public IResourceStream newMarkupResourceStream(Class<? extends MarkupContainer> containerClass)
 	{
 		// Get locator to search for the resource
@@ -1341,7 +1343,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			final String id = tag.getId();
 
 			// Get the component for the id from the given container
-			final Component component = get(id);
+			final Component<?> component = get(id);
 
 			// Failed to find it?
 			if (component != null)
@@ -1352,7 +1354,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			{
 				// 2rd try: Components like Border and Panel might implement
 				// the ComponentResolver interface as well.
-				MarkupContainer container = this;
+				MarkupContainer<?> container = this;
 				while (container != null)
 				{
 					if (container instanceof IComponentResolver)
@@ -1367,16 +1369,14 @@ public abstract class MarkupContainer<T> extends Component<T>
 				}
 
 				// 3rd try: Try application's component resolvers
-				final List componentResolvers = this.getApplication().getPageSettings()
+				final List<IComponentResolver> componentResolvers = this.getApplication().getPageSettings()
 						.getComponentResolvers();
-				final Iterator iterator = componentResolvers.iterator();
-				while (iterator.hasNext())
+				for (IComponentResolver resolver: componentResolvers)
 				{
-					final IComponentResolver resolver = (IComponentResolver)iterator.next();
 					if (resolver.resolve(this, markupStream, tag))
 					{
 						return;
-					}
+					}	
 				}
 
 				if (tag instanceof WicketTag)

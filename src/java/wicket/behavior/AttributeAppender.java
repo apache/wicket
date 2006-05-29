@@ -73,7 +73,7 @@ public class AttributeAppender extends AttributeModifier
 	 *            append value
 	 */
 	public AttributeAppender(String attribute, boolean addAttributeIfNotPresent,
-			IModel appendModel, String separator)
+			IModel<String> appendModel, String separator)
 	{
 		super(attribute, addAttributeIfNotPresent, appendModel);
 		this.separator = separator;
@@ -92,7 +92,7 @@ public class AttributeAppender extends AttributeModifier
 	 *            the separator string, comes between the original value and the
 	 *            append value
 	 */
-	public AttributeAppender(String attribute, IModel appendModel, String separator)
+	public AttributeAppender(String attribute, IModel<String> appendModel, String separator)
 	{
 		super(attribute, true, appendModel);
 		this.separator = separator;

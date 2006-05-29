@@ -174,7 +174,7 @@ public interface IRequestCycleSettings
 	/**
 	 * @return an unmodifiable list of added response filters, null if none
 	 */
-	List getResponseFilters();
+	List<IResponseFilter> getResponseFilters();
 
 	/**
 	 * In order to do proper form parameter decoding it is important that the

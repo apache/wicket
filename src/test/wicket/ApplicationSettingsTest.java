@@ -26,6 +26,7 @@ import wicket.resource.DummyApplication;
 import wicket.resource.loader.BundleStringResourceLoader;
 import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
+import wicket.resource.loader.IStringResourceLoader;
 import wicket.settings.Settings;
 
 /**
@@ -101,7 +102,7 @@ public class ApplicationSettingsTest extends TestCase
 	public void testDefaultStringResourceLoaderSetup()
 	{
 		Settings settings = new Settings(new DummyApplication());
-		List loaders = settings.getStringResourceLoaders();
+		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
 				loaders.get(0) instanceof ComponentStringResourceLoader);
@@ -119,7 +120,7 @@ public class ApplicationSettingsTest extends TestCase
 		settings.addStringResourceLoader(new BundleStringResourceLoader(
 				"wicket.resource.DummyResources"));
 		settings.addStringResourceLoader(new ComponentStringResourceLoader(dummy));
-		List loaders = settings.getStringResourceLoaders();
+		List<IStringResourceLoader> loaders = settings.getStringResourceLoaders();
 		Assert.assertEquals("There should be 2 overridden loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the bundle one",
 				loaders.get(0) instanceof BundleStringResourceLoader);

@@ -51,10 +51,13 @@ import wicket.version.undo.Change;
  * called. A common use for this is to create a cancel button.
  * </p>
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class Button extends FormComponent
+public class Button<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -93,7 +96,7 @@ public class Button extends FormComponent
 	 *            markup attribute value, don't provide a model, or let it
 	 *            return an empty string.
 	 */
-	public Button(MarkupContainer parent, final String id, final IModel model)
+	public Button(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 	}
@@ -106,7 +109,7 @@ public class Button extends FormComponent
 	 * @see wicket.Component#initModel()
 	 */
 	@Override
-	protected IModel initModel()
+	protected IModel<T> initModel()
 	{
 		return null;
 	}

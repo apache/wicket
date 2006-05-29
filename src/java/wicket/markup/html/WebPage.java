@@ -76,12 +76,15 @@ import wicket.util.string.JavascriptUtils;
  * request). In case the page has both constructors, the constructor with
  * PageParameters will be used.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Juergen Donnerstag
  * @author Gwyn Evans
  */
-public class WebPage extends Page implements INewBrowserWindowListener
+public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -129,7 +132,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(IModel)
 	 */
-	protected WebPage(final IModel model)
+	protected WebPage(final IModel<T> model)
 	{
 		super(model);
 		commonInit();
@@ -147,7 +150,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(PageMap, IModel)
 	 */
-	protected WebPage(final PageMap pageMap, final IModel model)
+	protected WebPage(final PageMap pageMap, final IModel<T> model)
 	{
 		super(pageMap, model);
 		commonInit();
@@ -168,7 +171,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	 */
 	protected WebPage(final PageParameters parameters)
 	{
-		this((IModel)null);
+		this((IModel<T>)null);
 	}
 
 	/**
@@ -365,7 +368,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		private static final long serialVersionUID = 1L;
 
 		/** The unload model for deleting the pagemap cookie */
-		private Model onUnLoadModel;
+		private Model<String> onUnLoadModel;
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)

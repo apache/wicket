@@ -150,7 +150,7 @@ public interface IResourceSettings
 	/**
 	 * @return an unmodifiable list of all available string resource loaders
 	 */
-	List getStringResourceLoaders();
+	List<IStringResourceLoader> getStringResourceLoaders();
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#getThrowExceptionOnMissingResource()
