@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>wicket-examples-1.2</name>
+	<name>wicket-examples</name>
 	<comment>Examples displaying a component reference and several componens in action.</comment>
 	<projects>
 	</projects>
