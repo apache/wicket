@@ -45,7 +45,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	AbstractTextComponent(MarkupContainer parent, final String id, final IModel model)
+	AbstractTextComponent(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 		setConvertEmptyInputStringToNull(true);

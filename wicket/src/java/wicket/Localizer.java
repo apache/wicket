@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -371,8 +371,8 @@ public class Localizer
 			final List searchStack, final Locale locale, final String style)
 	{
 		// Search each loader in turn and return the string if it is found
-		final Iterator iterator = application.getResourceSettings().getStringResourceLoaders()
-				.iterator();
+		final Iterator<IStringResourceLoader> iterator = application.getResourceSettings()
+				.getStringResourceLoaders().iterator();
 
 		// The return value
 		String string = null;
@@ -380,7 +380,7 @@ public class Localizer
 		// Iterate until a property has been found
 		while (iterator.hasNext() && (string == null))
 		{
-			IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
+			IStringResourceLoader loader = iterator.next();
 
 			// The key prefix is equal to the component path relativ to the
 			// current component on the top of the stack.

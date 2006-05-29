@@ -34,35 +34,38 @@ import wicket.model.IModel;
  * </p>
  * 
  * <pre>
- *                Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
- *                f.add(new TextField(&quot;value1&quot;));
- *                f.add(new SubmitLink(&quot;link1&quot;) {
- *                    protected void onSubmit() {
- *                        System.out.println(&quot;Link1 was clicked, value1 is: &quot;
- *                                + mod.getValue1());
- *                    };
- *                });
- *                add(new SubmitLink(&quot;link2&quot;,f) {
- *                    protected void onSubmit() {
- *                        System.out.println(&quot;Link2 was clicked, value1 is: &quot;
- *                                + mod.getValue1());
- *                    };
- *                });
- *         
- *             &lt;form wicket:id=&quot;linkForm&quot; &gt;
- *                &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
- *                &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
- *                &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
- *            &lt;/form&gt;
- *              &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
- *            
+ *                 Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
+ *                 f.add(new TextField(&quot;value1&quot;));
+ *                 f.add(new SubmitLink(&quot;link1&quot;) {
+ *                     protected void onSubmit() {
+ *                         System.out.println(&quot;Link1 was clicked, value1 is: &quot;
+ *                                 + mod.getValue1());
+ *                     };
+ *                 });
+ *                 add(new SubmitLink(&quot;link2&quot;,f) {
+ *                     protected void onSubmit() {
+ *                         System.out.println(&quot;Link2 was clicked, value1 is: &quot;
+ *                                 + mod.getValue1());
+ *                     };
+ *                 });
+ *          
+ *              &lt;form wicket:id=&quot;linkForm&quot; &gt;
+ *                 &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
+ *                 &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
+ *                 &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
+ *             &lt;/form&gt;
+ *               &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
+ *             
  * </pre>
+ * 
+ * @param <T>
+ *            The type
  * 
  * @author chris
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public class SubmitLink extends Button
+public class SubmitLink<T> extends Button<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -94,7 +97,7 @@ public class SubmitLink extends Button
 	 *            The model for this submitlink, It won't be used by the submit
 	 *            link itself, but it can be used for keeping state
 	 */
-	public SubmitLink(MarkupContainer parent, String id, IModel model)
+	public SubmitLink(MarkupContainer parent, String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}

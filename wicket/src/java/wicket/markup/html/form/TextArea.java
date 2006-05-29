@@ -25,9 +25,12 @@ import wicket.model.IModel;
 /**
  * Multi-row text editing component.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  */
-public class TextArea extends AbstractTextComponent
+public class TextArea<T> extends AbstractTextComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -42,7 +45,7 @@ public class TextArea extends AbstractTextComponent
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public TextArea(MarkupContainer parent, final String id, final IModel model)
+	public TextArea(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 	}

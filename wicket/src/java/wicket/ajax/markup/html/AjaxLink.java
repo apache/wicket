@@ -27,12 +27,15 @@ import wicket.model.IModel;
 /**
  * A component that allows a trigger request to be triggered via html anchor tag
  * 
+ * @param <T>
+ *            The type
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
+public abstract class AjaxLink<T> extends WebMarkupContainer<T> implements IAjaxLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +61,7 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 	 * @param id
 	 * @param model
 	 */
-	public AjaxLink(MarkupContainer parent, final String id, final IModel model)
+	public AjaxLink(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 

@@ -58,9 +58,9 @@ public class TextField<T> extends AbstractTextComponent<T>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public TextField(MarkupContainer parent, final String id, final IModel object)
+	public TextField(MarkupContainer parent, final String id, final IModel<T> model)
 	{
-		super(parent, id, object);
+		super(parent, id, model);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 *            The type to use when updating the model for this text field
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public TextField(MarkupContainer parent, final String id, IModel model, Class type)
+	public TextField(MarkupContainer parent, final String id, IModel<T> model, Class type)
 	{
 		super(parent, id, model);
 		setType(type);

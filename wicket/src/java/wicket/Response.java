@@ -75,14 +75,16 @@ public abstract class Response
 	 */
 	public final AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 	{
-		List responseFilters = Application.get().getRequestCycleSettings().getResponseFilters();
+		List<IResponseFilter> responseFilters = Application.get().getRequestCycleSettings()
+				.getResponseFilters();
 		if (responseFilters == null)
 		{
 			return responseBuffer;
 		}
-		for (int i = 0; i < responseFilters.size(); i++)
+		int size = responseFilters.size();
+		for (int i = 0; i < size; i++)
 		{
-			IResponseFilter filter = (IResponseFilter)responseFilters.get(i);
+			IResponseFilter filter = responseFilters.get(i);
 			responseBuffer = filter.filter(responseBuffer);
 		}
 		return responseBuffer;
