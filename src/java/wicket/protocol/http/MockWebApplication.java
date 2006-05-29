@@ -38,7 +38,7 @@ import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.session.DefaultPageFactory;
 import wicket.session.ISessionStore;
-import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequestCycleSettings.RenderStrategy;
 import wicket.util.file.WebApplicationPath;
 
 /**
@@ -182,7 +182,7 @@ public class MockWebApplication extends WebApplication
 		// set the default context path
 		getApplicationSettings().setContextPath(context.getServletContextName());
 
-		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
+		getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		getPageSettings().setAutomaticMultiWindowSupport(false);
 

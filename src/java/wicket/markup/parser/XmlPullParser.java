@@ -229,18 +229,18 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 		{
 			// Type of tag
-			XmlTag.Type type = XmlTag.OPEN;
+			XmlTag.Type type = XmlTag.Type.OPEN;
 
 			// If the tag ends in '/', it's a "simple" tag like <foo/>
 			if (tagText.endsWith("/"))
 			{
-				type = XmlTag.OPEN_CLOSE;
+				type = XmlTag.Type.OPEN_CLOSE;
 				tagText = tagText.substring(0, tagText.length() - 1);
 			}
 			else if (tagText.startsWith("/"))
 			{
 				// The tag text starts with a '/', it's a simple close tag
-				type = XmlTag.CLOSE;
+				type = XmlTag.Type.CLOSE;
 				tagText = tagText.substring(1);
 			}
 
@@ -260,7 +260,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 				// Often save a (longer) comparison at the expense of a
 				// extra shorter one for 's' tags
-				if ((type == XmlTag.OPEN) && lowerCase.startsWith("s"))
+				if ((type == XmlTag.Type.OPEN) && lowerCase.startsWith("s"))
 				{
 					if (lowerCase.startsWith("script"))
 					{

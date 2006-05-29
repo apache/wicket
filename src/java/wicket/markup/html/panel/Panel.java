@@ -101,7 +101,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 
 			// Convert <span wicket:id="myPanel" /> into
 			// <span wicket:id="myPanel">...</span>
-			tag.setType(XmlTag.OPEN);
+			tag.setType(XmlTag.Type.OPEN);
 		}
 		super.onComponentTag(tag);
 	}

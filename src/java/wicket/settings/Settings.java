@@ -188,7 +188,7 @@ public final class Settings
 	 * 'action' and a 'render' part is handled, and is mainly used to have a
 	 * means to circumvent the 'refresh' problem.
 	 */
-	private IRequestCycleSettings.RenderStrategy renderStrategy = REDIRECT_TO_BUFFER;
+	private RenderStrategy renderStrategy = RenderStrategy.REDIRECT_TO_BUFFER;
 
 	/** Filesystem Path to search for resources */
 	private IResourceFinder resourceFinder = new Path();
@@ -226,7 +226,7 @@ public final class Settings
 	private boolean throwExceptionOnMissingResource = true;
 
 	/** Type of handling for unexpected exceptions */
-	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
+	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = UnexpectedExceptionDisplay.SHOW_EXCEPTION_PAGE;
 
 	/** Determines behavior of string resource loading if string is missing */
 	private boolean useDefaultOnMissingResource = true;

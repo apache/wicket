@@ -29,6 +29,7 @@ import wicket.authorization.AuthorizationException;
 import wicket.markup.html.pages.ExceptionErrorPage;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.settings.IExceptionSettings;
+import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 
 /**
  * Default implementation of
@@ -79,14 +80,14 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
 		}
-		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
+		else if (settings.getUnexpectedExceptionDisplay() != UnexpectedExceptionDisplay.SHOW_NO_EXCEPTION_PAGE)
 		{
 			Class internalErrorPageClass = application.getApplicationSettings()
 					.getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass
-					&& settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
+					&& settings.getUnexpectedExceptionDisplay() == UnexpectedExceptionDisplay.SHOW_INTERNAL_ERROR_PAGE)
 			{
 				// Show internal error page
 				final IPageFactory pageFactory;

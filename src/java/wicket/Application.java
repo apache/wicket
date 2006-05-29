@@ -53,6 +53,7 @@ import wicket.settings.IResourceSettings;
 import wicket.settings.ISecuritySettings;
 import wicket.settings.ISessionSettings;
 import wicket.settings.Settings;
+import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import wicket.util.file.IResourceFinder;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -329,7 +330,7 @@ public abstract class Application
 			getDebugSettings().setComponentUseCheck(true);
 			getMarkupSettings().setStripWicketTags(false);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_EXCEPTION_PAGE);
+					UnexpectedExceptionDisplay.SHOW_EXCEPTION_PAGE);
 			getAjaxSettings().setAjaxDebugModeEnabled(true);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
@@ -338,7 +339,7 @@ public abstract class Application
 			getDebugSettings().setComponentUseCheck(false);
 			getMarkupSettings().setStripWicketTags(true);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
-					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
+					UnexpectedExceptionDisplay.SHOW_INTERNAL_ERROR_PAGE);
 			getAjaxSettings().setAjaxDebugModeEnabled(false);
 		}
 		else

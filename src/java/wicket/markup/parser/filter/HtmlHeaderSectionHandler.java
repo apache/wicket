@@ -153,13 +153,13 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	{
 		final XmlTag headOpenTag = new XmlTag();
 		headOpenTag.setName("head");
-		headOpenTag.setType(XmlTag.OPEN);
+		headOpenTag.setType(XmlTag.Type.OPEN);
 		final ComponentTag openTag = new ComponentTag(headOpenTag);
 		openTag.setId(HEADER_ID);
 
 		final XmlTag headCloseTag = new XmlTag();
 		headCloseTag.setName(headOpenTag.getName());
-		headCloseTag.setType(XmlTag.CLOSE);
+		headCloseTag.setType(XmlTag.Type.CLOSE);
 		final ComponentTag closeTag = new ComponentTag(headCloseTag);
 		closeTag.setOpenTag(openTag);
 		closeTag.setId(HEADER_ID);

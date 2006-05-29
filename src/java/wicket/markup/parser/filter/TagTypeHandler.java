@@ -99,9 +99,9 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 			// Pop any simple tags off the top of the stack
 			if (requiresOpenBodyCloseTag(name))
 			{
-				tag.setType(XmlTag.OPEN);
+				tag.setType(XmlTag.Type.OPEN);
 				XmlTag closeTag = new XmlTag();
-				closeTag.setType(XmlTag.CLOSE);
+				closeTag.setType(XmlTag.Type.CLOSE);
 				closeTag.setName(tag.getName());
 				closeTag.setNamespace(tag.getNamespace());
 				closeTag.closes(tag);

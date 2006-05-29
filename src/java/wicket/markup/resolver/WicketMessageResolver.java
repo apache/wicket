@@ -144,7 +144,7 @@ public class WicketMessageResolver implements IComponentResolver
 			// <wicket:message>...</wicket:message>
 			if (tag.isOpenClose())
 			{
-				tag.setType(XmlTag.OPEN);
+				tag.setType(XmlTag.Type.OPEN);
 			}
 			super.onComponentTag(tag);
 		}
