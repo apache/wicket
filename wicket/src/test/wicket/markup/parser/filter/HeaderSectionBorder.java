@@ -34,6 +34,7 @@ public class HeaderSectionBorder extends Border
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public HeaderSectionBorder(MarkupContainer parent, final String id)

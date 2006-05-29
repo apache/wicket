@@ -31,6 +31,7 @@ public class BorderComponent1 extends Border
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * @param parent
 	 * @param id
 	 */
 	public BorderComponent1(MarkupContainer parent, String id)

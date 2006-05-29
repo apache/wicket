@@ -30,6 +30,7 @@ public class InlinePanel_4 extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public InlinePanel_4(MarkupContainer parent, final String id)

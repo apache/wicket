@@ -139,9 +139,9 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY)
 				.newCrypt();
-		String s = crypt.encrypt(input);
+		String s = crypt.encryptUrlSafe(input);
 
-		String output = crypt.decrypt(s);
+		String output = crypt.decryptUrlSafe(s);
 		assertEquals(input, output);
 	}
 

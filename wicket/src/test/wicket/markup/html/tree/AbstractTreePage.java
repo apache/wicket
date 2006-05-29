@@ -39,14 +39,14 @@ public class AbstractTreePage extends WebPage
 	public AbstractTreePage()
 	{
 		// create a list with sublists
-		List l1 = new ArrayList();
+		List<Object> l1 = new ArrayList<Object>();
 		l1.add("test 1.1");
 		l1.add("test 1.2");
-		List l2 = new ArrayList();
+		List<Object> l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List l3 = new ArrayList();
+		List<Object> l3 = new ArrayList<Object>();
 		l3.add("test 3.1");
 		l2.add(l3);
 		l2.add("test 2.4");
@@ -56,22 +56,6 @@ public class AbstractTreePage extends WebPage
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
 		MyTree tree = new MyTree(this, "tree", treeModel);
-	}
-
-	/**
-	 * Convert the nested lists to a tree model
-	 * 
-	 * @param list
-	 *            the list
-	 * @return tree model
-	 */
-	private TreeModel convertToTreeModel(List list)
-	{
-		TreeModel model = null;
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-		add(rootNode, list);
-		model = new DefaultTreeModel(rootNode);
-		return model;
 	}
 
 	/**
@@ -99,5 +83,21 @@ public class AbstractTreePage extends WebPage
 				parent.add(child);
 			}
 		}
+	}
+
+	/**
+	 * Convert the nested lists to a tree model
+	 * 
+	 * @param list
+	 *            the list
+	 * @return tree model
+	 */
+	private TreeModel convertToTreeModel(List list)
+	{
+		TreeModel model = null;
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
+		add(rootNode, list);
+		model = new DefaultTreeModel(rootNode);
+		return model;
 	}
 }

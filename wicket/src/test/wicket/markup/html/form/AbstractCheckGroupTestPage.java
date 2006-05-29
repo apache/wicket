@@ -19,7 +19,6 @@
 
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.List;
 
 import wicket.markup.html.WebMarkupContainer;
@@ -33,9 +32,6 @@ import wicket.model.Model;
  */
 public abstract class AbstractCheckGroupTestPage extends WebPage
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 

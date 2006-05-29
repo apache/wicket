@@ -53,6 +53,8 @@ import wicket.util.lang.PropertyResolver;
  * expression "id"
  * </p>
  * 
+ * @param <T>
+ *            The type
  * @author jcompagner
  */
 public class ChoiceRenderer<T> implements IChoiceRenderer<T>

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -34,6 +34,7 @@ public class Panel_1 extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public Panel_1(MarkupContainer parent, final String id)

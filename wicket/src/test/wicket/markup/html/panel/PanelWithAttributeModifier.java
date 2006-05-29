@@ -34,11 +34,12 @@ public class PanelWithAttributeModifier extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public PanelWithAttributeModifier(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
-		add(new AttributeModifier("class", true, new Model("test")));
+		add(new AttributeModifier("class", true, new Model<String>("test")));
 	}
 }

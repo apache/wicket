@@ -30,6 +30,8 @@ public class TestBasePanel extends Panel
 
 	/**
 	 * Construct.
+	 * 
+	 * @param parent
 	 */
 	public TestBasePanel(MarkupContainer parent)
 	{

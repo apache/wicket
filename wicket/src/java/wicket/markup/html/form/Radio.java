@@ -31,6 +31,9 @@ import wicket.util.lang.Objects;
  * 
  * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @see wicket.markup.html.form.RadioGroup
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)

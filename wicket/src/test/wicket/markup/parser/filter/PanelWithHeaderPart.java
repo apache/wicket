@@ -18,6 +18,9 @@ public class PanelWithHeaderPart extends Panel
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Construct.
+	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public PanelWithHeaderPart(MarkupContainer parent, String id)

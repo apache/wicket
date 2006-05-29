@@ -26,6 +26,8 @@ import wicket.markup.MarkupStream;
 /**
  * Dummy component used for testing or resource loading funationality.
  * 
+ * @param <T>
+ *            The type
  * @author Chris Turner
  */
 public class DummyComponent<T> extends Component<T>
@@ -35,6 +37,7 @@ public class DummyComponent<T> extends Component<T>
 	/**
 	 * Create the component with the given name.
 	 * 
+	 * @param parent
 	 * @param name
 	 *            The name of the component
 	 * @param application

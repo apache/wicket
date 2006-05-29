@@ -29,6 +29,8 @@ public final class PageBorder extends Border
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 * 
 	 * @param id
 	 *            component naam
 	 */

@@ -34,6 +34,7 @@ public class SimpleBorder extends Border
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public SimpleBorder(MarkupContainer parent, final String id)

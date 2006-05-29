@@ -27,6 +27,9 @@ import wicket.util.string.AppendingStringBuffer;
 /**
  * Abstract base class for single-select choices.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
  * @author Johan Compagner

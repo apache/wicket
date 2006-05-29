@@ -53,6 +53,8 @@ import wicket.util.convert.ConversionException;
  * 
  * <p>
  * Note: This component does not support cookie persistence
+ * @param <T>
+ *            The type
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 

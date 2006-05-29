@@ -34,6 +34,7 @@ public class MyPanel extends Panel
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
 	 * @param id
 	 *            component identifier
 	 */

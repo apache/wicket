@@ -39,9 +39,9 @@ import wicket.model.Model;
  * A Label with a dynamic model can be created like this:
  * 
  * <pre>
- *      
- *            add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
  *       
+ *             add(new Label(&quot;myLabel&quot;, new PropertyModel(person, &quot;name&quot;));
+ *        
  * </pre>
  * 
  * In this case, the Label component will replace the body of the tag it is
@@ -64,6 +64,9 @@ import wicket.model.Model;
  * 	}
  * }
  * </pre>
+ * 
+ * @param <T>
+ *            The type
  * 
  * @author Jonathan Locke
  */

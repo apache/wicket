@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:52:19 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,21 +38,22 @@ import wicket.markup.html.image.Image;
  */
 public class MyTree extends Tree
 {
-	private static final long serialVersionUID = 1L;
+	private static final ResourceReference folder = new PackageResourceReference(Application.get(),
+			MyTree.class, "folder.gif");
 
 	private static final ResourceReference folderOpen = new PackageResourceReference(Application
 			.get(), MyTree.class, "folderopen.gif");
-	private static final ResourceReference folder = new PackageResourceReference(Application.get(),
-			MyTree.class, "folder.gif");
+	/** Log. */
+	private static Log log = LogFactory.getLog(MyTree.class);
 	private static final ResourceReference nodeImage = new PackageResourceReference(Application
 			.get(), MyTree.class, "node.gif");
 
-	/** Log. */
-	private static Log log = LogFactory.getLog(MyTree.class);
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 *            The id of this component
 	 * @param model
@@ -61,26 +62,6 @@ public class MyTree extends Tree
 	public MyTree(MarkupContainer parent, String id, TreeModel model)
 	{
 		super(parent, id, model);
-	}
-
-	/**
-	 * @see wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
-	 */
-	@Override
-	protected void junctionLinkClicked(DefaultMutableTreeNode node)
-	{
-		super.junctionLinkClicked(node);
-		log.info("tree junction link was clicked, user object: " + node.getUserObject());
-	}
-
-	/**
-	 * @see wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
-	 */
-	@Override
-	protected void nodeLinkClicked(DefaultMutableTreeNode node)
-	{
-		super.nodeLinkClicked(node);
-		log.info("tree node link was clicked, user object: " + node.getUserObject());
 	}
 
 	/**
@@ -132,5 +113,25 @@ public class MyTree extends Tree
 		{
 			return String.valueOf(node.getUserObject());
 		}
+	}
+
+	/**
+	 * @see wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 */
+	@Override
+	protected void junctionLinkClicked(DefaultMutableTreeNode node)
+	{
+		super.junctionLinkClicked(node);
+		log.info("tree junction link was clicked, user object: " + node.getUserObject());
+	}
+
+	/**
+	 * @see wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 */
+	@Override
+	protected void nodeLinkClicked(DefaultMutableTreeNode node)
+	{
+		super.nodeLinkClicked(node);
+		log.info("tree node link was clicked, user object: " + node.getUserObject());
 	}
 }

@@ -25,6 +25,9 @@ import wicket.Component;
  * UnsupportedOperationException to indicate that the subclass is a read-only
  * model.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  */
 public abstract class AbstractReadOnlyDetachableModel<T> extends AbstractDetachableModel<T>

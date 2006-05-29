@@ -90,8 +90,8 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testComponentClone()
 	{
-		PropertyModel pm = new PropertyModel(new TextField(new EmptyPage(), "test", new Model(
-				"test")), "modelObject");
+		PropertyModel pm = new PropertyModel(new TextField(new EmptyPage(), "test",
+				new Model<String>("test")), "modelObject");
 		PropertyModel pm2 = (PropertyModel)Objects.cloneModel(pm);
 		assertTrue(pm.getObject(null) == pm2.getObject(null));
 	}

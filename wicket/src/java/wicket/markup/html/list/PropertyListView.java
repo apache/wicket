@@ -28,6 +28,9 @@ import wicket.model.IModel;
  * BoundCompoundPropertyModel. Useful for lists where the item components will
  * be mapped through property expressions.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Nathan Hamblen
  */
 public abstract class PropertyListView<T> extends ListView<T>

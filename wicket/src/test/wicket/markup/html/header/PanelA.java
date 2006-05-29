@@ -30,6 +30,7 @@ public class PanelA extends BasePanel
 	/**
 	 * Creates a new instance of PanelA
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public PanelA(MarkupContainer parent, String id)

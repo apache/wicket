@@ -43,14 +43,16 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *      &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *     	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
- *     	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
- *      &lt;/span&gt;
+ *       &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *      	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
+ *      	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
+ *       &lt;/span&gt;
  * </pre>
  * 
  * </p>
  * 
+ * @param <T>
+ *            The type
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Martijn Dashorst

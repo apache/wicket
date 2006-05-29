@@ -34,7 +34,7 @@ public class CheckGroupTestPage1 extends AbstractCheckGroupTestPage
 	 */
 	public CheckGroupTestPage1()
 	{
-		super(new ArrayList());
+		super(new ArrayList<String>());
 
 	}
 

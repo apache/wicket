@@ -51,6 +51,7 @@ public class InlinePanelPage_5 extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param id
 		 * @param markupId
 		 */

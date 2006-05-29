@@ -32,15 +32,18 @@ import wicket.util.convert.ConversionException;
  * 
  * ie
  * 
- * <code>
- * <span wicket:id="radiochoicegroup">
- *   ...
- *   <input type="radio" wicket:id="singleradiochoice1">choice 1</input>
- *   ...
- *   <input type="radio" wicket:id="singleradiochoice2">choice 2</input>
- *   ...
- * </span>
- * </code>
+ * <pre>
+ *  &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
+ *    ...
+ *    &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
+ *    ...
+ *    &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
+ *    ...
+ *  &lt;/span&gt;
+ * </pre>
+ * 
+ * @param <T>
+ *            The type
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * @author Sven Meier (svenmeier)

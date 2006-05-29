@@ -83,7 +83,7 @@ public class Page_2 extends WebPage
 
 		Border border2 = new SimpleBorder(this, "myBorder2");
 		border2.setRenderBodyOnly(false);
-		border2.add(new AttributeModifier("testAttr", true, new Model("myValue")));
+		border2.add(new AttributeModifier("testAttr", true, new Model<String>("myValue")));
 
 		border2.add(new XsltTransfomerBehavior());
 	}
