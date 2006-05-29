@@ -19,6 +19,7 @@
 package wicket.ajax.markup.html.form;
 
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebComponent;
@@ -58,14 +59,32 @@ public abstract class AjaxSubmitButton extends WebComponent
 			{
 				AjaxSubmitButton.this.onSubmit(target, form);
 			}
-			
+
 			protected CharSequence getEventHandler()
 			{
 				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
 			}
 
+			protected IAjaxCallDecorator getAjaxCallDecorator()
+			{
+				return AjaxSubmitButton.this.getAjaxCallDecorator();
+			}
+
 		});
 
+	}
+
+	/**
+	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the
+	 * generated javascript. This is the preferred way of changing the
+	 * javascript in the onclick handler
+	 * 
+	 * @return call decorator used to modify the generated javascript or null
+	 *         for none
+	 */
+	protected IAjaxCallDecorator getAjaxCallDecorator()
+	{
+		return null;
 	}
 
 	protected void onComponentTag(ComponentTag tag)
@@ -73,11 +92,12 @@ public abstract class AjaxSubmitButton extends WebComponent
 		checkComponentTag(tag, "input");
 
 		final String type = tag.getAttributes().getString("type");
-		if (!"button".equals(type) && !"image".equals(type)&&!"submit".equals(type))
+		if (!"button".equals(type) && !"image".equals(type) && !"submit".equals(type))
 		{
 			findMarkupStream().throwMarkupException(
 					"Component " + getId() + " must be applied to a tag with 'type'"
-							+ " attribute matching 'submit', 'button' or 'image', not '" + type + "'");
+							+ " attribute matching 'submit', 'button' or 'image', not '" + type
+							+ "'");
 		}
 
 		super.onComponentTag(tag);
@@ -87,7 +107,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 * Listener method invoked on form submit
 	 * 
 	 * @param target
-	 * @param form 
+	 * @param form
 	 */
 	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
 
