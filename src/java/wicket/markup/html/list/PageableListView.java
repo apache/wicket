@@ -30,9 +30,12 @@ import wicket.version.undo.Change;
  * views. A PageableListView holds pageable rows of information. The rows can be
  * re-ordered and deleted, either one at a time or many at a time.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  */
-public abstract class PageableListView extends ListView implements IPageable
+public abstract class PageableListView<T> extends ListView<T> implements IPageable
 {
 	/** The page to show. */
 	private int currentPage;
@@ -53,7 +56,7 @@ public abstract class PageableListView extends ListView implements IPageable
 	 * @param rowsPerPage
 	 *            Number of rows to show on a page
 	 */
-	public PageableListView(MarkupContainer parent, final String id, final IModel model,
+	public PageableListView(MarkupContainer parent, final String id, final IModel<List<T>> model,
 			int rowsPerPage)
 	{
 		super(parent, id, model);
@@ -75,7 +78,7 @@ public abstract class PageableListView extends ListView implements IPageable
 	 *            Number of rows to show on a page
 	 * @see ListView#ListView(String, List)
 	 */
-	public PageableListView(MarkupContainer parent, final String id, final List list,
+	public PageableListView(MarkupContainer parent, final String id, final List<T> list,
 			final int rowsPerPage)
 	{
 		super(parent, id, list);
