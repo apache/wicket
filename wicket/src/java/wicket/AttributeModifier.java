@@ -212,7 +212,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	@Override
 	public final void onComponentTag(Component component, ComponentTag tag)
 	{
-		if (tag.getType() != XmlTag.CLOSE)
+		if (tag.getType() != XmlTag.Type.CLOSE)
 		{
 			replaceAttibuteValue(component, tag);
 		}

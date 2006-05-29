@@ -36,7 +36,7 @@ import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.session.ISessionStore;
-import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequestCycleSettings.RenderStrategy;
 import wicket.util.resource.IResourceStream;
 import wicket.util.time.Time;
 
@@ -48,15 +48,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *                      &lt;servlet&gt;
- *                          &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                          &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                          &lt;init-param&gt;
- *                              &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                              &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                          &lt;/init-param&gt;
- *                          &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *                      &lt;/servlet&gt;
+ *                       &lt;servlet&gt;
+ *                           &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                           &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                           &lt;init-param&gt;
+ *                               &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                               &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                           &lt;/init-param&gt;
+ *                           &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *                       &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -68,10 +68,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *                      &lt;init-param&gt;
- *                        &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *                          &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *                      &lt;/init-param&gt;
+ *                       &lt;init-param&gt;
+ *                         &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *                           &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *                       &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -88,11 +88,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *                      public void init() throws ServletException
- *                      {
- *                          ServletConfig config = getServletConfig();
- *                          String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                          ...
+ *                       public void init() throws ServletException
+ *                       {
+ *                           ServletConfig config = getServletConfig();
+ *                           String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                           ...
  * </pre>
  * 
  * </p>
@@ -148,7 +148,7 @@ public class WicketServlet extends HttpServlet
 		// Create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
-		if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
+		if (webApplication.getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER)
 		{
 			String queryString = servletRequest.getQueryString();
 			if (queryString != null)

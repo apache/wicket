@@ -56,7 +56,7 @@ import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolv
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.listener.RedirectPageRequestTarget;
-import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequestCycleSettings.RenderStrategy;
 import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Objects;
 import wicket.util.string.JavascriptUtils;
@@ -379,7 +379,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 			final IRequestTarget target = cycle.getRequestTarget();
 
 			int initialAccessStackSize = 0;
-			if (getApplication().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_RENDER
+			if (getApplication().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER
 					&& target instanceof RedirectPageRequestTarget)
 			{
 				initialAccessStackSize = 1;

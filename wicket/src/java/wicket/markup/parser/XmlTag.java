@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:41:52 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import wicket.markup.MarkupElement;
-import wicket.util.lang.EnumeratedType;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
@@ -35,14 +34,15 @@ import wicket.util.value.AttributeMap;
  */
 public class XmlTag extends MarkupElement
 {
-	/** A close tag, like &lt;/TAG&gt;. */
-	public static final Type CLOSE = new Type("CLOSE");
-
-	/** An open tag, like &lt;TAG componentId = "xyz"&gt;. */
-	public static final Type OPEN = new Type("OPEN");
-
-	/** An open/close tag, like &lt;TAG componentId = "xyz"/&gt;. */
-	public static final Type OPEN_CLOSE = new Type("OPEN_CLOSE");
+	/** Tag types. */
+	public static enum Type {
+		/** A close tag, like &lt;/TAG&gt;. */
+		CLOSE,
+		/** An open tag, like &lt;TAG componentId = "xyz"&gt;. */
+		OPEN,
+		/** An open/close tag, like &lt;TAG componentId = "xyz"/&gt;. */
+		OPEN_CLOSE
+	}
 
 	/** Attribute map. */
 	private AttributeMap attributes;
@@ -82,25 +82,6 @@ public class XmlTag extends MarkupElement
 
 	/** True if the name of this tag was changed. */
 	private boolean nameChanged = false;
-
-	/**
-	 * Enumerated type for different kinds of component tags.
-	 */
-	public static final class Type extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            name of type
-		 */
-		Type(final String name)
-		{
-			super(name);
-		}
-	}
 
 	/**
 	 * Construct.
@@ -253,7 +234,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public boolean isClose()
 	{
-		return type == CLOSE;
+		return type == Type.CLOSE;
 	}
 
 	/**
@@ -272,7 +253,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public boolean isOpen()
 	{
-		return type == OPEN;
+		return type == Type.OPEN;
 	}
 
 	/**
@@ -282,7 +263,7 @@ public class XmlTag extends MarkupElement
 	 */
 	public boolean isOpenClose()
 	{
-		return type == OPEN_CLOSE;
+		return type == Type.OPEN_CLOSE;
 	}
 
 	/**
@@ -583,7 +564,7 @@ public class XmlTag extends MarkupElement
 
 		buffer.append('<');
 
-		if (type == CLOSE)
+		if (type == Type.CLOSE)
 		{
 			buffer.append('/');
 		}
@@ -623,7 +604,7 @@ public class XmlTag extends MarkupElement
 			}
 		}
 
-		if (type == OPEN_CLOSE)
+		if (type == Type.OPEN_CLOSE)
 		{
 			buffer.append('/');
 		}

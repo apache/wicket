@@ -26,6 +26,7 @@ import wicket.request.RequestParameters;
 import wicket.request.target.IEventProcessor;
 import wicket.request.target.component.PageRequestTarget;
 import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
  * The abstract implementation of
@@ -121,7 +122,7 @@ public abstract class AbstractListenerInterfaceRequestTarget extends PageRequest
 		// and see if we have to redirect the render part by default
 		IRequestCycleSettings.RenderStrategy strategy = application.getRequestCycleSettings()
 				.getRenderStrategy();
-		boolean issueRedirect = (strategy == IRequestCycleSettings.REDIRECT_TO_RENDER || strategy == IRequestCycleSettings.REDIRECT_TO_BUFFER);
+		boolean issueRedirect = (strategy == RenderStrategy.REDIRECT_TO_RENDER || strategy == RenderStrategy.REDIRECT_TO_BUFFER);
 
 		requestCycle.setRedirect(issueRedirect);
 	}

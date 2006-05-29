@@ -86,7 +86,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		log.info(boldOpen);
 		Assert.assertTrue(boldOpen.getName().equals("b"));
-		Assert.assertEquals(XmlTag.OPEN, boldOpen.getType());
+		Assert.assertEquals(XmlTag.Type.OPEN, boldOpen.getType());
 
 		markupStream.next();
 
@@ -94,7 +94,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		log.info(boldClose);
 		Assert.assertTrue(boldClose.getName().equals("b"));
-		Assert.assertEquals(XmlTag.CLOSE, boldClose.getType());
+		Assert.assertEquals(XmlTag.Type.CLOSE, boldClose.getType());
 
 		markupStream.next();
 
@@ -104,7 +104,7 @@ public final class MarkupParserTest extends WicketTestCase
 		Assert.assertTrue(img.getName().equals("img"));
 		Assert.assertEquals(9, img.getAttributes().getInt("width"));
 		Assert.assertEquals(10, img.getAttributes().getInt("height"));
-		Assert.assertEquals(XmlTag.OPEN, img.getType());
+		Assert.assertEquals(XmlTag.Type.OPEN, img.getType());
 
 		markupStream.next();
 
@@ -112,7 +112,7 @@ public final class MarkupParserTest extends WicketTestCase
 
 		log.info(marker);
 		Assert.assertTrue(marker.getName().equals("marker"));
-		Assert.assertEquals(XmlTag.OPEN_CLOSE, marker.getType());
+		Assert.assertEquals(XmlTag.Type.OPEN_CLOSE, marker.getType());
 
 		markupStream.next();
 

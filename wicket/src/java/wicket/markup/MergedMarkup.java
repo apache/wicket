@@ -203,7 +203,7 @@ public class MergedMarkup extends Markup
 						// <wicket:child /> => <wicket:child>...</wicket:child>
 						childTag = wtag;
 						WicketTag childOpenTag = (WicketTag)wtag.mutable();
-						childOpenTag.getXmlTag().setType(XmlTag.OPEN);
+						childOpenTag.getXmlTag().setType(XmlTag.Type.OPEN);
 						childOpenTag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
 						addMarkupElement(childOpenTag);
 						break;
@@ -367,7 +367,7 @@ public class MergedMarkup extends Markup
 			// And now all remaining elements from the derived markup.
 			// But first add </wicket:child>
 			WicketTag childCloseTag = (WicketTag)childTag.mutable();
-			childCloseTag.getXmlTag().setType(XmlTag.CLOSE);
+			childCloseTag.getXmlTag().setType(XmlTag.Type.CLOSE);
 			childCloseTag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
 			addMarkupElement(childCloseTag);
 		}
@@ -427,13 +427,13 @@ public class MergedMarkup extends Markup
 			{
 				final XmlTag headOpenTag = new XmlTag();
 				headOpenTag.setName("head");
-				headOpenTag.setType(XmlTag.OPEN);
+				headOpenTag.setType(XmlTag.Type.OPEN);
 				final ComponentTag openTag = new ComponentTag(headOpenTag);
 				openTag.setId(HtmlHeaderSectionHandler.HEADER_ID);
 
 				final XmlTag headCloseTag = new XmlTag();
 				headCloseTag.setName(headOpenTag.getName());
-				headCloseTag.setType(XmlTag.CLOSE);
+				headCloseTag.setType(XmlTag.Type.CLOSE);
 				final ComponentTag closeTag = new ComponentTag(headCloseTag);
 				closeTag.setOpenTag(openTag);
 				closeTag.setId(HtmlHeaderSectionHandler.HEADER_ID);

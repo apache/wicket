@@ -309,7 +309,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		if (wtag.isOpenClose())
 		{
 			markupStream.next();
-			bodyTag.setType(XmlTag.CLOSE);
+			bodyTag.setType(XmlTag.Type.CLOSE);
 			renderComponentTag(bodyTag);
 		}
 
@@ -366,7 +366,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 			// in order for the html to look right: insert the body in between
 			// the wicket tags instead of behind the open-close tag.
 			bodyTag = tag.mutable();
-			bodyTag.setType(XmlTag.OPEN);
+			bodyTag.setType(XmlTag.Type.OPEN);
 		}
 		else
 		{

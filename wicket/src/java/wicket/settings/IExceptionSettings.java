@@ -1,6 +1,5 @@
 package wicket.settings;
 
-import wicket.util.lang.EnumeratedType;
 
 
 /**
@@ -19,36 +18,25 @@ import wicket.util.lang.EnumeratedType;
 public interface IExceptionSettings
 {
 	/**
-	 * Indicates that an exception page appropriate to development should be
-	 * shown when an unexpected exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_EXCEPTION_PAGE");
-
-	/**
-	 * Indicates a generic internal error page should be shown when an
-	 * unexpected exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_INTERNAL_ERROR_PAGE");
-	/**
-	 * Indicates that no exception page should be shown when an unexpected
-	 * exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-			"SHOW_NO_EXCEPTION_PAGE");
-
-	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
 	 */
-	public static final class UnexpectedExceptionDisplay extends EnumeratedType
+	public static enum UnexpectedExceptionDisplay
 	{
-		private static final long serialVersionUID = 1L;
-
-		UnexpectedExceptionDisplay(final String name)
-		{
-			super(name);
-		}
+		/**
+		 * Indicates that an exception page appropriate to development should be
+		 * shown when an unexpected exception is thrown.
+		 */
+		SHOW_EXCEPTION_PAGE,
+		/**
+		 * Indicates a generic internal error page should be shown when an
+		 * unexpected exception is thrown.
+		 */
+		SHOW_INTERNAL_ERROR_PAGE,
+		/**
+		 * Indicates that no exception page should be shown when an unexpected
+		 * exception is thrown.
+		 */
+		SHOW_NO_EXCEPTION_PAGE
 	}
 
 	/**

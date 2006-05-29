@@ -519,7 +519,7 @@ public class ComponentTag extends MarkupElement
 	{
 		response.write("<");
 
-		if (getType() == XmlTag.CLOSE)
+		if (getType() == XmlTag.Type.CLOSE)
 		{
 			response.write("/");
 		}
@@ -567,7 +567,7 @@ public class ComponentTag extends MarkupElement
 			}
 		}
 
-		if (getType() == XmlTag.OPEN_CLOSE)
+		if (getType() == XmlTag.Type.OPEN_CLOSE)
 		{
 			response.write("/");
 		}

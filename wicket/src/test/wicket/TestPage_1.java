@@ -46,7 +46,7 @@ public class TestPage_1 extends WebPage
 			@Override
 			protected void onComponentTag(ComponentTag tag)
 			{
-				tag.setType(XmlTag.OPEN);
+				tag.setType(XmlTag.Type.OPEN);
 				super.onComponentTag(tag);
 			}
 
