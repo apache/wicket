@@ -20,6 +20,7 @@ package wicket.ajax.markup.html.form;
 
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
@@ -68,8 +69,27 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 			{
 				return new AppendingStringBuffer(super.getEventHandler()).append("; return false;");
 			}
+
+			@Override
+			protected IAjaxCallDecorator getAjaxCallDecorator()
+			{
+				return AjaxSubmitLink.this.getAjaxCallDecorator();
+			}
 		});
 
+	}
+
+	/**
+	 * Returns the {@link IAjaxCallDecorator} that will be used to modify the
+	 * generated javascript. This is the preferred way of changing the
+	 * javascript in the onclick handler
+	 * 
+	 * @return call decorator used to modify the generated javascript or null
+	 *         for none
+	 */
+	protected IAjaxCallDecorator getAjaxCallDecorator()
+	{
+		return null;
 	}
 
 	@Override
