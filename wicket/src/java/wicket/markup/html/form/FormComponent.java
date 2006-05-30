@@ -674,7 +674,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 */
 	protected T convertValue(String[] value) throws ConversionException
 	{
-		return (T)(value != null && value.length > 0 ? value[0].trim() : null);
+		return (T)(value != null && value.length > 0 && value[0]!=null ? value[0].trim() : null);
 	}
 
 	/**
