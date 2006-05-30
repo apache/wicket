@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: AbstractTree.java 2527 2005-08-16 22:33:01 +0000 (Tue, 16 Aug 2005)
+ * eelco12 $ $Revision$ $Date: 2005-08-16 22:33:01 +0000 (Tue, 16 Aug
+ * 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +23,7 @@ import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -55,8 +57,8 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * Construct using the given tree state that holds the model to be
-	 * used as the tree model.
+	 * Construct using the given tree state that holds the model to be used as
+	 * the tree model.
 	 * 
 	 * @param id
 	 *            The id of this component
@@ -67,6 +69,50 @@ public abstract class AbstractTree extends Panel
 	{
 		super(id);
 		this.treeState = treeState;
+	}
+
+	/**
+	 * Ensures that the node identified by the specified path is collapsed and
+	 * viewable.
+	 * 
+	 * @param path
+	 *            the <code>TreePath</code> identifying a node
+	 */
+	public void collapsePath(TreePath path)
+	{
+		setExpandedState(path, false);
+	}
+
+	/**
+	 * Expand or collapse all nodes.
+	 * 
+	 * @param expand
+	 *            If true, expand all nodes in the tree. Else collapse all nodes
+	 *            in the tree.
+	 */
+	public void expandAll(boolean expand)
+	{
+		TreeNode root = (TreeNode)getTreeState().getModel().getRoot();
+		expandAll(new TreePath(root), expand);
+	}
+
+	/**
+	 * Ensures that the node identified by the specified path is expanded and
+	 * viewable. If the last item in the path is a leaf, this will have no
+	 * effect.
+	 * 
+	 * @param path
+	 *            the <code>TreePath</code> identifying a node
+	 */
+	public void expandPath(TreePath path)
+	{
+		// Only expand if not leaf!
+		TreeModel model = getTreeState().getModel();
+
+		if (path != null && model != null && !model.isLeaf(path.getLastPathComponent()))
+		{
+			setExpandedState(path, true);
+		}
 	}
 
 	/**
@@ -180,6 +226,17 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
+	 * Sets the current tree model.
+	 * 
+	 * @param treeModel
+	 *            the tree model to set as the current one
+	 */
+	public void setTreeModel(final TreeModel treeModel)
+	{
+		this.treeState = newTreeState(treeModel);
+	}
+
+	/**
 	 * Sets the current tree state to the given tree state.
 	 * 
 	 * @param treeState
@@ -188,16 +245,6 @@ public abstract class AbstractTree extends Panel
 	public void setTreeState(final TreeState treeState)
 	{
 		this.treeState = treeState;
-	}
-
-	/**
-	 * Sets the current tree model.
-	 *
-	 * @param treeModel the tree model to set as the current one
-	 */
-	public void setTreeModel(final TreeModel treeModel)
-	{
-		this.treeState = newTreeState(treeModel);
 	}
 
 	/**
@@ -217,12 +264,11 @@ public abstract class AbstractTree extends Panel
 		if (treeModel != null)
 		{
 			StringBuffer tabs = new StringBuffer();
-			DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) treeModel
-					.getRoot();
+			DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)treeModel.getRoot();
 			Enumeration e = rootNode.preorderEnumeration();
 			while (e.hasMoreElements())
 			{
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) e.nextElement();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
 				tabs.delete(0, tabs.length());
 				tabs.append("|");
 				for (int i = 0; i < node.getLevel(); i++)
@@ -260,5 +306,28 @@ public abstract class AbstractTree extends Panel
 		treeState.setRootVisible(rootVisible);
 		treeModel.addTreeModelListener(treeState);
 		return treeState;
+	}
+
+	private final void expandAll(TreePath parent, boolean expand)
+	{
+		TreeNode node = (TreeNode)parent.getLastPathComponent();
+		if (node.getChildCount() >= 0)
+		{
+			for (Enumeration e = node.children(); e.hasMoreElements();)
+			{
+				TreeNode n = (TreeNode)e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+				expandAll(path, expand);
+			}
+		}
+
+		if (expand)
+		{
+			expandPath(parent);
+		}
+		else
+		{
+			collapsePath(parent);
+		}
 	}
 }
