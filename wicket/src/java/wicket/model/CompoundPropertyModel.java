@@ -44,7 +44,7 @@ public class CompoundPropertyModel<T> extends AbstractPropertyModel<T> implement
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
-	public CompoundPropertyModel(final T model)
+	public CompoundPropertyModel(final Object model)
 	{
 		super(model);
 	}

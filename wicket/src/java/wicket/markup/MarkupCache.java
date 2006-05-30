@@ -300,7 +300,7 @@ public class MarkupCache
 			final CharSequence key, final MarkupResourceStream markupResourceStream)
 	{
 		// Watch file in the future
-		final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher();
+		final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(true);
 		if (watcher != null)
 		{
 			watcher.add(markupResourceStream, new IChangeListener()

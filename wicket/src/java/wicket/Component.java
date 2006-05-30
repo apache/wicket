@@ -42,7 +42,6 @@ import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
@@ -229,6 +228,56 @@ import wicket.version.undo.Change;
  */
 public abstract class Component<T> implements Serializable, ICoverterLocator
 {
+	/**
+	 * A model that wraps the ICompoundModel that this component gets from 
+	 * the parent.
+	 * 
+	 * @param <V> 
+	 * 
+	 */
+	public class WrapModel<V> implements IModel<V>
+	{
+		private static final long serialVersionUID = 1L;
+
+		private IModel model;
+
+		/**
+		 * Construct.
+		 * @param model
+		 */
+		public WrapModel(IModel model)
+		{
+			this.model = model;
+		}
+
+		public IModel getNestedModel()
+		{
+			return model;
+		}
+
+		@SuppressWarnings("unchecked")
+		public V getObject(Component component)
+		{
+			return (V)model.getObject(Component.this);
+		}
+
+		// I don't think there is any other way then to suppress the warnings here.
+		// The compound model will have its own Value that it returns (when calling with null object)
+		// and that is his type. But this component gets another type from that compound.
+		// The only solution as far as i see is to make compound not generic.
+		@SuppressWarnings("unchecked")
+		public void setObject(Component component, V object)
+		{
+			model.setObject(Component.this, object);
+		}
+
+		public void detach()
+		{
+			model.detach();
+		}
+
+	}
+
 	/**
 	 * Change record of a model.
 	 */
@@ -503,7 +552,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/** Flag for Component holding root compound model */
-	private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
+	private static final int NOT_USED_ANYMORE_FREE = 0x0004;
 
 	/** Ignore attribute modifiers */
 	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
@@ -619,11 +668,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		setId(id);
 		this.model = model;
 		// If a compound model is explicitly set on this component
-		if (model instanceof ICompoundModel)
-		{
-			// we need to remember this for getModelObject()
-			setFlag(FLAG_HAS_ROOT_MODEL, true);
-		}
 		getApplication().notifyComponentInstantiationListeners(this);
 		if (id.startsWith(AUTO_COMPONENT_PREFIX))
 		{
@@ -1019,16 +1063,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		final IModel<T> model = getModel();
 		if (model != null)
 		{
-			// If this component has the root model for a compound model
-			if (getFlag(FLAG_HAS_ROOT_MODEL))
-			{
-				// we need to return the root model and not a property of the
-				// model
-				return getRootModel(model).getObject(null);
-			}
-
-			// Get model value for this component
-			return model.getObject(this);
+			// Get model value for this component.
+			// always use null now to get the current components object.
+			return model.getObject(null);
 		}
 		else
 		{
@@ -1900,7 +1937,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @return True if the given component's model is the same as this
 	 *         component's model.
 	 */
-	@SuppressWarnings("unchecked")
 	public final boolean sameRootModel(final IModel model)
 	{
 		// Get the two models
@@ -1915,6 +1951,33 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 		return false;
 	}
+	
+	/**
+	 * Finds the root object for an IModel
+	 * 
+	 * @param model
+	 *            The model
+	 * @return The root object
+	 */
+	private final IModel getRootModel(final IModel model)
+	{
+		IModel nestedModelObject = model;
+		while (true)
+		{
+			final IModel next = nestedModelObject.getNestedModel();
+			if (next == null)
+			{
+				break;
+			}
+			if (nestedModelObject == next)
+			{
+				throw new WicketRuntimeException("Model for " + nestedModelObject
+						+ " is self-referential");
+			}
+			nestedModelObject = next;
+		}
+		return nestedModelObject;
+	}	
 
 	/**
 	 * Sets whether this component is enabled. Specific components may decide to
@@ -2007,13 +2070,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			this.model = model;
 		}
 
-		// If a compound model is explicitly set on this component
-		if (model instanceof ICompoundModel)
-		{
-			// we need to remember this for getModelObject()
-			setFlag(FLAG_HAS_ROOT_MODEL, true);
-		}
-
 		modelChanged();
 		return this;
 	}
@@ -2049,14 +2105,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		{
 			modelChanging();
 
-			if (getFlag(FLAG_HAS_ROOT_MODEL))
-			{
-				getRootModel(model).setObject(null, object);
-			}
-			else
-			{
-				model.setObject(this, object);
-			}
+			// sets the current object in the model. So always use null.
+			model.setObject(null, object);
 			modelChanged();
 		}
 
@@ -2416,7 +2466,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	{
 		// If the model is compound and it's not the root model, then it can
 		// be reconstituted via initModel() after replication
-		if (model instanceof CompoundPropertyModel && !getFlag(FLAG_HAS_ROOT_MODEL))
+		if (model instanceof WrapModel)
 		{
 			// Get rid of model which can be lazy-initialized again
 			this.model = null;
@@ -2542,7 +2592,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		for (Component current = getParent(); current != null; current = current.getParent())
 		{
 			// Get model
-			final IModel<T> model = current.getModel();
+			final IModel model = current.getModel();
 			if (model instanceof ICompoundModel)
 			{
 				// we turn off versioning as we share the model with another
@@ -2551,7 +2601,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				setVersioned(false);
 
 				// return the shared compound model
-				return model;
+				return new WrapModel<T>((ICompoundModel)model);
 			}
 		}
 
@@ -3012,30 +3062,4 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
 	}
 
-	/**
-	 * Finds the root object for an IModel
-	 * 
-	 * @param model
-	 *            The model
-	 * @return The root object
-	 */
-	private final IModel<T> getRootModel(final IModel<T> model)
-	{
-		IModel<T> nestedModelObject = model;
-		while (true)
-		{
-			final IModel<T> next = nestedModelObject.getNestedModel();
-			if (next == null)
-			{
-				break;
-			}
-			if (nestedModelObject == next)
-			{
-				throw new WicketRuntimeException("Model for " + nestedModelObject
-						+ " is self-referential");
-			}
-			nestedModelObject = next;
-		}
-		return nestedModelObject;
-	}
 }

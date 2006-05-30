@@ -629,11 +629,11 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#getResourceWatcher()
+	 * @see wicket.settings.IResourceSettings#getResourceWatcher(boolean)
 	 */
-	public ModificationWatcher getResourceWatcher()
+	public ModificationWatcher getResourceWatcher(boolean start)
 	{
-		if (resourceWatcher == null)
+		if (resourceWatcher == null && start)
 		{
 			final Duration pollFrequency = getResourcePollFrequency();
 			if (pollFrequency != null)
