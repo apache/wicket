@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -27,6 +27,7 @@ import javax.swing.tree.TreeModel;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.tree.Tree;
 
 /**
@@ -47,14 +48,14 @@ public class Home extends WicketExamplePage
 	public Home(final PageParameters parameters)
 	{
 		// create a list with sublists
-		List l1 = new ArrayList();
+		List<Object> l1 = new ArrayList<Object>();
 		l1.add("test 1.1");
 		l1.add("test 1.2");
-		List l2 = new ArrayList();
+		List<Object> l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List l3 = new ArrayList();
+		List<Object> l3 = new ArrayList<Object>();
 		l3.add("test 3.1");
 		l2.add(l3);
 		l2.add("test 2.4");
@@ -66,7 +67,7 @@ public class Home extends WicketExamplePage
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		Tree tree = new Tree(this, "tree", treeModel)
+		final Tree tree = new Tree(this, "tree", treeModel)
 		{
 			@Override
 			protected String getNodeLabel(DefaultMutableTreeNode node)
@@ -74,6 +75,23 @@ public class Home extends WicketExamplePage
 				Object userObject = node.getUserObject();
 				return (userObject instanceof List) ? "<sub>" : String
 						.valueOf(node.getUserObject());
+			}
+		};
+		new Link(this, "expandAll")
+		{
+			@Override
+			public void onClick()
+			{
+				tree.expandAll(true);
+			}
+		};
+
+		new Link(this, "collapseAll")
+		{
+			@Override
+			public void onClick()
+			{
+				tree.expandAll(false);
 			}
 		};
 

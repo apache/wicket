@@ -40,19 +40,20 @@ import wicket.markup.html.tree.Tree;
  */
 public class MyTree extends Tree
 {
-	private final ResourceReference folderOpen = new PackageResourceReference(Application.get(),
-			MyTree.class, "folderopen.gif");
-	private final ResourceReference folder = new PackageResourceReference(Application.get(),
-			MyTree.class, "folder.gif");
-	private final ResourceReference nodeImage = new PackageResourceReference(Application.get(),
-			MyTree.class, "node.gif");
-
 	/** Log. */
 	private static Log log = LogFactory.getLog(MyTree.class);
+	private final ResourceReference folder = new PackageResourceReference(Application.get(),
+			MyTree.class, "folder.gif");
+	private final ResourceReference folderOpen = new PackageResourceReference(Application.get(),
+			MyTree.class, "folderopen.gif");
+
+	private final ResourceReference nodeImage = new PackageResourceReference(Application.get(),
+			MyTree.class, "node.gif");
 
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
 	 * @param id
 	 *            The id of this component
 	 * @param model
@@ -64,27 +65,8 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
-	 */
-	@Override
-	protected void junctionLinkClicked(DefaultMutableTreeNode node)
-	{
-		super.junctionLinkClicked(node);
-		log.info("tree junction link was clicked, user object: " + node.getUserObject());
-	}
-
-	/**
-	 * @see wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
-	 */
-	@Override
-	protected void nodeLinkClicked(DefaultMutableTreeNode node)
-	{
-		super.nodeLinkClicked(node);
-		log.info("tree node link was clicked, user object: " + node.getUserObject());
-	}
-
-	/**
-	 * @see wicket.markup.html.tree.Tree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.markup.html.tree.Tree#getNodeImage(MarkupContainer,
+	 *      javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
 	protected Image getNodeImage(MarkupContainer parent, final DefaultMutableTreeNode node)
@@ -123,5 +105,25 @@ public class MyTree extends Tree
 	{
 		Object userObject = node.getUserObject();
 		return (userObject instanceof List) ? "<sub>" : String.valueOf(node.getUserObject());
+	}
+
+	/**
+	 * @see wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 */
+	@Override
+	protected void junctionLinkClicked(DefaultMutableTreeNode node)
+	{
+		super.junctionLinkClicked(node);
+		log.info("tree junction link was clicked, user object: " + node.getUserObject());
+	}
+
+	/**
+	 * @see wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 */
+	@Override
+	protected void nodeLinkClicked(DefaultMutableTreeNode node)
+	{
+		super.nodeLinkClicked(node);
+		log.info("tree node link was clicked, user object: " + node.getUserObject());
 	}
 }

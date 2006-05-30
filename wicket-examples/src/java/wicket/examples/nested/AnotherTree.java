@@ -42,33 +42,6 @@ import wicket.model.IModel;
  */
 public class AnotherTree extends Tree
 {
-	/** Log. */
-	private static Log log = LogFactory.getLog(AnotherTree.class);
-
-	/**
-	 * Construct.
-	 * 
-	 * @param id
-	 *            The id of this component
-	 * @param model
-	 *            the tree model
-	 */
-	public AnotherTree(MarkupContainer parent, final String id, TreeModel model)
-	{
-		super(parent, id, model);
-	}
-
-	/**
-	 * @see wicket.markup.html.tree.Tree#newNodePanel(java.lang.String,
-	 *      javax.swing.tree.DefaultMutableTreeNode)
-	 */
-	@Override
-	protected Component newNodePanel(MarkupContainer parent, String panelId,
-			DefaultMutableTreeNode node)
-	{
-		return new Node(parent, panelId, node);
-	}
-
 	/**
 	 * Custom node panel.
 	 */
@@ -77,6 +50,7 @@ public class AnotherTree extends Tree
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param panelId
 		 *            The id of the component
 		 * @param node
@@ -128,5 +102,33 @@ public class AnotherTree extends Tree
 			String label = (userObject instanceof List) ? "" : String.valueOf(node.getUserObject());
 			new Label(nodeLink, "label", label);
 		}
+	}
+
+	/** Log. */
+	private static Log log = LogFactory.getLog(AnotherTree.class);
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 *            The id of this component
+	 * @param model
+	 *            the tree model
+	 */
+	public AnotherTree(MarkupContainer parent, final String id, TreeModel model)
+	{
+		super(parent, id, model);
+	}
+
+	/**
+	 * @see wicket.markup.html.tree.Tree#newNodePanel(MarkupContainer, java.lang.String,
+	 *      javax.swing.tree.DefaultMutableTreeNode)
+	 */
+	@Override
+	protected Component newNodePanel(MarkupContainer parent, String panelId,
+			DefaultMutableTreeNode node)
+	{
+		return new Node(parent, panelId, node);
 	}
 }
