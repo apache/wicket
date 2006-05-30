@@ -59,7 +59,7 @@ public final class LibraryApplication extends WicketExampleApplication
 			protected boolean isAuthorized()
 			{
 				// check whether the user is logged on
-				return (((LibrarySession)Session.get()).isSignedIn());
+				return LibrarySession.get().isSignedIn();
 			}
 		};
 		getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);

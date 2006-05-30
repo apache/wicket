@@ -42,7 +42,7 @@ public final class SignIn extends WicketExamplePage
 			public boolean signIn(final String username, final String password)
 			{
 				// Sign the user in
-				final User user = ((LibrarySession)getSession()).authenticate(username, password);
+				final User user = LibrarySession.get().authenticate(username, password);
 
 				// If the user was signed in
 				if (user != null)

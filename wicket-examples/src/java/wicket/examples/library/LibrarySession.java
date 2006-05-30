@@ -20,6 +20,7 @@ package wicket.examples.library;
 
 import java.util.List;
 
+import wicket.Session;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
@@ -30,6 +31,16 @@ import wicket.protocol.http.WebSession;
  */
 public final class LibrarySession extends WebSession
 {
+	/**
+	 * Gets the library session.
+	 * 
+	 * @return The library session
+	 */
+	public static LibrarySession get()
+	{
+		return (LibrarySession)Session.get();
+	}
+
 	private User user;
 
 	/**
@@ -85,19 +96,19 @@ public final class LibrarySession extends WebSession
 	}
 
 	/**
-	 * @return True if user is signed in
-	 */
-	public boolean isSignedIn()
-	{
-		return user != null;
-	}
-
-	/**
 	 * @return User
 	 */
 	public User getUser()
 	{
 		return user;
+	}
+
+	/**
+	 * @return True if user is signed in
+	 */
+	public boolean isSignedIn()
+	{
+		return user != null;
 	}
 
 	/**
