@@ -25,9 +25,12 @@ import wicket.model.IModel;
  * A text field which automatically adds a RequiredValidator. This is mainly for
  * convenience, since you can always add(new RequiredValidator()) manually.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  */
-public class RequiredTextField extends TextField
+public class RequiredTextField<T> extends TextField<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +55,7 @@ public class RequiredTextField extends TextField
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public RequiredTextField(MarkupContainer parent, final String id, final IModel model)
+	public RequiredTextField(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 		setRequired(true);
@@ -67,7 +70,7 @@ public class RequiredTextField extends TextField
 	 *            The type to use when updating the model for this text field
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public RequiredTextField(MarkupContainer parent, final String id, IModel model, Class type)
+	public RequiredTextField(MarkupContainer parent, final String id, IModel<T> model, Class type)
 	{
 		super(parent, id, model, type);
 		setRequired(true);
