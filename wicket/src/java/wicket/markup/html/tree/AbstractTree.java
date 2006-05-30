@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -75,6 +76,50 @@ public abstract class AbstractTree extends Panel
 	{
 		super(parent, id);
 		this.treeState = treeState;
+	}
+
+	/**
+	 * Ensures that the node identified by the specified path is collapsed and
+	 * viewable.
+	 * 
+	 * @param path
+	 *            the <code>TreePath</code> identifying a node
+	 */
+	public void collapsePath(TreePath path)
+	{
+		setExpandedState(path, false);
+	}
+
+	/**
+	 * Expand or collapse all nodes.
+	 * 
+	 * @param expand
+	 *            If true, expand all nodes in the tree. Else collapse all nodes
+	 *            in the tree.
+	 */
+	public void expandAll(boolean expand)
+	{
+		TreeNode root = (TreeNode)getTreeState().getModel().getRoot();
+		expandAll(new TreePath(root), expand);
+	}
+
+	/**
+	 * Ensures that the node identified by the specified path is expanded and
+	 * viewable. If the last item in the path is a leaf, this will have no
+	 * effect.
+	 * 
+	 * @param path
+	 *            the <code>TreePath</code> identifying a node
+	 */
+	public void expandPath(TreePath path)
+	{
+		// Only expand if not leaf!
+		TreeModel model = getTreeState().getModel();
+
+		if (path != null && model != null && !model.isLeaf(path.getLastPathComponent()))
+		{
+			setExpandedState(path, true);
+		}
 	}
 
 	/**
@@ -188,17 +233,6 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
-	 * Sets the current tree state to the given tree state.
-	 * 
-	 * @param treeState
-	 *            the tree state to set as the current one
-	 */
-	public void setTreeState(final TreeState treeState)
-	{
-		this.treeState = treeState;
-	}
-
-	/**
 	 * Sets the current tree model.
 	 * 
 	 * @param treeModel
@@ -207,6 +241,17 @@ public abstract class AbstractTree extends Panel
 	public void setTreeModel(final TreeModel treeModel)
 	{
 		this.treeState = newTreeState(treeModel);
+	}
+
+	/**
+	 * Sets the current tree state to the given tree state.
+	 * 
+	 * @param treeState
+	 *            the tree state to set as the current one
+	 */
+	public void setTreeState(final TreeState treeState)
+	{
+		this.treeState = treeState;
 	}
 
 	/**
@@ -269,5 +314,28 @@ public abstract class AbstractTree extends Panel
 		treeState.setRootVisible(rootVisible);
 		treeModel.addTreeModelListener(treeState);
 		return treeState;
+	}
+
+	private final void expandAll(TreePath parent, boolean expand)
+	{
+		TreeNode node = (TreeNode)parent.getLastPathComponent();
+		if (node.getChildCount() >= 0)
+		{
+			for (Enumeration e = node.children(); e.hasMoreElements();)
+			{
+				TreeNode n = (TreeNode)e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+				expandAll(path, expand);
+			}
+		}
+
+		if (expand)
+		{
+			expandPath(parent);
+		}
+		else
+		{
+			collapsePath(parent);
+		}
 	}
 }
