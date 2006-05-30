@@ -180,11 +180,11 @@ public class SubmitLink extends Button
 	{
 		Form form = getForm();
 		StringBuffer sb = new StringBuffer(100);
-		sb.append("document.getElementById('");
+		sb.append("var e=document.getElementById('");
 		sb.append(form.getHiddenFieldId());
-		sb.append("').name=\'");
+		sb.append("'); e.name=\'");
 		sb.append(getInputName());
-		sb.append("';");
+		sb.append("'; e.value='x';");
 
 		sb.append("var f=document.getElementById('");
 		sb.append(form.getJavascriptId());
