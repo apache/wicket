@@ -86,7 +86,7 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	 * @param model
 	 *            The model object, which may or may not implement IModel
 	 */
-	public BoundCompoundPropertyModel(final T model)
+	public BoundCompoundPropertyModel(final Object model)
 	{
 		super(model);
 	}

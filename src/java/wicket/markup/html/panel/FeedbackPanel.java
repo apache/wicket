@@ -70,7 +70,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 		public MessageListView(MarkupContainer parent, final String id)
 		{
 			super(parent, id);
-			setModel(newFeedbackMessagesModel());
+			setModel(new WrapModel<List<FeedbackMessage>>(newFeedbackMessagesModel()));
 		}
 
 		/**

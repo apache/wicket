@@ -272,7 +272,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	{
 		// Watch file modifications
 		final ModificationWatcher watcher = Application.get().getResourceSettings()
-				.getResourceWatcher();
+				.getResourceWatcher(true);
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()

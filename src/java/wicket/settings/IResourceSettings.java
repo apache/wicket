@@ -142,10 +142,12 @@ public interface IResourceSettings
 	IResourceStreamLocator getResourceStreamLocator();
 
 	/**
+	 * @param start boolean if the resource watcher should be started if not already started. 
+	 *
 	 * @return Resource watcher with polling frequency determined by setting, or
 	 *         null if no polling frequency has been set.
 	 */
-	ModificationWatcher getResourceWatcher();
+	ModificationWatcher getResourceWatcher(boolean start);
 
 	/**
 	 * @return an unmodifiable list of all available string resource loaders
