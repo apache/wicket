@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -28,11 +28,19 @@ import java.util.List;
  */
 public final class User implements Serializable
 {
+	// The user's personal book list
+	private List<Book> books = new ArrayList<Book>();
+
 	// The user's name
 	private String name;
 
-	// The user's personal book list
-	private List books = new ArrayList();
+	/**
+	 * @return User's book list
+	 */
+	public final List<Book> getBooks()
+	{
+		return books;
+	}
 
 	/**
 	 * @return User name
@@ -43,28 +51,20 @@ public final class User implements Serializable
 	}
 
 	/**
+	 * @param books
+	 *            New book list
+	 */
+	public void setBooks(final List<Book> books)
+	{
+		this.books = books;
+	}
+
+	/**
 	 * @param string
 	 *            User name
 	 */
 	public final void setName(final String string)
 	{
 		name = string;
-	}
-
-	/**
-	 * @return User's book list
-	 */
-	public final List getBooks()
-	{
-		return books;
-	}
-
-	/**
-	 * @param books
-	 *            New book list
-	 */
-	public void setBooks(final List books)
-	{
-		this.books = books;
 	}
 }

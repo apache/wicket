@@ -56,10 +56,10 @@ public class LinkPage extends WicketExamplePage
 
 		// add a counter label to the link so that we can display it in the body
 		// of the link
-		new Label(link1, "label1", new Model()
+		new Label(link1, "label1", new Model<String>()
 		{
 			@Override
-			public Object getObject(Component component)
+			public String getObject(Component component)
 			{
 				return Integer.toString(count1.clicks);
 			}
@@ -115,10 +115,10 @@ public class LinkPage extends WicketExamplePage
 			{
 				super(parent, id);
 				count3 = new ClickCount();
-				add(new AttributeModifier("value", new Model()
+				add(new AttributeModifier("value", new Model<String>()
 				{
 					@Override
-					public Object getObject(Component component)
+					public String getObject(Component component)
 					{
 						// we just replace the whole string. You could use
 						// custom
@@ -167,10 +167,10 @@ public class LinkPage extends WicketExamplePage
 		{
 			// call super with a simple annonymous class model that displays the
 			// current number of clicks
-			super(parent, id, new Model()
+			super(parent, id, new Model<String>()
 			{
 				@Override
-				public Object getObject(Component component)
+				public String getObject(Component component)
 				{
 					return Integer.toString(clickCount.clicks);
 				}

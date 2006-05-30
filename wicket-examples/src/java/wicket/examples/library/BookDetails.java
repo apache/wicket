@@ -18,13 +18,13 @@
  */
 package wicket.examples.library;
 
-import java.util.Iterator;
-
 import wicket.AttributeModifier;
 import wicket.MarkupContainer;
 import wicket.PageParameters;
+import wicket.examples.library.Book.WritingStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.StringList;
 import wicket.util.string.StringValueConversionException;
@@ -37,15 +37,35 @@ import wicket.util.string.StringValueConversionException;
 public final class BookDetails extends AuthenticatedWebPage
 {
 	/**
-	 * Constructor for calls from external page links
+	 * Creates an external page link
 	 * 
-	 * @param parameters
-	 *            Page parameters
-	 * @throws StringValueConversionException
+	 * @param parent
+	 *            The parent component
+	 * @param name
+	 *            The name of the link component to create
+	 * @param book
+	 *            The book to link to
+	 * @param noBookTitle
+	 *            The title to show if book is null
+	 * @return The external page link
 	 */
-	public BookDetails(final PageParameters parameters) throws StringValueConversionException
+	public static BookmarkablePageLink link(MarkupContainer parent, final String name,
+			final Book book, final String noBookTitle)
 	{
-		this(Book.get(parameters.getLong("id")));
+		final BookmarkablePageLink link = new BookmarkablePageLink(parent, name, BookDetails.class);
+
+		if (book != null)
+		{
+			link.setParameter("id", book.getId());
+			new Label(link, "title", new Model<Book>(book));
+		}
+		else
+		{
+			new Label(link, "title", noBookTitle);
+			link.setEnabled(false);
+		}
+
+		return link;
 	}
 
 	/**
@@ -56,7 +76,7 @@ public final class BookDetails extends AuthenticatedWebPage
 	 */
 	public BookDetails(final Book book)
 	{
-		Model bookModel = new Model(book);
+		IModel<Book> bookModel = new Model<Book>(book);
 
 		new Label(this, "title", book.getTitle());
 		new Label(this, "author", book.getAuthor());
@@ -74,10 +94,8 @@ public final class BookDetails extends AuthenticatedWebPage
 		{
 			StringList styles = new StringList();
 
-			for (Iterator iterator = book.getWritingStyles().iterator(); iterator.hasNext();)
+			for (WritingStyle style : book.getWritingStyles())
 			{
-				Book.WritingStyle style = (Book.WritingStyle)iterator.next();
-
 				styles.add(getLocalizer().getString(style.toString(), this));
 			}
 
@@ -90,7 +108,7 @@ public final class BookDetails extends AuthenticatedWebPage
 
 		Label writingStylesLabel = new Label(this, "writingStyles", writingStyles);
 
-		final AttributeModifier italic = new AttributeModifier("class", new Model("italic"));
+		final AttributeModifier italic = new AttributeModifier("class", new Model<String>("italic"));
 		italic.setEnabled(!hasStyles);
 
 		writingStylesLabel.add(italic);
@@ -98,32 +116,14 @@ public final class BookDetails extends AuthenticatedWebPage
 	}
 
 	/**
-	 * Creates an external page link
+	 * Constructor for calls from external page links
 	 * 
-	 * @param name
-	 *            The name of the link component to create
-	 * @param book
-	 *            The book to link to
-	 * @param noBookTitle
-	 *            The title to show if book is null
-	 * @return The external page link
+	 * @param parameters
+	 *            Page parameters
+	 * @throws StringValueConversionException
 	 */
-	public static BookmarkablePageLink link(MarkupContainer parent, final String name,
-			final Book book, final String noBookTitle)
+	public BookDetails(final PageParameters parameters) throws StringValueConversionException
 	{
-		final BookmarkablePageLink link = new BookmarkablePageLink(parent, name, BookDetails.class);
-
-		if (book != null)
-		{
-			link.setParameter("id", book.getId());
-			new Label(link, "title", new Model(book));
-		}
-		else
-		{
-			new Label(link, "title", noBookTitle);
-			link.setEnabled(false);
-		}
-
-		return link;
+		this(Book.get(parameters.getLong("id")));
 	}
 }

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,12 +19,14 @@ package wicket.examples.library;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.examples.library.Book.WritingStyle;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -37,7 +39,6 @@ import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
-import wicket.util.lang.EnumeratedType;
 
 /**
  * A page that contains a form that allows editing of books.
@@ -46,26 +47,83 @@ import wicket.util.lang.EnumeratedType;
  */
 public final class EditBook extends AuthenticatedWebPage
 {
-	static final Book otherBook = new Book("Frisbee Techniques", "Marty van Hoff", Book.FICTION);
-
 	/**
-	 * Constructs a page that edits a book
+	 * Form that edits a book
 	 * 
-	 * @param book
-	 *            The book to edit
+	 * @author Jonathan Locke
 	 */
-	public EditBook(final Book book)
+	static public final class EditBookForm extends Form<Book>
 	{
-		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
+		/**
+		 * Constructor
+		 * 
+		 * @param parent
+		 *            The parent
+		 * @param id
+		 *            id of form
+		 * @param book
+		 *            Book model
+		 */
+		public EditBookForm(MarkupContainer parent, final String id, final Book book)
+		{
+			super(parent, id, new CompoundPropertyModel<Book>(book));
 
-		// Add edit book form to page
-		new EditBookForm(this, "editBookForm", book);
+			// Create a required text field with a max length of 30 characters
+			// that edits the book's title
+			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(this,
+					"titleFeedback");
+			final TextField title = new TextField(titleFeedback, "title");
+			title.setRequired(true);
+			title.add(StringValidator.maximumLength(30));
+
+			// Create a required text field that edits the book's author
+			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(
+					this, "authorFeedback");
+			final TextField author = new TextField(authorFeedback, "author");
+			author.setRequired(true);
+
+			// Add fiction checkbox
+			new CheckBox(this, "fiction");
+
+			// Books is everything but otherBook
+			List<Book> books = new ArrayList<Book>();
+
+			books.addAll(Book.getBooks());
+			books.remove(otherBook);
+
+			// Add companion book choice
+			new DropDownChoice<Book>(this, "companionBook", books);
+
+			// Add radio choice test
+			final RadioChoice relatedBook = new RadioChoice(this, "relatedBook", books);
+
+			// Multi-select among writing styles
+			new ListMultipleChoice<WritingStyle>(this, "writingStyles", Arrays.asList(WritingStyle
+					.values()));
+		}
+
+		/**
+		 * Show the resulting valid edit
+		 */
+		@Override
+		public final void onSubmit()
+		{
+			final RequestCycle cycle = getRequestCycle();
+			PageParameters parameters = new PageParameters();
+			final Book book = (Book)getModelObject();
+			parameters.put("id", new Long(book.getId()));
+			cycle.setResponsePage(getPageFactory().newPage(BookDetails.class, parameters));
+			cycle.setRedirect(true);
+		}
 	}
+
+	static final Book otherBook = new Book("Frisbee Techniques", "Marty van Hoff", Book.FICTION);
 
 	/**
 	 * Gets a link to a page that will edit a book
 	 * 
+	 * @param parent
+	 *            The parent
 	 * @param name
 	 *            The name of the link
 	 * @param id
@@ -89,70 +147,17 @@ public final class EditBook extends AuthenticatedWebPage
 	}
 
 	/**
-	 * Form that edits a book
+	 * Constructs a page that edits a book
 	 * 
-	 * @author Jonathan Locke
+	 * @param book
+	 *            The book to edit
 	 */
-	static public final class EditBookForm extends Form
+	public EditBook(final Book book)
 	{
-		/**
-		 * Constructor
-		 * 
-		 * @param id
-		 *            id of form
-		 * @param book
-		 *            Book model
-		 */
-		public EditBookForm(MarkupContainer parent, final String id, final Book book)
-		{
-			super(parent, id, new CompoundPropertyModel(book));
+		// Create and add feedback panel to page
+		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
 
-			// Create a required text field with a max length of 30 characters
-			// that edits the book's title
-			final FormComponentFeedbackBorder titleFeedback = new FormComponentFeedbackBorder(this,
-					"titleFeedback");
-			final TextField title = new TextField(titleFeedback, "title");
-			title.setRequired(true);
-			title.add(StringValidator.maximumLength(30));
-
-			// Create a required text field that edits the book's author
-			final FormComponentFeedbackBorder authorFeedback = new FormComponentFeedbackBorder(
-					this, "authorFeedback");
-			final TextField author = new TextField(authorFeedback, "author");
-			author.setRequired(true);
-
-			// Add fiction checkbox
-			new CheckBox(this, "fiction");
-
-			// Books is everything but otherBook
-			List books = new ArrayList();
-
-			books.addAll(Book.getBooks());
-			books.remove(otherBook);
-
-			// Add companion book choice
-			new DropDownChoice(this, "companionBook", books);
-
-			// Add radio choice test
-			final RadioChoice relatedBook = new RadioChoice(this, "relatedBook", books);
-
-			// Multi-select among writing styles
-			new ListMultipleChoice(this, "writingStyles", EnumeratedType
-					.getValues(Book.WritingStyle.class));
-		}
-
-		/**
-		 * Show the resulting valid edit
-		 */
-		@Override
-		public final void onSubmit()
-		{
-			final RequestCycle cycle = getRequestCycle();
-			PageParameters parameters = new PageParameters();
-			final Book book = (Book)getModelObject();
-			parameters.put("id", new Long(book.getId()));
-			cycle.setResponsePage(getPageFactory().newPage(BookDetails.class, parameters));
-			cycle.setRedirect(true);
-		}
+		// Add edit book form to page
+		new EditBookForm(this, "editBookForm", book);
 	}
 }

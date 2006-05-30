@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,50 +43,25 @@ import wicket.model.Model;
  */
 public final class GuestBook extends WicketExamplePage
 {
-	/** A global list of all comments from all users across all sessions */
-	private static final List commentList = new ArrayList();
-
-	/** The list view that shows comments */
-	private final ListView commentListView;
-
-	/**
-	 * Constructor that is invoked when page is invoked without a session.
-	 */
-	public GuestBook()
-	{
-		// Add comment form
-		new CommentForm(this, "commentForm");
-
-		// Add commentListView of existing comments
-		commentListView = (ListView)new ListView(this, "comments", commentList)
-		{
-			@Override
-			public void populateItem(final ListItem listItem)
-			{
-				final Comment comment = (Comment)listItem.getModelObject();
-				new Label(listItem, "date", new Model(comment.getDate()));
-				new MultiLineLabel(listItem, "text", comment.getText());
-			}
-		}.setVersioned(false);
-	}
-
 	/**
 	 * A form that allows a user to add a comment.
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class CommentForm extends Form
+	public final class CommentForm extends Form<Comment>
 	{
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent
 		 * @param id
 		 *            The name of this component
 		 */
 		public CommentForm(MarkupContainer parent, final String id)
 		{
 			// Construct form with no validation listener
-			super(parent, id, new CompoundPropertyModel(new Comment()));
+			super(parent, id, new CompoundPropertyModel<Comment>(new Comment()));
 
 			// Add text entry widget
 			new TextArea(this, "text");
@@ -99,7 +74,7 @@ public final class GuestBook extends WicketExamplePage
 		public final void onSubmit()
 		{
 			// Construct a copy of the edited comment
-			final Comment comment = (Comment)getModelObject();
+			final Comment comment = getModelObject();
 			final Comment newComment = new Comment(comment);
 
 			// Set date of comment to add
@@ -115,11 +90,38 @@ public final class GuestBook extends WicketExamplePage
 		}
 	}
 
+	/** A global list of all comments from all users across all sessions */
+	private static final List<Comment> commentList = new ArrayList<Comment>();
+
 	/**
 	 * Clears the comments.
 	 */
 	public static void clear()
 	{
 		commentList.clear();
+	}
+
+	/** The list view that shows comments */
+	private final ListView commentListView;
+
+	/**
+	 * Constructor that is invoked when page is invoked without a session.
+	 */
+	public GuestBook()
+	{
+		// Add comment form
+		new CommentForm(this, "commentForm");
+
+		// Add commentListView of existing comments
+		commentListView = (ListView)new ListView<Comment>(this, "comments", commentList)
+		{
+			@Override
+			public void populateItem(final ListItem<Comment> listItem)
+			{
+				final Comment comment = listItem.getModelObject();
+				new Label(listItem, "date", new Model<Date>(comment.getDate()));
+				new MultiLineLabel(listItem, "text", comment.getText());
+			}
+		}.setVersioned(false);
 	}
 }

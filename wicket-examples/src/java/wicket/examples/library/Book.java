@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import wicket.util.lang.EnumeratedType;
-
 /**
  * An example POJO model.
  * 
@@ -35,6 +33,23 @@ import wicket.util.lang.EnumeratedType;
  */
 public final class Book implements Serializable
 {
+	/**
+	 * Typesafe enumeration for writing styles
+	 */
+	public static enum WritingStyle {
+		/** Bad book. */
+		BAD,
+
+		/** Boring book. */
+		BORING,
+
+		/** Funny book. */
+		FUNNY,
+
+		/** Sad book. */
+		SAD
+	}
+
 	/**
 	 * Value for fiction books.
 	 */
@@ -45,20 +60,9 @@ public final class Book implements Serializable
 	 */
 	public static final boolean NON_FICTION = false;
 
-	/** Funny book */
-	public static final WritingStyle FUNNY = new WritingStyle("funny");
-
-	/** Boring book */
-	public static final WritingStyle BORING = new WritingStyle("boring");
-
-	/** Sad book */
-	public static final WritingStyle SAD = new WritingStyle("sad");
-
-	/** Bad book */
-	public static final WritingStyle BAD = new WritingStyle("bad");
+	private static final Map<Long, Book> idToBook = new HashMap<Long, Book>();
 
 	private static long nextId = 0;
-	private static final Map idToBook = new HashMap();
 
 	static
 	{
@@ -67,13 +71,34 @@ public final class Book implements Serializable
 		new Book("Where's my Tardis, dude?", "Dr. Who", Book.FICTION);
 	}
 
-	private long id;
-	private String title;
+	/**
+	 * @param id
+	 *            Book id
+	 * @return Book for id
+	 */
+	public static Book get(final long id)
+	{
+		return idToBook.get(new Long(id));
+	}
+
+	/**
+	 * @return All books
+	 */
+	public static Collection<Book> getBooks()
+	{
+		return idToBook.values();
+	}
+
 	private String author;
 	private Book companionBook;
-	private Book relatedBook;
+	private long id;
 	private boolean isFiction;
-	private List writingStyles = new ArrayList();
+
+	private Book relatedBook;
+
+	private String title;
+
+	private List<WritingStyle> writingStyles = new ArrayList<WritingStyle>();
 
 	/**
 	 * Constructor
@@ -96,43 +121,28 @@ public final class Book implements Serializable
 		add(this);
 	}
 
-	private void add(final Book book)
+	/**
+	 * @return The author
+	 */
+	public final String getAuthor()
 	{
-		boolean hit = false;
-		final Iterator iter = idToBook.values().iterator();
-		while (iter.hasNext())
-		{
-			final Book value = (Book)iter.next();
-			if (value.toString().equals(book.toString()))
-			{
-				book.id = value.id;
-				hit = true;
-				break;
-			}
-		}
-
-		if (hit == false)
-		{
-			idToBook.put(new Long(book.id), book);
-		}
+		return author;
 	}
 
 	/**
-	 * @param id
-	 *            Book id
-	 * @return Book for id
+	 * @return A book that makes a good companion to this one
 	 */
-	public static Book get(final long id)
+	public final Book getCompanionBook()
 	{
-		return (Book)idToBook.get(new Long(id));
+		return companionBook;
 	}
 
 	/**
-	 * @return All books
+	 * @return True if this book is fiction
 	 */
-	public static Collection getBooks()
+	public final boolean getFiction()
 	{
-		return idToBook.values();
+		return isFiction;
 	}
 
 	/**
@@ -144,20 +154,11 @@ public final class Book implements Serializable
 	}
 
 	/**
-	 * @param id
-	 *            New id
+	 * @return Returns the relatedBook.
 	 */
-	public final void setId(final long id)
+	public final Book getRelatedBook()
 	{
-		this.id = id;
-	}
-
-	/**
-	 * @return The author
-	 */
-	public final String getAuthor()
-	{
-		return author;
+		return relatedBook;
 	}
 
 	/**
@@ -169,27 +170,19 @@ public final class Book implements Serializable
 	}
 
 	/**
+	 * @return Returns the writingStyles.
+	 */
+	public final List<WritingStyle> getWritingStyles()
+	{
+		return writingStyles;
+	}
+
+	/**
 	 * @param string
 	 */
 	public final void setAuthor(final String string)
 	{
 		author = string;
-	}
-
-	/**
-	 * @param string
-	 */
-	public final void setTitle(final String string)
-	{
-		title = string;
-	}
-
-	/**
-	 * @return A book that makes a good companion to this one
-	 */
-	public final Book getCompanionBook()
-	{
-		return companionBook;
 	}
 
 	/**
@@ -211,36 +204,12 @@ public final class Book implements Serializable
 	}
 
 	/**
-	 * @return True if this book is fiction
+	 * @param id
+	 *            New id
 	 */
-	public final boolean getFiction()
+	public final void setId(final long id)
 	{
-		return isFiction;
-	}
-
-	/**
-	 * @return Returns the writingStyles.
-	 */
-	public final List getWritingStyles()
-	{
-		return writingStyles;
-	}
-
-	/**
-	 * @param writingStyles
-	 *            The writingStyles to set.
-	 */
-	public final void setWritingStyles(final List writingStyles)
-	{
-		this.writingStyles = writingStyles;
-	}
-
-	/**
-	 * @return Returns the relatedBook.
-	 */
-	public final Book getRelatedBook()
-	{
-		return relatedBook;
+		this.id = id;
 	}
 
 	/**
@@ -253,6 +222,23 @@ public final class Book implements Serializable
 	}
 
 	/**
+	 * @param string
+	 */
+	public final void setTitle(final String string)
+	{
+		title = string;
+	}
+
+	/**
+	 * @param writingStyles
+	 *            The writingStyles to set.
+	 */
+	public final void setWritingStyles(final List<WritingStyle> writingStyles)
+	{
+		this.writingStyles = writingStyles;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -261,14 +247,24 @@ public final class Book implements Serializable
 		return title + " (" + author + ")";
 	}
 
-	/**
-	 * Typesafe enumeration for writing styles
-	 */
-	public static final class WritingStyle extends EnumeratedType
+	private void add(final Book book)
 	{
-		WritingStyle(final String name)
+		boolean hit = false;
+		final Iterator iter = idToBook.values().iterator();
+		while (iter.hasNext())
 		{
-			super(name);
+			final Book value = (Book)iter.next();
+			if (value.toString().equals(book.toString()))
+			{
+				book.id = value.id;
+				hit = true;
+				break;
+			}
+		}
+
+		if (hit == false)
+		{
+			idToBook.put(new Long(book.id), book);
 		}
 	}
 }

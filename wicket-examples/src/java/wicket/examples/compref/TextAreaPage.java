@@ -16,7 +16,6 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
 
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
@@ -29,15 +28,15 @@ import wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class TextAreaPage extends WicketExamplePage
+public class TextAreaPage extends WicketExamplePage<TextAreaPageInput>
 {
 	/**
 	 * Constructor
 	 */
 	public TextAreaPage()
 	{
-		final Input input = new Input();
-		setModel(new CompoundPropertyModel(input));
+		final TextAreaPageInput textAreaPageInput = new TextAreaPageInput();
+		setModel(new CompoundPropertyModel<TextAreaPageInput>(textAreaPageInput));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
@@ -48,28 +47,12 @@ public class TextAreaPage extends WicketExamplePage
 			@Override
 			protected void onSubmit()
 			{
-				info("input: " + input);
+				info("input: " + textAreaPageInput);
 			}
 		};
 
 		// add a text area component that uses Input's 'text' property.
 		new TextArea(form, "text");
-	}
-
-	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
-	{
-		/** some plain text. */
-		public String text = "line 1\nline 2\nline 3";
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "text = '" + text + "'";
-		}
 	}
 
 	/**

@@ -32,6 +32,8 @@ public class LibraryApplicationBorder extends Border
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent
 	 * @param id
 	 *            The id of this component
 	 */

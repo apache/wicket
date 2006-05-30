@@ -63,7 +63,7 @@ public final class Home extends WicketExamplePage
 		});
 
 		// Simple model
-		new Image(this, "image4", new Model("Image2.gif"));
+		new Image(this, "image4", new Model<String>("Image2.gif"));
 
 		// Dynamically created buffered image
 		new Image(this, "image5", getImage5Resource());

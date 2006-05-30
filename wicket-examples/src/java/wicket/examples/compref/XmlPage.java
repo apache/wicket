@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: XmlPage.java 5896 2006-05-26 18:33:19 +0000 (Fri, 26 May 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-05-26 18:33:19 +0000 (Fri, 26 May
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -33,6 +34,33 @@ import wicket.markup.html.list.ListView;
  */
 public class XmlPage extends WebPage
 {
+	/** list view for rendering person objects. */
+	private static final class PersonsListView extends ListView<Person>
+	{
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
+		 * @param id
+		 *            component id
+		 * @param list
+		 *            the model
+		 */
+		public PersonsListView(MarkupContainer parent, final String id, List<Person> list)
+		{
+			super(parent, id, list);
+		}
+
+		@Override
+		protected void populateItem(ListItem<Person> item)
+		{
+			Person person = item.getModelObject();
+			new Label(item, "firstName", person.getName());
+			new Label(item, "lastName", person.getLastName());
+		}
+	}
+
 	/**
 	 * Constructor
 	 */
@@ -48,32 +76,5 @@ public class XmlPage extends WebPage
 	public String getMarkupType()
 	{
 		return "xml";
-	}
-
-	/** list view for rendering person objects. */
-	private static final class PersonsListView extends ListView
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param parent
-		 *            The parent of this component The parent of this component.
-		 * @param id
-		 *            component id
-		 * @param list
-		 *            the model
-		 */
-		public PersonsListView(MarkupContainer parent, final String id, List list)
-		{
-			super(parent, id, list);
-		}
-
-		@Override
-		protected void populateItem(ListItem item)
-		{
-			Person person = (Person)item.getModelObject();
-			new Label(item, "firstName", person.getName());
-			new Label(item, "lastName", person.getLastName());
-		}
 	}
 }

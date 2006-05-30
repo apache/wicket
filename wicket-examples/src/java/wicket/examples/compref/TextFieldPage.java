@@ -16,7 +16,6 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
 
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
@@ -29,14 +28,14 @@ import wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class TextFieldPage extends WicketExamplePage
+public class TextFieldPage extends WicketExamplePage<TextFieldPageInput>
 {
 	/**
 	 * Constructor
 	 */
 	public TextFieldPage()
 	{
-		final Input input = new Input();
+		final TextFieldPageInput textFieldPageInput = new TextFieldPageInput();
 
 		// we use the magical compound property model here as our 'super' model.
 		// when components do not have an explicit model, but on of their
@@ -50,7 +49,7 @@ public class TextFieldPage extends WicketExamplePage
 		// property model's actual object is an instance of 'Input', it will map
 		// to
 		// Input's 'text' property.
-		setModel(new CompoundPropertyModel(input));
+		setModel(new CompoundPropertyModel<TextFieldPageInput>(textFieldPageInput));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
@@ -61,7 +60,7 @@ public class TextFieldPage extends WicketExamplePage
 			@Override
 			protected void onSubmit()
 			{
-				info("input: " + input);
+				info("input: " + textFieldPageInput);
 			}
 		};
 
@@ -93,30 +92,6 @@ public class TextFieldPage extends WicketExamplePage
 		// in the javadocs
 		// of AbstractValidator
 		new TextField(form, "integer", Integer.class);
-	}
-
-	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
-	{
-		// Normally we would have played nice and made it a proper JavaBean with
-		// getters and
-		// setters for its properties. But this is an example which we like to
-		// keep small.
-
-		/** some plain text. */
-		public String text = "some text";
-
-		/** an integer. */
-		public Integer integer = new Integer(12);
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "text = '" + text + "', integer = '" + integer + "'";
-		}
 	}
 
 	/**

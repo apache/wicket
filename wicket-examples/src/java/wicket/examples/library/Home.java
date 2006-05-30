@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,15 +44,16 @@ public final class Home extends AuthenticatedWebPage
 	{
 		// Add table of books
 		final PageableListView listView;
-		listView = new PageableListView(this, "books", new PropertyModel(this, "books"), 4)
+		listView = new PageableListView<Book>(this, "books", new PropertyModel<List<Book>>(this,
+				"books"), 4)
 		{
 			@Override
-			public void populateItem(final ListItem listItem)
+			public void populateItem(final ListItem<Book> listItem)
 			{
-				final Book book = (Book)listItem.getModelObject();
+				final Book book = listItem.getModelObject();
 				BookDetails.link(listItem, "details", book, getLocalizer().getString("noBookTitle",
 						this));
-				new Label(listItem, "author", new Model(book));
+				new Label(listItem, "author", new Model<Book>(book));
 				moveUpLink(listItem, "moveUp", listItem);
 				moveDownLink(listItem, "moveDown", listItem);
 				removeLink(listItem, "remove", listItem);
@@ -72,7 +73,7 @@ public final class Home extends AuthenticatedWebPage
 		// has been instantiated. Thus, you can not realy on user != null.
 		// Note2: In any case, all components must be associated with a
 		// wicket tag.
-		User user = getLibrarySession().getUser();
+		User user = getSession().getUser();
 		if (user == null)
 		{
 			return new ArrayList();

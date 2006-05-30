@@ -49,12 +49,11 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	}
 
 	/**
-	 * Get downcast session object
-	 * 
-	 * @return The session
+	 * @see wicket.Component#getSession()
 	 */
-	public LibrarySession getLibrarySession()
+	@Override
+	public LibrarySession getSession()
 	{
-		return (LibrarySession)getSession();
+		return (LibrarySession)super.getSession();
 	}
 }

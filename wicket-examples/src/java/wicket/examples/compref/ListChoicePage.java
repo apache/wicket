@@ -16,10 +16,6 @@
  */
 package wicket.examples.compref;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
-
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.ListChoice;
@@ -31,19 +27,15 @@ import wicket.model.CompoundPropertyModel;
  * 
  * @author Eelco Hillenius
  */
-public class ListChoicePage extends WicketExamplePage
+public class ListChoicePage extends WicketExamplePage<ListChoicePageInput>
 {
-	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
-
 	/**
 	 * Constructor
 	 */
 	public ListChoicePage()
 	{
-		final Input input = new Input();
-		setModel(new CompoundPropertyModel(input));
+		final ListChoicePageInput listChoicePageInput = new ListChoicePageInput();
+		setModel(new CompoundPropertyModel<ListChoicePageInput>(listChoicePageInput));
 
 		// Add a FeedbackPanel for displaying our messages
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
@@ -54,7 +46,7 @@ public class ListChoicePage extends WicketExamplePage
 			@Override
 			protected void onSubmit()
 			{
-				info("input: " + input);
+				info("input: " + listChoicePageInput);
 			}
 		};
 
@@ -62,24 +54,8 @@ public class ListChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		ListChoice listChoice = new ListChoice(form, "site", SITES);
+		ListChoice listChoice = new ListChoice(form, "site", ListChoicePageInput.SITES);
 		listChoice.setMaxRows(4);
-	}
-
-	/** Simple data class that acts as a model for the input fields. */
-	private static class Input implements Serializable
-	{
-		/** the selected site. */
-		public String site = (String)SITES.get(0);
-
-		/**
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString()
-		{
-			return "site = '" + site + "'";
-		}
 	}
 
 	/**

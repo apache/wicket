@@ -65,7 +65,7 @@ public final class LibrarySession extends WebSession
 
 				user.setName(username);
 
-				final List books = user.getBooks();
+				final List<Book> books = user.getBooks();
 
 				books.add(new Book("Effective Java", "Joshua Bloch", Book.NON_FICTION));
 				books.add(new Book("The Illiad", "Homer Simpson", Book.FICTION));
