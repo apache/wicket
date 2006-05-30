@@ -25,7 +25,7 @@ import wicket.Session;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
 import wicket.examples.WicketExampleApplication;
-import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequestCycleSettings.RenderStrategy;
 
 /**
  * WicketServlet class for example.
@@ -48,7 +48,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_RENDER);
+		getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
 
 		// Install a simple page authorization strategy, that checks all pages
 		// of type AuthenticatedWebPage.
