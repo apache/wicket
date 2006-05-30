@@ -27,6 +27,7 @@ import javax.swing.tree.TreeModel;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.link.Link;
 import wicket.markup.html.tree.Tree;
 
 /**
@@ -66,7 +67,7 @@ public class Home extends WicketExamplePage
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		Tree tree = new Tree("tree", treeModel)
+		final Tree tree = new Tree("tree", treeModel)
 		{
 			protected String getNodeLabel(DefaultMutableTreeNode node)
 			{
@@ -76,6 +77,21 @@ public class Home extends WicketExamplePage
 			}
 		};
 		add(tree);
+		add(new Link("expandAll")
+		{
+			public void onClick()
+			{
+				tree.expandAll(true);
+			}
+		});
+
+		add(new Link("collapseAll")
+		{
+			public void onClick()
+			{
+				tree.expandAll(false);
+			}
+		});
 
 		// and another one
 		Tree tree2 = new MyTree("tree2", treeModel);
