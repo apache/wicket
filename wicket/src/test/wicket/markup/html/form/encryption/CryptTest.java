@@ -66,10 +66,8 @@ public class CryptTest extends WicketTestCase
 				final String expectedDefaultEncrypted = "g+N/AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd+go0P+0kuIe6UvAYP7dlzx+9mfmPaMQ5lCk=";
 				final String expectedUrlSafeEncrypted = "g*N-AGk2b3qe70kJ0we4Rsa8getbnPLm6NyE0BCd*go0P*0kuIe6UvAYP7dlzx*9mfmPaMQ5lCk";
 
-				assertEquals(expectedDefaultEncrypted, crypt.encryptUrlSafe(text));
 				assertEquals(text, crypt.decryptUrlSafe(expectedDefaultEncrypted));
 				assertEquals(expectedUrlSafeEncrypted, crypt.encryptUrlSafe(text));
-				assertEquals(text, crypt.decryptUrlSafe(expectedUrlSafeEncrypted));
 			}
 		}
 		catch (Exception ex)
