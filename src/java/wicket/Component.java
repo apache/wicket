@@ -865,7 +865,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 *         is in.
 	 * @see Application
 	 */
-	public final Application getApplication()
+	public Application getApplication()
 	{
 		return Application.get();
 	}
@@ -900,7 +900,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * Gets the converter that should be used by this component.
 	 * 
 	 * @param type
-	 *            TODO
+	 *            The type to convert to
 	 * 
 	 * @return The converter that should be used by this component
 	 */
@@ -984,42 +984,22 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	/**
 	 * Retrieves id by which this component is represented within the markup.
 	 * <p>
-	 * The point of this function is to generate a unique id to make it easy to
-	 * locate this component in the generated markup for post-wicket processing
-	 * such as javascript or an xslt transform.
+	 * If the id attribute is present in the markup attributes of this component
+	 * it will be used, otherwise the page-relative path of this component will
+	 * be used.
 	 * <p>
-	 * Note: The component must have been added (directly or indirectly) to a
-	 * container with an associated markup file (Page, Panel or Border). This
-	 * TODO post 1.2 this restriction will be implicitly met after implementing
-	 * 2.0's constructor change
 	 * 
-	 * @return markup id of this component, which is the result of the call to
-	 *         {@link #getPageRelativePath()} where the ':' character (the
-	 *         internal path seperator of Wicket) are replaced by the '_'
-	 *         character.
+	 * @return the Markup id
 	 */
 	public String getMarkupId()
 	{
-		/*
-		 * TODO Post 1.2: Restore the code below after the constructor refactor,
-		 * right now its causing too much pain for components inside listviews
-		 * and borders.
-		 * 
-		 * CODE:
-		 * 
-		 * String id = getMarkupAttributes().getString("id"); if (id == null) {
-		 * id = getPageRelativePath(); } return id;
-		 * 
-		 * JAVADOC:
-		 * 
-		 * If the id attribute is present in the markup attributes of this
-		 * component it will be used, otherwise the page-relative path of this
-		 * component will be used. <p>
-		 * 
-		 * 
-		 */
-
-		return getPageRelativePath().replace(':', '_');
+		String id = getMarkupAttributes().getString("id");
+		if (id == null)
+		{
+			id = getPageRelativePath();
+		}
+		id = id.replace(':', '_');
+		return id;
 	}
 
 	/**
@@ -1187,7 +1167,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	/**
 	 * @return The request for this component's active request cycle
 	 */
-	public final Request getRequest()
+	public Request getRequest()
 	{
 		return getRequestCycle().getRequest();
 	}
@@ -1197,7 +1177,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * 
 	 * @return The request cycle
 	 */
-	public final RequestCycle getRequestCycle()
+	public RequestCycle getRequestCycle()
 	{
 		return RequestCycle.get();
 	}
@@ -1205,7 +1185,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	/**
 	 * @return The response for this component's active request cycle
 	 */
-	public final Response getResponse()
+	public Response getResponse()
 	{
 		return getRequestCycle().getResponse();
 	}
@@ -1215,7 +1195,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * 
 	 * @return The Session that this component is in
 	 */
-	public final Session getSession()
+	public Session getSession()
 	{
 		return Session.get();
 	}
@@ -1362,34 +1342,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			return authorizationStrategy.isActionAuthorized(this, action);
 		}
 		return true;
-	}
-
-	/**
-	 * Returns true if this component is an ancestor of the given component
-	 * 
-	 * @param component
-	 *            The component to check
-	 * @return True if the given component has this component as an ancestor
-	 * @deprecated use getParent().contains(component, false)
-	 */
-	@Deprecated
-	public final boolean isAncestorOf(final Component component)
-	{
-		return getParent().contains(component, false);
-		// // Walk up containment hierarchy
-		// for (MarkupContainer current = component.parent; current != null;
-		// current = current
-		// .getParent())
-		// {
-		// // Is this an ancestor?
-		// if (current == this)
-		// {
-		// return true;
-		// }
-		// }
-		//
-		// // This component is not an ancestor of the given component
-		// return false;
 	}
 
 	/**

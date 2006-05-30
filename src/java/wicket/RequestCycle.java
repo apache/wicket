@@ -275,7 +275,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return Application interface
 	 */
-	public final Application getApplication()
+	public Application getApplication()
 	{
 		return application;
 	}
@@ -288,7 +288,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return the agent info object based on this request
 	 */
-	public final ClientInfo getClientInfo()
+	public ClientInfo getClientInfo()
 	{
 		return getSession().getClientInfo();
 	}
@@ -395,7 +395,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return Session object
 	 */
-	public final Session getSession()
+	public Session getSession()
 	{
 		return session;
 	}

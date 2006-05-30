@@ -281,7 +281,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 * 
 	 * @return Returns the application.
 	 */
-	public final Application getApplication()
+	public Application getApplication()
 	{
 		return application;
 	}
