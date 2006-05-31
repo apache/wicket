@@ -46,7 +46,7 @@ public interface IAutoCompleteRenderer extends Serializable
 	 *            completion choice object
 	 * @param response
 	 */
-	void render(Object object, Response response);
+	void render(Object object, Response response, String criteria);
 
 
 	/**
