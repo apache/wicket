@@ -1,6 +1,6 @@
 <projectDescription>
   <name>wicket-extensions</name>
-  <comment></comment>
+  <comment>Wicket Extensions is a rich component library for the Wicket framework.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
