@@ -111,12 +111,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 	private transient MarkupStream markupStream;
 
 	/**
-	 * package scope Constructor, only used by pages.
+	 * Package scope Constructor, only used by pages.
 	 * 
-	 * @param parent
-	 *            The parent of this component The parent of this component.
-	 * @param id
-	 *            The non-null id of this component.
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
