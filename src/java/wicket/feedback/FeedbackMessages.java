@@ -52,9 +52,6 @@ public final class FeedbackMessages implements Serializable
 	/**
 	 * Package local constructor; clients are not allowed to create instances as
 	 * this class is managed by the framework.
-	 * 
-	 * @param sessionStored
-	 *            whether or not this object is stored in session
 	 */
 	public FeedbackMessages()
 	{
