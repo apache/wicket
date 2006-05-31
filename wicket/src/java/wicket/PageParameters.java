@@ -55,7 +55,7 @@ public final class PageParameters extends ValueMap
 	/**
 	 * Copy constructor.
 	 * 
-	 * @param map
+	 * @param parameterMap
 	 *            The map to copy
 	 * @see ValueMap#ValueMap(java.util.Map)
 	 */
