@@ -654,7 +654,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
-	@SuppressWarnings("null")
 	public Component(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		if (parent == null)
