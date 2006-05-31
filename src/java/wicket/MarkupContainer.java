@@ -144,12 +144,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * may lead to a java component hierarchy which no longer matches the
 	 * template hierarchy, which in turn will lead to an error.
 	 * 
-	 * @param param1
-	 *            TODO
 	 * @param child
 	 *            The child
-	 * @param param2
-	 *            TODO
 	 * 
 	 * @throws IllegalArgumentException
 	 *             Thrown if a child with the same id is replaced by the add
