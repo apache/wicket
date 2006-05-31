@@ -6,7 +6,7 @@
 	<groupId>wicket</groupId>
 	<artifactId>wicket-auth-roles-examples</artifactId>
 	<packaging>war</packaging>
-	<version>1.2-SNAPSHOT</version>
+	<version>2.0-SNAPSHOT</version>
 	<name>Wicket Authorization Roles examples</name>
 	<description>
 		Examples project for the Wicket authorization based on roles. Requires Java 1.5
@@ -82,7 +82,7 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-auth-roles</artifactId>
-			<version>1.2-SNAPSHOT</version>
+			<version>2.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
