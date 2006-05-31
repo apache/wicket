@@ -190,22 +190,36 @@ function WicketAutoComplete(elementId,callbackUrl){
 	function getSelectedValue(){
 		var element=wicketGet(elementId+'-autocomplete');
 		var attr=element.firstChild.childNodes[selected].attributes['textvalue'];
+		var value;
 		if (attr==undefined) {
-		    return element.firstChild.childNodes[selected].innerHTML;
+		    value = element.firstChild.childNodes[selected].innerHTML;
 		} else {
-		    return attr.value;
-        }		    
+		    value = attr.value;
+    }
+    return stripHTML(value);		    
 	}
+	
+  function stripHTML(str) {
+		return str.replace(/<[^>]+>/g,"");
+  } 
 	
 	function render(){	
 		var element=wicketGet(elementId+'-autocomplete');
     	for(var i=0;i<elementCount;i++){
     		var node=element.firstChild.childNodes[i];
-			if(selected==i){
-	    		node.className='selected';
-	    	} else {
-	    		node.className='';
+    		
+				var classNames = node.className.split(" ");
+				for (var j=0; j<classNames.length; j++) {
+					if (classNames[j] == 'selected') {
+						classNames[j] = '';
+					}
+				} 
+    		
+				if(selected==i){
+	    		classNames.push('selected');
 	    	}
+	    	
+	    	node.className = classNames.join(" ");
     	}    		
 	}
 		
