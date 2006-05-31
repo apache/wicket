@@ -48,7 +48,7 @@ public class MultiLineLabel extends WebComponent
 	 * 
 	 * @param id
 	 *            See Component
-	 * @see Label#Label(String)
+	 * @see Label#Label(MarkupContainer, String)
 	 */
 	public MultiLineLabel(MarkupContainer parent, final String id)
 	{
@@ -67,7 +67,7 @@ public class MultiLineLabel extends WebComponent
 	 * @param label
 	 *            The label text
 	 * 
-	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	public MultiLineLabel(MarkupContainer parent, final String id, String label)
 	{
@@ -75,7 +75,7 @@ public class MultiLineLabel extends WebComponent
 	}
 
 	/**
-	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	public MultiLineLabel(MarkupContainer parent, final String id, IModel model)
 	{
