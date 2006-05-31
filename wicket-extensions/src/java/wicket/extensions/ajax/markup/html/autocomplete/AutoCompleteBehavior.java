@@ -53,7 +53,7 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 				while (comps.hasNext())
 				{
 					final Object comp = comps.next();
-					renderer.render(comp, r);
+					renderer.render(comp, r, val);
 				}
 				renderer.renderFooter(r);
 			}
