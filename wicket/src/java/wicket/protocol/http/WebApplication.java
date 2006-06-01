@@ -35,6 +35,7 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
@@ -236,7 +237,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final Class bookmarkablePageClass)
+	public final void mountBookmarkablePage(final String path, final Class<? extends WebPage> bookmarkablePageClass)
 	{
 		checkMountPath(path);
 		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
@@ -254,7 +255,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 *            the bookmarkable page class to mount
 	 */
 	public final void mountBookmarkablePage(final String path, final PageMap pageMap,
-			final Class bookmarkablePageClass)
+			final Class<? extends WebPage> bookmarkablePageClass)
 	{
 		checkMountPath(path);
 		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,

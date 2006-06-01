@@ -81,9 +81,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
 
 	/** Comparator implementation that sorts longest strings first */
-	private static final Comparator lengthComparator = new Comparator()
+	private static final Comparator<String> lengthComparator = new Comparator<String>()
 	{
-		public int compare(Object o1, Object o2)
+		public int compare(String o1, String o2)
 		{
 			// longer first
 			if (o1 == o2)
@@ -100,9 +100,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			}
 			else
 			{
-				String lhs = (String)o1;
-				String rhs = (String)o2;
-				return 0 - lhs.compareTo(rhs);
+				return 0 - o1.compareTo(o2);
 			}
 		}
 	};
@@ -126,7 +124,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * match the longest possible path first.
 	 * </p>
 	 */
-	private final SortedMap/* <String,IRequestTargetUrlCodingStrategy> */mountsOnPath = new TreeMap(
+	private final SortedMap<String, IRequestTargetUrlCodingStrategy>mountsOnPath = new TreeMap<String, IRequestTargetUrlCodingStrategy>(
 			lengthComparator);
 
 	/** cached url prefix. */

@@ -159,7 +159,7 @@ public class HtmlDocumentParser
 	 */
 	private Map extractAttributes(String attributeString)
 	{
-		Map m = new HashMap();
+		Map<String, String> m = new HashMap<String, String>();
 		attributeString = Strings.replaceAll(attributeString.trim(), "\t", " ").toString();
 		attributeString = Strings.replaceAll(attributeString, " = ", "=").toString();
 		String[] attributeElements = attributeString.split(" ");
