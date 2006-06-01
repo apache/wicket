@@ -45,7 +45,7 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	Page newPage(final Class pageClass);
+	Page newPage(final Class<? extends Page> pageClass);
 
 	/**
 	 * Creates a new Page, passing PageParameters to the Page constructor if
@@ -61,5 +61,5 @@ public interface IPageFactory
 	 * @throws WicketRuntimeException
 	 *             Thrown if the page cannot be constructed
 	 */
-	Page newPage(final Class pageClass, final PageParameters parameters);
+	Page newPage(final Class<? extends Page> pageClass, final PageParameters parameters);
 }
