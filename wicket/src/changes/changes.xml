@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+      <action type="fix" dev="Igor Vaynberg">Fixed palette remove on doubleclick to add button bug</action>
       <action type="fix" dev="Igor Vaynberg">Fixed SubmitLink.onSubmit()</action>
       <action type="fix" dev="Igor Vaynberg">Fixed errors when ajax requests came in to a page that is no longer active</action>
       <action type="fix" dev="Martijn Dashorst">Fix for AjaxEventBehavior where disabled components still got ajax behavior attached, especially when links are disabled, they shouldn't recieve an onclick event handler.</action>
