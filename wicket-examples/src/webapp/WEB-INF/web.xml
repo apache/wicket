@@ -32,218 +32,282 @@
 	  <param-value>development</param-value>
 	</context-param>
 
-	<servlet>
-		<servlet-name>AjaxPrototypeApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>AjaxPrototypeApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.ajax.prototype.PrototypeApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>prototype</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>AjaxApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>AjaxApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>wicket.examples.ajax.builtin.AjaxApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>ajax</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>HelloWorldApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>HelloWorldApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.helloworld.HelloWorldApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>helloworld</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>EchoApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>EchoApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.echo.EchoApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>echo</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>UnicodeConverterApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>UnicodeConverterApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>unicodeconverter</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>HelloBrowserApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>HelloBrowserApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.hellobrowser.HelloBrowserApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>hellobroser</param-value>
+		</init-param>
+	</filter>
 
-    <servlet>
-        <servlet-name>StockQuoteApplication</servlet-name>
-        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+    <filter>
+        <filter-name>StockQuoteApplication</filter-name>
+        <filter-class>wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
             <param-name>applicationClassName</param-name>
             <param-value>wicket.examples.stockquote.StockQuoteApplication</param-value>
         </init-param>
-    </servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>stockquote</param-value>
+		</init-param>
+    </filter>
     
-	<servlet>
-		<servlet-name>HangmanApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>HangmanApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.hangman.HangmanApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>hangman</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>FormInputApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>FormInputApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.forminput.FormInputApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>forminput</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>NestedApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>NestedApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.nested.NestedApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>nested</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>GuestBookApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>GuestBookApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.guestbook.GuestBookApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>guestbook</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>ImagesApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>ImagesApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.images.ImagesApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>images</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>LibraryApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>LibraryApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.library.LibraryApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>library</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>LinkomaticApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>LinkomaticApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.linkomatic.LinkomaticApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>linkomatic</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>NavomaticApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>NavomaticApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.navomatic.NavomaticApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>navomatic</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>PubApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>PubApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.pub.PubApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>pub</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>SignInApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>SignInApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.signin.SignInApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>signin</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>SignIn2Application</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>SignIn2Application</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.signin2.SignIn2Application</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>sigin2</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>UploadApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>UploadApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.upload.UploadApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>upload</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>DisplaytagApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>DisplaytagApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.displaytag.DisplaytagApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>displaytag</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>EncodingsApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>EncodingsApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.encodings.EncodingsApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>encodings</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>TemplateApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>TemplateApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.template.TemplateApplication</param-value>
@@ -252,68 +316,89 @@
 		  <param-name>configuration</param-name>
 		  <param-value>development</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>template</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>ComponentReferenceApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>ComponentReferenceApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.compref.ComponentReferenceApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>compref</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>RepeaterExamplesApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>RepeaterExamplesApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>wicket.examples.repeater.RepeaterApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>repeater</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>NiceUrlApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>NiceUrlApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.niceurl.NiceUrlApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>niceurl</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>FramesApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>FramesApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.frames.FramesApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>frames</param-value>
+		</init-param>
+	</filter>
 	
-	<servlet>
-		<servlet-name>CustomResourceLoadingApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>CustomResourceLoadingApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.customresourceloading.CustomResourceLoadingApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>customresourceloading</param-value>
+		</init-param>
+	</filter>
 
-	<servlet>
-		<servlet-name>WizardApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+	<filter>
+		<filter-name>WizardApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.wizard.WizardApplication</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>wizard</param-value>
+		</init-param>
+	</filter>
 
 	<servlet>
 		<servlet-name>BreadCrumbApplication</servlet-name>
@@ -323,147 +408,147 @@
 		  <param-value>wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
-	</servlet>
+	</servlet>	
 	
-	<servlet-mapping>
-		<servlet-name>AjaxApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>AjaxApplication</filter-name>
 		<url-pattern>/ajax/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>AjaxPrototypeApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>AjaxPrototypeApplication</filter-name>
 		<url-pattern>/prototype/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>RepeaterExamplesApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>RepeaterExamplesApplication</filter-name>
 		<url-pattern>/repeater/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>NiceUrlApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>NiceUrlApplication</filter-name>
 		<url-pattern>/niceurl/*</url-pattern>
-	</servlet-mapping>	
+	</filter-mapping>	
 
-	<servlet-mapping>
-		<servlet-name>SignInApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>SignInApplication</filter-name>
 		<url-pattern>/signin/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-    <servlet-mapping>
-        <servlet-name>StockQuoteApplication</servlet-name>
+    <filter-mapping>
+        <filter-name>StockQuoteApplication</filter-name>
         <url-pattern>/stock/*</url-pattern>
-    </servlet-mapping>
+    </filter-mapping>
     
-	<servlet-mapping>
-		<servlet-name>SignIn2Application</servlet-name>
+	<filter-mapping>
+		<filter-name>SignIn2Application</filter-name>
 		<url-pattern>/signin2/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>HangmanApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>HangmanApplication</filter-name>
 		<url-pattern>/hangman/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>NestedApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>NestedApplication</filter-name>
 		<url-pattern>/nested/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 	 
-	<servlet-mapping>
-		<servlet-name>PubApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>PubApplication</filter-name>
 		<url-pattern>/pub/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>NavomaticApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>NavomaticApplication</filter-name>
 		<url-pattern>/navomatic/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>LinkomaticApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>LinkomaticApplication</filter-name>
 		<url-pattern>/linkomatic/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>LibraryApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>LibraryApplication</filter-name>
 		<url-pattern>/library/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>ImagesApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>ImagesApplication</filter-name>
 		<url-pattern>/images/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>HelloWorldApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>HelloWorldApplication</filter-name>
 		<url-pattern>/helloworld/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>EchoApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>EchoApplication</filter-name>
 		<url-pattern>/echo/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>UnicodeConverterApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>UnicodeConverterApplication</filter-name>
 		<url-pattern>/unicodeconverter/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 	
-	<servlet-mapping>
-		<servlet-name>HelloBrowserApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>HelloBrowserApplication</filter-name>
 		<url-pattern>/hellobrowser/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>FormInputApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>FormInputApplication</filter-name>
 		<url-pattern>/forminput/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>GuestBookApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>GuestBookApplication</filter-name>
 		<url-pattern>/guestbook/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>UploadApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>UploadApplication</filter-name>
 		<url-pattern>/upload/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>DisplaytagApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>DisplaytagApplication</filter-name>
 		<url-pattern>/displaytag/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>EncodingsApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>EncodingsApplication</filter-name>
 		<url-pattern>/encodings/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>TemplateApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>TemplateApplication</filter-name>
 		<url-pattern>/template/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>ComponentReferenceApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>ComponentReferenceApplication</filter-name>
 		<url-pattern>/compref/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>FramesApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>FramesApplication</filter-name>
 		<url-pattern>/frames/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 	
-	<servlet-mapping>
-		<servlet-name>CustomResourceLoadingApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>CustomResourceLoadingApplication</filter-name>
 		<url-pattern>/customresourceloading/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>WizardApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>WizardApplication</filter-name>
 		<url-pattern>/wizard/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
 	<servlet-mapping>
 		<servlet-name>BreadCrumbApplication</servlet-name>

@@ -1,15 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-  <name>wicket-examples</name>
-  <comment>Examples displaying a component reference and several componens in action.</comment>
-  <projects/>
-  <buildSpec>
-    <buildCommand>
-      <name>org.eclipse.jdt.core.javabuilder</name>
-      <arguments/>
-    </buildCommand>
-  </buildSpec>
-  <natures>
-    <nature>org.eclipse.jdt.core.javanature</nature>
-    <nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
-  </natures>
+	<name>wicket-examples</name>
+	<comment>Examples displaying a component reference and several componens in action.</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
+	</natures>
 </projectDescription>
