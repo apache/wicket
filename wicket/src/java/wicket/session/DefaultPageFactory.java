@@ -43,12 +43,12 @@ import wicket.markup.MarkupException;
 public final class DefaultPageFactory implements IPageFactory
 {
 	/** Map of Constructors for Page subclasses */
-	private final Map constructorForClass = new ConcurrentHashMap();
+	private final Map<Class<? extends Page>, Constructor<? extends Page>> constructorForClass = new ConcurrentHashMap<Class<? extends Page>, Constructor<? extends Page>>();
 
 	/**
 	 * @see IPageFactory#newPage(Class)
 	 */
-	public final Page newPage(final Class pageClass)
+	public final Page newPage(final Class<? extends Page> pageClass)
 	{
 		try
 		{
@@ -61,7 +61,7 @@ public final class DefaultPageFactory implements IPageFactory
 		catch (NoSuchMethodException e)
 		{
 			// a bit of a hack here..
-			Constructor constructor = constructor(pageClass, PageParameters.class);
+			Constructor<? extends Page> constructor = constructor(pageClass, PageParameters.class);
 			if (constructor != null)
 			{
 				return newPage(constructor, new PageParameters());
@@ -85,10 +85,10 @@ public final class DefaultPageFactory implements IPageFactory
 	/**
 	 * @see IPageFactory#newPage(Class, PageParameters)
 	 */
-	public final Page newPage(final Class pageClass, final PageParameters parameters)
+	public final Page newPage(final Class<? extends Page> pageClass, final PageParameters parameters)
 	{
 		// Try to get constructor that takes PageParameters
-		Constructor constructor = constructor(pageClass, PageParameters.class);
+		Constructor<? extends Page> constructor = constructor(pageClass, PageParameters.class);
 
 		// If we got a PageParameters constructor
 		if (constructor != null)
@@ -111,10 +111,10 @@ public final class DefaultPageFactory implements IPageFactory
 	 * @return The page constructor, or null if no one-arg constructor can be
 	 *         found taking the given argument type.
 	 */
-	private final Constructor constructor(final Class pageClass, final Class argumentType)
+	private final Constructor<? extends Page> constructor(final Class<? extends Page> pageClass, final Class argumentType)
 	{
 		// Get constructor for page class from cache
-		Constructor constructor = (Constructor)constructorForClass.get(pageClass);
+		Constructor<? extends Page> constructor = constructorForClass.get(pageClass);
 
 		// Need to look up?
 		if (constructor == null)
@@ -148,11 +148,11 @@ public final class DefaultPageFactory implements IPageFactory
 	 *             Thrown if the Page cannot be instantiated using the given
 	 *             constructor and argument.
 	 */
-	private final Page newPage(final Constructor constructor, final Object argument)
+	private final Page newPage(final Constructor<? extends Page> constructor, final Object argument)
 	{
 		try
 		{
-			return (Page)constructor.newInstance(new Object[] { argument });
+			return constructor.newInstance(new Object[] { argument });
 		}
 		catch (InstantiationException e)
 		{

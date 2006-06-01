@@ -93,6 +93,9 @@ public class PageFactoryTest extends WicketTestCase
 		assertEquals(MyPage5.class, factory.newPage(MyPage5.class).getClass());
 
 		// String: Illegal String parameter constructor only
+		// Can't do this when using generics		
+		/*
+        
 		e = null;
 		try
 		{
@@ -103,7 +106,8 @@ public class PageFactoryTest extends WicketTestCase
 			e = ex;
 		}
 
-		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
+		assertNotNull("String does not extend Page. Should have thrown an exception", e);
+        */
 	}
 
 	/**
@@ -154,6 +158,7 @@ public class PageFactoryTest extends WicketTestCase
 		assertEquals(MyPage5.class, factory.newPage(MyPage5.class, new PageParameters()).getClass());
 
 		// String: Illegal String parameter constructor only
+		/*
 		e = null;
 		try
 		{
@@ -164,6 +169,7 @@ public class PageFactoryTest extends WicketTestCase
 			e = ex;
 		}
 
-		assertNotNull("String does not extend Page. Should habe thrown an exception", e);
+		assertNotNull("String does not extend Page. Should have thrown an exception", e);
+		*/
 	}
 }
