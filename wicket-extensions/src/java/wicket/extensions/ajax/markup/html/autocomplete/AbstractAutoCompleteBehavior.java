@@ -5,6 +5,7 @@ import wicket.Response;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * @since 1.2
@@ -42,9 +43,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 	{
 		Response response=getComponent().getResponse();
 		final String id = getComponent().getMarkupId();
-		response.write("<script type=\"text/javascript\"><!--");
+		response.write(JavascriptUtils.SCRIPT_OPEN_TAG);
 		response.write("new WicketAutoComplete('"+id+"','"+getCallbackUrl()+"');");
-		response.write("--></script>");
+		response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
 	}
 
 	/**
