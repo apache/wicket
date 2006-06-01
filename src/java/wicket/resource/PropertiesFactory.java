@@ -58,10 +58,10 @@ public class PropertiesFactory implements IPropertiesFactory
 	private static final Log log = LogFactory.getLog(PropertiesFactory.class);
 
 	/** Cache for all properties files loaded */
-	private final Map propertiesCache = new HashMap();
+	private final Map<String, Properties> propertiesCache = new HashMap<String, Properties>();
 
 	/** Listeners will be invoked after properties have been reloaded */
-	private final List afterReloadListeners = new ArrayList();
+	private final List<IPropertiesReloadListener> afterReloadListeners = new ArrayList<IPropertiesReloadListener>();
 
 	/**
 	 * Construct.

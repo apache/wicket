@@ -31,11 +31,11 @@ import java.util.Set;
  */
 public class Tag implements DocumentElement
 {
-	private Map expectedAttributes = new HashMap();
+	private Map<String, String> expectedAttributes = new HashMap<String, String>();
 
-	private List expectedChildren = new ArrayList();
+	private List<DocumentElement> expectedChildren = new ArrayList<DocumentElement>();
 
-	private Set illegalAttributes = new HashSet();
+	private Set<String> illegalAttributes = new HashSet<String>();
 
 	private String tag;
 
