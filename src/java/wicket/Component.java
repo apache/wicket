@@ -2405,19 +2405,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	protected void detachModel()
 	{
-		// If the model is compound and it's not the root model, then it can
-		// be reconstituted via initModel() after replication
-		if (model instanceof WrapModel)
+		if (model != null)
 		{
-			// Get rid of model which can be lazy-initialized again
-			this.model = null;
-		}
-		else
-		{
-			if (model != null)
-			{
-				model.detach();
-			}
+			model.detach();
 		}
 	}
 

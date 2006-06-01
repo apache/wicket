@@ -172,9 +172,9 @@ public class CookieValuePersisterTest extends TestCase
 		return ((WebRequest)cycle.getRequest()).getHttpServletRequest().getCookies();
 	}
 
-	private List getResponseCookies(final RequestCycle cycle)
+	private List<Cookie> getResponseCookies(final RequestCycle cycle)
 	{
-		return (List)((MockHttpServletResponse)((WebResponse)cycle.getResponse())
+		return (List<Cookie>)((MockHttpServletResponse)((WebResponse)cycle.getResponse())
 				.getHttpServletResponse()).getCookies();
 	}
 }

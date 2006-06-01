@@ -33,9 +33,9 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	public final String APP_CLASS_PARAM = "applicationClassName";
 
 	/** @see IWebApplicationFactory#createApplication(WicketServlet) */
-	public WebApplication createApplication(WicketServlet servlet)
+	public WebApplication createApplication(WicketFilter filter)
 	{
-		final String applicationClassName = servlet.getInitParameter(APP_CLASS_PARAM);
+		final String applicationClassName = filter.getFilterConfig().getInitParameter(APP_CLASS_PARAM);
 
 		if (applicationClassName == null)
 		{
@@ -43,7 +43,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 					"servlet init param ["
 							+ APP_CLASS_PARAM
 							+ "] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["
-							+ WicketServlet.APP_FACT_PARAM + "] is missing");
+							+ WicketFilter.APP_FACT_PARAM + "] is missing");
 		}
 
 		try

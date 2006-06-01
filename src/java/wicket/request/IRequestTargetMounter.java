@@ -36,7 +36,7 @@ public interface IRequestTargetMounter
 	 * @param urlCodingStrategy
 	 *            The strategy to use for encoding and decoding urls
 	 */
-	void mount(String path, IRequestTargetUrlCodingStrategy urlCodingStrategy);
+	void mount(IRequestTargetUrlCodingStrategy urlCodingStrategy);
 
 	/**
 	 * Unmounts a request target.

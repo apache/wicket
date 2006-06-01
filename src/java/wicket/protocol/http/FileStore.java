@@ -47,7 +47,7 @@ public class FileStore implements IStore
 	 */
 	public FileStore()
 	{
-		workDir = (File)((WebApplication)Application.get()).getWicketServlet().getServletContext()
+		workDir = (File)((WebApplication)Application.get()).getServletContext()
 				.getAttribute("javax.servlet.context.tempdir");
 	}
 

@@ -61,6 +61,15 @@ public class WebRequestCycle extends RequestCycle
 	};
 
 	/**
+	 * Gets request cycle for calling thread.
+	 * 
+	 * @return Request cycle for calling thread
+	 */
+	public final static WebRequestCycle get()
+	{
+		return (WebRequestCycle)RequestCycle.get();
+	}
+	/**
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
 	 * 
