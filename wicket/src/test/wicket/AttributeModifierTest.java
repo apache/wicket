@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.Model;
+import wicket.util.value.ValueMap;
 
 /**
  * Test case for the component tag attribute modifer test.
@@ -51,7 +52,7 @@ public class AttributeModifierTest extends TestCase
 	{
 		try
 		{
-			new AttributeModifier(null, new Model("model"));
+			new AttributeModifier(null, new Model<String>("model"));
 			Assert.fail("IllegalArgumentException should be thrown on null attribute name");
 		}
 		catch (IllegalArgumentException e)
@@ -116,7 +117,7 @@ public class AttributeModifierTest extends TestCase
 	 */
 	public void testModelReplacement()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", true, new Model(
+		AttributeModifier modifier = new AttributeModifier("test", true, new Model<String>(
 				"Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
@@ -136,7 +137,7 @@ public class AttributeModifierTest extends TestCase
 	 */
 	public void testNoModelReplacementForNonExistingAttributeValue()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", false, new Model(
+		AttributeModifier modifier = new AttributeModifier("test", false, new Model<String>(
 				"Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
@@ -153,12 +154,12 @@ public class AttributeModifierTest extends TestCase
 	 */
 	public void testModelReplacementOverwritingExistingAttributeValue()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", new Model("Ellioth Smith Rocks"));
+		AttributeModifier modifier = new AttributeModifier("test", new Model<String>("Ellioth Smith Rocks"));
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		Map attributes = tag.getAttributes();
+		ValueMap attributes = tag.getAttributes();
 		attributes.put("test", "My mother rocks");
 		modifier.replaceAttibuteValue(null, tag);
 		String replacement = (String)attributes.get("test");
@@ -171,13 +172,13 @@ public class AttributeModifierTest extends TestCase
 	 */
 	public void testNoNewValueWhenNotEnabled()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", new Model("Ellioth Smith Rocks"));
+		AttributeModifier modifier = new AttributeModifier("test", new Model<String>("Ellioth Smith Rocks"));
 		modifier.setEnabled(false);
 		XmlTag xmlTag = new XmlTag();
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		Map attributes = tag.getAttributes();
+		ValueMap attributes = tag.getAttributes();
 		attributes.put("test", "My mother rocks");
 		modifier.replaceAttibuteValue(null, tag);
 		String replacement = (String)attributes.get("test");
@@ -190,7 +191,7 @@ public class AttributeModifierTest extends TestCase
 	 */
 	public void testNewValueForModelValue()
 	{
-		AttributeModifier modifier = new AttributeModifier("test", true, new Model("happy"))
+		AttributeModifier modifier = new AttributeModifier("test", true, new Model<String>("happy"))
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -231,7 +232,7 @@ public class AttributeModifierTest extends TestCase
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		Map attributes = tag.getAttributes();
+		ValueMap attributes = tag.getAttributes();
 		attributes.put("test", "one");
 		modifier.replaceAttibuteValue(null, tag);
 		String replacement = (String)attributes.get("test");
