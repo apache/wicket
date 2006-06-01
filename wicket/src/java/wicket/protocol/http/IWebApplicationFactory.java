@@ -38,9 +38,9 @@ public interface IWebApplicationFactory
 	/**
 	 * Create application object
 	 * 
-	 * @param servlet
-	 *            the wicket servlet
+	 * @param filter
+	 *            the wicket filter
 	 * @return application object instance
 	 */
-	WebApplication createApplication(WicketServlet servlet);
+	WebApplication createApplication(WicketFilter filter);
 }

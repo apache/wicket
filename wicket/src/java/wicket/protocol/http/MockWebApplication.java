@@ -18,9 +18,11 @@
  */
 package wicket.protocol.http;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
@@ -115,7 +117,7 @@ public class MockWebApplication extends WebApplication
 	private WebSession wicketSession;
 
 	/** The homepage */
-	private Class homePage;
+	private Class<? extends Page> homePage;
 
 	/**
 	 * Create the mock http application that can be used for testing.
@@ -131,32 +133,36 @@ public class MockWebApplication extends WebApplication
 
 		context = new MockServletContext(this, path);
 
-		setWicketServlet(new WicketServlet()
+		setWicketFilter(new WicketFilter()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public ServletContext getServletContext()
+			public FilterConfig getFilterConfig()
 			{
-				return context;
-			};
-
-			/**
-			 * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
-			 */
-			@Override
-			public String getInitParameter(String name)
-			{
-				return null;
-			}
-
-			/**
-			 * @see javax.servlet.GenericServlet#getServletName()
-			 */
-			@Override
-			public String getServletName()
-			{
-				return "WicketMockServlet";
+				return new FilterConfig()
+				{
+				
+					public ServletContext getServletContext()
+					{
+						return context;
+					}
+				
+					public Enumeration getInitParameterNames()
+					{
+						return null;
+					}
+				
+					public String getInitParameter(String name)
+					{
+						return null;
+					}
+				
+					public String getFilterName()
+					{
+						return "WicketMockServlet";
+					}
+				};
 			}
 		});
 
@@ -207,19 +213,6 @@ public class MockWebApplication extends WebApplication
 	public Page getPreviousRenderedPage()
 	{
 		return previousRenderedPage;
-	}
-
-	/**
-	 * Get the context object so that we can apply configurations to it. This
-	 * method always returns an instance of <code>MockServletContext</code>,
-	 * so it is fine to cast the result to this class in order to get access to
-	 * the set methods.
-	 * 
-	 * @return The servlet context
-	 */
-	public ServletContext getServletContext()
-	{
-		return context;
 	}
 
 	/**
@@ -368,7 +361,7 @@ public class MockWebApplication extends WebApplication
 				else if (target instanceof IBookmarkablePageRequestTarget)
 				{
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
-					Class pageClass = pageClassRequestTarget.getPageClass();
+					Class<? extends Page> pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
 					if (parameters == null || parameters.size() == 0)
 					{
@@ -446,7 +439,7 @@ public class MockWebApplication extends WebApplication
 	 * 
 	 * @param clazz
 	 */
-	public void setHomePage(Class clazz)
+	public void setHomePage(Class<? extends Page> clazz)
 	{
 		homePage = clazz;
 	}

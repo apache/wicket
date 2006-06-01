@@ -59,10 +59,13 @@ import wicket.version.undo.Change;
  * selection change.
  * </p>
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
  */
-public class RadioChoice extends AbstractSingleSelectChoice implements IOnChangeListener
+public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -163,7 +166,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      List)
 	 */
-	public RadioChoice(MarkupContainer parent, final String id, final List choices)
+	public RadioChoice(MarkupContainer parent, final String id, final List<T> choices)
 	{
 		super(parent, id, choices);
 	}
@@ -181,8 +184,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      List,IChoiceRenderer)
 	 */
-	public RadioChoice(MarkupContainer parent, final String id, final List choices,
-			final IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, final String id, final List<T> choices,
+			final IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, choices, renderer);
 	}
@@ -200,7 +203,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List)
 	 */
-	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices)
+	public RadioChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> choices)
 	{
 		super(parent, id, model, choices);
 	}
@@ -220,8 +223,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List,IChoiceRenderer)
 	 */
-	public RadioChoice(MarkupContainer parent, final String id, IModel model, final List choices,
-			final IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> choices,
+			final IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, model, choices, renderer);
 	}
@@ -237,7 +240,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel)
 	 */
-	public RadioChoice(MarkupContainer parent, String id, IModel choices)
+	public RadioChoice(MarkupContainer parent, String id, IModel<List<T>> choices)
 	{
 		super(parent, id, choices);
 	}
@@ -256,7 +259,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      IModel,IModel)
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public RadioChoice(MarkupContainer parent, String id, IModel model, IModel choices)
+	public RadioChoice(MarkupContainer parent, String id, IModel<T> model, IModel<List<T>> choices)
 	{
 		super(parent, id, model, choices);
 	}
@@ -274,7 +277,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *      IModel,IChoiceRenderer)
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public RadioChoice(MarkupContainer parent, String id, IModel choices, IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, choices, renderer);
 	}
@@ -296,8 +299,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public RadioChoice(MarkupContainer parent, String id, IModel model, IModel choices,
-			IChoiceRenderer renderer)
+	public RadioChoice(MarkupContainer parent, String id, IModel<T> model, IModel<List<T>> choices,
+			IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, model, choices, renderer);
 	}
@@ -326,7 +329,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	 *            the same as you would get by calling getModelObject() if the
 	 *            new selection were current
 	 */
-	protected void onSelectionChanged(Object newSelection)
+	protected void onSelectionChanged(T newSelection)
 	{
 	}
 
@@ -418,7 +421,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 			final ComponentTag openTag)
 	{
 		// Iterate through choices
-		final List choices = getChoices();
+		final List<T> choices = getChoices();
 
 		// Buffer to hold generated body
 		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() + 1) * 70);
@@ -430,7 +433,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		for (int index = 0; index < choices.size(); index++)
 		{
 			// Get next choice
-			final Object choice = choices.get(index);
+			final T choice = choices.get(index);
 
 			Object displayValue = getChoiceRenderer().getDisplayValue(choice);
 			Class objectClass = displayValue == null ? null : displayValue.getClass();

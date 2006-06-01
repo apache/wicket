@@ -80,7 +80,7 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 		{
 			WebResponse webResponse = ((WebRequestCycle)requestCycle).getWebResponse();
 			final ServletContext context = ((WebApplication)requestCycle.getApplication())
-					.getWicketServlet().getServletContext();
+					.getServletContext();
 
 			// Set content type
 			webResponse.setContentType(context.getMimeType(url));

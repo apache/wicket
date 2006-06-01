@@ -41,8 +41,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.WebApplication;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
@@ -153,10 +152,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		parameters.setBookmarkableFormName(request.getParameter(BOOKMARKABLE_FORM_PARAMETER_NAME));
 
 		Map<String, ? extends Object> map = request.getParameterMap();
-		Iterator iterator = map.keySet().iterator();
+		Iterator<String> iterator = map.keySet().iterator();
 		while (iterator.hasNext())
 		{
-			String key = (String)iterator.next();
+			String key = iterator.next();
 			if (key.startsWith(NAME_SPACE))
 			{
 				iterator.remove();
@@ -230,7 +229,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	{
 		if (path == null)
 		{
-			return (IRequestTargetUrlCodingStrategy)mountsOnPath.get(null);
+			return mountsOnPath.get(null);
 		}
 		else if (!path.equals("/")) // ignore root paths.. is this the right
 		// path?
@@ -249,11 +248,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * @see wicket.request.IRequestTargetMounter#mount(java.lang.String,
+	 * @see wicket.request.IRequestTargetMounter#mount(
 	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
-	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
+	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
+		String path = encoder.getMountPath();
 		if (path == null)
 		{
 			throw new IllegalArgumentException("Argument path must be not-null");
@@ -702,9 +702,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	{
 		// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
 		// cache lookup results
-		for (Iterator i = mountsOnPath.values().iterator(); i.hasNext();)
+		for (Iterator<IRequestTargetUrlCodingStrategy> i = mountsOnPath.values().iterator(); i.hasNext();)
 		{
-			IRequestTargetUrlCodingStrategy encoder = (IRequestTargetUrlCodingStrategy)i.next();
+			IRequestTargetUrlCodingStrategy encoder = i.next();
 			if (encoder.matches(requestTarget))
 			{
 				return encoder;
@@ -740,35 +740,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	{
 		if (urlPrefix == null)
 		{
-			final AppendingStringBuffer buffer = new AppendingStringBuffer();
-			final WebRequest request = ((WebRequestCycle)requestCycle).getWebRequest();
-			if (request != null)
-			{
-				String contextPath = Application.get().getApplicationSettings().getContextPath();
-				if (contextPath == null)
-				{
-					contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-							.getContextPath();
-					if (contextPath == null)
-					{
-						contextPath = "";
-					}
-				}
-				if (!contextPath.equals("/"))
-				{
-					buffer.append(contextPath);
-				}
-				String path = request.getServletPath();
-				if (path != null && !path.equals(""))
-				{
-					if (!buffer.endsWith("/") && !path.startsWith("/"))
-					{
-						buffer.append("/");
-					}
-					buffer.append(path);
-				}
-			}
-			urlPrefix = buffer;
+			urlPrefix = WebApplication.get().getRootPath();
 		}
 		return urlPrefix;
 	}

@@ -23,7 +23,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.util.lang.Bytes;
 import wicket.util.upload.FileUploadException;
@@ -136,7 +138,13 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public String getPath()
 	{
-		return httpServletRequest.getPathInfo();
+		String url = httpServletRequest.getRequestURI();
+		String rootPath = ((WebApplication)Application.get()).getRootPath();
+		if(url.startsWith(rootPath))
+		{
+			return url.substring(rootPath.length());
+		}
+		return null;
 	}
 
 	/**

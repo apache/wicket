@@ -71,7 +71,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	 * 
 	 * @return path
 	 */
-	protected final String getMountPath()
+	public final String getMountPath()
 	{
 		return mountPath;
 	}

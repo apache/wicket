@@ -29,6 +29,14 @@ import wicket.request.RequestParameters;
  */
 public interface IRequestTargetUrlCodingStrategy
 {
+	
+	/**
+	 * Returns the path of the url where this request target is mounted on.
+	 * 
+	 * @return String The path of the url
+	 */
+	String getMountPath();
+	
 	/**
 	 * Gets the encoded url for the provided request target. Typically, the
 	 * result will be prepended with a protocol specific prefix. In a servlet

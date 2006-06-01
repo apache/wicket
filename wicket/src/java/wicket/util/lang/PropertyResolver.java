@@ -505,9 +505,10 @@ public class PropertyResolver
 		 * @see wicket.util.lang.PropertyResolver.IGetAndSet#setValue(java.lang.Object,
 		 *      java.lang.Object, wicket.util.convert.IConverter)
 		 */
+		@SuppressWarnings("unchecked")
 		public void setValue(Object object, Object value, PropertyResolverConverter converter)
 		{
-			((Map<String, Object>)object).put(key, value);
+			((Map)object).put(key, value);
 		}
 
 		/**

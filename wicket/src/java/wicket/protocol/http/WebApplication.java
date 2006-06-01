@@ -21,6 +21,7 @@ package wicket.protocol.http;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,13 +30,13 @@ import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.IRequestTarget;
 import wicket.ISessionFactory;
+import wicket.Page;
 import wicket.PageMap;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.WebPage;
 import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.markup.html.pages.InternalErrorPage;
 import wicket.markup.html.pages.PageExpiredErrorPage;
@@ -98,6 +99,17 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class WebApplication extends Application implements ISessionFactory
 {
+	
+	/**
+	 * Get WebApplication for current thread.
+	 * 
+	 * @return The current thread's Application
+	 */
+	public static WebApplication get()
+	{
+		return (WebApplication)Application.get();
+	}
+	
 	/**
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
@@ -117,7 +129,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	private ISessionFactory sessionFactory = this;
 
 	/** The WicketServlet that this application is attached to */
-	private WicketServlet wicketServlet;
+	private WicketFilter wicketFilter;
 
 	/** Request logger instance. */
 	private RequestLogger requestLogger;
@@ -127,6 +139,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
 	 */
 	private String applicationKey;
+
+	private String fullRootPath;
 
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
@@ -164,15 +178,15 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @return The Wicket servlet for this application
 	 */
-	public final WicketServlet getWicketServlet()
+	public final ServletContext getServletContext()
 	{
-		if (wicketServlet == null)
+		if (wicketFilter == null)
 		{
-			throw new IllegalStateException("wicketServlet is not set yet. Any code in your"
+			throw new IllegalStateException("servletContext is not set yet. Any code in your"
 					+ " Application object that uses the wicketServlet instance should be put"
 					+ " in the init() method instead of your constructor");
 		}
-		return wicketServlet;
+		return wicketFilter.getFilterConfig().getServletContext();
 	}
 
 	/**
@@ -191,26 +205,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Mounts an encoder at the given path.
-	 * 
-	 * @param path
-	 *            the path to mount the encoder on
-	 * @param encoder
-	 *            the encoder that will be used for this mount
-	 */
-	public final void mount(String path, IRequestTargetUrlCodingStrategy encoder)
-	{
-		checkMountPath(path);
-
-		if (encoder == null)
-		{
-			throw new IllegalArgumentException("Encoder must be not null");
-		}
-
-		getRequestCycleProcessor().getRequestCodingStrategy().mount(path, encoder);
-	}
-
-	/**
 	 * Mounts all bookmarkable pages at the given path.
 	 * 
 	 * @param path
@@ -221,12 +215,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final void mount(final String path, final PackageName packageName)
 	{
-		checkMountPath(path);
 		if (packageName == null)
 		{
 			throw new IllegalArgumentException("PackageName cannot be null");
 		}
-		mount(path, new PackageRequestTargetUrlCodingStrategy(path, packageName));
+		mount(new PackageRequestTargetUrlCodingStrategy(path, packageName));
 	}
 
 	/**
@@ -237,10 +230,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final Class<? extends WebPage> bookmarkablePageClass)
+	public final void mountBookmarkablePage(final String path, final Class<? extends Page> bookmarkablePageClass)
 	{
-		checkMountPath(path);
-		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
+		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
 				null));
 	}
 
@@ -255,10 +247,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 *            the bookmarkable page class to mount
 	 */
 	public final void mountBookmarkablePage(final String path, final PageMap pageMap,
-			final Class<? extends WebPage> bookmarkablePageClass)
+			final Class<? extends Page> bookmarkablePageClass)
 	{
-		checkMountPath(path);
-		mount(path, new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
+		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
 				pageMap.getName()));
 	}
 
@@ -272,8 +263,39 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final void mountSharedResource(final String path, final String resourceKey)
 	{
+		mount(new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
+	}
+
+	/**
+	 * Mounts an encoder at the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the encoder on
+	 * @param encoder
+	 *            the encoder that will be used for this mount
+	 */
+	public final void mount(IRequestTargetUrlCodingStrategy encoder)
+	{
+		checkMountPath(encoder.getMountPath());
+
+		if (encoder == null)
+		{
+			throw new IllegalArgumentException("Encoder must be not null");
+		}
+
+		getRequestCycleProcessor().getRequestCodingStrategy().mount(encoder);
+	}
+
+	/**
+	 * Unmounts whatever encoder is mounted at a given path.
+	 * 
+	 * @param path
+	 *            the path of the encoder to unmount
+	 */
+	public final void unmount(String path)
+	{
 		checkMountPath(path);
-		mount(path, new SharedResourceRequestTargetUrlCodingStrategy(path, resourceKey));
+		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
 	}
 
 	/**
@@ -288,35 +310,23 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * @param wicketServlet
-	 *            The wicket servlet instance for this application
+	 * @param wicketFilter
+	 *            The wicket filter instance for this application
 	 * @throws IllegalStateException
 	 *             If an attempt is made to call this method once the wicket
 	 *             servlet has been set for the application.
 	 */
-	public final void setWicketServlet(final WicketServlet wicketServlet)
+	public final void setWicketFilter(final WicketFilter wicketFilter)
 	{
-		if (this.wicketServlet == null)
+		if (this.wicketFilter == null)
 		{
-			this.wicketServlet = wicketServlet;
-			this.applicationKey = wicketServlet.getServletName();
+			this.wicketFilter = wicketFilter;
+			this.applicationKey = wicketFilter.getFilterConfig().getFilterName();
 		}
 		else
 		{
 			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
 		}
-	}
-
-	/**
-	 * Unmounts whatever encoder is mounted at a given path.
-	 * 
-	 * @param path
-	 *            the path of the encoder to unmount
-	 */
-	public final void unmount(String path)
-	{
-		checkMountPath(path);
-		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
 	}
 
 	/**
@@ -511,9 +521,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 
 		// Set resource finder to web app path
 		getResourceSettings().setResourceFinder(
-				new WebApplicationPath(getWicketServlet().getServletContext()));
+				new WebApplicationPath(wicketFilter.getFilterConfig().getServletContext()));
 
-		String contextPath = wicketServlet.getInitParameter(Application.CONTEXTPATH);
+		String contextPath = wicketFilter.getFilterConfig().getInitParameter(Application.CONTEXTPATH);
 		if (contextPath != null)
 		{
 			getApplicationSettings().setContextPath(contextPath);
@@ -533,24 +543,24 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// If no system parameter check servlet specific <init-param>
 		if (configuration == null)
 		{
-			configuration = wicketServlet.getInitParameter(Application.CONFIGURATION);
+			configuration = wicketFilter.getFilterConfig().getInitParameter(Application.CONFIGURATION);
 		}
 		// If no system parameter and not <init-param>, than check
 		// <context-param>
 		if (configuration == null)
 		{
-			configuration = wicketServlet.getServletContext().getInitParameter(
+			configuration = wicketFilter.getFilterConfig().getServletContext().getInitParameter(
 					Application.CONFIGURATION);
 		}
 
 		// Development mode is default if not settings have been found
 		if (configuration != null)
 		{
-			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+			configure(configuration, wicketFilter.getFilterConfig().getInitParameter("sourceFolder"));
 		}
 		else
 		{
-			configure(Application.DEVELOPMENT, wicketServlet.getInitParameter("sourceFolder"));
+			configure(Application.DEVELOPMENT, wicketFilter.getFilterConfig().getInitParameter("sourceFolder"));
 		}
 	}
 
@@ -720,5 +730,16 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
 		}
+	}
+
+	/**
+	 * Returns the full rootpath of this application. This is the ApplicationSettings.contextpath
+	 * and the WicketFilter.rootpath concatted.
+	 * 
+	 * @return String the full rootpath.
+	 */
+	public String getRootPath()
+	{
+		return wicketFilter.getRootPath(WebRequestCycle.get().getWebRequest().getHttpServletRequest());
 	}
 }

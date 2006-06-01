@@ -423,7 +423,7 @@ public final class Settings
 		// set (previous time or by the developer itself)
 		// This all to do missing api in the servlet spec.. You can't get a
 		// context path from the servlet context, which is just stupid.
-		if (contextPath == null && RequestCycle.get().getRequest() instanceof WebRequest)
+		if (contextPath == null && RequestCycle.get() != null && RequestCycle.get().getRequest() instanceof WebRequest)
 		{
 			contextPath = ((WebRequest)RequestCycle.get().getRequest()).getContextPath();
 		}
