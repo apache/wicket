@@ -28,7 +28,7 @@ public class QuickStartApplication extends WebApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	public Class<Index> getHomePage()
 	{
 		return Index.class;
 	}
