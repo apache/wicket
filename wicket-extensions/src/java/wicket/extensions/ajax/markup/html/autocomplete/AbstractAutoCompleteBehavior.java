@@ -42,9 +42,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 	{
 		Response response=getComponent().getResponse();
 		final String id = getComponent().getMarkupId();
-		response.write("<script type=\"text/javascript\">");
+		response.write("<script type=\"text/javascript\"><!--");
 		response.write("new WicketAutoComplete('"+id+"','"+getCallbackUrl()+"');");
-		response.write("</script>");
+		response.write("--></script>");
 	}
 
 	/**
