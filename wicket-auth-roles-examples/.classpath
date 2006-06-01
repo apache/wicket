@@ -1,11 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-  <classpathentry kind="src" path="src/main/java"/>
-  <classpathentry kind="output" path="target/classes"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar"/>
-  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar"/>
-  <classpathentry kind="var" path="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
-  <classpathentry kind="var" path="M2_REPO/wicket/wicket-auth-roles/2.0-SNAPSHOT/wicket-auth-roles-2.0-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket-auth-roles/2.0-SNAPSHOT/wicket-auth-roles-2.0-SNAPSHOT-sources.jar"/>
+	<classpathentry path="src/main/java" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5" kind="con"/>
+	<classpathentry path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" kind="var"/>
+	<classpathentry path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar" kind="var"/>
+	<classpathentry path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" kind="var"/>
+	<classpathentry path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar" kind="var"/>
+	<classpathentry path="/wicket" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/wicket-auth-roles" combineaccessrules="false" kind="src"/>
+	<classpathentry path="target/classes" kind="output"/>
 </classpath>
