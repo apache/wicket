@@ -43,16 +43,16 @@ public class AttributeModifierComponentPage extends WebPage
 	public AttributeModifierComponentPage()
 	{
 		// Label with attribute modifier
-		Label label1 = new Label(this, "label1", new Model("Label 1"));
+		Label label1 = new Label(this, "label1", new Model<String>("Label 1"));
 
 		// Label with override attribute modifier
-		Label label2 = new Label(this, "label2", new Model("Label 2"));
-		label2.add(new AttributeModifier("class", new Model("overrideLabel")));
-		label2.add(new AttributeModifier("unknown", new Model("invalid")));
+		Label label2 = new Label(this, "label2", new Model<String>("Label 2"));
+		label2.add(new AttributeModifier("class", new Model<String>("overrideLabel")));
+		label2.add(new AttributeModifier("unknown", new Model<String>("invalid")));
 
 		// Label with attribute inserter
-		Label label3 = new Label(this, "label3", new Model("Label 3"));
-		label3.add(new AttributeModifier("class", true, new AbstractDetachableModel()
+		Label label3 = new Label(this, "label3", new Model<String>("Label 3"));
+		label3.add(new AttributeModifier("class", true, new AbstractDetachableModel<String>()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -71,13 +71,13 @@ public class AttributeModifierComponentPage extends WebPage
 			}
 
 			@Override
-			public Object onGetObject(final Component component)
+			public String onGetObject(final Component component)
 			{
 				return text;
 			}
 
 			@Override
-			public void onSetObject(final Component component, final Object object)
+			public void onSetObject(final Component component, final String object)
 			{
 				text = object.toString();
 			}

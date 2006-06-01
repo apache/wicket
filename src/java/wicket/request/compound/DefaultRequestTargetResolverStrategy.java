@@ -263,7 +263,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		Class<? extends Page> pageClass;
 		try
 		{
-			pageClass = session.getClassResolver().resolveClass(bookmarkablePageClass);
+			pageClass = (Class<? extends Page>)session.getClassResolver().resolveClass(bookmarkablePageClass);
 		}
 		catch (RuntimeException e)
 		{
