@@ -313,7 +313,6 @@ public class Palette extends Panel
 			{
 				super.onComponentTag(tag);
 				tag.getAttributes().put("onclick", Palette.this.getAddOnClickJS());
-				tag.getAttributes().put("ondblclick", Palette.this.getRemoveOnClickJS());
 			}
 		};
 		return new Image(webMarkupContainer, "image", addImage);
