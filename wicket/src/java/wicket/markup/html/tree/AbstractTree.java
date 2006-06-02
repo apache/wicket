@@ -231,7 +231,7 @@ public abstract class AbstractTree extends Panel
 	 * @param node
 	 *            the tree node model
 	 */
-	public final void setExpandedState(final DefaultMutableTreeNode node)
+	public void setExpandedState(final DefaultMutableTreeNode node)
 	{
 		final TreePath selection = new TreePath(node.getPath());
 		setExpandedState(selection, (!treeState.isExpanded(selection))); // inverse
@@ -252,7 +252,7 @@ public abstract class AbstractTree extends Panel
 	 * @param expanded
 	 *            true if the selection is expanded, false otherwise
 	 */
-	public final void setExpandedState(final TreePath selection, final boolean expanded)
+	public void setExpandedState(final TreePath selection, final boolean expanded)
 	{
 		treeState.setExpandedState(selection, expanded);
 	}
@@ -263,7 +263,7 @@ public abstract class AbstractTree extends Panel
 	 * @param rootVisible
 	 *            whether the tree node should be displayed
 	 */
-	public final void setRootVisible(final boolean rootVisible)
+	public void setRootVisible(final boolean rootVisible)
 	{
 		treeState.setRootVisible(rootVisible);
 	}
@@ -275,7 +275,7 @@ public abstract class AbstractTree extends Panel
 	 * @param node
 	 *            the tree node model
 	 */
-	public final void setSelected(final DefaultMutableTreeNode node)
+	public void setSelected(final DefaultMutableTreeNode node)
 	{
 		final TreePath selection = new TreePath(node.getPath());
 		treeState.setSelectedPath(selection);
@@ -309,7 +309,7 @@ public abstract class AbstractTree extends Panel
 	 * 
 	 * @return the current tree model as a string
 	 */
-	public final String toString()
+	public String toString()
 	{
 		StringBuffer b = new StringBuffer("-- TREE MODEL --\n");
 		TreeState state = getTreeState();
@@ -365,6 +365,14 @@ public abstract class AbstractTree extends Panel
 		return treeState;
 	}
 
+	/**
+	 * Expand recursively.
+	 * 
+	 * @param parent
+	 *            The current parent node
+	 * @param expand
+	 *            Whether to expand or to collapse
+	 */
 	private final void expandAll(TreePath parent, boolean expand)
 	{
 		TreeNode node = (TreeNode)parent.getLastPathComponent();
