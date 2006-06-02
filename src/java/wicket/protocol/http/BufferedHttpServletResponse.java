@@ -199,6 +199,7 @@ class BufferedHttpServletResponse implements HttpServletResponse
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void addHeaderObject(String name, Object object)
 	{
 		Object previousObject = headers.get(name);

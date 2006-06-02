@@ -35,12 +35,12 @@ public class FileCleaner
 	/**
 	 * Queue of <code>Tracker</code> instances being watched.
 	 */
-	private static ReferenceQueue /* Tracker */q = new ReferenceQueue();
+	private static ReferenceQueue/*<Tracker>*/ q = new ReferenceQueue/*<Tracker>*/();
 
 	/**
 	 * Collection of <code>Tracker</code> instances in existence.
 	 */
-	private static Collection /* Tracker */trackers = new Vector();
+	private static Collection<Tracker>trackers = new Vector<Tracker>();
 
 	/**
 	 * The thread that will clean up registered files.

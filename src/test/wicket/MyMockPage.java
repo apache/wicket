@@ -31,8 +31,8 @@ public class MyMockPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	DropDownChoice drop1;
-	DropDownChoice drop2;
+	DropDownChoice<String> drop1;
+	DropDownChoice<String> drop2;
 
 	/**
 	 * Construct.
@@ -42,8 +42,8 @@ public class MyMockPage extends WebPage
 		final Form form = new Form(this, "form");
 
 		String[] choices = { "choice1", "choice2" };
-		drop1 = new DropDownChoice(form, "drop1", Arrays.asList(choices));
-		drop2 = new DropDownChoice(form, "drop2", Arrays.asList(choices));
+		drop1 = new DropDownChoice<String>(form, "drop1", Arrays.asList(choices));
+		drop2 = new DropDownChoice<String>(form, "drop2", Arrays.asList(choices));
 
 		drop1.setNullValid(true);
 		drop2.setNullValid(true);

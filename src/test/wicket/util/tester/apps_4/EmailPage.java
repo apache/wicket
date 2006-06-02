@@ -39,7 +39,7 @@ public class EmailPage extends WebPage
 	 */
 	public EmailPage()
 	{
-		Form form = new Form(this, "form");
+		Form<?> form = new Form(this, "form");
 		form.setModel(new CompoundPropertyModel(this));
 
 		TextField email = new TextField(form, "email");

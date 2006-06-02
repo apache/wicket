@@ -61,7 +61,7 @@ public final class RedirectPage extends WebPage
 	{
 		final WebMarkupContainer redirect = new WebMarkupContainer(this, "redirect");
 		final String content = waitBeforeRedirectInSeconds + ";URL=" + url;
-		redirect.add(new AttributeModifier("content", new Model(content)));
+		redirect.add(new AttributeModifier("content", new Model<String>(content)));
 	}
 
 	/**

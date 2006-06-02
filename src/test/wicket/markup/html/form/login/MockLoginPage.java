@@ -49,7 +49,7 @@ public class MockLoginPage extends WebPage
 				login(get("username").getModelObjectAsString().toString());
 			}
 		};
-		textField = new TextField(form, "username", new Model());
+		textField = new TextField<String>(form, "username", new Model<String>());
 	}
 
 	/**

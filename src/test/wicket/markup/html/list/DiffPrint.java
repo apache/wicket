@@ -36,10 +36,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Vector;
-
-// import com.objectspace.jgl.predicates.UnaryPredicate;
+import java.util.List;
 
 interface UnaryPredicate
 {
@@ -782,7 +781,7 @@ public class DiffPrint
 	static String[] slurp(String file) throws IOException
 	{
 		BufferedReader rdr = new BufferedReader(new FileReader(file));
-		Vector s = new Vector();
+		List<String> s = new ArrayList<String>();
 		for (;;)
 		{
 			String line = rdr.readLine();
@@ -790,11 +789,9 @@ public class DiffPrint
 			{
 				break;
 			}
-			s.addElement(line);
+			s.add(line);
 		}
-		String[] a = new String[s.size()];
-		s.copyInto(a);
-		return a;
+		return s.toArray(new String[s.size()]);
 	}
 
 	/**

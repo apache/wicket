@@ -41,7 +41,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 	public PagedTableNavigatorWithLabelProviderPage()
 	{
 		super();
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("one");
 		list.add("two");
 		list.add("three");

@@ -58,7 +58,7 @@ public class TableTest extends WicketTestCase
 			modelList.add(new Integer(i));
 		}
 
-		return new PageableListView(new EmptyPage(), "table", new Model<List<Integer>>(modelList), pageSize)
+		return new PageableListView<Integer>(new EmptyPage(), "table", new Model<List<Integer>>(modelList), pageSize)
 		{
 			private static final long serialVersionUID = 1L;
 

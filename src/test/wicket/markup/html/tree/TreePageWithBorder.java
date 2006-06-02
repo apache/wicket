@@ -41,14 +41,14 @@ public class TreePageWithBorder extends BorderedPage
 	public TreePageWithBorder()
 	{
 		// create a list with sublists
-		List l1 = new ArrayList();
+		List<Object> l1 = new ArrayList<Object>();
 		l1.add("test 1.1");
 		l1.add("test 1.2");
-		List l2 = new ArrayList();
+		List<Object> l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List l3 = new ArrayList();
+		List<Object> l3 = new ArrayList<Object>();
 		l3.add("test 3.1");
 		l2.add(l3);
 		l2.add("test 2.4");
