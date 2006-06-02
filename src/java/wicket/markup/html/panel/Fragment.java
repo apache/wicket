@@ -48,10 +48,13 @@ import wicket.version.undo.Change;
  * <pre>
  *                add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
+ *
+ * @param <T>
+ *            The type of the model object
  * 
  * @author Juergen Donnerstag
  */
-public class Fragment extends WebMarkupContainer
+public class Fragment<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -89,7 +92,7 @@ public class Fragment extends WebMarkupContainer
 	 *            The model for this fragment
 	 */
 	public Fragment(MarkupContainer parent, final String id, final String markupId,
-			final IModel model)
+			final IModel<T> model)
 	{
 		this(parent, id, markupId, null, model);
 	}
@@ -127,7 +130,7 @@ public class Fragment extends WebMarkupContainer
 	 *            The model for this fragment
 	 */
 	public Fragment(MarkupContainer parent, final String id, final String markupId,
-			final MarkupContainer markupProvider, final IModel model)
+			final MarkupContainer markupProvider, final IModel<T> model)
 	{
 		super(parent, id, model);
 

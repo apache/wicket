@@ -53,6 +53,7 @@ import wicket.version.undo.Change;
  * 
  * @param <T>
  *            The type
+ *            
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Martijn Dashorst
@@ -221,7 +222,7 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 	 *      java.util.List,wicket.markup.html.form.IChoiceRenderer)
 	 */
 	public CheckBoxMultipleChoice(MarkupContainer parent, final String id,
-			IModel<Collection<T>> model, final List<T> choices, final IChoiceRenderer renderer)
+			IModel<Collection<T>> model, final List<T> choices, final IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, model, choices, renderer);
 	}

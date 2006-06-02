@@ -36,7 +36,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class MultiLineLabel extends WebComponent
+public class MultiLineLabel extends WebComponent<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -77,7 +77,7 @@ public class MultiLineLabel extends WebComponent
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public MultiLineLabel(MarkupContainer parent, final String id, IModel model)
+	public MultiLineLabel(MarkupContainer parent, final String id, IModel<String> model)
 	{
 		super(parent, id, model);
 	}

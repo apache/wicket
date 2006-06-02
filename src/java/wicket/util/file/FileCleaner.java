@@ -35,7 +35,7 @@ public class FileCleaner
 	/**
 	 * Queue of <code>Tracker</code> instances being watched.
 	 */
-	private static ReferenceQueue/*<Tracker>*/ q = new ReferenceQueue/*<Tracker>*/();
+	private static ReferenceQueue<Object> q = new ReferenceQueue<Object>();
 
 	/**
 	 * Collection of <code>Tracker</code> instances in existence.
@@ -126,7 +126,7 @@ public class FileCleaner
 	/**
 	 * Inner class which acts as the reference for a file pending deletion.
 	 */
-	private static class Tracker extends PhantomReference
+	private static class Tracker extends PhantomReference<Object>
 	{
 
 		/**
@@ -144,7 +144,7 @@ public class FileCleaner
 		 * @param queue
 		 *            The queue on to which the tracker will be pushed.
 		 */
-		public Tracker(File file, Object marker, ReferenceQueue queue)
+		public Tracker(File file, Object marker, ReferenceQueue<Object> queue)
 		{
 			this(file.getPath(), marker, queue);
 		}
@@ -159,7 +159,7 @@ public class FileCleaner
 		 * @param queue
 		 *            The queue on to which the tracker will be pushed.
 		 */
-		public Tracker(String path, Object marker, ReferenceQueue queue)
+		public Tracker(String path, Object marker, ReferenceQueue<Object> queue)
 		{
 			super(marker, queue);
 			this.path = path;

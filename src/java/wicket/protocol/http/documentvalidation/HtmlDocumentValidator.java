@@ -42,7 +42,7 @@ public class HtmlDocumentValidator
 {
 	private static Log log = LogFactory.getLog(HtmlDocumentValidator.class);
 
-	private final List elements = new ArrayList();
+	private final List<DocumentElement> elements = new ArrayList<DocumentElement>();
 
 	private boolean skipComments = true;
 
@@ -79,9 +79,9 @@ public class HtmlDocumentValidator
 	public boolean isDocumentValid(final String document)
 	{
 		HtmlDocumentParser parser = new HtmlDocumentParser(document);
-		Iterator expectedElements = elements.iterator();
-		ArrayListStack iteratorStack = new ArrayListStack();
-		ArrayListStack tagNameStack = new ArrayListStack();
+		Iterator<DocumentElement> expectedElements = elements.iterator();
+		ArrayListStack<Iterator<DocumentElement>> iteratorStack = new ArrayListStack<Iterator<DocumentElement>>();
+		ArrayListStack<String> tagNameStack = new ArrayListStack<String>();
 
 		boolean end = false;
 		boolean valid = true;
@@ -272,8 +272,8 @@ public class HtmlDocumentValidator
 	 *            The stack of open tags
 	 * @return The iterator to continue to use
 	 */
-	private Iterator saveOpenTagState(ArrayListStack iteratorStack, Iterator expectedElements,
-			ArrayListStack tagNameStack)
+	private Iterator<DocumentElement> saveOpenTagState(ArrayListStack<Iterator<DocumentElement>> iteratorStack, Iterator<DocumentElement> expectedElements,
+			ArrayListStack<String> tagNameStack)
 	{
 		if (!isNonClosedTag(workingTag.getTag()))
 		{
@@ -297,8 +297,8 @@ public class HtmlDocumentValidator
 	 *            The stack of previous iterators
 	 * @return The next iterator to use, or null
 	 */
-	private Iterator validateCloseTag(ArrayListStack tagNameStack, HtmlDocumentParser parser,
-			Iterator expectedElements, ArrayListStack iteratorStack)
+	private Iterator<DocumentElement> validateCloseTag(ArrayListStack<String> tagNameStack, HtmlDocumentParser parser,
+			Iterator<DocumentElement> expectedElements, ArrayListStack<Iterator<DocumentElement>> iteratorStack)
 	{
 		if (tagNameStack.isEmpty())
 		{
@@ -308,7 +308,7 @@ public class HtmlDocumentValidator
 		}
 		else
 		{
-			String expectedTag = (String)tagNameStack.pop();
+			String expectedTag = tagNameStack.pop();
 			if (!expectedTag.equals(parser.getTag()))
 			{
 				log.error("Found closing tag </" + parser.getTag() + "> when we expecting "
@@ -319,7 +319,7 @@ public class HtmlDocumentValidator
 			{
 				if (expectedElements.hasNext())
 				{
-					DocumentElement e = (DocumentElement)expectedElements.next();
+					DocumentElement e = expectedElements.next();
 					log.error("Found closing tag </" + parser.getTag() + "> but we were "
 							+ "expecting to find another child element: " + e.toString());
 					expectedElements = null;
@@ -333,7 +333,7 @@ public class HtmlDocumentValidator
 					}
 					else
 					{
-						expectedElements = (Iterator)iteratorStack.pop();
+						expectedElements = iteratorStack.pop();
 					}
 				}
 			}
@@ -350,14 +350,14 @@ public class HtmlDocumentValidator
 	 *            The parser
 	 * @return Whether the comment is valid or not
 	 */
-	private boolean validateComment(Iterator expectedElements, HtmlDocumentParser parser)
+	private boolean validateComment(Iterator<DocumentElement> expectedElements, HtmlDocumentParser parser)
 	{
 		boolean valid = true;
 		if (!skipComments)
 		{
 			if (expectedElements.hasNext())
 			{
-				DocumentElement e = (DocumentElement)expectedElements.next();
+				DocumentElement e = expectedElements.next();
 				if (e instanceof Comment)
 				{
 					if (!((Comment)e).getText().equals(parser.getComment()))
@@ -393,12 +393,12 @@ public class HtmlDocumentValidator
 	 *            The parser
 	 * @return Whether the tag is valid or not
 	 */
-	private boolean validateTag(Iterator expectedElements, HtmlDocumentParser parser)
+	private boolean validateTag(Iterator<DocumentElement> expectedElements, HtmlDocumentParser parser)
 	{
 		boolean valid = true;
 		if (expectedElements.hasNext())
 		{
-			DocumentElement e = (DocumentElement)expectedElements.next();
+			DocumentElement e = expectedElements.next();
 			if (e instanceof Tag)
 			{
 				workingTag = (Tag)e;
@@ -480,12 +480,12 @@ public class HtmlDocumentValidator
 	 *            The parser
 	 * @return Whether the text is valid or not
 	 */
-	private boolean validateText(Iterator expectedElements, HtmlDocumentParser parser)
+	private boolean validateText(Iterator<DocumentElement> expectedElements, HtmlDocumentParser parser)
 	{
 		boolean valid = true;
 		if (expectedElements.hasNext())
 		{
-			DocumentElement e = (DocumentElement)expectedElements.next();
+			DocumentElement e = expectedElements.next();
 			if (e instanceof TextContent)
 			{
 				if (!parser.getText().matches(((TextContent)e).getValue()))

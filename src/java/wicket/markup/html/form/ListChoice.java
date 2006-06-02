@@ -27,10 +27,12 @@ import wicket.model.IModel;
  * Essentially a drop down choice that doesn't drop down. Instead, it scrolls
  * and displays a given number of rows.
  * 
+ * @param <T>
+ * 			The type of the model object.
+ *  
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Eelco Hillenius
- * @param <T> 
  */
 public class ListChoice<T> extends DropDownChoice<T>
 {

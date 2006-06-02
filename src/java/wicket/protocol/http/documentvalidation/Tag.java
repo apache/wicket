@@ -94,7 +94,7 @@ public class Tag implements DocumentElement
 	 * 
 	 * @return The expected attribute map
 	 */
-	public Map getExpectedAttributes()
+	public Map<String,String> getExpectedAttributes()
 	{
 		return expectedAttributes;
 	}
@@ -104,7 +104,7 @@ public class Tag implements DocumentElement
 	 * 
 	 * @return The expected children
 	 */
-	public List getExpectedChildren()
+	public List<DocumentElement> getExpectedChildren()
 	{
 		return expectedChildren;
 	}
@@ -114,7 +114,7 @@ public class Tag implements DocumentElement
 	 * 
 	 * @return The illegal attributes
 	 */
-	public Set getIllegalAttributes()
+	public Set<String> getIllegalAttributes()
 	{
 		return illegalAttributes;
 	}
