@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,9 +87,6 @@ public class MockWebApplication extends WebApplication
 	/** Logging */
 	private static Log log = LogFactory.getLog(MockWebApplication.class);
 
-	/** Mock http servlet context. */
-	private final MockServletContext context;
-
 	/** The last rendered page. */
 	private Page lastRenderedPage;
 
@@ -96,13 +94,13 @@ public class MockWebApplication extends WebApplication
 	private Page previousRenderedPage;
 
 	/** Mock http servlet request. */
-	private final MockHttpServletRequest servletRequest;
+	private MockHttpServletRequest servletRequest;
 
 	/** Mock http servlet response. */
-	private final MockHttpServletResponse servletResponse;
+	private MockHttpServletResponse servletResponse;
 
 	/** Mock http servlet session. */
-	private final MockHttpSession servletSession;
+	private MockHttpSession servletSession;
 
 	/** Request. */
 	private WebRequest wicketRequest;
@@ -129,56 +127,62 @@ public class MockWebApplication extends WebApplication
 	 */
 	public MockWebApplication(final String path)
 	{
-		Application.set(this);
-
-		context = new MockServletContext(this, path);
-
-		setWicketFilter(new WicketFilter()
+		final MockServletContext context = new MockServletContext(this, null);
+		WicketFilter filter = new WicketFilter()
 		{
-			private static final long serialVersionUID = 1L;
-
 			@Override
-			public FilterConfig getFilterConfig()
+			protected IWebApplicationFactory getApplicationFactory()
 			{
-				return new FilterConfig()
+				return new IWebApplicationFactory()
 				{
-				
-					public ServletContext getServletContext()
+					public WebApplication createApplication(WicketFilter filter)
 					{
-						return context;
-					}
-				
-					public Enumeration getInitParameterNames()
-					{
-						return null;
-					}
-				
-					public String getInitParameter(String name)
-					{
-						return null;
-					}
-				
-					public String getFilterName()
-					{
-						return "WicketMockServlet";
-					}
+						return MockWebApplication.this;
+					};
 				};
 			}
-		});
+		};
+		try
+		{
+			filter.init(new FilterConfig()
+			{
 
-		// Call internal init method of web application for default
-		// initialisation
-		this.internalInit();
+				public ServletContext getServletContext()
+				{
+					return context;
+				}
 
-		// Call init method of web application
-		this.init();
+				public Enumeration getInitParameterNames()
+				{
+					return null;
+				}
 
-		// We initialize components here rather than in the constructor or
-		// in the internal init, because in the init method class aliases
-		// can be added, that would be used in installing resources in the
-		// component.
-		this.initializeComponents();
+				public String getInitParameter(String name)
+				{
+					if(name.equals(WicketFilter.FILTER_PATH_PARAM))
+					{
+						return getName();
+					}
+					return null;
+				}
 
+				public String getFilterName()
+				{
+					return "WicketMockServlet";
+				}
+			});
+		}
+		catch (ServletException e)
+		{
+			throw new RuntimeException(e);
+		}
+		Application.set(this);
+	}
+	
+	@Override
+	protected void init()
+	{
+		ServletContext context =  getServletContext();
 		servletSession = new MockHttpSession(context);
 		servletRequest = new MockHttpServletRequest(this, servletSession, context);
 		servletResponse = new MockHttpServletResponse();
@@ -326,7 +330,7 @@ public class MockWebApplication extends WebApplication
 					.getWebRequest().getHttpServletRequest();
 
 			MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this,
-					servletSession, context);
+					servletSession, getServletContext());
 			newHttpRequest.setRequestToRedirectString(httpResponse.getRedirectLocation());
 			wicketRequest = newWebRequest(newHttpRequest);
 			wicketSession = getSession(wicketRequest);

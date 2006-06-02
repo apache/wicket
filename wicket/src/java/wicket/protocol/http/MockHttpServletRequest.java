@@ -97,6 +97,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private final HttpSession session;
 
+	private String url;
+
 	/**
 	 * Create the request using the supplied session object.
 	 * 
@@ -626,7 +628,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getRequestURI()
 	{
-		return path;
+		if(url == null) return "";
+		return url;
 	}
 
 	/**
@@ -938,6 +941,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			int index = url.indexOf("/", 7);
 			url = url.substring(index);
 		}
+		this.url = url;
 		if (url.startsWith(getContextPath()))
 		{
 			url = url.substring(getContextPath().length());
