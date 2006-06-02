@@ -51,7 +51,7 @@ public class PageLink extends Link
 	 * @param c
 	 *            Page class
 	 */
-	public PageLink(MarkupContainer parent, final String id, final Class c)
+	public PageLink(MarkupContainer parent, final String id, final Class<? extends Page> c)
 	{
 		super(parent, id);
 

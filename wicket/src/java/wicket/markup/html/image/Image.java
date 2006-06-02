@@ -150,7 +150,7 @@ public class Image extends WebComponent implements IResourceListener
 	 */
 	public Image(MarkupContainer parent, final String id, final String string)
 	{
-		this(parent, id, new Model(string));
+		this(parent, id, new Model<String>(string));
 	}
 
 	/**

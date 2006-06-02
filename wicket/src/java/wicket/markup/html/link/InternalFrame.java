@@ -62,7 +62,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 *            Page class
 	 */
 	public InternalFrame(MarkupContainer parent, final String id, final PageMap pageMap,
-			final Class c)
+			final Class<? extends Page> c)
 	{
 		this(parent, id, pageMap, new IPageLink()
 		{

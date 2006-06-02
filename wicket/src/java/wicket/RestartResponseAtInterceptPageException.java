@@ -58,7 +58,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	 * @param interceptPageClass
 	 *            Class of intercept page to instantiate
 	 */
-	public RestartResponseAtInterceptPageException(final Class interceptPageClass)
+	public RestartResponseAtInterceptPageException(final Class<? extends Page> interceptPageClass)
 	{
 		if (interceptPageClass == null)
 		{

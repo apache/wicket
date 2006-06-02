@@ -64,7 +64,7 @@ public class PasswordTextField extends TextField<String>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public PasswordTextField(MarkupContainer parent, final String id, IModel model)
+	public PasswordTextField(MarkupContainer parent, final String id, IModel<String> model)
 	{
 		super(parent, id, model);
 		setRequired(true);

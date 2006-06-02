@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.border;
 
+import wicket.Page;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
 import wicket.markup.html.form.Form;
@@ -99,7 +100,7 @@ public class BoxBorderTest extends WicketTestCase
 	 */
 	public void test4() throws Exception
 	{
-		Class pageClass = BorderTestHierarchyPage_4.class;
+		Class<? extends Page> pageClass = BorderTestHierarchyPage_4.class;
 
 		System.out.println("=== " + pageClass.getName() + " ===");
 		application.setHomePage(pageClass);

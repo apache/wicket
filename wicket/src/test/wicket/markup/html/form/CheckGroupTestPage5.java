@@ -41,12 +41,12 @@ public class CheckGroupTestPage5 extends WebPage
 	{
 		List list = new ArrayList();
 		Form form = new Form(this, "form");
-		CheckGroup group = new CheckGroup(form, "group", new Model(list));
+		CheckGroup<List> group = new CheckGroup(form, "group", new Model<List>(list));
 		WebMarkupContainer container = new WebMarkupContainer(group, "container");
-		Check check1 = new Check(group, "check1", new Model("check1"));
+		Check<String> check1 = new Check<String>(group, "check1", new Model<String>("check1"));
 		// here we add check2 to the form so it is outside the group - it should
 		// throw an exception when rendering
-		Check check2 = new Check(form, "check2", new Model("check2"));
+		Check<String> check2 = new Check<String>(form, "check2", new Model<String>("check2"));
 
 	}
 
