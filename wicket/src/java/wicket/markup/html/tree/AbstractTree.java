@@ -91,6 +91,32 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
+	 * Collapses all the siblings of a given node.
+	 * 
+	 * @param node
+	 *            The node of which to collapse the siblings.
+	 */
+	public void collapseSiblings(final DefaultMutableTreeNode node)
+	{
+		// Collapse all previous siblings
+		DefaultMutableTreeNode previousNode = node.getPreviousSibling();
+		while (null != previousNode)
+		{
+			final TreePath siblingSelection = new TreePath(previousNode.getPath());
+			setExpandedState(siblingSelection, false); // inverse
+			previousNode = previousNode.getPreviousSibling();
+		}
+		// Collapse all following siblings
+		DefaultMutableTreeNode nextNode = node.getNextSibling();
+		while (null != nextNode)
+		{
+			final TreePath siblingSelection = new TreePath(nextNode.getPath());
+			setExpandedState(siblingSelection, false); // inverse
+			nextNode = previousNode.getNextSibling();
+		}
+	}
+
+	/**
 	 * Expand or collapse all nodes.
 	 * 
 	 * @param expand
@@ -169,6 +195,30 @@ public abstract class AbstractTree extends Panel
 	}
 
 	/**
+	 * Returns true if the value identified by path is currently viewable, which
+	 * means it is either the root or all of its parents are expanded.
+	 * Otherwise, this method returns false.
+	 * 
+	 * @param path
+	 *            The path
+	 * 
+	 * @return true if the node is viewable, otherwise false
+	 */
+	public final boolean isVisible(TreePath path)
+	{
+		if (path != null)
+		{
+			TreePath parentPath = path.getParentPath();
+
+			if (parentPath != null)
+				return isExpanded(parentPath);
+			// Root.
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Creates a new tree state by creating a new {@link TreeState}object,
 	 * which is then set as the current tree state, creating a new
 	 * {@link TreeSelectionModel}and then calling setTreeModel with this
@@ -192,6 +242,13 @@ public abstract class AbstractTree extends Panel
 	{
 		final TreePath selection = new TreePath(node.getPath());
 		setExpandedState(selection, (!treeState.isExpanded(selection))); // inverse
+
+		// If set to SINGLE_TREE_SELECTION, collapse all sibling nodes
+		final int selectionType = getTreeState().getSelectionModel().getSelectionMode();
+		if (TreeSelectionModel.SINGLE_TREE_SELECTION == selectionType)
+		{
+			collapseSiblings(node);
+		}
 	}
 
 	/**
