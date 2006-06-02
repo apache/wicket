@@ -23,14 +23,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import wicket.Application;
 import wicket.Component;
 import wicket.WicketRuntimeException;
+import wicket.application.IClassResolver;
+import wicket.settings.IApplicationSettings;
 import wicket.util.io.ByteCountingOutputStream;
 
 /**
@@ -62,6 +66,37 @@ public abstract class Objects
 			}
 			return super.resolveObject(obj);
 		}
+
+		// This overide is required to resolve classess inside in different
+		// bundle, i.e.
+		// The classess can be resolved by OSGI classresolver implementation
+		@Override
+		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
+				ClassNotFoundException
+		{
+			String className = desc.getName();
+			Application application = Application.get();
+			IApplicationSettings applicationSettings = application.getApplicationSettings();
+			IClassResolver classResolver = applicationSettings.getClassResolver();
+
+			Class candidate = null;
+			try
+			{
+				candidate = classResolver.resolveClass(className);
+				if (candidate == null)
+				{
+					candidate = super.resolveClass(desc);
+				}
+			}
+			catch (WicketRuntimeException ex)
+			{
+				if(ex.getCause() instanceof ClassNotFoundException)
+				{
+					throw (ClassNotFoundException)ex.getCause();
+				}
+			}
+			return candidate;
+		}
 	}
 
 	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
@@ -87,6 +122,8 @@ public abstract class Objects
 			}
 			return super.replaceObject(obj);
 		}
+
+
 	}
 
 	/** Type tag meaning boolean. */
@@ -357,7 +394,39 @@ public abstract class Objects
 				ObjectOutputStream oos = new ObjectOutputStream(out);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()));
+						.toByteArray()))
+				{
+					// This overide is required to resolve classess inside in different
+					// bundle, i.e.
+					// The classess can be resolved by OSGI classresolver implementation
+					@Override
+					protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
+							ClassNotFoundException
+					{
+						String className = desc.getName();
+						Application application = Application.get();
+						IApplicationSettings applicationSettings = application.getApplicationSettings();
+						IClassResolver classResolver = applicationSettings.getClassResolver();
+
+						Class candidate = null;
+						try
+						{
+							candidate = classResolver.resolveClass(className);
+							if (candidate == null)
+							{
+								candidate = super.resolveClass(desc);
+							}
+						}
+						catch (WicketRuntimeException ex)
+						{
+							if(ex.getCause() instanceof ClassNotFoundException)
+							{
+								throw (ClassNotFoundException)ex.getCause();
+							}
+						}
+						return candidate;
+					}
+				};
 				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)
