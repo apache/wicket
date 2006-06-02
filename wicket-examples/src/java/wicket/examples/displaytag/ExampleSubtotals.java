@@ -50,7 +50,7 @@ public class ExampleSubtotals extends Displaytag
 	{
 		// Test data
 		final ReportList data = new ReportList();
-		final Map groups = new LinkedHashMap(); // Keep the insertion order
+		final Map<String, Integer> groups = new LinkedHashMap<String, Integer>(); // Keep the insertion order
 
 		// Fill the 'groups' map
 		ReportableListObject previousValue = (ReportableListObject)data.get(0);
@@ -71,9 +71,9 @@ public class ExampleSubtotals extends Displaytag
 		groups.put(previousValue.getCity(), new Integer(data.size() - startIdx));
 
 		// add the table
-		List groupList = new ArrayList();
+		List<String> groupList = new ArrayList<String>();
 		groupList.addAll(groups.keySet());
-		new ListView(this, "border", groupList)
+		new ListView<String>(this, "border", groupList)
 		{
 			private int startIndex = 0;
 
@@ -107,6 +107,7 @@ public class ExampleSubtotals extends Displaytag
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
 		 * @param id
 		 * @param data
 		 */

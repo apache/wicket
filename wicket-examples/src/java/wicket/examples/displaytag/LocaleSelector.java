@@ -38,11 +38,12 @@ import wicket.protocol.http.WebRequest;
 public class LocaleSelector extends Panel
 {
 	/** Relevant locales wrapped in a list. */
-	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
+	private static final List<Locale> LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
 			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE });
 
 	/**
 	 * 
+	 * @param parent
 	 * @param id
 	 */
 	public LocaleSelector(MarkupContainer parent, final String id)
@@ -82,11 +83,12 @@ public class LocaleSelector extends Panel
 	/**
 	 * Dropdown with Locales.
 	 */
-	private final class LocaleDropDownChoice extends DropDownChoice
+	private final class LocaleDropDownChoice extends DropDownChoice<Locale>
 	{
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param id
 		 *            component id
 		 */
@@ -125,7 +127,7 @@ public class LocaleSelector extends Panel
 	/**
 	 * Choice for a locale.
 	 */
-	private final class LocaleChoiceRenderer extends ChoiceRenderer
+	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale>
 	{
 		/**
 		 * Constructor.
@@ -138,9 +140,8 @@ public class LocaleSelector extends Panel
 		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
 		@Override
-		public Object getDisplayValue(Object object)
+		public Object getDisplayValue(Locale locale)
 		{
-			Locale locale = (Locale)object;
 			String display = locale.getDisplayName(getLocale());
 			return display;
 		}

@@ -50,7 +50,7 @@ public class ExamplePaging extends Displaytag
 	public ExamplePaging(final PageParameters parameters)
 	{
 		// Test data
-		final List data = new TestList(55, false);
+		final List<ListObject> data = new TestList(55, false);
 
 		// =======================================================================
 		// Add pageable table with alternating row styles. A Label component
@@ -64,7 +64,7 @@ public class ExamplePaging extends Displaytag
 		// Add pageable table with alternating row styles
 		// - The list contains less items than the page
 		// - Explicitly create a Label
-		List data2 = new ArrayList();
+		List<ListObject> data2 = new ArrayList<ListObject>();
 		data2.addAll(data.subList(0, 10));
 		final SimplePageableListView table2 = new SimplePageableListView(this, "rows2", data2, 20)
 		{
@@ -89,7 +89,7 @@ public class ExamplePaging extends Displaytag
 		// =======================================================================
 		new Label(this, "info5", "");
 
-		final List addRemoveOptions = new ArrayList();
+		final List<String> addRemoveOptions = new ArrayList<String>();
 		addRemoveOptions.add("10");
 		addRemoveOptions.add("5");
 		addRemoveOptions.add("3");
@@ -101,7 +101,7 @@ public class ExamplePaging extends Displaytag
 		addRemoveOptions.add("-5");
 		addRemoveOptions.add("-10");
 
-		new DropDownChoice(this, "addRemove", new Model(null), addRemoveOptions)
+		new DropDownChoice<String>(this, "addRemove", new Model<String>(null), addRemoveOptions)
 		{
 			@Override
 			protected boolean wantOnSelectionChangedNotifications()
@@ -116,7 +116,7 @@ public class ExamplePaging extends Displaytag
 
 				Label info5 = (Label)ExamplePaging.this.get("info5");
 
-				List data5 = (List)ExamplePaging.this.get("rows5").getModelObject();
+				List<ListObject> data5 = (List)ExamplePaging.this.get("rows5").getModelObject();
 				if (anz > 0)
 				{
 					data5.addAll(data.subList(0, anz));

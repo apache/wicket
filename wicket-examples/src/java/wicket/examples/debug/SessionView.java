@@ -81,10 +81,10 @@ public final class SessionView extends Panel
 		});
 
 		// Get pagemaps
-		final List pagemaps = session.getPageMaps();
+		final List<PageMap> pagemaps = session.getPageMaps();
 
 		// Create the table containing the list the components
-		new ListView(this, "pagemaps", pagemaps)
+		new ListView<PageMap>(this, "pagemaps", pagemaps)
 		{
 			private static final long serialVersionUID = 1L;
 

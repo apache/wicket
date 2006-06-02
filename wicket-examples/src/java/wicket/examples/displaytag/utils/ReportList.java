@@ -33,7 +33,7 @@ import wicket.util.string.AppendingStringBuffer;
  * @author epesh
  * @version $Revision $ ($Author $)
  */
-public class ReportList extends ArrayList implements Serializable
+public class ReportList extends ArrayList<ReportableListObject> implements Serializable
 {
 	/**
 	 * Creats a TestList that is filled with 20 ReportableListObject suitable

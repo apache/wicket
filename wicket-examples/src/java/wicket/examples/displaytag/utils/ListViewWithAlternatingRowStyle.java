@@ -32,16 +32,19 @@ import wicket.model.IModel;
  * The styles are named "even" and "odd".
  * 
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
  */
-public abstract class ListViewWithAlternatingRowStyle extends ListView
+public abstract class ListViewWithAlternatingRowStyle<T> extends ListView<T>
 {
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
 	 * @param id
 	 * @param data
 	 */
-	public ListViewWithAlternatingRowStyle(MarkupContainer parent, final String id, final List data)
+	public ListViewWithAlternatingRowStyle(MarkupContainer parent, final String id, final List<T> data)
 	{
 		super(parent, id, data);
 	}
@@ -49,11 +52,12 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
 	 * @param id
 	 * @param model
 	 */
 	public ListViewWithAlternatingRowStyle(MarkupContainer parent, final String id,
-			final IModel model)
+			final IModel<List<T>> model)
 	{
 		super(parent, id, model);
 	}
@@ -70,9 +74,9 @@ public abstract class ListViewWithAlternatingRowStyle extends ListView
 	 * @return List item
 	 */
 	@Override
-	protected ListItem newItem(final int index)
+	protected ListItem<T> newItem(final int index)
 	{
-		return new ListItem(this, index, getListItemModel(getModel(), index))
+		return new ListItem<T>(this, index, getListItemModel(getModel(), index))
 		{
 			@Override
 			protected void onComponentTag(final ComponentTag tag)

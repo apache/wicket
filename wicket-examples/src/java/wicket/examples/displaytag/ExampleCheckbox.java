@@ -56,8 +56,8 @@ public class ExampleCheckbox extends Displaytag
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				new CheckBox(listItem, "activ", new Model(new Boolean(value.isActive())));
-				new TextField(listItem, "comment", new Model(value.getStatus()));
+				new CheckBox(listItem, "activ", new Model<Boolean>(new Boolean(value.isActive())));
+				new TextField<String>(listItem, "comment", new Model<String>(value.getStatus()));
 			}
 		};
 	}

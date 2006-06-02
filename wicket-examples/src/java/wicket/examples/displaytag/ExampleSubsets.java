@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.PageParameters;
+import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.list.ListView;
@@ -42,7 +43,7 @@ public class ExampleSubsets extends Displaytag
 	 */
 	public ExampleSubsets(final PageParameters parameters)
 	{
-		List data = new TestList(10, false);
+		List<ListObject> data = new TestList(10, false);
 
 		// Add table of existing comments
 		newTable("table1", data);
@@ -50,7 +51,7 @@ public class ExampleSubsets extends Displaytag
 		// First alternativ
 		// Because subList() returns a view (not a copy) it is not serializable
 		// and thus can not be used directly.
-		List data2 = new ArrayList();
+		List<ListObject> data2 = new ArrayList<ListObject>();
 		data2.addAll(data.subList(0, 5));
 		newTable("table2", data);
 

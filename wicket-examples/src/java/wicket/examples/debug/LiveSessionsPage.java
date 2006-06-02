@@ -142,7 +142,7 @@ public class LiveSessionsPage extends WebPage
 			@Override
 			public Object getObject(Component component)
 			{
-				return new ArrayList(getRequestLogger().getLiveSessions());
+				return new ArrayList<SessionData>(getRequestLogger().getLiveSessions());
 			}
 		};
 		PageableListView listView = new PageableListView(this, "sessions", sessionModel, 50)
@@ -166,10 +166,10 @@ public class LiveSessionsPage extends WebPage
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				new Label(link, "id", new Model(sd.getId()));
-				new Label(item, "requestCount", new Model(new Integer(sd.getRequests().size())));
-				new Label(item, "requestsTime", new Model(sd.getRequestsTime()));
-				new Label(item, "sessionSize", new Model(Bytes.bytes(sd.getSessionSize())));
+				new Label(link, "id", new Model<String>(sd.getId()));
+				new Label(item, "requestCount", new Model<Integer>(new Integer(sd.getRequests().size())));
+				new Label(item, "requestsTime", new Model<Double>(sd.getRequestsTime()));
+				new Label(item, "sessionSize", new Model<Bytes>(Bytes.bytes(sd.getSessionSize())));
 			}
 		};
 

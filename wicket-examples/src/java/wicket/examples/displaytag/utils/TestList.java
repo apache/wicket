@@ -30,7 +30,7 @@ import java.util.Random;
  * 
  * @author epesh (wicket.examples.wicket.examples.displaytag)
  */
-public class TestList extends ArrayList implements Serializable
+public class TestList extends ArrayList<ListObject> implements Serializable
 {
 
 	/**

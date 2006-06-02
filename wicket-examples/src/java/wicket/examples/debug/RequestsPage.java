@@ -35,6 +35,7 @@ package wicket.examples.debug;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import wicket.Component;
@@ -75,7 +76,7 @@ public class RequestsPage extends WebPage
 			@Override
 			public Object getObject(Component component)
 			{
-				return new ArrayList(sessionData.getRequests());
+				return new ArrayList<RequestData>(sessionData.getRequests());
 			}
 		};
 		PageableListView listView = new PageableListView(this, "requests", requestsModel, 50)
@@ -88,7 +89,7 @@ public class RequestsPage extends WebPage
 			protected void populateItem(ListItem item)
 			{
 				RequestData rd = (RequestData)item.getModelObject();
-				Label startDate = new Label(item, "startDate", new Model(rd.getStartDate()))
+				Label startDate = new Label(item, "startDate", new Model<Date>(rd.getStartDate()))
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -114,10 +115,10 @@ public class RequestsPage extends WebPage
 						};
 					}
 				};
-				new Label(item, "timeTaken", new Model(rd.getTimeTaken()));
-				new Label(item, "eventTarget", new Model(rd.getEventTargert()));
-				new Label(item, "responseTarget", new Model(rd.getResponseTarget()));
-				new Label(item, "alteredObjects", new Model(rd.getAlteredObjects()))
+				new Label(item, "timeTaken", new Model<Long>(rd.getTimeTaken()));
+				new Label(item, "eventTarget", new Model<String>(rd.getEventTargert()));
+				new Label(item, "responseTarget", new Model<String>(rd.getResponseTarget()));
+				new Label(item, "alteredObjects", new Model<String>(rd.getAlteredObjects()))
 						.setEscapeModelStrings(false);
 			}
 		};

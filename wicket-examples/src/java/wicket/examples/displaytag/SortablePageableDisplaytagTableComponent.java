@@ -40,27 +40,30 @@ import wicket.model.IModel;
  * Sortable + pageable table example
  * 
  * @author Juergen Donnerstag
+ * 
+ * @param <T> 
  */
-public class SortablePageableDisplaytagTableComponent extends Panel
+public class SortablePageableDisplaytagTableComponent<T> extends Panel
 {
 	// Model data
-	final private List data;
+	final private List<T> data;
 
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
 	 * @param id
 	 *            Name of component
 	 * @param list
 	 *            List of data to display
 	 */
 	public SortablePageableDisplaytagTableComponent(MarkupContainer parent, final String id,
-			final List list)
+			final List<T> list)
 	{
 		super(parent, id);
 
 		// Get an internal copy of the model data
-		this.data = new ArrayList();
+		this.data = new ArrayList<T>();
 		this.data.addAll(list);
 
 		// Add a table
@@ -128,6 +131,7 @@ public class SortablePageableDisplaytagTableComponent extends Panel
 
 		/**
 		 * 
+		 * @param parent
 		 * @param id
 		 * @param table
 		 */

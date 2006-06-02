@@ -67,21 +67,21 @@ public final class PageMapView extends Panel
 		new Label(this, "size", "" + Bytes.bytes(pageMap.getSizeInBytes()));
 
 		// Get entry accesses
-		final ArrayListStack accessStack;
+		final ArrayListStack<Access> accessStack;
 		if (pageMap instanceof AccessStackPageMap)
 		{
 			accessStack = ((AccessStackPageMap)pageMap).getAccessStack();
 		}
 		else
 		{
-			accessStack = new ArrayListStack();
+			accessStack = new ArrayListStack<Access>();
 		}
-		final List reversedAccessStack = new ArrayList();
+		final List<Access> reversedAccessStack = new ArrayList<Access>();
 		reversedAccessStack.addAll(accessStack);
 		Collections.reverse(reversedAccessStack);
 
 		// Create the table containing the list the components
-		new ListView(this, "accesses", reversedAccessStack)
+		new ListView<Access>(this, "accesses", reversedAccessStack)
 		{
 			private static final long serialVersionUID = 1L;
 

@@ -39,7 +39,7 @@ import wicket.util.collections.MicroMap;
 public class SortableListViewHeaderGroup implements Serializable
 {
 	/** contains the name of SortableTableHeader to be sorted */
-	final private MicroMap sorted = new MicroMap();
+	final private MicroMap<String, Object> sorted = new MicroMap<String, Object>();
 
 	/** The underlying listView to be sorted */
 	private ListView listView;

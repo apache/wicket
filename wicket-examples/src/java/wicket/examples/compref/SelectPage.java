@@ -44,11 +44,11 @@ import wicket.model.Model;
 public class SelectPage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
 			"Java.Net" });
 
 	/** available choices for large selection box. */
-	private static final List MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
+	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
 			"Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
 
 	/**
@@ -73,15 +73,14 @@ public class SelectPage extends WicketExamplePage
 		};
 
 		Select site = new Select(form, "site");
-		new SelectOption(site, "site1", new Model("tss"));
-		new SelectOption(site, "site2", new Model("jl"));
-		new SelectOption(site, "site3", new Model("sd"));
-		new SelectOption(site, "site4", new Model("bn"));
+		new SelectOption(site, "site1", new Model<String>("tss"));
+		new SelectOption(site, "site2", new Model<String>("jl"));
+		new SelectOption(site, "site3", new Model<String>("sd"));
+		new SelectOption(site, "site4", new Model<String>("bn"));
 
 		Select choices = new Select(form, "choices");
 		IOptionRenderer renderer = new IOptionRenderer()
 		{
-
 			public String getDisplayValue(Object object)
 			{
 				return object.toString();
@@ -91,10 +90,8 @@ public class SelectPage extends WicketExamplePage
 			{
 				return new Model(value);
 			}
-
 		};
-		new SelectOptions(choices, "manychoices", new Model(MANY_CHOICES), renderer);
-
+		new SelectOptions(choices, "manychoices", new Model<List<String>>(MANY_CHOICES), renderer);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
@@ -104,7 +101,7 @@ public class SelectPage extends WicketExamplePage
 		public String site = new String("sd");
 
 		/** the selected choices. */
-		public List choices = new ArrayList();
+		public List<String> choices = new ArrayList<String>();
 
 		/** adds pre-selected items to the choices list */
 		public Input()

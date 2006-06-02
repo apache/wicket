@@ -56,7 +56,7 @@ public class ExampleStyles extends Displaytag
 
 		// Apply the style to the <table> tag
 		WebMarkupContainer htmlTable = new WebMarkupContainer(this, "htmlTable");
-		htmlTable.add(new AttributeModifier("class", new Model(parameters.getString("class"))));
+		htmlTable.add(new AttributeModifier("class", new Model<String>(parameters.getString("class"))));
 
 		// Add the rows to the list
 		new SimpleListView(this, "rows", data);

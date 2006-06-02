@@ -27,44 +27,38 @@ public class TabbedPanelPage extends WicketExamplePage
 	 */
 	public TabbedPanelPage()
 	{
-		setModel(new Model("tabpanel"));
+		setModel(new Model<String>("tabpanel"));
 
 		// create links used to switch between css variations
 		addCssSwitchingLinks();
 
 		// create a list of ITab objects used to feed the tabbed panel
-		List tabs = new ArrayList();
-		tabs.add(new AbstractTab(new Model("first tab"))
+		List<AbstractTab> tabs = new ArrayList<AbstractTab>();
+		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
-
 			@Override
 			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
 				return new TabPanel1(parent, panelId);
 			}
-
 		});
 
-		tabs.add(new AbstractTab(new Model("second tab"))
+		tabs.add(new AbstractTab(new Model<String>("second tab"))
 		{
-
 			@Override
 			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
 				return new TabPanel2(parent, panelId);
 			}
-
 		});
 
-		tabs.add(new AbstractTab(new Model("third tab"))
+		tabs.add(new AbstractTab(new Model<String>("third tab"))
 		{
-
 			@Override
 			public Panel getPanel(MarkupContainer parent, String panelId)
 			{
 				return new TabPanel3(parent, panelId);
 			}
-
 		});
 
 		// add the new tabbed panel, attribute modifier only used to switch
@@ -116,7 +110,6 @@ public class TabbedPanelPage extends WicketExamplePage
 		{
 			return !TabbedPanelPage.this.getModelObjectAsString().equals(clazz);
 		}
-
 	};
 
 	/**

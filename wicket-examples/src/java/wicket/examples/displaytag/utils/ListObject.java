@@ -88,7 +88,7 @@ public class ListObject implements Serializable
 	/**
 	 * sub list used to test nested tables.
 	 */
-	private List subList;
+	private List<SubListItem> subList;
 
 	/**
 	 * Checkbox example
@@ -120,7 +120,7 @@ public class ListObject implements Serializable
 		this.status = RandomSampleUtil.getRandomWord().toUpperCase();
 
 		// added sublist for testing of nested tables
-		this.subList = new ArrayList();
+		this.subList = new ArrayList<SubListItem>();
 		this.subList.add(new SubListItem());
 		this.subList.add(new SubListItem());
 		this.subList.add(new SubListItem());

@@ -49,10 +49,10 @@ public class ExampleDecoratorLink extends Displaytag
 	public ExampleDecoratorLink(final PageParameters parameters)
 	{
 		// Test data
-		List data = new TestList(10, false);
+		List<ListObject> data = new TestList(10, false);
 
 		// Add the table
-		new ListView(this, "rows", data)
+		new ListView<ListObject>(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -60,7 +60,7 @@ public class ExampleDecoratorLink extends Displaytag
 				final ListObject value = (ListObject)listItem.getModelObject();
 
 				// alternating row styles
-				listItem.add(new AttributeModifier("class", new Model(
+				listItem.add(new AttributeModifier("class", new Model<String>(
 						(listItem.getIndex() % 2) == 0 ? "even" : "odd")));
 
 				BookmarkablePageLink idLink = new BookmarkablePageLink(listItem, "idLink",
