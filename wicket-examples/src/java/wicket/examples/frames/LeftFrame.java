@@ -55,6 +55,7 @@ public class LeftFrame extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param id
 		 * @param bodyFrame
 		 * @param pageClass

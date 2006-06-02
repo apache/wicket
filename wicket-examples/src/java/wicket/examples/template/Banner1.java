@@ -23,12 +23,16 @@ import wicket.model.IModel;
  * A banner.
  * 
  * @author Eelco Hillenius
+ * 
+ * @param <T>
  */
-public class Banner1 extends Banner
+public class Banner1<T> extends Banner<T>
 {
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 */
 	public Banner1(MarkupContainer parent, String id)
@@ -39,10 +43,12 @@ public class Banner1 extends Banner
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param model
 	 */
-	public Banner1(MarkupContainer parent, final String id, IModel model)
+	public Banner1(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}

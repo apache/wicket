@@ -59,10 +59,10 @@ public class RepeatingPage extends BasePage
 			new Label(item, "cellphone", contact.getCellPhone());
 
 			final int idx = index;
-			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 			{
 				@Override
-				public Object getObject(Component component)
+				public String getObject(Component component)
 				{
 					return (idx % 2 == 1) ? "even" : "odd";
 				}

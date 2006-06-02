@@ -33,11 +33,11 @@ import java.util.Map;
  */
 public class ContactsDatabase
 {
-	private Map map = Collections.synchronizedMap(new HashMap());
-	private List fnameIdx = Collections.synchronizedList(new ArrayList());
-	private List lnameIdx = Collections.synchronizedList(new ArrayList());
-	private List fnameDescIdx = Collections.synchronizedList(new ArrayList());
-	private List lnameDescIdx = Collections.synchronizedList(new ArrayList());
+	private Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
+	private List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
 	/**
 	 * Constructor
@@ -159,35 +159,35 @@ public class ContactsDatabase
 
 	private void updateIndecies()
 	{
-		Collections.sort(fnameIdx, new Comparator()
+		Collections.sort(fnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg0).getFirstName().compareTo(((Contact)arg1).getFirstName());
+				return arg0.getFirstName().compareTo(arg1.getFirstName());
 			}
 		});
 
-		Collections.sort(lnameIdx, new Comparator()
+		Collections.sort(lnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg0).getLastName().compareTo(((Contact)arg1).getLastName());
+				return arg0.getLastName().compareTo(arg1.getLastName());
 			}
 		});
 
-		Collections.sort(fnameDescIdx, new Comparator()
+		Collections.sort(fnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg1).getFirstName().compareTo(((Contact)arg0).getFirstName());
+				return arg1.getFirstName().compareTo(arg0.getFirstName());
 			}
 		});
 
-		Collections.sort(lnameDescIdx, new Comparator()
+		Collections.sort(lnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Object arg0, Object arg1)
+			public int compare(Contact arg0, Contact arg1)
 			{
-				return ((Contact)arg1).getLastName().compareTo(((Contact)arg0).getLastName());
+				return arg1.getLastName().compareTo(arg0.getLastName());
 			}
 		});
 

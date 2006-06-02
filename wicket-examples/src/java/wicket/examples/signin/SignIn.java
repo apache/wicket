@@ -72,6 +72,7 @@ public final class SignIn extends WicketExamplePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
 		 * @param id
 		 *            id of the form component
 		 */
@@ -80,8 +81,8 @@ public final class SignIn extends WicketExamplePage
 			super(parent, id);
 
 			// Attach textfield components that edit properties map model
-			new TextField(this, "username", new PropertyModel(properties, "username"));
-			new PasswordTextField(this, "password", new PropertyModel(properties, "password"));
+			new TextField<String>(this, "username", new PropertyModel<String>(properties, "username"));
+			new PasswordTextField(this, "password", new PropertyModel<String>(properties, "password"));
 		}
 
 		/**

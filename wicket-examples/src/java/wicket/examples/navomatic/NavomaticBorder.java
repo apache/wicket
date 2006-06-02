@@ -32,6 +32,7 @@ public class NavomaticBorder extends Border
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
 	 * @param id
 	 *            The id of this component
 	 */

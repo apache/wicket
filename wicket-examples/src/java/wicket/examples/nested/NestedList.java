@@ -38,6 +38,7 @@ public final class NestedList extends Panel
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
 	 * @param id
 	 *            The id of this component
 	 * @param list
@@ -57,6 +58,7 @@ public final class NestedList extends Panel
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param name
 		 *            name of the component
 		 * @param list

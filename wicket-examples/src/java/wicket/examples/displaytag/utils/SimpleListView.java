@@ -38,8 +38,10 @@ import wicket.model.IModel;
  * component you want. Alternating row styles are provided as well.
  * 
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
  */
-public class SimpleListView extends ListView implements IComponentResolver
+public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 {
 	/** The tags "class" attribute for odd index rows */
 	public static String ODD = "odd";
@@ -50,10 +52,11 @@ public class SimpleListView extends ListView implements IComponentResolver
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
 	 * @param id
 	 * @param data
 	 */
-	public SimpleListView(MarkupContainer parent, final String id, final List data)
+	public SimpleListView(MarkupContainer parent, final String id, final List<T> data)
 	{
 		super(parent, id, data);
 	}
@@ -61,10 +64,11 @@ public class SimpleListView extends ListView implements IComponentResolver
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
 	 * @param id
 	 * @param model
 	 */
-	public SimpleListView(MarkupContainer parent, final String id, final IModel model)
+	public SimpleListView(MarkupContainer parent, final String id, final IModel<List<T>> model)
 	{
 		super(parent, id, model);
 	}
@@ -81,7 +85,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @return List item
 	 */
 	@Override
-	protected ListItem newItem(final int index)
+	protected ListItem<T> newItem(final int index)
 	{
 		return new SimpleListListItem(this, index, getListItemModel(getModel(), index));
 	}
@@ -108,7 +112,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 	 * @return IModel
 	 */
 	@Override
-	protected IModel getListItemModel(final IModel model, final int index)
+	protected IModel<T> getListItemModel(final IModel model, final int index)
 	{
 		return new BoundCompoundPropertyModel(super.getListItemModel(model, index));
 	}
@@ -138,6 +142,7 @@ public class SimpleListView extends ListView implements IComponentResolver
 	/**
 	 * Create a new default component in case it is not explicitly defined.
 	 * 
+	 * @param parent
 	 * @param id
 	 * @return Usually a Label like component
 	 */
@@ -159,11 +164,12 @@ public class SimpleListView extends ListView implements IComponentResolver
 	/**
 	 * 
 	 */
-	public class SimpleListListItem extends ListItem
+	public class SimpleListListItem extends ListItem<T>
 	{
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
 		 * @param index
 		 *            The row index
 		 * @param model

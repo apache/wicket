@@ -43,7 +43,7 @@ public class UnicodeConverter extends WicketExamplePage
 
 	private static final String TO_ESCAPED_UNICODE = "to escaped unicode";
 
-	private static List translationTypes = Arrays.asList(new String[] { TO_ESCAPED_UNICODE,
+	private static List<String> translationTypes = Arrays.asList(new String[] { TO_ESCAPED_UNICODE,
 			FROM_ESCAPED_UNICODE });
 
 	private String source = "";
@@ -113,7 +113,7 @@ public class UnicodeConverter extends WicketExamplePage
 	{
 		Form form = new Form(this, "form", new CompoundPropertyModel(this));
 		new TextArea(form, "source");
-		new DropDownChoice(form, "translationType", translationTypes);
+		new DropDownChoice<String>(form, "translationType", translationTypes);
 		new TextArea(form, "target", new ConverterModel());
 	}
 

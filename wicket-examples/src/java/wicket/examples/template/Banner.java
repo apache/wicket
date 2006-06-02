@@ -24,12 +24,16 @@ import wicket.model.IModel;
  * Base class for banners.
  * 
  * @author Eelco Hillenius
+ * 
+ * @param <T>
  */
-public abstract class Banner extends Panel
+public abstract class Banner<T> extends Panel<T>
 {
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 */
 	public Banner(MarkupContainer parent, String id)
@@ -40,10 +44,12 @@ public abstract class Banner extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param model
 	 */
-	public Banner(MarkupContainer parent, final String id, IModel model)
+	public Banner(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}

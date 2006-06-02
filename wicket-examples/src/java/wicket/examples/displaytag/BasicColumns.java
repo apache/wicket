@@ -46,11 +46,11 @@ public class BasicColumns extends Displaytag
 	public BasicColumns(final PageParameters parameters)
 	{
 		// test data
-		List data = new TestList(6, false);
+		List<ListObject> data = new TestList(6, false);
 
 		// ==========================================================================
 		// Add a simple table
-		new ListViewWithAlternatingRowStyle(this, "rows", data)
+		new ListViewWithAlternatingRowStyle<ListObject>(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -69,7 +69,7 @@ public class BasicColumns extends Displaytag
 		// Add a simple table but get the model data from a
 		// CompoundPropertyModel
 		// avoiding redundant naming of the label id and the property name.
-		new ListViewWithAlternatingRowStyle(this, "rows2", data)
+		new ListViewWithAlternatingRowStyle<ListObject>(this, "rows2", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)

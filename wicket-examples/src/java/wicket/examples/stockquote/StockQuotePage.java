@@ -51,11 +51,11 @@ public class StockQuotePage extends WicketExamplePage
 
 		// shared model to get and set the symbol property on the
 		// quote instance
-		final IModel model = new PropertyModel(quote, "symbol");
+		final IModel<String> model = new PropertyModel<String>(quote, "symbol");
 
 		// form holding the input field.
 		final Form form = new Form(this, "form");
-		new TextField(this, "symbol", model);
+		new TextField<String>(this, "symbol", model);
 
 		// labels for displaying the chosen symbol
 		new Label(this, "symbol", model);

@@ -51,10 +51,10 @@ public class SimplePage extends BasePage
 				new Label(item, "homephone", contact.getHomePhone());
 				new Label(item, "cellphone", contact.getCellPhone());
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
 					@Override
-					public Object getObject(Component component)
+					public String getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

@@ -62,6 +62,8 @@ public class BasePage extends ExamplePage
 	class ActionPanel extends Panel
 	{
 		/**
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            component id
 		 * @param model

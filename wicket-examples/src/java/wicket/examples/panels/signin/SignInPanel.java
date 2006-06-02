@@ -66,6 +66,8 @@ public abstract class SignInPanel extends Panel
 		/**
 		 * Constructor.
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            id of the form component
 		 */
@@ -123,7 +125,7 @@ public abstract class SignInPanel extends Panel
 	}
 
 	/**
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
 	public SignInPanel(MarkupContainer parent, final String id)
 	{
@@ -131,11 +133,13 @@ public abstract class SignInPanel extends Panel
 	}
 
 	/**
+	 * 
+	 * @param parent
 	 * @param id
 	 *            See Component constructor
 	 * @param includeRememberMe
 	 *            True if form should include a remember-me checkbox
-	 * @see wicket.Component#Component(String)
+	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
 	public SignInPanel(MarkupContainer parent, final String id, final boolean includeRememberMe)
 	{

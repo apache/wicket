@@ -46,6 +46,8 @@ public class Index extends WicketExamplePage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            Component id
 		 * @param wizardClass

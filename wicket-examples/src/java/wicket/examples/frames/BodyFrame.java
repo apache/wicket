@@ -17,8 +17,6 @@
  */
 package wicket.examples.frames;
 
-import java.io.Serializable;
-
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.RequestCycle;
@@ -72,7 +70,7 @@ public class BodyFrame extends WebPage
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
 		WebComponent leftFrameTag = new WebComponent(this, "leftFrame");
-		leftFrameTag.add(new AttributeModifier("src", new Model(leftFrameSrc)));
+		leftFrameTag.add(new AttributeModifier("src", new Model<CharSequence>(leftFrameSrc)));
 
 		// make a simple component for the right frame tag
 		WebComponent rightFrameTag = new WebComponent(this, "rightFrame");

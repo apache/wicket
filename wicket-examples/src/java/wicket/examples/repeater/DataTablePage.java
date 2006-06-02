@@ -42,9 +42,9 @@ public class DataTablePage extends BasePage
 	 */
 	public DataTablePage()
 	{
-		List columns = new ArrayList();
+		List<AbstractColumn> columns = new ArrayList<AbstractColumn>();
 
-		columns.add(new AbstractColumn(new Model("Actions"))
+		columns.add(new AbstractColumn(new Model<String>("Actions"))
 		{
 			public void populateItem(Item cellItem, String componentId, IModel model)
 			{
@@ -52,11 +52,11 @@ public class DataTablePage extends BasePage
 			}
 		});
 
-		columns.add(new PropertyColumn(new Model("ID"), "id"));
-		columns.add(new PropertyColumn(new Model("First Name"), "firstName", "firstName"));
-		columns.add(new PropertyColumn(new Model("Last Name"), "lastName", "lastName"));
-		columns.add(new PropertyColumn(new Model("Home Phone"), "homePhone"));
-		columns.add(new PropertyColumn(new Model("Cell Phone"), "cellPhone"));
+		columns.add(new PropertyColumn(new Model<String>("ID"), "id"));
+		columns.add(new PropertyColumn(new Model<String>("First Name"), "firstName", "firstName"));
+		columns.add(new PropertyColumn(new Model<String>("Last Name"), "lastName", "lastName"));
+		columns.add(new PropertyColumn(new Model<String>("Home Phone"), "homePhone"));
+		columns.add(new PropertyColumn(new Model<String>("Cell Phone"), "cellPhone"));
 
 		new DefaultDataTable(this, "table", columns, new SortableContactDataProvider(), 8);
 	}

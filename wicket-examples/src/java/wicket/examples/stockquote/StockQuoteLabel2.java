@@ -18,6 +18,8 @@ public class StockQuoteLabel2 extends Label
 	/**
 	 * Constructor taking the symbol directly.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            the component id
 	 * @param symbol

@@ -29,6 +29,7 @@ import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.AbstractReadOnlyModel;
+import wicket.model.IModel;
 
 /**
  * page that demonstrates a RefreshingView
@@ -44,7 +45,7 @@ public class RefreshingPage extends BasePage
 	 */
 	public RefreshingPage()
 	{
-		final List contacts = new ArrayList(10);
+		final List<IModel<Contact>> contacts = new ArrayList<IModel<Contact>>(10);
 
 		// populate list of contacts to be displayed
 		ContactDataProvider dp = new ContactDataProvider();
@@ -78,10 +79,10 @@ public class RefreshingPage extends BasePage
 				new Label(item, "homephone", contact.getHomePhone());
 				new Label(item, "cellphone", contact.getCellPhone());
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
 					@Override
-					public Object getObject(Component component)
+					public String getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

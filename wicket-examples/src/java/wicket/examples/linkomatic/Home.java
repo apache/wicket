@@ -165,6 +165,7 @@ public class Home extends WicketExamplePage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
 		 * @param id
 		 *            component id
 		 */

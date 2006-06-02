@@ -131,7 +131,7 @@ public class SourcesPage extends WebPage
 	 */
 	public class PackagedResourcesModel extends AbstractReadOnlyModel implements IDetachable
 	{
-		private final List resources = new ArrayList();
+		private final List<String> resources = new ArrayList<String>();
 
 		/**
 		 * Constructor.
@@ -365,6 +365,8 @@ public class SourcesPage extends WebPage
 		/**
 		 * Constructor.
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            the component identifier
 		 */
@@ -401,6 +403,8 @@ public class SourcesPage extends WebPage
 		/**
 		 * Constructor.
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 *            the component id
 		 */

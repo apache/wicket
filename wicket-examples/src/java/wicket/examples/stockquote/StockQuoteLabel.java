@@ -20,11 +20,13 @@ import wicket.model.Model;
  * You can use this component in your webapplication just as you might want to
  * use a <code>Label</code>.
  */
-public class StockQuoteLabel extends WebComponent
+public class StockQuoteLabel extends WebComponent<String>
 {
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            See Component
 	 */
@@ -37,22 +39,24 @@ public class StockQuoteLabel extends WebComponent
 	 * Convenience constructor. Same as StockQuoteLabel(String, new
 	 * Model(String))
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            See Component
 	 * @param symbol
 	 *            The symbol to look up
 	 * 
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	public StockQuoteLabel(MarkupContainer parent, final String id, String symbol)
 	{
-		super(parent, id, new Model(symbol));
+		super(parent, id, new Model<String>(symbol));
 	}
 
 	/**
-	 * @see wicket.Component#Component(String, IModel)
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public StockQuoteLabel(MarkupContainer parent, final String id, IModel model)
+	public StockQuoteLabel(MarkupContainer parent, final String id, IModel<String> model)
 	{
 		super(parent, id, model);
 	}

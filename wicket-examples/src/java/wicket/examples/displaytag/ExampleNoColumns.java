@@ -45,14 +45,14 @@ public class ExampleNoColumns extends Displaytag
 	public ExampleNoColumns(final PageParameters parameters)
 	{
 		// Test data
-		List data = new TestList(10, false);
+		List<ListObject> data = new TestList(10, false);
 
 		// ListVieweWithAlternatingRowStyle is a very simple extension
 		// to ListView implementing alternating row styles by changing
 		// the tags class attribute accordingly.
 		// Note: This is not the simplest way Wicket offers to render
 		// lists, but it shows how ListViews work in general.
-		new ListViewWithAlternatingRowStyle(this, "entries", data)
+		new ListViewWithAlternatingRowStyle<ListObject>(this, "entries", data)
 		{
 			/**
 			 * populateItem() is called for each item of the list. ListItem

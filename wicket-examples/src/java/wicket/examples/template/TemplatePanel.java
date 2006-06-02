@@ -24,12 +24,16 @@ import wicket.model.IModel;
  * Base panel to be extended.
  * 
  * @author Eelco Hillenius
+ * 
+ * @param <T>
  */
-public abstract class TemplatePanel extends Panel
+public abstract class TemplatePanel<T> extends Panel<T>
 {
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 */
@@ -41,12 +45,14 @@ public abstract class TemplatePanel extends Panel
 	/**
 	 * Construct.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param model
 	 *            the model
 	 */
-	public TemplatePanel(MarkupContainer parent, final String id, IModel model)
+	public TemplatePanel(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}

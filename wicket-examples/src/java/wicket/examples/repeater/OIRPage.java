@@ -53,6 +53,8 @@ public class OIRPage extends BasePage
 		/**
 		 * Constructor
 		 * 
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 * @param index
 		 * @param model
@@ -60,7 +62,7 @@ public class OIRPage extends BasePage
 		public HighlitableDataItem(MarkupContainer parent, final String id, int index, IModel model)
 		{
 			super(parent, id, index, model);
-			add(new AttributeModifier("style", true, new Model("background-color:#80b6ed;"))
+			add(new AttributeModifier("style", true, new Model<String>("background-color:#80b6ed;"))
 			{
 				@Override
 				public boolean isEnabled()
@@ -100,10 +102,10 @@ public class OIRPage extends BasePage
 				new Label(item, "homephone", contact.getHomePhone());
 				new Label(item, "cellphone", contact.getCellPhone());
 
-				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel()
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
 					@Override
-					public Object getObject(Component component)
+					public String getObject(Component component)
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}
