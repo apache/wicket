@@ -85,7 +85,7 @@ public class EqualInputValidator extends AbstractFormValidator
 		// we have a choice to validate the type converted values or the raw
 		// input values, we validate the raw input
 		final FormComponent formComponent1 = components[0];
-		final FormComponent formComponent2 = components[1];
+		final FormComponent<?> formComponent2 = components[1];
 
 		if (!Objects.equal(formComponent1.getInput(), formComponent2.getInput()))
 		{

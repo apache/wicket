@@ -124,7 +124,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 * Attribute modifier model that returns 'disabled' if a form component is
 	 * disabled or null otherwise (resulting in no attribute being appended).
 	 */
-	private final class DisabledAttributeModel extends Model
+	private final class DisabledAttributeModel extends Model<String>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -134,9 +134,9 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		@Override
 		public String getObject(Component component)
 		{
-			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled())
+			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled()
 					? null
-					: "disabled";
+					: "disabled");
 		}
 	}
 
@@ -596,6 +596,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 * errors. Converted value is available thorugh
 	 * {@link FormComponent#getConvertedInput()}
 	 */
+	@SuppressWarnings("unchecked")
 	protected final void convert()
 	{
 		if (type == null)
@@ -672,6 +673,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 * @throws ConversionException
 	 *             If input can't be converted
 	 */
+	@SuppressWarnings("unchecked")
 	protected T convertValue(String[] value) throws ConversionException
 	{
 		return (T)(value != null && value.length > 0 && value[0]!=null ? value[0].trim() : null);

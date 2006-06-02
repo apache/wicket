@@ -43,7 +43,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 	public PagedTableNavigatorWithMarginPage()
 	{
 		super();
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		list.add("one");
 		list.add("two");
 		list.add("three");
@@ -59,7 +59,7 @@ public class PagedTableNavigatorWithMarginPage extends WebPage
 		list.add("thirteen");
 		list.add("fourteen");
 
-		PageableListView table = new PageableListView(this, "table", list, 2)
+		PageableListView table = new PageableListView<String>(this, "table", list, 2)
 		{
 			private static final long serialVersionUID = 1L;
 

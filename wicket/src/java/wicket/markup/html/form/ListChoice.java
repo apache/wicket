@@ -30,8 +30,9 @@ import wicket.model.IModel;
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Eelco Hillenius
+ * @param <T> 
  */
-public class ListChoice extends DropDownChoice
+public class ListChoice<T> extends DropDownChoice<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -57,6 +58,7 @@ public class ListChoice extends DropDownChoice
 	 * @param defaultMaxRows
 	 *            The defaultMaxRows to set.
 	 */
+	@SuppressWarnings("unchecked")
 	protected static void setDefaultMaxRows(final int defaultMaxRows)
 	{
 		ListChoice.defaultMaxRows = defaultMaxRows;
@@ -74,7 +76,7 @@ public class ListChoice extends DropDownChoice
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final List values)
+	public ListChoice(MarkupContainer parent, final String id, final List<T> values)
 	{
 		super(parent, id, values);
 	}
@@ -89,8 +91,8 @@ public class ListChoice extends DropDownChoice
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      List,IChoiceRenderer)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final List choices,
-			final IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, final String id, final List<T> choices,
+			final IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, choices, renderer);
 	}
@@ -106,8 +108,8 @@ public class ListChoice extends DropDownChoice
 	 *            See AbstractChoice
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model,
-			final List choices, final IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, final String id, final IModel<T> model,
+			final List<T> choices, final IChoiceRenderer<T> renderer)
 	{
 		this(parent, id, model, choices, renderer, defaultMaxRows);
 	}
@@ -125,8 +127,8 @@ public class ListChoice extends DropDownChoice
 	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model,
-			final List choices, final IChoiceRenderer renderer, final int maxRows)
+	public ListChoice(MarkupContainer parent, final String id, final IModel<T> model,
+			final List<T> choices, final IChoiceRenderer<T> renderer, final int maxRows)
 	{
 		super(parent, id, model, choices, renderer);
 		this.maxRows = maxRows;
@@ -136,7 +138,7 @@ public class ListChoice extends DropDownChoice
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel)
 	 */
-	public ListChoice(MarkupContainer parent, String id, IModel choices)
+	public ListChoice(MarkupContainer parent, String id, IModel<List<T>> choices)
 	{
 		super(parent, id, choices);
 	}
@@ -145,7 +147,7 @@ public class ListChoice extends DropDownChoice
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IModel)
 	 */
-	public ListChoice(MarkupContainer parent, String id, IModel model, IModel choices)
+	public ListChoice(MarkupContainer parent, String id, IModel<T>model, IModel<List<T>> choices)
 	{
 		super(parent, id, model, choices);
 	}
@@ -154,7 +156,7 @@ public class ListChoice extends DropDownChoice
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel,IChoiceRenderer)
 	 */
-	public ListChoice(MarkupContainer parent, String id, IModel choices, IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, choices, renderer);
 	}
@@ -164,8 +166,8 @@ public class ListChoice extends DropDownChoice
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, IModel,IChoiceRenderer)
 	 */
-	public ListChoice(MarkupContainer parent, String id, IModel model, IModel choices,
-			IChoiceRenderer renderer)
+	public ListChoice(MarkupContainer parent, String id, IModel<T> model, IModel<List<T>> choices,
+			IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, model, choices, renderer);
 	}
@@ -221,8 +223,8 @@ public class ListChoice extends DropDownChoice
 	 *            The collection of values in the list
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model,
-			final List choices)
+	public ListChoice(MarkupContainer parent, final String id, final IModel<T> model,
+			final List<T> choices)
 	{
 		this(parent, id, model, choices, defaultMaxRows);
 	}
@@ -238,8 +240,8 @@ public class ListChoice extends DropDownChoice
 	 *            Maximum number of rows to show
 	 * @see DropDownChoice#DropDownChoice(MarkupContainer,String, IModel, List)
 	 */
-	public ListChoice(MarkupContainer parent, final String id, final IModel model,
-			final List choices, final int maxRows)
+	public ListChoice(MarkupContainer parent, final String id, final IModel<T> model,
+			final List<T> choices, final int maxRows)
 	{
 		super(parent, id, model, choices);
 		this.maxRows = maxRows;

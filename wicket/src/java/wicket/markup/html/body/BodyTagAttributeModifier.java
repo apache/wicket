@@ -166,7 +166,7 @@ public final class BodyTagAttributeModifier extends AttributeModifier
 		{
 			// Get the owner of the attribute modifier (e.g. the Panel, not the
 			// Body)
-			final Component behaviorOwner = componentReference.get();
+			final Component<?> behaviorOwner = componentReference.get();
 
 			// If case the components memory has been GCed already, than disable
 			// the attribute modifier and return the attribute value unchanged.

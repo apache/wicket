@@ -244,7 +244,7 @@ public class PropertyResolverTest extends TestCase
 	 */
 	public void testListSizeLookup() throws Exception
 	{
-		List addresses = new ArrayList();
+		List<Address> addresses = new ArrayList<Address>();
 		addresses.add(new Address());
 		addresses.add(new Address());
 		person.setAddressList(addresses);
@@ -259,7 +259,7 @@ public class PropertyResolverTest extends TestCase
 	 */
 	public void testMapSizeLookup() throws Exception
 	{
-		Map addresses = new HashMap();
+		Map<String, Address> addresses = new HashMap<String, Address>();
 		Address address = new Address();
 		addresses.put("size", address);
 		addresses.put("test", new Address());

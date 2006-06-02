@@ -20,6 +20,7 @@
 package wicket.markup.html.form;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import wicket.markup.html.WebMarkupContainer;
@@ -39,9 +40,9 @@ public class CheckGroupTestPage5 extends WebPage
 	 */
 	public CheckGroupTestPage5()
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		Form form = new Form(this, "form");
-		CheckGroup<List> group = new CheckGroup(form, "group", new Model<List>(list));
+		CheckGroup<String> group = new CheckGroup<String>(form, "group", new Model<Collection<String>>(list));
 		WebMarkupContainer container = new WebMarkupContainer(group, "container");
 		Check<String> check1 = new Check<String>(group, "check1", new Model<String>("check1"));
 		// here we add check2 to the form so it is outside the group - it should

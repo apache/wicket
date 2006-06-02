@@ -38,7 +38,7 @@ public class MarkupInheritanceBase_10 extends WebPage
 	public MarkupInheritanceBase_10()
 	{
 		WebMarkupContainer css = new WebMarkupContainer(this, "css");
-		css.add(new AttributeModifier("src", true, new Model("myStyle.css")));
+		css.add(new AttributeModifier("src", true, new Model<String>("myStyle.css")));
 
 		new Label(this, "label1", "base label 1");
 		new Label(this, "label2", "base label 2");

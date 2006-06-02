@@ -21,6 +21,7 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -113,13 +114,13 @@ public class CheckGroupTest extends WicketTestCase
 		modelObject.setProp2(check2);
 
 		// test model constructors
-		List list = new ArrayList();
-		Model<List> model = new Model<List>(list);
+		List<MockModelObject>list = new ArrayList<MockModelObject>();
+		Model<Collection<MockModelObject>> model = new Model<Collection<MockModelObject>>(list);
 
-		final CheckGroup group2 = new CheckGroup(new EmptyPage(), "group2", model);
+		final CheckGroup group2 = new CheckGroup<MockModelObject>(new EmptyPage(), "group2", model);
 		assertTrue(group2.getModelObject() == list);
 
-		final CheckGroup group3 = new CheckGroup(new EmptyPage(), "group3", list);
+		final CheckGroup group3 = new CheckGroup<MockModelObject>(new EmptyPage(), "group3", list);
 		assertTrue(group3.getModelObject() == list);
 
 

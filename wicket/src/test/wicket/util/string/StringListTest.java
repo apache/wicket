@@ -26,7 +26,7 @@ public class StringListTest extends TestCase
 	 */
 	private void checkValueOf(String[] inputs, int expectedNumber, String expectedString)
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		Object[] objects = new Object[inputs.length];
 		for (int i = 0; i < inputs.length; i++)
 		{

@@ -429,9 +429,9 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 * @see wicket.Request#getParameterMap()
 		 */
 		@Override
-		public Map getParameterMap()
+		public Map<String,?> getParameterMap()
 		{
-			return this.parameterMap;
+			return (Map<String,?>)this.parameterMap;
 		}
 
 		/**

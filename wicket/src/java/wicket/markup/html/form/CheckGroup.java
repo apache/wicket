@@ -109,6 +109,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected Collection<T> convertValue(String[] paths) throws ConversionException
 	{
@@ -136,7 +137,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 					path = path.substring(getPath().length() + 1);
 
 					// retrieve the selected checkbox component
-					Check<T> checkbox = (Check)get(path);
+					Check<T> checkbox = (Check<T>)get(path);
 
 					if (checkbox == null)
 					{

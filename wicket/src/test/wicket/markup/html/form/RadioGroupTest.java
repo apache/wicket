@@ -106,7 +106,7 @@ public class RadioGroupTest extends WicketTestCase
 		MockModelObject modelObject = new MockModelObject();
 
 		// object used to test regular model
-		Model model = new Model();
+		Model<String> model = new Model<String>();
 
 		// set up necessary objects to emulate a form submission
 
@@ -116,18 +116,18 @@ public class RadioGroupTest extends WicketTestCase
 
 		// create component hierarchy
 
-		final Form form = new Form(page, "form", new CompoundPropertyModel(modelObject));
+		final Form form = new Form<MockModelObject>(page, "form", new CompoundPropertyModel<MockModelObject>(modelObject));
 
 		final RadioGroup group = new RadioGroup(form, "prop1");
 
 		final WebMarkupContainer container = new WebMarkupContainer(group, "container");
 
-		final Radio choice1 = new Radio(container, "radio1", new Model(radio1));
-		final Radio choice2 = new Radio(group, "prop2");
+		final Radio<String> choice1 = new Radio<String>(container, "radio1", new Model<String>(radio1));
+		final Radio<String> choice2 = new Radio<String>(group, "prop2");
 
-		final RadioGroup group2 = new RadioGroup(form, "group2", model);
+		final RadioGroup group2 = new RadioGroup<String>(form, "group2", model);
 
-		final Radio choice3 = new Radio(group2, "radio3", new Model(radio1));
+		final Radio choice3 = new Radio<String>(group2, "radio3", new Model<String>(radio1));
 
 		// test mock form submissions
 

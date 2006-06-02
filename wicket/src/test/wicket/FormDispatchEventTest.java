@@ -75,7 +75,7 @@ public class FormDispatchEventTest extends WicketTestCase
 		MockPage page = new MockPage();
 		MyForm form = new MyForm(page, "form");
 
-		DropDownChoice dropDown = new DropDownChoice(form, "dropdown", new Model(), new ArrayList())
+		DropDownChoice<String> dropDown = new DropDownChoice<String>(form, "dropdown", new Model<String>(), new ArrayList<String>())
 		{
 			private static final long serialVersionUID = 1L;
 

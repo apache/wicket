@@ -61,7 +61,7 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Class pageClass, final String filename) throws Exception
+	protected void executeTest(final Class<? extends Page> pageClass, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 

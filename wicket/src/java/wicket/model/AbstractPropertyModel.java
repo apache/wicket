@@ -120,6 +120,7 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	/**
 	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected T onGetObject(final Component component)
 	{
@@ -147,6 +148,7 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	 *            object
 	 * @see AbstractDetachableModel#onSetObject(Component, Object)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onSetObject(final Component component, T object)
 	{

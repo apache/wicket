@@ -42,9 +42,9 @@ public class RadioGroupTestPage2 extends WebPage
 	public RadioGroupTestPage2()
 	{
 		Form form = new Form(this, "form");
-		RadioGroup group = new RadioGroup(form, "group", new Model("radio2"));
+		RadioGroup group = new RadioGroup<String>(form, "group", new Model<String>("radio2"));
 		WebMarkupContainer container = new WebMarkupContainer(group, "container");
-		Radio radio1 = new Radio(group, "radio1", new Model("radio1"));
-		Radio radio2 = new Radio(form, "radio2", new Model("radio2"));
+		Radio<String> radio1 = new Radio<String>(group, "radio1", new Model<String>("radio1"));
+		Radio<String> radio2 = new Radio<String>(form, "radio2", new Model<String>("radio2"));
 	}
 }
