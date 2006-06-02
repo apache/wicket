@@ -62,13 +62,13 @@ public class CheckGroupTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		private Set prop1 = new HashSet();
+		private Set<String> prop1 = new HashSet<String>();
 		private String prop2;
 
 		/**
 		 * @return prop1
 		 */
-		public Set getProp1()
+		public Set<String> getProp1()
 		{
 			return prop1;
 		}
@@ -76,7 +76,7 @@ public class CheckGroupTest extends WicketTestCase
 		/**
 		 * @param prop1
 		 */
-		public void setProp1(Set prop1)
+		public void setProp1(Set<String> prop1)
 		{
 			this.prop1 = prop1;
 		}
@@ -114,7 +114,7 @@ public class CheckGroupTest extends WicketTestCase
 
 		// test model constructors
 		List list = new ArrayList();
-		Model model = new Model(list);
+		Model<List> model = new Model<List>(list);
 
 		final CheckGroup group2 = new CheckGroup(new EmptyPage(), "group2", model);
 		assertTrue(group2.getModelObject() == list);
@@ -137,7 +137,7 @@ public class CheckGroupTest extends WicketTestCase
 
 		final WebMarkupContainer container = new WebMarkupContainer(group, "container");
 
-		final Check choice1 = new Check(container, "check1", new Model(check1));
+		final Check<String> choice1 = new Check<String>(container, "check1", new Model<String>(check1));
 		final Check choice2 = new Check(group, "prop2");
 
 

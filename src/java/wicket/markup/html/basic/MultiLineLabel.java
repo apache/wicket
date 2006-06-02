@@ -71,7 +71,7 @@ public class MultiLineLabel extends WebComponent
 	 */
 	public MultiLineLabel(MarkupContainer parent, final String id, String label)
 	{
-		this(parent, id, new Model(label));
+		this(parent, id, new Model<String>(label));
 	}
 
 	/**

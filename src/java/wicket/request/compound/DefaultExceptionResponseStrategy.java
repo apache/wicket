@@ -75,7 +75,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 			// render?
 			// else we need to make a page (see below) or set it hard to a
 			// redirect.
-			Class accessDeniedPageClass = application.getApplicationSettings()
+			Class<? extends Page> accessDeniedPageClass = application.getApplicationSettings()
 					.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);

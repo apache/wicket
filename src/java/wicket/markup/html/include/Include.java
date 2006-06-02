@@ -149,7 +149,7 @@ public class Include extends WebComponent
 	 */
 	public Include(MarkupContainer parent, String id, String modelObject)
 	{
-		super(parent, id, new Model(modelObject));
+		super(parent, id, new Model<String>(modelObject));
 	}
 
 	/**

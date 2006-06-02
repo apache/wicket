@@ -19,6 +19,7 @@
 package wicket.markup;
 
 import junit.framework.TestCase;
+import wicket.Page;
 import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
 
@@ -94,7 +95,7 @@ public class WicketNamespaceTest extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	public void executeTest(final Class pageClass, final String filename) throws Exception
+	public void executeTest(final Class<? extends Page> pageClass, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
