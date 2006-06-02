@@ -54,7 +54,8 @@ function WicketAutoComplete(elementId,callbackUrl){
 					break;					
 				default:
 			}
-		}	
+		}
+			
 		
 		obj.onkeyup=function(event){
 			switch(wicketKeyCode(getEvent(event))){
@@ -71,20 +72,29 @@ function WicketAutoComplete(elementId,callbackUrl){
 					updateChoices();					
 			}
 		}
-
+		
+		
 		obj.onkeypress=function(event){
 			if(wicketKeyCode(getEvent(event))==KEY_ENTER){
 				return killEvent(event);
 			}
-		}
+		}		
 
+	    if(window.addEventListener){
+	    	window.addEventListener("load",initializeDiv,false);
+        } else if(window.attachEvent){
+        	window.attachEvent("onload",initializeDiv);
+		}
+	}
+	
+	function initializeDiv(){
 		var choiceDiv = document.createElement("div");
-		document.body.appendChild(choiceDiv);
 		choiceDiv.id = elementId+"-autocomplete";
 		choiceDiv.className = "wicket-aa";
 		choiceDiv.style.display = "none";
 		choiceDiv.style.position = "absolute";
 		choiceDiv.style.zIndex = "900";
+		document.body.appendChild(choiceDiv);			
 	}
 	
 	function getEvent(event){	
@@ -222,6 +232,5 @@ function WicketAutoComplete(elementId,callbackUrl){
 	    	node.className = classNames.join(" ");
     	}    		
 	}
-		
 	initialize();
 }
