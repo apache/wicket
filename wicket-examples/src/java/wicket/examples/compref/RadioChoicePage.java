@@ -34,7 +34,7 @@ import wicket.model.CompoundPropertyModel;
 public class RadioChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
 			"Java.Net" });
 
 	/**
@@ -62,7 +62,7 @@ public class RadioChoicePage extends WicketExamplePage
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		new RadioChoice(form, "site", SITES);
+		new RadioChoice<String>(form, "site", SITES);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */

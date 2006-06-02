@@ -42,7 +42,7 @@ public class AutoCompletePage extends BasePage
 	{
 		Form form = new Form(this, "form");
 
-		new AutoCompleteTextField(form, "ac", new Model(""))
+		new AutoCompleteTextField(form, "ac", new Model<String>(""))
 		{
 			@Override
 			protected Iterator getChoices(String input)
@@ -52,14 +52,12 @@ public class AutoCompletePage extends BasePage
 					return Collections.EMPTY_LIST.iterator();
 				}
 
-				List choices = new ArrayList(10);
-
+				List<String> choices = new ArrayList<String>(10);
 				Locale[] locales = Locale.getAvailableLocales();
 
 				for (final Locale locale : locales)
 				{
 					final String country = locale.getDisplayCountry();
-
 					if (country.toUpperCase().startsWith(input.toUpperCase()))
 					{
 						choices.add(country);

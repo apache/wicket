@@ -44,7 +44,7 @@ public class ChoicePage extends BasePage
 {
 	private String selectedMake;
 
-	private Map modelsMap = new HashMap(); // map:company->model
+	private Map<String, List<String>> modelsMap = new HashMap<String, List<String>>(); // map:company->model
 
 	/**
 	 * @return Currently selected make
@@ -79,8 +79,8 @@ public class ChoicePage extends BasePage
 			@Override
 			public Object getObject(Component component)
 			{
-				Set keys = modelsMap.keySet();
-				List list = new ArrayList(keys);
+				Set<String> keys = modelsMap.keySet();
+				List<String> list = new ArrayList<String>(keys);
 				return list;
 			}
 

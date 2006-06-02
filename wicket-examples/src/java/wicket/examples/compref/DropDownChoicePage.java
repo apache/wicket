@@ -35,11 +35,11 @@ import wicket.model.CompoundPropertyModel;
 public class DropDownChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
 			"Java.Net" });
 
 	/** available numbers for selection. */
-	private static final List INTEGERS = Arrays.asList(new Integer[] { new Integer(1),
+	private static final List<Integer> INTEGERS = Arrays.asList(new Integer[] { new Integer(1),
 			new Integer(2), new Integer(3) });
 
 	/**
@@ -72,7 +72,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		// represent this null with key: "id + '.null'". In this case, this is
 		// 'site.null'
 		// which can be found in DropDownChoicePage.properties
-		new DropDownChoice(form, "site", SITES);
+		new DropDownChoice<String>(form, "site", SITES);
 
 		// Allthough the default behavior of displaying the string
 		// representations of the choices
@@ -83,14 +83,15 @@ public class DropDownChoicePage extends WicketExamplePage
 		// like the example below. Don't forget to check out the default
 		// implementation of
 		// IChoiceRenderer, ChoiceRenderer.
-		new DropDownChoice(form, "integer", INTEGERS, new IChoiceRenderer()
+		new DropDownChoice<Integer>(form, "integer", INTEGERS, new IChoiceRenderer<Integer>()
 		{
 			/**
 			 * Gets the display value that is visible to the end user.
 			 * 
 			 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(java.lang.Object)
 			 */
-			public Object getDisplayValue(Object object)
+			//@Override
+			public Object getDisplayValue(Integer object)
 			{
 				// Use an ugly switch statement. Usually you would hide this in
 				// your business
@@ -121,7 +122,7 @@ public class DropDownChoicePage extends WicketExamplePage
 			 * @see wicket.markup.html.form.IChoiceRenderer#getIdValue(java.lang.Object,
 			 *      int)
 			 */
-			public String getIdValue(Object object, int index)
+			public String getIdValue(Integer object, int index)
 			{
 				// though we could do kind of the reverse of what we did in
 				// getDisplayValue,

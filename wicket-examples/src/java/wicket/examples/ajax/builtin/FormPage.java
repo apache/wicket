@@ -55,7 +55,7 @@ public class FormPage extends BasePage
 		feedback.setOutputMarkupId(true);
 
 		// add form with markup id setter so it can be updated via ajax
-		Form form = new Form(this, "form", new CompoundPropertyModel(bean));
+		Form<Bean> form = new Form<Bean>(this, "form", new CompoundPropertyModel<Bean>(bean));
 		form.setOutputMarkupId(true);
 
 		FormComponent fc;

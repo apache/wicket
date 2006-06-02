@@ -38,11 +38,11 @@ import wicket.model.CompoundPropertyModel;
 public class CheckBoxMultipleChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
 			"Java.Net" });
 
 	/** available choices for large selection box. */
-	private static final List MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
+	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
 			"Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
 
 	/**
@@ -68,19 +68,19 @@ public class CheckBoxMultipleChoicePage extends WicketExamplePage
 
 		// add a couple of checkbox multiple choice components, notice the model
 		// used is a compound model set on the page
-		CheckBoxMultipleChoice listChoice = new CheckBoxMultipleChoice(form, "sites", SITES);
+		CheckBoxMultipleChoice<String> listChoice = new CheckBoxMultipleChoice<String>(form, "sites", SITES);
 
-		listChoice = new CheckBoxMultipleChoice(form, "choices", MANY_CHOICES);
+		listChoice = new CheckBoxMultipleChoice<String>(form, "choices", MANY_CHOICES);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
 	private static class Input implements Serializable
 	{
 		/** the selected sites. */
-		public List sites = new ArrayList();
+		public List<String> sites = new ArrayList<String>();
 
 		/** the selected choices. */
-		public List choices = new ArrayList();
+		public List<String> choices = new ArrayList<String>();
 
 		/** adds pre-selected items to the choices list */
 		public Input()

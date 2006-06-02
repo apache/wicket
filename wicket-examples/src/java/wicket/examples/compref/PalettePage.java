@@ -36,11 +36,11 @@ public class PalettePage extends WicketExamplePage
 
 		new FeedbackPanel(this, "feedback");
 		
-		List persons = ComponentReferenceApplication.getPersons();
+		List<Person> persons = ComponentReferenceApplication.getPersons();
 		IChoiceRenderer renderer = new ChoiceRenderer("fullName", "fullName");
 
-		this.palette = new Palette(form, "palette", new Model(new ArrayList()), new Model(
-				persons), renderer, 10, true);
+		this.palette = new Palette(form, "palette", new Model<List<Person>>(new ArrayList<Person>()), 
+				new Model<List<Person>>(persons), renderer, 10, true);
 	}
 
 	@Override

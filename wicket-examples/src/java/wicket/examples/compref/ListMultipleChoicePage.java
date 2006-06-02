@@ -36,11 +36,11 @@ import wicket.model.CompoundPropertyModel;
 public class ListMultipleChoicePage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
 			"Java.Net" });
 
 	/** available choices for large selection box. */
-	private static final List MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
+	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
 			"Choice3", "Choice4", "Choice5", "Choice6", "Choice7", "Choice8", "Choice9", });
 
 	/**
@@ -70,19 +70,19 @@ public class ListMultipleChoicePage extends WicketExamplePage
 		// list for the available options.
 		// Note that our model here holds a Collection, as we need to store
 		// multiple values too
-		ListMultipleChoice listChoice = new ListMultipleChoice(form, "sites", SITES);
+		ListMultipleChoice<String> listChoice = new ListMultipleChoice<String>(form, "sites", SITES);
 
-		listChoice = new ListMultipleChoice(form, "choices", MANY_CHOICES).setMaxRows(5);
+		listChoice = new ListMultipleChoice<String>(form, "choices", MANY_CHOICES).setMaxRows(5);
 	}
 
 	/** Simple data class that acts as a model for the input fields. */
 	private static class Input implements Serializable
 	{
 		/** the selected sites. */
-		public List sites = new ArrayList();
+		public List<String> sites = new ArrayList<String>();
 
 		/** the selected choices. */
-		public List choices = new ArrayList();
+		public List<String> choices = new ArrayList<String>();
 
 		/** adds pre-selected items to the choices list */
 		public Input()

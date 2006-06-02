@@ -11,6 +11,7 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
+import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
 /**
@@ -36,10 +37,10 @@ public class CheckGroupPage extends WicketExamplePage
 			}
 		};
 
-		group = new CheckGroup(form, "group", new ArrayList());
+		group = new CheckGroup<String>(form, "group", new ArrayList<String>());
 
 		new CheckGroupSelector(group, "groupselector");
-		ListView persons = new ListView(group, "persons", ComponentReferenceApplication
+		ListView<Person> persons = new ListView<Person>(group, "persons", ComponentReferenceApplication
 				.getPersons())
 		{
 
