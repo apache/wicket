@@ -82,7 +82,7 @@ import wicket.util.resource.UrlResourceStream;
  * 
  * @author Eelco Hillenius
  */
-public class Include extends WebComponent
+public class Include extends WebComponent<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -131,7 +131,7 @@ public class Include extends WebComponent
 	 * @param model
 	 *            the model
 	 */
-	public Include(MarkupContainer parent, String id, IModel model)
+	public Include(MarkupContainer parent, String id, IModel<String> model)
 	{
 		super(parent, id, model);
 	}

@@ -49,7 +49,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class CheckBox extends FormComponent implements IOnChangeListener
+public class CheckBox extends FormComponent<Boolean> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +64,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public CheckBox(MarkupContainer parent, final String id, IModel model)
+	public CheckBox(MarkupContainer parent, final String id, IModel<Boolean> model)
 	{
 		super(parent, id, model);
 	}
@@ -93,7 +93,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 *            the same as you would get by calling getModelObject() if the
 	 *            new selection were current
 	 */
-	protected void onSelectionChanged(Object newSelection)
+	protected void onSelectionChanged(Boolean newSelection)
 	{
 	}
 
@@ -198,7 +198,7 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	@Override
-	protected Object convertValue(String[] value)
+	protected Boolean convertValue(String[] value)
 	{
 		String tmp = value != null && value.length > 0 ? value[0] : null;
 		try

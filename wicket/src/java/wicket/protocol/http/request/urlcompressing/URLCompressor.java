@@ -58,7 +58,7 @@ public class URLCompressor implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private transient ReferenceQueue queue = new ReferenceQueue();
+	private transient ReferenceQueue<Object> queue = new ReferenceQueue<Object>();
 
 	private transient IntHashMap directComponentRefs = new IntHashMap(); // uid->component/interface
 
@@ -69,7 +69,7 @@ public class URLCompressor implements Serializable
 		s.defaultReadObject();
 
 		int size = s.readInt();
-		queue = new ReferenceQueue();
+		queue = new ReferenceQueue<Object>();
 		directComponentRefs = new IntHashMap((int)(size * 1.25));
 
 		while (--size >= 0)
@@ -203,7 +203,7 @@ public class URLCompressor implements Serializable
 		}
 	}
 
-	private static class IntKeyWeakReference extends WeakReference
+	private static class IntKeyWeakReference extends WeakReference<Object>
 	{
 		private int uid;
 
@@ -212,7 +212,7 @@ public class URLCompressor implements Serializable
 		 * @param referent
 		 * @param q
 		 */
-		public IntKeyWeakReference(int uid, Object referent, ReferenceQueue q)
+		public IntKeyWeakReference(int uid, Object referent, ReferenceQueue<Object> q)
 		{
 			super(referent, q);
 			this.uid = uid;

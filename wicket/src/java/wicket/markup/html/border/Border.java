@@ -86,9 +86,12 @@ import wicket.response.NullResponse;
  * markup. The preview region (everything in between the open and close tag)
  * will automatically be removed.
  * 
+ * @param <T>
+ *            Type of model object this component holds
+ * 
  * @author Jonathan Locke
  */
-public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
+public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 		implements
 			IComponentResolver
 {
@@ -122,7 +125,7 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public Border(MarkupContainer parent, final String id, final IModel model)
+	public Border(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 	}
@@ -281,11 +284,11 @@ public abstract class Border extends WebMarkupContainerWithAssociatedMarkup
 		// If markup stream is null, that indicates we already recursed into
 		// this block of log and set it to null (below). If we did that,
 		// then we want to go up another level of border nesting.
-		Border border = this;
+		Border<?> border = this;
 		if (border.getMarkupStream() == null)
 		{
 			// Find Border at or above parent of this border
-			final MarkupContainer borderParent = border.getParent();
+			final MarkupContainer<?> borderParent = border.getParent();
 			border = (Border)((borderParent instanceof Border) ? borderParent : borderParent
 					.findParent(Border.class));
 		}

@@ -57,7 +57,7 @@ public abstract class AjaxCheckBox extends CheckBox
 	 * @param id
 	 * @param model
 	 */
-	public AjaxCheckBox(MarkupContainer parent, final String id, final IModel model)
+	public AjaxCheckBox(MarkupContainer parent, final String id, final IModel<Boolean> model)
 	{
 		super(parent, id, model);
 
