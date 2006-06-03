@@ -46,6 +46,8 @@ public abstract class AbstractOptions extends FormComponent
 	}
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param palette

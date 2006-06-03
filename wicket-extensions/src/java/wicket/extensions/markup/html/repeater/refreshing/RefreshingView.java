@@ -65,10 +65,7 @@ public abstract class RefreshingView extends RepeatingView
 	private IItemReuseStrategy itemReuseStrategy;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            component id
+	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
 	public RefreshingView(MarkupContainer parent, final String id)
 	{
@@ -76,12 +73,7 @@ public abstract class RefreshingView extends RepeatingView
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            component id
-	 * @param model
-	 *            model
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	public RefreshingView(MarkupContainer parent, final String id, IModel model)
 	{

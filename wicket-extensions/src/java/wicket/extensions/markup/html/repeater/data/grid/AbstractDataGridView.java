@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.data.grid;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import wicket.MarkupContainer;
@@ -55,6 +54,8 @@ public abstract class AbstractDataGridView extends DataViewBase
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param populators

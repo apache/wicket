@@ -27,6 +27,8 @@ public class SelectOptions extends RepeatingView
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param model
 	 * @param renderer
@@ -42,6 +44,8 @@ public class SelectOptions extends RepeatingView
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param elements
 	 * @param renderer
@@ -107,6 +111,8 @@ public class SelectOptions extends RepeatingView
 		private String text;
 
 		/**
+		 * @param parent
+		 *            The parent of this component The parent of this component.
 		 * @param id
 		 * @param model
 		 * @param text

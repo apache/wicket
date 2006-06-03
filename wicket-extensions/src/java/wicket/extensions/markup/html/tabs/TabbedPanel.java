@@ -93,6 +93,8 @@ public class TabbedPanel extends Panel
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param tabs
@@ -183,6 +185,8 @@ public class TabbedPanel extends Panel
 	 * }
 	 * </pre>
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param linkId
 	 *            component id with which the link should be created
 	 * @param index

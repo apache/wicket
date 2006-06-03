@@ -22,9 +22,7 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink
 	private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public IndicatingAjaxFallbackLink(MarkupContainer parent, final String id)
 	{
@@ -32,10 +30,7 @@ public abstract class IndicatingAjaxFallbackLink extends AjaxFallbackLink
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param model
+	 * @see wicket.Component#Component(MarkupContainer,String,IModel)
 	 */
 	public IndicatingAjaxFallbackLink(MarkupContainer parent, final String id, IModel model)
 	{

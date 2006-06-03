@@ -34,17 +34,12 @@ public class GoFilter extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	protected static final IModel defaultGoModel = new Model("filter");
+	protected static final IModel<String> defaultGoModel = new Model<String>("filter");
 
 	private final Button go;
 
 	/**
-	 * Constructor
-	 * 
-	 * This constructor will use the default model for the button's text
-	 * 
-	 * @param id
-	 *            component id
+	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
 	public GoFilter(MarkupContainer parent, final String id)
 	{
@@ -52,12 +47,7 @@ public class GoFilter extends Panel
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 *            component id
-	 * @param goModel
-	 *            model for the button's text
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	public GoFilter(MarkupContainer parent, final String id, IModel goModel)
 	{

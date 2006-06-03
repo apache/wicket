@@ -48,7 +48,7 @@ public class ChoiceFilteredPropertyColumn extends FilteredPropertyColumn
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(java.lang.String,
+	 * @see wicket.extensions.markup.html.repeater.data.table.filter.IFilteredColumn#getFilter(MarkupContainer, java.lang.String,
 	 *      wicket.extensions.markup.html.repeater.data.table.filter.FilterForm)
 	 */
 	public Component getFilter(MarkupContainer parent, String componentId, FilterForm form)

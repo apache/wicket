@@ -30,8 +30,7 @@ public class UploadProgressBar extends Panel
 			UploadProgressBar.class, "progressbar.js");
 
 	/**
-	 * @param id
-	 * @param form
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public UploadProgressBar(MarkupContainer parent, final String id, final Form form)
 	{

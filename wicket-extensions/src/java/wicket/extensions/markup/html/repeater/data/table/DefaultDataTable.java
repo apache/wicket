@@ -49,6 +49,8 @@ public class DefaultDataTable extends DataTable
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param columns
@@ -59,7 +61,7 @@ public class DefaultDataTable extends DataTable
 	 *            number of rows per page
 	 */
 	public DefaultDataTable(MarkupContainer parent, final String id,
-			final List/* <IColumn> */columns, SortableDataProvider dataProvider, int rowsPerPage)
+			final List<IColumn> columns, SortableDataProvider dataProvider, int rowsPerPage)
 	{
 		this(parent, id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider,
 				rowsPerPage);
@@ -68,6 +70,8 @@ public class DefaultDataTable extends DataTable
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param columns

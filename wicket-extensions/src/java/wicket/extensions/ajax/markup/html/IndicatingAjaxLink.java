@@ -19,9 +19,7 @@ public abstract class IndicatingAjaxLink extends AjaxLink implements IAjaxIndica
 	private final WicketAjaxIndicatorAppender indicatorAppender = new WicketAjaxIndicatorAppender();
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public IndicatingAjaxLink(MarkupContainer parent, final String id)
 	{
@@ -29,10 +27,7 @@ public abstract class IndicatingAjaxLink extends AjaxLink implements IAjaxIndica
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param model
+	 * @see wicket.Component#Component(MarkupContainer,String,IModel)
 	 */
 	public IndicatingAjaxLink(MarkupContainer parent, final String id, IModel model)
 	{

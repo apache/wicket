@@ -22,13 +22,13 @@ import java.net.URL;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.markup.MarkupResourceStreamLookupResult;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 import wicket.util.string.Strings;
 
@@ -103,7 +103,7 @@ public class WizardStep<T> implements IWizardStep
 		 * @see wicket.MarkupContainer#newMarkupResourceStream(java.lang.Class)
 		 */
 		@Override
-		public IResourceStream newMarkupResourceStream(final Class containerClass)
+		public MarkupResourceStreamLookupResult newMarkupResourceStream(final Class containerClass)
 		{
 			return WizardStep.this.newMarkupResourceStream(containerClass);
 		}
@@ -379,7 +379,7 @@ public class WizardStep<T> implements IWizardStep
 	 *            The container the markup should be associated with
 	 * @return The resource stream for this step
 	 */
-	protected IResourceStream newMarkupResourceStream(final Class containerClass)
+	protected MarkupResourceStreamLookupResult newMarkupResourceStream(final Class containerClass)
 	{
 		return newMarkupResourceStream(getClass(), containerClass);
 	}
@@ -404,7 +404,7 @@ public class WizardStep<T> implements IWizardStep
 	 *            The container to associate with
 	 * @return The markup stream or null
 	 */
-	private final IResourceStream newMarkupResourceStream(final Class stepClass,
+	private final MarkupResourceStreamLookupResult newMarkupResourceStream(final Class stepClass,
 			final Class containerClass)
 	{
 		if (!stepClass.equals(WizardStep.class))
@@ -414,7 +414,7 @@ public class WizardStep<T> implements IWizardStep
 			final URL url = stepClass.getResource(name);
 			if (url != null)
 			{
-				return new UrlResourceStream(url);
+				return new MarkupResourceStreamLookupResult(new UrlResourceStream(url));
 			}
 			else
 			{

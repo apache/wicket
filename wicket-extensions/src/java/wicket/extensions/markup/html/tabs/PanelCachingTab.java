@@ -59,7 +59,7 @@ public class PanelCachingTab implements ITab
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.tabs.ITab#getPanel(java.lang.String)
+	 * @see wicket.extensions.markup.html.tabs.ITab#getPanel(MarkupContainer, java.lang.String)
 	 */
 	public Panel getPanel(MarkupContainer parent, final String panelId)
 	{

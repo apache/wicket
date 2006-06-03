@@ -36,6 +36,8 @@ public class TextFilter extends AbstractFilter
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param model

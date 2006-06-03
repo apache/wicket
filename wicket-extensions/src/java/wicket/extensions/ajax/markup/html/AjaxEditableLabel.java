@@ -34,9 +34,7 @@ public class AjaxEditableLabel extends Panel
 	private final TextField editor;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
+	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
 	public AjaxEditableLabel(MarkupContainer parent, final String id)
 	{
@@ -44,10 +42,7 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param model
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	public AjaxEditableLabel(MarkupContainer parent, final String id, IModel model)
 	{

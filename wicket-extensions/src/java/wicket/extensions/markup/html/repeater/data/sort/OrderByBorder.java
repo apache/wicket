@@ -39,18 +39,20 @@ public class OrderByBorder extends Border
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(MarkupContainer, String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 * @param property
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(MarkupContainer, String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 * @param stateLocator
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(MarkupContainer, String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 * @param cssProvider
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator, OrderByLink.ICssProvider) }
+	 *            {@link OrderByLink#OrderByLink(MarkupContainer, String, String, ISortStateLocator, OrderByLink.ICssProvider) }
 	 */
 	public OrderByBorder(MarkupContainer parent, final String id, String property,
 			ISortStateLocator stateLocator, OrderByLink.ICssProvider cssProvider)
@@ -81,15 +83,17 @@ public class OrderByBorder extends Border
 	}
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            {@link OrderByLink#OrderByLink(MarkupContainer, String, String, ISortStateLocator)}
 	 * @param property
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            {@link OrderByLink#OrderByLink(MarkupContainer, String, String, ISortStateLocator)}
 	 * @param stateLocator
 	 *            see
-	 *            {@link OrderByLink#OrderByLink(String, String, ISortStateLocator)}
+	 *            {@link OrderByLink#OrderByLink(MarkupContainer, String, String, ISortStateLocator)}
 	 */
 	public OrderByBorder(MarkupContainer parent, final String id, String property,
 			ISortStateLocator stateLocator)

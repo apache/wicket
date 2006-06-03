@@ -19,6 +19,7 @@ package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
+import wicket.model.IModel;
 
 /**
  * Component used to represent a filter component when no filter is provided.
@@ -32,8 +33,7 @@ public class NoFilter extends Panel
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param id
-	 *            component id
+	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
 	public NoFilter(MarkupContainer parent, final String id)
 	{

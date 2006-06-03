@@ -56,6 +56,7 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T> The IModel type
  */
 public interface IDataProvider<T> extends IDetachable
 {

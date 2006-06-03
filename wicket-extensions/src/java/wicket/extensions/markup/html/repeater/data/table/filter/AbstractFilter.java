@@ -36,6 +36,8 @@ public class AbstractFilter extends Panel
 	private FilterForm form;
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param form

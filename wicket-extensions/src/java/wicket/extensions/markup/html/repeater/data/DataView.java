@@ -67,6 +67,8 @@ public abstract class DataView extends DataViewBase
 {
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param dataProvider
@@ -78,6 +80,8 @@ public abstract class DataView extends DataViewBase
 	}
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param dataProvider

@@ -47,10 +47,7 @@ public class Select extends FormComponent
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor that will create a default model collection
-	 * 
-	 * @param id
-	 *            component id
+	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
 	public Select(MarkupContainer parent, final String id)
 	{
@@ -58,8 +55,7 @@ public class Select extends FormComponent
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
-	 *      IModel)
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	public Select(MarkupContainer parent, final String id, IModel model)
 	{

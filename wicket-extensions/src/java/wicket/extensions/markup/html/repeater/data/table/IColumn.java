@@ -33,6 +33,8 @@ public interface IColumn extends ICellPopulator
 	 * 
 	 * This component will be contained in &lt;span&gt; tags.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param componentId
 	 *            component id for the returned Component
 	 * 

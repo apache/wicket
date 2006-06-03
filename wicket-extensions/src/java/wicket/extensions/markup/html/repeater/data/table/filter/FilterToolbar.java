@@ -45,6 +45,9 @@ public class FilterToolbar extends AbstractToolbar
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
+	 * @param id
 	 * @param table
 	 *            data table this toolbar will be added to
 	 * @param stateLocator

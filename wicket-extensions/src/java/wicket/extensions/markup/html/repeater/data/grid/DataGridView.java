@@ -71,6 +71,8 @@ public class DataGridView extends AbstractDataGridView
 	 * 
 	 * Notice cells are created in the same order as cell populators in the list
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param populators
@@ -79,7 +81,7 @@ public class DataGridView extends AbstractDataGridView
 	 *            data provider
 	 */
 	public DataGridView(MarkupContainer parent, final String id,
-			List/* <ICellPopulator> */populators, IDataProvider dataProvider)
+			List<ICellPopulator> populators, IDataProvider dataProvider)
 	{
 		super(parent, id, (ICellPopulator[])populators
 				.toArray(new ICellPopulator[populators.size()]), dataProvider);
@@ -91,6 +93,8 @@ public class DataGridView extends AbstractDataGridView
 	 * Notice cells are created in the same order as cell populators in the
 	 * array
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param populators

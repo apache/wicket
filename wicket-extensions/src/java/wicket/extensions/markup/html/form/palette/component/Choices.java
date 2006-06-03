@@ -36,6 +36,8 @@ public class Choices extends AbstractOptions
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param palette

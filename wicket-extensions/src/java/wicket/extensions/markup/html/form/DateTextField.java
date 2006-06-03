@@ -43,10 +43,7 @@ public class DateTextField extends TextField
 	 * Creates a new DateTextField, without a specified pattern. This is the
 	 * same as calling <code>new TextField(id, Date.class)</code>
 	 * 
-	 * @param id
-	 *            The id of the text field
-	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see wicket.markup.html.form.TextField#TextField(MarkupContainer, String)
 	 */
 	public DateTextField(MarkupContainer parent, final String id)
 	{
@@ -57,12 +54,7 @@ public class DateTextField extends TextField
 	 * Creates a new DateTextField, without a specified pattern. This is the
 	 * same as calling <code>new TextField(id, object, Date.class)</code>
 	 * 
-	 * @param id
-	 *            The id of the text field
-	 * @param object
-	 *            The model
-	 * 
-	 * @see wicket.markup.html.form.TextField
+	 * @see wicket.markup.html.form.TextField#TextField(MarkupContainer, String, IModel)
 	 */
 	public DateTextField(MarkupContainer parent, final String id, IModel object)
 	{
@@ -73,6 +65,8 @@ public class DateTextField extends TextField
 	 * Creates a new DateTextField bound with a specific
 	 * <code>SimpleDateFormat</code> pattern.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            The id of the text field
 	 * @param datePattern
@@ -103,6 +97,8 @@ public class DateTextField extends TextField
 	 * Creates a new DateTextField bound with a specific
 	 * <code>SimpleDateFormat</code> pattern.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            The id of the text field
 	 * @param object

@@ -46,6 +46,8 @@ public class GoAndClearFilter extends GoFilter
 	 * This constructor will use default models for the 'clear' and 'go' button
 	 * labels
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param form
@@ -59,6 +61,8 @@ public class GoAndClearFilter extends GoFilter
 	/**
 	 * Constructor
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param form

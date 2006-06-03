@@ -49,6 +49,8 @@ public class OrderByLink extends Link
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            the component id of the link
 	 * @param property
@@ -69,6 +71,8 @@ public class OrderByLink extends Link
 	/**
 	 * Constructor.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            the component id of the link
 	 * @param property

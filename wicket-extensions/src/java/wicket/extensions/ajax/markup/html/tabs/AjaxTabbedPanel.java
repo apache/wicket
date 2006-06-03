@@ -20,10 +20,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param tabs
+	 * @see TabbedPanel#TabbedPanel(MarkupContainer, String, List)
 	 */
 	public AjaxTabbedPanel(MarkupContainer parent, final String id, List tabs)
 	{

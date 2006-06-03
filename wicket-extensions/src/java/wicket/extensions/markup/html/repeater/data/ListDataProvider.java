@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.data;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -32,6 +31,7 @@ import wicket.model.Model;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 
+ * @param <T> The IModel type
  */
 public class ListDataProvider<T> implements IDataProvider<T>
 {

@@ -31,6 +31,8 @@ import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
  * within the data provider.
  * 
  * @author Igor Vaynberg
+ * 
+ * @param <T> The IModel type
  */
 public abstract class SortableDataProvider<T> implements IDataProvider<T>, ISortStateLocator
 {

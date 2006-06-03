@@ -79,7 +79,7 @@ public abstract class AbstractColumn implements IColumn
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(java.lang.String)
+	 * @see wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(MarkupContainer, java.lang.String)
 	 */
 	public Component getHeader(MarkupContainer parent, String componentId)
 	{

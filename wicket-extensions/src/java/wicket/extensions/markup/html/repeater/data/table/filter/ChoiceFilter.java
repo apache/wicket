@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
-import java.io.Serializable;
 import java.util.List;
 
 import wicket.AttributeModifier;
@@ -45,6 +44,8 @@ public class ChoiceFilter extends AbstractFilter
 	private final DropDownChoice choice;
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param model
 	 * @param form
@@ -58,6 +59,8 @@ public class ChoiceFilter extends AbstractFilter
 	}
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param model
 	 * @param form
@@ -71,6 +74,8 @@ public class ChoiceFilter extends AbstractFilter
 	}
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 * @param model
 	 * @param form
@@ -86,6 +91,8 @@ public class ChoiceFilter extends AbstractFilter
 
 
 	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param id
 	 *            component id
 	 * @param model

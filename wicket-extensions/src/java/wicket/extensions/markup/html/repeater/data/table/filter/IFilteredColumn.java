@@ -37,6 +37,8 @@ public interface IFilteredColumn extends IColumn
 	 * Returns the component used by user to filter the column. If null is
 	 * returned, no filter will be added.
 	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
 	 * @param componentId
 	 *            component id for returned filter component
 	 * @param form
