@@ -17,21 +17,14 @@
  */
 package wicket.markup.html.autolink;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 import wicket.markup.html.autolink.sub.PageB;
-import wicket.markup.resolver.AutoLinkResolver;
 
 /**
  * 
  */
 public class AutolinkTest extends WicketTestCase
 {
-	/** Logging */
-	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
-
 	/**
 	 * Construct.
 	 * 
