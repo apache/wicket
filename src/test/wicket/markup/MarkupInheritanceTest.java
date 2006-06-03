@@ -18,9 +18,6 @@
  */
 package wicket.markup;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketTestCase;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.DiffUtil;
@@ -29,8 +26,6 @@ import wicket.markup.html.list.DiffUtil;
  */
 public class MarkupInheritanceTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(MarkupInheritanceTest.class);
-
 	/**
 	 * Create the test.
 	 * 
