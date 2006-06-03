@@ -72,11 +72,11 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 		{
 			// Render the component
 			component.renderComponent();
-		}
-
-		if (page != null)
-		{
-			page.endComponentRender(component);
+			
+			if (page != null)
+			{
+				page.endComponentRender(component);
+			}
 		}
 	}
 
