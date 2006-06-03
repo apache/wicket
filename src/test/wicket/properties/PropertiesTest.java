@@ -62,10 +62,10 @@ public class PropertiesTest extends WicketTestCase
 		cycle.getSession().setLocale(Locale.GERMANY);
 		cycle.getSession().setStyle("mystyle");
 
-		String str = page.getString("test1");
-		str = page.getString("test2");
-		str = page.getString("test3");
-		str = page.getString("test4");
+		page.getString("test1");
+		page.getString("test2");
+		page.getString("test3");
+		page.getString("test4");
 	}
 
 	/**
@@ -93,9 +93,9 @@ public class PropertiesTest extends WicketTestCase
 			}
 		};
 
-		String str = page.getString("test1");
-		str = page.getString("test2");
-		str = page.getString("test3");
-		str = page.getString("test4");
+		page.getString("test1");
+		page.getString("test2");
+		page.getString("test3");
+		page.getString("test4");
 	}
 }
