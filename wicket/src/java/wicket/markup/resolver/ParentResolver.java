@@ -47,7 +47,7 @@ public class ParentResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		// Ignore special tags like _panel, _border, _extend etc.
-		if ((tag instanceof WicketTag) || tag.getId().startsWith("_"))
+		if (tag instanceof WicketTag)
 		{
 			return false;
 		}
