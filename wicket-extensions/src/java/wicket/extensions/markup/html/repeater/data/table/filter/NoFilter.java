@@ -19,7 +19,6 @@ package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
-import wicket.model.IModel;
 
 /**
  * Component used to represent a filter component when no filter is provided.

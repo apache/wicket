@@ -21,7 +21,6 @@ import java.util.Collection;
 
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 
