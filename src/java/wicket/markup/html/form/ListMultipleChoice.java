@@ -66,6 +66,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 * @param defaultMaxRows
 	 *            The defaultMaxRows to set.
 	 */
+	@SuppressWarnings("unchecked")
 	protected static void setDefaultMaxRows(final int defaultMaxRows)
 	{
 		ListMultipleChoice.defaultMaxRows = defaultMaxRows;

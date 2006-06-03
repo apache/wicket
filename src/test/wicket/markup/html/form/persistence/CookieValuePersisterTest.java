@@ -73,6 +73,7 @@ public class CookieValuePersisterTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void test1() throws Exception
 	{
 		// How does the test work: Make sure you have a page, form and form
@@ -81,7 +82,7 @@ public class CookieValuePersisterTest extends TestCase
 
 		// Get the form and form component created
 		final TestForm form = (TestForm)page.get("form");
-		final TextField textField = (TextField)form.get("input");
+		final TextField<String> textField = (TextField<String>)form.get("input");
 
 		// Make sure a valid cycle is available through RequestCycle.get().
 		// The RequestCycle's constructor will attach the new cycle to

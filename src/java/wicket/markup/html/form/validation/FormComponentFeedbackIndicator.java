@@ -34,8 +34,9 @@ import wicket.model.IModel;
  * custom look you desire.
  * 
  * @author Jonathan Locke
+ * @param <T> 
  */
-public class FormComponentFeedbackIndicator extends Panel implements IFeedback
+public class FormComponentFeedbackIndicator<T> extends Panel<T> implements IFeedback
 {
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +60,7 @@ public class FormComponentFeedbackIndicator extends Panel implements IFeedback
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public FormComponentFeedbackIndicator(MarkupContainer parent, final String id, IModel model)
+	public FormComponentFeedbackIndicator(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}
