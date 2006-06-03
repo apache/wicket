@@ -88,8 +88,6 @@ public class MockWebApplication extends WebApplication
 	private static Log log = LogFactory.getLog(MockWebApplication.class);
 
 	/** The last rendered page. */
-//  Since we implemented xxRequestTargets etc the last rendered page can not be
-//  determined anymore.		
 	private Page lastRenderedPage;
 
 	/** The previously rendered page */

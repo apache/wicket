@@ -22,9 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.lang.Objects;
 
@@ -38,9 +35,6 @@ public abstract class PageMap implements Serializable
 
 	/** Name of default pagemap */
 	public static final String DEFAULT_NAME = null;
-
-	/** Log. */
-	private static final Log log = LogFactory.getLog(PageMap.class);
 
 	/** URL to continue to after a given page. */
 	private String interceptContinuationURL;
