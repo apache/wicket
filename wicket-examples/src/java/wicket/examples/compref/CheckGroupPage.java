@@ -11,7 +11,6 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
-import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
 /**

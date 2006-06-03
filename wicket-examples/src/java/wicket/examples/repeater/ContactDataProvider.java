@@ -47,6 +47,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#iterator(int,
 	 *      int)
 	 */
+	@SuppressWarnings("unchecked")
 	public Iterator<Contact> iterator(int first, int count)
 	{
 		return getContactsDB().find(first, count, "firstName", true).iterator();

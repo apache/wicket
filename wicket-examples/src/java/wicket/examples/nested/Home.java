@@ -55,7 +55,7 @@ public class Home extends WicketExamplePage
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List<Object> l3 = new ArrayList<Object>();
+		List<String> l3 = new ArrayList<String>();
 		l3.add("test 3.1");
 		l2.add(l3);
 		l2.add("test 2.4");
@@ -63,7 +63,7 @@ public class Home extends WicketExamplePage
 		l1.add("test 1.3");
 
 		// construct the panel
-		new NestedList(this, "nestedList", l1);
+		new NestedList<Object>(this, "nestedList", l1);
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);

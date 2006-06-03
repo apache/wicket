@@ -77,8 +77,8 @@ public abstract class SignInPanel extends Panel
 
 			// Attach textfield components that edit properties map
 			// in lieu of a formal beans model
-			username = new TextField(this, "username", new PropertyModel(properties, "username"));
-			password = new PasswordTextField(this, "password", new PropertyModel(properties,
+			username = new TextField<String>(this, "username", new PropertyModel<String>(properties, "username"));
+			password = new PasswordTextField(this, "password", new PropertyModel<String>(properties,
 					"password"));
 
 			// MarkupContainer row for remember me checkbox

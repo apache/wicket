@@ -21,7 +21,7 @@ package wicket.examples.customresourceloading;
 import java.net.URL;
 
 import wicket.examples.WicketExamplePage;
-import wicket.util.resource.IResourceStream;
+import wicket.markup.MarkupResourceStreamLookupResult;
 import wicket.util.resource.UrlResourceStream;
 
 /**
@@ -52,14 +52,14 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * @return A IResourceStream if the resource was found
 	 */
 	@Override
-	public IResourceStream newMarkupResourceStream(final Class containerClass)
+	public MarkupResourceStreamLookupResult newMarkupResourceStream(final Class containerClass)
 	{
 		// load a template with a totally different name from this package using
 		// this component's class loader
 		final URL url = PageWithCustomLoading.class.getResource("CustomLoadedTemplate.html");
 		if (url != null)
 		{
-			return new UrlResourceStream(url);
+			return new MarkupResourceStreamLookupResult(new UrlResourceStream(url));
 		}
 
 		// not resource was not found

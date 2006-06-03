@@ -32,8 +32,10 @@ import wicket.markup.html.panel.Panel;
  * element is either a string or another list.
  * 
  * @author Eelco Hillenius
+ * 
+ * @param <T>
  */
-public final class NestedList extends Panel
+public final class NestedList<T> extends Panel
 {
 	/**
 	 * Constructor.
@@ -44,16 +46,16 @@ public final class NestedList extends Panel
 	 * @param list
 	 *            a list where each element is either a string or another list
 	 */
-	public NestedList(MarkupContainer parent, final String id, List list)
+	public NestedList(MarkupContainer parent, final String id, List<T> list)
 	{
 		super(parent, id);
-		new Rows(this, "rows", list);
+		new Rows<T>(this, "rows", list);
 	}
 
 	/**
 	 * The list class.
 	 */
-	private static class Rows extends ListView
+	private static class Rows<T> extends ListView<T>
 	{
 		/**
 		 * Construct.
@@ -65,7 +67,7 @@ public final class NestedList extends Panel
 		 *            a list where each element is either a string or another
 		 *            list
 		 */
-		public Rows(MarkupContainer parent, String name, List list)
+		public Rows(MarkupContainer parent, String name, List<T> list)
 		{
 			super(parent, name, list);
 		}
@@ -81,7 +83,7 @@ public final class NestedList extends Panel
 			if (modelObject instanceof List)
 			{
 				// create a panel that renders the sub lis
-				NestedList nested = new NestedList(listItem, "nested", (List)modelObject);
+				NestedList nested = new NestedList<T>(listItem, "nested", (List)modelObject);
 				// if the current element is a list, we create a dummy row/
 				// label element
 				// as we have to confirm to our HTML definition, and set it's
@@ -98,7 +100,7 @@ public final class NestedList extends Panel
 				// to confirm to our HTML definition, and set this panel's
 				// visibility
 				// property to false to avoid having the UL tag rendered
-				NestedList nested = new NestedList(listItem, "nested", null);
+				NestedList nested = new NestedList<T>(listItem, "nested", null);
 				nested.setVisible(false);
 				// add the row (with the LI element attached, and the label with
 				// the
