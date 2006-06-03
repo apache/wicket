@@ -186,7 +186,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	 *            the number of visible rows
 	 * @return this
 	 */
-	public final ListMultipleChoice setMaxRows(final int maxRows)
+	public final ListMultipleChoice<T> setMaxRows(final int maxRows)
 	{
 		this.maxRows = maxRows;
 		return this;

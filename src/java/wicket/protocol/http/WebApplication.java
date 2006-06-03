@@ -140,8 +140,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	private String applicationKey;
 
-	private String fullRootPath;
-
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
 	 * application instead of overriding the constructor.</strong>
