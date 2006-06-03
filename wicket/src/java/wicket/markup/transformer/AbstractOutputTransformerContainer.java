@@ -36,8 +36,9 @@ import wicket.response.StringResponse;
  * @see wicket.markup.transformer.ITransformer
  * 
  * @author Juergen Donnerstag
+ * @param <T> 
  */
-public abstract class AbstractOutputTransformerContainer extends MarkupContainer
+public abstract class AbstractOutputTransformerContainer<T> extends MarkupContainer<T>
 		implements
 			ITransformer
 {
@@ -62,7 +63,7 @@ public abstract class AbstractOutputTransformerContainer extends MarkupContainer
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public AbstractOutputTransformerContainer(MarkupContainer parent, final String id,
-			final IModel model)
+			final IModel<T> model)
 	{
 		super(parent, id, model);
 	}

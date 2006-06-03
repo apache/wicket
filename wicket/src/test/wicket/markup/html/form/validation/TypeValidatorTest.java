@@ -112,7 +112,7 @@ public class TypeValidatorTest extends WicketTestCase
 
 		MockPage page = new MockPage();
 
-		Form form = new Form(page, "form", new CompoundPropertyModel(new Person()));
+		Form form = new Form<Person>(page, "form", new CompoundPropertyModel<Person>(new Person()));
 		DateField dateField = new DateField(form, "birthdate");
 
 		form.onFormSubmitted();

@@ -925,7 +925,7 @@ public class IntHashMap implements Cloneable, Serializable
 		return (ks != null ? ks : (keySet = new KeySet()));
 	}
 
-	private class KeySet extends AbstractSet
+	private class KeySet extends AbstractSet<Number>
 	{
 		/**
 		 * @see java.util.AbstractCollection#iterator()

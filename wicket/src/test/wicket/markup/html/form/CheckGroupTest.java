@@ -132,7 +132,7 @@ public class CheckGroupTest extends WicketTestCase
 
 		// create component hierarchy
 
-		final Form form = new Form(page, "form", new CompoundPropertyModel(modelObject));
+		final Form form = new Form<MockModelObject>(page, "form", new CompoundPropertyModel<MockModelObject>(modelObject));
 
 		final CheckGroup group = new CheckGroup(form, "prop1");
 

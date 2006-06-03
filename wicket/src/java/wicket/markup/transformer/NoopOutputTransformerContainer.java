@@ -26,8 +26,9 @@ import wicket.model.IModel;
  * modify the markup at all.
  * 
  * @author Juergen Donnerstag
+ * @param <T> 
  */
-public class NoopOutputTransformerContainer extends AbstractOutputTransformerContainer
+public class NoopOutputTransformerContainer<T> extends AbstractOutputTransformerContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +48,7 @@ public class NoopOutputTransformerContainer extends AbstractOutputTransformerCon
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
 	public NoopOutputTransformerContainer(MarkupContainer parent, final String id,
-			final IModel model)
+			final IModel<T> model)
 	{
 		super(parent, id, model);
 	}

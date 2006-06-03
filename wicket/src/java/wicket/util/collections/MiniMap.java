@@ -266,7 +266,7 @@ public final class MiniMap implements Map, Serializable
 	 */
 	public Collection values()
 	{
-		return new AbstractList()
+		return new AbstractList<Object>()
 		{
 			@Override
 			public Object get(final int index)
@@ -286,6 +286,8 @@ public final class MiniMap implements Map, Serializable
 			{
 				return size;
 			}
+			
+			
 		};
 	}
 

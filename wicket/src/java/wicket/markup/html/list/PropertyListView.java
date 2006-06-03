@@ -93,6 +93,6 @@ public abstract class PropertyListView<T> extends ListView<T>
 	@Override
 	protected IModel<T> getListItemModel(final IModel<List<T>> model, final int index)
 	{
-		return new BoundCompoundPropertyModel(super.getListItemModel(model, index));
+		return new BoundCompoundPropertyModel<T>(super.getListItemModel(model, index));
 	}
 }
