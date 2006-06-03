@@ -378,11 +378,11 @@ public class MockWebApplication extends WebApplication
 						lastRenderedPage = new DefaultPageFactory().newPage(pageClass, parameters);
 					}
 				}
+				else
+				{
+					lastRenderedPage = this.lastRenderedPage;
+				}
 			}
-		}
-		else
-		{
-			lastRenderedPage = this.lastRenderedPage;
 		}
 		
 		return lastRenderedPage;
