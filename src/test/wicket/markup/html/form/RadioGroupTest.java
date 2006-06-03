@@ -21,7 +21,6 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.html.WebMarkupContainer;
@@ -110,7 +109,7 @@ public class RadioGroupTest extends WicketTestCase
 
 		// set up necessary objects to emulate a form submission
 
-		RequestCycle cycle = application.createRequestCycle();
+		application.createRequestCycle();
 
 		MockPage page = new MockPage();
 

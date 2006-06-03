@@ -37,6 +37,6 @@ public class BoxBorderTestPage_6 extends WebPage
 	{
 		Border border1 = new BoxBorder(this, "border1");
 
-		Border border2 = new BoxBorder(border1, "border2");
+		new BoxBorder(border1, "border2");
 	}
 }

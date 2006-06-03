@@ -7,9 +7,6 @@
 
 package wicket.markup.html.form.login;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.Application;
 import wicket.Session;
 import wicket.markup.html.WebPage;
@@ -22,11 +19,9 @@ import wicket.model.Model;
 /**
  * @author marrink
  */
-public class MockLoginPage extends WebPage
+public class MockLoginPage<T> extends WebPage<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	private static Log log = LogFactory.getLog(MockLoginPage.class);
 
 	private Form form;
 

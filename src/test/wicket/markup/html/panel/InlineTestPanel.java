@@ -40,6 +40,6 @@ public class InlineTestPanel extends Panel
 	public InlineTestPanel(MarkupContainer parent, String id, Page page)
 	{
 		super(parent, id);
-		Fragment child = new Fragment(this, "child", "child-frag", page);
+		new Fragment(this, "child", "child-frag", page);
 	}
 }

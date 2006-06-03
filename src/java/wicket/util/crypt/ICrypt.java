@@ -20,16 +20,16 @@ package wicket.util.crypt;
 /**
  * Encryption and decryption implementations are accessed through this
  * interface. It provide some simple means to encrypt and decrypt strings, like
- * passwords etc.. It depends on the implementation itself which algorithms are
- * used to en-/decrypt the data.
+ * cookie values or URLs. It depends on the implementation itself which
+ * algorithms are used to en-/decrypt the data.
  * <p>
  * If you value the privacy of your websites users, then please consider using a
  * one-way encryption algorithm instead of the Wicket provided ICrypt
  * implementations. The intention of these encryption facilities is to keep
- * passwords private when stored in cookies or in the session.The implementation
- * of the encryption algorithm may change between releases. As such, this
- * interface and its implementations are not intended and should not be used as
- * an encryption facility for persistent values.
+ * passwords private when stored in cookies or in the session. The
+ * implementation of the encryption algorithm may change between releases. As
+ * such, this interface and its implementations are not intended and should not
+ * be used as an encryption facility for persistent values.
  * <p>
  * As of Wicket 1.2 the methods encrypt and decrypt are deprecated. Consider
  * changing your persistent encryption strategy to be based on a one-way

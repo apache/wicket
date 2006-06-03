@@ -88,6 +88,8 @@ public class MockWebApplication extends WebApplication
 	private static Log log = LogFactory.getLog(MockWebApplication.class);
 
 	/** The last rendered page. */
+//  Since we implemented xxRequestTargets etc the last rendered page can not be
+//  determined anymore.		
 	private Page lastRenderedPage;
 
 	/** The previously rendered page */
@@ -292,8 +294,9 @@ public class MockWebApplication extends WebApplication
 
 		if (component instanceof Page)
 		{
-			this.lastRenderedPage = (Page)component;
+			this.lastRenderedPage = (Page) component;
 		}
+		postProcessRequestCycle(cycle);
 	}
 
 	/**
@@ -314,7 +317,11 @@ public class MockWebApplication extends WebApplication
 	public void processRequestCycle(WebRequestCycle cycle)
 	{
 		cycle.request();
-
+		postProcessRequestCycle(cycle);
+	}
+	
+	private void postProcessRequestCycle(WebRequestCycle cycle)
+	{
 		previousRenderedPage = lastRenderedPage;
 
 		// handle redirects which are usually managed by the browser
@@ -324,10 +331,7 @@ public class MockWebApplication extends WebApplication
 
 		if (httpResponse.isRedirect())
 		{
-			generateLastRenderedPage(cycle);
-
-			final MockHttpServletRequest httpRequest = (MockHttpServletRequest)cycle
-					.getWebRequest().getHttpServletRequest();
+			this.lastRenderedPage = generateLastRenderedPage(cycle);
 
 			MockHttpServletRequest newHttpRequest = new MockHttpServletRequest(this,
 					servletSession, getServletContext());
@@ -338,7 +342,7 @@ public class MockWebApplication extends WebApplication
 			cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
 			cycle.request();
 		}
-		generateLastRenderedPage(cycle);
+		this.lastRenderedPage = generateLastRenderedPage(cycle);
 
 		Session.set(getWicketSession());
 
@@ -348,9 +352,9 @@ public class MockWebApplication extends WebApplication
 		}
 	}
 
-	private void generateLastRenderedPage(WebRequestCycle cycle)
+	private Page generateLastRenderedPage(WebRequestCycle cycle)
 	{
-		lastRenderedPage = cycle.getResponsePage();
+		Page lastRenderedPage = cycle.getResponsePage();
 		if (lastRenderedPage == null)
 		{
 			Class responseClass = cycle.getResponsePageClass();
@@ -378,6 +382,12 @@ public class MockWebApplication extends WebApplication
 				}
 			}
 		}
+		else
+		{
+			lastRenderedPage = this.lastRenderedPage;
+		}
+		
+		return lastRenderedPage;
 	}
 
 	/**

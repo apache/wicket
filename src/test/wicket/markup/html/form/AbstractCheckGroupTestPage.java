@@ -47,8 +47,8 @@ public abstract class AbstractCheckGroupTestPage extends WebPage
 		Form form = new Form(this, "form");
 		CheckGroup group = new CheckGroup<String>(form, "group", new Model<Collection<String>>(list));
 		WebMarkupContainer container = new WebMarkupContainer(group, "container");
-		Check<String> check1 = new Check<String>(group, "check1", new Model<String>("check1"));
-		Check<String> check2 = new Check<String>(container, "check2", new Model<String>("check2"));
+		new Check<String>(group, "check1", new Model<String>("check1"));
+		new Check<String>(container, "check2", new Model<String>("check2"));
 
 	}
 }

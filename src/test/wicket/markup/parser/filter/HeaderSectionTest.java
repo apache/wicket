@@ -18,9 +18,6 @@
  */
 package wicket.markup.parser.filter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.html.PackageResource;
@@ -34,8 +31,6 @@ import wicket.util.resource.IResourceStream;
  */
 public class HeaderSectionTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(HeaderSectionTest.class);
-
 	/**
 	 * Create the test.
 	 * 

@@ -79,7 +79,7 @@ public class Page_1 extends WebPage
 			}
 		};
 
-		Border border = new SimpleBorder(borderContainer, "myBorder");
+		new SimpleBorder(borderContainer, "myBorder");
 
 		MarkupContainer xsltContainer = new XsltOutputTransformerContainer(this, "test4");
 

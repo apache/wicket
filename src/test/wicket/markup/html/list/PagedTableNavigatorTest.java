@@ -192,7 +192,7 @@ public class PagedTableNavigatorTest extends TestCase
 		assertTrue(link.isEnabled());
 
 		// add entries to the model list.
-		List modelData = (List)page.get("table").getModelObject();
+		List<String> modelData = (List)page.get("table").getModelObject();
 		modelData.add("add-1");
 		modelData.add("add-2");
 		modelData.add("add-3");

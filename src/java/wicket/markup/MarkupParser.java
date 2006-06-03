@@ -315,9 +315,9 @@ public class MarkupParser
 						xmlParser.setPositionMarker(tag.getPos());
 					}
 
-					for (int i = 0; i < autoAddList.size(); i++)
+					for (MarkupElement element : autoAddList)
 					{
-						this.markup.addMarkupElement(autoAddList.get(i));
+						this.markup.addMarkupElement(element);
 					}
 					autoAddList.clear();
 				}

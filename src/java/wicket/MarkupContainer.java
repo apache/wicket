@@ -35,6 +35,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupResourceStream;
+import wicket.markup.MarkupResourceStreamLookupResult;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
@@ -870,7 +871,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @return A IResourceStream if the resource was found
 	 */
 	@SuppressWarnings("unchecked")
-	public IResourceStream newMarkupResourceStream(Class<? extends MarkupContainer> containerClass)
+	public MarkupResourceStreamLookupResult newMarkupResourceStream(Class<? extends MarkupContainer> containerClass)
 	{
 		// Get locator to search for the resource
 		final IResourceStreamLocator locator = getApplication().getResourceSettings()
@@ -887,8 +888,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 			// Did we find it already?
 			if (resourceStream != null)
 			{
-				return new MarkupResourceStream(resourceStream, new ContainerInfo(this),
-						containerClass);
+				return new MarkupResourceStreamLookupResult(
+						new MarkupResourceStream(resourceStream, new ContainerInfo(this), containerClass));
 			}
 
 			// Walk up the class hierarchy one level, if markup has not

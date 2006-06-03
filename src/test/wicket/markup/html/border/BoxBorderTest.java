@@ -74,7 +74,7 @@ public class BoxBorderTest extends WicketTestCase
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
 
-		Border border = (Border)application.getLastRenderedPage().get("border");
+		application.getLastRenderedPage().get("border");
 		Form form = (Form)application.getLastRenderedPage().get("border:myForm");
 
 		TextField input = (TextField)application.getLastRenderedPage().get("border:name");

@@ -91,9 +91,9 @@ public class Tree extends AbstractTree implements TreeModelListener
 		{
 			super(parent, panelId);
 			// create a link for expanding and collapsing the node
-			Link expandCollapsLink = tree.createJunctionLink(this, node);
+			tree.createJunctionLink(this, node);
 			// create a link for selecting a node
-			Link selectLink = tree.createNodeLink(this, node);
+			tree.createNodeLink(this, node);
 		}
 	}
 

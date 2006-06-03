@@ -50,7 +50,7 @@ public class SimplePage extends WebPage
 		Panel panel = new SimplePanel(this, "myPanel");
 		panel.setRenderBodyOnly(true);
 
-		Border border = new SimpleBorder(this, "myBorder");
+		new SimpleBorder(this, "myBorder");
 
 		Border border2 = new SimpleBorder(this, "myBorder2");
 		border2.setRenderBodyOnly(false);
