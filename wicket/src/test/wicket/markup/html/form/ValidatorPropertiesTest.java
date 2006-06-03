@@ -21,7 +21,6 @@ import java.util.MissingResourceException;
 import junit.framework.TestCase;
 import wicket.properties.MyTesterApplication;
 import wicket.properties.TestPage;
-import wicket.protocol.http.WebRequestCycle;
 import wicket.util.tester.WicketTester;
 
 /**
@@ -37,7 +36,7 @@ public class ValidatorPropertiesTest extends TestCase
 	{
 		WicketTester tester = new MyTesterApplication();
 		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.createRequestCycle();
 
 		TestPage page = new TestPage();
 		Form form = (Form)page.get("form1");
@@ -97,7 +96,7 @@ public class ValidatorPropertiesTest extends TestCase
 		WicketTester tester = new MyTesterApplication();
 		tester.getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.createRequestCycle();
 
 		String str = tester.getResourceSettings().getLocalizer().getString("XXX", null);
 		assertEquals("[Warning: String resource for 'XXX' not found]", str);
@@ -111,7 +110,7 @@ public class ValidatorPropertiesTest extends TestCase
 		WicketTester tester = new MyTesterApplication();
 		tester.getResourceSettings().setThrowExceptionOnMissingResource(true);
 		tester.setupRequestAndResponse();
-		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.createRequestCycle();
 
 		boolean hit = false;
 		try

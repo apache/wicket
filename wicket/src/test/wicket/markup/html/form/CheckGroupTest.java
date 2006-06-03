@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 import wicket.EmptyPage;
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.html.WebMarkupContainer;
@@ -125,13 +124,9 @@ public class CheckGroupTest extends WicketTestCase
 
 
 		// set up necessary objects to emulate a form submission
-
-		RequestCycle cycle = application.createRequestCycle();
-
 		MockPage page = new MockPage();
 
 		// create component hierarchy
-
 		final Form form = new Form<MockModelObject>(page, "form", new CompoundPropertyModel<MockModelObject>(modelObject));
 
 		final CheckGroup group = new CheckGroup(form, "prop1");
@@ -143,7 +138,6 @@ public class CheckGroupTest extends WicketTestCase
 
 
 		// test mock form submissions
-
 		modelObject.getProp1().add(check1);
 
 		form.onFormSubmitted();

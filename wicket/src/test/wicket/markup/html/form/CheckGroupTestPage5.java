@@ -35,6 +35,8 @@ import wicket.model.Model;
  */
 public class CheckGroupTestPage5 extends WebPage
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Constructor
 	 */
@@ -43,15 +45,10 @@ public class CheckGroupTestPage5 extends WebPage
 		List<String> list = new ArrayList<String>();
 		Form form = new Form(this, "form");
 		CheckGroup<String> group = new CheckGroup<String>(form, "group", new Model<Collection<String>>(list));
-		WebMarkupContainer container = new WebMarkupContainer(group, "container");
-		Check<String> check1 = new Check<String>(group, "check1", new Model<String>("check1"));
+		new WebMarkupContainer(group, "container");
+		new Check<String>(group, "check1", new Model<String>("check1"));
 		// here we add check2 to the form so it is outside the group - it should
 		// throw an exception when rendering
-		Check<String> check2 = new Check<String>(form, "check2", new Model<String>("check2"));
-
+		new Check<String>(form, "check2", new Model<String>("check2"));
 	}
-
-	private static final long serialVersionUID = 1L;
-
-
 }

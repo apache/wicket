@@ -55,6 +55,6 @@ public class PagedTablePage extends WebPage
 			}
 		};
 
-		PagingNavigation navigation = new PagingNavigation(this, "navigation", table);
+		new PagingNavigation(this, "navigation", table);
 	}
 }

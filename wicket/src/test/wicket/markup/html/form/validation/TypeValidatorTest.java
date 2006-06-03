@@ -21,7 +21,6 @@ package wicket.markup.html.form.validation;
 import java.util.Date;
 
 import wicket.MarkupContainer;
-import wicket.RequestCycle;
 import wicket.WicketTestCase;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
@@ -108,12 +107,12 @@ public class TypeValidatorTest extends WicketTestCase
 	 */
 	public void testDateField()
 	{
-		RequestCycle cycle = application.createRequestCycle();
+		application.createRequestCycle();
 
 		MockPage page = new MockPage();
 
 		Form form = new Form<Person>(page, "form", new CompoundPropertyModel<Person>(new Person()));
-		DateField dateField = new DateField(form, "birthdate");
+		new DateField(form, "birthdate");
 
 		form.onFormSubmitted();
 	}

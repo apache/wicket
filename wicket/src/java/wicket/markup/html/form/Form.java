@@ -148,7 +148,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private static abstract class ValidationVisitor implements FormComponent.IVisitor
 	{
-
 		/**
 		 * @see wicket.markup.html.form.FormComponent.IVisitor#formComponent(wicket.markup.html.form.FormComponent)
 		 */
@@ -167,7 +166,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		 * @param formComponent
 		 */
 		public abstract void validate(FormComponent formComponent);
-
 	}
 
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
@@ -529,7 +527,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	protected void appendDefaultButtonField(final MarkupStream markupStream,
 			final ComponentTag openTag)
 	{
-		String nameAndId = getHiddenFieldId(HIDDEN_FIELD_FAKE_SUBMIT);
 		AppendingStringBuffer buffer = new AppendingStringBuffer();
 		// get the value, first seeing whether the value attribute is set
 		// by a model
@@ -720,7 +717,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			}
 		});
 	}
-
 
 	/**
 	 * Mark each form component on this form valid.
@@ -936,7 +932,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 	}
 
-
 	/**
 	 * Process the form. Though you can override this method to provide your
 	 * whole own algorithm, it is not recommended to do so.
@@ -1004,7 +999,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			}
 		});
 	}
-
 
 	/**
 	 * Clears the input from the form's nested children of type

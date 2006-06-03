@@ -37,8 +37,8 @@ public class InlinePanel_4 extends Panel
 	{
 		super(parent, id);
 
-		Fragment panel1 = new Fragment(this, "myPanel1", "frag1");
+		new Fragment(this, "myPanel1", "frag1");
 
-		Fragment panel2 = new Fragment(this, "myPanel2", "frag2");
+		new Fragment(this, "myPanel2", "frag2");
 	}
 }

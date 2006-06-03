@@ -44,7 +44,7 @@ public class RadioGroupTestPage1 extends WebPage
 		Form form = new Form(this, "form");
 		RadioGroup<String> group = new RadioGroup<String>(form, "group", new Model<String>("radio2"));
 		WebMarkupContainer container = new WebMarkupContainer(group, "container");
-		Radio radio1 = new Radio<String>(group, "radio1", new Model<String>("radio1"));
-		Radio radio2 = new Radio<String>(container, "radio2", new Model<String>("radio2"));
+		new Radio<String>(group, "radio1", new Model<String>("radio1"));
+		new Radio<String>(container, "radio2", new Model<String>("radio2"));
 	}
 }

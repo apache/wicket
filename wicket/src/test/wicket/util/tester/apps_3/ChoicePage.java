@@ -111,7 +111,7 @@ public class ChoicePage extends WebPage
 	private CheckGroup newCheckGroup(Form parent, List<Book> candidateChoices)
 	{
 		CheckGroup checkGroupComponent = new CheckGroup(parent, "checkGroup");
-		ListView<Book> listView = new ListView<Book>(checkGroupComponent, "loop", candidateChoices)
+		new ListView<Book>(checkGroupComponent, "loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -128,7 +128,7 @@ public class ChoicePage extends WebPage
 	private RadioGroup newRadioGroup(Form parent, List<Book> candidateChoices)
 	{
 		RadioGroup radioGroupComponent = new RadioGroup(parent, "radioGroup");
-		ListView<Book> listView = new ListView<Book>(radioGroupComponent, "loop", candidateChoices)
+		new ListView<Book>(radioGroupComponent, "loop", candidateChoices)
 		{
 			private static final long serialVersionUID = 1L;
 

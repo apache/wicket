@@ -76,10 +76,8 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testCreateAllowedComponent() throws Exception
 	{
-		WicketTester app = new WicketTester()
-		{
-		};
-		WebComponent c = new WebComponent(new EmptyPage(), "test");
+		new WicketTester();
+		new WebComponent(new EmptyPage(), "test");
 	}
 
 	/**
@@ -101,7 +99,7 @@ public class AuthorizationTest extends TestCase
 		});
 		try
 		{
-			WebComponent c = new WebComponent(new EmptyPage(), "test");
+			new WebComponent(new EmptyPage(), "test");
 			// bad: authorization should have failed
 			fail("authorization check failed to throw an exception");
 		}

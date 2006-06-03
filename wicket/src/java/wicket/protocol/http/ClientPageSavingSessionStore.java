@@ -43,7 +43,6 @@ import wicket.util.string.JavascriptUtils;
  */
 public class ClientPageSavingSessionStore extends HttpSessionStore
 {
-
 	/** Log. */
 	private static final Log log = LogFactory.getLog(ClientPageSavingSessionStore.class);
 
@@ -245,8 +244,6 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 		 */
 		public AppendingStringBuffer filter(AppendingStringBuffer responseBuffer)
 		{
-			ClientPageSavingSessionStore sessionStore = (ClientPageSavingSessionStore)Application
-					.get().getSessionStore();
 			IRequestTarget rt = RequestCycle.get().getRequestTarget();
 
 			int index = responseBuffer.indexOf("<head>");

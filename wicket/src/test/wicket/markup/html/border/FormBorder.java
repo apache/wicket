@@ -32,8 +32,6 @@ public class FormBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
-
 	/**
 	 * Construct.
 	 * 
@@ -44,7 +42,7 @@ public class FormBorder extends Border
 	{
 		super(parent, id);
 
-		this.form = new Form(this, "myForm");
+		new Form(this, "myForm");
 	}
 
 	/**

@@ -76,7 +76,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.resource.IResourceStream#close()
 	 */
-	public void close() throws IOException
+	public final void close() throws IOException
 	{
 		resourceStream.close();
 	}
@@ -85,7 +85,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.resource.IResourceStream#getContentType()
 	 */
-	public String getContentType()
+	public final String getContentType()
 	{
 		return resourceStream.getContentType();
 	}
@@ -94,7 +94,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.resource.IResourceStream#getInputStream()
 	 */
-	public InputStream getInputStream() throws ResourceStreamNotFoundException
+	public final InputStream getInputStream() throws ResourceStreamNotFoundException
 	{
 		return resourceStream.getInputStream();
 	}
@@ -103,7 +103,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.resource.IResourceStream#getLocale()
 	 */
-	public Locale getLocale()
+	public final Locale getLocale()
 	{
 		return resourceStream.getLocale();
 	}
@@ -112,7 +112,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.watch.IModifiable#lastModifiedTime()
 	 */
-	public Time lastModifiedTime()
+	public final Time lastModifiedTime()
 	{
 		return resourceStream.lastModifiedTime();
 	}
@@ -121,7 +121,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.resource.IResourceStream#length()
 	 */
-	public long length()
+	public final long length()
 	{
 		return resourceStream.length();
 	}
@@ -130,7 +130,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
 	 */
-	public void setLocale(Locale locale)
+	public final void setLocale(Locale locale)
 	{
 		resourceStream.setLocale(locale);
 	}
@@ -141,7 +141,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @return The directly associated class
 	 */
-	public Class<? extends MarkupContainer> getMarkupClass()
+	public final Class<? extends MarkupContainer> getMarkupClass()
 	{
 		return markupClass;
 	}
@@ -151,7 +151,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @return ContainerInfo
 	 */
-	public ContainerInfo getContainerInfo()
+	public final ContainerInfo getContainerInfo()
 	{
 		return containerInfo;
 	}
@@ -161,7 +161,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString()
+	public final String toString()
 	{
 		return resourceStream.toString();
 	}

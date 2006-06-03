@@ -142,7 +142,7 @@ public class LocalizerTest extends WicketTestCase
 	 */
 	public void testInComponentConstructor()
 	{
-		Component myComponent = new MyLabel(new EmptyPage(), "myLabel");
+		new MyLabel(new EmptyPage(), "myLabel");
 	}
 
 	/**

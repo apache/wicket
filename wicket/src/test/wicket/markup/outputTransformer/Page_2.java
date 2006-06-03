@@ -79,7 +79,7 @@ public class Page_2 extends WebPage
 			}
 		};
 
-		Border border = new SimpleBorder(borderContainer, "myBorder");
+		new SimpleBorder(borderContainer, "myBorder");
 
 		Border border2 = new SimpleBorder(this, "myBorder2");
 		border2.setRenderBodyOnly(false);

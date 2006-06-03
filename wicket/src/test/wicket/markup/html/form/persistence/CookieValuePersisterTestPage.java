@@ -42,9 +42,8 @@ public class CookieValuePersisterTestPage extends WebPage
 	 */
 	public CookieValuePersisterTestPage()
 	{
-
 		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 		new TestForm(this, "form");
 	}
 

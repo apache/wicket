@@ -25,7 +25,6 @@ import java.util.Calendar;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.Component;
-import wicket.RequestCycle;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
 import wicket.protocol.http.MockWebApplication;
@@ -196,8 +195,7 @@ public class StringResourceModelTest extends TestCase
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(), application
-				.getWicketRequest(), application.getWicketResponse());
+		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
@@ -241,8 +239,7 @@ public class StringResourceModelTest extends TestCase
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		application.setupRequestAndResponse();
-		RequestCycle cycle = new WebRequestCycle(application.getWicketSession(), application
-				.getWicketRequest(), application.getWicketResponse());
+		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getNestedModel().getObject(page));
 		Assert.assertNotNull(model.getLocalizer());

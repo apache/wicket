@@ -40,7 +40,6 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.WebPage;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
@@ -268,7 +267,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		{
 			model.detach();
 		}
-
 	}
 
 	/**
@@ -1847,8 +1845,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		// header or body onLoad tag.
 		if (this.behaviors != null)
 		{
-			final WebPage webPage = (WebPage)getPage();
-
 			final Iterator<IBehavior> iter = this.behaviors.iterator();
 			while (iter.hasNext())
 			{

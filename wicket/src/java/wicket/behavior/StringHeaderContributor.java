@@ -44,9 +44,6 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/** The contribution as a model that returns a plain string. */
 		private final IModel contribution;
 
-		/** Temp var for the actual contribution. */
-		private transient String contributionAsString;
-
 		/**
 		 * Construct.
 		 * 
