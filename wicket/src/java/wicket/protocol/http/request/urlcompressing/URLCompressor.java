@@ -86,10 +86,10 @@ public class URLCompressor implements Serializable
 
 	private void writeObject(java.io.ObjectOutputStream s) throws IOException
 	{
-		IntKeyWeakReference ref = null;
-		while ((ref = (IntKeyWeakReference)queue.poll()) != null)
+		Object ref = null;
+		while ((ref = queue.poll()) != null)
 		{
-			directComponentRefs.remove(ref.uid);
+			directComponentRefs.remove(((IntKeyWeakReference)ref).uid);
 		}
 
 		s.defaultWriteObject();
@@ -158,10 +158,10 @@ public class URLCompressor implements Serializable
 	 */
 	public ComponentAndInterface getComponentAndInterfaceForUID(String uidString)
 	{
-		IntKeyWeakReference ref = null;
-		while ((ref = (IntKeyWeakReference)queue.poll()) != null)
+		Object ref;
+		while ((ref = queue.poll()) != null)
 		{
-			directComponentRefs.remove(ref.uid);
+			directComponentRefs.remove(((IntKeyWeakReference)ref).uid);
 		}
 		int uid = Integer.parseInt(uidString);
 		ComponentAndInterface cai = (ComponentAndInterface)directComponentRefs.get(uid);

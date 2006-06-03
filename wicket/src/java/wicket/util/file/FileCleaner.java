@@ -60,7 +60,8 @@ public class FileCleaner
 				try
 				{
 					// Wait for a tracker to remove.
-					tracker = (Tracker)q.remove();
+					Object o=q.remove();
+					tracker = (Tracker)o;
 				}
 				catch (Exception e)
 				{
