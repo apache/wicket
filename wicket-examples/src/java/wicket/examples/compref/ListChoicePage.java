@@ -54,7 +54,7 @@ public class ListChoicePage extends WicketExamplePage<ListChoicePageInput>
 		// designate the
 		// current selection, and that uses the SITES list for the available
 		// options.
-		ListChoice listChoice = new ListChoice(form, "site", ListChoicePageInput.SITES);
+		ListChoice<String> listChoice = new ListChoice<String>(form, "site", ListChoicePageInput.SITES);
 		listChoice.setMaxRows(4);
 	}
 

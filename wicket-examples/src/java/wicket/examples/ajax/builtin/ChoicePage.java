@@ -74,10 +74,10 @@ public class ChoicePage extends BasePage
 		modelsMap.put("FORD", Arrays.asList(new String[] { "CROWN", "ESCAPE", "EXPEDITION",
 				"EXPLORER", "F-150" }));
 
-		IModel makeChoices = new AbstractReadOnlyModel()
+		IModel<List<String>> makeChoices = new AbstractReadOnlyModel<List<String>>()
 		{
 			@Override
-			public Object getObject(Component component)
+			public List<String> getObject(Component component)
 			{
 				Set<String> keys = modelsMap.keySet();
 				List<String> list = new ArrayList<String>(keys);
@@ -86,12 +86,13 @@ public class ChoicePage extends BasePage
 
 		};
 
-		IModel modelChoices = new AbstractReadOnlyModel()
+		IModel<List<String>> modelChoices = new AbstractReadOnlyModel<List<String>>()
 		{
+			@SuppressWarnings("unchecked")
 			@Override
-			public Object getObject(Component component)
+			public List<String> getObject(Component component)
 			{
-				List models = (List)modelsMap.get(selectedMake);
+				List<String> models = modelsMap.get(selectedMake);
 				if (models == null)
 				{
 					models = Collections.EMPTY_LIST;
@@ -103,10 +104,10 @@ public class ChoicePage extends BasePage
 
 		Form form = new Form(this, "form");
 
-		final DropDownChoice makes = new DropDownChoice(form, "makes", new PropertyModel(this,
+		final DropDownChoice makes = new DropDownChoice<String>(form, "makes", new PropertyModel<String>(this,
 				"selectedMake"), makeChoices);
 
-		final DropDownChoice models = new DropDownChoice(form, "models", new Model(), modelChoices);
+		final DropDownChoice<String> models = new DropDownChoice<String>(form, "models", new Model<String>(), modelChoices);
 		models.setOutputMarkupId(true);
 
 		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")

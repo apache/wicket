@@ -34,7 +34,7 @@ public class PageablesPage extends BasePage
 		WebMarkupContainer datacontainer = new WebMarkupContainer(this, "data");
 		datacontainer.setOutputMarkupId(true);
 
-		PageableListView listview = new PageableListView(datacontainer, "rows", Arrays
+		PageableListView<String> listview = new PageableListView<String>(datacontainer, "rows", Arrays
 				.asList(names), 10)
 		{
 			@Override

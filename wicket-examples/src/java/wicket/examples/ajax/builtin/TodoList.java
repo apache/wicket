@@ -361,7 +361,7 @@ public class TodoList extends BasePage
 				protected void populateItem(ListItem item)
 				{
 					// add an AJAX checkbox to the item
-					new AjaxCheckBox(item, "check", new PropertyModel(item.getModel(), "checked"))
+					new AjaxCheckBox(item, "check", new PropertyModel<Boolean>(item.getModel(), "checked"))
 					{
 						@Override
 						protected void onUpdate(AjaxRequestTarget target)

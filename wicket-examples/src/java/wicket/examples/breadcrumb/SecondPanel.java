@@ -36,7 +36,7 @@ import wicket.model.CompoundPropertyModel;
 public class SecondPanel extends BreadCrumbPanel
 {
 	/** Test form. */
-	private final class InputForm extends Form
+	private final class InputForm extends Form<SecondPanel>
 	{
 		/** test input string. */
 		private String input;
@@ -52,7 +52,7 @@ public class SecondPanel extends BreadCrumbPanel
 		public InputForm(MarkupContainer parent, String id)
 		{
 			super(parent, id);
-			setModel(new CompoundPropertyModel(this));
+			setModel(new CompoundPropertyModel<SecondPanel>(this));
 			new TextField(this, "input");
 			new Button(this, "normalButton");
 

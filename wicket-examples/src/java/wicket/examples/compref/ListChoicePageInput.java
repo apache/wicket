@@ -24,11 +24,11 @@ import java.util.List;
 public class ListChoicePageInput implements Serializable
 {
 	/** available sites for selection. */
-	static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+	static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
 			"Java.Net" });
 
 	/** the selected site. */
-	public String site = (String)SITES.get(0);
+	public String site = SITES.get(0);
 
 	/**
 	 * @see java.lang.Object#toString()
