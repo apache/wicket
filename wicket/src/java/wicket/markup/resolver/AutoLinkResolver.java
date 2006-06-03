@@ -198,7 +198,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (queryStringPos != -1)
 			{
 				final String queryString = reference.substring(queryStringPos + 1);
-				pageParameters = new PageParameters(new ValueMap(queryString, "&"));
+				pageParameters = new PageParameters(queryString, "&");
 				infoPath = reference.substring(0, queryStringPos);
 			}
 			else
