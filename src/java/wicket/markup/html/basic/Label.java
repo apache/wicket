@@ -65,12 +65,9 @@ import wicket.model.Model;
  * }
  * </pre>
  * 
- * @param <T>
- *            The type
- * 
  * @author Jonathan Locke
  */
-public class Label<T> extends WebComponent<T>
+public class Label extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 
