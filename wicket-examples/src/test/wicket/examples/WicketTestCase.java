@@ -19,7 +19,9 @@
 package wicket.examples;
 
 import junit.framework.TestCase;
+import wicket.Page;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.diff.DiffUtil;
 
 /**
  * Base class for tests which require comparing wicket response with a file
@@ -51,7 +53,7 @@ public abstract class WicketTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Class pageClass, final String filename) throws Exception
+	protected void executeTest(final Class<? extends Page> pageClass, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 

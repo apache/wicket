@@ -21,12 +21,12 @@ package wicket.examples.displaytag.list;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.examples.DiffUtil;
 import wicket.examples.WicketTestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
 import wicket.settings.IRequestCycleSettings.RenderStrategy;
+import wicket.util.diff.DiffUtil;
 
 
 /**
