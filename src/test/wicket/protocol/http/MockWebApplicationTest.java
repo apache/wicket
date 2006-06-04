@@ -21,7 +21,7 @@ package wicket.protocol.http;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.list.DiffUtil;
+import wicket.util.diff.DiffUtil;
 
 /**
  * Simple application that demonstrates the mock http application code (and
