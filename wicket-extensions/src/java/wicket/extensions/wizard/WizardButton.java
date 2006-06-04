@@ -33,7 +33,7 @@ import wicket.model.ResourceModel;
  * 
  * @author Eelco Hillenius
  */
-public abstract class WizardButton extends Button
+public abstract class WizardButton extends Button<String>
 {
 	/**
 	 * The enclosing wizard.

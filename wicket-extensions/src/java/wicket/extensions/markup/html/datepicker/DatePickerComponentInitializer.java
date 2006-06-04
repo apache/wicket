@@ -36,14 +36,13 @@ import wicket.markup.html.PackageResourceReference;
 public class DatePickerComponentInitializer implements IInitializer
 {
 	/** locale to language map. */
-	private static final Map localeToLanguageReference = new HashMap();
+	private static final Map<String, String> localeToLanguageReference = new HashMap<String, String>();
 
 	static
 	{
-		// fill our default map. Note that new Locale("en", "",
-		// "").getLanguage() is to avoid
-		// future breaks because of the instable standard (read about this in
-		// Locale.getLanguage()
+		// fill our default map. Note that new Locale("en", "","").getLanguage()
+		// is to avoid future breaks because of the instable standard
+		// (read about this in Locale.getLanguage()
 		localeToLanguageReference.put(new Locale("af", "", "").toString(), "lang/calendar-af.js");
 		localeToLanguageReference.put(new Locale("al", "", "").toString(), "lang/calendar-al.js");
 		localeToLanguageReference.put(new Locale("br", "", "").toString(), "lang/calendar-br.js");

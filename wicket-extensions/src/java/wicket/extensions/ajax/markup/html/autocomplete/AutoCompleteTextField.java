@@ -11,97 +11,126 @@ import wicket.model.IModel;
  * 
  * @see AutoCompleteBehavior
  * @see IAutoCompleteRenderer
+ * @param <T>
+ *            The type
  * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AutoCompleteTextField extends TextField
+public abstract class AutoCompleteTextField<T> extends TextField<T>
 {
-
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param parent 
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * @param id
-	 * @param type
-	 */
-	public AutoCompleteTextField(MarkupContainer parent, String id, Class type)
-	{
-		this(parent, id, (IModel)null, type);
-	}
-
-	/**
-	 * @param parent 
-	 * @param id
-	 * @param model
-	 * @param type
-	 */
-	public AutoCompleteTextField(MarkupContainer parent, String id, IModel model, Class type)
-	{
-		this(parent, id, model, type, StringAutoCompleteRenderer.INSTANCE);
-
-	}
-
-	/**
-	 * @param parent 
-	 * @param id
-	 * @param object
-	 */
-	public AutoCompleteTextField(MarkupContainer parent, String id, IModel object)
-	{
-		this(parent, id, object, (Class)null);
-	}
-
-	/**
-	 * @param parent 
-	 * @param id
+	 *            The component id
 	 */
 	public AutoCompleteTextField(MarkupContainer parent, String id)
 	{
-		this(parent, id, (IModel)null);
+		this(parent, id, (IModel<T>)null);
 	}
 
 	/**
-	 * @param parent 
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * @param id
-	 * @param renderer
-	 */
-	public AutoCompleteTextField(MarkupContainer parent, String id, IAutoCompleteRenderer renderer)
-	{
-		this(parent, id, (IModel)null, renderer);
-	}
-
-	/**
-	 * @param parent 
-	 * @param id
+	 *            The component id
 	 * @param type
-	 * @param renderer
+	 *            Type for field validation
 	 */
-	public AutoCompleteTextField(MarkupContainer parent, String id, Class type, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(MarkupContainer parent, String id, Class type)
+	{
+		this(parent, id, (IModel<T>)null, type);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param id
+	 *            The component id
+	 * @param type
+	 *            Type for field validation
+	 * @param renderer
+	 *            does the rendering of the behavior
+	 */
+	public AutoCompleteTextField(MarkupContainer parent, String id, Class type,
+			IAutoCompleteRenderer renderer)
 	{
 		this(parent, id, null, type, renderer);
 	}
 
 	/**
-	 * @param parent 
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * @param id
-	 * @param model
+	 *            The component id
 	 * @param renderer
+	 *            does the rendering of the behavior
 	 */
-	public AutoCompleteTextField(MarkupContainer parent, String id, IModel model, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(MarkupContainer parent, String id, IAutoCompleteRenderer renderer)
 	{
-		this(parent, id, model, (Class)null, renderer);
+		this(parent, id, (IModel<T>)null, renderer);
 	}
 
 	/**
-	 * @param parent 
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
 	 * @param id
+	 *            The component id
 	 * @param model
-	 * @param type
-	 * @param renderer
+	 *            The model
 	 */
-	public AutoCompleteTextField(MarkupContainer parent, String id, IModel model, Class type, IAutoCompleteRenderer renderer)
+	public AutoCompleteTextField(MarkupContainer parent, String id, IModel<T> model)
+	{
+		this(parent, id, model, (Class)null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The model
+	 * @param type
+	 *            Type for field validation
+	 */
+	public AutoCompleteTextField(MarkupContainer parent, String id, IModel<T> model, Class type)
+	{
+		this(parent, id, model, type, StringAutoCompleteRenderer.INSTANCE);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The model
+	 * @param type
+	 *            Type for field validation
+	 * @param renderer
+	 *            does the rendering of the behavior
+	 */
+	public AutoCompleteTextField(MarkupContainer parent, String id, IModel<T> model, Class type,
+			IAutoCompleteRenderer renderer)
 	{
 		super(parent, id, model, type);
 
@@ -121,6 +150,24 @@ public abstract class AutoCompleteTextField extends TextField
 	}
 
 	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The model
+	 * @param renderer
+	 *            does the rendering of the behavior
+	 */
+	public AutoCompleteTextField(MarkupContainer parent, String id, IModel<T> model,
+			IAutoCompleteRenderer renderer)
+	{
+		this(parent, id, model, (Class)null, renderer);
+	}
+
+	/**
 	 * Callback method that should return an iterator over all possible assist
 	 * choice objects. These objects will be passed to the renderer to generate
 	 * output. Usually it is enough to return an iterator over strings.
@@ -132,6 +179,4 @@ public abstract class AutoCompleteTextField extends TextField
 	 * @return iterator ver all possible choice objects
 	 */
 	protected abstract Iterator getChoices(String input);
-
-
 }

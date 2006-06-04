@@ -80,9 +80,6 @@ public class Home extends WicketExamplePage
 			}
 		};
 
-		Label<String> l = new Label<String>(this, "test", "test");
-		String s = l.getModelObject();
-
 		new Label(this, "onClickLinkClickCount", new PropertyModel(this, "onClickLinkClickCount"));
 
 		// Link to Page1 is a simple external page link
@@ -157,7 +154,7 @@ public class Home extends WicketExamplePage
 	/**
 	 * Form that handles a redirect.
 	 */
-	private final class RedirectForm extends Form
+	private final class RedirectForm extends Form<RedirectForm>
 	{
 		/** receives form input. */
 		private String redirectUrl = "http://www.theserverside.com";
@@ -172,7 +169,7 @@ public class Home extends WicketExamplePage
 		public RedirectForm(MarkupContainer parent, String id)
 		{
 			super(parent, id);
-			setModel(new CompoundPropertyModel(this));
+			setModel(new CompoundPropertyModel<RedirectForm>(this));
 			new TextField(this, "redirectUrl");
 		}
 

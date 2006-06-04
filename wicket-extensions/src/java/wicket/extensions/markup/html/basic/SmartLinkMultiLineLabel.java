@@ -50,12 +50,13 @@ public final class SmartLinkMultiLineLabel extends MultiLineLabel
 	 */
 	public SmartLinkMultiLineLabel(MarkupContainer parent, String name, String label)
 	{
-		this(parent, name, new Model(label));
+		this(parent, name, new Model<String>(label));
 	}
 
 	/**
 	 * @see MultiLineLabel#MultiLineLabel(MarkupContainer,String, IModel)
 	 */
+	@SuppressWarnings("unchecked")
 	public SmartLinkMultiLineLabel(MarkupContainer parent, String name, IModel model)
 	{
 		super(parent, name, model);

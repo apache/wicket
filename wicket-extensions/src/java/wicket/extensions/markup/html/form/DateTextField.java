@@ -22,9 +22,8 @@ import wicket.util.convert.converters.DateConverter;
  * user's locale)
  * 
  * @author Stefan Kanev
- * 
  */
-public class DateTextField extends TextField
+public class DateTextField extends TextField<Date>
 {
 
 	private static final long serialVersionUID = 1L;
@@ -56,7 +55,7 @@ public class DateTextField extends TextField
 	 * 
 	 * @see wicket.markup.html.form.TextField#TextField(MarkupContainer, String, IModel)
 	 */
-	public DateTextField(MarkupContainer parent, final String id, IModel object)
+	public DateTextField(MarkupContainer parent, final String id, IModel<Date> object)
 	{
 		super(parent, id, object, Date.class);
 	}
@@ -108,7 +107,7 @@ public class DateTextField extends TextField
 	 * 
 	 * @see wicket.markup.html.form.TextField
 	 */
-	public DateTextField(MarkupContainer parent, final String id, IModel object, String datePattern)
+	public DateTextField(MarkupContainer parent, final String id, IModel<Date> object, String datePattern)
 	{
 		this(parent, id, datePattern);
 		setModel(object);

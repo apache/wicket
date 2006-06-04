@@ -23,6 +23,7 @@ import java.util.Date;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebComponent;
@@ -53,8 +54,8 @@ import wicket.util.string.AppendingStringBuffer;
  * (html)
  * 
  * <pre>
- *          &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
- *          &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
+ *           &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *           &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
  * 
  * </p>
@@ -77,7 +78,32 @@ import wicket.util.string.AppendingStringBuffer;
  */
 public class DatePicker extends Panel
 {
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Outputs the Javascript initialization code.
+	 */
+	private final class InitScript extends WebComponent
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see wicket.Component#Component(MarkupContainer,String)
+		 */
+		public InitScript(MarkupContainer parent, final String id)
+		{
+			super(parent, id);
+		}
+
+		/**
+		 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
+		 *      wicket.markup.ComponentTag)
+		 */
+		@Override
+		protected void onComponentTagBody(final MarkupStream markupStream,
+				final ComponentTag openTag)
+		{
+			replaceComponentTagBody(markupStream, openTag, getInitScript());
+		}
+	}
 
 	/**
 	 * Attribute modifier that modifies/ adds an attribute with value of the
@@ -97,12 +123,12 @@ public class DatePicker extends Panel
 		 */
 		public PathAttributeModifier(String attribute, final Component pathProvider)
 		{
-			super(attribute, true, new Model()
+			super(attribute, true, new Model<String>()
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public Object getObject(Component component)
+				public String getObject(Component component)
 				{
 					// do this lazily, so we know for sure we have the whole
 					// path including the page etc.
@@ -134,12 +160,12 @@ public class DatePicker extends Panel
 		{
 			super(parent, id);
 			add(new PathAttributeModifier("id", this));
-			IModel srcReplacement = new Model()
+			IModel<CharSequence> srcReplacement = new Model<CharSequence>()
 			{
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public Object getObject(Component component)
+				public CharSequence getObject(Component component)
 				{
 					return urlFor(resourceReference);
 				};
@@ -148,43 +174,18 @@ public class DatePicker extends Panel
 		}
 	}
 
-	/**
-	 * Outputs the Javascript initialization code.
-	 */
-	private final class InitScript extends WebComponent
-	{
-		private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-		/**
-		 * @see wicket.Component#Component(MarkupContainer,String)
-		 */
-		public InitScript(MarkupContainer parent, final String id)
-		{
-			super(parent, id);
-		}
+	private DateConverter dateConverter;
 
-		/**
-		 * @see wicket.Component#onComponentTagBody(wicket.markup.MarkupStream,
-		 *      wicket.markup.ComponentTag)
-		 */
-		@Override
-		protected void onComponentTagBody(final MarkupStream markupStream,
-				final ComponentTag openTag)
-		{
-			replaceComponentTagBody(markupStream, openTag, getInitScript());
-		}
-	}
+	/** settings for the javascript datepicker component. */
+	private final DatePickerSettings settings;
 
 	/** the receiving component. */
 	private final Component target;
 
 	/** the button that triggers the popup. */
 	private TriggerButton triggerButton;
-
-	/** settings for the javascript datepicker component. */
-	private final DatePickerSettings settings;
-
-	private DateConverter dateConverter;
 
 	/**
 	 * Construct with a default button and style.
@@ -216,24 +217,6 @@ public class DatePicker extends Panel
 	public DatePicker(MarkupContainer parent, final String id, Component label, Component target)
 	{
 		this(parent, id, label, target, new DatePickerSettings());
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param parent
-	 *            The parent of this component The parent of this component.
-	 * @param id
-	 *            the component id
-	 * @param target
-	 *            the receiving component
-	 * @param settings
-	 *            datepicker properties
-	 */
-	public DatePicker(MarkupContainer parent, final String id, final Component target,
-			final DatePickerSettings settings)
-	{
-		this(parent, id, null, target, settings);
 	}
 
 	/**
@@ -279,17 +262,35 @@ public class DatePicker extends Panel
 		new InitScript(this, "script");
 		new JavaScriptReference(this, "calendarMain", DatePicker.class, "calendar.js");
 		new JavaScriptReference(this, "calendarSetup", DatePicker.class, "calendar-setup.js");
-		new JavaScriptReference(this, "calendarLanguage", new Model()
+		new JavaScriptReference(this, "calendarLanguage", new Model<ResourceReference>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public ResourceReference getObject(Component component)
 			{
 				return settings.getLanguage(DatePicker.this.getLocale());
 			}
 		});
 		new StyleSheetReference(this, "calendarStyle", settings.getStyle());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
+	 * @param id
+	 *            the component id
+	 * @param target
+	 *            the receiving component
+	 * @param settings
+	 *            datepicker properties
+	 */
+	public DatePicker(MarkupContainer parent, final String id, final Component target,
+			final DatePickerSettings settings)
+	{
+		this(parent, id, null, target, settings);
 	}
 
 	/**

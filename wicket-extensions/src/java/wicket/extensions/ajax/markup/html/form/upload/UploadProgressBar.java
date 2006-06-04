@@ -15,60 +15,12 @@ import wicket.markup.html.resources.JavaScriptReference;
 import wicket.model.Model;
 
 /**
- * ProgressbarPanel
+ * ProgressbarPanel.
  * 
  * @author Andrew Lombardi
  */
 public class UploadProgressBar extends Panel
 {
-
-	private static final String RESOURCE_NAME = UploadProgressBar.class.getName();
-
-	private static final long serialVersionUID = 1L;
-
-	private static final PackageResourceReference JS_PROGRESSBAR = new PackageResourceReference(
-			UploadProgressBar.class, "progressbar.js");
-
-	/**
-	 * @see wicket.Component#Component(MarkupContainer,String)
-	 */
-	public UploadProgressBar(MarkupContainer parent, final String id, final Form form)
-	{
-		super(parent, id);
-		setOutputMarkupId(true);
-		form.setOutputMarkupId(true);
-		setRenderBodyOnly(true);
-
-		new JavaScriptReference(this, "javascript", JS_PROGRESSBAR);
-
-
-		final WebMarkupContainer barDiv = new WebMarkupContainer(this, "bar");
-		barDiv.setOutputMarkupId(true);
-
-		final WebMarkupContainer statusDiv = new WebMarkupContainer(this, "status");
-		statusDiv.setOutputMarkupId(true);
-
-		form.add(new AttributeModifier("onsubmit", true, new Model()
-		{
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-
-			@Override
-			public Object getObject(Component component)
-			{
-				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
-
-				return "var def=new wupb.Def('" + form.getMarkupId() + "', '"
-						+ statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '"
-						+ getPage().urlFor(ref) + "'); wupb.start(def);";
-			}
-		}));
-	}
-
 	/**
 	 * Initializer for this component; binds static resources.
 	 */
@@ -86,4 +38,44 @@ public class UploadProgressBar extends Panel
 		}
 	}
 
+	private static final PackageResourceReference JS_PROGRESSBAR = new PackageResourceReference(
+			UploadProgressBar.class, "progressbar.js");
+
+	private static final String RESOURCE_NAME = UploadProgressBar.class.getName();
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see wicket.Component#Component(MarkupContainer,String)
+	 */
+	public UploadProgressBar(MarkupContainer parent, final String id, final Form form)
+	{
+		super(parent, id);
+		setOutputMarkupId(true);
+		form.setOutputMarkupId(true);
+		setRenderBodyOnly(true);
+
+		new JavaScriptReference(this, "javascript", JS_PROGRESSBAR);
+
+		final WebMarkupContainer barDiv = new WebMarkupContainer(this, "bar");
+		barDiv.setOutputMarkupId(true);
+
+		final WebMarkupContainer statusDiv = new WebMarkupContainer(this, "status");
+		statusDiv.setOutputMarkupId(true);
+
+		form.add(new AttributeModifier("onsubmit", true, new Model<String>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String getObject(Component component)
+			{
+				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
+
+				return "var def=new wupb.Def('" + form.getMarkupId() + "', '"
+						+ statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '"
+						+ getPage().urlFor(ref) + "'); wupb.start(def);";
+			}
+		}));
+	}
 }
