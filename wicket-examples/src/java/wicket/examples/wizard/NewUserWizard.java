@@ -19,6 +19,7 @@
 package wicket.examples.wizard;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import wicket.MarkupContainer;
@@ -28,9 +29,12 @@ import wicket.extensions.wizard.WizardModel;
 import wicket.extensions.wizard.WizardStep;
 import wicket.extensions.wizard.WizardModel.ICondition;
 import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.AbstractFormValidator;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
@@ -48,7 +52,7 @@ import wicket.model.StringResourceModel;
  * 
  * @author Eelco Hillenius
  */
-public class NewUserWizard extends Wizard
+public class NewUserWizard extends Wizard<NewUserWizard>
 {
 	/**
 	 * The confirmation step.
@@ -71,7 +75,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * The user details step.
 	 */
-	private final class UserDetailsStep extends WizardStep
+	private final class UserDetailsStep extends WizardStep<User>
 	{
 		/**
 		 * Construct.
@@ -99,7 +103,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * The user name step.
 	 */
-	private final class UserNameStep extends WizardStep
+	private final class UserNameStep extends WizardStep<User>
 	{
 		/**
 		 * Construct.
@@ -124,7 +128,7 @@ public class NewUserWizard extends Wizard
 	/**
 	 * The user details step.
 	 */
-	private final class UserRolesStep extends WizardStep implements ICondition
+	private final class UserRolesStep extends WizardStep<User> implements ICondition
 	{
 		/**
 		 * Construct.
@@ -150,7 +154,32 @@ public class NewUserWizard extends Wizard
 		@Override
 		protected void populate(Panel contentPanel)
 		{
-			new ListMultipleChoice<String>(contentPanel, "user.roles", allRoles);
+			final ListMultipleChoice rolesChoiceField = new ListMultipleChoice<String>(
+					contentPanel, "user.roles", allRoles);
+			final TextField<String> rolesSetNameField = new TextField<String>(contentPanel,
+					"user.rolesSetName");
+			add(new AbstractFormValidator()
+			{
+				public FormComponent[] getDependentFormComponents()
+				{
+					// name and roles don't have anything to validate,
+					// so might as well just skip them here
+					return null;
+				}
+
+				public void validate(Form form)
+				{
+					String rolesInput = rolesChoiceField.getInput();
+					if (rolesInput != null && (!"".equals(rolesInput)))
+					{
+						if ("".equals(rolesSetNameField.getInput()))
+						{
+							rolesSetNameField.error(Collections
+									.singletonList("error.noSetNameForRoles"), null);
+						}
+					}
+				}
+			});
 		}
 	}
 
@@ -179,7 +208,7 @@ public class NewUserWizard extends Wizard
 		// create a blank user
 		user = new User();
 
-		setModel(new CompoundPropertyModel(this));
+		setModel(new CompoundPropertyModel<NewUserWizard>(this));
 		WizardModel model = new WizardModel();
 		model.add(new UserNameStep());
 		model.add(new UserDetailsStep());

@@ -35,7 +35,9 @@ public final class User implements Serializable
 	private String firstName;
 	private String lastName;
 
-	private Set roles = new HashSet();
+	private Set<String> roles = new HashSet<String>();
+
+	private String rolesSetName;
 
 	private String userName;
 
@@ -84,9 +86,19 @@ public final class User implements Serializable
 	 * 
 	 * @return roles
 	 */
-	public Set getRoles()
+	public Set<String> getRoles()
 	{
 		return roles;
+	}
+
+	/**
+	 * Gets rolesSetName.
+	 * 
+	 * @return rolesSetName
+	 */
+	public String getRolesSetName()
+	{
+		return rolesSetName;
 	}
 
 	/**
@@ -153,9 +165,20 @@ public final class User implements Serializable
 	 * @param roles
 	 *            roles
 	 */
-	public void setRoles(Set roles)
+	public void setRoles(Set<String> roles)
 	{
 		this.roles = roles;
+	}
+
+	/**
+	 * Sets rolesSetName.
+	 * 
+	 * @param rolesSetName
+	 *            rolesSetName
+	 */
+	public void setRolesSetName(String rolesSetName)
+	{
+		this.rolesSetName = rolesSetName;
 	}
 
 	/**

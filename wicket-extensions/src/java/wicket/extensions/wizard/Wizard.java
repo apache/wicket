@@ -51,9 +51,12 @@ import wicket.markup.html.panel.Panel;
  * functionality provided in this package, you can provde a custom wizard
  * </p>
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Eelco Hillenius
  */
-public class Wizard extends Panel implements IWizardModelListener, IWizard
+public class Wizard<T> extends Panel<T> implements IWizardModelListener, IWizard
 {
 	/**
 	 * Initializer for this component; binds static resources.
@@ -217,6 +220,17 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
+	 * Gets the form in which the view is nested, and on which the wizard
+	 * buttons work.
+	 * 
+	 * @return The wizard form
+	 */
+	public final Form getForm()
+	{
+		return form;
+	}
+
+	/**
 	 * @see wicket.extensions.wizard.IWizard#getWizardModel()
 	 */
 	public final IWizardModel getWizardModel()
@@ -246,6 +260,20 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		this.activeStep = newStep;
 		activeStep.getView(form, VIEW_ID, this).reAttach();
 		activeStep.getHeader(form, HEADER_ID, this).reAttach();
+	}
+
+	/**
+	 * Called when the wizard is cancelled.
+	 */
+	public void onCancel()
+	{
+	};
+
+	/**
+	 * Called when the wizard is finished.
+	 */
+	public void onFinish()
+	{
 	}
 
 	/**
@@ -285,7 +313,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		// reset model to prepare for action
 		wizardModel.reset();
-	};
+	}
 
 	/**
 	 * Create a new button bar. Clients can override this method to provide a
@@ -335,19 +363,5 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		// return a dummy component by default as we don't have an overview
 		// component
 		return new WebMarkupContainer(parent, id).setVisible(false);
-	}
-
-	/**
-	 * Called when the wizard is cancelled.
-	 */
-	public void onCancel()
-	{
-	}
-
-	/**
-	 * Called when the wizard is finished.
-	 */
-	public void onFinish()
-	{
 	}
 }

@@ -19,11 +19,19 @@
 package wicket.extensions.wizard;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.MarkupResourceStreamLookupResult;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.IFormValidator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.CompoundPropertyModel;
@@ -56,18 +64,18 @@ import wicket.util.string.Strings;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *                        &lt;wicket:panel&gt;
- *                         &lt;table&gt;
- *                          &lt;tr&gt;
- *                           &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *                          &lt;/tr&gt;
- *                          &lt;tr&gt;
- *                           &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *                          &lt;/tr&gt;
- *                         &lt;/table&gt;
- *                        &lt;/wicket:panel&gt;
+ *                          &lt;wicket:panel&gt;
+ *                           &lt;table&gt;
+ *                            &lt;tr&gt;
+ *                             &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *                             &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *                            &lt;/tr&gt;
+ *                            &lt;tr&gt;
+ *                             &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *                             &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *                            &lt;/tr&gt;
+ *                           &lt;/table&gt;
+ *                          &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
@@ -79,10 +87,29 @@ import wicket.util.string.Strings;
  */
 public class WizardStep<T> implements IWizardStep
 {
+
+	/**
+	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know
+	 * at construction time from then.
+	 */
+	private final class AddFormValidatorAction
+	{
+		/**
+		 * Wrapper for any form validators.
+		 */
+		final FormValidatorWrapper formValidatorWrapper = new FormValidatorWrapper();
+
+		void execute()
+		{
+			Form form = (Form)content.findParent(Form.class);
+			form.add(formValidatorWrapper);
+		}
+	}
+
 	/**
 	 * Content panel.
 	 */
-	private final class Content extends Panel
+	private final class Content extends Panel<Object>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -106,6 +133,92 @@ public class WizardStep<T> implements IWizardStep
 		public MarkupResourceStreamLookupResult newMarkupResourceStream(final Class containerClass)
 		{
 			return WizardStep.this.newMarkupResourceStream(containerClass);
+		}
+
+		/**
+		 * Workaround for adding the form validators; not needed in 2.0.
+		 * 
+		 * @see wicket.Component#onAttach()
+		 */
+		protected void onAttach()
+		{
+			if (onAttachAction != null)
+			{
+				onAttachAction.execute();
+				onAttachAction = null;
+			}
+		}
+	}
+
+	/**
+	 * Wraps form validators for this step such that they are only executed when
+	 * this step is active.
+	 */
+	private final class FormValidatorWrapper implements IFormValidator
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		private final List<IFormValidator> validators = new ArrayList<IFormValidator>();
+
+		/**
+		 * Adds a form validator.
+		 * 
+		 * @param validator
+		 *            The validator to add
+		 */
+		public final void add(IFormValidator validator)
+		{
+			validators.add(validator);
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
+		 */
+		public FormComponent[] getDependentFormComponents()
+		{
+			if (isActiveStep())
+			{
+				Set<FormComponent> components = new HashSet<FormComponent>();
+				for (Iterator i = validators.iterator(); i.hasNext();)
+				{
+					IFormValidator v = (IFormValidator)i.next();
+					FormComponent[] dependentComponents = v.getDependentFormComponents();
+					if (dependentComponents != null)
+					{
+						int len = dependentComponents.length;
+						for (int j = 0; j < len; j++)
+						{
+							components.add(dependentComponents[j]);
+						}
+					}
+				}
+				return components.toArray(new FormComponent[components.size()]);
+			}
+			return null;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.IFormValidator#validate(wicket.markup.html.form.Form)
+		 */
+		public void validate(Form form)
+		{
+			if (isActiveStep())
+			{
+				for (Iterator i = validators.iterator(); i.hasNext();)
+				{
+					IFormValidator v = (IFormValidator)i.next();
+					v.validate(form);
+				}
+			}
+		}
+
+		/**
+		 * @return whether the step this wrapper is part of is the current step
+		 */
+		private final boolean isActiveStep()
+		{
+			return (wizardModel.getActiveStep().equals(WizardStep.this));
 		}
 	}
 
@@ -169,6 +282,8 @@ public class WizardStep<T> implements IWizardStep
 	 */
 	private IModel<T> model;
 
+	private transient AddFormValidatorAction onAttachAction;
+
 	/**
 	 * A summary of this step, or some usage advice.
 	 */
@@ -178,6 +293,11 @@ public class WizardStep<T> implements IWizardStep
 	 * The title of this step.
 	 */
 	private IModel<String> title;
+
+	/**
+	 * The wizard model.
+	 */
+	private IWizardModel wizardModel;
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a
@@ -250,9 +370,23 @@ public class WizardStep<T> implements IWizardStep
 	 * @param model
 	 *            Any model which is to be used for this step
 	 */
-	public WizardStep(String title, String summary, IModel model)
+	public WizardStep(String title, String summary, IModel<T> model)
 	{
-		this(new Model<String>(title), new Model<String>(summary), null);
+		this(new Model<String>(title), new Model<String>(summary), model);
+	}
+
+	/**
+	 * Adds a form validator.
+	 * 
+	 * @param validator
+	 */
+	public final void add(IFormValidator validator)
+	{
+		if (onAttachAction == null)
+		{
+			onAttachAction = new AddFormValidatorAction();
+		}
+		onAttachAction.formValidatorWrapper.add(validator);
 	}
 
 	/**
@@ -309,14 +443,16 @@ public class WizardStep<T> implements IWizardStep
 
 	/**
 	 * Called to initialize the step. This method will be called when the wizard
-	 * is first initialising. This implementation does nothing; override when
-	 * you need to do specific work when the step initializes
+	 * is first initialising. This method sets the wizard model and then calls
+	 * template method {@link #onInit(IWizardModel)}
 	 * 
-	 * @param model
+	 * @param wizardModel
 	 *            the model to which the step belongs.
 	 */
-	public void init(IWizardModel model)
+	public final void init(IWizardModel wizardModel)
 	{
+		this.wizardModel = wizardModel;
+		onInit(wizardModel);
 	}
 
 	/**
@@ -328,7 +464,7 @@ public class WizardStep<T> implements IWizardStep
 	 *         <tt>false</tt> otherwise.
 	 * @see #setComplete
 	 */
-	public final boolean isComplete()
+	public boolean isComplete()
 	{
 		return complete;
 	}
@@ -342,7 +478,7 @@ public class WizardStep<T> implements IWizardStep
 	 *            otherwise.
 	 * @see #isComplete
 	 */
-	public final void setComplete(boolean complete)
+	public void setComplete(boolean complete)
 	{
 		this.complete = complete;
 	}
@@ -353,7 +489,7 @@ public class WizardStep<T> implements IWizardStep
 	 * @param summary
 	 *            summary
 	 */
-	public final void setSummaryModel(IModel<String> summary)
+	public void setSummaryModel(IModel<String> summary)
 	{
 		this.summary = summary;
 	}
@@ -364,7 +500,7 @@ public class WizardStep<T> implements IWizardStep
 	 * @param title
 	 *            title
 	 */
-	public final void setTitleModel(IModel<String> title)
+	public void setTitleModel(IModel<String> title)
 	{
 		this.title = title;
 	}
@@ -382,6 +518,15 @@ public class WizardStep<T> implements IWizardStep
 	protected MarkupResourceStreamLookupResult newMarkupResourceStream(final Class containerClass)
 	{
 		return newMarkupResourceStream(getClass(), containerClass);
+	}
+
+	/**
+	 * Called when the step is being initialized.
+	 * 
+	 * @param wizardModel
+	 */
+	protected void onInit(IWizardModel wizardModel)
+	{
 	}
 
 	/**
