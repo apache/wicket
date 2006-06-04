@@ -21,13 +21,20 @@ package wicket.util.tester.apps_5;
 import wicket.Page;
 import wicket.util.tester.WicketTester;
 
+/**
+ * 
+ */
 public class AppTester extends WicketTester
 {
+	/**
+	 * Construct.
+	 */
 	public AppTester()
 	{
 		super("/admin");
 	}
 
+	@Override
 	public void init()
 	{
 		super.init();

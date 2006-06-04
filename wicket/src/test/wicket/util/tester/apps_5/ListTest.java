@@ -20,13 +20,23 @@ package wicket.util.tester.apps_5;
 
 import junit.framework.TestCase;
 
+/**
+ * @author janne
+ */
 public class ListTest extends TestCase
 {
+	/**
+	 * Construct.
+	 * @param name
+	 */
 	public ListTest(String name)
 	{
 		super(name);
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public void test1() throws Exception
 	{
 		AppTester tester = new AppTester();
