@@ -55,6 +55,7 @@ public class PagedTableNavigatorTest extends TestCase
 	 * 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public void testPagedTable() throws Exception
 	{
 		MockWebApplication application = new MockWebApplication(null);

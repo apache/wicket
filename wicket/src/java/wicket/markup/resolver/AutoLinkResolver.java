@@ -43,7 +43,6 @@ import wicket.markup.html.link.ExternalLink;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.util.lang.Packages;
 import wicket.util.string.Strings;
-import wicket.util.value.ValueMap;
 
 /**
  * The AutoLinkResolver is responsible to handle automatic link resolution. Tags
