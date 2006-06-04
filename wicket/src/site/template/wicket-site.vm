@@ -315,6 +315,7 @@
 			#publishDate( "navigation-bottom" $decoration.publishDate $decoration.version )
 			<p></p>
 			<a href="http://www.sourceforge.net" target="_blank"class="logoLink"><img alt="SourceForge.net" src="http://sourceforge.net/sflogo.php?group_id=119783&amp;type=1" /></a>
+			<p></p>
 		</div>
     </div>
     <div id="bodyColumn">
