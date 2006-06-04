@@ -22,6 +22,7 @@ public final class StringAutoCompleteRenderer extends AbstractAutoCompleteTextRe
 	/**
 	 * @see AbstractAutoCompleteTextRenderer#getTextValue(Object)
 	 */
+	@Override
 	protected String getTextValue(Object object)
 	{
 		return object.toString();

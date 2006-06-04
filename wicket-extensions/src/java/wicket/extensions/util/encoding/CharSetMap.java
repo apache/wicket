@@ -65,7 +65,7 @@ public final class CharSetMap
 	/**
 	 * A common charset mapper for languages.
 	 */
-	private static final Map commonMapper = new HashMap();
+	private static final Map<String,String> commonMapper = new HashMap<String,String>();
 
 	static
 	{

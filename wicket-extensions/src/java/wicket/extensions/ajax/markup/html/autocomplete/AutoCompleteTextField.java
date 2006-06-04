@@ -110,6 +110,7 @@ public abstract class AutoCompleteTextField extends TextField
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Iterator getChoices(String input)
 			{
 				return AutoCompleteTextField.this.getChoices(input);

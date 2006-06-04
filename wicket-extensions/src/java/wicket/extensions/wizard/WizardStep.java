@@ -140,6 +140,7 @@ public class WizardStep<T> implements IWizardStep
 		 * 
 		 * @see wicket.Component#onAttach()
 		 */
+		@Override
 		protected void onAttach()
 		{
 			if (onAttachAction != null)

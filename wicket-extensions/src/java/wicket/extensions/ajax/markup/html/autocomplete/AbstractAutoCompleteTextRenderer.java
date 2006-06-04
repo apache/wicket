@@ -15,6 +15,7 @@ public abstract class AbstractAutoCompleteTextRenderer extends AbstractAutoCompl
 	/**
 	 * @see AbstractAutoCompleteRenderer#renderChoice(Object, Response, String)
 	 */
+	@Override
 	protected void renderChoice(Object object, Response response, String criteria)
 	{
 		response.write(getTextValue(object));

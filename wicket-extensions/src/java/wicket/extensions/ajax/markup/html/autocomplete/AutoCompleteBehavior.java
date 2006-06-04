@@ -40,6 +40,7 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 	}
 
 
+	@Override
 	protected final void onRequest(final String val, RequestCycle requestCycle)
 	{
 		IRequestTarget target = new IRequestTarget()

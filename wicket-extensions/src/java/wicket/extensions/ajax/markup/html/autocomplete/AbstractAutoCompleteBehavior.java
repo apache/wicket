@@ -22,16 +22,19 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	protected String getImplementationId()
 	{
 	    return "wicket-default-autocomplete";
 	}
 
+	@Override
 	protected void onBind()
 	{
 		getComponent().setOutputMarkupId(true);
 	}
 
+	@Override
 	protected void onRenderHeadInitContribution(Response response)
 	{
 	    super.onRenderHeadInitContribution(response);
@@ -39,6 +42,7 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 	    writeJsReference(response, AUTOCOMPLETE_JS);
 	}
 
+	@Override
 	protected void onComponentRendered()
 	{
 		Response response=getComponent().getResponse();
