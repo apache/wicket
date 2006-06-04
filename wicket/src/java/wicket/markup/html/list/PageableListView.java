@@ -31,7 +31,7 @@ import wicket.version.undo.Change;
  * re-ordered and deleted, either one at a time or many at a time.
  * 
  * @param <T>
- *            The type
+ *            The type of the list elements
  * 
  * @author Jonathan Locke
  */

@@ -400,7 +400,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *            Separator to use between radio options
 	 * @return this
 	 */
-	public final RadioChoice setSuffix(String suffix)
+	public final RadioChoice<T> setSuffix(String suffix)
 	{
 		// Tell the page that this component's suffix was changed
 		final Page page = findPage();
