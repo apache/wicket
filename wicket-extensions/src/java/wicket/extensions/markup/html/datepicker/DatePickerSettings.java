@@ -1,10 +1,11 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: Add.java 5883 2006-05-26 10:12:48Z joco01 $ $Revision: 5883 $ $Date:
+ * 2006-05-26 00:46:21 +0200 (vr, 26 mei 2006) $
  * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 

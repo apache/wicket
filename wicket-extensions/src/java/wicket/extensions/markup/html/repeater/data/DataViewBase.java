@@ -38,7 +38,6 @@ import wicket.markup.html.navigation.paging.IPageable;
  * @see RefreshingView
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class DataViewBase extends AbstractPageableView
 {

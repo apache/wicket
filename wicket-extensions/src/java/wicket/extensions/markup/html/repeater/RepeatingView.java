@@ -58,14 +58,13 @@ import wicket.model.IModel;
  *          &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
- * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
+ *            Type of model object this component holds
  * 
+ * @author Igor Vaynberg ( ivaynberg )
  */
-public class RepeatingView extends WebMarkupContainer
+public class RepeatingView<T> extends WebMarkupContainer<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/** Counter used for generating unique child component ids. */
@@ -78,7 +77,7 @@ public class RepeatingView extends WebMarkupContainer
 	}
 
 	/** @see Component#Component(MarkupContainer,String, IModel) */
-	public RepeatingView(MarkupContainer parent, final String id, IModel model)
+	public RepeatingView(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}
@@ -159,5 +158,4 @@ public class RepeatingView extends WebMarkupContainer
 	{
 		child.render(getMarkupStream());
 	}
-
 }

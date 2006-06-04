@@ -35,9 +35,12 @@ import wicket.util.lang.Objects;
  * 
  * @see Select
  * 
+ * @param <T>
+ *            Type of model object this component holds
+ *            
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  */
-public class SelectOption extends WebMarkupContainer
+public class SelectOption<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,11 +56,10 @@ public class SelectOption extends WebMarkupContainer
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
 	 *      IModel)
 	 */
-	public SelectOption(MarkupContainer parent, final String id, IModel model)
+	public SelectOption(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}
-
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
@@ -67,7 +69,6 @@ public class SelectOption extends WebMarkupContainer
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
-
 		// must be attached to <option .../> tag
 		checkComponentTag(tag, "option");
 
@@ -90,11 +91,9 @@ public class SelectOption extends WebMarkupContainer
 
 		boolean isSelected = false;
 
-		Object value = getModelObject();
-
-		if (selected != null && selected instanceof Collection)
+		T value = getModelObject();
+		if ((selected != null) && (selected instanceof Collection))
 		{
-
 			if (value instanceof Collection)
 			{
 				isSelected = selected.equals(value);
@@ -117,6 +116,4 @@ public class SelectOption extends WebMarkupContainer
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
-
-
 }

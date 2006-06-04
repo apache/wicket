@@ -15,7 +15,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package wicket.extensions.markup.html.form.palette.component;
 
 import java.util.Iterator;

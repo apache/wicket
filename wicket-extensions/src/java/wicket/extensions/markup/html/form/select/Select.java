@@ -109,7 +109,6 @@ public class Select extends FormComponent
 			for (String element : paths)
 			{
 				String path = element;
-
 				if (path != null)
 				{
 					/*
@@ -117,12 +116,10 @@ public class Select extends FormComponent
 					 * relative path from group to option since we know the
 					 * option is child of select
 					 */
-
 					path = path.substring(getPath().length() + 1);
 
 					// retrieve the selected checkbox component
 					SelectOption option = (SelectOption)get(path);
-
 					if (option == null)
 					{
 						throw new WicketRuntimeException(

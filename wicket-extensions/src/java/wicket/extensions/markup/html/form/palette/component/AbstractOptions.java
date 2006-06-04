@@ -33,17 +33,14 @@ import wicket.util.value.ValueMap;
  * Generats html option elements based on iterator specified by
  * getOptionsIterator() and IChoiceRender specified by the palette
  * 
- * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
+ *            Type of model object this component holds
  * 
+ * @author Igor Vaynberg ( ivaynberg )
  */
-public abstract class AbstractOptions extends FormComponent
+public abstract class AbstractOptions<T> extends FormComponent<T>
 {
 	private Palette palette;
-
-	protected Palette getPalette()
-	{
-		return palette;
-	}
 
 	/**
 	 * @param parent
@@ -57,6 +54,11 @@ public abstract class AbstractOptions extends FormComponent
 	{
 		super(parent, id);
 		this.palette = palette;
+	}
+
+	protected Palette getPalette()
+	{
+		return palette;
 	}
 
 	protected abstract Iterator getOptionsIterator();
@@ -92,13 +94,11 @@ public abstract class AbstractOptions extends FormComponent
 		checkComponentTag(tag, "select");
 
 		super.onComponentTag(tag);
+		
 		ValueMap attrs = tag.getAttributes();
-
 		attrs.put("multiple", null);
 		attrs.put("size", new Integer(getPalette().getRows()));
-
 		attrs.put("id", getPath());
-
 	}
 
 	/**
@@ -108,5 +108,4 @@ public abstract class AbstractOptions extends FormComponent
 	public void updateModel()
 	{
 	}
-
 }

@@ -1,7 +1,23 @@
+/*
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 00:46:21 +0200 (vr, 26 mei 2006) $
+ * 
+ * ==============================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package wicket.extensions.markup.html.form.select;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
@@ -15,14 +31,18 @@ import wicket.model.Model;
 /**
  * Component that makes it easy to produce a list of SelectOption components
  * 
- * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            Type of the collection objects
  * 
+ * @author Igor Vaynberg (ivaynberg)
  */
-public class SelectOptions extends RepeatingView
+public class SelectOptions<T> extends RepeatingView<Collection<T>>
 {
 	private static final long serialVersionUID = 1L;
+	
 	private boolean recreateChoices = false;
-	private IOptionRenderer renderer;
+	
+	private IOptionRenderer<T> renderer;
 
 	/**
 	 * Constructor
@@ -33,10 +53,11 @@ public class SelectOptions extends RepeatingView
 	 * @param model
 	 * @param renderer
 	 */
-	public SelectOptions(MarkupContainer parent, final String id, IModel model,
-			IOptionRenderer renderer)
+	public SelectOptions(MarkupContainer parent, final String id, IModel<Collection<T>> model,
+			IOptionRenderer<T> renderer)
 	{
 		super(parent, id, model);
+		
 		this.renderer = renderer;
 		setRenderBodyOnly(true);
 	}
@@ -50,10 +71,10 @@ public class SelectOptions extends RepeatingView
 	 * @param elements
 	 * @param renderer
 	 */
-	public SelectOptions(MarkupContainer parent, final String id, Collection elements,
-			IOptionRenderer renderer)
+	public SelectOptions(MarkupContainer parent, final String id, Collection<T> elements,
+			IOptionRenderer<T> renderer)
 	{
-		this(parent, id, new Model(elements), renderer);
+		this(parent, id, new Model<Collection<T>>(elements), renderer);
 	}
 
 	/**
@@ -76,7 +97,7 @@ public class SelectOptions extends RepeatingView
 			// populate this repeating view with SelectOption components
 			removeAll();
 
-			Object modelObject = getModelObject();
+			Collection<T> modelObject = getModelObject();
 
 			if (modelObject != null)
 			{
@@ -87,26 +108,24 @@ public class SelectOptions extends RepeatingView
 				}
 
 				// iterator over model objects for SelectOption components
-				Iterator it = ((Collection)modelObject).iterator();
-
-				while (it.hasNext())
+				for (T value : modelObject)
 				{
 					// we need a container to represent a row in repeater
 					WebMarkupContainer row = new WebMarkupContainer(this, newChildId());
 					row.setRenderBodyOnly(true);
 
 					// we add our actual SelectOption component to the row
-					Object value = it.next();
 					String text = renderer.getDisplayValue(value);
-					IModel model = renderer.getModel(value);
-					new SimpleSelectOption(row, "option", model, text);
+					IModel<T> model = renderer.getModel(value);
+					new SimpleSelectOption<T>(row, "option", model, text);
 				}
 			}
 		}
 	}
 
-	private static class SimpleSelectOption extends SelectOption
+	private static class SimpleSelectOption<T> extends SelectOption<T>
 	{
+		private static final long serialVersionUID = 1L;
 
 		private String text;
 
@@ -117,7 +136,7 @@ public class SelectOptions extends RepeatingView
 		 * @param model
 		 * @param text
 		 */
-		public SimpleSelectOption(MarkupContainer parent, final String id, IModel model, String text)
+		public SimpleSelectOption(MarkupContainer parent, final String id, IModel<T> model, String text)
 		{
 			super(parent, id, model);
 			this.text = text;
@@ -128,10 +147,5 @@ public class SelectOptions extends RepeatingView
 		{
 			replaceComponentTagBody(markupStream, openTag, text);
 		}
-
-
-		private static final long serialVersionUID = 1L;
-
-
 	}
 }

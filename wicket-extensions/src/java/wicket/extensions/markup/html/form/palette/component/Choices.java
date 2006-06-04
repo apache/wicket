@@ -48,7 +48,6 @@ public class Choices extends AbstractOptions
 		super(parent, id, palette);
 	}
 
-
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
@@ -68,5 +67,4 @@ public class Choices extends AbstractOptions
 	{
 		return getPalette().getUnselectedChoices();
 	}
-
 }

@@ -46,10 +46,8 @@ import wicket.version.undo.Change;
  * @see wicket.markup.html.navigation.paging.IPageable
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public abstract class AbstractPageableView extends RefreshingView implements IPageable
-
 {
 	/**
 	 * Keeps track of the number of items we show per page. The default is

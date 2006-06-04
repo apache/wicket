@@ -18,18 +18,15 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 
-
 /**
  * Label that provides Showing x to y of z message given for a DataTable
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class NavigatorLabel extends Label
 {

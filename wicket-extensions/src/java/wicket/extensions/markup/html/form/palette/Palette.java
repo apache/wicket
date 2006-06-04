@@ -35,24 +35,29 @@ import wicket.markup.html.image.Image;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.AppendingStringBuffer;
 
 /**
  * Palette is a component that allows the user to easily select and order
  * multiple items by moving them from one select box into another.
  * 
- * @author Igor Vaynberg ( ivaynberg )
+ * @param <T>
+ *            Type of model object this component holds
+ * @param <E>
+ *            Type of choices model object 
  * 
+ * @author Igor Vaynberg ( ivaynberg )
  */
-public class Palette extends Panel
+public class Palette<T, E> extends Panel<Collection<T>>
 {
+	private static final long serialVersionUID = 1L;
+
 	private static final String SELECTED_HEADER_ID = "selectedHeader";
 
 	private static final String AVAILABLE_HEADER_ID = "availableHeader";
 
-	private static final long serialVersionUID = 1L;
-
 	/** collection containing all available choices */
-	private IModel choicesModel;
+	private IModel<E> choicesModel;
 
 	/**
 	 * choice render used to render the choices in both available and selected
@@ -118,7 +123,7 @@ public class Palette extends Panel
 	 * @param allowOrder
 	 *            allow user to move selections up and down
 	 */
-	public Palette(MarkupContainer parent, final String id, IModel model, IModel choicesModel,
+	public Palette(MarkupContainer parent, final String id, IModel<Collection<T>> model, IModel<E> choicesModel,
 			IChoiceRenderer choiceRenderer, int rows, boolean allowOrder)
 	{
 		super(parent, id, model);
@@ -126,12 +131,10 @@ public class Palette extends Panel
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
+		
 		recorderComponent = newRecorderComponent();
-
 		choicesComponent = newChoicesComponent();
-
 		selectionComponent = newSelectionComponent();
-
 
 		newAddComponent();
 		newRemoveComponent();
@@ -150,12 +153,12 @@ public class Palette extends Panel
 	 */
 	private void addJavascript()
 	{
-		IModel srcReplacement = new Model()
+		IModel<CharSequence> srcReplacement = new Model<CharSequence>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public CharSequence getObject(Component component)
 			{
 				return urlFor(javascript);
 			};
@@ -163,7 +166,6 @@ public class Palette extends Panel
 		WebMarkupContainer javascript = new WebMarkupContainer(this, "javascript");
 		javascript.add(new AttributeModifier("src", true, srcReplacement));
 	}
-
 
 	/**
 	 * @return iterator over selected choices
@@ -180,7 +182,6 @@ public class Palette extends Panel
 	{
 		return getRecorderComponent().getUnselectedChoices();
 	}
-
 
 	/**
 	 * factory method to create the tracker component
@@ -379,7 +380,6 @@ public class Palette extends Panel
 		return choiceRenderer;
 	}
 
-
 	/**
 	 * @return items visible without scrolling
 	 */
@@ -394,15 +394,14 @@ public class Palette extends Panel
 	protected final void updateModel()
 	{
 		// prepare model
-		Collection model = (Collection)getModelObject();
+		Collection<T> model = getModelObject();
 		model.clear();
 
 		// update model
-		Iterator it = getRecorderComponent().getSelectedChoices();
-
+		Iterator<T> it = getRecorderComponent().getSelectedChoices();
 		while (it.hasNext())
 		{
-			final Object selectedChoice = it.next();
+			final T selectedChoice = it.next();
 			model.add(selectedChoice);
 		}
 	}
@@ -416,11 +415,10 @@ public class Palette extends Panel
 	 */
 	protected String buildJSCall(String funcName)
 	{
-		return new StringBuffer(funcName).append("('").append(getChoicesComponent().getPath())
+		return new AppendingStringBuffer(funcName).append("('").append(getChoicesComponent().getPath())
 				.append("','").append(getSelectionComponent().getPath()).append("','").append(
 						getRecorderComponent().getPath()).append("');").toString();
 	}
-
 
 	/**
 	 * @return choices component on focus javascript handler
