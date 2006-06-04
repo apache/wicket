@@ -19,6 +19,7 @@
 package wicket.examples.wizard;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import wicket.extensions.wizard.StaticContentStep;
@@ -27,9 +28,12 @@ import wicket.extensions.wizard.WizardModel;
 import wicket.extensions.wizard.WizardStep;
 import wicket.extensions.wizard.WizardModel.ICondition;
 import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.AbstractFormValidator;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
@@ -113,7 +117,33 @@ public class NewUserWizard extends Wizard
 		{
 			super(new ResourceModel("userroles.title"), null);
 			setSummaryModel(new StringResourceModel("userroles.summary", this, new Model(user)));
-			add(new ListMultipleChoice("user.roles", allRoles));
+			final ListMultipleChoice rolesChoiceField = new ListMultipleChoice("user.roles",
+					allRoles);
+			add(rolesChoiceField);
+			final TextField rolesSetNameField = new TextField("user.rolesSetName");
+			add(rolesSetNameField);
+			add(new AbstractFormValidator()
+			{
+				public FormComponent[] getDependentFormComponents()
+				{
+					// name and roles don't have anything to validate,
+					// so might as well just skip them here
+					return null;
+				}
+
+				public void validate(Form form)
+				{
+					String rolesInput = rolesChoiceField.getInput();
+					if (rolesInput != null && (!"".equals(rolesInput)))
+					{
+						if ("".equals(rolesSetNameField.getInput()))
+						{
+							rolesSetNameField.error(Collections
+									.singletonList("error.noSetNameForRoles"), null);
+						}
+					}
+				}
+			});
 		}
 
 		/**
