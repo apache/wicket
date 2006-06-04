@@ -361,8 +361,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<configuration>
-					<templateDirectory>src/site/template/</templateDirectory>
-					<template>wicket-site.vm</template>
+					<templateFile>src/site/template/wicket-site.vm</templateFile>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -411,7 +410,7 @@
 	<distributionManagement>
 		<site>
 			<id>wicket-site</id>
-			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/wicket-1.2</url>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs</url>
 		</site>
 		<repository>
 			<id>wicket-repo</id>
