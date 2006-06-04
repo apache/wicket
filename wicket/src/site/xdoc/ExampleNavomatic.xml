@@ -110,7 +110,11 @@ public class NavomaticApplication extends WebApplication
 {
     public NavomaticApplication()
     {
-        getPages().setHomePage(Page1.class);
+    }
+    
+    public Class getHomePage() 
+    {
+        return Page1.class;
     }
 }]]></source>
 </subsection>
@@ -267,7 +271,7 @@ public class NavomaticBorder extends Border
     </servlet>
     <servlet-mapping>
         <servlet-name>NavomaticApplication</servlet-name>
-        <url-pattern>/navomatic</url-pattern>
+        <url-pattern>/app/*</url-pattern>
     </servlet-mapping>]]></source>
 </subsection>
 </section>
