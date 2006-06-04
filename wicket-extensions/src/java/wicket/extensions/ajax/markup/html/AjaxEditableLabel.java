@@ -20,60 +20,86 @@ import wicket.model.IModel;
  * Current triggers: Save the edit if either enter is pressed or the component
  * loses focus. Cancel if esc is pressed.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class AjaxEditableLabel extends Panel
+public class AjaxEditableLabel<T> extends Panel<T>
 {
-	private static final long serialVersionUID = 1L;
-
-	/** label component */
-	private final Label label;
-
-	/** editor component */
-	private final TextField editor;
-
 	/**
-	 * @see wicket.Component#Component(MarkupContainer, String)
+	 * Edit behavior.
 	 */
-	public AjaxEditableLabel(MarkupContainer parent, final String id)
+	private class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
-		this(parent, id, null);
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructor.
+		 */
+		public EditorAjaxBehavior()
+		{
+		}
+
+		/**
+		 * @see wicket.behavior.AbstractAjaxBehavior#onComponentTag(wicket.markup.ComponentTag)
+		 */
+		@Override
+		protected void onComponentTag(ComponentTag tag)
+		{
+			super.onComponentTag(tag);
+			final String saveCall = "{wicketAjaxGet('" + getCallbackUrl()
+					+ "&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
+
+			final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl()
+					+ "&save=false'); return false;}";
+
+			final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall
+					+ " else if (kc!=13) { return true; } else " + saveCall;
+
+			tag.put("onblur", saveCall);
+			tag.put("onkeypress", keypress);
+		}
+
+		/**
+		 * @see wicket.ajax.AbstractDefaultAjaxBehavior#respond(wicket.ajax.AjaxRequestTarget)
+		 */
+		@Override
+		protected void respond(AjaxRequestTarget target)
+		{
+			RequestCycle rc = RequestCycle.get();
+			boolean save = Boolean.valueOf(rc.getRequest().getParameter("save")).booleanValue();
+			if (save)
+			{
+				editor.processInput();
+			}
+			label.setVisible(true);
+			editor.setVisible(false);
+			target.addComponent(AjaxEditableLabel.this);
+		}
 	}
 
 	/**
-	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
-	 */
-	public AjaxEditableLabel(MarkupContainer parent, final String id, IModel model)
-	{
-		super(parent, id);
-		setOutputMarkupId(true);
-
-		label = new Label(this, "label", model);
-		label.setOutputMarkupId(true);
-		label.add(new LabeAjaxBehavior("onClick"));
-
-		editor = new TextField(this, "editor", model);
-		editor.setOutputMarkupId(true);
-		editor.setVisible(false);
-		editor.add(new EditorAjaxBehavior());
-
-	}
-
-	/**
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 * 
+	 * The label behavior.
 	 */
 	private final class LabeAjaxBehavior extends AjaxEventBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param event
+		 */
 		private LabeAjaxBehavior(String event)
 		{
 			super(event);
 		}
 
+		/**
+		 * @see wicket.ajax.AjaxEventBehavior#onEvent(wicket.ajax.AjaxRequestTarget)
+		 */
 		@Override
 		protected void onEvent(AjaxRequestTarget target)
 		{
@@ -89,55 +115,37 @@ public class AjaxEditableLabel extends Panel
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
+	/** editor component. */
+	private final TextField editor;
+
+	/** label component. */
+	private final Label label;
+
 	/**
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 * 
+	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
-	private class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
+	public AjaxEditableLabel(MarkupContainer parent, final String id)
 	{
+		this(parent, id, null);
+	}
 
-		private static final long serialVersionUID = 1L;
+	/**
+	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
+	 */
+	public AjaxEditableLabel(MarkupContainer parent, final String id, IModel<T> model)
+	{
+		super(parent, id);
+		setOutputMarkupId(true);
 
-		/**
-		 * Constructor
-		 */
-		public EditorAjaxBehavior()
-		{
-		}
+		label = new Label(this, "label", model);
+		label.setOutputMarkupId(true);
+		label.add(new LabeAjaxBehavior("onClick"));
 
-		@Override
-		protected void onComponentTag(ComponentTag tag)
-		{
-			super.onComponentTag(tag);
-			final String saveCall = "{wicketAjaxGet('" + getCallbackUrl()
-					+ "&save=true&'+this.name+'='+wicketEncode(this.value)); return true;}";
-
-			final String cancelCall = "{wicketAjaxGet('" + getCallbackUrl()
-					+ "&save=false'); return false;}";
-
-
-			final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall
-					+ " else if (kc!=13) { return true; } else " + saveCall;
-
-			tag.put("onblur", saveCall);
-			tag.put("onkeypress", keypress);
-
-		}
-
-		@Override
-		protected void respond(AjaxRequestTarget target)
-		{
-			RequestCycle rc = RequestCycle.get();
-			boolean save = Boolean.valueOf(rc.getRequest().getParameter("save")).booleanValue();
-			if (save)
-			{
-				editor.processInput();
-			}
-			label.setVisible(true);
-			editor.setVisible(false);
-			target.addComponent(AjaxEditableLabel.this);
-		}
-
+		editor = new TextField<T>(this, "editor", model);
+		editor.setOutputMarkupId(true);
+		editor.setVisible(false);
+		editor.add(new EditorAjaxBehavior());
 	}
 }
