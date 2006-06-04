@@ -85,7 +85,7 @@ public abstract class SignInPanel extends Panel
 			WebMarkupContainer rememberMeRow = new WebMarkupContainer(this, "rememberMeRow");
 
 			// Add rememberMe checkbox
-			new CheckBox(rememberMeRow, "rememberMe", new PropertyModel(SignInPanel.this,
+			new CheckBox(rememberMeRow, "rememberMe", new PropertyModel<Boolean>(SignInPanel.this,
 					"rememberMe"));
 
 			// Make form values persistent

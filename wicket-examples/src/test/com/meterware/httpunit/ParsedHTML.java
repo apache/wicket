@@ -584,11 +584,13 @@ class ParsedHTML
 	{
 		return new HTMLElementBase(element)
 		{
+			@Override
 			protected ScriptableDelegate newScriptable()
 			{
 				return new HTMLElementScriptable(this);
 			}
 
+			@Override
 			protected ScriptableDelegate getParentDelegate()
 			{
 				return getResponse().getScriptableObject().getDocument();
@@ -929,7 +931,7 @@ class ParsedHTML
 	}
 
 
-	private static HashMap _htmlFactoryClasses = new HashMap();
+	private static HashMap<String, HTMLElementFactory> _htmlFactoryClasses = new HashMap<String, HTMLElementFactory>();
 	private static HTMLElementFactory _defaultFactory = new DefaultElementFactory();
 
 	static
@@ -959,7 +961,7 @@ class ParsedHTML
 		for (Iterator i = Arrays.asList(FormControl.getControlElementTags()).iterator(); i
 				.hasNext();)
 		{
-			_htmlFactoryClasses.put(i.next(), new FormControlFactory());
+			_htmlFactoryClasses.put((String)i.next(), new FormControlFactory());
 		}
 	}
 
