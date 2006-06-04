@@ -21,6 +21,14 @@
         only exception is the oblibatory <code>web.xml</code> file which should reside
         in the <code>WEB-INF/</code> directory of your web application root folder.
 	</p>
+	<p>
+		If you wish to start building this example, you may want to take a look at the
+		<a href="/wicket-quickstart">Wicket Quickstart</a> project, which provides a quick
+		way of getting up and running without having to figure things out yourself. The
+		Quickstart project contains the necessary build files (Ant and Maven), libraries,
+		minimal set of Java and markup files and an embedded Jetty server to run your
+		application without having to go through the whole build-deploy cycle.
+	</p>
 	<img src="images/image001.png" alt="HelloWorld" />
 <subsection name="HelloWorldApplication.java">
 	<p>
@@ -36,7 +44,11 @@ public class HelloWorldApplication extends WebApplication
 {
     public HelloWorldApplication()
     {
-        getPages().setHomePage(HelloWorld.class);
+    }
+    
+    public Class getHomePage() 
+    {
+        return HelloWorld.class;
     }
 }]]></source>
 	<p>
@@ -125,7 +137,7 @@ public class HelloWorld extends WebPage
     </servlet>
     <servlet-mapping>
         <servlet-name>HelloWorldApplication</servlet-name>
-        <url-pattern>/helloworld</url-pattern>
+        <url-pattern>/app/*</url-pattern>
     </servlet-mapping>
 </web-app>]]></source>
 	<p>
@@ -133,11 +145,20 @@ public class HelloWorld extends WebPage
 		requests. In order to let <em>Wicket</em> know which application is available, 
 		only the <code>applicationClassName</code> servlet parameter is needed.
 	</p>
+	<p>
+		Also, notice the url-mapping to <tt>/app/*</tt>. This ensures that the Wicket servlet
+		will only process requests made to the application itself, not to (static) resources 
+		that are outside the realm of the Wicket application, such as style sheets, JavaScript
+		files, images and so forth.
+	</p>
 </subsection>
 <subsection name="Ready to deploy">
 	<p>
 		That's it. No more configuration necessary! All you need to do now is to 
-		deploy the web application into your favourite application server.
+		deploy the web application into your favourite application server. Point your browser to
+		the url: <tt>http://<i>&lt;servername&gt;</i>/<i>&lt;warfilename&gt;</i>/app</tt>,
+		substituting <i>servername</i> and <i>warfilename</i> to the appropiate values, such as
+		<tt>http://localhost:8080/helloworld/app</tt>.
 	</p>
 	<p>
 		As you can see: no superfluous XML configuration files are needed to enable
