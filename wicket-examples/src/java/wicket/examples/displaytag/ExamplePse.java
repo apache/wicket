@@ -50,7 +50,7 @@ public class ExamplePse extends Displaytag
 		final ReportList data = new ReportList();
 
 		// Add the table
-		final SimplePageableListView table = new SimplePageableListView(this, "rows", data, 10)
+		final SimplePageableListView<ReportableListObject> table = new SimplePageableListView<ReportableListObject>(this, "rows", data, 10)
 		{
 			// Groups: value must be equal
 			private ReportableListObject previousValue = null;
@@ -84,7 +84,7 @@ public class ExamplePse extends Displaytag
 		};
 
 		// Add the sortable header and define how to sort the different columns
-		new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders<ReportableListObject>(this, "header", table)
 		{
 			@Override
 			protected Comparable getObjectToCompare(final SortableListViewHeader header,

@@ -44,7 +44,7 @@ public class ExampleTwoTables extends Displaytag
 		final List<ListObject> data2 = new ArrayList<ListObject>();
 		data2.addAll(data1);
 
-		new SortablePageableDisplaytagTableComponent(this, "table1", data1);
-		new SortablePageableDisplaytagTableComponent(this, "table2", data2);
+		new SortablePageableDisplaytagTableComponent<ListObject>(this, "table1", data1);
+		new SortablePageableDisplaytagTableComponent<ListObject>(this, "table2", data2);
 	}
 }

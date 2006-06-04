@@ -98,7 +98,7 @@ public class LocaleSelector extends Panel
 
 			// set the model that gets the current locale, and that is used for
 			// updating the current locale to property 'locale' of FormInput
-			setModel(new PropertyModel(LocaleSelector.this, "locale"));
+			setModel(new PropertyModel<Locale>(LocaleSelector.this, "locale"));
 		}
 
 		/**

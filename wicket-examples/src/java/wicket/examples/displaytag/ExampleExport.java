@@ -25,6 +25,7 @@ import wicket.examples.displaytag.export.CsvView;
 import wicket.examples.displaytag.export.ExcelView;
 import wicket.examples.displaytag.export.ExportLink;
 import wicket.examples.displaytag.export.XmlView;
+import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 
@@ -44,10 +45,10 @@ public class ExampleExport extends Displaytag
 	public ExampleExport(final PageParameters parameters)
 	{
 		// Test data
-		final List data = new TestList(6, false);
+		final List<ListObject> data = new TestList(6, false);
 
 		// Add the table
-		new SimpleListView(this, "rows", data);
+		new SimpleListView<ListObject>(this, "rows", data);
 
 		// Add the export links
 		new ExportLink(this, "exportCsv", data, new CsvView(data, true, false, false));

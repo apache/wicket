@@ -40,13 +40,13 @@ public class BodyFrame extends WebPage
 	 * Model that returns the url to the bookmarkable page that is set in the
 	 * current frame target.
 	 */
-	private final class FrameModel extends Model
+	private final class FrameModel extends Model<CharSequence>
 	{
 		/**
 		 * @see wicket.model.Model#getObject(wicket.Component)
 		 */
 		@Override
-		public Object getObject(Component component)
+		public CharSequence getObject(Component component)
 		{
 			RequestCycle cycle = getRequestCycle();
 			IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();

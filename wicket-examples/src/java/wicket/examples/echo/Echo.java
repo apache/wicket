@@ -41,7 +41,7 @@ public class Echo extends WicketExamplePage
 	{
 		// This model references the page's message property and is
 		// shared by the label and form component
-		PropertyModel messageModel = new PropertyModel(this, "message");
+		PropertyModel<String> messageModel = new PropertyModel<String>(this, "message");
 
 		// The label displays the currently set message
 		new Label(this, "msg", messageModel);
@@ -50,7 +50,7 @@ public class Echo extends WicketExamplePage
 		// else with this form as the shared model is automatically updated
 		// on form submits
 		Form form = new Form(this, "form");
-		new TextField(form, "msgInput", messageModel);
+		new TextField<String>(form, "msgInput", messageModel);
 	}
 
 	/**

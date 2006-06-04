@@ -41,9 +41,9 @@ import wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  * 
- * @param <T> 
+ * @param <T> The type of the list element
  */
-public class SortablePageableDisplaytagTableComponent<T> extends Panel
+public class SortablePageableDisplaytagTableComponent<T> extends Panel<T>
 {
 	// Model data
 	final private List<T> data;
@@ -67,10 +67,10 @@ public class SortablePageableDisplaytagTableComponent<T> extends Panel
 		this.data.addAll(list);
 
 		// Add a table
-		final SimplePageableListView table = new SimplePageableListView(this, "rows", list, 10);
+		final SimplePageableListView<T> table = new SimplePageableListView<T>(this, "rows", list, 10);
 
 		// Add a sortable header to the table
-		new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders<T>(this, "header", table)
 		{
 			@Override
 			protected int compareTo(SortableListViewHeader header, Object o1, Object o2)

@@ -80,7 +80,7 @@ public class ExampleSubtotals extends Displaytag
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
-				SubtotalTable subtable = new SubtotalTable(listItem, "rows", data);
+				SubtotalTable subtable = new SubtotalTable<ReportableListObject>(listItem, "rows", data);
 				subtable.setStartIndex(startIndex);
 
 				String group = listItem.getModelObjectAsString();
@@ -98,7 +98,7 @@ public class ExampleSubtotals extends Displaytag
 	 * A subtotal + grouping table prints the tables rows and adds a bar and the
 	 * subtotal at the bottom.
 	 */
-	private class SubtotalTable extends SimpleListView
+	private class SubtotalTable<T> extends SimpleListView<T>
 	{
 		private ReportableListObject previousValue = null;
 		private double subtotal = 0;
@@ -111,7 +111,7 @@ public class ExampleSubtotals extends Displaytag
 		 * @param id
 		 * @param data
 		 */
-		public SubtotalTable(MarkupContainer parent, final String id, final List data)
+		public SubtotalTable(MarkupContainer parent, final String id, final List<T> data)
 		{
 			super(parent, id, data);
 		}

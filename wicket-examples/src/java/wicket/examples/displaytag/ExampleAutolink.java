@@ -46,10 +46,10 @@ public class ExampleAutolink extends Displaytag
 	public ExampleAutolink(final PageParameters parameters)
 	{
 		// test data
-		List data = new TestList(10, false);
+		List<ListObject> data = new TestList(10, false);
 
 		// Add table
-		new SimpleListView(this, "rows", data)
+		new SimpleListView<ListObject>(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -63,7 +63,7 @@ public class ExampleAutolink extends Displaytag
 		};
 
 		// Add table
-		new SimpleListView(this, "rows2", data)
+		new SimpleListView<ListObject>(this, "rows2", data)
 		{
 			@Override
 			protected Component newLabel(MarkupContainer parent, String id)

@@ -35,14 +35,17 @@ import wicket.util.collections.MicroMap;
  * @see SortableListViewHeaderGroup
  * @see SortableListViewHeaders
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            Type of model object this component holds
  */
-public class SortableListViewHeaderGroup implements Serializable
+public class SortableListViewHeaderGroup<T> implements Serializable
 {
 	/** contains the name of SortableTableHeader to be sorted */
 	final private MicroMap<String, Object> sorted = new MicroMap<String, Object>();
 
 	/** The underlying listView to be sorted */
-	private ListView listView;
+	private ListView<T> listView;
 
 	/**
 	 * Maintain a group SortableTableHeader
@@ -52,7 +55,7 @@ public class SortableListViewHeaderGroup implements Serializable
 	 * @param listView
 	 *            The underlying ListView
 	 */
-	public SortableListViewHeaderGroup(final MarkupContainer container, final ListView listView)
+	public SortableListViewHeaderGroup(final MarkupContainer container, final ListView<T> listView)
 	{
 		this.listView = listView;
 	}
@@ -87,7 +90,7 @@ public class SortableListViewHeaderGroup implements Serializable
 	 * 
 	 * @return the list view's underlying list
 	 */
-	protected List getListViewModelObject()
+	protected List<T> getListViewModelObject()
 	{
 		return listView.getList();
 	}

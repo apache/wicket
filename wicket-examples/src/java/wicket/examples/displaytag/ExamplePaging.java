@@ -56,7 +56,7 @@ public class ExamplePaging extends Displaytag
 		// Add pageable table with alternating row styles. A Label component
 		// is automatically created for each list item.
 		// - The list contains more items than the page
-		final SimplePageableListView table = new SimplePageableListView(this, "rows", data, 10);
+		final SimplePageableListView<ListObject> table = new SimplePageableListView<ListObject>(this, "rows", data, 10);
 
 		new MyPageableListViewNavigator(this, "pageTableNav", table);
 
@@ -66,7 +66,7 @@ public class ExamplePaging extends Displaytag
 		// - Explicitly create a Label
 		List<ListObject> data2 = new ArrayList<ListObject>();
 		data2.addAll(data.subList(0, 10));
-		final SimplePageableListView table2 = new SimplePageableListView(this, "rows2", data2, 20)
+		final SimplePageableListView<ListObject> table2 = new SimplePageableListView<ListObject>(this, "rows2", data2, 20)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -82,8 +82,8 @@ public class ExamplePaging extends Displaytag
 
 		// =======================================================================
 		// Empty table
-		List data4 = new ArrayList();
-		final SimplePageableListView table4 = new SimplePageableListView(this, "rows4", data4, 10);
+		List<ListObject> data4 = new ArrayList<ListObject>();
+		final SimplePageableListView<ListObject> table4 = new SimplePageableListView<ListObject>(this, "rows4", data4, 10);
 		new MyPageableListViewNavigator(this, "pageTableNav4", table4);
 
 		// =======================================================================
@@ -141,8 +141,8 @@ public class ExamplePaging extends Displaytag
 			}
 		};
 
-		List data5 = new ArrayList();
-		final SimplePageableListView table5 = new SimplePageableListView(this, "rows5", data5, 4);
+		List<ListObject> data5 = new ArrayList<ListObject>();
+		final SimplePageableListView<ListObject> table5 = new SimplePageableListView<ListObject>(this, "rows5", data5, 4);
 		new MyPageableListViewNavigator(this, "pageTableNav5", table5);
 	}
 }

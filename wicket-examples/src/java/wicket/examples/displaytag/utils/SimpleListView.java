@@ -39,7 +39,7 @@ import wicket.model.IModel;
  * 
  * @author Juergen Donnerstag
  * 
- * @param <T>
+ * @param <T> The type of the list element
  */
 public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 {
@@ -112,9 +112,9 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 	 * @return IModel
 	 */
 	@Override
-	protected IModel<T> getListItemModel(final IModel model, final int index)
+	protected IModel<T> getListItemModel(final IModel<List<T>> model, final int index)
 	{
-		return new BoundCompoundPropertyModel(super.getListItemModel(model, index));
+		return new BoundCompoundPropertyModel<T>(super.getListItemModel(model, index));
 	}
 
 	/**
@@ -175,7 +175,7 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(MarkupContainer parent, final int index, final IModel model)
+		public SimpleListListItem(MarkupContainer parent, final int index, final IModel<T> model)
 		{
 			super(parent, index, model);
 		}

@@ -113,7 +113,7 @@ public class FormInput extends WicketExamplePage
 			new RequiredTextField<Integer>(this, "integerInRangeProperty", Integer.class)
 					.add(NumberValidator.range(0, 100));
 			new CheckBox(this, "booleanProperty");
-			RadioChoice rc = new RadioChoice(this, "numberRadioChoice", NUMBERS).setSuffix("");
+			RadioChoice<String> rc = new RadioChoice<String>(this, "numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model<String>("number"));
 			rc.setRequired(true);
 
@@ -232,7 +232,7 @@ public class FormInput extends WicketExamplePage
 			// add a text field that works on each list item model (returns
 			// objects of
 			// type FormInputModel.Line) using property text.
-			new TextField(item, "lineEdit", new PropertyModel(item.getModel(), "text"));
+			new TextField<String>(item, "lineEdit", new PropertyModel<String>(item.getModel(), "text"));
 		}
 	}
 

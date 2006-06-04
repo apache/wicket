@@ -81,7 +81,7 @@ public class ExampleDecoratorLink extends Displaytag
 		};
 
 		// Add table of existing comments
-		new SimpleListView(this, "rows2", data)
+		new SimpleListView<ListObject>(this, "rows2", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)

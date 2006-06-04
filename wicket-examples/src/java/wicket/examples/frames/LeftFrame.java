@@ -18,6 +18,7 @@
 package wicket.examples.frames;
 
 import wicket.MarkupContainer;
+import wicket.Page;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.link.Link;
 
@@ -50,7 +51,7 @@ public class LeftFrame extends WebPage
 		private final BodyFrame bodyFrame;
 
 		/** this link's target. */
-		private final Class pageClass;
+		private final Class<? extends Page> pageClass;
 
 		/**
 		 * Construct.
@@ -61,7 +62,7 @@ public class LeftFrame extends WebPage
 		 * @param pageClass
 		 */
 		public ChangeFramePageLink(MarkupContainer parent, final String id, BodyFrame bodyFrame,
-				Class pageClass)
+				Class<? extends Page> pageClass)
 		{
 			super(parent, id);
 			this.bodyFrame = bodyFrame;

@@ -33,6 +33,7 @@
 package wicket.examples.debug;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import wicket.Application;
 import wicket.Component;
@@ -43,6 +44,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
+import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebApplication;
@@ -135,17 +137,17 @@ public class LiveSessionsPage extends WebPage
 			}
 		});
 
-		Model sessionModel = new Model()
+		IModel<List<SessionData>> sessionModel = new Model<List<SessionData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public List<SessionData> getObject(Component component)
 			{
 				return new ArrayList<SessionData>(getRequestLogger().getLiveSessions());
 			}
 		};
-		PageableListView listView = new PageableListView(this, "sessions", sessionModel, 50)
+		PageableListView<SessionData> listView = new PageableListView<SessionData>(this, "sessions", sessionModel, 50)
 		{
 			private static final long serialVersionUID = 1L;
 

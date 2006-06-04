@@ -42,21 +42,21 @@ public class ExampleNestedTables extends Displaytag
 	public ExampleNestedTables(final PageParameters parameters)
 	{
 		// Test data
-		List data = new TestList(6, false);
+		List<ListObject> data = new TestList(6, false);
 
 		// straight forward
-		new SimpleListView(this, "rows", data)
+		new SimpleListView<ListObject>(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
 				final ListObject value = (ListObject)listItem.getModelObject();
 
-				List data2 = new TestList(3, false);
+				List<ListObject> data2 = new TestList(3, false);
 
 				// Just create a new table, which will be put into the current
 				// cell
-				new SimpleListView(listItem, "rows", data2);
+				new SimpleListView<ListObject>(listItem, "rows", data2);
 			}
 		};
 	}

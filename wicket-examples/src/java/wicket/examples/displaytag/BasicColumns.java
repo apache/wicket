@@ -84,9 +84,9 @@ public class BasicColumns extends Displaytag
 
 			// This makes the trick
 			@Override
-			protected IModel getListItemModel(final IModel model, final int index)
+			protected IModel<ListObject> getListItemModel(final IModel<List<ListObject>> model, final int index)
 			{
-				return new CompoundPropertyModel(super.getListItemModel(model, index));
+				return new CompoundPropertyModel<ListObject>(super.getListItemModel(model, index));
 			}
 		};
 
@@ -95,7 +95,7 @@ public class BasicColumns extends Displaytag
 		// plus that if a list item component is missing, it will automatically
 		// be
 		// created for you. Hence, it is even easier
-		new SimpleListView(this, "rows3", data)
+		new SimpleListView<ListObject>(this, "rows3", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -113,6 +113,6 @@ public class BasicColumns extends Displaytag
 
 		// ==========================================================================
 		// It can be that simple to create a list view with multiple column
-		new SimpleListView(this, "rows4", data);
+		new SimpleListView<ListObject>(this, "rows4", data);
 	}
 }

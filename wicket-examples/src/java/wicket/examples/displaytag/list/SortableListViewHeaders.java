@@ -38,15 +38,19 @@ import wicket.markup.resolver.IComponentResolver;
  * 
  * @see SortableListViewHeaderGroup
  * @see SortableListViewHeader
+ * 
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            Type of model object this component holds
  */
-public class SortableListViewHeaders extends WebMarkupContainer implements IComponentResolver
+public class SortableListViewHeaders<T> extends WebMarkupContainer<T> implements IComponentResolver
 {
 	/** Logging. */
 	final private static Log log = LogFactory.getLog(SortableListViewHeaders.class);
 
 	/** Each SortableTableHeader (without 's) must be attached to a group. */
-	final private SortableListViewHeaderGroup group;
+	final private SortableListViewHeaderGroup<T> group;
 
 	/**
 	 * Construct.
@@ -57,11 +61,11 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 	 * @param listView
 	 *            the underlying ListView
 	 */
-	public SortableListViewHeaders(MarkupContainer parent, final String id, final ListView listView)
+	public SortableListViewHeaders(MarkupContainer parent, final String id, final ListView<T> listView)
 	{
 		super(parent, id);
 
-		this.group = new SortableListViewHeaderGroup(this, listView);
+		this.group = new SortableListViewHeaderGroup<T>(this, listView);
 	}
 
 	/**
@@ -114,7 +118,7 @@ public class SortableListViewHeaders extends WebMarkupContainer implements IComp
 			}
 			if ((componentId != null) && (get(componentId) == null))
 			{
-				SortableListViewHeader slvh = new SortableListViewHeader(this, componentId, group)
+				SortableListViewHeader<T> slvh = new SortableListViewHeader<T>(this, componentId, group)
 				{
 					@Override
 					protected int compareTo(final Object o1, final Object o2)

@@ -40,13 +40,13 @@ public class ExampleSorting extends Displaytag
 	public ExampleSorting()
 	{
 		// Test data
-		final List data = new TestList(6, false);
+		final List<ListObject> data = new TestList(6, false);
 
 		// Add the table (but no table header)
-		SimpleListView table = new SimpleListView(this, "rows", data);
+		SimpleListView<ListObject> table = new SimpleListView<ListObject>(this, "rows", data);
 
 		// And this is with a little bit of magic
-		new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders<ListObject>(this, "header", table)
 		{
 			/**
 			 * If object does not support equals()

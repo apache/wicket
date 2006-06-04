@@ -20,6 +20,8 @@ package wicket.examples.frames;
 
 import java.io.Serializable;
 
+import wicket.Page;
+
 /**
  * Simple struct for holding the class of the right frame.
  * 
@@ -30,7 +32,7 @@ public final class FrameTarget implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** the class of the bookmarkable page. */
-	private Class frameClass;
+	private Class<? extends Page> frameClass;
 
 	/**
 	 * Construct.
@@ -44,7 +46,7 @@ public final class FrameTarget implements Serializable
 	 * 
 	 * @param frameClass
 	 */
-	public FrameTarget(Class frameClass)
+	public FrameTarget(Class<? extends Page> frameClass)
 	{
 		this.frameClass = frameClass;
 	}
@@ -54,7 +56,7 @@ public final class FrameTarget implements Serializable
 	 * 
 	 * @return lefFrameClass
 	 */
-	public Class getFrameClass()
+	public Class<? extends Page> getFrameClass()
 	{
 		return frameClass;
 	}
@@ -65,7 +67,7 @@ public final class FrameTarget implements Serializable
 	 * @param frameClass
 	 *            lefFrameClass
 	 */
-	public void setFrameClass(Class frameClass)
+	public void setFrameClass(Class<? extends Page> frameClass)
 	{
 		this.frameClass = frameClass;
 	}

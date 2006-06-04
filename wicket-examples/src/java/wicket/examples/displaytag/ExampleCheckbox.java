@@ -46,10 +46,10 @@ public class ExampleCheckbox extends Displaytag
 	public ExampleCheckbox(final PageParameters parameters)
 	{
 		// test data
-		List data = new TestList(6, false);
+		List<ListObject> data = new TestList(6, false);
 
 		// Add table of existing comments
-		new SimpleListView(this, "rows", data)
+		new SimpleListView<ListObject>(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)

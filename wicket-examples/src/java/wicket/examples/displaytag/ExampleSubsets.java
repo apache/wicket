@@ -69,11 +69,11 @@ public class ExampleSubsets extends Displaytag
 	 * @param data
 	 * @return ListView
 	 */
-	private ListView newTable(final String id, final List data)
+	private ListView newTable(final String id, final List<ListObject> data)
 	{
 		Fragment panel = new Fragment(this, id, "tableFrag");
 
-		ListView table = new SimpleListView(panel, "rows", data);
+		ListView table = new SimpleListView<ListObject>(panel, "rows", data);
 
 		return table;
 	}

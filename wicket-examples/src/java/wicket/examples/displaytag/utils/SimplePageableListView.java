@@ -40,8 +40,11 @@ import wicket.model.IModel;
  * other component you want. Alternating row styles are provided as well.
  * 
  * @author Juergen Donnerstag
+ * 
+ * @param <T>
+ *            Type of model object this component holds
  */
-public class SimplePageableListView extends PageableListView implements IComponentResolver
+public class SimplePageableListView<T> extends PageableListView<T> implements IComponentResolver
 {
 	/** The tags "class" attribute for odd index rows */
 	public static String ODD = "odd";
@@ -57,7 +60,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * @param data
 	 * @param rowsPerPage
 	 */
-	public SimplePageableListView(MarkupContainer parent, final String id, final List data,
+	public SimplePageableListView(MarkupContainer parent, final String id, final List<T> data,
 			final int rowsPerPage)
 	{
 		super(parent, id, data, rowsPerPage);
@@ -71,7 +74,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * @param model
 	 * @param rowsPerPage
 	 */
-	public SimplePageableListView(MarkupContainer parent, final String id, final IModel model,
+	public SimplePageableListView(MarkupContainer parent, final String id, final IModel<List<T>> model,
 			final int rowsPerPage)
 	{
 		super(parent, id, model, rowsPerPage);
@@ -89,7 +92,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * @return List item
 	 */
 	@Override
-	protected ListItem newItem(final int index)
+	protected ListItem<T> newItem(final int index)
 	{
 		return new SimpleListListItem(this, index, getListItemModel(getModel(), index));
 	}
@@ -116,9 +119,9 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * @return IModel
 	 */
 	@Override
-	protected IModel getListItemModel(final IModel model, final int index)
+	protected IModel<T> getListItemModel(final IModel<List<T>> model, final int index)
 	{
-		return new BoundCompoundPropertyModel(super.getListItemModel(model, index));
+		return new BoundCompoundPropertyModel<T>(super.getListItemModel(model, index));
 	}
 
 	/**
@@ -169,7 +172,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 */
 	public static class SimpleListLabel
 	{
-		private static Map idToLabel = new HashMap();
+		private static Map<String, Label> idToLabel = new HashMap<String, Label>();
 
 		/**
 		 * Construct
@@ -201,7 +204,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	public class SimpleListListItem extends ListItem
+	public class SimpleListListItem extends ListItem<T>
 	{
 		/**
 		 * Constructor
@@ -212,7 +215,7 @@ public class SimplePageableListView extends PageableListView implements ICompone
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(MarkupContainer parent, final int index, final IModel model)
+		public SimpleListListItem(MarkupContainer parent, final int index, final IModel<T> model)
 		{
 			super(parent, index, model);
 		}

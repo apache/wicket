@@ -36,6 +36,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import wicket.Component;
@@ -45,6 +46,7 @@ import wicket.markup.html.image.Image;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
+import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.RequestLogger.RequestData;
 import wicket.protocol.http.RequestLogger.SessionData;
@@ -69,17 +71,17 @@ public class RequestsPage extends WebPage
 
 		new SessionView(this, "session", sessionData.getSession());
 
-		Model requestsModel = new Model()
+		IModel<List<RequestData>> requestsModel = new Model<List<RequestData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public List<RequestData> getObject(Component component)
 			{
 				return new ArrayList<RequestData>(sessionData.getRequests());
 			}
 		};
-		PageableListView listView = new PageableListView(this, "requests", requestsModel, 50)
+		PageableListView<RequestData> listView = new PageableListView<RequestData>(this, "requests", requestsModel, 50)
 		{
 			private static final long serialVersionUID = 1L;
 

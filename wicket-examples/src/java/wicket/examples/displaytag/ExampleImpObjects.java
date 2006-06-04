@@ -43,10 +43,10 @@ public class ExampleImpObjects extends Displaytag
 	public ExampleImpObjects(final PageParameters parameters)
 	{
 		// Test data
-		List data = new TestList(10, false);
+		List<ListObject> data = new TestList(10, false);
 
 		// Add table of existing comments
-		new SimpleListView(this, "rows", data)
+		new SimpleListView<ListObject>(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)

@@ -22,6 +22,7 @@ import java.util.List;
 
 import wicket.AttributeModifier;
 import wicket.PageParameters;
+import wicket.examples.displaytag.utils.ListObject;
 import wicket.examples.displaytag.utils.SimpleListView;
 import wicket.examples.displaytag.utils.TestList;
 import wicket.markup.html.WebMarkupContainer;
@@ -44,7 +45,7 @@ public class ExampleStyles extends Displaytag
 	public ExampleStyles(final PageParameters parameters)
 	{
 		// my model object
-		List data = new TestList(10, false);
+		List<ListObject> data = new TestList(10, false);
 
 		// Add Links to handle the different styles
 		addStyleLink("isis");
@@ -59,7 +60,7 @@ public class ExampleStyles extends Displaytag
 		htmlTable.add(new AttributeModifier("class", new Model<String>(parameters.getString("class"))));
 
 		// Add the rows to the list
-		new SimpleListView(this, "rows", data);
+		new SimpleListView<ListObject>(this, "rows", data);
 	}
 
 	/**

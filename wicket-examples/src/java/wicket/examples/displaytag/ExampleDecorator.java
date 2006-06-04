@@ -45,10 +45,10 @@ public class ExampleDecorator extends Displaytag
 	public ExampleDecorator(final PageParameters parameters)
 	{
 		// Test data
-		List data = new TestList(10, false);
+		List<ListObject> data = new TestList(10, false);
 
 		// Add table
-		new SimpleListView(this, "rows", data)
+		new SimpleListView<ListObject>(this, "rows", data)
 		{
 			@Override
 			public void populateItem(final ListItem listItem)
@@ -66,6 +66,6 @@ public class ExampleDecorator extends Displaytag
 		new LocaleSelector(this, "localeSelector");
 
 		// Add table
-		new SimpleListView(this, "rows2", data);
+		new SimpleListView<ListObject>(this, "rows2", data);
 	}
 }

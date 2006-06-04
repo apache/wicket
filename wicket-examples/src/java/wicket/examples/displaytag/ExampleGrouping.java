@@ -18,6 +18,8 @@
  */
 package wicket.examples.displaytag;
 
+import java.util.List;
+
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ReportList;
 import wicket.examples.displaytag.utils.ReportableListObject;
@@ -41,10 +43,10 @@ public class ExampleGrouping extends Displaytag
 	public ExampleGrouping(final PageParameters parameters)
 	{
 		// Test data
-		ReportList data = new ReportList();
+		List<ReportableListObject> data = new ReportList();
 
 		// Add table of existing comments
-		new SimpleListView(this, "rows", data)
+		new SimpleListView<ReportableListObject>(this, "rows", data)
 		{
 			// Remember the value from the previous row
 			private ReportableListObject previousValue = null;
