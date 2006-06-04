@@ -17,9 +17,11 @@ import wicket.markup.html.form.login.InterceptTest.MySession;
 import wicket.model.Model;
 
 /**
- * @author marrink
+ * Login test page.
+ * 
+ * @author Maurice Marrink
  */
-public class MockLoginPage<T> extends WebPage<T>
+public class MockLoginPage extends WebPage<Object>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +30,7 @@ public class MockLoginPage<T> extends WebPage<T>
 	private TextField textField;
 
 	/**
-	 * 
+	 * Construct.
 	 */
 	public MockLoginPage()
 	{
@@ -48,6 +50,23 @@ public class MockLoginPage<T> extends WebPage<T>
 	}
 
 	/**
+	 * @return form
+	 */
+	public final Form getForm()
+	{
+		return form;
+	}
+
+	/**
+	 * @return textfield
+	 */
+	public final TextField getTextField()
+	{
+		return textField;
+	}
+
+	/**
+	 * Logs in with the provided user name.
 	 * 
 	 * @param username
 	 * @return boolean
@@ -60,23 +79,5 @@ public class MockLoginPage<T> extends WebPage<T>
 			setResponsePage(Application.get().getHomePage());
 		}
 		return true;
-	}
-
-	/**
-	 * 
-	 * @return form
-	 */
-	public final Form getForm()
-	{
-		return form;
-	}
-
-	/**
-	 * 
-	 * @return textfield
-	 */
-	public final TextField getTextField()
-	{
-		return textField;
 	}
 }
