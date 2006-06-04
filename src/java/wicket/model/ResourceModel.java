@@ -28,7 +28,7 @@ import wicket.Component;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ResourceModel extends AbstractReadOnlyModel
+public class ResourceModel extends AbstractReadOnlyModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -66,7 +66,7 @@ public class ResourceModel extends AbstractReadOnlyModel
 	 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
 	 */
 	@Override
-	public Object getObject(Component component)
+	public String getObject(Component component)
 	{
 		return component.getLocalizer().getString(resourceKey, component, defaultValue);
 	}
