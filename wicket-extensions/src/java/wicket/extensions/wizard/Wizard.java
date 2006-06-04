@@ -207,6 +207,17 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
+	 * Gets the form in which the view is nested, and on which the wizard
+	 * buttons work.
+	 * 
+	 * @return The wizard form
+	 */
+	public final Form getForm()
+	{
+		return form;
+	}
+
+	/**
 	 * @see wicket.extensions.wizard.IWizard#getWizardModel()
 	 */
 	public final IWizardModel getWizardModel()
@@ -235,6 +246,20 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		this.activeStep = newStep;
 		form.replace(activeStep.getView(VIEW_ID, this, this));
 		form.replace(activeStep.getHeader(HEADER_ID, this, this));
+	}
+
+	/**
+	 * Called when the wizard is cancelled.
+	 */
+	public void onCancel()
+	{
+	};
+
+	/**
+	 * Called when the wizard is finished.
+	 */
+	public void onFinish()
+	{
 	}
 
 	/**
@@ -275,7 +300,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		// reset model to prepare for action
 		wizardModel.reset();
-	};
+	}
 
 	/**
 	 * Create a new button bar. Clients can override this method to provide a
@@ -319,19 +344,5 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		// return a dummy component by default as we don't have an overview
 		// component
 		return new WebMarkupContainer(id).setVisible(false);
-	}
-
-	/**
-	 * Called when the wizard is cancelled.
-	 */
-	public void onCancel()
-	{
-	}
-
-	/**
-	 * Called when the wizard is finished.
-	 */
-	public void onFinish()
-	{
 	}
 }
