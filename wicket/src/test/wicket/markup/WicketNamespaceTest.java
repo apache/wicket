@@ -20,8 +20,8 @@ package wicket.markup;
 
 import junit.framework.TestCase;
 import wicket.Page;
-import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.diff.DiffUtil;
 
 /**
  */

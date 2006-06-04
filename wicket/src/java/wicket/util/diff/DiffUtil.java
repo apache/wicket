@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.list;
+package wicket.util.diff;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -111,11 +111,23 @@ public final class DiffUtil
 
 			String[] test1 = StringList.tokenize(reference, "\n").toArray();
 			String[] test2 = StringList.tokenize(document, "\n").toArray();
-			Diff diff = new Diff(test1, test2);
-			Diff.change script = diff.diff_2(false);
-			DiffPrint.Base p = new DiffPrint.UnifiedPrint(test1, test2);
-			p.setOutput(new PrintWriter(System.err));
-			p.print_script(script);
+			Diff df = new Diff(test1);
+			Revision r;
+			try
+			{
+				r = df.diff(test2);
+			}
+			catch (DifferentiationFailedException e)
+			{
+				throw new RuntimeException(e);
+			}
+
+			//Diff diff = new Diff(test1, test2);
+			//Diff.change script = diff.diff_2(false);
+			//DiffPrint.Base p = new DiffPrint.UnifiedPrint(test1, test2);
+			//p.setOutput(new PrintWriter(System.err));
+			//p.print_script(script);
+			System.out.println(r.toString());
 		}
 
 		return equals;

@@ -20,8 +20,8 @@ package wicket.ajax.markup.html.componentMap;
 
 import wicket.Page;
 import wicket.WicketTestCase;
-import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.diff.DiffUtil;
 
 /**
  * Test for ajax handler.
