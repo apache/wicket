@@ -21,10 +21,16 @@ package wicket.util.tester.apps_5;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 
+/**
+ * 
+ */
 public class ListPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 */
 	public ListPage()
 	{
 		new Label(this, "_label", "test");
