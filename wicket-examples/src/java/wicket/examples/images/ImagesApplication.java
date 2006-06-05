@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 5121 $ $Date$
+ * $Id: ImagesApplication.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,6 +19,7 @@
 package wicket.examples.images;
 
 import wicket.examples.WicketExampleApplication;
+import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
@@ -45,6 +47,14 @@ public class ImagesApplication extends WicketExampleApplication
 	public Class getHomePage()
 	{
 		return Home.class;
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	protected void init()
+	{
+		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 
 	/**
