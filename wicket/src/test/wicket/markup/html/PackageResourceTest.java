@@ -17,8 +17,6 @@
  */
 package wicket.markup.html;
 
-import java.util.regex.Pattern;
-
 import junit.framework.TestCase;
 import wicket.Application;
 import wicket.SharedResources;
@@ -53,14 +51,6 @@ public class PackageResourceTest extends TestCase
 	}
 
 	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception
-	{
-		application = new MockWebApplication(null);
-	}
-
-	/**
 	 * Tests binding a single absolute package resource.
 	 * 
 	 * @throws Exception
@@ -76,19 +66,31 @@ public class PackageResourceTest extends TestCase
 	}
 
 	/**
-	 * Tests binding a bunch of resources in one go using a regexp.
+	 * Tests {@link PackageResourceGuard}.
 	 * 
 	 * @throws Exception
 	 */
-	public void testBindGlobPackageResource() throws Exception
+	public void testPackageResourceGuard() throws Exception
 	{
-		final SharedResources sharedResources = Application.get().getSharedResources();
-		PackageResource.bind(application, PackageResourceTest.class, Pattern.compile(".*\\.js"), false);
-		assertNotNull("resource packaged3.js should be available as a packaged resource",
-				sharedResources.get(PackageResourceTest.class, "packaged3.js", null, null, true));
-		assertNotNull("resource packaged4.js should be available as a packaged resource",
-				sharedResources.get(PackageResourceTest.class, "packaged4.js", null, null, true));
-		assertNull("resource packaged2.txt should NOT be available as a packaged resource",
-				sharedResources.get(PackageResourceTest.class, "packaged2.txt", null, null, true));
+		PackageResourceGuard guard = new PackageResourceGuard();
+		assertTrue(guard.acceptExtension("txt"));
+		assertFalse(guard.acceptExtension("java"));
+		assertTrue(guard.acceptAbsolutePath("foo/Bar.txt"));
+		assertFalse(guard.acceptAbsolutePath("foo/Bar.java"));
+		assertTrue(guard.accept(PackageResourceTest.class, "Bar.txt"));
+		assertTrue(guard.accept(PackageResourceTest.class, "Bar.txt."));
+		assertTrue(guard.accept(PackageResourceTest.class, ".Bar.txt"));
+		assertTrue(guard.accept(PackageResourceTest.class, ".Bar.txt."));
+		assertTrue(guard.accept(PackageResourceTest.class, ".Bar"));
+		assertTrue(guard.accept(PackageResourceTest.class, ".java"));
+		assertFalse(guard.accept(PackageResourceTest.class, "Bar.java"));
+	}
+
+	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	protected void setUp() throws Exception
+	{
+		application = new MockWebApplication(null);
 	}
 }

@@ -20,12 +20,9 @@ package wicket.extensions.wizard;
 
 import java.util.Iterator;
 
-import wicket.Application;
 import wicket.Component;
-import wicket.IInitializer;
 import wicket.behavior.HeaderContributor;
 import wicket.feedback.ContainerFeedbackMessageFilter;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -54,20 +51,6 @@ import wicket.markup.html.panel.Panel;
  */
 public class Wizard extends Panel implements IWizardModelListener, IWizard
 {
-	/**
-	 * Initializer for this component; binds static resources.
-	 */
-	public final static class WizardInitializer implements IInitializer
-	{
-		/**
-		 * @see wicket.IInitializer#init(wicket.Application)
-		 */
-		public void init(Application application)
-		{
-			PackageResource.bind(application, Wizard.class, "Wizard.css");
-		}
-	}
-
 	/** Component id of the buttons panel as used by the default wizard panel. */
 	public static final String BUTTONS_ID = "buttons";
 

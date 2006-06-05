@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ResourceReference.java 4730 2006-03-03 17:35:47 +0000 (Fri, 03 Mar 2006)
+ * joco01 $ $Revision$ $Date: 2006-03-03 17:35:47 +0000 (Fri, 03 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,6 +20,8 @@ package wicket;
 
 import java.io.Serializable;
 import java.util.Locale;
+
+import wicket.markup.html.PackageResource;
 
 /**
  * ResourceReference is essentially a reference to an actual resource which is
@@ -86,8 +89,8 @@ public class ResourceReference implements Serializable
 	/**
 	 * Contructs a resource reference with Application.class scope and the given
 	 * name. All resource references constructed with this constructor must have
-	 * unique names since they all have the same Application-wide scope that is the 
-	 * wicket.Application.class
+	 * unique names since they all have the same Application-wide scope that is
+	 * the wicket.Application.class
 	 * 
 	 * @param name
 	 *            The name of the resource
@@ -108,8 +111,9 @@ public class ResourceReference implements Serializable
 		// Try to resolve resource
 		if (resource == null)
 		{
+			SharedResources sharedResources = application.getSharedResources();
 			// Try to get resource from Application repository
-			resource = application.getSharedResources().get(scope, name, locale, style, true);
+			resource = sharedResources.get(scope, name, locale, style, true);
 
 			// Not available yet?
 			if (resource == null)
@@ -120,17 +124,21 @@ public class ResourceReference implements Serializable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = application.getSharedResources().get(scope, name, locale, style,
-							false);
+					resource = sharedResources.get(scope, name, locale, style, false);
 					if (resource == null)
 					{
-						throw new WicketRuntimeException("Unable to resolve shared resource "
-								+ this);
+						// still null? try to see whether it is a package
+						// resource that should
+						// be lazily loaded
+						PackageResource packageResource = PackageResource.get(scope, name);
+						// will throw an exception if not found, so if we come
+						// here, it was found
+						sharedResources.add(name, packageResource);
 					}
 				}
 
 				// Share through application
-				application.getSharedResources().add(scope, name, locale, style, resource);
+				sharedResources.add(scope, name, locale, style, resource);
 			}
 		}
 	}
@@ -152,16 +160,6 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
-	 * @return the shared resource key for this resource reference.
-	 */
-	public final String getSharedResourceKey()
-	{
-		Application application = Application.get();
-		bind(application);
-		return application.getSharedResources().resourceKey(scope, name, locale, style);
-	}
-
-	/**
 	 * Gets the resource for this resource reference. If the ResourceReference
 	 * has not yet been bound to the application via
 	 * {@link ResourceReference#bind(Application)}this method may return null.
@@ -180,6 +178,16 @@ public class ResourceReference implements Serializable
 	public final Class getScope()
 	{
 		return scope;
+	}
+
+	/**
+	 * @return the shared resource key for this resource reference.
+	 */
+	public final String getSharedResourceKey()
+	{
+		Application application = Application.get();
+		bind(application);
+		return application.getSharedResources().resourceKey(scope, name, locale, style);
 	}
 
 	/**

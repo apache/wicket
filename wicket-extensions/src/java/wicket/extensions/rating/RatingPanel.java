@@ -1,14 +1,11 @@
 package wicket.extensions.rating;
 
-import wicket.Application;
 import wicket.Component;
-import wicket.IInitializer;
 import wicket.ResourceReference;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.behavior.HeaderContributor;
 import wicket.behavior.SimpleAttributeModifier;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -83,21 +80,6 @@ import wicket.model.StringResourceModel;
  */
 public abstract class RatingPanel extends Panel
 {
-	/**
-	 * Initializer for this component; binds static resources.
-	 */
-	public final static class RatingPanelInitializer implements IInitializer
-	{
-		/**
-		 * @see wicket.IInitializer#init(wicket.Application)
-		 */
-		public void init(Application application)
-		{
-			PackageResource.bind(application, RatingPanel.class, "RatingPanel.css");
-			PackageResource.bind(application, RatingPanel.class, "star0.gif");
-			PackageResource.bind(application, RatingPanel.class, "star1.gif");
-		}
-	}
 	/**
 	 * Renders the stars and the links necessary for rating.
 	 */
