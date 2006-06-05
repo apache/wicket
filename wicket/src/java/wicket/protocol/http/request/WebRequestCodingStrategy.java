@@ -449,7 +449,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		String pathInfo = request.getPath();
 		if (pathInfo != null && pathInfo.startsWith("/resources/"))
 		{
-			parameters.setResourceKey(pathInfo.substring("/resources/".length()));
+			int ix = "/resources/".length();
+			if (pathInfo.length() > ix)
+			{
+				StringBuffer path = new StringBuffer(pathInfo.substring(ix));
+				int ixSemiColon = path.indexOf(";");
+				// strip off any jsession id
+				if (ixSemiColon != -1)
+				{
+					int ixEnd = path.indexOf("?");
+					if (ixEnd == -1)
+					{
+						ixEnd = path.length();
+					}
+					path.delete(ixSemiColon, ixEnd);
+				}
+				parameters.setResourceKey(path.toString());
+			}
 		}
 	}
 
