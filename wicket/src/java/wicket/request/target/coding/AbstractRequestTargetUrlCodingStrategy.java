@@ -67,13 +67,33 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * Gets path.
+	 * Encodes Map into a url fragment and append that to the provided url
+	 * buffer.
 	 * 
-	 * @return path
+	 * @param url
+	 *            url so far
+	 * 
+	 * @param parameters
+	 *            Map object to be encoded
 	 */
-	protected final String getMountPath()
+	protected void appendParameters(AppendingStringBuffer url, Map parameters)
 	{
-		return mountPath;
+		if (parameters != null && parameters.size() > 0)
+		{
+			Iterator entries = parameters.entrySet().iterator();
+			while (entries.hasNext())
+			{
+				Map.Entry entry = (Entry)entries.next();
+				if (entry.getValue() != null)
+				{
+					String escapedValue = urlEncode(entry.getValue().toString());
+					if (!Strings.isEmpty(escapedValue))
+					{
+						url.append("/").append(entry.getKey()).append("/").append(escapedValue);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -130,6 +150,16 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
+	 * Gets path.
+	 * 
+	 * @return path
+	 */
+	protected final String getMountPath()
+	{
+		return mountPath;
+	}
+
+	/**
 	 * Returns a decoded value of the given value
 	 * 
 	 * @param value
@@ -147,36 +177,6 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			log.error("error decoding parameter", ex);
 		}
 		return value;
-	}
-
-	/**
-	 * Encodes Map into a url fragment and append that to the provided url
-	 * buffer.
-	 * 
-	 * @param url
-	 *            url so far
-	 * 
-	 * @param parameters
-	 *            Map object to be encoded
-	 */
-	protected void appendParameters(AppendingStringBuffer url, Map parameters)
-	{
-		if (parameters != null && parameters.size() > 0)
-		{
-			Iterator entries = parameters.entrySet().iterator();
-			while (entries.hasNext())
-			{
-				Map.Entry entry = (Entry)entries.next();
-				if (entry.getValue() != null)
-				{
-					String escapedValue = urlEncode(entry.getValue().toString());
-					if (!Strings.isEmpty(escapedValue))
-					{
-						url.append("/").append(entry.getKey()).append("/").append(escapedValue);
-					}
-				}
-			}
-		}
 	}
 
 	/**
