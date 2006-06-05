@@ -18,7 +18,19 @@
  */
 package wicket.markup.html;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
@@ -27,8 +39,10 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.util.lang.PackageName;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
+import wicket.util.string.Strings;
 
 /**
  * Represents a localizable static resource.
@@ -48,6 +62,149 @@ import wicket.util.resource.IResourceStream;
  */
 public class PackageResource extends WebResource
 {
+
+	/**
+	 * Gets non-localized resources for a given set of criteria. Multiple
+	 * resource can be loaded for the same criteria if they match the pattern.
+	 * If no resources were found, this method returns null.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the calling class/ the class in which you
+	 *            call this method
+	 * @param pattern
+	 *            Regexp pattern to match resources
+	 * @return The resources, never null but may be empty
+	 * @deprecated Will be removed in 2.0; contribute resources one by one
+	 *             instead
+	 */
+	public static PackageResource[] get(Class scope, Pattern pattern)
+	{
+		return get(scope, pattern, false);
+	}
+
+	/**
+	 * Gets non-localized resources for a given set of criteria. Multiple
+	 * resource can be loaded for the same criteria if they match the pattern.
+	 * If no resources were found, this method returns null.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the calling class/ the class in which you
+	 *            call this method
+	 * @param pattern
+	 *            Regexp pattern to match resources
+	 * @param recurse
+	 *            Whether this method should recurse into sub packages
+	 * @return The resources, never null but may be empty
+	 * @deprecated Will be removed in 2.0; contribute resources one by one
+	 *             instead
+	 */
+	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
+	{
+		final List resources = new ArrayList();
+		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
+				.toString();
+		ClassLoader loader = scope.getClassLoader();
+		try
+		{
+			// loop through the resources of the package
+			Enumeration packageResources = loader.getResources(packageRef);
+			while (packageResources.hasMoreElements())
+			{
+				URL resource = (URL)packageResources.nextElement();
+				URLConnection connection = resource.openConnection();
+				if (connection instanceof JarURLConnection)
+				{
+					JarFile jf = ((JarURLConnection)connection).getJarFile();
+					scanJarFile(scope, pattern, recurse, resources, packageRef, jf);
+				}
+				else
+				{
+					String absolutePath = scope.getResource("").toExternalForm();
+					File basedir;
+					URI uri;
+					try
+					{
+						uri = new URI(absolutePath);
+					}
+					catch (URISyntaxException e)
+					{
+						throw new RuntimeException(e);
+					}
+					try
+					{
+						basedir = new File(uri);
+					}
+					catch (IllegalArgumentException e)
+					{
+						log.debug("Can't construct the uri as a file: " + absolutePath);
+						// if this is throwen then the path is not really a
+						// file. but could be a zip.
+						String jarZipPart = uri.getSchemeSpecificPart();
+						// lowercased for testing if jar/zip, but leave the real
+						// filespec unchanged
+						String lowerJarZipPart = jarZipPart.toLowerCase();
+						int index = lowerJarZipPart.indexOf(".zip");
+						if (index == -1)
+							index = lowerJarZipPart.indexOf(".jar");
+						if (index == -1)
+							throw e;
+
+						String filename = jarZipPart.substring(0, index + 4); // 4 =
+						// len
+						// of
+						// ".jar"
+						// or
+						// ".zip"
+						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
+						JarFile jarFile = new JarFile(filename, false);
+						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
+						return (PackageResource[])resources.toArray(new PackageResource[resources
+								.size()]);
+					}
+					if (!basedir.isDirectory())
+					{
+						throw new IllegalStateException("unable to read resources from directory "
+								+ basedir);
+					}
+					// should not be necesarry anymore
+					// addResources(scope, pattern, resources, new
+					// StringBuffer(""), basedir, recurse);
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
+
+		return (PackageResource[])resources.toArray(new PackageResource[resources.size()]);
+	}
+
+	/* removed in 2.0 */
+	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse,
+			final List resources, String packageRef, JarFile jf)
+	{
+		Enumeration enumeration = jf.entries();
+		while (enumeration.hasMoreElements())
+		{
+			JarEntry je = (JarEntry)enumeration.nextElement();
+			String name = je.getName();
+			if (name.startsWith(packageRef))
+			{
+				name = name.substring(packageRef.length() + 1);
+				if (pattern.matcher(name).matches() && (recurse || (name.indexOf('/') == -1)))
+				{
+					// we add the entry as a package resource
+					resources.add(get(scope, name, null, null));
+				}
+			}
+		}
+	}
+
 	/**
 	 * Exception thrown when the creation of a package resource is not allowed.
 	 */
@@ -70,7 +227,8 @@ public class PackageResource extends WebResource
 	 * common extension pattern for css files; matches all files with extension
 	 * 'css'.
 	 * 
-	 * @deprecated Will be removed in 2.0
+	 * @deprecated Will be removed in 2.0; contribute resources one by one
+	 *             instead
 	 */
 	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
 
@@ -78,7 +236,8 @@ public class PackageResource extends WebResource
 	 * common extension pattern for javascript files; matches all files with
 	 * extension 'js'.
 	 * 
-	 * @deprecated Will be removed in 2.0
+	 * @deprecated Will be removed in 2.0; contribute resources one by one
+	 *             instead
 	 */
 	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
 
