@@ -48,21 +48,12 @@ import wicket.util.string.Strings;
 import wicket.util.time.Time;
 
 /**
+ * Filter for initiating handling of Wicket requests.
+ * 
  * @author jcompagner
  */
 public class WicketFilter implements Filter
 {
-
-	/** Log. */
-	private static final Log log = LogFactory.getLog(WicketFilter.class);
-
-	/** The URL path prefix expected for (so called) resources (not html pages). */
-	private static final String RESOURCES_PATH_PREFIX = "/resources/";
-
-	/** the servlet path holder when the WicketSerlvet is used. 
-	 * So that the filter path will be computed with the first request
-	 */
-	static final String SERVLET_PATH_HOLDER = "<servlet>";
 
 	/**
 	 * The name of the context parameter that specifies application factory
@@ -76,17 +67,43 @@ public class WicketFilter implements Filter
 	 */
 	public static final String FILTER_PATH_PARAM = "filterPath";
 
-	private WebApplication webApplication;
-	private FilterConfig filterConfig;
+	/**
+	 * the servlet path holder when the WicketSerlvet is used. So that the
+	 * filter path will be computed with the first request
+	 */
+	static final String SERVLET_PATH_HOLDER = "<servlet>";
 
-	/* This is the filter path that can be specified in the filter config. 
-	 * Or it is the servlet path if the wicket servlet it used.
-	 * both are without any / (start or end) 
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WicketFilter.class);
+
+	/** The URL path prefix expected for (so called) resources (not html pages). */
+	private static final String RESOURCES_PATH_PREFIX = "/resources/";
+
+	private FilterConfig filterConfig;
+	/*
+	 * This is the filter path that can be specified in the filter config. Or it
+	 * is the servlet path if the wicket servlet it used. both are without any /
+	 * (start or end)
 	 */
 	private String filterPath;
 
-	/* This holds the complete full root path including context and filter or servlet path */
+	/*
+	 * This holds the complete full root path including context and filter or
+	 * servlet path
+	 */
 	private String rootPath;
+
+	private WebApplication webApplication;
+
+	/**
+	 * Servlet cleanup.
+	 */
+	public void destroy()
+	{
+		this.webApplication.internalDestroy();
+		this.webApplication = null;
+	}
+
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
@@ -123,45 +140,6 @@ public class WicketFilter implements Filter
 		{
 			chain.doFilter(request, response);
 		}
-	}
-
-
-	private boolean isWicketRequest(HttpServletRequest request)
-	{
-		String fullRootPath = getRootPath(request);
-		String url = request.getRequestURI();
-		// Homepage
-		if (Strings.isEmpty(request.getQueryString()) && url.equals(fullRootPath))
-		{
-			return true;
-		}
-		// SharedResources
-		if (url.startsWith(fullRootPath + RESOURCES_PATH_PREFIX))
-		{
-			return true;
-		}
-		// Url with wicket namespace in one of the params.
-		Enumeration enumeration = request.getParameterNames();
-		while (enumeration.hasMoreElements())
-		{
-			String name = (String)enumeration.nextElement();
-			if (name.startsWith(WebRequestCodingStrategy.NAME_SPACE))
-			{
-				return true;
-			}
-		}
-		// Mount url
-		String path = url.substring(fullRootPath.length());
-		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy()
-				.urlCodingStrategyForPath(path) != null;
-	}
-
-	private void maybeSetLastModified(HttpServletResponse resp, long lastModified)
-	{
-		if (resp.containsHeader("Last-Modified"))
-			return;
-		if (lastModified >= 0)
-			resp.setDateHeader("Last-Modified", lastModified);
 	}
 
 	/**
@@ -281,6 +259,49 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * @return The filter config of this WicketFilter
+	 */
+	public FilterConfig getFilterConfig()
+	{
+		return filterConfig;
+	}
+
+	/**
+	 * Returns the full rootpath of this application. This is the
+	 * ApplicationSettings.contextpath and the WicketFilter.rootpath concatted.
+	 * 
+	 * @param request
+	 *            The request where the optional context path (if not specified
+	 *            in the settings) can be get from.
+	 * 
+	 * @return String the full rootpath.
+	 */
+	public String getRootPath(HttpServletRequest request)
+	{
+		if (rootPath == null)
+		{
+			String contextPath = webApplication.getApplicationSettings().getContextPath();
+			if (contextPath == null)
+				contextPath = request.getContextPath();
+			if (SERVLET_PATH_HOLDER.equals(filterPath))
+			{
+				filterPath = request.getServletPath();
+				if (filterPath.startsWith("/"))
+					filterPath = filterPath.substring(1);
+			}
+			if (!contextPath.endsWith("/"))
+			{
+				rootPath = contextPath + "/" + filterPath;
+			}
+			else
+			{
+				rootPath = contextPath + filterPath;
+			}
+		}
+		return rootPath;
+	}
+
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
@@ -325,15 +346,6 @@ public class WicketFilter implements Filter
 		{
 			Application.unset();
 		}
-	}
-
-	/**
-	 * Servlet cleanup.
-	 */
-	public void destroy()
-	{
-		this.webApplication.internalDestroy();
-		this.webApplication = null;
 	}
 
 	/**
@@ -393,11 +405,13 @@ public class WicketFilter implements Filter
 	long getLastModified(final HttpServletRequest servletRequest)
 	{
 		final String pathInfo = servletRequest.getRequestURI();
-		
+
 		int rootPathLength = getRootPath(servletRequest).length();
-		if (pathInfo.length() > rootPathLength && pathInfo.substring(rootPathLength).startsWith(RESOURCES_PATH_PREFIX))
+		if (pathInfo.length() > rootPathLength
+				&& pathInfo.substring(rootPathLength).startsWith(RESOURCES_PATH_PREFIX))
 		{
-			final String resourceReferenceKey = pathInfo.substring(rootPathLength + RESOURCES_PATH_PREFIX.length());
+			final String resourceReferenceKey = pathInfo.substring(rootPathLength
+					+ RESOURCES_PATH_PREFIX.length());
 
 			// Try to find shared resource
 			Resource resource = webApplication.getSharedResources().get(resourceReferenceKey);
@@ -445,45 +459,41 @@ public class WicketFilter implements Filter
 		return -1;
 	}
 
-	/**
-	 * @return The filter config of this WicketFilter
-	 */
-	public FilterConfig getFilterConfig()
+	private boolean isWicketRequest(HttpServletRequest request)
 	{
-		return filterConfig;
-	}
-
-	/**
-	 * Returns the full rootpath of this application. This is the
-	 * ApplicationSettings.contextpath and the WicketFilter.rootpath concatted.
-	 * 
-	 * @param request
-	 *            The request where the optional context path (if not specified
-	 *            in the settings) can be get from.
-	 * 
-	 * @return String the full rootpath.
-	 */
-	public String getRootPath(HttpServletRequest request)
-	{
-		if (rootPath == null)
+		String fullRootPath = getRootPath(request);
+		String url = request.getRequestURI();
+		// Homepage
+		if (Strings.isEmpty(request.getQueryString()) && url.equals(fullRootPath))
 		{
-			String contextPath = webApplication.getApplicationSettings().getContextPath();
-			if (contextPath == null)
-				contextPath = request.getContextPath();
-			if(SERVLET_PATH_HOLDER.equals(filterPath))
+			return true;
+		}
+		// SharedResources
+		if (url.startsWith(fullRootPath + RESOURCES_PATH_PREFIX))
+		{
+			return true;
+		}
+		// Url with wicket namespace in one of the params.
+		Enumeration enumeration = request.getParameterNames();
+		while (enumeration.hasMoreElements())
+		{
+			String name = (String)enumeration.nextElement();
+			if (name.startsWith(WebRequestCodingStrategy.NAME_SPACE))
 			{
-				filterPath = request.getServletPath();
-				if(filterPath.startsWith("/")) filterPath = filterPath.substring(1);
-			}
-			if (!contextPath.endsWith("/"))
-			{
-				rootPath = contextPath + "/" + filterPath;
-			}
-			else
-			{
-				rootPath = contextPath + filterPath;
+				return true;
 			}
 		}
-		return rootPath;
+		// Mount url
+		String path = url.substring(fullRootPath.length());
+		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy()
+				.urlCodingStrategyForPath(path) != null;
+	}
+
+	private void maybeSetLastModified(HttpServletResponse resp, long lastModified)
+	{
+		if (resp.containsHeader("Last-Modified"))
+			return;
+		if (lastModified >= 0)
+			resp.setDateHeader("Last-Modified", lastModified);
 	}
 }
