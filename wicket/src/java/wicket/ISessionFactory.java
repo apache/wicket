@@ -26,15 +26,6 @@ package wicket;
  */
 public interface ISessionFactory
 {
-	/**
-	 * Creates a new session
-	 * 
-	 * @return The session
-	 * 
-	 * @deprecated
-	 */
-	@Deprecated
-	Session newSession();
 
 	/**
 	 * Creates a new session
