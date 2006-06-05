@@ -266,6 +266,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		WicketTagIdentifier.registerWellKnownTagName("body");
 		WicketTagIdentifier.registerWellKnownTagName("border");
+		WicketTagIdentifier.registerWellKnownTagName("panel");
 
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 
