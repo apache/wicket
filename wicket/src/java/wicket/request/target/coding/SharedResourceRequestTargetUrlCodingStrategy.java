@@ -57,25 +57,12 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 	{
 		final String parametersFragment = requestParameters.getPath().substring(
 				getMountPath().length());
-		final ValueMap parameters = decodeParameters(parametersFragment, requestParameters.getParameters());
+		final ValueMap parameters = decodeParameters(parametersFragment, requestParameters
+				.getParameters());
 
 		requestParameters.setParameters(parameters);
 		requestParameters.setResourceKey(resourceKey);
 		return new SharedResourceRequestTarget(requestParameters);
-	}
-
-	/**
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(wicket.IRequestTarget)
-	 */
-	public boolean matches(IRequestTarget requestTarget)
-	{
-		if (requestTarget instanceof ISharedResourceRequestTarget)
-		{
-			SharedResourceRequestTarget target = (SharedResourceRequestTarget)requestTarget;
-			return target.getRequestParameters().getResourceKey().equals(resourceKey);
-		}
-		else
-			return false;
 	}
 
 	/**
@@ -95,5 +82,19 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 		RequestParameters requestParameters = target.getRequestParameters();
 		appendParameters(url, requestParameters.getParameters());
 		return url;
+	}
+
+	/**
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#matches(wicket.IRequestTarget)
+	 */
+	public boolean matches(IRequestTarget requestTarget)
+	{
+		if (requestTarget instanceof ISharedResourceRequestTarget)
+		{
+			SharedResourceRequestTarget target = (SharedResourceRequestTarget)requestTarget;
+			return target.getRequestParameters().getResourceKey().equals(resourceKey);
+		}
+		else
+			return false;
 	}
 }

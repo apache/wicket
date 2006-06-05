@@ -1,6 +1,7 @@
 /*
- * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10 21:28:56 eelco12
- * Exp $ $Revision$ $Date$
+ * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10
+ * 21:28:56 eelco12 Exp $ $Revision$ $Date: 2006-05-12 16:19:05 +0000
+ * (Fri, 12 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,7 +31,9 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Eelco Hillenius
  */
-public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequestTargetUrlCodingStrategy
+public class BookmarkablePageRequestTargetUrlCodingStrategy
+		extends
+			AbstractRequestTargetUrlCodingStrategy
 {
 	/** bookmarkable page class. */
 	private final Class bookmarkablePageClass;
@@ -63,24 +66,41 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 	}
 
 	/**
+	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
+	 */
+	public IRequestTarget decode(RequestParameters requestParameters)
+	{
+		final String parametersFragment = requestParameters.getPath().substring(
+				getMountPath().length());
+		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
+				requestParameters.getParameters()));
+		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		requestParameters.setPageMapName(pageMapName);
+
+		final BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
+				bookmarkablePageClass, parameters);
+		return target;
+	}
+
+	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#encode(wicket.IRequestTarget)
 	 */
 	public final CharSequence encode(final IRequestTarget requestTarget)
 	{
 		if (!(requestTarget instanceof IBookmarkablePageRequestTarget))
 		{
-			throw new IllegalArgumentException("This encoder can only be used with " +
-        "instances of "	+ IBookmarkablePageRequestTarget.class.getName());
+			throw new IllegalArgumentException("This encoder can only be used with "
+					+ "instances of " + IBookmarkablePageRequestTarget.class.getName());
 		}
 		final AppendingStringBuffer url = new AppendingStringBuffer(40);
 		url.append(getMountPath());
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
 		PageParameters pageParameters = target.getPageParameters();
-		String pagemap = pageMapName != null?pageMapName: target.getPageMapName();
-		if(pagemap != null)
+		String pagemap = pageMapName != null ? pageMapName : target.getPageMapName();
+		if (pagemap != null)
 		{
-			if(pageParameters == null)
+			if (pageParameters == null)
 			{
 				pageParameters = new PageParameters();
 			}
@@ -88,21 +108,6 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy extends AbstractRequ
 		}
 		appendParameters(url, pageParameters);
 		return url;
-	}
-
-	/**
-	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
-	 */
-	public IRequestTarget decode(RequestParameters requestParameters)
-	{
-		final String parametersFragment = requestParameters.getPath().substring(getMountPath().length());
-		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
-		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
-		requestParameters.setPageMapName(pageMapName);
-
-		final BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
-				bookmarkablePageClass, parameters);
-		return target;
 	}
 
 	/**

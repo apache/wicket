@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: IRequestTargetUrlCodingStrategy.java 5241 2006-04-02 21:09:16 +0000
+ * (Sun, 02 Apr 2006) joco01 $ $Revision$ $Date: 2006-04-02 21:09:16
+ * +0000 (Sun, 02 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,13 +22,22 @@ import wicket.IRequestTarget;
 import wicket.request.RequestParameters;
 
 /**
- * Implementations of this interface know how to encode and decode
- * request targets to/from a URL.
+ * Implementations of this interface know how to encode and decode request
+ * targets to/from a URL.
  * 
  * @author Eelco Hillenius
  */
 public interface IRequestTargetUrlCodingStrategy
 {
+	/**
+	 * Gets the decoded request target.
+	 * 
+	 * @param requestParameters
+	 *            the request parameters
+	 * @return the decoded request target
+	 */
+	IRequestTarget decode(RequestParameters requestParameters);
+
 	/**
 	 * Gets the encoded url for the provided request target. Typically, the
 	 * result will be prepended with a protocol specific prefix. In a servlet
@@ -40,15 +50,6 @@ public interface IRequestTargetUrlCodingStrategy
 	 * @return the encoded url
 	 */
 	CharSequence encode(IRequestTarget requestTarget);
-
-	/**
-	 * Gets the decoded request target.
-	 * 
-   * @param requestParameters
-	 *            the request parameters
-	 * @return the decoded request target
-	 */
-	IRequestTarget decode(RequestParameters requestParameters);
 
 	/**
 	 * Gets whether this mounter is applicable for the provided request target.

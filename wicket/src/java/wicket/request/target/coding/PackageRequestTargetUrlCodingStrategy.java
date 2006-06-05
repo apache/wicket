@@ -1,6 +1,7 @@
 /*
  * $Id: BookmarkablePageRequestTargetUrlCodingStrategy.java,v 1.1 2005/12/10
- * 21:28:56 eelco12 Exp $ $Revision$ $Date$
+ * 21:28:56 eelco12 Exp $ $Revision$ $Date: 2006-04-17 10:23:38 +0000
+ * (Mon, 17 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -70,16 +71,18 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		{
 			parametersFragment = remainder.substring(ix);
 		}
-		
-		if (remainder.startsWith("/")) {
-			remainder=remainder.substring(1);
+
+		if (remainder.startsWith("/"))
+		{
+			remainder = remainder.substring(1);
 			ix--;
 		}
-		
-		final String bookmarkablePageClassName = packageName + "."+ remainder.substring(0, ix);
+
+		final String bookmarkablePageClassName = packageName + "." + remainder.substring(0, ix);
 		Class bookmarkablePageClass = Session.get().getClassResolver().resolveClass(
 				bookmarkablePageClassName);
-		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment, requestParameters.getParameters()));
+		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
+				requestParameters.getParameters()));
 
 		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);
@@ -103,13 +106,13 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		url.append(getMountPath());
 		IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 		url.append("/").append(Classes.simpleName(target.getPageClass()));
-		
+
 		PageParameters pageParameters = target.getPageParameters();
-		if(target.getPageMapName() != null)
+		if (target.getPageMapName() != null)
 		{
 			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, target.getPageMapName());
 		}
-		
+
 		appendParameters(url, pageParameters);
 		return url;
 	}
