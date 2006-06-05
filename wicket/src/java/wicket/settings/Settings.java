@@ -40,6 +40,8 @@ import wicket.authorization.IUnauthorizedComponentInstantiationListener;
 import wicket.authorization.UnauthorizedInstantiationException;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
+import wicket.markup.html.IPackageResourceGuard;
+import wicket.markup.html.PackageResourceGuard;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.markup.resolver.AutoComponentResolver;
@@ -91,20 +93,11 @@ public final class Settings
 			IAjaxSettings,
 			IFrameworkSettings
 {
-	/** ajax debug mode status */
-	private boolean ajaxDebugModeEnabled = false;
-
-	/**
-	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
-	 * removed from output
-	 */
-	private boolean stripWicketTags = false;
-
-	/** In order to remove <?xml?> from output as required by IE quirks mode */
-	private boolean stripXmlDeclarationFromOutput;
-
 	/** Class of access denied page. */
 	private Class accessDeniedPage;
+
+	/** ajax debug mode status */
+	private boolean ajaxDebugModeEnabled = false;
 
 	/** The application */
 	private Application application;
@@ -114,6 +107,12 @@ public final class Settings
 
 	/** Application default for automatically resolving hrefs */
 	private boolean automaticLinking = false;
+
+	/**
+	 * Whether Wicket should try to support multiple windows transparently, true
+	 * by default.
+	 */
+	private boolean automaticMultiWindowSupport = true;
 
 	/** True if the response should be buffered */
 	private boolean bufferResponse = true;
@@ -129,6 +128,9 @@ public final class Settings
 
 	/** True if multiple tabs/spaces should be compressed to a single space */
 	private boolean compressWhitespace = false;
+
+	/** The context path that should be used for url prefixing */
+	private String contextPath;
 
 	/**
 	 * Factory for the converter instance; default to the non localized factory
@@ -154,6 +156,15 @@ public final class Settings
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
 
+	/**
+	 * Whether Wicket should try to get extensive client info by redirecting to
+	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
+	 * method is used by the default implementation of {@link #newClientInfo()},
+	 * so if that method is overriden, there is no guarantee this method will be
+	 * taken into account. False by default.
+	 */
+	private boolean gatherExtendedBrowserInfo = false;
+
 	/** Class of internal error page. */
 	private Class internalErrorPage;
 
@@ -174,6 +185,9 @@ public final class Settings
 
 	/** True if string resource loaders have been overridden */
 	private boolean overriddenStringResourceLoaders = false;
+
+	/** The package resource guard. */
+	private IPackageResourceGuard packageResourceGuard = new PackageResourceGuard();
 
 	/** The error page displayed when an expired page is accessed. */
 	private Class pageExpiredErrorPage;
@@ -225,32 +239,17 @@ public final class Settings
 	/** Should HTML comments be stripped during rendering? */
 	private boolean stripComments = false;
 
+	/**
+	 * If true, wicket tags ( <wicket: ..>) and wicket:id attributes we be
+	 * removed from output
+	 */
+	private boolean stripWicketTags = false;
+
+	/** In order to remove <?xml?> from output as required by IE quirks mode */
+	private boolean stripXmlDeclarationFromOutput;
+
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
-
-	/** Type of handling for unexpected exceptions */
-	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
-
-	/** Determines behavior of string resource loading if string is missing */
-	private boolean useDefaultOnMissingResource = true;
-
-	/** Determines if pages should be managed by a version manager by default */
-	private boolean versionPagesByDefault = true;
-
-	/** The context path that should be used for url prefixing */
-	private String contextPath;
-
-	/** Whether Wicket should try to support multiple windows transparently, true by default. */
-	private boolean automaticMultiWindowSupport = true;
-
-	/**
-	 * Whether Wicket should try to get extensive client info by redirecting to
-	 * {@link BrowserInfoPage a page that polls for client capabilities}. This
-	 * method is used by the default implementation of {@link #newClientInfo()},
-	 * so if that method is overriden, there is no guarantee this method will be
-	 * taken into account. False by default.
-	 */
-	private boolean gatherExtendedBrowserInfo = false;
 
 	/** Authorizer for component instantiations */
 	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
@@ -269,6 +268,15 @@ public final class Settings
 		}
 	};
 
+	/** Type of handling for unexpected exceptions */
+	private UnexpectedExceptionDisplay unexpectedExceptionDisplay = SHOW_EXCEPTION_PAGE;
+
+	/** Determines behavior of string resource loading if string is missing */
+	private boolean useDefaultOnMissingResource = true;
+
+	/** Determines if pages should be managed by a version manager by default */
+	private boolean versionPagesByDefault = true;
+
 	/**
 	 * Create the application settings, carrying out any necessary
 	 * initialisations.
@@ -281,7 +289,8 @@ public final class Settings
 		this.application = application;
 		this.markupParserFactory = new MarkupParserFactory(application);
 		stringResourceLoaders.add(new ComponentStringResourceLoader(application));
-		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application.getClass()));
+		stringResourceLoaders.add(new ClassStringResourceLoader(application, this.application
+				.getClass()));
 	}
 
 	/**
@@ -368,6 +377,14 @@ public final class Settings
 	public boolean getAutomaticLinking()
 	{
 		return automaticLinking;
+	}
+
+	/**
+	 * @see wicket.settings.IPageSettings#getAutomaticMultiWindowSupport()
+	 */
+	public boolean getAutomaticMultiWindowSupport()
+	{
+		return automaticMultiWindowSupport;
 	}
 
 	/**
@@ -539,6 +556,14 @@ public final class Settings
 	public int getMaxPageVersions()
 	{
 		return maxPageVersions;
+	}
+
+	/**
+	 * @see wicket.settings.IResourceSettings#getPackageResourceGuard()
+	 */
+	public IPackageResourceGuard getPackageResourceGuard()
+	{
+		return packageResourceGuard;
 	}
 
 	/**
@@ -727,6 +752,21 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IFrameworkSettings#getVersion()
+	 */
+	public String getVersion()
+	{
+		String implVersion = null;
+		Package pkg = this.getClass().getPackage();
+		if (pkg != null)
+		{
+			implVersion = pkg.getImplementationVersion();
+		}
+		return Strings.isEmpty(implVersion) ? "n/a" : implVersion;
+	}
+
+
+	/**
 	 * @see wicket.settings.IPageSettings#getVersionPagesByDefault()
 	 */
 	public boolean getVersionPagesByDefault()
@@ -734,6 +774,13 @@ public final class Settings
 		return versionPagesByDefault;
 	}
 
+	/**
+	 * @see wicket.settings.IDebugSettings#isAjaxDebugModeEnabled()
+	 */
+	public boolean isAjaxDebugModeEnabled()
+	{
+		return ajaxDebugModeEnabled;
+	}
 
 	/**
 	 * @see wicket.settings.IApplicationSettings#setAccessDeniedPage(java.lang.Class)
@@ -747,6 +794,14 @@ public final class Settings
 		checkPageClass(accessDeniedPage);
 
 		this.accessDeniedPage = accessDeniedPage;
+	}
+
+	/**
+	 * @see wicket.settings.IDebugSettings#setAjaxDebugModeEnabled(boolean)
+	 */
+	public void setAjaxDebugModeEnabled(boolean enable)
+	{
+		ajaxDebugModeEnabled = enable;
 	}
 
 	/**
@@ -767,6 +822,14 @@ public final class Settings
 	public void setAutomaticLinking(boolean automaticLinking)
 	{
 		this.automaticLinking = automaticLinking;
+	}
+
+	/**
+	 * @see wicket.settings.IPageSettings#setAutomaticMultiWindowSupport(boolean)
+	 */
+	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
+	{
+		this.automaticMultiWindowSupport = automaticMultiWindowSupport;
 	}
 
 	/**
@@ -941,6 +1004,18 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IResourceSettings#setPackageResourceGuard(wicket.markup.html.IPackageResourceGuard)
+	 */
+	public void setPackageResourceGuard(IPackageResourceGuard packageResourceGuard)
+	{
+		if (packageResourceGuard == null)
+		{
+			throw new IllegalArgumentException("Argument packageResourceGuard may not be null");
+		}
+		this.packageResourceGuard = packageResourceGuard;
+	}
+
+	/**
 	 * @see wicket.settings.IApplicationSettings#setPageExpiredErrorPage(java.lang.Class)
 	 */
 	public void setPageExpiredErrorPage(final Class pageExpiredErrorPage)
@@ -1106,51 +1181,5 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
-	}
-
-	/**
-	 * @see wicket.settings.IDebugSettings#setAjaxDebugModeEnabled(boolean)
-	 */
-	public void setAjaxDebugModeEnabled(boolean enable)
-	{
-		ajaxDebugModeEnabled = enable;
-	}
-
-	/**
-	 * @see wicket.settings.IDebugSettings#isAjaxDebugModeEnabled()
-	 */
-	public boolean isAjaxDebugModeEnabled()
-	{
-		return ajaxDebugModeEnabled;
-	}
-
-	/**
-	 * @see wicket.settings.IPageSettings#getAutomaticMultiWindowSupport()
-	 */
-	public boolean getAutomaticMultiWindowSupport()
-	{
-		return automaticMultiWindowSupport;
-	}
-
-	/**
-	 * @see wicket.settings.IPageSettings#setAutomaticMultiWindowSupport(boolean)
-	 */
-	public void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport)
-	{
-		this.automaticMultiWindowSupport = automaticMultiWindowSupport;
-	}
-
-	/**
-	 * @see wicket.settings.IFrameworkSettings#getVersion()
-	 */
-	public String getVersion()
-	{
-		String implVersion = null;
-		Package pkg = this.getClass().getPackage();
-		if (pkg != null)
-		{
-			implVersion = pkg.getImplementationVersion();
-		}
-		return Strings.isEmpty(implVersion)?"n/a":implVersion;
 	}
 }

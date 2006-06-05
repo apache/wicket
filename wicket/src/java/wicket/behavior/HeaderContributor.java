@@ -20,14 +20,12 @@ package wicket.behavior;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import wicket.Application;
 import wicket.Component;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.protocol.http.WebRequestCycle;
@@ -298,72 +296,6 @@ public class HeaderContributor extends AbstractHeaderContributor
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that reference all CSS files with extension 'css' that live
-	 * in a package.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final Class scope)
-	{
-		return forCss(scope, PackageResource.EXTENSION_CSS);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that reference CSS files that match the pattern and that
-	 * live in a package.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final Class scope, final Pattern pattern)
-	{
-		return forCss(scope, pattern, false);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that reference CSS files that match the pattern and that
-	 * live in a package and its sub packages in case recurse is true.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @param recurse
-	 *            whether to recurse into sub packages
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forCss(final Class scope, final Pattern pattern,
-			boolean recurse)
-	{
-		PackageResource[] resources = PackageResource.get(scope, pattern, recurse);
-		HeaderContributor contributor = new HeaderContributor();
-		if (resources != null)
-		{
-			int len = resources.length;
-			for (int i = 0; i < len; i++)
-			{
-				contributor.addContributor(new CSSReferenceHeaderContributor(scope, resources[i]
-						.getPath()));
-			}
-		}
-		return contributor;
-	}
-
-	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
 	 * 
@@ -392,72 +324,6 @@ public class HeaderContributor extends AbstractHeaderContributor
 	public static final HeaderContributor forCss(final String location)
 	{
 		return new HeaderContributor(new CSSHeaderContributor(location));
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that references all java script files with extension 'js'
-	 * that live in a package.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forJavaScript(final Class scope)
-	{
-		return forJavaScript(scope, PackageResource.EXTENSION_JS);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that references java script files that match the pattern and
-	 * that live in a package.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forJavaScript(final Class scope, final Pattern pattern)
-	{
-		return forJavaScript(scope, pattern, false);
-	}
-
-	/**
-	 * Returns a new instance of {@link HeaderContributor} with a set of header
-	 * contributors that references java script files that match the pattern and
-	 * that live in a package and sub packages in case recurse is true.
-	 * 
-	 * @param scope
-	 *            The scope of the package resource (typically the class of the
-	 *            caller, or a class that lives in the package where the
-	 *            resource lives).
-	 * @param pattern
-	 *            The regexp pattern to match resources on
-	 * @param recurse
-	 *            whether to recurse into sub packages
-	 * @return the new header contributor instance
-	 */
-	public static final HeaderContributor forJavaScript(final Class scope, final Pattern pattern,
-			boolean recurse)
-	{
-		PackageResource[] resources = PackageResource.get(scope, pattern, recurse);
-		HeaderContributor contributor = new HeaderContributor();
-		if (resources != null)
-		{
-			int len = resources.length;
-			for (int i = 0; i < len; i++)
-			{
-				contributor.addContributor(new JavaScriptReferenceHeaderContributor(scope,
-						resources[i].getPath()));
-			}
-		}
-		return contributor;
 	}
 
 	/**
