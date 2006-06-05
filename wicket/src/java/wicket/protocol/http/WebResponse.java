@@ -83,11 +83,11 @@ public class WebResponse extends Response
 	{
 		getHttpServletResponse().addCookie(cookie);
 	}
-	
+
 	/**
 	 * Convenience method for clearing a cookie.
 	 * 
-	 * @param cookie 
+	 * @param cookie
 	 *            The cookie to set
 	 * @see WebResponse#addCookie(Cookie)
 	 */
@@ -97,7 +97,7 @@ public class WebResponse extends Response
 		cookie.setValue(null);
 		addCookie(cookie);
 	}
-	
+
 	/**
 	 * Closes response output.
 	 */
@@ -159,17 +159,20 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Redirects to the given url.
+	 * Redirects to the given url. Implementations should encode the URL to make
+	 * sure cookie-less operation is supported in case clients forgot.
 	 * 
 	 * @param url
 	 *            The URL to redirect to
 	 */
-	public void redirect(final String url)
+	public void redirect(String url)
 	{
 		if (!redirect)
 		{
 			if (httpServletResponse != null)
 			{
+				// encode to make sure no caller forgot this
+				url = encodeURL(url).toString();
 				try
 				{
 					if (httpServletResponse.isCommitted())
@@ -336,6 +339,6 @@ public class WebResponse extends Response
 	public void setAttachmentHeader(String filename)
 	{
 		setHeader("Content-Disposition", "attachment"
-				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename+"\"") : ""));
+				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
 	}
 }
