@@ -21,6 +21,8 @@ package wicket;
 import java.io.Serializable;
 import java.util.Locale;
 
+import wicket.markup.html.PackageResource;
+
 /**
  * ResourceReference is essentially a reference to an actual resource which is
  * shared through the Application. A ResourceReference has a name and a scope
@@ -109,8 +111,9 @@ public class ResourceReference implements Serializable
 		// Try to resolve resource
 		if (resource == null)
 		{
+			SharedResources sharedResources = application.getSharedResources();
 			// Try to get resource from Application repository
-			resource = application.getSharedResources().get(scope, name, locale, style, true);
+			resource = sharedResources.get(scope, name, locale, style, true);
 
 			// Not available yet?
 			if (resource == null)
@@ -121,17 +124,21 @@ public class ResourceReference implements Serializable
 				{
 					// If lazy-init did not create resource with correct locale
 					// and style then we should default the resource
-					resource = application.getSharedResources().get(scope, name, locale, style,
-							false);
+					resource = sharedResources.get(scope, name, locale, style, false);
 					if (resource == null)
 					{
-						throw new WicketRuntimeException("Unable to resolve shared resource "
-								+ this);
+						// still null? try to see whether it is a package
+						// resource that should
+						// be lazily loaded
+						PackageResource packageResource = PackageResource.get(scope, name);
+						// will throw an exception if not found, so if we come
+						// here, it was found
+						sharedResources.add(name, packageResource);
 					}
 				}
 
 				// Share through application
-				application.getSharedResources().add(scope, name, locale, style, resource);
+				sharedResources.add(scope, name, locale, style, resource);
 			}
 		}
 	}

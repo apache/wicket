@@ -18,15 +18,21 @@
  */
 package wicket;
 
+import wicket.markup.html.PackageResource;
+
 /**
- * Initializes something when application loads
+ * Initializes something when application loads.
  * 
  * Initializer is there for clustering. Lets say you access a page that has a
- * link to a packaged resource on node A now the url for the resource gets
- * forwarded to node B, but node B doesnt have the resource registered yet
- * because maybe the page class hasn't been loaded and so its static block
- * hasn't run yet. So the initializer is a place for you to register all those
- * resources and do all the stuff you used to do in the static blocks.
+ * link to a resource on node A now the url for the resource gets forwarded to
+ * node B, but node B doesnt have the resource registered yet because maybe the
+ * page class hasn't been loaded and so its static block hasn't run yet. So the
+ * initializer is a place for you to register all those resources and do all the
+ * stuff you used to do in the static blocks.
+ * <p>
+ * You don't have to pre-register {@link PackageResource package resources}, as
+ * they can be initialized lazily.
+ * </p>
  * 
  * @author Jonathan Locke
  */

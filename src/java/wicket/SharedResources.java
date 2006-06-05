@@ -42,22 +42,6 @@ public class SharedResources
 	/** Logger */
 	private static Log log = LogFactory.getLog(SharedResources.class);
 
-	/** Map of Class to alias String */
-	private final Map<Class, String> classAliasMap = new HashMap<Class, String>();
-
-	/** Map of shared resources states */
-	private final Map<String, Resource> resourceMap = new HashMap<String, Resource>();
-
-	/**
-	 * Construct.
-	 * 
-	 * @param application
-	 *            The application
-	 */
-	SharedResources(Application application)
-	{
-	}
-
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts
 	 * _[locale] and _[style] into path just before any extension that might
@@ -109,43 +93,20 @@ public class SharedResources
 		return buffer.toString();
 	}
 
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @param scope
-	 *            The scope of the resource
-	 * @param path
-	 *            The resource path
-	 * @param locale
-	 *            The locale
-	 * @param style
-	 *            The style (see {@link wicket.Session})
-	 * @return The localized path
-	 */
-	public String resourceKey(final Class scope, final String path, final Locale locale,
-			final String style)
-	{
-		String alias = classAliasMap.get(scope);
-		if (alias == null)
-		{
-			alias = scope.getName();
-		}
-		return alias + '/' + resourceKey(path, locale, style);
-	}
+	/** Map of Class to alias String */
+	private final Map<Class, String> classAliasMap = new HashMap<Class, String>();
+
+	/** Map of shared resources states */
+	private final Map<String, Resource> resourceMap = new HashMap<String, Resource>();
 
 	/**
-	 * Sets an alias for a class so that a resource url can look like:
-	 * resources/images/Image.jpg instead of
-	 * resources/wicket.resources.ResourceClass/Image.jpg
+	 * Construct.
 	 * 
-	 * @param clz
-	 *            The class that has to be aliased.
-	 * @param alias
-	 *            The alias string.
+	 * @param application
+	 *            The application
 	 */
-	public final void putClassAlias(Class clz, String alias)
+	SharedResources(Application application)
 	{
-		classAliasMap.put(clz, alias);
 	}
 
 	/**
@@ -173,6 +134,7 @@ public class SharedResources
 			if (value == null)
 			{
 				resourceMap.put(key, resource);
+				log.info("added shared resource " + key);
 			}
 		}
 	}
@@ -289,6 +251,21 @@ public class SharedResources
 	}
 
 	/**
+	 * Sets an alias for a class so that a resource url can look like:
+	 * resources/images/Image.jpg instead of
+	 * resources/wicket.resources.ResourceClass/Image.jpg
+	 * 
+	 * @param clz
+	 *            The class that has to be aliased.
+	 * @param alias
+	 *            The alias string.
+	 */
+	public final void putClassAlias(Class clz, String alias)
+	{
+		classAliasMap.put(clz, alias);
+	}
+
+	/**
 	 * Removes a shared resource.
 	 * 
 	 * @param key
@@ -300,5 +277,29 @@ public class SharedResources
 		{
 			resourceMap.remove(key);
 		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param scope
+	 *            The scope of the resource
+	 * @param path
+	 *            The resource path
+	 * @param locale
+	 *            The locale
+	 * @param style
+	 *            The style (see {@link wicket.Session})
+	 * @return The localized path
+	 */
+	public String resourceKey(final Class scope, final String path, final Locale locale,
+			final String style)
+	{
+		String alias = classAliasMap.get(scope);
+		if (alias == null)
+		{
+			alias = scope.getName();
+		}
+		return alias + '/' + resourceKey(path, locale, style);
 	}
 }

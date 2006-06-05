@@ -18,20 +18,7 @@
  */
 package wicket.markup.html;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.JarURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Locale;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,10 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
-import wicket.util.lang.PackageName;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
-import wicket.util.string.Strings;
 
 /**
  * Represents a localizable static resource.
@@ -50,14 +35,11 @@ import wicket.util.string.Strings;
  * Use like eg:
  * 
  * <pre>
- * private static final PackageResource IMG_UNKNOWN = PackageResource.get(EditPage.class,
- * 		&quot;questionmark.gif&quot;);
+ * PackageResource IMG_UNKNOWN = PackageResource.get(EditPage.class, &quot;questionmark.gif&quot;);
  * </pre>
  * 
  * where the static resource references image 'questionmark.gif' from the the
- * package that EditPage is in to get a package resource. Register package
- * resources with one of the 'bind' methods to make them available as shared/
- * bookmarkable resources.
+ * package that EditPage is in to get a package resource.
  * </p>
  * 
  * @author Jonathan Locke
@@ -65,37 +47,28 @@ import wicket.util.string.Strings;
  */
 public class PackageResource extends WebResource
 {
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Exception thrown when the creation of a package resource is not allowed.
+	 */
+	public static final class PackageResourceBlockedException extends WicketRuntimeException
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param message
+		 */
+		public PackageResourceBlockedException(String message)
+		{
+			super(message);
+		}
+	}
 
 	/** log. */
 	private static final Log log = LogFactory.getLog(PackageResource.class);
 
-	/**
-	 * common extension pattern for javascript files; matches all files with
-	 * extension 'js'.
-	 */
-	public static final Pattern EXTENSION_JS = Pattern.compile(".*\\.js");
-
-	/**
-	 * common extension pattern for css files; matches all files with extension
-	 * 'css'.
-	 */
-	public static final Pattern EXTENSION_CSS = Pattern.compile(".*\\.css");
-
-	/** The path to the resource */
-	private final String absolutePath;
-
-	/** The resource's locale */
-	private Locale locale;
-
-	/** The resource's style */
-	private final String style;
-
-	/** The scoping class, used for class loading and to determine the package. */
-	private final Class scope;
-
-	/** The path this resource was created with. */
-	private final String path;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Binds a resource to the given application object. Will create the
@@ -179,246 +152,6 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Binds the resources that match the provided pattern to the given
-	 * application object. Will create any resources if not already in the
-	 * shared resources of the application object.
-	 * 
-	 * @param application
-	 *            The application to bind to.
-	 * @param scope
-	 *            The scope of the resource.
-	 * @param pattern
-	 *            A regular expression to match against the contents of the
-	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
-	 *            will add all the files with extension &quot;js&quot; from that
-	 *            package).
-	 */
-	public static void bind(Application application, Class scope, Pattern pattern)
-	{
-		// bind using the pattern without recursing
-		bind(application, scope, pattern, false);
-	}
-
-	/**
-	 * Binds the resources that match the provided pattern to the given
-	 * application object. Will create any resources if not already in the
-	 * shared resources of the application object and does that recursively when
-	 * the recurse parameter is true, or just for the scoped package if that
-	 * parameter is false
-	 * 
-	 * @param application
-	 *            The application to bind to.
-	 * @param scope
-	 *            The scope of the resource.
-	 * @param pattern
-	 *            A regular expression to match against the contents of the
-	 *            package of the provided scope class (eg &quot;.*\\.js&quot;
-	 *            will add all the files with extension &quot;js&quot; from that
-	 *            package).
-	 * @param recurse
-	 *            Whether this method should recurse into sub packages
-	 */
-	public static void bind(Application application, Class scope, Pattern pattern, boolean recurse)
-	{
-		// bind using the pattern
-		get(scope, pattern, recurse);
-	}
-
-	/**
-	 * Gets a non-localized resource for a given set of criteria. Only one
-	 * resource will be loaded for the same criteria.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the calling class/ the class in which you
-	 *            call this method
-	 * @param path
-	 *            The path to the resource
-	 * @return The resource
-	 */
-	public static PackageResource get(final Class scope, final String path)
-	{
-		return get(scope, path, null, null);
-	}
-
-	/**
-	 * Gets the resource for a given set of criteria. Only one resource will be
-	 * loaded for the same criteria.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the class in which you call this method
-	 * @param path
-	 *            The path to the resource
-	 * @param locale
-	 *            The locale of the resource
-	 * @param style
-	 *            The style of the resource (see {@link wicket.Session})
-	 * @return The resource
-	 */
-	public static PackageResource get(final Class scope, final String path, final Locale locale,
-			final String style)
-	{
-		final SharedResources sharedResources = Application.get().getSharedResources();
-		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
-				true);
-		if (resource == null)
-		{
-			resource = new PackageResource(scope, path, locale, style);
-			sharedResources.add(scope, path, locale, style, resource);
-		}
-		return resource;
-	}
-
-	/**
-	 * Gets non-localized resources for a given set of criteria. Multiple
-	 * resource can be loaded for the same criteria if they match the pattern.
-	 * If no resources were found, this method returns null.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the calling class/ the class in which you
-	 *            call this method
-	 * @param pattern
-	 *            Regexp pattern to match resources
-	 * @return The resources, never null but may be empty
-	 */
-	public static PackageResource[] get(Class scope, Pattern pattern)
-	{
-		return get(scope, pattern, false);
-	}
-
-	/**
-	 * Gets non-localized resources for a given set of criteria. Multiple
-	 * resource can be loaded for the same criteria if they match the pattern.
-	 * If no resources were found, this method returns null.
-	 * 
-	 * @param scope
-	 *            This argument will be used to get the class loader for loading
-	 *            the package resource, and to determine what package it is in.
-	 *            Typically this is the calling class/ the class in which you
-	 *            call this method
-	 * @param pattern
-	 *            Regexp pattern to match resources
-	 * @param recurse
-	 *            Whether this method should recurse into sub packages
-	 * @return The resources, never null but may be empty
-	 */
-	public static PackageResource[] get(Class scope, Pattern pattern, boolean recurse)
-	{
-		final List<PackageResource> resources = new ArrayList<PackageResource>();
-		String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
-				.toString();
-		ClassLoader loader = scope.getClassLoader();
-		try
-		{
-			// loop through the resources of the package
-			Enumeration packageResources = loader.getResources(packageRef);
-			while (packageResources.hasMoreElements())
-			{
-				URL resource = (URL)packageResources.nextElement();
-				URLConnection connection = resource.openConnection();
-				if (connection instanceof JarURLConnection)
-				{
-					JarFile jf = ((JarURLConnection)connection).getJarFile();
-					scanJarFile(scope, pattern, recurse, resources, packageRef, jf);
-				}
-				else
-				{
-					String absolutePath = scope.getResource("").toExternalForm();
-					File basedir;
-					URI uri;
-					try
-					{
-						uri = new URI(absolutePath);
-					}
-					catch (URISyntaxException e)
-					{
-						throw new RuntimeException(e);
-					}
-					try
-					{
-						basedir = new File(uri);
-					}
-					catch (IllegalArgumentException e)
-					{
-						log.debug("Can't construct the uri as a file: " + absolutePath);
-						// if this is throwen then the path is not really a
-						// file. but could be a zip.
-						String jarZipPart = uri.getSchemeSpecificPart();
-						// lowercased for testing if jar/zip, but leave the real
-						// filespec unchanged
-						String lowerJarZipPart = jarZipPart.toLowerCase();
-						int index = lowerJarZipPart.indexOf(".zip");
-						if (index == -1)
-						{
-							index = lowerJarZipPart.indexOf(".jar");
-						}
-						if (index == -1)
-						{
-							throw e;
-						}
-
-						String filename = jarZipPart.substring(0, index + 4); // 4 =
-						// len
-						// of
-						// ".jar"
-						// or
-						// ".zip"
-						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
-						JarFile jarFile = new JarFile(filename, false);
-						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
-						return resources.toArray(new PackageResource[resources.size()]);
-					}
-					if (!basedir.isDirectory())
-					{
-						throw new IllegalStateException("unable to read resources from directory "
-								+ basedir);
-					}
-					addResources(scope, pattern, resources, new StringBuffer(""), basedir, recurse);
-				}
-			}
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
-
-		return resources.toArray(new PackageResource[resources.size()]);
-	}
-
-	/**
-	 * @param scope
-	 * @param pattern
-	 * @param recurse
-	 * @param resources
-	 * @param packageRef
-	 * @param jf =
-	 */
-	private static void scanJarFile(Class scope, Pattern pattern, boolean recurse,
-			final List<PackageResource> resources, String packageRef, JarFile jf)
-	{
-		Enumeration enumeration = jf.entries();
-		while (enumeration.hasMoreElements())
-		{
-			JarEntry je = (JarEntry)enumeration.nextElement();
-			String name = je.getName();
-			if (name.startsWith(packageRef))
-			{
-				name = name.substring(packageRef.length() + 1);
-				if (pattern.matcher(name).matches() && (recurse || (name.indexOf('/') == -1)))
-				{
-					// we add the entry as a package resource
-					resources.add(get(scope, name, null, null));
-				}
-			}
-		}
-	}
-
-	/**
 	 * Gets whether a resource for a given set of criteria exists.
 	 * 
 	 * @param scope
@@ -442,48 +175,73 @@ public class PackageResource extends WebResource
 	}
 
 	/**
-	 * Adds resources recursively.
+	 * Gets a non-localized resource for a given set of criteria. Only one
+	 * resource will be loaded for the same criteria.
 	 * 
 	 * @param scope
-	 *            the original scope used to get the base directory
-	 * @param pattern
-	 *            Regexp pattern to match resources
-	 * @param resources
-	 *            the current list of resources
-	 * @param relativePath
-	 *            The relative path that is to be prepended to the resource's
-	 *            name
-	 * @param dir
-	 *            the current directory
-	 * @param recurse
-	 *            Whether this method should recurse into sub packages
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the calling class/ the class in which you
+	 *            call this method
+	 * @param path
+	 *            The path to the resource
+	 * @return The resource
+	 * @throws PackageResourceBlockedException
+	 *             when the target resource is not accepted by
+	 *             {@link IPackageResourceGuard the package resource guard}.
 	 */
-	private static final void addResources(final Class scope, final Pattern pattern,
-			final List<PackageResource> resources, final StringBuffer relativePath, final File dir,
-			boolean recurse)
+	public static PackageResource get(final Class scope, final String path)
 	{
-		File[] files = dir.listFiles();
-		for (File file : files)
-		{
-			if (file.isDirectory())
-			{
-				if (recurse)
-				{
-					addResources(scope, pattern, resources, new StringBuffer(relativePath
-							.toString()).append(file.getName()).append('/'), file, recurse);
-				}
-			}
-			else
-			{
-				String fileName = file.getName();
-				if (pattern.matcher(fileName).matches())
-				{
-					// we add the entry as a package resource
-					resources.add(get(scope, relativePath + fileName, null, null));
-				}
-			}
-		}
+		return get(scope, path, null, null);
 	}
+
+	/**
+	 * Gets the resource for a given set of criteria. Only one resource will be
+	 * loaded for the same criteria.
+	 * 
+	 * @param scope
+	 *            This argument will be used to get the class loader for loading
+	 *            the package resource, and to determine what package it is in.
+	 *            Typically this is the class in which you call this method
+	 * @param path
+	 *            The path to the resource
+	 * @param locale
+	 *            The locale of the resource
+	 * @param style
+	 *            The style of the resource (see {@link wicket.Session})
+	 * @return The resource
+	 * @throws PackageResourceBlockedException
+	 *             when the target resource is not accepted by
+	 *             {@link IPackageResourceGuard the package resource guard}.
+	 */
+	public static PackageResource get(final Class scope, final String path, final Locale locale,
+			final String style)
+	{
+		final SharedResources sharedResources = Application.get().getSharedResources();
+		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
+				true);
+		if (resource == null)
+		{
+			resource = new PackageResource(scope, path, locale, style);
+			sharedResources.add(scope, path, locale, style, resource);
+		}
+		return resource;
+	}
+
+	/** The path to the resource */
+	private final String absolutePath;
+
+	/** The resource's locale */
+	private Locale locale;
+
+	/** The path this resource was created with. */
+	private final String path;
+
+	/** The scoping class, used for class loading and to determine the package. */
+	private final Class scope;
+
+	/** The resource's style */
+	private final String style;
 
 	/**
 	 * Hidden constructor.
@@ -497,12 +255,24 @@ public class PackageResource extends WebResource
 	 *            The locale of the resource
 	 * @param style
 	 *            The style of the resource
+	 * @throws PackageResourceBlockedException
+	 *             when the target resource is not accepted by
+	 *             {@link IPackageResourceGuard the package resource guard}.
 	 */
 	private PackageResource(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
 		// Convert resource path to absolute path relative to base package
 		this.absolutePath = Packages.absolutePath(scope, path);
+
+		IPackageResourceGuard guard = Application.get().getResourceSettings()
+				.getPackageResourceGuard();
+		if (!guard.accept(scope, path))
+		{
+			throw new PackageResourceBlockedException("package resource " + absolutePath
+					+ " may not be accessed");
+		}
+
 		this.scope = scope;
 		this.path = path;
 		this.locale = locale;
@@ -517,6 +287,36 @@ public class PackageResource extends WebResource
 			// Invalidate it again so that it won't hold up resources
 			invalidate();
 		}
+	}
+
+	/**
+	 * Gets the absolute path of the resource.
+	 * 
+	 * @return the absolute resource path
+	 */
+	public final String getAbsolutePath()
+	{
+		return absolutePath;
+	}
+
+	/**
+	 * Gets the locale.
+	 * 
+	 * @return The Locale of this package resource
+	 */
+	public final Locale getLocale()
+	{
+		return locale;
+	}
+
+	/**
+	 * Gets the path this resource was created with.
+	 * 
+	 * @return the path
+	 */
+	public final String getPath()
+	{
+		return path;
 	}
 
 	/**
@@ -537,36 +337,6 @@ public class PackageResource extends WebResource
 		}
 		this.locale = resourceStream.getLocale();
 		return resourceStream;
-	}
-
-	/**
-	 * Gets the locale.
-	 * 
-	 * @return The Locale of this package resource
-	 */
-	public final Locale getLocale()
-	{
-		return locale;
-	}
-
-	/**
-	 * Gets the absolute path of the resource.
-	 * 
-	 * @return the absolute resource path
-	 */
-	public final String getAbsolutePath()
-	{
-		return absolutePath;
-	}
-
-	/**
-	 * Gets the path this resource was created with.
-	 * 
-	 * @return the path
-	 */
-	public final String getPath()
-	{
-		return path;
 	}
 
 	/**

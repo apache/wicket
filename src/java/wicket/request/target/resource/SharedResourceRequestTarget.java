@@ -22,11 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Response;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.application.IClassResolver;
+import wicket.markup.html.PackageResource;
 import wicket.protocol.http.WebResponse;
 import wicket.request.RequestParameters;
 
@@ -42,7 +45,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	private static final Log log = LogFactory.getLog(SharedResourceRequestTarget.class);
 
 	private final RequestParameters requestParameters;
-
 
 	/**
 	 * Construct.
@@ -65,45 +67,25 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * Respond by looking up the shared resource and delegating the actual
-	 * response to that resource.
-	 * 
-	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
-	 */
-	public void respond(RequestCycle requestCycle)
-	{
-		SharedResources sharedResources = requestCycle.getApplication().getSharedResources();
-		final String resourceKey = getRequestParameters().getResourceKey();
-		Resource resource = sharedResources.get(resourceKey);
-		if (resource == null)
-		{
-			Response response = requestCycle.getResponse();
-			if (response instanceof WebResponse)
-			{
-				((WebResponse)response).getHttpServletResponse().setStatus(
-						HttpServletResponse.SC_NOT_FOUND);
-				log.error("shared resource " + resourceKey + " not found");
-				return;
-			}
-			else
-			{
-				throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
-			}
-		}
-
-		if (requestParameters != null)
-		{
-			resource.setParameters(requestParameters.getParameters());
-		}
-
-		resource.onResourceRequested();
-	}
-
-	/**
 	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
 	 */
 	public void detach(RequestCycle requestCycle)
 	{
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof SharedResourceRequestTarget)
+		{
+			SharedResourceRequestTarget that = (SharedResourceRequestTarget)obj;
+			return getRequestParameters().getResourceKey().equals(
+					that.getRequestParameters().getResourceKey());
+		}
+		return false;
 	}
 
 	/**
@@ -131,21 +113,6 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof SharedResourceRequestTarget)
-		{
-			SharedResourceRequestTarget that = (SharedResourceRequestTarget)obj;
-			return getRequestParameters().getResourceKey().equals(
-					that.getRequestParameters().getResourceKey());
-		}
-		return false;
-	}
-
-	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -154,6 +121,77 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 		int result = "SharedResourceRequestTarget".hashCode();
 		result += getRequestParameters().getResourceKey().hashCode();
 		return 17 * result;
+	}
+
+	/**
+	 * Respond by looking up the shared resource and delegating the actual
+	 * response to that resource.
+	 * 
+	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
+	 */
+	public void respond(RequestCycle requestCycle)
+	{
+		Application application = requestCycle.getApplication();
+		SharedResources sharedResources = application.getSharedResources();
+		final String resourceKey = getRequestParameters().getResourceKey();
+		Resource resource = sharedResources.get(resourceKey);
+
+		// try to lazily register
+		if (resource == null)
+		{
+			int ix = resourceKey.indexOf('/');
+			if (ix != -1)
+			{
+				String className = resourceKey.substring(0, ix);
+				IClassResolver resolver = application.getApplicationSettings().getClassResolver();
+				Class scope = null;
+				try
+				{
+					scope = resolver.resolveClass(className);
+					String path = resourceKey.substring(ix + 1);
+
+					PackageResource packageResource = PackageResource.get(scope, path);
+					if (sharedResources.get(resourceKey) == null)
+					{
+						sharedResources.add(resourceKey, packageResource);
+					}
+					resource = packageResource;
+				}
+				catch (Exception e)
+				{
+					// besides logging, ignore exception; after this an error
+					// will be returned that the resource could not be retrieved
+					log.error("unable to lazily register shared resource " + resourceKey
+							+ ", exception=" + e.getMessage());
+				}
+			}
+		}
+
+		// if resource is still null, it doesn't exist
+		if (resource == null)
+		{
+			Response response = requestCycle.getResponse();
+			if (response instanceof WebResponse)
+			{
+				((WebResponse)response).getHttpServletResponse().setStatus(
+						HttpServletResponse.SC_NOT_FOUND);
+				log.error("shared resource " + resourceKey + " not found");
+				return;
+			}
+			else
+			{
+				throw new WicketRuntimeException("shared resource " + resourceKey + " not found");
+			}
+		}
+
+		// set request parameters if there are any
+		if (requestParameters != null)
+		{
+			resource.setParameters(requestParameters.getParameters());
+		}
+
+		// let the resource handle the request
+		resource.onResourceRequested();
 	}
 
 	/**
