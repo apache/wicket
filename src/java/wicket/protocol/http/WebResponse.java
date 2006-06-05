@@ -163,18 +163,21 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Redirects to the given url.
+	 * Redirects to the given url. Implementations should encode the URL to make
+	 * sure cookie-less operation is supported in case clients forgot.
 	 * 
 	 * @param url
 	 *            The URL to redirect to
 	 */
 	@Override
-	public void redirect(final String url)
+	public void redirect(String url)
 	{
 		if (!redirect)
 		{
 			if (httpServletResponse != null)
 			{
+				// encode to make sure no caller forgot this
+				url = encodeURL(url).toString();
 				try
 				{
 					if (httpServletResponse.isCommitted())
