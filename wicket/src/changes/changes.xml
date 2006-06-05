@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+      <action type="fix" dev="Eelco Hillenius">Redirect URLs sometimes were not being encoded for redirects, preventing 'cookie-less' operation (most notably when used with redirectTo). Fixed by always encoding redirects low-down; encoding multiple times has no effect.</action>
       <action type="fix" dev="Eelco Hillenius" issue="1490949">Package resources do not have to be pre-registered anymore. When a shared resource is not found, 
 Wicket tries to find a corresponding package resource, and if it finds one, registers it lazily.
 This fixes quite a few uncomfortable situations, and makes writing custom components easier. Package resources
