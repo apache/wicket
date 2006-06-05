@@ -80,6 +80,8 @@ public class BufferedWebResponse extends WebResponse
 
 	/**
 	 * Saves url to redirect to when buffered response is flushed.
+	 * Implementations should encode the URL to make sure cookie-less operation
+	 * is supported in case clients forgot.
 	 * 
 	 * @param url
 	 *            The URL to redirect to
@@ -92,7 +94,8 @@ public class BufferedWebResponse extends WebResponse
 			throw new WicketRuntimeException("Already redirecting to '" + redirectURL
 					+ "'. Cannot redirect more than once");
 		}
-		this.redirectURL = url;
+		// encode to make sure no caller forgot this
+		this.redirectURL = encodeURL(url).toString();
 	}
 
 	/**
