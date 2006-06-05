@@ -21,6 +21,7 @@ package wicket.proxy;
 import java.lang.reflect.Proxy;
 
 import junit.framework.TestCase;
+
 import wicket.proxy.LazyInitProxyFactory.ProxyReplacement;
 import wicket.proxy.util.ConcreteObject;
 import wicket.proxy.util.IInterface;
@@ -28,6 +29,7 @@ import wicket.proxy.util.IObjectMethodTester;
 import wicket.proxy.util.InterfaceObject;
 import wicket.proxy.util.ObjectMethodTester;
 import wicket.util.lang.Objects;
+import wicket.util.tester.WicketTester;
 
 /**
  * Tests lazy init proxy factory
@@ -37,6 +39,13 @@ import wicket.util.lang.Objects;
  */
 public class LazyInitProxyFactoryTest extends TestCase
 {
+
+
+	protected void setUp() throws Exception
+	{
+		new WicketTester(null);
+	}
+
 	private static InterfaceObject interfaceObject = new InterfaceObject("interface");
 
 	private static ConcreteObject concreteObject = new ConcreteObject("concrete");
@@ -94,7 +103,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		};
 
 		IObjectMethodTester testerProxy = (IObjectMethodTester) LazyInitProxyFactory
-				.createProxy(IObjectMethodTester.class, testerLocator);
+		.createProxy(IObjectMethodTester.class, testerLocator);
 		testerProxy.equals(this);
 		testerProxy.hashCode();
 		testerProxy.toString();
@@ -137,7 +146,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		};
 
 		ObjectMethodTester testerProxy = (ObjectMethodTester) LazyInitProxyFactory
-				.createProxy(ObjectMethodTester.class, testerLocator);
+		.createProxy(ObjectMethodTester.class, testerLocator);
 		testerProxy.equals(this);
 		testerProxy.hashCode();
 		testerProxy.toString();
