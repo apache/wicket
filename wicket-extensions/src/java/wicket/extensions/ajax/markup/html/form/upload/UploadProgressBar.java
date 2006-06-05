@@ -6,7 +6,6 @@ import wicket.Component;
 import wicket.IInitializer;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Form;
@@ -31,8 +30,6 @@ public class UploadProgressBar extends Panel
 		 */
 		public void init(Application application)
 		{
-			PackageResource.bind(application, ComponentInitializer.class, "progressbar.js");
-
 			// register the upload status resource
 			Application.get().getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());
 		}

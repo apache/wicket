@@ -21,12 +21,9 @@ package wicket.extensions.breadcrumb;
 import java.util.ArrayList;
 import java.util.List;
 
-import wicket.Application;
 import wicket.Component;
-import wicket.IInitializer;
 import wicket.MarkupContainer;
 import wicket.behavior.HeaderContributor;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -60,20 +57,6 @@ import wicket.model.LoadableDetachableModel;
  */
 public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 {
-	/**
-	 * Initializer for this component; binds static resources.
-	 */
-	public final static class BreadCrumbBarInitializer implements IInitializer
-	{
-		/**
-		 * @see wicket.IInitializer#init(wicket.Application)
-		 */
-		public void init(Application application)
-		{
-			PackageResource.bind(application, BreadCrumbBar.class, "BreadCrumbBar.css");
-		}
-	}
-
 	/**
 	 * List view for rendering the bread crumbs.
 	 */
@@ -236,7 +219,8 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected IBreadCrumbParticipant getParticipant(MarkupContainer parent, String componentId)
+				protected IBreadCrumbParticipant getParticipant(MarkupContainer parent,
+						String componentId)
 				{
 					return breadCrumbParticipant;
 				}

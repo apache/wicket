@@ -5,6 +5,8 @@ import java.util.Locale;
 
 import wicket.IResourceFactory;
 import wicket.Localizer;
+import wicket.markup.html.IPackageResourceGuard;
+import wicket.markup.html.PackageResourceGuard;
 import wicket.model.IModel;
 import wicket.resource.IPropertiesFactory;
 import wicket.resource.loader.IStringResourceLoader;
@@ -109,6 +111,13 @@ public interface IResourceSettings
 	Localizer getLocalizer();
 
 	/**
+	 * Gets the {@link PackageResourceGuard package resource guard}.
+	 * 
+	 * @return The package resource guard
+	 */
+	IPackageResourceGuard getPackageResourceGuard();
+
+	/**
 	 * Get the property factory which will be used to load property files
 	 * 
 	 * @return PropertiesFactory
@@ -142,8 +151,10 @@ public interface IResourceSettings
 	IResourceStreamLocator getResourceStreamLocator();
 
 	/**
-	 * @param start boolean if the resource watcher should be started if not already started. 
-	 *
+	 * @param start
+	 *            boolean if the resource watcher should be started if not
+	 *            already started.
+	 * 
 	 * @return Resource watcher with polling frequency determined by setting, or
 	 *         null if no polling frequency has been set.
 	 */
@@ -172,6 +183,14 @@ public interface IResourceSettings
 	 *            The defaultLocale to set.
 	 */
 	void setDefaultLocale(Locale defaultLocale);
+
+	/**
+	 * Sets the {@link PackageResourceGuard package resource guard}.
+	 * 
+	 * @param packageResourceGuard
+	 *            The package resource guard
+	 */
+	void setPackageResourceGuard(IPackageResourceGuard packageResourceGuard);
 
 	/**
 	 * Set the property factory which will be used to load property files
@@ -223,5 +242,4 @@ public interface IResourceSettings
 	 *            resource is requested
 	 */
 	void setUseDefaultOnMissingResource(final boolean useDefaultOnMissingResource);
-
 }

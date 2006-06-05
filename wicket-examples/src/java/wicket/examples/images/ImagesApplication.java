@@ -20,6 +20,7 @@ package wicket.examples.images;
 
 import wicket.Page;
 import wicket.examples.WicketExampleApplication;
+import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
@@ -34,11 +35,10 @@ import wicket.request.compound.CompoundRequestCycleProcessor;
 public class ImagesApplication extends WicketExampleApplication
 {
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public ImagesApplication()
 	{
-
 	}
 
 	/**
@@ -48,6 +48,15 @@ public class ImagesApplication extends WicketExampleApplication
 	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
+	}
+
+	/**
+	 * @see wicket.examples.WicketExampleApplication#init()
+	 */
+	@Override
+	protected void init()
+	{
+		getSharedResources().add("cancelButton", new DefaultButtonImageResource("Cancel"));
 	}
 
 	/**

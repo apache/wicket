@@ -22,6 +22,7 @@ import java.awt.Font;
 import java.util.Locale;
 
 import wicket.Page;
+import wicket.SharedResources;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
@@ -65,16 +66,17 @@ public class FormInputApplication extends WicketExampleApplication
 		imgSave.setFont(font);
 		DefaultButtonImageResource imgReset = new DefaultButtonImageResource("\u91CD\u7F6E");
 		imgReset.setFont(font);
-		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
-		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
+		SharedResources sharedResources = getSharedResources();
+		sharedResources.add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
+		sharedResources.add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
 		Font fontJa = new Font("Serif", Font.BOLD, 16);
 		DefaultButtonImageResource imgSaveJa = new DefaultButtonImageResource("\u4fdd\u5b58");
 		imgSaveJa.setFont(fontJa);
 		DefaultButtonImageResource imgResetJa = new DefaultButtonImageResource(
 				"\u30ea\u30bb\u30c3\u30c8");
 		imgResetJa.setFont(fontJa);
-		getSharedResources().add("save", Locale.JAPANESE, imgSaveJa);
-		getSharedResources().add("reset", Locale.JAPANESE, imgResetJa);
+		sharedResources.add("save", Locale.JAPANESE, imgSaveJa);
+		sharedResources.add("reset", Locale.JAPANESE, imgResetJa);
 	}
 
 	/**

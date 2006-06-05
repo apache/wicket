@@ -34,18 +34,9 @@ import wicket.protocol.http.WebRequest;
  */
 class UploadStatusResource extends DynamicWebResource
 {
-
 	/**
-	 * 
+	 * Dynamic resource for upload state.
 	 */
-	private static final long serialVersionUID = 1L;
-
-	@Override
-	protected ResourceState getResourceState()
-	{
-		return new UploadResourceState();
-	}
-
 	private static class UploadResourceState extends DynamicWebResource.ResourceState
 	{
 		/**
@@ -56,11 +47,10 @@ class UploadStatusResource extends DynamicWebResource
 		private String status;
 
 		/**
-		 * 
+		 * Construct.
 		 */
 		public UploadResourceState()
 		{
-
 			RequestCycle rc = RequestCycle.get();
 			HttpServletRequest req = ((WebRequest)rc.getRequest()).getHttpServletRequest();
 			UploadInfo info = UploadWebRequest.getUploadInfo(req);
@@ -88,15 +78,6 @@ class UploadStatusResource extends DynamicWebResource
 		}
 
 		/**
-		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getLength()
-		 */
-		@Override
-		public int getLength()
-		{
-			return status.length();
-		}
-
-		/**
 		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getData()
 		 */
 		@Override
@@ -104,5 +85,25 @@ class UploadStatusResource extends DynamicWebResource
 		{
 			return status.getBytes();
 		}
+
+		/**
+		 * @see wicket.markup.html.DynamicWebResource.ResourceState#getLength()
+		 */
+		@Override
+		public int getLength()
+		{
+			return status.length();
+		}
+	}
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * @see wicket.markup.html.DynamicWebResource#getResourceState()
+	 */
+	@Override
+	protected ResourceState getResourceState()
+	{
+		return new UploadResourceState();
 	}
 }
