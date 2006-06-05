@@ -62,12 +62,13 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			url.append("/").append(urlEncode(value));
 			i++;
 		}
-		
+
 		String pageMap = (String)parameters.get(WebRequestCodingStrategy.PAGEMAP);
-		if(pageMap != null)
+		if (pageMap != null)
 		{
 			i++;
-			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(urlEncode(pageMap));
+			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
+					urlEncode(pageMap));
 		}
 
 		if (i != parameters.size())
@@ -93,10 +94,10 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		String[] parts = urlFragment.split("/");
 		for (int i = 0; i < parts.length; i++)
 		{
-			if(WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
 			{
 				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP,parts[i]);
+				params.put(WebRequestCodingStrategy.PAGEMAP, parts[i]);
 			}
 			else
 			{
