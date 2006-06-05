@@ -123,7 +123,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * match the longest possible path first.
 	 * </p>
 	 */
-	private final SortedMap<String, IRequestTargetUrlCodingStrategy>mountsOnPath = new TreeMap<String, IRequestTargetUrlCodingStrategy>(
+	private final SortedMap<String, IRequestTargetUrlCodingStrategy> mountsOnPath = new TreeMap<String, IRequestTargetUrlCodingStrategy>(
 			lengthComparator);
 
 	/** cached url prefix. */
@@ -441,7 +441,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		String pathInfo = request.getPath();
 		if (pathInfo != null && pathInfo.startsWith("/resources/"))
 		{
-			parameters.setResourceKey(pathInfo.substring("/resources/".length()));
+			int ix = "/resources/".length();
+			if (pathInfo.length() > ix)
+			{
+				StringBuilder path = new StringBuilder(pathInfo.substring(ix));
+				int ixSemiColon = path.indexOf(";");
+				// strip off any jsession id
+				if (ixSemiColon != -1)
+				{
+					int ixEnd = path.indexOf("?");
+					if (ixEnd == -1)
+					{
+						ixEnd = path.length();
+					}
+					path.delete(ixSemiColon, ixEnd);
+				}
+				parameters.setResourceKey(path.toString());
+			}
 		}
 	}
 
@@ -702,9 +718,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	{
 		// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
 		// cache lookup results
-		for (Iterator<IRequestTargetUrlCodingStrategy> i = mountsOnPath.values().iterator(); i.hasNext();)
+		for (IRequestTargetUrlCodingStrategy encoder : mountsOnPath.values())
 		{
-			IRequestTargetUrlCodingStrategy encoder = i.next();
 			if (encoder.matches(requestTarget))
 			{
 				return encoder;
