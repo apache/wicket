@@ -43,17 +43,17 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *       &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *      	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
- *      	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
- *       &lt;/span&gt;
+ *        &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *       	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
+ *       	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
+ *        &lt;/span&gt;
  * </pre>
  * 
  * </p>
  * 
  * @param <T>
  *            The type
- *            
+ * 
  * @author Jonathan Locke
  * @author Johan Compagner
  * @author Martijn Dashorst
@@ -405,8 +405,9 @@ public class CheckBoxMultipleChoice<T> extends ListMultipleChoice<T>
 				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
 						" type=\"checkbox\"").append(
 						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-						.append(" value=\"").append(id).append("\" id=\"").append(idAttr).append(
-								"\"/>");
+						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
+						.append(id).append("\" id=\"").append(idAttr).append("\"/>");
+
 
 				// Add label for checkbox
 				String display = label;
