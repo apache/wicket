@@ -17,7 +17,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 
 	/**
 	 * @see wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#render(java.lang.Object,
-	 *      wicket.Response)
+	 *      wicket.Response, String)
 	 */
 	public final void render(Object object, Response response, String criteria)
 	{
@@ -60,6 +60,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 * @param object
 	 *            current assist choice
 	 * @param response
+	 * @param criteria 
 	 */
 	protected abstract void renderChoice(Object object, Response response, String criteria);
 
