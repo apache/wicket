@@ -160,7 +160,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 *            The variables to interpolate
 	 * @return This for chaining
 	 */
-	public final PackagedTextTemplate interpolate(Map variables)
+	public final TextTemplate interpolate(Map variables)
 	{
 		if (variables != null)
 		{

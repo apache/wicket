@@ -27,6 +27,7 @@ import wicket.util.string.interpolator.MapVariableInterpolator;
  * Represents a text template that can do variable interpolation.
  * 
  * @author Eelco Hillenius
+ * @author Jonathan Locke
  */
 public abstract class TextTemplate extends AbstractStringResourceStream
 {
@@ -85,4 +86,13 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 * @return The string resource
 	 */
 	public abstract String getString();
+
+	/**
+	 * Interpolates values into this text template.
+	 * 
+	 * @param variables
+	 *            Variables to interpolate into this text template
+	 * @return This for chaining
+	 */
+	public abstract TextTemplate interpolate(Map variables);
 }
