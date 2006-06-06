@@ -59,7 +59,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
 			Iterator existingItems)
 	{
-		final Map modelToItem = new HashMap();
+		final Map<IModel< ? >, Item> modelToItem = new HashMap<IModel< ? >, Item>();
 		while (existingItems.hasNext())
 		{
 			final Item item = (Item)existingItems.next();

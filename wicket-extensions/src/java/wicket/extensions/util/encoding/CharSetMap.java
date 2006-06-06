@@ -128,7 +128,7 @@ public final class CharSetMap
 	{
 		final Properties props = new Properties();
 		props.load(input);
-		return new HashMap(props);
+		return new HashMap<Object,Object>(props);
 	}
 
 	/**

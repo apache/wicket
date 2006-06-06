@@ -76,7 +76,7 @@ public class ListDataProvider<T> implements IDataProvider<T>
 	 */
 	public IModel<T> model(T object)
 	{
-		return new Model(object);
+		return new Model<T>(object);
 	}
 
 	public void detach()

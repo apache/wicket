@@ -94,6 +94,7 @@ public abstract class RatingPanel extends Panel<Integer>
 			super(parent, id, model);
 		}
 
+		@Override
 		protected void populateItem(LoopItem item)
 		{
 			// Use an AjaxFallbackLink for rating to make voting work even
@@ -102,11 +103,13 @@ public abstract class RatingPanel extends Panel<Integer>
 			{
 				private static final long serialVersionUID = 1L;
 
+				@Override
 				public boolean isEnabled()
 				{
 					return !((Boolean)hasVoted.getObject(RatingPanel.this)).booleanValue();
 				}
 
+				@Override
 				public void onClick(AjaxRequestTarget target)
 				{
 					LoopItem item = (LoopItem)getParent();

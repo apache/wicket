@@ -34,7 +34,7 @@ public class GoAndClearFilter extends GoFilter
 {
 	private static final long serialVersionUID = 1L;
 
-	protected static final IModel defaultClearModel = new Model("clear");
+	protected static final IModel<String> defaultClearModel = new Model<String>("clear");
 
 	private final Button clear;
 

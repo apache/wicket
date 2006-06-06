@@ -84,7 +84,7 @@ public class Recorder extends HiddenField
 
 		// set model and update ids array
 		String modelString = modelStringBuffer.toString();
-		setModel(new Model(modelString));
+		setModel(new Model<String>(modelString));
 		updateIds(modelString);
 	}
 

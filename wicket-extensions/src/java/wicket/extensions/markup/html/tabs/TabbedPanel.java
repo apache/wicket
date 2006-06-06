@@ -146,7 +146,7 @@ public class TabbedPanel extends Panel
 				});
 				if (item.getIteration() == getIterations() - 1)
 				{
-					item.add(new AttributeAppender("class", true, new Model("last"), " "));
+					item.add(new AttributeAppender("class", true, new Model<String>("last"), " "));
 				}
 
 			}

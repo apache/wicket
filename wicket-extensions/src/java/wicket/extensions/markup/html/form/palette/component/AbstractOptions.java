@@ -61,18 +61,18 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		return palette;
 	}
 
-	protected abstract Iterator getOptionsIterator();
+	protected abstract Iterator<T> getOptionsIterator();
 
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
-		Iterator options = getOptionsIterator();
-		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
+		Iterator<T> options = getOptionsIterator();
+		IChoiceRenderer<T> renderer = getPalette().getChoiceRenderer();
 
 		while (options.hasNext())
 		{
-			final Object choice = options.next();
+			final T choice = options.next();
 			String id = renderer.getIdValue(choice, 0);
 			Object displayValue = renderer.getDisplayValue(choice);
 			Class displayClass = displayValue == null ? null : displayValue.getClass();
