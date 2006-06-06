@@ -19,8 +19,8 @@
 package wicket.markup.html.basic;
 
 import junit.framework.TestCase;
-import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.diff.DiffUtil;
 
 /**
  * @author jcompagner
