@@ -42,7 +42,7 @@ public class AutoCompletePage extends BasePage
 	{
 		Form form = new Form(this, "form");
 
-		new AutoCompleteTextField(form, "ac", new Model<String>(""))
+		new AutoCompleteTextField<String>(form, "ac", new Model<String>(""))
 		{
 			@Override
 			protected Iterator getChoices(String input)

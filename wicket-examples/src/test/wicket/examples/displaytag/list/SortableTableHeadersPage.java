@@ -46,7 +46,7 @@ public class SortableTableHeadersPage extends WebPage
 	{
 		super();
 
-		List list = new ArrayList();
+		List <User>list = new ArrayList<User>();
 		addUser(list, 1, "Name-aaa", "mail-1");
 		addUser(list, 2, "Name-bbb", "mail-2");
 		addUser(list, 3, "Name-ccc", "mail-3");
@@ -57,7 +57,7 @@ public class SortableTableHeadersPage extends WebPage
 		addUser(list, 8, "Name-dca", "mail-8");
 		addUser(list, 9, "Name-eaa", "mail-9");
 
-		ListView table = new ListView(this, "table", list)
+		ListView<User> table = new ListView<User>(this, "table", list)
 		{
 			@Override
 			protected void populateItem(ListItem listItem)
@@ -69,7 +69,7 @@ public class SortableTableHeadersPage extends WebPage
 			}
 		};
 
-		new SortableListViewHeaders(this, "header", table)
+		new SortableListViewHeaders<User>(this, "header", table)
 		{
 			/*
 			 * If object does not support equals()
@@ -111,7 +111,7 @@ public class SortableTableHeadersPage extends WebPage
 
 	}
 
-	private void addUser(List data, int id, String name, String email)
+	private void addUser(List<User> data, int id, String name, String email)
 	{
 		User user = new User();
 		user.setId(id);
