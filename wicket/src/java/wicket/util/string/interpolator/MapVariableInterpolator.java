@@ -63,7 +63,12 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 */
 	protected final String getValue(final String variableName)
 	{
-		return variables.get(variableName).toString();
+		final Object value = variables.get(variableName);
+		if (value != null)
+		{
+			return value.toString();
+		}
+		throw new IllegalStateException("Interpolated variable '" + variableName + "' not found.");
 	}
 
 	/**
