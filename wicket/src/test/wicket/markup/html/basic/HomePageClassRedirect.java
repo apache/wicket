@@ -20,8 +20,9 @@ import wicket.markup.html.WebPage;
 
 /**
  * @author jcompagner
+ * @param <T> 
  */
-public class HomePageClassRedirect extends WebPage
+public class HomePageClassRedirect<T> extends WebPage<T>
 {
 	private static final long serialVersionUID = 1L;
 

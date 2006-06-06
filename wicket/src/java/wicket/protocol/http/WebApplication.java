@@ -443,6 +443,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * Create new Wicket Session object. Note, this method is not called if you
 	 * registered your own ISessionFactory with the Application.
+	 * @return new session
 	 * 
 	 * @see wicket.ISessionFactory#newSession()
 	 */

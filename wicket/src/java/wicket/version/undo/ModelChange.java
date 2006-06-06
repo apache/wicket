@@ -52,7 +52,7 @@ class ModelChange extends Change
 	 * @param component
 	 *            subject of the change
 	 */
-	ModelChange(final Component component)
+	ModelChange(final Component<?> component)
 	{
 		if (component == null)
 		{

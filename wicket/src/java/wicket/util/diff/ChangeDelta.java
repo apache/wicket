@@ -86,7 +86,7 @@ public class ChangeDelta extends Delta
         init(orig, rev);
     }
 
-    public void verify(List target) throws PatchFailedException
+    public void verify(List<Object> target) throws PatchFailedException
     {
         if (!original.verify(target))
         {
@@ -98,7 +98,7 @@ public class ChangeDelta extends Delta
         }
     }
 
-    public void applyTo(List target)
+    public void applyTo(List<Object> target)
     {
         original.applyDelete(target);
         revised.applyAdd(original.first(), target);

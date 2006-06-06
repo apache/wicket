@@ -134,6 +134,7 @@ public class Image extends WebComponent implements IResourceListener
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
+	@SuppressWarnings("unchecked")
 	public Image(MarkupContainer parent, final String id, final IModel model)
 	{
 		super(parent, id, model);

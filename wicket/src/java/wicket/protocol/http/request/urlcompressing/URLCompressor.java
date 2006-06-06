@@ -60,7 +60,7 @@ public class URLCompressor implements Serializable
 
 	private transient ReferenceQueue<Object> queue = new ReferenceQueue<Object>();
 
-	private transient IntHashMap directComponentRefs = new IntHashMap(); // uid->component/interface
+	private transient IntHashMap<ComponentAndInterface> directComponentRefs = new IntHashMap<ComponentAndInterface>(); // uid->component/interface
 
 	private int uid = 1;
 
@@ -70,7 +70,7 @@ public class URLCompressor implements Serializable
 
 		int size = s.readInt();
 		queue = new ReferenceQueue<Object>();
-		directComponentRefs = new IntHashMap((int)(size * 1.25));
+		directComponentRefs = new IntHashMap<ComponentAndInterface>((int)(size * 1.25));
 
 		while (--size >= 0)
 		{

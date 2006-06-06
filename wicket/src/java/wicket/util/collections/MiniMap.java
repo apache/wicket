@@ -221,12 +221,12 @@ public final class MiniMap implements Map, Serializable
 	 */
 	public Set keySet()
 	{
-		return new AbstractSet()
+		return new AbstractSet<Object>()
 		{
 			@Override
-			public Iterator iterator()
+			public Iterator<Object> iterator()
 			{
-				return new Iterator()
+				return new Iterator<Object>()
 				{
 					public boolean hasNext()
 					{
@@ -296,12 +296,12 @@ public final class MiniMap implements Map, Serializable
 	 */
 	public Set entrySet()
 	{
-		return new AbstractSet()
+		return new AbstractSet<Object>()
 		{
 			@Override
-			public Iterator iterator()
+			public Iterator<Object> iterator()
 			{
-				return new Iterator()
+				return new Iterator<Object>()
 				{
 					public boolean hasNext()
 					{

@@ -86,7 +86,7 @@ public class AddDelta extends Delta
         init(new Chunk(origpos, 0), rev);
     }
 
-    public void verify(List target) throws PatchFailedException
+    public void verify(List<Object> target) throws PatchFailedException
     {
         if (original.first() > target.size())
         {
@@ -94,7 +94,7 @@ public class AddDelta extends Delta
         }
     }
 
-    public void applyTo(List target)
+    public void applyTo(List<Object> target)
     {
         revised.applyAdd(original.first(), target);
     }

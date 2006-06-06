@@ -58,7 +58,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 		list.add("fourteen");
 
 		final int pageSize = 2;
-		final PageableListView listview = new PageableListView(this, "table", list, pageSize)
+		final PageableListView listview = new PageableListView<String>(this, "table", list, pageSize)
 		{
 			private static final long serialVersionUID = 1L;
 

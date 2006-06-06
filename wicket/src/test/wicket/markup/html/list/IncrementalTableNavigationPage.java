@@ -49,7 +49,7 @@ public class IncrementalTableNavigationPage extends WebPage
 		list.add("seven");
 		list.add("eight");
 
-		PageableListView table = new PageableListView(this, "table", list, 2)
+		PageableListView table = new PageableListView<String>(this, "table", list, 2)
 		{
 			private static final long serialVersionUID = 1L;
 
