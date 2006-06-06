@@ -18,6 +18,8 @@
  */
 package wicket.extensions.util.resource;
 
+import java.util.Map;
+
 import wicket.util.string.JavascriptUtils;
 import wicket.util.string.Strings;
 
@@ -63,5 +65,18 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	public String getAfterTemplateContents()
 	{
 		return JAVASCRIPT_END_TAG;
+	}
+
+	/**
+	 * JavaScriptTemplate class decorates another text template class and so
+	 * does not allow interpolation.
+	 * 
+	 * @param variables
+	 *            Ignored
+	 * @return This for chaining
+	 */
+	public TextTemplate interpolate(final Map variables)
+	{
+		return this;
 	}
 }
