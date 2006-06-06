@@ -93,6 +93,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected T convertValue(String[] input) throws ConversionException
 	{
@@ -106,7 +107,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 			String path = input[0].substring(getPath().length() + 1);
 
 			// retrieve the selected single radio choice component
-			Radio<T> choice = (Radio)get(path);
+			Radio<T> choice = (Radio<T>)get(path);
 
 			if (choice == null)
 			{

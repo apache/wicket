@@ -139,7 +139,7 @@ public class Chunk extends ToString
      * @param count
      *            the size of the chunk.
      */
-    public Chunk(List iseq, int pos, int count)
+    public Chunk(List<Object> iseq, int pos, int count)
     {
         this(pos, count);
         chunk = slice(iseq, pos, count);
@@ -158,7 +158,7 @@ public class Chunk extends ToString
      * @param offset
      *            the position the chunk should have in the resulting text.
      */
-    public Chunk(List iseq, int pos, int count, int offset)
+    public Chunk(List<Object> iseq, int pos, int count, int offset)
     {
         this(offset, count);
         chunk = slice(iseq, pos, count);

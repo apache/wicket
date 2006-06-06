@@ -61,7 +61,7 @@ public class FormTesterTest extends WicketTestCase
 		{
 			public Page getTestPage()
 			{
-				return new ChoicePage(Arrays.asList(books));
+				return new ChoicePage<Book>(Arrays.asList(books));
 			}
 		});
 		formTester = application.newFormTester("choiceForm");

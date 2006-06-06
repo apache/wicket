@@ -364,6 +364,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 * @param url
 		 * @param encodedParamReplacement
 		 */
+		@SuppressWarnings("unchecked")
 		public DecodedUrlRequest(final Request request, final String url,
 				final String encodedParamReplacement)
 		{

@@ -34,8 +34,9 @@ import java.util.Set;
  * calculated or key object is stored.
  * 
  * @author jcompagner
+ * @param <T> 
  */
-public class IntHashMap implements Cloneable, Serializable
+public class IntHashMap<T> implements Cloneable, Serializable
 {
 	transient volatile Set keySet = null;
 
@@ -217,7 +218,8 @@ public class IntHashMap implements Cloneable, Serializable
 	 *         <tt>null</tt> if the map contains no mapping for this key.
 	 * @see #put(int, Object)
 	 */
-	public Object get(int key)
+	@SuppressWarnings("unchecked")
+	public T get(int key)
 	{
 		int i = indexFor(key, table.length);
 		Entry e = table[i];
@@ -225,11 +227,11 @@ public class IntHashMap implements Cloneable, Serializable
 		{
 			if (e == null)
 			{
-				return e;
+				return null;
 			}
 			if (key == e.key)
 			{
-				return e.value;
+				return (T)e.value;
 			}
 			e = e.next;
 		}
@@ -291,7 +293,8 @@ public class IntHashMap implements Cloneable, Serializable
 	 *         also indicate that the HashMap previously associated
 	 *         <tt>null</tt> with the specified key.
 	 */
-	public Object put(int key, Object value)
+	@SuppressWarnings("unchecked")
+	public T put(int key, T value)
 	{
 		int i = indexFor(key, table.length);
 
@@ -299,7 +302,7 @@ public class IntHashMap implements Cloneable, Serializable
 		{
 			if (key == e.key)
 			{
-				Object oldValue = e.value;
+				T oldValue = (T)e.value;
 				e.value = value;
 				return oldValue;
 			}
@@ -416,7 +419,8 @@ public class IntHashMap implements Cloneable, Serializable
 	 * @throws NullPointerException
 	 *             if the specified map is null.
 	 */
-	public void putAll(IntHashMap m)
+	@SuppressWarnings("unchecked")
+	public void putAll(IntHashMap<T> m)
 	{
 		int numKeysToBeAdded = m.size();
 		if (numKeysToBeAdded == 0)
@@ -454,7 +458,7 @@ public class IntHashMap implements Cloneable, Serializable
 		for (Iterator i = m.entrySet().iterator(); i.hasNext();)
 		{
 			Entry e = (Entry)i.next();
-			put(e.getKey(), e.getValue());
+			put(e.getKey(), (T)e.getValue());
 		}
 	}
 
@@ -625,6 +629,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * @return a shallow copy of this map.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object clone()
 	{
@@ -778,7 +783,8 @@ public class IntHashMap implements Cloneable, Serializable
 		size++;
 	}
 
-	private abstract class HashIterator implements Iterator
+	@SuppressWarnings("hiding")
+	private abstract class HashIterator<T> implements Iterator<T>
 	{
 		Entry next; // next entry to return
 		int expectedModCount; // For fast-fail
@@ -866,30 +872,32 @@ public class IntHashMap implements Cloneable, Serializable
 		}
 	}
 
-	private class KeyIterator extends HashIterator
+	private class KeyIterator extends HashIterator<Integer>
 	{
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public Integer next()
 		{
 			return new Integer(nextEntry().getKey());
 		}
 	}
 
-	private class EntryIterator extends HashIterator
+	@SuppressWarnings("hiding")
+	private class EntryIterator<T> extends HashIterator<T>
 	{
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		@SuppressWarnings("unchecked")
+		public T next()
 		{
-			return nextEntry();
+			return (T)nextEntry();
 		}
 	}
 
 	// Subclass overrides these to alter behavior of views' iterator() method
-	Iterator newKeyIterator()
+	Iterator<Integer> newKeyIterator()
 	{
 		return new KeyIterator();
 	}
@@ -899,9 +907,9 @@ public class IntHashMap implements Cloneable, Serializable
 		return new ValueIterator();
 	}
 
-	Iterator newEntryIterator()
+	Iterator<T> newEntryIterator()
 	{
-		return new EntryIterator();
+		return new EntryIterator<T>();
 	}
 
 	// Views
@@ -925,13 +933,13 @@ public class IntHashMap implements Cloneable, Serializable
 		return (ks != null ? ks : (keySet = new KeySet()));
 	}
 
-	private class KeySet extends AbstractSet<Number>
+	private class KeySet extends AbstractSet<Integer>
 	{
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
 		@Override
-		public Iterator iterator()
+		public Iterator<Integer> iterator()
 		{
 			return newKeyIterator();
 		}
@@ -1058,13 +1066,13 @@ public class IntHashMap implements Cloneable, Serializable
 		return (es != null ? es : (entrySet = new EntrySet()));
 	}
 
-	private class EntrySet extends AbstractSet
+	private class EntrySet<E> extends AbstractSet<T>
 	{
 		/**
 		 * @see java.util.AbstractCollection#iterator()
 		 */
 		@Override
-		public Iterator iterator()
+		public Iterator<T> iterator()
 		{
 			return newEntryIterator();
 		}

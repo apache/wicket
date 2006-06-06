@@ -105,6 +105,7 @@ public class TableTest extends WicketTestCase
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unchecked")
 	public void testEmptyTable()
 	{
 		PageableListView table = createTable(0, 4);

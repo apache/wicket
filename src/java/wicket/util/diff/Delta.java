@@ -167,7 +167,7 @@ public abstract class Delta extends ToString
      * @throws PatchFailedException
      *             if the patch cannot be applied.
      */
-    public abstract void verify(List target) throws PatchFailedException;
+    public abstract void verify(List<Object> target) throws PatchFailedException;
 
     /**
      * Applies this delta as a patch to the given text.
@@ -177,7 +177,7 @@ public abstract class Delta extends ToString
      * @throws PatchFailedException
      *             if the patch cannot be applied.
      */
-    public final void patch(List target) throws PatchFailedException
+    public final void patch(List<Object> target) throws PatchFailedException
     {
         verify(target);
         try
@@ -198,7 +198,7 @@ public abstract class Delta extends ToString
      * @throws PatchFailedException
      *             if the patch cannot be applied.
      */
-    public abstract void applyTo(List target);
+    public abstract void applyTo(List<Object> target);
 
     /**
      * Converts this delta into its Unix diff style string representation.

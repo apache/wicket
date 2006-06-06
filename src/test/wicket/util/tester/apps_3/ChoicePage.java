@@ -42,8 +42,9 @@ import wicket.util.tester.apps_1.Book;
 
 /**
  * @author Ingram Chen
+ * @param <T> 
  */
-public class ChoicePage extends WebPage
+public class ChoicePage<T> extends WebPage<T>
 {
 	private static final long serialVersionUID = 1L;
 

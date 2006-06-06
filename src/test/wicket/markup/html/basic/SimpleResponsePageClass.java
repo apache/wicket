@@ -9,9 +9,10 @@ import wicket.markup.html.form.Form;
 
 /**
  * @author jcompagner
+ * @param <T> 
  * 
  */
-public class SimpleResponsePageClass extends WebPage
+public class SimpleResponsePageClass<T> extends WebPage<T>
 {
 	private static final long serialVersionUID = 1L;
 
