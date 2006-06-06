@@ -123,6 +123,12 @@
 			<email>jan_blok at users.sourceforge.net</email>
 			<roles />
 		</developer>
+		<developer>
+			<name>Janne Hietamäki</name>
+			<id>jannehietamaki</id>
+			<email>jannehietamaki at users.sourceforge.net</email>
+			<roles />
+		</developer>
 	</developers>
 
 	<contributors>
