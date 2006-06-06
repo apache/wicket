@@ -24,6 +24,7 @@ import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
+import wicket.util.diff.DiffUtil;
 
 
 /**

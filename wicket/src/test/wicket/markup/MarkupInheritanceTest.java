@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketTestCase;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.list.DiffUtil;
+import wicket.util.diff.DiffUtil;
 
 /**
  */
