@@ -73,6 +73,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.BeanFactory#getBean(java.lang.String,
 	 *      java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public Object getBean(String name, Class requiredType) throws BeansException
 	{
 		Object bean = beans.get(name);
@@ -90,6 +91,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	/**
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeansOfType(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, Object> getBeansOfType(Class type) throws BeansException
 	{
 		Map<String, Object> found = new HashMap<String, Object>();
