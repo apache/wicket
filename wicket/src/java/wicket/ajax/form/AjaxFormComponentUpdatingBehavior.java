@@ -103,7 +103,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	{
 		final FormComponent formComponent = getFormComponent();
 		boolean callOnUpdate = true;
-		
+
 		try
 		{
 			formComponent.inputChanged();
@@ -124,7 +124,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			onError(target, e);
 
 		}
-		
+
 		if (callOnUpdate)
 		{
 			onUpdate(target);
@@ -140,6 +140,13 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 */
 	protected abstract void onUpdate(AjaxRequestTarget target);
 
+	/**
+	 * Called to handle any error resulting from updating form component. Errors
+	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * 
+	 * @param target
+	 * @param e
+	 */
 	protected void onError(AjaxRequestTarget target, RuntimeException e)
 	{
 		throw e;
