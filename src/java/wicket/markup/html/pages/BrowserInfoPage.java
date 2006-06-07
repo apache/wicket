@@ -65,7 +65,7 @@ public class BrowserInfoPage extends WebPage
 	/**
 	 * Holds properties of the client.
 	 */
-	private static final class ClientPropertiesBean implements Serializable
+	public static class ClientPropertiesBean implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
