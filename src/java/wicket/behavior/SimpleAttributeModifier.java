@@ -21,7 +21,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	private String attribute;
 
 	/** The value to set */
-	private String value;
+	private CharSequence value;
 
 	/**
 	 * Construct.
@@ -31,7 +31,7 @@ public class SimpleAttributeModifier extends AbstractBehavior
 	 * @param value
 	 *            The value
 	 */
-	public SimpleAttributeModifier(final String attribute, final String value)
+	public SimpleAttributeModifier(final String attribute, final CharSequence value)
 	{
 		if (attribute == null)
 		{
