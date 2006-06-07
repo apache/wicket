@@ -70,10 +70,11 @@ import java.util.List;
  */
 public class ChangeDelta extends Delta
 {
-
+	/**
+	 * Construct.
+	 */
     ChangeDelta()
     {
-        super();
     }
 
     /**
@@ -86,6 +87,10 @@ public class ChangeDelta extends Delta
         init(orig, rev);
     }
 
+    /**
+
+     * @see wicket.util.diff.Delta#verify(java.util.List)
+     */
     public void verify(List<Object> target) throws PatchFailedException
     {
         if (!original.verify(target))
@@ -98,12 +103,18 @@ public class ChangeDelta extends Delta
         }
     }
 
+    /**
+     * @see wicket.util.diff.Delta#applyTo(java.util.List)
+     */
     public void applyTo(List<Object> target)
     {
         original.applyDelete(target);
         revised.applyAdd(original.first(), target);
     }
 
+    /**
+     * @see wicket.util.diff.Delta#toString(java.lang.StringBuffer)
+     */
     public void toString(StringBuffer s)
     {
         original.rangeString(s);
@@ -116,6 +127,9 @@ public class ChangeDelta extends Delta
         revised.toString(s, "> ", "\n");
     }
 
+    /**
+     * @see wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
+     */
     public void toRCSString(StringBuffer s, String EOL)
     {
         s.append("d");
@@ -131,6 +145,9 @@ public class ChangeDelta extends Delta
         revised.toString(s, "", EOL);
     }
 
+    /**
+     * @see wicket.util.diff.Delta#accept(wicket.util.diff.RevisionVisitor)
+     */
     public void accept(RevisionVisitor visitor)
     {
         visitor.visit(this);
