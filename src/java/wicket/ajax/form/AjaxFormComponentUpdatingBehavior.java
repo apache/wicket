@@ -106,19 +106,44 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
 		final FormComponent formComponent = getFormComponent();
-		formComponent.inputChanged();
-		formComponent.validate();
-		if (formComponent.hasErrorMessage())
+		boolean callOnUpdate = true;
+
+		try
 		{
-			formComponent.invalid();
+			formComponent.inputChanged();
+			formComponent.validate();
+			if (formComponent.hasErrorMessage())
+			{
+				formComponent.invalid();
+			}
+			else
+			{
+				formComponent.valid();
+				formComponent.updateModel();
+			}
 		}
-		else
+		catch (RuntimeException e)
 		{
-			formComponent.valid();
-			formComponent.updateModel();
+			callOnUpdate = false;
+			onError(target, e);
 		}
 
-		onUpdate(target);
+		if (callOnUpdate)
+		{
+			onUpdate(target);
+		}
+	}
+
+	/**
+	 * Called to handle any error resulting from updating form component. Errors
+	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * 
+	 * @param target
+	 * @param e
+	 */
+	private void onError(AjaxRequestTarget target, RuntimeException e)
+	{
+		throw e;
 	}
 
 	/**
