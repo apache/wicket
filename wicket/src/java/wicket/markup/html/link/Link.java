@@ -159,7 +159,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @return the popup specification.
 	 */
-	public final PopupSettings getPopupSettings()
+	public PopupSettings getPopupSettings()
 	{
 		return popupSettings;
 	}
