@@ -41,7 +41,7 @@ public final class LastButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public LastButton(MarkupContainer parent, final String id, Wizard wizard)
+	public LastButton(MarkupContainer parent, final String id, IWizard wizard)
 	{
 		super(parent, id, wizard, "wicket.extensions.wizard.last");
 	}

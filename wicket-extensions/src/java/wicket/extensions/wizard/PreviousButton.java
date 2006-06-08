@@ -41,7 +41,7 @@ public final class PreviousButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public PreviousButton(MarkupContainer parent, final String id, Wizard wizard)
+	public PreviousButton(MarkupContainer parent, final String id, IWizard wizard)
 	{
 		super(parent, id, wizard, "wicket.extensions.wizard.previous");
 		setDefaultFormProcessing(false);

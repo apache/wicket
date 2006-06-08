@@ -41,7 +41,7 @@ public final class FinishButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public FinishButton(MarkupContainer parent, final String id, Wizard wizard)
+	public FinishButton(MarkupContainer parent, final String id, IWizard wizard)
 	{
 		super(parent, id, wizard, "wicket.extensions.wizard.finish");
 	}
