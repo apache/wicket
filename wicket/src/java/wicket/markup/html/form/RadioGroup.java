@@ -30,15 +30,15 @@ import wicket.util.convert.ConversionException;
  * 
  * ie
  * 
- * <code>
- * <span wicket:id="radiochoicegroup">
- *   ...
- *   <input type="radio" wicket:id="singleradiochoice1">choice 1</input>
- *   ...
- *   <input type="radio" wicket:id="singleradiochoice2">choice 2</input>
- *   ...
- * </span>
- * </code>
+ * <pre>
+ *  &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
+ *    ...
+ *    &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
+ *    ...
+ *    &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
+ *    ...
+ *  &lt;/span&gt;
+ * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * @author Sven Meier (svenmeier)
@@ -70,7 +70,7 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	{
 		return false;
 	}
-	
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
@@ -92,21 +92,21 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 			{
 				throw new WicketRuntimeException(
 						"submitted http post value ["
-						+ path
-						+ "] for RadioGroup component ["
-						+ getPath()
-						+ "] is illegal because it does not contain relative path to a Radio componnet. "
-						+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
+								+ path
+								+ "] for RadioGroup component ["
+								+ getPath()
+								+ "] is illegal because it does not contain relative path to a Radio componnet. "
+								+ "Due to this the RadioGroup component cannot resolve the selected Radio component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 			}
 
-			
+
 			// assign the value of the group's model
 			return choice.getModelObject();
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * Called when a selection changes.
 	 */
@@ -127,16 +127,17 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	 * want to be notified of selection events.
 	 * 
 	 * @param newSelection
-	 *			  The newly selected object of the backing model NOTE this is
-	 *			  the same as you would get by calling getModelObject() if the
-	 *			  new selection were current
+	 *            The newly selected object of the backing model NOTE this is
+	 *            the same as you would get by calling getModelObject() if the
+	 *            new selection were current
 	 */
 	protected void onSelectionChanged(final Object newSelection)
 	{
 	}
-	
+
 	/**
 	 * Radio group does not support persistence through cookies
+	 * 
 	 * @see wicket.markup.html.form.FormComponent#supportsPersistence()
 	 */
 	protected final boolean supportsPersistence()
