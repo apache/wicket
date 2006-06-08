@@ -32,6 +32,7 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 import wicket.request.RequestParameters;
 import wicket.session.pagemap.IPageMapEntry;
@@ -182,9 +183,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 	/**
 	 * Boolean if the page is stateless, so it doesn't have to be in the page
-	 * map, will be set in urlFor
+	 * map, will be set in urlFor.
 	 */
-	private transient Boolean stateless = Boolean.TRUE;
+	private transient Boolean stateless = null;
 
 	/** Version manager for this page */
 	private IPageVersionManager<T> versionManager;
@@ -375,6 +376,15 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// Reset it to stateless so that it can be tested again
 		this.stateless = null;
 
+		if (!isStateless())
+		{
+			// trigger creation of the actual session in case it was deferred
+			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
+		}
+
+		// Add/touch the response page in the session (its pagemap).
+		getSession().touch(this);
+
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
 
@@ -430,9 +440,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 		// Check rendering if it happened fully
 		checkRendering(this);
-
-		// Add/touch the response page in the session (its pagemap).
-		getSession().touch(this);
 	}
 
 	/**
@@ -983,8 +990,11 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * @return Returns true if this page can be seen as stateless so it won't go
-	 *         into the session
+	 * Gets whether the page is stateless. A page is stateless when it doesn't
+	 * have any call backs (like {@link Link links}), and thus doesn't need to
+	 * be kept around for possible calls.
+	 * 
+	 * @return Whether to page is stateless
 	 */
 	@Override
 	public final boolean isStateless()
@@ -997,7 +1007,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 				{
 					if (!component.isStateless())
 					{
-						return false;
+						return Boolean.FALSE;
 					}
 					return CONTINUE_TRAVERSAL;
 				}
@@ -1008,13 +1018,31 @@ public abstract class Page<T> extends MarkupContainer<T>
 			}
 			else if (returnValue instanceof Boolean)
 			{
-				stateless = (Boolean)returnValue;
+				stateless =  (Boolean)returnValue;
 			}
 		}
 		return stateless;
 	}
 
-	final void setStateless(boolean stateless)
+	/**
+	 * Sets whether the page is stateless. A page is stateless when it doesn't
+	 * have any call backs (like {@link Link links}), and thus doesn't need to
+	 * be kept around for possible calls. Pages start out being stateless. If
+	 * {@link RequestCycle#urlFor(Component, RequestListenerInterface) a url is created for a call back}
+	 * on a page, it is regarded to be stateful. This is not a 100% failsafe way
+	 * of doing things - in fact it is quite eager and can theoretically result
+	 * in pages being marked as stateful without needing so - but it should work
+	 * for 99% of the cases if people use the Wicket API like it is supposed to
+	 * be used.
+	 * <p>
+	 * A side effect of calling this method with stateless is false is that if
+	 * the session creation was deferred, it will explicitly be created now.
+	 * </p>
+	 * 
+	 * @param stateless
+	 *            Whether to page is stateless
+	 */
+	final void setStateless(Boolean stateless)
 	{
 		this.stateless = stateless;
 	}

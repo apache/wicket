@@ -137,12 +137,13 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request)
+	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request, boolean)
 	 */
-	public final String getSessionId(Request request)
+	public final String getSessionId(Request request, boolean create)
 	{
 		WebRequest webRequest = toWebRequest(request);
-		return getHttpSession(webRequest).getId();
+		HttpSession httpSession = webRequest.getHttpServletRequest().getSession(create);
+		return (httpSession != null) ? httpSession.getId() : null;
 	}
 
 	/**
@@ -179,8 +180,13 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	public Session lookup(Request request)
 	{
-		WebRequest webRequest = toWebRequest(request);
-		return (Session)getAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME);
+		String sessionId = getSessionId(request, false);
+		if (sessionId != null)
+		{
+			WebRequest webRequest = toWebRequest(request);
+			return (Session)getAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME);
+		}
+		return null;
 	}
 
 	/**
@@ -220,9 +226,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	protected final HttpSession getHttpSession(WebRequest request)
 	{
-		// FIXME post 1.2 allow for session-less operation
-		HttpSession httpSession = request.getHttpServletRequest().getSession(true);
-		return httpSession;
+		return request.getHttpServletRequest().getSession(false);
 	}
 
 	/**

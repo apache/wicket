@@ -331,15 +331,16 @@ public abstract class Session implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * Gets the unique id for this session from the underlying SessionStore
+	 * Gets the unique id for this session from the underlying SessionStore. May
+	 * be null if a concrete session is not yet created.
 	 * 
-	 * @return The unique id for this session
+	 * @return The unique id for this session or null
 	 */
 	public final String getId()
 	{
 		if (id == null)
 		{
-			id = getSessionStore().getSessionId(RequestCycle.get().getRequest());
+			id = getSessionStore().getSessionId(RequestCycle.get().getRequest(), false);
 			dirty = true;
 		}
 		return id;

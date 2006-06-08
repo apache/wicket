@@ -73,11 +73,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *       public void init()
- *       {
- *           String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *           URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *           ...
+ *         public void init()
+ *         {
+ *             String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *             URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *             ...
  * </pre>
  * 
  * @see WicketServlet
@@ -99,7 +99,7 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class WebApplication extends Application implements ISessionFactory
 {
-	
+
 	/**
 	 * Get WebApplication for current thread.
 	 * 
@@ -109,7 +109,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		return (WebApplication)Application.get();
 	}
-	
+
 	/**
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
@@ -228,10 +228,10 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final Class<? extends Page> bookmarkablePageClass)
+	public final void mountBookmarkablePage(final String path,
+			final Class<? extends Page> bookmarkablePageClass)
 	{
-		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,
-				null));
+		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass, null));
 	}
 
 	/**
@@ -443,6 +443,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * Create new Wicket Session object. Note, this method is not called if you
 	 * registered your own ISessionFactory with the Application.
+	 * 
 	 * @return new session
 	 * 
 	 * @see wicket.ISessionFactory#newSession()
@@ -522,7 +523,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 		getResourceSettings().setResourceFinder(
 				new WebApplicationPath(wicketFilter.getFilterConfig().getServletContext()));
 
-		String contextPath = wicketFilter.getFilterConfig().getInitParameter(Application.CONTEXTPATH);
+		String contextPath = wicketFilter.getFilterConfig().getInitParameter(
+				Application.CONTEXTPATH);
 		if (contextPath != null)
 		{
 			getApplicationSettings().setContextPath(contextPath);
@@ -542,7 +544,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// If no system parameter check servlet specific <init-param>
 		if (configuration == null)
 		{
-			configuration = wicketFilter.getFilterConfig().getInitParameter(Application.CONFIGURATION);
+			configuration = wicketFilter.getFilterConfig().getInitParameter(
+					Application.CONFIGURATION);
 		}
 		// If no system parameter and not <init-param>, than check
 		// <context-param>
@@ -555,11 +558,13 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// Development mode is default if not settings have been found
 		if (configuration != null)
 		{
-			configure(configuration, wicketFilter.getFilterConfig().getInitParameter("sourceFolder"));
+			configure(configuration, wicketFilter.getFilterConfig()
+					.getInitParameter("sourceFolder"));
 		}
 		else
 		{
-			configure(Application.DEVELOPMENT, wicketFilter.getFilterConfig().getInitParameter("sourceFolder"));
+			configure(Application.DEVELOPMENT, wicketFilter.getFilterConfig().getInitParameter(
+					"sourceFolder"));
 		}
 	}
 
@@ -639,11 +644,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 			// Create session using session factory
 			session = getSessionFactory().newSession(request);
 
-			// Set the client Locale for this session
-			session.setLocale(request.getLocale());
+			if (sessionStore.getSessionId(request, false) != null)
+			{
+				// Set the client Locale for this session
+				session.setLocale(request.getLocale());
 
-			// Bind the session to the session store
-			sessionStore.bind(request, session);
+				// Bind the session to the session store
+				sessionStore.bind(request, session);
+			}
 		}
 
 		WebSession webSession;
@@ -732,13 +740,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Returns the full rootpath of this application. This is the ApplicationSettings.contextpath
-	 * and the WicketFilter.rootpath concatted.
+	 * Returns the full rootpath of this application. This is the
+	 * ApplicationSettings.contextpath and the WicketFilter.rootpath concatted.
 	 * 
 	 * @return String the full rootpath.
 	 */
 	public String getRootPath()
 	{
-		return wicketFilter.getRootPath(WebRequestCycle.get().getWebRequest().getHttpServletRequest());
+		return wicketFilter.getRootPath(WebRequestCycle.get().getWebRequest()
+				.getHttpServletRequest());
 	}
 }

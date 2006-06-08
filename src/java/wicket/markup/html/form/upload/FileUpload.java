@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import wicket.Session;
+import wicket.Application;
+import wicket.RequestCycle;
 import wicket.util.file.Files;
 import wicket.util.upload.FileItem;
 
@@ -134,7 +135,9 @@ public class FileUpload implements Serializable
 	 */
 	public final File writeToTempFile() throws IOException
 	{
-		File temp = File.createTempFile(Session.get().getId(), item.getFieldName());
+		String sessionId = Application.get().getSessionStore().getSessionId(
+				RequestCycle.get().getRequest(), true);
+		File temp = File.createTempFile(sessionId, item.getFieldName());
 		writeTo(temp);
 		return temp;
 	}
