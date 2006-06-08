@@ -37,7 +37,7 @@ public final class NextButton extends WizardButton
 	 * @param id
 	 * @param wizard
 	 */
-	public NextButton(String id, Wizard wizard)
+	public NextButton(String id, IWizard wizard)
 	{
 		super(id, wizard, "wicket.extensions.wizard.next");
 	}
