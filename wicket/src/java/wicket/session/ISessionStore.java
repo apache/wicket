@@ -20,6 +20,8 @@ package wicket.session;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
@@ -84,13 +86,19 @@ public interface ISessionStore
 	void setAttribute(Request request, String name, Object value);
 
 	/**
-	 * Get the session id for the provided request.
+	 * Get the session id for the provided request. It create is false and the
+	 * creation of the actual session is deferred, this method should return
+	 * null to reflect it doesn't have one.
 	 * 
 	 * @param request
 	 *            The request
-	 * @return The session id for the provided request
+	 * @param create
+	 *            Whether to create an actual session (typically an instance of
+	 *            {@link HttpSession}) when not already done so
+	 * @return The session id for the provided request, possibly null if create
+	 *         is false and the creation of the actual session was deferred
 	 */
-	String getSessionId(Request request);
+	String getSessionId(Request request, boolean create);
 
 	/**
 	 * Retrieves the session for the provided request from this facade.

@@ -669,6 +669,9 @@ public abstract class RequestCycle
 		final Page page = component.getPage();
 		page.setStateless(false);
 
+		// trigger creation of the actual session in case it was deferred
+		session.getSessionStore().getSessionId(request, true);
+
 		// Get the listener interface name
 		final IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, listener);
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
@@ -685,6 +688,7 @@ public abstract class RequestCycle
 	 */
 	public final CharSequence urlFor(final IRequestTarget requestTarget)
 	{
+		
 		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, requestTarget);
 	}

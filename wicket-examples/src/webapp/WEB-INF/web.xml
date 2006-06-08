@@ -409,7 +409,17 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>	
-	
+
+	<servlet>
+		<servlet-name>StatelessApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.stateless.StatelessApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 	<filter-mapping>
 		<filter-name>AjaxApplication</filter-name>
 		<url-pattern>/ajax/*</url-pattern>
@@ -553,6 +563,11 @@
 	<servlet-mapping>
 		<servlet-name>BreadCrumbApplication</servlet-name>
 		<url-pattern>/breadcrumb/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>StatelessApplication</servlet-name>
+		<url-pattern>/stateless/*</url-pattern>
 	</servlet-mapping>
 
 	<session-config>

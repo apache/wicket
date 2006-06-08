@@ -255,7 +255,9 @@ public class RequestLogger
 	private SessionData getSessionData()
 	{
 		Session session = Session.get();
-		SessionData sessionData = liveSessions.get(session.getId());
+		String sessionId = session.getId();
+
+		SessionData sessionData = (sessionId != null) ? liveSessions.get(sessionId) : null;
 		if (sessionData == null)
 		{
 			sessionData = createSessionData(session);
@@ -270,11 +272,15 @@ public class RequestLogger
 	private SessionData createSessionData(Session session)
 	{
 		SessionData sessionData = new SessionData(session);
-		liveSessions.put(session.getId(), sessionData);
-		totalCreatedSessions++;
-		if (peakSessions < liveSessions.size())
+		String sessionId = session.getId();
+		if (sessionId != null)
 		{
-			peakSessions = liveSessions.size();
+			liveSessions.put(sessionId, sessionData);
+			totalCreatedSessions++;
+			if (peakSessions < liveSessions.size())
+			{
+				peakSessions = liveSessions.size();
+			}
 		}
 		return sessionData;
 	}

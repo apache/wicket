@@ -171,16 +171,19 @@ public class WicketFilter implements Filter
 			{
 				// Try to see if there is a redirect stored
 				ISessionStore sessionStore = webApplication.getSessionStore();
-				String sessionId = sessionStore.getSessionId(request);
-				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
-						sessionId, queryString);
-
-				if (bufferedResponse != null)
+				String sessionId = sessionStore.getSessionId(request, false);
+				if (sessionId != null)
 				{
-					bufferedResponse.writeTo(servletResponse);
-					// redirect responses are ignored for the request
-					// logger...
-					return;
+					BufferedHttpServletResponse bufferedResponse = webApplication
+							.popBufferedResponse(sessionId, queryString);
+
+					if (bufferedResponse != null)
+					{
+						bufferedResponse.writeTo(servletResponse);
+						// redirect responses are ignored for the request
+						// logger...
+						return;
+					}
 				}
 			}
 		}
@@ -218,15 +221,12 @@ public class WicketFilter implements Filter
 		response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 				.getResponseRequestEncoding());
 
+
 		try
 		{
-			// Create a new request cycle
-			// FIXME post 1.2 Instead of doing this, we should get a request
-			// cycle factory
-			// from the application settings and use that. That way we are a
-			// step
-			// closer to a session-less operation of Wicket.
 			RequestCycle cycle = session.newRequestCycle(request, response);
+
+			RequestLogger requestLogger = webApplication.getRequestLogger();
 
 			try
 			{
@@ -244,7 +244,6 @@ public class WicketFilter implements Filter
 			response.close();
 
 			RequestLogger requestLogger = webApplication.getRequestLogger();
-
 			if (requestLogger != null)
 			{
 				requestLogger.requestTime((System.currentTimeMillis() - time));

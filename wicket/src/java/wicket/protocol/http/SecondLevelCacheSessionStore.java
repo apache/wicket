@@ -61,18 +61,26 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		@Override
 		protected void removeEntry(IPageMapEntry entry)
 		{
-			getStore().removePage(getSession().getId(), entry.getPage());
+			String sessionId = getSession().getId();
+			if (sessionId != null)
+			{
+				getStore().removePage(sessionId, entry.getPage());
+			}
 		}
 
 		@Override
 		protected void put(Page page)
 		{
-			if (lastPage != page)
+			String sessionId = getSession().getId();
+			if (sessionId != null)
 			{
-				lastPage = page;
-				dirty();
+				if (lastPage != page)
+				{
+					lastPage = page;
+					dirty();
+				}
+				getStore().storePage(sessionId, page);
 			}
-			getStore().storePage(getSession().getId(), page);
 		}
 
 		@Override

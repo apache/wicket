@@ -739,6 +739,10 @@ public abstract class Application
 		applicationKeyToApplication.put(applicationKey, this);
 
 		sessionStore = newSessionStore();
+		if (sessionStore == null)
+		{
+			throw new IllegalStateException("sessionStore must be not null");
+		}
 	}
 
 	/**
