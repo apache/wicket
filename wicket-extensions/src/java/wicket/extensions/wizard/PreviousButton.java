@@ -37,7 +37,7 @@ public final class PreviousButton extends WizardButton
 	 * @param wizard
 	 *            The wizard
 	 */
-	public PreviousButton(String id, Wizard wizard)
+	public PreviousButton(String id, IWizard wizard)
 	{
 		super(id, wizard, "wicket.extensions.wizard.previous");
 		setDefaultFormProcessing(false);
