@@ -157,7 +157,8 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	public final FeedbackMessagesModel getFeedbackMessagesModel()
 	{
-		return (FeedbackMessagesModel)messageListView.getModel();
+		WrapModel wrapped = (WrapModel)messageListView.getModel();
+		return (FeedbackMessagesModel)wrapped.getNestedModel();
 	}
 
 	/**
