@@ -236,13 +236,17 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 		private IModel model;
 
+		private final boolean rootCompound;
+
 		/**
 		 * Construct.
 		 * @param model
+		 * @param rootCompound 
 		 */
-		public WrapModel(IModel model)
+		public WrapModel(IModel model, boolean rootCompound)
 		{
 			this.model = model;
+			this.rootCompound = rootCompound;
 		}
 
 		public IModel getNestedModel()
@@ -253,7 +257,14 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		@SuppressWarnings("unchecked")
 		public V getObject(Component component)
 		{
-			return (V)model.getObject(Component.this);
+			if(rootCompound)
+			{
+				return (V)model.getObject(null);
+			}
+			else
+			{
+				return (V)model.getObject(Component.this);
+			}
 		}
 
 		// I don't think there is any other way then to suppress the warnings here.
@@ -263,7 +274,14 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		@SuppressWarnings("unchecked")
 		public void setObject(Component component, V object)
 		{
-			model.setObject(Component.this, object);
+			if(rootCompound)
+			{
+				model.setObject(null, object);
+			}
+			else
+			{
+				model.setObject(Component.this, object);
+			}
 		}
 
 		public void detach()
@@ -1044,8 +1062,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		if (model != null)
 		{
 			// Get model value for this component.
-			// always use null now to get the current components object.
-			return model.getObject(null);
+			return model.getObject(this);
 		}
 		else
 		{
@@ -2013,12 +2030,25 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		{
 			this.model.detach();
 		}
+		
+		IModel prevModel = this.model;
+		if(prevModel instanceof WrapModel)
+		{
+			prevModel = model.getNestedModel();
+		}
 
 		// Change model
-		if (this.model != model)
+		if (prevModel != model)
 		{
-			addStateChange(new ComponentModelChange(this.model));
-			this.model = model;
+			if(prevModel != null) addStateChange(new ComponentModelChange(prevModel));
+			if(model instanceof ICompoundModel)
+			{
+				this.model = new WrapModel<T>(model,true);
+			}
+			else
+			{
+				this.model = model;
+			}
 		}
 
 		modelChanged();
@@ -2542,7 +2572,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				setVersioned(false);
 
 				// return the shared compound model
-				return new WrapModel<T>((ICompoundModel)model);
+				return new WrapModel<T>((ICompoundModel)model,false);
 			}
 		}
 
