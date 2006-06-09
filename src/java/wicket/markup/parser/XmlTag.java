@@ -125,6 +125,14 @@ public class XmlTag extends MarkupElement
 	}
 
 	/**
+	 * @return true if there 1 or more attributes.
+	 */
+	public boolean hasAttributes()
+	{
+		return attributes != null && attributes.size() > 0;
+	}
+	
+	/**
 	 * Get the column number.
 	 * 
 	 * @return Returns the columnNumber.
@@ -312,11 +320,12 @@ public class XmlTag extends MarkupElement
 	/**
 	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
 	 * it is immutable.
+	 * @param markupAttributes 
 	 * 
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
-	public XmlTag mutable()
+	public XmlTag mutable(AttributeMap markupAttributes)
 	{
 		if (isMutable)
 		{
@@ -335,7 +344,7 @@ public class XmlTag extends MarkupElement
 			tag.isMutable = true;
 			tag.closes = closes;
 			tag.copyOf = copyOf;
-
+			tag.attributes = markupAttributes;
 			return tag;
 		}
 	}

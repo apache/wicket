@@ -186,8 +186,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	/** True if the form has enctype of multipart/form-data */
 	private boolean multiPart = false;
 
-	private String javascriptId;
-
 	/** multi-validators assigned to this form */
 	private Object formValidators = null;
 
@@ -748,24 +746,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	public final String getHiddenFieldId(String hiddenFieldName)
 	{
-		return getJavascriptId() + ":hf:" + hiddenFieldName;
-	}
-
-	/**
-	 * Returns the javascript/css id of this form that will be used to generated
-	 * the id="xxx" attribute. it will be generated if not set already in the
-	 * onComponentTag. Where it will be tried to load from the markup first
-	 * before it is generated.
-	 * 
-	 * @return The javascript/css id of this form.
-	 */
-	protected final String getJavascriptId()
-	{
-		if (Strings.isEmpty(javascriptId))
-		{
-			javascriptId = getPageRelativePath();
-		}
-		return javascriptId;
+		return getMarkupId() + ":hf:" + hiddenFieldName;
 	}
 
 	/**
@@ -808,25 +789,13 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		checkComponentTag(tag, "form");
+		setOutputMarkupId(true);
 		super.onComponentTag(tag);
 
 		// If the javascriptid is already generated then use that on even it was
 		// before the first render. Bbecause there could be a component which
 		// already uses it to submit the forum. This should be fixed when we
 		// pre parse the markup so that we know the id is at front.
-		if (!Strings.isEmpty(javascriptId))
-		{
-			tag.put("id", javascriptId);
-		}
-		else
-		{
-			javascriptId = (String)tag.getAttributes().get("id");
-			if (Strings.isEmpty(javascriptId))
-			{
-				javascriptId = getJavascriptId();
-				tag.put("id", javascriptId);
-			}
-		}
 		tag.put("method", "post");
 		Page page = getPage();
 		boolean addAction = true;
@@ -1310,7 +1279,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		return new AppendingStringBuffer("document.getElementById('").append(
 				getHiddenFieldId(HIDDEN_FIELD_FAKE_SUBMIT)).append("').value='").append(url)
-				.append("';document.getElementById('").append(getJavascriptId()).append(
+				.append("';document.getElementById('").append(getMarkupId()).append(
 						"').submit();");
 	}
 

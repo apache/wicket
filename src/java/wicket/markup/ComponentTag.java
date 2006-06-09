@@ -28,6 +28,7 @@ import wicket.markup.parser.filter.HtmlHandler;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
+import wicket.util.value.AttributeMap;
 import wicket.util.value.ValueMap;
 
 /**
@@ -133,6 +134,14 @@ public class ComponentTag extends MarkupElement
 		return xmlTag.getAttributes();
 	}
 
+	/**
+	 * @see wicket.markup.parser.XmlTag#hasAttributes()
+	 * @return true if there 1 or more attributes.
+	 */
+	public boolean hasAttributes()
+	{
+		return xmlTag.hasAttributes();
+	}
 	/**
 	 * Get the tag's component id
 	 * 
@@ -309,7 +318,21 @@ public class ComponentTag extends MarkupElement
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
-	public ComponentTag mutable()
+	public final ComponentTag mutable()
+	{
+		return mutable(null);
+	}
+	/**
+	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
+	 * it is immutable.
+	 * 
+	 * @param markupAttributes
+	 * 			The attributes that must be used for this mutable tag. 
+	 * 
+	 * @return This tag if it is already mutable, or a mutable copy of this tag
+	 *         if it is immutable.
+	 */
+	public ComponentTag mutable(AttributeMap markupAttributes)
 	{
 		if (xmlTag.isMutable())
 		{
@@ -317,7 +340,7 @@ public class ComponentTag extends MarkupElement
 		}
 		else
 		{
-			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
+			final ComponentTag tag = new ComponentTag(xmlTag.mutable(markupAttributes));
 			tag.id = id;
 			tag.setMarkupClass(this.markupClass);
 			tag.setHasNoCloseTag(this.hasNoCloseTag);

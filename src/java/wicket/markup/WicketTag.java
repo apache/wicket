@@ -18,6 +18,7 @@
 package wicket.markup;
 
 import wicket.markup.parser.XmlTag;
+import wicket.util.value.AttributeMap;
 
 /**
  * WicketTag extends ComponentTag and will be created by a MarkupParser whenever
@@ -159,7 +160,7 @@ public class WicketTag extends ComponentTag
 	 *         if it is immutable.
 	 */
 	@Override
-	public ComponentTag mutable()
+	public ComponentTag mutable(AttributeMap map)
 	{
 		if (xmlTag.isMutable())
 		{
@@ -167,7 +168,7 @@ public class WicketTag extends ComponentTag
 		}
 		else
 		{
-			final WicketTag tag = new WicketTag(xmlTag.mutable());
+			final WicketTag tag = new WicketTag(xmlTag.mutable(map));
 			tag.setId(getId());
 			return tag;
 		}

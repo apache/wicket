@@ -52,10 +52,10 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public class ValueMap extends HashMap<String, Object>
+public class ValueMap extends HashMap<String, Object> implements IValueMap
 {
 	/** An empty ValueMap. */
-	public static final ValueMap EMPTY_MAP = new ValueMap();
+	public static final ValueMap EMPTY_MAP = new ValueMap(0).makeImmutable();
 
 	private static final long serialVersionUID = 1L;
 
@@ -70,6 +70,16 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
+	 * Constructs empty value map.
+	 * 
+     * @param  initialCapacity the initial capacity.
+	 */
+	public ValueMap(int initialCapacity)
+	{
+		super(initialCapacity);
+	}
+
+	/**
 	 * Copy constructor.
 	 * 
 	 * @param map
@@ -77,6 +87,7 @@ public class ValueMap extends HashMap<String, Object>
 	 */
 	public ValueMap(final Map<? extends String, ? extends Object> map)
 	{
+		super((int) (map.size()/0.75)+1);
 		super.putAll(map);
 	}
 
@@ -130,7 +141,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * @see java.util.Map#clear()
+	 * @see wicket.util.value.IValueMap#clear()
 	 */
 	@Override
 	public final void clear()
@@ -140,12 +151,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a boolean value by key.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getBoolean(java.lang.String)
 	 */
 	public final boolean getBoolean(final String key) throws StringValueConversionException
 	{
@@ -153,12 +159,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a double value by key.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getDouble(java.lang.String)
 	 */
 	public final double getDouble(final String key) throws StringValueConversionException
 	{
@@ -166,12 +167,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a duration.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getDuration(java.lang.String)
 	 */
 	public final Duration getDuration(final String key) throws StringValueConversionException
 	{
@@ -179,12 +175,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets an int.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getInt(java.lang.String)
 	 */
 	public final int getInt(final String key) throws StringValueConversionException
 	{
@@ -192,14 +183,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets an int, using a default if not found.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getInt(java.lang.String, int)
 	 */
 	public final int getInt(final String key, final int defaultValue)
 			throws StringValueConversionException
@@ -208,12 +192,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a long.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getLong(java.lang.String)
 	 */
 	public final long getLong(final String key) throws StringValueConversionException
 	{
@@ -221,14 +200,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a long using a default if not found.
-	 * 
-	 * @param key
-	 *            The key
-	 * @param defaultValue
-	 *            Value to use if no value in map
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getLong(java.lang.String, long)
 	 */
 	public final long getLong(final String key, final long defaultValue)
 			throws StringValueConversionException
@@ -237,13 +209,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a string by key.
-	 * 
-	 * @param key
-	 *            The get
-	 * @param defaultValue
-	 *            Default value to return if value is null
-	 * @return The string
+	 * @see wicket.util.value.IValueMap#getString(java.lang.String, java.lang.String)
 	 */
 	public final String getString(final String key, final String defaultValue)
 	{
@@ -252,11 +218,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a string by key.
-	 * 
-	 * @param key
-	 *            The get
-	 * @return The string
+	 * @see wicket.util.value.IValueMap#getString(java.lang.String)
 	 */
 	public final String getString(final String key)
 	{
@@ -286,11 +248,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a string by key.
-	 * 
-	 * @param key
-	 *            The get
-	 * @return The string
+	 * @see wicket.util.value.IValueMap#getCharSequence(java.lang.String)
 	 */
 	public final CharSequence getCharSequence(final String key)
 	{
@@ -328,13 +286,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a String array by key. If the value was a String[] it will be
-	 * returned directly. If it was a String it will be converted to a String
-	 * array of one. If it was an array of another type a String array will be
-	 * made and the elements will be converted to a string.
-	 * 
-	 * @param key
-	 * @return The String array of that key
+	 * @see wicket.util.value.IValueMap#getStringArray(java.lang.String)
 	 */
 	public String[] getStringArray(final String key)
 	{
@@ -365,11 +317,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a StringValue by key.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The string value object
+	 * @see wicket.util.value.IValueMap#getStringValue(java.lang.String)
 	 */
 	public StringValue getStringValue(final String key)
 	{
@@ -377,12 +325,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets a time.
-	 * 
-	 * @param key
-	 *            The key
-	 * @return The value
-	 * @throws StringValueConversionException
+	 * @see wicket.util.value.IValueMap#getTime(java.lang.String)
 	 */
 	public final Time getTime(final String key) throws StringValueConversionException
 	{
@@ -390,9 +333,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Gets whether this value map is made immutable.
-	 * 
-	 * @return whether this value map is made immutable
+	 * @see wicket.util.value.IValueMap#isImmutable()
 	 */
 	public final boolean isImmutable()
 	{
@@ -400,18 +341,16 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Makes this value map immutable by changing the underlying map
-	 * representation to a collections "unmodifiableMap". After calling this
-	 * method, any attempt to modify this map will result in a runtime exception
-	 * being thrown by the collections classes.
+	 * @see wicket.util.value.IValueMap#makeImmutable()
 	 */
-	public final void makeImmutable()
+	public final ValueMap makeImmutable()
 	{
 		this.immutable = true;
+		return this;
 	}
 
 	/**
-	 * @see java.util.Map#put(K, V)
+	 * @see wicket.util.value.IValueMap#put(java.lang.String, java.lang.Object)
 	 */
 	@Override
 	public Object put(final String key, final Object value)
@@ -463,7 +402,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * @see java.util.Map#putAll(java.util.Map)
+	 * @see wicket.util.value.IValueMap#putAll(java.util.Map)
 	 */
 	@Override
 	public void putAll(final Map<? extends String, ? extends Object> map)
@@ -473,7 +412,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * @see java.util.Map#remove(java.lang.Object)
+	 * @see wicket.util.value.IValueMap#remove(java.lang.Object)
 	 */
 	@Override
 	public Object remove(final Object key)
@@ -483,12 +422,7 @@ public class ValueMap extends HashMap<String, Object>
 	}
 
 	/**
-	 * Provided the hash key is a string and you need to access the value
-	 * ignoring ignoring the keys case (upper or lower letter), than you may use
-	 * this method to get the correct writing.
-	 * 
-	 * @param key
-	 * @return The key with the correct writing
+	 * @see wicket.util.value.IValueMap#getKey(java.lang.String)
 	 */
 	public String getKey(final String key)
 	{

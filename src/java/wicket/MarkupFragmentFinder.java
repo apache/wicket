@@ -35,7 +35,7 @@ final class MarkupFragmentFinder
 	/**
 	 * Construct
 	 */
-	public MarkupFragmentFinder()
+	private MarkupFragmentFinder()
 	{
 	}
 
@@ -45,7 +45,7 @@ final class MarkupFragmentFinder
 	 * @param component
 	 * @return A MarkupStream which is positioned at the component
 	 */
-	final MarkupStream find(final Component component)
+	static final MarkupStream find(final Component component)
 	{
 		// Get the parent's associated markup stream.
 		MarkupContainer parentWithAssociatedMarkup = component.findParentWithAssociatedMarkup();
@@ -127,7 +127,7 @@ final class MarkupFragmentFinder
 	 *            which contains the markup fragment
 	 * @return the relativ path
 	 */
-	private String getComponentRelativePath(final Component component,
+	private static String getComponentRelativePath(final Component component,
 			final MarkupContainer parentWithAssociatedMarkup)
 	{
 		final String componentPath = component.getParent().getPageRelativePath();
