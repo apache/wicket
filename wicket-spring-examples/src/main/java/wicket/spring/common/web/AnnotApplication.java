@@ -18,7 +18,7 @@
  */
 package wicket.spring.common.web;
 
-import wicket.spring.injection.annot.AnnotSpringWebApplication;
+import wicket.spring.injection.AnnotSpringWebApplication;
 
 public class AnnotApplication extends AnnotSpringWebApplication {
 

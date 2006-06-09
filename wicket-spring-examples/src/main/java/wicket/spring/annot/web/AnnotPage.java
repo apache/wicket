@@ -21,7 +21,7 @@ package wicket.spring.annot.web;
 import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
 import wicket.spring.common.ContactDao;
 import wicket.spring.common.web.ContactsDisplayPage;
-import wicket.spring.injection.annot.SpringBean;
+import wicket.spring.injection.SpringBean;
 
 
 public class AnnotPage extends ContactsDisplayPage {
