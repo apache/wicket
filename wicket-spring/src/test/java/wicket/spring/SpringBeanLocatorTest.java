@@ -19,6 +19,7 @@
 package wicket.spring;
 
 import junit.framework.TestCase;
+import wicket.protocol.http.MockWebApplication;
 import wicket.spring.test.ApplicationContextMock;
 import wicket.spring.test.SpringContextLocatorMock;
 import wicket.util.lang.Objects;
@@ -60,6 +61,8 @@ public class SpringBeanLocatorTest extends TestCase
 	 */
 	public void testLookupByClassAfterDeserialization()
 	{
+		new MockWebApplication("/");
+		
 		Bean bean = new Bean();
 		
 		ctx.putBean("bean", bean);
@@ -127,6 +130,8 @@ public class SpringBeanLocatorTest extends TestCase
 	 */
 	public void testLookupByNameAfterDeserialization()
 	{
+		new MockWebApplication("/");
+		
 		Bean bean = new Bean();
 		ctx.putBean("bean", bean);
 
