@@ -49,6 +49,9 @@ import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
+import wicket.util.value.AttributeMap;
+import wicket.util.value.CopyOnWriteValueMap;
+import wicket.util.value.IValueMap;
 import wicket.util.value.ValueMap;
 import wicket.version.undo.Change;
 
@@ -614,6 +617,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	/** Any parent container. */
 	private MarkupContainer<?> parent;
 
+	/** The markup attributes for this component */ 
+	private IValueMap markupAttributes;
+
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This is the minimal constructor of component. It does not register a
@@ -658,7 +664,6 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		setId(id);
 		this.model = model;
 		
-		// If a compound model is explicitly set on this component
 		getApplication().notifyComponentInstantiationListeners(this);
 		if (id.startsWith(AUTO_COMPONENT_PREFIX))
 		{
@@ -666,6 +671,19 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		}
 		else
 		{
+			try
+			{
+				MarkupStream markupStream = MarkupFragmentFinder.find(this);
+				ComponentTag tag = markupStream.getTag();
+				if(tag.hasAttributes())
+				{
+					markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
+				}
+			} 
+			catch(RuntimeException re)
+			{
+				throw new WicketRuntimeException("Couldn't find the markup of the component " + id + " in parent " + parent.getPageRelativePath());
+			}
 			parent.add(this);
 		}
 	}
@@ -947,25 +965,19 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
 	 * 
 	 * Get a copy of the markup's attributes which are associated with the
 	 * component.
-	 * <p>
-	 * Modifications to the map returned don't change the tags attributes. It is
-	 * just a copy.
-	 * <p>
-	 * Note: The component must have been added (directly or indirectly) to a
-	 * container with an associated markup file (Page, Panel or Border).
 	 * 
 	 * @return markup attributes
 	 */
-	public final ValueMap getMarkupAttributes()
+	public final IValueMap getMarkupAttributes()
 	{
-		MarkupStream markupStream = new MarkupFragmentFinder().find(this);
-		ValueMap attrs = new ValueMap(markupStream.getTag().getAttributes());
-		attrs.makeImmutable();
-		return attrs;
+		if(markupAttributes == null)
+		{
+			markupAttributes = new ValueMap(2);
+		}
+		return markupAttributes;
 	}
 
 	/**
@@ -984,6 +996,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		if (id == null)
 		{
 			id = getPageRelativePath();
+			getMarkupAttributes().put("id", id);
 		}
 		id = id.replace(':', '_');
 		return id;
@@ -1678,7 +1691,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			// Save the parent's markup stream to re-assign it at the end
 			MarkupContainer parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
-			MarkupStream markupStream = new MarkupFragmentFinder().find(this);
+			MarkupStream markupStream = MarkupFragmentFinder.find(this);
 
 			try
 			{
@@ -1741,7 +1754,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 		// Get mutable copy of next tag
 		final ComponentTag openTag = markupStream.getTag();
-		final ComponentTag tag = openTag.mutable();
+		final AttributeMap attributeMap = markupAttributes != null?new AttributeMap(markupAttributes):null;
+		final ComponentTag tag = openTag.mutable(attributeMap);
 
 		// Call any tag handler
 		onComponentTag(tag);
@@ -2734,7 +2748,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose()
 					&& (isIgnoreAttributeModifier() == false))
 			{
-				tag = tag.mutable();
+				
+				AttributeMap attributeMap = markupAttributes != null?new AttributeMap(markupAttributes):null;
+				tag = tag.mutable(attributeMap);
 
 				for (IBehavior behavior : behaviors)
 				{
@@ -2922,7 +2938,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				if (openTag.getNameChanged())
 				{
 					// change the id of the close tag
-					closeTag = closeTag.mutable();
+					closeTag = closeTag.mutable(null);
 					closeTag.setName(openTag.getName());
 				}
 

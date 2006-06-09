@@ -20,6 +20,7 @@ package wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
@@ -48,7 +49,7 @@ import wicket.markup.parser.IMarkupFilter;
 public final class BodyOnLoadHandler extends AbstractMarkupFilter
 {
 	/** The automatically assigned wicket:id to &gt;body&lt; tag */
-	public static final String BODY_ID = "_<body>";
+	public static final String BODY_ID = Component.AUTO_COMPONENT_PREFIX + "<body>";
 
 	/**
 	 * Construct.

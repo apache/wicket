@@ -205,7 +205,7 @@ public class SubmitLink<T> extends Button<T>
 		sb.append("'; e.value='x';");
 
 		sb.append("var f=document.getElementById('");
-		sb.append(form.getJavascriptId());
+		sb.append(form.getMarkupId());
 		sb.append("');");
 
 		if (shouldInvokeJavascriptFormOnsubmit())
