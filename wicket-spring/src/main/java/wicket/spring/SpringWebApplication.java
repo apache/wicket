@@ -26,8 +26,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.Application;
+import wicket.extensions.proxy.LazyInitProxyFactory;
 import wicket.protocol.http.WebApplication;
-import wicket.proxy.LazyInitProxyFactory;
 
 /**
  * Base class for spring aware wicket web application object. This class has

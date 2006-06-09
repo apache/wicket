@@ -23,7 +23,7 @@ import java.util.Map;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
-import wicket.proxy.IProxyTargetLocator;
+import wicket.extensions.proxy.IProxyTargetLocator;
 import wicket.util.lang.Objects;
 
 /**
@@ -109,7 +109,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	}
 
 	/**
-	 * @see wicket.proxy.IProxyTargetLocator#locateProxyTarget()
+	 * @see wicket.extensions.proxy.IProxyTargetLocator#locateProxyTarget()
 	 */
 	public Object locateProxyTarget()
 	{
