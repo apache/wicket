@@ -20,7 +20,6 @@ package wicket.spring.common.web;
 
 import java.util.Arrays;
 
-import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
 import wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
