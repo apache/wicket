@@ -60,8 +60,8 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(MarkupContainer parent, final String id,
-			final List<IColumn> columns, SortableDataProvider dataProvider, int rowsPerPage)
+	public DefaultDataTable(MarkupContainer parent, final String id, final List<IColumn> columns,
+			SortableDataProvider dataProvider, int rowsPerPage)
 	{
 		this(parent, id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider,
 				rowsPerPage);
@@ -86,18 +86,10 @@ public class DefaultDataTable extends DataTable
 	{
 		super(parent, id, columns, dataProvider, rowsPerPage);
 
-		addTopToolbar(new IToolbarFactory()
-		{
-
-			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
-			{
-				return new NavigationToolbar(parent, id, dataTable);
-			}
-
-		});
-
-		// TODO ivaynberg: this is rediculous, would be better to have a
-		// onPopulateTopToolbars() callback
+		/*
+		 * TODO General: ivaynberg: this is rediculous, would be better to have
+		 * a onPopulateTopToolbars() callback
+		 */
 
 		addTopToolbar(new IToolbarFactory()
 		{
