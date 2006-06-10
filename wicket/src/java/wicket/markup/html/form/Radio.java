@@ -116,12 +116,12 @@ public class Radio<T> extends WebMarkupContainer<T>
 			// url that points to this components IOnChangeListener method
 			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
-			try
+			Form form = (Form)group.findParent(Form.class);
+			if (form != null)
 			{
-				Form form = group.getForm();
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
-			catch (WicketRuntimeException ex)
+			else
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript

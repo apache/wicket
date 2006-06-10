@@ -185,12 +185,12 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 			// url that points to this components IOnChangeListener method
 			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			try
+			Form form = (Form)findParent(Form.class);
+			if (form != null)
 			{
-				Form form = getForm();
 				tag.put("onchange", form.getJsForInterfaceUrl(url));
 			}
-			catch (WicketRuntimeException ex)
+			else
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
