@@ -18,6 +18,7 @@
  */
 package wicket.spring;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -169,10 +170,23 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 		if (beans.size() > 1)
 		{
-			throw new IllegalStateException(
-					"more then one bean of type ["
-							+ clazz.getName()
-							+ "] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict");
+			String msg = "more then one bean of type [["
+					+ clazz.getName()
+					+ "]] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict. Beans that match type [[";
+
+			Iterator beanNames = beans.keySet().iterator();
+			while (beanNames.hasNext())
+			{
+				String beanName = (String) beanNames.next();
+				msg += beanName;
+				if (beanNames.hasNext())
+				{
+					msg += ", ";
+				}
+			}
+
+			msg += "]]";
+			throw new IllegalStateException(msg);
 		}
 		return beans.values().iterator().next();
 	}
