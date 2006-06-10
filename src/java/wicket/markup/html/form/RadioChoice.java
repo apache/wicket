@@ -22,7 +22,6 @@ import java.util.List;
 
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -45,10 +44,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *     &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *    	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
- *    	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
- *     &lt;/span&gt;
+ *      &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *     	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
+ *     	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
+ *      &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -203,7 +202,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List)
 	 */
-	public RadioChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> choices)
+	public RadioChoice(MarkupContainer parent, final String id, IModel<T> model,
+			final List<T> choices)
 	{
 		super(parent, id, model, choices);
 	}
@@ -223,8 +223,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 * @see wicket.markup.html.form.AbstractChoice#AbstractChoice(MarkupContainer,String,
 	 *      IModel, List,IChoiceRenderer)
 	 */
-	public RadioChoice(MarkupContainer parent, final String id, IModel<T> model, final List<T> choices,
-			final IChoiceRenderer<T> renderer)
+	public RadioChoice(MarkupContainer parent, final String id, IModel<T> model,
+			final List<T> choices, final IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, model, choices, renderer);
 	}
@@ -277,7 +277,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	 *      IModel,IChoiceRenderer)
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public RadioChoice(MarkupContainer parent, String id, IModel<List<T>> choices, IChoiceRenderer<T> renderer)
+	public RadioChoice(MarkupContainer parent, String id, IModel<List<T>> choices,
+			IChoiceRenderer<T> renderer)
 	{
 		super(parent, id, choices, renderer);
 	}
@@ -466,17 +467,16 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				{
 					final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-					try
+					Form form = (Form)findParent(Form.class);
+					if (form != null)
 					{
-						Form form = getForm();
 						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(
 								";\"");
 					}
-					catch (WicketRuntimeException ex)
+					else
 					{
 						// NOTE: do not encode the url as that would give
-						// invalid
-						// JavaScript
+						// invalid JavaScript
 						buffer.append(" onclick=\"").append(url).append("&" + getInputName())
 								.append("=").append(id).append("';\"");
 					}

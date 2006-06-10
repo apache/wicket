@@ -165,13 +165,12 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		{
 			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			// NOTE: do not encode the url as that would give invalid JavaScript
-			try
+			Form form = (Form)findParent(Form.class);
+			if (form != null)
 			{
-				Form form = getForm();
 				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
-			catch (WicketRuntimeException ex)
+			else
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript

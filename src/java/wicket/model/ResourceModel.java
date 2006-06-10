@@ -18,6 +18,7 @@
  */
 package wicket.model;
 
+import wicket.Application;
 import wicket.Component;
 
 /**
@@ -32,9 +33,9 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
-	private String resourceKey;
-
 	private String defaultValue;
+
+	private String resourceKey;
 
 	/**
 	 * Constructor
@@ -68,7 +69,8 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	@Override
 	public String getObject(Component component)
 	{
-		return component.getLocalizer().getString(resourceKey, component, defaultValue);
+		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
+				component, defaultValue);
 	}
 
 }
