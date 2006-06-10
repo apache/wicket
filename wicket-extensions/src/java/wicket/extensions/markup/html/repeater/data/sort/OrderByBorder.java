@@ -70,7 +70,22 @@ public class OrderByBorder extends Border
 				OrderByBorder.this.onSortChanged();
 			}
 		};
+
+		onLinkCreated(link);
 		add(new OrderByLink.CssModifier(link, cssProvider));
+	}
+
+	/**
+	 * Callback method for when an {@link OrderByLink} object has been created
+	 * by this border. This callback can be used to, for example, add an ajax
+	 * behavior to the link.
+	 * 
+	 * @param link
+	 *            created link component
+	 */
+	protected void onLinkCreated(OrderByLink link)
+	{
+		// noop
 	}
 
 	/**

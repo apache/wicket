@@ -22,6 +22,7 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
+import wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
@@ -81,6 +82,12 @@ public class HeadersToolbar extends AbstractToolbar
 					{
 						table.setCurrentPage(0);
 					}
+
+					@Override
+					protected void onLinkCreated(OrderByLink link)
+					{
+						HeadersToolbar.this.onLinkCreated(link);
+					}
 				};
 
 			}
@@ -92,6 +99,19 @@ public class HeadersToolbar extends AbstractToolbar
 			column.getHeader(header, "label");
 		}
 
+	}
+
+	/**
+	 * Callback method for when an {@link OrderByLink} object has been created
+	 * by this toolbar. This callback can be used to, for example, add an ajax
+	 * behavior to the link.
+	 * 
+	 * @param link
+	 *            created link component
+	 */
+	protected void onLinkCreated(OrderByLink link)
+	{
+		// noop
 	}
 
 

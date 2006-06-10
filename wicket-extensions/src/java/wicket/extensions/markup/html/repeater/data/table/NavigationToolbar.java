@@ -53,7 +53,7 @@ public class NavigationToolbar extends AbstractToolbar
 		super(parent, id, table);
 		this.table = table;
 
-		WebMarkupContainer span = new WebMarkupContainer<Object>(this, "span");
+		WebMarkupContainer span = new WebMarkupContainer(this, "span");
 		span.add(new AttributeModifier("colspan", true, new Model<String>(String.valueOf(table
 				.getColumns().length))));
 
