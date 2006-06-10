@@ -42,6 +42,6 @@ public interface IItemFactory
 	 * 
 	 * @return DataItem new DataItem
 	 */
-	Item newItem(final int index, final IModel model);
+	Item newItem(int index, IModel model);
 
 }

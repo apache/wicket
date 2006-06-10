@@ -139,9 +139,9 @@ public class DataTable extends Panel implements IPageable
 			}
 
 			@Override
-			protected Item newCellItem(final String id, int index, IModel model)
+			protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index, IModel model)
 			{
-				return DataTable.this.newCellItem(id, index, model);
+				return DataTable.this.newCellItem(cellContainer, id, index, model);
 			}
 		};
 		datagrid.setRowsPerPage(rowsPerPage);
@@ -296,6 +296,7 @@ public class DataTable extends Panel implements IPageable
 	/**
 	 * Factory method for Item container that represents a cell in the
 	 * underlying DataGridView
+	 * @param cellContainer 
 	 * 
 	 * @see Item
 	 * 
@@ -308,9 +309,9 @@ public class DataTable extends Panel implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newCellItem(final String id, int index, final IModel model)
+	protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index, final IModel model)
 	{
-		return new Item(this, id, index, model);
+		return new Item(cellContainer, id, index, model);
 	}
 
 	/**

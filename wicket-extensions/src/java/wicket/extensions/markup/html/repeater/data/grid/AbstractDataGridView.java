@@ -27,6 +27,7 @@ import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.extensions.markup.html.repeater.util.ArrayIteratorAdapter;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -129,6 +130,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 				if (item.get("cell") == null)
 				{
+					// TODO General: Fix error message
 					throw new WicketRuntimeException(
 							populator.getClass().getName()
 									+ ".populateItem() failed to add a component with id ["
@@ -141,7 +143,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 			@Override
 			protected Item newItem(final String id, int index, IModel model)
 			{
-				return newCellItem(id, index, model);
+				return newCellItem(this, id, index, model);
 			}
 
 		};
@@ -181,6 +183,9 @@ public abstract class AbstractDataGridView extends DataViewBase
 	/**
 	 * Factory method for Item container that represents a cell.
 	 * 
+	 * @param cellContainer
+	 *            item's parent container
+	 * 
 	 * @see Item
 	 * @see RefreshingView#newItem(String, int, IModel)
 	 * 
@@ -193,9 +198,10 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newCellItem(final String id, int index, final IModel model)
+	protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index,
+			final IModel model)
 	{
-		return new Item(this, id, index, model);
+		return new Item(cellContainer, id, index, model);
 	}
 
 }
