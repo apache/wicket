@@ -23,7 +23,6 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.behavior.HeaderContributor;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -39,19 +38,10 @@ import wicket.model.LoadableDetachableModel;
  * first / second / third
  * </pre>
  * 
- * This component also functions as an
- * {@link IBreadCrumbModel bread crumb model} implementation. So this component
- * holds the state as well as doing the rendering.
- * 
- * <p>
- * If you want to use this bar for the render logic and the model, but want to
- * provide a different way of rendering you can provide a different bread crumb
- * component by overriding method
- * {@link #newBreadCrumbComponent(MarkupContainer, String, int, int, IBreadCrumbParticipant)},
- * and you can adjust how the &lt;ul&gt; elements display by providing your own
- * style and don't add the {@link #addDefaultCssStyle() default style} by either
- * calling that or using the constructor that adds that.
- * </p>
+ * This component also functions as a implementation of
+ * {@link IBreadCrumbModel bread crumb model}. This component holds the state
+ * as well as doing the rendering. Override and provide your own markup file if
+ * you want to work with other elements, e.g. uls instead of spans.
  * 
  * @author Eelco Hillenius
  */
@@ -252,43 +242,10 @@ public class BreadCrumbBar extends Panel implements IBreadCrumbModel
 	 */
 	public BreadCrumbBar(MarkupContainer parent, final String id)
 	{
-		this(parent, id, true);
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param parent
-	 *            The parent component
-	 * 
-	 * @param id
-	 *            Component id
-	 * @param addDefaultCssStyle
-	 *            Whether the {@link #addDefaultCssStyle() default style} should
-	 *            be added
-	 */
-	public BreadCrumbBar(MarkupContainer parent, final String id, boolean addDefaultCssStyle)
-	{
 		super(parent, id);
 
 		BreadCrumbsListView breadCrumbsListView = new BreadCrumbsListView(this, "crumbs");
 		addListener(breadCrumbsListView);
-
-		if (addDefaultCssStyle)
-		{
-			addDefaultCssStyle();
-		}
-	}
-
-
-	/**
-	 * Will let the bread crumb bar contribute a CSS include to the page's
-	 * header. It will add BreadCrumbBar.css from this package. This method is
-	 * typically called by the class that creates the bread crumb bar.
-	 */
-	public final void addDefaultCssStyle()
-	{
-		add(HeaderContributor.forCss(BreadCrumbBar.class, "BreadCrumbBar.css"));
 	}
 
 	/**
