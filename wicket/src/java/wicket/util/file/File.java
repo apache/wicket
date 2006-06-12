@@ -98,6 +98,19 @@ public class File extends java.io.File implements IModifiable
 	{
 		super(uri);
 	}
+
+    /**
+     * @return File extension (whatever is after the last '.' in the file name)
+     */
+    public String getExtension()
+    {
+        final int lastDot = getName().lastIndexOf('.');
+        if (lastDot >= 0)
+        {
+            return getName().substring(lastDot + 1);
+        }
+        return null;
+    }
 	
 	/**
 	 * @return Parent folder
