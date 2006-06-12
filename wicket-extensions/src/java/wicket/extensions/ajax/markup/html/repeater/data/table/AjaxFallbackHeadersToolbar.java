@@ -4,7 +4,6 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxFallbackOrderByBorder;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
-import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import wicket.markup.html.WebMarkupContainer;

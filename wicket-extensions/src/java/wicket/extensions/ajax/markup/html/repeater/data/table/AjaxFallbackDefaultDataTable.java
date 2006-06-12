@@ -24,7 +24,6 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
-import wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
 import wicket.extensions.markup.html.repeater.data.table.NavigationToolbar;
 import wicket.extensions.markup.html.repeater.data.table.NoRecordsToolbar;
