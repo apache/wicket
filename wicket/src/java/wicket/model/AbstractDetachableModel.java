@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractDetachableModel.java 3764 2006-01-14 17:38:33 +0000 (Sat, 14 Jan
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-01-14 17:38:33 +0000
+ * (Sat, 14 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,14 +23,15 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 
 /**
  * This provide a base class to work with detachable {@link wicket.model.IModel}s.
- * It encapsulates the logic for attaching and detaching models. The
- * onAttach() abstract method will be called at the first access to the model
- * within a request and - if the model was attached earlier, onDetach() will be
- * called at the end of the request. In effect, attachment and detachment is
- * only done when it is actually needed.
+ * It encapsulates the logic for attaching and detaching models. The onAttach()
+ * abstract method will be called at the first access to the model within a
+ * request and - if the model was attached earlier, onDetach() will be called at
+ * the end of the request. In effect, attachment and detachment is only done
+ * when it is actually needed.
  * 
  * @author Chris Turner
  * @author Eelco Hillenius
@@ -80,12 +82,12 @@ public abstract class AbstractDetachableModel implements IModel
 		IModel nestedModel = getNestedModel();
 		if (nestedModel != null)
 		{
-			// do detach the nested model because this one could be attached 
+			// do detach the nested model because this one could be attached
 			// if the model is used not through this compound model
 			nestedModel.detach();
 		}
 	}
-	
+
 	/**
 	 * @see wicket.model.IModel#getNestedModel()
 	 */
@@ -97,7 +99,15 @@ public abstract class AbstractDetachableModel implements IModel
 	public final Object getObject(final Component component)
 	{
 		attach();
-		return onGetObject(component);
+		try
+		{
+			return onGetObject(component);
+		}
+		catch (RuntimeException e)
+		{
+			throw new WicketRuntimeException("unable to get object, model: " + this
+					+ ", called with component " + component, e);
+		}
 	}
 
 	/**
@@ -116,13 +126,22 @@ public abstract class AbstractDetachableModel implements IModel
 	public final void setObject(final Component component, final Object object)
 	{
 		attach();
-		onSetObject(component, object);
+		try
+		{
+			onSetObject(component, object);
+		}
+		catch (RuntimeException e)
+		{
+			throw new WicketRuntimeException("unable to set object " + object + ", model: " + this
+					+ ", called with component " + component, e);
+		}
 	}
 
 	/**
-	 * @see Object#toString() 
+	 * @see Object#toString()
 	 */
-	public String toString() {
+	public String toString()
+	{
 		StringBuffer sb = new StringBuffer("Model:classname=[");
 		sb.append(getClass().getName()).append("]");
 		sb.append(":attached=").append(isAttached());
@@ -153,14 +172,14 @@ public abstract class AbstractDetachableModel implements IModel
 	protected abstract Object onGetObject(final Component component);
 
 	/**
-	 * Called when setObject is called in order to change the detachable
-	 * object. Before this method is called, setObject() always calls attach()
-	 * to ensure that the object is attached.
+	 * Called when setObject is called in order to change the detachable object.
+	 * Before this method is called, setObject() always calls attach() to ensure
+	 * that the object is attached.
 	 * 
 	 * @param component
-	 *			The component asking for replacement of the model object
+	 *            The component asking for replacement of the model object
 	 * @param object
-	 * 			The new model object
+	 *            The new model object
 	 */
 	protected abstract void onSetObject(final Component component, final Object object);
 }
