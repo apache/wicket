@@ -20,7 +20,6 @@ package wicket.extensions.ajax.markup.html.repeater.data.table;
 
 import java.util.List;
 
-import wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxFallbackHeadersToolbar;
 import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.HeadersToolbar;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
