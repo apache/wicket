@@ -47,9 +47,9 @@
 		<item name="Dependencies" href="/dependencies.html" />
 	</menu>
 	<menu name="Releases">
-		<item name="Wicket 1.2" href="/wicket-1.2/index.html"/>
-		<item name="Wicket 1.1" href="/wicket-1.1/index.html" />
-		<item name="Wicket 1.0" href="/wicket-1.0/index.html" />
+		<item name="Wicket 1.2" href="http://wicketframework.org/wicket-1.2/index.html"/>
+		<item name="Wicket 1.1" href="http://wicketframework.org/wicket-1.1/index.html" />
+		<item name="Wicket 1.0" href="http://wicketframework.org/wicket-1.0/index.html" />
 	</menu>
 	<menu name="Related projects">
 		<item name="Wicket Extensions" href="/wicket-extensions/index.html" />
