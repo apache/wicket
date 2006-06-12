@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 
 /**
  * This provide a base class to work with detachable {@link wicket.model.IModel}s.
@@ -101,7 +102,15 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	public final T getObject(final Component component)
 	{
 		attach();
-		return onGetObject(component);
+		try
+		{
+			return onGetObject(component);
+		}
+		catch (RuntimeException e)
+		{
+			throw new WicketRuntimeException("unable to get object, model: " + this
+					+ ", called with component " + component, e);
+		}
 	}
 
 	/**
@@ -120,7 +129,15 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	public final void setObject(final Component component, final T object)
 	{
 		attach();
-		onSetObject(component, object);
+		try
+		{
+			onSetObject(component, object);
+		}
+		catch (RuntimeException e)
+		{
+			throw new WicketRuntimeException("unable to set object " + object + ", model: " + this
+					+ ", called with component " + component, e);
+		}
 	}
 
 	/**
