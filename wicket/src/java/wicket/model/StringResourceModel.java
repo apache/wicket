@@ -479,6 +479,10 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel
 	 */
 	protected final Object onGetObject(final Component component)
 	{
+		if (this.component == null)
+		{
+			this.component = component;
+		}
 		return getString();
 	}
 }
