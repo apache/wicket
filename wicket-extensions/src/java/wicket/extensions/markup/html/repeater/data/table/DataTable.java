@@ -103,7 +103,7 @@ public class DataTable extends Panel implements IPageable
 		 *            datatable instance that this toolbar belongs to
 		 * @return created toolbar
 		 */
-		AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable);
+		AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable);
 	}
 
 

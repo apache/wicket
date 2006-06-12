@@ -24,6 +24,7 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.extensions.markup.html.repeater.refreshing.OddEvenItem;
 import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -94,7 +95,7 @@ public class DefaultDataTable extends DataTable
 		addTopToolbar(new IToolbarFactory()
 		{
 
-			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
+			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
 				return new NavigationToolbar(parent, id, dataTable);
 			}
@@ -104,7 +105,7 @@ public class DefaultDataTable extends DataTable
 		addTopToolbar(new IToolbarFactory()
 		{
 
-			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
+			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
 				return new HeadersToolbar(parent, id, dataTable, dataProvider);
 			}
@@ -114,7 +115,7 @@ public class DefaultDataTable extends DataTable
 		addBottomToolbar(new IToolbarFactory()
 		{
 
-			public AbstractToolbar newToolbar(MarkupContainer parent, String id, DataTable dataTable)
+			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
 				return new NoRecordsToolbar(parent, id, dataTable);
 			}

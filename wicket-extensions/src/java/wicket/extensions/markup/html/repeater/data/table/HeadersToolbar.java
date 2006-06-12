@@ -18,12 +18,17 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import java.util.Iterator;
+
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
+import wicket.extensions.markup.html.repeater.util.ArrayIteratorAdapter;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * Toolbars that displays column headers. If the column is sortable a sortable
@@ -58,61 +63,78 @@ public class HeadersToolbar extends AbstractToolbar
 	{
 		super(parent, id, table);
 
-		RepeatingView headers = new RepeatingView(this, "headers");
-		IColumn[] cols = table.getColumns();
-
-		for (IColumn column : cols)
+		new RefreshingView(this, "headers")
 		{
-			// TODO Post 1.2: General: Is this extra component really necessary?
-			// can we
-			// not simply use the repeater's body without the need for the id in
-			// the markup?
-			WebMarkupContainer item = new WebMarkupContainer(headers, headers.newChildId());
+			private static final long serialVersionUID = 1L;
 
-			WebMarkupContainer header = null;
-			if (column.isSortable())
+			protected Iterator getItemModels()
 			{
-				header = new OrderByBorder(item, "header", column.getSortProperty(), stateLocator)
+				return new ArrayIteratorAdapter(table.getColumns())
 				{
 
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					protected void onSortChanged()
+					protected IModel model(Object object)
 					{
-						table.setCurrentPage(0);
+						return new Model((IColumn)object);
 					}
 
-					@Override
-					protected void onLinkCreated(OrderByLink link)
-					{
-						HeadersToolbar.this.onLinkCreated(link);
-					}
 				};
+			}
+
+			protected void populateItem(Item item)
+			{
+				item.setRenderBodyOnly(true);
+
+
+				IColumn column = (IColumn)item.getModelObject();
+				WebMarkupContainer header = null;
+				if (column.isSortable())
+				{
+					header = newSortableHeader(item, "header", column.getSortProperty(),
+							stateLocator);
+				}
+				else
+				{
+					header = new WebMarkupContainer(item, "header");
+				}
+
+				//TODO General: ivaynberg: rename ICOlumn.getHeader() to newHeader()
+				column.getHeader(header, "label");
 
 			}
-			else
-			{
-				header = new WebMarkupContainer(item, "header");
-			}
-			item.setRenderBodyOnly(true);
-			column.getHeader(header, "label");
-		}
+
+		};
 
 	}
 
 	/**
-	 * Callback method for when an {@link OrderByLink} object has been created
-	 * by this toolbar. This callback can be used to, for example, add an ajax
-	 * behavior to the link.
+	 * Factory method for sortable header components. A sortable header
+	 * component must have id of <code>headerId</code> and conform to markup
+	 * specified in <code>HeadersToolbar.html</code>
 	 * 
-	 * @param link
-	 *            created link component
+	 * @param parent
+	 *            parent container
+	 * @param headerId
+	 *            header component id
+	 * @param property
+	 *            propert this header represents
+	 * @param locator
+	 *            sort state locator
+	 * @return created header component
 	 */
-	protected void onLinkCreated(OrderByLink link)
+	protected WebMarkupContainer newSortableHeader(WebMarkupContainer parent, String headerId,
+			String property, ISortStateLocator locator)
 	{
-		// noop
-	}
+		return new OrderByBorder(parent, headerId, property, locator)
+		{
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			protected void onSortChanged()
+			{
+				getTable().setCurrentPage(0);
+			}
+		};
+
+	}
 
 }
