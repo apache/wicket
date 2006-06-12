@@ -182,8 +182,12 @@ public class StringResourceModelTest extends TestCase
 			model.setObject(page, "Some value");
 			Assert.fail("UnsupportedOperationException expected");
 		}
-		catch (UnsupportedOperationException e)
+		catch (Exception e)
 		{
+			if (!(e instanceof UnsupportedOperationException || e.getCause() instanceof UnsupportedOperationException))
+			{
+				Assert.fail("UnsupportedOperationException expected");
+			}
 			// Expected result
 		}
 	}
