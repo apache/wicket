@@ -116,7 +116,15 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model)
 			throws MissingResourceException
 	{
-		return getString(key, component, model, component.getLocale(), component.getStyle(), null);
+		if (component != null)
+		{
+			return getString(key, component, model, component.getLocale(), component.getStyle(), null);
+		}
+		else
+		{
+			Session session = Session.get();
+			return getString(key, component, model, session.getLocale(), session.getStyle(), null);
+		}
 	}
 
 	/**
@@ -139,8 +147,16 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model,
 			final String defaultValue) throws MissingResourceException
 	{
-		return getString(key, component, model, component.getLocale(), component.getStyle(),
-				defaultValue);
+		if (component != null)
+		{
+			return getString(key, component, model, component.getLocale(), component.getStyle(),
+					defaultValue);
+		}
+		else
+		{
+			Session session = Session.get();
+			return getString(key, component, model, session.getLocale(), session.getStyle(), defaultValue);
+		}
 	}
 
 	/**
@@ -160,8 +176,15 @@ public class Localizer
 	public String getString(final String key, final Component component, final String defaultValue)
 			throws MissingResourceException
 	{
-		return getString(key, component, null, component.getLocale(), component.getStyle(),
-				defaultValue);
+		if (component != null)
+		{
+			return getString(key, component, null, component.getLocale(), component.getStyle(), defaultValue);
+		}
+		else
+		{
+			Session session = Session.get();
+			return getString(key, component, null, session.getLocale(), session.getStyle(), defaultValue);
+		}
 	}
 
 	/**
