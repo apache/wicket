@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.4 $ $Date$
+ * $Id: HeadersToolbar.java 5279 2006-04-06 15:37:06 +0000 (Thu, 06 Apr 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-04-06 15:37:06 +0000 (Thu, 06 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,10 +18,17 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import java.util.Iterator;
+
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
+import wicket.extensions.markup.html.repeater.util.ArrayIteratorAdapter;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.model.IModel;
+import wicket.model.Model;
 
 /**
  * Toolbars that displays column headers. If the column is sortable a sortable
@@ -48,42 +56,59 @@ public class HeadersToolbar extends AbstractToolbar
 	{
 		super(table);
 
-		RepeatingView headers = new RepeatingView("headers");
-		add(headers);
-		IColumn[] cols = table.getColumns();
 
-		for (int i = 0; i < cols.length; i++)
+		RefreshingView headers = new RefreshingView("headers")
 		{
-			// TODO Post 1.2: General: Is this extra component really necessary? can we
-			// not simply use the repeater's body without the need for the id in
-			// the markup?
-			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
-			headers.add(item);
+			private static final long serialVersionUID = 1L;
 
-			IColumn column = cols[i];
-			WebMarkupContainer header = null;
-			if (column.isSortable())
+			protected Iterator getItemModels()
 			{
-				header = new OrderByBorder("header", column.getSortProperty(), stateLocator)
+				return new ArrayIteratorAdapter(table.getColumns())
 				{
 
-					private static final long serialVersionUID = 1L;
-
-					protected void onSortChanged()
+					protected IModel model(Object object)
 					{
-						table.setCurrentPage(0);
+						return new Model((IColumn)object);
 					}
+
 				};
+			}
+
+			protected void populateItem(Item item)
+			{
+				IColumn column = (IColumn)item.getModelObject();
+				WebMarkupContainer header = null;
+				if (column.isSortable())
+				{
+					header = newSortableHeader("header", column.getSortProperty(), stateLocator);
+				}
+				else
+				{
+					header = new WebMarkupContainer("header");
+				}
+				item.add(header);
+				item.setRenderBodyOnly(true);
+				header.add(column.getHeader("label"));
 
 			}
-			else
+
+		};
+		add(headers);
+	}
+
+	protected WebMarkupContainer newSortableHeader(String borderId, String property,
+			ISortStateLocator locator)
+	{
+		return new OrderByBorder("header", property, locator)
+		{
+
+			private static final long serialVersionUID = 1L;
+
+			protected void onSortChanged()
 			{
-				header = new WebMarkupContainer("header");
+				getTable().setCurrentPage(0);
 			}
-			item.add(header);
-			item.setRenderBodyOnly(true);
-			header.add(column.getHeader("label"));
-		}
+		};
 
 	}
 
