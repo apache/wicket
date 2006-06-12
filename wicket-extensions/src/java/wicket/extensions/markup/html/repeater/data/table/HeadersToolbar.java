@@ -20,7 +20,6 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.Iterator;
 
-import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
@@ -96,10 +95,23 @@ public class HeadersToolbar extends AbstractToolbar
 		add(headers);
 	}
 
-	protected WebMarkupContainer newSortableHeader(String borderId, String property,
+	/**
+	 * Factory method for sortable header components. A sortable header
+	 * component must have id of <code>headerId</code> and conform to markup
+	 * specified in <code>HeadersToolbar.html</code>
+	 * 
+	 * @param headerId
+	 *            header component id
+	 * @param property
+	 *            propert this header represents
+	 * @param locator
+	 *            sort state locator
+	 * @return created header component
+	 */
+	protected WebMarkupContainer newSortableHeader(String headerId, String property,
 			ISortStateLocator locator)
 	{
-		return new OrderByBorder("header", property, locator)
+		return new OrderByBorder(headerId, property, locator)
 		{
 
 			private static final long serialVersionUID = 1L;

@@ -22,14 +22,30 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import wicket.extensions.markup.html.repeater.data.sort.OrderByLink;
 import wicket.markup.html.border.Border;
 
 
+/**
+ * Ajaxified version of {@link OrderByBorder}
+ * 
+ * @see OrderByBorder
+ * 
+ * @since 1.2.1
+ * 
+ * @author Igor Vaynberg (ivaynberg)
+ * 
+ */
 public abstract class AjaxFallbackOrderByBorder extends Border
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param property
+	 * @param stateLocator
+	 */
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator)
 	{
 		this(id, property, stateLocator, AjaxFallbackOrderByLink.DefaultCssProvider.getInstance(),
@@ -37,6 +53,14 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	}
 
 
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param property
+	 * @param stateLocator
+	 * @param cssProvider
+	 */
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
 			AjaxFallbackOrderByLink.ICssProvider cssProvider)
 	{
@@ -44,6 +68,14 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	}
 
 
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param property
+	 * @param stateLocator
+	 * @param decorator
+	 */
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
 			IAjaxCallDecorator decorator)
 	{
@@ -52,6 +84,15 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 	}
 
 
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param property
+	 * @param stateLocator
+	 * @param cssProvider
+	 * @param decorator
+	 */
 	public AjaxFallbackOrderByBorder(String id, String property, ISortStateLocator stateLocator,
 			AjaxFallbackOrderByLink.ICssProvider cssProvider, final IAjaxCallDecorator decorator)
 	{
