@@ -21,7 +21,6 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.MarkupContainer;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 
@@ -44,10 +43,10 @@ import wicket.model.IModel;
  * HTML:
  * 
  * <pre>
- *    	&lt;select wicket:id=&quot;site&quot;&gt;
- *    		&lt;option&gt;site 1&lt;/option&gt;
- *    		&lt;option&gt;site 2&lt;/option&gt;
- *    	&lt;/select&gt;
+ *     	&lt;select wicket:id=&quot;site&quot;&gt;
+ *     		&lt;option&gt;site 1&lt;/option&gt;
+ *     		&lt;option&gt;site 2&lt;/option&gt;
+ *     	&lt;/select&gt;
  * </pre>
  * 
  * </p>
