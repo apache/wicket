@@ -100,7 +100,9 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
-					<descriptor>src/assembly/bin.xml</descriptor>
+					<descriptors>
+						<descriptor>src/assembly/bin.xml</descriptor>
+					</descriptors>
 					<finalName>${artifactId}-${version}</finalName>
 					<outputDirectory>target/distributions</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
@@ -186,4 +188,10 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<distributionManagement>
+		<site>
+			<id>wicket-site</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/wicket-quickstart</url>
+		</site>
+	</distributionManagement>
 </project>
