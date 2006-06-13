@@ -18,7 +18,6 @@
  */
 package wicket.spring.common.web;
 
-import wicket.Component;
 import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
 import wicket.spring.common.Contact;
@@ -55,11 +54,11 @@ public abstract class ContactDetachableModel extends AbstractDetachableModel {
 		contact = null;
 	}
 
-	protected Object onGetObject(Component component) {
+	protected Object onGetObject() {
 		return contact;
 	}
 
-	protected void onSetObject(Component component, Object object) {
+	protected void onSetObject(Object object) {
 		throw new UnsupportedOperationException();
 	}
 
