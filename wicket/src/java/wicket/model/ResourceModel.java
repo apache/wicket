@@ -29,7 +29,9 @@ import wicket.Component;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ResourceModel extends AbstractReadOnlyModel<String> implements IInhertanceAware<String>
+public class ResourceModel extends AbstractReadOnlyModel<String>
+		implements
+			IAssignmentAware<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -69,11 +71,16 @@ public class ResourceModel extends AbstractReadOnlyModel<String> implements IInh
 	@Override
 	public String getObject()
 	{
-		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-				null, defaultValue);
+		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey, null,
+				defaultValue);
 	}
 
-	public <String> IWrapModel<String> wrapOnInhertance(final Component<String> component)
+
+	/*
+	 * FIXME i dont think component<string> is correct here, what if this model
+	 * is used for formcomponent.setlabel(imodel<string>)?
+	 */
+	public <String> IWrapModel<String> wrapOnAssignment(final Component<String> component)
 	{
 		return new IWrapModel<String>()
 		{
@@ -86,8 +93,8 @@ public class ResourceModel extends AbstractReadOnlyModel<String> implements IInh
 
 			public String getObject()
 			{
-				return (String)Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-						component, defaultValue);
+				return (String)Application.get().getResourceSettings().getLocalizer().getString(
+						resourceKey, component, defaultValue);
 			}
 
 			public void setObject(String object)
