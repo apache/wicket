@@ -128,7 +128,7 @@ public class DatePicker extends Panel
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public String getObject(Component component)
+				public String getObject()
 				{
 					// do this lazily, so we know for sure we have the whole
 					// path including the page etc.
@@ -165,7 +165,7 @@ public class DatePicker extends Panel
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public CharSequence getObject(Component component)
+				public CharSequence getObject()
 				{
 					return urlFor(resourceReference);
 				};
@@ -267,7 +267,7 @@ public class DatePicker extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public ResourceReference getObject(Component component)
+			public ResourceReference getObject()
 			{
 				return settings.getLanguage(DatePicker.this.getLocale());
 			}

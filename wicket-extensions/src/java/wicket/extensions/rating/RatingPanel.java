@@ -106,7 +106,7 @@ public abstract class RatingPanel extends Panel<Integer>
 				@Override
 				public boolean isEnabled()
 				{
-					return !((Boolean)hasVoted.getObject(RatingPanel.this)).booleanValue();
+					return !((Boolean)hasVoted.getObject()).booleanValue();
 				}
 
 				@Override

@@ -249,7 +249,7 @@ public class WizardStep<T> implements IWizardStep
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 					return getTitle();
 				}
@@ -259,7 +259,7 @@ public class WizardStep<T> implements IWizardStep
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 					return getSummary();
 				}
@@ -416,7 +416,7 @@ public class WizardStep<T> implements IWizardStep
 	 */
 	public String getSummary()
 	{
-		return (summary != null) ? summary.getObject(null) : (String)null;
+		return (summary != null) ? summary.getObject() : (String)null;
 	}
 
 	/**
@@ -426,7 +426,7 @@ public class WizardStep<T> implements IWizardStep
 	 */
 	public String getTitle()
 	{
-		return (title != null) ? title.getObject(null) : (String)null;
+		return (title != null) ? title.getObject() : (String)null;
 	}
 
 	/**

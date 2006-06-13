@@ -47,9 +47,9 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	}
 
 	/**
-	 * @see wicket.model.IModel#getObject(wicket.Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public Boolean getObject(Component component)
+	public Boolean getObject()
 	{
 		return isSelected(component) ? Boolean.TRUE : Boolean.FALSE;
 	}
@@ -64,9 +64,9 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	public abstract boolean isSelected(Component component);
 
 	/**
-	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public void setObject(Component component, Boolean object)
+	public void setObject(Boolean object)
 	{
 		boolean sel = Boolean.TRUE.equals(object);
 		setSelected(component, sel);

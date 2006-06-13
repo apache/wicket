@@ -20,7 +20,6 @@ package wicket.extensions.util.resource;
 
 import java.util.Map;
 
-import wicket.Component;
 import wicket.behavior.StringHeaderContributor;
 import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
@@ -104,14 +103,14 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		}
 
 		/**
-		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
+		 * @see wicket.model.AbstractDetachableModel#onGetObject()
 		 */
 		@Override
-		protected String onGetObject(Component component)
+		protected String onGetObject()
 		{
 			if (variablesModel != null)
 			{
-				Map variables = (Map)variablesModel.getObject(component);
+				Map variables = (Map)variablesModel.getObject();
 				if (variables != null)
 				{
 					return template.asString(variables);

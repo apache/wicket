@@ -23,7 +23,6 @@ import java.util.Iterator;
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.util.ModelIteratorAdapter;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.version.undo.Change;
 

@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
@@ -47,7 +46,7 @@ public class NavigatorLabel extends Label
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				int of = table.getRowCount();
 				int from = table.getCurrentPage() * table.getRowsPerPage();

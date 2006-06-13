@@ -2,7 +2,6 @@ package wicket.extensions.ajax.markup.html.form.upload;
 
 import wicket.Application;
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.IInitializer;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
@@ -65,7 +64,7 @@ public class UploadProgressBar extends Panel
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public String getObject(Component component)
+			public String getObject()
 			{
 				ResourceReference ref = new ResourceReference(RESOURCE_NAME);
 

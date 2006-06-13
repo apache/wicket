@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
@@ -47,7 +46,7 @@ public class NoRecordsToolbar extends AbstractToolbar
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			return component.getLocalizer().getString("datatable.no-records-found", component,
 					"No Records Found");

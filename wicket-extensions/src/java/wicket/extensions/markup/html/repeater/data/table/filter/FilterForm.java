@@ -170,18 +170,17 @@ public class FilterForm extends Form
 		}
 
 		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 * @see wicket.model.IModel#getObject()
 		 */
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			return locator.getFilterState();
 		}
 
 		/**
-		 * @see wicket.model.IModel#setObject(wicket.Component,
-		 *      java.lang.Object)
+		 * @see wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(Component component, Object object)
+		public void setObject(Object object)
 		{
 			locator.setFilterState(object);
 		}

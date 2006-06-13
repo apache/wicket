@@ -21,7 +21,6 @@ package wicket.extensions.markup.html.repeater.data.sort;
 import java.io.Serializable;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.AbstractModel;
@@ -214,14 +213,14 @@ public class OrderByLink extends Link
 					return null;
 				}
 
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 
 					final ISortState sortState = link.stateLocator.getSortState();
 					return provider.getClassAttributeValue(sortState, link.property);
 				}
 
-				public void setObject(Component component, Object object)
+				public void setObject(Object object)
 				{
 					throw new UnsupportedOperationException();
 				}
@@ -236,7 +235,7 @@ public class OrderByLink extends Link
 		@Override
 		public boolean isEnabled()
 		{
-			return getReplaceModel().getObject(null) != null;
+			return getReplaceModel().getObject() != null;
 		}
 
 

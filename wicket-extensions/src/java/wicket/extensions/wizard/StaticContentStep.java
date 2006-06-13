@@ -147,7 +147,7 @@ public class StaticContentStep extends WizardStep<String>
 	 */
 	public final String getContent()
 	{
-		return (content != null) ? (String)content.getObject(null) : null;
+		return (content != null) ? (String)content.getObject() : null;
 	}
 
 	/**

@@ -81,7 +81,7 @@ public class Select extends FormComponent
 		}
 		else
 		{
-			getModel().setObject(this, null);
+			getModel().setObject(null);
 		}
 
 		/*

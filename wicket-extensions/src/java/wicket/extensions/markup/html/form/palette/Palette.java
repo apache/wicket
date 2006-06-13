@@ -158,7 +158,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public CharSequence getObject(Component component)
+			public CharSequence getObject()
 			{
 				return urlFor(javascript);
 			};
@@ -361,7 +361,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 */
 	public Collection getChoices()
 	{
-		return (Collection)choicesModel.getObject(this);
+		return (Collection)choicesModel.getObject();
 	}
 
 	/**
