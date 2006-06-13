@@ -78,7 +78,7 @@ public class AnotherTree extends Tree
 			IModel junctionLabelModel = new AbstractReadOnlyModel()
 			{
 				@Override
-				public Object getObject(Component component)
+				public Object getObject()
 				{
 					return (!node.isLeaf()) ? (isExpanded(node)) ? "^" : ">" : "";
 				}

@@ -18,7 +18,6 @@
 package wicket.examples.repeater;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
@@ -105,7 +104,7 @@ public class OIRPage extends BasePage
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
 					@Override
-					public String getObject(Component component)
+					public String getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

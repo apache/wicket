@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.markup.html.form.DropDownChoice;
@@ -77,7 +76,7 @@ public class ChoicePage extends BasePage
 		IModel<List<String>> makeChoices = new AbstractReadOnlyModel<List<String>>()
 		{
 			@Override
-			public List<String> getObject(Component component)
+			public List<String> getObject()
 			{
 				Set<String> keys = modelsMap.keySet();
 				List<String> list = new ArrayList<String>(keys);
@@ -90,7 +89,7 @@ public class ChoicePage extends BasePage
 		{
 			@SuppressWarnings("unchecked")
 			@Override
-			public List<String> getObject(Component component)
+			public List<String> getObject()
 			{
 				List<String> models = modelsMap.get(selectedMake);
 				if (models == null)

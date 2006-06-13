@@ -66,9 +66,9 @@ public class UnicodeConverter extends WicketExamplePage
 	private final class ConverterModel extends AbstractModel<String>
 	{
 		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 * @see wicket.model.IModel#getObject()
 		 */
-		public String getObject(Component component)
+		public String getObject()
 		{
 			String result;
 			if (TO_ESCAPED_UNICODE.equals(translationType))
@@ -83,10 +83,9 @@ public class UnicodeConverter extends WicketExamplePage
 		}
 
 		/**
-		 * @see wicket.model.IModel#setObject(wicket.Component,
-		 *      java.lang.Object)
+		 * @see wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(Component component, String object)
+		public void setObject(String object)
 		{
 			// Ignore. We are not interested in updating any value,
 			// and we don't want to throw an exception like

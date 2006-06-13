@@ -18,7 +18,6 @@
  */
 package wicket.examples.repeater;
 
-import wicket.Component;
 import wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy;
 import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
@@ -85,7 +84,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	}
 
 	@Override
-	protected Contact onGetObject(Component component)
+	protected Contact onGetObject()
 	{
 		return contact;
 	}

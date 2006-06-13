@@ -46,7 +46,7 @@ public class Guess extends HangmanPage
 		new Label(this, "word", new Model()
 		{
 			@Override
-			public Object getObject(wicket.Component component)
+			public Object getObject()
 			{
 				return getGame().getWord().asString(true);
 			}

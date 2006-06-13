@@ -1,6 +1,5 @@
 package wicket.examples.stockquote;
 
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
@@ -33,7 +32,7 @@ public class StockQuoteLabel2 extends Label
 			 * Gets the stockquote for the given symbol.
 			 */
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				final StockQuote quote = new StockQuote(symbol);
 				return quote.getQuote();

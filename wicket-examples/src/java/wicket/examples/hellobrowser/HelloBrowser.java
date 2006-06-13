@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import wicket.Component;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
@@ -62,10 +61,10 @@ public class HelloBrowser extends WicketExamplePage
 		IModel clientTimeModel = new AbstractReadOnlyModel()
 		{
 			/**
-			 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
+			 * @see wicket.model.AbstractReadOnlyModel#getObject()
 			 */
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				TimeZone timeZone = properties.getTimeZone();
 				if (timeZone != null)

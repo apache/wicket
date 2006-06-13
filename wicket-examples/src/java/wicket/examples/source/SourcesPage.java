@@ -81,12 +81,10 @@ public class SourcesPage extends WebPage
 		/**
 		 * Returns the contents of the file loaded from the classpath.
 		 * 
-		 * @param component
-		 *            ignored
 		 * @return the contents of the file identified by name
 		 */
 		@Override
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			// name contains the name of the selected file
 			if (Strings.isEmpty(name))
@@ -151,12 +149,10 @@ public class SourcesPage extends WebPage
 		/**
 		 * Returns the list of resources found in the package of the page.
 		 * 
-		 * @param component
-		 *            ignored.
 		 * @return the list of resources found in the package of the page.
 		 */
 		@Override
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			if (resources.isEmpty())
 			{

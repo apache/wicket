@@ -21,7 +21,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
@@ -69,10 +68,10 @@ public class Clock extends Label
 		}
 
 		/**
-		 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
+		 * @see wicket.model.AbstractReadOnlyModel#getObject()
 		 */
 		@Override
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			return df.format(new Date());
 		}

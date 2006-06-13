@@ -18,7 +18,6 @@
 package wicket.examples.frames;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.RequestCycle;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebPage;
@@ -43,10 +42,10 @@ public class BodyFrame extends WebPage
 	private final class FrameModel extends Model<CharSequence>
 	{
 		/**
-		 * @see wicket.model.Model#getObject(wicket.Component)
+		 * @see wicket.model.Model#getObject()
 		 */
 		@Override
-		public CharSequence getObject(Component component)
+		public CharSequence getObject()
 		{
 			RequestCycle cycle = getRequestCycle();
 			IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();

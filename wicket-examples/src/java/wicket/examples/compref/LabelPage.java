@@ -18,7 +18,6 @@ package wicket.examples.compref;
 
 import java.util.Date;
 
-import wicket.Component;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.model.Model;
@@ -47,7 +46,7 @@ public class LabelPage extends WicketExamplePage
 		new Label(this, "dynamicLabel", new Model()
 		{
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Date();
 			}

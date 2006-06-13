@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.Application;
-import wicket.Component;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
@@ -91,7 +90,7 @@ public class LiveSessionsPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
 				RequestLogger requestLogger = webApplication.getRequestLogger();
@@ -111,7 +110,7 @@ public class LiveSessionsPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getTotalCreatedSessions());
 			}
@@ -121,7 +120,7 @@ public class LiveSessionsPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getLiveSessions().size());
 			}
@@ -131,7 +130,7 @@ public class LiveSessionsPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return new Integer(getRequestLogger().getPeakSessions());
 			}
@@ -142,7 +141,7 @@ public class LiveSessionsPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public List<SessionData> getObject(Component component)
+			public List<SessionData> getObject()
 			{
 				return new ArrayList<SessionData>(getRequestLogger().getLiveSessions());
 			}

@@ -39,7 +39,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import wicket.Component;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
@@ -76,7 +75,7 @@ public class RequestsPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public List<RequestData> getObject(Component component)
+			public List<RequestData> getObject()
 			{
 				return new ArrayList<RequestData>(sessionData.getRequests());
 			}

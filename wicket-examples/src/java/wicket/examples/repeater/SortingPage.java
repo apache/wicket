@@ -19,7 +19,6 @@
 package wicket.examples.repeater;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
@@ -61,7 +60,7 @@ public class SortingPage extends BasePage
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
 					@Override
-					public String getObject(Component component)
+					public String getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

@@ -21,7 +21,6 @@ package wicket.examples.repeater;
 import java.util.Iterator;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -62,7 +61,7 @@ public class RepeatingPage extends BasePage
 			item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 			{
 				@Override
-				public String getObject(Component component)
+				public String getObject()
 				{
 					return (idx % 2 == 1) ? "even" : "odd";
 				}

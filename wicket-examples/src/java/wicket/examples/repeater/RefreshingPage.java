@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.basic.Label;
@@ -82,7 +81,7 @@ public class RefreshingPage extends BasePage
 				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>()
 				{
 					@Override
-					public String getObject(Component component)
+					public String getObject()
 					{
 						return (item.getIndex() % 2 == 1) ? "even" : "odd";
 					}

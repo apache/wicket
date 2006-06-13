@@ -19,7 +19,6 @@ package wicket.examples.compref;
 import java.io.Serializable;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
@@ -59,7 +58,7 @@ public class LinkPage extends WicketExamplePage
 		new Label(link1, "label1", new Model<String>()
 		{
 			@Override
-			public String getObject(Component component)
+			public String getObject()
 			{
 				return Integer.toString(count1.clicks);
 			}
@@ -118,7 +117,7 @@ public class LinkPage extends WicketExamplePage
 				add(new AttributeModifier("value", new Model<String>()
 				{
 					@Override
-					public String getObject(Component component)
+					public String getObject()
 					{
 						// we just replace the whole string. You could use
 						// custom
@@ -170,7 +169,7 @@ public class LinkPage extends WicketExamplePage
 			super(parent, id, new Model<String>()
 			{
 				@Override
-				public String getObject(Component component)
+				public String getObject()
 				{
 					return Integer.toString(clickCount.clicks);
 				}
