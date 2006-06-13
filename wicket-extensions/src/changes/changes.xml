@@ -6,6 +6,12 @@
     <author email="igor at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
+    <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+    	<action type="fix" dev="Janne Hietamäki">Set the AutoComplete response headers properly</action>
+    	<action type="fix" dev="Janne Hietamäki">Fixed AutoComplete bugs when running under IE</action>
+ 	</release> 
+    <release version="1.2" date="2006-05-24" description="Wicket 1.2">
+    </release>
     <release version="1.2-RC?" date="tbd" description="Wicket CVS HEAD development">
 		<action type="add" dev="Eelco Hillenius">Added wizard component</action>
     </release>

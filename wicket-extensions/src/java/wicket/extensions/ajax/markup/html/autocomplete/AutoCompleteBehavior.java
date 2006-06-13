@@ -2,9 +2,10 @@ package wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Iterator;
 
+import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
-import wicket.Response;
+import wicket.protocol.http.WebResponse;
 
 /**
  * This behavior builds on top of {@link AbstractAutoCompleteBehavior} by
@@ -47,7 +48,19 @@ public abstract class AutoCompleteBehavior extends AbstractAutoCompleteBehavior
 
 			public void respond(RequestCycle requestCycle)
 			{
-				Response r = requestCycle.getResponse();
+				
+				WebResponse r = (WebResponse)requestCycle.getResponse();
+				
+				// Determine encoding
+				final String encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
+				r.setCharacterEncoding(encoding);
+				r.setContentType("text/xml; charset=" + encoding);
+
+				// Make sure it is not cached by a
+				r.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+				r.setHeader("Cache-Control", "no-cache, must-revalidate");
+				r.setHeader("Pragma", "no-cache");
+
 				Iterator comps = getChoices(val);
 				renderer.renderHeader(r);
 				while (comps.hasNext())
