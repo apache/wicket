@@ -22,7 +22,6 @@ import wicket.MarkupContainer;
 import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 import wicket.model.ResourceModel;
 
