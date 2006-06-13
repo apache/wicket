@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.AttributeModifier;
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessagesModel;
@@ -90,10 +89,10 @@ public class FeedbackPanel extends Panel implements IFeedback
 				 * 'feedbackPanelERROR'. This is used as the class of the li /
 				 * span elements.
 				 * 
-				 * @see wicket.model.IModel#getObject(Component)
+				 * @see wicket.model.IModel#getObject()
 				 */
 				@Override
-				public String getObject(final Component component)
+				public String getObject()
 				{
 					return getCSSClass(message);
 				}

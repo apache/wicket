@@ -156,7 +156,7 @@ public abstract class AbstractValidator implements IValidator
 			keys.add(defaultKey);
 		}
 
-		Map<String, Serializable> args = resourceModel.getObject(formComponent);
+		Map<String, Serializable> args = resourceModel.getObject();
 
 		formComponent.error(keys, args);
 	}
@@ -198,7 +198,7 @@ public abstract class AbstractValidator implements IValidator
 		Object label = null;
 		if (formComponent.getLabel() != null)
 		{
-			label = formComponent.getLabel().getObject(formComponent);
+			label = formComponent.getLabel().getObject();
 		}
 
 		if (label != null)

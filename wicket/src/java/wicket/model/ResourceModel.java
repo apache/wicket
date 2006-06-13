@@ -29,7 +29,7 @@ import wicket.Component;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class ResourceModel extends AbstractReadOnlyModel<String>
+public class ResourceModel extends AbstractReadOnlyModel<String> implements IInhertanceAware<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,13 +64,41 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	}
 
 	/**
-	 * @see wicket.model.AbstractReadOnlyModel#getObject(wicket.Component)
+	 * @see wicket.model.AbstractReadOnlyModel#getObject()
 	 */
 	@Override
-	public String getObject(Component component)
+	public String getObject()
 	{
 		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-				component, defaultValue);
+				null, defaultValue);
+	}
+
+	public <String> IWrapModel<String> wrapOnInhertance(final Component<String> component)
+	{
+		return new IWrapModel<String>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public IModel getNestedModel()
+			{
+				return ResourceModel.this;
+			}
+
+			public String getObject()
+			{
+				return (String)Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
+						component, defaultValue);
+			}
+
+			public void setObject(String object)
+			{
+			}
+
+			public void detach()
+			{
+				ResourceModel.this.detach();
+			}
+		};
 	}
 
 }

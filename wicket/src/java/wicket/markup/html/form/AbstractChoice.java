@@ -205,7 +205,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 */
 	public List<E> getChoices()
 	{
-		List<E> choices = this.choices.getObject(this);
+		List<E> choices = this.choices.getObject();
 		if (choices == null)
 		{
 			throw new NullPointerException(

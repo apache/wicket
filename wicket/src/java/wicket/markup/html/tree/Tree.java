@@ -273,10 +273,10 @@ public class Tree extends AbstractTree implements TreeModelListener
 		}
 
 		/**
-		 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
+		 * @see wicket.model.AbstractDetachableModel#onGetObject()
 		 */
 		@Override
-		protected List<DefaultMutableTreeNode> onGetObject(Component component)
+		protected List<DefaultMutableTreeNode> onGetObject()
 		{
 			return paths;
 		}

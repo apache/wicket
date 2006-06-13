@@ -17,7 +17,6 @@
  */
 package wicket.markup.html;
 
-import wicket.Component;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 
@@ -44,7 +43,7 @@ public class ScopedPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public Object getObject(Component component)
+			public Object getObject()
 			{
 				return "Clicked: " + _clicked;
 			}

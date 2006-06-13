@@ -21,13 +21,12 @@ package wicket.model;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component;
 import wicket.RequestCycle;
 
 /**
  * Model that makes working with detachable models a breeze.
  * LoadableDetachableModel holds a temporary, transient model object, that is
- * set when {@link #getObject(Component)} is called by calling abstract method
+ * set when {@link #getObject()} is called by calling abstract method
  * 'load', and that will be reset/ set to null on {@link #detach()}.
  * 
  * A usage example:
@@ -107,10 +106,10 @@ public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T
 	}
 
 	/**
-	 * @see wicket.model.IModel#getObject(wicket.Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
 	@Override
-	public T getObject(Component component)
+	public T getObject()
 	{
 		if (!attached)
 		{

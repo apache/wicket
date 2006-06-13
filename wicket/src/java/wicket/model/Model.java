@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import wicket.Component;
 
 /**
  * Model is the basic implementation of an AbstractModel. It just wraps a simple
@@ -96,9 +95,9 @@ public class Model<T /* extends Serializable */> extends AbstractModel<T>
 	}
 
 	/**
-	 * @see wicket.model.IModel#getObject(wicket.Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public T getObject(final Component component)
+	public T getObject()
 	{
 		return object;
 	}
@@ -106,27 +105,14 @@ public class Model<T /* extends Serializable */> extends AbstractModel<T>
 	/**
 	 * Set the model object; calls setObject(java.io.Serializable). The model
 	 * object must be serializable, as it is stored in the session
-	 * 
 	 * @param object
 	 *            the model object
-	 * @see wicket.model.IModel#setObject(Component, Object)
-	 */
-	public void setObject(final Component component, final T object)
-	{
-		setObject(object);
-	}
-
-	/**
-	 * Sets the model object. The model object must be serializable, as it is
-	 * stored in the session
 	 * 
-	 * @param object
-	 *            The serializable model object
-	 * @see wicket.model.IModel#setObject(Component, Object)
+	 * @see wicket.model.IModel#setObject(Object)
 	 */
 	public void setObject(final T object)
 	{
-		this.object = object;
+		setObject(object);
 	}
 
 	/**

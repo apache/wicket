@@ -24,7 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import wicket.Component;
-import wicket.model.AbstractDetachableModel;
+import wicket.model.AbstractDetachableAssignmentAwareModel;
 import wicket.model.IModel;
 
 /**
@@ -32,7 +32,7 @@ import wicket.model.IModel;
  * 
  * @author Eelco Hillenius
  */
-public class FeedbackMessagesModel extends AbstractDetachableModel<List<FeedbackMessage>>
+public class FeedbackMessagesModel extends AbstractDetachableAssignmentAwareModel<List<FeedbackMessage>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -90,10 +90,10 @@ public class FeedbackMessagesModel extends AbstractDetachableModel<List<Feedback
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
+	 * @see wicket.model.AbstractDetachableModel#onGetObject()
 	 */
 	@Override
-	public final List<FeedbackMessage> onGetObject(final Component component)
+	public final List<FeedbackMessage> onGetObject(Component component)
 	{
 		if (messages == null)
 		{
@@ -162,8 +162,7 @@ public class FeedbackMessagesModel extends AbstractDetachableModel<List<Feedback
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
-	 *      java.lang.Object)
+	 * @see wicket.model.AbstractDetachableModel#onSetObject(java.lang.Object)
 	 */
 	@Override
 	protected void onSetObject(Component component, List<FeedbackMessage> object)

@@ -18,7 +18,6 @@
  */
 package wicket.model;
 
-import wicket.Component;
 
 /**
  * Adds a default implementation of onSetObject() which throws an
@@ -36,15 +35,13 @@ public abstract class AbstractReadOnlyDetachableModel<T> extends AbstractDetacha
 	 * This default implementation of onSetObject unconditionally throws an
 	 * UnsupportedOperationException. Since the method is final, any subclass is
 	 * effectively a read-only model.
-	 * 
-	 * @param component
-	 *            The component wanting to set the object
 	 * @param object
 	 *            The object to set into the model
+	 * 
 	 * @throws UnsupportedOperationException
 	 */
 	@Override
-	protected final void onSetObject(final Component component, final T object)
+	protected final void onSetObject(final T object)
 	{
 		throw new UnsupportedOperationException("Model " + getClass()
 				+ " does not support setObject(Object)");

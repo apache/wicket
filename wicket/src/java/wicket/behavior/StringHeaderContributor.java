@@ -84,8 +84,8 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		{
 			if (obj instanceof StringContributor)
 			{
-				Object thisContrib = contribution.getObject(null);
-				Object thatContrib = ((StringContributor)obj).contribution.getObject(null);
+				Object thisContrib = contribution.getObject();
+				Object thatContrib = ((StringContributor)obj).contribution.getObject();
 				return Objects.equal(thisContrib, thatContrib);
 			}
 			return false;
@@ -97,7 +97,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		@Override
 		public int hashCode()
 		{
-			Object object = contribution.getObject(null);
+			Object object = contribution.getObject();
 			return (object != null) ? object.hashCode() : 0;
 		}
 
@@ -106,7 +106,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		 */
 		public void renderHead(Response response)
 		{
-			Object object = contribution.getObject(null);
+			Object object = contribution.getObject();
 			if (object != null)
 			{
 				response.println(object.toString());
@@ -174,7 +174,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	@Override
 	public String toString()
 	{
-		return "StringHeaderContributor[contribution=" + contributor.contribution.getObject(null)
+		return "StringHeaderContributor[contribution=" + contributor.contribution.getObject()
 				+ "]";
 	}
 }

@@ -36,7 +36,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T>
+public abstract class AbstractPropertyAssignmentAwareModel<T> extends AbstractDetachableAssignmentAwareModel<T>
 {
 	/** Any model object (which may or may not implement IModel) */
 	private Object nestedModel;
@@ -47,7 +47,7 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	 * @param modelObject
 	 *            The nested model object
 	 */
-	public AbstractPropertyModel(final Object modelObject)
+	public AbstractPropertyAssignmentAwareModel(final Object modelObject)
 	{
 		if (modelObject == null)
 		{
@@ -82,7 +82,7 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	{
 		if (nestedModel instanceof IModel)
 		{
-			return ((IModel)nestedModel).getObject(component);
+			return ((IModel)nestedModel).getObject();
 		}
 		return nestedModel;
 	}
@@ -118,11 +118,11 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
+	 * @see wicket.model.AbstractDetachableModel#onGetObject()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected T onGetObject(final Component component)
+	protected T onGetObject(Component component)
 	{
 		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
@@ -142,22 +142,22 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	/**
 	 * Applies the property expression on the model object using the given
 	 * object argument.
-	 * 
 	 * @param object
 	 *            The object that will be used when setting a value on the model
 	 *            object
-	 * @see AbstractDetachableModel#onSetObject(Component, Object)
+	 * 
+	 * @see AbstractDetachableModel#onSetObject(Object)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void onSetObject(final Component component, T object)
+	protected void onSetObject(Component component,T object)
 	{
 		final String expression = propertyExpression(component);
 		if (Strings.isEmpty(expression))
 		{
 			if (nestedModel instanceof IModel)
 			{
-				((IModel)nestedModel).setObject(null, object);
+				((IModel)nestedModel).setObject(object);
 			}
 			else
 			{

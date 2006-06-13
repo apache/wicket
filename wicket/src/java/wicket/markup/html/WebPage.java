@@ -465,10 +465,10 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 						private static final long serialVersionUID = 1L;
 
 						/**
-						 * @see wicket.model.Model#getObject(wicket.Component)
+						 * @see wicket.model.Model#getObject()
 						 */
 						@Override
-						public String getObject(Component component)
+						public String getObject()
 						{
 							Application application = Application.get();
 							return "deleteWicketCookie('pm-" + getPageMap().getName()

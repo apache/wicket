@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.list;
 
-import wicket.Component;
 import wicket.model.AbstractDetachableModel;
 import wicket.model.IModel;
 
@@ -87,20 +86,19 @@ public class ListItemModel<T> extends AbstractDetachableModel<T>
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject(wicket.Component)
+	 * @see wicket.model.AbstractDetachableModel#onGetObject()
 	 */
 	@Override
-	protected T onGetObject(final Component component)
+	protected T onGetObject()
 	{
 		return object;
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onSetObject(wicket.Component,
-	 *      java.lang.Object)
+	 * @see wicket.model.AbstractDetachableModel#onSetObject(java.lang.Object)
 	 */
 	@Override
-	protected void onSetObject(final Component component, final T object)
+	protected void onSetObject(final T object)
 	{
 		this.object = object;
 	}
