@@ -21,7 +21,6 @@ package wicket.model;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Component;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 
@@ -97,19 +96,18 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	public abstract IModel getNestedModel();
 
 	/**
-	 * @see wicket.model.IModel#getObject(Component)
+	 * @see wicket.model.IModel#getObject()
 	 */
-	public final T getObject(final Component component)
+	public final T getObject()
 	{
 		attach();
 		try
 		{
-			return onGetObject(component);
+			return onGetObject();
 		}
 		catch (RuntimeException e)
 		{
-			throw new WicketRuntimeException("unable to get object, model: " + this
-					+ ", called with component " + component, e);
+			throw new WicketRuntimeException("unable to get object, model: " + this, e);
 		}
 	}
 
@@ -124,19 +122,18 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	}
 
 	/**
-	 * @see wicket.model.IModel#setObject(wicket.Component, java.lang.Object)
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public final void setObject(final Component component, final T object)
+	public final void setObject(final T object)
 	{
 		attach();
 		try
 		{
-			onSetObject(component, object);
+			onSetObject(object);
 		}
 		catch (RuntimeException e)
 		{
-			throw new WicketRuntimeException("unable to set object " + object + ", model: " + this
-					+ ", called with component " + component, e);
+			throw new WicketRuntimeException("unable to set object " + object + ", model: " + this, e);
 		}
 	}
 
@@ -169,21 +166,16 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	 * object. Before this method is called, getObject() always calls attach()
 	 * to ensure that the object is attached.
 	 * 
-	 * @param component
-	 *            The component asking for the object
 	 * @return The object
 	 */
-	protected abstract T onGetObject(final Component component);
+	protected abstract T onGetObject();
 
 	/**
 	 * Called when setObject is called in order to change the detachable object.
 	 * Before this method is called, setObject() always calls attach() to ensure
 	 * that the object is attached.
-	 * 
-	 * @param component
-	 *            The component asking for replacement of the model object
 	 * @param object
 	 *            The new model object
 	 */
-	protected abstract void onSetObject(final Component component, final T object);
+	protected abstract void onSetObject(final T object);
 }

@@ -34,7 +34,7 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  */
-public class CompoundPropertyModel<T> extends AbstractPropertyModel<T> implements ICompoundModel<T>
+public class CompoundPropertyModel<T> extends AbstractPropertyInheritanceModel<T> implements ICompoundModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,7 +50,7 @@ public class CompoundPropertyModel<T> extends AbstractPropertyModel<T> implement
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
+	 * @see wicket.model.AbstractPropertyAssignmentAwareModel#propertyExpression(wicket.Component)
 	 */
 	@Override
 	protected String propertyExpression(final Component component)
@@ -64,7 +64,7 @@ public class CompoundPropertyModel<T> extends AbstractPropertyModel<T> implement
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
+	 * @see wicket.model.AbstractPropertyAssignmentAwareModel#propertyType(wicket.Component)
 	 */
 	@Override
 	protected Class propertyType(final Component component)

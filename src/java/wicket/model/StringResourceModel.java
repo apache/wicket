@@ -359,12 +359,12 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 			{
 				if (parameters[i] instanceof IModel)
 				{
-					realParams[i] = ((IModel)parameters[i]).getObject(component);
+					realParams[i] = ((IModel)parameters[i]).getObject();
 				}
 				else if (model != null && parameters[i] instanceof String)
 				{
 					realParams[i] = PropertyVariableInterpolator.interpolate((String)parameters[i],
-							model.getObject(component));
+							model.getObject());
 				}
 				else
 				{
@@ -430,7 +430,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 		if (model != null)
 		{
 			return PropertyVariableInterpolator
-					.interpolate(resourceKey, model.getObject(component));
+					.interpolate(resourceKey, model.getObject());
 		}
 		else
 		{
@@ -480,10 +480,10 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	 * string is returned as an object to allow it to be used generically within
 	 * components.
 	 * 
-	 * @see AbstractDetachableModel#onGetObject(Component)
+	 * @see AbstractDetachableModel#onGetObject()
 	 */
 	@Override
-	protected final String onGetObject(final Component component)
+	protected final String onGetObject()
 	{
 		if (this.component == null)
 		{

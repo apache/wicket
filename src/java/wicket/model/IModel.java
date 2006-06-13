@@ -17,7 +17,6 @@
  */
 package wicket.model;
 
-import wicket.Component;
 
 /**
  * A IModel wraps the actual model Object used by a Component. IModel
@@ -57,9 +56,9 @@ import wicket.Component;
  * 
  * <li><b>Compound Property Models </b>- The IModel interface is parameterized
  * by Component, allowing a model to be shared among several Components. When
- * the {@link IModel#getObject(Component)}method is called, the value returned
+ * the {@link IModel#getObject()}method is called, the value returned
  * will depend on the Component which is asking for the value. Likewise, the
- * {@link IModel#setObject(Component, Object)}method sets a different property
+ * {@link IModel#setObject(Object)}method sets a different property
  * depending on which Component is doing the setting. For more information on
  * CompoundPropertyModels and model inheritance, see
  * {@link wicket.model.CompoundPropertyModel}and {@link wicket.Page}.
@@ -87,21 +86,14 @@ public interface IModel<T> extends IDetachable
 	/**
 	 * Gets the model object.
 	 * 
-	 * @param component
-	 *            The component which wants to get a model Object
-	 * 
 	 * @return The model object
 	 */
-	T getObject(final Component component);
+	T getObject();
 
 	/**
 	 * Sets the model object.
-	 * 
-	 * @param component
-	 *            The component which wants to set a new model Object
-	 * 
 	 * @param object
 	 *            The model object
 	 */
-	void setObject(final Component component, final T object);
+	void setObject(final T object);
 }

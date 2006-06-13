@@ -36,6 +36,6 @@ package wicket.model;
  * 
  * @author jcompagner
  */
-public interface ICompoundModel<T> extends IModel<T>
+public interface ICompoundModel<T> extends IInhertanceAware<T>
 {
 }

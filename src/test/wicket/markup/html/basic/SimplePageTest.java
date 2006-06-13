@@ -26,7 +26,6 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.panel.Panel;
 import wicket.util.value.IValueMap;
-import wicket.util.value.ValueMap;
 
 /**
  * Simple application that demonstrates the mock http application code (and

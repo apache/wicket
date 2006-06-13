@@ -363,7 +363,7 @@ public class Localizer
 	{
 		if ((string != null) && (model != null))
 		{
-			return PropertyVariableInterpolator.interpolate(string, model.getObject(component));
+			return PropertyVariableInterpolator.interpolate(string, model.getObject());
 		}
 		return string;
 	}

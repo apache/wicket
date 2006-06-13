@@ -90,7 +90,7 @@ import wicket.util.lang.PropertyResolver;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class PropertyModel<T> extends AbstractPropertyModel<T>
+public class PropertyModel<T> extends AbstractPropertyAssignmentAwareModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -164,7 +164,7 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
+	 * @see wicket.model.AbstractPropertyAssignmentAwareModel#propertyExpression(wicket.Component)
 	 */
 	@Override
 	protected String propertyExpression(Component component)
@@ -173,7 +173,7 @@ public class PropertyModel<T> extends AbstractPropertyModel<T>
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
+	 * @see wicket.model.AbstractPropertyAssignmentAwareModel#propertyType(wicket.Component)
 	 */
 	@Override
 	protected Class propertyType(Component component)

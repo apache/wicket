@@ -62,7 +62,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 				IModel label = formComponent.getLabel();
 				if (label != null)
 				{
-					args.put(arg, (Serializable)label.getObject(formComponent));
+					args.put(arg, (Serializable)label.getObject());
 				}
 				else
 				{

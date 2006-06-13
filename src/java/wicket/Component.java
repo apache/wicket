@@ -41,9 +41,11 @@ import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.model.ICompoundModel;
+import wicket.model.IAssignmentAware;
+import wicket.model.IInhertanceAware;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
+import wicket.model.IWrapModel;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
@@ -223,76 +225,6 @@ import wicket.version.undo.Change;
  */
 public abstract class Component<T> implements Serializable, ICoverterLocator
 {
-	/**
-	 * A model that wraps the ICompoundModel that this component gets from the
-	 * parent.
-	 * 
-	 * @param <V>
-	 * 
-	 */
-	public class WrapModel<V> implements IModel<V>
-	{
-		private static final long serialVersionUID = 1L;
-
-		private IModel model;
-
-		private final boolean rootCompound;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param model
-		 * @param rootCompound
-		 */
-		public WrapModel(IModel model, boolean rootCompound)
-		{
-			this.model = model;
-			this.rootCompound = rootCompound;
-		}
-
-		public IModel getNestedModel()
-		{
-			return model;
-		}
-
-		@SuppressWarnings("unchecked")
-		public V getObject(Component component)
-		{
-			if (rootCompound)
-			{
-				return (V)model.getObject(null);
-			}
-			else
-			{
-				return (V)model.getObject(Component.this);
-			}
-		}
-
-		// I don't think there is any other way then to suppress the warnings
-		// here.
-		// The compound model will have its own Value that it returns (when
-		// calling with null object)
-		// and that is his type. But this component gets another type from that
-		// compound.
-		// The only solution as far as i see is to make compound not generic.
-		@SuppressWarnings("unchecked")
-		public void setObject(Component component, V object)
-		{
-			if (rootCompound)
-			{
-				model.setObject(null, object);
-			}
-			else
-			{
-				model.setObject(Component.this, object);
-			}
-		}
-
-		public void detach()
-		{
-			model.detach();
-		}
-	}
 
 	/**
 	 * Change record of a model.
@@ -709,9 +641,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			parent.add(this);
 		}
 
-		if (model instanceof ICompoundModel)
+		if (model instanceof IInhertanceAware)
 		{
-			this.model = new WrapModel<T>(model, true);
+			this.model = ((IInhertanceAware)model).wrapOnInhertance(this);
 		}
 		else
 		{
@@ -1075,7 +1007,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		if (model != null)
 		{
 			// Get model value for this component.
-			return model.getObject(this);
+			return model.getObject();
 		}
 		else
 		{
@@ -2046,7 +1978,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		}
 
 		IModel prevModel = this.model;
-		if (prevModel instanceof WrapModel)
+		// TODO really need such a check? Can we just store the wrapper in the state change?
+		if (prevModel instanceof IWrapModel)
 		{
 			prevModel = model.getNestedModel();
 		}
@@ -2059,9 +1992,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				addStateChange(new ComponentModelChange(prevModel));
 			}
 
-			if (model instanceof ICompoundModel)
+			if (model instanceof IAssignmentAware)
 			{
-				this.model = new WrapModel<T>(model, true);
+				this.model = ((IAssignmentAware<T>)model).wrapOnAssignment(this);
 			}
 			else
 			{
@@ -2105,7 +2038,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			modelChanging();
 
 			// sets the current object in the model. So always use null.
-			model.setObject(null, object);
+			model.setObject(object);
 			modelChanged();
 		}
 
@@ -2583,12 +2516,12 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			// Get model
 			IModel model = current.getModel();
 
-			if (model instanceof WrapModel)
+			if (model instanceof IWrapModel)
 			{
-				model = ((WrapModel)model).getNestedModel();
+				model = ((IWrapModel)model).getNestedModel();
 			}
 
-			if (model instanceof ICompoundModel)
+			if (model instanceof IInhertanceAware)
 			{
 				// we turn off versioning as we share the model with another
 				// component that is the owner of the model (that component
@@ -2596,7 +2529,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				setVersioned(false);
 
 				// return the shared compound model
-				return new WrapModel<T>((ICompoundModel)model, false);
+				return ((IInhertanceAware)model).wrapOnInhertance(this);
 			}
 		}
 

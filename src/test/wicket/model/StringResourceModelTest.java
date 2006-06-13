@@ -24,7 +24,6 @@ import java.util.Calendar;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.Component;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
 import wicket.protocol.http.MockWebApplication;
@@ -78,7 +77,7 @@ public class StringResourceModelTest extends TestCase
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, null);
 		Assert.assertEquals("Text should be as expected", "Simple text", model.getString());
-		Assert.assertEquals("Text should be as expected", "Simple text", model.getObject(page));
+		Assert.assertEquals("Text should be as expected", "Simple text", model.getObject());
 		Assert.assertEquals("Text should be as expected", "Simple text", model.toString());
 	}
 
@@ -179,7 +178,7 @@ public class StringResourceModelTest extends TestCase
 		try
 		{
 			StringResourceModel model = new StringResourceModel("simple.text", page, null);
-			model.setObject(page, "Some value");
+			model.setObject("Some value");
 			Assert.fail("UnsupportedOperationException expected");
 		}
 		catch (Exception e)
@@ -230,7 +229,7 @@ public class StringResourceModelTest extends TestCase
 			}
 
 			@Override
-			protected WeatherStation onGetObject(final Component component)
+			protected WeatherStation onGetObject()
 			{
 				return station;
 			}
@@ -245,7 +244,7 @@ public class StringResourceModelTest extends TestCase
 		application.setupRequestAndResponse();
 		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
-		Assert.assertNotNull(model.getNestedModel().getObject(page));
+		Assert.assertNotNull(model.getNestedModel().getObject());
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...

@@ -129,10 +129,10 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 * @see wicket.model.IModel#getObject()
 		 */
 		@Override
-		public String getObject(Component component)
+		public String getObject()
 		{
 			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled()
 					? null
@@ -1082,7 +1082,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			Object label = null;
 			if (getLabel() != null)
 			{
-				label = getLabel().getObject(this);
+				label = getLabel().getObject();
 			}
 			if (label != null)
 			{

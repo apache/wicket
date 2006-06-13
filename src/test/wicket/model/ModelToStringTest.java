@@ -144,10 +144,10 @@ public class ModelToStringTest extends WicketTestCase
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * @see AbstractReadOnlyModel#getObject(Component)
+		 * @see AbstractReadOnlyModel#getObject()
 		 */
 		@Override
-		public Object getObject(Component component)
+		public Object getObject()
 		{
 			return "FOO";
 		}
@@ -191,7 +191,7 @@ public class ModelToStringTest extends WicketTestCase
 		}
 
 		@Override
-		protected Object onGetObject(Component component)
+		protected Object onGetObject()
 		{
 			return null;
 		}
@@ -229,7 +229,7 @@ public class ModelToStringTest extends WicketTestCase
 				+ ":attached=false" + ":tempModelObject=[null]";
 		assertEquals(expected, model.toString());
 
-		model.getObject(null);
+		model.getObject();
 		expected = "Model:classname=[" + model.getClass().getName() + "]" + ":attached=true"
 				+ ":tempModelObject=[foo]";
 		assertEquals(expected, model.toString());

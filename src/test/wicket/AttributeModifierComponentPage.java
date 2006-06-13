@@ -71,13 +71,13 @@ public class AttributeModifierComponentPage extends WebPage
 			}
 
 			@Override
-			public String onGetObject(final Component component)
+			public String onGetObject()
 			{
 				return text;
 			}
 
 			@Override
-			public void onSetObject(final Component component, final String object)
+			public void onSetObject(final String object)
 			{
 				text = object.toString();
 			}
