@@ -24,6 +24,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
+import wicket.model.ResourceModel;
 
 /**
  * A toolbar that displays a "no records found" message when the data table
@@ -41,17 +42,8 @@ public class NoRecordsToolbar extends AbstractToolbar
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final IModel DEFAULT_MESSAGE_MODEL = new AbstractReadOnlyModel()
-	{
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public Object getObject()
-		{
-			return component.getLocalizer().getString("datatable.no-records-found", component,
-					"No Records Found");
-		}
-	};
+	private static final IModel DEFAULT_MESSAGE_MODEL = new ResourceModel(
+			"datatable.no-records-found", "No Records Found");
 
 
 	/**
