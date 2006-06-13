@@ -19,7 +19,6 @@
       <action type="fix" dev="Eelco Hillenius" issue="1490949">Package resources do not have to be pre-registered anymore. When a shared resource is not found, Wicket tries to find a corresponding package resource, and if it finds one, registers it lazily. This fixes quite a few uncomfortable situations, and makes writing custom components easier. Package resources may be blocked by utilizing IPackageResourceGuard (IResourceSettings). By default everything except files with the extension 'html', 'class', 'java', and 'properties' are served. Fixes amongst others bug 1490949. All methods that took Pattern are now deprecated and will be removed in 2.0.
       </action>
       <action type="fix" dev="Eelco Hillenius">Fixed setting the shared resource path so that it strips any jsession id (or whatever there may be between [path];[whatever][?(optional)] which was a problem when a browser doesn't support cookies</action>
-      <action type="fix" dev="Janne Hietamaki">Fixed AutoComplete bugs when running under IE</action>
       <action type="fix" dev="Igor Vaynberg">Fixed palette bug that removed items when add button was double clicked</action>
       <action type="fix" dev="Igor Vaynberg">Fixed SubmitLink.onSubmit() was not being called</action>
       <action type="fix" dev="Igor Vaynberg">Fixed errors when ajax requests came in to a page that is no longer active</action>
