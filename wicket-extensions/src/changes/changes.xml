@@ -7,15 +7,13 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+		<action type="add" dev="Martijn Dashorst">Added AjaxNavigationToolbar</action>
+		<action type="add" dev="Igor Vaynberg">Added AjaxFallbackDefaultDataTable</action>
     	<action type="fix" dev="Janne Hietamäki">Set the AutoComplete response headers properly</action>
     	<action type="fix" dev="Janne Hietamäki">Fixed AutoComplete bugs when running under IE</action>
  	</release> 
     <release version="1.2" date="2006-05-24" description="Wicket 1.2">
-    </release>
-    <release version="1.2-RC?" date="tbd" description="Wicket CVS HEAD development">
 		<action type="add" dev="Eelco Hillenius">Added wizard component</action>
-    </release>
-    <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
 		<action type="add" dev="Igor Vaynberg">new ajax driven form upload progress bar (UploadProgressBar)</action>
 		<action type="add" dev="Igor Vaynberg">new ajax link variations with a busy indicator (IndicatingAjaxLink, IndicatingAjaxFallbackLink)</action>
 		<action type="add" dev="Igor Vaynberg">new AjaxEditableLabel</action>
