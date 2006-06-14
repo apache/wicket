@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,17 +21,35 @@ package wicket.model;
 import wicket.Component;
 
 /**
- * TODO IGOR
+ * Models that wish to substitute themselves with a wraper when they are bound
+ * to a component ( either through IModel parameter in a constructor or via a
+ * call to {@link Component#setModel(IModel)} ) should implement this interface.
+ * One reason for a model to want to do this is if it needs to be aware of the
+ * component it is bound to.
+ * 
+ * The algorithm wicket employes is similar to this:
+ * 
+ * <pre>
+ *   void Component.setModel(IModel model) {
+ *     if (model instanceof IAssignementAware) {
+ *        this.model=((IAssignmentAware)model).wrapOnAssignment(this);
+ *     } else {
+ *        this.model=model;
+ *     }
+ * </pre>
+ * 
+ * For an example see {@link ResourceModel}
  * 
  * @param <T>
  *            Type of model object this model holds
  * 
  * @author jcompagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public interface IAssignmentAware<T> extends IModel<T>
 {
 	/**
-	 * @param <C> 
+	 * @param <C>
 	 * @param component
 	 * @return The WrapModel that wraps this model
 	 */
