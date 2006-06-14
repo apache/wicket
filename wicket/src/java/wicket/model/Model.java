@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wicket.WicketRuntimeException;
+
 
 /**
  * Model is the basic implementation of an AbstractModel. It just wraps a simple
@@ -112,7 +114,14 @@ public class Model<T /* extends Serializable */> extends AbstractModel<T>
 	 */
 	public void setObject(final T object)
 	{
-		setObject(object);
+		if (object != null)
+		{
+			if (!(object instanceof Serializable))
+			{
+				throw new WicketRuntimeException("Model object must be Serializable");
+			}
+		}
+		this.object=object;
 	}
 
 	/**
