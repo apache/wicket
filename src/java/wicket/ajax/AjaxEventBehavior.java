@@ -123,8 +123,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
-	protected CharSequence getCallbackScript(String partialCall, String onSuccessScript,
-			String onFailureScript)
+	protected CharSequence getCallbackScript(CharSequence partialCall, CharSequence onSuccessScript,
+			CharSequence onFailureScript)
 	{
 		CharSequence script = super
 				.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
