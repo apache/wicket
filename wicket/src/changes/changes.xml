@@ -11,6 +11,7 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+      <action type="fix" dev="Martijn Dashorst">Fixed AjaxPagingNavigator to update user specified 'owner' components. This implementation allows users to override the default implementation of searching for a suitable parent.</action>
 	  <action type="fix" dev="Igor Vaynberg">Fixed problem where setThrottleDelay() broke the ajax behavior</action>
 	  <action type="fix" dev="Igor Vaynberg">Ajax Checkbox now uses onclick instead of onchange which works correctly</action>
       <action type="fix" dev="Eelco Hillenius">StringResourceModel: build in feature that takes the passed in Component of onGetObject in case the component that was passed in in the constructor was null. All tests fail, can't think of any side effects (as Wicket will keep on searching the hierarchy anyway and using null on Localizer is not particularly helpful) and StringResourceModel works more like ResourceModel now.</action>

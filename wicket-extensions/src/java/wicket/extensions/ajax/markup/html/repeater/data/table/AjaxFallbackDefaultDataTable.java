@@ -84,8 +84,8 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 			SortableDataProvider dataProvider, int rowsPerPage)
 	{
 		super(id, columns, dataProvider, rowsPerPage);
-
-		addTopToolbar(new NavigationToolbar(this));
+		setOutputMarkupId(true);
+		addTopToolbar(new AjaxNavigationToolbar(this));
 		addTopToolbar(new AjaxFallbackHeadersToolbar(this, dataProvider));
 		addBottomToolbar(new NoRecordsToolbar(this));
 	}
