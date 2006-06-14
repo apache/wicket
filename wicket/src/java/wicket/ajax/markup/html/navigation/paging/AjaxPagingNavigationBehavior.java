@@ -19,7 +19,7 @@
 package wicket.ajax.markup.html.navigation.paging;
 
 import wicket.Component;
-import wicket.MarkupContainer;
+import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
@@ -82,34 +82,21 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		// handle the event
 		owner.onClick(target);
 
-		// update the container (parent) of the pageable, this assumes that
-		// the pageable is a component, and that it is a child of a web
-		// markup container. If no parent is found, the whole page will be
-		// updated.
-
-		Component container = ((Component)pageable).findParent(MarkupContainer.class);
-		target.addComponent(container);
-
 		// find the PagingNavigator parent of this link
-		Component navigator = (AjaxPagingNavigator)((Component)owner)
+		AjaxPagingNavigator navigator = (AjaxPagingNavigator)((Component)owner)
 				.findParent(AjaxPagingNavigator.class);
-
 		if (navigator == null)
 		{
-			// this is an ugly cast, but we do not have IComponent to properly
-			// mixin IAjaxLink
-			navigator = (Component)owner;
+			throw new WicketRuntimeException(
+					"Unable to find AjaxPagingNavigator component in hierarchy starting from "
+							+ owner);
 		}
 
-		if (navigator != null)
-		{
+		// tell the PagingNavigator to update the IPageable
+		navigator.onAjaxEvent(target);
 
-			if (!(container instanceof MarkupContainer && ((MarkupContainer)container)
-					.contains(navigator, true))) {
-				target.addComponent(navigator);
-			}
-		}
-
+		// add the navigator itself to the ajax request for updating
+		target.addComponent(navigator);
 	}
 
 	/**
