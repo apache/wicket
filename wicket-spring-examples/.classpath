@@ -3,19 +3,19 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/launcher"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.4"/>
 	<classpathentry sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar" kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
 	<classpathentry sourcepath="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar" kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar"/>
 	<classpathentry sourcepath="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar" kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cglib/cglib-nodep/2.1_3/cglib-nodep-2.1_3.jar"/>
 	<classpathentry sourcepath="M2_REPO/org/springframework/spring/1.2.6/spring-1.2.6-sources.jar" kind="var" path="M2_REPO/org/springframework/spring/1.2.6/spring-1.2.6.jar"/>
 	<classpathentry sourcepath="M2_REPO/asm/asm/1.5.3/asm-1.5.3-sources.jar" kind="var" path="M2_REPO/asm/asm/1.5.3/asm-1.5.3.jar"/>
-	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.11/log4j-1.2.11.jar"/>
+	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jetty/jasper-runtime/4.2.20RC0/jasper-runtime-4.2.20RC0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/wicket/wicket/1.2-SNAPSHOT/wicket-1.2-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jetty/jetty/4.2.9/jetty-4.2.9.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jetty/jasper-compiler/4.2.20RC0/jasper-compiler-4.2.20RC0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/wicket/wicket-spring/1.0-SNAPSHOT/wicket-spring-1.0-SNAPSHOT.jar"/>
-	<classpathentry kind="var" path="M2_REPO/wicket/wicket-extensions/1.2-SNAPSHOT/wicket-extensions-1.2-SNAPSHOT.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-spring"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
