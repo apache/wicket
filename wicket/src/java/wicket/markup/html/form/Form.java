@@ -615,7 +615,8 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				{
 					if (!button.isVisible())
 					{
-						throw new WicketRuntimeException("Submit Button is not visible");
+						throw new WicketRuntimeException("Submit Button " + button.getInputName()
+								+ " (path=" + button.getPageRelativePath() + ") is not visible");
 					}
 					return button;
 				}
