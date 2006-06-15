@@ -39,7 +39,7 @@ import wicket.markup.MarkupResourceStreamLookupResult;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.model.ICompoundModel;
+import wicket.model.IInheritableModel;
 import wicket.model.IModel;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.locator.IResourceStreamLocator;
@@ -635,7 +635,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	{
 		final IModel<T> previous = getModel();
 		super.setModel(model);
-		if (previous instanceof ICompoundModel)
+		if (previous instanceof IInheritableModel)
 		{
 			visitChildren(new IVisitor()
 			{

@@ -42,7 +42,7 @@ import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IAssignmentAware;
-import wicket.model.IInhertanceAware;
+import wicket.model.IInheritableModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
 import wicket.model.IWrapModel;
@@ -641,9 +641,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			parent.add(this);
 		}
 
-		if (model instanceof IInhertanceAware)
+		if (model instanceof IAssignmentAware)
 		{
-			this.model = ((IInhertanceAware)model).wrapOnInhertance(this);
+			this.model = ((IAssignmentAware)model).wrapOnAssignment(this);
 		}
 		else
 		{
@@ -1978,7 +1978,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		}
 
 		IModel prevModel = this.model;
-		// TODO really need such a check? Can we just store the wrapper in the state change?
+		// TODO really need such a check? Can we just store the wrapper in the
+		// state change?
 		if (prevModel instanceof IWrapModel)
 		{
 			prevModel = model.getNestedModel();
@@ -2521,15 +2522,19 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				model = ((IWrapModel)model).getNestedModel();
 			}
 
-			if (model instanceof IInhertanceAware)
+			if (model instanceof IInheritableModel)
 			{
 				// we turn off versioning as we share the model with another
 				// component that is the owner of the model (that component
 				// has to decide whether to version or not
 				setVersioned(false);
 
-				// return the shared compound model
-				return ((IInhertanceAware)model).wrapOnInhertance(this);
+				// return the shared inherited
+				model = ((IInheritableModel)model).wrapOnInhertance(this);
+				if (model != null && (model instanceof IAssignmentAware))
+				{
+					model = ((IAssignmentAware)model).wrapOnAssignment(this);
+				}
 			}
 		}
 

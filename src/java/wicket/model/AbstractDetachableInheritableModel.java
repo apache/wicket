@@ -40,10 +40,10 @@ import wicket.WicketRuntimeException;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractDetachableInheritanceModel<T> implements IInhertanceAware<T>
+public abstract class AbstractDetachableInheritableModel<T> implements IInheritableModel<T>
 {
 	/** Logger. */
-	private static final Log log = LogFactory.getLog(AbstractDetachableInheritanceModel.class);
+	private static final Log log = LogFactory.getLog(AbstractDetachableInheritableModel.class);
 
 	/**
 	 * Transient flag to prevent multiple detach/attach scenario. We need to
@@ -99,7 +99,7 @@ public abstract class AbstractDetachableInheritanceModel<T> implements IInhertan
 
 			public IModel getNestedModel()
 			{
-				return AbstractDetachableInheritanceModel.this;
+				return AbstractDetachableInheritableModel.this;
 			}
 
 			@SuppressWarnings("unchecked")
@@ -116,7 +116,7 @@ public abstract class AbstractDetachableInheritanceModel<T> implements IInhertan
 
 			public void detach()
 			{
-				AbstractDetachableInheritanceModel.this.detach();
+				AbstractDetachableInheritableModel.this.detach();
 			}
 			
 		};

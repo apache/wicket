@@ -36,7 +36,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class AbstractPropertyInheritanceModel<T> extends AbstractDetachableInheritanceModel<T>
+public abstract class AbstractPropertyInheritableModel<T> extends AbstractDetachableInheritableModel<T>
 {
 	/** Any model object (which may or may not implement IModel) */
 	private Object nestedModel;
@@ -47,7 +47,7 @@ public abstract class AbstractPropertyInheritanceModel<T> extends AbstractDetach
 	 * @param modelObject
 	 *            The nested model object
 	 */
-	public AbstractPropertyInheritanceModel(final Object modelObject)
+	public AbstractPropertyInheritableModel(final Object modelObject)
 	{
 		if (modelObject == null)
 		{
