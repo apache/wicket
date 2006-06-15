@@ -2535,6 +2535,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				{
 					model = ((IAssignmentAware)model).wrapOnAssignment(this);
 				}
+				
+				return model;
 			}
 		}
 
