@@ -596,7 +596,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				{
 					if (!button.isVisible())
 					{
-						throw new WicketRuntimeException("Submit Button is not visible");
+						throw new WicketRuntimeException("Submit Button " + button.getInputName()
+								+ " (path=" + button.getPageRelativePath() + ") is not visible");
 					}
 					return button;
 				}
@@ -757,10 +758,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// get the hidden field id
 		String nameAndId = getHiddenFieldId();
 
-		
+
 		// render the hidden field
-		AppendingStringBuffer buffer = new AppendingStringBuffer("<div style=\"display:none\"><input type=\"hidden\" name=\"")
-				.append(nameAndId).append("\" id=\"").append(nameAndId).append("\" /></div>");
+		AppendingStringBuffer buffer = new AppendingStringBuffer(
+				"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
+				.append("\" id=\"").append(nameAndId).append("\" /></div>");
 		getResponse().write(buffer);
 
 		// if a default button was set, handle the rendering of that
