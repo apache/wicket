@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Wicket Examples - helloworld</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<span wicket:id="mainNavigation" />
+
+		<form wicket:id="form">
+			<p>
+				<img wicket:id="captchaImage" />
+			</p>
+			<p>
+				Please replicate the text you see above
+				<br />
+				<input wicket:id="response" type="text" />
+				<input type="submit" value="submit" />
+			</p>
+			<p>
+				<span wicket:id="feedback">[feedback is rendered here]</span>
+			<p>
+		</form>
+
+	</body>
+</html>
