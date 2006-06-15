@@ -400,6 +400,19 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>CaptchaApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.captcha.CaptchaApplication</param-value>
+		</init-param>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>captcha</param-value>
+		</init-param>
+	</filter>
+
 	<servlet>
 		<servlet-name>BreadCrumbApplication</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
@@ -558,6 +571,11 @@
 	<filter-mapping>
 		<filter-name>WizardApplication</filter-name>
 		<url-pattern>/wizard/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>CaptchaApplication</filter-name>
+		<url-pattern>/captcha/*</url-pattern>
 	</filter-mapping>
 
 	<servlet-mapping>
