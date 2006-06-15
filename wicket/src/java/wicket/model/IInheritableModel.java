@@ -18,24 +18,34 @@
  */
 package wicket.model;
 
+import wicket.Component;
+
 /**
- * This is a marker interface for models that can be used as a shared/compound
- * model for multiply components.
+ * This is a marker interface for models that can be inherited from components
+ * higher in the hierarchy
  * 
  * If a model implements this interface then you can give the parent container
- * this model and all the child components will also get and then set that model
- * as there own.
+ * this model and all the child (recursively) components will also get and then
+ * set that model on their own if they are created with a null model
  * 
  * <pre>
  * Form form = new Form(&quot;form&quot;, new ModelImplementingICompoundModel());
- * form.add(new TextField(&quot;textfield&quot;));
+ * form.add(new TextField(&quot;textfield&quot;)); // notice textfield is created with a null model
  * </pre>
  * 
  * @param <T>
  *            Type of model object this model holds
  * 
  * @author jcompagner
+ * @author Igor Vaynberg (ivaynberg)
  */
-public interface ICompoundModel<T> extends IInhertanceAware<T>
+public interface IInheritableModel<T> extends IModel<T>
 {
+	/**
+	 * @param <C>
+	 *            The type of the component
+	 * @param component
+	 * @return The WrapModel that wraps this model
+	 */
+	<C> IWrapModel<C> wrapOnInhertance(Component<C> component);
 }
