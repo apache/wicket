@@ -116,14 +116,6 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 
 				if (path != null)
 				{
-					/*
-					 * checkbox component path sans group path = relative path
-					 * from group to checkbox since we know the checkbox is
-					 * child of group
-					 */
-
-					path = path.substring(getPath().length() + 1);
-
 					// retrieve the selected checkbox component
 					Check checkbox = (Check)get(path);
 

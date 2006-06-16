@@ -87,9 +87,11 @@ public class Check extends WebMarkupContainer
 							+ "] cannot find its parent CheckGroup. All Check components must be a child of or below in the hierarchy of a CheckGroup component.");
 		}
 
+		String relativePath = path.substring(group.getPath().length() + 1);
+			
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", path);
+		tag.put("value", relativePath);
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
@@ -107,7 +109,7 @@ public class Check extends WebMarkupContainer
 		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if (rawInput != null && rawInput.indexOf(path) != -1)
+			if (rawInput != null && rawInput.indexOf(relativePath) != -1)
 			{
 				tag.put("checked", "checked");
 			}
