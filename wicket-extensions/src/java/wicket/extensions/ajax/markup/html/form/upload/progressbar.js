@@ -52,7 +52,7 @@ var wupb= {
 		}
 	
 		transport.onreadystatechange = function() { wupb.update(transport, def); };
-		transport.open('GET', def.url, true);
+		transport.open('GET', def.url+'?anticache='+Math.random(), true);
 		transport.send(null);
 	},
 	
