@@ -8,6 +8,6 @@
 	<classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar"/>
 	<classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wicket_1_2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
