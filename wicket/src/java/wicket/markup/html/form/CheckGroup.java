@@ -128,14 +128,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 
 				if (path != null)
 				{
-					/*
-					 * checkbox component path sans group path = relative path
-					 * from group to checkbox since we know the checkbox is
-					 * child of group
-					 */
-
-					path = path.substring(getPath().length() + 1);
-
+					
 					// retrieve the selected checkbox component
 					Check<T> checkbox = (Check<T>)get(path);
 
