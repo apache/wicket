@@ -70,7 +70,7 @@ public class UploadProgressBar extends Panel
 
 				return "var def=new wupb.Def('" + form.getMarkupId() + "', '"
 						+ statusDiv.getMarkupId() + "', '" + barDiv.getMarkupId() + "', '"
-						+ getPage().urlFor(ref) + "'); wupb.start(def);";
+						+ getPage().urlFor(ref) + "'); wupb.start(def); return false;";
 			}
 		}));
 	}
