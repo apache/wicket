@@ -23,8 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import wicket.Component;
-import wicket.model.AbstractDetachableAssignmentAwareModel;
+import wicket.Page;
 import wicket.model.IModel;
 
 /**
@@ -32,7 +31,7 @@ import wicket.model.IModel;
  * 
  * @author Eelco Hillenius
  */
-public class FeedbackMessagesModel extends AbstractDetachableAssignmentAwareModel<List<FeedbackMessage>>
+public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,11 +44,23 @@ public class FeedbackMessagesModel extends AbstractDetachableAssignmentAwareMode
 	/** Comparator used for sorting the messages. */
 	private Comparator<FeedbackMessage> sortingComparator;
 
+	/** the page of component this model is attached to */
+	private final Page page;
+
 	/**
 	 * Constructor. Creates a model for all feedback messages on the page.
+	 * 
+	 * @param page
+	 *            Page for which messages will be displayed - usually the same
+	 *            page as the one feedbackpanel is attached to
 	 */
-	public FeedbackMessagesModel()
+	public FeedbackMessagesModel(Page page)
 	{
+		if (page == null)
+		{
+			throw new IllegalArgumentException("Argument [[page]] cannot be null");
+		}
+		this.page = page;
 	}
 
 	/**
@@ -58,9 +69,14 @@ public class FeedbackMessagesModel extends AbstractDetachableAssignmentAwareMode
 	 * 
 	 * @param filter
 	 *            The filter to apply
+	 * @param page
+	 *            Page for which messages will be displayed - usually the same
+	 *            page as the one feedbackpanel is attached to
+	 * 
 	 */
-	public FeedbackMessagesModel(IFeedbackMessageFilter filter)
+	public FeedbackMessagesModel(Page page, IFeedbackMessageFilter filter)
 	{
+		this(page);
 		setFilter(filter);
 	}
 
@@ -73,15 +89,6 @@ public class FeedbackMessagesModel extends AbstractDetachableAssignmentAwareMode
 	}
 
 	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	@Override
-	public final IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
 	 * @return The current sorting comparator
 	 */
 	public final Comparator<FeedbackMessage> getSortingComparator()
@@ -90,18 +97,52 @@ public class FeedbackMessagesModel extends AbstractDetachableAssignmentAwareMode
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onGetObject()
+	 * @param filter
+	 *            Filter to apply to model
 	 */
-	@Override
-	public final List<FeedbackMessage> onGetObject(Component component)
+	public final void setFilter(IFeedbackMessageFilter filter)
+	{
+		this.filter = filter;
+	}
+
+	/**
+	 * Sets the comparator used for sorting the messages.
+	 * 
+	 * @param sortingComparator
+	 *            comparator used for sorting the messages
+	 */
+	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
+	{
+		this.sortingComparator = sortingComparator;
+	}
+
+
+	/**
+	 * Override this method to post process to the FeedbackMessage list.
+	 * 
+	 * @param messages
+	 *            List of sorted and filtered FeedbackMessages for further
+	 *            processing
+	 * @return The processed FeedbackMessage list
+	 */
+	protected List<FeedbackMessage> processMessages(final List<FeedbackMessage> messages)
+	{
+		return messages;
+	}
+
+	public List<FeedbackMessage> getObject()
 	{
 		if (messages == null)
 		{
+			if (page == null)
+			{
+				throw new IllegalStateException(
+						"getObject() cannot be called on this model until it has been attached to a component");
+			}
 			// Get filtered messages from page where component lives
-			List<FeedbackMessage> pageMessages = component.getPage().getFeedbackMessages()
-					.messages(filter);
+			List<FeedbackMessage> pageMessages = page.getFeedbackMessages().messages(filter);
 
-			List<FeedbackMessage> sessionMessages = component.getSession().getFeedbackMessages()
+			List<FeedbackMessage> sessionMessages = page.getSession().getFeedbackMessages()
 					.messages(filter);
 
 			messages = new ArrayList<FeedbackMessage>(pageMessages.size() + sessionMessages.size());
@@ -125,60 +166,29 @@ public class FeedbackMessagesModel extends AbstractDetachableAssignmentAwareMode
 	}
 
 	/**
-	 * @param filter
-	 *            Filter to apply to model
-	 */
-	public final void setFilter(IFeedbackMessageFilter filter)
-	{
-		this.filter = filter;
-	}
-
-	/**
-	 * Sets the comparator used for sorting the messages.
 	 * 
-	 * @param sortingComparator
-	 *            comparator used for sorting the messages
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
-	public final void setSortingComparator(Comparator<FeedbackMessage> sortingComparator)
-	{
-		this.sortingComparator = sortingComparator;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#onAttach()
-	 */
-	@Override
-	protected void onAttach()
+	public void setObject(List<FeedbackMessage> object)
 	{
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onDetach()
+	 * 
+	 * @see wicket.model.IDetachable#detach()
 	 */
-	@Override
-	protected void onDetach()
+	public void detach()
 	{
 		messages = null;
 	}
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onSetObject(java.lang.Object)
+	 * 
+	 * @see wicket.model.IModel#getNestedModel()
 	 */
-	@Override
-	protected void onSetObject(Component component, List<FeedbackMessage> object)
+	public IModel getNestedModel()
 	{
+		return null;
 	}
 
-	/**
-	 * Override this method to post process to the FeedbackMessage list.
-	 * 
-	 * @param messages
-	 *            List of sorted and filtered FeedbackMessages for further
-	 *            processing
-	 * @return The processed FeedbackMessage list
-	 */
-	protected List<FeedbackMessage> processMessages(final List<FeedbackMessage> messages)
-	{
-		return messages;
-	}
 }

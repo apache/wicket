@@ -315,7 +315,7 @@ public class FeedbackPanel extends Panel implements IFeedback
 	 */
 	protected FeedbackMessagesModel newFeedbackMessagesModel()
 	{
-		return new FeedbackMessagesModel();
+		return new FeedbackMessagesModel(getPage());
 	}
 
 }
