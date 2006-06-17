@@ -162,7 +162,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("Add " + child.getId() + " to " + this);
+			log.debug("Add " + child.getId() + " to component " + this.getClass().getName()+" with path "+getPath());
 		}
 
 		// Add to map
