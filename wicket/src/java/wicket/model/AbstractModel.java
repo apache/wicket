@@ -18,6 +18,8 @@
  */
 package wicket.model;
 
+import wicket.Component;
+
 /**
  * AbstractModel is an adapter base class for implementing models which have no
  * detach logic.
@@ -58,5 +60,31 @@ public abstract class AbstractModel<T> implements IModel<T>
 	public IModel getNestedModel()
 	{
 		return null;
+	}
+
+	/**
+	 * @param component
+	 * @return nada
+	 * @deprecated THIS METHOD IS NOT SUPPORTED ANYMORE AND WILL BE REMOVED IN
+	 *             WICKET 2.0.1.
+	 */
+	@Deprecated
+	public final Object getObject(final Component component)
+	{
+		throw new UnsupportedOperationException("since Wicket 2.0, IModel's signature changed. "
+				+ "It does not take a component argument anymore.");
+	}
+
+	/**
+	 * @param component
+	 * @param object
+	 * @deprecated THIS METHOD IS NOT SUPPORTED ANYMORE AND WILL BE REMOVED IN
+	 *             WICKET 2.0.1.
+	 */
+	@Deprecated
+	public final void setObject(final Component component, final Object object)
+	{
+		throw new UnsupportedOperationException("since Wicket 2.0, IModel's signature changed. "
+				+ "It does not take a component argument anymore.");
 	}
 }
