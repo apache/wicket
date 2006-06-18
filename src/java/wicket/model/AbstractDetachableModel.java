@@ -21,6 +21,7 @@ package wicket.model;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 
@@ -178,4 +179,30 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	 *            The new model object
 	 */
 	protected abstract void onSetObject(final T object);
+
+	/**
+	 * @param component
+	 * @return nada
+	 * @deprecated THIS METHOD IS NOT SUPPORTED ANYMORE AND WILL BE REMOVED IN
+	 *             WICKET 2.0.1.
+	 */
+	@Deprecated
+	protected final Object onGetObject(final Component component)
+	{
+		throw new UnsupportedOperationException("since Wicket 2.0, IModel's signature changed. "
+				+ "It does not take a component argument anymore.");
+	}
+
+	/**
+	 * @param component
+	 * @param object
+	 * @deprecated THIS METHOD IS NOT SUPPORTED ANYMORE AND WILL BE REMOVED IN
+	 *             WICKET 2.0.1.
+	 */
+	@Deprecated
+	protected final void onSetObject(final Component component, final Object object)
+	{
+		throw new UnsupportedOperationException("since Wicket 2.0, IModel's signature changed. "
+				+ "It does not take a component argument anymore.");
+	}
 }
