@@ -197,7 +197,7 @@ public class WicketSessionFilter implements Filter
 		chain.doFilter(request, response);
 		
 		// clean up
-		Session.set(null);
+		Session.unset();
 	}
 
 	/**
