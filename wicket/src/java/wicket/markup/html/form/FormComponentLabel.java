@@ -61,4 +61,14 @@ public class FormComponentLabel extends WebMarkupContainer
 		checkComponentTag(tag, "label");
 		tag.put("for", fc.getMarkupId());
 	}
+
+	/**
+	 * Gets the form component this label is attached to
+	 * 
+	 * @return the form component this label is attached to
+	 */
+	protected final FormComponent getFormComponent()
+	{
+		return fc;
+	}
 }
