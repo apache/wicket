@@ -478,7 +478,7 @@ public class PackageResource extends WebResource
 	 * @param style
 	 *            The style of the resource
 	 */
-	private PackageResource(final Class scope, final String path, final Locale locale,
+	protected PackageResource(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
 		// Convert resource path to absolute path relative to base package
