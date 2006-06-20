@@ -259,7 +259,7 @@ public class PackageResource extends WebResource
 	 *             when the target resource is not accepted by
 	 *             {@link IPackageResourceGuard the package resource guard}.
 	 */
-	private PackageResource(final Class scope, final String path, final Locale locale,
+	protected PackageResource(final Class scope, final String path, final Locale locale,
 			final String style)
 	{
 		// Convert resource path to absolute path relative to base package
