@@ -65,7 +65,7 @@ import wicket.model.IModel;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public class SubmitLink<T> extends Button<T>
+public abstract class SubmitLink<T> extends Button<T>
 {
 	private static final long serialVersionUID = 1L;
 
