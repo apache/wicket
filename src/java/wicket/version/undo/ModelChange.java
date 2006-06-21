@@ -77,7 +77,7 @@ class ModelChange extends Change
 				if (component instanceof FormComponent)
 				{
 					// and it's using the same model as the form
-					if (((FormComponent)component).getForm().getModel() == model)
+					if (((FormComponent<?>)component).getForm().getModel() == model)
 					{
 						// we don't need to clone the model, because it will
 						// be re-initialized using initModel()
