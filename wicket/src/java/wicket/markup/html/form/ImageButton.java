@@ -34,7 +34,7 @@ import wicket.markup.html.image.resource.LocalizedImageResource;
  * 
  * @author Jonathan Locke
  */
-public class ImageButton extends Button implements IResourceListener
+public abstract class ImageButton extends Button implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 

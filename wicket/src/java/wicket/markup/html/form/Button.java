@@ -57,7 +57,7 @@ import wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class Button<T> extends FormComponent<T>
+public abstract class Button<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -229,9 +229,7 @@ public class Button<T> extends FormComponent<T>
 	 * Override this method to provide special submit handling in a multi-button
 	 * form. It is called whenever the user clicks this particular button.
 	 */
-	protected void onSubmit()
-	{
-	}
+	protected abstract void onSubmit(); 
 
 	/**
 	 * @see wicket.MarkupContainer#isStateless()

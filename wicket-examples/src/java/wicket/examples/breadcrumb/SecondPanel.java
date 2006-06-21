@@ -54,7 +54,20 @@ public class SecondPanel extends BreadCrumbPanel
 			super(parent, id);
 			setModel(new CompoundPropertyModel<SecondPanel>(this));
 			new TextField(this, "input");
-			new Button(this, "normalButton");
+			new Button(this, "normalButton") {
+
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				protected void onSubmit() {
+					
+					
+				}
+				
+			};
 
 			new Button(this, "nextButton")
 			{

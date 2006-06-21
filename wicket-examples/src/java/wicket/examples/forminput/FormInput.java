@@ -183,7 +183,15 @@ public class FormInput extends WicketExamplePage
 			// and this is to show we can nest ListViews in Forms too
 			new LinesListView(this, "lines");
 
-			new ImageButton(this, "saveButton");
+			new ImageButton(this, "saveButton") {
+
+				@Override
+				protected void onSubmit() {
+					
+					
+				}
+				
+			};
 
 			Link link = new Link(this, "resetButtonLink")
 			{
