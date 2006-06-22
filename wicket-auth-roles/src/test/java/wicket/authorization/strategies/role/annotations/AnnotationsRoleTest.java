@@ -66,6 +66,8 @@ public class AnnotationsRoleTest extends TestCase
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer("FOO")));
 		tester.startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				return new NormalPage();
@@ -84,6 +86,8 @@ public class AnnotationsRoleTest extends TestCase
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer("ADMIN")));
 		tester.startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				return new AdminPage();
@@ -116,6 +120,8 @@ public class AnnotationsRoleTest extends TestCase
 		{
 			tester.startPage(new ITestPageSource()
 			{
+				private static final long serialVersionUID = 1L;
+
 				public Page getTestPage()
 				{
 					return new AdminPage();
