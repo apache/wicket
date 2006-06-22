@@ -179,7 +179,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		ProxyReplacement ser = new ProxyReplacement(
 				ConcreteObject.class.getName(), concreteObjectLocator);
 
-		ConcreteObject proxy2 = (ConcreteObject) Objects.cloneObject(ser);
+		ConcreteObject proxy2 = (ConcreteObject) Objects.cloneObject((Object)ser);
 		assertEquals(proxy2.getMessage(), "concrete");
 	}
 
