@@ -76,7 +76,7 @@ public class ObjectsTest extends WicketTestCase
 
 		try
 		{
-			Objects.cloneModel(cloneMe);
+			Objects.cloneModel((Serializable)cloneMe);
 			fail("Exception expected");
 		}
 		catch (RuntimeException e)
