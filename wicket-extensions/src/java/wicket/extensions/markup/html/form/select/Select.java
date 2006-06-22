@@ -91,7 +91,7 @@ public class Select extends FormComponent
 		 * components unless nothing was selected in which case the input
 		 * contains null
 		 */
-		String[] paths = inputAsStringArray();
+		String[] paths = getInputAsArray();
 
 		/*
 		 * if the input is null we do not need to do anything since the model
