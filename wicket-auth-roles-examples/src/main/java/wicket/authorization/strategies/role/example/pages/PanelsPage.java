@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,16 +34,16 @@ public class PanelsPage extends WebPage
 	 */
 	public PanelsPage()
 	{
-		ForAllUsers forAllUsers = new ForAllUsers(this,"forAllUsersPanel");
+		ForAllUsers forAllUsers = new ForAllUsers(this, "forAllUsersPanel");
 		// don't have to do anything here; component is by default not protected
 
-		ForAdminsAndUsers forAdminsAndUsers = new ForAdminsAndUsers(this,"forAdminsAndUsersPanel");
+		ForAdminsAndUsers forAdminsAndUsers = new ForAdminsAndUsers(this, "forAdminsAndUsersPanel");
 		// authorise roles admin and user (and thus deny everyone else) for the
 		// Component.RENDER action
 		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, "ADMIN");
 		MetaDataRoleAuthorizationStrategy.authorize(forAdminsAndUsers, RENDER, "USER");
 
-		ForAdmins forAdmins = new ForAdmins(this,"forAdminsPanel");
+		ForAdmins forAdmins = new ForAdmins(this, "forAdminsPanel");
 		// authorise role admin (and thus deny everyone else) for the
 		// Component.RENDER action
 		MetaDataRoleAuthorizationStrategy.authorize(forAdmins, RENDER, "ADMIN");
@@ -57,11 +57,13 @@ public class PanelsPage extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
 		 * @param id
 		 */
 		public ForAllUsers(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	}
 
@@ -73,11 +75,13 @@ public class PanelsPage extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
 		 * @param id
 		 */
 		public ForAdminsAndUsers(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	}
 
@@ -89,11 +93,13 @@ public class PanelsPage extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
 		 * @param id
 		 */
 		public ForAdmins(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	}
 }

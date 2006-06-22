@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: MyAuthenticatedWebApplication.java 4790 2006-03-06 22:59:16 +0000 (Mon,
+ * 06 Mar 2006) eelco12 $ $Revision$ $Date: 2006-03-06 22:59:16 +0000
+ * (Mon, 06 Mar 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,6 +18,7 @@
  */
 package wicket.authentication.example;
 
+import wicket.Page;
 import wicket.authentication.AuthenticatedWebApplication;
 import wicket.authentication.AuthenticatedWebSession;
 import wicket.markup.html.WebPage;
@@ -45,7 +46,7 @@ public class MyAuthenticatedWebApplication extends AuthenticatedWebApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return HomePage.class;
 	}

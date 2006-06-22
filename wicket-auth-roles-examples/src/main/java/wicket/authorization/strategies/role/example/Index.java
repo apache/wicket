@@ -46,12 +46,12 @@ public class Index extends WebPage
 	public Index()
 	{
 		new Label(this,"currentUser", new PropertyModel(this, "session.user"));
-		new ListView(this,"users", RolesApplication.USERS)
+		new ListView<User>(this,"users", RolesApplication.USERS)
 		{
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(ListItem<User> item)
 			{
-				final User user = (User)item.getModelObject();
+				final User user = item.getModelObject();
 				Link link = new Link(item,"selectUserLink")
 				{
 					@Override
@@ -61,7 +61,7 @@ public class Index extends WebPage
 						session.setUser(user);
 					}
 				};
-				new Label(link,"userId", new Model(user));
+				new Label(link,"userId", new Model<User>(user));
 			}
 		};
 

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import wicket.ISessionFactory;
+import wicket.Page;
 import wicket.Session;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
@@ -53,9 +54,9 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	 * @see wicket.Application#getHomePage()
 	 */
 	@Override
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
-		return Index.class;
+		return null;
 	}
 
 	/**

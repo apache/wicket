@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AnnotationsPanelsPage.java 5904 2006-05-26 23:24:34 +0000 (Fri, 26 May
+ * 2006) joco01 $ $Revision$ $Date: 2006-05-26 23:24:34 +0000 (Fri, 26
+ * May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,9 +37,9 @@ public class AnnotationsPanelsPage extends WebPage
 	 */
 	public AnnotationsPanelsPage()
 	{
-		new ForAllUsers(this,"forAllUsersPanel");
-		new ForAdminsAndUsers(this,"forAdminsAndUsersPanel");
-		new ForAdmins(this,"forAdminsPanel");
+		new ForAllUsers(this, "forAllUsersPanel");
+		new ForAdminsAndUsers(this, "forAdminsAndUsersPanel");
+		new ForAdmins(this, "forAdminsPanel");
 	}
 
 	/**
@@ -49,11 +50,13 @@ public class AnnotationsPanelsPage extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
 		 * @param id
 		 */
-		public ForAllUsers(MarkupContainer parent,String id)
+		public ForAllUsers(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	}
 
@@ -66,11 +69,13 @@ public class AnnotationsPanelsPage extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
 		 * @param id
 		 */
-		public ForAdminsAndUsers(MarkupContainer parent,String id)
+		public ForAdminsAndUsers(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	}
 
@@ -83,11 +88,13 @@ public class AnnotationsPanelsPage extends WebPage
 		/**
 		 * Construct.
 		 * 
+		 * @param parent
+		 *            The parent component
 		 * @param id
 		 */
-		public ForAdmins(MarkupContainer parent,String id)
+		public ForAdmins(MarkupContainer parent, String id)
 		{
-			super(parent,id);
+			super(parent, id);
 		}
 	}
 }
