@@ -110,10 +110,11 @@ public class UnicodeConverter extends WicketExamplePage
 	 */
 	public UnicodeConverter()
 	{
-		Form form = new Form(this, "form", new CompoundPropertyModel(this));
+		Form form = new Form<UnicodeConverter>(this, "form",
+				new CompoundPropertyModel<UnicodeConverter>(this));
 		new TextArea(form, "source");
 		new DropDownChoice<String>(form, "translationType", translationTypes);
-		new TextArea(form, "target", new ConverterModel());
+		new TextArea<String>(form, "target", new ConverterModel());
 	}
 
 	/**

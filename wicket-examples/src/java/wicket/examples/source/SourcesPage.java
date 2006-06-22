@@ -127,7 +127,7 @@ public class SourcesPage extends WebPage
 	 * Model for retrieving the contents of a package directory from the class
 	 * path.
 	 */
-	public class PackagedResourcesModel extends AbstractReadOnlyModel implements IDetachable
+	public class PackagedResourcesModel extends AbstractReadOnlyModel<List<String>> implements IDetachable
 	{
 		private final List<String> resources = new ArrayList<String>();
 
@@ -152,37 +152,11 @@ public class SourcesPage extends WebPage
 		 * @return the list of resources found in the package of the page.
 		 */
 		@Override
-		public Object getObject()
+		public List<String> getObject()
 		{
 			if (resources.isEmpty())
 			{
 				get(page);
-				// PackageName name = PackageName.forClass(page);
-				// ClassLoader loader = page.getClassLoader();
-				// String path = Strings.replaceAll(name.getName(), ".",
-				// "/").toString();
-				// try
-				// {
-				// // gives the urls for each place where the package
-				// // path could be found. There could be multiple
-				// // jar files containing the same package, so each
-				// // jar file has its own url.
-				//
-				// Enumeration urls = loader.getResources(path);
-				// while (urls.hasMoreElements())
-				// {
-				// URL url = (URL)urls.nextElement();
-				//
-				// // the url points to the directory structure
-				// // embedded in the classpath.
-				//
-				// getPackageContents(url);
-				// }
-				// }
-				// catch (IOException e)
-				// {
-				// log.error("Unable to read resource for: " + path, e);
-				// }
 			}
 			return resources;
 		}
@@ -369,12 +343,12 @@ public class SourcesPage extends WebPage
 		public FilesBrowser(MarkupContainer parent, String id)
 		{
 			super(parent, id);
-			ListView lv = new ListView(this, "file", new PackagedResourcesModel())
+			ListView lv = new ListView<String>(this, "file", new PackagedResourcesModel())
 			{
 				@Override
-				protected void populateItem(ListItem item)
+				protected void populateItem(ListItem<String> item)
 				{
-					AjaxFallbackLink link = new AjaxFallbackLink(item, "link", item.getModel())
+					AjaxFallbackLink link = new AjaxFallbackLink<String>(item, "link", item.getModel())
 					{
 						@Override
 						public void onClick(AjaxRequestTarget target)

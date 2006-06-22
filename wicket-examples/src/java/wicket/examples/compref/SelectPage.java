@@ -73,10 +73,10 @@ public class SelectPage extends WicketExamplePage
 		};
 
 		Select site = new Select(form, "site");
-		new SelectOption(site, "site1", new Model<String>("tss"));
-		new SelectOption(site, "site2", new Model<String>("jl"));
-		new SelectOption(site, "site3", new Model<String>("sd"));
-		new SelectOption(site, "site4", new Model<String>("bn"));
+		new SelectOption<String>(site, "site1", new Model<String>("tss"));
+		new SelectOption<String>(site, "site2", new Model<String>("jl"));
+		new SelectOption<String>(site, "site3", new Model<String>("sd"));
+		new SelectOption<String>(site, "site4", new Model<String>("bn"));
 
 		Select choices = new Select(form, "choices");
 		IOptionRenderer renderer = new IOptionRenderer()
