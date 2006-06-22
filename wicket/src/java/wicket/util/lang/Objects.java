@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -343,7 +344,8 @@ public abstract class Objects
 	 *            The object to clone
 	 * @return A deep copy of the object
 	 */
-	public static Object cloneModel(final Object object)
+	@SuppressWarnings("unchecked")
+	public static <T extends Serializable> T cloneModel(final T object)
 	{
 		if (object == null)
 		{
@@ -359,7 +361,7 @@ public abstract class Objects
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
 						.toByteArray()), replacedObjects);
-				return ois.readObject();
+				return (T) ois.readObject();
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -380,7 +382,8 @@ public abstract class Objects
 	 *            The object to clone
 	 * @return A deep copy of the object
 	 */
-	public static Object cloneObject(final Object object)
+	@SuppressWarnings("unchecked")
+	public static <T extends Serializable> T cloneObject(final T object)
 	{
 		if (object == null)
 		{
@@ -427,7 +430,7 @@ public abstract class Objects
 						return candidate;
 					}
 				};
-				return ois.readObject();
+				return (T) ois.readObject();
 			}
 			catch (ClassNotFoundException e)
 			{
