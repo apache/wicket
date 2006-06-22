@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,18 +34,13 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 	 */
 	public void testValidEmailAddresses()
 	{
-		RfcCompliantEmailAddressPatternValidator validator = RfcCompliantEmailAddressPatternValidator.getInstance();
-		
-		String[] validEmails = new String[] { 
-				"bill.gates@gmail.com",
-				"firstname.middlename@lastname.dk", 
-				"buy@something.nu", 
-				"user@post.inet.tele.dk",
-				"read@my.info", 
-				"my @email.com", 
-				"my@ email.com", 
-				"\"John Doe\"@email.com",
-				"no@domain" };
+		RfcCompliantEmailAddressPatternValidator validator = RfcCompliantEmailAddressPatternValidator
+				.getInstance();
+
+		String[] validEmails = new String[] { "bill.gates@gmail.com",
+				"firstname.middlename@lastname.dk", "buy@something.nu", "user@post.inet.tele.dk",
+				"read@my.info", "my @email.com", "my@ email.com", "\"John Doe\"@email.com",
+				"no@domain", "german@m‰dchen.de", "another.german@Îm‰Ôl.com" };
 
 		for (int i = 0; i < validEmails.length; i++)
 		{
@@ -56,19 +51,18 @@ public class RfcCompliantEmailValidatorTest extends TestCase
 			assertTrue(emailAddress + " wasn't valid but should be", matcher.matches());
 		}
 	}
-	
-	
+
+
 	/**
 	 * Test a couple of invalid email addresses.
 	 */
 	public void testInValidEmailAddresses()
 	{
-		RfcCompliantEmailAddressPatternValidator validator = RfcCompliantEmailAddressPatternValidator.getInstance();
-		
-		String[] inValidEmails = new String[] { 
-				"whatever",
-				"dont.end.in.a.dot.@gmail.com",
-				".dot.in.the.beginning.is.not.good@wicketframework.org"	};
+		RfcCompliantEmailAddressPatternValidator validator = RfcCompliantEmailAddressPatternValidator
+				.getInstance();
+
+		String[] inValidEmails = new String[] { "whatever", "dont.end.in.a.dot.@gmail.com",
+				".dot.in.the.beginning.is.not.good@wicketframework.org" };
 
 		for (int i = 0; i < inValidEmails.length; i++)
 		{
