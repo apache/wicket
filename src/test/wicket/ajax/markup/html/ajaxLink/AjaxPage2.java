@@ -43,10 +43,10 @@ public class AjaxPage2 extends WebPage
 		myBorder = new BoxBorder(this, "pageLayout");
 		myBorder.setTransparentResolver(true);
 
-		ajaxLabel = new Label(this, "ajaxLabel", "AAAAAAA");
+		ajaxLabel = new Label(myBorder, "ajaxLabel", "AAAAAAA");
 		ajaxLabel.setOutputMarkupId(true);
 
-		new AjaxLink(this, "ajaxLink")
+		new AjaxLink(myBorder, "ajaxLink")
 		{
 			private static final long serialVersionUID = 1L;
 

@@ -21,7 +21,6 @@ package wicket.ajax;
 import java.io.Serializable;
 
 import wicket.markup.ComponentTag;
-import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 
 /**
@@ -32,7 +31,7 @@ import wicket.util.time.Duration;
  * 
  * <pre>
  *          DropDownChoice choice=new DropDownChoice(...);
- *          choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
+ *          choice.add(new AjaxEventBehavior(ClientEvent.CHANGE) {
  *              protected void onEvent(AjaxRequestTarget target) {
  *                  System.out.println(&quot;ajax here!&quot;);
  *              }
@@ -53,20 +52,20 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 
 	private static final long serialVersionUID = 1L;
 
-	private String event;
+	private ClientEvent event;
 
 
 	private ThrottlingSettings throttlingSettings;
-
+	
 	/**
 	 * Construct.
 	 * 
 	 * @param event
 	 *            event this behavior will be attached to
 	 */
-	public AjaxEventBehavior(final String event)
+	public AjaxEventBehavior(final ClientEvent event)
 	{
-		if (Strings.isEmpty(event))
+		if (event == null)
 		{
 			throw new IllegalArgumentException("argument [event] cannot be null or empty");
 		}
@@ -106,7 +105,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put(event, getEventHandler());
+		tag.put(event.getEvent(), getEventHandler());
 	}
 
 	/**
@@ -116,7 +115,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	protected CharSequence getEventHandler()
 	{
 		CharSequence handler = getCallbackScript();
-		if (event.equalsIgnoreCase("href"))
+		if (event == ClientEvent.HREF)
 		{
 			handler = "javascript:" + handler;
 		}
@@ -141,7 +140,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @param event
 	 */
-	protected void onCheckEvent(final String event)
+	protected void onCheckEvent(final ClientEvent event)
 	{
 	}
 
@@ -149,7 +148,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @return event
 	 */
-	protected final String getEvent()
+	protected final ClientEvent getEvent()
 	{
 		return event;
 	}

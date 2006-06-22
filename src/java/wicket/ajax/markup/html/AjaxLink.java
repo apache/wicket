@@ -20,6 +20,7 @@ package wicket.ajax.markup.html;
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -65,7 +66,7 @@ public abstract class AjaxLink<T> extends WebMarkupContainer<T> implements IAjax
 	{
 		super(parent, id, model);
 
-		add(new AjaxEventBehavior("href")
+		add(new AjaxEventBehavior(ClientEvent.HREF)
 		{
 			private static final long serialVersionUID = 1L;
 

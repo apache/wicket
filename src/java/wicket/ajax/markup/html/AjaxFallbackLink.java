@@ -21,6 +21,7 @@ package wicket.ajax.markup.html;
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.markup.html.link.Link;
@@ -69,7 +70,7 @@ public abstract class AjaxFallbackLink<T> extends Link<T> implements IAjaxLink
 	{
 		super(parent, id, model);
 
-		add(new AjaxEventBehavior("onclick")
+		add(new AjaxEventBehavior(ClientEvent.CLICK)
 		{
 			private static final long serialVersionUID = 1L;
 

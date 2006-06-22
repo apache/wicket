@@ -20,6 +20,7 @@ package wicket.ajax.markup.html.navigation.paging;
 
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.markup.html.IAjaxLink;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.navigation.paging.PagingNavigationLink;
@@ -53,7 +54,7 @@ public class AjaxPagingNavigationLink extends PagingNavigationLink implements IA
 			final IPageable pageable, final int pageNumber)
 	{
 		super(parent, id, pageable, pageNumber);
-		add(new AjaxPagingNavigationBehavior(this, pageable, "onclick"));
+		add(new AjaxPagingNavigationBehavior(this, pageable, ClientEvent.CLICK));
 		setOutputMarkupId(true);
 	}
 

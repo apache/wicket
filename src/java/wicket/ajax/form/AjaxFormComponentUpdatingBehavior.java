@@ -21,6 +21,7 @@ package wicket.ajax.form;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.IValuePersister;
 import wicket.util.string.AppendingStringBuffer;
@@ -45,7 +46,7 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @param event
 	 *            event to trigger this behavior
 	 */
-	public AjaxFormComponentUpdatingBehavior(final String event)
+	public AjaxFormComponentUpdatingBehavior(final ClientEvent event)
 	{
 		super(event);
 	}
@@ -89,9 +90,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * @see wicket.ajax.AjaxEventBehavior#onCheckEvent(java.lang.String)
 	 */
 	@Override
-	protected void onCheckEvent(String event)
+	protected void onCheckEvent(ClientEvent event)
 	{
-		if ("href".equalsIgnoreCase(event))
+		if (event == ClientEvent.HREF)
 		{
 			throw new IllegalArgumentException(
 					"this behavior cannot be attached to an 'href' event");
