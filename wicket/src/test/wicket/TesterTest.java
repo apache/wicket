@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -29,51 +29,67 @@ import wicket.util.tester.WicketTester;
 /**
  * @author jcompagner
  */
-public class TesterTest extends TestCase {
+public class TesterTest extends TestCase
+{
 
-    WicketTester tester;
+	WicketTester tester;
 
-    protected void setUp() throws Exception {
-        tester = new WicketTester();
-    }
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester();
+	}
 
-    /**
-     * 
-     */
-    public void testAssert() {
-        tester.startPage(new ITestPageSource() {
-            public Page getTestPage() {
-                return new MyPage();
-            }
-        });
-        tester.debugComponentTrees();
-        try {
-            tester.assertVisible("label");
-            fail("Should fail, because label is invisible");
-        } catch (AssertionFailedError e) {
-        } catch (NullPointerException e) {
-            fail("NullPointerException shouldn't be thrown, instead it must fail.");
-        }
-    }
+	/**
+	 * 
+	 */
+	public void testAssert()
+	{
+		tester.startPage(new ITestPageSource()
+		{
+			private static final long serialVersionUID = 1L;
 
-    private class MyPage extends WebPage {
+			public Page getTestPage()
+			{
+				return new MyPage();
+			}
+		});
+		tester.debugComponentTrees();
+		try
+		{
+			tester.assertVisible("label");
+			fail("Should fail, because label is invisible");
+		}
+		catch (AssertionFailedError e)
+		{
+		}
+		catch (NullPointerException e)
+		{
+			fail("NullPointerException shouldn't be thrown, instead it must fail.");
+		}
+	}
+
+	private class MyPage extends WebPage
+	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * Construct.
 		 */
-		public MyPage() {
-            add(new Label("label") {
+		public MyPage()
+		{
+			add(new Label("label")
+			{
 
-            	private static final long serialVersionUID = 1L;
+				private static final long serialVersionUID = 1L;
 
-				public boolean isVisible() {
-                    return false;
-                }
-            });
-        }
-        
-    }
+				public boolean isVisible()
+				{
+					return false;
+				}
+			});
+		}
+
+	}
 
 
 }

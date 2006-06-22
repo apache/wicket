@@ -17,6 +17,8 @@
  */
 package wicket.util.tester;
 
+import java.io.Serializable;
+
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -24,7 +26,7 @@ import wicket.markup.html.panel.Panel;
  * 
  * @author Ingram Chen
  */
-public abstract interface TestPanelSource
+public interface TestPanelSource extends Serializable
 {
 	/**
 	 * Define a panel instance source for WicketTester
@@ -34,5 +36,5 @@ public abstract interface TestPanelSource
 	 * @return Panel testing panel instance, note that testing panel's
 	 *         componentId must use supplied <code>panelId</code>.
 	 */
-	public Panel getTestPanel(final String panelId);
+	Panel getTestPanel(final String panelId);
 }
