@@ -1,12 +1,7 @@
-package wicket;
-import wicket.markup.html.WebPage;
-import wicket.util.tester.WicketTester;
-import junit.framework.TestCase;
-
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,29 +16,53 @@ import junit.framework.TestCase;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package wicket;
+
+import wicket.markup.html.WebPage;
+import wicket.util.tester.WicketTester;
+import junit.framework.TestCase;
 
 /**
  * @author jcompagner
  */
-public class HomePageRedirectTest extends TestCase {
-    public HomePageRedirectTest(String name) {
-        super(name);
-    }
+public class HomePageRedirectTest extends TestCase
+{
+	/**
+	 * Construct.
+	 * 
+	 * @param name
+	 */
+	public HomePageRedirectTest(String name)
+	{
+		super(name);
+	}
 
-    public void testPage() throws Exception {
-        WicketTester app = new WicketTester();
+	/**
+	 * @throws Exception
+	 */
+	public void testPage() throws Exception
+	{
+		WicketTester app = new WicketTester();
 
-        app.setHomePage(Page1.class);
-        app.mountBookmarkablePage("/page1", Page1.class);
+		app.setHomePage(Page1.class);
+		app.mountBookmarkablePage("/page1", Page1.class);
 
-        app.setupRequestAndResponse();
-        app.processRequestCycle();
-    }
+		app.setupRequestAndResponse();
+		app.processRequestCycle();
+	}
 
-    public static class Page1 extends WebPage {
+	/**
+	 * Test page
+	 */
+	public static class Page1 extends WebPage
+	{
 		private static final long serialVersionUID = 1L;
 
-		public Page1() {
-        }
-    }
+		/**
+		 * Construct.
+		 */
+		public Page1()
+		{
+		}
+	}
 }
