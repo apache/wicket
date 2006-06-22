@@ -22,6 +22,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.ajax.markup.html.IAjaxLink;
@@ -61,7 +62,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 	 * @param event
 	 *            the javascript event to bind to (e.g. onclick)
 	 */
-	public AjaxPagingNavigationBehavior(IAjaxLink owner, IPageable pageable, String event)
+	public AjaxPagingNavigationBehavior(IAjaxLink owner, IPageable pageable, ClientEvent event)
 	{
 		super(event);
 		this.owner = owner;

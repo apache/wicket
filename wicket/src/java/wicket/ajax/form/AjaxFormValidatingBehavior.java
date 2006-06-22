@@ -21,6 +21,7 @@ package wicket.ajax.form;
 import wicket.Component;
 import wicket.Component.IVisitor;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.feedback.IFeedback;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
@@ -48,7 +49,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 *            javascript event this behavior will be invoked on, like
 	 *            onclick
 	 */
-	public AjaxFormValidatingBehavior(Form form, String event)
+	public AjaxFormValidatingBehavior(Form form, ClientEvent event)
 	{
 		super(form, event);
 	}
@@ -73,7 +74,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param form
 	 * @param event
 	 */
-	public static void addToAllFormComponents(final Form form, final String event)
+	public static void addToAllFormComponents(final Form form, final ClientEvent event)
 	{
 		addToAllFormComponents(form, event, null);
 	}
@@ -85,7 +86,7 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 	 * @param event
 	 * @param throttleDelay
 	 */
-	public static void addToAllFormComponents(final Form form, final String event,
+	public static void addToAllFormComponents(final Form form, final ClientEvent event,
 			final Duration throttleDelay)
 	{
 		form.visitChildren(FormComponent.class, new IVisitor()

@@ -20,6 +20,7 @@ package wicket.ajax.markup.html.form;
 
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
@@ -54,7 +55,7 @@ public abstract class AjaxSubmitButton extends WebComponent
 	{
 		super(parent, id);
 
-		add(new AjaxFormSubmitBehavior(form, "onclick")
+		add(new AjaxFormSubmitBehavior(form, ClientEvent.CLICK)
 		{
 
 			private static final long serialVersionUID = 1L;

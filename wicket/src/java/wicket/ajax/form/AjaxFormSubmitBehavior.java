@@ -20,6 +20,7 @@ package wicket.ajax.form;
 
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
@@ -57,7 +58,7 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 * @param event
 	 *            javascript event this behavior is attached to, like onclick
 	 */
-	public AjaxFormSubmitBehavior(Form form, String event)
+	public AjaxFormSubmitBehavior(Form form, ClientEvent event)
 	{
 		super(event);
 		this.form = form;

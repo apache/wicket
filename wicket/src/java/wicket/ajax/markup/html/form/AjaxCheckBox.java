@@ -20,6 +20,7 @@ package wicket.ajax.markup.html.form;
 
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.markup.html.form.CheckBox;
 import wicket.model.IModel;
@@ -63,7 +64,7 @@ public abstract class AjaxCheckBox extends CheckBox
 
 		setOutputMarkupId(true);
 
-		add(new AjaxFormComponentUpdatingBehavior("onclick")
+		add(new AjaxFormComponentUpdatingBehavior(ClientEvent.CLICK)
 		{
 			private static final long serialVersionUID = 1L;
 
