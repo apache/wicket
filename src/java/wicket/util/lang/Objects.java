@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,7 +25,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -91,7 +90,7 @@ public abstract class Objects
 			}
 			catch (WicketRuntimeException ex)
 			{
-				if(ex.getCause() instanceof ClassNotFoundException)
+				if (ex.getCause() instanceof ClassNotFoundException)
 				{
 					throw (ClassNotFoundException)ex.getCause();
 				}
@@ -343,9 +342,11 @@ public abstract class Objects
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
+	 * @param <T>
+	 *            The type
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T cloneModel(final T object)
+	public static <T> T cloneModel(final T object)
 	{
 		if (object == null)
 		{
@@ -361,7 +362,7 @@ public abstract class Objects
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
 						.toByteArray()), replacedObjects);
-				return (T) ois.readObject();
+				return (T)ois.readObject();
 			}
 			catch (ClassNotFoundException e)
 			{
@@ -381,9 +382,11 @@ public abstract class Objects
 	 * @param object
 	 *            The object to clone
 	 * @return A deep copy of the object
+	 * @param <T>
+	 *            The type
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Serializable> T cloneObject(final T object)
+	public static <T> T cloneObject(final T object)
 	{
 		if (object == null)
 		{
@@ -399,16 +402,19 @@ public abstract class Objects
 				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
 						.toByteArray()))
 				{
-					// This overide is required to resolve classess inside in different
+					// This overide is required to resolve classess inside in
+					// different
 					// bundle, i.e.
-					// The classess can be resolved by OSGI classresolver implementation
+					// The classess can be resolved by OSGI classresolver
+					// implementation
 					@Override
 					protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
 							ClassNotFoundException
 					{
 						String className = desc.getName();
 						Application application = Application.get();
-						IApplicationSettings applicationSettings = application.getApplicationSettings();
+						IApplicationSettings applicationSettings = application
+								.getApplicationSettings();
 						IClassResolver classResolver = applicationSettings.getClassResolver();
 
 						Class candidate = null;
@@ -422,7 +428,7 @@ public abstract class Objects
 						}
 						catch (WicketRuntimeException ex)
 						{
-							if(ex.getCause() instanceof ClassNotFoundException)
+							if (ex.getCause() instanceof ClassNotFoundException)
 							{
 								throw (ClassNotFoundException)ex.getCause();
 							}
@@ -430,7 +436,7 @@ public abstract class Objects
 						return candidate;
 					}
 				};
-				return (T) ois.readObject();
+				return (T)ois.readObject();
 			}
 			catch (ClassNotFoundException e)
 			{
