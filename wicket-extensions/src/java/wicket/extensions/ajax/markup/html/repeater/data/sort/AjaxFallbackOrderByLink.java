@@ -2,6 +2,7 @@ package wicket.extensions.ajax.markup.html.repeater.data.sort;
 
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
@@ -86,7 +87,7 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 	{
 		super(parent, id, property, stateLocator, cssProvider);
 
-		add(new AjaxEventBehavior("onclick")
+		add(new AjaxEventBehavior(ClientEvent.CLICK)
 		{
 			private static final long serialVersionUID = 1L;
 

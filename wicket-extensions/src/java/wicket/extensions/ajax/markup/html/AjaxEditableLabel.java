@@ -23,6 +23,7 @@ import wicket.RequestCycle;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
@@ -112,7 +113,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		 * 
 		 * @param event
 		 */
-		private LabeAjaxBehavior(String event)
+		private LabeAjaxBehavior(ClientEvent event)
 		{
 			super(event);
 		}
@@ -159,7 +160,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 
 		label = new Label(this, "label", model);
 		label.setOutputMarkupId(true);
-		label.add(new LabeAjaxBehavior("onClick"));
+		label.add(new LabeAjaxBehavior(ClientEvent.CLICK));
 
 		editor = new TextField<T>(this, "editor", model);
 		editor.setOutputMarkupId(true);
