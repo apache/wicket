@@ -293,6 +293,8 @@ public class WicketTester extends MockWebApplication
 	{
 		return (Panel)startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				return new DummyPanelPage(testPanelSource);
@@ -314,10 +316,14 @@ public class WicketTester extends MockWebApplication
 	{
 		return (Panel)startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				return new DummyPanelPage(new TestPanelSource()
 				{
+					private static final long serialVersionUID = 1L;
+
 					public Panel getTestPanel(String panelId)
 					{
 						try
