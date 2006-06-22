@@ -784,6 +784,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 *            MarkupContainer class to search for
 	 * @return First container parent that is an instance of the given class, or
 	 *         null if none can be found
+	 * @param
+	 *         <P>
+	 *         The type
 	 */	
 	public final <P extends MarkupContainer> P findParent(final Class<P> c)
 	{
