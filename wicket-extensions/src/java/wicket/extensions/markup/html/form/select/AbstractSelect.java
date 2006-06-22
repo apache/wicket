@@ -41,14 +41,14 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  */
-public class Select extends FormComponent
+public abstract class AbstractSelect<T> extends FormComponent<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public Select(MarkupContainer parent, final String id)
+	public AbstractSelect(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -56,11 +56,13 @@ public class Select extends FormComponent
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public Select(MarkupContainer parent, final String id, IModel model)
+	public AbstractSelect(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}
 
+	protected abstract void clearModel();
+	
 	/**
 	 * @see FormComponent#updateModel()
 	 */
