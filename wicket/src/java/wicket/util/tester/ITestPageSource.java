@@ -17,6 +17,8 @@
  */
 package wicket.util.tester;
 
+import java.io.Serializable;
+
 import wicket.Page;
 
 /**
@@ -24,7 +26,7 @@ import wicket.Page;
  * 
  * @author Ingram Chen
  */
-public abstract interface ITestPageSource
+public interface ITestPageSource extends Serializable
 {
 	/**
 	 * Define a page instance source for WicketTester
