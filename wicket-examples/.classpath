@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry output="target/test-classes" kind="src" path="src/test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
 	<classpathentry sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar" kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
