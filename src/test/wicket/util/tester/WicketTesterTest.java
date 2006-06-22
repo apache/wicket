@@ -47,6 +47,8 @@ public class WicketTesterTest extends TestCase
 		// let the page be instatiated lately.
 		tester.startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				Book mockBook = new Book("xxId", "xxName");
@@ -119,6 +121,8 @@ public class WicketTesterTest extends TestCase
 		// let the page be instatiated lately.
 		tester.startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				Book mockBook = new Book("xxId", "xxName");

@@ -59,6 +59,8 @@ public class FormTesterTest extends WicketTestCase
 
 		choicePage = (ChoicePage)application.startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				return new ChoicePage<Book>(Arrays.asList(books));
