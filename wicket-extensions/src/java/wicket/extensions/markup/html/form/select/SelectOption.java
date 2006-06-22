@@ -33,7 +33,7 @@ import wicket.util.lang.Objects;
  * 
  * TODO Post 1.2: General: Example
  * 
- * @see Select
+ * @see AbstractSelect
  * 
  * @param <T>
  *            Type of model object this component holds
@@ -72,7 +72,7 @@ public class SelectOption<T> extends WebMarkupContainer<T>
 		// must be attached to <option .../> tag
 		checkComponentTag(tag, "option");
 
-		Select select = (Select)findParent(Select.class);
+		AbstractSelect select = (AbstractSelect)findParent(AbstractSelect.class);
 		if (select == null)
 		{
 			throw new WicketRuntimeException(

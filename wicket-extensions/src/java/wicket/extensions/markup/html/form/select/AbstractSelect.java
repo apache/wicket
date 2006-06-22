@@ -25,21 +25,15 @@ import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 
 /**
- * Component that represents a <code>&lt;select&gt;</code> box. Elements are
- * provided by one or more <code>SelectChoice</code> or
- * <code>SelectOptions</code> components in the hierarchy below the
- * <code>Select</code> component.
+ * Component that serves as the base for {@link Select} and {@link SelectMultiple}.
  * 
- * Advantages to the standard choice components is that the user has a lot more
- * control over the markup between the &lt;select&gt; tag and its children
- * &lt;option&gt; tags: allowing for such things as &lt;optgroup&gt; tags.
+ * @see Select
+ * @see SelectMultiple
  * 
- * TODO Post 1.2: General: Example
- * 
- * @see SelectOption
- * @see SelectOptions
+ * @param <T> type of model object
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
+ * @author Matej Knopp 
  */
 public abstract class AbstractSelect<T> extends FormComponent<T>
 {
@@ -61,7 +55,31 @@ public abstract class AbstractSelect<T> extends FormComponent<T>
 		super(parent, id, model);
 	}
 
+	/**
+	 * Clears the model. Either by setting the model object to null (single selection
+	 * or cleaning the collection (select multiple).	
+	 */
 	protected abstract void clearModel();
+
+	/**
+	 * Assigns the with the current model.
+	 * @param value 
+	 * 			value of selected choice
+	 */
+	protected abstract void assignValue(Object value);
+	
+	/**
+	 * Checks whether the given count of options selected by user is correct
+	 * for this type of Select.
+	 * @param count 
+	 * 			count of options selected by user
+	 */
+	protected abstract void checkSelectedOptionsCount(int count);
+	
+	/**
+	 * This methods is called after the model has been updated.
+	 */
+	protected abstract void finishModelUpdate();
 	
 	/**
 	 * @see FormComponent#updateModel()
@@ -72,19 +90,7 @@ public abstract class AbstractSelect<T> extends FormComponent<T>
 		Object object = getModelObject();
 		boolean isModelCollection = object instanceof Collection;
 
-		/*
-		 * clear the model
-		 */
-		if (isModelCollection)
-		{
-			modelChanging();
-
-			((Collection)object).clear();
-		}
-		else
-		{
-			getModel().setObject(null);
-		}
+		clearModel();
 
 		/*
 		 * the input contains an array of full path of the selected option
@@ -100,13 +106,7 @@ public abstract class AbstractSelect<T> extends FormComponent<T>
 
 		if (paths != null && paths.length > 0)
 		{
-			if (!isModelCollection && paths.length > 1)
-			{
-				throw new WicketRuntimeException(
-						"The model of Select component ["
-								+ getPath()
-								+ "] is not of type java.util.Collection, but more then one SelectOption component has been selected. Either remove the multiple attribute from the select tag or make the model of the Select component a collection");
-			}
+			checkSelectedOptionsCount(paths.length);
 
 			for (String element : paths)
 			{
@@ -134,22 +134,11 @@ public abstract class AbstractSelect<T> extends FormComponent<T>
 										+ "] which does not point to an SelectOption component. Due to this the Select component cannot resolve the selected SelectOption component pointed to by the illegal value. A possible reason is that component hierarchy changed between rendering and form submission.");
 					}
 
-					// assign the value
-					if (isModelCollection)
-					{
-						((Collection)object).add(option.getModelObject());
-					}
-					else
-					{
-						setModelObject(option.getModelObject());
-					}
+					assignValue(option.getModelObject());
 				}
 			}
 		}
 
-		if (isModelCollection)
-		{
-			modelChanged();
-		}
+		finishModelUpdate();
 	}
 }
