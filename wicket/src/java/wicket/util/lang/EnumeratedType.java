@@ -34,7 +34,10 @@ import wicket.util.string.StringValue;
  * represented by a given subclass can be retrieved by calling getValues(Class).
  * 
  * @author Jonathan Locke
+ * 
+ * @deprecated To be replaced by JSE 5 constructs in Wicket 2.0; will be removed soon!
  */
+@Deprecated
 public abstract class EnumeratedType extends StringValue
 {
 	/** Map of type values by class */
