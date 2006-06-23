@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ContainerFeedbackMessageFilter.java 5528 2006-04-26 12:49:13 +0000 (Wed,
+ * 26 Apr 2006) eelco12 $ $Revision$ $Date: 2006-04-26 12:49:13 +0000
+ * (Wed, 26 Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -51,6 +52,13 @@ public class ContainerFeedbackMessageFilter implements IFeedbackMessageFilter
 	 */
 	public boolean accept(FeedbackMessage message)
 	{
-		return container.contains(message.getReporter(), true);
+		if (message.getReporter() == null)
+		{
+			return false;
+		}
+		else
+		{
+			return container.contains(message.getReporter(), true);
+		}
 	}
 }
