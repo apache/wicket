@@ -23,6 +23,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import wicket.EmptyPage;
+import wicket.MockPageWithOneComponent;
 import wicket.model.Model;
 import wicket.protocol.http.MockWebApplication;
 
@@ -62,7 +63,7 @@ public class ListViewTest extends TestCase
 			modelList.add(new Integer(i));
 		}
 
-		return new ListView<Integer>(new EmptyPage(), "listView", new Model<List<Integer>>(
+		return new ListView<Integer>(new MockPageWithOneComponent(), "component", new Model<List<Integer>>(
 				modelList))
 		{
 			private static final long serialVersionUID = 1L;
@@ -125,7 +126,7 @@ public class ListViewTest extends TestCase
 		// bar, where there is no underlying model necessary, as
 		// listItem.getIndex() is equal to the required
 		// listItem.getModelObject()
-		lv = new ListView<Integer>(new EmptyPage(), "listView", new Model<List<Integer>>(null))
+		lv = new ListView<Integer>(new MockPageWithOneComponent(), "component", new Model<List<Integer>>(null))
 		{
 			private static final long serialVersionUID = 1L;
 
