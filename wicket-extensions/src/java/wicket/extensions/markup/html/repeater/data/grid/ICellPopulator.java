@@ -34,24 +34,26 @@ import wicket.model.IModel;
  * class NamePopulator implements ICellPopulator
  * {
  * 	void populateItem(final Item cellItem, final String componentId, final IModel rowModel) {
- *         User user=(User)rowModel.getObject(cellItem);
- *         String name=user.getFirstName()+&quot; &quot;+user.getLastName();
- *         cellItem.add(new Label(componentId, name);
- *       }
+ *          User user=(User)rowModel.getObject(cellItem);
+ *          String name=user.getFirstName()+&quot; &quot;+user.getLastName();
+ *          cellItem.add(new Label(componentId, name);
+ *        }
  * }
  * </pre>
  * 
  * In this example the IDataProvider assigned to the DataGridView retrieves User
  * objects from the database. The cell populator adds a label to the cell that
- * will display the full name of the user.
+ * will display the full name of the user. *
  * 
+ * @param <T>
+ *            type of model object this component holds
  * @see DataGridView
  * @see Item
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public interface ICellPopulator extends Serializable
+public interface ICellPopulator<T> extends Serializable
 {
 	/**
 	 * Method used to populate a cell in the {@link DataGridView}
@@ -71,5 +73,5 @@ public interface ICellPopulator extends Serializable
 	 * 
 	 * @see Item
 	 */
-	void populateItem(final Item cellItem, final String componentId, final IModel rowModel);
+	void populateItem(final Item cellItem, final String componentId, final IModel<T> rowModel);
 }

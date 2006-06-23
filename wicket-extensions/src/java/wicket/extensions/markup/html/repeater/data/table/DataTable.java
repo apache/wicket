@@ -42,7 +42,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *                      &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *                       &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -60,14 +60,16 @@ import wicket.model.IModel;
  * table.add(new HeadersToolbar(table));
  * add(table);
  * 
- * </pre>
+ * </pre> *
  * 
+ * @param <T>
+ *            type of model object this item holds
  * @see DefaultDataTable
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class DataTable extends Panel implements IPageable
+public class DataTable<T> extends Panel<T> implements IPageable
 {
 	/**
 	 * The component id that toolbars must be created with in order to be added
@@ -79,7 +81,7 @@ public class DataTable extends Panel implements IPageable
 
 	private final DataGridView datagrid;
 
-	private IColumn[] columns;
+	private IColumn<T>[] columns;
 
 	private final RepeatingView topToolbars;
 	private final RepeatingView bottomToolbars;
@@ -121,8 +123,8 @@ public class DataTable extends Panel implements IPageable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DataTable(MarkupContainer parent, final String id, IColumn[] columns,
-			IDataProvider dataProvider, int rowsPerPage)
+	public DataTable(MarkupContainer parent, final String id, IColumn<T>[] columns,
+			IDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(parent, id);
 
@@ -139,7 +141,8 @@ public class DataTable extends Panel implements IPageable
 			}
 
 			@Override
-			protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index, IModel model)
+			protected Item newCellItem(WebMarkupContainer cellContainer, final String id,
+					int index, IModel model)
 			{
 				return DataTable.this.newCellItem(cellContainer, id, index, model);
 			}
@@ -175,7 +178,7 @@ public class DataTable extends Panel implements IPageable
 	/**
 	 * @return array of column objects this table displays
 	 */
-	public final IColumn[] getColumns()
+	public final IColumn<T>[] getColumns()
 	{
 		return columns;
 	}
@@ -288,15 +291,16 @@ public class DataTable extends Panel implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newRowItem(final String id, int index, final IModel model)
+	protected Item newRowItem(final String id, int index, final IModel<T> model)
 	{
-		return new Item(this, id, index, model);
+		return new Item<T>(this, id, index, model);
 	}
 
 	/**
 	 * Factory method for Item container that represents a cell in the
 	 * underlying DataGridView
-	 * @param cellContainer 
+	 * 
+	 * @param cellContainer
 	 * 
 	 * @see Item
 	 * 
@@ -309,7 +313,8 @@ public class DataTable extends Panel implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index, final IModel model)
+	protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index,
+			final IModel model)
 	{
 		return new Item(cellContainer, id, index, model);
 	}

@@ -34,7 +34,7 @@ import wicket.version.undo.Change;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class Item extends WebMarkupContainer
+public class Item<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,7 +51,7 @@ public class Item extends WebMarkupContainer
 	 * @param model
 	 *            model for this item
 	 */
-	public Item(MarkupContainer parent, final String id, int index, final IModel model)
+	public Item(MarkupContainer parent, final String id, int index, final IModel<T> model)
 	{
 		super(parent, id, model);
 		this.index = index;
@@ -103,6 +103,7 @@ public class Item extends WebMarkupContainer
 	/**
 	 * @return the primary key assigned to this item
 	 */
+	//FIXME General: ivaynberg: wth is this?
 	public String getPrimaryKey()
 	{
 		return getId();
@@ -114,7 +115,7 @@ public class Item extends WebMarkupContainer
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
 	 */
-	public static class IndexComparator implements Comparator
+	public static class IndexComparator implements Comparator<Item>
 	{
 		private static final Comparator instance = new IndexComparator();
 
@@ -129,11 +130,9 @@ public class Item extends WebMarkupContainer
 		/**
 		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 		 */
-		public int compare(Object o1, Object o2)
+		public int compare(Item o1, Item o2)
 		{
-			Item lhs = (Item)o1;
-			Item rhs = (Item)o2;
-			return lhs.getIndex() - rhs.getIndex();
+			return o1.getIndex() - o2.getIndex();
 		}
 
 	};

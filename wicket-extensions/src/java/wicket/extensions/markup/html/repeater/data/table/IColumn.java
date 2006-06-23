@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: IColumn.java 6018 2006-06-03 09:23:39 +0000 (Sat, 03 Jun 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-06-03 09:23:39 +0000 (Sat, 03 Jun
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -22,11 +23,14 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
 
 /**
- * An inteface that represents a column in the {@link DefaultDataTable}
+ * An inteface that represents a column in the {@link DefaultDataTable} *
+ * 
+ * @param <T>
+ *            type of model object this component holds
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public interface IColumn extends ICellPopulator
+public interface IColumn<T> extends ICellPopulator<T>
 {
 	/**
 	 * Returns the component that will be used as the header for the column.

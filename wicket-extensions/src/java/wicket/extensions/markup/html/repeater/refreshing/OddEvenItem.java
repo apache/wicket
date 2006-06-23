@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:46:21 +0200 (vr, 26 mei 2006) $
+ * $Id: OddEvenItem.java 6043 2006-06-04 18:32:14 +0000 (Sun, 04 Jun 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-05-26 00:46:21 +0200 (vr, 26 mei
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,9 +26,11 @@ import wicket.model.IModel;
  * Item that sets class="even" or class="odd" attributes based on its index
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @param <T>
+ *            type of model object this item holds
  * 
  */
-public class OddEvenItem extends Item
+public class OddEvenItem<T> extends Item<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -46,7 +49,7 @@ public class OddEvenItem extends Item
 	 * @param model
 	 *            item model
 	 */
-	public OddEvenItem(MarkupContainer parent, final String id, int index, IModel model)
+	public OddEvenItem(MarkupContainer parent, final String id, int index, IModel<T> model)
 	{
 		super(parent, id, index, model);
 	}

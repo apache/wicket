@@ -34,8 +34,10 @@ import wicket.model.IModel;
  * <p>
  * The {@link NavigationToolbar} and the {@link HeadersToolbar} are added as top
  * toolbars, while the {@link NoRecordsToolbar} toolbar is added as a bottom
- * toolbar.
+ * toolbar. *
  * 
+ * @param <T>
+ *            type of model object this item holds
  * @see DataTable
  * @see HeadersToolbar
  * @see NavigationToolbar
@@ -43,7 +45,7 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public class DefaultDataTable extends DataTable
+public class DefaultDataTable<T> extends DataTable<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,10 +63,10 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(MarkupContainer parent, final String id, final List<IColumn> columns,
-			SortableDataProvider dataProvider, int rowsPerPage)
+	public DefaultDataTable(MarkupContainer parent, final String id, final List<IColumn<T>> columns,
+			SortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
-		this(parent, id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider,
+		this(parent, id, (IColumn<T>[])columns.toArray(new IColumn[columns.size()]), dataProvider,
 				rowsPerPage);
 	}
 
@@ -82,8 +84,8 @@ public class DefaultDataTable extends DataTable
 	 * @param rowsPerPage
 	 *            number of rows per page
 	 */
-	public DefaultDataTable(MarkupContainer parent, final String id, final IColumn[] columns,
-			final SortableDataProvider dataProvider, int rowsPerPage)
+	public DefaultDataTable(MarkupContainer parent, final String id, final IColumn<T>[] columns,
+			final SortableDataProvider<T> dataProvider, int rowsPerPage)
 	{
 		super(parent, id, columns, dataProvider, rowsPerPage);
 
@@ -124,9 +126,9 @@ public class DefaultDataTable extends DataTable
 	}
 
 	@Override
-	protected Item newRowItem(final String id, int index, IModel model)
+	protected Item<T> newRowItem(final String id, int index, IModel<T> model)
 	{
-		return new OddEvenItem(this, id, index, model);
+		return new OddEvenItem<T>(this, id, index, model);
 	}
 
 }
