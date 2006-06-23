@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+    <display-name>WicketPortlet</display-name>
+    <servlet>
+        <servlet-name>WicketPortlet</servlet-name>
+        <display-name>WicketPortlet Wrapper</display-name>
+        <servlet-class>org.apache.pluto.core.PortletServlet</servlet-class>
+        <init-param>
+            <param-name>portlet-guid</param-name>
+            <param-value>WicketPortlet</param-value>
+        </init-param>
+        <init-param>
+            <param-name>portlet-class</param-name>
+            <param-value>wicket.protocol.http.portlet.WicketPortlet</param-value>
+        </init-param>
+	</servlet>
+    <servlet-mapping>
+        <servlet-name>WicketPortlet</servlet-name>
+        <url-pattern>/WicketPortlet/*</url-pattern>
+    </servlet-mapping>
+</web-app>
