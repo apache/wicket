@@ -234,5 +234,10 @@
 			<id>wicket-repo</id>
 			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
 		</repository>
+		<snapshotRepository>
+        	<id>maven.sateh.com</id>
+            <url>scpexe://maven.sateh.com/sateh/services/lighttpd/maven.sateh.com/www/wicket</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
 	</distributionManagement>
 </project>
