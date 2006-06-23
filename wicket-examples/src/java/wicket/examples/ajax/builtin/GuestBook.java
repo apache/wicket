@@ -7,6 +7,7 @@ import java.util.List;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.AjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
@@ -126,7 +127,7 @@ public class GuestBook extends BasePage
 		// The AjaxFormSubmitBehavior already calls the onSubmit of the form,
 		// all we need to do in the onSubmit(AjaxRequestTarget) handler
 		// is do our Ajax specific stuff, like rendering our components.
-		commentForm.add(new AjaxFormSubmitBehavior(commentForm, "onsubmit")
+		commentForm.add(new AjaxFormSubmitBehavior(commentForm, ClientEvent.SUBMIT)
 		{
 			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()

@@ -21,6 +21,7 @@ package wicket.examples.ajax.builtin;
 import java.io.Serializable;
 
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.form.AjaxFormValidatingBehavior;
 import wicket.ajax.markup.html.form.AjaxSubmitButton;
 import wicket.markup.html.form.Form;
@@ -77,7 +78,8 @@ public class FormPage extends BasePage
 		// attach an ajax validation behavior to all form component's onkeydown
 		// event and throttle it down to once per second
 
-		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeyup", Duration.ONE_SECOND);
+		AjaxFormValidatingBehavior.addToAllFormComponents(form, ClientEvent.KEYUP,
+				Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
 		new AjaxSubmitButton(form, "ajax-submit-button", form)

@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.ClientEvent;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
@@ -109,7 +110,7 @@ public class ChoicePage extends BasePage
 		final DropDownChoice<String> models = new DropDownChoice<String>(form, "models", new Model<String>(), modelChoices);
 		models.setOutputMarkupId(true);
 
-		makes.add(new AjaxFormComponentUpdatingBehavior("onchange")
+		makes.add(new AjaxFormComponentUpdatingBehavior(ClientEvent.CHANGE)
 		{
 			@Override
 			protected void onUpdate(AjaxRequestTarget target)
