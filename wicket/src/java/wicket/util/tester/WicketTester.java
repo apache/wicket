@@ -33,7 +33,10 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxLink;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
@@ -548,13 +551,42 @@ public class WicketTester extends MockWebApplication
 	/**
 	 * click the <code>Link</code> in the last rendered Page.
 	 * 
+	 * This method also works for <code>AjaxLink</code>. On AjaxLinks the
+	 * onClick method is invoked with a valid AjaxRequestTarget. In that way you
+	 * can test the flow of your application when using AJAX.
+	 * 
 	 * @param path
 	 *            path to <code>Link</code> component
 	 */
 	public void clickLink(String path)
 	{
-		Link link = (Link)getComponentFromLastRenderedPage(path);
-		newRequestToComponent(link);
+		Component linkComponent = getComponentFromLastRenderedPage(path);
+
+		// if the link is an AjaxLink, we process it differently
+		// than a normal link
+		if (linkComponent instanceof AjaxLink)
+		{
+			AjaxLink link = (AjaxLink)linkComponent;
+
+			RequestCycle requestCycle = createRequestCycle();
+			AjaxRequestTarget target = new AjaxRequestTarget();
+			requestCycle.setRequestTarget(target);
+
+			link.onClick(target);
+
+			// process the request target
+			target.respond(requestCycle);
+		}
+		// if the link is a normal link
+		else if (linkComponent instanceof Link)
+		{
+			Link link = (Link)linkComponent;
+			newRequestToComponent(link);
+		}
+		else
+		{
+			Assert.fail("Link " + path + " is not a Link or AjaxLink");
+		}
 	}
 
 	/**
