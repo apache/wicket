@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<portlet-app
+	xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/
+                                 portlet-app_1_0.xsd/etc/opt/SUNWportal/dtd/portlet.xsd"
+	version="1.0" id="WicketPortlet">
+	<portlet id="WicketPortlet">
+		<portlet-name>WicketPortlet</portlet-name>
+		<portlet-class>
+			wicket.protocol.http.portlet.WicketPortlet
+		</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<resource-bundle>WicketPortlet</resource-bundle>
+
+		<portlet-preferences>
+			<preference>
+				<name>applicationClassName</name>
+				<value>wicket.examples.portlet.ExamplePortletApplication</value>
+			</preference>		
+		</portlet-preferences>
+
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+			<portlet-mode>EDIT</portlet-mode>
+			<portlet-mode>HELP</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>WicketPortlet</title>
+		</portlet-info>
+	</portlet>
+</portlet-app>
