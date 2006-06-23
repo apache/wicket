@@ -1,22 +1,20 @@
 package wicket.examples.portlet;
 
-import wicket.Page;
 import wicket.protocol.http.portlet.PortletApplication;
 
-
 /**
+ * Application class of the example.
+ * 
  * @author Janne Hietam&auml;ki
- *
  */
-public class ExamplePortletApplication extends PortletApplication 
+public class ExamplePortletApplication extends PortletApplication
 {
-
-	/*
+	/**
+	 * Gets the home page.
 	 * 
-	 * @see wicket.Application#getHomePage()
+	 * @return The home page
 	 */
-	@Override
-	public Class<? extends Page> getHomePage()
+	public Class getHomePage()
 	{
 		return ExamplePortlet.class;
 	}

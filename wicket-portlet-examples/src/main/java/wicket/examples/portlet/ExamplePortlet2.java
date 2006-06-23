@@ -6,7 +6,7 @@ import wicket.protocol.http.portlet.PortletPage;
 
 /**
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class ExamplePortlet2 extends PortletPage
 {
@@ -14,9 +14,10 @@ public class ExamplePortlet2 extends PortletPage
 	/**
 	 * @param page
 	 */
-	public ExamplePortlet2(final Page page){
-		add(new Link("link"){
-			@Override
+	public ExamplePortlet2(final Page page)
+	{
+		add(new Link("link")
+		{
 			public void onClick()
 			{
 				setResponsePage(page);

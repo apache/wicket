@@ -12,16 +12,17 @@ import wicket.protocol.http.portlet.PortletPage;
 
 /**
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class ExamplePortlet extends PortletPage
 {
 	private static final Log log = LogFactory.getLog(ExamplePortlet.class);
-	
+
 	/**
 	 * 
 	 */
-	public ExamplePortlet(){
+	public ExamplePortlet()
+	{
 		// This model references the page's message property and is
 		// shared by the label and form component
 		PropertyModel messageModel = new PropertyModel(this, "message");
@@ -31,37 +32,41 @@ public class ExamplePortlet extends PortletPage
 
 		// Add a form to change the message. We don't need to do anything
 		// else with this form as the shared model is automatically updated
-		// on form submits		
-		Form form = new Form("form"){
+		// on form submits
+		Form form = new Form("form")
+		{
 
 			protected void onSubmit()
 			{
-				log.info(hashCode()+" : "+this+" Form.onSubmit()");
+				log.info(hashCode() + " : " + this + " Form.onSubmit()");
 			}
-			
+
 		};
 		form.add(new TextField("msgInput", messageModel));
-		
-		add(new Link("link"){
-			public void onClick(){
+
+		add(new Link("link")
+		{
+			public void onClick()
+			{
 				log.info("link clicked");
-				message="Link clicked!";
+				message = "Link clicked!";
 			}
 		});
-		
-		add(form);
-		add(new Link("link2"){
 
-			@Override
+		add(form);
+		add(new Link("link2")
+		{
+
 			public void onClick()
 			{
 				setResponsePage(new ExamplePortlet2(ExamplePortlet.this));
-			}			
+			}
 		});
 
-		//add(new Image("image",new ResourceReference(ExamplePortlet.class,"wicket-logo.png")));
+		// add(new Image("image",new
+		// ResourceReference(ExamplePortlet.class,"wicket-logo.png")));
 	}
-	
+
 	private String message = "[type your message to the world here]";
 
 	/**
