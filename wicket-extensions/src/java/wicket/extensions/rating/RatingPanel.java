@@ -274,7 +274,7 @@ public abstract class RatingPanel extends Panel<Integer>
 	public RatingPanel(MarkupContainer parent, String id, IModel<Integer> rating, int nrOfStars,
 			boolean addDefaultCssStyle)
 	{
-		this(parent, id, rating, new Model<Integer>(new Integer(nrOfStars)), null,
+		this(parent, id, rating, new Model<Integer>(Integer.valueOf(nrOfStars)), null,
 				new Model<Boolean>(Boolean.FALSE), addDefaultCssStyle);
 	}
 
@@ -300,7 +300,7 @@ public abstract class RatingPanel extends Panel<Integer>
 	public RatingPanel(MarkupContainer parent, String id, IModel<Integer> rating, int nrOfStars,
 			IModel<Integer> nrOfVotes, boolean addDefaultCssStyle)
 	{
-		this(parent, id, rating, new Model<Integer>(new Integer(nrOfStars)), nrOfVotes,
+		this(parent, id, rating, new Model<Integer>(Integer.valueOf(nrOfStars)), nrOfVotes,
 				new Model<Boolean>(Boolean.FALSE), addDefaultCssStyle);
 	}
 
