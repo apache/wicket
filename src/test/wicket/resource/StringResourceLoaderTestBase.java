@@ -23,6 +23,8 @@ import java.util.Locale;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.Component;
+import wicket.MockPageWithOneComponent;
+import wicket.Page;
 import wicket.resource.loader.IStringResourceLoader;
 
 /**
@@ -66,8 +68,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	{
 		super.setUp();
 		this.application = new DummyApplication();
-		DummyPage page = new DummyPage();
-		this.component = new DummyComponent(page, "test", this.application);
+		Page page = new MockPageWithOneComponent();
+		this.component = new DummyComponent(page, "component", this.application);
 		this.loader = createLoader();
 	}
 

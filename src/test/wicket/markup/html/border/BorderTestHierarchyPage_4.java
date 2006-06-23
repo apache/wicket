@@ -38,7 +38,7 @@ public class BorderTestHierarchyPage_4 extends WebPage
 	 */
 	public BorderTestHierarchyPage_4()
 	{
-		new BorderComponent1(this, "border1");
-		new Label(this, "label1");
+		Border border = new BorderComponent1(this, "border1");
+		new Label(border, "label1");
 	}
 }

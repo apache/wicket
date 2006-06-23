@@ -16,11 +16,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.ajax;
+package wicket;
 
 import wicket.markup.html.WebPage;
 
-public class MockPageWithPlaceholder extends WebPage
+public class MockPageWithOneComponent extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
