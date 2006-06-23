@@ -8,9 +8,11 @@
     <author email="eelco12 at users.sourceforge.net">Eelco Hillenius</author>
     <author email="joco01 at users.sourceforge.net">Johan Compagner</author>
     <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
+    <author email="jannehietamaki at users.sourceforge.net">Janne Hietamäki</author>
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+	  <action type="add" dev="Janne Hietamäki">Portlet (JSR-168) support</action>
       <action type="fix" dev="Igor Vaynberg" due-to="Andrew Berman">Fixed bug in ContainerFeedbackMessageFilter that threw NPE if there is a session feedback message</action>
 	  <action type="fix" dev="Igor Vaynberg" issue="1509831" due-to="tdrencak">Fixed bug in pallette where ids were not generated properly if an index based choice renderer was used</action>
 	  <action type="fix" dev="Igor Vaynberg" issue="1507518">Fixed Form and TodoList examples to work in explorer</action>
