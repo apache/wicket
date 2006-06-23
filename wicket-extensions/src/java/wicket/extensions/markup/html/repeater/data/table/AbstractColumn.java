@@ -28,7 +28,7 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public abstract class AbstractColumn implements IColumn
+public abstract class AbstractColumn<T> implements IColumn<T>
 {
 	private IModel displayModel;
 	private String sortProperty;
@@ -39,7 +39,7 @@ public abstract class AbstractColumn implements IColumn
 	 * @param sortProperty
 	 *            sort property this column represents
 	 */
-	public AbstractColumn(IModel displayModel, String sortProperty)
+	public AbstractColumn(IModel<String> displayModel, String sortProperty)
 	{
 		this.displayModel = displayModel;
 		this.sortProperty = sortProperty;
@@ -49,7 +49,7 @@ public abstract class AbstractColumn implements IColumn
 	 * @param displayModel
 	 *            model used to generate header text
 	 */
-	public AbstractColumn(IModel displayModel)
+	public AbstractColumn(IModel<String> displayModel)
 	{
 		this(displayModel, null);
 	}
@@ -57,7 +57,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @return returns display model to be used for the header component
 	 */
-	public IModel getDisplayModel()
+	public IModel<String> getDisplayModel()
 	{
 		return displayModel;
 	}
@@ -81,7 +81,7 @@ public abstract class AbstractColumn implements IColumn
 	/**
 	 * @see wicket.extensions.markup.html.repeater.data.table.IColumn#getHeader(MarkupContainer, java.lang.String)
 	 */
-	public Component getHeader(MarkupContainer parent, String componentId)
+	public Component<String> getHeader(MarkupContainer parent, String componentId)
 	{
 		return new Label(parent, componentId, getDisplayModel());
 	}

@@ -44,7 +44,7 @@ import wicket.model.PropertyModel;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class PropertyColumn extends AbstractColumn
+public class PropertyColumn<T> extends AbstractColumn<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -60,7 +60,7 @@ public class PropertyColumn extends AbstractColumn
 	 * @param propertyExpression
 	 *            wicket property expression used by PropertyModel
 	 */
-	public PropertyColumn(IModel displayModel, String sortProperty, String propertyExpression)
+	public PropertyColumn(IModel<String> displayModel, String sortProperty, String propertyExpression)
 	{
 		super(displayModel, sortProperty);
 		this.propertyExpression = propertyExpression;
@@ -75,7 +75,7 @@ public class PropertyColumn extends AbstractColumn
 	 *            wicket property expression
 	 * @see PropertyModel
 	 */
-	public PropertyColumn(IModel displayModel, String propertyExpressions)
+	public PropertyColumn(IModel<String> displayModel, String propertyExpressions)
 	{
 		super(displayModel, null);
 		this.propertyExpression = propertyExpressions;
@@ -87,7 +87,7 @@ public class PropertyColumn extends AbstractColumn
 	 * 
 	 * @see ICellPopulator#populateItem(Item, String, IModel)
 	 */
-	public void populateItem(Item item, String componentId, IModel model)
+	public void populateItem(Item item, String componentId, IModel<T> model)
 	{
 		new Label(item, componentId, createLabelModel(model));
 	}
