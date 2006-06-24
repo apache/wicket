@@ -20,6 +20,9 @@ package wicket;
 
 import wicket.markup.html.WebPage;
 
+/**
+ * 
+ */
 public class MockPageWithOneComponent extends WebPage
 {
 	private static final long serialVersionUID = 1L;

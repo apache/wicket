@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
-import wicket.EmptyPage;
 import wicket.MockPageWithOneComponent;
 import wicket.model.Model;
 import wicket.protocol.http.MockWebApplication;
