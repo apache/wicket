@@ -67,11 +67,13 @@ public class HeadersToolbar extends AbstractToolbar
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected Iterator getItemModels()
 			{
 				return new ArrayIteratorAdapter(table.getColumns())
 				{
 
+					@Override
 					protected IModel model(Object object)
 					{
 						return new Model((IColumn)object);
@@ -80,6 +82,7 @@ public class HeadersToolbar extends AbstractToolbar
 				};
 			}
 
+			@Override
 			protected void populateItem(Item item)
 			{
 				item.setRenderBodyOnly(true);

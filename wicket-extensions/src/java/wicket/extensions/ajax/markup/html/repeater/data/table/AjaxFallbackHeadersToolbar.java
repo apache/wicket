@@ -50,6 +50,7 @@ public class AjaxFallbackHeadersToolbar extends HeadersToolbar
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onAjaxClick(AjaxRequestTarget target)
 			{
 				target.addComponent(getTable());

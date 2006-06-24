@@ -110,11 +110,13 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onSortChanged()
 			{
 				AjaxFallbackOrderByBorder.this.onSortChanged();
 			}
 
+			@Override
 			protected void onAjaxClick(AjaxRequestTarget target)
 			{
 				AjaxFallbackOrderByBorder.this.onAjaxClick(target);

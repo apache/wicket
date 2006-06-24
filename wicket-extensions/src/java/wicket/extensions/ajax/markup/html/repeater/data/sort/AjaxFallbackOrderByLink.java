@@ -91,12 +91,14 @@ public abstract class AjaxFallbackOrderByLink extends OrderByLink
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			protected void onEvent(AjaxRequestTarget target)
 			{
 				onClick();
 				onAjaxClick(target);
 			}
 
+			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
 				return new CancelEventIfNoAjaxDecorator(decorator);
