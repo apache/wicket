@@ -77,7 +77,7 @@ public class AuthorizationTest extends TestCase
 	public void testCreateAllowedComponent() throws Exception
 	{
 		new WicketTester();
-		new WebComponent(new EmptyPage(), "test");
+		new WebComponent(new MockPageWithOneComponent(), "component");
 	}
 
 	/**

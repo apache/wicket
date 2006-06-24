@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 import wicket.Component;
+import wicket.MockPageWithOneComponent;
 import wicket.markup.html.panel.Panel;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
@@ -61,8 +62,8 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	@Override
 	public void testLoaderUnknownResources()
 	{
-		DummyPage page = new DummyPage();
-		Component c = new DummyComponent(page, "hello", application)
+		MockPageWithOneComponent page = new MockPageWithOneComponent();
+		Component c = new DummyComponent(page, "component", application)
 		{
 			private static final long serialVersionUID = 1L;
 		};
@@ -121,8 +122,8 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	 */
 	public void testMultiLevelEmbeddedComponentLoadFromComponent()
 	{
-		DummyPage p = new DummyPage();
-		Panel panel = new Panel(p, "panel");
+		MockPageWithOneComponent p = new MockPageWithOneComponent();
+		Panel panel = new Panel(p, "component");
 		DummyComponent c = new DummyComponent(panel, "hello", application);
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
 		Assert.assertEquals("Valid resourse string should be found", "Component string", loader

@@ -22,6 +22,7 @@ import wicket.markup.html.WebPage;
 
 /**
  * 
+ * @author Frank Bille
  */
 public class MockPageWithOneComponent extends WebPage
 {

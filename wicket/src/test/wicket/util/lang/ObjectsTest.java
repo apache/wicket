@@ -2,7 +2,7 @@ package wicket.util.lang;
 
 import java.io.Serializable;
 
-import wicket.EmptyPage;
+import wicket.MockPageWithOneComponent;
 import wicket.WicketTestCase;
 import wicket.markup.html.form.TextField;
 import wicket.model.Model;
@@ -90,7 +90,7 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testComponentClone()
 	{
-		PropertyModel pm = new PropertyModel(new TextField<String>(new EmptyPage(), "test",
+		PropertyModel pm = new PropertyModel(new TextField<String>(new MockPageWithOneComponent(), "component",
 				new Model<String>("test")), "modelObject");
 		PropertyModel pm2 = (PropertyModel)Objects.cloneModel(pm);
 		assertTrue(pm.getObject() == pm2.getObject());

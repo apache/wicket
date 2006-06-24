@@ -19,8 +19,8 @@
 package wicket.markup.html.border;
 
 import wicket.Page;
+import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
-import wicket.markup.MarkupException;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.protocol.http.MockHttpServletRequest;
@@ -93,12 +93,10 @@ public class BoxBorderTest extends WicketTestCase
 	}
 
 	/**
-	 * Test to ensure MarkupException is thrown when Markup and Object hierarchy
+	 * Test to ensure WicketRuntimeException is thrown when Markup and Object hierarchy
 	 * does not match with a Border involved.
-	 * 
-	 * @throws Exception
 	 */
-	public void test4() throws Exception
+	public void test4()
 	{
 		Class<? extends Page> pageClass = BorderTestHierarchyPage_4.class;
 
@@ -106,18 +104,18 @@ public class BoxBorderTest extends WicketTestCase
 		application.setHomePage(pageClass);
 		application.setupRequestAndResponse();
 
-		MarkupException markupException = null;
+		WicketRuntimeException wicketRuntimeException = null;
 		try
 		{
 			application.processRequestCycle();
 		}
-		catch (MarkupException e)
+		catch (WicketRuntimeException e)
 		{
-			markupException = e;
+			wicketRuntimeException = e;
 		}
 
 		assertNotNull("Markup does not match component hierarchy, but exception not thrown.",
-				markupException);
+				wicketRuntimeException);
 	}
 
 	/**

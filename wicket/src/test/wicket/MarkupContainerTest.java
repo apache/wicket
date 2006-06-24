@@ -45,7 +45,7 @@ public class MarkupContainerTest extends WicketTestCase
 	 */
 	public void testIteratorOrder()
 	{
-		MarkupContainer container = new WebMarkupContainer(new EmptyPage(), "test");
+		MarkupContainer container = new WebMarkupContainer(new MockPageWithOneComponent(), "component");
 		for (int i = 0; i < 10; i++)
 		{
 			new WebComponent(container, Integer.toString(i));

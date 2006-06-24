@@ -37,6 +37,7 @@ import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.ResourceReference;
 import wicket.Response;
+import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -273,6 +274,12 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 					}
 				}
 			}
+		}
+		else
+		{
+			throw new WicketRuntimeException(
+					"Each Page must have associated markup. Unable to find the markup file for Page: " 
+					+ this.toString());
 		}
 
 		// if automatic multi window support is on, add a page checker instance
