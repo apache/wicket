@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.form;
 
-import wicket.EmptyPage;
 import wicket.MockPageWithOneComponent;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
