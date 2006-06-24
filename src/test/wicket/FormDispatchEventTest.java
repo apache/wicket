@@ -22,7 +22,6 @@ import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.model.Model;
-import wicket.protocol.http.MockPage;
 
 /**
  * @author jcompagner
@@ -72,7 +71,7 @@ public class FormDispatchEventTest extends WicketTestCase
 	 */
 	public void testDropDownEvent() throws Exception
 	{
-		MockPage page = new MockPage();
+		MockPageWithFormAndDropdown page = new MockPageWithFormAndDropdown();
 		MyForm form = new MyForm(page, "form");
 
 		DropDownChoice<String> dropDown = new DropDownChoice<String>(form, "dropdown", new Model<String>(), new ArrayList<String>())
