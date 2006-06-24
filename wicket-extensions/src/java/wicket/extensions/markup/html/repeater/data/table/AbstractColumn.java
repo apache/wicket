@@ -83,7 +83,7 @@ public abstract class AbstractColumn<T> implements IColumn<T>
 	 */
 	public Component<String> getHeader(MarkupContainer parent, String componentId)
 	{
-		return new Label(parent, componentId, getDisplayModel());
+		return (Component) new Label(parent, componentId, getDisplayModel());
 	}
 
 
