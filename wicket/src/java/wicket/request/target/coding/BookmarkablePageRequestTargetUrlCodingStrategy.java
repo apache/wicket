@@ -23,6 +23,7 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.RequestParameters;
+import wicket.request.target.component.BookmarkableFormPageRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
@@ -105,9 +106,24 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 				requestParameters.getParameters()));
 		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);
-
-		final BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
-				bookmarkablePageClass, parameters);
+		
+		final String bookmarkableFormName = (String)parameters.remove(
+				WebRequestCodingStrategy.BOOKMARKABLE_FORM_PARAMETER_NAME);
+		
+		final BookmarkablePageRequestTarget target;
+		
+		if (bookmarkableFormName != null) 
+		{		
+			requestParameters.setBookmarkableFormName(bookmarkableFormName);
+			target = new BookmarkableFormPageRequestTarget(pageMapName, 
+					bookmarkablePageClass, parameters, bookmarkableFormName);
+		} 
+		else 
+		{
+			target = new BookmarkablePageRequestTarget(pageMapName,
+					bookmarkablePageClass, parameters);	
+		}
+		 
 		return target;
 	}
 
