@@ -16,7 +16,6 @@
 	<classpathentry kind="var" path="M2_REPO/jwebunit/jwebunit/1.2/jwebunit-1.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar"/>
 	<classpathentry sourcepath="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2-sources.jar" kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar"/>
-	<classpathentry sourcepath="M2_REPO/wicket/wicket-extensions/2.0-SNAPSHOT/wicket-extensions-2.0-SNAPSHOT-sources.jar" kind="var" path="M2_REPO/wicket/wicket-extensions/2.0-SNAPSHOT/wicket-extensions-2.0-SNAPSHOT.jar"/>
 	<classpathentry kind="var" path="M2_REPO/tomcat/jasper-runtime/4.1.30/jasper-runtime-4.1.30.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/ccil/cowan/tagsoup/tagsoup/0.9.7/tagsoup-0.9.7.jar"/>
 	<classpathentry kind="var" path="M2_REPO/rhino/js/1.6R1/js-1.6R1.jar"/>
@@ -33,6 +32,5 @@
 	<classpathentry kind="var" path="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6.jar"/>
 	<classpathentry sourcepath="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar" kind="var" path="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/octo/captcha/jcaptcha-all/1.0-RC-2.0.1/jcaptcha-all-1.0-RC-2.0.1.jar"/>
-	<classpathentry sourcepath="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT-sources.jar" kind="var" path="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
