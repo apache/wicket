@@ -50,6 +50,7 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
 import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
 
 /**
  * A helper to ease unit testing of Wicket applications without the need for a
@@ -568,6 +569,7 @@ public class WicketTester extends MockWebApplication
 		{
 			AjaxLink link = (AjaxLink)linkComponent;
 
+			setupRequestAndResponse();
 			RequestCycle requestCycle = createRequestCycle();
 			AjaxRequestTarget target = new AjaxRequestTarget();
 			requestCycle.setRequestTarget(target);
@@ -762,5 +764,46 @@ public class WicketTester extends MockWebApplication
 			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)element;
 			log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
 		}
+	}
+	
+	/**
+	 * Test that a component has been added to a AjaxRequestTarget, using
+	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually
+	 * tests that a component is on the AJAX response sent back to the client.
+	 * <p>
+	 * PLEASE NOTE! This method doesn't actually insert the component in the
+	 * client DOM tree, using javascript. But it shouldn't be needed because you
+	 * have to trust that the Wicket Ajax Javascript just works.
+	 * 
+	 * @param component
+	 *            The component to test whether it's on the response.
+	 */
+	public void assertComponentOnAjaxResponse(Component component)
+	{
+		String failMessage = "A component which is null could not have been added to the AJAX response";
+		Assert.assertNotNull(failMessage, component);
+
+		// Get the AJAX response
+		String ajaxResponse = getServletResponse().getDocument();
+
+		// Test that the previous response was actually a AJAX response
+		failMessage = "The Previous response was not an AJAX response. "
+				+ "You need to execute an AJAX event, using clickLink, before using this assert";
+		boolean isAjaxResponse = ajaxResponse
+				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
+		Assert.assertTrue(failMessage, isAjaxResponse);
+
+		// See if the component has a markup id
+		String markupId = component.getMarkupId();
+
+		failMessage = "The component doesn't have a markup id, "
+				+ "which means that it can't have been added to the AJAX response";
+		Assert.assertFalse(failMessage, Strings.isEmpty(markupId));
+
+		// Look for that the component is on the response, using the markup id
+		boolean isComponentInAjaxResponse = ajaxResponse.matches(".*<component id=\"" + markupId
+				+ "\" ?>.*");
+		failMessage = "Component wasn't found in the AJAX response";
+		Assert.assertTrue(failMessage, isComponentInAjaxResponse);
 	}
 }
