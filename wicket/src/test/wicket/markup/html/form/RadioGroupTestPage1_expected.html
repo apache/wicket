@@ -1,13 +1,13 @@
 <html>
 <head><title>RadioGroupTestPage1</title></head>
 <body>
-	<form action="/WicketTester/WicketTester?wicket:interface=:0:form::IFormSubmitListener" wicket:id="form" method="post" id="form">
+	<form action="/WicketTester/WicketTester?wicket:interface=:0:form::IFormSubmitListener" id="form" method="post" wicket:id="form">
 <div style="display:none"><input type="hidden" name="form:hf:fs" id="form:hf:fs"/>
 <input type="hidden" name="wicketState" id="form:hf:ws"/></div>
 		
-			<input value="0:form:group:radio1" type="radio" wicket:id="radio1" name="group">radio1</input>
+			<input value="0:form:group:radio1" type="radio" name="group" wicket:id="radio1">radio1</input>
 			<span wicket:id="container">
-				<input value="0:form:group:container:radio2" type="radio" wicket:id="radio2" checked="checked" name="group">radio2</input>
+				<input checked="checked" value="0:form:group:container:radio2" type="radio" name="group" wicket:id="radio2">radio2</input>
 			</span>
 		
 	</form>
