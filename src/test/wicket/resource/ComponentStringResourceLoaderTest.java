@@ -137,10 +137,9 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	{
 		DummyPage p = new DummyPage();
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());
-		Assert
-				.assertEquals("Valid resourse string should be found", "Another string", loader
-						.loadStringResource(p.getClass(), "another.test.string", Locale
-								.getDefault(), null));
+		Assert.assertEquals("Valid resourse string should be found", "Another string", 
+				loader.loadStringResource(p.getClass(), "another.test.string", 
+						Locale.getDefault(), null));
 	}
 
 	/**
