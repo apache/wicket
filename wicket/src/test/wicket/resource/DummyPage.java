@@ -28,7 +28,6 @@ public class DummyPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-
 	/**
 	 * Construct.
 	 */
@@ -36,5 +35,4 @@ public class DummyPage extends WebPage
 	{
 		super();
 	}
-
 }
