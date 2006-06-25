@@ -37,11 +37,9 @@ import wicket.protocol.http.MockPage;
  * Test for RadioGroup and Radio components
  * 
  * @author igor
- * 
  */
 public class CheckGroupTest extends WicketTestCase
 {
-
 	/**
 	 * @param name
 	 */
@@ -53,8 +51,6 @@ public class CheckGroupTest extends WicketTestCase
 	/**
 	 * mock model object with an embedded property used to test compound
 	 * property model
-	 * 
-	 * @author igor
 	 * 
 	 */
 	public static class MockModelObject implements Serializable
@@ -95,8 +91,6 @@ public class CheckGroupTest extends WicketTestCase
 		{
 			this.prop2 = prop2;
 		}
-
-
 	}
 
 	/**
@@ -104,7 +98,6 @@ public class CheckGroupTest extends WicketTestCase
 	 */
 	public void testFormProcessing()
 	{
-		
 		// THIS NEEDS TO BE REWRITTEN BASED ON 1_2 VERSION
 		
 		MockModelObject modelObject = new MockModelObject();
@@ -112,17 +105,14 @@ public class CheckGroupTest extends WicketTestCase
 
 		// create component hierarchy
 
-		final Form form = new Form(page, "form", new CompoundPropertyModel(modelObject));
+		final Form<MockModelObject> form = new Form<MockModelObject>(page, "form", new CompoundPropertyModel<MockModelObject>(modelObject));
 
 		final CheckGroup group = new CheckGroup(form, "prop1");
-
 		final WebMarkupContainer container = new WebMarkupContainer(group, "container");
-
 
 		// setup some values we will use for testing as well as a test model
 		final String check1 = "check1-selection";
 		final String check2 = "check2-selection";
-
 
 		// test model constructors
 		List list = new ArrayList();
@@ -134,11 +124,8 @@ public class CheckGroupTest extends WicketTestCase
 		final CheckGroup group3 = new CheckGroup(form, "group3", list);
 		assertTrue(group3.getModelObject() == list);
 
-
 		// set up necessary objects to emulate a form submission
-
 		RequestCycle cycle = application.createRequestCycle();
-
 
 		final Check choice1 = new Check(container, "check1", new Model(check1));
 		final Check choice2 = new Check(group, "prop2");
@@ -182,10 +169,8 @@ public class CheckGroupTest extends WicketTestCase
 		}
 		catch (WicketRuntimeException e)
 		{
-
+			;
 		}
-
-
 	}
 
 	/**
@@ -211,9 +196,6 @@ public class CheckGroupTest extends WicketTestCase
 			{
 				fail("failed with wrong exception");
 			}
-
 		}
 	}
-
-
 }
