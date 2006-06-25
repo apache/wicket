@@ -12,6 +12,7 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+      <action type="add" dev="Janne Hietamäki" issue="1511607" due-to="Frank Bille Jensen">WicketTester: assert that a component has been added to AjaxRequestTarget</action>
 	  <action type="fix" dev="Igor Vaynberg" issue="1511595" due-to="Joseph Toth">Fixed ResourceLink.onClick is not being called</action>
 	  <action type="add" dev="Janne Hietamäki">Portlet (JSR-168) support</action>
       <action type="fix" dev="Igor Vaynberg" due-to="Andrew Berman">Fixed bug in ContainerFeedbackMessageFilter that threw NPE if there is a session feedback message</action>

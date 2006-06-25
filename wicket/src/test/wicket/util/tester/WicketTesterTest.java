@@ -20,8 +20,13 @@ package wicket.util.tester;
 import java.util.Locale;
 
 import junit.framework.TestCase;
+import wicket.Component;
+import wicket.MockPageWithLink;
 import wicket.Page;
 import wicket.Session;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxLink;
+import wicket.markup.html.link.Link;
 import wicket.util.tester.apps_1.Book;
 import wicket.util.tester.apps_1.CreateBook;
 import wicket.util.tester.apps_1.MyMockApplication;
@@ -150,5 +155,63 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
+	}
+	
+	/**
+	 * 
+	 */
+	public void testAssertComponentOnAjaxResponse()
+	{
+		// Start the tester
+		WicketTester tester = new WicketTester();
+		
+		final Page page = new MockPageWithLink();
+		AjaxLink ajaxLink = new AjaxLink(MockPageWithLink.LINK_ID)
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void onClick(AjaxRequestTarget target)
+			{
+				// Replace the link with a normal Link
+				Link link = new Link(MockPageWithLink.LINK_ID) {
+					private static final long serialVersionUID = 1L;
+
+					public void onClick()
+					{
+						// Do nothing
+					}
+				};
+				link.setOutputMarkupId(true);
+				
+				page.replace(link);
+				
+				target.addComponent(link);
+			}
+		};
+		ajaxLink.setOutputMarkupId(true);
+		
+		page.add(ajaxLink);
+		
+		tester.startPage(new ITestPageSource() {
+			private static final long serialVersionUID = 1L;
+
+			public Page getTestPage()
+			{
+				return page;
+			}
+		});
+		
+		
+		// Click the link
+		tester.clickLink(MockPageWithLink.LINK_ID);
+
+		// The link must be a Link :)
+		tester.assertComponent(MockPageWithLink.LINK_ID, Link.class);
+		
+		// Get the new link component
+		Component component = tester.getComponentFromLastRenderedPage(MockPageWithLink.LINK_ID);
+		
+		// This must not fail
+		tester.assertComponentOnAjaxResponse(component);
 	}
 }
