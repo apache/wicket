@@ -39,6 +39,8 @@ import wicket.model.PropertyModel;
  * The above will attach a label to the cell with a property model for the
  * expression &quot;name.first&quot;
  * 
+ * @param <T>
+ *            The type
  * @see PropertyModel
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -60,7 +62,8 @@ public class PropertyColumn<T> extends AbstractColumn<T>
 	 * @param propertyExpression
 	 *            wicket property expression used by PropertyModel
 	 */
-	public PropertyColumn(IModel<String> displayModel, String sortProperty, String propertyExpression)
+	public PropertyColumn(IModel<String> displayModel, String sortProperty,
+			String propertyExpression)
 	{
 		super(displayModel, sortProperty);
 		this.propertyExpression = propertyExpression;

@@ -18,15 +18,12 @@
  */
 package wicket.extensions.markup.html.form.select;
 
-import java.util.Collection;
-
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
-import wicket.util.lang.Objects;
 
 /**
  * Component representing a single <code>&lt;option&gt;</code> html element
@@ -37,7 +34,7 @@ import wicket.util.lang.Objects;
  * 
  * @param <T>
  *            Type of model object this component holds
- *            
+ * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  */
 public class SelectOption<T> extends WebMarkupContainer<T>

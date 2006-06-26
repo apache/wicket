@@ -30,6 +30,8 @@ import wicket.version.undo.Change;
  * Item instead of the view, this is accomplished by implementing
  * refreshingView.populateItem(Item item).
  * 
+ * @param <T>
+ *            The type
  * @see RefreshingView
  * 
  * @author Igor Vaynberg (ivaynberg)

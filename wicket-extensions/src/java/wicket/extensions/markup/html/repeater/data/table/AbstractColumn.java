@@ -26,6 +26,9 @@ import wicket.model.IModel;
 /**
  * A helper implementation for the IColumn interface
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Igor Vaynberg ( ivaynberg )
  */
 public abstract class AbstractColumn<T> implements IColumn<T>
