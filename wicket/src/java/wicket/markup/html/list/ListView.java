@@ -65,7 +65,7 @@ import wicket.version.undo.Change;
  * <p>
  * WARNING: though you can nest ListViews within Forms, you HAVE to set the
  * setReuseItems property to true in order to have validation work
- * properly. By default, optimizeItemRemoval is false, which has the effect that
+ * properly. By default, reuseItems is false, which has the effect that
  * ListView replaces all child components by new instances. The idea behind this
  * is that you always render the fresh data, and as people usually use ListViews
  * for displaying read-only lists (at least, that's what we think), this is good
@@ -74,7 +74,7 @@ import wicket.version.undo.Change;
  * search for specific messages for these components fails as they are replaced
  * with other instances. Another problem is that 'wrong' user input is kept as
  * (temporary) instance data of the components. As these components are replaced
- * by new ones, your user will never see the wrong data when optimizeItemRemoval
+ * by new ones, your user will never see the wrong data when reuseItems
  * is false.
  * </p>
  * 
