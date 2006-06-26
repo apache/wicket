@@ -37,15 +37,6 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>pluto-container</groupId>
-			<artifactId>pluto</artifactId>
-			<version>0.46</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
--->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
