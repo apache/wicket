@@ -14,8 +14,6 @@
  */
 package wicket.protocol.http.portlet;
 
-import javax.portlet.PortletPreferences;
-
 import wicket.WicketRuntimeException;
 
 /**
@@ -34,11 +32,9 @@ public class PortletPreferencesPortletApplicationFactory implements IPortletAppl
 	public final String APP_CLASS_PARAM = "applicationClassName";
 
 	/** @see IPortletApplicationFactory#createApplication(WicketPortlet) */
-	public PortletApplication createApplication(PortletPreferences preferences)
-	{        
-		
-		
-		final String applicationClassName=preferences.getValue(APP_CLASS_PARAM,null);
+	public PortletApplication createApplication(WicketPortlet portlet)
+	{        	
+		final String applicationClassName=portlet.getInitParameter(APP_CLASS_PARAM);
 		if (applicationClassName == null)
 		{
 			throw new WicketRuntimeException(
@@ -46,7 +42,6 @@ public class PortletPreferencesPortletApplicationFactory implements IPortletAppl
 					+ APP_CLASS_PARAM
 					+ "] is missing. If you are trying to use your own implementation of IPortletApplicationFactory and get this message then the portlet init param ["
 					+ WicketPortlet.APP_FACT_PARAM + "] is missing");
-
 		}
 
 		try
