@@ -22,10 +22,13 @@ import java.util.Locale;
 import junit.framework.TestCase;
 import wicket.Component;
 import wicket.MockPageWithLink;
+import wicket.MockPageWithOneComponent;
 import wicket.Page;
 import wicket.Session;
+import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
+import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.util.tester.apps_1.Book;
 import wicket.util.tester.apps_1.CreateBook;
@@ -39,6 +42,13 @@ import wicket.util.tester.apps_1.ViewBook;
  */
 public class WicketTesterTest extends TestCase
 {
+	private boolean eventExecuted;
+	
+	protected void setUp() throws Exception
+	{
+		eventExecuted = false;
+	}
+	
 	/**
 	 * 
 	 * @throws Exception
@@ -213,5 +223,45 @@ public class WicketTesterTest extends TestCase
 		
 		// This must not fail
 		tester.assertComponentOnAjaxResponse(component);
+	}
+	
+	/**
+	 * Test that the executeAjaxEvent on the WicketTester works.
+	 */
+	public void testExecuteAjaxEvent()
+	{
+		// Start the tester
+		WicketTester tester = new WicketTester();
+
+		// Setup mocks
+		final MockPageWithOneComponent page = new MockPageWithOneComponent();
+
+		Label label = new Label("component", "Dblclick This To See Magick");
+		label.add(new AjaxEventBehavior("ondblclick")
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				eventExecuted = true;
+			}
+		});
+		page.add(label);
+
+		// Start the page
+		tester.startPage(new ITestPageSource()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Page getTestPage()
+			{
+				return page;
+			}
+		});
+
+		// Execute the event
+		tester.executeAjaxEvent(label, "ondblclick");
+
+		assertTrue(eventExecuted);
 	}
 }
