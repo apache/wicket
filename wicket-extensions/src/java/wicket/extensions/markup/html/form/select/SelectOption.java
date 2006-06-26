@@ -72,7 +72,7 @@ public class SelectOption<T> extends WebMarkupContainer<T>
 		// must be attached to <option .../> tag
 		checkComponentTag(tag, "option");
 
-		AbstractSelect select = (AbstractSelect)findParent(AbstractSelect.class);
+		Select select = (Select)findParent(Select.class);
 		if (select == null)
 		{
 			throw new WicketRuntimeException(
@@ -84,31 +84,8 @@ public class SelectOption<T> extends WebMarkupContainer<T>
 		// assign name and value
 		tag.put("value", getPath());
 
-		// check if the model collection of the select contains the model
-		// object.
-		// if it does mark the option as selected
-		Object selected = select.getModelObject();
 
-		boolean isSelected = false;
-
-		T value = getModelObject();
-		if ((selected != null) && (selected instanceof Collection))
-		{
-			if (value instanceof Collection)
-			{
-				isSelected = selected.equals(value);
-			}
-			else
-			{
-				isSelected = ((Collection)selected).contains(value);
-			}
-		}
-		else
-		{
-			isSelected = Objects.equal(selected, value);
-		}
-
-		if (isSelected)
+		if (select.isSelected(this))
 		{
 			tag.put("selected", "true");
 		}

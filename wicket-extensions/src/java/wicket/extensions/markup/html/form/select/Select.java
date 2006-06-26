@@ -1,8 +1,11 @@
 package wicket.extensions.markup.html.form.select;
 
+import java.util.Collection;
+
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.model.IModel;
+import wicket.util.lang.Objects;
 
 /**
  * Component that represents a single selection <code>&lt;select&gt;</code> box. Elements are
@@ -86,4 +89,51 @@ public class Select<T> extends AbstractSelect<T>
 	{
 	}
 
+	/**
+	 * Checks if the specified option is selected
+	 * 
+	 * @param option
+	 * @return true if the option is selected, false otherwise
+	 */
+	boolean isSelected(SelectOption option)
+	{
+		// if the raw input is specified use that, otherwise use model
+		if (hasRawInput()) {
+			String[] paths = getInputAsArray();
+			if (paths != null && paths.length > 0)
+			{
+				for (int i = 0; i < paths.length; i++)
+				{
+					String path = paths[i];
+					if (path.equals(option.getPath())) {
+						return true;
+					}
+				}
+			}
+		} else {
+			Object selected = getModelObject();
+			Object value = option.getModelObject();
+
+			if (selected != null && selected instanceof Collection)
+			{
+				if (value instanceof Collection)
+				{
+					return ((Collection)selected).containsAll((Collection)value);
+				}
+				else
+				{
+					return ((Collection)selected).contains(value);
+				}
+			}
+			else
+			{
+				return Objects.equal(selected, value);
+			}
+		}
+		
+		return false;
+		
+	}
+
+	
 }
