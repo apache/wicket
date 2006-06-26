@@ -148,7 +148,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @return event
 	 */
-	protected final ClientEvent getEvent()
+	public final ClientEvent getEvent()
 	{
 		return event;
 	}
