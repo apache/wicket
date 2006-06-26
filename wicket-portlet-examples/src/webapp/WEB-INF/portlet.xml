@@ -13,12 +13,10 @@
 		<expiration-cache>0</expiration-cache>
 		<resource-bundle>WicketPortlet</resource-bundle>
 
-		<portlet-preferences>
-			<preference>
-				<name>applicationClassName</name>
-				<value>wicket.examples.portlet.ExamplePortletApplication</value>
-			</preference>		
-		</portlet-preferences>
+		<init-param>
+			<name>applicationClassName</name>
+			<value>wicket.examples.portlet.ExamplePortletApplication</value>
+		</init-param>
 
 		<supports>
 			<mime-type>text/html</mime-type>
