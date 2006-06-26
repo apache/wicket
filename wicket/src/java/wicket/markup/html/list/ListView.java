@@ -64,7 +64,7 @@ import wicket.version.undo.Change;
  * 
  * <p>
  * WARNING: though you can nest ListViews within Forms, you HAVE to set the
- * optimizeItemRemoval property to true in order to have validation work
+ * setReuseItems property to true in order to have validation work
  * properly. By default, optimizeItemRemoval is false, which has the effect that
  * ListView replaces all child components by new instances. The idea behind this
  * is that you always render the fresh data, and as people usually use ListViews
