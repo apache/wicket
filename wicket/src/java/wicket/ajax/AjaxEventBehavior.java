@@ -153,7 +153,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @return event
 	 */
-	protected final String getEvent()
+	public final String getEvent()
 	{
 		return event;
 	}

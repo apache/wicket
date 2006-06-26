@@ -34,8 +34,10 @@ import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
+import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
@@ -804,5 +806,84 @@ public class WicketTester extends MockWebApplication
 				+ "\" ?>.*");
 		failMessage = "Component wasn't found in the AJAX response";
 		Assert.assertTrue(failMessage, isComponentInAjaxResponse);
+	}
+	
+	/**
+	 * Simulate that an AJAX event has been fired. You add an AJAX event to a
+	 * component by using:
+	 * 
+	 * <pre>
+	 *  ...
+	 *  component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *      public void onEvent(AjaxRequestTarget) {
+	 *          // Do something.
+	 *      }
+	 *  });
+	 *  ...
+	 * </pre>
+	 * 
+	 * You can then test that the code inside onEvent actually does what it's
+	 * supposed to, using the WicketTester:
+	 * 
+	 * <pre>
+	 *  ...
+	 *  tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *            
+	 *  // Test that the code inside onEvent is correct.
+	 *  ...
+	 * </pre>
+	 * 
+	 * PLEASE NOTE! This method doesn't actually insert the component in the
+	 * client DOM tree, using javascript.
+	 * 
+	 * 
+	 * @param component
+	 *            The component which has the AjaxEventBehavior we wan't to
+	 *            test. If the component is null, the test will fail.
+	 * @param event
+	 *            The event which we simulate is fired. If the event is null,
+	 *            the test will fail.
+	 */
+	public void executeAjaxEvent(Component component, String event)
+	{
+		String failMessage = "Can't execute event on a component which is null.";
+		Assert.assertNotNull(failMessage, component);
+
+		failMessage = "event must not be null";
+		Assert.assertNotNull(failMessage, event);
+
+		// Run through all the behavior and select the LAST ADDED behavior which
+		// matches the event parameter.
+		AjaxEventBehavior ajaxEventBehavior = null;
+		List behaviors = component.getBehaviors();
+		for (Iterator iter = behaviors.iterator(); iter.hasNext();)
+		{
+			IBehavior behavior = (IBehavior)iter.next();
+
+			// AjaxEventBehavior is the one to look for
+			if (behavior instanceof AjaxEventBehavior)
+			{
+				AjaxEventBehavior tmp = (AjaxEventBehavior)behavior;
+
+				if (event.equals(tmp.getEvent()))
+				{
+					ajaxEventBehavior = tmp;
+				}
+			}
+		}
+
+		// If there haven't been found any event behaviors on the component
+		// which maches the parameters we fail.
+		failMessage = "No AjaxEventBehavior found on component: " + component.getId()
+				+ " which matches the event: " + event.toString();
+		Assert.assertNotNull(failMessage, ajaxEventBehavior);
+
+		setupRequestAndResponse();
+		RequestCycle requestCycle = createRequestCycle();
+
+		ajaxEventBehavior.onRequest();
+
+		// process the request target
+		requestCycle.getRequestTarget().respond(requestCycle);
 	}
 }
