@@ -348,7 +348,7 @@
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -365,11 +365,19 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+			<version>1.0</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.13</version>
 			<type>jar</type>
-			<scope>compile</scope>
+			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
