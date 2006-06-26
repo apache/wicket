@@ -19,8 +19,8 @@ import java.io.IOException;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -120,56 +120,50 @@ public class WicketPortlet extends GenericPortlet
 			this.portletApplication = null;	
 		}
 	} 
-	
-	protected final PortletApplication getApplication(PortletRequest req){
-		if(portletApplication==null){
-			synchronized(this){
-				if(portletApplication==null){
-					final IPortletApplicationFactory factory = getApplicationFactory();
 
-					// Construct PortletApplication subclass
-					this.portletApplication = factory.createApplication(req.getPreferences());
+	public void init(PortletConfig cfg) throws PortletException
+	{
+		super.init(cfg);
+		final IPortletApplicationFactory factory = getApplicationFactory();
 
-					// Set this WicketPortlet as the portlet for the portlet application
-					this.portletApplication.setWicketPortlet(this);
+		// Construct PortletApplication subclass
+		this.portletApplication = factory.createApplication(this);
 
-					// Store instance of this application object in portlet context to make
-					// integration with outside world easier
-					final String contextKey = "wicket:" + getPortletConfig().getPortletName();
-					getPortletContext().setAttribute(contextKey, this.portletApplication);
+		// Set this WicketPortlet as the portlet for the portlet application
+		this.portletApplication.setWicketPortlet(this);
 
-					// Finished
-					log.info("WicketPortlet loaded application " + this.portletApplication.getName() + " via "
-							+ factory.getClass().getName() + " factory");
+		// Store instance of this application object in portlet context to make
+		// integration with outside world easier
+		final String contextKey = "wicket:" + getPortletConfig().getPortletName();
+		getPortletContext().setAttribute(contextKey, this.portletApplication);
 
-					try
-					{
-						Application.set(portletApplication);
-						this.portletApplication.initPortlet();
+		// Finished
+		log.info("WicketPortlet loaded application " + this.portletApplication.getName() + " via "
+				+ factory.getClass().getName() + " factory");
 
-						// We initialize components here rather than in the constructor or
-						// in the internal init, because in the init method class aliases
-						// can be added, that would be used in installing resources in the
-						// component.
-						this.portletApplication.initializeComponents();
-					}
-					finally
-					{
-						Application.unset();
-					}
-				}			
-			}
+		try
+		{
+			Application.set(portletApplication);
+			this.portletApplication.initPortlet();
+
+			// We initialize components here rather than in the constructor or
+			// in the internal init, because in the init method class aliases
+			// can be added, that would be used in installing resources in the
+			// component.
+			this.portletApplication.initializeComponents();
 		}
-		return this.portletApplication;
+		finally
+		{
+			Application.unset();
+		}
 	}
-	
 
 	/* (non-Javadoc)
 	 * @see javax.portlet.GenericPortlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)
 	 */
 	public void processAction(ActionRequest req, ActionResponse res){
 		// First, set the webapplication for this thread
-		Application.set(getApplication(req));
+		Application.set(portletApplication);
 
 		// Create a response object and set the output encoding according to
 		// wicket's application setttings.
@@ -213,9 +207,9 @@ public class WicketPortlet extends GenericPortlet
 	 */
 	public void render(RenderRequest req, RenderResponse res) throws PortletException, IOException
 	{
-		
+
 		// First, set the webapplication for this thread
-		Application.set(getApplication(req));
+		Application.set(portletApplication);
 
 		// Create a response object and set the output encoding according to
 		// wicket's application setttings.

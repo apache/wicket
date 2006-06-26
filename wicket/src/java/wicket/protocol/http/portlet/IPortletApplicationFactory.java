@@ -14,8 +14,6 @@
  */
 package wicket.protocol.http.portlet;
 
-import javax.portlet.PortletPreferences;
-
 /**
  * A factory interface used by wicket portlet to create portlet application objects.
  *
@@ -30,9 +28,9 @@ public interface IPortletApplicationFactory
 
 	/**
 	 * Create application object
-	 * @param preferences 
+	 * @param portlet
 	 * 
 	 * @return application object instance
 	 */
-	PortletApplication createApplication(PortletPreferences preferences);
+	PortletApplication createApplication(WicketPortlet portlet);
 }
