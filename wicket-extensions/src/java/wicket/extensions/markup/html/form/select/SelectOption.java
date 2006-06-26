@@ -17,14 +17,11 @@
  */
 package wicket.extensions.markup.html.form.select;
 
-import java.util.Collection;
-
 import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
-import wicket.util.lang.Objects;
 
 /**
  * Component representing a single <code>&lt;option&gt;</code> html element
@@ -79,26 +76,9 @@ public class SelectOption extends WebMarkupContainer
 		// assign name and value
 		tag.put("value", getPath());
 
-		// check if the model collection of the select contains the model object.
-		// if it does mark the option as selected
-		Object selected=select.getModelObject();
-
 		boolean isSelected=false;
 		
-		Object value=getModelObject();
-		
-		if (selected!=null && selected instanceof Collection) {
-			
-			if (value instanceof Collection) {
-				isSelected=selected.equals(value);
-			} else {
-				isSelected=((Collection)selected).contains(value);
-			}
-		} else {
-			isSelected=Objects.equal(selected,value);
-		}
-		
-		if (isSelected)
+		if (select.isSelected(this))
 		{
 			tag.put("selected", "true");
 		}
@@ -106,6 +86,5 @@ public class SelectOption extends WebMarkupContainer
 		// Default handling for component tag
 		super.onComponentTag(tag);
 	}
-
 
 }
