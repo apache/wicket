@@ -240,6 +240,106 @@
 			<name>Ralf Ebert</name>
 			<email>-</email>
 		</contributor>
+    <contributor>
+    		<name>Joshua Lim</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jesper Preuss</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Nathan Hamblen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Thomas Singer</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ryan Sonnek</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Alastair Maw</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Philip A. Chapman</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Joni Suominen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jim McLaughlin</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jonathan Cone</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ramnivas Laddad</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Lulian Costan</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Geertjan Wielenga</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Timo Stamm</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jesse Sightler</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Per Ejeklint</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>David Leangen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ingram Chen</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Mark Derricutt</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ari Suutari</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Joe Toth</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Jan Bares</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Scott Sauyet</name>
+    		<email>-</email>
+    </contributor>
+    <contributor>
+    		<name>Ali Zaid Anwar</name>
+    		<email>-</email>
+    </contributor>
+		<contributor>
+			<name>Frank Bille Jensen </name>
+			<email>-</email>
+		</contributor>
 	</contributors>
 
 	<dependencies>

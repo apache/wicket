@@ -439,6 +439,10 @@
     		<name>Ali Zaid Anwar</name>
     		<email>-</email>
     </contributor>
+		<contributor>
+			<name>Frank Bille Jensen </name>
+			<email>-</email>
+		</contributor>
   </contributors>
   <dependencies>
     <dependency>
