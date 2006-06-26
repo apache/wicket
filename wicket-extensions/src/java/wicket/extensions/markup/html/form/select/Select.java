@@ -167,7 +167,7 @@ public class Select extends FormComponent
 	{
 		// if the raw input is specified use that, otherwise use model
 		if (hasRawInput()) {
-			String[] paths = inputAsStringArray();
+			String[] paths = getInputAsArray();
 			if (paths != null && paths.length > 0)
 			{
 				for (int i = 0; i < paths.length; i++)
