@@ -164,10 +164,8 @@ public abstract class Session implements Serializable, ICoverterLocator
 	private int autoCreatePageMapCounter = 0;
 
 	/** A linked list for last used pagemap queue */
-	private LinkedList/* <PageMap> */<PageMap> usedPageMaps = new LinkedList<PageMap>();
+	private LinkedList<PageMap> usedPageMaps = new LinkedList<PageMap>();
 
-	/** The session store of this session. */
-	// private transient ISessionStore sessionStore;
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
 
