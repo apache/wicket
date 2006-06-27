@@ -166,8 +166,6 @@ public abstract class Session implements Serializable
 	/** A linked list for last used pagemap queue */
 	private LinkedList/* <PageMap> */usedPageMaps = new LinkedList();
 
-	/** The session store of this session. */
-	// private transient ISessionStore sessionStore;
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
 
