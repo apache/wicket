@@ -38,14 +38,18 @@ import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
+import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.ajax.markup.html.AjaxLink;
+import wicket.ajax.markup.html.form.AjaxSubmitLink;
 import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
@@ -553,11 +557,21 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * click the <code>Link</code> in the last rendered Page.
-	 * 
-	 * This method also works for <code>AjaxLink</code>. On AjaxLinks the
-	 * onClick method is invoked with a valid AjaxRequestTarget. In that way you
-	 * can test the flow of your application when using AJAX.
+	 * Click the <code>Link</code> in the last rendered Page.
+	 * <p>
+	 * This method also works for {@link AjaxLink} and {@link AjaxSubmitLink}.
+	 * <p>
+	 * On AjaxLinks the onClick method is invoked with a valid
+	 * AjaxRequestTarget. In that way you can test the flow of your application
+	 * when using AJAX.
+	 * <p>
+	 * When clicking an AjaxSubmitLink the form, which the AjaxSubmitLink is
+	 * attached to is first submitted, and then the onSubmit method on
+	 * AjaxSubmitLink is invoked. If you have changed some values in the form
+	 * during your test, these will also be submitted. This should not be used
+	 * as a replacement for the {@link FormTester} to test your forms. It should
+	 * be used to test that the code in your onSubmit method in AjaxSubmitLink
+	 * actually works.
 	 * 
 	 * @param path
 	 *            path to <code>Link</code> component
@@ -582,6 +596,68 @@ public class WicketTester extends MockWebApplication
 			// process the request target
 			target.respond(requestCycle);
 		}
+		// if the link is an AjaxSubmitLink, we need to find the form
+		// from it using reflection so we know what to submit.
+		else if (linkComponent instanceof AjaxSubmitLink)
+		{
+			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
+
+			// We cycle through the attached behaviors and select the
+			// LAST matching behavior as the one we handle.
+			List behaviors = link.getBehaviors();
+			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = null;
+			for (Object behavior : behaviors) {
+				if (behavior instanceof AjaxFormSubmitBehavior) {
+					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior) behavior;
+					ajaxFormSubmitBehavior = submitBehavior;
+				}
+			}
+			
+			String failMessage = "No form submit behavior found on the submit link. Strange!!";
+			Assert.assertNotNull(failMessage, ajaxFormSubmitBehavior);
+			
+			// We need to get the form submitted, using reflection.
+			// It needs to be "submitted".
+			Form form = null;
+			try
+			{
+				Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
+				formField.setAccessible(true);
+				form = (Form)formField.get(ajaxFormSubmitBehavior);
+			}
+			catch (Exception e)
+			{
+				Assert.fail(e.getMessage());
+			}
+			
+			failMessage = "No form attached to the submitlink.";
+			Assert.assertNotNull(failMessage, form);
+			
+			setupRequestAndResponse();
+			RequestCycle requestCycle = createRequestCycle();
+			
+			// "Submit" the form
+			form.visitFormComponents(new FormComponent.IVisitor()
+			{
+				public void formComponent(FormComponent formComponent)
+				{
+					if (!(formComponent instanceof Button)
+							&& !(formComponent instanceof RadioGroup))
+					{
+						String name = formComponent.getInputName();
+						String value = formComponent.getValue();
+						
+						getServletRequest().setParameter(name, value);
+					}
+				}
+			});
+			
+			// Ok, finally we "click" the link
+			ajaxFormSubmitBehavior.onRequest();
+
+			// process the request target
+			requestCycle.getRequestTarget().respond(requestCycle);
+		}
 		// if the link is a normal link
 		else if (linkComponent instanceof Link)
 		{
@@ -590,7 +666,7 @@ public class WicketTester extends MockWebApplication
 		}
 		else
 		{
-			Assert.fail("Link " + path + " is not a Link or AjaxLink");
+			Assert.fail("Link " + path + " is not a Link, AjaxLink or AjaxSubmitLink");
 		}
 	}
 
@@ -767,6 +843,24 @@ public class WicketTester extends MockWebApplication
 			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)element;
 			log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
 		}
+	}
+	
+	/**
+	 * Test that a component has been added to a AjaxRequestTarget, using
+	 * {@link AjaxRequestTarget#addComponent(Component)}. This method
+	 * actually tests that a component is on the AJAX response sent back to
+	 * the client.
+	 * <p>
+	 * PLEASE NOTE! This method doesn't actually insert the component in the
+	 * client DOM tree, using javascript. But it shouldn't be needed because
+	 * you have to trust that the Wicket Ajax Javascript just works.
+	 * 
+	 * @param componentPath
+	 *            The component path to the component to test whether it's
+	 *            on the response.
+	 */
+	public void assertComponentOnAjaxResponse(String componentPath) {
+		assertComponentOnAjaxResponse(getComponentFromLastRenderedPage(componentPath));
 	}
 	
 	/**
