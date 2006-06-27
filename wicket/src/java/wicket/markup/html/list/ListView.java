@@ -39,10 +39,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *               &lt;tbody&gt;
- *                 &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                     &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                 ...    
+ *                &lt;tbody&gt;
+ *                  &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                      &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                  ...    
  * </pre>
  * 
  * <p>
@@ -64,18 +64,18 @@ import wicket.version.undo.Change;
  * 
  * <p>
  * WARNING: though you can nest ListViews within Forms, you HAVE to set the
- * setReuseItems property to true in order to have validation work
- * properly. By default, reuseItems is false, which has the effect that
- * ListView replaces all child components by new instances. The idea behind this
- * is that you always render the fresh data, and as people usually use ListViews
- * for displaying read-only lists (at least, that's what we think), this is good
- * default behavior. <br />
+ * setReuseItems property to true in order to have validation work properly. By
+ * default, reuseItems is false, which has the effect that ListView replaces all
+ * child components by new instances. The idea behind this is that you always
+ * render the fresh data, and as people usually use ListViews for displaying
+ * read-only lists (at least, that's what we think), this is good default
+ * behavior. <br />
  * However, as the components are replaced before the rendering starts, the
  * search for specific messages for these components fails as they are replaced
  * with other instances. Another problem is that 'wrong' user input is kept as
  * (temporary) instance data of the components. As these components are replaced
- * by new ones, your user will never see the wrong data when reuseItems
- * is false.
+ * by new ones, your user will never see the wrong data when reuseItems is
+ * false.
  * </p>
  * 
  * @param <T>
@@ -99,7 +99,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 * ListView in a Form, ALWAYS set this property to true, as otherwise
 	 * validation will not work properly.
 	 */
-	private boolean optimizeItemRemoval = false;
+	private boolean reuseItems = false;
 
 	/** Max number (not index) of items to show */
 	private int viewSize = Integer.MAX_VALUE;
@@ -169,11 +169,11 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
 	 * validation will not work properly.
 	 * 
-	 * @return Returns the optimizeItemRemoval.
+	 * @return Whether to reuse items
 	 */
 	public boolean getReuseItems()
 	{
-		return optimizeItemRemoval;
+		return reuseItems;
 	}
 
 	/**
@@ -413,7 +413,7 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	 */
 	public ListView setReuseItems(boolean reuseItems)
 	{
-		this.optimizeItemRemoval = reuseItems;
+		this.reuseItems = reuseItems;
 		return this;
 	}
 
