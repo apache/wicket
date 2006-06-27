@@ -75,7 +75,13 @@ public abstract class AbstractPropertyModel extends AbstractDetachableModel
 	{
 		if (nestedModel instanceof IModel)
 		{
-			return ((IModel)nestedModel).getObject(component);
+			final IModel model=(IModel)nestedModel;
+			if (model instanceof ICompoundModel) {
+				return model.getObject(null);
+			} else {
+				return model.getObject(component);
+			}
+			
 		}
 		return nestedModel;
 	}
