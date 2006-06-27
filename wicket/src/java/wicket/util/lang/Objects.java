@@ -42,7 +42,7 @@ import wicket.util.io.ByteCountingOutputStream;
  * 
  * @author Jonathan Locke
  */
-public abstract class Objects
+public final class Objects
 {
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
