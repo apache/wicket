@@ -38,10 +38,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *            &lt;tbody&gt;
- *              &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                  &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *              ...    
+ *               &lt;tbody&gt;
+ *                 &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                     &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                 ...    
  * </pre>
  * 
  * <p>
@@ -95,7 +95,7 @@ public abstract class ListView extends WebMarkupContainer
 	 * ListView in a Form, ALWAYS set this property to true, as otherwise
 	 * validation will not work properly.
 	 */
-	private boolean optimizeItemRemoval = false;
+	private boolean reuseItems = false;
 
 	/** Max number (not index) of items to show */
 	private int viewSize = Integer.MAX_VALUE;
@@ -163,10 +163,10 @@ public abstract class ListView extends WebMarkupContainer
 	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
 	 * validation will not work properly.
 	 * 
-	 * @return Returns the optimizeItemRemoval.
+	 * @return Whether to reuse items
 	 * @deprecated Use {@link #getReuseItems()} instead
 	 */
-	//TODO Post 1.2: Remove
+	// TODO Post 1.2: Remove
 	public boolean getOptimizeItemRemoval()
 	{
 		return getReuseItems();
@@ -180,11 +180,11 @@ public abstract class ListView extends WebMarkupContainer
 	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
 	 * validation will not work properly.
 	 * 
-	 * @return Returns the optimizeItemRemoval.
+	 * @return Whether to reuse items
 	 */
 	public boolean getReuseItems()
 	{
-		return optimizeItemRemoval;
+		return reuseItems;
 	}
 
 	/**
@@ -401,15 +401,15 @@ public abstract class ListView extends WebMarkupContainer
 	 * ListView in a Form, ALLWAYS set this property to true, as otherwise
 	 * validation will not work properly.
 	 * 
-	 * @param optimizeItemRemoval
-	 *            The optimizeItemRemoval to set.
+	 * @param reuseItems
+	 *            Whether to reuse items
 	 * @return this
 	 * @deprecated Use {@link #setReuseItems(boolean)} instead
 	 */
-	//TODO Post 1.2: Remove
-	public ListView setOptimizeItemRemoval(boolean optimizeItemRemoval)
+	// TODO Post 1.2: Remove
+	public ListView setOptimizeItemRemoval(boolean reuseItems)
 	{
-		return setReuseItems(optimizeItemRemoval);
+		return setReuseItems(reuseItems);
 	}
 
 	/**
@@ -426,7 +426,7 @@ public abstract class ListView extends WebMarkupContainer
 	 */
 	public ListView setReuseItems(boolean reuseItems)
 	{
-		this.optimizeItemRemoval = reuseItems;
+		this.reuseItems = reuseItems;
 		return this;
 	}
 
