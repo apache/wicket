@@ -42,7 +42,7 @@ import wicket.util.io.ByteCountingOutputStream;
  * 
  * @author Jonathan Locke
  */
-public abstract class Objects
+public final class Objects
 {
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
@@ -814,6 +814,20 @@ public abstract class Objects
 		return getNumericType(v1, v2, false);
 	}
 
+	/**
+	 * returns hashcode of the object by calling obj.hashcode(). safe to use
+	 * when obj is null.
+	 * 
+	 * @param obj
+	 * @return hashcode of the object or 0 if obj is null
+	 */
+	public static int hashCode(final Object... obj) {
+		int result = 37;
+		for (Object o : obj) {
+			result = 37 * result + (o != null ? o.hashCode() : 0);
+		}
+		return result;
+	}
 
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses

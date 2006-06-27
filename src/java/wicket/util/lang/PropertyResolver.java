@@ -58,7 +58,7 @@ import wicket.util.string.Strings;
  * 
  * @author jcompagner
  */
-public class PropertyResolver
+public final class PropertyResolver
 {
 	private final static Map<Class<? extends Object>, Map<String, IGetAndSet>> classesToGetAndSetters = new ConcurrentHashMap<Class<? extends Object>, Map<String, IGetAndSet>>(
 			64);
@@ -413,6 +413,12 @@ public class PropertyResolver
 			log.debug("Cannot find method " + clz + "." + expression, e);
 		}
 		return method;
+	}
+
+	/**
+	 * Utility class: instantiation not allowed.
+	 */
+	private PropertyResolver() {
 	}
 
 	/**
