@@ -64,7 +64,7 @@ import wicket.util.string.Strings;
 public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(CryptedUrlWebRequestCodingStrategy.class);
+	private static final Log log = LogFactory.getLog(CryptedUrlWebRequestCodingStrategy.class);
 
 	/** The default request coding strategy most of the methods are delegated to */
 	private final IRequestCodingStrategy defaultStrategy;

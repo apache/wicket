@@ -61,7 +61,7 @@ import wicket.util.string.Strings;
 public class DefaultRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(DefaultRequestTargetResolverStrategy.class);
+	private static final Log log = LogFactory.getLog(DefaultRequestTargetResolverStrategy.class);
 
 	/**
 	 * Construct.

@@ -34,7 +34,7 @@ class Remove extends Change
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static Log log = LogFactory.getLog(Remove.class);
+	private static final Log log = LogFactory.getLog(Remove.class);
 
 	/** subject. */
 	private final Component component;

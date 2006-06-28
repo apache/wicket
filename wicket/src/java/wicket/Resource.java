@@ -64,7 +64,7 @@ public abstract class Resource implements IResourceListener
 	private static final long serialVersionUID = 1L;
 
 	/** Logger */
-	private static Log log = LogFactory.getLog(Resource.class);
+	private static final Log log = LogFactory.getLog(Resource.class);
 
 	/** True if this resource can be cached */
 	private boolean cacheable;

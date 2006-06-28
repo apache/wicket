@@ -40,7 +40,7 @@ import wicket.protocol.http.documentvalidation.TextContent;
  */
 public class AttributeModifierComponentTest extends TestCase
 {
-	private static Log log = LogFactory.getLog(AttributeModifierComponentTest.class);
+	private static final Log log = LogFactory.getLog(AttributeModifierComponentTest.class);
 
 	private MockWebApplication application;
 

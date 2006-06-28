@@ -534,7 +534,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	private static final int FLAG_VISIBLE = 0x0010;
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(Component.class);
+	private static final Log log = LogFactory.getLog(Component.class);
 
 	/**
 	 * The name of attribute that will hold markup id
