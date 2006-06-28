@@ -36,25 +36,25 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *          add(new Link(&quot;myLink&quot;)
- *          {
- *              public void onClick(RequestCycle cycle)
- *              {
- *                  // do something here...  
- *              }
- *          );
+ *           add(new Link(&quot;myLink&quot;)
+ *           {
+ *               public void onClick(RequestCycle cycle)
+ *               {
+ *                   // do something here...  
+ *               }
+ *           );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *          &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *           &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *          &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *           &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -62,13 +62,13 @@ import wicket.util.string.Strings;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *          add(new Link(&quot;link&quot;, listItem.getModel()) 
- *          {
- *              public void onClick() 
- *              {
- *                  MyObject obj = (MyObject)getModelObject();
- *                  setResponsePage(new MyPage(obj.getId(), ... ));
- *              }
+ *           add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *           {
+ *               public void onClick() 
+ *               {
+ *                   MyObject obj = (MyObject)getModelObject();
+ *                   setResponsePage(new MyPage(obj.getId(), ... ));
+ *               }
  * </pre>
  * 
  * @author Jonathan Locke
@@ -349,7 +349,8 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		if (!isEnabled())
 		{
 			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+					|| tag.getName().equalsIgnoreCase("area"))
 			{
 				// Change anchor link to span tag
 				tag.setName("span");
@@ -373,7 +374,8 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		else
 		{
 			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+					|| tag.getName().equalsIgnoreCase("area"))
 			{
 				// generate the href attribute
 				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
