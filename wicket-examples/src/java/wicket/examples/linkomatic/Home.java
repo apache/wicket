@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.examples.linkomatic;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageMap;
@@ -118,12 +119,13 @@ public class Home extends WicketExamplePage
 		});
 
 		// FIXME image map doesn't work anymore!
-//		// Image map link example
-//		new ImageMap(this, "imageMap").addRectangleLink(0, 0, 100, 100,
-//				new BookmarkablePageLink(this, "page1", Page1.class)).addCircleLink(160, 50, 35,
-//				new BookmarkablePageLink(this, "page2", Page2.class)).addPolygonLink(
-//				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-//				new BookmarkablePageLink(this, "page3", Page3.class));
+		// // Image map link example
+		// new ImageMap(this, "imageMap").addRectangleLink(0, 0, 100, 100,
+		// new BookmarkablePageLink(this, "page1",
+		// Page1.class)).addCircleLink(160, 50, 35,
+		// new BookmarkablePageLink(this, "page2", Page2.class)).addPolygonLink(
+		// new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
+		// new BookmarkablePageLink(this, "page3", Page3.class));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
@@ -149,6 +151,24 @@ public class Home extends WicketExamplePage
 		// redirect to external url form
 		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
 		new RedirectForm(this, "redirectForm");
+
+		Link linkToAnchor = new Link(this, "linkToAnchor")
+		{
+			@Override
+			public void onClick()
+			{
+			}
+		};
+		Link anotherlinkToAnchor = new Link(this, "anotherlinkToAnchor")
+		{
+			@Override
+			public void onClick()
+			{
+			}
+		};
+		Component anchorLabel = new Label(this, "anchorLabel",
+				"this label is here to function as an anchor for a link").setOutputMarkupId(true);
+		linkToAnchor.setAnchor(anchorLabel);
 	}
 
 	/**

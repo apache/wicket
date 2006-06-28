@@ -2064,6 +2064,18 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
+	 * Gets whether or not component will output id attribute into the markup.
+	 * id attribute will be set to the value returned from
+	 * {@link Component#getMarkupId()}.
+	 * 
+	 * @return whether or not component will output id attribute into the markup
+	 */
+	public final boolean getOutputMarkupId()
+	{
+		return getFlag(FLAG_OUTPUT_MARKUP_ID);
+	}
+
+	/**
 	 * @param redirect
 	 *            True if the response should be redirected to
 	 * @see RequestCycle#setRedirect(boolean)
