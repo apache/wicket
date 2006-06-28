@@ -47,7 +47,7 @@ import wicket.util.crypt.NoCryptFactory;
  */
 public class CookieTest extends TestCase
 {
-	private static Log log = LogFactory.getLog(CookieTest.class);
+	private static final Log log = LogFactory.getLog(CookieTest.class);
 
 	private MockWebApplication application;
 	private SignInPanel panel;

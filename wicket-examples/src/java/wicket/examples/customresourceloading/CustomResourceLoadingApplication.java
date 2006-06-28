@@ -42,7 +42,7 @@ import wicket.util.string.Strings;
 public class CustomResourceLoadingApplication extends WicketExampleApplication
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(CustomResourceLoadingApplication.class);
+	private static final Log log = LogFactory.getLog(CustomResourceLoadingApplication.class);
 
 	/**
 	 * Custom implementation of {@link IResourceStreamLocator}.

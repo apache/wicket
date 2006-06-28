@@ -42,7 +42,7 @@ public abstract class BaseExportView implements Serializable
 	/**
 	 * logger.
 	 */
-	private static Log log = LogFactory.getLog(BaseExportView.class);
+	private static final Log log = LogFactory.getLog(BaseExportView.class);
 
 	/**
 	 * Headers.

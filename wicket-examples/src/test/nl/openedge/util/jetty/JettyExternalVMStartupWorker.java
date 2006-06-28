@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 class JettyExternalVMStartupWorker extends Thread
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(JettyExternalVMStartupWorker.class);
+	private static final Log log = LogFactory.getLog(JettyExternalVMStartupWorker.class);
 
 	/** start command. */
 	private String[] startCommand;

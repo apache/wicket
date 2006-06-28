@@ -47,7 +47,7 @@ public class MyTree extends Tree
 			MyTree.class, "node.gif");
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(MyTree.class);
+	private static final Log log = LogFactory.getLog(MyTree.class);
 
 	/**
 	 * Construct.
