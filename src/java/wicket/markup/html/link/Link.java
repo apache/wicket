@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,9 +18,11 @@
 package wicket.markup.html.link;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -37,25 +39,25 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *             add(new Link(&quot;myLink&quot;)
- *             {
- *                 public void onClick(RequestCycle cycle)
- *                 {
- *                     // do something here...  
- *                 }
- *             );
+ *                         add(new Link(&quot;myLink&quot;)
+ *                         {
+ *                             public void onClick(RequestCycle cycle)
+ *                             {
+ *                                 // do something here...  
+ *                             }
+ *                         );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *             &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *                         &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *             &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *                         &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -63,13 +65,13 @@ import wicket.util.string.Strings;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *             add(new Link(&quot;link&quot;, listItem.getModel()) 
- *             {
- *                 public void onClick() 
- *                 {
- *                     MyObject obj = (MyObject)getModelObject();
- *                     setResponsePage(new MyPage(obj.getId(), ... ));
- *                 }
+ *                         add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *                         {
+ *                             public void onClick() 
+ *                             {
+ *                                 MyObject obj = (MyObject)getModelObject();
+ *                                 setResponsePage(new MyPage(obj.getId(), ... ));
+ *                             }
  * </pre>
  * 
  * @param <T>
@@ -81,6 +83,16 @@ import wicket.util.string.Strings;
 public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * An anchor (form 'http://server/app/etc#someAnchor') will be appended to
+	 * the link so that after this link executes, it will jump to the provided
+	 * anchor component's position. The provided anchor must either have the
+	 * {@link Component#getOutputMarkupId()} flag true, or it must be attached
+	 * to a &lt;a tag with a href attribute of more than one character starting
+	 * with '#' ('&lt;a href="#someAnchor" ... ').
+	 */
+	private Component anchor;
 
 	/**
 	 * Simple insertion string to allow disabled links to look like <i>Disabled
@@ -120,6 +132,16 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	public Link(MarkupContainer parent, final String id, IModel<T> object)
 	{
 		super(parent, id, object);
+	}
+
+	/**
+	 * Gets any anchor component.
+	 * 
+	 * @return Any anchor component to jump to, might be null
+	 */
+	public Component getAnchor()
+	{
+		return anchor;
 	}
 
 	/**
@@ -213,6 +235,23 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	}
 
 	/**
+	 * Sets an anchor component. An anchor (form
+	 * 'http://server/app/etc#someAnchor') will be appended to the link so that
+	 * after this link executes, it will jump to the provided anchor component's
+	 * position. The provided anchor must either have the
+	 * {@link Component#getOutputMarkupId()} flag true, or it must be attached
+	 * to a &lt;a tag with a href attribute of more than one character starting
+	 * with '#' ('&lt;a href="#someAnchor" ... ').
+	 * 
+	 * @param anchor
+	 *            The anchor
+	 */
+	public void setAnchor(Component anchor)
+	{
+		this.anchor = anchor;
+	}
+
+	/**
 	 * Sets the insertion string to allow disabled links to look like
 	 * <i>Disabled link </i>.
 	 * 
@@ -277,6 +316,79 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	}
 
 	/**
+	 * Appends any anchor to the url if the url is not null and the url does not
+	 * already contain an anchor (url.indexOf('#') != -1). This implementation
+	 * looks whether an anchor component was set, and if so, it will append the
+	 * markup id of that component. That markup id is gotten by either calling
+	 * {@link Component#getMarkupId()} if {@link Component#getOutputMarkupId()}
+	 * returns true, or if the anchor component does not output it's id, this
+	 * method will try to retrieve the id from the markup directly. If neither
+	 * is found, an {@link WicketRuntimeException excpeption} is thrown. If no
+	 * anchor component was set, but the link component is attached to a &lt;a
+	 * element, this method will append what is in the href attribute <i>if</i>
+	 * there is one, starts with a '#' and has more than one character.
+	 * <p>
+	 * You can override this method, but it means that you have to take care of
+	 * whatever is done with any set anchor component yourself. You also have to
+	 * manually append the '#' at the right place.
+	 * </p>
+	 * 
+	 * @param tag
+	 *            The component tag
+	 * @param url
+	 *            The url to start with
+	 * @return The url, possibly with an anchor appended
+	 */
+	protected CharSequence appendAnchor(final ComponentTag tag, CharSequence url)
+	{
+		if (url != null)
+		{
+			Component anchor = getAnchor();
+			if (anchor != null)
+			{
+				if (url.toString().indexOf('#') == -1)
+				{
+					String id;
+					if (anchor.getOutputMarkupId())
+					{
+						id = anchor.getMarkupId();
+					}
+					else
+					{
+						id = anchor.getMarkupAttributes().getString("id");
+					}
+
+					if (id != null)
+					{
+						url = url + "#" + anchor.getMarkupId();
+					}
+					else
+					{
+						throw new WicketRuntimeException("an achor component was set on " + this
+								+ " but it neither has outputMarkupId set to true "
+								+ "nor has a id set explicitly");
+					}
+				}
+			}
+			else
+			{
+				if (tag.getName().equalsIgnoreCase("a"))
+				{
+					if (url.toString().indexOf('#') == -1)
+					{
+						String href = getMarkupAttributes().getString("href");
+						if (href != null && href.length() > 1 && href.charAt(0) == '#')
+						{
+							url = url + href;
+						}
+					}
+				}
+			}
+		}
+		return url;
+	}
+
+	/**
 	 * @param url
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
@@ -338,6 +450,9 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 
 		// Set href to link to this link's linkClicked method
 		CharSequence url = getURL();
+
+		// append any anchor
+		url = appendAnchor(tag, url);
 
 		// If we're disabled
 		if (!isEnabled())
