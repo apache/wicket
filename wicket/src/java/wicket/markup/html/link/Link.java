@@ -343,7 +343,8 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 		if (!isEnabled())
 		{
 			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+					|| tag.getName().equalsIgnoreCase("area"))
 			{
 				// Change anchor link to span tag
 				tag.setName("span");
@@ -367,7 +368,8 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 		else
 		{
 			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a"))
+			if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+					|| tag.getName().equalsIgnoreCase("area"))
 			{
 				// generate the href attribute
 				tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
