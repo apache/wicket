@@ -12,7 +12,7 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
-      <action type="fix" dev="Eelco Hillenius" due-to="Ali Zaid,Andrew Berman,Thijs Vonk" issue="1491239">Implemented anchors on Links. You can either provide a component that is to be used for getting the anchor, or provide an anchor in the href attribute of &lt;a tags.</action>
+      <action type="add" dev="Eelco Hillenius" due-to="Ali Zaid,Andrew Berman,Thijs Vonk" issue="1491239">Implemented anchors on Links. You can either provide a component that is to be used for getting the anchor, or provide an anchor in the href attribute of &lt;a tags.</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Sven Meiers">let links play nice with &lt;link and &lt;area tags too, and aligned Link and ExternalLink so they work in the same way on tags.</action>
 	  <action type="fix" dev="Igor Vaynberg" due-to="Rüdiger Schulz">Property model will now correctly work when chained with a compound model</action>
 	  <action type="fix" dev="Igor Vaynberg" due-to="Rüdiger Schulz">Fixed bug in extensions Select component where it did not remember input if a validation error occured</action>
