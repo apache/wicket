@@ -49,7 +49,7 @@ import wicket.util.lang.Bytes;
 public class UploadPage extends WicketExamplePage
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(UploadPage.class);
+	private static final Log log = LogFactory.getLog(UploadPage.class);
 
 	/** List of files, model for file table. */
 	private List files = new ArrayList();

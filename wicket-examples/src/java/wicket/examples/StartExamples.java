@@ -31,7 +31,7 @@ public class StartExamples
 	/**
 	 * Used for logging.
 	 */
-	private static Log log = LogFactory.getLog(StartExamples.class);
+	private static final Log log = LogFactory.getLog(StartExamples.class);
 
 	/**
 	 * Construct.

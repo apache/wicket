@@ -84,7 +84,7 @@ public class JettyStarterPrg
 	private static final int DEFAULT_STOP_PORT = 8079;
 
 	/** Logger. */
-	private static Log log = LogFactory.getLog(JettyStarterPrg.class);
+	private static final Log log = LogFactory.getLog(JettyStarterPrg.class);
 
 	/**
 	 * Starts Jetty.
