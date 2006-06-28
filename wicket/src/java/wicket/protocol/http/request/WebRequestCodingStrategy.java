@@ -83,7 +83,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * this parameter is not important, it simply has to be present to enable
 	 * the behavior
 	 */
-	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE + "ignoreIfNotActive";
+	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE
+			+ "ignoreIfNotActive";
 
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
@@ -156,10 +157,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
 		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
-		if (request.getParameter(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME)!=null) {
+		if (request.getParameter(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME) != null)
+		{
 			parameters.setOnlyProcessIfPathActive(true);
 		}
-		
+
 		Map map = request.getParameterMap();
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext())
