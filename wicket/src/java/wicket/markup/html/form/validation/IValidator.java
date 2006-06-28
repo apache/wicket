@@ -44,9 +44,7 @@ public interface IValidator extends Serializable
 	 * need, subclass CustomValidator.
 	 * <p>
 	 * Validates the given input. The input corresponds to the input from the
-	 * request for a component. Any implementation of this method should be
-	 * synchronized because validators are intended to be shared across
-	 * sessions/threads.
+	 * request for a component.
 	 * 
 	 * @param component
 	 *            Component to validate
