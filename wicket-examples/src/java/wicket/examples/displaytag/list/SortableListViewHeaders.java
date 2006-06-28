@@ -41,7 +41,7 @@ import wicket.markup.resolver.IComponentResolver;
 public class SortableListViewHeaders extends WebMarkupContainer implements IComponentResolver
 {
 	/** Logging. */
-	final private static Log log = LogFactory.getLog(SortableListViewHeaders.class);
+	private static final Log log = LogFactory.getLog(SortableListViewHeaders.class);
 
 	/** Each SortableTableHeader (without 's) must be attached to a group. */
 	final private SortableListViewHeaderGroup group;

@@ -35,7 +35,7 @@ public abstract class WicketExampleApplication extends WebApplication
 	/**
 	 * Used for logging.
 	 */
-	private static Log log = LogFactory.getLog(WicketExampleApplication.class);
+	private static final Log log = LogFactory.getLog(WicketExampleApplication.class);
 
 	/**
 	 * Constructor.
