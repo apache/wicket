@@ -53,7 +53,7 @@ import wicket.util.string.Strings;
 public class PortletRequestTargetResolverStrategy implements IRequestTargetResolverStrategy {
 
 	/** log. */
-	private static Log log = LogFactory.getLog(PortletRequestTargetResolverStrategy.class);
+	private static final Log log = LogFactory.getLog(PortletRequestTargetResolverStrategy.class);
 
 	/**
 	 * @see wicket.request.compound.IRequestTargetResolverStrategy#resolve(wicket.RequestCycle,

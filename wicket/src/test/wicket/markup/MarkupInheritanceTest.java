@@ -29,7 +29,7 @@ import wicket.util.diff.DiffUtil;
  */
 public class MarkupInheritanceTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(MarkupInheritanceTest.class);
+	private static final Log log = LogFactory.getLog(MarkupInheritanceTest.class);
 
 	/**
 	 * Create the test.

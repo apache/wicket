@@ -36,7 +36,7 @@ import wicket.request.compound.IResponseStrategy;
 public class PortletActionRequestCycleProcessor extends CompoundRequestCycleProcessor
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(PortletRenderRequestCycleProcessor.class);
+	private static final Log log = LogFactory.getLog(PortletRenderRequestCycleProcessor.class);
 
 	/**
 	 * Construct.

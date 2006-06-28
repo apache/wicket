@@ -35,7 +35,7 @@ public class PortletRenderRequestCycleProcessor extends CompoundRequestCycleProc
 {
 
 	/** log. */
-	private static Log log = LogFactory.getLog(PortletRenderRequestCycleProcessor.class);
+	private static final Log log = LogFactory.getLog(PortletRenderRequestCycleProcessor.class);
 
 	/**
 	 * Construct.

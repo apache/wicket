@@ -44,7 +44,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	private static final long serialVersionUID = 1L;
 
 	/** Logging. */
-	private static Log log = LogFactory.getLog(UrlResourceStream.class);
+	private static final Log log = LogFactory.getLog(UrlResourceStream.class);
 
 	/** Resource stream. */
 	private transient InputStream inputStream;

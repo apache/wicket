@@ -172,7 +172,7 @@ import wicket.util.string.Strings;
 public class WicketTester extends MockWebApplication
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(WicketTester.class);
+	private static final Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
 	 * create WicketTester with null path

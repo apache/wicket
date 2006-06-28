@@ -37,7 +37,7 @@ import wicket.request.target.IEventProcessor;
 public final class DefaultEventProcessorStrategy implements IEventProcessorStrategy
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(DefaultEventProcessorStrategy.class);
+	private static final Log log = LogFactory.getLog(DefaultEventProcessorStrategy.class);
 
 	/**
 	 * Construct.

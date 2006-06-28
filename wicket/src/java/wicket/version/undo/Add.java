@@ -33,7 +33,7 @@ class Add extends Change
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static Log log = LogFactory.getLog(Add.class);
+	private static final Log log = LogFactory.getLog(Add.class);
 
 	/** subject. */
 	private final Component component;

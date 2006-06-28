@@ -59,7 +59,7 @@ import wicket.util.value.ValueMap;
  */
 public class MockServletContext implements ServletContext
 {
-	private static Log log = LogFactory.getLog(MockServletContext.class);
+	private static final Log log = LogFactory.getLog(MockServletContext.class);
 
 	private Application application;
 

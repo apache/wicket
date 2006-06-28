@@ -84,7 +84,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static Log log = LogFactory.getLog(WebPage.class);
+	private static final Log log = LogFactory.getLog(WebPage.class);
 
 	/** meta data key for missing body tags logging. */
 	private static final MetaDataKey MISSING_BODY_TAG_LOGGED_MDK = new MetaDataKey(
