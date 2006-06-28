@@ -244,7 +244,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 */
 	protected Component newDownComponent()
 	{
-		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this, "moveDownButton")
+		WebMarkupContainer webMarkupContainer = new PaletteButton(this, "moveDownButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -265,7 +265,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 */
 	protected Component newUpComponent()
 	{
-		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this, "moveUpButton")
+		WebMarkupContainer webMarkupContainer = new PaletteButton(this, "moveUpButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -286,7 +286,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 */
 	protected Component newRemoveComponent()
 	{
-		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this, "removeButton")
+		WebMarkupContainer webMarkupContainer = new PaletteButton(this, "removeButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -307,7 +307,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 */
 	protected Component newAddComponent()
 	{
-		WebMarkupContainer webMarkupContainer = new WebMarkupContainer(this, "addButton")
+		WebMarkupContainer webMarkupContainer = new PaletteButton(this, "addButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -476,5 +476,39 @@ public class Palette<T, E> extends Panel<Collection<T>>
 		// to a component
 		// an alternative might be to attach it to one of the subcomponents
 		choicesModel.detach();
+	}
+	
+	/**
+	 * Return true if the palette is enabled, false otherwise
+	 * @return true if the palette is enabled, false otherwise
+	 */
+	public final boolean isPaletteEnabled()
+	{
+		return isEnabled() && isEnableAllowed();
+	}
+
+	private class PaletteButton extends WebMarkupContainer
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructor
+		 * @param parent 
+		 * @param id
+		 */
+		public PaletteButton(MarkupContainer parent, String id)
+		{
+			super(parent, id);
+		}
+
+
+		protected void onComponentTag(ComponentTag tag)
+		{
+			if (!isPaletteEnabled())
+			{
+				tag.getAttributes().put("disabled", "disabled");
+			}
+		}
 	}
 }

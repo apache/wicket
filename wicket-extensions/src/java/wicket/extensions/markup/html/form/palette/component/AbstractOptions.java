@@ -99,6 +99,10 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		attrs.put("multiple", null);
 		attrs.put("size", new Integer(getPalette().getRows()));
 		attrs.put("id", getPath());
+		
+		if (!palette.isPaletteEnabled()) {
+			attrs.put("disabled","disabled");
+		}
 	}
 
 	/**
