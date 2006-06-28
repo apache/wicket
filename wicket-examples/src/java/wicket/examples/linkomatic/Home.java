@@ -17,6 +17,7 @@
  */
 package wicket.examples.linkomatic;
 
+import wicket.Component;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.ResourceReference;
@@ -145,6 +146,25 @@ public class Home extends WicketExamplePage
 		FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
 		add(feedbackPanel);
 		add(new RedirectForm("redirectForm"));
+		
+		Link linkToAnchor = new Link("linkToAnchor")
+		{
+			public void onClick()
+			{
+			}
+		};
+		add(linkToAnchor);
+		Link anotherlinkToAnchor = new Link("anotherlinkToAnchor")
+		{
+			public void onClick()
+			{
+			}
+		};
+		add(anotherlinkToAnchor);
+		Component anchorLabel = new Label("anchorLabel",
+				"this label is here to function as an anchor for a link").setOutputMarkupId(true);
+		add(anchorLabel);
+		linkToAnchor.setAnchor(anchorLabel);
 	}
 
 	/**
