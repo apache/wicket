@@ -92,65 +92,70 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		final String path = requestParameters.getPath();
 		if (requestParameters.getComponentPath() != null)
 		{
-			synchronized (requestCycle.getSession()) {
-			// we need to check if this request has been flagged as
-			// process-only-if-path-is-active and if so make sure this condition
-			// is met
-
-			// marks whether or not we will be processing this request
-			boolean processRequest = true;
-
-			if (requestParameters.isOnlyProcessIfPathActive())
+			synchronized (requestCycle.getSession())
 			{
-				// this request has indeed been flagged as
-				// process-only-if-path-is-active
+				// we need to check if this request has been flagged as
+				// process-only-if-path-is-active and if so make sure this
+				// condition is met
 
-				Session session = Session.get();
-				PageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(), false);
-				if (pageMap == null)
+				// marks whether or not we will be processing this request
+				boolean processRequest = true;
+
+				if (requestParameters.isOnlyProcessIfPathActive())
 				{
-					// requested pagemap no longer exists - ignore this request
-					processRequest = false;
-				}
-				else
-				{
-					if (pageMap.getAccessStack().size() > 0)
+					// this request has indeed been flagged as
+					// process-only-if-path-is-active
+
+					Session session = Session.get();
+					PageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(),
+							false);
+					if (pageMap == null)
 					{
-						final Access access = (Access)pageMap.getAccessStack().peek();
-
-						final int pageId = Integer.parseInt(Strings.firstPathComponent(
-								requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
-
-						if (pageId != access.getId())
+						// requested pagemap no longer exists - ignore this
+						// request
+						processRequest = false;
+					}
+					else
+					{
+						if (pageMap.getAccessStack().size() > 0)
 						{
-							// the page is no longer the active page
-							// - ignore this request
-							processRequest = false;
-						}
-						else
-						{
-							final int version = requestParameters.getVersionNumber();
-							if (version != Page.LATEST_VERSION && version != access.getVersion())
+							final Access access = (Access)pageMap.getAccessStack().peek();
+
+							final int pageId = Integer
+									.parseInt(Strings.firstPathComponent(requestParameters
+											.getComponentPath(), Component.PATH_SEPARATOR));
+
+							if (pageId != access.getId())
 							{
-								// version is no longer the active version -
-								// ignore this request
+								// the page is no longer the active page
+								// - ignore this request
 								processRequest = false;
+							}
+							else
+							{
+								final int version = requestParameters.getVersionNumber();
+								if (version != Page.LATEST_VERSION
+										&& version != access.getVersion())
+								{
+									// version is no longer the active version -
+									// ignore this request
+									processRequest = false;
+								}
 							}
 						}
 					}
-				}
-			
-			}
 
-			if (processRequest)
-			{
-				return resolveRenderedPage(requestCycle, requestParameters);
+				}
+
+				if (processRequest)
+				{
+					return resolveRenderedPage(requestCycle, requestParameters);
+				}
+				else
+				{
+					return EmptyRequestTarget.getInstance();
+				}
 			}
-			else
-			{
-				return EmptyRequestTarget.getInstance();
-			}
-		}
 		}
 		// see whether this request points to a bookmarkable page
 		else if (requestParameters.getBookmarkablePageClass() != null)
