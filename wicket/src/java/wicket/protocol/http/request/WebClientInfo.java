@@ -41,7 +41,7 @@ public class WebClientInfo extends ClientInfo
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static Log log = LogFactory.getLog(WebClientInfo.class);
+	private static final Log log = LogFactory.getLog(WebClientInfo.class);
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically,

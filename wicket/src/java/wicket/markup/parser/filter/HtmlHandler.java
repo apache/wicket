@@ -40,7 +40,7 @@ import wicket.util.collections.ArrayListStack;
 public final class HtmlHandler extends AbstractMarkupFilter
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(HtmlHandler.class);
+	private static final Log log = LogFactory.getLog(HtmlHandler.class);
 
 	/** Tag stack to find balancing tags */
 	final private ArrayListStack stack = new ArrayListStack();

@@ -81,7 +81,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
 
 	/** log. */
-	private static Log log = LogFactory.getLog(PortletRequestCodingStrategy.class);
+	private static final Log log = LogFactory.getLog(PortletRequestCodingStrategy.class);
 
 	/**
 	 * Construct.

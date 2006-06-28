@@ -23,7 +23,7 @@ public class MockHomePage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(MockHomePage.class);
+	private static final Log log = LogFactory.getLog(MockHomePage.class);
 
 	/**
 	 * 

@@ -45,7 +45,7 @@ import wicket.util.string.StringValueConversionException;
  */
 public final class MarkupParserTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(MarkupParserTest.class);
+	private static final Log log = LogFactory.getLog(MarkupParserTest.class);
 
 	/**
 	 * Construct.
