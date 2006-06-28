@@ -44,7 +44,7 @@ public class MyTree extends Tree
 	private static final ResourceReference nodeImage = new PackageResourceReference(Application.get(), MyTree.class, "node.gif");
 	
 	/** Log. */
-	private static Log log = LogFactory.getLog(MyTree.class);
+	private static final Log log = LogFactory.getLog(MyTree.class);
 
 	/**
 	 * Construct.

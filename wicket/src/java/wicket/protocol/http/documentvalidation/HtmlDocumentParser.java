@@ -34,7 +34,7 @@ import wicket.util.string.Strings;
  */
 public class HtmlDocumentParser
 {
-	private static Log log = LogFactory.getLog(HtmlDocumentParser.class);
+	private static final Log log = LogFactory.getLog(HtmlDocumentParser.class);
 
 	/** Constant for close tag token. */
 	public static final int CLOSE_TAG = 4;

@@ -31,7 +31,7 @@ import wicket.WicketTestCase;
  */
 public class TreeTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(TreeTest.class);
+	private static final Log log = LogFactory.getLog(TreeTest.class);
 
 	/**
 	 * Create the test.

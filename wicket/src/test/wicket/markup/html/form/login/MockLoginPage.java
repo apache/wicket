@@ -26,7 +26,7 @@ public class MockLoginPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	private static Log log = LogFactory.getLog(MockLoginPage.class);
+	private static final Log log = LogFactory.getLog(MockLoginPage.class);
 
 	private Form form;
 

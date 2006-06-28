@@ -35,7 +35,7 @@ import wicket.version.IPageVersionManager;
 public class UndoPageVersionManager implements IPageVersionManager
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(UndoPageVersionManager.class);
+	private static final Log log = LogFactory.getLog(UndoPageVersionManager.class);
 
 	private static final long serialVersionUID = 1L;
 

@@ -38,7 +38,7 @@ import wicket.util.value.ValueMap;
  */
 public class SimplePageTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(SimplePageTest.class);
+	private static final Log log = LogFactory.getLog(SimplePageTest.class);
 
 	/**
 	 * Create the test.

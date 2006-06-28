@@ -30,7 +30,7 @@ import wicket.Session;
 public class WebSession extends Session
 {
 	/** log. careful, this log is used to trigger profiling too! */
-	// private static Log log = LogFactory.getLog(WebSession.class);
+	// private static final Log log = LogFactory.getLog(WebSession.class);
 	private static final long serialVersionUID = 1L;
 
 	/** The request cycle factory for the session */

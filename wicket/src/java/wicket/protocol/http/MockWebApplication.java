@@ -82,7 +82,7 @@ import wicket.util.file.WebApplicationPath;
 public class MockWebApplication extends WebApplication
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(MockWebApplication.class);
+	private static final Log log = LogFactory.getLog(MockWebApplication.class);
 
 	/** Mock http servlet context. */
 	private final MockServletContext context;

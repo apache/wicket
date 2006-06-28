@@ -26,7 +26,7 @@ import wicket.util.diff.DiffUtil;
  */
 public class WicketNamespaceTest extends TestCase
 {
-	// private static Log log = LogFactory.getLog(WicketNamespaceTest.class);
+	// private static final Log log = LogFactory.getLog(WicketNamespaceTest.class);
 
 	private MockWebApplication application;
 
