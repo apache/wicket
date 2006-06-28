@@ -164,6 +164,10 @@ public class Palette extends Panel
 		add(javascript);
 	}
 
+	/**
+	 * Return true if the palette is enabled, false otherwise
+	 * @return true if the palette is enabled, false otherwise
+	 */
 	public final boolean isPaletteEnabled()
 	{
 		return isEnabled() && isEnableAllowed();
