@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ExternalLink.java 4825 2006-03-08 20:05:01 +0000 (Wed, 08 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-08 20:05:01 +0000 (Wed, 08 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -149,17 +150,36 @@ public class ExternalLink extends WebMarkupContainer
 			Object hrefValue = href.getObject(this);
 			if (hrefValue != null)
 			{
-				// generate a popup script by asking popup settings for one
-				if (popupSettings != null)
+				String url = hrefValue.toString();
+				// if the tag is an anchor proper
+				if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+						|| tag.getName().equalsIgnoreCase("area"))
 				{
-					popupSettings.setTarget("'" + hrefValue.toString() + "'");
-					String popupScript = popupSettings.getPopupJavaScript();
-					tag.put("onclick", popupScript);
+					// generate the href attribute
+					tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
+
+					// Add any popup script
+					if (popupSettings != null)
+					{
+						// NOTE: don't encode to HTML as that is not valid
+						// JavaScript
+						tag.put("onclick", popupSettings.getPopupJavaScript());
+					}
 				}
 				else
 				{
-					// or generate an onclick JS handler directly
-					tag.put("href", Strings.replaceAll(hrefValue.toString(), "&", "&amp;"));
+					// generate a popup script by asking popup settings for one
+					if (popupSettings != null)
+					{
+						popupSettings.setTarget("'" + url + "'");
+						String popupScript = popupSettings.getPopupJavaScript();
+						tag.put("onclick", popupScript);
+					}
+					else
+					{
+						// or generate an onclick JS handler directly
+						tag.put("onclick", "location.href='" + url + "';");
+					}
 				}
 			}
 		}
