@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -164,6 +164,11 @@ public class Palette extends Panel
 		add(javascript);
 	}
 
+	public final boolean isPaletteEnabled()
+	{
+		return isEnabled() && isEnableAllowed();
+	}
+
 
 	/**
 	 * @return iterator over selected choices
@@ -210,7 +215,9 @@ public class Palette extends Panel
 
 	/**
 	 * factory method for the available items header
-	 * @param componentId component id of the returned header component
+	 * 
+	 * @param componentId
+	 *            component id of the returned header component
 	 * 
 	 * @return available items component
 	 */
@@ -221,7 +228,9 @@ public class Palette extends Panel
 
 	/**
 	 * factory method for the selected items header
-	 * @param componentId component id of the returned header component
+	 * 
+	 * @param componentId
+	 *            component id of the returned header component
 	 * 
 	 * @return header component
 	 */
@@ -230,6 +239,7 @@ public class Palette extends Panel
 		return new Label(componentId, "Selected");
 	}
 
+
 	/**
 	 * factory method for the move down component
 	 * 
@@ -237,7 +247,7 @@ public class Palette extends Panel
 	 */
 	protected Component newDownComponent()
 	{
-		return new WebMarkupContainer("moveDownButton")
+		return new PaletteButton("moveDownButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -256,7 +266,7 @@ public class Palette extends Panel
 	 */
 	protected Component newUpComponent()
 	{
-		return new WebMarkupContainer("moveUpButton")
+		return new PaletteButton("moveUpButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -275,7 +285,7 @@ public class Palette extends Panel
 	 */
 	protected Component newRemoveComponent()
 	{
-		return new WebMarkupContainer("removeButton")
+		return new PaletteButton("removeButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -294,7 +304,7 @@ public class Palette extends Panel
 	 */
 	protected Component newAddComponent()
 	{
-		return new WebMarkupContainer("addButton")
+		return new PaletteButton("addButton")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -463,5 +473,30 @@ public class Palette extends Panel
 		// to a component
 		// an alternative might be to attach it to one of the subcomponents
 		choicesModel.detach();
+	}
+
+	private class PaletteButton extends WebMarkupContainer
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param id
+		 */
+		public PaletteButton(String id)
+		{
+			super(id);
+		}
+
+
+		protected void onComponentTag(ComponentTag tag)
+		{
+			if (!isPaletteEnabled())
+			{
+				tag.getAttributes().put("disabled", "disabled");
+			}
+		}
 	}
 }
