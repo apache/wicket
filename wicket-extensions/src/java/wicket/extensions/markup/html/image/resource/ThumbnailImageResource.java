@@ -47,7 +47,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(ThumbnailImageResource.class);
+	private static final Log log = LogFactory.getLog(ThumbnailImageResource.class);
 
 	/** the unscaled, original image resource. */
 	private final WebResource unscaledImageResource;

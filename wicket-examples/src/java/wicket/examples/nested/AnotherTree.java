@@ -105,7 +105,7 @@ public class AnotherTree extends Tree
 	}
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(AnotherTree.class);
+	private static final Log log = LogFactory.getLog(AnotherTree.class);
 
 	/**
 	 * Construct.

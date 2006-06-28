@@ -41,7 +41,7 @@ import wicket.markup.html.tree.Tree;
 public class MyTree extends Tree
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(MyTree.class);
+	private static final Log log = LogFactory.getLog(MyTree.class);
 	private final ResourceReference folder = new PackageResourceReference(Application.get(),
 			MyTree.class, "folder.gif");
 	private final ResourceReference folderOpen = new PackageResourceReference(Application.get(),

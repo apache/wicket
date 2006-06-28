@@ -41,7 +41,7 @@ import wicket.protocol.http.WebApplication;
 public class CharSetUtil
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(CharSetUtil.class);
+	private static final Log log = LogFactory.getLog(CharSetUtil.class);
 
 	/** Locale to character encoding mapping */
 	private static CharSetMap charSetMap;

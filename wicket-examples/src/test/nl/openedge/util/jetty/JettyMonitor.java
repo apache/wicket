@@ -64,7 +64,7 @@ public class JettyMonitor extends Thread
 	private String commKey;
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(JettyMonitor.class);
+	private static final Log log = LogFactory.getLog(JettyMonitor.class);
 
 	/** socket chanel for commands. */
 	private ServerSocketChannel serverSocketChanel = null;

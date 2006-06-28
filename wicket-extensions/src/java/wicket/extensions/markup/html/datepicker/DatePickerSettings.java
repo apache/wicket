@@ -47,7 +47,7 @@ public class DatePickerSettings implements Serializable
 	private static final Map<String, String> localeToLanguageReference = new HashMap<String, String>();
 
 	/** log. */
-	private static Log log = LogFactory.getLog(DatePickerSettings.class);
+	private static final Log log = LogFactory.getLog(DatePickerSettings.class);
 
 	private static final long serialVersionUID = 1L;
 

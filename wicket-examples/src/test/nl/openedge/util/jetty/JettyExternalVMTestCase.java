@@ -63,7 +63,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class JettyExternalVMTestCase extends AbstractJettyTestCase
 {
 	/** logger. */
-	private static Log log = LogFactory.getLog(JettyExternalVMTestCase.class);
+	private static final Log log = LogFactory.getLog(JettyExternalVMTestCase.class);
 
 	/**
 	 * command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start",

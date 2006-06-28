@@ -155,7 +155,7 @@ public class UploadPage extends WicketExamplePage
 	}
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(UploadPage.class);
+	private static final Log log = LogFactory.getLog(UploadPage.class);
 
 	/** Reference to listview for easy access. */
 	private FileListView fileListView;

@@ -84,7 +84,7 @@ public class JettyExternalVMDecorator extends AbstractJettyDecorator
 	private static final int DEFAULT_SLEEP_BETWEEN_TRIES = 1000;
 
 	/** logger. */
-	private static Log log = LogFactory.getLog(JettyExternalVMDecorator.class);
+	private static final Log log = LogFactory.getLog(JettyExternalVMDecorator.class);
 
 	/**
 	 * command to execute; see Runtime.exec(String[]). Eg {"cmd", "/C", "start",

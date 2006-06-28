@@ -30,7 +30,7 @@ import wicket.examples.WicketWebTestCase;
  */
 public class GuestbookTest extends WicketWebTestCase
 {
-	private static Log log = LogFactory.getLog(GuestbookTest.class);
+	private static final Log log = LogFactory.getLog(GuestbookTest.class);
 
 	/**
 	 * 

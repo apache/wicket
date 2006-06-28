@@ -33,7 +33,7 @@ import wicket.markup.html.basic.Label;
  */
 public class Home extends WicketExamplePage
 {
-	private static Log log = LogFactory.getLog(Home.class);
+	private static final Log log = LogFactory.getLog(Home.class);
 
 	/**
 	 * Constructor

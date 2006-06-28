@@ -32,7 +32,7 @@ public class StartSpringExamples
 	/**
 	 * Used for logging.
 	 */
-	private static Log log = LogFactory.getLog(StartSpringExamples.class);
+	private static final Log log = LogFactory.getLog(StartSpringExamples.class);
 
 	/**
 	 * Construct.

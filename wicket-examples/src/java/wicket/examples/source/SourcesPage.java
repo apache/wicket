@@ -63,7 +63,7 @@ import wicket.util.string.Strings;
  */
 public class SourcesPage extends WebPage
 {
-	private static Log log = LogFactory.getLog(SourcesPage.class);
+	private static final Log log = LogFactory.getLog(SourcesPage.class);
 
 	/**
 	 * Model for retrieving the source code from the classpath of a packaged
