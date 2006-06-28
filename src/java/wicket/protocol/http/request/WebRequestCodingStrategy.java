@@ -105,7 +105,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	};
 
 	/** log. */
-	private static Log log = LogFactory.getLog(WebRequestCodingStrategy.class);
+	private static final Log log = LogFactory.getLog(WebRequestCodingStrategy.class);
 
 	/**
 	 * map of path mounts for mount encoders on paths.

@@ -40,7 +40,7 @@ import wicket.util.string.AppendingStringBuffer;
 public class SharedResources
 {
 	/** Logger */
-	private static Log log = LogFactory.getLog(SharedResources.class);
+	private static final Log log = LogFactory.getLog(SharedResources.class);
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT. Inserts

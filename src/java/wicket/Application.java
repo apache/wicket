@@ -135,7 +135,7 @@ public abstract class Application
 	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(Application.class);
+	private static final Log log = LogFactory.getLog(Application.class);
 
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];

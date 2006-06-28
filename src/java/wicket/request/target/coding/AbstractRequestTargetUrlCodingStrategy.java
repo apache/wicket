@@ -44,7 +44,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			IRequestTargetUrlCodingStrategy
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
+	private static final Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
 
 
 	/** mounted path. */

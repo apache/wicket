@@ -64,7 +64,7 @@ import wicket.util.string.Strings;
 public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTargetResolverStrategy
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(WebURLCompressingTargetResolverStrategy.class);
+	private static final Log log = LogFactory.getLog(WebURLCompressingTargetResolverStrategy.class);
 
 	/**
 	 * Resolves the RequestTarget for the given interface. This method can be

@@ -28,7 +28,7 @@ import wicket.WicketTestCase;
  */
 public class HrefTest extends WicketTestCase
 {
-	// private static Log log = LogFactory.getLog(HrefTest.class);
+	// private static final Log log = LogFactory.getLog(HrefTest.class);
 
 	/**
 	 * Create the test.

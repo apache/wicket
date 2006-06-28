@@ -40,7 +40,7 @@ import wicket.util.string.StringList;
 public final class FeedbackMessages implements Serializable
 {
 	/** Log. */
-	private static Log log = LogFactory.getLog(FeedbackMessages.class);
+	private static final Log log = LogFactory.getLog(FeedbackMessages.class);
 
 	private static final long serialVersionUID = 1L;
 

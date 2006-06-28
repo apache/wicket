@@ -35,7 +35,7 @@ import wicket.protocol.http.documentvalidation.TextContent;
  */
 public class WicketTagPanelTest extends TestCase
 {
-	private static Log log = LogFactory.getLog(WicketTagPanelTest.class);
+	private static final Log log = LogFactory.getLog(WicketTagPanelTest.class);
 
 	private MockWebApplication application;
 

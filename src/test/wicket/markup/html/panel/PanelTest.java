@@ -30,7 +30,7 @@ import wicket.markup.resolver.FragmentResolver;
  */
 public class PanelTest extends WicketTestCase
 {
-	// private static Log log = LogFactory.getLog(PanelTest.class);
+	// private static final Log log = LogFactory.getLog(PanelTest.class);
 
 	/**
 	 * Create the test.

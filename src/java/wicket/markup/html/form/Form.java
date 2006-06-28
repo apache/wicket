@@ -178,7 +178,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(Form.class);
+	private static final Log log = LogFactory.getLog(Form.class);
 
 	/** Maximum size of an upload in bytes */
 	private Bytes maxSize = Bytes.MAX;

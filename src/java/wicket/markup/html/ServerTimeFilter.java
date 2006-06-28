@@ -38,7 +38,7 @@ import wicket.util.string.JavascriptUtils;
  */
 public class ServerTimeFilter implements IResponseFilter
 {
-	private static Log log = LogFactory.getLog(ServerTimeFilter.class);
+	private static final Log log = LogFactory.getLog(ServerTimeFilter.class);
 
 	/**
 	 * @see wicket.IResponseFilter#filter(AppendingStringBuffer)
