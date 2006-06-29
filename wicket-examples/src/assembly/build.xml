@@ -122,6 +122,7 @@
 				<exclude name="nekohtml*.jar" />
 				<exclude name="dom4j*.jar" />
 				<exclude name="org.mortbay.*" />
+				<exclude name="*.war" />
 			</lib>
 		</war>
 	</target>
