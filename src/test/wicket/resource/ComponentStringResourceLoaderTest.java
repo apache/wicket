@@ -122,7 +122,7 @@ public class ComponentStringResourceLoaderTest extends StringResourceLoaderTestB
 	 */
 	public void testMultiLevelEmbeddedComponentLoadFromComponent()
 	{
-		MockPageWithOneComponent p = new MockPageWithOneComponent();
+		MockComponentStringResourceLoaderTestPage p = new MockComponentStringResourceLoaderTestPage();
 		Panel panel = new Panel(p, "component");
 		DummyComponent c = new DummyComponent(panel, "hello", application);
 		IStringResourceLoader loader = new ComponentStringResourceLoader(new DummyApplication());

@@ -31,7 +31,6 @@ import wicket.WicketTestCase;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
-import wicket.protocol.http.MockPage;
 
 /**
  * Test for RadioGroup and Radio components
@@ -101,7 +100,7 @@ public class CheckGroupTest extends WicketTestCase
 		// THIS NEEDS TO BE REWRITTEN BASED ON 1_2 VERSION
 		
 		MockModelObject modelObject = new MockModelObject();
-		MockPage page = new MockPage();
+		MockCheckGroupTestFormPage page = new MockCheckGroupTestFormPage();
 
 		// create component hierarchy
 

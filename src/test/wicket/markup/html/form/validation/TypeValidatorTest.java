@@ -109,7 +109,7 @@ public class TypeValidatorTest extends WicketTestCase
 	{
 		application.createRequestCycle();
 
-		MockPage page = new MockPage();
+		MockTypeValidatorTestFormPage page = new MockTypeValidatorTestFormPage();
 
 		Form form = new Form<Person>(page, "form", new CompoundPropertyModel<Person>(new Person()));
 		new DateField(form, "birthdate");

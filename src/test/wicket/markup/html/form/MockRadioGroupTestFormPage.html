@@ -7,8 +7,16 @@
 </head>
 <body>
 <form wicket:id="form">
-<input type="text" wicket:id="name" />
+<div wicket:id="prop1">
+<p wicket:id="container">
+<input type="radio" wicket:id="radio1" />
+</p>
+<input type="radio" wicket:id="prop2" />
+</div>
+
+<div wicket:id="group2">
+<input type="radio" wicket:id="radio3" />
+</div>
 </form>
-<a href="#" wicket:id="link">Link</a>
 </body>
 </html>
