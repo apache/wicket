@@ -27,6 +27,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor
@@ -38,25 +39,25 @@ import wicket.util.string.Strings;
  * You can use a link like:
  * 
  * <pre>
- *                 add(new Link(&quot;myLink&quot;)
- *                 {
- *                     public void onClick(RequestCycle cycle)
+ *                     add(new Link(&quot;myLink&quot;)
  *                     {
- *                         // do something here...  
- *                     }
- *                 );
+ *                         public void onClick(RequestCycle cycle)
+ *                         {
+ *                             // do something here...  
+ *                         }
+ *                     );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *                 &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *                     &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *                 &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *                     &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -64,13 +65,13 @@ import wicket.util.string.Strings;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *                 add(new Link(&quot;link&quot;, listItem.getModel()) 
- *                 {
- *                     public void onClick() 
+ *                     add(new Link(&quot;link&quot;, listItem.getModel()) 
  *                     {
- *                         MyObject obj = (MyObject)getModelObject();
- *                         setResponsePage(new MyPage(obj.getId(), ... ));
- *                     }
+ *                         public void onClick() 
+ *                         {
+ *                             MyObject obj = (MyObject)getModelObject();
+ *                             setResponsePage(new MyPage(obj.getId(), ... ));
+ *                         }
  * </pre>
  * 
  * @author Jonathan Locke
@@ -243,7 +244,32 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 */
 	public void setAnchor(Component anchor)
 	{
+		addStateChange(new AnchorChange(this.anchor));
 		this.anchor = anchor;
+	}
+
+	/** Change record for when an anchor is changed. */
+	private final class AnchorChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** the old anchor. */
+		private Component anchor;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param anchor
+		 */
+		public AnchorChange(Component anchor)
+		{
+			this.anchor = anchor;
+		}
+
+		public final void undo()
+		{
+			Link.this.anchor = anchor;
+		}
 	}
 
 	/**
