@@ -1618,7 +1618,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 					}
 				}
 
-				// Re-thtow the exception
+				// Re-throw the exception
 				throw ex;
 			}
 
