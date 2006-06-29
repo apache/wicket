@@ -31,8 +31,8 @@ import wicket.model.IModel;
  * <p>
  * Notice that the <u>model</u> and not the <u>model object</u> needs to
  * implement the equals method. Most of the time it is a good idea to forward
- * teh equals call to the object, however if a detachable model is used it is
- * often enough to compare object ids models point to ( this saves the mdoel
+ * the equals call to the object, however if a detachable model is used it is
+ * often enough to compare object ids models point to ( this saves the model
  * from loading the object).
  * 
  * @author Igor Vaynberg (ivaynberg)
