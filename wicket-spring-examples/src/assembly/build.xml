@@ -3,9 +3,9 @@
 
 	<property name="final.name" value="wicket-spring-examples" />
 
-	<property name="src.main.dir" value="src/java" />
-	<property name="src.test.dir" value="src/test" />
-	<property name="src.web.dir" value="src/webapp" />
+	<property name="src.main.dir" value="src/main/java" />
+	<property name="src.test.dir" value="src/test/java" />
+	<property name="src.web.dir" value="src/main/webapp" />
 	
 	<property name="lib.dir" value="lib" />
 

@@ -3,58 +3,27 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>wicket</groupId>
+	<parent>
+		<groupId>wicket</groupId>
+		<artifactId>wicket-parent</artifactId>
+		<version>1.2-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>wicket-portlet-examples</artifactId>
 	<packaging>war</packaging>
-	<version>1.2-SNAPSHOT</version>
+
 	<name>Wicket Portlet Examples</name>
 	<description></description>
-
-	<organization>
-		<name>Wicket developers</name>
-		<url>http://wicket.sourceforge.net</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-quickstart</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-quickstart</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-quickstart</url>
-	</scm>
 
 	<dependencies>
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
-			<version>1.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.3</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-		  <groupId>javax.portlet</groupId>
-		  <artifactId>portlet-api</artifactId>
-		  <version>1.0</version>
-		  <type>jar</type>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
-	    <sourceDirectory>src/main/java</sourceDirectory>
-            <testSourceDirectory>src/test/java</testSourceDirectory>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
 
 		<resources>
 			<resource>
@@ -72,7 +41,7 @@
 		<testResources>
 			<testResource>
 				<filtering>false</filtering>
-				<directory>src/main/test</directory>
+				<directory>src/test/java</directory>
 				<includes>
 					<include>**</include>
 				</includes>
@@ -83,13 +52,12 @@
 		</testResources>
 
 		<plugins>
-		
-                      <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-compiler-plugin</artifactId>
-                        </plugin>
-	<plugin>		
-		<groupId>org.apache.maven.plugins</groupId>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>		
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
@@ -102,9 +70,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-                                <configuration>
-                                        <warSourceDirectory>src/webapp</warSourceDirectory>
-                                </configuration>
+				<configuration>
+					<warSourceDirectory>src/webapp</warSourceDirectory>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -118,7 +86,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<configuration>
-					<templateDirectory>file:src/site/template/</templateDirectory>
+					<templateDirectory>src/site/template/</templateDirectory>
 					<template>wicket-site.vm</template>
 				</configuration>
 			</plugin>
