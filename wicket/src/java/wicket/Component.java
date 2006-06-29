@@ -1538,7 +1538,7 @@ public abstract class Component implements Serializable
 					}
 				}
 
-				// Re-thtow the exception
+				// Re-throw the exception
 				throw ex;
 			}
 
