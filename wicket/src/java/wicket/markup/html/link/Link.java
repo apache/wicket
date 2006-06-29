@@ -397,7 +397,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 				{
 					if (url.toString().indexOf('#') == -1)
 					{
-						String href = getMarkupAttributes().getString("href");
+						String href = tag.getAttributes().getString("href");
 						if (href != null && href.length() > 1 && href.charAt(0) == '#')
 						{
 							url = url + href;
