@@ -402,7 +402,7 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 				{
 					if (url.toString().indexOf('#') == -1)
 					{
-						String href = getMarkupAttributes().getString("href");
+						String href = tag.getAttributes().getString("href");
 						if (href != null && href.length() > 1 && href.charAt(0) == '#')
 						{
 							url = url + href;
