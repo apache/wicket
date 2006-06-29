@@ -39,25 +39,25 @@ import wicket.version.undo.Change;
  * You can use a link like:
  * 
  * <pre>
- *                     add(new Link(&quot;myLink&quot;)
- *                     {
- *                         public void onClick(RequestCycle cycle)
- *                         {
- *                             // do something here...  
- *                         }
- *                     );
+ *                      add(new Link(&quot;myLink&quot;)
+ *                      {
+ *                          public void onClick(RequestCycle cycle)
+ *                          {
+ *                              // do something here...  
+ *                          }
+ *                      );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *                     &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *                      &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *                     &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *                      &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -65,13 +65,13 @@ import wicket.version.undo.Change;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *                     add(new Link(&quot;link&quot;, listItem.getModel()) 
- *                     {
- *                         public void onClick() 
- *                         {
- *                             MyObject obj = (MyObject)getModelObject();
- *                             setResponsePage(new MyPage(obj.getId(), ... ));
- *                         }
+ *                      add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *                      {
+ *                          public void onClick() 
+ *                          {
+ *                              MyObject obj = (MyObject)getModelObject();
+ *                              setResponsePage(new MyPage(obj.getId(), ... ));
+ *                          }
  * </pre>
  * 
  * @author Jonathan Locke
@@ -79,7 +79,37 @@ import wicket.version.undo.Change;
  */
 public abstract class Link extends WebMarkupContainer implements ILinkListener
 {
+	/** Change record for when an anchor is changed. */
+	private final class AnchorChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** the old anchor. */
+		private Component anchor;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param anchor
+		 */
+		public AnchorChange(Component anchor)
+		{
+			this.anchor = anchor;
+		}
+
+		public final void undo()
+		{
+			Link.this.anchor = anchor;
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Simple insertion string to allow disabled links to look like <i>Disabled
+	 * link </i>.
+	 */
+	private String afterDisabledLink;
 
 	/**
 	 * An anchor (form 'http://server/app/etc#someAnchor') will be appended to
@@ -90,12 +120,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 * with '#' ('&lt;a href="#someAnchor" ... ').
 	 */
 	private Component anchor;
-
-	/**
-	 * Simple insertion string to allow disabled links to look like <i>Disabled
-	 * link </i>.
-	 */
-	private String afterDisabledLink;
 
 	/**
 	 * True if link should automatically enable/disable based on current page;
@@ -132,16 +156,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
-	 * Gets any anchor component.
-	 * 
-	 * @return Any anchor component to jump to, might be null
-	 */
-	public Component getAnchor()
-	{
-		return anchor;
-	}
-
-	/**
 	 * Gets the insertion string to allow disabled links to look like
 	 * <i>Disabled link </i>.
 	 * 
@@ -150,6 +164,16 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	public String getAfterDisabledLink()
 	{
 		return afterDisabledLink;
+	}
+
+	/**
+	 * Gets any anchor component.
+	 * 
+	 * @return Any anchor component to jump to, might be null
+	 */
+	public Component getAnchor()
+	{
+		return anchor;
 	}
 
 	/**
@@ -231,6 +255,23 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	}
 
 	/**
+	 * Sets the insertion string to allow disabled links to look like
+	 * <i>Disabled link </i>.
+	 * 
+	 * @param afterDisabledLink
+	 *            The insertion string
+	 */
+	public void setAfterDisabledLink(final String afterDisabledLink)
+	{
+		if (afterDisabledLink == null)
+		{
+			throw new IllegalArgumentException(
+					"Value cannot be null.  For no text, specify an empty String instead.");
+		}
+		this.afterDisabledLink = afterDisabledLink;
+	}
+
+	/**
 	 * Sets an anchor component. An anchor (form
 	 * 'http://server/app/etc#someAnchor') will be appended to the link so that
 	 * after this link executes, it will jump to the provided anchor component's
@@ -246,47 +287,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	{
 		addStateChange(new AnchorChange(this.anchor));
 		this.anchor = anchor;
-	}
-
-	/** Change record for when an anchor is changed. */
-	private final class AnchorChange extends Change
-	{
-		private static final long serialVersionUID = 1L;
-
-		/** the old anchor. */
-		private Component anchor;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param anchor
-		 */
-		public AnchorChange(Component anchor)
-		{
-			this.anchor = anchor;
-		}
-
-		public final void undo()
-		{
-			Link.this.anchor = anchor;
-		}
-	}
-
-	/**
-	 * Sets the insertion string to allow disabled links to look like
-	 * <i>Disabled link </i>.
-	 * 
-	 * @param afterDisabledLink
-	 *            The insertion string
-	 */
-	public void setAfterDisabledLink(final String afterDisabledLink)
-	{
-		if (afterDisabledLink == null)
-		{
-			throw new IllegalArgumentException(
-					"Value cannot be null.  For no text, specify an empty String instead.");
-		}
-		this.afterDisabledLink = afterDisabledLink;
 	}
 
 	/**
@@ -413,6 +413,16 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	 * @param url
 	 *            The url for the link
 	 * @return Any onClick JavaScript that should be used
+	 */
+	protected CharSequence getOnClickScript(final CharSequence url)
+	{
+		return getOnClickScript(url.toString());
+	}
+
+	/**
+	 * @param url
+	 *            The url for the link
+	 * @return Any onClick JavaScript that should be used
 	 * @deprecated this method will be removed by
 	 *             {@link #getOnClickScript(CharSequence)} shortly. Please
 	 *             override that method instead.
@@ -420,16 +430,6 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 	protected String getOnClickScript(final String url)
 	{
 		return null;
-	}
-
-	/**
-	 * @param url
-	 *            The url for the link
-	 * @return Any onClick JavaScript that should be used
-	 */
-	protected CharSequence getOnClickScript(final CharSequence url)
-	{
-		return getOnClickScript(url.toString());
 	}
 
 	/**
