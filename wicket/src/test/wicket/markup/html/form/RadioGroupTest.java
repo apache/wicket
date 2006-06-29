@@ -111,7 +111,7 @@ public class RadioGroupTest extends WicketTestCase
 
 		application.createRequestCycle();
 
-		MockPage page = new MockPage();
+		MockRadioGroupTestFormPage page = new MockRadioGroupTestFormPage();
 
 		// create component hierarchy
 
