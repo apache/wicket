@@ -28,6 +28,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
+import wicket.version.undo.Change;
 
 /**
  * Implementation of a hyperlink component. A link can be used with an anchor
@@ -248,7 +249,32 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	 */
 	public void setAnchor(Component anchor)
 	{
+		addStateChange(new AnchorChange(this.anchor));
 		this.anchor = anchor;
+	}
+
+	/** Change record for when an anchor is changed. */
+	private final class AnchorChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** the old anchor. */
+		private Component anchor;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param anchor
+		 */
+		public AnchorChange(Component anchor)
+		{
+			this.anchor = anchor;
+		}
+
+		public final void undo()
+		{
+			Link.this.anchor = anchor;
+		}
 	}
 
 	/**
