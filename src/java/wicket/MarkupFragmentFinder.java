@@ -26,7 +26,7 @@ import wicket.markup.html.border.Border;
  * Responding to an AJAX request requires that we position the markup stream at
  * the component associated with the AJAX request. That is straight forward in
  * most cases except for "transparent" components and for components which
- * implement there own IComponentResolver.
+ * implement their own IComponentResolver.
  * 
  * @author Juergen Donnerstag
  */
@@ -119,13 +119,13 @@ final class MarkupFragmentFinder
 	}
 
 	/**
-	 * Get component path relativ to the parent container with associated markup
+	 * Get component path relative to the parent container with associated markup
 	 * 
 	 * @param component
 	 * @param parentWithAssociatedMarkup
-	 *            A parent container of 'component' which has associated markup
-	 *            which contains the markup fragment
-	 * @return the relativ path
+	 *            A parent container of 'component', which has associated markup
+	 *            that contains the markup fragment
+	 * @return the relative path
 	 */
 	private static String getComponentRelativePath(final Component component,
 			final MarkupContainer parentWithAssociatedMarkup)
