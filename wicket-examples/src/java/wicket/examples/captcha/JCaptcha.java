@@ -27,7 +27,7 @@ import wicket.examples.WicketExamplePage;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.validation.AbstractValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.DynamicImageResource;
@@ -46,7 +46,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * 
  * @author Eelco Hillenius
  */
-public class Captcha extends WicketExamplePage
+public class JCaptcha extends WicketExamplePage
 {
 	/**
 	 * Form that has the captcha image and knows how to check the captcha
@@ -102,7 +102,7 @@ public class Captcha extends WicketExamplePage
 
 			// add the text field for receiving the client's answer
 			IModel responseModel = new PropertyModel(this, "challengeResponse");
-			TextField responseField = new TextField("response", responseModel)
+			RequiredTextField responseField = new RequiredTextField("response", responseModel)
 			{
 				protected final void onComponentTag(final ComponentTag tag)
 				{
@@ -177,7 +177,7 @@ public class Captcha extends WicketExamplePage
 	/**
 	 * Construct.
 	 */
-	public Captcha()
+	public JCaptcha()
 	{
 		add(new CaptchaForm("form"));
 	}

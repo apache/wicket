@@ -1,7 +1,5 @@
 /*
- * $Id: HelloWorldApplication.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
- * 2006) jdonnerstag $ $Revision: 5394 $ $Date: 2006-04-16 13:36:52 +0000 (Sun,
- * 16 Apr 2006) $
+ * $Id$ $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,27 +16,19 @@
  */
 package wicket.examples.captcha;
 
-import wicket.examples.WicketExampleApplication;
+import wicket.examples.WicketExamplePage;
 
 /**
- * Application class for the captcha example.
+ * Home page of the captcha example.
  * 
  * @author Eelco Hillenius
  */
-public class CaptchaApplication extends WicketExampleApplication
+public class Index extends WicketExamplePage
 {
 	/**
-	 * Constructor.
+	 * Constructor
 	 */
-	public CaptchaApplication()
+	public Index()
 	{
-	}
-
-	/**
-	 * @see wicket.Application#getHomePage()
-	 */
-	public Class getHomePage()
-	{
-		return Index.class;
 	}
 }
