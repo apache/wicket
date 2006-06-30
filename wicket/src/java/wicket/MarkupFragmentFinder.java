@@ -40,7 +40,7 @@ final class MarkupFragmentFinder
 	}
 
 	/**
-	 * Get the markup stream and position it at the component
+	 * Gets the markup stream and positions it at the component.
 	 * 
 	 * @param component
 	 * @return A MarkupStream which is positioned at the component
@@ -119,7 +119,7 @@ final class MarkupFragmentFinder
 	}
 
 	/**
-	 * Get component path relative to the parent container with associated markup
+	 * Gets component path relative to the parent container with associated markup.
 	 * 
 	 * @param component
 	 * @param parentWithAssociatedMarkup
