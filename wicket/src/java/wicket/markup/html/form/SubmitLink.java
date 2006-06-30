@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SubmitLink.java 5949 2006-05-30 23:50:46 +0000 (Tue, 30 May 2006)
+ * ivaynberg $ $Revision$ $Date: 2006-05-30 23:50:46 +0000 (Tue, 30 May
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +19,7 @@
 package wicket.markup.html.form;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.html.link.ILinkListener;
 import wicket.model.IModel;
 
 /**
@@ -30,37 +32,44 @@ import wicket.model.IModel;
  * submit to. Second way is to use the Form constructor then that form will be
  * used to submit to.
  * </p>
- * 
+ * <p>
  * <pre>
- *             Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
- *             f.add(new TextField(&quot;value1&quot;));
- *             f.add(new SubmitLink(&quot;link1&quot;) {
- *                 protected void onSubmit() {
- *                     System.out.println(&quot;Link1 was clicked, value1 is: &quot;
- *                             + mod.getValue1());
- *                 };
- *             });
- *             add(new SubmitLink(&quot;link2&quot;,f) {
- *                 protected void onSubmit() {
- *                     System.out.println(&quot;Link2 was clicked, value1 is: &quot;
- *                             + mod.getValue1());
- *                 };
- *             });
- *      
- *          &lt;form wicket:id=&quot;linkForm&quot; &gt;
- *             &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
- *             &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
- *             &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
- *         &lt;/form&gt;
- *           &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
- *         
+ *                 Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
+ *                 f.add(new TextField(&quot;value1&quot;));
+ *                 f.add(new SubmitLink(&quot;link1&quot;) {
+ *                     protected void onSubmit() {
+ *                         System.out.println(&quot;Link1 was clicked, value1 is: &quot;
+ *                                 + mod.getValue1());
+ *                     };
+ *                 });
+ *                 add(new SubmitLink(&quot;link2&quot;,f) {
+ *                     protected void onSubmit() {
+ *                         System.out.println(&quot;Link2 was clicked, value1 is: &quot;
+ *                                 + mod.getValue1());
+ *                     };
+ *                 });
+ *          
+ *              &lt;form wicket:id=&quot;linkForm&quot; &gt;
+ *                 &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
+ *                 &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
+ *                 &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
+ *             &lt;/form&gt;
+ *               &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
+ *             
  * </pre>
+ * </p>
+ * <p>
+ * If this link is not placed in a form or given a form to cooperate with, it will
+ * fall back to a normal link behavior, meaning that {@link #onSubmit()} will be called
+ * without any other consequences.
+ * </p>
  * 
  * @author chris
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
+ * @author Eelco Hillenius
  */
-public class SubmitLink extends Button
+public class SubmitLink extends Button implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -179,38 +188,55 @@ public class SubmitLink extends Button
 	private String getTriggerJavaScript()
 	{
 		Form form = getForm();
-		StringBuffer sb = new StringBuffer(100);
-		sb.append("var e=document.getElementById('");
-		sb.append(form.getHiddenFieldId());
-		sb.append("'); e.name=\'");
-		sb.append(getInputName());
-		sb.append("'; e.value='x';");
-
-		sb.append("var f=document.getElementById('");
-		sb.append(form.getJavascriptId());
-		sb.append("');");
-
-		if (shouldInvokeJavascriptFormOnsubmit())
+		if (form != null)
 		{
-
-			sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
+			StringBuffer sb = new StringBuffer(100);
+			sb.append("var e=document.getElementById('");
+			sb.append(form.getHiddenFieldId());
+			sb.append("'); e.name=\'");
+			sb.append(getInputName());
+			sb.append("'; e.value='x';");
+			sb.append("var f=document.getElementById('");
+			sb.append(form.getJavascriptId());
+			sb.append("');");
+			if (shouldInvokeJavascriptFormOnsubmit())
+			{
+				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
+			}
+			sb.append("f.submit();return false;");
+			return sb.toString();
 		}
-
-
-		sb.append("f.submit();return false;");
-		return sb.toString();
+		else
+		{
+			// if we didn't find a parent form, fall back on normal link
+			// behavior
+			return "location.href='" + urlFor(ILinkListener.INTERFACE).toString() + "';";
+		}
 	}
 
 	/**
-	 * @return the Form for which this submit link submits
+	 * @return the Form for which this submit link submits. Null if there is no
+	 *         form.
 	 */
 	public final Form getForm()
 	{
 		if (form == null)
 		{
-			form = super.getForm();
+			// Look for parent form
+			form = (Form)findParent(Form.class);
 		}
 		return form;
+	}
+
+	/**
+	 * This method is here as a means to fall back on normal link
+	 * behavior when this link is not nested in a form. Not intended
+	 * to be called by clients directly.
+	 * @see wicket.markup.html.link.ILinkListener#onLinkClicked()
+	 */
+	public final void onLinkClicked()
+	{
+		onSubmit();
 	}
 
 	/**
