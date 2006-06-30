@@ -49,7 +49,7 @@ public class TextField<T> extends AbstractTextComponent<T>
 	 * @param type
 	 *            Type for field validation
 	 */
-	public TextField(MarkupContainer parent, final String id, final Class type)
+	public TextField(MarkupContainer parent, final String id, final Class<? extends T> type)
 	{
 		super(parent, id);
 		setType(type);
