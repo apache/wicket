@@ -313,7 +313,7 @@ public class RequestParameters implements Serializable
 	@Override
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer("[RequestParameters ");
+		StringBuilder b = new StringBuilder("[RequestParameters ");
 		if (getComponentPath() != null)
 		{
 			b.append(" componentPath=").append(getComponentPath());
