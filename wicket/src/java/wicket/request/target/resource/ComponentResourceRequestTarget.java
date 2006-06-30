@@ -123,7 +123,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	@Override
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer(getClass().getName()).append("@").append(hashCode())
+		StringBuilder b = new StringBuilder(getClass().getName()).append("@").append(hashCode())
 				.append(page).append("->").append(component.getId()).append("->IResourceListener");
 		return b.toString();
 	}

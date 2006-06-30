@@ -319,7 +319,7 @@ public abstract class AbstractTree extends Panel
 	@Override
 	public String toString()
 	{
-		StringBuffer b = new StringBuffer("-- TREE MODEL --\n");
+		StringBuilder b = new StringBuilder("-- TREE MODEL --\n");
 		TreeState state = getTreeState();
 		TreeModel treeModel = null;
 		if (state != null)
