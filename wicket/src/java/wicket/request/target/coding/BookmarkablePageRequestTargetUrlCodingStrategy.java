@@ -18,15 +18,19 @@
  */
 package wicket.request.target.coding;
 
+import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkableFormPageRequestTarget;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 
 /**
  * Encodes and decodes mounts for a single bookmarkable page class.
@@ -82,6 +86,24 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		final IBookmarkablePageRequestTarget target = (IBookmarkablePageRequestTarget)requestTarget;
 
 		PageParameters pageParameters = target.getPageParameters();
+		
+		// If the target contains component path and request target interface, encode it.
+		if (target instanceof BookmarkableListenerInterfaceRequestTarget) 
+		{
+			BookmarkableListenerInterfaceRequestTarget interfaceRequestTarget = (BookmarkableListenerInterfaceRequestTarget) target;
+			final AppendingStringBuffer value = new AppendingStringBuffer(32);
+			value.append(Component.PATH_SEPARATOR);
+			value.append(interfaceRequestTarget.getComponentPath());
+			value.append(Component.PATH_SEPARATOR);
+			value.append(Component.PATH_SEPARATOR);
+			value.append(interfaceRequestTarget.getInterfaceName());
+			if (pageParameters == null)
+			{
+				pageParameters = new PageParameters();
+			}
+			pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, value);
+		}
+		
 		String pagemap = pageMapName != null ? pageMapName : target.getPageMapName();
 		if (pagemap != null)
 		{
@@ -100,6 +122,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 	 */
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
+
 		final String parametersFragment = requestParameters.getPath().substring(
 				getMountPath().length());
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
@@ -107,12 +130,32 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);
 		
+		final BookmarkablePageRequestTarget target;
+		
+		final String bookmarkableInterfaceListener = (String) parameters.remove(
+				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+		
 		final String bookmarkableFormName = (String)parameters.remove(
 				WebRequestCodingStrategy.BOOKMARKABLE_FORM_PARAMETER_NAME);
 		
-		final BookmarkablePageRequestTarget target;
-		
-		if (bookmarkableFormName != null) 
+		// Do the parameters contain component path and listener interface?
+		if (bookmarkableInterfaceListener != null) {
+			// try to parse component path and listener interface 
+			final String[] pathComponents = Strings.split(bookmarkableInterfaceListener, Component.PATH_SEPARATOR);
+			// There must be at least 4 path components
+			if (pathComponents.length < 4)
+			{
+				throw new WicketRuntimeException("Internal error parsing "
+						+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = " + bookmarkableInterfaceListener);
+			}
+			final String interfaceName = pathComponents[pathComponents.length - 1];
+			final String componentPath = bookmarkableInterfaceListener.substring(1, 
+					bookmarkableInterfaceListener.length() - interfaceName.length() - 2);
+			
+			target = new BookmarkableListenerInterfaceRequestTarget(pageMapName, bookmarkablePageClass, parameters,
+					componentPath, interfaceName);
+		}										
+		else if (bookmarkableFormName != null) 
 		{		
 			requestParameters.setBookmarkableFormName(bookmarkableFormName);
 			target = new BookmarkableFormPageRequestTarget(pageMapName, 
