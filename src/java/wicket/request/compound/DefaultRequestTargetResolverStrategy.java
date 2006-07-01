@@ -41,6 +41,7 @@ import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkableFormPageRequestTarget;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ExpiredPageClassRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
@@ -86,16 +87,17 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			return mounted;
 		}
 
-		// See whether this request points to a rendered page
 		final String path = requestParameters.getPath();
-		if (requestParameters.getComponentPath() != null)
-		{
-			return resolveRenderedPage(requestCycle, requestParameters);
-		}
+		
 		// see whether this request points to a bookmarkable page
-		else if (requestParameters.getBookmarkablePageClass() != null)
+		if (requestParameters.getBookmarkablePageClass() != null)
 		{
 			return resolveBookmarkablePage(requestCycle, requestParameters);
+		}		
+		// See whether this request points to a rendered page		
+		else if (requestParameters.getComponentPath() != null)
+		{
+			return resolveRenderedPage(requestCycle, requestParameters);
 		}
 		// see whether this request points to a shared resource
 		else if (requestParameters.getResourceKey() != null)
@@ -274,7 +276,12 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			if (requestParameters.getBookmarkableFormName() != null)
+			if (requestParameters.getComponentPath() != null && requestParameters.getInterfaceName() != null) 
+			{
+				return new BookmarkableListenerInterfaceRequestTarget(requestParameters.getPageMapName(), 
+						pageClass, params, requestParameters.getComponentPath(), requestParameters.getInterfaceName());
+			}			
+			else if (requestParameters.getBookmarkableFormName() != null)
 			{
 				return new BookmarkableFormPageRequestTarget(requestParameters.getPageMapName(),
 						pageClass, params, requestParameters.getBookmarkableFormName());
