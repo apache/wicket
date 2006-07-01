@@ -67,6 +67,16 @@ public abstract class AbstractOutputTransformerContainer<T> extends MarkupContai
 	{
 		super(parent, id, model);
 	}
+	
+	/**
+	 * 
+	 * @see wicket.markup.html.WebMarkupContainer#getMarkupType()
+	 */
+	@Override
+	public String getMarkupType()
+	{
+		return "html";
+	}
 
 	/**
 	 * You can choose whether the body of the tag excluding the tag shall be
