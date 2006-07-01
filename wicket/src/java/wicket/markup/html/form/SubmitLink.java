@@ -87,21 +87,6 @@ public class SubmitLink extends Button implements ILinkListener
 	}
 
 	/**
-	 * With this constructor the SubmitLink must be inside a Form.
-	 * 
-	 * @param id
-	 *            The id of the submitlink.
-	 * @param model
-	 *            The model for this submitlink, It won't be used by the submit
-	 *            link itself, but it can be used for keeping state
-	 */
-	public SubmitLink(String id, IModel model)
-	{
-		super(id, model);
-	}
-
-
-	/**
 	 * With this constructor the SubmitLink will submit the {@link Form} that is
 	 * given when the link is clicked on.
 	 * 
@@ -120,6 +105,21 @@ public class SubmitLink extends Button implements ILinkListener
 	{
 		super(id);
 		this.form = form;
+	}
+
+
+	/**
+	 * With this constructor the SubmitLink must be inside a Form.
+	 * 
+	 * @param id
+	 *            The id of the submitlink.
+	 * @param model
+	 *            The model for this submitlink, It won't be used by the submit
+	 *            link itself, but it can be used for keeping state
+	 */
+	public SubmitLink(String id, IModel model)
+	{
+		super(id, model);
 	}
 
 	/**
@@ -144,6 +144,31 @@ public class SubmitLink extends Button implements ILinkListener
 	{
 		super(id);
 		this.form = form;
+	}
+
+	/**
+	 * @return the Form for which this submit link submits. Null if there is no
+	 *         form.
+	 */
+	public final Form getForm()
+	{
+		if (form == null)
+		{
+			// Look for parent form
+			form = (Form)findParent(Form.class);
+		}
+		return form;
+	}
+
+	/**
+	 * This method is here as a means to fall back on normal link
+	 * behavior when this link is not nested in a form. Not intended
+	 * to be called by clients directly.
+	 * @see wicket.markup.html.link.ILinkListener#onLinkClicked()
+	 */
+	public final void onLinkClicked()
+	{
+		onSubmit();
 	}
 
 	/**
@@ -181,6 +206,18 @@ public class SubmitLink extends Button implements ILinkListener
 	}
 
 	/**
+	 * Controls whether or not clicking on this link will invoke form's
+	 * javascript onsubmit handler. True by default.
+	 * 
+	 * @return true if form's javascript onsubmit handler should be invoked,
+	 *         false otherwise
+	 */
+	protected boolean shouldInvokeJavascriptFormOnsubmit()
+	{
+		return true;
+	}
+
+	/**
 	 * The javascript which trigges this link
 	 * 
 	 * @return The javascript
@@ -212,42 +249,5 @@ public class SubmitLink extends Button implements ILinkListener
 			// behavior
 			return "location.href='" + urlFor(ILinkListener.INTERFACE).toString() + "';";
 		}
-	}
-
-	/**
-	 * @return the Form for which this submit link submits. Null if there is no
-	 *         form.
-	 */
-	public final Form getForm()
-	{
-		if (form == null)
-		{
-			// Look for parent form
-			form = (Form)findParent(Form.class);
-		}
-		return form;
-	}
-
-	/**
-	 * This method is here as a means to fall back on normal link
-	 * behavior when this link is not nested in a form. Not intended
-	 * to be called by clients directly.
-	 * @see wicket.markup.html.link.ILinkListener#onLinkClicked()
-	 */
-	public final void onLinkClicked()
-	{
-		onSubmit();
-	}
-
-	/**
-	 * Controls whether or not clicking on this link will invoke form's
-	 * javascript onsubmit handler. True by default.
-	 * 
-	 * @return true if form's javascript onsubmit handler should be invoked,
-	 *         false otherwise
-	 */
-	protected boolean shouldInvokeJavascriptFormOnsubmit()
-	{
-		return true;
 	}
 }
