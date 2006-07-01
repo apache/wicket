@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.basic;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
@@ -280,6 +281,8 @@ public class SimplePageTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
+		Application.get().getMarkupSettings().setStripComments(true);
+		
 		executeTest(SimplePage_3.class, "SimplePageExpectedResult_3.html");
 	}
 

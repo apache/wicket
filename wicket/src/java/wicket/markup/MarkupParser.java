@@ -394,7 +394,10 @@ public class MarkupParser
 
 			if (pos2 >= 0)
 			{
-				buf.append(rawMarkup.substring(0, pos1 - 1));
+				if (pos1 > 0)
+				{
+					buf.append(rawMarkup.substring(0, pos1 - 1));
+				}
 				buf.append(rawMarkup.substring(pos2 + 4));
 				rawMarkup = buf.toString();
 			}

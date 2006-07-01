@@ -19,10 +19,9 @@
 package wicket.markup.html.basic;
 
 
+
 /**
  * Mock page for testing.
- * 
- * @author Chris Turner
  */
 public class SimplePage_3 extends SimplePage
 {
@@ -33,6 +32,10 @@ public class SimplePage_3 extends SimplePage
 	 */
 	public SimplePage_3()
 	{
+		// This has changed with wicket 2.0 and the constructor
+		// change. The markup now MUST contain the markup for
+		// all component even if set invisible. setVisible()
+		// is called after the constructor
 		get("myLabel").setVisible(false);
 		get("test").setVisible(false);
 		get("myPanel").setVisible(false);
