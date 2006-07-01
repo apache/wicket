@@ -382,6 +382,9 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		 */
 		public final void renderHead(final Response response)
 		{
+			if (WebPage.this.isStateless() == true)
+				return;
+			
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 
