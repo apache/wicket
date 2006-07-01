@@ -50,6 +50,7 @@ import wicket.protocol.http.request.WebClientInfo;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.util.lang.Bytes;
 import wicket.util.string.AppendingStringBuffer;
@@ -807,10 +808,14 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				if (page.getClass().getConstructor((Class[])null) != null
 						|| page.getClass().getConstructor(new Class[] { PageParameters.class }) != null)
 				{
-					PageParameters pp = new PageParameters();
-					pp.add(WebRequestCodingStrategy.BOOKMARKABLE_FORM_PARAMETER_NAME,
-							getPageRelativePath());
-					tag.put("action", urlFor(page.getClass(), pp));
+//					PageParameters pp = new PageParameters();
+//					pp.add(WebRequestCodingStrategy.BOOKMARKABLE_FORM_PARAMETER_NAME,
+//							getPageRelativePath());					
+//					tag.put("action", urlFor(page.getClass(), pp));
+					
+					BookmarkableListenerInterfaceRequestTarget target = new BookmarkableListenerInterfaceRequestTarget(
+							page.getPageMap().getName(), page.getClass(), new PageParameters(), this, IFormSubmitListener.INTERFACE);
+					tag.put("action", urlFor(target));
 					addAction = false;
 				}
 			}
