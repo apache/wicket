@@ -37,10 +37,10 @@ import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.ResourceReference;
 import wicket.Response;
-import wicket.WicketRuntimeException;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
+import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.TagUtils;
 import wicket.markup.html.internal.HtmlBodyContainer;
@@ -277,7 +277,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		}
 		else
 		{
-			throw new WicketRuntimeException(
+			throw new MarkupNotFoundException(
 					"Each Page must have associated markup. Unable to find the markup file for Page: " 
 					+ this.toString());
 		}

@@ -19,7 +19,6 @@
 package wicket.markup.html.basic;
 
 import wicket.Application;
-import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
@@ -317,12 +316,9 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_5.class, "SimplePageExpectedResult_5.html");
 		}
-		catch (WicketRuntimeException ex)
+		catch (MarkupNotFoundException ex)
 		{
-			if ((ex.getCause() != null) && (ex.getCause() instanceof MarkupNotFoundException))
-			{
-				hit = true;
-			}
+			hit = true;
 		}
 		assertTrue("Did expect a MarkupNotFoundException", hit);
 	}

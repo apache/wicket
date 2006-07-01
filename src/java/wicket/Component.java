@@ -633,6 +633,10 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 					markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
 				}
 			}
+			catch (MarkupException ex)
+			{
+				throw ex;
+			}
 			catch (RuntimeException re)
 			{
 				throw new WicketRuntimeException("Couldn't find the markup of the component " + id
