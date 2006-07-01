@@ -636,7 +636,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			catch (RuntimeException re)
 			{
 				throw new WicketRuntimeException("Couldn't find the markup of the component " + id
-						+ " in parent " + parent.getPageRelativePath());
+						+ " in parent " + parent.getPageRelativePath(), re);
 			}
 			parent.add(this);
 		}
