@@ -249,6 +249,17 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 	}
 
 	/**
+	 * This method is here as a means to fall back on normal link
+	 * behavior when this link is not nested in a form. Not intended
+	 * to be called by clients directly.
+	 * @see wicket.markup.html.link.ILinkListener#onLinkClicked()
+	 */
+	public final void onLinkClicked()
+	{
+		onSubmit();
+	}
+
+	/**
 	 * Controls whether or not clicking on this link will invoke form's
 	 * javascript onsubmit handler. True by default.
 	 * 
