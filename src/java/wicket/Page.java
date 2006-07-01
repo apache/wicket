@@ -1302,5 +1302,18 @@ public abstract class Page<T> extends MarkupContainer<T>
 			return false;
 		}
 	}
+	
+	/**
+	 * Returns true if the page is bookmarkable.
+	 * Bookmarkable page can be instantiated using a bookmarkable URL.
+	 */
+	public boolean isBookmarkable() {
+		try {
+			return getClass().getConstructor((Class[])null) != null || 
+				   getClass().getConstructor(new Class[] { PageParameters.class }) != null;
+		} catch (Exception ignore) {
+			return false;
+		}
+	}
 
 }
