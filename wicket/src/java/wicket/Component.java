@@ -1055,7 +1055,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @throws IllegalStateException
 	 *             Thrown if component is not yet attached to a Page.
 	 */
-	public final Page getPage()
+	public final Page<?> getPage()
 	{
 		// Search for nearest Page
 		final Page page = findPage();
