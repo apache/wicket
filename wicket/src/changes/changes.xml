@@ -12,6 +12,7 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+      <action type="fix" dev="Eelco Hillenius" due-to="Marco Geier">Fix for firefox not parsing xml-responses after the pages document.domain has been changed to the base-domain.</action>
       <action type="fix" dev="Eelco Hillenius">Implemented a workaround for an inconsistency between different servlet containers and a bug in the servlet spec which does not seem to state what should happen with empty valued request parameters. This caused Wicket to have some problems (like a failing required test) with Jetty 6.</action>
       <action type="fix" dev="Eelco Hillenius">Submit links now fall back to a normal link behavior if there are not nested in a form are given a form to cooperate with.</action>
       <action type="add" dev="Eelco Hillenius" due-to="Ali Zaid,Andrew Berman,Thijs Vonk" issue="1491239">Implemented anchors on Links. You can either provide a component that is to be used for getting the anchor, or provide an anchor in the href attribute of &lt;a tags.</action>

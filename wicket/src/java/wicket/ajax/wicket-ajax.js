@@ -129,23 +129,33 @@ function wicketSubmitFormById(formId, url, submitButton, successHandler, failure
     return wicketSubmitForm(form, url, submitButton, successHandler, failureHandler);
 }
 function wicketAjaxOnStateChange(transport, successHandler, failureHandler) {
-    if (transport.readyState == 4) {
-        if (transport.status == 200) {
-            if (wicketAjaxDebugEnabled()) {
-                var log=WicketAjaxDebug.logInfo;
-                log("received ajax response. "+transport.responseText.length+" characters, envelope following...");
-                log("");
-                log(transport.responseText);
-            }
-            wicketAjaxProcess(transport.responseXML, successHandler, failureHandler);
-        } else {
-            if (wicketAjaxDebugEnabled()) {
-                var log=WicketAjaxDebug.logError;
-                log("received ajax response with code: "+transport.status);
-            }
-			wicketAjaxCallFailureHandler(failureHandler);
-		}        
-    }
+   if (transport.readyState == 4) {
+       if (transport.status == 200) {
+           if (wicketAjaxDebugEnabled()) {
+               var log=WicketAjaxDebug.logInfo;
+               log("received ajax response."+transport.responseText.length+" characters, envelope following...");
+               log("");
+               log(transport.responseText);
+           }
+           var responseAsText = transport.responseText;
+           var xmldoc;
+           if (window.XMLHttpRequest) {
+               var parser = new DOMParser();
+               xmldoc = parser.parseFromString(responseAsText, "text/xml");
+           }
+           else
+           if (window.ActiveXObject) {
+               xmldoc = transport.responseXML;
+           }
+           wicketAjaxProcess(xmldoc, successHandler, failureHandler);
+       } else {
+           if (wicketAjaxDebugEnabled()) {
+               var log=WicketAjaxDebug.logError;
+               log("received ajax response with code: "+transport.status);
+           }
+           wicketAjaxCallFailureHandler(failureHandler);
+        }
+   }
 }
 function wicketAjaxProcess(envelope, successHandler, failureHandler) {
 	try {
