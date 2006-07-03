@@ -71,15 +71,18 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		@Override
 		protected void put(Page page)
 		{
-			String sessionId = getSession().getId();
-			if (sessionId != null)
+			if(!page.isStateless())
 			{
-				if (lastPage != page)
+				String sessionId = getSession().getId();
+				if (sessionId != null)
 				{
-					lastPage = page;
-					dirty();
+					if (lastPage != page)
+					{
+						lastPage = page;
+						dirty();
+					}
+					getStore().storePage(sessionId, page);
 				}
-				getStore().storePage(sessionId, page);
 			}
 		}
 
