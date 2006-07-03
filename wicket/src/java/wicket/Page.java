@@ -376,14 +376,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// Reset it to stateless so that it can be tested again
 		this.stateless = null;
 
-		if (!isStateless())
-		{
-			// trigger creation of the actual session in case it was deferred
-			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
-		}
-
-		// Add/touch the response page in the session (its pagemap).
-		getSession().touch(this);
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
@@ -440,6 +432,14 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 		// Check rendering if it happened fully
 		checkRendering(this);
+		
+		if (!isStateless())
+		{
+			// trigger creation of the actual session in case it was deferred
+			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
+			// Add/touch the response page in the session (its pagemap).
+			getSession().touch(this);
+		}
 	}
 
 	/**
