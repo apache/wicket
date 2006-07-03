@@ -47,7 +47,6 @@ import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.request.WebClientInfo;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
