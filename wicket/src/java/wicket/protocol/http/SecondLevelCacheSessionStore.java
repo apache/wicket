@@ -97,7 +97,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			String sessionId = getSession().getId();
 			if(sessionId != null)
 			{
-				getStore().getPage(sessionId, id, versionNumber);
+				return getStore().getPage(sessionId, id, versionNumber);
 			}
 			return null;
 		}
