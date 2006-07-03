@@ -77,6 +77,8 @@ public abstract class FormComponent extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
 
+	private static final String[] EMPTY_STRING_ARRAY = new String[] { "" };
+
 	/**
 	 * The value separator
 	 */
@@ -306,7 +308,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public String[] getInputAsArray()
 	{
-		return getRequest().getParameters(getInputName());
+		String[] values = getRequest().getParameters(getInputName());
+		if (!isInputNullable())
+		{
+			if (values != null && values.length == 1 && values[0] == null)
+			{
+				// we the key got passed in (otherwise values would be null),
+				// but the value was set to null.
+				// As the servlet spec isn't clear on what to do with 'empty'
+				// request values - most return an empty string, but some null -
+				// we have to workaround here and deliberately set to an empty
+				// string if the the component is not nullable (text components)
+				return EMPTY_STRING_ARRAY;
+			}
+		}
+		return values;
 	}
 
 	/**
@@ -676,7 +692,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected Object convertValue(String[] value) throws ConversionException
 	{
-		return value != null && value.length > 0 && value[0]!=null ? value[0].trim() : null;
+		return value != null && value.length > 0 && value[0] != null ? value[0].trim() : null;
 	}
 
 	/**
@@ -803,7 +819,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @return The values in the request for this component
 	 * @deprecated Use {@link #getInputAsArray()} instead
 	 */
-	//TODO Post 1.2: remove
+	// TODO Post 1.2: remove
 	protected final String[] inputAsStringArray()
 	{
 		return getInputAsArray();
@@ -937,7 +953,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			final String[] input = getInputAsArray();
 
 			// If there is any input
-			if (input != null)
+			if (input != null && input.length > 0 && input[0] != null)
 			{
 				// join the values together with ";", for example, "id1;id2;id3"
 				rawInput = StringList.valueOf(input).join(VALUE_SEPARATOR);
