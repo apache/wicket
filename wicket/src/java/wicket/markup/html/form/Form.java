@@ -274,10 +274,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR
 	 * CALL IT.
 	 * 
-	 * Handles form submissions. By default, this method simply calls validate()
-	 * to validate the form and update the model if there is only one button. If
-	 * there is more than one button, it calls the onClick() method for the
-	 * button which submitted the form.
+	 * Handles form submissions.
 	 * 
 	 * @see Form#validate()
 	 */
