@@ -51,9 +51,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		private SecondLevelCachePageMap(String name, Session session)
 		{
 			super(name, session);
-			// don't have to have multi window support, all pages should be able
-			// to be resolved.
-			Application.get().getPageSettings().setAutomaticMultiWindowSupport(false);
 		}
 
 		@Override
