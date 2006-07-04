@@ -30,14 +30,12 @@ import wicket.Session;
 import wicket.session.pagemap.IPageMapEntry;
 
 /**
+ * FIXME document me!
+ * 
  * @author jcompagner
  */
 public class SecondLevelCacheSessionStore extends HttpSessionStore
 {
-
-	/**
-	 * @author jcompagner
-	 */
 	private static final class SecondLevelCachePageMap extends PageMap
 	{
 		private static final long serialVersionUID = 1L;
@@ -71,7 +69,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		@Override
 		protected void put(Page page)
 		{
-			if(!page.isStateless())
+			if (!page.isStateless())
 			{
 				String sessionId = getSession().getId();
 				if (sessionId != null)
@@ -98,7 +96,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				}
 			}
 			String sessionId = getSession().getId();
-			if(sessionId != null)
+			if (sessionId != null)
 			{
 				return getStore().getPage(sessionId, id, versionNumber);
 			}
@@ -112,7 +110,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	}
 
 	/**
-	 * @author jcompagner
+	 * FIXME document me!
 	 */
 	public interface IStore
 	{
