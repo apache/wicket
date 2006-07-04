@@ -321,8 +321,11 @@ public class WicketFilter implements Filter
 		filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
 
 		// Finished
-		log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
-				+ factory.getClass().getName() + " factory");
+		if (log.isDebugEnabled())
+		{
+			log.debug("WicketServlet loaded application " + this.webApplication.getName() + " via "
+					+ factory.getClass().getName() + " factory");
+		}
 
 		try
 		{
