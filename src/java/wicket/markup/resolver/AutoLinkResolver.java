@@ -384,11 +384,6 @@ public final class AutoLinkResolver implements IComponentResolver
 					// was not found as a pcakge resource
 					return autoLink;
 				}
-				else
-				{
-					log.info("Did not find autolink resource: " + pathInfo.reference
-							+ "; Assume it is a valid external URL");
-				}
 			}
 			// else we can't have absolute resource references, at least not at
 			// this time
