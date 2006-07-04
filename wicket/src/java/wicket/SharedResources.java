@@ -134,7 +134,10 @@ public class SharedResources
 			if (value == null)
 			{
 				resourceMap.put(key, resource);
-				log.info("added shared resource " + key);
+				if (log.isDebugEnabled())
+				{
+					log.debug("added shared resource " + key);
+				}
 			}
 		}
 	}
