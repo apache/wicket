@@ -157,9 +157,6 @@ public abstract class Session implements Serializable
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
 
-	/** Factory for constructing Pages for this Session */
-	private transient IPageFactory pageFactory;
-
 	/** A number to generate names for auto create pagemaps */
 	private int autoCreatePageMapCounter = 0;
 
@@ -429,11 +426,7 @@ public abstract class Session implements Serializable
 	 */
 	public final IPageFactory getPageFactory()
 	{
-		if (pageFactory == null)
-		{
-			pageFactory = application.getSessionSettings().getPageFactory();
-		}
-		return pageFactory;
+		return application.getSessionSettings().getPageFactory();
 	}
 
 	/**
