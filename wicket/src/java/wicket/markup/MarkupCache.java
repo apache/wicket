@@ -306,7 +306,10 @@ public class MarkupCache
 			{
 				public void onChange()
 				{
-					log.info("Remove markup from cache: " + markupResourceStream);
+					if (log.isDebugEnabled())
+					{
+						log.debug("Remove markup from cache: " + markupResourceStream);
+					}
 
 					// Remove the markup from the cache. It will be reloaded
 					// next time it the markup is requested.
@@ -316,7 +319,10 @@ public class MarkupCache
 			});
 		}
 
-		log.info("Loading markup from " + markupResourceStream);
+		if (log.isDebugEnabled())
+		{
+			log.debug("Loading markup from " + markupResourceStream);
+		}
 		return loadMarkup(container, key, markupResourceStream);
 	}
 
@@ -419,7 +425,10 @@ public class MarkupCache
 		{
 			public void onChange()
 			{
-				log.info("Remove derived markup from cache: " + markup.getResource());
+				if (log.isDebugEnabled())
+				{
+					log.debug("Remove derived markup from cache: " + markup.getResource());
+				}
 				removeMarkup(key, markup.getResource());
 			}
 
