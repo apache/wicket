@@ -139,7 +139,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 	}
 
-	private IStore cachingStore;
+	private final IStore cachingStore;
 
 	/**
 	 * Construct.
