@@ -64,18 +64,18 @@ import wicket.util.string.Strings;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *                          &lt;wicket:panel&gt;
- *                           &lt;table&gt;
- *                            &lt;tr&gt;
- *                             &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                             &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *                            &lt;/tr&gt;
- *                            &lt;tr&gt;
- *                             &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                             &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *                            &lt;/tr&gt;
- *                           &lt;/table&gt;
- *                          &lt;/wicket:panel&gt;
+ *                           &lt;wicket:panel&gt;
+ *                            &lt;table&gt;
+ *                             &lt;tr&gt;
+ *                              &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *                              &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *                             &lt;/tr&gt;
+ *                             &lt;tr&gt;
+ *                              &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *                              &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *                             &lt;/tr&gt;
+ *                            &lt;/table&gt;
+ *                           &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
@@ -560,7 +560,10 @@ public class WizardStep<T> implements IWizardStep
 			final URL url = stepClass.getResource(name);
 			if (url != null)
 			{
-				return new MarkupResourceStreamLookupResult(new UrlResourceStream(url));
+				MarkupResourceStreamLookupResult result = new MarkupResourceStreamLookupResult(
+						new UrlResourceStream(url));
+				result.setCacheKey(url.toString());
+				return result;
 			}
 			else
 			{
