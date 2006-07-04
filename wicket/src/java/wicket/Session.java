@@ -157,9 +157,6 @@ public abstract class Session implements Serializable, ICoverterLocator
 	/** The locale to use when loading resources for this session. */
 	private Locale locale;
 
-	/** Factory for constructing Pages for this Session */
-	private transient IPageFactory pageFactory;
-
 	/** A number to generate names for auto create pagemaps */
 	private int autoCreatePageMapCounter = 0;
 
@@ -214,6 +211,72 @@ public abstract class Session implements Serializable, ICoverterLocator
 					+ Thread.currentThread().getName());
 		}
 		return session;
+	}
+
+	/**
+	 * Get the session for the calling thread.
+	 * 
+	 * @param forceBind
+	 *            Whether to force binding this session to the application's
+	 *            {@link ISessionStore session store}. A Wicket application can
+	 *            operate in a session-less mode as long as stateless pages are
+	 *            used. Session objects will then be created for each request,
+	 *            but they will only live for that request. You can recognize
+	 *            temporary sessions by calling {@link #isTemporary()} which
+	 *            basically checks whether the session's id is null. Hence,
+	 *            temporary sessions have no session id. If this argument is
+	 *            true, the session will be bound (made not-temporary) if it was
+	 *            not bound yet. It is useful for cases where you want to be
+	 *            absolutely sure this session object will be available in next
+	 *            requests.
+	 * 
+	 * @return Session for calling thread
+	 */
+	public static Session get(boolean forceBind)
+	{
+		Session session = get();
+		session.bind();
+		return session;
+	}
+
+	/**
+	 * Force binding this session to the application's
+	 * {@link ISessionStore session store}. A Wicket application can operate in
+	 * a session-less mode as long as stateless pages are used. Session objects
+	 * will be then created for each request, but they will only live for that
+	 * request. You can recognize temporary sessions by calling
+	 * {@link #isTemporary()} which basically checks whether the session's id is
+	 * null. Hence, temporary sessions have no session id.
+	 * <p>
+	 * By calling this method, the session will be bound (made not-temporary) if
+	 * it was not bound yet. It is useful for cases where you want to be
+	 * absolutely sure this session object will be available in next requests.
+	 * </p>
+	 */
+	protected final void bind()
+	{
+		ISessionStore store = getSessionStore();
+		Request request = RequestCycle.get().getRequest();
+		if (store.getSessionId(request, false) == null)
+		{
+			// explicitly create a session
+			this.id = store.getSessionId(request, true);
+			// bind it
+			store.bind(request, this);
+		}
+	}
+
+	/**
+	 * Whether this session is temporary. A Wicket application can operate in a
+	 * session-less mode as long as stateless pages are used. If this session
+	 * object is temporary, it will not be available on a next request.
+	 * 
+	 * @return Whether this session is temporary (which is the same as it's id
+	 *         being null)
+	 */
+	public final boolean isTemporary()
+	{
+		return getId() == null;
 	}
 
 	/**
@@ -332,14 +395,20 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 * Gets the unique id for this session from the underlying SessionStore. May
 	 * be null if a concrete session is not yet created.
 	 * 
-	 * @return The unique id for this session or null
+	 * @return The unique id for this session or null if it is a temporary
+	 *         session
 	 */
 	public final String getId()
 	{
 		if (id == null)
 		{
 			id = getSessionStore().getSessionId(RequestCycle.get().getRequest(), false);
-			dirty = true;
+
+			// we have one?
+			if (id != null)
+			{
+				dirty();
+			}
 		}
 		return id;
 	}
@@ -425,11 +494,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 */
 	public final IPageFactory getPageFactory()
 	{
-		if (pageFactory == null)
-		{
-			pageFactory = application.getSessionSettings().getPageFactory();
-		}
-		return pageFactory;
+		return application.getSessionSettings().getPageFactory();
 	}
 
 	/**
@@ -602,10 +667,6 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 *            The response
 	 * @return The new request cycle.
 	 */
-	// FIXME post 1.2 Move to application. We really shouldn't need a session to
-	// make request cycles.
-	// see
-	// https://sourceforge.net/tracker/?func=detail&atid=684975&aid=1468853&group_id=119783
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
@@ -686,6 +747,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 	public final void setMetaData(final MetaDataKey key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
+		dirty();
 	}
 
 	/**
@@ -828,9 +890,9 @@ public abstract class Session implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * Marks session state as dirty
+	 * Marks session state as dirty.
 	 */
-	protected final void dirty()
+	protected void dirty()
 	{
 		this.dirty = true;
 	}
@@ -917,16 +979,20 @@ public abstract class Session implements Serializable, ICoverterLocator
 
 		ISessionStore store = getSessionStore();
 		Request request = cycle.getRequest();
-		
+
 		// extra check on session binding event
 		if (value == this)
 		{
 			Object current = store.getAttribute(request, name);
 			if (current == null)
 			{
-				// this is a new instance. wherever it came from, bind the
-				// session now
-				store.bind(request, (Session)value);
+				String id = store.getSessionId(request, false);
+				if (id != null)
+				{
+					// this is a new instance. wherever it came from, bind the
+					// session now
+					store.bind(request, (Session)value);
+				}
 			}
 		}
 
