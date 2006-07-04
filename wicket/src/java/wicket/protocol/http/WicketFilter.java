@@ -320,13 +320,6 @@ public class WicketFilter implements Filter
 
 		filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
 
-		// Finished
-		if (log.isDebugEnabled())
-		{
-			log.debug("WicketServlet loaded application " + this.webApplication.getName() + " via "
-					+ factory.getClass().getName() + " factory");
-		}
-
 		try
 		{
 			Application.set(webApplication);
@@ -343,6 +336,10 @@ public class WicketFilter implements Filter
 			// can be added, that would be used in installing resources in the
 			// component.
 			this.webApplication.initializeComponents();
+
+			// Finished
+			log.info("Wicket application " + this.webApplication.getName()
+						+ " started [factory=" + factory.getClass().getName() + "]");
 		}
 		finally
 		{
