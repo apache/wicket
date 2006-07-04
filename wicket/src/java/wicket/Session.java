@@ -338,7 +338,12 @@ public abstract class Session implements Serializable
 		if (id == null)
 		{
 			id = getSessionStore().getSessionId(RequestCycle.get().getRequest());
-			dirty = true;
+
+			// we have one?
+			if (id != null)
+			{
+				dirty();
+			}
 		}
 		return id;
 	}
@@ -602,8 +607,6 @@ public abstract class Session implements Serializable
 	 *            The response
 	 * @return The new request cycle.
 	 */
-	// FIXME post 1.2 Move to application. We really shouldn't need a session to make request cycles.
-	// see https://sourceforge.net/tracker/?func=detail&atid=684975&aid=1468853&group_id=119783
 	public final RequestCycle newRequestCycle(final Request request, final Response response)
 	{
 		return getRequestCycleFactory().newRequestCycle(this, request, response);
