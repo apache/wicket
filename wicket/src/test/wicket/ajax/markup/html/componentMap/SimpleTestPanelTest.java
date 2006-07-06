@@ -48,6 +48,7 @@ public class SimpleTestPanelTest extends WicketTestCase
 		executeTest(SimpleTestPage.class, "SimpleTestPageExpectedResult.html");
 
 		application.setupRequestAndResponse();
+		application.getAjaxSettings().setAjaxDebugModeEnabled(false);
 		WebRequestCycle cycle = application.createRequestCycle();
 
 		Page page = application.getLastRenderedPage();
