@@ -310,7 +310,7 @@ function wicketAjaxProcessScript(scriptNode) {
 	var script = createHeadElement("script");
 	script.type = scriptNode.getAttribute("type");
 		
-	if (scriptNode.getAttribute("src") != null && ScriptNode.getAttribute("src") != "") {		
+	if (scriptNode.getAttribute("src") != null && scriptNode.getAttribute("src") != "") {		
 		script.src = scriptNode.getAttribute("src");
 	} else {
 		var content = scriptNode.firstChild.nodeValue;		
