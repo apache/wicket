@@ -475,8 +475,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		component.renderHead(header);
 		if (component instanceof MarkupContainer) 
 		{
-			((MarkupContainer)component).visitChildren(new Component.IVisitor() {
-				public Object component(Component component) {
+			((MarkupContainer)component).visitChildren(new Component.IVisitor() 
+			{
+				public Object component(Component component) 
+				{
 					if (component.isVisible())
 					{
 						component.renderHead(header);
@@ -488,12 +490,12 @@ public class AjaxRequestTarget implements IRequestTarget
 		
 		RequestCycle.get().setResponse(oldResponse);
 		
-		if (encodingResponse.getContents().length() != 0) {
+		if (encodingResponse.getContents().length() != 0) 
+		{
 			response.write("<header-contribution>");
 			response.write(encodingResponse.getContents());
 			response.write("</header-contribution>");			
-		}
-		
+		}		
 	}
 	
 	/**
