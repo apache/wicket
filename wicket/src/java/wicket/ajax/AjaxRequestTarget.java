@@ -36,11 +36,9 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
-import wicket.response.StringResponse;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
@@ -469,10 +467,10 @@ public class AjaxRequestTarget implements IRequestTarget
 	{		
 		final HtmlHeaderContainer header = new HtmlHeaderContainer(component.getPage(),
 				HtmlHeaderSectionHandler.HEADER_ID);
+				
+		EncodingResponse encodingResponse = new EncodingResponse(response);
 		
-		response.write("<header-contribution>");		
-		
-		Response oldResponse = RequestCycle.get().setResponse(response);
+		Response oldResponse = RequestCycle.get().setResponse(encodingResponse);
 										
 		component.renderHead(header);
 		if (component instanceof MarkupContainer) 
@@ -490,7 +488,12 @@ public class AjaxRequestTarget implements IRequestTarget
 		
 		RequestCycle.get().setResponse(oldResponse);
 		
-		response.write("</header-contribution>");
+		if (encodingResponse.getContents().length() != 0) {
+			response.write("<header-contribution>");
+			response.write(encodingResponse.getContents());
+			response.write("</header-contribution>");			
+		}
+		
 	}
 	
 	/**
