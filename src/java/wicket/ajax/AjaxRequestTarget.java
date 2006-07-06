@@ -32,10 +32,15 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
+import wicket.response.StringResponse;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
@@ -310,9 +315,10 @@ public class AjaxRequestTarget implements IRequestTarget
 			while (it.hasNext())
 			{
 				final Map.Entry<String, Component> entry = it.next();
-				final Component component = entry.getValue();
+				final Component component = entry.getValue();				
 				final String markupId = entry.getKey();
-				respondComponent(response, markupId, component);
+				respondComponent(response, markupId, component);				
+				respondHeaderContribution(response, component);
 			}
 
 			Iterator<String> it2 = javascripts.iterator();
@@ -321,8 +327,8 @@ public class AjaxRequestTarget implements IRequestTarget
 				String js = it2.next();
 				respondInvocation(response, js);
 			}
-			response.write("</ajax-response>");
-
+			response.write("</ajax-response>");			
+			
 			// restore component use check
 			app.getDebugSettings().setComponentUseCheck(oldUseCheck);
 		}
@@ -449,9 +455,44 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("]]></component>");
 
 		encodingResponse.reset();
+		
+		
 	}
 
 
+	/**
+	 * 
+	 * @param response
+	 * @param component
+	 */
+	private void respondHeaderContribution(final Response response, final Component component) 
+	{		
+		final HtmlHeaderContainer header = new HtmlHeaderContainer(component.getPage(),
+				HtmlHeaderSectionHandler.HEADER_ID);
+		
+		response.write("<header-contribution>");		
+		
+		Response oldResponse = RequestCycle.get().setResponse(response);
+										
+		component.renderHead(header);
+		if (component instanceof MarkupContainer) 
+		{
+			((MarkupContainer)component).visitChildren(new Component.IVisitor() {
+				public Object component(Component component) {
+					if (component.isVisible())
+					{
+						component.renderHead(header);
+					}
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+		}
+		
+		RequestCycle.get().setResponse(oldResponse);
+		
+		response.write("</header-contribution>");
+	}
+	
 	/**
 	 * 
 	 * @param response

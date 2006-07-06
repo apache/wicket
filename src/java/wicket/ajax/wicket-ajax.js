@@ -174,6 +174,8 @@ function wicketAjaxProcess(envelope, successHandler, failureHandler) {
 	           wicketAjaxProcessComponent(node);
 	        } else if (node.tagName == "evaluate") {
 	           wicketAjaxProcessEvaluation(node);
+	        } else if (node.tagName == "header-contribution") {
+	           wicketAjaxProcessHeaderContribution(node);
 	        }
 	    }
 	    
@@ -282,6 +284,70 @@ function wicketReplaceAll(str, from, to) {
         idx = str.indexOf(from);
     }
     return str;
+}
+
+function createHeadElement(name) {
+	var objHead = document.getElementsByTagName('head');
+	if (objHead[0])
+	{
+		if (document.createElementNS && objHead[0].tagName == 'head')
+			var result = objHead[0].appendChild(document.createElementNS('http://www.w3.org/1999/xhtml', name));
+		else
+			var result = objHead[0].appendChild(document.createElement(name));
+	}
+	return result;
+}
+
+function wicketAjaxProcessLink(linkNode) {
+	var css = createHeadElement("link");
+	css.id = 'someuniqueid'; // should we make a hash form href or something like that? 
+	css.rel = linkNode.getAttribute("rel");
+	css.href = linkNode.getAttribute("href");
+	css.type = linkNode.getAttribute("type");
+}
+
+function wicketAjaxProcessScript(scriptNode) {
+	var script = createHeadElement("script");
+	script.type = scriptNode.getAttribute("type");
+		
+	if (scriptNode.getAttribute("src") != null && ScriptNode.getAttribute("src") != "") {		
+		script.src = scriptNode.getAttribute("src");
+	} else {
+		var content = scriptNode.firstChild.nodeValue;		
+		if (null == script.canHaveChildren || script.canHaveChildren) {
+			var textNode = document.createTextNode(content);			
+		    script.appendChild(textNode);
+		} else {
+			script.text = content;
+		} 
+	}	
+}
+
+function wicketAjaxProcessStyle(styleNode) {
+	var content = styleNode.firstChild.nodeValue;
+	if (document.all && !window.opera) {  // IE
+		document.createStyleSheet("javascript:'" + content + "'")
+	} else {
+		var style = createHeadElement("style");
+		var textNode = document.createTextNode(content);
+		style.appendChild(textNode);
+	}
+}
+
+function wicketAjaxProcessHeaderContribution(rootNode) {
+	for (var i = 0; i < rootNode.childNodes.length; i++) {
+		var node = rootNode.childNodes[i];			
+		if (node.tagName !=null) {
+			var name = node.tagName.toLowerCase();
+		    if (name == "link") {
+				wicketAjaxProcessLink(node);
+			} else if (name == "script") {
+				wicketAjaxProcessScript(node);
+			} else if (name == "style") {
+				wicketAjaxProcessStyle(node);
+			}
+		}
+	}
 }
 
 
