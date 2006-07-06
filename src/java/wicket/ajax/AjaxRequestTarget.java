@@ -493,7 +493,16 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (encodingResponse.getContents().length() != 0) 
 		{
 			response.write("<header-contribution>");
-			response.write(encodingResponse.getContents());
+			
+			// we need to write response as CDATA and parse it on client, because
+			// konqueror crashes when there is a <script> element
+			response.write("<![CDATA[<head>");
+			
+			CharSequence replaced = encodingResponse.getContents();
+			response.write(replaced);
+			
+			response.write("</head>]]>");
+			
 			response.write("</header-contribution>");			
 		}		
 	}
