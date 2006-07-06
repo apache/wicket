@@ -137,7 +137,7 @@ function WicketAutoComplete(elementId,callbackUrl){
         }
         
         var value=wicketGet(elementId).value;
-        transport.open("GET",callbackUrl+"&random="+Math.random()+"&q="+value,true);
+        transport.open("GET",callbackUrl+"&random="+Math.random()+"&q="+processValue(value),true);
         transport.onreadystatechange = function () {
             if (transport.readyState == 4) {
                 if (transport.status == 200) {
@@ -157,6 +157,14 @@ function WicketAutoComplete(elementId,callbackUrl){
             }
         };
         transport.send(null);
+    }
+
+    function processValue(param) {
+        var browserName = navigator.appName;
+        if (browserName != "Microsoft Internet Explorer"){
+            return param;
+        }
+        return encodeURIComponent(param);
     }
     
     function showAutoComplete(){
