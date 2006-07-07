@@ -315,8 +315,8 @@ public class AjaxRequestTarget implements IRequestTarget
 				final Map.Entry<String, Component> entry = it.next();
 				final Component component = entry.getValue();				
 				final String markupId = entry.getKey();
-				respondComponent(response, markupId, component);				
 				respondHeaderContribution(response, component);
+				respondComponent(response, markupId, component);								
 			}
 
 			Iterator<String> it2 = javascripts.iterator();
@@ -467,11 +467,11 @@ public class AjaxRequestTarget implements IRequestTarget
 	{		
 		final HtmlHeaderContainer header = new HtmlHeaderContainer(component.getPage(),
 				HtmlHeaderSectionHandler.HEADER_ID);
-				
-		EncodingResponse encodingResponse = new EncodingResponse(response);
-		
+						
 		Response oldResponse = RequestCycle.get().setResponse(encodingResponse);
-										
+		
+		encodingResponse.reset();
+		
 		component.renderHead(header);
 		if (component instanceof MarkupContainer) 
 		{
@@ -492,14 +492,20 @@ public class AjaxRequestTarget implements IRequestTarget
 		
 		if (encodingResponse.getContents().length() != 0) 
 		{
-			response.write("<header-contribution>");
+			response.write("<header-contribution");
 			
+			if (encodingResponse.isContentsEncoded())
+			{
+				response.write(" encoding=\"");
+				response.write(getEncodingName());
+				response.write("\" ");
+			}
+						
 			// we need to write response as CDATA and parse it on client, because
 			// konqueror crashes when there is a <script> element
-			response.write("<![CDATA[<head>");
-			
-			CharSequence replaced = encodingResponse.getContents();
-			response.write(replaced);
+			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
+						
+			response.write(encodingResponse.getContents());
 			
 			response.write("</head>]]>");
 			
