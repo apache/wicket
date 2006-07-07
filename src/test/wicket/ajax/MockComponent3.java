@@ -22,10 +22,19 @@ import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.resources.StyleSheetReference;
 
+/**
+ * 
+ */
 public class MockComponent3 extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 */
 	public MockComponent3(MarkupContainer parent, String id)
 	{
 		super(parent, id);
