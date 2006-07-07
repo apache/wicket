@@ -147,7 +147,7 @@ public class ContactsDatabase
 	 */
 	public void delete(final Contact contact)
 	{
-		Contact c = (Contact)map.remove(new Long(contact.getId()));
+		map.remove(new Long(contact.getId()));
 
 		fnameIdx.remove(contact);
 		lnameIdx.remove(contact);

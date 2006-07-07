@@ -39,8 +39,6 @@ import wicket.model.Model;
  */
 public class ExamplePaging extends Displaytag
 {
-	private final Random random = new Random();
-
 	/**
 	 * Constructor.
 	 * 

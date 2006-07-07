@@ -86,9 +86,6 @@ public class GuestBook extends BasePage
 		commentList.clear();
 	}
 
-	/** The list view that shows comments */
-	private final ListView<Comment> commentListView;
-
 	/** Container for the comments, used to update the listview. */
 	private WebMarkupContainer comments;
 
@@ -108,7 +105,7 @@ public class GuestBook extends BasePage
 		comments.setOutputMarkupId(true);
 
 		// Add commentListView of existing comments
-		commentListView = new ListView<Comment>(comments, "comments",
+		new ListView<Comment>(comments, "comments",
 				new PropertyModel<List<Comment>>(this, "commentList"))
 		{
 			@Override
