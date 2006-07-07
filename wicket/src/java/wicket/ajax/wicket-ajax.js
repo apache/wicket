@@ -29,8 +29,6 @@ function wicketHide(id) {
     e.style.display = "none";
 }
 
-
-
 // AJAX FUNCTIONS
 function wicketAjaxCreateTransport() {
     var transport = null;
@@ -228,6 +226,60 @@ function wicketAjaxCallFailureHandler(failureHandler) {
 	}
 }
 
+/* Goes through all script elements contained by the element and add them to head. */
+function wicketAjaxAddJavascriptsToHead(element) {
+       var scripts = element.getElementsByTagName("script");
+       for (var i = 0; i < scripts.length; ++i) {
+			var script = wicketCreateHeadElement("script");
+			var content = scripts[i].text;
+			
+			if (null == script.canHaveChildren || script.canHaveChildren) {
+				var textNode = document.createTextNode(content);			
+			    script.appendChild(textNode);
+			} else {
+				script.text = content;
+			} 		
+			wicketAddElementToHead(script);
+       }
+}
+
+/* Replaces the element's outer html with the given text. If it's needed
+   (for all browsers except gecko based) it takes the newly created scripts elements 
+   and adds them to head (execute them) */
+function wicketAjaxReplaceOuterHtml(element, text) {
+    if (element.outerHTML) { // internet explorer
+       var parent = element.parentNode;
+       
+       // find out the element's index. we need to access
+       // newly created elements to execute theirs <script elements
+       var i;
+       for (i = 0; i < parent.childNodes.length; ++i) {
+       		if (parent.childNodes[i] == element) 
+       			break;
+       }
+       element.outerHTML=text;
+       element = parent.childNodes[i];
+       wicketAjaxAddJavascriptsToHead(element);
+       
+    } else {
+    	// create range and fragment
+        var range = element.ownerDocument.createRange();
+        range.selectNode(element);
+		var fragment = range.createContextualFragment(text);
+
+		// get the element to be added
+		var newElement = fragment.firstChild;		
+		
+        element.parentNode.replaceChild(fragment, element);
+
+		if (document.all != null) {
+			// for all browsers except gecko based add scripts to head
+		    wicketAjaxAddJavascriptsToHead(newElement);
+		}		   
+    }		
+}	
+
+
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
 
@@ -248,19 +300,10 @@ function wicketAjaxProcessComponent(node) {
 			log("Component with id [["+compId+"]] a was not found while trying to perform markup update. Make sure you called component.setOutputMarkupId(true) on the component whose markup you are trying to update.");
 		}
     }
-    
-    if (element.outerHTML) {
-       element.outerHTML=text;
-    } else {
-        var range = element.ownerDocument.createRange();
-        range.selectNode(element);
-        element.parentNode.replaceChild(
-            range.createContextualFragment(text), element);
-    }
-    
-    
-    
+
+    wicketAjaxReplaceOuterHtml(element, text);      
 }
+
 function wicketAjaxProcessEvaluation(node) {
     var text = node.firstChild.nodeValue;
     var encoding = node.getAttribute("encoding");
@@ -306,15 +349,60 @@ function wicketAjaxProcessLink(linkNode) {
 	wicketAddElementToHead(css);		
 }
 
-function wicketAjaxProcessScript(scriptNode) {
+// method for serializing DOM nodes to string
+// original taken from Tacos (http://tacoscomponents.jot.com)
+function wicketSerializeNodeChildren(node){
+	if (node == null) { 
+		return "" 
+	}
+	var result = "";
+	for (var i = 0; i < node.childNodes.length; i++) {
+		var thisNode = node.childNodes[i];
+		switch (thisNode.nodeType) {
+			case 1: // ELEMENT_NODE
+			case 5: // ENTITY_REFERENCE_NODE
+				result += wicketSerializeNode(thisNode);
+				break;
+			case 3: // TEXT_NODE
+			case 2: // ATTRIBUTE_NODE
+			case 4: // CDATA_SECTION_NODE
+				result += thisNode.nodeValue;
+				break;
+			default:
+				break;
+		}
+	}
+	return result;	
+}
+
+function wicketSerializeNode(node){
+	if (node == null) { 
+		return "" 
+	}
+	var result = "";
+	result += '<' + node.nodeName;
 	
+	if (node.attributes && node.attributes.length > 0) {
+		for (var i = 0; i < node.attributes.length; i++) {
+			result += " " + node.attributes[i].name 
+				+ "=\"" + node.attributes[i].value + "\"";	
+		}
+	}
+	
+	result += '>';
+	result += wicketSerializeNodeChildren(node);
+	result += '</' + node.nodeName + '>';
+	return result;
+}
+
+function wicketAjaxProcessScript(scriptNode) {
 	var script = wicketCreateHeadElement("script");
 	script.type = scriptNode.getAttribute("type");
 	
 	if (scriptNode.getAttribute("src") != null && scriptNode.getAttribute("src") != "") {		
 		script.src = scriptNode.getAttribute("src");
 	} else {
-		var content = scriptNode.firstChild.nodeValue;		
+		var content = wicketSerializeNodeChildren(scriptNode);
 
 		if (null == script.canHaveChildren || script.canHaveChildren) {
 			var textNode = document.createTextNode(content);			
@@ -323,11 +411,11 @@ function wicketAjaxProcessScript(scriptNode) {
 			script.text = content;
 		} 		
 	}	
-	wicketAddElementToHead(script);
+	wicketAddElementToHead(script); 
 }
 
 function wicketAjaxProcessStyle(styleNode) {
-	var content = styleNode.firstChild.nodeValue;	
+	var content = wicketSerializeNodeChildren(styleNode);
 	if (document.all && !window.opera) {  // IE
 		document.createStyleSheet("javascript:'" + content + "'")
 	} else {
@@ -339,11 +427,19 @@ function wicketAjaxProcessStyle(styleNode) {
 }
 
 function wicketAjaxProcessHeaderContribution(headerNode) {
+
 	var text = headerNode.firstChild.nodeValue;
 	
+    var encoding = headerNode.getAttribute("encoding");
+    
+    if (encoding != null && encoding != "") {
+        text = wicketDecode(encoding, text);        
+    }       
+    	
 	// konqueror crashes if there is a <script element in the xml
 	text = text.replace(/<script/g,"<SCRIPT");
-	text = text.replace(/<\/script>/g,"</SCRIPT>");
+	text = text.replace(/<\/script>/g,"</SCRIPT>");	
+		
 	
 	var xmldoc;
 	if (window.ActiveXObject) {
@@ -354,7 +450,7 @@ function wicketAjaxProcessHeaderContribution(headerNode) {
 	    xmldoc = parser.parseFromString(text, "text/xml");	
 	}
 	var rootNode = xmldoc.documentElement;
-		
+					
 	for (var i = 0; i < rootNode.childNodes.length; i++) {
 		var node = rootNode.childNodes[i];			
 		if (node.tagName !=null) {
@@ -418,7 +514,7 @@ function wicketSerializeForm(form) {
     var result = "";
     for (var i = 0; i < form.elements.length; ++i) {
         var e = form.elements[i];
-        if (!e.disabled) {
+        if (e.name && !e.disabled) {
             result += wicketSerialize(e);
         }
     }
