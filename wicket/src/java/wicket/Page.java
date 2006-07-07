@@ -1304,16 +1304,20 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 	
 	/**
-	 * Returns true if the page is bookmarkable.
 	 * Bookmarkable page can be instantiated using a bookmarkable URL.
+	 * 
+	 * @return Returns true if the page is bookmarkable.
 	 */
-	public boolean isBookmarkable() {
-		try {
+	public boolean isBookmarkable() 
+	{
+		try 
+		{
 			return getClass().getConstructor((Class[])null) != null || 
 				   getClass().getConstructor(new Class[] { PageParameters.class }) != null;
-		} catch (Exception ignore) {
+		} 
+		catch (Exception ignore) 
+		{
 			return false;
 		}
 	}
-
 }
