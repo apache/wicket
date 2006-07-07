@@ -110,7 +110,7 @@ final class MarkupFragmentFinder
 			{
 				throw new WicketRuntimeException(
 						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: "
-								+ component.toString());
+								+ component.getId());
 			}
 
 			// Not found, reset the stream
