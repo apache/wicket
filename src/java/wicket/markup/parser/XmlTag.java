@@ -35,7 +35,8 @@ import wicket.util.value.AttributeMap;
 public class XmlTag extends MarkupElement
 {
 	/** Tag types. */
-	public static enum Type {
+	public static enum Type 
+	{
 		/** A close tag, like &lt;/TAG&gt;. */
 		CLOSE,
 		/** An open tag, like &lt;TAG componentId = "xyz"&gt;. */
