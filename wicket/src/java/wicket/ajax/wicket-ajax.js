@@ -75,6 +75,9 @@ function wicketAjaxGet(url, successHandler, failureHandler) {
     if (transport == null) {
         return false;
     }
+    
+    wicketAjaxInvokePreCallHandler();
+    
     transport.open("GET", url + "&random=" + Math.random(), true);    
     transport.onreadystatechange = function () {
         wicketAjaxOnStateChange(transport, successHandler, failureHandler);
@@ -84,7 +87,7 @@ function wicketAjaxGet(url, successHandler, failureHandler) {
         }
     };
     transport.send(null);
-
+    
     return true;
 }
 function wicketAjaxPost(url, body, successHandler, failureHandler) {
@@ -102,6 +105,9 @@ function wicketAjaxPost(url, body, successHandler, failureHandler) {
     if (transport == null) {
         return false;
     }
+
+    wicketAjaxInvokePreCallHandler();
+
     transport.open("POST", url + "&random=" + Math.random(), true);
     transport.onreadystatechange = function () {
         wicketAjaxOnStateChange(transport, successHandler, failureHandler);
@@ -152,9 +158,12 @@ function wicketAjaxOnStateChange(transport, successHandler, failureHandler) {
                log("received ajax response with code: "+transport.status);
            }
            wicketAjaxCallFailureHandler(failureHandler);
+	       wicketAjaxInvokePostCallHandler();
+           
         }
    }
 }
+
 function wicketAjaxProcess(envelope, successHandler, failureHandler) {
 	try {
 	    var root = envelope.getElementsByTagName("ajax-response");
@@ -202,8 +211,36 @@ function wicketAjaxProcess(envelope, successHandler, failureHandler) {
 		}
 		wicketAjaxCallFailureHandler(failureHandler);
 	}
-	    
+	
+	wicketAjaxInvokePostCallHandler();
 }
+
+function wicketAjaxInvokePreCallHandler() {
+    if (typeof(window.wicketGlobalPreCallHandler) != "undefined") {
+	    var global=wicketGlobalPreCallHandler;
+	    if (global!=null) {
+    		if (wicketAjaxDebugEnabled()) {
+    			var log=WicketAjaxDebug.logInfo;
+    			log("invoking window.wicketGlobalPreCallHandler handler...");
+    		}
+    		global();
+		}
+	}
+}
+
+function wicketAjaxInvokePostCallHandler() {
+    if (typeof(window.wicketGlobalPostCallHandler) != "undefined") {
+	    var global=wicketGlobalPostCallHandler;
+	    if (global!=null) {
+    		if (wicketAjaxDebugEnabled()) {
+    			var log=WicketAjaxDebug.logInfo;
+    			log("invoking window.wicketGlobalPostCallHandler handler...");
+    		}
+    		global();
+		}
+	}
+}
+
 
 function wicketAjaxCallFailureHandler(failureHandler) {
 	if (failureHandler!=undefined && failureHandler!=null) {
