@@ -18,6 +18,10 @@
  */
 package wicket.markup.parser;
 
+import java.text.ParseException;
+
+import wicket.markup.ComponentTag;
+
 /**
  * Base class for markup filters
  * 
@@ -58,5 +62,17 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	public final void setParent(final IMarkupFilter parent)
 	{
 		this.parent = parent;
+	}
+
+	/**
+	 * A convinience function to retrieve the next tag (same as nextTag()),
+	 * however assuming that it is a ComponentTag.
+	 * 
+	 * @return ComponentTag
+	 * @throws ParseException
+	 */
+	protected final ComponentTag nextComponentTag() throws ParseException
+	{
+		return (ComponentTag)getParent().nextTag();
 	}
 }
