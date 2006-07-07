@@ -26,7 +26,6 @@ import wicket.WicketTestCase;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
-import wicket.protocol.http.MockPage;
 
 /**
  * Test for RadioGroup and Radio components

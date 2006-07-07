@@ -40,6 +40,9 @@ import wicket.util.tester.ITestPageSource;
  */
 public class AjaxRequestTargetTest extends WicketTestCase
 {
+	/**
+	 * Construct.
+	 */
 	public AjaxRequestTargetTest()
 	{
 		super("Test of AjaxRequestTarget");

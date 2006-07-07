@@ -21,10 +21,19 @@ package wicket.ajax;
 import wicket.MarkupContainer;
 import wicket.markup.html.panel.Panel;
 
+/**
+ * 
+ */
 public class MockComponent1 extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 */
 	public MockComponent1(MarkupContainer parent, String id)
 	{
 		super(parent, id);

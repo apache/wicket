@@ -25,7 +25,6 @@ import wicket.WicketTestCase;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.model.CompoundPropertyModel;
-import wicket.protocol.http.MockPage;
 
 /**
  * Tests for checking typed validators.
