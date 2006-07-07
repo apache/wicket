@@ -82,8 +82,10 @@ public class Radio<T> extends WebMarkupContainer<T>
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "radio");
 
-		RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
-		String path = getPath();
+		final RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
+		final String path = getPath();
+		final String relativePath = path.substring(group.getPath().length() + 1);
+		
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
@@ -94,14 +96,14 @@ public class Radio<T> extends WebMarkupContainer<T>
 
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", path);
+		tag.put("value", relativePath);
 
 		// compare the model objects of the group and self, if the same add the
 		// checked attribute, first check if there was a raw input on the group.
 		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if (rawInput != null && rawInput.equals(path))
+			if (rawInput != null && rawInput.equals(relativePath))
 			{
 				tag.put("checked", "checked");
 			}

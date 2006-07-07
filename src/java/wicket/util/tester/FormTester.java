@@ -126,7 +126,10 @@ public class FormTester
 				}
 				else
 				{
-					assignValueToFormComponent(formComponent, foundRadio.getPath());
+					String path=foundRadio.getPath();
+					path=path.substring(formComponent.getPath().length()+1, path.length());
+					
+					assignValueToFormComponent(formComponent, path);
 				}
 			}
 			else if (formComponent instanceof CheckGroup)

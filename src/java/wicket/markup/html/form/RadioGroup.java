@@ -99,12 +99,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	{
 		if (input != null && input.length > 0)
 		{
-			/*
-			 * single radio choice component path sans group path = relative
-			 * path from group to choice since we know the choice is child of
-			 * group
-			 */
-			String path = input[0].substring(getPath().length() + 1);
+			String path = input[0];
 
 			// retrieve the selected single radio choice component
 			Radio<T> choice = (Radio<T>)get(path);
