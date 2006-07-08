@@ -1,8 +1,7 @@
 /*
-/*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * /* $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +34,7 @@ import wicket.util.tester.apps_6.MockPageWithFormAndLink.MockPojo;
 public class AjaxSubmitLinkClickTest extends WicketTestCase
 {
 	private boolean linkClicked;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -43,27 +42,26 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 	{
 		super("Ajax submit link click test");
 	}
-	
-	
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		
+
 		linkClicked = false;
 	}
-
 
 	/**
 	 * 
 	 */
-	public void testClickLink_ajaxSubmitLink() {
+	public void testClickLink_ajaxSubmitLink()
+	{
 		MockPojo mockPojo = new MockPageWithFormAndLink.MockPojo();
 		mockPojo.setName("Mock name");
-		
+
 		final MockPageWithFormAndLink page = new MockPageWithFormAndLink(mockPojo);
-		AjaxSubmitLink link = new AjaxSubmitLink(page, "link", page.getForm()) {
+		new AjaxSubmitLink(page, "link", page.getForm())
+		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -72,8 +70,9 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 				linkClicked = true;
 			}
 		};
-		
-		application.startPage(new ITestPageSource() {
+
+		application.startPage(new ITestPageSource()
+		{
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -81,18 +80,18 @@ public class AjaxSubmitLinkClickTest extends WicketTestCase
 				return page;
 			}
 		});
-		
+
 		application.assertRenderedPage(MockPageWithFormAndLink.class);
-		
+
 		// Change the name in the textfield
 		page.getNameField().setModelValue("new mock value");
 
 		// Click the submit link
 		application.clickLink("link");
-		
+
 		// Has it really been clicked?
 		assertTrue(linkClicked);
-		
+
 		// And has the form been "submitted"
 		assertEquals("new mock value", mockPojo.getName());
 	}

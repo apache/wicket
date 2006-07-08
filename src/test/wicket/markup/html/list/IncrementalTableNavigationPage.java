@@ -61,9 +61,7 @@ public class IncrementalTableNavigationPage extends WebPage
 			}
 		};
 
-		PagingNavigationIncrementLink prev = new PagingNavigationIncrementLink(this, "prev", table,
-				-1);
-		PagingNavigationIncrementLink nextNext = new PagingNavigationIncrementLink(this,
-				"nextNext", table, +2);
+		new PagingNavigationIncrementLink(this, "prev", table, -1);
+		new PagingNavigationIncrementLink(this,	"nextNext", table, +2);
 	}
 }

@@ -72,7 +72,7 @@ public class PageParametersTest extends TestCase
 	{
 		try
 		{
-			PageParameters parameters = new PageParameters("=test");
+			new PageParameters("=test");
 			fail("Expected an exception: invalid URL parameter");
 		}
 		catch (IllegalArgumentException ex)

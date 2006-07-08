@@ -32,6 +32,6 @@ public class SimpleTestPage extends WebPage
 	 */
 	public SimpleTestPage()
 	{
-		SimpleTestPanel panel = new SimpleTestPanel(this, "testPanel");
+		new SimpleTestPanel(this, "testPanel");
 	}
 }

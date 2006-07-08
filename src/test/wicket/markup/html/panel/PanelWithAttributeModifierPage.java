@@ -36,6 +36,6 @@ public class PanelWithAttributeModifierPage extends WebPage
 	 */
 	public PanelWithAttributeModifierPage()
 	{
-		Panel panel = new PanelWithAttributeModifier(this, "myPanel");
+		new PanelWithAttributeModifier(this, "myPanel");
 	}
 }

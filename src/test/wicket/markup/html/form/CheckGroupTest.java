@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.html.WebMarkupContainer;
@@ -124,10 +123,10 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue(group3.getModelObject() == list);
 
 		// set up necessary objects to emulate a form submission
-		RequestCycle cycle = application.createRequestCycle();
+		application.createRequestCycle();
 
-		final Check choice1 = new Check(container, "check1", new Model(check1));
-		final Check choice2 = new Check(group, "prop2");
+		new Check(container, "check1", new Model(check1));
+		new Check(group, "prop2");
 
 		modelObject.setProp2(check2);
 
