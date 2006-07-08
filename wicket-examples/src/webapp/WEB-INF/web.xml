@@ -413,26 +413,6 @@
 		</init-param>
 	</filter>
 
-	<servlet>
-		<servlet-name>BreadCrumbApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>	
-
-	<servlet>
-		<servlet-name>StatelessApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.stateless.StatelessApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
 	<filter-mapping>
 		<filter-name>AjaxApplication</filter-name>
 		<url-pattern>/ajax/*</url-pattern>
@@ -577,6 +557,27 @@
 		<filter-name>CaptchaApplication</filter-name>
 		<url-pattern>/captcha/*</url-pattern>
 	</filter-mapping>
+
+	<servlet>
+		<servlet-name>BreadCrumbApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>	
+
+	<servlet>
+		<servlet-name>StatelessApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.stateless.StatelessApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
 
 	<servlet-mapping>
 		<servlet-name>BreadCrumbApplication</servlet-name>
