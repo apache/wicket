@@ -80,7 +80,8 @@ public class WicketFilter implements Filter
 	private static final String RESOURCES_PATH_PREFIX = "/resources/";
 
 	private FilterConfig filterConfig;
-	/*
+
+	/**
 	 * This is the filter path that can be specified in the filter config. Or it
 	 * is the servlet path if the wicket servlet it used. both are without any /
 	 * (start or end)
@@ -88,7 +89,7 @@ public class WicketFilter implements Filter
 	private String filterPath;
 
 	/*
-	 * This holds the complete full root path including context and filter or
+	 * + This holds the complete full root path including context and filter or
 	 * servlet path
 	 */
 	private String rootPath;
@@ -104,7 +105,10 @@ public class WicketFilter implements Filter
 		this.webApplication = null;
 	}
 
-
+	/**
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+	 *      javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException
 	{
@@ -221,13 +225,9 @@ public class WicketFilter implements Filter
 		response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 				.getResponseRequestEncoding());
 
-
 		try
 		{
 			RequestCycle cycle = session.newRequestCycle(request, response);
-
-			RequestLogger requestLogger = webApplication.getRequestLogger();
-
 			try
 			{
 				// Process request
@@ -282,12 +282,17 @@ public class WicketFilter implements Filter
 		{
 			String contextPath = webApplication.getApplicationSettings().getContextPath();
 			if (contextPath == null)
+			{
 				contextPath = request.getContextPath();
+			}
+
 			if (SERVLET_PATH_HOLDER.equals(filterPath))
 			{
 				filterPath = request.getServletPath();
 				if (filterPath.startsWith("/"))
+				{
 					filterPath = filterPath.substring(1);
+				}
 			}
 			if (!contextPath.endsWith("/"))
 			{
@@ -338,8 +343,8 @@ public class WicketFilter implements Filter
 			this.webApplication.initializeComponents();
 
 			// Finished
-			log.info("Wicket application " + this.webApplication.getName()
-						+ " started [factory=" + factory.getClass().getName() + "]");
+			log.info("Wicket application " + this.webApplication.getName() + " started [factory="
+					+ factory.getClass().getName() + "]");
 		}
 		finally
 		{
@@ -401,6 +406,11 @@ public class WicketFilter implements Filter
 		}
 	}
 
+	/**
+	 * 
+	 * @param servletRequest
+	 * @return
+	 */
 	long getLastModified(final HttpServletRequest servletRequest)
 	{
 		final String pathInfo = servletRequest.getRequestURI();
@@ -458,6 +468,11 @@ public class WicketFilter implements Filter
 		return -1;
 	}
 
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
 	private boolean isWicketRequest(HttpServletRequest request)
 	{
 		String fullRootPath = getRootPath(request);
@@ -488,11 +503,20 @@ public class WicketFilter implements Filter
 				.urlCodingStrategyForPath(path) != null;
 	}
 
+	/**
+	 * 
+	 * @param resp
+	 * @param lastModified
+	 */
 	private void maybeSetLastModified(HttpServletResponse resp, long lastModified)
 	{
 		if (resp.containsHeader("Last-Modified"))
+		{
 			return;
+		}
 		if (lastModified >= 0)
+		{
 			resp.setDateHeader("Last-Modified", lastModified);
+		}
 	}
 }

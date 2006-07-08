@@ -102,6 +102,7 @@ public class WicketServlet extends HttpServlet
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(WicketServlet.class);
 
 	/** The WicketFilter where all the handling is done in */

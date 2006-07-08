@@ -128,7 +128,6 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
-		String resourceKey = requestParameters.getResourceKey();
 		return new SharedResourceRequestTarget(requestParameters);
 	}
 
@@ -261,7 +260,6 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	{
 		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		Session session = requestCycle.getSession();
-		Application application = session.getApplication();
 		Class<? extends Page> pageClass;
 		try
 		{

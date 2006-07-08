@@ -100,6 +100,7 @@ public class MaskConverter implements IConverter
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(MaskConverter.class);
 
 	/** Object that knows all about masks. */
