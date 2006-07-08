@@ -47,6 +47,7 @@ import wicket.util.crypt.NoCryptFactory;
  */
 public class CookieTest extends TestCase
 {
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(CookieTest.class);
 
 	private MockWebApplication application;
@@ -56,7 +57,6 @@ public class CookieTest extends TestCase
 	private Cookie cookiePassword;
 	private Cookie[] cookies;
 	private WebPage page;
-	private WebRequestCycle cycle;
 
 	/**
 	 * Create the test case.
@@ -102,12 +102,12 @@ public class CookieTest extends TestCase
 
 		application.getServletRequest().setCookies(cookies);
 
-		cycle = new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(),
+		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(),
 				application.getWicketResponse());
 
 		this.page = new MockPage(null);
 
-		WebRequestCycle cycle = new WebRequestCycle(application.getWicketSession(), application
+		new WebRequestCycle(application.getWicketSession(), application
 				.getWicketRequest(), application.getWicketResponse());
 	}
 

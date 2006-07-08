@@ -81,7 +81,7 @@ public final class NestedList extends Panel
 			if (modelObject instanceof List)
 			{
 				// create a panel that renders the sub lis
-				NestedList nested = new NestedList(listItem, "nested", (List)modelObject);
+				new NestedList(listItem, "nested", (List)modelObject);
 				// if the current element is a list, we create a dummy row/
 				// label element
 				// as we have to confirm to our HTML definition, and set it's

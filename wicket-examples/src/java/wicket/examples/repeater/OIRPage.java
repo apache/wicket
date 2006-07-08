@@ -111,9 +111,13 @@ public class OIRPage extends BasePage
 				}));
 			}
 
-			protected Item newItem(MarkupContainer parent, final String id, int index, IModel model)
+			/**
+			 * @see wicket.extensions.markup.html.repeater.refreshing.RefreshingView#newItem(java.lang.String, int, wicket.model.IModel)
+			 */
+			@Override
+			protected Item newItem(String id, int index, IModel model)
 			{
-				return new HighlitableDataItem(parent, id, index, model);
+				return new HighlitableDataItem(this, id, index, model);
 			}
 		};
 

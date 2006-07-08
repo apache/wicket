@@ -174,7 +174,7 @@ public class LiveSessionsPage extends WebPage
 			}
 		};
 
-		PagingNavigator navigator = new PagingNavigator(this, "navigator", listView);
+		new PagingNavigator(this, "navigator", listView);
 	}
 
 	RequestLogger getRequestLogger()

@@ -51,7 +51,6 @@ public class ExampleImpObjects extends Displaytag
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
-				final ListObject value = (ListObject)listItem.getModelObject();
 				final int row = listItem.getIndex() + 1;
 				new Label(listItem, "rowNumber", String.valueOf(row));
 			}

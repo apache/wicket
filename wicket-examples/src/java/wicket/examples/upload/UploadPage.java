@@ -155,6 +155,7 @@ public class UploadPage extends WicketExamplePage
 	}
 
 	/** Log. */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(UploadPage.class);
 
 	/** Reference to listview for easy access. */
@@ -181,11 +182,11 @@ public class UploadPage extends WicketExamplePage
 		uploadFolder.mkdirs();
 
 		// Create feedback panels
-		final FeedbackPanel uploadFeedback = new FeedbackPanel(this, "uploadFeedback");
+		new FeedbackPanel(this, "uploadFeedback");
 
 		// Add simple upload form, which is hooked up to its feedback panel by
 		// virtue of that panel being nested in the form.
-		final FileUploadForm simpleUploadForm = new FileUploadForm(this, "simpleUpload");
+		new FileUploadForm(this, "simpleUpload");
 
 		// Add folder view
 		new Label(this, "dir", uploadFolder.getAbsolutePath());

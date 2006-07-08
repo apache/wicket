@@ -33,6 +33,7 @@ import wicket.markup.html.basic.Label;
  */
 public class Home extends WicketExamplePage
 {
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(Home.class);
 
 	/**

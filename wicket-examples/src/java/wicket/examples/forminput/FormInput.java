@@ -118,7 +118,7 @@ public class FormInput extends WicketExamplePage
 			rc.setRequired(true);
 
 			RadioGroup group = new RadioGroup(this, "numbersGroup");
-			ListView numbers = new ListView<String>(group, "numbers", NUMBERS)
+			new ListView<String>(group, "numbers", NUMBERS)
 			{
 				@Override
 				protected void populateItem(ListItem<String> item)
@@ -129,7 +129,7 @@ public class FormInput extends WicketExamplePage
 			};
 
 			CheckGroup checks = new CheckGroup(this, "numbersCheckGroup");
-			ListView checksList = new ListView<String>(checks, "numbers", NUMBERS)
+			new ListView<String>(checks, "numbers", NUMBERS)
 			{
 				@Override
 				protected void populateItem(ListItem<String> item)
@@ -142,9 +142,13 @@ public class FormInput extends WicketExamplePage
 			new ListMultipleChoice<String>(this, "siteSelection", SITES);
 
 			// TextField using a custom converter.
-			new TextField(this, "urlProperty", URL.class)
+			new TextField<URL>(this, "urlProperty", URL.class)
 			{
-				public IConverter getConverter()
+				/**
+				 * @see wicket.Component#getConverter(java.lang.Class)
+				 */
+				@Override
+				public IConverter getConverter(Class type)
 				{
 					return new SimpleConverterAdapter()
 					{
@@ -171,9 +175,13 @@ public class FormInput extends WicketExamplePage
 			};
 
 			// TextField using a mask converter
-			new TextField(this, "phoneNumberUS", UsPhoneNumber.class)
+			new TextField<UsPhoneNumber>(this, "phoneNumberUS", UsPhoneNumber.class)
 			{
-				public IConverter getConverter()
+				/**
+				 * @see wicket.Component#getConverter(java.lang.Class)
+				 */
+				@Override
+				public IConverter getConverter(Class type)
 				{
 					// US telephone number mask
 					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
@@ -329,7 +337,7 @@ public class FormInput extends WicketExamplePage
 	public FormInput()
 	{
 		// Construct form and feedback panel and hook them up
-		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 		new InputForm(this, "inputForm");
 	}
 

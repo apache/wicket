@@ -74,11 +74,6 @@ public final class LibraryApplication extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession()
-			{
-				return new LibrarySession(LibraryApplication.this);
-			}
-
 			public Session newSession(Request request)
 			{
 				return new LibrarySession(LibraryApplication.this);

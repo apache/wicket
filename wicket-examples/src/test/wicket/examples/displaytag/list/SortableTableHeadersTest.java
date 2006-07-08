@@ -34,6 +34,7 @@ import wicket.util.diff.DiffUtil;
  */
 public class SortableTableHeadersTest extends WicketTestCase
 {
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(SortableTableHeadersTest.class);
 
 	/**

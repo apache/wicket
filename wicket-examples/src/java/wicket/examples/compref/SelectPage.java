@@ -44,8 +44,8 @@ import wicket.model.Model;
 public class SelectPage extends WicketExamplePage
 {
 	/** available sites for selection. */
-	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
-			"Java.Net" });
+//	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+//			"Java.Net" });
 
 	/** available choices for large selection box. */
 	private static final List<String> MANY_CHOICES = Arrays.asList(new String[] { "Choice1", "Choice2",
@@ -60,7 +60,7 @@ public class SelectPage extends WicketExamplePage
 		setModel(new CompoundPropertyModel<Input>(input));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 
 		// Add a form with an onSubmit implementation that sets a message
 		Form form = new Form(this, "form")

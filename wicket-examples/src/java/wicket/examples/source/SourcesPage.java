@@ -161,44 +161,6 @@ public class SourcesPage extends WebPage
 			return resources;
 		}
 
-		/**
-		 * Retrieves the package contents for the given URL.
-		 * 
-		 * @param packageListing
-		 *            the url to list.
-		 */
-		private void getPackageContents(URL packageListing)
-		{
-			BufferedReader br = null;
-			try
-			{
-				InputStream openStream = packageListing.openStream();
-				if (openStream == null)
-				{
-					return;
-				}
-				br = new BufferedReader(new InputStreamReader(openStream));
-
-				while (br.ready())
-				{
-					String listing = br.readLine();
-					String extension = Strings.afterLast(listing, '.');
-					if (!listing.endsWith("class"))
-					{
-						resources.add(listing);
-					}
-				}
-			}
-			catch (IOException e)
-			{
-				log.error("Unable to get package content: " + packageListing.toString(), e);
-			}
-			finally
-			{
-				IOUtils.closeQuietly(br);
-			}
-		}
-
 		private final void addResources(final Class scope,
 				final AppendingStringBuffer relativePath, final File dir)
 		{
@@ -213,7 +175,6 @@ public class SourcesPage extends WebPage
 				else
 				{
 					String name = file.getName();
-					String extension = Strings.afterLast(name, '.');
 					if (!name.endsWith("class"))
 					{
 						resources.add(relativePath + name);
@@ -317,7 +278,6 @@ public class SourcesPage extends WebPage
 				if (name.startsWith(packageRef))
 				{
 					name = name.substring(packageRef.length() + 1);
-					String extension = Strings.afterLast(name, '.');
 					if (!name.endsWith("class"))
 					{
 						resources.add(name);
@@ -343,7 +303,7 @@ public class SourcesPage extends WebPage
 		public FilesBrowser(MarkupContainer parent, String id)
 		{
 			super(parent, id);
-			ListView lv = new ListView<String>(this, "file", new PackagedResourcesModel())
+			new ListView<String>(this, "file", new PackagedResourcesModel())
 			{
 				@Override
 				protected void populateItem(ListItem<String> item)

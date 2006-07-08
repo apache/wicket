@@ -47,11 +47,6 @@ public class HangmanApplication extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession()
-			{
-				return new HangmanSession(HangmanApplication.this);
-			}
-
 			public Session newSession(Request request)
 			{
 				return new HangmanSession(HangmanApplication.this);

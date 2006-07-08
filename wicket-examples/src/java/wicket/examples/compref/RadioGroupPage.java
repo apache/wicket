@@ -35,8 +35,7 @@ public class RadioGroupPage extends WicketExamplePage
 		};
 		this.group = new RadioGroup(form, "group", new Model());
 
-		ListView<Person> persons = new ListView<Person>(group, "persons", ComponentReferenceApplication
-				.getPersons())
+		new ListView<Person>(group, "persons", ComponentReferenceApplication.getPersons())
 		{
 			@Override
 			protected void populateItem(ListItem item)

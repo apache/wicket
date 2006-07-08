@@ -20,7 +20,6 @@ package wicket.examples.displaytag;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import wicket.PageParameters;
 import wicket.examples.displaytag.utils.ListObject;

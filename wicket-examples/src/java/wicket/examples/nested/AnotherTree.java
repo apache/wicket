@@ -83,11 +83,6 @@ public class AnotherTree extends Tree
 					return (!node.isLeaf()) ? (isExpanded(node)) ? "^" : ">" : "";
 				}
 			};
-			String junctionLabel = "";
-			if (!node.isLeaf())
-			{
-				junctionLabel = (isExpanded(node)) ? "[-]" : "[+]";
-			}
 			new Label(junctionLink, "junctionLabel", junctionLabelModel);
 
 			// create a link for selecting a node
@@ -105,6 +100,7 @@ public class AnotherTree extends Tree
 	}
 
 	/** Log. */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(AnotherTree.class);
 
 	/**

@@ -30,6 +30,7 @@ import wicket.examples.WicketWebTestCase;
  */
 public class GuestbookTest extends WicketWebTestCase
 {
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(GuestbookTest.class);
 
 	/**

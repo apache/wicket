@@ -96,10 +96,10 @@ public class Home extends WicketExamplePage
 		};
 
 		// and another one
-		Tree tree2 = new MyTree(this, "tree2", treeModel);
+		new MyTree(this, "tree2", treeModel);
 
 		// and yet another one
-		Tree tree3 = new AnotherTree(this, "tree3", treeModel);
+		new AnotherTree(this, "tree3", treeModel);
 	}
 
 	/**

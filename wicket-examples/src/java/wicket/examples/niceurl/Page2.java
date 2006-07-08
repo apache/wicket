@@ -61,8 +61,7 @@ public class Page2 extends WicketExamplePage
 		params.put("param1", newP1 + " " + newP2);
 		params.put("param2", newP2 + " " + newP1);
 
-		BookmarkablePageLink link = new BookmarkablePageLink(this, "refreshLink", Page2.class,
-				params);
+		new BookmarkablePageLink(this, "refreshLink", Page2.class, params);
 
 		new BookmarkablePageLink(this, "homeLink", Home.class);
 	}

@@ -34,7 +34,7 @@ public class ButtonPage extends WicketExamplePage
 	public ButtonPage()
 	{
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 
 		// Add a form with an onSumbit implementation that sets a message
 		Form form = new Form(this, "form")
@@ -46,7 +46,7 @@ public class ButtonPage extends WicketExamplePage
 			}
 		};
 
-		Button button1 = new Button(form, "button1")
+		new Button(form, "button1")
 		{
 			@Override
 			protected void onSubmit()

@@ -35,6 +35,7 @@ import wicket.protocol.http.WebResponse;
  */
 public class Export extends Page
 {
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(Export.class);
 
 	private final BaseExportView exportView;

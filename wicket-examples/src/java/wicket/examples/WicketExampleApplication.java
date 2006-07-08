@@ -36,6 +36,7 @@ public abstract class WicketExampleApplication extends WebApplication
 	/**
 	 * Used for logging.
 	 */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(WicketExampleApplication.class);
 
 	/**

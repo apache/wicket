@@ -95,7 +95,7 @@ public final class EditBook extends AuthenticatedWebPage
 			new DropDownChoice<Book>(this, "companionBook", books);
 
 			// Add radio choice test
-			final RadioChoice relatedBook = new RadioChoice<Book>(this, "relatedBook", books);
+			new RadioChoice<Book>(this, "relatedBook", books);
 
 			// Multi-select among writing styles
 			new ListMultipleChoice<WritingStyle>(this, "writingStyles", Arrays.asList(WritingStyle
@@ -155,7 +155,7 @@ public final class EditBook extends AuthenticatedWebPage
 	public EditBook(final Book book)
 	{
 		// Create and add feedback panel to page
-		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 
 		// Add edit book form to page
 		new EditBookForm(this, "editBookForm", book);

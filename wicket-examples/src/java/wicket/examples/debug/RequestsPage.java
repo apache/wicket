@@ -90,7 +90,7 @@ public class RequestsPage extends WebPage
 			protected void populateItem(ListItem item)
 			{
 				RequestData rd = (RequestData)item.getModelObject();
-				Label startDate = new Label(item, "startDate", new Model<Date>(rd.getStartDate()))
+				new Label(item, "startDate", new Model<Date>(rd.getStartDate()))
 				{
 					private static final long serialVersionUID = 1L;
 
@@ -124,6 +124,6 @@ public class RequestsPage extends WebPage
 			}
 		};
 
-		PagingNavigator navigator = new PagingNavigator(this, "navigator", listView);
+		new PagingNavigator(this, "navigator", listView);
 	}
 }

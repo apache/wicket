@@ -88,11 +88,6 @@ public final class SignIn2Application extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession()
-			{
-				return new SignIn2Session(SignIn2Application.this);
-			}
-
 			public Session newSession(Request request)
 			{
 				return new SignIn2Session(SignIn2Application.this);

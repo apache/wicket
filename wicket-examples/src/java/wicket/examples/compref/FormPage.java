@@ -33,7 +33,7 @@ public class FormPage extends WicketExamplePage
 	public FormPage()
 	{
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 
 		// Add a form with an onSubmit implementation that sets a message
 		new Form(this, "form")

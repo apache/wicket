@@ -50,8 +50,6 @@ public class ExampleNestedTables extends Displaytag
 			@Override
 			public void populateItem(final ListItem listItem)
 			{
-				final ListObject value = (ListObject)listItem.getModelObject();
-
 				List<ListObject> data2 = new TestList(3, false);
 
 				// Just create a new table, which will be put into the current

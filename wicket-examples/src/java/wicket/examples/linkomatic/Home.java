@@ -71,7 +71,7 @@ public class Home extends WicketExamplePage
 		new Label(actionLink, "linkClickCount", new PropertyModel(this, "linkClickCount"));
 
 		// Action link counts link clicks on works with onclick handler
-		final Link<String> actionOnClickLink = new Link<String>(this, "actionOnClickLink")
+		new Link<String>(this, "actionOnClickLink")
 		{
 			@Override
 			public void onClick()
@@ -149,7 +149,7 @@ public class Home extends WicketExamplePage
 		new ResourceLink(this, "cancelButtonLink", new ResourceReference("cancelButton"));
 
 		// redirect to external url form
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 		new RedirectForm(this, "redirectForm");
 
 		Link linkToAnchor = new Link(this, "linkToAnchor")
@@ -159,7 +159,7 @@ public class Home extends WicketExamplePage
 			{
 			}
 		};
-		Link anotherlinkToAnchor = new Link(this, "anotherlinkToAnchor")
+		new Link(this, "anotherlinkToAnchor")
 		{
 			@Override
 			public void onClick()

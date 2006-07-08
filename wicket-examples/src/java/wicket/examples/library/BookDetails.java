@@ -24,7 +24,6 @@ import wicket.PageParameters;
 import wicket.examples.library.Book.WritingStyle;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
-import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.StringList;
 import wicket.util.string.StringValueConversionException;
@@ -76,8 +75,6 @@ public final class BookDetails extends AuthenticatedWebPage
 	 */
 	public BookDetails(final Book book)
 	{
-		IModel<Book> bookModel = new Model<Book>(book);
-
 		new Label(this, "title", book.getTitle());
 		new Label(this, "author", book.getAuthor());
 		new Label(this, "fiction", Boolean.toString(book.getFiction()));

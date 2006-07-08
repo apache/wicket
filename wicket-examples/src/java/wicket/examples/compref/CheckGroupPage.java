@@ -39,8 +39,7 @@ public class CheckGroupPage extends WicketExamplePage
 		group = new CheckGroup<String>(form, "group", new ArrayList<String>());
 
 		new CheckGroupSelector(group, "groupselector");
-		ListView<Person> persons = new ListView<Person>(group, "persons", ComponentReferenceApplication
-				.getPersons())
+		new ListView<Person>(group, "persons", ComponentReferenceApplication.getPersons())
 		{
 
 			@Override

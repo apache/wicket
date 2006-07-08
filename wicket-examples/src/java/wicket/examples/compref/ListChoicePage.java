@@ -38,7 +38,7 @@ public class ListChoicePage extends WicketExamplePage<ListChoicePageInput>
 		setModel(new CompoundPropertyModel<ListChoicePageInput>(listChoicePageInput));
 
 		// Add a FeedbackPanel for displaying our messages
-		FeedbackPanel feedbackPanel = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 
 		// Add a form with an onSumbit implementation that sets a message
 		Form form = new Form(this, "form")

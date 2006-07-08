@@ -51,8 +51,7 @@ public final class SignIn extends WicketExamplePage
 	public SignIn(final PageParameters parameters)
 	{
 		// Create feedback panel and add to page
-		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
-
+		new FeedbackPanel(this, "feedback");
 
 		// Add sign-in form to page, passing feedback panel as validation error
 		// handler

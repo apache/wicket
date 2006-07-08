@@ -44,9 +44,6 @@ public final class Home extends WicketExamplePage
 	 */
 	public Home()
 	{
-		// Get our custom application subclass
-		final ImagesApplication application = (ImagesApplication)getApplication();
-
 		// Image as package resource
 		new Image(this, "image2");
 

@@ -148,7 +148,7 @@ public abstract class SignInPanel extends Panel
 		this.includeRememberMe = includeRememberMe;
 
 		// Create feedback panel and add to page
-		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
+		new FeedbackPanel(this, "feedback");
 
 		// Add sign-in form to page, passing feedback panel as
 		// validation error handler

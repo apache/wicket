@@ -32,7 +32,7 @@ public class BorderPage extends WicketExamplePage
 	public BorderPage()
 	{
 		MyBorder border = new MyBorder(this, "border");
-		Label label = new Label(border, "label", "I am the label");
+		new Label(border, "label", "I am the label");
 	}
 
 	/**

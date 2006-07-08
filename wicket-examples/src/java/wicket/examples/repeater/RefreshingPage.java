@@ -55,7 +55,7 @@ public class RefreshingPage extends BasePage
 		}
 
 		// create the refreshing view
-		RefreshingView view = new RefreshingView(this, "view")
+		new RefreshingView(this, "view")
 		{
 			/**
 			 * Return an iterator over models for items in the view
