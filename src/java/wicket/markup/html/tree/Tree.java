@@ -355,9 +355,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 */
 	private boolean reuseItems = true;
 
-	/** List view for tree paths. */
-	private TreePathsListView treePathsListView;
-
 	/** Model for the paths of the tree. */
 	private TreePathsModel treePathsModel;
 
@@ -376,7 +373,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super(parent, id, model);
 		this.treePathsModel = new TreePathsModel();
-		treePathsListView = createTreePathsListView(this);
+		createTreePathsListView(this);
 
 		PackageResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
@@ -397,7 +394,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super(parent, id, treeState);
 		this.treePathsModel = new TreePathsModel();
-		treePathsListView = createTreePathsListView(this);
+		createTreePathsListView(this);
 
 		PackageResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
@@ -449,7 +446,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super.setTreeModel(treeModel);
 		this.treePathsModel = new TreePathsModel();
-		treePathsListView = createTreePathsListView(this);
+		createTreePathsListView(this);
 	}
 
 	/**
@@ -463,7 +460,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	{
 		super.setTreeState(treeState);
 		this.treePathsModel = new TreePathsModel();
-		treePathsListView = createTreePathsListView(this);
+		createTreePathsListView(this);
 	}
 
 	/**
