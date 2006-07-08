@@ -15,27 +15,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package wicket.markup.html.form;
 
 import java.io.Serializable;
 
-import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
-import wicket.markup.html.WebMarkupContainer;
-import wicket.model.CompoundPropertyModel;
-import wicket.model.Model;
 
 /**
  * Test for RadioGroup and Radio components
  * 
  * @author igor
- * 
  */
 public class RadioGroupTest extends WicketTestCase
 {
-
 	/**
 	 * @param name
 	 */
@@ -89,8 +82,6 @@ public class RadioGroupTest extends WicketTestCase
 		{
 			this.prop2 = prop2;
 		}
-
-
 	}
 
 	/**
@@ -99,6 +90,8 @@ public class RadioGroupTest extends WicketTestCase
 	public void testFormProcessing()
 	{
 		// setup some values we will use for testing as well as a test model
+//		 FIXME backported from 1.2.1 needs to be reworked for 2.0
+		/*
 		final String radio1 = "radio1-selection";
 		// object used to test compound property model
 		MockModelObject modelObject = new MockModelObject();
@@ -108,9 +101,7 @@ public class RadioGroupTest extends WicketTestCase
 
 		// set up necessary objects to emulate a form submission
 
-		RequestCycle cycle = application.createRequestCycle();
-//		 FIXME backported from 1.2.1 needs to be reworked for 2.0
-		/*
+		application.createRequestCycle();
 		MockPage page = new MockPage();
 
 		// create component hierarchy

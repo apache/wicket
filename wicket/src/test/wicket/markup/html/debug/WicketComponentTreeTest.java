@@ -21,15 +21,11 @@ package wicket.markup.html.debug;
 import wicket.WicketTestCase;
 
 /**
- * Test the component: PageView
  * 
  * @author Juergen Donnerstag
  */
 public class WicketComponentTreeTest extends WicketTestCase
 {
-	// private static Log log =
-	// LogFactory.getLog(WicketComponentTreeTest.class);
-
 	/**
 	 * Create the test.
 	 * 
@@ -48,7 +44,8 @@ public class WicketComponentTreeTest extends WicketTestCase
 	 */
 	public void test1() throws Exception
 	{
-		this.executeTest(WicketComponentTreeTestPage.class,
+		executeTest(
+				WicketComponentTreeTestPage.class, 
 				"WicketComponentTreeTestPage_ExpectedResult.html");
 	}
 }

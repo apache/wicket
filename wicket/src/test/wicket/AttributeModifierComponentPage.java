@@ -43,7 +43,7 @@ public class AttributeModifierComponentPage extends WebPage
 	public AttributeModifierComponentPage()
 	{
 		// Label with attribute modifier
-		Label label1 = new Label(this, "label1", new Model<String>("Label 1"));
+		new Label(this, "label1", new Model<String>("Label 1"));
 
 		// Label with override attribute modifier
 		Label label2 = new Label(this, "label2", new Model<String>("Label 2"));
