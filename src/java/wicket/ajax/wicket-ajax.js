@@ -32,13 +32,11 @@ function wicketHide(id) {
 // AJAX FUNCTIONS
 function wicketAjaxCreateTransport() {
     var transport = null;
-    if (window.XMLHttpRequest) {
+    if (window.ActiveXObject) {
+        transport = new ActiveXObject("Microsoft.XMLHTTP");
+    } else if (window.XMLHttpRequest) {
         transport = new XMLHttpRequest();
-    } else {
-        if (window.ActiveXObject) {
-            transport = new ActiveXObject("Microsoft.XMLHTTP");
-        }
-    }
+    } 
     
     if (transport==null&&wicketAjaxDebugEnabled()) {
         var log=WicketAjaxDebug.logError;
@@ -551,7 +549,7 @@ function wicketSerializeForm(form) {
     var result = "";
     for (var i = 0; i < form.elements.length; ++i) {
         var e = form.elements[i];
-        if (e.name && !e.disabled) {
+        if (e.name && e.name != "" && !e.disabled) {
             result += wicketSerialize(e);
         }
     }
