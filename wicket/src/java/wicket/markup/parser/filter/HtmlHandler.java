@@ -85,7 +85,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	public MarkupElement nextTag() throws ParseException
 	{
 		// Get the next tag. If null, no more tags are available
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null)
 		{
 			// No more tags from the markup.

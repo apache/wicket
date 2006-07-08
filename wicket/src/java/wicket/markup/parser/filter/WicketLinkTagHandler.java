@@ -25,7 +25,6 @@ import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.util.collections.ArrayListStack;
@@ -100,7 +99,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	public final MarkupElement nextTag() throws ParseException
 	{
 		// Get next tag. Null, if no more tag available
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null)
 		{
 			return tag;
@@ -126,45 +125,39 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 
 		// For all <wicket:link ..> tags which probably change the
 		// current autolink status.
-		if (tag instanceof WicketTag)
+		if (tag.isLinkTag())
 		{
-			final WicketTag wtag = (WicketTag)tag;
-			if (wtag.isLinkTag())
+			// Beginning of the region
+			if (tag.isOpen() || tag.isOpenClose())
 			{
-				// Beginning of the region
-				if (tag.isOpen() || tag.isOpenClose())
+				if (tag.isOpen())
 				{
-					if (tag.isOpen())
+					if (autolinkStatus == null)
 					{
-						if (autolinkStatus == null)
-						{
-							autolinkStatus = new ArrayListStack<Boolean>();
-						}
-
-						// remember the current setting to be reset after the
-						// region
-						autolinkStatus.push(new Boolean(autolinking));
+						autolinkStatus = new ArrayListStack<Boolean>();
 					}
 
-					// html allows to represent true in different ways
-					final String autolink = tag.getAttributes().getString("autolink");
-					try
-					{
-						autolinking = Strings.isEmpty(autolink) || Strings.isTrue(autolink);
-					}
-					catch (StringValueConversionException e)
-					{
-						throw new WicketRuntimeException("Invalid autolink attribute value \""
-								+ autolink + "\"");
-					}
-				}
-				else if (tag.isClose())
-				{
-					// restore the autolink setting from before the region
-					autolinking = autolinkStatus.pop().booleanValue();
+					// remember the current setting to be reset after the
+					// region
+					autolinkStatus.push(new Boolean(autolinking));
 				}
 
-				return wtag;
+				// html allows to represent true in different ways
+				final String autolink = tag.getAttributes().getString("autolink");
+				try
+				{
+					autolinking = Strings.isEmpty(autolink) || Strings.isTrue(autolink);
+				}
+				catch (StringValueConversionException e)
+				{
+					throw new WicketRuntimeException("Invalid autolink attribute value \""
+							+ autolink + "\"");
+				}
+			}
+			else if (tag.isClose())
+			{
+				// restore the autolink setting from before the region
+				autolinking = autolinkStatus.pop().booleanValue();
 			}
 		}
 

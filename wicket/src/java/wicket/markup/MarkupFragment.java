@@ -41,6 +41,7 @@ import wicket.util.string.AppendingStringBuffer;
  */
 public class MarkupFragment
 {
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(MarkupFragment.class);
 
 	/** Placeholder that indicates no markup */
@@ -166,56 +167,5 @@ public class MarkupFragment
 	final void reset()
 	{
 		this.markupElements = new ArrayList<MarkupElement>();
-	}
-
-	/**
-	 * Create an iterator for the markup elements
-	 * 
-	 * @return Iterator
-	 */
-	public final Iterator iterator()
-	{
-		return iterator(0, null);
-	}
-
-	/**
-	 * Create an iterator for the tags being an istance of 'matchClass'
-	 * 
-	 * @param startIndex
-	 *            The index to start with
-	 * @param matchClass
-	 *            Iterate over elements matching the class
-	 * @return Iterator
-	 */
-	public final Iterator iterator(final int startIndex, final Class matchClass)
-	{
-		return new Iterator()
-		{
-			int index = startIndex - 1;
-
-			public boolean hasNext()
-			{
-				while (++index < size())
-				{
-					MarkupElement element = get(index);
-					if ((matchClass == null) || matchClass.isInstance(element))
-					{
-						return true;
-					}
-				}
-				return false;
-			}
-
-			public Object next()
-			{
-				return get(index);
-			}
-
-			public void remove()
-			{
-				markupElements.remove(index);
-				index -= 1;
-			}
-		};
 	}
 }

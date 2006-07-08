@@ -30,7 +30,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.lang.Classes;
 
@@ -83,14 +82,13 @@ public final class AutoComponentResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		// It must be <wicket:...>
-		if (tag instanceof WicketTag)
+		if (tag.isWicketTag())
 		{
 			// It must be <wicket:component...>
-			final WicketTag wicketTag = (WicketTag)tag;
-			if (wicketTag.isComponentTag())
+			if (tag.isComponentTag())
 			{
 				// Create and initialize the component
-				final Component component = createComponent(container, wicketTag);
+				final Component component = createComponent(container, tag);
 				if (component != null)
 				{
 					// 1. push the current component onto the stack
@@ -151,10 +149,10 @@ public final class AutoComponentResolver implements IComponentResolver
 	 *             in case the component could not be created
 	 */
 	// Wicket is current not using any bean util jar, which is why ...
-	private final Component createComponent(final MarkupContainer container, final WicketTag tag)
+	private final Component createComponent(final MarkupContainer container, final ComponentTag tag)
 	{
 		// If no component name is given, create a page-unique one yourself.
-		String componentId = tag.getNameAttribute();
+		String componentId = tag.getAttributes().getString("name");
 		if (componentId == null)
 		{
 			componentId = Component.AUTO_COMPONENT_PREFIX + container.getPage().getAutoIndex();

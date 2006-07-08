@@ -21,8 +21,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.internal.TransparentWebMarkupContainer;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
@@ -56,59 +55,15 @@ public class MarkupInheritanceResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <wicket:...>
-		if (tag instanceof WicketTag)
+		// If <wicket:extend...> or <wicket:child...>
+		if (tag.isExtendTag() || tag.isChildTag())
 		{
-			final WicketTag wicketTag = (WicketTag)tag;
-
-			// It must be <wicket:extend...>
-			if (wicketTag.isExtendTag())
-			{
-				// TODO we just have to prefix it i with a AUTO prefix.. Can
-				// this be done? Shoult the wicketTag id first be altered?
-				new TransparentWebMarkupContainer(container, Component.AUTO_COMPONENT_PREFIX
-						+ wicketTag.getId()).autoAdded();
-				return true;
-			}
-
-			// It must be <wicket:child...>
-			if (wicketTag.isChildTag())
-			{
-				// TODO we just have to prefix it i with a AUTO prefix.. Can
-				// this be done? Shoult the wicketTag id first be altered?
-				new TransparentWebMarkupContainer(container, Component.AUTO_COMPONENT_PREFIX
-						+ wicketTag.getId()).autoAdded();
-				return true;
-			}
-		}
-		// We were not able to handle the componentId
-		return false;
-	}
-
-	/**
-	 * This is a WebMarkupContainer, except that it is transparent for it child
-	 * components.
-	 */
-	private static class TransparentWebMarkupContainer extends WebMarkupContainer
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * @param parent
-		 * @param id
-		 */
-		public TransparentWebMarkupContainer(MarkupContainer parent, final String id)
-		{
-			super(parent, id);
-		}
-
-		/**
-		 * @see wicket.MarkupContainer#isTransparentResolver()
-		 */
-		@Override
-		public boolean isTransparentResolver()
-		{
+			new TransparentWebMarkupContainer(container, Component.AUTO_COMPONENT_PREFIX
+					+ tag.getId()).autoAdded();
 			return true;
 		}
+
+		// We were not able to handle the id
+		return false;
 	}
 }

@@ -21,7 +21,6 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 
 /**
  * Some containers are transparent to the user (e.g. HtmlHeaderContainer or
@@ -47,7 +46,7 @@ public class ParentResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		// Ignore special tags like _panel, _border, _extend etc.
-		if (tag instanceof WicketTag)
+		if (tag.isWicketTag())
 		{
 			return false;
 		}

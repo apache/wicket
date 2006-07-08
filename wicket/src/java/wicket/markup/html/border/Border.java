@@ -22,7 +22,6 @@ import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.XmlTag;
@@ -193,13 +192,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 			final ComponentTag tag)
 	{
 		// Determine if tag is a <wicket:body> tag
-		if (!(tag instanceof WicketTag))
-		{
-			return false;
-		}
-
-		final WicketTag wtag = (WicketTag)tag;
-		if (!wtag.isBodyTag())
+		if (!tag.isWicketBodyTag())
 		{
 			return false;
 		}
@@ -216,7 +209,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 
 		try
 		{
-			renderBodyComponent(markupStream, wtag);
+			renderBodyComponent(markupStream, tag);
 		}
 		finally
 		{
@@ -276,7 +269,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @param wtag
 	 *            The wicket:body tag
 	 */
-	public void renderBodyComponent(final MarkupStream markupStream, final WicketTag wtag)
+	public void renderBodyComponent(final MarkupStream markupStream, final ComponentTag wtag)
 	{
 		// Ok, it is a wicket:body tag. Now render its body
 		final ComponentTag bodyTag = renderBodyComponentTag(markupStream, wtag);

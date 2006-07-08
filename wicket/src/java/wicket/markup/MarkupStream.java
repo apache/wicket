@@ -18,8 +18,6 @@
  */
 package wicket.markup;
 
-import java.util.Iterator;
-
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
@@ -145,6 +143,35 @@ public final class MarkupStream
 	}
 
 	/**
+	 * @return The current markup element as a markup tag
+	 */
+	public ComponentTag getTag()
+	{
+		return getTag(true);
+	}
+
+	/**
+	 * @param throwException
+	 *            If true throw an exception if the element is not a
+	 *            ComponentTag
+	 * @return The current markup element as a markup tag
+	 */
+	public ComponentTag getTag(final boolean throwException)
+	{
+		if (current instanceof ComponentTag)
+		{
+			return (ComponentTag)current;
+		}
+
+		if (throwException)
+		{
+			throwMarkupException("Tag expected");
+		}
+
+		return null;
+	}
+
+	/**
 	 * @return Current index in markup stream
 	 */
 	public int getCurrentIndex()
@@ -161,21 +188,6 @@ public final class MarkupStream
 	}
 
 	/**
-	 * @return The current markup element as a markup tag
-	 */
-	public ComponentTag getTag()
-	{
-		if (current instanceof ComponentTag)
-		{
-			return (ComponentTag)current;
-		}
-
-		throwMarkupException("Tag expected");
-
-		return null;
-	}
-
-	/**
 	 * @return True if this markup stream has more MarkupElement elements
 	 */
 	public boolean hasMore()
@@ -184,7 +196,24 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Note:
+	 * 
+	 * @return True, if more ComponentTags are in the stream
+	 */
+	public boolean hasMoreComponentTags()
+	{
+		while (hasMore())
+		{
+			MarkupElement elem = next();
+			if (elem instanceof ComponentTag)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * 
 	 * @return The next markup element in the stream
 	 */
@@ -266,8 +295,8 @@ public final class MarkupStream
 	{
 		while (true)
 		{
-			if ((current instanceof WicketTag)
-					&& ((WicketTag)current).getName().equals(wicketTagName))
+			if ((current instanceof ComponentTag) && ((ComponentTag)current).isWicketTag()
+					&& ((ComponentTag)current).getName().equals(wicketTagName))
 			{
 				return;
 			}
@@ -436,19 +465,6 @@ public final class MarkupStream
 	public final int findComponentIndex(final String path, final String id)
 	{
 		return this.markup.findComponentIndex(path, id);
-	}
-
-	/**
-	 * Create an iterator for the component tags in the stream.
-	 * <p>
-	 * Note: it will not modify the current index of the underlying markup
-	 * stream
-	 * 
-	 * @return ComponentTagIterator
-	 */
-	public final Iterator componentTagIterator()
-	{
-		return markup.componentTagIterator(0, ComponentTag.class);
 	}
 
 	/**

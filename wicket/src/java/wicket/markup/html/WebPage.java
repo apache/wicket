@@ -28,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.AccessStackPageMap;
 import wicket.Application;
-import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.MetaDataKey;
@@ -39,11 +38,10 @@ import wicket.ResourceReference;
 import wicket.Response;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.MarkupElement;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
-import wicket.markup.TagUtils;
 import wicket.markup.html.internal.HtmlBodyContainer;
+import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -104,8 +102,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	{
 		private static final long serialVersionUID = 1L;
 
-		Set/* <Class> */<Class<? extends WebPage>> missingBodyTagsLogged = new HashSet<Class<? extends WebPage>>(
-				1);
+		Set<Class<? extends WebPage>> missingBodyTagsLogged = new HashSet<Class<? extends WebPage>>(1);
 	}
 
 	/** The resource references used for new window/tab support */
@@ -248,38 +245,51 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		// Add a Body container if the associated markup contains a <body> tag
 		// get markup stream gracefully
 		MarkupStream markupStream = getAssociatedMarkupStream(false);
-		if (markupStream != null)
-		{
-			// The default <body> container. It can be accessed, replaced
-			// and attribute modifiers can be attached. <body> tags without
-			// wicket:id get automatically a wicket:id="body" assigned.
-			// find the body tag
-			while (markupStream.hasMore())
-			{
-				final MarkupElement element = markupStream.next();
-				if (element instanceof ComponentTag)
-				{
-					final ComponentTag tag = (ComponentTag)element;
-					if (tag.isOpen() && TagUtils.isBodyTag(tag))
-					{
-						// Add a default container if the tag has the default
-						// name
-						if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
-						{
-							new HtmlBodyContainer(this, tag.getId());
-						}
-						// remember the id of the tag
-						bodyContainer = new BodyContainer(this, tag.getId());
-						break;
-					}
-				}
-			}
-		}
-		else
+		if (markupStream == null)
 		{
 			throw new MarkupNotFoundException(
 					"Each Page must have associated markup. Unable to find the markup file for Page: " 
 					+ this.toString());
+		}
+		
+		// The <body> container. It can be accessed, replaced
+		// and attribute modifiers can be attached. <body> tags without
+		// wicket:id get automatically a wicket:id assigned.
+		while (markupStream.hasMoreComponentTags())
+		{
+			final ComponentTag tag = markupStream.getTag();
+			if (tag.isOpen() && tag.isBodyTag())
+			{
+				// Add a default container if the tag has the default
+				// name. If the tag has a wicket:id, than the user
+				// must create the component.
+				if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
+				{
+					new HtmlBodyContainer(this, tag.getId());
+				}
+				// remember the id of the tag
+				bodyContainer = new BodyContainer(this, tag.getId());
+				break;
+			}
+		}
+		
+		// The <head> container. It can be accessed, replaced
+		// and attribute modifiers can be attached. 
+		markupStream.setCurrentIndex(0);
+		while (markupStream.hasMoreComponentTags())
+		{
+			final ComponentTag tag = markupStream.getTag();
+			if (tag.isOpen() && tag.isHeadTag())
+			{
+				// Add a default container if the tag has the default
+				// name. If the tag has a wicket:id, than the user
+				// must create the component.
+				if (HtmlHeaderSectionHandler.HEADER_ID.equals(tag.getId()))
+				{
+					new HtmlHeaderContainer(this, tag.getId());
+				}
+				break;
+			}
 		}
 
 		// if automatic multi window support is on, add a page checker instance
@@ -287,11 +297,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		{
 			add(new PageMapChecker());
 		}
-
-		// TODO Post 1.2: If the concept proofs valuable we could add the header
-		// container the same way instead of using a resolver. The advantages
-		// would be that the header container be available at build time already
-		// and not only at render time.
 	}
 
 	/**
@@ -327,22 +332,22 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 * 
 	 * @see wicket.Component#onDetach()
 	 */
-	@Override
-	protected void onDetach()
-	{
-		// This code can not go into HtmlHeaderContainer as
-		// header.onEndRequest() is executed inside an iterator
-		// and you can only call container.remove() which
-		// is != iter.remove(). And the iterator is not available
-		// inside onEndRequest(). Obviously WebPage.onEndRequest()
-		// is invoked outside the iterator loop.
-		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
-		if (header != null)
-		{
-			this.remove(header);
-		}
-		super.onDetach();
-	}
+//	@Override
+//	protected void onDetach()
+//	{
+//		// This code can not go into HtmlHeaderContainer as
+//		// header.onEndRequest() is executed inside an iterator
+//		// and you can only call container.remove() which
+//		// is != iter.remove(). And the iterator is not available
+//		// inside onEndRequest(). Obviously WebPage.onEndRequest()
+//		// is invoked outside the iterator loop.
+//		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
+//		if (header != null)
+//		{
+//			this.remove(header);
+//		}
+//		super.onDetach();
+//	}
 
 	/**
 	 * @see wicket.markup.html.INewBrowserWindowListener#onNewBrowserWindow()

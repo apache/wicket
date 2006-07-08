@@ -82,7 +82,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 
 		// Get the next tag. If null, no more tags are available
 		// in the markup
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null)
 		{
 			return tag;

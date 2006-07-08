@@ -20,7 +20,6 @@ package wicket.markup.resolver;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
@@ -62,18 +61,12 @@ public class FragmentResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// If <wicket:...>
-		if (tag instanceof WicketTag)
+		// If <wicket:fragment ...>
+		if (tag.isFragementTag())
 		{
-			final WicketTag wTag = (WicketTag)tag;
-
-			// If <wicket:fragment ...>
-			if (wTag.isFragementTag())
-			{
-				// skip the markup associated with the tag
-				markupStream.skipComponent();
-				return true;
-			}
+			// skip the markup associated with the tag
+			markupStream.skipComponent();
+			return true;
 		}
 
 		// We were not able to handle the tag

@@ -22,7 +22,6 @@ import java.text.ParseException;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 
@@ -69,14 +68,14 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag from the next MarkupFilter in the chain
 		// If null, no more tags are available
-		final ComponentTag openTag = (ComponentTag)getParent().nextTag();
+		final ComponentTag openTag = nextComponentTag();
 		if (openTag == null)
 		{
 			return openTag;
 		}
 
 		// If it is not a remove tag, than we are finished
-		if (!(openTag instanceof WicketTag) || !((WicketTag)openTag).isRemoveTag())
+		if (!openTag.isRemoveTag())
 		{
 			return openTag;
 		}

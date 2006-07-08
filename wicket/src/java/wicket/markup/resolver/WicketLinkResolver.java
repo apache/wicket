@@ -21,7 +21,6 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
@@ -54,33 +53,29 @@ public class WicketLinkResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <body onload>
-		if (tag instanceof WicketTag)
+		// It must be <wicket:link>
+		if (tag.isLinkTag())
 		{
-			WicketTag wtag = (WicketTag)tag;
-			if (wtag.isLinkTag() && (wtag.getNamespace() != null))
+			final String id = Component.AUTO_COMPONENT_PREFIX + "_link_"
+					+ container.getPage().getAutoIndex();
+			final Component component = new WebMarkupContainer(container, id)
 			{
-				final String id = Component.AUTO_COMPONENT_PREFIX + "_link_"
-						+ container.getPage().getAutoIndex();
-				final Component component = new WebMarkupContainer(container, id)
+				private static final long serialVersionUID = 1L;
+
+				/**
+				 * @see wicket.MarkupContainer#isTransparentResolver()
+				 */
+				@Override
+				public boolean isTransparentResolver()
 				{
-					private static final long serialVersionUID = 1L;
+					return true;
+				}
+			};
 
-					/**
-					 * @see wicket.MarkupContainer#isTransparentResolver()
-					 */
-					@Override
-					public boolean isTransparentResolver()
-					{
-						return true;
-					}
-				};
+			component.autoAdded();
 
-				component.autoAdded();
-
-				// Yes, we handled the tag
-				return true;
-			}
+			// Yes, we handled the tag
+			return true;
 		}
 
 		// We were not able to handle the tag

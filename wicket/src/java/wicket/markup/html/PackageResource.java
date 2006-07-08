@@ -66,6 +66,7 @@ public class PackageResource extends WebResource
 	}
 
 	/** log. */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(PackageResource.class);
 
 	private static final long serialVersionUID = 1L;
