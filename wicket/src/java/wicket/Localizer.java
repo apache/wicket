@@ -54,6 +54,7 @@ import wicket.util.string.interpolator.PropertyVariableInterpolator;
 public class Localizer
 {
 	/** Log */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(Localizer.class);
 
 	/** The application and its settings to use to control the utils. */
@@ -294,13 +295,6 @@ public class Localizer
 		{
 			throw new IllegalArgumentException(
 					"Parameter 'searchStack' must have at least one entry");
-		}
-
-		// The top element
-		Class componentClass = null;
-		if (searchStack.size() > 0)
-		{
-			componentClass = (Class)searchStack.get(0);
 		}
 
 		// Get the property by iterating over the register string resouce loader
