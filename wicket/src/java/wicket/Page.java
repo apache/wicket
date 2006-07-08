@@ -478,7 +478,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Returns the feedbackMessages.
+	 * @return Returns feedback messages from all components in this page (including the page itself).
 	 */
 	public final FeedbackMessages getFeedbackMessages()
 	{
