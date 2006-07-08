@@ -214,7 +214,7 @@ public abstract class GridView extends DataViewBase
 			{
 				// Build a row
 				Item rowItem = newRowItem(newChildId(), row);
-				RepeatingView rowView = new RepeatingView(rowItem, "cols");
+				new RepeatingView(rowItem, "cols");
 
 				// Populate the row
 				for (int index = 0; index < cols; index++)

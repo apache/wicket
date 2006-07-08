@@ -12,14 +12,12 @@ import junit.framework.TestCase;
  */
 public class NoopFieldValueFactoryTest extends TestCase
 {
-	private Integer testField;
-
 	private Field field;
 
 	@Override
 	protected void setUp() throws Exception
 	{
-		Field field = NoopFieldValueFactoryTest.class.getDeclaredField("testField");
+		field = NoopFieldValueFactoryTest.class.getDeclaredField("testField");
 	}
 
 	/**

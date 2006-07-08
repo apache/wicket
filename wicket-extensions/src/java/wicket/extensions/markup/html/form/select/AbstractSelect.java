@@ -17,8 +17,6 @@
  */
 package wicket.extensions.markup.html.form.select;
 
-import java.util.Collection;
-
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.form.FormComponent;
@@ -87,9 +85,6 @@ public abstract class AbstractSelect<T> extends FormComponent<T>
 	@Override
 	public void updateModel()
 	{
-		Object object = getModelObject();
-		boolean isModelCollection = object instanceof Collection;
-
 		clearModel();
 
 		/*
