@@ -53,6 +53,7 @@ import wicket.markup.parser.AbstractMarkupFilter;
 public final class PrependContextPathHandler extends AbstractMarkupFilter
 {
 	/** Logging */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(PrependContextPathHandler.class);
 
 	/** List of attribute names considered */
@@ -108,7 +109,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	public MarkupElement nextTag() throws ParseException
 	{
 		// Get the next tag. If null, no more tags are available
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null || tag.getId() != null)
 		{
 			return tag;

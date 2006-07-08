@@ -146,9 +146,9 @@ public final class BodyContainer implements Serializable
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
-	public final BodyContainer addOnLoadModifier(final String value, final Component behaviorOwner)
+	public final BodyContainer addOnLoadModifier(final CharSequence value, final Component behaviorOwner)
 	{
-		final IModel<String> model = new Model<String>(value);
+		final IModel<CharSequence> model = new Model<CharSequence>(value);
 		return addOnLoadModifier(model, behaviorOwner);
 	}
 
@@ -203,9 +203,9 @@ public final class BodyContainer implements Serializable
 	 * @TODO Post 1.2: A listener hook on IBehavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
-	public final BodyContainer addOnUnLoadModifier(final String value, final Component behaviorOwner)
+	public final BodyContainer addOnUnLoadModifier(final CharSequence value, final Component behaviorOwner)
 	{
-		final IModel<String> model = new Model<String>(value);
+		final IModel<CharSequence> model = new Model<CharSequence>(value);
 		return addOnUnLoadModifier(model, behaviorOwner);
 	}
 

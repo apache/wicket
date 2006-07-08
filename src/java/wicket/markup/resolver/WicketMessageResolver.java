@@ -25,7 +25,6 @@ import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.parser.XmlTag;
@@ -72,42 +71,38 @@ public class WicketMessageResolver implements IComponentResolver
 			final ComponentTag tag)
 	{
 		// It must be <body onload>
-		if (tag instanceof WicketTag)
+		if (tag.isMessageTag())
 		{
-			WicketTag wtag = (WicketTag)tag;
-			if (wtag.isMessageTag())
+			String messageKey = tag.getAttributes().getString("key");
+			if ((messageKey == null) || (messageKey.trim().length() == 0))
 			{
-				String messageKey = wtag.getAttributes().getString("key");
-				if ((messageKey == null) || (messageKey.trim().length() == 0))
-				{
-					throw new MarkupException(
-							"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
-				}
-
-				final String value = container.getApplication().getResourceSettings()
-						.getLocalizer().getString(messageKey, container, "");
-
-				final String id = Component.AUTO_COMPONENT_PREFIX + "_message_"
-						+ container.getPage().getAutoIndex();
-				Component component = null;
-				if ((value != null) && (value.trim().length() > 0))
-				{
-					component = new MyLabel(container, id, value);
-				}
-				else
-				{
-					log.info("No value found for message key: " + messageKey);
-					component = new WebMarkupContainer(container, id);
-				}
-
-				component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
-						.getStripWicketTags());
-
-				component.autoAdded();
-
-				// Yes, we handled the tag
-				return true;
+				throw new MarkupException(
+						"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 			}
+
+			final String value = container.getApplication().getResourceSettings()
+					.getLocalizer().getString(messageKey, container, "");
+
+			final String id = Component.AUTO_COMPONENT_PREFIX + "_message_"
+					+ container.getPage().getAutoIndex();
+			Component component = null;
+			if ((value != null) && (value.trim().length() > 0))
+			{
+				component = new MyLabel(container, id, value);
+			}
+			else
+			{
+				log.info("No value found for message key: " + messageKey);
+				component = new WebMarkupContainer(container, id);
+			}
+
+			component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
+					.getStripWicketTags());
+
+			component.autoAdded();
+
+			// Yes, we handled the tag
+			return true;
 		}
 
 		// We were not able to handle the tag

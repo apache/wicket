@@ -38,7 +38,6 @@ import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.IAssignmentAware;
@@ -639,8 +638,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			}
 			catch (RuntimeException re)
 			{
-				throw new WicketRuntimeException("Couldn't find the markup of the component " + id
-						+ " in parent " + parent.getPageRelativePath(), re);
+				throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
+						+ "' in parent " + parent.getPageRelativePath(), re);
 			}
 			parent.add(this);
 		}
@@ -2755,7 +2754,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	protected final void renderComponentTag(ComponentTag tag)
 	{
 		final boolean stripWicketTags = Application.get().getMarkupSettings().getStripWicketTags();
-		if (!(tag instanceof WicketTag) || !stripWicketTags)
+		if ((tag.isWicketTag() == false) || (stripWicketTags == false))
 		{
 			// Apply behavior modifiers
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose()

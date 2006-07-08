@@ -20,13 +20,21 @@ package wicket.markup.html;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.Response;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupElement;
+import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.internal.HeaderPartContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IModel;
+import wicket.response.NullResponse;
+import wicket.util.lang.Classes;
 
 /**
+ * A WebMarkupContainer, such as Panel or Border, with an associated markup 
+ * file. 
  * 
  * @param <T>
  *            Type of model object this component holds
@@ -37,8 +45,11 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 {
 	private static final long serialVersionUID = 1L;
 
-	/** A utility class which implements the internals */
-	private ContainerWithAssociatedMarkupHelper markupHelper;
+	/** True if body onLoad attribute modifiers have been attached */
+	private boolean checkedBody = false;
+
+	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
+	private boolean noMoreWicketHeadTagsAllowed = false;
 
 	/**
 	 * @see Component#Component(MarkupContainer,String)
@@ -55,29 +66,6 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 			IModel<T> model)
 	{
 		super(parent, id, model);
-	}
-
-	/**
-	 * Called by components like Panel and Border which have associated Markup
-	 * and which may have a &lt;wicket:head&gt; tag.
-	 * <p>
-	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer
-	 * parameter has been added to the Page as a container for all headers any
-	 * of its components might wish to contribute.
-	 * <p>
-	 * The headers contributed are rendered in the standard way.
-	 * 
-	 * @param container
-	 *            The HtmlHeaderContainer added to the Page
-	 */
-	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer container)
-	{
-		if (markupHelper == null)
-		{
-			markupHelper = new ContainerWithAssociatedMarkupHelper(this);
-		}
-
-		markupHelper.renderHeadFromAssociatedMarkupFile(container);
 	}
 
 	/**
@@ -100,77 +88,238 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	}
 
 	/**
-	 * For each wicket:head tag a HeaderPartContainer is created and added to
-	 * the HtmlHeaderContainer which has been added to the Page.
+	 * Called by components like Panel and Border which have associated Markup
+	 * and which may have a &lt;wicket:head&gt; tag.
+	 * <p>
+	 * Whereas 'this' might be a Panel or Border, the HtmlHeaderContainer
+	 * parameter has been added to the Page as a container for all headers any
+	 * of its components might wish to contribute.
+	 * <p>
+	 * The headers contributed are rendered in the standard way.
+	 * 
+	 * @param htmlContainer
+	 *            The HtmlHeaderContainer added to the Page
 	 */
-	public static final class HeaderPartContainer extends WebMarkupContainer
-			implements
-				IComponentResolver
+	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
 	{
-		private static final long serialVersionUID = 1L;
+		// Gracefully getAssociateMarkupStream. Throws no exception in case
+		// markup is not found
+		final MarkupStream markupStream = getAssociatedMarkupStream(false);
 
-		/** The panel or bordered page the header part is associated with */
-		private final MarkupContainer container;
-
-		/** <wicket:head scope="...">. A kind of namespace */
-		private final String scope;
-
-		/**
-		 * @param parent
-		 *            The parent of this component
-		 * @param id
-		 *            The component id
-		 * @param container
-		 *            The Panel (or bordered page) the header part is associated
-		 *            with
-		 * @param scope
-		 *            The scope of the wicket:head tag
-		 */
-		public HeaderPartContainer(MarkupContainer parent, final String id,
-				final MarkupContainer container, final String scope)
+		// No associated markup => no header section
+		if (markupStream == null)
 		{
-			super(parent, id);
-			this.container = container;
-			this.scope = scope;
+			return;
 		}
 
-		/**
-		 * Get the scope of the header part
-		 * 
-		 * @return The scope name
-		 */
-		public final String getScope()
+		// Position pointer at current (first) header
+		this.noMoreWicketHeadTagsAllowed = false;
+		while (nextHeaderMarkup(markupStream) != -1)
 		{
-			return this.scope;
-		}
-
-		/**
-		 * @see IComponentResolver#resolve(MarkupContainer, MarkupStream,
-		 *      ComponentTag)
-		 */
-		public final boolean resolve(final MarkupContainer container,
-				final MarkupStream markupStream, final ComponentTag tag)
-		{
-			// The tag must be resolved against the panel and not against the
-			// page
-			Component component = this.container.get(tag.getId());
-			if (component != null)
+			Class markupClass = markupStream.getTag().getMarkupClass();
+			if (markupClass == null)
 			{
-				component.render(markupStream);
-				return true;
+				markupClass = markupStream.getContainerClass();
+			}
+			// Create a HeaderPartContainer and associate the markup
+			final HeaderPartContainer headerPart = getHeaderPart(htmlContainer, markupClass,
+					markupStream.getCurrentIndex());
+			if (headerPart != null)
+			{
+				// A component's header section must only be added once,
+				// no matter how often the same Component has been added
+				// to the page or any other container in the hierachy.
+				if (htmlContainer.okToRenderComponent(headerPart.getScope(), headerPart.getId()))
+				{
+					headerPart.autoAdded();
+
+					// Check if the Panel/Border requires some <body
+					// onload=".."> attribute to be copied to the page's body
+					// tag.
+					if (checkedBody == false)
+					{
+						checkedBody = true;
+						checkBodyOnLoad();
+					}
+				}
+				else
+				{
+					// TODO Performance: I haven't found a more efficient
+					// solution yet.
+					// Already added but all the components in this header part
+					// must be touched (that they are rendered)
+					Response response = getRequestCycle().getResponse();
+					try
+					{
+						getRequestCycle().setResponse(NullResponse.getInstance());
+						headerPart.autoAdded();
+					}
+					finally
+					{
+						getRequestCycle().setResponse(response);
+					}
+				}
 			}
 
-			return false;
+			// Position the stream after <wicket:head>
+			markupStream.skipComponent();
+		}
+	}
+
+	/**
+	 * Check if the Panel/Border requires some <body onload=".."> attribute to
+	 * be copied to the page's body tag.
+	 */
+	private void checkBodyOnLoad()
+	{
+		// Gracefully getAssociateMarkupStream. Throws no exception in case
+		// markup is not found
+		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(false);
+
+		// No associated markup => no body tag
+		if (associatedMarkupStream == null)
+		{
+			return;
 		}
 
-		/**
-		 * @see #setMarkupStream(MarkupStream)
-		 * 
-		 * @param markupStream
-		 */
-		public final void setMyMarkupStream(final MarkupStream markupStream)
+		// Remember the current position within markup, where we need to
+		// go back to, at the end.
+		int index = associatedMarkupStream.getCurrentIndex();
+
+		try
 		{
-			super.setMarkupStream(markupStream);
+			associatedMarkupStream.setCurrentIndex(0);
+			while (associatedMarkupStream.hasMoreComponentTags())
+			{
+				final ComponentTag tag = associatedMarkupStream.getTag();
+				if (tag.isBodyTag())
+				{
+					final CharSequence onLoad = tag.getString("onload");
+					if (onLoad != null)
+					{
+						// Attach an AttributeModifier to the body container
+						// which appends the new value to the onLoad
+						// attribute
+						getWebPage().getBodyContainer().addOnLoadModifier(
+								onLoad, this);
+					}
+
+					// There can only be one body tag
+					break;
+				}
+			}
 		}
+		finally
+		{
+			// Make sure we return to the orginal position in the markup
+			associatedMarkupStream.setCurrentIndex(index);
+		}
+	}
+
+	/**
+	 * Gets the header part of the Panel/Border. Returns null if it doesn't have
+	 * a header tag.
+	 * 
+	 * @param parent
+	 *            The parent of this component
+	 * 
+	 * @param index
+	 *            A unique index
+	 * @param markupClass
+	 *            The java class the wicket:head tag is directly associated with
+	 * @return the header part for this panel/border or null if it doesn't have
+	 *         a wicket:head tag.
+	 */
+	private final HeaderPartContainer getHeaderPart(MarkupContainer parent,
+			final Class markupClass, final int index)
+	{
+		// Gracefully getAssociateMarkupStream. Throws no exception in case
+		// markup is not found
+		final MarkupStream markupStream = getAssociatedMarkupStream(false);
+
+		// Position markup stream at beginning of header tag
+		markupStream.setCurrentIndex(index);
+
+		// Create a HtmlHeaderContainer for the header tag found
+		final ComponentTag tag = markupStream.getTag(false);
+		if ((tag != null) && tag.isWicketHeadTag())
+		{
+			// found <wicket:head>. Create a unique id for the 
+			// HtmlHeaderContainer to be created
+			final String headerId = Component.AUTO_COMPONENT_PREFIX
+					+ Classes.simpleName(markupClass) + getVariation()
+					+ "Header" + index;
+
+			// Create the header container and associate the markup with
+			// it
+			String scope = tag.getAttributes().getString(
+					markupStream.getWicketNamespace() + ":scope");
+			final HeaderPartContainer headerContainer = newHeaderPartContainer(
+					parent, headerId, scope);
+			headerContainer.setMyMarkupStream(markupStream);
+			headerContainer.setRenderBodyOnly(true);
+
+			// The container does have a header component
+			return headerContainer;
+		}
+
+		throw new WicketRuntimeException("Programming error: expected a WicketTag: "
+				+ markupStream.toString());
+	}
+
+	/**
+	 * 
+	 * @param associatedMarkupStream
+	 * @return xxx
+	 */
+	private final int nextHeaderMarkup(final MarkupStream associatedMarkupStream)
+	{
+		// No associated markup => no header section
+		if (associatedMarkupStream == null)
+		{
+			return -1;
+		}
+
+		// Scan the markup for <wicket:head>.
+		MarkupElement elem = associatedMarkupStream.get();
+		while (elem != null)
+		{
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag tag = (ComponentTag)elem;
+				if (tag.isOpen() && tag.isWicketHeadTag())
+				{
+					if (this.noMoreWicketHeadTagsAllowed == true)
+					{
+						throw new MarkupException(
+								"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag");
+					}
+					return associatedMarkupStream.getCurrentIndex();
+				}
+				else if (this.noMoreWicketHeadTagsAllowed == false)
+				{
+					// wicket:head must be before border, panel or extend
+					if (tag.isOpen()
+							&& (tag.isPanelTag() || tag.isBorderTag() || tag.isExtendTag()))
+					{
+						this.noMoreWicketHeadTagsAllowed = true;
+					}
+					// wicket:head must be before </head>
+					else if (tag.isClose() && tag.isHeadTag())
+					{
+						this.noMoreWicketHeadTagsAllowed = true;
+					}
+					// wicket:head must be before <body>
+					else if (tag.isOpen() && tag.isBodyTag())
+					{
+						this.noMoreWicketHeadTagsAllowed = true;
+					}
+				}
+			}
+			elem = associatedMarkupStream.next();
+		}
+
+		// No (more) wicket:head found
+		return -1;
 	}
 }

@@ -25,7 +25,6 @@ import java.util.List;
 import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
-import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlTag;
@@ -96,7 +95,8 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		if (namespace.equalsIgnoreCase(xmlTag.getNamespace()))
 		{
 			// It is <wicket:...>
-			tag = new WicketTag(xmlTag);
+			tag = new ComponentTag(xmlTag);
+			tag.setWicketTag(true);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
 			tag.setId("_" + tag.getName());

@@ -101,7 +101,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag from the next MarkupFilter in the chain
 		// If null, no more tags are available
-		final ComponentTag tag = (ComponentTag)getParent().nextTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null)
 		{
 			return tag;

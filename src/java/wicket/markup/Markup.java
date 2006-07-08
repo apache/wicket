@@ -18,7 +18,6 @@
 package wicket.markup;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -453,19 +452,5 @@ public class Markup
 		this.xmlDeclaration = null;
 		this.encoding = null;
 		this.currentPath = null;
-	}
-
-	/**
-	 * Create an iterator for the component tags in the markup.
-	 * 
-	 * @param startIndex
-	 *            The index to start with
-	 * @param matchClass
-	 *            Iterate over elements matching the class
-	 * @return ComponentTagIterator
-	 */
-	public Iterator componentTagIterator(final int startIndex, final Class matchClass)
-	{
-		return this.markup.iterator(startIndex, matchClass);
 	}
 }

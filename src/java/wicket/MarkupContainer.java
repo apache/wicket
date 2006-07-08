@@ -37,7 +37,6 @@ import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupResourceStreamLookupResult;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
@@ -578,7 +577,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
+		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && associatedMarkupOpenTag.isWicketTag()))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -1333,6 +1332,12 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 			// Get component id
 			final String id = tag.getId();
+			if (id == null)
+			{
+				throw new WicketRuntimeException(
+						"Prgamming error: tag id must not be null: " 
+						+ tag.toString());
+			}
 
 			// Get the component for the id from the given container
 			final Component<?> component = get(id);
@@ -1371,9 +1376,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 					}	
 				}
 
-				if (tag instanceof WicketTag)
+				if (tag.isWicketTag())
 				{
-					if (((WicketTag)tag).isChildTag())
+					if (tag.isChildTag())
 					{
 						markupStream.throwMarkupException("Found " + tag.toString()
 								+ " but no <wicket:extend>");

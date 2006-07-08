@@ -22,7 +22,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.WicketTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.internal.HtmlHeaderContainer;
@@ -72,19 +71,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// Only <head> component tags have the id == "_header"
-		if (tag.getId().equals(HtmlHeaderSectionHandler.HEADER_ID))
-		{
-			// Create a special header component which will gather additional
-			// input the <head> from 'contributors'.
-			final WebMarkupContainer header = new HtmlHeaderContainer(container,
-					HtmlHeaderSectionHandler.HEADER_ID);
-			header.autoAdded();
-
-			// Yes, we handled the tag
-			return true;
-		}
-		else if ((tag instanceof WicketTag) && ((WicketTag)tag).isHeadTag())
+		if (tag.isWicketHeadTag())
 		{
 			// If we found <wicket:head> without surrounding <head> on a Page,
 			// than we have to add wicket:head into a automatically generated
@@ -97,12 +84,10 @@ public class HtmlHeaderResolver implements IComponentResolver
 				final MarkupContainer header = new HtmlHeaderContainer(container,
 						HtmlHeaderSectionHandler.HEADER_ID);
 
-
 				// It is <wicket:head>. Because they do not provide any
-				// additional
-				// functionality they are merely a means of surrounding relevant
-				// markup. Thus we simply create a WebMarkupContainer to handle
-				// the tag.
+				// additional functionality they are merely a means of 
+				// surrounding relevant markup. Thus we simply create 
+				// a WebMarkupContainer to handle the tag.
 				final WebMarkupContainer header2 = new WebMarkupContainer(header,
 						HtmlHeaderSectionHandler.HEADER_ID)
 				{
@@ -115,18 +100,14 @@ public class HtmlHeaderResolver implements IComponentResolver
 					}
 				};
 				header2.setRenderBodyOnly(true);
-
 				header.autoAdded();
-
 			}
 			else if (container instanceof HtmlHeaderContainer)
 			{
 				// It is <wicket:head>. Because they do not provide any
-				// additional
-				// functionality there are merely a means of surrounding
-				// relevant
-				// markup. Thus we simply create a WebMarkupContainer to handle
-				// the tag.
+				// additional functionality there are merely a means of 
+				// surrounding relevant markup. Thus we simply create a 
+				// WebMarkupContainer to handle the tag.
 				final WebMarkupContainer header = new WebMarkupContainer(container,
 						HtmlHeaderSectionHandler.HEADER_ID)
 				{
@@ -146,7 +127,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				}
 				catch (IllegalArgumentException ex)
 				{
-					throw new WicketRuntimeException("If the root exception says something like "
+					throw new WicketRuntimeException("If the root exception states that "
 							+ "\"A child with id '_header' already exists\" "
 							+ "then you most likely forgot to override autoAdd() "
 							+ "in your bordered page component.", ex);
