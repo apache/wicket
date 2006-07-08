@@ -31,6 +31,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public abstract class StringValidator extends AbstractValidator
 {
@@ -116,6 +117,31 @@ public abstract class StringValidator extends AbstractValidator
 		return new MaximumLengthValidator(maximum);
 	}
 
+	/**
+	 * Gets a String exact length validator to check if a string length is exactly the same as the given value
+	 * 
+	 * If that is not the case then an error message will be generated with the
+	 * key "StringValidator.exact" and the messages keys that can be used are:
+	 * <ul>
+	 * <li>${exact}: the maximum length</li>
+	 * <li>${length}: the length of the user input</li>
+	 * <li>${input}: the input the user did give</li>
+	 * <li>${name}: the name of the component that failed</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
+	 * </ul>
+	 * 
+	 * @param length
+	 *            The required length of the string.
+	 * 
+	 * @return The StringValidator
+	 */
+	public static StringValidator exactLength(int length)
+	{
+		return new ExactLengthValidator(length);
+	}
+	
 	/**
 	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
 	 */
@@ -231,6 +257,52 @@ public abstract class StringValidator extends AbstractValidator
 
 	}
 
+	private static class ExactLengthValidator extends StringValidator
+	{
+		private static final long serialVersionUID = 1L;
+		private final int length;
+
+		private ExactLengthValidator(int length)
+		{
+			this.length = length;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.StringValidator#onValidate(wicket.markup.html.form.FormComponent,
+		 *      java.lang.String)
+		 */
+		@Override
+		public void onValidate(FormComponent formComponent, String value)
+		{
+			if (!Strings.isEmpty(value))
+			{
+				if (value.length() != length)
+				{
+					error(formComponent);
+				}
+			}
+		}
+
+		@Override
+		protected Map<String, Serializable> messageModel(FormComponent formComponent)
+		{
+			final Map<String, Serializable> map = super.messageModel(formComponent);
+			map.put("length", new Integer(((String)formComponent.getConvertedInput()).length()));
+			map.put("exact", this.length);
+			return map;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
+		 */
+		@Override
+		protected String resourceKey(FormComponent formComponent)
+		{
+			return "StringValidator.exact";
+		}
+
+	}
+	
 	private static class MaximumLengthValidator extends StringValidator
 	{
 		private static final long serialVersionUID = 1L;
