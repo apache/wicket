@@ -85,6 +85,7 @@ import wicket.util.file.WebApplicationPath;
 public class MockWebApplication extends WebApplication
 {
 	/** Logging */
+	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(MockWebApplication.class);
 
 	/** The last rendered page. */
