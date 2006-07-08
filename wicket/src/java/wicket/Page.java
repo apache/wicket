@@ -498,7 +498,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * @return Returns the feedbackMessages.
+	 * @return Returns feedback messages from all components in this page (including the page itself).
 	 */
 	public final FeedbackMessages getFeedbackMessages()
 	{
