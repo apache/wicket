@@ -211,13 +211,29 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * 
 	 * @param ref
 	 *            reference to add
+	 * @param id
+	 * 			  the unique identifier of created javascript element
+	 */
+	public void writeJsReference(final Response response, final PackageResourceReference ref, String id)
+	{
+		CharSequence url = RequestCycle.get().urlFor(ref);		
+		JavascriptUtils.writeJavascriptUrl(response, url, id);
+	}
+
+	/**
+	 * Convenience method to add a javascript reference.
+	 * 
+	 * @param response
+	 * 
+	 * @param ref
+	 *            reference to add
 	 */
 	protected void writeJsReference(final Response response, final PackageResourceReference ref)
 	{
-		CharSequence url = RequestCycle.get().urlFor(ref);
+		CharSequence url = RequestCycle.get().urlFor(ref);		
 		JavascriptUtils.writeJavascriptUrl(response, url);
 	}
-
+	
 	/**
 	 * Gets the component that this handler is bound to.
 	 * 
