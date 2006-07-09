@@ -133,7 +133,10 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	@Override
 	public void renderHead(HtmlHeaderContainer container)
 	{
-		this.renderHeadFromAssociatedMarkupFile(container);
+		if (isHeadRendered() == false) 
+		{
+			this.renderHeadFromAssociatedMarkupFile(container);			
+		}
 		super.renderHead(container);
 	}
 }
