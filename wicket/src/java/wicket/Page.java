@@ -360,6 +360,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	public final void renderPage()
 	{
+		resetHeadRendered();
+		
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -401,7 +403,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// Now, do the initialization for the other components
 		internalAttach();
 
-		// Visit all this page's children to reset markup streams and check
+		// Visit all this page's children to reset header contribution status and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
 		// authorization exception is thrown it will block the rendering of this
@@ -410,6 +412,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 		{
 			public Object component(final Component component)
 			{
+				component.resetHeadRendered();
+				
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 
