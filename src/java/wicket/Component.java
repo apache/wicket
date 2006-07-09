@@ -470,7 +470,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
-
+	
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -532,6 +532,9 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	/** Visibility boolean */
 	private static final int FLAG_VISIBLE = 0x0010;
 
+	/** Whether the header has already been contributed */
+	private static final int FLAG_HEAD_RENDERED = 0x100000;
+	
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Component.class);
 
@@ -1506,6 +1509,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				parent.add(this);
 			}
 		}
+		resetHeadRendered();
 		return this;
 	}
 
@@ -1824,19 +1828,23 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		// Ask all behaviors if they have something to contribute to the
-		// header or body onLoad tag.
-		if (this.behaviors != null)
+		if (isHeadRendered() == false) 
 		{
-			final Iterator<IBehavior> iter = this.behaviors.iterator();
-			while (iter.hasNext())
+			// Ask all behaviors if they have something to contribute to the
+			// header or body onLoad tag.
+			if (this.behaviors != null)
 			{
-				IBehavior behavior = iter.next();
-				if (behavior instanceof IHeaderContributor)
+				final Iterator<IBehavior> iter = this.behaviors.iterator();
+				while (iter.hasNext())
 				{
-					((IHeaderContributor)behavior).renderHead(container.getResponse());
+					IBehavior behavior = iter.next();
+					if (behavior instanceof IHeaderContributor)
+					{
+						((IHeaderContributor)behavior).renderHead(container.getResponse());
+					}
 				}
 			}
+			setFlag(FLAG_HEAD_RENDERED, true);
 		}
 	}
 
@@ -3017,5 +3025,20 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	{
 		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
 	}
-
+	
+	/**
+	 * Returns whether the head has already been rendered.
+	 */
+	final protected boolean isHeadRendered() {
+		return getFlag(FLAG_HEAD_RENDERED);
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * Resets the state of head rendering.
+	 */
+	final protected void resetHeadRendered() {
+		setFlag(FLAG_HEAD_RENDERED, false);
+	}
 }
