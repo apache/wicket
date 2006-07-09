@@ -24,6 +24,7 @@ function wicketShow(id) {
     var e=wicketGet(id);
     e.style.display = "";
 }
+
 function wicketHide(id) {
     var e=wicketGet(id);
     e.style.display = "none";
@@ -38,7 +39,7 @@ function wicketAjaxCreateTransport() {
         transport = new XMLHttpRequest();
     } 
     
-    if (transport==null&&wicketAjaxDebugEnabled()) {
+    if (transport==null && wicketAjaxDebugEnabled()) {
         var log=WicketAjaxDebug.logError;
         log("Could not locate ajax transport. Your browser does not support the required XMLHttpRequest object or wicket could not gain access to it.");
     }    
@@ -88,6 +89,7 @@ function wicketAjaxGet(url, successHandler, failureHandler) {
     
     return true;
 }
+
 function wicketAjaxPost(url, body, successHandler, failureHandler) {
     if (wicketAjaxDebugEnabled()) {
         var log=WicketAjaxDebug.logInfo;
@@ -119,6 +121,7 @@ function wicketAjaxPost(url, body, successHandler, failureHandler) {
        
     return true;
 }
+
 function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler) {
     var body = wicketSerializeForm(form);
     if (submitButton != null) {
@@ -126,10 +129,12 @@ function wicketSubmitForm(form, url, submitButton, successHandler, failureHandle
     }
     return wicketAjaxPost(url, body, successHandler, failureHandler);
 }
+
 function wicketSubmitFormById(formId, url, submitButton, successHandler, failureHandler) {
     var form = document.getElementById(formId);
     return wicketSubmitForm(form, url, submitButton, successHandler, failureHandler);
 }
+
 function wicketAjaxOnStateChange(transport, successHandler, failureHandler) {
    if (transport.readyState == 4) {
        if (transport.status == 200) {
@@ -239,7 +244,6 @@ function wicketAjaxInvokePostCallHandler() {
 	}
 }
 
-
 function wicketAjaxCallFailureHandler(failureHandler) {
 	if (failureHandler!=undefined && failureHandler!=null) {
 		if (wicketAjaxDebugEnabled()) {
@@ -314,7 +318,6 @@ function wicketAjaxReplaceOuterHtml(element, text) {
     }		
 }	
 
-
 function wicketAjaxProcessComponent(node) {
     var compId = node.getAttribute("id");
 
@@ -347,14 +350,17 @@ function wicketAjaxProcessEvaluation(node) {
     }
     eval(text);
 }
+
 function wicketDecode(encoding, text) {
     if (encoding == "wicket1") {
         return wicketDecode1(text);
     }
 }
+
 function wicketDecode1(text) {
     return wicketReplaceAll(text, "]^", "]");
 }
+
 function wicketReplaceAll(str, from, to) {
     var idx = str.indexOf(from);
     while (idx > -1) {
@@ -364,20 +370,49 @@ function wicketReplaceAll(str, from, to) {
     return str;
 }
 
+
+function wicketIsElementInDocument(element) {
+	var id = element.getAttribute("id");
+	return document.getElementById(id) != null;
+}
+
 function wicketCreateHeadElement(name) {
 	return document.createElement(name);
 }
 
-function wicketAddElementToHead(element) {
+function wicketAddElementToHead(element, originalElement) {
 	var head = document.getElementsByTagName("head");
+
 	if (head[0]) {
 		head[0].appendChild(element);
 	}
 }
 
+function wicketIsElementInHead(element, mandatoryAttribute) {
+
+	var attr = element.getAttribute(mandatoryAttribute);
+	if (attr == null || attr == "" || typeof(attr) == "undefined")
+		return false;
+
+	var head = document.getElementsByTagName("head")[0];
+	var nodes = head.getElementsByTagName(element.tagName);
+	for (var i = 0; i < nodes.length; ++i) {
+		var node = nodes[i];
+		if (node.tagName == element.tagName &&
+		    node.getAttribute(mandatoryAttribute) == attr) {
+		    return true;
+		}
+	}
+	return false;
+}
+
 function wicketAjaxProcessLink(linkNode) {
+	if (wicketIsElementInHead(linkNode, "href")) {
+		return;
+	}
+
 	var css = wicketCreateHeadElement("link");
-	css.id = 'someuniqueid'; // should we make a hash form href or something like that? 
+	css.id = linkNode.getAttribute("id");
 	css.rel = linkNode.getAttribute("rel");
 	css.href = linkNode.getAttribute("href");
 	css.type = linkNode.getAttribute("type");
@@ -391,6 +426,7 @@ function wicketSerializeNodeChildren(node){
 		return "" 
 	}
 	var result = "";
+	
 	for (var i = 0; i < node.childNodes.length; i++) {
 		var thisNode = node.childNodes[i];
 		switch (thisNode.nodeType) {
@@ -398,9 +434,14 @@ function wicketSerializeNodeChildren(node){
 			case 5: // ENTITY_REFERENCE_NODE
 				result += wicketSerializeNode(thisNode);
 				break;
+			case 8: // COMMENT
+				result += "<!--" + thisNode.nodeValue + "-->";
+				break;
+			case 4: // CDATA_SECTION_NODE
+				result += "<![CDATA[" + thisNode.nodeValue + "]]>";
+				break;				
 			case 3: // TEXT_NODE
 			case 2: // ATTRIBUTE_NODE
-			case 4: // CDATA_SECTION_NODE
 				result += thisNode.nodeValue;
 				break;
 			default:
@@ -410,6 +451,7 @@ function wicketSerializeNodeChildren(node){
 	return result;	
 }
 
+
 function wicketSerializeNode(node){
 	if (node == null) { 
 		return "" 
@@ -418,6 +460,7 @@ function wicketSerializeNode(node){
 	result += '<' + node.nodeName;
 	
 	if (node.attributes && node.attributes.length > 0) {
+				
 		for (var i = 0; i < node.attributes.length; i++) {
 			result += " " + node.attributes[i].name 
 				+ "=\"" + node.attributes[i].value + "\"";	
@@ -431,7 +474,12 @@ function wicketSerializeNode(node){
 }
 
 function wicketAjaxProcessScript(scriptNode) {
+	if (wicketIsElementInHead(scriptNode, "src")) {
+		return;
+	}
+
 	var script = wicketCreateHeadElement("script");
+	script.id = scriptNode.getAttribute("id");
 	script.type = scriptNode.getAttribute("type");
 	
 	if (scriptNode.getAttribute("src") != null && scriptNode.getAttribute("src") != "") {		
@@ -446,25 +494,28 @@ function wicketAjaxProcessScript(scriptNode) {
 			script.text = content;
 		} 		
 	}	
-	wicketAddElementToHead(script); 
+	wicketAddElementToHead(script, scriptNode); 
 }
 
 function wicketAjaxProcessStyle(styleNode) {
 	var content = wicketSerializeNodeChildren(styleNode);
 	if (document.all && !window.opera) {  // IE
 		document.createStyleSheet("javascript:'" + content + "'")
+		// add empty style element with ID to be able to check for duplicate contribution
+		var style = wicketCreateHeadElement("style");
+		style.id = styleNode.getAttribute("id");
+		wicketAddElementToHead(style, styleNode);
 	} else {
 		var style = wicketCreateHeadElement("style");
+		style.id = styleNode.getAttribute("id");
 		var textNode = document.createTextNode(content);
 		style.appendChild(textNode);
-		wicketAddElementToHead(style);
+		wicketAddElementToHead(style, styleNode);
 	}
 }
 
 function wicketAjaxProcessHeaderContribution(headerNode) {
-
-	var text = headerNode.firstChild.nodeValue;
-	
+	var text = headerNode.firstChild.nodeValue;	
     var encoding = headerNode.getAttribute("encoding");
     
     if (encoding != null && encoding != "") {
@@ -474,8 +525,7 @@ function wicketAjaxProcessHeaderContribution(headerNode) {
 	// konqueror crashes if there is a <script element in the xml
 	text = text.replace(/<script/g,"<SCRIPT");
 	text = text.replace(/<\/script>/g,"</SCRIPT>");	
-		
-	
+			
 	var xmldoc;
 	if (window.ActiveXObject) {
         xmldoc = new ActiveXObject("Microsoft.XMLDOM");
@@ -484,19 +534,23 @@ function wicketAjaxProcessHeaderContribution(headerNode) {
 	    var parser = new DOMParser();    
 	    xmldoc = parser.parseFromString(text, "text/xml");	
 	}
+	
 	var rootNode = xmldoc.documentElement;
-					
+				
 	for (var i = 0; i < rootNode.childNodes.length; i++) {
 		var node = rootNode.childNodes[i];			
-		if (node.tagName !=null) {
-			var name = node.tagName.toLowerCase();			
-		    if (name == "link") {
-				wicketAjaxProcessLink(node);
-			} else if (name == "script") {
-				wicketAjaxProcessScript(node);
-			} else if (name == "style") {
-				wicketAjaxProcessStyle(node);
-			}		
+		if (node.tagName != null) {
+			var name = node.tagName.toLowerCase();		
+						
+			if (wicketIsElementInDocument(node) == false) {
+			    if (name == "link") {
+					wicketAjaxProcessLink(node);
+				} else if (name == "script") {
+					wicketAjaxProcessScript(node);
+				} else if (name == "style") {
+					wicketAjaxProcessStyle(node);
+				}		
+			} 
 		}
 	}	
 }
@@ -509,6 +563,7 @@ function wicketEncode(text) {
         return escape(text);
     }
 }
+
 function wicketSerializeSelect(select) {
     var result = "";
     for (var i = 0; i < select.options.length; ++i) {
@@ -545,6 +600,7 @@ function wicketSerialize(e) {
         }
     }
 }
+
 function wicketSerializeForm(form) {
     var result = "";
     for (var i = 0; i < form.elements.length; ++i) {
@@ -573,7 +629,6 @@ WicketThrottlerEntry.prototype.getFunc=function() {
 WicketThrottlerEntry.prototype.setFunc=function(func) {
 	this.func=func;
 }
-
 
 function WicketThrottler() {
 	this.entries=new Array();

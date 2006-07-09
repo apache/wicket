@@ -482,8 +482,12 @@ public class AjaxRequestTarget implements IRequestTarget
 					if (component.isVisible())
 					{
 						component.renderHead(header);
+						return CONTINUE_TRAVERSAL;
+					}					
+					else
+					{
+						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 					}
-					return CONTINUE_TRAVERSAL;
 				}
 			});
 		}
