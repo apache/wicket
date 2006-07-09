@@ -34,6 +34,13 @@ public class JavascriptUtils
 	/** Script close tag */
 	public final static String SCRIPT_CLOSE_TAG = "\n/*-->]]>*/</script>\n";
 
+	/** Script open tag */
+	public final static String SCRIPT_CONTENT_PREFIX = "<!--/*--><![CDATA[/*><!--*/\n";
+
+	/** Script close tag */
+	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*-->]]>*/";
+
+	
 	/** The response object */
 	private Response response;
 
@@ -43,10 +50,32 @@ public class JavascriptUtils
 	 * @param response
 	 *            The response object
 	 */
-	public JavascriptUtils(final Response response)
+	public JavascriptUtils(final Response response, String id)
 	{
 		this.response = response;
-		writeOpenTag(response);
+		writeOpenTag(response, id);
+	}
+
+	/**
+	 * Write a reference to a javascript file to the response object
+	 * 
+	 * @param response
+	 *            The HTTP response
+	 * @param url
+	 *            The javascript file URL
+	 * @param id
+	 *            Unique identifier of element
+	 */
+	public static void writeJavascriptUrl(final Response response, final CharSequence url, final String id)
+	{
+		response.write("<script type=\"text/javascript\" ");
+		if (id != null) 
+		{
+			response.write("id=\"" + id + "\" ");
+		}
+		response.write("src=\"");
+		response.write(url);
+		response.println("\"></script>");
 	}
 
 	/**
@@ -59,11 +88,26 @@ public class JavascriptUtils
 	 */
 	public static void writeJavascriptUrl(final Response response, final CharSequence url)
 	{
-		response.write("<script type=\"text/javascript\" src=\"");
-		response.write(url);
-		response.println("\"></script>");
+		writeJavascriptUrl(response, url, null);
 	}
-
+	
+	/**
+	 * Write the simple text to the response object surrounded by a script tag.
+	 * 
+	 * @param response
+	 *            The HTTP: response
+	 * @param text
+	 *            The text to added in between the script tags
+	 * @param id
+	 *            Unique identifier of element
+	 */
+	public static void writeJavascript(final Response response, final CharSequence text, String id)
+	{
+		writeOpenTag(response, id);
+		response.write(text);
+		writeCloseTag(response);
+	}
+	
 	/**
 	 * Write the simple text to the response object surrounded by a script tag.
 	 * 
@@ -74,27 +118,39 @@ public class JavascriptUtils
 	 */
 	public static void writeJavascript(final Response response, final CharSequence text)
 	{
-		writeOpenTag(response);
-		response.write(text);
-		writeCloseTag(response);
+		writeJavascript(response, text, null);
 	}
-
+	/**
+	 * 
+	 * @param response
+	 */
+	public static void writeOpenTag(final Response response, String id)
+	{
+		response.write("<script type=\"text/javascript\" ");
+		if (id != null) 
+		{
+			response.write("id=\"" + id + "\"");
+		}
+		response.write(">");
+		response.write(SCRIPT_CONTENT_PREFIX);
+	}
 	/**
 	 * 
 	 * @param response
 	 */
 	public static void writeOpenTag(final Response response)
 	{
-		response.write(SCRIPT_OPEN_TAG);
+		writeOpenTag(response, null);
 	}
-
 	/**
 	 * 
 	 * @param response
 	 */
 	public static void writeCloseTag(final Response response)
 	{
-		response.println(SCRIPT_CLOSE_TAG);
+		response.write(SCRIPT_CONTENT_SUFFIX);
+		response.println("</script>\n");
+		
 	}
 
 	/**
