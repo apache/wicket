@@ -92,7 +92,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 
 		if (settings.isAjaxDebugModeEnabled())
 		{
-			JavascriptUtils.writeJavascript(response, "wicketAjaxDebugEnable=true;");
+			JavascriptUtils.writeJavascript(response, "wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
 			writeJsReference(response, JAVASCRIPT_DEBUG_DRAG);
 			writeJsReference(response, JAVASCRIPT_DEBUG);
 		}
