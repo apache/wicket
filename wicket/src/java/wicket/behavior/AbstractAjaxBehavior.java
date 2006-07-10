@@ -308,10 +308,10 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.AbstractBehavior#isStateless()
+	 * @see wicket.behavior.AbstractBehavior#getStatelessHint()
 	 */
 	@Override
-	public boolean isStateless()
+	public boolean getStatelessHint()
 	{
 		return false;
 	}

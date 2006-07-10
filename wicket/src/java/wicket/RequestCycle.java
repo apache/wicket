@@ -667,7 +667,6 @@ public abstract class RequestCycle
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
-		page.setStateless(false);
 
 		// trigger creation of the actual session in case it was deferred
 		session.getSessionStore().getSessionId(request, true);

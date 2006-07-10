@@ -296,7 +296,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		 *         should stop. If no return value is useful, the generic
 		 *         non-null value STOP_TRAVERSAL can be used.
 		 */
-		public Object component(Component component);
+		public Object component(Component<?> component);
 	}
 
 	/**
@@ -2653,19 +2653,13 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * @return if this component is stateless or not.
+	 * Returns whether the component can be stateless.
+	 * Being able to be stateless doesn't necessary mean, that the component
+	 * should be stateless. Whether the component should be stateless depends
+	 * on {@link Page#isStateless()}. 
 	 */
-	protected boolean isStateless()
-	{
-		Iterator<IBehavior> behaviors = getBehaviors().iterator();
-		while (behaviors.hasNext())
-		{
-			IBehavior behavior = behaviors.next();
-			if (!behavior.isStateless())
-			{
-				return false;
-			}
-		}
+	protected boolean getStatelessHint()
+	{		
 		return true;
 	}
 

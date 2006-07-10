@@ -350,16 +350,16 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#isStateless()
+	 * @see wicket.MarkupContainer#getStatelessHint()
 	 */
 	@Override
-	protected boolean isStateless()
+	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}
-		return super.isStateless();
+		return super.getStatelessHint();
 	}
 
 	/**

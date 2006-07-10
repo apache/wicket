@@ -78,16 +78,16 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#isStateless()
+	 * @see wicket.MarkupContainer#getStatelessHint()
 	 */
 	@Override
-	protected boolean isStateless()
+	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}
-		return super.isStateless();
+		return super.getStatelessHint();
 	}
 
 	/**

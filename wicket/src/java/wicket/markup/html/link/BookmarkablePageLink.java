@@ -221,15 +221,4 @@ public class BookmarkablePageLink extends Link<CharSequence>
 			return urlFor(getPageMap(), pageClass, parameters);
 		}
 	}
-
-	/**
-	 * @see wicket.markup.html.link.Link#isStateless()
-	 */
-	@Override
-	protected boolean isStateless()
-	{
-		// should we test behaviours? Can a bookmarkable link have behaviours
-		// that are statefull?
-		return true;
-	}
 }

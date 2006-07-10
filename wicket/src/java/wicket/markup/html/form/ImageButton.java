@@ -128,10 +128,10 @@ public abstract class ImageButton extends Button implements IResourceListener
 	}
 
 	/**
-	 * @see wicket.markup.html.form.Button#isStateless()
+	 * @see wicket.markup.html.form.Button#getStatelessHint()
 	 */
 	@Override
-	protected boolean isStateless()
+	protected boolean getStatelessHint()
 	{
 		return localizedImageResource.isStateless();
 	}

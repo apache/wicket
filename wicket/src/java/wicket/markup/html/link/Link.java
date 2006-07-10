@@ -434,15 +434,12 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	 */
 	protected CharSequence getURL()
 	{
-		if (isStateless() == false)
+		if (getPage().isStateless() == false)
 		{
 			return urlFor(ILinkListener.INTERFACE);
 		}
 		else
 		{
-			if (getPage().isBookmarkable() == false)
-				throw new WicketRuntimeException("Stateless link can only be used within a bookmarkable page.");
-
 			IRequestTarget requestTarget = new BookmarkableListenerInterfaceRequestTarget(
 					getPage().getPageMap().getName(), getPage().getClass(), new PageParameters(),
 					this, ILinkListener.INTERFACE);
@@ -466,14 +463,6 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 		}
 	}
 
-	/**
-	 * @see wicket.MarkupContainer#isStateless()
-	 */
-	@Override
-	protected boolean isStateless()
-	{
-		return false;
-	}
 
 	/**
 	 * Whether this link refers to the given page.

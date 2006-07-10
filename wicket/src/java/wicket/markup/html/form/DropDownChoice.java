@@ -235,15 +235,15 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#isStateless()
+	 * @see wicket.MarkupContainer#getStatelessHint()
 	 */
 	@Override
-	protected boolean isStateless()
+	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}
-		return super.isStateless();
+		return super.getStatelessHint();
 	}
 }
