@@ -128,7 +128,7 @@ public class MockWebApplication extends WebApplication
 	public MockWebApplication(final String path)
 	{
 		Application.set(this);
-
+		
 		context = new MockServletContext(this, path);
 
 		setWicketServlet(new WicketServlet()
@@ -160,6 +160,8 @@ public class MockWebApplication extends WebApplication
 		// Call internal init method of web application for default
 		// initialisation
 		this.internalInit();
+		
+		getDebugSettings().setSerializeSessionAttributes(false);
 		
 		// Call init method of web application
 		this.init();
