@@ -27,6 +27,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import wicket.AccessStackPageMap;
+import wicket.Application;
 import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
@@ -50,7 +51,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		// Do some extra profiling/ debugging. This can be a great help
 		// just for testing whether your webbapp will behave when using
 		// session replication
-		if (log.isDebugEnabled())
+		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
 		{
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try
