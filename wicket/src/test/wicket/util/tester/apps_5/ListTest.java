@@ -39,7 +39,7 @@ public class ListTest extends TestCase
 	 */
 	public void test1() throws Exception
 	{
-		AppTester tester = new AppTester();
+		AppTester tester = new AppTester();		
 		tester.startPage(new ListPage());
 	}
 }
