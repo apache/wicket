@@ -225,6 +225,9 @@ public final class Settings
 	/** List of {@link IResponseFilter}s. */
 	private List responseFilters;
 
+	/** Flag for serialize session attributes feature */
+	private boolean serializeSessionAttributes = false;
+
 	/**
 	 * In order to do proper form parameter decoding it is important that the
 	 * response and the following request have the same encoding. see
@@ -1181,5 +1184,23 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
+	}
+
+	/**
+	 * 
+	 * @see wicket.settings.IDebugSettings#getSerializeSessionAttributes()
+	 */
+	public boolean getSerializeSessionAttributes()
+	{
+		return serializeSessionAttributes;
+	}
+
+	/**
+	 * 
+	 * @see wicket.settings.IDebugSettings#setSerializeSessionAttributes(boolean)
+	 */
+	public void setSerializeSessionAttributes(boolean serialize)
+	{
+		this.serializeSessionAttributes = serialize;
 	}
 }
