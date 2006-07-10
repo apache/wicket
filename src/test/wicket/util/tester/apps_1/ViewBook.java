@@ -29,13 +29,14 @@ import wicket.model.PropertyModel;
 public class ViewBook extends WebPage
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * 
 	 * @param book
 	 */
 	public ViewBook(Book book)
 	{
+		setStatelessHint(true);
 		new Label(this, "id", new PropertyModel(book, "id"));
 		new Label(this, "name", new PropertyModel(book, "name"));
 		new BookmarkablePageLink(this, "link", CreateBook.class);

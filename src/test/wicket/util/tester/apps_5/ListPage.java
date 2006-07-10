@@ -33,6 +33,7 @@ public class ListPage extends WebPage
 	 */
 	public ListPage()
 	{
+		setStatelessHint(true);
 		new Label(this, "_label", "test");
 	}
 }
