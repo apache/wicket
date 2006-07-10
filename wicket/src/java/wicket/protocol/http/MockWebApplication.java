@@ -197,6 +197,8 @@ public class MockWebApplication extends WebApplication
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		getPageSettings().setAutomaticMultiWindowSupport(false);
 
+		getDebugSettings().setSerializeSessionAttributes(false);
+		
 		createRequestCycle();
 	}
 
