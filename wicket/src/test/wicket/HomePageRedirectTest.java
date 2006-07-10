@@ -26,10 +26,19 @@ import junit.framework.TestCase;
  * @author jcompagner
  */
 public class HomePageRedirectTest extends TestCase {
+	
+	/**
+	 * Construct.
+	 * @param name
+	 */
     public HomePageRedirectTest(String name) {
         super(name);
     }
 
+    /**
+     * Test page.
+     * @throws Exception
+     */
     public void testPage() throws Exception {
         WicketTester app = new WicketTester();
 
@@ -40,9 +49,13 @@ public class HomePageRedirectTest extends TestCase {
         app.processRequestCycle();
     }
 
+    /** test page. */
     public static class Page1 extends WebPage {
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Construct.
+		 */
 		public Page1() {
         }
     }
