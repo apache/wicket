@@ -202,8 +202,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	private Button defaultButton;
 
-	private boolean bookmarkableHint;
-
 	/**
 	 * Constructs a form with no validation.
 	 * 
@@ -797,23 +795,14 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		tag.put("method", "post");
 		Page page = getPage();
 		boolean addAction = true;
-		if (bookmarkableHint && page.isStateless())
+		if (page.isStateless())
 		{
 			try
 			{
-				if (page.getClass().getConstructor((Class[])null) != null
-						|| page.getClass().getConstructor(new Class[] { PageParameters.class }) != null)
-				{
-//					PageParameters pp = new PageParameters();
-//					pp.add(WebRequestCodingStrategy.BOOKMARKABLE_FORM_PARAMETER_NAME,
-//							getPageRelativePath());					
-//					tag.put("action", urlFor(page.getClass(), pp));
-					
-					BookmarkableListenerInterfaceRequestTarget target = new BookmarkableListenerInterfaceRequestTarget(
-							page.getPageMap().getName(), page.getClass(), new PageParameters(), this, IFormSubmitListener.INTERFACE);
-					tag.put("action", urlFor(target));
-					addAction = false;
-				}
+				BookmarkableListenerInterfaceRequestTarget target = new BookmarkableListenerInterfaceRequestTarget(
+						page.getPageMap().getName(), page.getClass(), new PageParameters(), this, IFormSubmitListener.INTERFACE);
+				tag.put("action", urlFor(target));
+				addAction = false;				
 			}
 			catch (Exception e)
 			{
@@ -840,31 +829,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				setMultiPart(true);
 			}
 		}
-	}
-
-	/**
-	 * @see wicket.MarkupContainer#isStateless()
-	 */
-	@Override
-	protected boolean isStateless()
-	{
-		if (bookmarkableHint)
-		{
-			try
-			{
-				Page page = getPage();
-				if (page.getClass().getConstructor((Class[])null) != null
-						|| page.getClass().getConstructor(new Class[] { PageParameters.class }) != null)
-				{
-					return super.isStateless();
-				}
-			}
-			catch (Exception e)
-			{
-				// ignore
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -1522,38 +1486,5 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		error(new MapVariableInterpolator(error, args).toString());
 	}
-
-	/**
-	 * @return the boolean if a form tries to generate a bookmarkable
-	 *         (stateless) link to itself.
-	 */
-	public final boolean isBookmarkableHint()
-	{
-		return bookmarkableHint;
-	}
-
-	/**
-	 * Sets the hint boolean that a form can generate a bookmarkable link as its
-	 * action url. It only does this if the page is stateless by itself because
-	 * it doesn't make sense to use a bookmarkable/stateless form action url
-	 * when the page is not stateless anyway. And it only does generate the
-	 * bookmarkable url if the page where it is in does have a default or a
-	 * PageParameters constructor (So it is really a bookmarkable page)
-	 * 
-	 * If you set this boolean to true and the page is bookmarkable and
-	 * stateless then be aware that in the onsubmit you don't have the previous
-	 * state anymore you only have the state of a newly created form/page and
-	 * the submit parameters.
-	 * 
-	 * 
-	 * @param bookmarkableHint
-	 * @return This
-	 */
-	public final Form setBookmarkableHint(boolean bookmarkableHint)
-	{
-		this.bookmarkableHint = bookmarkableHint;
-		return this;
-	}
-
 
 }

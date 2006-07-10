@@ -113,5 +113,5 @@ public interface IBehavior extends Serializable
 	 * 
 	 * @return boolean true or false.
 	 */
-	boolean isStateless();
+	boolean getStatelessHint();
 }

@@ -117,9 +117,9 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#isStateless()
+	 * @see wicket.behavior.IBehavior#getStatelessHint()
 	 */
-	public boolean isStateless()
+	public boolean getStatelessHint()
 	{
 		return true;
 	}

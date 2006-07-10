@@ -226,16 +226,16 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#isStateless()
+	 * @see wicket.MarkupContainer#getStatelessHint()
 	 */
 	@Override
-	protected boolean isStateless()
+	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}
-		return super.isStateless();
+		return super.getStatelessHint();
 	}
 
 }

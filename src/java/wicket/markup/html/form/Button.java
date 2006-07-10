@@ -231,15 +231,4 @@ public abstract class Button<T> extends FormComponent<T>
 	 */
 	protected abstract void onSubmit(); 
 
-	/**
-	 * @see wicket.MarkupContainer#isStateless()
-	 */
-	@Override
-	protected boolean isStateless()
-	{
-		// call the on click script. If that generated a url to the page
-		// then the page is now not stateless anymore.
-		getOnClickScript();
-		return super.isStateless();
-	}
 }

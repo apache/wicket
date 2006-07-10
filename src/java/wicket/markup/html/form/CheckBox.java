@@ -113,16 +113,16 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 	}
 
 	/**
-	 * @see wicket.MarkupContainer#isStateless()
+	 * @see wicket.MarkupContainer#getStatelessHint()
 	 */
 	@Override
-	protected boolean isStateless()
+	protected boolean getStatelessHint()
 	{
 		if (wantOnSelectionChangedNotifications())
 		{
 			return false;
 		}
-		return super.isStateless();
+		return super.getStatelessHint();
 	}
 
 	/**
