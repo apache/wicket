@@ -598,6 +598,8 @@ function wicketSerialize(e) {
         if (tag == "input" || tag == "textarea") {
             return wicketSerializeInput(e);
         }
+    } else {
+    	return "";
     }
 }
 
