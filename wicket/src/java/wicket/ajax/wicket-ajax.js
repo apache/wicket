@@ -594,10 +594,8 @@ function wicketSerialize(e) {
     var tag = e.tagName.toLowerCase();
     if (tag == "select") {
         return wicketSerializeSelect(e);
-    } else {
-        if (tag == "input" || tag == "textarea") {
-            return wicketSerializeInput(e);
-        }
+    } else if (tag == "input" || tag == "textarea") {
+        return wicketSerializeInput(e);
     } else {
     	return "";
     }
