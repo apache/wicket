@@ -34,6 +34,7 @@ public class StatelessPage extends WebPage
 	 */
 	public StatelessPage()
 	{
+		setStatelessHint(true);
 		new Label(this, "message", new SessionModel());
 		new BookmarkablePageLink(this, "indexLink", Index.class);
 	}

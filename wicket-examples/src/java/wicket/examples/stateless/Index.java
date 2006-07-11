@@ -34,6 +34,7 @@ public class Index extends WebPage
 	 */
 	public Index()
 	{
+		setStatelessHint(true);
 		new Label(this, "message", new SessionModel());
 		new BookmarkablePageLink(this, "linkToStatelessPage", StatelessPage.class);
 		new BookmarkablePageLink(this, "linkToStatefulPage", StatefulPage.class);
