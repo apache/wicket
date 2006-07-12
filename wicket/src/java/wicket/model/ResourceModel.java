@@ -76,9 +76,11 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	}
 
 
-	/*
+	/**
 	 * FIXME i dont think component<string> is correct here, what if this model
 	 * is used for formcomponent.setlabel(imodel<string>)?
+	 *
+	 * @see wicket.model.IAssignmentAware#wrapOnAssignment(wicket.Component)
 	 */
 	public <String> IWrapModel<String> wrapOnAssignment(final Component<String> component)
 	{
