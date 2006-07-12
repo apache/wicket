@@ -21,10 +21,14 @@ package wicket.behavior;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.PackageResourceReference;
+import wicket.model.AbstractReadOnlyModel;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
 
 /**
@@ -46,6 +50,113 @@ import wicket.util.string.JavascriptUtils;
 // meta data object to avoid the use of a static map
 public class HeaderContributor extends AbstractHeaderContributor
 {
+	/**
+	 * Contributes a reference to a javascript file relative to the context
+	 * path.
+	 */
+	public static final class JavaScriptHeaderContributor extends StringHeaderContributor
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param location
+		 *            the location of the CSS file relative to the context path.
+		 */
+		public JavaScriptHeaderContributor(final String location)
+		{
+			super(new AbstractReadOnlyModel<String>()
+			{
+
+				private static final long serialVersionUID = 1L;
+				private String path = null;
+
+				public String getObject()
+				{
+					if (path == null)
+					{
+						String contextPath = Application.get().getApplicationSettings()
+								.getContextPath();
+						if (contextPath == null)
+						{
+							contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+									.getContextPath();
+							if (contextPath == null)
+							{
+								contextPath = "";
+							}
+						}
+						AppendingStringBuffer b = new AppendingStringBuffer();
+						b.append("<script type=\"text/javascript\" src=\"");
+						b.append(contextPath);
+						if (!contextPath.endsWith("/") && !location.startsWith("/"))
+						{
+							b.append("/");
+						}
+						b.append((location != null) ? location : "");
+						b.append("\"></script>");
+						path = b.toString();
+					}
+					return path;
+				}
+			});
+		}
+	}
+
+	/**
+	 * Contributes a reference to a css file relative to the context path.
+	 */
+	public static final class CSSHeaderContributor extends StringHeaderContributor
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param location
+		 *            the location of the CSS file relative to the context path.
+		 */
+		public CSSHeaderContributor(final String location)
+		{
+			super(new AbstractReadOnlyModel<String>()
+			{
+
+				private static final long serialVersionUID = 1L;
+				private String path = null;
+
+				public String getObject()
+				{
+					if (path == null)
+					{
+						String contextPath = Application.get().getApplicationSettings()
+								.getContextPath();
+						if (contextPath == null)
+						{
+							contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+									.getContextPath();
+							if (contextPath == null)
+							{
+								contextPath = "";
+							}
+						}
+						AppendingStringBuffer b = new AppendingStringBuffer();
+						b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+						b.append(contextPath);
+						if (!contextPath.endsWith("/") && !location.startsWith("/"))
+						{
+							b.append("/");
+						}
+						b.append((location != null) ? location : "");
+						b.append("\"></link>");
+						path = b.toString();
+					}
+					return path;
+				}
+			});
+		}
+	}
+
 	/**
 	 * prints a css resource reference.
 	 */
@@ -184,6 +295,34 @@ public class HeaderContributor extends AbstractHeaderContributor
 	}
 
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in the web application
+	 * directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final String location)
+	{
+		return new HeaderContributor(new CSSHeaderContributor(location));
+	}
+
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a JavaScript file that lives in the web
+	 * application directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forJavaScript(final String location)
+	{
+		return new HeaderContributor(new JavaScriptHeaderContributor(location));
+	}
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
