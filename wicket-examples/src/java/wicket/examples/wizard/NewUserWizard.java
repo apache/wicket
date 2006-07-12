@@ -22,7 +22,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.extensions.wizard.IWizard;
 import wicket.extensions.wizard.StaticContentStep;
 import wicket.extensions.wizard.Wizard;
 import wicket.extensions.wizard.WizardModel;
@@ -75,7 +77,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	/**
 	 * The user details step.
 	 */
-	private final class UserDetailsStep extends WizardStep<User>
+	private final class UserDetailsStep extends WizardStep
 	{
 		/**
 		 * Construct.
@@ -87,23 +89,39 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 					user)));
 		}
 
-		/**
-		 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
-		 */
-		@Override
-		protected void populate(Panel contentPanel)
+		/** The view for this step. */
+		private class View extends Panel<User>
 		{
-			new RequiredTextField(contentPanel, "user.firstName");
-			new RequiredTextField(contentPanel, "user.lastName");
-			new TextField(contentPanel, "user.department");
-			new CheckBox(contentPanel, "assignRoles");
+			/**
+			 * Construct.
+			 * 
+			 * @param parent
+			 * @param id
+			 */
+			public View(MarkupContainer parent, String id)
+			{
+				super(parent, id);
+				new RequiredTextField(this, "user.firstName");
+				new RequiredTextField(this, "user.lastName");
+				new TextField(this, "user.department");
+				new CheckBox(this, "assignRoles");
+			}
+		}
+
+		/**
+		 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
+		 *      java.lang.String, wicket.extensions.wizard.IWizard)
+		 */
+		public Component getView(MarkupContainer parent, String id, IWizard wizard)
+		{
+			return new View(parent, id);
 		}
 	}
 
 	/**
 	 * The user name step.
 	 */
-	private final class UserNameStep extends WizardStep<User>
+	public final class UserNameStep extends WizardStep
 	{
 		/**
 		 * Construct.
@@ -113,23 +131,81 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			super(new ResourceModel("username.title"), new ResourceModel("username.summary"));
 		}
 
-		/**
-		 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
-		 */
-		@Override
-		protected void populate(Panel contentPanel)
+		/** The view for this step. */
+		public final class View extends Panel<User>
 		{
-			new RequiredTextField(contentPanel, "user.userName");
-			new RequiredTextField(contentPanel, "user.email").add(EmailAddressPatternValidator
-					.getInstance());
+			/**
+			 * Construct.
+			 * 
+			 * @param parent
+			 * @param id
+			 */
+			public View(MarkupContainer parent, String id)
+			{
+				super(parent, id);
+				new RequiredTextField(this, "user.userName");
+				new RequiredTextField(this, "user.email").add(EmailAddressPatternValidator
+						.getInstance());
+			}
+		}
+
+		/**
+		 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
+		 *      java.lang.String, wicket.extensions.wizard.IWizard)
+		 */
+		public Component getView(MarkupContainer parent, String id, IWizard wizard)
+		{
+			return new View(parent, id);
 		}
 	}
 
 	/**
 	 * The user details step.
 	 */
-	private final class UserRolesStep extends WizardStep<User> implements ICondition
+	private class UserRolesStep extends WizardStep implements ICondition
 	{
+		/** The view for this step. */
+		private class View extends Panel<User>
+		{
+			/**
+			 * Construct.
+			 * 
+			 * @param parent
+			 * @param id
+			 */
+			public View(MarkupContainer parent, String id)
+			{
+				super(parent, id);
+				final ListMultipleChoice rolesChoiceField = new ListMultipleChoice<String>(this,
+						"user.roles", allRoles);
+				final TextField<String> rolesSetNameField = new TextField<String>(this,
+						"user.rolesSetName");
+				Form form = findParent(Form.class);
+				form.add(new AbstractFormValidator()
+				{
+					public FormComponent[] getDependentFormComponents()
+					{
+						// name and roles don't have anything to validate,
+						// so might as well just skip them here
+						return null;
+					}
+
+					public void validate(Form form)
+					{
+						String rolesInput = rolesChoiceField.getInput();
+						if (rolesInput != null && (!"".equals(rolesInput)))
+						{
+							if ("".equals(rolesSetNameField.getInput()))
+							{
+								rolesSetNameField.error(Collections
+										.singletonList("error.noSetNameForRoles"), null);
+							}
+						}
+					}
+				});
+			}
+		}
+
 		/**
 		 * Construct.
 		 */
@@ -149,37 +225,12 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		}
 
 		/**
-		 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
+		 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
+		 *      java.lang.String, wicket.extensions.wizard.IWizard)
 		 */
-		@Override
-		protected void populate(Panel contentPanel)
+		public Component getView(MarkupContainer parent, String id, IWizard wizard)
 		{
-			final ListMultipleChoice rolesChoiceField = new ListMultipleChoice<String>(
-					contentPanel, "user.roles", allRoles);
-			final TextField<String> rolesSetNameField = new TextField<String>(contentPanel,
-					"user.rolesSetName");
-			add(new AbstractFormValidator()
-			{
-				public FormComponent[] getDependentFormComponents()
-				{
-					// name and roles don't have anything to validate,
-					// so might as well just skip them here
-					return null;
-				}
-
-				public void validate(Form form)
-				{
-					String rolesInput = rolesChoiceField.getInput();
-					if (rolesInput != null && (!"".equals(rolesInput)))
-					{
-						if ("".equals(rolesSetNameField.getInput()))
-						{
-							rolesSetNameField.error(Collections
-									.singletonList("error.noSetNameForRoles"), null);
-						}
-					}
-				}
-			});
+			return new View(parent, id);
 		}
 	}
 

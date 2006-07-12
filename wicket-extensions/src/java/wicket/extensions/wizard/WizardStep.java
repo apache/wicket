@@ -18,27 +18,13 @@
  */
 package wicket.extensions.wizard;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.markup.MarkupResourceStreamLookupResult;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.validation.IFormValidator;
 import wicket.markup.html.panel.Panel;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.resource.UrlResourceStream;
-import wicket.util.string.Strings;
 
 /**
  * default implementation of {@link IWizardStep}. It is also a panel, which is
@@ -64,165 +50,26 @@ import wicket.util.string.Strings;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *                           &lt;wicket:panel&gt;
- *                            &lt;table&gt;
- *                             &lt;tr&gt;
- *                              &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                              &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *                             &lt;/tr&gt;
- *                             &lt;tr&gt;
- *                              &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                              &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *                             &lt;/tr&gt;
- *                            &lt;/table&gt;
- *                           &lt;/wicket:panel&gt;
+ *          &lt;wicket:panel&gt;
+ *           &lt;table&gt;
+ *            &lt;tr&gt;
+ *             &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *             &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *            &lt;/tr&gt;
+ *            &lt;tr&gt;
+ *             &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *             &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *            &lt;/tr&gt;
+ *           &lt;/table&gt;
+ *          &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
  * 
- * @param <T>
- *            The type
- * 
  * @author Eelco Hillenius
  */
-public class WizardStep<T> implements IWizardStep
+public abstract class WizardStep implements IWizardStep
 {
-
-	/**
-	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know
-	 * at construction time from then.
-	 */
-	private final class AddFormValidatorAction
-	{
-		/**
-		 * Wrapper for any form validators.
-		 */
-		final FormValidatorWrapper formValidatorWrapper = new FormValidatorWrapper();
-
-		void execute()
-		{
-			Form form = (Form)content.findParent(Form.class);
-			form.add(formValidatorWrapper);
-		}
-	}
-
-	/**
-	 * Content panel.
-	 */
-	private final class Content extends Panel<Object>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param parent
-		 * @param id
-		 * @param wizard
-		 */
-		public Content(MarkupContainer parent, String id, IWizard wizard)
-		{
-			super(parent, id);
-			WizardStep.this.populate(this);
-		}
-
-		/**
-		 * @see wicket.MarkupContainer#newMarkupResourceStream(java.lang.Class)
-		 */
-		@Override
-		public MarkupResourceStreamLookupResult newMarkupResourceStream(final Class containerClass)
-		{
-			return WizardStep.this.newMarkupResourceStream(containerClass);
-		}
-
-		/**
-		 * Workaround for adding the form validators; not needed in 2.0.
-		 * 
-		 * @see wicket.Component#onAttach()
-		 */
-		@Override
-		protected void onAttach()
-		{
-			if (onAttachAction != null)
-			{
-				onAttachAction.execute();
-				onAttachAction = null;
-			}
-		}
-	}
-
-	/**
-	 * Wraps form validators for this step such that they are only executed when
-	 * this step is active.
-	 */
-	private final class FormValidatorWrapper implements IFormValidator
-	{
-
-		private static final long serialVersionUID = 1L;
-
-		private final List<IFormValidator> validators = new ArrayList<IFormValidator>();
-
-		/**
-		 * Adds a form validator.
-		 * 
-		 * @param validator
-		 *            The validator to add
-		 */
-		public final void add(IFormValidator validator)
-		{
-			validators.add(validator);
-		}
-
-		/**
-		 * @see wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
-		 */
-		public FormComponent[] getDependentFormComponents()
-		{
-			if (isActiveStep())
-			{
-				Set<FormComponent> components = new HashSet<FormComponent>();
-				for (Iterator i = validators.iterator(); i.hasNext();)
-				{
-					IFormValidator v = (IFormValidator)i.next();
-					FormComponent[] dependentComponents = v.getDependentFormComponents();
-					if (dependentComponents != null)
-					{
-						int len = dependentComponents.length;
-						for (int j = 0; j < len; j++)
-						{
-							components.add(dependentComponents[j]);
-						}
-					}
-				}
-				return components.toArray(new FormComponent[components.size()]);
-			}
-			return null;
-		}
-
-		/**
-		 * @see wicket.markup.html.form.validation.IFormValidator#validate(wicket.markup.html.form.Form)
-		 */
-		public void validate(Form form)
-		{
-			if (isActiveStep())
-			{
-				for (Iterator i = validators.iterator(); i.hasNext();)
-				{
-					IFormValidator v = (IFormValidator)i.next();
-					v.validate(form);
-				}
-			}
-		}
-
-		/**
-		 * @return whether the step this wrapper is part of is the current step
-		 */
-		private final boolean isActiveStep()
-		{
-			return (wizardModel.getActiveStep().equals(WizardStep.this));
-		}
-	}
-
 	/**
 	 * Default header for wizards.
 	 */
@@ -244,26 +91,8 @@ public class WizardStep<T> implements IWizardStep
 		{
 			super(parent, id);
 			setModel(new CompoundPropertyModel<IWizard>(wizard));
-			new Label(this, "title", new AbstractReadOnlyModel()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public Object getObject()
-				{
-					return getTitle();
-				}
-			}).setEscapeModelStrings(false);
-			new Label(this, "summary", new AbstractReadOnlyModel()
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public Object getObject()
-				{
-					return getSummary();
-				}
-			}).setEscapeModelStrings(false);
+			new Label(this, "title", title).setEscapeModelStrings(false);
+			new Label(this, "summary", summary).setEscapeModelStrings(false);
 		}
 	}
 
@@ -275,15 +104,6 @@ public class WizardStep<T> implements IWizardStep
 	 */
 	private boolean complete;
 
-	/** The cached content panel. */
-	private Content content = null;
-
-	/**
-	 * Any model of the step.
-	 */
-	private IModel<T> model;
-
-	private transient AddFormValidatorAction onAttachAction;
 
 	/**
 	 * A summary of this step, or some usage advice.
@@ -322,26 +142,8 @@ public class WizardStep<T> implements IWizardStep
 	 */
 	public WizardStep(IModel<String> title, IModel<String> summary)
 	{
-		this(title, summary, null);
-	}
-
-	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
-	 * 
-	 * @param title
-	 *            the title of this step.
-	 * @param summary
-	 *            a brief summary of this step or some usage guidelines.
-	 * @param model
-	 *            Any model which is to be used for this step
-	 */
-	public WizardStep(IModel<String> title, IModel<String> summary, IModel<T> model)
-	{
 		this.title = title;
 		this.summary = summary;
-		this.model = model;
 	}
 
 	/**
@@ -356,38 +158,7 @@ public class WizardStep<T> implements IWizardStep
 	 */
 	public WizardStep(String title, String summary)
 	{
-		this(title, summary, null);
-	}
-
-	/**
-	 * Creates a new step with the specified title and summary. The title and
-	 * summary are displayed in the wizard title block while this step is
-	 * active.
-	 * 
-	 * @param title
-	 *            the title of this step.
-	 * @param summary
-	 *            a brief summary of this step or some usage guidelines.
-	 * @param model
-	 *            Any model which is to be used for this step
-	 */
-	public WizardStep(String title, String summary, IModel<T> model)
-	{
-		this(new Model<String>(title), new Model<String>(summary), model);
-	}
-
-	/**
-	 * Adds a form validator.
-	 * 
-	 * @param validator
-	 */
-	public final void add(IFormValidator validator)
-	{
-		if (onAttachAction == null)
-		{
-			onAttachAction = new AddFormValidatorAction();
-		}
-		onAttachAction.formValidatorWrapper.add(validator);
+		this(new Model<String>(title), new Model<String>(summary));
 	}
 
 	/**
@@ -405,41 +176,6 @@ public class WizardStep<T> implements IWizardStep
 	public Component getHeader(MarkupContainer parent, final String id, IWizard wizard)
 	{
 		return new Header(parent, id, wizard);
-	}
-
-	/**
-	 * Gets the summary of this step. This will be displayed in the title of the
-	 * wizard while this step is active. The summary is typically an overview of
-	 * the step or some usage guidelines for the user.
-	 * 
-	 * @return the summary of this step.
-	 */
-	public String getSummary()
-	{
-		return (summary != null) ? summary.getObject() : (String)null;
-	}
-
-	/**
-	 * Gets the title of this step.
-	 * 
-	 * @return the title of this step.
-	 */
-	public String getTitle()
-	{
-		return (title != null) ? title.getObject() : (String)null;
-	}
-
-	/**
-	 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
-	 *      java.lang.String, wicket.extensions.wizard.IWizard)
-	 */
-	public Component getView(MarkupContainer parent, final String id, IWizard wizard)
-	{
-		if (content == null)
-		{
-			content = new Content(parent, id, wizard);
-		}
-		return content;
 	}
 
 	/**
@@ -507,71 +243,11 @@ public class WizardStep<T> implements IWizardStep
 	}
 
 	/**
-	 * Locates the markup for the current step. It tries to match the step class
-	 * first, and moves higher up the inheritance hierarchy until something is
-	 * found, possibly arriving at this class. WARNING: don't override unless
-	 * you know what you are doing.
-	 * 
-	 * @param containerClass
-	 *            The container the markup should be associated with
-	 * @return The resource stream for this step
-	 */
-	protected MarkupResourceStreamLookupResult newMarkupResourceStream(final Class containerClass)
-	{
-		return newMarkupResourceStream(getClass(), containerClass);
-	}
-
-	/**
 	 * Called when the step is being initialized.
 	 * 
 	 * @param wizardModel
 	 */
 	protected void onInit(IWizardModel wizardModel)
 	{
-	}
-
-	/**
-	 * Populate this step's content panel (e.g. add labels, textfields and
-	 * such).
-	 * 
-	 * @param contentPanel
-	 *            The wizard step's content panel
-	 */
-	protected void populate(Panel contentPanel)
-	{
-	}
-
-	/**
-	 * Tries to load the markup stream matching the provided step class.
-	 * 
-	 * @param stepClass
-	 *            The class to match
-	 * @param containerClass
-	 *            The container to associate with
-	 * @return The markup stream or null
-	 */
-	private final MarkupResourceStreamLookupResult newMarkupResourceStream(final Class stepClass,
-			final Class containerClass)
-	{
-		if (!stepClass.equals(WizardStep.class))
-		{
-			String name = Strings.afterLast(stepClass.getName(), '.') + ".html";
-			// try to load template with name of implementing step class;
-			final URL url = stepClass.getResource(name);
-			if (url != null)
-			{
-				MarkupResourceStreamLookupResult result = new MarkupResourceStreamLookupResult(
-						new UrlResourceStream(url));
-				result.setCacheKey(url.toString());
-				return result;
-			}
-			else
-			{
-				return newMarkupResourceStream(stepClass.getSuperclass(), containerClass);
-			}
-		}
-
-		// not resource was not found
-		return null;
 	}
 }

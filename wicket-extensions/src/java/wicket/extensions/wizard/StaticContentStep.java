@@ -18,6 +18,8 @@
  */
 package wicket.extensions.wizard;
 
+import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
@@ -29,7 +31,7 @@ import wicket.model.Model;
  * 
  * @author eelcohillenius
  */
-public class StaticContentStep extends WizardStep<String>
+public class StaticContentStep extends WizardStep
 {
 	private static final long serialVersionUID = 1L;
 
@@ -172,11 +174,27 @@ public class StaticContentStep extends WizardStep<String>
 	}
 
 	/**
-	 * @see wicket.extensions.wizard.WizardStep#populate(wicket.markup.html.panel.Panel)
+	 * The content.
 	 */
-	@Override
-	protected void populate(Panel contentPanel)
+	private final class Content extends Panel
 	{
-		new Label(contentPanel, "content", content).setEscapeModelStrings(!allowHtml);
+		/**
+		 * @param parent
+		 * @param id
+		 */
+		public Content(MarkupContainer parent, String id)
+		{
+			super(parent, id);
+			new Label(parent, "content", content).setEscapeModelStrings(!allowHtml);
+		}
+
+		private static final long serialVersionUID = 1L;
+		
+	}
+
+	public Component getView(MarkupContainer parent, String id, IWizard wizard)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

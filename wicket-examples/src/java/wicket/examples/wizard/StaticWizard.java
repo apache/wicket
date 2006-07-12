@@ -34,7 +34,7 @@ import wicket.extensions.wizard.WizardModel;
  * 
  * @author Eelco Hillenius
  */
-public class StaticWizard extends Wizard
+public class StaticWizard extends Wizard<String>
 {
 
 	/**
