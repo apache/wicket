@@ -61,7 +61,7 @@ public class StaticWizardWithPanels extends Wizard
 		 */
 		public Step2()
 		{
-			super("One", "The first step");
+			super("Two", "The second step");
 		}
 	}
 
@@ -75,7 +75,7 @@ public class StaticWizardWithPanels extends Wizard
 		 */
 		public Step3()
 		{
-			super("One", "The first step");
+			super("Three", "The third step");
 		}
 	}
 
