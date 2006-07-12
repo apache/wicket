@@ -500,7 +500,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forJavaScript(final String location)
 	{
-		return new HeaderContributor(new CSSHeaderContributor(location));
+		return new HeaderContributor(new JavaScriptHeaderContributor(location));
 	}
 
 	/**
