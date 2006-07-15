@@ -7,6 +7,9 @@ function WicketAutoComplete(elementId,callbackUrl){
     var KEY_UP=38;
     var KEY_RIGHT=39;
     var KEY_DOWN=40;
+    var KEY_SHIFT=16;
+    var KEY_CTRL=17;
+    var KEY_ALT=18;    
     
     var selected=-1;
     var elementCount=0;
@@ -66,6 +69,9 @@ function WicketAutoComplete(elementId,callbackUrl){
                 case KEY_TAB:
                 case KEY_RIGHT:
                 case KEY_LEFT:
+                case KEY_SHIFT:
+                case KEY_ALT:
+                case KEY_CTRL:
                 break;
                 default:
     	            updateChoices();
@@ -127,36 +133,10 @@ function WicketAutoComplete(elementId,callbackUrl){
     
     function updateChoices(){
         selected=-1;
-        var transport = wicketAjaxGetTransport();
-        if (transport == null){
-            if (wicketAjaxDebugEnabled()) {
-                var log=WicketAjaxDebug.logError;
-                log("Ajax-transport not available!");
-            }
-            return false;
-        }
-        
-        var value=wicketGet(elementId).value;
-        transport.open("GET",callbackUrl+"&random="+Math.random()+"&q="+processValue(value),true);
-        transport.onreadystatechange = function () {
-            if (transport.readyState == 4) {
-                if (transport.status == 200) {
-                    if (wicketAjaxDebugEnabled()) {
-                        var log=WicketAjaxDebug.logInfo;
-                        log("received ajax autocomplete response. "+transport.responseText.length+" characters.");
-                        log("elementId="+getMenuId());
-                        log(transport.responseText);
-                    }
-                    doUpdateChoices(transport.responseText);
-                    } else {
-                    if (wicketAjaxDebugEnabled()) {
-                        var log=WicketAjaxDebug.logError;
-                        log("received ajax response with code: "+transport.status);
-                    }
-                }
-            }
-        };
-        transport.send(null);
+
+        var value = wicketGet(elementId).value;
+       	var request = new Wicket.Ajax.Request(callbackUrl+"&q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
+       	request.get();
     }
 
     function processValue(param) {
