@@ -458,9 +458,10 @@ Wicket.Ajax.Request.prototype = {
 		this.randomURL = randomURL != null ? randomURL : true;
 		this.failureHandler = failureHandler != null ? failureHandler : function() { };
 		this.async = true;
-		this.channel = channel != null ? channel : "0|s";
+		this.channel = channel;
 		this.suppressDone = false;
 		this.instance = Math.random();
+		this.debugContent = true;
 	},
 	
 	done: function() {
@@ -487,8 +488,12 @@ Wicket.Ajax.Request.prototype = {
 	},
 	
 	get: function() {
-		var res = Wicket.channelManager.schedule(this.channel, this.doGet.bind(this));
-		return res != null ? res : true;
+		if (this.channel != null) {
+			var res = Wicket.channelManager.schedule(this.channel, this.doGet.bind(this));
+			return res != null ? res : true;
+		} else {
+			return this.doGet();
+		}
 	},
 	
 	doGet: function() {
@@ -512,8 +517,12 @@ Wicket.Ajax.Request.prototype = {
 	},
 	
 	post: function(body) {
-		var res = Wicket.channelManager.schedule(this.channel, function() { this.doPost(body); }.bind(this));
-		return res != null ? res: true;
+		if (this.channel != null) {
+			var res = Wicket.channelManager.schedule(this.channel, function() { this.doPost(body); }.bind(this));
+			return res != null ? res: true;
+		} else {
+			return doPost(this);
+		}
 	},
 	
 	doPost: function(body) {
@@ -545,8 +554,10 @@ Wicket.Ajax.Request.prototype = {
 				var responseAsText = t.responseText;
 				
 				var log = Wicket.Log.info;				
-				log("Received ajax response (" + responseAsText.length + " characters), envelope following...");
-        		log("\n"+responseAsText);
+				log("Received ajax response (" + responseAsText.length + " characters)");
+				if (this.debugContent != false) {
+					log("\n", responseAsText);
+				}
         		
         		if (this.parseResponse == true) {        		
 					var xmldoc;
@@ -580,7 +591,8 @@ Wicket.Ajax.Call.prototype = {
 	initialize: function(url, successHandler, failureHandler, channel) {
 		this.successHandler = successHandler != null ? successHandler : function() { };
 		this.failureHandler = failureHandler != null ? failureHandler : function() { };
-		this.request = new Wicket.Ajax.Request(url, this.loadedCallback.bind(this), true, true, failureHandler, channel);
+		var c = channel != null ? channel : "0|s";
+		this.request = new Wicket.Ajax.Request(url, this.loadedCallback.bind(this), true, true, failureHandler, c);
 		this.request.suppressDone = true;
 	},
 	
@@ -817,6 +829,7 @@ Wicket.Head.Contributor.prototype = {
 					notify();
 				}
 				var req = new Wicket.Ajax.Request(src, onLoad, false, false);
+				req.debugContent = false;
 				if (Wicket.Browser.isKHTML())
 					req.async = false;
 				req.get();
