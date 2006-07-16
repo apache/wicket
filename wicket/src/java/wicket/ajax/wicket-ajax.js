@@ -59,43 +59,7 @@ Wicket.Log = {
 	}
 },
 
-// Wait And Notify 
-
-Wicket.WaitNotify = Class.create();
-
-Wicket.WaitNotify.prototype = {
-	initialize: function(callback, frequency) {
-		this.callback = callback;
-		this.frequency = frequency;
-		this.waiting = true;    
-		
-		this.registerCallback();
-	},
-   
-	registerCallback: function() {
-		this.interval = setInterval(this.onTimerEvent.bind(this), this.frequency);
-	},
-
-	notify: function() {
-		this.waiting = false;
-	},
-  
-	stop: function() {
-		clearInterval(this.interval);
-	},
-   
-	onTimerEvent: function() {
-		if (!this.waiting) {
-			try {
-				this.waiting = true;
-				this.callback(this);
-			} finally {
-			}
-		}
-	}
-}
-
-// Functions Executer
+// Functions executer
 
 Wicket.FunctionsExecuter = Class.create();
 
@@ -103,22 +67,28 @@ Wicket.FunctionsExecuter.prototype = {
 	initialize: function(functions) {
 		this.functions = functions;
 		this.current = 0;
-		this.waitNotify = new Wicket.WaitNotify(this.notifyCallback.bind(this), 20);
 	},
 	
-	start: function() {		
-		this.waitNotify.notify();
-	},
-	
-	notifyCallback: function(waitNotify) {
-		if (this.current == this.functions.length) {		
-			waitNotify.stop();
-			this.functions = null;
-		} else {
-			this.functions[this.current++](waitNotify.notify.bind(waitNotify));
+	processNext: function() {
+		if (this.current < this.functions.length) {
+			var f = this.functions[this.current];
+			var run = function() {
+				f(this.notify.bind(this));
+			}.bind(this);
+			window.setTimeout(run, 1);
+			this.current++;		
 		}
+	},	
+	
+	start: function() {
+		this.processNext();
+	},
+	
+	notify: function() {
+		this.processNext();
 	}
 }
+
 
 /* Replaces the element's outer html with the given text. If it's needed
    (for all browsers except gecko based) it takes the newly created scripts elements 
@@ -127,17 +97,23 @@ Wicket.replaceOuterHtml = function(element, text) {
     if (element.outerHTML) { // internet explorer
        var parent = element.parentNode;
        
-       // find out the element's index. we need to access
+       // find out the element's index and next element (if any). we need to access
        // newly created elements to execute theirs <script elements
        var i;
+       var next = null;
        for (i = 0; i < parent.childNodes.length; ++i) {
-       		if (parent.childNodes[i] == element) 
-       			break;
+       		if (parent.childNodes[i] == element) {
+       			if (i != parent.childNodes.length - 1) {
+       				next = parent.childNodes[i+1]
+       			}
+       			break;       			
+       		}
        }
        element.outerHTML=text;
-       element = parent.childNodes[i];
-
-       Wicket.Head.addJavascripts(element);       
+       
+       for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {
+	       Wicket.Head.addJavascripts(parent.childNodes[j]);       
+	   }
 
     } else {
         
@@ -146,15 +122,18 @@ Wicket.replaceOuterHtml = function(element, text) {
         range.selectNode(element);
 		var fragment = range.createContextualFragment(text);
 		
-		// get the element to be added
-		var newElement = fragment.firstChild;		
-			
-        element.parentNode.replaceChild(fragment, element);
+		// get the elements to be added
+		var elements = new Array();
+		for (var i = 0; i < fragment.childNodes.length; ++i)
+			elements.push(fragment.childNodes[i]);
+
+        element.parentNode.replaceChild(fragment, element);        
 
 		if (document.all != null) {
-			// for all browsers except gecko based add scripts to head
-		    Wicket.Head.addJavascripts(newElement);
-		}		   
+			for (var i in elements) {
+				Wicket.Head.addJavascripts(elements[i]);
+			}
+		}
     }		
 }	
 
@@ -888,12 +867,19 @@ Wicket.Head.addJavascript = function(content, id, fakeSrc) {
 
 /* Goes through all script elements contained by the element and add them to head. */
 Wicket.Head.addJavascripts = function(element) {
-	var scripts = element.getElementsByTagName("script");
-	for (var i = 0; i < scripts.length; ++i) {
-		var content = Wicket.DOM.serializeNodeChildren(scripts[i]);
+	function add(element) {
+		var content = Wicket.DOM.serializeNodeChildren(element);
 		if (content == null || content == "")
-			content = scripts[i].text;
+			content = element.text;
 		Wicket.Head.addJavascript(content);		
+	}
+	if (element.tagName.toLowerCase() == "script") {
+		add(element);
+	} else {
+		var scripts = element.getElementsByTagName("script");
+		for (var i = 0; i < scripts.length; ++i) {
+			add(scripts[i]);
+		}
 	}
 }
 
@@ -1047,3 +1033,4 @@ function wicketHide(id) {
     var e=wicketGet(id);
     e.style.display = "none";
 }
+
