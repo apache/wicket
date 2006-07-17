@@ -110,7 +110,7 @@ public final class EditBook extends AuthenticatedWebPage
 		{
 			final RequestCycle cycle = getRequestCycle();
 			PageParameters parameters = new PageParameters();
-			final Book book = (Book)getModelObject();
+			final Book book = getModelObject();
 			parameters.put("id", new Long(book.getId()));
 			cycle.setResponsePage(getPageFactory().newPage(BookDetails.class, parameters));
 			cycle.setRedirect(true);

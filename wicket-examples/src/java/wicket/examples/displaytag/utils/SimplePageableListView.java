@@ -189,7 +189,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 		 */
 		public static Label getInstance(MarkupContainer parent, final String id)
 		{
-			Label label = (Label)idToLabel.get(id);
+			Label label = idToLabel.get(id);
 			if (label == null)
 			{
 				label = new Label(parent, id);

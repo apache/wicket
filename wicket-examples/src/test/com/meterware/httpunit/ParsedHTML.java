@@ -96,7 +96,7 @@ class ParsedHTML
 		if (_forms == null)
 		{
 			loadElements();
-			_forms = (WebForm[])_formsList.toArray(new WebForm[_formsList.size()]);
+			_forms = _formsList.toArray(new WebForm[_formsList.size()]);
 		}
 		return _forms;
 	}
@@ -112,7 +112,7 @@ class ParsedHTML
 		if (_links == null)
 		{
 			loadElements();
-			_links = (WebLink[])_linkList.toArray(new WebLink[_linkList.size()]);
+			_links = _linkList.toArray(new WebLink[_linkList.size()]);
 		}
 		return _links;
 	}
@@ -128,7 +128,7 @@ class ParsedHTML
 		if (_applets == null)
 		{
 			loadElements();
-			_applets = (WebApplet[])_appletList.toArray(new WebApplet[_appletList.size()]);
+			_applets = _appletList.toArray(new WebApplet[_appletList.size()]);
 		}
 		return _applets;
 	}
@@ -144,7 +144,7 @@ class ParsedHTML
 		if (_images == null)
 		{
 			loadElements();
-			_images = (WebImage[])_imagesList.toArray(new WebImage[_imagesList.size()]);
+			_images = _imagesList.toArray(new WebImage[_imagesList.size()]);
 		}
 		return _images;
 	}
@@ -161,7 +161,7 @@ class ParsedHTML
 		if (_blocks == null)
 		{
 			loadElements();
-			_blocks = (TextBlock[])_blocksList.toArray(new TextBlock[_blocksList.size()]);
+			_blocks = _blocksList.toArray(new TextBlock[_blocksList.size()]);
 		}
 		return _blocks;
 	}
@@ -200,7 +200,7 @@ class ParsedHTML
 		{
 			return null;
 		}
-		return (TextBlock)_blocksList.get(index + 1);
+		return _blocksList.get(index + 1);
 	}
 
 
@@ -215,7 +215,7 @@ class ParsedHTML
 		if (_tables == null)
 		{
 			loadElements();
-			_tables = (WebTable[])_tableList.toArray(new WebTable[_tableList.size()]);
+			_tables = _tableList.toArray(new WebTable[_tableList.size()]);
 		}
 		return _tables;
 	}
@@ -268,7 +268,7 @@ class ParsedHTML
 				elements.add(element);
 			}
 		}
-		return (HTMLElement[])elements.toArray(new HTMLElement[elements.size()]);
+		return elements.toArray(new HTMLElement[elements.size()]);
 	}
 
 
@@ -280,7 +280,7 @@ class ParsedHTML
 	public String[] getElementNames()
 	{
 		loadElements();
-		return (String[])_elementsByName.keySet().toArray(new String[_elementsByName.size()]);
+		return _elementsByName.keySet().toArray(new String[_elementsByName.size()]);
 	}
 
 
@@ -304,7 +304,7 @@ class ParsedHTML
 		for (int i = 0; i < elements.length; i++)
 		{
 			Node node = nl.item(i);
-			elements[i] = (HTMLElement)_elements.get(node);
+			elements[i] = _elements.get(node);
 			if (elements[i] == null)
 			{
 				elements[i] = toDefaultElement((Element)node);
@@ -392,7 +392,7 @@ class ParsedHTML
 				matches.add(forms[i]);
 			}
 		}
-		return (WebForm[])matches.toArray(new WebForm[matches.size()]);
+		return matches.toArray(new WebForm[matches.size()]);
 	}
 
 
@@ -999,7 +999,7 @@ class ParsedHTML
 
 	private static HTMLElementFactory getHTMLElementFactory(String tagName)
 	{
-		final HTMLElementFactory factory = (HTMLElementFactory)_htmlFactoryClasses.get(tagName);
+		final HTMLElementFactory factory = _htmlFactoryClasses.get(tagName);
 		return factory != null ? factory : _defaultFactory;
 	}
 
@@ -1162,7 +1162,7 @@ class ParsedHTML
 
 	private void addNamedElement(String name, HTMLElement htmlElement)
 	{
-		List<HTMLElement> list = (List<HTMLElement>)_elementsByName.get(name);
+		List<HTMLElement> list = _elementsByName.get(name);
 		if (list == null)
 		{
 			_elementsByName.put(name, list = new ArrayList<HTMLElement>());
@@ -1292,7 +1292,7 @@ class ParsedHTML
 				matches.add(links[i]);
 			}
 		}
-		return (WebLink[])matches.toArray(new WebLink[matches.size()]);
+		return matches.toArray(new WebLink[matches.size()]);
 	}
 
 
@@ -1526,7 +1526,7 @@ class ParsedHTML
 		if (_frames == null)
 		{
 			loadElements();
-			_frames = (WebFrame[])_frameList.toArray(new WebFrame[_frameList.size()]);
+			_frames = _frameList.toArray(new WebFrame[_frameList.size()]);
 		}
 		return _frames;
 	}

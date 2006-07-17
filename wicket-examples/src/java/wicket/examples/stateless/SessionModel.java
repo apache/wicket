@@ -33,6 +33,7 @@ public class SessionModel extends AbstractReadOnlyModel<String>
 	/**
 	 * @see wicket.model.AbstractReadOnlyModel#getObject()
 	 */
+	@Override
 	public String getObject()
 	{
 		final String msg;

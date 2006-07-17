@@ -60,9 +60,10 @@ public class RatingsPage extends BasePage
 		/**
 		 * @see Link#onClick()
 		 */
+		@Override
 		public void onClick()
 		{
-			RatingModel rating = (RatingModel)getModelObject();
+			RatingModel rating = getModelObject();
 			rating.nrOfVotes = 0;
 			rating.rating = 0;
 			rating.sumOfRatings = 0;
@@ -162,11 +163,13 @@ public class RatingsPage extends BasePage
 		new RatingPanel(this, "rating1", new PropertyModel<Integer>(rating1, "rating"), 5,
 				new PropertyModel<Integer>(rating1, "nrOfVotes"), true)
 		{
+			@Override
 			protected boolean onIsStarActive(int star)
 			{
 				return RatingsPage.rating1.isActive(star);
 			}
 
+			@Override
 			protected void onRated(int rating, AjaxRequestTarget target)
 			{
 				RatingsPage.rating1.addRating(rating);
@@ -177,21 +180,25 @@ public class RatingsPage extends BasePage
 				new PropertyModel<Integer>(rating2, "nrOfVotes"), new PropertyModel<Boolean>(this,
 						"hasVoted"), true)
 		{
+			@Override
 			protected String getActiveStarUrl(int iteration)
 			{
 				return getRequestCycle().urlFor(WICKETSTAR1).toString();
 			}
 
+			@Override
 			protected String getInactiveStarUrl(int iteration)
 			{
 				return getRequestCycle().urlFor(WICKETSTAR0).toString();
 			}
 
+			@Override
 			protected boolean onIsStarActive(int star)
 			{
 				return RatingsPage.rating2.isActive(star);
 			}
 
+			@Override
 			protected void onRated(int rating, AjaxRequestTarget target)
 			{
 				// make sure the user can't vote again

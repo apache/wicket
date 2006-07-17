@@ -89,7 +89,7 @@ public final class FormInputModel implements Serializable
 	private Integer integerInRangeProperty = new Integer(50);
 	private Integer integerProperty = new Integer(100);
 	private List<Line> lines = new ArrayList<Line>();
-	private String numberRadioChoice = (String)FormInput.NUMBERS.get(0);
+	private String numberRadioChoice = FormInput.NUMBERS.get(0);
 	private List<String> numbersCheckGroup = new ArrayList<String>();
 	private String numbersGroup;
 	/** US phone number with mask '(###) ###-####'. */

@@ -53,12 +53,12 @@ public class ExampleSubtotals extends Displaytag
 		final Map<String, Integer> groups = new LinkedHashMap<String, Integer>(); // Keep the insertion order
 
 		// Fill the 'groups' map
-		ReportableListObject previousValue = (ReportableListObject)data.get(0);
+		ReportableListObject previousValue = data.get(0);
 		groups.put(previousValue.getCity(), new Integer(0));
 		int startIdx = 0;
 		for (int i = 1; i < data.size(); i++)
 		{
-			final ReportableListObject value = (ReportableListObject)data.get(i);
+			final ReportableListObject value = data.get(i);
 
 			if (!value.getCity().equals(previousValue.getCity()))
 			{
@@ -84,7 +84,7 @@ public class ExampleSubtotals extends Displaytag
 				subtable.setStartIndex(startIndex);
 
 				String group = listItem.getModelObjectAsString();
-				int size = ((Integer)groups.get(group)).intValue();
+				int size = (groups.get(group)).intValue();
 				subtable.setViewSize(size);
 				startIndex += size;
 

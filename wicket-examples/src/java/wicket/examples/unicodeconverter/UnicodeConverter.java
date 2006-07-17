@@ -48,7 +48,7 @@ public class UnicodeConverter extends WicketExamplePage
 
 	private String source = "";
 
-	private String translationType = (String)translationTypes.get(0);
+	private String translationType = translationTypes.get(0);
 
 	/**
 	 * Model that does the conversion. Note that as we 'pull' the value every

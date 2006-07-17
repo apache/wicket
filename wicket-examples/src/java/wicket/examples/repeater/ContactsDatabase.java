@@ -62,7 +62,7 @@ public class ContactsDatabase
 	 */
 	public Contact get(long id)
 	{
-		Contact c = (Contact)map.get(new Long(id));
+		Contact c = map.get(new Long(id));
 		if (c == null)
 		{
 			throw new RuntimeException("contact with id [" + id + "] not found in the database");

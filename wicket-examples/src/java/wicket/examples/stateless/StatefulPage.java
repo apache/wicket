@@ -45,6 +45,7 @@ public class StatefulPage extends WebPage
 		// Action link counts link clicks
 		final Link actionLink = new Link(this, "actionLink")
 		{
+			@Override
 			public void onClick()
 			{
 				linkClickCount++;

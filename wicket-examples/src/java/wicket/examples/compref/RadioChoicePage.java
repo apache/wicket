@@ -69,7 +69,7 @@ public class RadioChoicePage extends WicketExamplePage
 	private static class Input implements Serializable
 	{
 		/** the selected site. */
-		public String site = (String)SITES.get(0);
+		public String site = SITES.get(0);
 
 		/**
 		 * @see java.lang.Object#toString()

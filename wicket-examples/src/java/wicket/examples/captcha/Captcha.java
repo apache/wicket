@@ -83,6 +83,7 @@ public class Captcha extends WicketExamplePage
 			// answer
 			DynamicImageResource captchaImageResource = new DynamicImageResource()
 			{
+				@Override
 				protected byte[] getImageData()
 				{
 					try
@@ -108,6 +109,7 @@ public class Captcha extends WicketExamplePage
 			IModel<String> responseModel = new PropertyModel<String>(this, "challengeResponse");
 			TextField responseField = new TextField<String>(this, "response", responseModel)
 			{
+				@Override
 				protected final void onComponentTag(final ComponentTag tag)
 				{
 					super.onComponentTag(tag);
@@ -129,6 +131,7 @@ public class Captcha extends WicketExamplePage
 					}
 				}
 
+				@Override
 				protected String resourceKey(final FormComponent formComponent)
 				{
 					return "captcha.validation.failed";
@@ -163,6 +166,7 @@ public class Captcha extends WicketExamplePage
 		/**
 		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		protected void onSubmit()
 		{
 			// if we get here, it means the response got validated

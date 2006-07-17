@@ -97,7 +97,7 @@ public class DropDownChoicePage extends WicketExamplePage
 				// your business
 				// object or in a utility.
 				String stringrep;
-				int value = ((Integer)object).intValue();
+				int value = (object).intValue();
 				switch (value)
 				{
 					case 1 :
@@ -141,7 +141,7 @@ public class DropDownChoicePage extends WicketExamplePage
 		public String site;
 
 		/** the selected integer. */
-		public Integer integer = (Integer)INTEGERS.get(0);
+		public Integer integer = INTEGERS.get(0);
 
 		/**
 		 * @see java.lang.Object#toString()

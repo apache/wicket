@@ -110,7 +110,7 @@ public class TestList extends ArrayList<ListObject> implements Serializable
 	 */
 	public ListObject getItem(int index)
 	{
-		return (ListObject)super.get(index);
+		return super.get(index);
 	}
 
 }
