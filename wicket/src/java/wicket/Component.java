@@ -470,7 +470,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
-	
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -534,7 +534,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/** Whether the header has already been contributed */
 	private static final int FLAG_HEAD_RENDERED = 0x100000;
-	
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Component.class);
 
@@ -793,7 +793,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @param
 	 *         <P>
 	 *         The type
-	 */	
+	 */
 	public final <P extends MarkupContainer> P findParent(final Class<P> c)
 	{
 		// Start with immediate parent
@@ -1828,7 +1828,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		if (isHeadRendered() == false) 
+		if (isHeadRendered() == false)
 		{
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
@@ -2561,7 +2561,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 				{
 					model = ((IAssignmentAware)model).wrapOnAssignment(this);
 				}
-				
+
 				return model;
 			}
 		}
@@ -2653,13 +2653,13 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	}
 
 	/**
-	 * Returns whether the component can be stateless.
-	 * Being able to be stateless doesn't necessary mean, that the component
-	 * should be stateless. Whether the component should be stateless depends
-	 * on {@link Page#isStateless()}. 
+	 * Returns whether the component can be stateless. Being able to be
+	 * stateless doesn't necessary mean, that the component should be stateless.
+	 * Whether the component should be stateless depends on
+	 * {@link Page#isStateless()}.
 	 */
 	protected boolean getStatelessHint()
-	{		
+	{
 		return true;
 	}
 
@@ -3019,20 +3019,22 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	{
 		setFlag(FLAG_IS_RENDER_ALLOWED, renderAllowed);
 	}
-	
+
 	/**
 	 * Returns whether the head has already been rendered.
 	 */
-	final protected boolean isHeadRendered() {
+	final protected boolean isHeadRendered()
+	{
 		return getFlag(FLAG_HEAD_RENDERED);
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * Resets the state of head rendering.
 	 */
-	final protected void resetHeadRendered() {
+	final protected void resetHeadRendered()
+	{
 		setFlag(FLAG_HEAD_RENDERED, false);
 	}
 }
