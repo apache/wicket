@@ -45,13 +45,13 @@ public class MarkupFragment
 	private static final Log log = LogFactory.getLog(MarkupFragment.class);
 
 	/** Placeholder that indicates no markup */
-	public static final MarkupFragment NO_MARKUP_FRAGMENT = new MarkupFragment(Markup.NO_MARKUP);
+	public static final MarkupFragment NO_MARKUP_FRAGMENT = new MarkupFragment(IMarkup.NO_MARKUP);
 
 	/** The list of markup elements */
 	private/* final */List<MarkupElement> markupElements;
 
 	/** The associate markup */
-	private final Markup markup;
+	private final IMarkup markup;
 
 	/**
 	 * Constructor
@@ -59,7 +59,7 @@ public class MarkupFragment
 	 * @param markup
 	 *            The associated Markup
 	 */
-	MarkupFragment(final Markup markup)
+	MarkupFragment(final IMarkup markup)
 	{
 		this.markup = markup;
 		this.markupElements = new ArrayList<MarkupElement>();
@@ -104,7 +104,7 @@ public class MarkupFragment
 	 * 
 	 * @return The associated markup
 	 */
-	public final Markup getMarkup()
+	public final IMarkup getMarkup()
 	{
 		return this.markup;
 	}

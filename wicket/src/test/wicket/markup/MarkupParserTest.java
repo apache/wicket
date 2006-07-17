@@ -68,7 +68,7 @@ public final class MarkupParserTest extends WicketTestCase
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.setWicketNamespace("componentName");
 
-		final Markup markup = parser
+		final IMarkup markup = parser
 				.parse("This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
 						+ "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
 
@@ -132,7 +132,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.setWicketNamespace("componentName");
-		final Markup tokens = parser
+		final IMarkup tokens = parser
 				.parse("This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10/></a> of the emergency broadcasting system");
 
 		log.info("tok(0)=" + tokens.get(0));
@@ -172,7 +172,7 @@ public final class MarkupParserTest extends WicketTestCase
 				+ "<body><h1>XHTML Test</h1></body>" + "</html>";
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.setWicketNamespace("componentName");
-		final Markup tokens = parser.parse(docText);
+		final IMarkup tokens = parser.parse(docText);
 
 		log.info("tok(0)=" + tokens.get(0));
 
@@ -209,7 +209,7 @@ public final class MarkupParserTest extends WicketTestCase
 		MarkupResourceStream resource = newMarkupResourceStream(locator, this.getClass(), "1",
 				null, "html");
 
-		Markup tokens = parser.readAndParse(resource);
+		IMarkup tokens = parser.readAndParse(resource);
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
@@ -291,7 +291,7 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		Markup markup = parser.parse("<wicket:remove>  </wicket:remove>");
+		IMarkup markup = parser.parse("<wicket:remove>  </wicket:remove>");
 		assertEquals(0, markup.size());
 
 		markup = parser.parse("<wicket:remove> <span id=\"test\"/> </wicket:remove>");
@@ -337,7 +337,7 @@ public final class MarkupParserTest extends WicketTestCase
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 		parser.setWicketNamespace("wcn");
 
-		Markup markup = parser.parse("<span wcn:id=\"test\"/>");
+		IMarkup markup = parser.parse("<span wcn:id=\"test\"/>");
 		assertEquals(1, markup.size());
 
 		markup = parser.parse("<span wicket:id=\"test\"/>");
@@ -360,7 +360,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 
-		Markup markup = parser
+		IMarkup markup = parser
 				.parse("<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
 		assertEquals(3, markup.size());
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
@@ -380,7 +380,7 @@ public final class MarkupParserTest extends WicketTestCase
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 
 		// Note: <img> is one of these none-balanced HTML tags
-		Markup markup = parser
+		IMarkup markup = parser
 				.parse("<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
 
 		ComponentTag t = (ComponentTag)markup.get(0);

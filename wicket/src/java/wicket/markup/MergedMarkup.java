@@ -61,7 +61,7 @@ public class MergedMarkup extends Markup
 	 * @param extendIndex
 	 *            Index where <wicket:extend> has been found
 	 */
-	MergedMarkup(final Markup markup, final Markup baseMarkup, int extendIndex)
+	MergedMarkup(final IMarkup markup, final IMarkup baseMarkup, int extendIndex)
 	{
 		// Copy settings from derived markup
 		setResource(markup.getResource());
@@ -95,7 +95,7 @@ public class MergedMarkup extends Markup
 	 * @param markup
 	 * @return onLoad attribute
 	 */
-	private String getBodyOnLoadString(final Markup markup)
+	private String getBodyOnLoadString(final IMarkup markup)
 	{
 		final MarkupStream markupStream = new MarkupStream(markup);
 
@@ -147,7 +147,7 @@ public class MergedMarkup extends Markup
 	 * @param extendIndex
 	 *            Index where <wicket:extend> has been found
 	 */
-	private void merge(final Markup markup, final Markup baseMarkup, int extendIndex)
+	private void merge(final IMarkup markup, final IMarkup baseMarkup, int extendIndex)
 	{
 		// True if either <wicket:head> or <head> has been processed
 		boolean wicketHeadProcessed = false;
@@ -440,7 +440,7 @@ public class MergedMarkup extends Markup
 	 * @param markup
 	 * @param extendIndex
 	 */
-	private void copyWicketHead(final Markup markup, int extendIndex)
+	private void copyWicketHead(final IMarkup markup, int extendIndex)
 	{
 		boolean copy = false;
 		for (int i = 0; i < extendIndex; i++)

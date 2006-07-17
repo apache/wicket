@@ -49,7 +49,7 @@ public class MarkupCache
 	private static final Log log = LogFactory.getLog(MarkupCache.class);
 
 	/** Map of markup tags by class (exactly what is in the file). */
-	private final Map<CharSequence, Markup> markupCache = new ConcurrentHashMap<CharSequence, Markup>();
+	private final Map<CharSequence, IMarkup> markupCache = new ConcurrentHashMap<CharSequence, IMarkup>();
 
 	/**
 	 * Markup inheritance requires that merged markup gets re-merged either
@@ -102,10 +102,10 @@ public class MarkupCache
 		}
 
 		// Look for associated markup
-		final Markup markup = getMarkup(container, container.getClass());
+		final IMarkup markup = getMarkup(container, container.getClass());
 
 		// If we found markup for this container
-		if (markup != Markup.NO_MARKUP)
+		if (markup != IMarkup.NO_MARKUP)
 		{
 			return new MarkupStream(markup);
 		}
@@ -131,7 +131,7 @@ public class MarkupCache
 	 */
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
-		return getMarkup(container, container.getClass()) != Markup.NO_MARKUP;
+		return getMarkup(container, container.getClass()) != IMarkup.NO_MARKUP;
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class MarkupCache
 	 *            container as well (markup inheritance)
 	 * @return Markup resource
 	 */
-	private final Markup getMarkup(final MarkupContainer<?> container,
+	private final IMarkup getMarkup(final MarkupContainer<?> container,
 			final Class<? extends MarkupContainer> clazz)
 	{
 		Class<? extends MarkupContainer> containerClass = clazz;
@@ -164,7 +164,7 @@ public class MarkupCache
 
 		// Look up markup tag list by class, locale, style and markup type
 		final CharSequence key = markupKey(container, clazz);
-		Markup markup = markupCache.get(key);
+		IMarkup markup = markupCache.get(key);
 
 		// If no markup in the cache
 		if (markup == null)
@@ -205,7 +205,7 @@ public class MarkupCache
 						// flag markup as non-existent (as opposed to null,
 						// which might mean that it's simply not loaded into
 						// the cache)
-						markup = Markup.NO_MARKUP;
+						markup = IMarkup.NO_MARKUP;
 
 						// Save any markup list (or absence of one) for next
 						// time
@@ -241,13 +241,13 @@ public class MarkupCache
 	 *            The markup resource stream to load
 	 * @return The markup
 	 */
-	private final Markup loadMarkup(final MarkupContainer container, 
+	private final IMarkup loadMarkup(final MarkupContainer container, 
 			final MarkupResourceStreamLookupResult lookupResult)
 	{
 		try
 		{
 			// read and parse the markup
-			Markup markup = application.getMarkupSettings().getMarkupParserFactory()
+			IMarkup markup = application.getMarkupSettings().getMarkupParserFactory()
 					.newMarkupParser().readAndParse(lookupResult.getMarkupResourceStream());
 
 			// Check for markup inheritance. If it contains <wicket:extend>
@@ -277,7 +277,7 @@ public class MarkupCache
 			afterLoadListeners.remove(lookupResult.getResourceStream());
 		}
 
-		return Markup.NO_MARKUP;
+		return IMarkup.NO_MARKUP;
 	}
 
 	/**
@@ -292,7 +292,7 @@ public class MarkupCache
 	 *            The markup stream to load and begin to watch
 	 * @return The markup in the stream
 	 */
-	private final Markup loadMarkupAndWatchForChanges(final MarkupContainer container,
+	private final IMarkup loadMarkupAndWatchForChanges(final MarkupContainer container,
 			final MarkupResourceStreamLookupResult lookupResult)
 	{
 		if (lookupResult.isDisableCaching() == false)
@@ -397,8 +397,8 @@ public class MarkupCache
 	 * @return A markup object with the the base markup elements resolved.
 	 */
 	@SuppressWarnings("unchecked")
-	private Markup checkForMarkupInheritance(final MarkupContainer container,
-			final MarkupResourceStreamLookupResult lookupResult, final Markup markup)
+	private IMarkup checkForMarkupInheritance(final MarkupContainer container,
+			final MarkupResourceStreamLookupResult lookupResult, final IMarkup markup)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
@@ -411,10 +411,10 @@ public class MarkupCache
 
 		Class<? extends MarkupContainer> markupClass = markup.getResource().getMarkupClass();
 		// get the base markup
-		final Markup baseMarkup = getMarkup(container,
+		final IMarkup baseMarkup = getMarkup(container,
 				(Class<? extends MarkupContainer>)markupClass.getSuperclass());
 
-		if (baseMarkup == Markup.NO_MARKUP)
+		if (baseMarkup == IMarkup.NO_MARKUP)
 		{
 			throw new MarkupNotFoundException(
 					"Parent markup of inherited markup not found. Component class: "
@@ -460,7 +460,7 @@ public class MarkupCache
 		});
 
 		// Merge base and derived markup
-		Markup mergedMarkup = new MergedMarkup(markup, baseMarkup, extendIndex);
+		IMarkup mergedMarkup = new MergedMarkup(markup, baseMarkup, extendIndex);
 		return mergedMarkup;
 	}
 
@@ -472,7 +472,7 @@ public class MarkupCache
 	 * @param markup
 	 * @return == 0, if no wicket:extend was found
 	 */
-	private int requiresBaseMarkup(final Markup markup)
+	private int requiresBaseMarkup(final IMarkup markup)
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{

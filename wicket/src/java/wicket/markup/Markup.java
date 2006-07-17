@@ -36,12 +36,9 @@ import org.apache.commons.logging.LogFactory;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public class Markup
+public class Markup implements IMarkup
 {
 	private static final Log log = LogFactory.getLog(Markup.class);
-
-	/** Placeholder that indicates no markup */
-	public static final Markup NO_MARKUP = new Markup();
 
 	/** The list of markup elements */
 	private MarkupFragment markup;
@@ -119,7 +116,7 @@ public class Markup
 	}
 
 	/**
-	 * @return String representation of markup list
+	 * @see wicket.markup.IMarkup#toString()
 	 */
 	@Override
 	public String toString()
@@ -135,7 +132,7 @@ public class Markup
 	}
 
 	/**
-	 * @return String representation of markup list
+	 * @see wicket.markup.IMarkup#toDebugString()
 	 */
 	public String toDebugString()
 	{
@@ -143,13 +140,7 @@ public class Markup
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
-	 * 
-	 * @param index
-	 *            Index into markup list
-	 * @return Markup element
+	 * @see wicket.markup.IMarkup#get(int)
 	 */
 	public MarkupElement get(final int index)
 	{
@@ -161,17 +152,13 @@ public class Markup
 	 * 
 	 * @return The resource where this markup came from
 	 */
-	MarkupResourceStream getResource()
+	public final MarkupResourceStream getResource()
 	{
 		return resource;
 	}
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
-	 * 
-	 * @return Number of markup elements
+	 * @see wicket.markup.IMarkup#size()
 	 */
 	public int size()
 	{
@@ -179,9 +166,7 @@ public class Markup
 	}
 
 	/**
-	 * Return the XML declaration string, in case if found in the markup.
-	 * 
-	 * @return Null, if not found.
+	 * @see wicket.markup.IMarkup#getXmlDeclaration()
 	 */
 	public String getXmlDeclaration()
 	{
@@ -189,11 +174,7 @@ public class Markup
 	}
 
 	/**
-	 * Gets the markup encoding. A markup encoding may be specified in a markup
-	 * file with an XML encoding specifier of the form &lt;?xml ...
-	 * encoding="..." ?&gt;.
-	 * 
-	 * @return Encoding, or null if not found.
+	 * @see wicket.markup.IMarkup#getEncoding()
 	 */
 	public String getEncoding()
 	{
@@ -201,9 +182,7 @@ public class Markup
 	}
 
 	/**
-	 * Get the wicket namespace valid for this specific markup
-	 * 
-	 * @return wicket namespace
+	 * @see wicket.markup.IMarkup#getWicketNamespace()
 	 */
 	public String getWicketNamespace()
 	{
@@ -211,13 +190,7 @@ public class Markup
 	}
 
 	/**
-	 * Find the markup element index of the component with 'path'
-	 * 
-	 * @param path
-	 *            The component path expression
-	 * @param id
-	 *            The component's id to search for
-	 * @return -1, if not found
+	 * @see wicket.markup.IMarkup#findComponentIndex(java.lang.String, java.lang.String)
 	 */
 	public int findComponentIndex(final String path, final String id)
 	{
@@ -315,7 +288,7 @@ public class Markup
 	 * 
 	 * @param markupElement
 	 */
-	final void addMarkupElement(final MarkupElement markupElement)
+	public final void addMarkupElement(final MarkupElement markupElement)
 	{
 		this.markup.addMarkupElement(markupElement);
 	}

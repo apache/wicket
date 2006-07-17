@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wicket.markup.ComponentTag;
-import wicket.markup.Markup;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
@@ -47,7 +47,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	private static List<String> wellKnownTagNames;
 
 	/** The current markup needed to get the markups namespace */
-	private final Markup markup;
+	private final IMarkup markup;
 
 	/**
 	 * Construct.
@@ -58,7 +58,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 *            The parent of this component The next MarkupFilter in the
 	 *            chain
 	 */
-	public WicketTagIdentifier(final Markup markup, final IMarkupFilter parent)
+	public WicketTagIdentifier(final IMarkup markup, final IMarkupFilter parent)
 	{
 		super(parent);
 		this.markup = markup;

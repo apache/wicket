@@ -20,8 +20,6 @@ package wicket.markup;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 import wicket.Application;
 import wicket.Page;
@@ -111,12 +109,9 @@ public class MarkupParser
 	 * Create a new markup filter chain and initialize with all default filters
 	 * required.
 	 * 
-	 * @param tagList
-	 *            A list which the handler may add new MarkupElement to which
-	 *            were not found in the markup file.
 	 * @return a preconfigured markup filter chain
 	 */
-	private final IMarkupFilter newFilterChain(final List<ComponentTag> tagList)
+	private final IMarkupFilter newFilterChain()
 	{
 		// Chain together all the different markup filters and configure them
 		IMarkupFilter filter = new WicketTagIdentifier(markup, xmlParser);
@@ -144,7 +139,7 @@ public class MarkupParser
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
-					filter = new HtmlHeaderSectionHandler(tagList, filter);
+					filter = new HtmlHeaderSectionHandler(this.markup, filter);
 				}
 				
 				filter = new HeadForceTagIdHandler(filter, containerInfo.getContainerClass());
@@ -186,7 +181,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	final Markup readAndParse(final MarkupResourceStream resource) throws IOException,
+	final IMarkup readAndParse(final MarkupResourceStream resource) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
@@ -217,7 +212,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public final Markup parse(final String string) throws IOException,
+	public final IMarkup parse(final String string) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
@@ -242,12 +237,8 @@ public class MarkupParser
 	 */
 	private void parseMarkup()
 	{
-		// Handlers may add MarkupElements which were not found in the markup
-		// file.
-		final List<ComponentTag> autoAddList = new ArrayList<ComponentTag>();
-
 		// Initialize the markup filter chain
-		this.markupFilterChain = newFilterChain(autoAddList);
+		this.markupFilterChain = newFilterChain();
 
 		// Allow subclasses to extend the filter chain
 		initFilterChain();
@@ -258,6 +249,8 @@ public class MarkupParser
 
 		try
 		{
+			int size = this.markup.size();
+			
 			// Loop through tags
 			for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
 			{
@@ -268,7 +261,7 @@ public class MarkupParser
 				}
 
 				// Add tag to list?
-				if (add || (autoAddList.size() > 0) || tag.isModified())
+				if (add || tag.isModified())
 				{
 					final CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
 
@@ -284,23 +277,18 @@ public class MarkupParser
 
 						if (compressWhitespace)
 						{
-							rawMarkup = rawMarkup.replaceAll("[ \\t]+", " ");
-							rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
+							rawMarkup = compressWhitespace(rawMarkup);
 						}
 
-						this.markup.addMarkupElement(new RawMarkup(rawMarkup));
+						// Make sure you add it at the correct location.
+						// IMarkupFilters might have added elements as well.
+						this.markup.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
-					if ((add == false) && (autoAddList.size() > 0))
+					if (add == false)
 					{
 						xmlParser.setPositionMarker(tag.getPos());
 					}
-
-					for (MarkupElement element : autoAddList)
-					{
-						this.markup.addMarkupElement(element);
-					}
-					autoAddList.clear();
 				}
 
 				if (add)
@@ -319,6 +307,8 @@ public class MarkupParser
 					this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					xmlParser.setPositionMarker();
 				}
+				
+				size = this.markup.size();
 			}
 		}
 		catch (ParseException ex)
@@ -349,6 +339,19 @@ public class MarkupParser
 		this.markup.makeImmutable();
 	}
 
+	/**
+	 * Remove whitespaces from the raw markup
+	 * 
+	 * @param rawMarkup
+	 * @return rawMarkup
+	 */
+	protected String compressWhitespace(String rawMarkup)
+	{
+		rawMarkup = rawMarkup.replaceAll("[ \\t]+", " ");
+		rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
+		return rawMarkup;
+	}
+	
 	/**
 	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For
 	 * reasons I don't understand, the following regex

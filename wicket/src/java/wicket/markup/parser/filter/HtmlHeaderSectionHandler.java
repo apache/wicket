@@ -19,10 +19,10 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.List;
 
 import wicket.Component;
 import wicket.markup.ComponentTag;
+import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.IMarkupFilter;
@@ -53,35 +53,22 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 
 	/** True if all the rest of the markup file can be ignored */
 	private boolean ignoreTheRest = false;
-
-	/**
-	 * In case you want to add extra Components to the markup, just add them to
-	 * the list. MarkupParser will handle it.
-	 */
-	private List<ComponentTag> tagList;
-
+	
+	/** The Markup available so far for the resource */
+	private final Markup markup;
+	
 	/**
 	 * Construct.
 	 * 
-	 * @param tagList
+	 * @param markup The Markup object being filled while reading the markup resource
 	 * @param parent
 	 *            The parent of this component The next MarkupFilter in the
 	 *            chain
 	 */
-	public HtmlHeaderSectionHandler(final List<ComponentTag> tagList, final IMarkupFilter parent)
+	public HtmlHeaderSectionHandler(final Markup markup, final IMarkupFilter parent)
 	{
 		super(parent);
-		setTagList(tagList);
-	}
-
-	/**
-	 * In order to add ComponentTags which are NOT from markup file.
-	 * 
-	 * @param tagList
-	 */
-	public void setTagList(final List<ComponentTag> tagList)
-	{
-		this.tagList = tagList;
+		this.markup = markup;
 	}
 
 	/**
@@ -168,7 +155,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		closeTag.setOpenTag(openTag);
 
 		// insert the tags into the markup stream
-		tagList.add(openTag);
-		tagList.add(closeTag);
+		this.markup.addMarkupElement(openTag);
+		this.markup.addMarkupElement(closeTag);
 	}
 }

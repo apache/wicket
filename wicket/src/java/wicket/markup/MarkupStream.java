@@ -53,7 +53,7 @@ public final class MarkupStream
 	private int currentIndex = 0;
 
 	/** The markup element list */
-	private final Markup markup;
+	private final IMarkup markup;
 
 	/**
 	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN THE NEAR
@@ -70,7 +70,7 @@ public final class MarkupStream
 	 * @param markup
 	 *            List of markup elements
 	 */
-	public MarkupStream(final Markup markup)
+	public MarkupStream(final IMarkup markup)
 	{
 		this.markup = markup;
 
