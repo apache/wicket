@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: Localizer.java 6429 2006-07-08 09:21:42 +0000 (Sat, 08 Jul 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-07-08 09:21:42 +0000 (Sat, 08 Jul
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -119,7 +120,8 @@ public class Localizer
 	{
 		if (component != null)
 		{
-			return getString(key, component, model, component.getLocale(), component.getStyle(), null);
+			return getString(key, component, model, component.getLocale(), component.getStyle(),
+					null);
 		}
 		else
 		{
@@ -156,7 +158,8 @@ public class Localizer
 		else
 		{
 			Session session = Session.get();
-			return getString(key, component, model, session.getLocale(), session.getStyle(), defaultValue);
+			return getString(key, component, model, session.getLocale(), session.getStyle(),
+					defaultValue);
 		}
 	}
 
@@ -179,12 +182,14 @@ public class Localizer
 	{
 		if (component != null)
 		{
-			return getString(key, component, null, component.getLocale(), component.getStyle(), defaultValue);
+			return getString(key, component, null, component.getLocale(), component.getStyle(),
+					defaultValue);
 		}
 		else
 		{
 			Session session = Session.get();
-			return getString(key, component, null, session.getLocale(), session.getStyle(), defaultValue);
+			return getString(key, component, null, session.getLocale(), session.getStyle(),
+					defaultValue);
 		}
 	}
 
@@ -259,6 +264,7 @@ public class Localizer
 			{
 				message.append(" for component: ");
 				message.append(component.getPageRelativePath());
+				message.append(" [class=").append(component.getClass().getName()).append("]");
 			}
 			throw new MissingResourceException(message.toString(), (component != null ? component
 					.getClass().getName() : ""), key);
