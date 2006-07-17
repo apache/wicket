@@ -31,16 +31,18 @@ import java.util.Set;
  * that null is not a valid key.
  * 
  * @author Jonathan Locke
+ * @param <K>
+ * @param <V>
  */
-public final class MiniMap implements Map, Serializable
+public final class MiniMap<K, V> implements Map<K, V>, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The array of keys. Keys that are null are not used. */
-	private final Object[] keys;
+	private final K[] keys;
 
 	/** The array of values which correspond by index with the keys array. */
-	private final Object[] values;
+	private final V[] values;
 
 	/** The number of valid entries */
 	private int size;
@@ -54,10 +56,11 @@ public final class MiniMap implements Map, Serializable
 	 * @param maxEntries
 	 *            The maximum number of entries this map can hold
 	 */
+	@SuppressWarnings("unchecked")
 	public MiniMap(final int maxEntries)
 	{
-		this.keys = new Object[maxEntries];
-		this.values = new Object[maxEntries];
+		this.keys = (K[])new Object[maxEntries];
+		this.values = (V[])new Object[maxEntries];
 	}
 
 	/**
@@ -117,7 +120,7 @@ public final class MiniMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#get(java.lang.Object)
 	 */
-	public Object get(final Object key)
+	public V get(final Object key)
 	{
 		// Search for key
 		final int index = findKey(key);
@@ -132,10 +135,8 @@ public final class MiniMap implements Map, Serializable
 		return null;
 	}
 
-	/**
-	 * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-	 */
-	public Object put(final Object key, final Object value)
+
+	public V put(final K key, final V value)
 	{
 		// Search for key
 		final int index = findKey(key);
@@ -143,7 +144,7 @@ public final class MiniMap implements Map, Serializable
 		if (index != -1)
 		{
 			// Replace existing value
-			final Object oldValue = values[index];
+			final V oldValue = values[index];
 			this.values[index] = value;
 			return oldValue;
 		}
@@ -170,7 +171,7 @@ public final class MiniMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	public Object remove(final Object key)
+	public V remove(final Object key)
 	{
 		// Search for key
 		final int index = findKey(key);
@@ -178,7 +179,7 @@ public final class MiniMap implements Map, Serializable
 		if (index != -1)
 		{
 			// Store value
-			final Object oldValue = values[index];
+			final V oldValue = values[index];
 
 			keys[index] = null;
 			values[index] = null;
@@ -193,11 +194,12 @@ public final class MiniMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
+	@SuppressWarnings("unchecked")
 	public void putAll(final Map map)
 	{
-		for (final Iterator iterator = map.entrySet().iterator(); iterator.hasNext();)
+		for (final Iterator<Entry<K, V>> iterator = map.entrySet().iterator(); iterator.hasNext();)
 		{
-			final Map.Entry e = (Map.Entry)iterator.next();
+			final Map.Entry<K, V> e = iterator.next();
 			put(e.getKey(), e.getValue());
 		}
 	}
@@ -219,21 +221,21 @@ public final class MiniMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#keySet()
 	 */
-	public Set keySet()
+	public Set<K> keySet()
 	{
-		return new AbstractSet<Object>()
+		return new AbstractSet<K>()
 		{
 			@Override
-			public Iterator<Object> iterator()
+			public Iterator<K> iterator()
 			{
-				return new Iterator<Object>()
+				return new Iterator<K>()
 				{
 					public boolean hasNext()
 					{
 						return i < size;
 					}
 
-					public Object next()
+					public K next()
 					{
 						// Find next key
 						i = nextKey(nextIndex(i));
@@ -264,12 +266,12 @@ public final class MiniMap implements Map, Serializable
 	/**
 	 * @see java.util.Map#values()
 	 */
-	public Collection values()
+	public Collection<V> values()
 	{
-		return new AbstractList<Object>()
+		return new AbstractList<V>()
 		{
 			@Override
-			public Object get(final int index)
+			public V get(final int index)
 			{
 				int keyIndex = nextKey(0);
 
@@ -286,48 +288,46 @@ public final class MiniMap implements Map, Serializable
 			{
 				return size;
 			}
-			
-			
 		};
 	}
 
 	/**
 	 * @see java.util.Map#entrySet()
 	 */
-	public Set entrySet()
+	public Set<Entry<K, V>> entrySet()
 	{
-		return new AbstractSet<Object>()
+		return new AbstractSet<Entry<K, V>>()
 		{
 			@Override
-			public Iterator<Object> iterator()
+			public Iterator<Entry<K, V>> iterator()
 			{
-				return new Iterator<Object>()
+				return new Iterator<Entry<K, V>>()
 				{
 					public boolean hasNext()
 					{
 						return index < size;
 					}
 
-					public Object next()
+					public Entry<K, V> next()
 					{
 						keyIndex = nextKey(nextIndex(keyIndex));
 						index++;
 
-						return new Map.Entry()
+						return new Map.Entry<K, V>()
 						{
-							public Object getKey()
+							public K getKey()
 							{
 								return keys[keyIndex];
 							}
 
-							public Object getValue()
+							public V getValue()
 							{
 								return values[keyIndex];
 							}
 
-							public Object setValue(final Object value)
+							public V setValue(final V value)
 							{
-								final Object oldValue = values[keyIndex];
+								final V oldValue = values[keyIndex];
 
 								values[keyIndex] = value;
 
