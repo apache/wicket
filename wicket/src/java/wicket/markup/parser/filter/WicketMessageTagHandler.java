@@ -121,7 +121,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 						tag.getPos());
 			}
 
-			StringTokenizer attrTokenizer = new StringTokenizer(wicketMessageAttribute, ",");
+			final StringTokenizer attrTokenizer = new StringTokenizer(wicketMessageAttribute, ",");
 			while (attrTokenizer.hasMoreTokens())
 			{
 				String text = attrTokenizer.nextToken().trim();
@@ -130,15 +130,15 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 					text = wicketMessageAttribute;
 				}
 
-				StringTokenizer valueTokenizer = new StringTokenizer(text, "=");
+				final StringTokenizer valueTokenizer = new StringTokenizer(text, "=");
 				if (valueTokenizer.countTokens() != 2)
 				{
 					throw new ParseException("Wrong format of wicket:message attribute value. "
 							+ text + "; Must be: key=value[, key=value]", tag.getPos());
 				}
 
-				String attrName = valueTokenizer.nextToken();
-				String messageKey = valueTokenizer.nextToken();
+				final String attrName = valueTokenizer.nextToken();
+				final String messageKey = valueTokenizer.nextToken();
 				if ((attrName == null) || (attrName.trim().length() == 0) || (messageKey == null)
 						|| (messageKey.trim().length() == 0))
 				{
@@ -146,7 +146,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 							+ text + "; Must be: key=value[, key=value]", tag.getPos());
 				}
 
-				String value = settings.getLocalizer().getString(messageKey, null, searchStack,
+				final String value = settings.getLocalizer().getString(messageKey, null, searchStack,
 						containerInfo.getLocale(), containerInfo.getStyle());
 
 				if (value.length() > 0)

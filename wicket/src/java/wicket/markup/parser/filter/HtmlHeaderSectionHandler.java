@@ -84,7 +84,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag from the markup.
 		// If null, no more tags are available
-		ComponentTag tag = nextComponentTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null)
 		{
 			return tag;

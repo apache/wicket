@@ -148,7 +148,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 				{
 					autolinking = Strings.isEmpty(autolink) || Strings.isTrue(autolink);
 				}
-				catch (StringValueConversionException e)
+				catch (final StringValueConversionException e)
 				{
 					throw new WicketRuntimeException("Invalid autolink attribute value \""
 							+ autolink + "\"");

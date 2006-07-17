@@ -61,7 +61,7 @@ public class MergedMarkup extends Markup
 	 * @param extendIndex
 	 *            Index where <wicket:extend> has been found
 	 */
-	MergedMarkup(final IMarkup markup, final IMarkup baseMarkup, int extendIndex)
+	MergedMarkup(final IMarkup markup, final IMarkup baseMarkup, final int extendIndex)
 	{
 		// Copy settings from derived markup
 		setResource(markup.getResource());
@@ -71,8 +71,8 @@ public class MergedMarkup extends Markup
 
 		if (log.isDebugEnabled())
 		{
-			String derivedResource = Strings.afterLast(markup.getResource().toString(), '/');
-			String baseResource = Strings.afterLast(baseMarkup.getResource().toString(), '/');
+			final String derivedResource = Strings.afterLast(markup.getResource().toString(), '/');
+			final String baseResource = Strings.afterLast(baseMarkup.getResource().toString(), '/');
 			log.debug("Merge markup: derived markup: " + derivedResource + "; base markup: "
 					+ baseResource);
 		}
@@ -129,7 +129,7 @@ public class MergedMarkup extends Markup
 			final ComponentTag tag = markupStream.getTag();
 			if (tag.isOpen() && tag.isBodyTag())
 			{
-				String onLoad = tag.getAttributes().getString("onload");
+				final String onLoad = tag.getAttributes().getString("onload");
 				return onLoad;
 			}
 		}
@@ -188,7 +188,7 @@ public class MergedMarkup extends Markup
 					{
 						// <wicket:child /> => <wicket:child>...</wicket:child>
 						childTag = tag;
-						ComponentTag childOpenTag = tag.mutable();
+						final ComponentTag childOpenTag = tag.mutable();
 						childOpenTag.getXmlTag().setType(XmlTag.Type.OPEN);
 						childOpenTag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
 						childOpenTag.setWicketTag(true);
@@ -264,7 +264,7 @@ public class MergedMarkup extends Markup
 				{
 					if (onLoad != null)
 					{
-						ComponentTag mutableTag = tag.mutable();
+						final ComponentTag mutableTag = tag.mutable();
 						mutableTag.getAttributes().put("onload", onLoad);
 						element = mutableTag;
 					}
@@ -272,7 +272,7 @@ public class MergedMarkup extends Markup
 				else if (onLoad != null)
 				{
 					onLoadBase += onLoad;
-					ComponentTag mutableTag = tag.mutable();
+					final ComponentTag mutableTag = tag.mutable();
 					mutableTag.getAttributes().put("onload", onLoadBase);
 					element = mutableTag;
 				}
@@ -292,12 +292,12 @@ public class MergedMarkup extends Markup
 		// <wicket:extend> until </wicket:extend> to the list
 		for (; extendIndex < markup.size(); extendIndex++)
 		{
-			MarkupElement element = markup.get(extendIndex);
+			final MarkupElement element = markup.get(extendIndex);
 			addMarkupElement(element);
 
 			if (element instanceof ComponentTag)
 			{
-				ComponentTag tag = (ComponentTag)element;
+				final ComponentTag tag = (ComponentTag)element;
 				if (tag.isExtendTag() && tag.isClose())
 				{
 					break;
@@ -316,10 +316,10 @@ public class MergedMarkup extends Markup
 		{
 			for (baseIndex++; baseIndex < baseMarkup.size(); baseIndex++)
 			{
-				MarkupElement element = baseMarkup.get(baseIndex);
+				final MarkupElement element = baseMarkup.get(baseIndex);
 				if (element instanceof ComponentTag)
 				{
-					ComponentTag tag = (ComponentTag)element;
+					final ComponentTag tag = (ComponentTag)element;
 					if (tag.isChildTag() && tag.isClose())
 					{
 						// Ok, skipped the childs content
@@ -353,7 +353,7 @@ public class MergedMarkup extends Markup
 		{
 			// And now all remaining elements from the derived markup.
 			// But first add </wicket:child>
-			ComponentTag childCloseTag = childTag.mutable();
+			final ComponentTag childCloseTag = childTag.mutable();
 			childCloseTag.getXmlTag().setType(XmlTag.Type.CLOSE);
 			childCloseTag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
 			childCloseTag.setWicketTag(true);
@@ -362,14 +362,14 @@ public class MergedMarkup extends Markup
 
 		for (baseIndex++; baseIndex < baseMarkup.size(); baseIndex++)
 		{
-			MarkupElement element = baseMarkup.get(baseIndex);
+			final MarkupElement element = baseMarkup.get(baseIndex);
 			addMarkupElement(element);
 
 			// Make sure all tags of the base markup remember where they are
 			// from
 			if ((element instanceof ComponentTag) && (baseMarkup.getResource() != null))
 			{
-				ComponentTag tag = (ComponentTag)element;
+				final ComponentTag tag = (ComponentTag)element;
 				tag.setMarkupClass(baseMarkup.getResource().getMarkupClass());
 			}
 		}
@@ -387,10 +387,10 @@ public class MergedMarkup extends Markup
 			int hasHead = -1;
 			for (int i = 0; i < size(); i++)
 			{
-				MarkupElement element = get(i);
+				final MarkupElement element = get(i);
 				if (element instanceof ComponentTag)
 				{
-					ComponentTag tag = (ComponentTag) element;
+					final ComponentTag tag = (ComponentTag) element;
 					if ((hasOpenWicketHead == -1) && tag.isWicketHeadTag())
 					{
 						hasOpenWicketHead = i;
@@ -440,15 +440,15 @@ public class MergedMarkup extends Markup
 	 * @param markup
 	 * @param extendIndex
 	 */
-	private void copyWicketHead(final IMarkup markup, int extendIndex)
+	private void copyWicketHead(final IMarkup markup, final int extendIndex)
 	{
 		boolean copy = false;
 		for (int i = 0; i < extendIndex; i++)
 		{
-			MarkupElement elem = markup.get(i);
+			final MarkupElement elem = markup.get(i);
 			if (elem instanceof ComponentTag)
 			{
-				ComponentTag etag = (ComponentTag)elem;
+				final ComponentTag etag = (ComponentTag)elem;
 				if (etag.isWicketHeadTag())
 				{
 					if (etag.isOpen())

@@ -95,10 +95,10 @@ public class Markup implements IMarkup
 			StringBuffer componentPath = null;
 			for (int i = 0; i < this.markup.size(); i++)
 			{
-				MarkupElement elem = this.markup.get(i);
+				final MarkupElement elem = this.markup.get(i);
 				if (elem instanceof ComponentTag)
 				{
-					ComponentTag tag = (ComponentTag)elem;
+					final ComponentTag tag = (ComponentTag)elem;
 
 					// Set the tags components path
 					componentPath = setComponentPathForTag(componentPath, tag);
@@ -210,8 +210,8 @@ public class Markup implements IMarkup
 		String completePath = (path == null || path.length() == 0 ? id : path + ":" + id);
 
 		// s/:\d+//g
-		Pattern re = Pattern.compile(":\\d+");
-		Matcher matcher = re.matcher(completePath);
+		final Pattern re = Pattern.compile(":\\d+");
+		final Matcher matcher = re.matcher(completePath);
 		completePath = matcher.replaceAll("");
 
 		// All component tags are registered with the cache
@@ -385,7 +385,7 @@ public class Markup implements IMarkup
 					|| tag.getOpenTag().getAttributes().containsKey(wicketId))
 			{
 				// Remove the last element from the component path
-				int index = this.currentPath.lastIndexOf(":");
+				final int index = this.currentPath.lastIndexOf(":");
 				if (index != -1)
 				{
 					this.currentPath.setLength(index);

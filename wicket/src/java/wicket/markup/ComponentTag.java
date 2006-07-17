@@ -255,7 +255,7 @@ public class ComponentTag extends MarkupElement
 	 *            The key
 	 * @return The string value
 	 */
-	public final CharSequence getString(String key)
+	public final CharSequence getString(final String key)
 	{
 		return xmlTag.getString(key);
 	}
@@ -441,7 +441,7 @@ public class ComponentTag extends MarkupElement
 	 * @return True if this tag is an open tag with the given component name
 	 * @see wicket.markup.parser.XmlTag#isOpen()
 	 */
-	public final boolean isOpen(String id)
+	public final boolean isOpen(final String id)
 	{
 		return xmlTag.isOpen() && this.id.equals(id);
 	}
@@ -461,7 +461,7 @@ public class ComponentTag extends MarkupElement
 	 * @return True if this tag is an openclose tag with the given component id
 	 * @see wicket.markup.parser.XmlTag#isOpenClose()
 	 */
-	public final boolean isOpenClose(String id)
+	public final boolean isOpenClose(final String id)
 	{
 		return xmlTag.isOpenClose() && this.id.equals(id);
 	}
@@ -538,7 +538,7 @@ public class ComponentTag extends MarkupElement
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
-	public ComponentTag mutable(AttributeMap markupAttributes)
+	public ComponentTag mutable(final AttributeMap markupAttributes)
 	{
 		if (xmlTag.isMutable())
 		{
@@ -564,7 +564,7 @@ public class ComponentTag extends MarkupElement
 	 * @param value
 	 *            The value
 	 */
-	public final void put(String key, boolean value)
+	public final void put(final String key, final boolean value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -576,7 +576,7 @@ public class ComponentTag extends MarkupElement
 	 * @param value
 	 *            The value
 	 */
-	public final void put(String key, CharSequence value)
+	public final void put(final String key, final CharSequence value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -588,7 +588,7 @@ public class ComponentTag extends MarkupElement
 	 * @param value
 	 *            The value
 	 */
-	public final void put(String key, int value)
+	public final void put(final String key, final int value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -600,7 +600,7 @@ public class ComponentTag extends MarkupElement
 	 * @param value
 	 *            The value
 	 */
-	public final void put(String key, StringValue value)
+	public final void put(final String key, final StringValue value)
 	{
 		xmlTag.put(key, value);
 	}
@@ -620,7 +620,7 @@ public class ComponentTag extends MarkupElement
 	 * @param key
 	 *            The key to remove
 	 */
-	public final void remove(String key)
+	public final void remove(final String key)
 	{
 		xmlTag.remove(key);
 	}
@@ -647,7 +647,7 @@ public class ComponentTag extends MarkupElement
 	 * 
 	 * @param hasNoCloseTag
 	 */
-	public void setHasNoCloseTag(boolean hasNoCloseTag)
+	public void setHasNoCloseTag(final boolean hasNoCloseTag)
 	{
 		this.hasNoCloseTag = hasNoCloseTag;
 	}
@@ -681,7 +681,7 @@ public class ComponentTag extends MarkupElement
 	 * @param wicketHeaderClass
 	 *            wicketHeaderClass
 	 */
-	public void setMarkupClass(Class wicketHeaderClass)
+	public void setMarkupClass(final Class wicketHeaderClass)
 	{
 		this.markupClass = wicketHeaderClass;
 	}
@@ -702,7 +702,7 @@ public class ComponentTag extends MarkupElement
 	 * @param name
 	 *            New tag name
 	 */
-	public final void setName(String name)
+	public final void setName(final String name)
 	{
 		xmlTag.setName(name);
 	}
@@ -712,7 +712,7 @@ public class ComponentTag extends MarkupElement
 	 * @param namespace
 	 *            New tag name namespace
 	 */
-	public final void setNamespace(String namespace)
+	public final void setNamespace(final String namespace)
 	{
 		xmlTag.setNamespace(namespace);
 	}
@@ -767,7 +767,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final CharSequence syntheticCloseTagString()
 	{
-		AppendingStringBuffer buf = new AppendingStringBuffer();
+		final AppendingStringBuffer buf = new AppendingStringBuffer();
 		buf.append("</");
 		if (getNamespace() != null)
 		{

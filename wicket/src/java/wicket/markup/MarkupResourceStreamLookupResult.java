@@ -71,7 +71,7 @@ public class MarkupResourceStreamLookupResult
 	 * @param cacheKey
 	 *            cacheKey
 	 */
-	public final void setCacheKey(CharSequence cacheKey)
+	public final void setCacheKey(final CharSequence cacheKey)
 	{
 		this.cacheKey = cacheKey;
 	}
@@ -92,7 +92,7 @@ public class MarkupResourceStreamLookupResult
 	 * @param disableCaching
 	 *            disableCaching
 	 */
-	public final void setDisableCaching(boolean disableCaching)
+	public final void setDisableCaching(final boolean disableCaching)
 	{
 		this.disableCaching = disableCaching;
 	}
@@ -123,7 +123,7 @@ public class MarkupResourceStreamLookupResult
 	 * @param resourceStream
 	 *            resourceStream
 	 */
-	public final void setResourceStream(IResourceStream resourceStream)
+	public final void setResourceStream(final IResourceStream resourceStream)
 	{
 		this.resourceStream = resourceStream;
 	}

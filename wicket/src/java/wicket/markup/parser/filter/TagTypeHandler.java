@@ -100,7 +100,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 			if (requiresOpenBodyCloseTag(name))
 			{
 				tag.setType(XmlTag.Type.OPEN);
-				XmlTag closeTag = new XmlTag();
+				final XmlTag closeTag = new XmlTag();
 				closeTag.setType(XmlTag.Type.CLOSE);
 				closeTag.setName(tag.getName());
 				closeTag.setNamespace(tag.getNamespace());

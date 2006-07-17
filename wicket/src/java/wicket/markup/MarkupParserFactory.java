@@ -33,7 +33,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 * @param filters
 	 *            additional markup filters
 	 */
-	public MarkupParserFactory(final Application application, IMarkupFilter[] filters)
+	public MarkupParserFactory(final Application application, final IMarkupFilter[] filters)
 	{
 		this.filters = new IMarkupFilter[filters.length + 1];
 		System.arraycopy(filters, 0, this.filters, 0, filters.length);
@@ -48,7 +48,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 * @param filter
 	 *            additional markup filter
 	 */
-	public MarkupParserFactory(final Application application, IMarkupFilter filter)
+	public MarkupParserFactory(final Application application, final IMarkupFilter filter)
 	{
 		this.filters = new IMarkupFilter[] { filter, new PrependContextPathHandler(application) };
 	}

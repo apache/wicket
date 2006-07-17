@@ -91,7 +91,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	 *            The application object
 	 * 
 	 */
-	public PrependContextPathHandler(Application application)
+	public PrependContextPathHandler(final Application application)
 	{
 		super(null);
 		this.application = application;
@@ -135,13 +135,13 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 
 		if (contextPath.length() > 0)
 		{
-			for (String attrName : attributeNames)
+			for (final String attrName : attributeNames)
 			{
-				String attrValue = tag.getAttributes().getString(attrName);
+				final String attrValue = tag.getAttributes().getString(attrName);
 				if ((attrValue != null) && (attrValue.startsWith("/") == false)
 						&& (attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
-					String url = contextPath + attrValue;
+					final String url = contextPath + attrValue;
 					tag.getAttributes().put(attrName, url);
 					tag.setModified(true);
 				}

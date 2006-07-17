@@ -203,7 +203,7 @@ public final class MarkupStream
 	{
 		while (hasMore())
 		{
-			MarkupElement elem = next();
+			final MarkupElement elem = next();
 			if (elem instanceof ComponentTag)
 			{
 				return true;

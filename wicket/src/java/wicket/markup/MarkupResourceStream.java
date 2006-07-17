@@ -130,7 +130,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * 
 	 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
 	 */
-	public final void setLocale(Locale locale)
+	public final void setLocale(final Locale locale)
 	{
 		resourceStream.setLocale(locale);
 	}

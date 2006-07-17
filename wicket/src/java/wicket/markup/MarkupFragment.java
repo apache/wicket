@@ -149,7 +149,7 @@ public class MarkupFragment
 	{
 		for (int i = 0; i < this.markupElements.size(); i++)
 		{
-			MarkupElement elem = this.markupElements.get(i);
+			final MarkupElement elem = this.markupElements.get(i);
 			if (elem instanceof ComponentTag)
 			{
 				// Make the tag immutable

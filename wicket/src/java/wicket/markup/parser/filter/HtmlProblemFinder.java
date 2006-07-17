@@ -103,7 +103,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 		// logged.
 		if ("img".equals(tag.getName()) && (tag.isOpen() || tag.isOpenClose()))
 		{
-			String src = tag.getAttributes().getString("src");
+			final String src = tag.getAttributes().getString("src");
 			if ((src != null) && (src.trim().length() == 0))
 			{
 				escalateWarning("Attribute 'src' should not be empty. Location: ", tag);
@@ -112,7 +112,7 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 
 		// Some people are using a dot "wicket.xxx" instead of a colon
 		// "wicket:xxx"
-		Iterator iter = tag.getAttributes().keySet().iterator();
+		final Iterator iter = tag.getAttributes().keySet().iterator();
 		while (iter.hasNext())
 		{
 			String key = (String)iter.next();

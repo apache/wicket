@@ -80,7 +80,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag from the markup.
 		// If null, no more tags are available
-		ComponentTag tag = nextComponentTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null)
 		{
 			return tag;
@@ -88,7 +88,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 
 		if (tag.isOpen() && "html".equals(tag.getName().toLowerCase()))
 		{
-			String namespace = determineWicketNamespace(tag);
+			final String namespace = determineWicketNamespace(tag);
 			if (namespace != null)
 			{
 				markup.setWicketNamespace(namespace);
@@ -126,7 +126,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 				{
 					// Set the Wicket namespace for wicket tags (e.g.
 					// <eicket:panel>) and attributes (e.g. wicket:id)
-					String namespace = attributeName.substring(XMLNS.length());
+					final String namespace = attributeName.substring(XMLNS.length());
 					
 					// Note: <html ...> tags usually have no wicket:id and hence are treated
 					// as raw markup and removing xmlns:wicket from markup does not have any

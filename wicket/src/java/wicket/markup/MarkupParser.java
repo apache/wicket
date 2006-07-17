@@ -123,7 +123,7 @@ public class MarkupParser
 		filter = new WicketNamespaceHandler(filter, markup);
 
 		// Provided the wicket component requesting the markup is known ...
-		MarkupResourceStream resource = markup.getResource();
+		final MarkupResourceStream resource = markup.getResource();
 		if (resource != null) 
 		{
 			final ContainerInfo containerInfo = resource.getContainerInfo();
@@ -244,11 +244,12 @@ public class MarkupParser
 		initFilterChain();
 
 		// Get relevant settings from the Application
-		boolean stripComments = this.markupSettings.getStripComments();
-		boolean compressWhitespace = this.markupSettings.getCompressWhitespace();
+		final boolean stripComments = this.markupSettings.getStripComments();
+		final boolean compressWhitespace = this.markupSettings.getCompressWhitespace();
 
 		try
 		{
+			// allways remember the latest index (size)
 			int size = this.markup.size();
 			
 			// Loop through tags
@@ -285,33 +286,28 @@ public class MarkupParser
 						this.markup.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
-					if (add == false)
+					if (add)
 					{
-						xmlParser.setPositionMarker(tag.getPos());
+						// Add to list unless preview component tag remover flagged
+						// as removed
+						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
+						{
+							this.markup.addMarkupElement(tag);
+						}
 					}
-				}
-
-				if (add)
-				{
-					// Add to list unless preview component tag remover flagged
-					// as removed
-					if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
+					else if (tag.isModified())
 					{
-						this.markup.addMarkupElement(tag);
+						this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
-
-					xmlParser.setPositionMarker();
-				}
-				else if (tag.isModified())
-				{
-					this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+					
 					xmlParser.setPositionMarker();
 				}
 				
+				// allways remember the latest index (size)
 				size = this.markup.size();
 			}
 		}
-		catch (ParseException ex)
+		catch (final ParseException ex)
 		{
 			// Add remaining input string
 			final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
@@ -323,7 +319,7 @@ public class MarkupParser
 			this.markup.setEncoding(xmlParser.getEncoding());
 			this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
 
-			MarkupStream markupStream = new MarkupStream(markup);
+			final MarkupStream markupStream = new MarkupStream(markup);
 			markupStream.setCurrentIndex(this.markup.size() - 1);
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
@@ -366,8 +362,8 @@ public class MarkupParser
 		int pos1 = rawMarkup.indexOf("<!--");
 		while (pos1 >= 0)
 		{
-			AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
-			int pos2 = rawMarkup.indexOf("-->", pos1);
+			final AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
+			final int pos2 = rawMarkup.indexOf("-->", pos1);
 
 			if (pos2 >= 0)
 			{

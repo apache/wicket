@@ -262,11 +262,11 @@ public class MarkupCache
 
 			return markup;
 		}
-		catch (ResourceStreamNotFoundException e)
+		catch (final ResourceStreamNotFoundException e)
 		{
 			log.error("Unable to find markup from " + lookupResult.getResourceStream(), e);
 		}
-		catch (IOException e)
+		catch (final IOException e)
 		{
 			log.error("Unable to read markup from " + lookupResult.getResourceStream(), e);
 		}
@@ -350,9 +350,9 @@ public class MarkupCache
 		if (locale != null)
 		{
 			// TODO What is wrong with locale.toString()?!?
-			boolean l = locale.getLanguage().length() != 0;
-			boolean c = locale.getCountry().length() != 0;
-			boolean v = locale.getVariant().length() != 0;
+			final boolean l = locale.getLanguage().length() != 0;
+			final boolean c = locale.getCountry().length() != 0;
+			final boolean v = locale.getVariant().length() != 0;
 			buffer.append(locale.getLanguage());
 			if (c || (l && v))
 			{
@@ -402,14 +402,14 @@ public class MarkupCache
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
-		int extendIndex = requiresBaseMarkup(markup);
+		final int extendIndex = requiresBaseMarkup(markup);
 		if (extendIndex == -1)
 		{
 			// return a MarkupStream for the markup
 			return markup;
 		}
 
-		Class<? extends MarkupContainer> markupClass = markup.getResource().getMarkupClass();
+		final Class<? extends MarkupContainer> markupClass = markup.getResource().getMarkupClass();
 		// get the base markup
 		final IMarkup baseMarkup = getMarkup(container,
 				(Class<? extends MarkupContainer>)markupClass.getSuperclass());
@@ -442,7 +442,7 @@ public class MarkupCache
 			 * @see java.lang.Object#equals(java.lang.Object)
 			 */
 			@Override
-			public boolean equals(Object obj)
+			public boolean equals(final Object obj)
 			{
 				return true;
 			}
@@ -460,7 +460,7 @@ public class MarkupCache
 		});
 
 		// Merge base and derived markup
-		IMarkup mergedMarkup = new MergedMarkup(markup, baseMarkup, extendIndex);
+		final IMarkup mergedMarkup = new MergedMarkup(markup, baseMarkup, extendIndex);
 		return mergedMarkup;
 	}
 
@@ -476,7 +476,7 @@ public class MarkupCache
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{
-			MarkupElement elem = markup.get(i);
+			final MarkupElement elem = markup.get(i);
 			if ((elem instanceof ComponentTag) && ((ComponentTag)elem).isExtendTag())
 			{
 				// Ok, inheritance is on and we must get the
