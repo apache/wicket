@@ -20,7 +20,7 @@ package wicket.util.tester;
 
 import java.io.Serializable;
 
-import wicket.markup.html.panel.Panel;
+import wicket.MarkupContainer;
 
 /**
  * A test panel factory for WicketTester
@@ -30,12 +30,13 @@ import wicket.markup.html.panel.Panel;
 public interface TestPanelSource extends Serializable
 {
 	/**
-	 * Define a panel instance source for WicketTester
+	 * Define a panel instance source for WicketTester. note that testing
+	 * panel's componentId must use supplied <code>panelId</code>.
 	 * 
+	 * @param parent
+	 *            Parent of the testing panel
 	 * @param panelId
 	 *            panelId of the testing panel
-	 * @return Panel testing panel instance, note that testing panel's
-	 *         componentId must use supplied <code>panelId</code>.
 	 */
-	public Panel getTestPanel(final String panelId);
+	public void getTestPanel(final MarkupContainer parent, final String panelId);
 }

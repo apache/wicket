@@ -38,6 +38,6 @@ public class DummyPanelPage extends WebPage
 	 */
 	public DummyPanelPage(final TestPanelSource testPanelSource)
 	{
-		testPanelSource.getTestPanel(TEST_PANEL_ID);
+		testPanelSource.getTestPanel(this, TEST_PANEL_ID);
 	}
 }

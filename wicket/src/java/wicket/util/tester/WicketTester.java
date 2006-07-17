@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
@@ -335,12 +336,12 @@ public class WicketTester extends MockWebApplication
 				{
 					private static final long serialVersionUID = 1L;
 
-					public Panel getTestPanel(String panelId)
+					public void getTestPanel(MarkupContainer parent, String panelId)
 					{
 						try
 						{
-							Constructor c = panelClass.getConstructor(new Class[] { String.class });
-							return (Panel)c.newInstance(new Object[] { panelId });
+							Constructor c = panelClass.getConstructor(new Class[] { MarkupContainer.class, String.class });
+							c.newInstance(new Object[] { parent, panelId });
 						}
 						catch (SecurityException e)
 						{
