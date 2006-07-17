@@ -615,6 +615,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * must return true and the page must be bookmarkable. 
 	 * @see wicket.Component#getStatelessHint()
 	 */
+	@Override
 	public final boolean getStatelessHint() {
 		return getFlag(FLAG_STATELESS_HINT);
 	}

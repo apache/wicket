@@ -174,7 +174,7 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 		if (form == null)
 		{
 			// Look for parent form
-			form = (Form)findParent(Form.class);
+			form = findParent(Form.class);
 		}
 		return form;
 	}

@@ -628,7 +628,10 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getRequestURI()
 	{
-		if(url == null) return "";
+		if(url == null)
+		{
+			return "";
+		}
 		return url;
 	}
 

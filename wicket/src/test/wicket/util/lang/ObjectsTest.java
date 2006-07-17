@@ -92,7 +92,7 @@ public class ObjectsTest extends WicketTestCase
 	{
 		PropertyModel pm = new PropertyModel(new TextField<String>(new MockPageWithOneComponent(), "component",
 				new Model<String>("test")), "modelObject");
-		PropertyModel pm2 = (PropertyModel)Objects.cloneModel(pm);
+		PropertyModel pm2 = Objects.cloneModel(pm);
 		assertTrue(pm.getObject() == pm2.getObject());
 	}
 

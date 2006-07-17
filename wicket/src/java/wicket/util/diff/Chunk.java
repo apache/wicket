@@ -293,7 +293,8 @@ public class Chunk extends ToString
      * Provide a string image of the chunk using the an empty prefix and
      * postfix.
      */
-    public void toString(StringBuffer s)
+    @Override
+	public void toString(StringBuffer s)
     {
         toString(s, "", "");
     }

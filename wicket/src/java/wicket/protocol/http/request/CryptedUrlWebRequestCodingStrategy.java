@@ -432,7 +432,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		@Override
 		public Map<String,?> getParameterMap()
 		{
-			return (Map<String,?>)this.parameterMap;
+			return this.parameterMap;
 		}
 
 		/**

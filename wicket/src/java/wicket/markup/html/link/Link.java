@@ -104,6 +104,7 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 			this.anchor = anchor;
 		}
 
+		@Override
 		public final void undo()
 		{
 			Link.this.anchor = anchor;

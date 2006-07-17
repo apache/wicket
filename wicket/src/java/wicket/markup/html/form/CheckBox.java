@@ -165,7 +165,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 		{
 			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			Form form = (Form)findParent(Form.class);
+			Form form = findParent(Form.class);
 			if (form != null)
 			{
 				tag.put("onclick", form.getJsForInterfaceUrl(url));

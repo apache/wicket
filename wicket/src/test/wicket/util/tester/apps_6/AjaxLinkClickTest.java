@@ -46,6 +46,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	 * Make sure that our test flags are reset between every test.
 	 * @see wicket.WicketTestCase#setUp()
 	 */
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -66,6 +67,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				linkClicked = true;

@@ -94,7 +94,8 @@ public final class Snake extends PathNode
      * 
      * @return true always
      */
-    public boolean isSnake()
+    @Override
+	public boolean isSnake()
     {
         return true;
     }

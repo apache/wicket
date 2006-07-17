@@ -90,7 +90,7 @@ public class PropertiesFactory implements IPropertiesFactory
 			final Locale locale)
 	{
 		final String key = createResourceKey(clazz, locale, style);
-		Properties props = (Properties)propertiesCache.get(key);
+		Properties props = propertiesCache.get(key);
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
 			final IResourceStream resource = application.getResourceSettings()
@@ -197,7 +197,7 @@ public class PropertiesFactory implements IPropertiesFactory
 	{
 		// Make sure someone else didn't load our resources while we were
 		// waiting for the synchronized lock on the method
-		Properties props = (Properties)propertiesCache.get(key);
+		Properties props = propertiesCache.get(key);
 		if (props != null)
 		{
 			return props;

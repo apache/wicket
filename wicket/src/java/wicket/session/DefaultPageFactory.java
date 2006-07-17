@@ -56,7 +56,7 @@ public final class DefaultPageFactory implements IPageFactory
 			// => improved error message
 			pageClass.getConstructor((Class[])null);
 
-			return (Page)pageClass.newInstance();
+			return pageClass.newInstance();
 		}
 		catch (NoSuchMethodException e)
 		{

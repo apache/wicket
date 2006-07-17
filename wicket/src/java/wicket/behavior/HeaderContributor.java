@@ -72,6 +72,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 				private static final long serialVersionUID = 1L;
 				private String path = null;
 
+				@Override
 				public String getObject()
 				{
 					if (path == null)
@@ -125,6 +126,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 				private static final long serialVersionUID = 1L;
 				private String path = null;
 
+				@Override
 				public String getObject()
 				{
 					if (path == null)

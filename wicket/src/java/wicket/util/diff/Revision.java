@@ -134,7 +134,7 @@ public class Revision extends ToString
      */
     public Delta getDelta(int i)
     {
-        return (Delta) deltas_.get(i);
+        return deltas_.get(i);
     }
 
     /**
@@ -190,7 +190,8 @@ public class Revision extends ToString
      *            a {@link StringBuffer StringBuffer} to which the string
      *            representation will be appended.
      */
-    public synchronized void toString(StringBuffer s)
+    @Override
+	public synchronized void toString(StringBuffer s)
     {
         Iterator i = deltas_.iterator();
         while (i.hasNext())

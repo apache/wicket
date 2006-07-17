@@ -109,9 +109,9 @@ public class CookieValuePersisterTest extends TestCase
 		persister.save(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals(cycle.getWebRequest().getContextPath(), ((Cookie)getResponseCookies(cycle)
+		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("form:input", (getResponseCookies(cycle).get(0)).getName());
+		assertEquals(cycle.getWebRequest().getContextPath(), (getResponseCookies(cycle)
 				.get(0)).getPath());
 
 		// To clear in the context of cookies means to add a special cookie
@@ -121,9 +121,9 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", ((Cookie)getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(0)).getName());
-		assertEquals(cycle.getWebRequest().getContextPath(), ((Cookie)getResponseCookies(cycle)
+		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("form:input", (getResponseCookies(cycle).get(0)).getName());
+		assertEquals(cycle.getWebRequest().getContextPath(), (getResponseCookies(cycle)
 				.get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's
@@ -158,14 +158,14 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form:input", ((Cookie)getResponseCookies(cycle).get(1)).getName());
-		assertEquals(0, ((Cookie)getResponseCookies(cycle).get(1)).getMaxAge());
+		assertEquals("form:input", (getResponseCookies(cycle).get(1)).getName());
+		assertEquals(0, (getResponseCookies(cycle).get(1)).getMaxAge());
 	}
 
 	private void copyCookieFromResponseToRequest(final RequestCycle cycle)
 	{
 		((MockHttpServletRequest)((WebRequest)cycle.getRequest()).getHttpServletRequest())
-				.addCookie((Cookie)getResponseCookies(cycle).get(0));
+				.addCookie(getResponseCookies(cycle).get(0));
 	}
 
 	private Cookie[] getRequestCookies(final RequestCycle cycle)

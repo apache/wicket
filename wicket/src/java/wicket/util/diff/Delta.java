@@ -207,7 +207,8 @@ public abstract class Delta extends ToString
      *            a {@link StringBuffer StringBuffer} to which the string
      *            representation will be appended.
      */
-    public void toString(StringBuffer s)
+    @Override
+	public void toString(StringBuffer s)
     {
         original.rangeString(s);
         s.append("x");

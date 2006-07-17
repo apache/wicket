@@ -467,7 +467,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				{
 					final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-					Form form = (Form)findParent(Form.class);
+					Form form = findParent(Form.class);
 					if (form != null)
 					{
 						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(

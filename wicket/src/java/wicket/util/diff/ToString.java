@@ -82,7 +82,8 @@ public class ToString
      * {@link java.lang.Object#toString toString() } method that delegates work
      * to a {@link java.lang.StringBuffer StringBuffer} base version.
      */
-    public String toString()
+    @Override
+	public String toString()
     {
         StringBuffer s = new StringBuffer();
         toString(s);
@@ -123,7 +124,7 @@ public class ToString
         catch (java.io.IOException e)
         {
         }
-        return (String[]) l.toArray(new String[l.size()]);
+        return l.toArray(new String[l.size()]);
     }
 
     /**

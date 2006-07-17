@@ -53,7 +53,8 @@ public final class DiffNode extends PathNode
      * 
      * @return false, always
      */
-    public boolean isSnake()
+    @Override
+	public boolean isSnake()
     {
         return false;
     }

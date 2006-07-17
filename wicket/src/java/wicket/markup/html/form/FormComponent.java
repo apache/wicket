@@ -246,7 +246,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	public Form getForm()
 	{
 		// Look for parent form
-		final Form form = (Form)findParent(Form.class);
+		final Form form = findParent(Form.class);
 		if (form == null)
 		{
 			throw new WicketRuntimeException("Could not find Form parent for " + this);

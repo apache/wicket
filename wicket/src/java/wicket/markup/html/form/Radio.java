@@ -82,7 +82,7 @@ public class Radio<T> extends WebMarkupContainer<T>
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "radio");
 
-		final RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
+		final RadioGroup group = findParent(RadioGroup.class);
 		final String path = getPath();
 		final String relativePath = path.substring(group.getPath().length() + 1);
 		

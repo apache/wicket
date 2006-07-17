@@ -90,7 +90,8 @@ public class AddDelta extends Delta
     /**
      * @see wicket.util.diff.Delta#verify(java.util.List)
      */
-    public void verify(List<Object> target) throws PatchFailedException
+    @Override
+	public void verify(List<Object> target) throws PatchFailedException
     {
         if (original.first() > target.size())
         {
@@ -101,7 +102,8 @@ public class AddDelta extends Delta
     /**
      * @see wicket.util.diff.Delta#applyTo(java.util.List)
      */
-    public void applyTo(List<Object> target)
+    @Override
+	public void applyTo(List<Object> target)
     {
         revised.applyAdd(original.first(), target);
     }
@@ -109,7 +111,8 @@ public class AddDelta extends Delta
     /**
      * @see wicket.util.diff.Delta#toString(java.lang.StringBuffer)
      */
-    public void toString(StringBuffer s)
+    @Override
+	public void toString(StringBuffer s)
     {
         s.append(original.anchor());
         s.append("a");
@@ -121,7 +124,8 @@ public class AddDelta extends Delta
     /**
      * @see wicket.util.diff.Delta#toRCSString(java.lang.StringBuffer, java.lang.String)
      */
-    public void toRCSString(StringBuffer s, String EOL)
+    @Override
+	public void toRCSString(StringBuffer s, String EOL)
     {
         s.append("a");
         s.append(original.anchor());
@@ -134,7 +138,8 @@ public class AddDelta extends Delta
     /**
      * @see wicket.util.diff.Delta#accept(wicket.util.diff.RevisionVisitor)
      */
-    public void accept(RevisionVisitor visitor)
+    @Override
+	public void accept(RevisionVisitor visitor)
     {
         visitor.visit(this);
     }

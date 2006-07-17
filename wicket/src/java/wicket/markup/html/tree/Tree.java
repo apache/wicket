@@ -178,7 +178,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 				public boolean isVisible()
 				{
 					TreeState treeState = getTreeState();
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode)getModelObject();
+					DefaultMutableTreeNode node = getModelObject();
 					final TreePath path = new TreePath(node.getPath());
 					final int row = treeState.getRowForPath(path);
 
@@ -195,7 +195,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		protected void populateItem(ListItem<DefaultMutableTreeNode> listItem)
 		{
 			// get the model object which is a tree node
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)listItem.getModelObject();
+			DefaultMutableTreeNode node = listItem.getModelObject();
 
 			// add spacers
 			int level = node.getLevel();

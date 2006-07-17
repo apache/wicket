@@ -61,7 +61,7 @@ public class CheckGroupSelector<T> extends WebMarkupContainer<T>
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup group = (CheckGroup)findParent(CheckGroup.class);
+		CheckGroup group = findParent(CheckGroup.class);
 		if (group == null)
 		{
 			throw new WicketRuntimeException(

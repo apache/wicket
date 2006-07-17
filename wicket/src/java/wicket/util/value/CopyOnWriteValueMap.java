@@ -79,6 +79,7 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 		return wrapped.entrySet();
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		return wrapped.equals(o);

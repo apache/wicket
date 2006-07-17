@@ -122,16 +122,21 @@ public abstract class PathNode
     public final PathNode previousSnake()
     {
         if (isBootstrap())
-            return null;
+		{
+			return null;
+		}
         if (!isSnake() && prev != null)
-            return prev.previousSnake();
+		{
+			return prev.previousSnake();
+		}
         return this;
     }
 
     /**
      * {@inheritDoc}
      */
-    public String toString()
+    @Override
+	public String toString()
     {
         StringBuffer buf = new StringBuffer("[");
         PathNode node = this;

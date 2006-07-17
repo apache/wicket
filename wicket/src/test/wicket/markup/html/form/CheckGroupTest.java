@@ -114,7 +114,7 @@ public class CheckGroupTest extends WicketTestCase
 
 		// test model constructors
 		List list = new ArrayList();
-		Model model = new Model((Serializable)list);
+		Model model = new Model(list);
 
 		final CheckGroup group2 = new CheckGroup(group, "group2", model);
 		assertTrue(group2.getModelObject() == list);

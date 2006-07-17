@@ -122,6 +122,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
+	@Override
 	protected CharSequence getCallbackScript(CharSequence partialCall, CharSequence onSuccessScript,
 			CharSequence onFailureScript)
 	{

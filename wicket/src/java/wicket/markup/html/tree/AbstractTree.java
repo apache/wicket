@@ -211,7 +211,9 @@ public abstract class AbstractTree extends Panel
 			TreePath parentPath = path.getParentPath();
 
 			if (parentPath != null)
+			{
 				return isExpanded(parentPath);
+			}
 			// Root.
 			return true;
 		}

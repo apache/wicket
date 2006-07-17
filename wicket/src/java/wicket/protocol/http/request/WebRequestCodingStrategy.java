@@ -546,9 +546,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget) {
 			BookmarkableListenerInterfaceRequestTarget listenerTarget = (BookmarkableListenerInterfaceRequestTarget) requestTarget;
 			if (firstParameter == true)
+			{
 				url.append("?");
+			}
 			else
+			{
 				url.append("&");
+			}
 			firstParameter = false;
 			url.append(INTERFACE_PARAMETER_NAME);
 			url.append("=");

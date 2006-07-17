@@ -164,7 +164,7 @@ public class URLCompressor implements Serializable
 			directComponentRefs.remove(((IntKeyWeakReference)ref).uid);
 		}
 		int uid = Integer.parseInt(uidString);
-		ComponentAndInterface cai = (ComponentAndInterface)directComponentRefs.get(uid);
+		ComponentAndInterface cai = directComponentRefs.get(uid);
 		return cai;
 	}
 

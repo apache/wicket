@@ -398,7 +398,7 @@ public class BrowserInfoPage extends WebPage
 		@Override
 		protected void onSubmit()
 		{
-			ClientPropertiesBean propertiesBean = (ClientPropertiesBean)getModelObject();
+			ClientPropertiesBean propertiesBean = getModelObject();
 
 			WebRequestCycle requestCycle = (WebRequestCycle)getRequestCycle();
 			WebSession session = (WebSession)getSession();

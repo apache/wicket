@@ -118,7 +118,7 @@ public class Person
 	 */
 	public Address getAddressAt(int index)
 	{
-		return (Address)addressList.get(index);
+		return addressList.get(index);
 	}
 
 	/**

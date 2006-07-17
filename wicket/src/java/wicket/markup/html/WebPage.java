@@ -358,7 +358,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		WebPage clonedPage = this;
 		try
 		{
-			clonedPage = (WebPage)Objects.cloneObject(this);
+			clonedPage = Objects.cloneObject(this);
 		}
 		catch (Exception e)
 		{
@@ -388,7 +388,9 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		public final void renderHead(final Response response)
 		{
 			if (WebPage.this.isStateless() == true)
+			{
 				return;
+			}
 			
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
