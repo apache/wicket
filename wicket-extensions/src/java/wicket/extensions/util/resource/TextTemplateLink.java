@@ -33,6 +33,8 @@ public class TextTemplateLink extends ResourceLink
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Construct.
+	 * 
 	 * @param id
 	 *            Component id
 	 * @param factory
