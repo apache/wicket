@@ -12,6 +12,8 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+	  <action type="fix" dev="Igor Vaynberg" due-to="Michael Hosier">Fixed RadioChoice bug that prevented onchange notifications sent if it was used outside a form</action>
+	  <action type="update" dev="Igor Vaynberg">Added IDebugSettings.serializeSessionAttributes instead of relying on logger set to debug mode for the session store</action>
 	  <action type="fix" dev="Igor Vaynberg">Palette is now propertly disabled</action>
 	  <action type="fix" dev="Igor Vaynberg" due-to="Rüdiger Schulz">Property model will now correctly work when chained with a compound model</action>
       <action type="fix" dev="Eelco Hillenius" due-to="Marco Geier">Fix for firefox not parsing xml-responses after the pages document.domain has been changed to the base-domain.</action>
