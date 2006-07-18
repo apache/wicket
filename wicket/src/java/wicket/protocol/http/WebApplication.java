@@ -387,7 +387,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @return Request cycle factory
 	 */
-	protected IRequestCycleFactory getDefaultRequestCycleFactory()
+	protected IRequestCycleFactory getRequestCycleFactory()
 	{
 		return new IRequestCycleFactory()
 		{
