@@ -73,11 +73,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *         public void init()
- *         {
- *             String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *             URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *             ...
+ *             public void init()
+ *             {
+ *                 String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                 URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                 ...
  * </pre>
  * 
  * @see WicketServlet
@@ -377,6 +377,17 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * @return Request cycle factory
+	 * @deprecated use {@link #getRequestCycleFactory()} instead
+	 * 
+	 * TODO Post 2.0: Remove
+	 */
+	protected final IRequestCycleFactory getDefaultRequestCycleFactory()
+	{
+		return getRequestCycleFactory();
+	}
+
+	/**
 	 * Create a request cycle factory which is used by default by WebSession.
 	 * You may provide your own default factory by subclassing WebApplication
 	 * and overriding this method or your may subclass WebSession to create a
@@ -645,7 +656,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 			session = getSessionFactory().newSession(request);
 			// Set the client Locale for this session
 			session.setLocale(request.getLocale());
-			
+
 			if (sessionStore.getSessionId(request, false) != null)
 			{
 				// Bind the session to the session store
