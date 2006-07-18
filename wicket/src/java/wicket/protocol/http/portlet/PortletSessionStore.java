@@ -43,7 +43,8 @@ import wicket.util.lang.Bytes;
  * @author jcompagner
  * @author Eelco Hillenius
  */
-public class PortletSessionStore implements ISessionStore{
+public class PortletSessionStore implements ISessionStore
+{
 
 
 	/** log. */
@@ -196,7 +197,7 @@ public class PortletSessionStore implements ISessionStore{
 	protected void onUnbind(String sessionId)
 	{
 	}
-	
+
 	/**
 	 * @see wicket.session.ISessionStore#setAttribute(Request,java.lang.String,
 	 *      java.lang.Object)
@@ -242,12 +243,13 @@ public class PortletSessionStore implements ISessionStore{
 				}
 			}
 
-			httpSession.setAttribute(attributeName, value);
+			httpSession.setAttribute(attributeName, value, PortletSession.PORTLET_SCOPE);
 		}
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request, java.lang.String)
+	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request,
+	 *      java.lang.String)
 	 */
 	public Object getAttribute(Request request, String name)
 	{
@@ -255,7 +257,8 @@ public class PortletSessionStore implements ISessionStore{
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)
 		{
-			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name);
+			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name,
+					PortletSession.PORTLET_SCOPE);
 		}
 		return null;
 	}
@@ -317,7 +320,7 @@ public class PortletSessionStore implements ISessionStore{
 	 * @return the prefix for storing variables in the actual session
 	 */
 	private String getSessionAttributePrefix(final WicketPortletRequest request)
-	{		
+	{
 		return application.getSessionAttributePrefix(request);
 	}
 }

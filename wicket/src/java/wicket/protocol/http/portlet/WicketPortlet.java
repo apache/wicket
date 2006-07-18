@@ -35,63 +35,66 @@ import wicket.protocol.http.ContextParamWebApplicationFactory;
 import wicket.protocol.http.WebApplicationFactoryCreationException;
 
 /**
- * Portlet class for all wicket portlet applications. The specific application class to
- * instantiate should be specified to the application server via an portlet-preferences/preference
- * argument named "applicationClassName" in the portlet declaration, which is
- * typically in a <i>portlet.xml </i> file. 
+ * Portlet class for all wicket portlet applications. The specific application
+ * class to instantiate should be specified to the application server via an
+ * portlet-preferences/preference argument named "applicationClassName" in the
+ * portlet declaration, which is typically in a <i>portlet.xml </i> file.
+ * 
  * <pre>
- *         	&lt;portlet id="WicketPortlet"&gt;
- *		&lt;portlet-name&gt;WicketPortlet&lt;/portlet-name&gt;
- *		&lt;portlet-class&gt;
- *			wicket.protocol.http.portlet.WicketPortlet
- *		&lt;/portlet-class&gt;
- *		&lt;expiration-cache&gt;0&lt;/expiration-cache&gt;
- *		&lt;resource-bundle&gt;WicketPortlet&lt;/resource-bundle&gt;
- *
- *		&lt;portlet-preferences&gt;
- *			&lt;preference&gt;
- *				&lt;name&gt;applicationClassName&lt;/name&gt;
- * 				&lt;value&gt;wicket.examples.portlet.ExamplePortletApplication&lt;/value&gt;
- *			&lt;/preference&gt;		
- *		&lt;/portlet-preferences&gt;
- *
- *		&lt;supports&gt;
- *			&lt;mime-type&gt;text/html&lt;/mime-type&gt;
- *			&lt;portlet-mode&gt;VIEW&lt;/portlet-mode&gt;
- *			&lt;portlet-mode&gt;EDIT&lt;/portlet-mode&gt;
- *			&lt;portlet-mode&gt;HELP&lt;/portlet-mode&gt;
- *		&lt;/supports&gt;
- *		&lt;portlet-info&gt;
- *			&lt;title&gt;WicketPortlet&lt;/title&gt;
- *		&lt;/portlet-info&gt;
- *	&lt;/portlet>
+ *          	&lt;portlet id=&quot;WicketPortlet&quot;&gt;
+ * 		&lt;portlet-name&gt;WicketPortlet&lt;/portlet-name&gt;
+ * 		&lt;portlet-class&gt;
+ * 			wicket.protocol.http.portlet.WicketPortlet
+ * 		&lt;/portlet-class&gt;
+ * 		&lt;expiration-cache&gt;0&lt;/expiration-cache&gt;
+ * 		&lt;resource-bundle&gt;WicketPortlet&lt;/resource-bundle&gt;
+ * 
+ * 		&lt;portlet-preferences&gt;
+ * 			&lt;preference&gt;
+ * 				&lt;name&gt;applicationClassName&lt;/name&gt;
+ *  				&lt;value&gt;wicket.examples.portlet.ExamplePortletApplication&lt;/value&gt;
+ * 			&lt;/preference&gt;		
+ * 		&lt;/portlet-preferences&gt;
+ * 
+ * 		&lt;supports&gt;
+ * 			&lt;mime-type&gt;text/html&lt;/mime-type&gt;
+ * 			&lt;portlet-mode&gt;VIEW&lt;/portlet-mode&gt;
+ * 			&lt;portlet-mode&gt;EDIT&lt;/portlet-mode&gt;
+ * 			&lt;portlet-mode&gt;HELP&lt;/portlet-mode&gt;
+ * 		&lt;/supports&gt;
+ * 		&lt;portlet-info&gt;
+ * 			&lt;title&gt;WicketPortlet&lt;/title&gt;
+ * 		&lt;/portlet-info&gt;
+ * 	&lt;/portlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
- * qualified name of a class that extends PortletApplication. If your class cannot
- * be found, does not extend PortletApplication or cannot be instantiated, a runtime
- * exception of type WicketRuntimeException will be thrown.
+ * qualified name of a class that extends PortletApplication. If your class
+ * cannot be found, does not extend PortletApplication or cannot be
+ * instantiated, a runtime exception of type WicketRuntimeException will be
+ * thrown.
  * </p>
  * As an alternative, you can configure an application factory instead. This
  * looks like:
  * 
- * <pre>          
- *			&lt;preference&gt;
- *				&lt;name&gt;applicationFactoryClassName&lt;/name&gt;
- * 				&lt;value&gt;com.cemron.cpf.web.wicket.SpringApplicationFactory&lt;/value&gt;
- *			&lt;/preference&gt;		
+ * <pre>
+ *           
+ * 			&lt;preference&gt;
+ * 				&lt;name&gt;applicationFactoryClassName&lt;/name&gt;
+ *  				&lt;value&gt;com.cemron.cpf.web.wicket.SpringApplicationFactory&lt;/value&gt;
+ * 			&lt;/preference&gt;		
  * </pre>
  * 
  * and it has to satisfy interface
  * {@link wicket.protocol.http.portlet.IPortletApplicationFactory}.
  * 
  * In order to support frameworks like Spring, the class is non-final and the
- * variable portletApplication is protected instead of private. Thus subclasses may
- * provide there own means of providing the application object.
+ * variable portletApplication is protected instead of private. Thus subclasses
+ * may provide there own means of providing the application object.
  * 
  * @see wicket.RequestCycle
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class WicketPortlet extends GenericPortlet
 {
@@ -107,21 +110,22 @@ public class WicketPortlet extends GenericPortlet
 	private static final Log log = LogFactory.getLog(WicketPortlet.class);
 
 	/** The application this portlet is serving */
-	protected PortletApplication portletApplication=null;
+	protected PortletApplication portletApplication = null;
 
 
 	/*
 	 * @see javax.portlet.GenericPortlet#destroy()
 	 */
-	public void destroy()
+	public final void destroy()
 	{
-		if(this.portletApplication!=null){
+		if (this.portletApplication != null)
+		{
 			this.portletApplication.destroyPortlet();
-			this.portletApplication = null;	
+			this.portletApplication = null;
 		}
-	} 
+	}
 
-	public void init(PortletConfig cfg) throws PortletException
+	public final void init(PortletConfig cfg) throws PortletException
 	{
 		super.init(cfg);
 		final IPortletApplicationFactory factory = getApplicationFactory();
@@ -158,10 +162,14 @@ public class WicketPortlet extends GenericPortlet
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.portlet.GenericPortlet#processAction(javax.portlet.ActionRequest, javax.portlet.ActionResponse)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.portlet.GenericPortlet#processAction(javax.portlet.ActionRequest,
+	 *      javax.portlet.ActionResponse)
 	 */
-	public void processAction(ActionRequest req, ActionResponse res){
+	public final void processAction(ActionRequest req, ActionResponse res)
+	{
 		// First, set the webapplication for this thread
 		Application.set(portletApplication);
 
@@ -177,10 +185,13 @@ public class WicketPortlet extends GenericPortlet
 		try
 		{
 			// Create a new request cycle
-			// FIXME post 1.2 Instead of doing this, we should get a request cycle factory
-			// from the application settings and use that. That way we are a step
+			// FIXME post 1.2 Instead of doing this, we should get a request
+			// cycle factory
+			// from the application settings and use that. That way we are a
+			// step
 			// closer to a session-less operation of Wicket.
-			PortletRequestCycle cycle = (PortletRequestCycle)session.newRequestCycle(request, response);
+			PortletRequestCycle cycle = (PortletRequestCycle)session.newRequestCycle(request,
+					response);
 			try
 			{
 				// Process request
@@ -203,11 +214,11 @@ public class WicketPortlet extends GenericPortlet
 	}
 
 	/*
-	public void doView(RenderRequest req, RenderResponse res){
+	 * public void doView(RenderRequest req, RenderResponse res){
 	 */
-	public void render(RenderRequest req, RenderResponse res) throws PortletException, IOException
+	public final void render(RenderRequest req, RenderResponse res) throws PortletException,
+			IOException
 	{
-
 		// First, set the webapplication for this thread
 		Application.set(portletApplication);
 
@@ -223,10 +234,13 @@ public class WicketPortlet extends GenericPortlet
 		try
 		{
 			// Create a new request cycle
-			// FIXME post 1.2 Instead of doing this, we should get a request cycle factory
-			// from the application settings and use that. That way we are a step
+			// FIXME post 1.2 Instead of doing this, we should get a request
+			// cycle factory
+			// from the application settings and use that. That way we are a
+			// step
 			// closer to a session-less operation of Wicket.
-			PortletRequestCycle cycle = (PortletRequestCycle)session.newRequestCycle(request, response);
+			PortletRequestCycle cycle = (PortletRequestCycle)session.newRequestCycle(request,
+					response);
 
 			try
 			{
@@ -246,7 +260,7 @@ public class WicketPortlet extends GenericPortlet
 			// Clean up thread local application
 			Application.unset();
 
-		}		 
+		}
 	}
 
 	/**
@@ -259,8 +273,8 @@ public class WicketPortlet extends GenericPortlet
 	 * 
 	 * @return application factory instance
 	 */
-	protected IPortletApplicationFactory getApplicationFactory()
-	{		
+	protected final IPortletApplicationFactory getApplicationFactory()
+	{
 		final String appFactoryClassName = getPortletContext().getInitParameter(APP_FACT_PARAM);
 
 		if (appFactoryClassName == null)

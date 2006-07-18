@@ -65,7 +65,7 @@ public class PortletApplicationPath implements IResourcePath
 		final Folder f = new Folder(folder);
 		if (f.exists())
 		{
-			folders.add(f);			
+			folders.add(f);
 		}
 		else
 		{
@@ -132,7 +132,7 @@ public class PortletApplicationPath implements IResourcePath
 	public String toString()
 	{
 		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: "
-		+ StringList.valueOf(webappPaths) + "]";
+				+ StringList.valueOf(webappPaths) + "]";
 	}
 
 }

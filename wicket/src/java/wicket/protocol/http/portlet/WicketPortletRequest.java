@@ -24,20 +24,21 @@ import wicket.WicketRuntimeException;
 
 /**
  * A Request implementation that uses PortletRequest
-*
+ * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class WicketPortletRequest extends Request
 {
 	/** The underlying request object. */
 	PortletRequest req;
-	
+
 	/**
 	 * @param req
 	 */
-	public WicketPortletRequest(PortletRequest req){
-		this.req=req;
+	public WicketPortletRequest(PortletRequest req)
+	{
+		this.req = req;
 	}
 
 	/**
@@ -45,7 +46,7 @@ public class WicketPortletRequest extends Request
 	 */
 	public String getContextPath()
 	{
-		return req.getContextPath();		
+		return req.getContextPath();
 	}
 
 	/*
@@ -83,7 +84,8 @@ public class WicketPortletRequest extends Request
 	/**
 	 * @return the underlying portlet request
 	 */
-	public PortletRequest getPortletRequest(){
+	public PortletRequest getPortletRequest()
+	{
 		return req;
 	}
 
@@ -101,5 +103,4 @@ public class WicketPortletRequest extends Request
 	{
 		throw new WicketRuntimeException("URL is not available in portlet request");
 	}
-	
 }

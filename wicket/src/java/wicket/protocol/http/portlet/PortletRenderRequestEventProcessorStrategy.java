@@ -19,20 +19,20 @@ import wicket.request.compound.IEventProcessorStrategy;
 
 /**
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class PortletRenderRequestEventProcessorStrategy implements IEventProcessorStrategy
 {
 
-	/* 
+	/*
 	 * Events are not processed in RenderRequests
 	 * 
 	 * @see wicket.request.compound.IEventProcessorStrategy#processEvents(wicket.RequestCycle)
-	 * @param requestCycle
+	 *      @param requestCycle
 	 */
 	public void processEvents(final RequestCycle requestCycle)
 	{
-		
+
 	}
 
 }
