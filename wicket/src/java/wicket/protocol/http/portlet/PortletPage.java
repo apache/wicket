@@ -13,6 +13,7 @@
  * the License.
  */
 package wicket.protocol.http.portlet;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,8 +23,8 @@ import wicket.PageParameters;
 import wicket.model.IModel;
 
 /**
- * Base class for portlet pages. 
- * <p>
+ * Base class for portlet pages.
+ * 
  * @author Janne Hietam&auml;ki
  * 
  * @see WebPage

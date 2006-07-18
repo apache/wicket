@@ -15,12 +15,13 @@
 package wicket.protocol.http.portlet;
 
 /**
- * A factory interface used by wicket portlet to create portlet application objects.
- *
+ * A factory interface used by wicket portlet to create portlet application
+ * objects.
+ * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  * @see PortletApplication
- *
+ * 
  */
 
 public interface IPortletApplicationFactory
@@ -28,6 +29,7 @@ public interface IPortletApplicationFactory
 
 	/**
 	 * Create application object
+	 * 
 	 * @param portlet
 	 * 
 	 * @return application object instance

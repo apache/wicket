@@ -48,7 +48,7 @@ import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**
- * Request coding  strategy implementation that uses PortletURL object to create
+ * Request coding strategy implementation that uses PortletURL object to create
  * links.
  * 
  * Also stores response/render parameters as portlet render parameters.
@@ -56,7 +56,7 @@ import wicket.util.string.Strings;
  * @author Janne Hietam&auml;ki
  */
 
-//TODO: this should not really implement IRequestTargetMounter 
+// TODO: this should not really implement IRequestTargetMounter
 public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** Name of interface target query parameter */
@@ -74,7 +74,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	/** AJAX query parameter name */
 	public static final String BEHAVIOR_ID_PARAMETER_NAME = NAME_SPACE + "behaviorId";
 
-	/** Resource key parameter name	 */
+	/** Resource key parameter name */
 	public static final String RESOURCES_PARAMETER_NAME = NAME_SPACE + "resources";
 
 	/** Pagemap parameter constant */
@@ -178,7 +178,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			final RequestParameters parameters)
 	{
 		final String requestString = request
-		.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
@@ -192,7 +192,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			final String pageMapName = components[0];
 			parameters.setPageMapName(pageMapName.length() == 0
 					? PageMap.DEFAULT_NAME
-							: pageMapName);
+					: pageMapName);
 
 			// Extract bookmarkable page class name
 			final String pageClassName = components[1];
@@ -222,14 +222,14 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 			// Set pagemap name
 			final String pageMapName = request.getParameter(PAGEMAP);
-			parameters.setPageMapName(pageMapName!=null && pageMapName.length()>0				
+			parameters.setPageMapName(pageMapName != null && pageMapName.length() > 0
 					? PageMap.DEFAULT_NAME
-							: pageMapName);
+					: pageMapName);
 
 			final String interfaceName = request.getParameter(INTERFACE_PARAMETER_NAME);
-			parameters.setInterfaceName(interfaceName!=null && interfaceName.length() != 0
+			parameters.setInterfaceName(interfaceName != null && interfaceName.length() != 0
 					? interfaceName
-							: IRedirectListener.INTERFACE.getName());
+					: IRedirectListener.INTERFACE.getName());
 
 			final String versionNumberString = request.getParameter(VERSION_PARAMETER_NAME);
 			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
@@ -257,8 +257,9 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	protected void addResourceParameters(Request request, RequestParameters parameters)
 	{
 		// TODO: resources are not yet supported
-		//final String resourceKey = request.getParameter(RESOURCES_PARAMETER_NAME);
-		//parameters.setResourceKey(resourceKey);
+		// final String resourceKey =
+		// request.getParameter(RESOURCES_PARAMETER_NAME);
+		// parameters.setResourceKey(resourceKey);
 	}
 
 	/**
@@ -299,10 +300,10 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	{
 
 		/*
-		PortletURL url=getRenderURL(requestCycle);
-		final String sharedResourceKey = requestTarget.getResourceKey();
-		url.setParameter(RESOURCES_PARAMETER_NAME,sharedResourceKey);
-		return url.toString();
+		 * PortletURL url=getRenderURL(requestCycle); final String
+		 * sharedResourceKey = requestTarget.getResourceKey();
+		 * url.setParameter(RESOURCES_PARAMETER_NAME,sharedResourceKey); return
+		 * url.toString();
 		 */
 		throw new WicketRuntimeException("Portlet resources are not yet implemented");
 	}
@@ -324,20 +325,25 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			IListenerInterfaceRequestTarget requestTarget)
 	{
 		PortletURL url;
-		try{
-			url=getActionURL(requestCycle);
-		} catch (WicketRuntimeException e){
+		try
+		{
+			url = getActionURL(requestCycle);
+		}
+		catch (WicketRuntimeException e)
+		{
 			/*
 			 * 
 			 * TODO
 			 * 
-			 * This is a kludge to allow page to be set stateful by calling page.urlFor. If
-			 * we could set the page stateful manually, this could be removed.
+			 * This is a kludge to allow page to be set stateful by calling
+			 * page.urlFor. If we could set the page stateful manually, this
+			 * could be removed.
 			 * 
-			 * Exception is thrown when getActionURL is called when not in the portlet
-			 * render phase.
+			 * Exception is thrown when getActionURL is called when not in the
+			 * portlet render phase.
 			 * 
-			 * @see doSetRenderParameters(RequestCycle requestCycle, IPageRequestTarget requestTarget)
+			 * @see doSetRenderParameters(RequestCycle requestCycle,
+			 *      IPageRequestTarget requestTarget)
 			 */
 			return null;
 		}
@@ -346,30 +352,30 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 		// Get component and page for request target
 		final Component component = requestTarget.getTarget();
-		final Page page = component.getPage();		
+		final Page page = component.getPage();
 		// Add pagemap
 		final PageMap pageMap = page.getPageMap();
 		if (!pageMap.isDefault())
 		{
-			url.setParameter(PAGEMAP,pageMap.getName());
+			url.setParameter(PAGEMAP, pageMap.getName());
 		}
 		// Add path to component
-		url.setParameter(COMPONENT_PATH_PARAMETER_NAME,component.getPath());
+		url.setParameter(COMPONENT_PATH_PARAMETER_NAME, component.getPath());
 
 		// Add version
 		final int versionNumber = component.getPage().getCurrentVersionNumber();
 		if (!rli.getRecordsPageVersion())
 		{
-			url.setParameter(VERSION_PARAMETER_NAME,String.valueOf(Page.LATEST_VERSION));
+			url.setParameter(VERSION_PARAMETER_NAME, String.valueOf(Page.LATEST_VERSION));
 		}
 		else if (versionNumber > 0)
 		{
-			url.setParameter(VERSION_PARAMETER_NAME,String.valueOf(versionNumber));
+			url.setParameter(VERSION_PARAMETER_NAME, String.valueOf(versionNumber));
 		}
 
 		// Add listener interface
 		final String listenerName = rli.getName();
-		url.setParameter(INTERFACE_PARAMETER_NAME,listenerName);
+		url.setParameter(INTERFACE_PARAMETER_NAME, listenerName);
 
 		return url.toString();
 	}
@@ -390,7 +396,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	protected CharSequence encodeRequest(RequestCycle requestCycle,
 			IBookmarkablePageRequestTarget requestTarget)
 	{
-		final PortletURL url=getActionURL(requestCycle);
+		final PortletURL url = getActionURL(requestCycle);
 
 		// Get page Class
 		final Class pageClass = requestTarget.getPageClass();
@@ -420,8 +426,9 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			}
 		}
 
-		url.setParameter(WebRequestCodingStrategy.PAGEMAP,pageMapName);
-		url.setParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,pageClass.getName());
+		url.setParameter(WebRequestCodingStrategy.PAGEMAP, pageMapName);
+		url.setParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageClass
+				.getName());
 
 		// Get page parameters
 		final PageParameters parameters = requestTarget.getPageParameters();
@@ -456,23 +463,23 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 
 	/*
-	 * Set the render parameters to the portlet so we can later resolve current page parameters
+	 * Set the render parameters to the portlet so we can later resolve current
+	 * page parameters
 	 */
 	/**
 	 * @param requestCycle
 	 * @param requestTarget
 	 */
-	public void setRenderParameters(PortletRequestCycle requestCycle,IRequestTarget requestTarget)
+	public void setRenderParameters(PortletRequestCycle requestCycle, IRequestTarget requestTarget)
 	{
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			doSetRenderParameters(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
 		}
 		/*
-		else if (requestTarget instanceof ISharedResourceRequestTarget)
-		{
-			doSetRenderParameters(requestCycle, (ISharedResourceRequestTarget)requestTarget);
-		}
+		 * else if (requestTarget instanceof ISharedResourceRequestTarget) {
+		 * doSetRenderParameters(requestCycle,
+		 * (ISharedResourceRequestTarget)requestTarget); }
 		 */
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
@@ -481,14 +488,19 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		else if (requestTarget instanceof IPageRequestTarget)
 		{
 			doSetRenderParameters(requestCycle, (IPageRequestTarget)requestTarget);
-		} else {
+		}
+		else
+		{
 			// TODO: ??
-			log.warn("Unable to set RenderParameters, unsupported IRequestTarget "+requestTarget.getClass().getName());
+			log.warn("Unable to set RenderParameters, unsupported IRequestTarget "
+					+ requestTarget.getClass().getName());
 		}
 	}
 
-	private void doSetRenderParameters(PortletRequestCycle requestCycle,IBookmarkablePageRequestTarget requestTarget){		
-		ActionResponse response=getActionResponse(requestCycle);
+	private void doSetRenderParameters(PortletRequestCycle requestCycle,
+			IBookmarkablePageRequestTarget requestTarget)
+	{
+		ActionResponse response = getActionResponse(requestCycle);
 		// Get page Class
 		final Class pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
@@ -520,56 +532,61 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		boolean firstParameter = true;
 		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName))
 		{
-			response.setRenderParameter(PAGEMAP,pageMapName);
-			response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,pageClass.getName());
+			response.setRenderParameter(PAGEMAP, pageMapName);
+			response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+					pageClass.getName());
 		}
 		response.setRenderParameters(requestTarget.getPageParameters());
 	}
 
-	private void doSetRenderParameters(PortletRequestCycle requestCycle,IListenerInterfaceRequestTarget requestTarget){
-		ActionResponse response=getActionResponse(requestCycle);
+	private void doSetRenderParameters(PortletRequestCycle requestCycle,
+			IListenerInterfaceRequestTarget requestTarget)
+	{
+		ActionResponse response = getActionResponse(requestCycle);
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
 
 		// Get component and page for request target
 		final Component component = requestTarget.getTarget();
-		final Page page = component.getPage();		
+		final Page page = component.getPage();
 
 		// Add pagemap
 		final PageMap pageMap = page.getPageMap();
 		if (!pageMap.isDefault())
 		{
-			response.setRenderParameter(PAGEMAP,pageMap.getName());
+			response.setRenderParameter(PAGEMAP, pageMap.getName());
 		}
 		// Add path to component
-		response.setRenderParameter(COMPONENT_PATH_PARAMETER_NAME,component.getPath());
+		response.setRenderParameter(COMPONENT_PATH_PARAMETER_NAME, component.getPath());
 
 		// Add version
 		final int versionNumber = component.getPage().getCurrentVersionNumber();
 		if (!rli.getRecordsPageVersion())
 		{
-			response.setRenderParameter(VERSION_PARAMETER_NAME,String.valueOf(Page.LATEST_VERSION));
+			response
+					.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(Page.LATEST_VERSION));
 		}
 		else if (versionNumber > 0)
 		{
-			response.setRenderParameter(VERSION_PARAMETER_NAME,String.valueOf(versionNumber));
+			response.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(versionNumber));
 		}
 
 		// Add listener interface
 		final String listenerName = rli.getName();
-		response.setRenderParameter(INTERFACE_PARAMETER_NAME,listenerName);		
+		response.setRenderParameter(INTERFACE_PARAMETER_NAME, listenerName);
 	}
 
 
 	private void doSetRenderParameters(RequestCycle requestCycle, IPageRequestTarget requestTarget)
 	{
-		ActionResponse response=getActionResponse(requestCycle);
+		ActionResponse response = getActionResponse(requestCycle);
 
-		final PortletPage page = (PortletPage) requestTarget.getPage();
+		final PortletPage page = (PortletPage)requestTarget.getPage();
 
 		/*
-		 * Kludge: call page.urlFor to make the page stateful. 
-		 *
-		 * @see encodeRequest(RequestCycle requestCycle, IListenerInterfaceRequestTarget requestTarget)
+		 * Kludge: call page.urlFor to make the page stateful.
+		 * 
+		 * @see encodeRequest(RequestCycle requestCycle,
+		 *      IListenerInterfaceRequestTarget requestTarget)
 		 */
 		page.urlFor(requestTarget);
 
@@ -581,60 +598,68 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 		if (!pageMap.isDefault())
 		{
-			response.setRenderParameter(PAGEMAP,pageMap.getName());
+			response.setRenderParameter(PAGEMAP, pageMap.getName());
 		}
 		// Add path to component
-		response.setRenderParameter(COMPONENT_PATH_PARAMETER_NAME,page.getPath());
+		response.setRenderParameter(COMPONENT_PATH_PARAMETER_NAME, page.getPath());
 
 		// Add version
 		final int versionNumber = page.getCurrentVersionNumber();
-		response.setRenderParameter(VERSION_PARAMETER_NAME,String.valueOf(versionNumber));
-		response.setRenderParameter(INTERFACE_PARAMETER_NAME,IRedirectListener.INTERFACE.getName());
+		response.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(versionNumber));
+		response
+				.setRenderParameter(INTERFACE_PARAMETER_NAME, IRedirectListener.INTERFACE.getName());
 	}
 
 	/**
 	 * @param requestCycle
 	 * @return the PortletURL instance for portlet action URL
 	 */
-	private PortletURL getActionURL(RequestCycle requestCycle){
-		PortletRequestCycle portletRequestCycle=(PortletRequestCycle)requestCycle;
-		PortletResponse response=portletRequestCycle.getPortletResponse().getPortletResponse();
+	private PortletURL getActionURL(RequestCycle requestCycle)
+	{
+		PortletRequestCycle portletRequestCycle = (PortletRequestCycle)requestCycle;
+		PortletResponse response = portletRequestCycle.getPortletResponse().getPortletResponse();
 
-		if(!(response instanceof RenderResponse)){
+		if (!(response instanceof RenderResponse))
+		{
 			throw new WicketRuntimeException("Unable to render URL while not in RenderResponse");
 		}
 
-		RenderResponse resp=(RenderResponse)response;
+		RenderResponse resp = (RenderResponse)response;
 		return resp.createActionURL();
 	}
 
-	
+
 	/**
 	 * @param requestCycle
 	 * @return the PortletURL instance for portlet render URL
-	 */	
-	private PortletURL getRenderURL(RequestCycle requestCycle){
-		PortletRequestCycle portletRequestCycle=(PortletRequestCycle)requestCycle;
-		PortletResponse response=portletRequestCycle.getPortletResponse().getPortletResponse();
-		if(!(response instanceof RenderResponse)){
+	 */
+	private PortletURL getRenderURL(RequestCycle requestCycle)
+	{
+		PortletRequestCycle portletRequestCycle = (PortletRequestCycle)requestCycle;
+		PortletResponse response = portletRequestCycle.getPortletResponse().getPortletResponse();
+		if (!(response instanceof RenderResponse))
+		{
 			throw new WicketRuntimeException("Unable to render URL while not in RenderResponse");
 		}
 
-		RenderResponse resp=(RenderResponse)response;
+		RenderResponse resp = (RenderResponse)response;
 		return resp.createRenderURL();
 	}
 
-	private ActionResponse getActionResponse(RequestCycle requestCycle){
-		PortletRequestCycle portletRequestCycle=(PortletRequestCycle)requestCycle;
-		PortletResponse response=portletRequestCycle.getPortletResponse().getPortletResponse();
-		if(!(response instanceof ActionResponse)){
+	private ActionResponse getActionResponse(RequestCycle requestCycle)
+	{
+		PortletRequestCycle portletRequestCycle = (PortletRequestCycle)requestCycle;
+		PortletResponse response = portletRequestCycle.getPortletResponse().getPortletResponse();
+		if (!(response instanceof ActionResponse))
+		{
 			throw new WicketRuntimeException("Invalid state: ActionRquest not available");
 		}
 		return (ActionResponse)response;
 	}
 
 
-	// TODO: These should be removed, needs to be implemented because IRequestCodingStrategy extends IRequestTargetMounter
+	// TODO: These should be removed, needs to be implemented because
+	// IRequestCodingStrategy extends IRequestTargetMounter
 
 	/*
 	 * @see wicket.request.IRequestTargetMounter#pathForTarget(wicket.IRequestTarget)
@@ -653,20 +678,25 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 
-	/* (non-Javadoc)
-	 * @see wicket.request.IRequestTargetMounter#mount(java.lang.String, wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see wicket.request.IRequestTargetMounter#mount(java.lang.String,
+	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public void mount(String path, IRequestTargetUrlCodingStrategy urlCodingStrategy)
 	{
 		throw new WicketRuntimeException("Portlet can't do mounts");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see wicket.request.IRequestTargetMounter#unmount(java.lang.String)
 	 */
 	public void unmount(String path)
 	{
-		throw new WicketRuntimeException("Portlet can't do mounts");		
+		throw new WicketRuntimeException("Portlet can't do mounts");
 	}
 
 	/**

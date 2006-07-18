@@ -38,17 +38,16 @@ import wicket.session.ISessionStore;
 /**
  * 
  * A portlet application is a subclass of Application which associates with an
- * instance of WicketPortlet to serve pages as portlets. This class
- * is intended to be subclassed by framework clients to define a web
- * application.
+ * instance of WicketPortlet to serve pages as portlets. This class is intended
+ * to be subclassed by framework clients to define a web application.
  * <p>
- * Application settings are given defaults by the Portletapplication() constructor
- * and internalInit method, such as error page classes appropriate for portlets.
- * PortletApplication subclasses can override these values and/or modify other
- * application settings by overriding the init() method and then by calling
- * getXXXSettings() to retrieve an interface to a mutable Settings object. Do
- * not do this in the constructor itself because the defaults will then override
- * your settings.
+ * Application settings are given defaults by the Portletapplication()
+ * constructor and internalInit method, such as error page classes appropriate
+ * for portlets. PortletApplication subclasses can override these values and/or
+ * modify other application settings by overriding the init() method and then by
+ * calling getXXXSettings() to retrieve an interface to a mutable Settings
+ * object. Do not do this in the constructor itself because the defaults will
+ * then override your settings.
  * 
  * @see WicketPortlet
  * @see wicket.settings.IApplicationSettings
@@ -63,9 +62,9 @@ import wicket.session.ISessionStore;
  * 
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
-public  abstract class PortletApplication extends Application implements ISessionFactory
+public abstract class PortletApplication extends Application implements ISessionFactory
 {
 	/**
 	 * The cached application key. Will be set in
@@ -77,7 +76,7 @@ public  abstract class PortletApplication extends Application implements ISessio
 	/** the default request cycle processor implementation for render requests */
 	private IRequestCycleProcessor requestCycleProcessor;
 
-	/** the default request cycle processor implementation. for action requests*/
+	/** the default request cycle processor implementation. for action requests */
 	private IRequestCycleProcessor actionRequestCycleProcessor;
 
 
@@ -139,8 +138,9 @@ public  abstract class PortletApplication extends Application implements ISessio
 		}
 		else
 		{
-			throw new WicketRuntimeException("Session created by a PortletApplication session factory "
-					+ "must be a subclass of PortletSession");
+			throw new WicketRuntimeException(
+					"Session created by a PortletApplication session factory "
+							+ "must be a subclass of PortletSession");
 		}
 
 		// Set application on session
@@ -183,7 +183,7 @@ public  abstract class PortletApplication extends Application implements ISessio
 					+ " be set properly or this method is called before WicketPortlet is"
 					+ " set, which leads to the wrong behavior");
 		}
-		return applicationKey;	
+		return applicationKey;
 	}
 
 	protected ISessionFactory getSessionFactory()
@@ -197,7 +197,9 @@ public  abstract class PortletApplication extends Application implements ISessio
 	}
 
 
-	/* Create new WicketPortletSession object
+	/*
+	 * Create new WicketPortletSession object
+	 * 
 	 * @see wicket.ISessionFactory#newSession()
 	 */
 	public Session newSession()
@@ -272,8 +274,7 @@ public  abstract class PortletApplication extends Application implements ISessio
 		// <context-param>
 		if (configuration == null)
 		{
-			configuration = portlet.getPortletContext().getInitParameter(
-					Application.CONFIGURATION);
+			configuration = portlet.getPortletContext().getInitParameter(Application.CONFIGURATION);
 		}
 
 		// Development mode is default if not settings have been found
@@ -285,7 +286,7 @@ public  abstract class PortletApplication extends Application implements ISessio
 		{
 			configure(Application.DEVELOPMENT, portlet.getInitParameter("sourceFolder"));
 		}
-	}	
+	}
 
 	/**
 	 * 
@@ -293,7 +294,7 @@ public  abstract class PortletApplication extends Application implements ISessio
 	public void destroyPortlet()
 	{
 		internalDestroy();
-	}	
+	}
 
 	/**
 	 * Create a request cycle factory which is used by default by WebSession.
@@ -314,17 +315,20 @@ public  abstract class PortletApplication extends Application implements ISessio
 
 			public RequestCycle newRequestCycle(Session session, Request request, Response response)
 			{
-				WicketPortletRequest req=(WicketPortletRequest)request;
-				WicketPortletResponse res=(WicketPortletResponse)response;
-				PortletRequest preq=req.getPortletRequest();
-				PortletResponse pres=res.getPortletResponse();
-				if(preq instanceof ActionRequest){					
-					return new PortletActionRequestCycle((WicketPortletSession)session, (WicketPortletRequest)request,
-							(WicketPortletResponse)response);
+				WicketPortletRequest req = (WicketPortletRequest)request;
+				WicketPortletResponse res = (WicketPortletResponse)response;
+				PortletRequest preq = req.getPortletRequest();
+				PortletResponse pres = res.getPortletResponse();
+				if (preq instanceof ActionRequest)
+				{
+					return new PortletActionRequestCycle((WicketPortletSession)session,
+							(WicketPortletRequest)request, (WicketPortletResponse)response);
 
-				} else {
-					return new PortletRenderRequestCycle((WicketPortletSession)session, (WicketPortletRequest)request,
-							(WicketPortletResponse)response);
+				}
+				else
+				{
+					return new PortletRenderRequestCycle((WicketPortletSession)session,
+							(WicketPortletRequest)request, (WicketPortletResponse)response);
 
 				}
 			}
@@ -365,7 +369,7 @@ public  abstract class PortletApplication extends Application implements ISessio
 			actionRequestCycleProcessor = newActionRequestCycleProcessor();
 		}
 		return actionRequestCycleProcessor;
-	}	
+	}
 
 	/**
 	 * Gets the default request cycle processor (with lazy initialization). This
@@ -431,7 +435,7 @@ public  abstract class PortletApplication extends Application implements ISessio
 	{
 		if (sessionAttributePrefix == null)
 		{
-			String contextPath = request.getContextPath();
+			String contextPath = getApplicationKey();
 			if (contextPath == null)
 			{
 				throw new WicketRuntimeException("unable to retrieve portlet context path");

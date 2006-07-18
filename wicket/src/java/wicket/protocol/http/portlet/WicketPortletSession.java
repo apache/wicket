@@ -22,7 +22,7 @@ import wicket.Session;
  * A session subclass for the PortletSession
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class WicketPortletSession extends Session
 {
@@ -94,7 +94,8 @@ public class WicketPortletSession extends Session
 	{
 		if (requestCycleFactory == null)
 		{
-			this.requestCycleFactory = ((PortletApplication)getApplication()).getDefaultRequestCycleFactory();
+			this.requestCycleFactory = ((PortletApplication)getApplication())
+					.getDefaultRequestCycleFactory();
 		}
 
 		return this.requestCycleFactory;

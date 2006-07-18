@@ -22,9 +22,9 @@ import wicket.request.compound.IResponseStrategy;
 
 /**
  * @author Janne Hietam&auml;ki
- *
- * IResponseStrategy which do not really render the page, but sets the 
- * needed parameters as portlet render parameters
+ * 
+ * IResponseStrategy which do not really render the page, but sets the needed
+ * parameters as portlet render parameters
  */
 public class PortletActionRequestResponseStrategy implements IResponseStrategy
 {
@@ -32,14 +32,16 @@ public class PortletActionRequestResponseStrategy implements IResponseStrategy
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(PortletActionRequestResponseStrategy.class);
 
-	/* 
+	/*
 	 * @see wicket.request.compound.IResponseStrategy#respond(wicket.RequestCycle)
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		log.info("action -> "+requestCycle.getRequestTarget());
-		PortletRequestCodingStrategy strategy=(PortletRequestCodingStrategy)requestCycle.getProcessor().getRequestCodingStrategy();
-		strategy.setRenderParameters((PortletRequestCycle) requestCycle,requestCycle.getRequestTarget());
+		log.info("action -> " + requestCycle.getRequestTarget());
+		PortletRequestCodingStrategy strategy = (PortletRequestCodingStrategy)requestCycle
+				.getProcessor().getRequestCodingStrategy();
+		strategy.setRenderParameters((PortletRequestCycle)requestCycle, requestCycle
+				.getRequestTarget());
 	}
 
 }

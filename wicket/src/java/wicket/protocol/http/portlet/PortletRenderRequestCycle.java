@@ -24,7 +24,7 @@ import wicket.request.IRequestCycleProcessor;
  * A portlet RequestCycle implementation for portlet RenderRequest.
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class PortletRenderRequestCycle extends PortletRequestCycle
 {
@@ -36,7 +36,8 @@ public class PortletRenderRequestCycle extends PortletRequestCycle
 	 * @param request
 	 * @param response
 	 */
-	public PortletRenderRequestCycle(WicketPortletSession session, WicketPortletRequest request, Response response)
+	public PortletRenderRequestCycle(WicketPortletSession session, WicketPortletRequest request,
+			Response response)
 	{
 		super(session, request, response);
 	}
@@ -50,8 +51,7 @@ public class PortletRenderRequestCycle extends PortletRequestCycle
 
 	public final IRequestCycleProcessor getProcessor()
 	{
-		PortletApplication application=(PortletApplication)getApplication();
+		PortletApplication application = (PortletApplication)getApplication();
 		return application.getRequestCycleProcessor();
 	}
-
 }

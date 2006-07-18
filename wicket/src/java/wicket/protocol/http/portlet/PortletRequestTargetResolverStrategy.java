@@ -42,15 +42,16 @@ import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
 /**
- * Portlet target resolver strategy. Almost identical to the DefaultRequestTargetResolverStrategy
- * but does not support page mounting.
- *   
+ * Portlet target resolver strategy. Almost identical to the
+ * DefaultRequestTargetResolverStrategy but does not support page mounting.
+ * 
  * @author Janne Hietam&auml;ki
  * @author Eelco Hillenius
  * @author Igor Vaynberg
  * @author Jonathan Locke
  */
-public class PortletRequestTargetResolverStrategy implements IRequestTargetResolverStrategy {
+public class PortletRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
+{
 
 	/** log. */
 	private static final Log log = LogFactory.getLog(PortletRequestTargetResolverStrategy.class);
@@ -61,15 +62,17 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	 */
 	public final IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
-	{			
+	{
 		// See whether this request points to a rendered page
-		final String path = requestParameters.getPath();		
+		final String path = requestParameters.getPath();
 
 		if (requestParameters.getComponentPath() != null)
 		{
-			synchronized (requestCycle.getSession()) {
+			synchronized (requestCycle.getSession())
+			{
 				// we need to check if this request has been flagged as
-				// process-only-if-path-is-active and if so make sure this condition
+				// process-only-if-path-is-active and if so make sure this
+				// condition
 				// is met
 
 				// marks whether or not we will be processing this request
@@ -81,10 +84,12 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 					// process-only-if-path-is-active
 
 					Session session = Session.get();
-					PageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(), false);
+					PageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(),
+							false);
 					if (pageMap == null)
 					{
-						// requested pagemap no longer exists - ignore this request
+						// requested pagemap no longer exists - ignore this
+						// request
 						processRequest = false;
 					}
 					else
@@ -93,8 +98,9 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 						{
 							final Access access = (Access)pageMap.getAccessStack().peek();
 
-							final int pageId = Integer.parseInt(Strings.firstPathComponent(
-									requestParameters.getComponentPath(), Component.PATH_SEPARATOR));
+							final int pageId = Integer
+									.parseInt(Strings.firstPathComponent(requestParameters
+											.getComponentPath(), Component.PATH_SEPARATOR));
 
 							if (pageId != access.getId())
 							{
@@ -105,7 +111,8 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 							else
 							{
 								final int version = requestParameters.getVersionNumber();
-								if (version != Page.LATEST_VERSION && version != access.getVersion())
+								if (version != Page.LATEST_VERSION
+										&& version != access.getVersion())
 								{
 									// version is no longer the active version -
 									// ignore this request
@@ -131,10 +138,11 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 			return resolveSharedResource(requestCycle, requestParameters);
 		}
 
-		if(requestParameters.getPath()==null && requestParameters.getComponentPath()==null){
-			return resolveHomePageTarget(requestCycle,requestParameters);
+		if (requestParameters.getPath() == null && requestParameters.getComponentPath() == null)
+		{
+			return resolveHomePageTarget(requestCycle, requestParameters);
 		}
-		throw new WicketRuntimeException("Unable to resolve request target "+requestParameters);
+		throw new WicketRuntimeException("Unable to resolve request target " + requestParameters);
 	}
 
 	/**
@@ -154,6 +162,7 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	{
 		final String componentPath = requestParameters.getComponentPath();
 		final Session session = requestCycle.getSession();
+
 		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
 				requestParameters.getVersionNumber());
 
@@ -181,7 +190,7 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 			// limit was reached
 			return new ExpiredPageClassRequestTarget();
 		}
-	}	
+	}
 
 	/**
 	 * Resolves the RequestTarget for the given interface. This method can be
@@ -203,15 +212,14 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 			final Page page, final String componentPath, final String interfaceName,
 			final RequestParameters requestParameters)
 	{
-		
+
 		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
 		{
 			return new RedirectPageRequestTarget(page);
 		}
 
 		// Get the listener interface we need to call
-		final RequestListenerInterface listener = RequestListenerInterface
-		.forName(interfaceName);
+		final RequestListenerInterface listener = RequestListenerInterface.forName(interfaceName);
 		if (listener == null)
 		{
 			throw new WicketRuntimeException(
@@ -259,7 +267,7 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	{
 		String resourceKey = requestParameters.getResourceKey();
 		return new SharedResourceRequestTarget(requestParameters);
-	}	
+	}
 
 	/**
 	 * Resolves to a home page target.
@@ -295,5 +303,5 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		{
 			throw new WicketRuntimeException("Could not create home page", e);
 		}
-	}	
+	}
 }

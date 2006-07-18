@@ -24,7 +24,7 @@ import wicket.request.IRequestCycleProcessor;
  * A portlet RequestCycle implementation for portlet ActionRequest.
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class PortletActionRequestCycle extends PortletRequestCycle
 {
@@ -37,21 +37,22 @@ public class PortletActionRequestCycle extends PortletRequestCycle
 	 * @param request
 	 * @param response
 	 */
-	public PortletActionRequestCycle(WicketPortletSession session, WicketPortletRequest request, Response response)
+	public PortletActionRequestCycle(WicketPortletSession session, WicketPortletRequest request,
+			Response response)
 	{
 		super(session, request, response);
 	}
 
 	/**
-	 * returns the PortletApplications action request cycle processor.
-	 * See {@link PortletApplication#getActionRequestCycleProcessor()}.
+	 * returns the PortletApplications action request cycle processor. See
+	 * {@link PortletApplication#getActionRequestCycleProcessor()}.
 	 * 
 	 * @see wicket.RequestCycle#getProcessor()
 	 */
 
 	public final IRequestCycleProcessor getProcessor()
 	{
-		PortletApplication application=(PortletApplication)getApplication();
+		PortletApplication application = (PortletApplication)getApplication();
 		return application.getActionRequestCycleProcessor();
-	}	
+	}
 }

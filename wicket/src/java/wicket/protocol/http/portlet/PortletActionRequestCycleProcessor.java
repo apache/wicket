@@ -23,15 +23,15 @@ import wicket.request.compound.IRequestTargetResolverStrategy;
 import wicket.request.compound.IResponseStrategy;
 
 /**
- * A RequestCycleProcessor for portlet action requests. The page is not rendered in 
- * the action phase. Render state is stored as portlet render parameters in the 
- * PortletActionRequestResponseStrategy.
+ * A RequestCycleProcessor for portlet action requests. The page is not rendered
+ * in the action phase. Render state is stored as portlet render parameters in
+ * the PortletActionRequestResponseStrategy.
  * 
  * @see PortletActionRequestResponseStrategy
  * @see PortletRequestCycle
-
+ * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class PortletActionRequestCycleProcessor extends CompoundRequestCycleProcessor
 {
@@ -61,9 +61,9 @@ public class PortletActionRequestCycleProcessor extends CompoundRequestCycleProc
 	{
 		return new PortletRequestTargetResolverStrategy();
 	}
-	
+
 	protected IResponseStrategy newResponseStrategy()
 	{
 		return new PortletActionRequestResponseStrategy();
-	}	
+	}
 }
