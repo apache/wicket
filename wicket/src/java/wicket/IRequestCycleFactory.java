@@ -24,6 +24,13 @@ import java.io.Serializable;
  * Factory for creating request cycles for a session.
  * 
  * @author Jonathan Locke
+ * 
+ * 
+ * TODO 2.0: Deprecate this interface and add newRequstCycle overridable methods
+ * to Application and Session directly. This interface is just bloat since we do
+ * not push it into settings and you still have to override methods to use it. I
+ * dont see the need for extra indirection. Consinder the same for
+ * {@link ISessionFactory}.
  */
 public interface IRequestCycleFactory extends Serializable
 {
