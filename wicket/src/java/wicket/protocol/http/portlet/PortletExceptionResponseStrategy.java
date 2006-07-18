@@ -13,6 +13,7 @@
  * the License.
  */
 package wicket.protocol.http.portlet;
+
 /**
  * Portlet implementation of
  * {@link wicket.request.compound.IExceptionResponseStrategy}. Depending on the
@@ -42,7 +43,7 @@ import wicket.settings.IExceptionSettings;
 
 /**
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class PortletExceptionResponseStrategy implements IExceptionResponseStrategy
 {
@@ -70,17 +71,21 @@ public class PortletExceptionResponseStrategy implements IExceptionResponseStrat
 		{
 			requestCycle.setResponsePage(override);
 		}
-		else if(e instanceof AuthorizationException)
+		else if (e instanceof AuthorizationException)
 		{
-			// are authorization exceptions always thrown before the real render?
-			// else we need to make a page (see below) or set it hard to a redirect.
-			Class accessDeniedPageClass = application.getApplicationSettings().getAccessDeniedPage();
+			// are authorization exceptions always thrown before the real
+			// render?
+			// else we need to make a page (see below) or set it hard to a
+			// redirect.
+			Class accessDeniedPageClass = application.getApplicationSettings()
+					.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
-			Class internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();
+			Class internalErrorPageClass = application.getApplicationSettings()
+					.getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass

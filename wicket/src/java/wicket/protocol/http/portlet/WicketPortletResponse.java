@@ -23,9 +23,9 @@ import javax.portlet.RenderResponse;
 
 import wicket.Response;
 import wicket.WicketRuntimeException;
- 
+
 /**
- * A Response implementation that uses PortletResponse 
+ * A Response implementation that uses PortletResponse
  * 
  * @see Response
  * @see WebResponse
@@ -34,17 +34,18 @@ import wicket.WicketRuntimeException;
  */
 public class WicketPortletResponse extends Response
 {
-	
+
 	/** The underlying response object. */
 	PortletResponse res;
 
 	/**
 	 * @param res
 	 */
-	public WicketPortletResponse(PortletResponse res){
-		this.res=res;
+	public WicketPortletResponse(PortletResponse res)
+	{
+		this.res = res;
 
-		ActionResponse r=null;
+		ActionResponse r = null;
 	}
 
 	/*
@@ -52,10 +53,14 @@ public class WicketPortletResponse extends Response
 	 */
 	public OutputStream getOutputStream()
 	{
-		try{
-			if(res instanceof RenderResponse){
-				return ((RenderResponse)res).getPortletOutputStream();				
-			} else {
+		try
+		{
+			if (res instanceof RenderResponse)
+			{
+				return ((RenderResponse)res).getPortletOutputStream();
+			}
+			else
+			{
 				throw new WicketRuntimeException("OutputStream not available during ActionRequest");
 			}
 		}
@@ -65,15 +70,19 @@ public class WicketPortletResponse extends Response
 		}
 	}
 
-	/* 
+	/*
 	 * @see wicket.Response#write(java.lang.CharSequence)
 	 */
 	public void write(final CharSequence string)
 	{
-		try{
-			if(res instanceof RenderResponse){
+		try
+		{
+			if (res instanceof RenderResponse)
+			{
 				((RenderResponse)res).getWriter().write(string.toString());
-			} else {
+			}
+			else
+			{
 				throw new WicketRuntimeException("Writer not available during ActionRequest");
 			}
 		}
@@ -81,20 +90,21 @@ public class WicketPortletResponse extends Response
 		{
 			throw new WicketRuntimeException("Error while writing to portlet output writer.", e);
 		}
-	}	
+	}
 
-	/* 
+	/*
 	 * @see wicket.Response#setContentType(java.lang.String)
 	 */
 	public void setContentType(final String mimeType)
 	{
-		if(res instanceof RenderResponse){
-			RenderResponse r=(RenderResponse)res;
+		if (res instanceof RenderResponse)
+		{
+			RenderResponse r = (RenderResponse)res;
 			r.setContentType(mimeType);
 		}
 	}
 
-	/* 
+	/*
 	 * @see wicket.Response#encodeURL(java.lang.CharSequence)
 	 */
 	public CharSequence encodeURL(CharSequence url)
@@ -102,7 +112,7 @@ public class WicketPortletResponse extends Response
 		return res.encodeURL(url.toString());
 	}
 
-	/* 	 
+	/*
 	 * @see wicket.Response#redirect(java.lang.String)
 	 */
 	public void redirect(String url)
@@ -116,8 +126,8 @@ public class WicketPortletResponse extends Response
 	 * 
 	 * @return The wrapped portlet response object
 	 */
-	public final PortletResponse getPortletResponse(){
+	public final PortletResponse getPortletResponse()
+	{
 		return res;
 	}
 }
-

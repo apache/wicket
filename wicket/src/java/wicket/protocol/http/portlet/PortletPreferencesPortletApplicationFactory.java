@@ -20,7 +20,7 @@ import wicket.WicketRuntimeException;
  * A IPortletApplicationFactory implementation using portlet preferences.
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class PortletPreferencesPortletApplicationFactory implements IPortletApplicationFactory
 {
@@ -33,15 +33,15 @@ public class PortletPreferencesPortletApplicationFactory implements IPortletAppl
 
 	/** @see IPortletApplicationFactory#createApplication(WicketPortlet) */
 	public PortletApplication createApplication(WicketPortlet portlet)
-	{        	
-		final String applicationClassName=portlet.getInitParameter(APP_CLASS_PARAM);
+	{
+		final String applicationClassName = portlet.getInitParameter(APP_CLASS_PARAM);
 		if (applicationClassName == null)
 		{
 			throw new WicketRuntimeException(
 					"portlet init param ["
-					+ APP_CLASS_PARAM
-					+ "] is missing. If you are trying to use your own implementation of IPortletApplicationFactory and get this message then the portlet init param ["
-					+ WicketPortlet.APP_FACT_PARAM + "] is missing");
+							+ APP_CLASS_PARAM
+							+ "] is missing. If you are trying to use your own implementation of IPortletApplicationFactory and get this message then the portlet init param ["
+							+ WicketPortlet.APP_FACT_PARAM + "] is missing");
 		}
 
 		try

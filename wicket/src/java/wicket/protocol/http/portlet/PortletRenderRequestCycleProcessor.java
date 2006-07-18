@@ -23,13 +23,13 @@ import wicket.request.compound.IExceptionResponseStrategy;
 import wicket.request.compound.IRequestTargetResolverStrategy;
 
 /**
- * A RequestCycleProcessor for portlet render requests. The events are not 
+ * A RequestCycleProcessor for portlet render requests. The events are not
  * processed in the render phase.
  * 
  * @see PortletRequestCycle
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public class PortletRenderRequestCycleProcessor extends CompoundRequestCycleProcessor
 {

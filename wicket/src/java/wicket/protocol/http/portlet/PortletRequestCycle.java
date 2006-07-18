@@ -26,16 +26,16 @@ import wicket.request.ClientInfo;
 
 /**
  * 
- * Base RequestCycle implementation for portlets. There is two implementations of 
- * this abstract class, PortletRenderRequestCycle for portlet render requests, and
- * PortletActionRequesCycle for portlet action requests. 
+ * Base RequestCycle implementation for portlets. There is two implementations
+ * of this abstract class, PortletRenderRequestCycle for portlet render
+ * requests, and PortletActionRequesCycle for portlet action requests.
  * 
  * @see PortletRenderRequestCycle
  * @see PortletActionRequestCycle
  * 
  * 
  * @author Janne Hietam&auml;ki
- *
+ * 
  */
 public abstract class PortletRequestCycle extends RequestCycle
 {
@@ -53,8 +53,8 @@ public abstract class PortletRequestCycle extends RequestCycle
 	 * @param response
 	 *            The response
 	 */
-	public PortletRequestCycle(final WicketPortletSession session, final WicketPortletRequest request,
-			final Response response)
+	public PortletRequestCycle(final WicketPortletSession session,
+			final WicketPortletRequest request, final Response response)
 	{
 		super(session, request, response);
 	}
@@ -97,5 +97,5 @@ public abstract class PortletRequestCycle extends RequestCycle
 	protected ClientInfo newClientInfo()
 	{
 		throw new WicketRuntimeException("ClientInfo not yet implemented");
-	}	
+	}
 }
