@@ -535,7 +535,7 @@ Wicket.Ajax.Request.prototype = {
 				var log = Wicket.Log.info;				
 				log("Received ajax response (" + responseAsText.length + " characters)");
 				if (this.debugContent != false) {
-					log("\n", responseAsText);
+					log("\n" + responseAsText);
 				}
         		
         		if (this.parseResponse == true) {        		
