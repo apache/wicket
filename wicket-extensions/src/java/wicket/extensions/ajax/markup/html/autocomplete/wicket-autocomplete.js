@@ -1,3 +1,9 @@
+/*
+* Wicket Ajax Autocomplete
+* Licensed under the Apache License, Version 2.0
+* @author Janne Hietam&auml;ki
+*/
+
 function WicketAutoComplete(elementId,callbackUrl){
     var KEY_BACKSPACE=8;
     var KEY_TAB=9;
@@ -11,10 +17,12 @@ function WicketAutoComplete(elementId,callbackUrl){
     var selected=-1;
     var elementCount=0;
     var visible=0;
+    var mouseactive=0;
     
     function initialize(){
         var obj=wicketGet(elementId);
         obj.onblur=function(event){
+        	if(mouseactive==1)return false;        
             hideAutoComplete();
         }
         
@@ -202,7 +210,26 @@ function WicketAutoComplete(elementId,callbackUrl){
         element.innerHTML=resp;
         if(element.firstChild && element.firstChild.childNodes) {
             elementCount=element.firstChild.childNodes.length;
-            } else {
+		    for(var i=0;i<elementCount;i++){
+	            var node=element.firstChild.childNodes[i];
+       	
+				node.onclick = function(event){
+					wicketGet(elementId).value=getSelectedValue();
+					hideAutoComplete();
+       			}
+
+				node.onmouseover = function(event){
+					mouseactive=1;
+					selected = getElementIndex(this);
+					render();
+				 	showAutoComplete();
+				}
+				
+				node.onmouseout = function(event){
+					mouseactive=0;
+				}
+       		}
+        } else {
             elementCount=0;
         }
         if(elementCount>0){
@@ -223,6 +250,14 @@ function WicketAutoComplete(elementId,callbackUrl){
             value = attr.value;
         }
         return stripHTML(value);
+    }
+    
+    function getElementIndex(element) {
+		for(var i=0;i<element.parentNode.childNodes.length;i++){
+	        var node=element.parentNode.childNodes[i];
+			if(node==element)return i;
+		}
+		return -1;
     }
     
     function stripHTML(str) {
@@ -248,60 +283,59 @@ function WicketAutoComplete(elementId,callbackUrl){
         }
     }
     
-    // The following is borrowed and modified from calendar.js
-    function hideShowCovered() {
+       function isVisible(obj) {
+                var value = obj.style.visibility;
+                if (!value) {
+                        if (document.defaultView && typeof(document.defaultView.getComputedStyle)=="function") {
+                                value = document.defaultView.getComputedStyle(obj,"").getPropertyValue("visibility");
+                        } else if (obj.currentStyle) {
+                                value = obj.currentStyle.visibility;
+                        } else {
+                                value = '';
+                        }
+                }
+                return value;
+        }
+        
+    function hideShowCovered(){
         if (!/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
             return;
         }
-        function getVisib(obj) {
-            var value = obj.style.visibility;
-            if (!value) {
-                if (document.defaultView && typeof (document.defaultView.getComputedStyle) == "function") { // Gecko, W3C
-                    value = document.defaultView.getComputedStyle(obj, "").getPropertyValue("visibility");
-                    } else if (obj.currentStyle) { // IE
-                    value = obj.currentStyle.visibility;
-                    } else {
-                    value = '';
-                }
-            }
-            return value;
-        }
-        
-        var tags = new Array("applet", "iframe", "select");
-        var el = getAutocompleteMenu();
-        
+
+        var el = getAutocompleteMenu();                
         var p = getPosition(el);
-        var EX1 = p[0];
-        var EX2 = el.offsetWidth + EX1;
-        var EY1 = p[1];
-        var EY2 = el.offsetHeight + EY1;
+
+        var acLeftX=p[0];
+        var acRightX=el.offsetWidth+acLeftX;
+        var acTopY=p[1];
+        var acBottomY=el.offsetHeight+acTopY;
+
+        var hideTags = new Array("select","iframe","applet");        
         
-        for (var k = tags.length; k > 0; ) {
-            var ar = document.getElementsByTagName(tags[--k]);
-            var cc = null;
-            
-            for (var i = ar.length; i > 0;) {
-                cc = ar[--i];
+        for (var j=0;j<hideTags.length;j++) {
+            var tagsFound = document.getElementsByTagName(hideTags[j]);
+            for (var i=0; i<tagsFound.length; i++){
+                var tag=tagsFound[i];                
+                p=getPosition(tag);
+                var leftX = p[0];
+                var rightX = leftX+cc.offsetWidth;
+                var topY = p[1];
+                var bottomY = topY+cc.offsetHeight;
                 
-                p = getPosition(cc);
-                var CX1 = p[0];
-                var CX2 = cc.offsetWidth + CX1;
-                var CY1 = p[1];
-                var CY2 = cc.offsetHeight + CY1;
-                
-                if (this.hidden || (CX1 > EX2) || (CX2 < EX1) || (CY1 > EY2) || (CY2 < EY1)) {
-                    if (!cc.__msh_save_visibility) {
-                        cc.__msh_save_visibility = getVisib(cc);
+                if (this.hidden || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
+                    if(!tag.wicket_element_visibility) {
+                        tag.wicket_element_visibility=isVisible(tag);
                     }
-                    cc.style.visibility = cc.__msh_save_visibility;
-                    } else {
-                    if (!cc.__msh_save_visibility) {
-                        cc.__msh_save_visibility = getVisib(cc);
-                    }
-                    cc.style.visibility = "hidden";
+                    tag.style.visibility=tag.wicket_element_visibility;
+                 } else {
+                	 if (!tag.wicket_element_visibility) {
+                    	tag.wicket_element_visibility=isVisible(tag);
+                     }
+                    tag.style.visibility = "hidden";
                 }
             }
         }
     }
+        
     initialize();
 } 
