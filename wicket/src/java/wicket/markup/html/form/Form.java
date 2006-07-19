@@ -644,7 +644,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @return True if this form has at least one error.
 	 */
-	protected final boolean hasError()
+	public final boolean hasError()
 	{
 		// if this form itself has an error message
 		if (hasErrorMessage())
