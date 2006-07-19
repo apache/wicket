@@ -115,13 +115,16 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			if (rootItem == null) 
 			{				
 				TreeNode rootNode = (TreeNode) getModelObject().getRoot();
-				rootItem = createTreeItem(rootNode, 0);
-				if (isRootLess())
+				if (rootNode != null)
 				{
-					rootItem.setVisible(false);
+					rootItem = createTreeItem(rootNode, 0);
+					if (isRootLess())
+					{
+						rootItem.setVisible(false);
+					}
+					buildItemChildren(rootItem);
 				}
-				buildItemChildren(rootItem);
-			}
+			}			
 			
 			attached = true;
 		}		
