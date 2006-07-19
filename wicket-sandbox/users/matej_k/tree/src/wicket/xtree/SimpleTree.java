@@ -49,9 +49,9 @@ public class SimpleTree extends DefaultAbstractTree {
 			public void onComponentTag(Component component, ComponentTag tag) {
 				super.onComponentTag(component, tag);
 				if (getTreeState().isNodeSelected(node))
-					tag.put("class", "c1");
+					tag.put("class", "row-selected");
 				else
-					tag.put("class", "c2");
+					tag.put("class", "row");
 			}
 		});
 	}

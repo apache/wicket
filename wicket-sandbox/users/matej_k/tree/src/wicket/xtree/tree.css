@@ -1,51 +1,49 @@
-.tree {
-	font-weight: bold;
-	margin: 0;
-	padding: 0;
-	text-decoration: none;
-	white-space: nowrap;
-}
-
-.treerow {
-	display: block;
-}
-
-.treerow-selected {
-	display: block;
-	background-color: #E7E7FF;
-}
-
-.wicket-indent-tree .wicket-indent-tree-spacer {
-	padding-left: 16px;
-}
-
-.wicket-indent-tree .wicket-indent-tree-junctionimage {
-	padding-left: 4px;
-	padding-right: 4px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin: 1px;
-}
-
-.wicket-indent-tree .wicket-indent-tree-nodeimage {
-	padding-left: 4px;
-	padding-right: 4px;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin: 1px;
-}
-
-.wicket-indent-tree .wicket-indent-tree-nodelabel {
-	margin: 2px;
-}
-
 div.wicket-tree {
+	white-space: nowrap;	
+	border: 1px solid #ccc;
+	width: 20em;
+	overflow: auto;
+	margin: 0.5em;
 }
 
-div.wicket-tree div.c1 {
-	background-color: gray;	
+div.wicket-tree img {
+	border-width: 0px;
 }
 
-div.wicket-tree div.c2 {
-	background-color: yellow;
+div.wicket-tree img.junction {
+	width: 11px;
+	height: 11px;
+}
+
+div.wicket-tree a {
+	text-decoration: none;
+	color: #3311aa;
+}
+
+div.wicket-tree a:hover {
+	text-decoration: underline;
+}
+
+div.wicket-tree div.row {
+	background-color: #eeeeee;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-top: 1px solid #fff;
+	border-left: 1px solid #fff;
+	padding-left: 1em;
+}
+
+div.wicket-tree div.row:hover {
+	background-color: #ddd;
+	border-top-color: #ddd;
+	border-left-color: #ddd;	
+}
+
+div.wicket-tree div.row-selected {
+	padding-left: 1em;
+	border-left: 1px solid #FFEEBC;	
+	border-top: 1px solid #FFEEBC;
+	background-color: #FFE598;
+	border-bottom: 1px solid #FFD65C;	
+	border-right: 1px solid #FFD65C;		
 }
