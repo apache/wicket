@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:43:46 +0200 (vr, 26 mei 2006) $
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,7 +38,7 @@ import wicket.WicketRuntimeException;
  * @author Chris Turner
  * @author Eelco Hillenius
  */
-public class Model<T /* extends Serializable */> extends AbstractModel<T>
+public class Model<T> extends AbstractModel<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -64,27 +64,35 @@ public class Model<T /* extends Serializable */> extends AbstractModel<T>
 	}
 
 	/**
+	 * Return a map, possibly a new serializable map in case the provided one
+	 * was not serializable.
+	 * 
+	 * @param <K>
+	 *            The key type
+	 * @param <V>
+	 *            The value type
 	 * @param map
 	 *            The Map, which may or may not be Serializable
 	 * @return A Model object wrapping the Map
 	 */
-	public static Model<Map<String, Serializable>> valueOf(final Map<String, Serializable> map)
+	public static <K, V> Model<Map<K, V>> valueOf(final Map<K, V> map)
 	{
-		return new Model<Map<String, Serializable>>(map instanceof Serializable
-				? map
-				: new HashMap<String, Serializable>(map));
+		return new Model<Map<K, V>>(map instanceof Serializable ? map : new HashMap<K, V>(map));
 	}
 
 	/**
+	 * Return a list, possibly a new serializable list in case the provided one
+	 * was not serializable.
+	 * 
+	 * @param <K>
+	 *            The type
 	 * @param list
 	 *            The List, which may or may not be Serializable
 	 * @return A Model object wrapping the List
 	 */
-	public static Model<List<Serializable>> valueOf(final List<Serializable> list)
+	public static <K> Model<List<K>> valueOf(final List<K> list)
 	{
-		return new Model<List<Serializable>>(list instanceof Serializable
-				? list
-				: new ArrayList<Serializable>(list));
+		return new Model<List<K>>(list instanceof Serializable ? list : new ArrayList<K>(list));
 	}
 
 	/**
@@ -107,6 +115,7 @@ public class Model<T /* extends Serializable */> extends AbstractModel<T>
 	/**
 	 * Set the model object; calls setObject(java.io.Serializable). The model
 	 * object must be serializable, as it is stored in the session
+	 * 
 	 * @param object
 	 *            the model object
 	 * 
@@ -121,7 +130,7 @@ public class Model<T /* extends Serializable */> extends AbstractModel<T>
 				throw new WicketRuntimeException("Model object must be Serializable");
 			}
 		}
-		this.object=object;
+		this.object = object;
 	}
 
 	/**
