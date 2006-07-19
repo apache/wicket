@@ -227,7 +227,7 @@ public abstract class DefaultAbstractTree extends AbstractTree {
 	}
 	
 	protected String getIndentationString() {
-		return "&nbsp;&nbsp;&nbsp;";
+		return "&nbsp;&nbsp;&nbsp;&nbsp;";
 	}
 	
 	protected PackageResourceReference getCSS() 
