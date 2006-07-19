@@ -99,6 +99,22 @@ public class WizardStep extends Panel implements IWizardStep
 	}
 
 	/**
+	 * @see wicket.Component#detachModel()
+	 */
+	protected void detachModel()
+	{
+		super.detachModel();
+		if (title != null)
+		{
+			title.detach();
+		}
+		if (summary != null)
+		{
+			summary.detach();
+		}
+	}
+
+	/**
 	 * Wraps form validators for this step such that they are only executed when
 	 * this step is active.
 	 */
