@@ -1,5 +1,5 @@
 /*
- * Wicket Ajax Support 
+ * Wicket Ajax Autocomplete
  * Licensed under the Apache License, Version 2.0
  * @author Janne Hietam&auml;ki
  */
