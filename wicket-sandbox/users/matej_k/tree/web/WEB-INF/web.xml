@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+      PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+      "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>Ajax Tree</display-name>
+
+	<context-param>
+	  <param-name>configuration</param-name>
+	  <param-value>development</param-value>
+	</context-param>
+ 
+    <servlet>
+        <servlet-name>WicketServlet</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>app.TreeApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WicketServlet</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
