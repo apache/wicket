@@ -21,6 +21,7 @@ package wicket.extensions.ajax.markup.html.autocomplete;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
+import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.PackageResourceReference;
 import wicket.util.string.JavascriptUtils;
@@ -30,10 +31,9 @@ import wicket.util.string.JavascriptUtils;
  * 
  * @author Janne Hietam&auml;ki (jannehietamaki)
  */
-public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
+public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBehavior
 {
     private static final PackageResourceReference AUTOCOMPLETE_JS = new PackageResourceReference(AutoCompleteBehavior.class, "wicket-autocomplete.js");
-    private static final PackageResourceReference AJAX_JS = new PackageResourceReference(AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
 
 	/**
 	 * 
@@ -41,22 +41,9 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected String getImplementationId()
-	{
-	    return "wicket-default-autocomplete";
-	}
-
-	@Override
-	protected void onBind()
-	{
-		getComponent().setOutputMarkupId(true);
-	}
-
-	@Override
 	protected void onRenderHeadInitContribution(Response response)
 	{
 	    super.onRenderHeadInitContribution(response);
-	    writeJsReference(response, AJAX_JS);
 	    writeJsReference(response, AUTOCOMPLETE_JS);
 	}
 
@@ -70,14 +57,11 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractAjaxBehavior
 		response.write(JavascriptUtils.SCRIPT_CLOSE_TAG);
 	}
 
-	/**
-	 * @see wicket.behavior.IBehaviorListener#onRequest()
-	 */
-	public final void onRequest()
-	{
+	@Override
+	protected void respond(AjaxRequestTarget target){
 		final RequestCycle requestCycle = RequestCycle.get();
 		final String val = requestCycle.getRequest().getParameter("q");
-		onRequest(val, requestCycle);
+		onRequest(val, requestCycle);		
 	}
 
 	/**
