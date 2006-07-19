@@ -127,13 +127,11 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 					// Set the Wicket namespace for wicket tags (e.g.
 					// <eicket:panel>) and attributes (e.g. wicket:id)
 					final String namespace = attributeName.substring(XMLNS.length());
-					
-					// Note: <html ...> tags usually have no wicket:id and hence are treated
-					// as raw markup and removing xmlns:wicket from markup does not have any
-					// effect. The solution approach does not work.
 					if (Application.get().getMarkupSettings().getStripWicketTags())
 					{
 						attributes.remove(attributeName);
+						
+						// Make sure the parser knows it has been changed
 						tag.setModified(true);
 					}
 					

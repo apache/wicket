@@ -87,7 +87,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * 
 	 * @see wicket.markup.parser.IXmlPullParser#getInputFromPositionMarker(int)
 	 */
-	public final CharSequence getInputFromPositionMarker(int toPos)
+	public final CharSequence getInputFromPositionMarker(final int toPos)
 	{
 		return this.input.getSubstring(toPos);
 	}
@@ -160,7 +160,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		}
 
 		// While we can find an open tag, parse the tag
-		int openBracketIndex = this.input.find('<');
+		final int openBracketIndex = this.input.find('<');
 		if (openBracketIndex == -1)
 		{
 			// There is no next matching tag
@@ -189,7 +189,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			// Skip ahead to "-->". Note that you can not simply test for
 			// tagText.endsWith("--") as the comment might contain a '>'
 			// inside.
-			int pos = this.input.find("-->", openBracketIndex + 1);
+			final int pos = this.input.find("-->", openBracketIndex + 1);
 			if (pos == -1)
 			{
 				throw new ParseException("Unclosed comment beginning at line:"
@@ -210,7 +210,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			do
 			{
 				// Get index of closing tag and advance past the tag
-				closeBracketIndex = findCloseBracket('>', pos1);
+				closeBracketIndex = findChar('>', pos1);
 
 				if (closeBracketIndex == -1)
 				{
@@ -225,6 +225,12 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				pos1 = closeBracketIndex + 1;
 			}
 			while (tagText.endsWith("]]") == false);
+			
+			// Move to position after the tag
+			this.input.setPosition(closeBracketIndex + 1);
+
+			// Return next tag
+			return nextTag();
 		}
 
 		{
@@ -256,7 +262,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 			}
 			else
 			{
-				String lowerCase = tagText.toLowerCase();
+				final String lowerCase = tagText.toLowerCase();
 
 				// Often save a (longer) comparison at the expense of a
 				// extra shorter one for 's' tags
@@ -310,13 +316,13 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 *            Start index
 	 * @return -1 if not found, else the index
 	 */
-	private int findCloseBracket(final char ch, int startIndex)
+	private int findChar(final char ch, int startIndex)
 	{
 		char quote = 0;
 
 		for (; startIndex < this.input.size(); startIndex++)
 		{
-			char charAt = this.input.charAt(startIndex);
+			final char charAt = this.input.charAt(startIndex);
 			if (quote != 0)
 			{
 				if (quote == charAt)

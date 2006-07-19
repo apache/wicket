@@ -314,14 +314,10 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		parser
-				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
-		parser
-				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
-		parser
-				.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
-		parser
-				.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\"/>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">    </wicket:component>");
+		parser.parse("<wicket:component name = \"componentName\" class = \"classname\" param1 = \"value1\">  <span wicket:id=\"msg\">hello world!</span></wicket:component>");
+		parser.parse("<wicket:panel><div id=\"definitionsContentBox\"><span wicket:id=\"contentPanel\"/></div></wicket:panel>");
 	}
 
 	/**
@@ -368,6 +364,27 @@ public final class MarkupParserTest extends WicketTestCase
 		assertEquals(true, markup.get(1) instanceof RawMarkup);
 		assertEquals("<script language=\"JavaScript\">... <x a> ...</script>", ((RawMarkup)markup
 				.get(1)).toString());
+	}
+
+	/**
+	 * Test &lt;wicket: .
+	 * 
+	 * @throws ParseException
+	 * @throws ResourceStreamNotFoundException
+	 * @throws IOException
+	 */
+	public final void testCDATA() throws ParseException, ResourceStreamNotFoundException,
+			IOException
+	{
+		final MarkupParser parser = new MarkupParser(new XmlPullParser());
+
+		IMarkup markup = parser
+				.parse("<html><![CDATA[ test ]]></html>");
+		assertEquals(1, markup.size());
+		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
+		assertEquals("html", ((ComponentTag)markup.get(1)).getName());
+		assertEquals(true, markup.get(1) instanceof RawMarkup);
+		assertEquals("<![CDATA[ test ]]>", ((RawMarkup)markup.get(1)).toString());
 	}
 
 	/**

@@ -326,7 +326,7 @@ public class XmlTag extends MarkupElement
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
-	public XmlTag mutable(AttributeMap markupAttributes)
+	public XmlTag mutable(final AttributeMap markupAttributes)
 	{
 		if (isMutable)
 		{
@@ -429,7 +429,7 @@ public class XmlTag extends MarkupElement
 		for (final Iterator iterator = map.keySet().iterator(); iterator.hasNext();)
 		{
 			final String key = (String)iterator.next();
-			Object value = map.get(key);
+			final Object value = map.get(key);
 			put(key, (value != null) ? value.toString() : null);
 		}
 	}
