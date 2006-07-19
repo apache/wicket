@@ -13,6 +13,7 @@ div.wicket-tree img {
 div.wicket-tree img.junction {
 	width: 11px;
 	height: 11px;
+	margin-top: 0.2em;
 }
 
 div.wicket-tree a {
@@ -27,7 +28,6 @@ div.wicket-tree a:hover {
 div.wicket-tree div.row {
 	background-color: #eeeeee;
 	border-bottom: 1px solid #ddd;
-	border-right: 1px solid #ddd;
 	border-top: 1px solid #fff;
 	border-left: 1px solid #fff;
 	padding-left: 1em;
@@ -45,5 +45,8 @@ div.wicket-tree div.row-selected {
 	border-top: 1px solid #FFEEBC;
 	background-color: #FFE598;
 	border-bottom: 1px solid #FFD65C;	
-	border-right: 1px solid #FFD65C;		
+}
+
+div.wicket-tree div.row-selected:hover {
+	background-color: #FFDF80;
 }
