@@ -258,6 +258,7 @@ public abstract class DefaultAbstractTree extends AbstractTree {
 				}
 			}
 		};
+		result.setRenderBodyOnly(true);
 		return result;
 	}
 	
