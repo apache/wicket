@@ -42,7 +42,7 @@ public class DefaultTreeState implements TreeState, Serializable
 			}
 		}
 	}
-
+	
 	public void collapseNode(TreeNode node) 
 	{
 		if (nodesCollapsed == true)
