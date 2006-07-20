@@ -526,7 +526,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		{
 			buffer.append(" style=\"display: none\"");
 		}
-		buffer.append("\" />");
+		buffer.append(" />");
 		getResponse().write(buffer);
 	}
 
