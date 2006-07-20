@@ -68,31 +68,55 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		final String formId = form.getMarkupId();
 		final CharSequence url = getCallbackUrl();
 
-		
-		AppendingStringBuffer call=new AppendingStringBuffer("wicketSubmitFormById('").append(formId).append(
-		"', '").append(url).append("', ");
-		
-		if (getComponent() instanceof Button) {
+
+		AppendingStringBuffer call = new AppendingStringBuffer("wicketSubmitFormById('").append(
+				formId).append("', '").append(url).append("', ");
+
+		if (getComponent() instanceof Button)
+		{
 			call.append("'").append(((FormComponent)getComponent()).getInputName()).append("' ");
-		} else {
+		}
+		else
+		{
 			call.append("null");
 		}
-		
-		return getCallbackScript(call, null, null)+";";
+
+		return getCallbackScript(call, null, null) + ";";
 	}
 
 	protected void onEvent(AjaxRequestTarget target)
 	{
 		form.onFormSubmitted();
-		onSubmit(target);
+		if (!form.hasError())
+		{
+			onSubmit(target);
+		}
+		else
+		{
+			onError(target);
+		}
 	}
 
 	/**
 	 * Listener method that is invoked after the form has ben submitted and
-	 * processed
+	 * processed without errors
 	 * 
 	 * @param target
 	 */
 	protected abstract void onSubmit(AjaxRequestTarget target);
+
+	/**
+	 * Listener method invoked when the form has been processed and errors
+	 * occured
+	 * 
+	 * @param target
+	 * 
+	 * TODO 1.3: make abstract to be consistent with onsubmit()
+	 * 
+	 */
+	protected void onError(AjaxRequestTarget target)
+	{
+
+	}
 
 }
