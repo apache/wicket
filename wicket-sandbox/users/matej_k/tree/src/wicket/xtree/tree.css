@@ -3,7 +3,7 @@ div.wicket-tree {
 	border: 1px solid #ccc;
 	width: 20em;
 	overflow: auto;
-	margin: 0.5em;
+	margin: 10px;
 }
 
 div.wicket-tree a {
