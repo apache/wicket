@@ -14,11 +14,12 @@ import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.behavior.HeaderContributor;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResourceReference;
+import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.tree.Tree;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -28,17 +29,14 @@ public abstract class DefaultAbstractTree extends AbstractTree {
 	private static final PackageResourceReference CSS = 
 		new PackageResourceReference(DefaultAbstractTree.class, "tree.css");
 
-	/** Minus sign image. */
-	private static final ResourceReference MINUS = 
-		new PackageResourceReference(DefaultAbstractTree.class, "minus.gif");
-
-	/** Plus sign image. */
-	private static final ResourceReference PLUS = 
-		new PackageResourceReference(DefaultAbstractTree.class, "plus.gif");
+	private static final PackageResourceReference ITEM = 
+		new PackageResourceReference(DefaultAbstractTree.class, "item.gif");
 	
-	/** Blank image. */
-	private static final ResourceReference BLANK = 
-		new PackageResourceReference(Tree.class, "blank.gif");
+	private static final PackageResourceReference FOLDER_OPEN = 
+		new PackageResourceReference(DefaultAbstractTree.class, "folder-open.gif");
+	
+	private static final PackageResourceReference FOLDER_CLOSED = 
+		new PackageResourceReference(DefaultAbstractTree.class, "folder-closed.gif");
 	
 	public DefaultAbstractTree(MarkupContainer parent, String id, TreeModel model, boolean rootLess) 
 	{
@@ -127,6 +125,32 @@ public abstract class DefaultAbstractTree extends AbstractTree {
 		}
 	}
 	
+	protected WebComponent createNodeIcon(MarkupContainer parent, String id, final TreeNode node)
+	{
+		return new Image(parent, id)
+		{
+			@Override
+			protected ResourceReference getImageResourceReference() {
+				return getNodeIcon(node);
+			}
+		};
+	}
+	
+	protected ResourceReference getNodeIcon(TreeNode node)
+	{
+		if (node.isLeaf() == true)
+		{
+			return getItem();
+		}
+		else
+		{
+			if (isNodeExpanded(node))
+				return getFolderOpen();
+			else
+				return getFolderClosed();
+		}
+	}
+	
 	protected void createJunctionLink(MarkupContainer parent, final String id, 
 			                          final String imageId, final TreeNode node)
 	{
@@ -166,52 +190,74 @@ public abstract class DefaultAbstractTree extends AbstractTree {
 			createJunctionImage(junctionLink, imageId, node);
 	}
 	
-	
-	protected Image createJunctionImage(MarkupContainer parent, final String id, final TreeNode node)
-	{		
-		if (!node.isLeaf())
+	/**
+	 * Returns whether node is last child of it's parent.
+	 * @return
+	 */
+	private boolean isNodeLast(TreeNode node) {
+		TreeNode parent = node.getParent();
+		if (parent == null)
 		{
-			// we want the image to be dynamically, yet resolving to a static
-			// image.
-			return new Image(parent, id)
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				protected ResourceReference getImageResourceReference()
-				{
-					if (isNodeExpanded(node))
-					{
-						return MINUS;
-					}
-					else
-					{
-						return PLUS;
-					}
-				}
-			};
+			return true;
 		}
 		else
 		{
-			return new Image(parent, id, getBlank());
+			return parent.getChildAt(parent.getChildCount() - 1).equals(node);
 		}
 	}
 	
-	protected MarkupContainer createIndentation(MarkupContainer parent, String id, final int level) 
+	protected WebMarkupContainer createJunctionImage(MarkupContainer parent, final String id, final TreeNode node)
+	{		
+		return (WebMarkupContainer) new WebMarkupContainer(parent, id) 
+		{			
+			@Override
+			protected void onComponentTag(ComponentTag tag) {
+				super.onComponentTag(tag);
+			
+				final String cssClassInner;
+				if (node.isLeaf() == false)
+				{
+					cssClassInner = isNodeExpanded(node) ? "minus" : "plus";							
+				}
+				else
+				{
+					cssClassInner = "corner"; 
+				}
+				
+				final String cssClassOuter = isNodeLast(node) ? "junction-last" : "junction"; 				
+				
+				Response response = RequestCycle.get().getResponse();
+				response.write("<span class=\""+cssClassOuter+"\"><span class=\""+cssClassInner+"\"></span></span>");
+			}
+		}.setRenderBodyOnly(true);
+	}
+	
+	protected MarkupContainer createIndentation(MarkupContainer parent, String id, final TreeNode node, final int level) 
 	{
 		WebMarkupContainer result = new WebMarkupContainer(parent, id) {
 			@Override
-			protected void onComponentTag(ComponentTag tag) 
-			{
-				super.onComponentTag(tag);
+			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
 				Response response = RequestCycle.get().getResponse();
+				TreeNode parent = node.getParent();
+				
+				CharSequence urls[] = new CharSequence[level];				
 				for (int i = 0; i < level; ++i) 
 				{
-					response.write(getIndentationString());
+					if (isNodeLast(parent))
+						urls[i] = "indent-blank";
+					else
+						urls[i] = "indent-line"; 
+					
+					parent = parent.getParent();
+				}
+				
+				for (int i = level - 1; i >= 0; --i)
+				{
+					response.write("<span class=\""+urls[i]+"\"></span>");
+
 				}
 			}
 		};
-		result.setRenderBodyOnly(true);
 		return result;
 	}
 	
@@ -225,28 +271,24 @@ public abstract class DefaultAbstractTree extends AbstractTree {
 			}
 		});
 	}
-	
-	protected String getIndentationString() {
-		return "&nbsp;&nbsp;&nbsp;&nbsp;";
-	}
-	
+		
 	protected PackageResourceReference getCSS() 
 	{
 		return CSS;
+	}	
+	
+	protected ResourceReference getItem()
+	{
+		return ITEM;
 	}
 	
-	protected ResourceReference getMinus() 
+	protected ResourceReference getFolderOpen()
 	{
-		return MINUS;
+		return FOLDER_OPEN;
 	}
 	
-	protected ResourceReference getPlus() 
+	protected ResourceReference getFolderClosed() 
 	{
-		return PLUS;
-	}
-	
-	protected ResourceReference getBlank() 
-	{
-		return BLANK;
+		return FOLDER_CLOSED;
 	}
 }

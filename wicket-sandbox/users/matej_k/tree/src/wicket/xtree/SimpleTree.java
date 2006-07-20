@@ -31,11 +31,13 @@ public class SimpleTree extends DefaultAbstractTree {
 	{
 		final TreeNode node = item.getModelObject();
 		
-		createIndentation(item, "indent", level);
+		createIndentation(item, "indent", item.getModelObject(), level);
 		
 		createJunctionLink(item, "link", "image", node);
 		
 		WebMarkupContainer nodeLink = createNodeLink(item, "nodeLink", node);
+		
+		createNodeIcon(nodeLink, "icon", node);
 		
 		new Label(nodeLink, "label", new Model<String>() {
 			@Override
