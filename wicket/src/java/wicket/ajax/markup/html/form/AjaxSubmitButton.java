@@ -59,6 +59,11 @@ public abstract class AjaxSubmitButton extends WebComponent
 			{
 				AjaxSubmitButton.this.onSubmit(target, form);
 			}
+			
+			protected void onError(AjaxRequestTarget target)
+			{
+				AjaxSubmitButton.this.onError(target, form);
+			}
 
 			protected CharSequence getEventHandler()
 			{
@@ -104,12 +109,23 @@ public abstract class AjaxSubmitButton extends WebComponent
 	}
 
 	/**
-	 * Listener method invoked on form submit
+	 * Listener method invoked on form submit with no errors
 	 * 
 	 * @param target
 	 * @param form
 	 */
 	protected abstract void onSubmit(AjaxRequestTarget target, Form form);
 
+	/**
+	 * Listener method invoked on form submit with errors
+	 * 
+	 * @param target
+	 * @param form
+	 * 
+	 * TODO 1.3: Make abstract to be consistent with onsubmit()
+	 */
+	protected void onError(AjaxRequestTarget target, Form form) {
+		
+	}
 
 }
