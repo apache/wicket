@@ -25,28 +25,52 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
 
+/**
+ * This class encapsulates the logic for displaying and (partial) updating the tree.
+ * Actual presentation is out of scope of this class. 
+ * User should derive they own tree (if needed) from {@link DefaultAbstractTree} or 
+ * {@link SimpleTree} (recommended).  
+ * @author Matej Knopp
+ */
 public abstract class AbstractTree extends Panel<TreeModel> implements TreeStateListener, TreeModelListener 
 {
 
+	/**
+	 * Tree constructor
+	 * @param parent
+	 * @param id
+	 * @param rootLess whether the tree root should be hidden or shown
+	 */
 	public AbstractTree(MarkupContainer parent, String id, boolean rootLess) 
 	{
 		super(parent, id);
 		init(rootLess);		
 	}
 
+	/**
+	 * Tree constructor
+	 * @param parent
+	 * @param id
+	 * @param model
+	 * @param rootLess whether the tree root should be hidden or shown
+	 */
 	public AbstractTree(MarkupContainer parent, String id, IModel<TreeModel> model, boolean rootLess) 
 	{
 		super(parent, id, model);
 		init(rootLess);
 	}
-
+	
+	// whether the tree root is shown
 	private boolean rootLess = false;
 	
+	/**
+	 * @return whether the tree root is shown
+	 */
 	public final boolean isRootLess() {
 		return rootLess;
 	}
 
-	/** Reference to the css file. */
+	/** Reference to the javascript file. */
 	private static final PackageResourceReference JAVASCRIPT = 
 		new PackageResourceReference(AbstractTree.class, "tree.js");
 	
@@ -69,8 +93,13 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	private boolean attached = false;
 	
+	// we need to track previous model. if the model changes, we unregister the tree
+	// from listeners of old model and register the tree as litener of new model
 	private TreeModel previousModel = null;
 	
+	/**
+	 * Checks whether the model has been chaned, and if so unregister and register listeners.
+	 */
 	private final void checkModel() {
 		// find out whether the model object (the TreeModel) has been changed
 		TreeModel model = getModelObject();
@@ -91,7 +120,11 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			invalidateAll();
 		}		
 	}
-	
+
+	/**
+	 * Called at the beginning of the request (not ajax request, unless we are rendering 
+	 * the entire component)
+	 */
 	@Override
 	protected void onAttach() 
 	{		
@@ -136,6 +169,9 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		attached = false;
 	}
 	
+	/**
+	 * Called after the rendering of tree is complete. Here we clear the dirty flags.
+	 */
 	@Override
 	protected void onAfterRender() 
 	{
@@ -508,7 +544,8 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	private AppendingStringBuffer deleteIds = new AppendingStringBuffer();
 	
 	// returns the short version of item id (just the number part)
-	private String getShortItemId(TreeItem item) {
+	private String getShortItemId(TreeItem item) 
+	{
 		// show much of component id can we skip? (to minimize the length of javascript being sent)
 		final int skip = getMarkupId().length() + 1; // the length of id of tree and '_'.
 		return item.getMarkupId().substring(skip);
@@ -538,7 +575,8 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	// removes the item, appends it's id to deleteIds
 	// this is called when a items parent is being deleted or rebuild
-	private void removeItem(TreeItem item) {
+	private void removeItem(TreeItem item) 
+	{
 		// even if the item is dirty it's no longer necessary to update id 
 		dirtyItems.remove(item);
 		
@@ -615,7 +653,8 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	/**
 	 * Returns the javascript used to delete removed elements.
 	 */
-	private String getElementsDeleteJavascript() {
+	private String getElementsDeleteJavascript() 
+	{
 		// build the javascript call
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(100);
 		
@@ -641,6 +680,12 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Updates the changed portions of the tree using given AjaxRequestTarget.
+	 * Call this method if you modified the tree model during an ajax request target
+	 * and you want to partially update the component on page. Make sure that the 
+	 * tree model has fired the proper listener functions.
+	 * 
+	 * @param target
+	 * 			Ajax request target used to send the update to the page
 	 */
 	public final void updateTree(final AjaxRequestTarget target) 
 	{
@@ -815,8 +860,9 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		}
 	}
 	
-	public final void treeNodesRemoved(TreeModelEvent e) {
-		
+	// called when certain tree nodes have been removed
+	public final void treeNodesRemoved(TreeModelEvent e) 
+	{
 		//get the parent node of inserted nodes
 		TreeNode parent = (TreeNode) e.getTreePath().getLastPathComponent();
 		TreeItem parentItem = nodeToItemMap.get(parent);
@@ -847,7 +893,9 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		}
 	}
 	
-	public final void treeStructureChanged(TreeModelEvent e) {
+	// called when the tree structure has significanly changed
+	public final void treeStructureChanged(TreeModelEvent e) 
+	{
 		// get the parent node of changed nodes		
 		TreeNode node = (TreeNode) e.getTreePath().getLastPathComponent();
 		
@@ -892,5 +940,15 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		return getTreeState().isNodeExpanded(node);
 	}
 	
+	/**
+	 * This method is called after creating every TreeItem.
+	 * This is the place for adding components on item (junction links, labels, icons...)
+	 *  
+	 * @param item 
+	 * 			newly created tree item. The node can be obtained as item.getModelObject()
+	 *  
+	 * @param level 
+	 * 			how deep the component is in tree hierarchy (0 for root item) 
+	 */
 	protected abstract void populateTreeItem(WebMarkupContainer<TreeNode> item, int level);
 }
