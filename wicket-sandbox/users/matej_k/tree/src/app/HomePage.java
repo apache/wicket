@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
@@ -30,8 +31,14 @@ public class HomePage extends WebPage {
 		final DefaultTreeModel treeModel = (DefaultTreeModel) createTreeModel();
 		
 		SimpleTree tree = new SimpleTree(this, "tree", treeModel, false);
-		tree.getTreeState().setAllowSelectMultiple(true);		
-		tree.setLinkType(DefaultAbstractTree.LinkType.AJAX);		
+		tree.getTreeState().setAllowSelectMultiple(true);
+		tree.getTreeState().collapseAll();
+		tree.getTreeState().expandNode((TreeNode)treeModel.getRoot());
+		tree.setLinkType(DefaultAbstractTree.LinkType.AJAX);
+		
+//		Tree tree = new Tree(this, "tree", treeModel);
+		
+		setVersioned(false);
 	}
 	
 	private TreeModel createTreeModel() 
@@ -48,6 +55,11 @@ public class HomePage extends WebPage {
 		l3.add("test 3.1");
 		l3.add("test 3.2");
 		l3.add("test 3.3");
+		
+//		for (int i = 0; i <250; ++i) {
+//			l3.add("Test 3.x" + i);
+//		}
+		
 		l2.add(l3);
 		
 		l2.add("test 2.4");
