@@ -103,7 +103,7 @@ public class WebSession extends Session
 		if (requestCycleFactory == null)
 		{
 			this.requestCycleFactory = ((WebApplication)getApplication())
-					.getDefaultRequestCycleFactory();
+					.getRequestCycleFactory();
 		}
 
 		return this.requestCycleFactory;
