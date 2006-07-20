@@ -612,6 +612,9 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		rootItem = null;
 	}
 
+	/**
+	 * Returns the javascript used to delete removed elements.
+	 */
 	private String getElementsDeleteJavascript() {
 		// build the javascript call
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(100);
@@ -664,7 +667,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 				System.out.println(js);
 
 				// add the javascript to target
-				target.addJavascript(js);
+				target.prependJavascript(js);
 			}
 			
 			for (TreeItem item : dirtyItemsCreateDOM)
@@ -686,8 +689,8 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 						previous = previous.getChildren().get(previous.getChildren().size() - 1);
 					}
 				}
-				target.addJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId() + "\"," +
-						                                       "\"" + previous.getMarkupId() + "\")");				
+				target.prependJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId() + "\"," +
+						                                          "\"" + previous.getMarkupId() + "\")");				
 			}
 								
 			// iterate through dirty items
