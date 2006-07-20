@@ -543,7 +543,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		{
 			buffer.append(" style=\"display: none\"");
 		}
-		buffer.append("\" />");
+		buffer.append(" />");
 		getResponse().write(buffer);
 	}
 
