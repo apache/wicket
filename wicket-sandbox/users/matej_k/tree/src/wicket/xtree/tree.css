@@ -34,8 +34,7 @@ div.wicket-tree span.junction {
 }
 
 div.wicket-tree span.junction-last {
-	background-image: url("line.gif");
-	background-position: 0px -10px;
+	background-image: url("line-short.gif"); 
 	background-repeat: no-repeat;
 }
 
