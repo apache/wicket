@@ -39,6 +39,13 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 
 	private String resourceKey;
 
+	private Component component;
+
+	void setComponent(Component c)
+	{
+		component = c;
+	}
+
 	/**
 	 * Constructor
 	 * 
@@ -71,43 +78,37 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	@Override
 	public String getObject()
 	{
-		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey, null,
-				defaultValue);
+		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
+					component, defaultValue);
 	}
 
 
 	/**
-	 * FIXME i dont think component<string> is correct here, what if this model
-	 * is used for formcomponent.setlabel(imodel<string>)?
-	 *
 	 * @see wicket.model.IAssignmentAware#wrapOnAssignment(wicket.Component)
 	 */
-	public <String> IWrapModel<String> wrapOnAssignment(final Component<String> component)
+	public IWrapModel<String> wrapOnAssignment(final Component component)
 	{
-		return new IWrapModel<String>()
+		return new AssignmentWrapper(resourceKey, defaultValue, component);
+	}
+	
+	private class AssignmentWrapper extends ResourceModel implements IWrapModel<String> {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public AssignmentWrapper(String resourceKey, String defaultValue, Component component)
 		{
-			private static final long serialVersionUID = 1L;
+			super(resourceKey, defaultValue);
+			setComponent(component);
+		}
 
-			public IModel getNestedModel()
-			{
-				return ResourceModel.this;
-			}
-
-			public String getObject()
-			{
-				return (String)Application.get().getResourceSettings().getLocalizer().getString(
-						resourceKey, component, defaultValue);
-			}
-
-			public void setObject(String object)
-			{
-			}
-
-			public void detach()
-			{
-				ResourceModel.this.detach();
-			}
-		};
+		@Override
+		public IModel getNestedModel()
+		{
+			return ResourceModel.this;
+		}
 	}
 
 }
