@@ -12,6 +12,7 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+	  <action type="fix" dev="Igor Vaynberg">AjaxFormSubmitBehavior no longer incorrectly calls onSubmit() if an error occured during form processing (this aligns it with Button.onSubmit() semantic), instead a new onError() method will be called to allow for error related ajax target processing</action>
 	  <action type="fix" dev="Igor Vaynberg" due-to="Michael Hosier">Fixed RadioChoice bug that prevented onchange notifications sent if it was used outside a form</action>
 	  <action type="update" dev="Igor Vaynberg">Added IDebugSettings.serializeSessionAttributes instead of relying on logger set to debug mode for the session store</action>
 	  <action type="fix" dev="Igor Vaynberg">Palette is now propertly disabled</action>
