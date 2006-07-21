@@ -418,11 +418,13 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			else
 			{
 				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='' || window.name !='");
-				response.write(name);
-				response.write("') window.location=\"");
+				response.write("if (window.name=='') { window.location=\"");
 				response.write(url);
-				response.write("\";");
+				response.write("\"; } else if (window.name !='");
+				response.write(name);
+				response.write("') { window.name=\"");
+				response.write(name);
+				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 		}
