@@ -51,7 +51,6 @@ import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrate
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
-import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Objects;
 import wicket.util.string.JavascriptUtils;
 
@@ -407,7 +406,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				url = urlFor(INewBrowserWindowListener.INTERFACE);
 			}
-			final ArrayListStack accessStack = getPageMap().getAccessStack();
 			if (firstAccess)
 			{
 				// this is the first access to the pagemap, set window.name
