@@ -34,28 +34,27 @@ import wicket.model.IModel;
  * </p>
  * <p>
  * <pre>
- *                 Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
- *                 f.add(new TextField(&quot;value1&quot;));
- *                 f.add(new SubmitLink(&quot;link1&quot;) {
- *                     protected void onSubmit() {
- *                         System.out.println(&quot;Link1 was clicked, value1 is: &quot;
+ *     Form f = new Form(&quot;linkForm&quot;, new CompoundPropertyModel(mod));
+ *     f.add(new TextField(&quot;value1&quot;));
+ *     f.add(new SubmitLink(&quot;link1&quot;) {
+ *         protected void onSubmit() {
+ *             System.out.println(&quot;Link1 was clicked, value1 is: &quot;
  *                                 + mod.getValue1());
- *                     };
- *                 });
- *                 add(new SubmitLink(&quot;link2&quot;,f) {
- *                     protected void onSubmit() {
- *                         System.out.println(&quot;Link2 was clicked, value1 is: &quot;
+ *         };
+ *      });
+ *      add(new SubmitLink(&quot;link2&quot;,f) {
+ *          protected void onSubmit() {
+ *              System.out.println(&quot;Link2 was clicked, value1 is: &quot;
  *                                 + mod.getValue1());
- *                     };
- *                 });
+ *           };
+ *      });
  *          
- *              &lt;form wicket:id=&quot;linkForm&quot; &gt;
- *                 &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
- *                 &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
- *                 &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
- *             &lt;/form&gt;
- *               &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
- *             
+ *      &lt;form wicket:id=&quot;linkForm&quot; &gt;
+ *          &lt;input wicket:id=&quot;value1&quot; type=&quot;text&quot; size=&quot;30&quot;/&gt;
+ *          &lt;a wicket:id=&quot;link1&quot;&gt;Press link1 to submit&lt;/a&gt;
+ *          &lt;input type=&quot;submit&quot; value=&quot;Send&quot;/&gt;
+ *      &lt;/form&gt;
+ *      &lt;a wicket:id=&quot;link2&quot;&gt;Press link 2 to submit&lt;/a&gt;
  * </pre>
  * </p>
  * <p>
@@ -142,7 +141,7 @@ public class SubmitLink extends Button implements ILinkListener
 	 */
 	public SubmitLink(String id, IModel model, Form form)
 	{
-		super(id);
+		super(id, model);
 		this.form = form;
 	}
 
