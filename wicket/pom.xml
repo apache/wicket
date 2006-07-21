@@ -41,18 +41,27 @@
 			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
 			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
 			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
+			<otherArchives>
+			    <otherArchive>http://www.nabble.com/Wicket---Announce-f13975.html</otherArchive>
+			</otherArchives>
 		</mailingList>
 		<mailingList>
 			<name>Wicket User List</name>
 			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
 			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
 			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
+			<otherArchives>
+			    <otherArchive>http://www.nabble.com/Wicket---User-f13976.html</otherArchive>
+			</otherArchives>
 		</mailingList>
 		<mailingList>
 			<name>Wicket Development List</name>
 			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</subscribe>
 			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</unsubscribe>
 			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-develop</archive>
+			<otherArchives>
+			    <otherArchive>http://www.nabble.com/Wicket---Dev-f13977.html</otherArchive>
+			</otherArchives>
 		</mailingList>
 		<mailingList>
 			<name>Wicket CVS commit List</name>
