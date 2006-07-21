@@ -329,27 +329,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	}
 
 	/**
-	 * 
-	 * @see wicket.Component#onDetach()
-	 */
-//	@Override
-//	protected void onDetach()
-//	{
-//		// This code can not go into HtmlHeaderContainer as
-//		// header.onEndRequest() is executed inside an iterator
-//		// and you can only call container.remove() which
-//		// is != iter.remove(). And the iterator is not available
-//		// inside onEndRequest(). Obviously WebPage.onEndRequest()
-//		// is invoked outside the iterator loop.
-//		final Component header = get(HtmlHeaderSectionHandler.HEADER_ID);
-//		if (header != null)
-//		{
-//			this.remove(header);
-//		}
-//		super.onDetach();
-//	}
-
-	/**
 	 * @see wicket.markup.html.INewBrowserWindowListener#onNewBrowserWindow()
 	 */
 	public void onNewBrowserWindow()
