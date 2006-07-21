@@ -12,6 +12,9 @@
   </properties>
   <body>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
+      <action type="fix" due-to="Antonio Petrelli (Scopes)">For improved reliability, instead of utilizing cookies and falling back on a quirky JavasScript, we now use window.name to detect whether we are in sync with the proper page map.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Jose Luis Casas Serradilla" issue="1501275">Form appendDefaultButtonField produced a double quote too many</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Yoav Hakman" issue="1518170">DatePicker hebrew</action>
       <action type="fix" dev="Martijn Dashorst" due-to="Ivo Lodewijks">Fixed SubmitLink constructor taking a model, but didn't pass the model to super.</action>
 	  <action type="fix" dev="Igor Vaynberg">AjaxFormSubmitBehavior no longer incorrectly calls onSubmit() if an error occured during form processing (this aligns it with Button.onSubmit() semantic), instead a new onError() method will be called to allow for error related ajax target processing</action>
 	  <action type="fix" dev="Igor Vaynberg" due-to="Michael Hosier">Fixed RadioChoice bug that prevented onchange notifications sent if it was used outside a form</action>
