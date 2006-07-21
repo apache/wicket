@@ -21,12 +21,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.http.Cookie;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.MetaDataKey;
@@ -35,6 +32,7 @@ import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.ResourceReference;
 import wicket.Response;
+import wicket.Session;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -53,8 +51,6 @@ import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrate
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
-import wicket.request.target.component.listener.RedirectPageRequestTarget;
-import wicket.settings.IRequestCycleSettings;
 import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Objects;
 import wicket.util.string.JavascriptUtils;
@@ -87,18 +83,20 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	private static final Log log = LogFactory.getLog(WebPage.class);
 
 	/** meta data key for missing body tags logging. */
-	private static final MetaDataKey MISSING_BODY_TAG_LOGGED_MDK = new MetaDataKey(
-			MissingBodyTagLoggedMetaData.class)
+	private static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
+			PageMapAccessMetaData.class)
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	/** meta data for missing body tags logging. */
-	private static final class MissingBodyTagLoggedMetaData implements Serializable
+	/**
+	 * meta data for recording map map access.
+	 */
+	private static final class PageMapAccessMetaData implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
-		Set/* <Class> */missingBodyTagsLogged = new HashSet(1);
+		Set pageMapNames = new HashSet(1);
 	}
 
 	/** The resource references used for new window/tab support */
@@ -366,22 +364,31 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 
-			int initialAccessStackSize = 0;
-			if (getApplication().getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_RENDER
-					&& target instanceof RedirectPageRequestTarget)
+			String name = getPageMap().getName();
+			if (name == null)
 			{
-				initialAccessStackSize = 1;
+				name = "wicket:default";
 			}
-			
-		   String name = getPageMap().getName();
-         if (name == null)
-         {
-             name = "wicket:default";
-         }
-         else
-         {
-         	name = name.replace('"', '_');
-         }
+			else
+			{
+				name = name.replace('"', '_');
+			}
+
+			Session session = getSession();
+
+			PageMapAccessMetaData meta = (PageMapAccessMetaData)session
+					.getMetaData(PAGEMAP_ACCESS_MDK);
+			if (meta == null)
+			{
+				meta = new PageMapAccessMetaData();
+				session.setMetaData(PAGEMAP_ACCESS_MDK, meta);
+			}
+			boolean firstAccess = false;
+			if (!meta.pageMapNames.contains(name))
+			{
+				firstAccess = true;
+				meta.pageMapNames.add(name);
+			}
 
 			// Here is our trickery to detect whether the current request was
 			// made in a new window/ tab, in which case it should go in a
@@ -401,25 +408,25 @@ public class WebPage extends Page implements INewBrowserWindowListener
 				url = urlFor(INewBrowserWindowListener.INTERFACE);
 			}
 			final ArrayListStack accessStack = getPageMap().getAccessStack();
-			if (accessStack.size() == initialAccessStackSize)
-         {
-             // this is the first access to the pagemap, set window.name
+			if (firstAccess)
+			{
+				// this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
 				response.write("window.name=\"");
 				response.write(name);
 				response.write("\";");
 				JavascriptUtils.writeCloseTag(response);
-         }
-         else
-         {
+			}
+			else
+			{
 				JavascriptUtils.writeOpenTag(response);
 				response.write("if (window.name=='' || window.name !='");
 				response.write(name);
 				response.write("') window.location=\"");
 				response.write(url);
 				response.write("\";");
- 				JavascriptUtils.writeCloseTag(response);
-         }			
+				JavascriptUtils.writeCloseTag(response);
+			}
 		}
 	}
 }
