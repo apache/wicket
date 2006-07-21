@@ -381,10 +381,12 @@ public final class MarkupParserTest extends WicketTestCase
 		IMarkup markup = parser
 				.parse("<html><![CDATA[ test ]]></html>");
 		assertEquals(1, markup.size());
-		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
-		assertEquals("html", ((ComponentTag)markup.get(1)).getName());
-		assertEquals(true, markup.get(1) instanceof RawMarkup);
-		assertEquals("<![CDATA[ test ]]>", ((RawMarkup)markup.get(1)).toString());
+//		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
+//		assertEquals("html", ((ComponentTag)markup.get(1)).getName());
+//		assertEquals(true, markup.get(1) instanceof RawMarkup);
+//		assertEquals("<![CDATA[ test ]]>", ((RawMarkup)markup.get(1)).toString());
+		assertEquals(true, markup.get(0) instanceof RawMarkup);
+		assertEquals("<html><![CDATA[ test ]]></html>", ((RawMarkup)markup.get(0)).toString());
 	}
 
 	/**

@@ -19,6 +19,7 @@
 package wicket.markup.parser;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -38,14 +39,14 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * 
 	 * @return if null, JVM defaults have been used.
 	 */
-	public abstract String getEncoding();
+	String getEncoding();
 
 	/**
 	 * Return the XML declaration string, in case if found in the markup.
 	 * 
 	 * @return Null, if not found.
 	 */
-	public String getXmlDeclaration();
+	String getXmlDeclaration();
 
 	/**
 	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
@@ -56,7 +57,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 *            To position
 	 * @return The raw markup in between the position marker and toPos
 	 */
-	public abstract CharSequence getInputFromPositionMarker(int toPos);
+	CharSequence getInputFromPositionMarker(int toPos);
 
 	/**
 	 * Wicket dissects the markup into Wicket relevant tags and raw markup,
@@ -69,7 +70,19 @@ public interface IXmlPullParser extends IMarkupFilter
 	 *            To position
 	 * @return The raw markup in between fromPos and toPos
 	 */
-	public abstract CharSequence getInput(final int fromPos, final int toPos);
+	CharSequence getInput(final int fromPos, final int toPos);
+
+	/**
+	 * Dissect the XML markup into tags and text. Tags are further analysed into
+	 * comments, CDATA, processing instruction etc as well as "standard" tags.
+	 * By means of getType() the type of the current element can be retrieved
+	 * and the appropriate getters must used to get hold of the informantion.
+	 * 
+	 * @return false, if end-of-file as been reached. If true, than use
+	 *         getType() to determine what has been found.
+	 * @throws ParseException
+	 */
+	boolean next() throws ParseException;
 
 	/**
 	 * Parse the markup provided. Use nextTag() to access the tags contained one
@@ -85,8 +98,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * @throws ResourceStreamNotFoundException
 	 *             Resource not found
 	 */
-	public abstract void parse(final CharSequence string) throws IOException,
-			ResourceStreamNotFoundException;
+	void parse(final CharSequence string) throws IOException, ResourceStreamNotFoundException;
 
 	/**
 	 * Reads and parses markup from a resource like file. Use nextTag() to
@@ -101,18 +113,18 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * @throws ResourceStreamNotFoundException
 	 *             Resource not found
 	 */
-	public abstract void parse(final IResourceStream resource, final String encoding)
-			throws IOException, ResourceStreamNotFoundException;
+	void parse(final IResourceStream resource, final String encoding) throws IOException,
+			ResourceStreamNotFoundException;
 
 	/**
 	 * Set the position marker of the markup at the current position.
 	 */
-	public abstract void setPositionMarker();
+	void setPositionMarker();
 
 	/**
 	 * Set the position marker of the markup
 	 * 
 	 * @param pos
 	 */
-	public abstract void setPositionMarker(final int pos);
+	void setPositionMarker(final int pos);
 }

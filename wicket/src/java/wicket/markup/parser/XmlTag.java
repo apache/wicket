@@ -67,7 +67,7 @@ public class XmlTag extends MarkupElement
 	int pos;
 
 	/** Full text of tag. */
-	String text;
+	CharSequence text;
 
 	/** The tag type (OPEN, CLOSE or OPEN_CLOSE). */
 	Type type;

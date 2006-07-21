@@ -41,6 +41,17 @@ import wicket.util.resource.StringResourceStream;
  */
 public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPullParser
 {
+	public static enum Type 
+	{
+		NOT_INITIALIZED,  /** next() must be called at least once for the Type to be valid */ 
+		TAG,              /** <name ...> */
+		BODY,             /** Tag body in between two tags */
+		COMMENT,          /** <!-- ... --> */
+		CDATA,            /** <![CDATA[ .. ]]> */
+		PROCESSING_INSTRUCTION,   /** <?...> */
+		SPECIAL_TAG       /** all other tags which look like <!.. > */
+	};
+
 	/**
 	 * Reads the xml data from an input stream and converts the chars according
 	 * to its encoding (<?xml ... encoding="..." ?>)
@@ -55,6 +66,15 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 	/** temporary variable which will hold the name of the closing tag. */
 	private String skipUntilText;
+
+	/** The last substring selected from the input */
+	private CharSequence lastText;
+
+	/** The type of what is in lastText */
+	private Type lastType = Type.NOT_INITIALIZED;
+
+	/** If lastType == TAG, than ... */
+	private XmlTag lastTag;
 
 	/**
 	 * Construct.
@@ -133,8 +153,10 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		}
 
 		this.input.setPosition(pos);
+		this.lastText = this.input.getSubstring(startIndex, pos);
+		this.lastType = Type.BODY;
 
-		// Get index of closing tag and advance past the tag
+		// Check that the tag is properly closed
 		lastPos = this.input.find('>', lastPos + tagNameLen);
 		if (lastPos == -1)
 		{
@@ -152,44 +174,153 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 * @return The extracted tag (will always be of type XmlTag).
 	 * @throws ParseException
 	 */
-	public final MarkupElement nextTag() throws ParseException
+	public final boolean next() throws ParseException
 	{
+		// Reached end of markup file?
+		if (this.input.getPosition() >= this.input.size())
+		{
+			return false;
+		}
+
 		if (this.skipUntilText != null)
 		{
 			skipUntil();
+			return true;
 		}
 
-		// While we can find an open tag, parse the tag
+		// Any more tags in the markup?
 		final int openBracketIndex = this.input.find('<');
-		if (openBracketIndex == -1)
+		
+		// Tag or Body?
+		if (this.input.charAt(this.input.getPosition()) != '<')
 		{
-			// There is no next matching tag
-			return null;
+			if (openBracketIndex == -1)
+			{
+				// There is no next matching tag.
+				this.lastText = this.input.getSubstring(-1);
+				this.input.setPosition(this.input.size());
+				this.lastType = Type.BODY;
+				return true;
+			}
+			
+			this.lastText = this.input.getSubstring(openBracketIndex);
+			this.input.setPosition(openBracketIndex);
+			this.lastType = Type.BODY;
+			return true;
 		}
 
-		// Determine line number
+		// Determine the line number
 		this.input.countLinesTo(openBracketIndex);
 
 		// Get index of closing tag and advance past the tag
 		int closeBracketIndex = this.input.find('>', openBracketIndex + 1);
-
 		if (closeBracketIndex == -1)
 		{
 			throw new ParseException("No matching close bracket at position " + openBracketIndex,
 					this.input.getPosition());
 		}
 
-		// Get the tagtext between open and close brackets
-		String tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
-				.toString();
+		// Get the complete tag text
+		this.lastText = this.input.getSubstring(openBracketIndex, closeBracketIndex + 1);
 
+		// Get the tagtext between open and close brackets
+		String tagText = this.lastText.subSequence(1, this.lastText.length() - 1).toString();
+		if (tagText.length() == 0)
+		{
+			throw new ParseException("Found empty tag: '<>' at position " + openBracketIndex,
+					this.input.getPosition());
+		}
+
+		// Handle special tags like <!-- and <![CDATA ...
+		final char firstChar = tagText.charAt(0);
+		if ((firstChar == '!') || (firstChar == '?'))
+		{
+			specialTagHandling(tagText, openBracketIndex, closeBracketIndex);
+			return true;
+		}
+
+		// Type of the tag, to be determined next
+		final XmlTag.Type type;
+
+		// If the tag ends in '/', it's a "simple" tag like <foo/>
+		if (tagText.endsWith("/"))
+		{
+			type = XmlTag.Type.OPEN_CLOSE;
+			tagText = tagText.substring(0, tagText.length() - 1);
+		}
+		else if (tagText.startsWith("/"))
+		{
+			// The tag text starts with a '/', it's a simple close tag
+			type = XmlTag.Type.CLOSE;
+			tagText = tagText.substring(1);
+		}
+		else
+		{
+			// It must be an open tag
+			type = XmlTag.Type.OPEN;
+
+			// If open tag and starts with "s" like "script" or "style", than
+			// ...
+			if ((tagText.length() > 5)
+					&& ((tagText.charAt(0) == 's') || (tagText.charAt(0) == 'S')))
+			{
+				final String lowerCase = tagText.substring(0, 6).toLowerCase();
+				if (lowerCase.startsWith("script"))
+				{
+					// prepare to skip everything between the open and close tag
+					this.skipUntilText = "script";
+				}
+				else if (lowerCase.startsWith("style"))
+				{
+					// prepare to skip everything between the open and close tag
+					this.skipUntilText = "style";
+				}
+			}
+		}
+
+		// Parse remaining tag text, obtaining a tag object or null
+		// if it's invalid
+		this.lastTag = parseTagText(tagText);
+		if (this.lastTag != null)
+		{
+			// Populate tag fields
+			this.lastTag.type = type;
+			this.lastTag.pos = openBracketIndex;
+			this.lastTag.length = this.lastText.length();
+			this.lastTag.text = this.lastText;
+			this.lastTag.lineNumber = this.input.getLineNumber();
+			this.lastTag.columnNumber = this.input.getColumnNumber();
+
+			// Move to position after the tag
+			this.input.setPosition(closeBracketIndex + 1);
+			this.lastType = Type.TAG;
+			return true;
+		}
+		else
+		{
+			throw new ParseException("Malformed tag (line " + this.input.getLineNumber()
+					+ ", column " + this.input.getColumnNumber() + ")", openBracketIndex);
+		}
+	}
+
+	/**
+	 * Handle special tags like <!-- --> or <![CDATA[..]]> or <?xml>
+	 * 
+	 * @param tagText
+	 * @param openBracketIndex
+	 * @param closeBracketIndex
+	 * @throws ParseException
+	 */
+	private void specialTagHandling(String tagText, final int openBracketIndex,
+			int closeBracketIndex) throws ParseException
+	{
 		// Handle comments
 		if (tagText.startsWith("!--"))
 		{
 			// Skip ahead to "-->". Note that you can not simply test for
 			// tagText.endsWith("--") as the comment might contain a '>'
 			// inside.
-			final int pos = this.input.find("-->", openBracketIndex + 1);
+			int pos = this.input.find("-->", openBracketIndex + 1);
 			if (pos == -1)
 			{
 				throw new ParseException("Unclosed comment beginning at line:"
@@ -197,114 +328,97 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 						openBracketIndex);
 			}
 
-			this.input.setPosition(pos + 3);
-			return nextTag();
+			pos += 3;
+			this.lastText = this.input.getSubstring(openBracketIndex, pos);
+			this.lastType = Type.COMMENT;
+			this.input.setPosition(pos);
+			return;
 		}
 
 		// CDATA sections might contain "<" which is not part of an XML tag.
 		// Make sure escaped "<" are treated right
-		final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
-		if (startText.toUpperCase().equals("![CDATA["))
+		if (tagText.startsWith("!["))
 		{
-			int pos1 = openBracketIndex;
-			do
+			final String startText = (tagText.length() <= 8 ? tagText : tagText.substring(0, 8));
+			if (startText.toUpperCase().equals("![CDATA["))
 			{
-				// Get index of closing tag and advance past the tag
-				closeBracketIndex = findChar('>', pos1);
-
-				if (closeBracketIndex == -1)
+				int pos1 = openBracketIndex;
+				do
 				{
-					throw new ParseException("No matching close bracket at position "
-							+ openBracketIndex, this.input.getPosition());
+					// Get index of closing tag and advance past the tag
+					closeBracketIndex = findChar('>', pos1);
+
+					if (closeBracketIndex == -1)
+					{
+						throw new ParseException("No matching close bracket at line:"
+								+ input.getLineNumber() + " column:" + input.getColumnNumber(),
+								this.input.getPosition());
+					}
+
+					// Get the tagtext between open and close brackets
+					tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
+							.toString();
+
+					pos1 = closeBracketIndex + 1;
 				}
+				while (tagText.endsWith("]]") == false);
 
-				// Get the tagtext between open and close brackets
-				tagText = this.input.getSubstring(openBracketIndex + 1, closeBracketIndex)
-						.toString();
-
-				pos1 = closeBracketIndex + 1;
-			}
-			while (tagText.endsWith("]]") == false);
-			
-			// Move to position after the tag
-			this.input.setPosition(closeBracketIndex + 1);
-
-			// Return next tag
-			return nextTag();
-		}
-
-		{
-			// Type of tag
-			XmlTag.Type type = XmlTag.Type.OPEN;
-
-			// If the tag ends in '/', it's a "simple" tag like <foo/>
-			if (tagText.endsWith("/"))
-			{
-				type = XmlTag.Type.OPEN_CLOSE;
-				tagText = tagText.substring(0, tagText.length() - 1);
-			}
-			else if (tagText.startsWith("/"))
-			{
-				// The tag text starts with a '/', it's a simple close tag
-				type = XmlTag.Type.CLOSE;
-				tagText = tagText.substring(1);
-			}
-
-			// We don't deeply parse tags like DOCTYPE that start with !
-			// or XML document definitions that start with ?
-			if (tagText.startsWith("!") || tagText.startsWith("?"))
-			{
 				// Move to position after the tag
 				this.input.setPosition(closeBracketIndex + 1);
 
-				// Return next tag
-				return nextTag();
-			}
-			else
-			{
-				final String lowerCase = tagText.toLowerCase();
-
-				// Often save a (longer) comparison at the expense of a
-				// extra shorter one for 's' tags
-				if ((type == XmlTag.Type.OPEN) && lowerCase.startsWith("s"))
-				{
-					if (lowerCase.startsWith("script"))
-					{
-						this.skipUntilText = "script";
-					}
-					else if (lowerCase.startsWith("style"))
-					{
-						this.skipUntilText = "style";
-					}
-				}
-
-				// Parse remaining tag text, obtaining a tag object or null
-				// if it's invalid
-				final XmlTag tag = parseTagText(tagText);
-				if (tag != null)
-				{
-					// Populate tag fields
-					tag.type = type;
-					tag.pos = openBracketIndex;
-					tag.length = (closeBracketIndex + 1) - openBracketIndex;
-					tag.text = this.input.getSubstring(openBracketIndex, closeBracketIndex + 1)
-							.toString();
-					tag.lineNumber = this.input.getLineNumber();
-					tag.columnNumber = this.input.getColumnNumber();
-
-					// Move to position after the tag
-					this.input.setPosition(closeBracketIndex + 1);
-
-					// Return the tag we found!
-					return tag;
-				}
-				else
-				{
-					throw new ParseException("Malformed tag (line " + this.input.getLineNumber()
-							+ ", column " + this.input.getColumnNumber() + ")", openBracketIndex);
-				}
+				this.lastText = tagText;
+				this.lastType = Type.CDATA;
+				return;
 			}
 		}
+
+		if (tagText.charAt(0) == '?')
+		{
+			this.lastType = Type.PROCESSING_INSTRUCTION;
+
+			// Move to position after the tag
+			this.input.setPosition(closeBracketIndex + 1);
+			return;
+		}
+
+		// Move to position after the tag
+		this.lastType = Type.SPECIAL_TAG;
+		this.input.setPosition(closeBracketIndex + 1);
+	}
+
+	/**
+	 * Gets the next tag from the input string.
+	 * 
+	 * @return The extracted tag (will always be of type XmlTag).
+	 * @throws ParseException
+	 */
+	public final MarkupElement nextTag() throws ParseException
+	{
+		while (next())
+		{
+			switch (this.lastType)
+			{
+				case TAG :
+					return this.lastTag;
+
+				case BODY :
+					break;
+
+				case COMMENT :
+					break;
+
+				case CDATA :
+					break;
+
+				case PROCESSING_INSTRUCTION :
+					break;
+
+				case SPECIAL_TAG :
+					break;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -449,7 +563,6 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 			// Extract attributes
 			final VariableAssignmentParser attributeParser = new VariableAssignmentParser(tagText);
-
 			while (attributeParser.matcher().find(pos))
 			{
 				// Get key and value using attribute pattern
