@@ -372,12 +372,21 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				initialAccessStackSize = 1;
 			}
+			
+		   String name = getPageMap().getName();
+         if (name == null)
+         {
+             name = "wicket:default";
+         }
+         else
+         {
+         	name = name.replace('"', '_');
+         }
 
 			// Here is our trickery to detect whether the current request was
 			// made in a new window/ tab, in which case it should go in a
 			// different page map so that we don't intermangle the history of
 			// those windows
-			final ArrayListStack accessStack = getPageMap().getAccessStack();
 			CharSequence url = null;
 			if (target instanceof IBookmarkablePageRequestTarget)
 			{
@@ -391,90 +400,26 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				url = urlFor(INewBrowserWindowListener.INTERFACE);
 			}
-			final BodyContainer body = getBodyContainer();
-			final Cookie[] cookies = cycle.getWebRequest().getCookies();
-			if ((cookies == null && accessStack.size() > initialAccessStackSize) || body == null)
-			{
-				// If the browser does not support cookies, we try to work
-				// with the history
-				if (cookies != null && body == null && log.isWarnEnabled())
-				{
-					// issue a warning; the cookies based alternative would
-					// have worked, but unfortunately, it doesn't now
-					// because it misses the body tag
-					Application app = getApplication();
-					MissingBodyTagLoggedMetaData meta = (MissingBodyTagLoggedMetaData)app
-							.getMetaData(MISSING_BODY_TAG_LOGGED_MDK);
-					if (meta == null)
-					{
-						meta = new MissingBodyTagLoggedMetaData();
-						app.setMetaData(MISSING_BODY_TAG_LOGGED_MDK, meta);
-					}
-					Class pageClass = WebPage.this.getClass();
-					if (!meta.missingBodyTagsLogged.contains(pageClass))
-					{
-						log
-								.warn("Page with class "
-										+ pageClass.getName()
-										+ " does not have a body tag. It is advisable to have"
-										+ " a body tag pair, as multi window support might be problematic without.");
-						meta.missingBodyTagsLogged.add(pageClass);
-					}
-				}
-
-				if (accessStack.size() > initialAccessStackSize)
-				{
-					JavascriptUtils.writeOpenTag(response);
-					response.write("if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
-					response.write(url);
-					response.write("'}");
-					JavascriptUtils.writeCloseTag(response);
-				}
-			}
-			else
-			{
-				// We seem to have cookie support. Write out a script that
-				// adds a cookie on page load, and removes it on page unload.
-				// Whenever the cookie is not unloaded (it's there on load),
-				// we know that we have a new window/ tab instance
-				if (onUnLoadModel == null)
-				{
-					onUnLoadModel = new Model()
-					{
-						private static final long serialVersionUID = 1L;
-
-						/**
-						 * @see wicket.model.Model#getObject(wicket.Component)
-						 */
-						public Object getObject(Component component)
-						{
-							Application application = Application.get();
-							return "deleteWicketCookie('pm-" + getPageMap().getName()
-									+ application.getApplicationSettings().getContextPath()
-									+ application.getApplicationKey() + "');";
-						}
-					};
-					body.addOnUnLoadModifier(onUnLoadModel, null);
-				}
-				Application application = Application.get();
-				final String pageMapName = getPageMap().getName();
-				JavascriptUtils.writeJavascriptUrl(response, urlFor(cookiesResource));
+			final ArrayListStack accessStack = getPageMap().getAccessStack();
+			if (accessStack.size() == initialAccessStackSize)
+         {
+             // this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
-				response.write("var pagemapcookie = getWicketCookie('pm-");
-				response.write(pageMapName);
-				response.write(application.getApplicationSettings().getContextPath());
-				response.write(application.getApplicationKey());
-				response.println("');");
-				response.write("if(!pagemapcookie && pagemapcookie != '1'){setWicketCookie('pm-");
-				response.write(pageMapName);
-				response.write(application.getApplicationSettings().getContextPath());
-				response.write(application.getApplicationKey());
-				response.println("',1);}");
-				response.write("else {document.location.href = '");
-				response.write(url);
-				response.println("';}");
+				response.write("window.name=\"");
+				response.write(name);
+				response.write("\";");
 				JavascriptUtils.writeCloseTag(response);
-			}
+         }
+         else
+         {
+				JavascriptUtils.writeOpenTag(response);
+				response.write("if (window.name=='' || window.name !='");
+				response.write(name);
+				response.write("') window.location=\"");
+				response.write(url);
+				response.write("\";");
+ 				JavascriptUtils.writeCloseTag(response);
+         }			
 		}
 	}
 }
