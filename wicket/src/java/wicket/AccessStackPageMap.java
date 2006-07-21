@@ -197,6 +197,13 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 	@Override
 	public final void removeEntry(final IPageMapEntry entry)
 	{
+		if(entry == null)
+		{
+			// TODO this shouldn't happen but to many people are still getting this now and then/
+			// so first this "fix"
+			log.warn("PageMap.removeEntry called with an null entry");
+			return;
+		}
 		// Remove entry from session
 		Session session = getSession();
 		synchronized (session)
