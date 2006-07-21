@@ -21,13 +21,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.http.Cookie;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.AccessStackPageMap;
-import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.MetaDataKey;
@@ -36,6 +32,7 @@ import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.ResourceReference;
 import wicket.Response;
+import wicket.Session;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupNotFoundException;
@@ -54,9 +51,6 @@ import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrate
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
-import wicket.request.target.component.listener.RedirectPageRequestTarget;
-import wicket.settings.IRequestCycleSettings.RenderStrategy;
-import wicket.util.collections.ArrayListStack;
 import wicket.util.lang.Objects;
 import wicket.util.string.JavascriptUtils;
 
@@ -91,18 +85,20 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	private static final Log log = LogFactory.getLog(WebPage.class);
 
 	/** meta data key for missing body tags logging. */
-	private static final MetaDataKey MISSING_BODY_TAG_LOGGED_MDK = new MetaDataKey(
-			MissingBodyTagLoggedMetaData.class)
+	private static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
+			PageMapAccessMetaData.class)
 	{
 		private static final long serialVersionUID = 1L;
 	};
 
-	/** meta data for missing body tags logging. */
-	private static final class MissingBodyTagLoggedMetaData implements Serializable
+	/**
+	 * meta data for recording map map access.
+	 */
+	private static final class PageMapAccessMetaData implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
-		Set<Class<? extends WebPage>> missingBodyTagsLogged = new HashSet<Class<? extends WebPage>>(1);
+		Set<String> pageMapNames = new HashSet<String>(1);
 	}
 
 	/** The resource references used for new window/tab support */
@@ -248,10 +244,10 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		if (markupStream == null)
 		{
 			throw new MarkupNotFoundException(
-					"Each Page must have associated markup. Unable to find the markup file for Page: " 
-					+ this.toString());
+					"Each Page must have associated markup. Unable to find the markup file for Page: "
+							+ this.toString());
 		}
-		
+
 		// The <body> container. It can be accessed, replaced
 		// and attribute modifiers can be attached. <body> tags without
 		// wicket:id get automatically a wicket:id assigned.
@@ -272,9 +268,9 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 				break;
 			}
 		}
-		
+
 		// The <head> container. It can be accessed, replaced
-		// and attribute modifiers can be attached. 
+		// and attribute modifiers can be attached.
 		markupStream.setCurrentIndex(0);
 		while (markupStream.hasMoreComponentTags())
 		{
@@ -359,41 +355,46 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		private static final long serialVersionUID = 1L;
 
 		/** The unload model for deleting the pagemap cookie */
-		private Model<String> onUnLoadModel;
+		private Model onUnLoadModel;
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
 		public final void renderHead(final Response response)
 		{
-			if (WebPage.this.isStateless() == true)
-			{
-				return;
-			}
-			
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 
-			int initialAccessStackSize = 0;
-			if (getApplication().getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_RENDER
-					&& target instanceof RedirectPageRequestTarget)
+			String name = getPageMap().getName();
+			if (name == null)
 			{
-				initialAccessStackSize = 1;
+				name = "wicket:default";
+			}
+			else
+			{
+				name = name.replace('"', '_');
+			}
+
+			Session session = getSession();
+
+			PageMapAccessMetaData meta = (PageMapAccessMetaData)session
+					.getMetaData(PAGEMAP_ACCESS_MDK);
+			if (meta == null)
+			{
+				meta = new PageMapAccessMetaData();
+				session.setMetaData(PAGEMAP_ACCESS_MDK, meta);
+			}
+			boolean firstAccess = false;
+			if (!meta.pageMapNames.contains(name))
+			{
+				firstAccess = true;
+				meta.pageMapNames.add(name);
 			}
 
 			// Here is our trickery to detect whether the current request was
 			// made in a new window/ tab, in which case it should go in a
 			// different page map so that we don't intermangle the history of
 			// those windows
-			final ArrayListStack accessStack;
-			if (getPageMap() instanceof AccessStackPageMap)
-			{
-				accessStack = ((AccessStackPageMap)getPageMap()).getAccessStack();
-			}
-			else
-			{
-				accessStack = new ArrayListStack();
-			}
 			CharSequence url = null;
 			if (target instanceof IBookmarkablePageRequestTarget)
 			{
@@ -407,90 +408,25 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 			{
 				url = urlFor(INewBrowserWindowListener.INTERFACE);
 			}
-			final BodyContainer body = getBodyContainer();
-			final Cookie[] cookies = cycle.getWebRequest().getCookies();
-			if ((cookies == null && accessStack.size() > initialAccessStackSize) || body == null)
+			if (firstAccess)
 			{
-				// If the browser does not support cookies, we try to work
-				// with the history
-				if (cookies != null && body == null && log.isWarnEnabled())
-				{
-					// issue a warning; the cookies based alternative would
-					// have worked, but unfortunately, it doesn't now
-					// because it misses the body tag
-					Application app = getApplication();
-					MissingBodyTagLoggedMetaData meta = (MissingBodyTagLoggedMetaData)app
-							.getMetaData(MISSING_BODY_TAG_LOGGED_MDK);
-					if (meta == null)
-					{
-						meta = new MissingBodyTagLoggedMetaData();
-						app.setMetaData(MISSING_BODY_TAG_LOGGED_MDK, meta);
-					}
-					Class<? extends WebPage> pageClass = WebPage.this.getClass();
-					if (!meta.missingBodyTagsLogged.contains(pageClass))
-					{
-						log
-								.warn("Page with class "
-										+ pageClass.getName()
-										+ " does not have a body tag. It is advisable to have"
-										+ " a body tag pair, as multi window support might be problematic without.");
-						meta.missingBodyTagsLogged.add(pageClass);
-					}
-				}
-
-				if (accessStack.size() > initialAccessStackSize)
-				{
-					JavascriptUtils.writeOpenTag(response);
-					response
-							.write("if((history.length == 0 && document.all) || (history.length == 1 && !document.all)){ if (!document.all) window.location.hash='some-random-hash!'; document.location.href = '");
-					response.write(url);
-					response.write("'}");
-					JavascriptUtils.writeCloseTag(response);
-				}
+				// this is the first access to the pagemap, set window.name
+				JavascriptUtils.writeOpenTag(response);
+				response.write("window.name=\"");
+				response.write(name);
+				response.write("\";");
+				JavascriptUtils.writeCloseTag(response);
 			}
 			else
 			{
-				// We seem to have cookie support. Write out a script that
-				// adds a cookie on page load, and removes it on page unload.
-				// Whenever the cookie is not unloaded (it's there on load),
-				// we know that we have a new window/ tab instance
-				if (onUnLoadModel == null)
-				{
-					onUnLoadModel = new Model<String>()
-					{
-						private static final long serialVersionUID = 1L;
-
-						/**
-						 * @see wicket.model.Model#getObject()
-						 */
-						@Override
-						public String getObject()
-						{
-							Application application = Application.get();
-							return "deleteWicketCookie('pm-" + getPageMap().getName()
-									+ application.getApplicationSettings().getContextPath()
-									+ application.getApplicationKey() + "');";
-						}
-					};
-					body.addOnUnLoadModifier(onUnLoadModel, null);
-				}
-				Application application = Application.get();
-				final String pageMapName = getPageMap().getName();
-				JavascriptUtils.writeJavascriptUrl(response, urlFor(cookiesResource));
 				JavascriptUtils.writeOpenTag(response);
-				response.write("var pagemapcookie = getWicketCookie('pm-");
-				response.write(pageMapName);
-				response.write(application.getApplicationSettings().getContextPath());
-				response.write(application.getApplicationKey());
-				response.println("');");
-				response.write("if(!pagemapcookie && pagemapcookie != '1'){setWicketCookie('pm-");
-				response.write(pageMapName);
-				response.write(application.getApplicationSettings().getContextPath());
-				response.write(application.getApplicationKey());
-				response.println("',1);}");
-				response.write("else {document.location.href = '");
+				response.write("if (window.name=='') { window.location=\"");
 				response.write(url);
-				response.println("';}");
+				response.write("\"; } else if (window.name !='");
+				response.write(name);
+				response.write("') { window.name=\"");
+				response.write(name);
+				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 		}
