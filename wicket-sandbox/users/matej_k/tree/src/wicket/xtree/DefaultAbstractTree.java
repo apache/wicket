@@ -40,44 +40,44 @@ public abstract class DefaultAbstractTree extends AbstractTree
 {	
 	/** Reference to the css file. */
 	private static final PackageResourceReference CSS = 
-		new PackageResourceReference(DefaultAbstractTree.class, "tree.css");
+		new PackageResourceReference(DefaultAbstractTree.class, "res/tree.css");
 
 	/** Reference to the icon of tree item (not a folder) */
 	private static final PackageResourceReference ITEM = 
-		new PackageResourceReference(DefaultAbstractTree.class, "item.gif");
+		new PackageResourceReference(DefaultAbstractTree.class, "res/item.gif");
 	
 	/** Reference to the icon of open tree folder */
 	private static final PackageResourceReference FOLDER_OPEN = 
-		new PackageResourceReference(DefaultAbstractTree.class, "folder-open.gif");
+		new PackageResourceReference(DefaultAbstractTree.class, "res/folder-open.gif");
 	
 	/** Reference to the icon of closed tree folder */
 	private static final PackageResourceReference FOLDER_CLOSED = 
-		new PackageResourceReference(DefaultAbstractTree.class, "folder-closed.gif");
+		new PackageResourceReference(DefaultAbstractTree.class, "res/folder-closed.gif");
 	
 	/**
 	 * Tree constructor.
 	 */
-	public DefaultAbstractTree(MarkupContainer parent, String id, TreeModel model, boolean rootLess) 
+	public DefaultAbstractTree(MarkupContainer parent, String id, TreeModel model) 
 	{
-		super(parent, id, new Model<TreeModel>(model), rootLess);
+		super(parent, id, new Model<TreeModel>(model));
 		init();
 	}
 
 	/**
 	 * Tree constructor.
 	 */
-	public DefaultAbstractTree(MarkupContainer parent, String id, IModel<TreeModel> model, boolean rootLess) 
+	public DefaultAbstractTree(MarkupContainer parent, String id, IModel<TreeModel> model) 
 	{
-		super(parent, id, model, rootLess);
+		super(parent, id, model);
 		init();
 	}
 
 	/**
 	 * Tree contructor.
 	 */
-	public DefaultAbstractTree(MarkupContainer parent, String id, boolean rootLess) 
+	public DefaultAbstractTree(MarkupContainer parent, String id) 
 	{		
-		super(parent, id, rootLess);
+		super(parent, id);
 		init();
 	}
 

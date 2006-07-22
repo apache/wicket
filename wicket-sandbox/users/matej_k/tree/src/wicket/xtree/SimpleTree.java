@@ -21,22 +21,22 @@ public class SimpleTree extends DefaultAbstractTree {
 	/**
 	 * Tree constructor.
 	 */
-	public SimpleTree(MarkupContainer parent, String id, TreeModel model, boolean rootLess) {
-		super(parent, id, model, rootLess);
+	public SimpleTree(MarkupContainer parent, String id, TreeModel model) {
+		super(parent, id, model);
 	}
 
 	/**
 	 * Tree constructor.
 	 */
-	public SimpleTree(MarkupContainer parent, String id, IModel<TreeModel> model, boolean rootLess) {
-		super(parent, id, model, rootLess);
+	public SimpleTree(MarkupContainer parent, String id, IModel<TreeModel> model) {
+		super(parent, id, model);
 	}
 
 	/**
 	 * Tree constructor.
 	 */
-	public SimpleTree(MarkupContainer parent, String id, boolean rootLess) {
-		super(parent, id, rootLess);
+	public SimpleTree(MarkupContainer parent, String id) {
+		super(parent, id);
 	}
 
 	/**

@@ -41,10 +41,10 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 * @param id
 	 * @param rootLess whether the tree root should be hidden or shown
 	 */
-	public AbstractTree(MarkupContainer parent, String id, boolean rootLess) 
+	public AbstractTree(MarkupContainer parent, String id) 
 	{
 		super(parent, id);
-		init(rootLess);		
+		init();		
 	}
 
 	/**
@@ -54,34 +54,51 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 * @param model
 	 * @param rootLess whether the tree root should be hidden or shown
 	 */
-	public AbstractTree(MarkupContainer parent, String id, IModel<TreeModel> model, boolean rootLess) 
+	public AbstractTree(MarkupContainer parent, String id, IModel<TreeModel> model) 
 	{
 		super(parent, id, model);
-		init(rootLess);
+		init();
 	}
 	
 	// whether the tree root is shown
 	private boolean rootLess = false;
 	
 	/**
+	 * Sets whether the root of the tree should be visible. 
+	 */
+	public void setRootLess(boolean rootLess) 
+	{
+		if (this.rootLess != rootLess)
+		{
+			this.rootLess = rootLess;
+			invalidateAll();
+			
+			// if the tree is in rootless mode, make sure the root node is expanded
+			if (rootLess == true && getModelObject() != null)
+			{
+				getTreeState().expandNode((TreeNode)getModelObject().getRoot());
+			}
+		}
+	}
+	
+	/**
 	 * @return whether the tree root is shown
 	 */
-	public final boolean isRootLess() {
+	public final boolean isRootLess() 
+	{
 		return rootLess;
 	}
 
 	/** Reference to the javascript file. */
 	private static final PackageResourceReference JAVASCRIPT = 
-		new PackageResourceReference(AbstractTree.class, "tree.js");
+		new PackageResourceReference(AbstractTree.class, "res/tree.js");
 	
 	
 	/**
 	 * Initialize the component.
 	 */
-	private final void init(boolean rootLess) 
+	private final void init() 
 	{
-		this.rootLess = rootLess;
-		
 		// we need id when we are replacing the whole tree
 		setOutputMarkupId(true);
 		
