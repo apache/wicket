@@ -41,15 +41,22 @@ import wicket.util.resource.StringResourceStream;
  */
 public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPullParser
 {
-	public static enum Type 
-	{
-		NOT_INITIALIZED,  /** next() must be called at least once for the Type to be valid */ 
-		TAG,              /** <name ...> */
-		BODY,             /** Tag body in between two tags */
-		COMMENT,          /** <!-- ... --> */
-		CDATA,            /** <![CDATA[ .. ]]> */
-		PROCESSING_INSTRUCTION,   /** <?...> */
-		SPECIAL_TAG       /** all other tags which look like <!.. > */
+	/** the tag type. */
+	public static enum Type {
+		/** next() must be called at least once for the Type to be valid */
+		NOT_INITIALIZED,
+		/** <name ...> */
+		TAG,
+		/** Tag body in between two tags */
+		BODY,
+		/** <!-- ... --> */
+		COMMENT,
+		/** <![CDATA[ .. ]]> */
+		CDATA,
+		/** <?...> */
+		PROCESSING_INSTRUCTION,
+		/** all other tags which look like <!.. > */
+		SPECIAL_TAG
 	};
 
 	/**
@@ -190,7 +197,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 
 		// Any more tags in the markup?
 		final int openBracketIndex = this.input.find('<');
-		
+
 		// Tag or Body?
 		if (this.input.charAt(this.input.getPosition()) != '<')
 		{
@@ -202,7 +209,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 				this.lastType = Type.BODY;
 				return true;
 			}
-			
+
 			this.lastText = this.input.getSubstring(openBracketIndex);
 			this.input.setPosition(openBracketIndex);
 			this.lastType = Type.BODY;
