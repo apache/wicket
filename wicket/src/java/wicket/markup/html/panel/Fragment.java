@@ -142,6 +142,14 @@ public class Fragment<T> extends WebMarkupContainer<T>
 		this.markupId = markupId;
 		this.markupProvider = markupProvider;
 	}
+	
+	/**
+	 * @return The fragments markupid in the parent markup.
+	 */
+	public final String getFragmentMarkupId()
+	{
+		return markupId;
+	}
 
 	/**
 	 * The associated markup fragment can be modified
@@ -207,6 +215,8 @@ public class Fragment<T> extends WebMarkupContainer<T>
 
 		renderFragment(providerMarkupStream, openTag);
 	}
+	
+	
 
 	/**
 	 * Get the markup stream which shall be used to search for the fragment

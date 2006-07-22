@@ -21,6 +21,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.border.Border;
+import wicket.markup.html.panel.Fragment;
 
 /**
  * Responding to an AJAX request requires that we position the markup stream at
@@ -108,6 +109,22 @@ final class MarkupFragmentFinder
 			}
 			else
 			{
+				// if it is a child of a fragement. First find the fragement
+				MarkupContainer mc = component.findParent(Fragment.class);
+				if(mc != null)
+				{
+					String fragmentId = ((Fragment)mc).getFragmentMarkupId();
+					String componentId = getComponentRelativePath(mc, parentWithAssociatedMarkup) + mc.getId();
+					relativePath = relativePath.replace(componentId, fragmentId);
+					// If the component is defined in the markup
+					index = markupStream.findComponentIndex(relativePath, component.getId());
+					if (index != -1)
+					{
+						// than position the stream at the beginning of the component
+						markupStream.setCurrentIndex(index);
+						return markupStream;
+					}
+				}
 				throw new WicketRuntimeException(
 						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: "
 								+ component.getId());
