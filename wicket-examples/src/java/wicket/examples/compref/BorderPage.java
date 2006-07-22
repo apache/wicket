@@ -47,7 +47,7 @@ public class BorderPage extends WicketExamplePage
 		String code = "&nbsp;&nbsp;&nbsp;&nbsp;public BorderPage()\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;{\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Label label = new Label(\"label\", \"I am the label\");\n"
-				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBorder border = new MyBorder(\"border\");\n"
+				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyBorder border = new MyBorder(this, \"border\");\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;border.add(label);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add(border);\n"
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;}";
