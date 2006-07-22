@@ -88,13 +88,13 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		}
 
 		final String path = requestParameters.getPath();
-		
+
 		// see whether this request points to a bookmarkable page
 		if (requestParameters.getBookmarkablePageClass() != null)
 		{
 			return resolveBookmarkablePage(requestCycle, requestParameters);
-		}		
-		// See whether this request points to a rendered page		
+		}
+		// See whether this request points to a rendered page
 		else if (requestParameters.getComponentPath() != null)
 		{
 			return resolveRenderedPage(requestCycle, requestParameters);
@@ -255,6 +255,7 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
+	@SuppressWarnings("unchecked")
 	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
@@ -274,11 +275,13 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			if (requestParameters.getComponentPath() != null && requestParameters.getInterfaceName() != null) 
+			if (requestParameters.getComponentPath() != null
+					&& requestParameters.getInterfaceName() != null)
 			{
-				return new BookmarkableListenerInterfaceRequestTarget(requestParameters.getPageMapName(), 
-						pageClass, params, requestParameters.getComponentPath(), requestParameters.getInterfaceName());
-			}			
+				return new BookmarkableListenerInterfaceRequestTarget(requestParameters
+						.getPageMapName(), pageClass, params, requestParameters.getComponentPath(),
+						requestParameters.getInterfaceName());
+			}
 			else if (requestParameters.getBookmarkableFormName() != null)
 			{
 				return new BookmarkableFormPageRequestTarget(requestParameters.getPageMapName(),

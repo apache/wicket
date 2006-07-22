@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:32:40 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -160,7 +160,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 	/** True if component changes are being tracked. */
 	private static final int FLAG_TRACK_CHANGES = FLAG_RESERVED4;
-	
+
 	/** True if the page should try to be stateless */
 	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
 
@@ -291,10 +291,12 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/**
 	 * A component was added.
 	 * 
+	 * @param <V>
+	 *            The type
 	 * @param component
 	 *            The component that was added
 	 */
-	final void componentAdded(final Component component)
+	final <V> void componentAdded(final Component<V> component)
 	{
 		checkHierarchyChange(component);
 
@@ -308,10 +310,12 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/**
 	 * A component's model changed.
 	 * 
+	 * @param <V>
+	 *            The type
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	final void componentModelChanging(final Component component)
+	final <V> void componentModelChanging(final Component<V> component)
 	{
 		checkHierarchyChange(component);
 
@@ -325,10 +329,12 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/**
 	 * A component was removed.
 	 * 
+	 * @param <V>
+	 *            The type
 	 * @param component
 	 *            The component that was removed
 	 */
-	final void componentRemoved(final Component component)
+	final <V> void componentRemoved(final Component<V> component)
 	{
 		checkHierarchyChange(component);
 
@@ -457,7 +463,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	{
 		Session.get().dirtyPage(this);
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
@@ -478,7 +484,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			renderedComponents = null;
 		}
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
@@ -538,7 +544,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * @return Returns feedback messages from all components in this page (including the page itself).
+	 * @return Returns feedback messages from all components in this page
+	 *         (including the page itself).
 	 */
 	public final FeedbackMessages getFeedbackMessages()
 	{
@@ -610,13 +617,15 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * Returns whether the page should try to be stateless.
-	 * To be stateless, getStatelessHint() of every component on page (and it's behavior)
-	 * must return true and the page must be bookmarkable. 
+	 * Returns whether the page should try to be stateless. To be stateless,
+	 * getStatelessHint() of every component on page (and it's behavior) must
+	 * return true and the page must be bookmarkable.
+	 * 
 	 * @see wicket.Component#getStatelessHint()
 	 */
 	@Override
-	public final boolean getStatelessHint() {
+	public final boolean getStatelessHint()
+	{
 		return getFlag(FLAG_STATELESS_HINT);
 	}
 
@@ -948,28 +957,28 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * 
 	 * @return Returns true if the page is bookmarkable.
 	 */
-	public boolean isBookmarkable() 
+	public boolean isBookmarkable()
 	{
-		try 
+		try
 		{
-			if (getClass().getConstructor(new Class[] { PageParameters.class } ) != null)
+			if (getClass().getConstructor(new Class[] { PageParameters.class }) != null)
 			{
 				return true;
-			}			       
-				   
-		} 
-		catch (Exception ignore) 
+			}
+
+		}
+		catch (Exception ignore)
 		{
-			try 
+			try
 			{
-				if (getClass().getConstructor(new Class[] { }) != null)
+				if (getClass().getConstructor(new Class[] {}) != null)
 				{
 					return true;
 				}
 			}
 			catch (Exception ignore2)
-			{				
-			}			
+			{
+			}
 		}
 		return false;
 	}
@@ -988,9 +997,10 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * Gets whether the page is stateless. Components on stateless page must not render
-	 * any statefull urls, and components on statefull page must not render any stateless urls.
-	 * Statefull urls are urls, which refer to a certain (current) page instance.   
+	 * Gets whether the page is stateless. Components on stateless page must not
+	 * render any statefull urls, and components on statefull page must not
+	 * render any stateless urls. Statefull urls are urls, which refer to a
+	 * certain (current) page instance.
 	 * 
 	 * @return Whether to page is stateless
 	 */
@@ -1000,7 +1010,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		{
 			stateless = false;
 		}
-		
+
 		if (stateless == null)
 		{
 			Object returnValue = visitChildren(Component.class, new IVisitor()
@@ -1011,9 +1021,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 					{
 						return Boolean.FALSE;
 					}
-					
+
 					final Iterator<IBehavior> behaviors = component.getBehaviors().iterator();
-					
+
 					while (behaviors.hasNext())
 					{
 						IBehavior behavior = behaviors.next();
@@ -1032,7 +1042,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			}
 			else if (returnValue instanceof Boolean)
 			{
-				stateless =  (Boolean)returnValue;
+				stateless = (Boolean)returnValue;
 			}
 		}
 		return stateless;
@@ -1106,7 +1116,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		final IPageSettings settings = getSession().getApplication().getPageSettings();
 		return new UndoPageVersionManager<T>(this, settings.getMaxPageVersions());
 	}
-	
+
 	/**
 	 * Redirect to this page.
 	 * 
@@ -1190,7 +1200,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	public final void renderPage()
 	{
 		resetHeadRendered();
-		
+
 		// first try to check if the page can be rendered:
 		if (!isActionAuthorized(RENDER))
 		{
@@ -1232,7 +1242,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// Now, do the initialization for the other components
 		internalAttach();
 
-		// Visit all this page's children to reset header contribution status and check
+		// Visit all this page's children to reset header contribution status
+		// and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
 		// authorization exception is thrown it will block the rendering of this
@@ -1242,7 +1253,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			public Object component(final Component component)
 			{
 				component.resetHeadRendered();
-				
+
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 
@@ -1265,14 +1276,14 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 		// Check rendering if it happened fully
 		checkRendering(this);
-		
+
 		if (!isStateless())
 		{
 			// trigger creation of the actual session in case it was deferred
 			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
 			// Add/touch the response page in the session (its pagemap).
 			getSession().touch(this);
-		}		
+		}
 	}
 
 	/**
@@ -1323,14 +1334,20 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * Sets, whether the page should try to be stateless. 
-	 * To be stateless, getStatelessHint() of every component on page (and it's behavior)
-	 * must return true and the page must be bookmarkable.
+	 * Sets whether the page should try to be stateless. To be stateless,
+	 * getStatelessHint() of every component on page (and it's behavior) must
+	 * return true and the page must be bookmarkable.
+	 * 
+	 * @param value
+	 *            whether the page should try to be stateless
 	 */
-	public final void setStatelessHint(boolean value) {
-		if(value && !isBookmarkable())
+	public final void setStatelessHint(boolean value)
+	{
+		if (value && !isBookmarkable())
 		{
-			throw new WicketRuntimeException("Can't set stateless hint to true on a page when the page is not bookmarkable, page: " + this);
+			throw new WicketRuntimeException(
+					"Can't set stateless hint to true on a page when the page is not bookmarkable, page: "
+							+ this);
 		}
 		setFlag(FLAG_STATELESS_HINT, value);
 	}
@@ -1347,7 +1364,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	{
 		renderedComponents = null;
 	}
-	
+
 	/**
 	 * Get the string representation of this container.
 	 * 

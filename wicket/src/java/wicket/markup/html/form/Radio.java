@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -72,6 +72,7 @@ public class Radio<T> extends WebMarkupContainer<T>
 	 * @param tag
 	 *            the abstraction representing html tag of this component
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
@@ -85,7 +86,7 @@ public class Radio<T> extends WebMarkupContainer<T>
 		final RadioGroup group = findParent(RadioGroup.class);
 		final String path = getPath();
 		final String relativePath = path.substring(group.getPath().length() + 1);
-		
+
 		if (group == null)
 		{
 			throw new WicketRuntimeException(

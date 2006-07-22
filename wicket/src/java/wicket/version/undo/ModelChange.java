@@ -31,9 +31,12 @@ import wicket.util.lang.Objects;
 /**
  * A model change operation.
  * 
+ * @param <T>
+ *            The type
+ * 
  * @author Jonathan Locke
  */
-class ModelChange extends Change
+class ModelChange<T> extends Change
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,10 +44,10 @@ class ModelChange extends Change
 	private static final Log log = LogFactory.getLog(ModelChange.class);
 
 	/** subject. */
-	private final Component component;
+	private final Component<T> component;
 
 	/** original model. */
-	private IModel originalModel;
+	private IModel<T> originalModel;
 
 	/**
 	 * Construct.
@@ -52,7 +55,7 @@ class ModelChange extends Change
 	 * @param component
 	 *            subject of the change
 	 */
-	ModelChange(final Component<?> component)
+	ModelChange(final Component<T> component)
 	{
 		if (component == null)
 		{
@@ -63,7 +66,7 @@ class ModelChange extends Change
 		this.component = component;
 
 		// Get component model
-		final IModel model = component.getModel();
+		final IModel<T> model = component.getModel();
 
 		// If the component has a model, it's about to change!
 		if (model != null)

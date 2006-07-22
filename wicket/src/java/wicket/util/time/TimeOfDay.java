@@ -72,6 +72,7 @@ public final class TimeOfDay extends AbstractTime
 	public static final TimeOfDay NOON = time(12, 0, PM);
 
 	/** Typesafe AM/PM enumeration. */
+	// FIXME: convert to Java 5 enum
 	public static final class Meridian extends EnumeratedType
 	{
 		private static final long serialVersionUID = 1L;

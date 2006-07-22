@@ -473,6 +473,7 @@ public final class Objects
 	 *             if the objects are both non-numeric yet of incompatible types
 	 *             or do not implement Comparable.
 	 */
+	@SuppressWarnings("unchecked")
 	public static int compareWithConversion(Object v1, Object v2)
 	{
 		int result;

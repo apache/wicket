@@ -95,7 +95,7 @@ public class ServletWebRequest extends WebRequest
 	 * @return Map of parameters
 	 */
 	@Override
-	public Map<String, ? extends Object> getParameterMap()
+	public Map<String, Object> getParameterMap()
 	{
 		final Map<String, Object> map = new HashMap<String, Object>();
 
@@ -140,7 +140,7 @@ public class ServletWebRequest extends WebRequest
 	{
 		String url = httpServletRequest.getRequestURI();
 		String rootPath = ((WebApplication)Application.get()).getRootPath();
-		if(url.startsWith(rootPath))
+		if (url.startsWith(rootPath))
 		{
 			return url.substring(rootPath.length());
 		}

@@ -42,7 +42,7 @@ import wicket.util.tester.apps_1.Book;
 
 /**
  * @author Ingram Chen
- * @param <T> 
+ * @param <T>
  */
 public class ChoicePage<T> extends WebPage<T>
 {
@@ -81,19 +81,20 @@ public class ChoicePage<T> extends WebPage<T>
 	{
 		ChoiceRenderer<Book> bookChoiceRenderer = new ChoiceRenderer<Book>("name", "id");
 
-		Form<?> form = new Form(this, "choiceForm");
+		Form<ChoicePage> form = new Form<ChoicePage>(this, "choiceForm");
 
-		form.setModel(new CompoundPropertyModel(this));
+		form.setModel(new CompoundPropertyModel<ChoicePage>(this));
 
 		// single select family
 		new DropDownChoice<Book>(form, "dropDownChoice", candidateChoices, bookChoiceRenderer);
-		new ListChoice<Book>(form, "listChoice", candidateChoices, bookChoiceRenderer).setMaxRows(4);
+		new ListChoice<Book>(form, "listChoice", candidateChoices, bookChoiceRenderer)
+				.setMaxRows(4);
 		new RadioChoice<Book>(form, "radioChoice", candidateChoices, bookChoiceRenderer);
 		newRadioGroup(form, candidateChoices);
 
 		// mulitple select family
-		new ListMultipleChoice<Book>(form, "listMultipleChoice", candidateChoices, bookChoiceRenderer)
-				.setMaxRows(4);
+		new ListMultipleChoice<Book>(form, "listMultipleChoice", candidateChoices,
+				bookChoiceRenderer).setMaxRows(4);
 		new CheckBoxMultipleChoice<Book>(form, "checkBoxMultipleChoice", candidateChoices,
 				bookChoiceRenderer);
 		newCheckGroup(form, candidateChoices);

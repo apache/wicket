@@ -88,7 +88,7 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 	/**
 	 * @see wicket.version.IPageVersionManager#componentAdded(wicket.Component)
 	 */
-	public void componentAdded(Component component)
+	public <V> void componentAdded(Component<V> component)
 	{
 		changeList.componentAdded(component);
 	}
@@ -96,7 +96,7 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 	/**
 	 * @see wicket.version.IPageVersionManager#componentModelChanging(wicket.Component)
 	 */
-	public void componentModelChanging(Component component)
+	public <V> void componentModelChanging(Component<V> component)
 	{
 		changeList.componentModelChanging(component);
 	}
@@ -104,7 +104,7 @@ public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 	/**
 	 * @see wicket.version.IPageVersionManager#componentRemoved(wicket.Component)
 	 */
-	public void componentRemoved(Component component)
+	public <V> void componentRemoved(Component<V> component)
 	{
 		changeList.componentRemoved(component);
 	}

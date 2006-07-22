@@ -352,7 +352,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 * The new parameter map with the 'x' param removed and the 'new' one
 		 * included
 		 */
-		private final Map parameterMap;
+		private final Map<String, Object> parameterMap;
 
 		/** The start index to the new relative URL */
 		private final int startRelativeUrl;
@@ -430,7 +430,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		 * @see wicket.Request#getParameterMap()
 		 */
 		@Override
-		public Map<String,?> getParameterMap()
+		public Map<String, Object> getParameterMap()
 		{
 			return this.parameterMap;
 		}

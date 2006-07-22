@@ -63,18 +63,22 @@ public interface IPageVersionManager<T> extends Serializable
 	/**
 	 * Indicates that the given component was added.
 	 * 
+	 * @param <V>
+	 *            The type
 	 * @param component
 	 *            The component that was added.
 	 */
-	void componentAdded(Component component);
+	<V> void componentAdded(Component<V> component);
 
 	/**
 	 * Indicates that the model for the given component is about to change.
 	 * 
+	 * @param <V>
+	 *            The type
 	 * @param component
 	 *            The component whose model is about to change
 	 */
-	void componentModelChanging(Component component);
+	<V> void componentModelChanging(Component<V> component);
 
 	/**
 	 * Indicates an internal state for the given component is about to change.
@@ -87,10 +91,12 @@ public interface IPageVersionManager<T> extends Serializable
 	/**
 	 * Indicates that the given component was removed.
 	 * 
+	 * @param <V>
+	 *            The type
 	 * @param component
 	 *            The component that was removed.
 	 */
-	void componentRemoved(Component component);
+	<V> void componentRemoved(Component<V> component);
 
 	/**
 	 * Called when changes to the page have ended.

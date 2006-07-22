@@ -79,25 +79,31 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	public String getObject()
 	{
 		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-					component, defaultValue);
+				component, defaultValue);
 	}
 
 
 	/**
 	 * @see wicket.model.IAssignmentAware#wrapOnAssignment(wicket.Component)
 	 */
+	@SuppressWarnings("unchecked")
 	public IWrapModel<String> wrapOnAssignment(final Component component)
 	{
 		return new AssignmentWrapper(resourceKey, defaultValue, component);
 	}
-	
-	private class AssignmentWrapper extends ResourceModel implements IWrapModel<String> {
 
-		/**
-		 * 
-		 */
+	private class AssignmentWrapper extends ResourceModel implements IWrapModel<String>
+	{
+
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Construct.
+		 * 
+		 * @param resourceKey
+		 * @param defaultValue
+		 * @param component
+		 */
 		public AssignmentWrapper(String resourceKey, String defaultValue, Component component)
 		{
 			super(resourceKey, defaultValue);

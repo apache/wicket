@@ -54,7 +54,8 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param parent
-	 * @param markupFileClass Used to generated the a common prefix for the id
+	 * @param markupFileClass
+	 *            Used to generated the a common prefix for the id
 	 */
 	public HeadForceTagIdHandler(final IMarkupFilter parent, final Class markupFileClass)
 	{
@@ -108,9 +109,11 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	}
 
 	/**
+	 * Gets whether the tag needs to have a wicket id.
 	 * 
 	 * @param tag
-	 * @return
+	 *            The tag
+	 * @return whether the tag needs to have a wicket id
 	 */
 	private final boolean needId(final ComponentTag tag)
 	{
@@ -128,8 +131,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return increased counter value
 	 */
 	private final int nextValue()
 	{

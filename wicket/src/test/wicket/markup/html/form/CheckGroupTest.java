@@ -21,6 +21,7 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.CompoundPropertyModel;
+import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
@@ -55,13 +57,13 @@ public class CheckGroupTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		private Set prop1 = new HashSet();
+		private Set<String> prop1 = new HashSet<String>();
 		private String prop2;
 
 		/**
 		 * @return prop1
 		 */
-		public Set getProp1()
+		public Set<String> getProp1()
 		{
 			return prop1;
 		}
@@ -69,7 +71,7 @@ public class CheckGroupTest extends WicketTestCase
 		/**
 		 * @param prop1
 		 */
-		public void setProp1(Set prop1)
+		public void setProp1(Set<String> prop1)
 		{
 			this.prop1 = prop1;
 		}
@@ -97,13 +99,14 @@ public class CheckGroupTest extends WicketTestCase
 	public void testFormProcessing()
 	{
 		// THIS NEEDS TO BE REWRITTEN BASED ON 1_2 VERSION
-		
+
 		MockModelObject modelObject = new MockModelObject();
 		MockCheckGroupTestFormPage page = new MockCheckGroupTestFormPage();
 
 		// create component hierarchy
 
-		final Form<MockModelObject> form = new Form<MockModelObject>(page, "form", new CompoundPropertyModel<MockModelObject>(modelObject));
+		final Form<MockModelObject> form = new Form<MockModelObject>(page, "form",
+				new CompoundPropertyModel<MockModelObject>(modelObject));
 
 		final CheckGroup group = new CheckGroup(form, "prop1");
 		final WebMarkupContainer container = new WebMarkupContainer(group, "container");
@@ -113,19 +116,18 @@ public class CheckGroupTest extends WicketTestCase
 		final String check2 = "check2-selection";
 
 		// test model constructors
-		List list = new ArrayList();
-		Model model = new Model(list);
-
-		final CheckGroup group2 = new CheckGroup(group, "group2", model);
+		List<String> list = new ArrayList<String>();
+		IModel<Collection<String>> model = new Model<Collection<String>>(list);
+		final CheckGroup group2 = new CheckGroup<String>(group, "group2", model);
 		assertTrue(group2.getModelObject() == list);
 
-		final CheckGroup group3 = new CheckGroup(form, "group3", list);
+		final CheckGroup group3 = new CheckGroup<String>(form, "group3", list);
 		assertTrue(group3.getModelObject() == list);
 
 		// set up necessary objects to emulate a form submission
 		application.createRequestCycle();
 
-		new Check(container, "check1", new Model(check1));
+		new Check<String>(container, "check1", new Model<String>(check1));
 		new Check(group, "prop2");
 
 		modelObject.setProp2(check2);

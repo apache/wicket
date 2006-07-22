@@ -56,12 +56,14 @@ class ChangeList implements Serializable
 	/**
 	 * A model is about to change.
 	 * 
+	 * @param <T>
+	 *            The type
 	 * @param component
 	 *            the component of which the model changed
 	 */
-	void componentModelChanging(Component component)
+	<T> void componentModelChanging(Component<T> component)
 	{
-		changes.add(new ModelChange(component));
+		changes.add(new ModelChange<T>(component));
 	}
 
 	/**

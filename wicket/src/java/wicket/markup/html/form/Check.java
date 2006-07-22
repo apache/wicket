@@ -82,7 +82,7 @@ public class Check<T> extends WebMarkupContainer<T>
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup group = findParent(CheckGroup.class);
+		CheckGroup<?> group = findParent(CheckGroup.class);
 		String path = getPath();
 		if (group == null)
 		{

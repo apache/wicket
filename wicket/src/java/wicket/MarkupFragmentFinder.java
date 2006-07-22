@@ -44,9 +44,11 @@ final class MarkupFragmentFinder
 	 * Gets the markup stream and positions it at the component.
 	 * 
 	 * @param component
+	 * @param <T>
+	 *            Component type
 	 * @return A MarkupStream which is positioned at the component
 	 */
-	static final MarkupStream find(final Component component)
+	static final <T> MarkupStream find(final Component<T> component)
 	{
 		// Get the parent's associated markup stream.
 		MarkupContainer parentWithAssociatedMarkup = component.findParentWithAssociatedMarkup();

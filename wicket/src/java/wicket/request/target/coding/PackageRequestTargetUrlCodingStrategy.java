@@ -58,6 +58,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 	/**
 	 * @see wicket.request.target.coding.IRequestTargetUrlCodingStrategy#decode(wicket.request.RequestParameters)
 	 */
+	@SuppressWarnings("unchecked")
 	public IRequestTarget decode(RequestParameters requestParameters)
 	{
 		String remainder = requestParameters.getPath().substring(getMountPath().length());

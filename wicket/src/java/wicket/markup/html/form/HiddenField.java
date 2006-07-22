@@ -64,7 +64,7 @@ public class HiddenField<T> extends TextField<T>
 	 * @param type
 	 *            the type to use when updating the model for this text field
 	 */
-	public HiddenField(MarkupContainer parent, String id, Class type)
+	public HiddenField(MarkupContainer parent, String id, Class<? extends T> type)
 	{
 		super(parent, id, type);
 	}

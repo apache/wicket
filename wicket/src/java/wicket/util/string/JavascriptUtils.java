@@ -19,7 +19,6 @@ package wicket.util.string;
 
 import wicket.Response;
 
-
 /**
  * Provide some helpers to write javascript related tags to the response object.
  * 
@@ -27,7 +26,7 @@ import wicket.Response;
  */
 public class JavascriptUtils
 {
-	
+
 	/** Script open tag */
 	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--/*--><![CDATA[/*><!--*/\n";
 
@@ -40,7 +39,7 @@ public class JavascriptUtils
 	/** Script close tag */
 	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*-->]]>*/";
 
-	
+
 	/** The response object */
 	private Response response;
 
@@ -49,6 +48,8 @@ public class JavascriptUtils
 	 * 
 	 * @param response
 	 *            The response object
+	 * @param id
+	 *            any id to be rendered
 	 */
 	public JavascriptUtils(final Response response, String id)
 	{
@@ -66,10 +67,11 @@ public class JavascriptUtils
 	 * @param id
 	 *            Unique identifier of element
 	 */
-	public static void writeJavascriptUrl(final Response response, final CharSequence url, final String id)
+	public static void writeJavascriptUrl(final Response response, final CharSequence url,
+			final String id)
 	{
 		response.write("<script type=\"text/javascript\" ");
-		if (id != null) 
+		if (id != null)
 		{
 			response.write("id=\"" + id + "\" ");
 		}
@@ -90,7 +92,7 @@ public class JavascriptUtils
 	{
 		writeJavascriptUrl(response, url, null);
 	}
-	
+
 	/**
 	 * Write the simple text to the response object surrounded by a script tag.
 	 * 
@@ -107,7 +109,7 @@ public class JavascriptUtils
 		response.write(text);
 		writeCloseTag(response);
 	}
-	
+
 	/**
 	 * Write the simple text to the response object surrounded by a script tag.
 	 * 
@@ -120,20 +122,26 @@ public class JavascriptUtils
 	{
 		writeJavascript(response, text, null);
 	}
+
 	/**
+	 * Write an open tag.
 	 * 
 	 * @param response
+	 *            The response object
+	 * @param id
+	 *            any id to be rendered
 	 */
 	public static void writeOpenTag(final Response response, String id)
 	{
 		response.write("<script type=\"text/javascript\" ");
-		if (id != null) 
+		if (id != null)
 		{
 			response.write("id=\"" + id + "\"");
 		}
 		response.write(">");
 		response.write(SCRIPT_CONTENT_PREFIX);
 	}
+
 	/**
 	 * 
 	 * @param response
@@ -142,6 +150,7 @@ public class JavascriptUtils
 	{
 		writeOpenTag(response, null);
 	}
+
 	/**
 	 * 
 	 * @param response
@@ -150,7 +159,7 @@ public class JavascriptUtils
 	{
 		response.write(SCRIPT_CONTENT_SUFFIX);
 		response.println("</script>\n");
-		
+
 	}
 
 	/**

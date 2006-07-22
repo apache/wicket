@@ -43,7 +43,8 @@ public class PrimitiveTypeRequiredTest extends WicketTestCase
 	 */
 	public void testPrimitiveClass() throws Exception
 	{
-		TextField tf = new TextField(new MockPageWithOneComponent(), "component", int.class);
+		TextField tf = new TextField<Integer>(new MockPageWithOneComponent(), "component",
+				int.class);
 		assertTrue(tf.isRequired());
 
 		try

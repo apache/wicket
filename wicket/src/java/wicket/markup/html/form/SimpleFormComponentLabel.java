@@ -43,6 +43,7 @@ public class SimpleFormComponentLabel extends FormComponentLabel
 	 * @param fc
 	 *            form component
 	 */
+	@SuppressWarnings("unchecked")
 	public SimpleFormComponentLabel(MarkupContainer parent, String id, FormComponent fc)
 	{
 		super(parent, id, fc);

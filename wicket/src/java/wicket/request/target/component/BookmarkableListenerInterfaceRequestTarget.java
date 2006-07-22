@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,49 +25,80 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 
 /**
- * Request target for bookmarkable page links that also contain component path and interface name.
- * This is used for stateless forms and stateless links.
+ * Request target for bookmarkable page links that also contain component path
+ * and interface name. This is used for stateless forms and stateless links.
+ * 
  * @author Matej Knopp
  */
-public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePageRequestTarget 
-{	
+public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePageRequestTarget
+{
 	private String componentPath;
 	private String interfaceName;
-	
-	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class<? extends Page> pageClass,
-			PageParameters pageParameters, String componentPath, String interfaceName) 
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pageMapName
+	 * @param pageClass
+	 * @param pageParameters
+	 * @param componentPath
+	 * @param interfaceName
+	 */
+	public BookmarkableListenerInterfaceRequestTarget(String pageMapName,
+			Class<? extends Page> pageClass, PageParameters pageParameters, String componentPath,
+			String interfaceName)
 	{
 		super(pageMapName, pageClass, pageParameters);
 		this.componentPath = componentPath;
 		this.interfaceName = interfaceName;
 	}
-	
-	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class<? extends Page> pageClass,
-			PageParameters pageParameters, Component component, RequestListenerInterface listenerInterface)             
+
+	/**
+	 * Construct.
+	 * 
+	 * @param pageMapName
+	 * @param pageClass
+	 * @param pageParameters
+	 * @param component
+	 * @param listenerInterface
+	 */
+	public BookmarkableListenerInterfaceRequestTarget(String pageMapName,
+			Class<? extends Page> pageClass, PageParameters pageParameters, Component component,
+			RequestListenerInterface listenerInterface)
 	{
-		this(pageMapName, pageClass, pageParameters, component.getPageRelativePath(), listenerInterface.getName());
+		this(pageMapName, pageClass, pageParameters, component.getPageRelativePath(),
+				listenerInterface.getName());
 	}
-	
+
 	@Override
-	public void processEvents(RequestCycle requestCycle) 
+	public void processEvents(RequestCycle requestCycle)
 	{
 		Page page = getPage(requestCycle);
 		Component<?> component = page.get(componentPath);
-		RequestListenerInterface listenerInterface = RequestListenerInterface.forName(interfaceName);
+		RequestListenerInterface listenerInterface = RequestListenerInterface
+				.forName(interfaceName);
 		listenerInterface.invoke(page, component);
 	}
-	
+
 	@Override
-	public void respond(RequestCycle requestCycle) 
+	public void respond(RequestCycle requestCycle)
 	{
 		getPage(requestCycle).renderPage();
 	}
-	
-	public String getComponentPath() {
+
+	/**
+	 * @return The component path.
+	 */
+	public String getComponentPath()
+	{
 		return componentPath;
 	}
-	
-	public String getInterfaceName() {
+
+	/**
+	 * @return The interface name
+	 */
+	public String getInterfaceName()
+	{
 		return interfaceName;
 	}
 }

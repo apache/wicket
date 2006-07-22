@@ -1021,6 +1021,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param component
 	 *            Component being added
 	 */
+	@SuppressWarnings("unchecked")
 	private final void addedComponent(final Component component)
 	{
 		// Check for degenerate case
@@ -1276,7 +1277,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 * @param component
 	 *            Component being removed
 	 */
-	private final void removedComponent(final Component<?> component)
+	@SuppressWarnings("unchecked")
+	private final void removedComponent(final Component component)
 	{
 		// Notify Page that component is being removed
 		final Page page = component.findPage();

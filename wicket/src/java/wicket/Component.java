@@ -607,6 +607,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @throws WicketRuntimeException
 	 *             Thrown if the component has been given a null id.
 	 */
+	@SuppressWarnings("unchecked")
 	public Component(MarkupContainer<?> parent, final String id, final IModel<T> model)
 	{
 		if (parent == null)
@@ -1061,7 +1062,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * @throws IllegalStateException
 	 *             Thrown if component is not yet attached to a Page.
 	 */
-	public final Page<?> getPage()
+	public final Page getPage()
 	{
 		// Search for nearest Page
 		final Page page = findPage();
@@ -1417,7 +1418,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		onModelChanging();
 
 		// Tell the page that our model changed
-		final Page page = findPage();
+		final Page<?> page = findPage();
 		if (page != null)
 		{
 			page.componentModelChanging(this);
@@ -1983,6 +1984,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 *            The model
 	 * @return This
 	 */
+	@SuppressWarnings("unchecked")
 	public Component setModel(final IModel<T> model)
 	{
 		// Detach current model
@@ -2535,6 +2537,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * 
 	 * @return The model
 	 */
+	@SuppressWarnings("unchecked")
 	protected IModel<T> initModel()
 	{
 		// Search parents for CompoundPropertyModel
@@ -2657,6 +2660,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * stateless doesn't necessary mean, that the component should be stateless.
 	 * Whether the component should be stateless depends on
 	 * {@link Page#isStateless()}.
+	 * 
+	 * @return whether the component can be stateless
 	 */
 	protected boolean getStatelessHint()
 	{
@@ -3022,6 +3027,8 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/**
 	 * Returns whether the head has already been rendered.
+	 * 
+	 * @return whether the head has already been rendered
 	 */
 	final protected boolean isHeadRendered()
 	{

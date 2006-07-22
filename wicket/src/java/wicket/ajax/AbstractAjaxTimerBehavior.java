@@ -94,7 +94,7 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);
-		target.addJavascript(getJsTimeoutCall(updateInterval));
+		target.appendJavascript(getJsTimeoutCall(updateInterval));
 	}
 
 	/**

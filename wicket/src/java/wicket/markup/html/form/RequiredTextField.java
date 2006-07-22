@@ -46,7 +46,7 @@ public class RequiredTextField<T> extends TextField<T>
 	/**
 	 * @see TextField#TextField(MarkupContainer,String, Class)
 	 */
-	public RequiredTextField(MarkupContainer parent, final String id, final Class type)
+	public RequiredTextField(MarkupContainer parent, final String id, final Class<? extends T> type)
 	{
 		super(parent, id, type);
 		setRequired(true);

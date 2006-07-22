@@ -407,9 +407,10 @@ public class WicketFilter implements Filter
 	}
 
 	/**
+	 * Gets the last modified time stamp for the given request.
 	 * 
 	 * @param servletRequest
-	 * @return
+	 * @return The last modified time stamp
 	 */
 	long getLastModified(final HttpServletRequest servletRequest)
 	{
@@ -469,9 +470,11 @@ public class WicketFilter implements Filter
 	}
 
 	/**
+	 * Is this a Wicket request?
 	 * 
 	 * @param request
-	 * @return
+	 *            The servlet request
+	 * @return True if this is a Wicket request
 	 */
 	private boolean isWicketRequest(HttpServletRequest request)
 	{

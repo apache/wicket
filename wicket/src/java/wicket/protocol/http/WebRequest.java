@@ -95,7 +95,7 @@ public abstract class WebRequest extends Request
 	 * @return Map<String, Object> of parameters
 	 */
 	@Override
-	public abstract Map<String, ? extends Object> getParameterMap();
+	public abstract Map<String, Object> getParameterMap();
 
 	/**
 	 * Gets the request parameters with the given key.
