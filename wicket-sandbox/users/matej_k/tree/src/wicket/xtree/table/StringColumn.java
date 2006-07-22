@@ -4,6 +4,7 @@ import javax.swing.tree.TreeNode;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 
@@ -49,4 +50,15 @@ public class StringColumn implements Column {
 		this.visible = visible;
 	}
 
+	public int getSpan(TreeNode node) {
+		return 0;
+	}
+	
+	public Renderable createCell(TreeNode node, int level) {
+		return new Renderable() {
+			public void render(Response response) {
+				response.write("<span class=\"text\" title=\"" + cell + "\">" + cell + "</span>\n");
+			}
+		};
+	}
 }

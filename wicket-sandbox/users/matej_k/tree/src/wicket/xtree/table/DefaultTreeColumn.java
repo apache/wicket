@@ -1,5 +1,7 @@
 package wicket.xtree.table;
 
+import javax.swing.tree.TreeNode;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
@@ -30,5 +32,13 @@ public class DefaultTreeColumn extends AbstractTreeColumn {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+	
+	public int getSpan(TreeNode node) {
+		return 0;
+	}
+	
+	public Renderable createCell(TreeNode node, int level) {
+		return null;
 	}
 }

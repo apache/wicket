@@ -21,13 +21,24 @@ public class SideColumnsView extends WebMarkupContainer {
 
 	private List<Column> columns = new ArrayList<Column>();
 	private List<Component> components = new ArrayList<Component>();
+	private List<Renderable> renderables = new ArrayList<Renderable>();
 
-	public void addColumn(Column column, Component component)
+	public void addColumn(Column column, Component component, Renderable renderable)
 	{
 		if (column.isVisible())
 		{
-			columns.add(column);
-			components.add(component);
+			if (column.getLocation().getAlignment() == Alignment.LEFT)
+			{
+				columns.add(column);
+				components.add(component);
+				renderables.add(renderable);
+			}
+			else
+			{
+				columns.add(0, column);
+				components.add(0, component);
+				renderables.add(0, renderable);
+			}
 		}
 	}
 	
@@ -86,32 +97,44 @@ public class SideColumnsView extends WebMarkupContainer {
 		Response response = RequestCycle.get().getResponse();
 	
 		boolean firstLeft = true; // whether there was no left column rendered yet
+		boolean rendered = false;
 		
-		if (columns.isEmpty() == false)
+		for (int i = 0; i < columns.size(); ++i)
 		{
-			for (int i = 0; i < columns.size(); ++i)
+			Column column = columns.get(i);
+			Component component = components.get(i);
+			Renderable renderable = renderables.get(i);
+			
+			response.write("<span class=\"column\" style=\"" + renderColumnStyle(column) + "\">");
+			if (column.getLocation().getAlignment() == Alignment.LEFT && firstLeft == true)
 			{
-				Column column = columns.get(i);
-				Component component = components.get(i);
-				
-				response.write("<span class=\"column\" style=\"" + renderColumnStyle(column) + "\">");
-				if (column.getLocation().getAlignment() == Alignment.LEFT && firstLeft == true)
-				{
-					response.write("<span class=\"column-inner-first\">");
-					firstLeft = false;
-				}				
-				else
-				{
-					response.write("<span class=\"column-inner\">");
-				}
-
-				markupStream.setCurrentIndex(markupStart);				
-				component.render(markupStream);
-				
-				response.write("</span></span>\n");
+				response.write("<span class=\"column-inner-first\">");
+				firstLeft = false;
+			}				
+			else
+			{
+				response.write("<span class=\"column-inner\">");
 			}
+			
+			if (component != null)
+			{
+				markupStream.setCurrentIndex(markupStart);
+				component.render(markupStream);
+				rendered = true;
+			}
+			else if (renderable != null)
+			{
+				renderable.render(response);
+			}
+			else
+			{
+				throw new IllegalStateException("Either renderable or cell component must be created for this noode");
+			}
+			
+			response.write("</span></span>\n");
 		}
-		else
+		
+		if (rendered == false)
 		{
 			markupStream.skipComponent();
 		}		

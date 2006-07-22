@@ -15,5 +15,9 @@ public interface Column extends Serializable {
 	
 	public Component createHeader(MarkupContainer<?> parent, String id);	 
 	
-	public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level);	
+	public Renderable createCell(TreeNode node, int level);
+	
+	public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level);		
+	
+	public int getSpan(TreeNode node);
 }

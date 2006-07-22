@@ -20,13 +20,15 @@ public class MiddleColumnsView extends WebMarkupContainer {
 
 	private List<Column> columns = new ArrayList<Column>();
 	private List<Component> components = new ArrayList<Component>();
+	private List<Renderable> renderables = new ArrayList<Renderable>();
 
-	public void addColumn(Column column, Component component)
+	public void addColumn(Column column, Component component, Renderable renderable)
 	{
 		if (column.isVisible())
 		{
 			columns.add(column);
 			components.add(component);
+			renderables.add(renderable);					
 		}
 	}
 
@@ -70,23 +72,35 @@ public class MiddleColumnsView extends WebMarkupContainer {
 		final int markupStart = markupStream.getCurrentIndex();
 		Response response = RequestCycle.get().getResponse();
 		int widths[] = computeColumnWidths();
-			
-		if (columns.isEmpty() == false)
+		boolean rendered = false;	
+		
+		for (int i = 0; i < columns.size(); ++i)
 		{
-			for (int i = 0; i < columns.size(); ++i)
+			Component component = components.get(i);
+			Renderable renderable = renderables.get(i);
+			
+			response.write("<span class=\"column\" style=\"width:" + widths[i] + "%\">");
+			response.write("<span class=\"column-inner\">");						
+			
+			if (component != null)
 			{
-				Component component = components.get(i);
-				
-				response.write("<span class=\"column\" style=\"width:" + widths[i] + "%\">");
-				response.write("<span class=\"column-inner\">");
-
-				markupStream.setCurrentIndex(markupStart);				
+				markupStream.setCurrentIndex(markupStart);
 				component.render(markupStream);
-				
-				response.write("</span></span>\n");
+				rendered = true;
 			}
+			else if (renderable != null)
+			{
+				renderable.render(response);
+			}
+			else
+			{
+				throw new IllegalStateException("Either renderable or cell component must be created for this noode");
+			}
+			
+			response.write("</span></span>\n");
 		}
-		else
+		
+		if (rendered == false)
 		{
 			markupStream.skipComponent();
 		}		
