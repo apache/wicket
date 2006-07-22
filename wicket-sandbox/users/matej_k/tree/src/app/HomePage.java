@@ -7,13 +7,19 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreeNode;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
 import wicket.xtree.DefaultAbstractTree;
 import wicket.xtree.SimpleTree;
+import wicket.xtree.table.Column;
+import wicket.xtree.table.ColumnLocation;
+import wicket.xtree.table.DefaultTreeColumn;
+import wicket.xtree.table.StringColumn;
+import wicket.xtree.table.TreeTable;
+import wicket.xtree.table.ColumnLocation.Alignment;
+import wicket.xtree.table.ColumnLocation.Unit;
 
 public class HomePage extends WebPage {
 
@@ -29,14 +35,31 @@ public class HomePage extends WebPage {
 		};
 
 		final DefaultTreeModel treeModel = (DefaultTreeModel) createTreeModel();
+
 		
-		SimpleTree tree = new SimpleTree(this, "tree", treeModel, false);
+		Column columns[] = new Column[] {
+			new StringColumn(new ColumnLocation(Alignment.LEFT, 20, Unit.PX), "L0", "Very first left column. Has solid width set to 20 pixels"),				
+			new DefaultTreeColumn(new ColumnLocation(Alignment.LEFT, 15, Unit.EM), "Tree Column"),
+			new StringColumn(new ColumnLocation(Alignment.LEFT, 10, Unit.PERCENT), "L 2", "Second left column. This column has percentage width"),
+			new StringColumn(new ColumnLocation(Alignment.LEFT, 3, Unit.EM), "L 3", "Third left column. This column has width set in em."),
+			
+			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M1", "First middle column. Has weight 2."),
+			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 1, Unit.PROPORTIONAL), "M2", "Second middle column. Has weight 1."),
+			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 1, Unit.PROPORTIONAL), "M3", "Third middle column. Has weight 1."),
+			
+			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R1", "First right column. Width set to 2 em."),			
+		};
+		
+		SimpleTree tree = new TreeTable(this, "tree", treeModel, columns);
+			//new SimpleTree(this, "tree", treeModel);
+		
 		tree.getTreeState().setAllowSelectMultiple(true);
-		tree.getTreeState().collapseAll();
-		tree.getTreeState().expandNode((TreeNode)treeModel.getRoot());
+//		//tree.getTreeState().collapseAll();
+//		//tree.getTreeState().expandNode((TreeNode)treeModel.getRoot());		
 		tree.setLinkType(DefaultAbstractTree.LinkType.AJAX);
 		
 //		Tree tree = new Tree(this, "tree", treeModel);
+//		tree.expandAll(true);
 		
 		setVersioned(false);
 	}
