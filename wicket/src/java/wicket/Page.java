@@ -1328,6 +1328,10 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * must return true and the page must be bookmarkable.
 	 */
 	public final void setStatelessHint(boolean value) {
+		if(value && !isBookmarkable())
+		{
+			throw new WicketRuntimeException("Can't set stateless hint to true on a page when the page is not bookmarkable, page: " + this);
+		}
 		setFlag(FLAG_STATELESS_HINT, value);
 	}
 
