@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -194,12 +194,12 @@ public class TestPage extends WebPage
 		}
 
 		/**
-		 * @see wicket.markup.html.form.FormComponent#getInput()
+		 * @see wicket.markup.html.form.FormComponent#getInputAsArray()
 		 */
 		@Override
-		public String getInput()
+		public String[] getInputAsArray()
 		{
-			return input;
+			return new String[] { input };
 		}
 
 		/**

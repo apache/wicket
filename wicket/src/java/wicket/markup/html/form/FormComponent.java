@@ -283,9 +283,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 * 
 	 * @return The value in the request for this component
 	 */
-	// TODO Post 1.2: make this final, if the users want to override this they
-	// should really be overriding #getInputAsArray()
-	public String getInput()
+	public final String getInput()
 	{
 		String[] input = getInputAsArray();
 		if (input == null || input.length == 0)

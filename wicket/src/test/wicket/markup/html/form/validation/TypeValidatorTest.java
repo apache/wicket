@@ -36,7 +36,7 @@ public class TypeValidatorTest extends WicketTestCase
 	/**
 	 * Special component for handling date properties.
 	 */
-	public static class DateField extends TextField
+	public static class DateField extends TextField<Date>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -54,12 +54,12 @@ public class TypeValidatorTest extends WicketTestCase
 		/**
 		 * Test method with mock input.
 		 * 
-		 * @see wicket.markup.html.form.FormComponent#getInput()
+		 * @see wicket.markup.html.form.FormComponent#getInputAsArray()
 		 */
 		@Override
-		public String getInput()
+		public String[] getInputAsArray()
 		{
-			return "01/01/2001";
+			return new String[] { "01/01/2001" };
 		}
 	}
 
