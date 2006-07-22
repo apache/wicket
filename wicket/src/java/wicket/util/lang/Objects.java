@@ -30,6 +30,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.Component;
 import wicket.WicketRuntimeException;
@@ -44,15 +47,21 @@ import wicket.util.io.ByteCountingOutputStream;
  */
 public final class Objects
 {
+	
+	/** log. */
+	private static final Log log = LogFactory.getLog(Objects.class);
+
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
 		private HashMap replacedComponents;
+		private final ClassLoader classloader;
 
-		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents)
+		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents, ClassLoader classloader)
 				throws IOException
 		{
 			super(in);
 			this.replacedComponents = replacedComponents;
+			this.classloader = classloader;
 			enableResolveObject(true);
 		}
 
@@ -73,6 +82,17 @@ public final class Objects
 				ClassNotFoundException
 		{
 			String className = desc.getName();
+
+			try
+			{
+				return Class.forName(className, true, classloader);
+			}
+			catch (ClassNotFoundException ex1)
+			{
+				// ignore this exception.
+				log.debug("Class not found by using objects own classloader, trying the IClassResolver");
+			} 
+
 			Application application = Application.get();
 			IApplicationSettings applicationSettings = application.getApplicationSettings();
 			IClassResolver classResolver = applicationSettings.getClassResolver();
@@ -348,7 +368,7 @@ public final class Objects
 				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()), replacedObjects);
+						.toByteArray()), replacedObjects,object.getClass().getClassLoader());
 				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)
@@ -395,6 +415,18 @@ public final class Objects
 							ClassNotFoundException
 					{
 						String className = desc.getName();
+						
+						try
+						{
+							return Class.forName(className, true, object.getClass().getClassLoader());
+						}
+						catch (ClassNotFoundException ex1)
+						{
+							// ignore this exception.
+							log.debug("Class not found by using objects own classloader, trying the IClassResolver");
+						} 
+						
+						
 						Application application = Application.get();
 						IApplicationSettings applicationSettings = application
 								.getApplicationSettings();
