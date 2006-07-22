@@ -62,9 +62,5 @@ public abstract class WicketExampleApplication extends WebApplication
 		// box.
 		getSecuritySettings().setCryptFactory(
 				new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
-
-		// Disable creation of javascript which jWebUnit (test only)
-		// doesn't handle properly
-		getPageSettings().setAutomaticMultiWindowSupport(false);
 	}
 }
