@@ -20,8 +20,6 @@ package wicket.util.time;
 import java.text.ParseException;
 import java.util.Calendar;
 
-import wicket.util.lang.EnumeratedType;
-
 /**
  * An immutable time of day value represented as milliseconds since the most
  * recent midnight.
@@ -59,34 +57,22 @@ public final class TimeOfDay extends AbstractTime
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Constant for AM time. */
-	public static final Meridian AM = new Meridian("AM");
-
 	/** Constant for midnight. */
-	public static final TimeOfDay MIDNIGHT = time(12, 0, AM);
-
-	/** Constant for PM time. */
-	public static final Meridian PM = new Meridian("PM");
+	public static final TimeOfDay MIDNIGHT = time(12, 0, Meridian.AM);
 
 	/** Constant for noon. */
-	public static final TimeOfDay NOON = time(12, 0, PM);
+	public static final TimeOfDay NOON = time(12, 0, Meridian.PM);
 
 	/** Typesafe AM/PM enumeration. */
-	// FIXME: convert to Java 5 enum
-	public static final class Meridian extends EnumeratedType
-	{
-		private static final long serialVersionUID = 1L;
-
+	public enum Meridian {
 		/**
-		 * Construct.
-		 * 
-		 * @param name
-		 *            the meridian name (value)
+		 * AM
 		 */
-		Meridian(final String name)
-		{
-			super(name);
-		}
+		AM,
+		/**
+		 * PM
+		 */
+		PM
 	}
 
 	/**
@@ -159,7 +145,7 @@ public final class TimeOfDay extends AbstractTime
 	public static TimeOfDay time(final int hour, final int minute, final int second,
 			final Meridian meridian)
 	{
-		if (meridian == PM)
+		if (meridian == Meridian.PM)
 		{
 			if (hour == 12)
 			{

@@ -21,6 +21,7 @@ package wicket.util.time;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.util.time.TimeOfDay.Meridian;
 
 /**
  * Test cases for this object
@@ -37,8 +38,8 @@ public final class TimeOfDayTest extends TestCase
 		Assert.assertEquals(0, TimeOfDay.MIDNIGHT.hour());
 		Assert.assertEquals(TimeOfDay.MIDNIGHT, TimeOfDay.valueOf(TimeOfDay.MIDNIGHT.next()));
 
-		final TimeOfDay three = TimeOfDay.time(3, 0, TimeOfDay.PM);
-		final TimeOfDay five = TimeOfDay.time(5, 0, TimeOfDay.PM);
+		final TimeOfDay three = TimeOfDay.time(3, 0, Meridian.PM);
+		final TimeOfDay five = TimeOfDay.time(5, 0, Meridian.PM);
 
 		Assert.assertTrue(five.after(three));
 	}
