@@ -18,6 +18,7 @@
  */
 package wicket.extensions.ajax.markup.html;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -27,6 +28,7 @@ import wicket.ajax.ClientEvent;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 
@@ -43,16 +45,16 @@ import wicket.model.IModel;
  *            The type
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @author eelcohillenius
  */
 public class AjaxEditableLabel<T> extends Panel<T>
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Edit behavior.
 	 */
-	private class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
+	private final class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -89,16 +91,68 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		@Override
 		protected void respond(AjaxRequestTarget target)
 		{
-			RequestCycle rc = RequestCycle.get();
-			boolean save = Boolean.valueOf(rc.getRequest().getParameter("save")).booleanValue();
-			if (save)
-			{
-				editor.processInput();
-			}
 			label.setVisible(true);
 			editor.setVisible(false);
 			target.addComponent(AjaxEditableLabel.this);
+
+			RequestCycle requestCycle = RequestCycle.get();
+			boolean save = Boolean.valueOf(requestCycle.getRequest().getParameter("save"))
+					.booleanValue();
+
+			if (save)
+			{
+				editor.processInput();
+
+				if (editor.isValid())
+				{
+					if (save)
+					{
+						onSubmit(target);
+					}
+				}
+				else
+				{
+					onError(target);
+				}
+			}
+			else
+			{
+				onCancel(target);
+			}
 		}
+	}
+
+	/**
+	 * Invoked when the label is in edit mode, and received a cancel event.
+	 * Typically, nothing should be done here.
+	 * 
+	 * @param target
+	 *            the ajax request target
+	 */
+	protected void onCancel(AjaxRequestTarget target)
+	{
+	}
+
+	/**
+	 * Invoked when the label is in edit mode, received a new input, but that
+	 * input didn't validate
+	 * 
+	 * @param target
+	 *            the ajax request target
+	 */
+	protected void onError(AjaxRequestTarget target)
+	{
+	}
+
+	/**
+	 * Invoked when the editor was succesfully updated. Use this method e.g. to
+	 * persist the changed value.
+	 * 
+	 * @param target
+	 *            The ajax request target
+	 */
+	protected void onSubmit(AjaxRequestTarget target)
+	{
 	}
 
 	/**
@@ -129,7 +183,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 			target.addComponent(AjaxEditableLabel.this);
 			// put focus on the textfield and stupid explorer hack to move the
 			// caret to the end
-			target.addJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
+			target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
 					+ "  el.focus(); " + "  if (el.createTextRange) { "
 					+ "     var v = el.value; var r = el.createTextRange(); "
 					+ "     r.moveStart('character', v.length); r.select(); } }");
@@ -137,7 +191,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	}
 
 	/** editor component. */
-	private final TextField editor;
+	private final TextField<T> editor;
 
 	/** label component. */
 	private final Label label;
@@ -166,5 +220,87 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior());
+	}
+
+	/**
+	 * Adds a validator to this form component.
+	 * 
+	 * @param validator
+	 *            The validator
+	 * @return This
+	 */
+	public AjaxEditableLabel<T> add(IValidator validator)
+	{
+		editor.add(validator);
+		return this;
+	}
+
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 * 
+	 * @param labelModel
+	 * @return this for chaining
+	 */
+	public AjaxEditableLabel<T> setLabel(final IModel labelModel)
+	{
+		editor.setLabel(labelModel);
+		return this;
+	}
+
+	/**
+	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
+	 */
+	@Override
+	public Component setModel(IModel<T> model)
+	{
+		super.setModel(model);
+		editor.setModel(model);
+		return this;
+	}
+
+	/**
+	 * Sets the required flag
+	 * 
+	 * @param required
+	 * @return this for chaining
+	 */
+	public final AjaxEditableLabel<T> setRequired(final boolean required)
+	{
+		editor.setRequired(required);
+		return this;
+	}
+
+	/**
+	 * Sets the type that will be used when updating the model for this
+	 * component. If no type is specified String type is assumed.
+	 * 
+	 * @param type
+	 * @return this for chaining
+	 */
+	public final AjaxEditableLabel<T> setType(Class< ? extends T> type)
+	{
+		editor.setType(type);
+		return this;
+	}
+
+	/**
+	 * Gets the editor component.
+	 * 
+	 * @return The editor component
+	 */
+	protected final TextField<T> getEditor()
+	{
+		return editor;
+	}
+
+	/**
+	 * Gets the label component.
+	 * 
+	 * @return The label component
+	 */
+	protected final Label getLabel()
+	{
+		return label;
 	}
 }
