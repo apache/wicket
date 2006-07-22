@@ -11,6 +11,16 @@
 	  <param-value>development</param-value>
 	</context-param>
  
+ 	<filter>
+		<filter-name>RequestTimeFilter</filter-name>
+		<filter-class>app.RequestTimeFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>RequestTimeFilter</filter-name>
+		<url-pattern>/app</url-pattern>
+	</filter-mapping>
+ 
     <servlet>
         <servlet-name>WicketServlet</servlet-name>
         <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
