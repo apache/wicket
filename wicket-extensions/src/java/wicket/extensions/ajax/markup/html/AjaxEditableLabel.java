@@ -31,6 +31,7 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * A simple implementation of ajaxified edit-in-place component. Currently the
@@ -91,10 +92,6 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		@Override
 		protected void respond(AjaxRequestTarget target)
 		{
-			label.setVisible(true);
-			editor.setVisible(false);
-			target.addComponent(AjaxEditableLabel.this);
-
 			RequestCycle requestCycle = RequestCycle.get();
 			boolean save = Boolean.valueOf(requestCycle.getRequest().getParameter("save"))
 					.booleanValue();
@@ -105,6 +102,10 @@ public class AjaxEditableLabel<T> extends Panel<T>
 
 				if (editor.isValid())
 				{
+					label.setVisible(true);
+					editor.setVisible(false);
+					target.addComponent(AjaxEditableLabel.this);
+
 					if (save)
 					{
 						onSubmit(target);
@@ -117,42 +118,13 @@ public class AjaxEditableLabel<T> extends Panel<T>
 			}
 			else
 			{
+				label.setVisible(true);
+				editor.setVisible(false);
+				target.addComponent(AjaxEditableLabel.this);
+
 				onCancel(target);
 			}
 		}
-	}
-
-	/**
-	 * Invoked when the label is in edit mode, and received a cancel event.
-	 * Typically, nothing should be done here.
-	 * 
-	 * @param target
-	 *            the ajax request target
-	 */
-	protected void onCancel(AjaxRequestTarget target)
-	{
-	}
-
-	/**
-	 * Invoked when the label is in edit mode, received a new input, but that
-	 * input didn't validate
-	 * 
-	 * @param target
-	 *            the ajax request target
-	 */
-	protected void onError(AjaxRequestTarget target)
-	{
-	}
-
-	/**
-	 * Invoked when the editor was succesfully updated. Use this method e.g. to
-	 * persist the changed value.
-	 * 
-	 * @param target
-	 *            The ajax request target
-	 */
-	protected void onSubmit(AjaxRequestTarget target)
-	{
 	}
 
 	/**
@@ -178,15 +150,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		@Override
 		protected void onEvent(AjaxRequestTarget target)
 		{
-			label.setVisible(false);
-			editor.setVisible(true);
-			target.addComponent(AjaxEditableLabel.this);
-			// put focus on the textfield and stupid explorer hack to move the
-			// caret to the end
-			target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
-					+ "  el.focus(); " + "  if (el.createTextRange) { "
-					+ "     var v = el.value; var r = el.createTextRange(); "
-					+ "     r.moveStart('character', v.length); r.select(); } }");
+			onEdit(target);
 		}
 	}
 
@@ -272,7 +236,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param required
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel<T> setRequired(final boolean required)
+	public AjaxEditableLabel<T> setRequired(final boolean required)
 	{
 		editor.setRequired(required);
 		return this;
@@ -285,7 +249,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final AjaxEditableLabel<T> setType(Class< ? extends T> type)
+	public AjaxEditableLabel<T> setType(Class< ? extends T> type)
 	{
 		editor.setType(type);
 		return this;
@@ -309,6 +273,70 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	protected final Label getLabel()
 	{
 		return label;
+	}
+
+	/**
+	 * Invoked when the label is in edit mode, and received a cancel event.
+	 * Typically, nothing should be done here.
+	 * 
+	 * @param target
+	 *            the ajax request target
+	 */
+	protected void onCancel(AjaxRequestTarget target)
+	{
+	}
+
+	/**
+	 * Called when the label is clicked and the component is put in edit mode.
+	 * 
+	 * @param target
+	 *            Ajax target
+	 */
+	protected void onEdit(AjaxRequestTarget target)
+	{
+		label.setVisible(false);
+		editor.setVisible(true);
+		target.addComponent(AjaxEditableLabel.this);
+		// put focus on the textfield and stupid explorer hack to move the
+		// caret to the end
+		target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
+				+ "  el.focus(); " + "  if (el.createTextRange) { "
+				+ "     var v = el.value; var r = el.createTextRange(); "
+				+ "     r.moveStart('character', v.length); r.select(); } }");
+	}
+
+	/**
+	 * Invoked when the label is in edit mode, received a new input, but that
+	 * input didn't validate
+	 * 
+	 * @param target
+	 *            the ajax request target
+	 */
+	protected void onError(AjaxRequestTarget target)
+	{
+		String errorMessage = editor.getFeedbackMessage().getMessage();
+		if (errorMessage != null)
+		{
+			target.appendJavascript("window.status='" + JavascriptUtils.escapeQuotes(errorMessage)
+					+ "';");
+		}
+		String editorMarkupId = editor.getMarkupId();
+		target.appendJavascript(editorMarkupId + ".select();");
+		target.appendJavascript(editorMarkupId + ".focus();");
+		target.addComponent(editor);
+	}
+
+	/**
+	 * Invoked when the editor was succesfully updated. Use this method e.g. to
+	 * persist the changed value. This implemention clears any window status
+	 * that might have been set in onError.
+	 * 
+	 * @param target
+	 *            The ajax request target
+	 */
+	protected void onSubmit(AjaxRequestTarget target)
+	{
+		target.appendJavascript("window.status='';");
 	}
 
 	/**
