@@ -7,6 +7,7 @@ import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.panel.Panel;
@@ -15,16 +16,38 @@ import wicket.model.IModel;
 import wicket.util.string.JavascriptUtils;
 
 /**
- * A simple implementation of ajaxified edit-in-place component. Currently the
- * implementation is pretty inflexible, it is missing validator/error support.
- * It also does not allow the customization of save/cancel triggers. Maybe a
- * textarea instead of an input field would be nicer as well.
+ * An implementation of ajaxified edit-in-place component using a
+ * {@link TextField} as it's editor.
  * <p>
- * Current triggers: Save the edit if either enter is pressed or the component
- * loses focus. Cancel if esc is pressed.
+ * There are several methods that can be overriden for customization.
+ * <ul>
+ * <li>{@link #onEdit(AjaxRequestTarget)} is called when the label is clicked
+ * and the editor is to be displayed. The default implementation switches the
+ * label for the editor and places the curret at the end of the text. </li>
+ * <li>{@link #onSubmit(AjaxRequestTarget)} is called when in edit mode, the
+ * user submitted new content, that content validated well, and the model value
+ * succesfully updated. This implementation also clears any
+ * <code>window.status</code> set. </li>
+ * <li>{@link #onError(AjaxRequestTarget)} is called when in edit mode, the
+ * user submitted new content, but that content did not validate. Get the
+ * current input by calling {@link FormComponent#getInput()} on
+ * {@link #getEditor()}, and the error message by calling:
+ * 
+ * <pre>
+ * String errorMessage = editor.getFeedbackMessage().getMessage();
+ * </pre>
+ * 
+ * The default implementation of this method displays the error message in
+ * <code>window.status</code>, redisplays the editor, selects the editor's
+ * content and sets the focus on it.
+ * <li>{@link #onCancel(AjaxRequestTarget)} is called when in edit mode, the
+ * user choose not to submit the contents (he/she pressed espace). The default
+ * implementation displays the label again without any further action.</li>
+ * </ul>
+ * </p>
  * 
  * @author Igor Vaynberg (ivaynberg)
- * @author eelcohillenius
+ * @author Eelco Hillenius
  */
 public class AjaxEditableLabel extends Panel
 {
@@ -78,14 +101,7 @@ public class AjaxEditableLabel extends Panel
 
 				if (editor.isValid())
 				{
-					label.setVisible(true);
-					editor.setVisible(false);
-					target.addComponent(AjaxEditableLabel.this);
-
-					if (save)
-					{
-						onSubmit(target);
-					}
+					onSubmit(target);
 				}
 				else
 				{
@@ -94,10 +110,6 @@ public class AjaxEditableLabel extends Panel
 			}
 			else
 			{
-				label.setVisible(true);
-				editor.setVisible(false);
-				target.addComponent(AjaxEditableLabel.this);
-
 				onCancel(target);
 			}
 		}
@@ -257,6 +269,9 @@ public class AjaxEditableLabel extends Panel
 	 */
 	protected void onCancel(AjaxRequestTarget target)
 	{
+		label.setVisible(true);
+		editor.setVisible(false);
+		target.addComponent(AjaxEditableLabel.this);
 	}
 
 	/**
@@ -301,14 +316,18 @@ public class AjaxEditableLabel extends Panel
 
 	/**
 	 * Invoked when the editor was succesfully updated. Use this method e.g. to
-	 * persist the changed value. This implemention clears any window status
-	 * that might have been set in onError.
+	 * persist the changed value. This implemention displays the label and
+	 * clears any window status that might have been set in onError.
 	 * 
 	 * @param target
 	 *            The ajax request target
 	 */
 	protected void onSubmit(AjaxRequestTarget target)
 	{
+		label.setVisible(true);
+		editor.setVisible(false);
+		target.addComponent(AjaxEditableLabel.this);
+
 		target.addJavascript("window.status='';");
 	}
 
