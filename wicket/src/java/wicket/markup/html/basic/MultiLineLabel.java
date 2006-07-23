@@ -36,7 +36,7 @@ import wicket.util.string.Strings;
  * 
  * @author Jonathan Locke
  */
-public class MultiLineLabel extends WebComponent<String>
+public class MultiLineLabel extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -77,7 +77,8 @@ public class MultiLineLabel extends WebComponent<String>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public MultiLineLabel(MarkupContainer parent, final String id, IModel<String> model)
+	@SuppressWarnings("unchecked")
+	public MultiLineLabel(MarkupContainer parent, final String id, IModel model)
 	{
 		super(parent, id, model);
 	}

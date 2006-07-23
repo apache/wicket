@@ -67,7 +67,7 @@ import wicket.model.Model;
  * 
  * @author Jonathan Locke
  */
-public class Label extends WebComponent<Object>
+public class Label extends WebComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -107,9 +107,9 @@ public class Label extends WebComponent<Object>
 	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
 	@SuppressWarnings("unchecked")
-	public Label(MarkupContainer parent, final String id, IModel<?> model)
+	public Label(MarkupContainer parent, final String id, IModel model)
 	{
-		super(parent, id, (IModel<Object>)model);
+		super(parent, id, model);
 	}
 
 	/**
