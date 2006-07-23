@@ -1,8 +1,17 @@
+if (typeof(Wicket) == "undefined")
+	Wicket = { };
+
 Wicket.Tree = { };
+
 Wicket.Tree.removeNodes = function(prefix, nodeList) {
 	for (var i in nodeList) {
 		var e = document.getElementById(prefix + nodeList[i]);
-		e.parentNode.removeChild(e);
+		if (e != null) {
+			e.parentNode.removeChild(e);
+		} else {
+			// while developing alert a warning
+			alert("Can't find node with id " + prefix + nodeList[i] + ". This shouldn't happen - possible bug in tree?");
+		}
 	}
 }
 
