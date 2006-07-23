@@ -474,18 +474,18 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 * (which nodes are expanded / collapsed, selected, ...) is stored. 
 	 * @return
 	 */
-	protected TreeState createTreeState() 
+	protected ITreeState createTreeState() 
 	{
 		return new DefaultTreeState();
 	};
 	
 	// stores reference to tree state
-	private TreeState state;
+	private ITreeState state;
 	
 	/**
 	 * Returns the TreeState of this tree.
 	 */
-	public TreeState getTreeState() 
+	public ITreeState getTreeState() 
 	{
 		if (state == null) 
 		{	

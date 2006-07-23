@@ -10,7 +10,7 @@ import javax.swing.tree.TreeNode;
  * It can also fire callbacks on listener in case any of the information changed.
  * @author Matej Knopp
  */
-public interface TreeState  
+public interface ITreeState  
 {
 	/**
 	 * Expands all nodes of the tree.

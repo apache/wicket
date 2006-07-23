@@ -16,7 +16,7 @@ import javax.swing.tree.TreeNode;
  * This implementation tries to be as lightweight as possible.
  * @author Matej Knopp
  */
-public class DefaultTreeState implements TreeState, Serializable 
+public class DefaultTreeState implements ITreeState, Serializable 
 {
 	// set of nodes which are collapsed or expanded (depends on nodesCollapsed veriable)
 	private Set<TreeNode> nodes = new HashSet<TreeNode>();

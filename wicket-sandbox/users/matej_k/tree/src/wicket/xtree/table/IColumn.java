@@ -7,6 +7,11 @@ import javax.swing.tree.TreeNode;
 import wicket.Component;
 import wicket.MarkupContainer;
 
+/**
+ * Interface that represents a column in {@link TreeTable}
+ * @author Matej Knopp
+ *
+ */
 public interface IColumn extends Serializable {
 
 	public ColumnLocation getLocation();
