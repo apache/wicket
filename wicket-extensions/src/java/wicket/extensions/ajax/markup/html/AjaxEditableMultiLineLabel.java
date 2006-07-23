@@ -41,10 +41,10 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	private static final long serialVersionUID = 1L;
 
 	/** text area's number of rows. */
-	private int rows = 6;
+	private int rows = 10;
 
 	/** text area's number of columns. */
-	private int cols = 20;
+	private int cols = 40;
 
 	/**
 	 * Construct.
