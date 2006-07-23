@@ -121,6 +121,43 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	}
 
 	/**
+	 * Gets a css header contributor based on the given text template. The
+	 * template will be interpolated with the given variables. The content will
+	 * be written as the body of a script tag pair.
+	 * 
+	 * @param template
+	 *            The text template that is the base for the contribution
+	 * @param variablesModel
+	 *            The variables to interpolate
+	 * @return The header contributor instance
+	 */
+	public static TextTemplateHeaderContributor forCss(TextTemplate template, IModel variablesModel)
+	{
+		return new TextTemplateHeaderContributor(new CssTemplate(template), variablesModel);
+	}
+
+	/**
+	 * Gets a css header contributor that will load the template from the given
+	 * file name relative to (/in the same package as) the provided clazz
+	 * argument. The template will be interpolated with the given variables. The
+	 * content will be written as the body of a script tag pair.
+	 * 
+	 * @param clazz
+	 *            The class to be used for retrieving the classloader for
+	 *            loading the packaged template.
+	 * @param fileName
+	 *            The name of the file, relative to the clazz position
+	 * @param variablesModel
+	 *            The variables to interpolate
+	 * @return The header contributor instance
+	 */
+	public static TextTemplateHeaderContributor forCss(final Class clazz, final String fileName,
+			IModel variablesModel)
+	{
+		return forCss(new PackagedTextTemplate(clazz, fileName), variablesModel);
+	}
+
+	/**
 	 * Gets a javascript header contributor based on the given text template.
 	 * The template will be interpolated with the given variables. The content
 	 * will be written as the body of a script tag pair.
