@@ -16,26 +16,26 @@ import wicket.model.Model;
  * A complete tree implementation where three item consists of junction link, icon and label.
  * @author Matej Knopp
  */
-public class SimpleTree extends DefaultAbstractTree {
+public class Tree extends DefaultAbstractTree {
 
 	/**
 	 * Tree constructor.
 	 */
-	public SimpleTree(MarkupContainer parent, String id, TreeModel model) {
+	public Tree(MarkupContainer parent, String id, TreeModel model) {
 		super(parent, id, model);
 	}
 
 	/**
 	 * Tree constructor.
 	 */
-	public SimpleTree(MarkupContainer parent, String id, IModel<TreeModel> model) {
+	public Tree(MarkupContainer parent, String id, IModel<TreeModel> model) {
 		super(parent, id, model);
 	}
 
 	/**
 	 * Tree constructor.
 	 */
-	public SimpleTree(MarkupContainer parent, String id) {
+	public Tree(MarkupContainer parent, String id) {
 		super(parent, id);
 	}
 

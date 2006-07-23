@@ -29,7 +29,7 @@ import wicket.util.string.AppendingStringBuffer;
  * This class encapsulates the logic for displaying and (partial) updating the tree.
  * Actual presentation is out of scope of this class. 
  * User should derive they own tree (if needed) from {@link DefaultAbstractTree} or 
- * {@link SimpleTree} (recommended).  
+ * {@link Tree} (recommended).  
  * @author Matej Knopp
  */
 public abstract class AbstractTree extends Panel<TreeModel> implements TreeStateListener, TreeModelListener 

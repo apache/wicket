@@ -30,7 +30,7 @@ import wicket.model.Model;
  * <p>
  * The class itself adds no component to tree items.
  * If you use this class directly, you have to implement populateTreeItem() on your own.
- * If you want to use an existing (complete) tree class, use {@link SimpleTree}
+ * If you want to use an existing (complete) tree class, use {@link Tree}
  * <p>
  * This class allows you to choose between 3 types of links.
  * 		{@link DefaultAbstractTree#setLinkType(wicket.xtree.DefaultAbstractTree.LinkType)}
