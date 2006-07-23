@@ -177,19 +177,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	{
 		super(parent, id);
 
-		// the #getModel() call below will resolve and assign any inheritable
-		// model this component can use. Set that directly to the label and
-		// editor so that those components work like this enclosing panel
-		// does not exist (must have that e.g. with CompoundPropertyModels
-		IModel<T> m = getModel();
-
-		// check that a model was found
-		if (m == null)
-		{
-			throw new IllegalStateException(
-					"No model found for this component, either pass one explicitly or "
-							+ "make sure an inheritable model is available");
-		}
+		IModel<T> m = getParentModel();
 
 		init(m);
 	}
@@ -200,6 +188,12 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	public AjaxEditableLabel(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
+
+		if (model == null)
+		{
+			model = getParentModel();
+		}
+
 		init(model);
 	}
 
@@ -393,6 +387,27 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		target.addComponent(AjaxEditableLabel.this);
 
 		target.appendJavascript("window.status='';");
+	}
+
+	/**
+	 * @return Gets the parent model in case no explicit model was specified.
+	 */
+	private IModel<T> getParentModel()
+	{
+		// the #getModel() call below will resolve and assign any inheritable
+		// model this component can use. Set that directly to the label and
+		// editor so that those components work like this enclosing panel
+		// does not exist (must have that e.g. with CompoundPropertyModels
+		IModel<T> m = getModel();
+
+		// check that a model was found
+		if (m == null)
+		{
+			throw new IllegalStateException(
+					"No model found for this component, either pass one explicitly or "
+							+ "make sure an inheritable model is available");
+		}
+		return m;
 	}
 
 	/**
