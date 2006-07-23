@@ -95,11 +95,13 @@ div.wicket-tree-table div.row,
 div.wicket-tree-table div.row-selected {
 	overflow: hidden;
 	_width: 100%; /* ie float container height bug */
-	padding-left: 1em;	
 }
 
-div.wicket-tree-table div.row-selected {
+div.wicket-tree-table div.row-selected  {
 	background-color: #E0E8FF;
+}
+
+div.wicket-tree-table div.row-selected a.node-link span {
 	font-weight: bold;
 }
 
@@ -114,11 +116,6 @@ div.wicket-tree-table {
 	overflow: auto;
 }
 
-div.wicket-tree-table div.row,
-div.wicket-tree-table div.row-selected {
-	padding-left: 0px;
-}
-
 
 div.wicket-tree-table div.row,
 div.wicket-tree-table div.row-selected,
@@ -131,8 +128,7 @@ div.wicket-tree-table span.column span.column-inner {
 	min-height: 18px;
 }
 
-div.wicket-tree-table div.row,
-div.wicket-tree-table div.row span.column  /*, 
+div.wicket-tree-table div.row /*, 
 div.wicket-tree-table div.row-selected,
 div.wicket-tree-table div.row-selected span.column */ {
 	background-image: url("dotted-line.png");
@@ -156,15 +152,21 @@ div.wicket-tree-table span.column {
 
 div.wicket-tree-table span.column span.column-inner {
 	border-left: 1px solid #ddd;	
-	padding: 0em 0.5em;
-	margin-left: 0.5em;
+	padding-left: 6px;
+	margin-left: 6px;
 	display: block;
 }
 
 div.wicket-tree-table span.column span.column-inner-first {
-	padding: 0em 0.5em;
-	margin-left: 0.5em;
+	padding-left: 6px;
+	margin-left: 6px;
 	display: block;
+}
+
+div.wicket-tree-table div.row,
+div.wicket-tree-table div.row-selected,
+div.wicket-tree-table div.header {
+	padding-right: 6px;
 }
 
 
@@ -185,3 +187,4 @@ div.wicket-tree-table div.header span.text {
 	position: relative;
 	top: 0.15em;
 }
+
