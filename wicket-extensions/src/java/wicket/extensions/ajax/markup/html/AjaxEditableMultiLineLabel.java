@@ -67,24 +67,22 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	}
 
 	/**
-	 * @see wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(wicket.MarkupContainer,
-	 *      wicket.model.IModel)
+	 * @see wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(wicket.MarkupContainer, java.lang.String, wicket.model.IModel)
 	 */
-	protected Component newLabel(MarkupContainer parent, IModel model)
+	protected Component newLabel(MarkupContainer parent, String componentId, IModel model)
 	{
-		MultiLineLabel label = new MultiLineLabel("label", model);
+		MultiLineLabel label = new MultiLineLabel(componentId, model);
 		label.setOutputMarkupId(true);
 		label.add(new LabelAjaxBehavior("onclick"));
 		return label;
 	}
 
 	/**
-	 * @see wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(wicket.MarkupContainer,
-	 *      wicket.model.IModel)
+	 * @see wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(wicket.MarkupContainer, java.lang.String, wicket.model.IModel)
 	 */
-	protected FormComponent newEditor(MarkupContainer parent, IModel model)
+	protected FormComponent newEditor(MarkupContainer parent, String componentId, IModel model)
 	{
-		TextArea editor = new TextArea("editor", model);
+		TextArea editor = new TextArea(componentId, model);
 		editor.add(new AttributeModifier("rows", new AbstractReadOnlyModel()
 		{
 			private static final long serialVersionUID = 1L;
