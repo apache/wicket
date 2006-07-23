@@ -37,7 +37,6 @@ public class PortletActionRequestResponseStrategy implements IResponseStrategy
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		log.info("action -> " + requestCycle.getRequestTarget());
 		PortletRequestCodingStrategy strategy = (PortletRequestCodingStrategy)requestCycle
 				.getProcessor().getRequestCodingStrategy();
 		strategy.setRenderParameters((PortletRequestCycle)requestCycle, requestCycle
