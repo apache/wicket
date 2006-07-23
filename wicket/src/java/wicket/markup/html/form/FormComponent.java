@@ -1033,7 +1033,12 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 */
 	public String getValidatorKeyPrefix()
 	{
-		return getForm().getValidatorKeyPrefix();
+		Form form = (Form)findParent(Form.class);
+		if (form != null)
+		{
+			return getForm().getValidatorKeyPrefix();
+		}
+		return null;
 	}
 
 	/**
