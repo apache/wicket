@@ -13,6 +13,7 @@
   <body>
 	<release version="1.2.2" date="tbd" description="Wicket 1.2.2">
 		<action type="fix" dev="Igor Vaynberg">AjaxEditableLabel will not properly work when a compound model is used</action>
+		<action type="add" dev="Janne Hietamäki">WindowState and PortletMode support for portlets</action>
 	</release>
     <release version="1.2.1" date="tbd" description="Wicket 1.2.1">
       <action type="fix" due-to="Antonio Petrelli (Scopes)">For improved reliability, instead of utilizing cookies and falling back on a quirky JavasScript, we now use window.name to detect whether we are in sync with the proper page map.</action>
