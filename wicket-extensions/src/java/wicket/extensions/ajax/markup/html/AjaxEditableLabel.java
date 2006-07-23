@@ -207,9 +207,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 *            The validator
 	 * @return This
 	 */
-	public AjaxEditableLabel<T> add(IValidator validator)
+	public final AjaxEditableLabel<T> add(IValidator validator)
 	{
-		editor.add(validator);
+		getEditor().add(validator);
 		return this;
 	}
 
@@ -220,9 +220,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public AjaxEditableLabel<T> setLabel(final IModel labelModel)
+	public final AjaxEditableLabel<T> setLabel(final IModel labelModel)
 	{
-		editor.setLabel(labelModel);
+		getEditor().setLabel(labelModel);
 		return this;
 	}
 
@@ -230,10 +230,10 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
 	 */
 	@Override
-	public Component setModel(IModel<T> model)
+	public final Component setModel(IModel<T> model)
 	{
 		super.setModel(model);
-		editor.setModel(model);
+		getEditor().setModel(model);
 		return this;
 	}
 
@@ -243,9 +243,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param required
 	 * @return this for chaining
 	 */
-	public AjaxEditableLabel<T> setRequired(final boolean required)
+	public final AjaxEditableLabel<T> setRequired(final boolean required)
 	{
-		editor.setRequired(required);
+		getEditor().setRequired(required);
 		return this;
 	}
 
@@ -256,19 +256,23 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param type
 	 * @return this for chaining
 	 */
-	public AjaxEditableLabel<T> setType(Class<? extends T> type)
+	public final AjaxEditableLabel<T> setType(Class<? extends T> type)
 	{
-		editor.setType(type);
+		getEditor().setType(type);
 		return this;
 	}
 
 	/**
-	 * Gets the editor component.
+	 * Gets the editor component, lazy initialize if needed.
 	 * 
 	 * @return The editor component
 	 */
 	protected final FormComponent<T> getEditor()
 	{
+		if (editor == null)
+		{
+			initLabelAndEditor();
+		}
 		return editor;
 	}
 
@@ -290,14 +294,11 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	{
 		super.onBeforeRender();
 
-		// add components once here (tempModel may not be null after
-		// construction) to get around nasty constructor issues
-		// for overriding classes
+		// if tempModel - set on construction - is not-null, the label and
+		// editor components have not yet been set.
 		if (tempModel != null)
 		{
-			label = newLabel(this, "label", tempModel);
-			editor = newEditor(this, "editor", tempModel);
-			this.tempModel = null;
+			initLabelAndEditor();
 		}
 	}
 
@@ -412,6 +413,17 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	}
 
 	/**
+	 * Lazy initialization of the label and editor components and set tempModel
+	 * to null.
+	 */
+	private void initLabelAndEditor()
+	{
+		editor = newEditor(this, "editor", tempModel);
+		label = newLabel(this, "label", tempModel);
+		this.tempModel = null;
+	}
+
+	/**
 	 * @return Gets the parent model in case no explicit model was specified.
 	 */
 	private IModel<T> getParentModel()
@@ -431,4 +443,5 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		}
 		return m;
 	}
+
 }
