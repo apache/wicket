@@ -1,6 +1,7 @@
 package wicket.extensions.ajax.markup.html;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.ajax.AjaxEventBehavior;
@@ -53,19 +54,19 @@ public class AjaxEditableLabel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
-	/** label component */
-	private Label label;
+	/** editor component. */
+	private FormComponent editor;
 
-	/** editor component */
-	private TextField editor;
+	/** label component. */
+	private Component label;
 
-	private final class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
+	protected class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
 
 		private static final long serialVersionUID = 1L;
 
 		/**
-		 * Constructor
+		 * Constructor.
 		 */
 		public EditorAjaxBehavior()
 		{
@@ -115,11 +116,16 @@ public class AjaxEditableLabel extends Panel
 		}
 	}
 
-	private final class LabelAjaxBehavior extends AjaxEventBehavior
+	protected class LabelAjaxBehavior extends AjaxEventBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
-		private LabelAjaxBehavior(String event)
+		/**
+		 * Construct.
+		 * 
+		 * @param event
+		 */
+		public LabelAjaxBehavior(String event)
 		{
 			super(event);
 		}
@@ -241,11 +247,46 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
+	 * Create a new form component instance to serve as editor.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param model
+	 *            The model
+	 * @return The editor
+	 */
+	protected FormComponent newEditor(MarkupContainer parent, IModel model)
+	{
+		TextField editor = new TextField("editor", model);
+		editor.setOutputMarkupId(true);
+		editor.setVisible(false);
+		editor.add(new EditorAjaxBehavior());
+		return editor;
+	}
+
+	/**
+	 * Create a new form component instance to serve as editor.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param model
+	 *            The model
+	 * @return The editor
+	 */
+	protected Component newLabel(MarkupContainer parent, IModel model)
+	{
+		Label label = new Label("label", model);
+		label.setOutputMarkupId(true);
+		label.add(new LabelAjaxBehavior("onclick"));
+		return label;
+	}
+
+	/**
 	 * Gets the editor component.
 	 * 
 	 * @return The editor component
 	 */
-	protected final TextField getEditor()
+	protected final FormComponent getEditor()
 	{
 		return editor;
 	}
@@ -255,7 +296,7 @@ public class AjaxEditableLabel extends Panel
 	 * 
 	 * @return The label component
 	 */
-	protected final Label getLabel()
+	protected final Component getLabel()
 	{
 		return label;
 	}
@@ -340,14 +381,9 @@ public class AjaxEditableLabel extends Panel
 	{
 		setOutputMarkupId(true);
 
-		label = new Label("label", model);
-		label.setOutputMarkupId(true);
-		label.add(new LabelAjaxBehavior("onClick"));
+		label = newLabel(this, model);
 
-		editor = new TextField("editor", model);
-		editor.setOutputMarkupId(true);
-		editor.setVisible(false);
-		editor.add(new EditorAjaxBehavior());
+		editor = newEditor(this, model);
 
 		add(label);
 		add(editor);
