@@ -18,20 +18,22 @@
 package wicket.examples.ajax.builtin;
 
 import wicket.extensions.ajax.markup.html.AjaxEditableLabel;
+import wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.AbstractReadOnlyModel;
-import wicket.model.PropertyModel;
+import wicket.model.CompoundPropertyModel;
 
 /**
  * Page to demo the inplace edit label {@link AjaxEditableLabel}
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class EditableLabelPage extends BasePage
+public class EditableLabelPage extends BasePage<EditableLabelPage>
 {
 	private String text1 = "fox";
 	private String text2 = "dog";
+	private String text3 = "multiple\nlines of\ntextual content";
 	private int refreshCounter = 0;
 
 	/**
@@ -39,8 +41,10 @@ public class EditableLabelPage extends BasePage
 	 */
 	public EditableLabelPage()
 	{
-		new AjaxEditableLabel<String>(this, "text1", new PropertyModel<String>(this, "text1"));
-		new AjaxEditableLabel<String>(this, "text2", new PropertyModel<String>(this, "text2"));
+		setModel(new CompoundPropertyModel<EditableLabelPage>(this));
+		new AjaxEditableLabel(this, "text1");
+		new AjaxEditableLabel(this, "text2");
+		new AjaxEditableMultiLineLabel(this, "text3");
 
 		new Label(this, "refresh-counter", new AbstractReadOnlyModel()
 		{
@@ -78,6 +82,14 @@ public class EditableLabelPage extends BasePage
 	}
 
 	/**
+	 * @return gets text3
+	 */
+	public String getText3()
+	{
+		return text3;
+	}
+
+	/**
 	 * @param text1
 	 */
 	public void setText1(String text1)
@@ -91,5 +103,14 @@ public class EditableLabelPage extends BasePage
 	public void setText2(String text2)
 	{
 		this.text2 = text2;
+	}
+
+	/**
+	 * @param text3
+	 *            the text3 to set
+	 */
+	public void setText3(String text3)
+	{
+		this.text3 = text3;
 	}
 }

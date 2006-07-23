@@ -22,7 +22,8 @@ import wicket.examples.WicketExamplePage;
 
 /**
  * Base page for ajax example
+ * @param <T> 
  */
-public class BasePage extends WicketExamplePage
+public class BasePage<T> extends WicketExamplePage<T>
 {
 }
