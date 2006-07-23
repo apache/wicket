@@ -29,6 +29,7 @@ import wicket.Application;
 import wicket.Component;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
+import wicket.IResourceListener;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -45,6 +46,7 @@ import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -56,7 +58,7 @@ import wicket.util.string.Strings;
  * @author Janne Hietam&auml;ki
  */
 
-// TODO: this should not really implement IRequestTargetMounter
+//TODO: this should not really implement IRequestTargetMounter
 public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** Name of interface target query parameter */
@@ -79,6 +81,10 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 	/** Pagemap parameter constant */
 	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
+
+	/** cached url prefix. */
+	private CharSequence urlPrefix;
+
 
 	/** log. */
 	private static final Log log = LogFactory.getLog(PortletRequestCodingStrategy.class);
@@ -132,6 +138,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	public final CharSequence encode(final RequestCycle requestCycle,
 			final IRequestTarget requestTarget)
 	{
+		
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			return encodeRequest(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
@@ -178,7 +185,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			final RequestParameters parameters)
 	{
 		final String requestString = request
-				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+		.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
@@ -192,7 +199,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			final String pageMapName = components[0];
 			parameters.setPageMapName(pageMapName.length() == 0
 					? PageMap.DEFAULT_NAME
-					: pageMapName);
+							: pageMapName);
 
 			// Extract bookmarkable page class name
 			final String pageClassName = components[1];
@@ -224,12 +231,12 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			final String pageMapName = request.getParameter(PAGEMAP);
 			parameters.setPageMapName(pageMapName != null && pageMapName.length() > 0
 					? PageMap.DEFAULT_NAME
-					: pageMapName);
+							: pageMapName);
 
 			final String interfaceName = request.getParameter(INTERFACE_PARAMETER_NAME);
 			parameters.setInterfaceName(interfaceName != null && interfaceName.length() != 0
 					? interfaceName
-					: IRedirectListener.INTERFACE.getName());
+							: IRedirectListener.INTERFACE.getName());
 
 			final String versionNumberString = request.getParameter(VERSION_PARAMETER_NAME);
 			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
@@ -257,9 +264,6 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	protected void addResourceParameters(Request request, RequestParameters parameters)
 	{
 		// TODO: resources are not yet supported
-		// final String resourceKey =
-		// request.getParameter(RESOURCES_PARAMETER_NAME);
-		// parameters.setResourceKey(resourceKey);
 	}
 
 	/**
@@ -281,7 +285,6 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		return null;
 	}
 
-
 	/**
 	 * Encode a shared resource target.
 	 * 
@@ -298,14 +301,29 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	protected CharSequence encodeRequest(RequestCycle requestCycle,
 			ISharedResourceRequestTarget requestTarget)
 	{
-
-		/*
-		 * PortletURL url=getRenderURL(requestCycle); final String
-		 * sharedResourceKey = requestTarget.getResourceKey();
-		 * url.setParameter(RESOURCES_PARAMETER_NAME,sharedResourceKey); return
-		 * url.toString();
-		 */
-		throw new WicketRuntimeException("Portlet resources are not yet implemented");
+		final CharSequence prefix = urlPrefix(requestCycle);
+		final String sharedResourceKey = requestTarget.getResourceKey();
+		if ((sharedResourceKey == null) || (sharedResourceKey.trim().length() == 0))
+		{
+			return prefix;
+		}
+		else
+		{
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(sharedResourceKey
+					.length()
+					+ prefix.length() + 11);
+			buffer.append(prefix);
+			if ((buffer.length() > 0) && buffer.charAt(buffer.length() - 1) == '/')
+			{
+				buffer.append("resources/");
+			}
+			else
+			{
+				buffer.append("/resources/");
+			}
+			buffer.append(sharedResourceKey);
+			return requestCycle.getOriginalResponse().encodeURL(buffer);
+		}
 	}
 
 	/**
@@ -325,6 +343,16 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			IListenerInterfaceRequestTarget requestTarget)
 	{
 		PortletURL url;
+		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
+
+		if(IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
+		{
+			final CharSequence prefix = urlPrefix(requestCycle);
+			log.warn("Support for dynamic resources is not yet implemented");
+			// TODO: support for dynamic resources
+			return prefix;
+		}
+		
 		try
 		{
 			url = getActionURL(requestCycle);
@@ -347,8 +375,6 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			 */
 			return null;
 		}
-
-		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
 
 		// Get component and page for request target
 		final Component component = requestTarget.getTarget();
@@ -476,11 +502,6 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			doSetRenderParameters(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
 		}
-		/*
-		 * else if (requestTarget instanceof ISharedResourceRequestTarget) {
-		 * doSetRenderParameters(requestCycle,
-		 * (ISharedResourceRequestTarget)requestTarget); }
-		 */
 		else if (requestTarget instanceof IListenerInterfaceRequestTarget)
 		{
 			doSetRenderParameters(requestCycle, (IListenerInterfaceRequestTarget)requestTarget);
@@ -563,7 +584,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		if (!rli.getRecordsPageVersion())
 		{
 			response
-					.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(Page.LATEST_VERSION));
+			.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(Page.LATEST_VERSION));
 		}
 		else if (versionNumber > 0)
 		{
@@ -607,7 +628,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		final int versionNumber = page.getCurrentVersionNumber();
 		response.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(versionNumber));
 		response
-				.setRenderParameter(INTERFACE_PARAMETER_NAME, IRedirectListener.INTERFACE.getName());
+		.setRenderParameter(INTERFACE_PARAMETER_NAME, IRedirectListener.INTERFACE.getName());
 	}
 
 	/**
@@ -708,4 +729,40 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 				.getPath());
 		return (encoder != null) ? encoder.decode(requestParameters) : null;
 	}
+
+	/**
+	 * Gets prefix.
+	 * 
+	 * @param requestCycle
+	 *            the request cycle
+	 * 
+	 * @return prefix
+	 */
+	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
+	{
+		if (urlPrefix == null)
+		{
+			final AppendingStringBuffer buffer = new AppendingStringBuffer();
+			final WicketPortletRequest request = ((PortletRenderRequestCycle)requestCycle).getPortletRequest();
+			if (request != null)
+			{
+				String contextPath = Application.get().getApplicationSettings().getContextPath();
+				if (contextPath == null)
+				{
+					contextPath = ((PortletRenderRequestCycle)RequestCycle.get()).getPortletRequest().getPortletRequest().getContextPath();
+					if (contextPath == null)
+					{
+						contextPath = "";
+					}
+				}
+				if (!contextPath.equals("/"))
+				{
+					buffer.append(contextPath);
+				}
+			}
+			urlPrefix = buffer;
+		}
+		return urlPrefix;
+	}
+
 }
