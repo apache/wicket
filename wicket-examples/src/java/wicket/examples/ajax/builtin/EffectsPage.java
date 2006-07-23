@@ -84,7 +84,7 @@ public class EffectsPage extends BasePage
 			{
 				counter1++;
 				target.addComponent(c1);
-				target.addJavascript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
+				target.appendJavascript("new Effect.Shake($('" + c1.getMarkupId() + "'));");
 			}
 		};
 
@@ -97,7 +97,7 @@ public class EffectsPage extends BasePage
 				if (target != null)
 				{
 					target.addComponent(c2);
-					target.addJavascript("new Effect.Highlight($('" + c2.getMarkupId() + "'));");
+					target.appendJavascript("new Effect.Highlight($('" + c2.getMarkupId() + "'));");
 				}
 			}
 
