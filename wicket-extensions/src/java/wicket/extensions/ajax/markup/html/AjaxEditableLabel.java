@@ -1,7 +1,5 @@
 /*
- * $Id: AbstractTime.java 5791 2006-05-20 00:32:57 +0000 (Sat, 20 May 2006)
- * joco01 $ $Revision: 5874 $ $Date: 2006-05-20 00:32:57 +0000 (Sat, 20 May
- * 2006) $
+ * $Id$ $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -78,7 +76,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	/**
 	 * Edit behavior.
 	 */
-	private final class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
+	protected class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -142,7 +140,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	/**
 	 * The label behavior.
 	 */
-	private final class LabelAjaxBehavior extends AjaxEventBehavior
+	protected class LabelAjaxBehavior extends AjaxEventBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -151,7 +149,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		 * 
 		 * @param event
 		 */
-		private LabelAjaxBehavior(ClientEvent event)
+		public LabelAjaxBehavior(ClientEvent event)
 		{
 			super(event);
 		}
@@ -167,10 +165,10 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	}
 
 	/** editor component. */
-	private TextField<T> editor;
+	private FormComponent<T> editor;
 
 	/** label component. */
-	private Label label;
+	private Component label;
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String)
@@ -261,7 +259,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param type
 	 * @return this for chaining
 	 */
-	public AjaxEditableLabel<T> setType(Class< ? extends T> type)
+	public AjaxEditableLabel<T> setType(Class<? extends T> type)
 	{
 		editor.setType(type);
 		return this;
@@ -272,7 +270,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * 
 	 * @return The editor component
 	 */
-	protected final TextField<T> getEditor()
+	protected final FormComponent<T> getEditor()
 	{
 		return editor;
 	}
@@ -282,8 +280,43 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * 
 	 * @return The label component
 	 */
-	protected final Label getLabel()
+	protected final Component getLabel()
 	{
+		return label;
+	}
+
+	/**
+	 * Create a new form component instance to serve as editor.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param model
+	 *            The model
+	 * @return The editor
+	 */
+	protected FormComponent<T> newEditor(MarkupContainer parent, IModel<T> model)
+	{
+		TextField<T> editor = new TextField<T>(parent, "editor", model);
+		editor.setOutputMarkupId(true);
+		editor.setVisible(false);
+		editor.add(new EditorAjaxBehavior());
+		return editor;
+	}
+
+	/**
+	 * Create a new form component instance to serve as editor.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param model
+	 *            The model
+	 * @return The editor
+	 */
+	protected Component newLabel(MarkupContainer parent, IModel<T> model)
+	{
+		Label label = new Label(this, "label", model);
+		label.setOutputMarkupId(true);
+		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
 		return label;
 	}
 
@@ -364,17 +397,12 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * @param model
 	 *            The model
 	 */
-	private void init(IModel<T> model)
+	private final void init(IModel<T> model)
 	{
 		setOutputMarkupId(true);
 
-		label = new Label(this, "label", model);
-		label.setOutputMarkupId(true);
-		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
+		label = newLabel(this, model);
 
-		editor = new TextField<T>(this, "editor", model);
-		editor.setOutputMarkupId(true);
-		editor.setVisible(false);
-		editor.add(new EditorAjaxBehavior());
+		editor = newEditor(this, model);
 	}
 }
