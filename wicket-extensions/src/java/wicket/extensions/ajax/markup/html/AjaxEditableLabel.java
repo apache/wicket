@@ -158,7 +158,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	/**
 	 * The label behavior.
 	 */
-	private final class LabeAjaxBehavior extends AjaxEventBehavior
+	private final class LabelAjaxBehavior extends AjaxEventBehavior
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -167,7 +167,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		 * 
 		 * @param event
 		 */
-		private LabeAjaxBehavior(ClientEvent event)
+		private LabelAjaxBehavior(ClientEvent event)
 		{
 			super(event);
 		}
@@ -191,17 +191,24 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	}
 
 	/** editor component. */
-	private final TextField<T> editor;
+	private TextField<T> editor;
 
 	/** label component. */
-	private final Label label;
+	private Label label;
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
 	public AjaxEditableLabel(MarkupContainer parent, final String id)
 	{
-		this(parent, id, null);
+		super(parent, id);
+
+		// the #getModel() call below will resolve and assign any inheritable
+		// model this component can use. at least that is behavior right now.
+
+		checkModel(getModel());
+		
+		init(getModel());
 	}
 
 	/**
@@ -209,12 +216,26 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 */
 	public AjaxEditableLabel(MarkupContainer parent, final String id, IModel<T> model)
 	{
-		super(parent, id);
+		super(parent, id, model);
+		init(model);
+	}
+	
+	private void checkModel(IModel<T> model) {
+		if (model == null)
+		{
+			throw new IllegalStateException(
+					"No model found for this component, either pass one explicitly or "
+							+ "make sure an inheritable model is available");
+		}
+	}
+
+	private void init(IModel<T> model)
+	{
 		setOutputMarkupId(true);
 
 		label = new Label(this, "label", model);
 		label.setOutputMarkupId(true);
-		label.add(new LabeAjaxBehavior(ClientEvent.CLICK));
+		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
 
 		editor = new TextField<T>(this, "editor", model);
 		editor.setOutputMarkupId(true);
