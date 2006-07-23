@@ -205,7 +205,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 */
 	public List<E> getChoices()
 	{
-		List<E> choices = this.choices.getObject();
+		List<E> choices = (this.choices != null) ? this.choices.getObject() : null;
 		if (choices == null)
 		{
 			throw new NullPointerException(
@@ -277,7 +277,10 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	{
 		super.detachModel();
 
-		choices.detach();
+		if (choices != null)
+		{
+			choices.detach();
+		}
 	}
 
 	/**
