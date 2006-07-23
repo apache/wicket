@@ -17,6 +17,10 @@
  */
 package wicket.examples.ajax.builtin;
 
+import java.util.Arrays;
+import java.util.List;
+
+import wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import wicket.extensions.ajax.markup.html.AjaxEditableLabel;
 import wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
 import wicket.markup.html.basic.Label;
@@ -31,6 +35,11 @@ import wicket.model.CompoundPropertyModel;
  */
 public class EditableLabelPage extends BasePage<EditableLabelPage>
 {
+
+	/** available sites for the multiple select. */
+	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
+			"Java Lobby", "Java.Net" });
+	private String site = SITES.get(0);
 	private String text1 = "fox";
 	private String text2 = "dog";
 	private String text3 = "multiple\nlines of\ntextual content";
@@ -45,6 +54,7 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 		new AjaxEditableLabel(this, "text1");
 		new AjaxEditableLabel(this, "text2");
 		new AjaxEditableMultiLineLabel(this, "text3");
+		new AjaxEditableChoiceLabel<String>(this, "site", SITES);
 
 		new Label(this, "refresh-counter", new AbstractReadOnlyModel()
 		{
@@ -112,5 +122,22 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 	public void setText3(String text3)
 	{
 		this.text3 = text3;
+	}
+
+	/**
+	 * @return gets site
+	 */
+	public String getSite()
+	{
+		return site;
+	}
+
+	/**
+	 * @param site
+	 *            the site to set
+	 */
+	public void setSite(String site)
+	{
+		this.site = site;
 	}
 }
