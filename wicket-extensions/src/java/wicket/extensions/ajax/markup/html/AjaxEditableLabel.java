@@ -54,6 +54,9 @@ public class AjaxEditableLabel extends Panel
 {
 	private static final long serialVersionUID = 1L;
 
+	/** temporary model to lazily initialize the label and editor. */
+	private transient IModel tempModel;
+
 	/** editor component. */
 	private FormComponent editor;
 
@@ -170,7 +173,8 @@ public class AjaxEditableLabel extends Panel
 	public AjaxEditableLabel(String id)
 	{
 		super(id);
-		init(new PassThroughModel());
+		setOutputMarkupId(true);
+		this.tempModel = new PassThroughModel();
 	}
 
 	/**
@@ -182,7 +186,8 @@ public class AjaxEditableLabel extends Panel
 	public AjaxEditableLabel(String id, IModel model)
 	{
 		super(id, model);
-		init((model != null) ? model : new PassThroughModel());
+		setOutputMarkupId(true);
+		this.tempModel = (model != null) ? model : new PassThroughModel();
 	}
 
 	/**
@@ -306,6 +311,26 @@ public class AjaxEditableLabel extends Panel
 	}
 
 	/**
+	 * @see wicket.Component#internalOnAttach()
+	 */
+	protected void internalOnAttach()
+	{
+		super.onBeforeRender();
+
+		// add components once here (tempModel may not be null after
+		// construction) to get around nasty constructor issues
+		// for overriding classes
+		if (tempModel != null)
+		{
+			label = newLabel(this, "label", tempModel);
+			editor = newEditor(this, "editor", tempModel);
+			add(label);
+			add(editor);
+			this.tempModel = null;
+		}
+	}
+
+	/**
 	 * Invoked when the label is in edit mode, and received a cancel event.
 	 * Typically, nothing should be done here.
 	 * 
@@ -374,23 +399,5 @@ public class AjaxEditableLabel extends Panel
 		target.addComponent(AjaxEditableLabel.this);
 
 		target.addJavascript("window.status='';");
-	}
-
-
-	/**
-	 * Internal init method.
-	 * 
-	 * @param model
-	 */
-	private void init(IModel model)
-	{
-		setOutputMarkupId(true);
-
-		label = newLabel(this, "label", model);
-
-		editor = newEditor(this, "editor", model);
-
-		add(label);
-		add(editor);
 	}
 }
