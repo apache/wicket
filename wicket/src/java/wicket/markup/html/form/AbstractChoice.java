@@ -197,10 +197,11 @@ abstract class AbstractChoice extends FormComponent
 	 */
 	public List getChoices()
 	{
-		List choices = (List)this.choices.getObject(this);
+		List choices = (this.choices != null) ? (List)this.choices.getObject(this) : null;
 		if (choices == null)
 		{
-			throw new NullPointerException("List of choices is null - Was the supplied 'Choices' model empty?");
+			throw new NullPointerException(
+					"List of choices is null - Was the supplied 'Choices' model empty?");
 		}
 		return choices;
 	}
@@ -267,7 +268,10 @@ abstract class AbstractChoice extends FormComponent
 	{
 		super.detachModel();
 
-		choices.detach();
+		if (choices != null)
+		{
+			choices.detach();
+		}
 	}
 
 	/**
@@ -327,7 +331,8 @@ abstract class AbstractChoice extends FormComponent
 	 * Generats and appends html for a single choice into the provided buffer
 	 * 
 	 * @param buffer
-	 *            Appending string buffer that will have the generated html appended
+	 *            Appending string buffer that will have the generated html
+	 *            appended
 	 * @param choice
 	 *            Choice object
 	 * @param index
