@@ -1,5 +1,6 @@
 package wicket.extensions.ajax.markup.html;
 
+import wicket.Component;
 import wicket.RequestCycle;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.ajax.AjaxEventBehavior;
@@ -8,6 +9,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
+import wicket.model.AbstractModel;
 import wicket.model.IModel;
 
 /**
@@ -27,10 +29,10 @@ public class AjaxEditableLabel extends Panel
 	private static final long serialVersionUID = 1L;
 
 	/** label component */
-	private final Label label;
+	private Label label;
 
 	/** editor component */
-	private final TextField editor;
+	private TextField editor;
 
 	/**
 	 * Constructor
@@ -39,7 +41,8 @@ public class AjaxEditableLabel extends Panel
 	 */
 	public AjaxEditableLabel(String id)
 	{
-		this(id, null);
+		super(id);
+		init(new PassThroughModel());
 	}
 
 	/**
@@ -51,6 +54,16 @@ public class AjaxEditableLabel extends Panel
 	public AjaxEditableLabel(String id, IModel model)
 	{
 		super(id);
+		init(model);
+	}
+
+	/**
+	 * Internal init method
+	 * 
+	 * @param model
+	 */
+	private void init(IModel model)
+	{
 		setOutputMarkupId(true);
 
 		label = new Label("label", model);
@@ -140,6 +153,40 @@ public class AjaxEditableLabel extends Panel
 			label.setVisible(true);
 			editor.setVisible(false);
 			target.addComponent(AjaxEditableLabel.this);
+		}
+
+	}
+
+	/**
+	 * Model that allows other components to benefit of the compound model that
+	 * AjaxEditableLabel inherits
+	 * 
+	 * @author ivaynberg
+	 * 
+	 */
+	private class PassThroughModel extends AbstractModel
+	{
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 */
+		public Object getObject(Component component)
+		{
+			return getModel().getObject(AjaxEditableLabel.this);
+		}
+
+		/**
+		 * @see wicket.model.IModel#setObject(wicket.Component,
+		 *      java.lang.Object)
+		 */
+		public void setObject(Component component, Object object)
+		{
+			getModel().setObject(AjaxEditableLabel.this, object);
 		}
 
 	}
