@@ -58,6 +58,24 @@ public class JavascriptUtils
 	}
 
 	/**
+	 * Escape quotes and double quotes so that they can be part of e.g. an alert
+	 * call.
+	 * 
+	 * @param input
+	 *            input
+	 * @return Escaped version of the input
+	 */
+	public static CharSequence escapeQuotes(final CharSequence input)
+	{
+		CharSequence s = input;
+		if (s != null)
+		{
+			s = Strings.replaceAll(s, "'", "\\'");
+		}
+		return s;
+	}
+
+	/**
 	 * Write a reference to a javascript file to the response object
 	 * 
 	 * @param response
