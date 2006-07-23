@@ -53,7 +53,7 @@ public class AjaxEditableLabel extends Panel
 	 */
 	public AjaxEditableLabel(String id, IModel model)
 	{
-		super(id);
+		super(id, model);
 		init(model);
 	}
 
