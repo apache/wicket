@@ -20,14 +20,14 @@ package wicket.extensions.util.resource;
 
 import java.util.Map;
 
-import wicket.util.string.JavascriptUtils;
+import wicket.util.string.CssUtils;
 
 /**
- * Decorates the template with javascript tags.
+ * Decorates the template with CSS tags.
  * 
  * @author Eelco Hillenius
  */
-public final class JavaScriptTemplate extends TextTemplateDecorator
+public final class CssTemplate extends TextTemplateDecorator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	 * @param textTemplate
 	 *            The template to decorate
 	 */
-	public JavaScriptTemplate(TextTemplate textTemplate)
+	public CssTemplate(TextTemplate textTemplate)
 	{
 		super(textTemplate);
 	}
@@ -47,7 +47,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	 */
 	public String getBeforeTemplateContents()
 	{
-		return JavascriptUtils.SCRIPT_OPEN_TAG;
+		return CssUtils.INLINE_OPEN_TAG;
 	}
 
 	/**
@@ -55,12 +55,13 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	 */
 	public String getAfterTemplateContents()
 	{
-		return JavascriptUtils.SCRIPT_CLOSE_TAG;
+		return CssUtils.INLINE_CLOSE_TAG;
 	}
 
+
 	/**
-	 * This class decorates another text template class and so
-	 * does not allow interpolation.
+	 * This class decorates another text template class and so does not allow
+	 * interpolation.
 	 * 
 	 * @param variables
 	 *            Ignored
