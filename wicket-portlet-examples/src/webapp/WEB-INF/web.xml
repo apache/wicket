@@ -5,4 +5,18 @@
 <web-app>
     <display-name>WicketPortlet</display-name>
     <description>Wicket Test Portlet</description>
+
+    <servlet>
+		<servlet-name>WicketServlet</servlet-name>
+		<servlet-class>wicket.protocol.http.portlet.WicketPortletServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+
+	<!-- this is used for the resources -->
+	
+	<servlet-mapping>
+		<servlet-name>WicketServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>	    
 </web-app>
