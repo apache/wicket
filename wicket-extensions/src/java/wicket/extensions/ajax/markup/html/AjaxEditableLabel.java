@@ -164,6 +164,9 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		}
 	}
 
+	/** temporary model to lazily initialize the label and editor. */
+	private transient IModel<T> tempModel;
+
 	/** editor component. */
 	private FormComponent<T> editor;
 
@@ -176,10 +179,10 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	public AjaxEditableLabel(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
+		setOutputMarkupId(true);
 
-		IModel<T> m = getParentModel();
-
-		init(m);
+		IModel<T> model = getParentModel();
+		this.tempModel = model;
 	}
 
 	/**
@@ -188,13 +191,13 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	public AjaxEditableLabel(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
+		setOutputMarkupId(true);
 
 		if (model == null)
 		{
 			model = getParentModel();
 		}
-
-		init(model);
+		this.tempModel = model;
 	}
 
 	/**
@@ -277,6 +280,25 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	protected final Component getLabel()
 	{
 		return label;
+	}
+
+	/**
+	 * @see wicket.Component#internalOnAttach()
+	 */
+	@Override
+	protected void internalOnAttach()
+	{
+		super.onBeforeRender();
+
+		// add components once here (tempModel may not be null after
+		// construction) to get around nasty constructor issues
+		// for overriding classes
+		if (tempModel != null)
+		{
+			label = newLabel(this, "label", tempModel);
+			editor = newEditor(this, "editor", tempModel);
+			this.tempModel = null;
+		}
 	}
 
 	/**
@@ -408,20 +430,5 @@ public class AjaxEditableLabel<T> extends Panel<T>
 							+ "make sure an inheritable model is available");
 		}
 		return m;
-	}
-
-	/**
-	 * Initialize the label and editor components with a model.
-	 * 
-	 * @param model
-	 *            The model
-	 */
-	private final void init(IModel<T> model)
-	{
-		setOutputMarkupId(true);
-
-		label = newLabel(this, "label", model);
-
-		editor = newEditor(this, "editor", model);
 	}
 }
