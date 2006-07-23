@@ -415,6 +415,14 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	{
 		return new TreeItem(itemContainer, "" + idCounter++, node, level);
 	}
+	
+	/**
+	 * Creates a tree item for given node with specified id.
+	 */
+	private final TreeItem createTreeItem(TreeNode node, int level, String id) 
+	{
+		return new TreeItem(itemContainer, id, node, level);
+	}	
 
 	/**
 	 * Builds the children for given TreeItem. It recursively traverses children of it's TreeNode 
@@ -580,18 +588,34 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Invalidates single node (without children). On the next render, this node will be updated.
+	 * Node will not be rebuilt, unless forceRebuild is true. TODO Implement forceRebuild
 	 */
-	private final void invalidateNode(TreeNode node) 
+	private final void invalidateNode(TreeNode node, boolean forceRebuld) 
 	{
 		// get item for this node
 		TreeItem item = nodeToItemMap.get(node);
+		
+		if (forceRebuld) 
+		{
+			// recreate the item
+			int level = item.getLevel();
+			List<TreeItem> children = item.getChildren();
+			String id = item.getId();
+			
+			item.remove();			
+			
+			item = createTreeItem(node, level, id);
+			item.setChildren(children);			
+		}
 		
 		if (item != null)
 			dirtyItems.add(item);
 	}
 	
-	// removes the item, appends it's id to deleteIds
-	// this is called when a items parent is being deleted or rebuild
+	/**
+	 * Removes the item, appends it's id to deleteIds. 
+	 * This is called when a items parent is being deleted or rebuilt.
+	 */
 	private void removeItem(TreeItem item) 
 	{
 		// even if the item is dirty it's no longer necessary to update id 
@@ -611,6 +635,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Invalidates node and it's children. On the next render, the node and children will be updated.
+	 * Node and children will be rebuilt.
 	 */
 	private final void invalidateNodeWithChildren(TreeNode node) 
 	{
@@ -816,7 +841,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	{
 		if (isNodeVisible(node))
 		{
-			invalidateNode(node);
+			invalidateNode(node, true);
 		}
 	}
 	
@@ -825,7 +850,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	{
 		if (isNodeVisible(node))
 		{
-			invalidateNode(node);
+			invalidateNode(node, true);
 		}
 	}
 	
@@ -837,7 +862,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		{
 			if (rootItem != null)
 			{
-				invalidateNode(rootItem.getModelObject());
+				invalidateNode(rootItem.getModelObject(), true);
 			}			
 		}
 		else
@@ -849,7 +874,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 				if (isNodeVisible(node))
 				{
 					// if the nodes is visible invalidate it
-					invalidateNode(node);
+					invalidateNode(node, true);
 				}
 			}
 		}
