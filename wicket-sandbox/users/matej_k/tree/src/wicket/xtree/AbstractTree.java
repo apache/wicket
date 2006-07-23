@@ -602,10 +602,21 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			List<TreeItem> children = item.getChildren();
 			String id = item.getId();
 			
+			// store the parent of old item
+			TreeItem parent = item.getParentItem();
+			
+			// if the old item has a parent, store it's index
+			int index = parent != null ? parent.getChildren().indexOf(item) : -1;
+			
 			item.remove();			
 			
 			item = createTreeItem(node, level, id);
-			item.setChildren(children);			
+			item.setChildren(children);
+			
+			if (parent != null)
+			{				
+				parent.getChildren().set(index, item);
+			}
 		}
 		
 		if (item != null)
