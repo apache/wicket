@@ -197,9 +197,9 @@ public class AjaxEditableLabel extends Panel
 	 *            The validator
 	 * @return This
 	 */
-	public AjaxEditableLabel add(IValidator validator)
+	public final AjaxEditableLabel add(IValidator validator)
 	{
-		editor.add(validator);
+		getEditor().add(validator);
 		return this;
 	}
 
@@ -210,19 +210,19 @@ public class AjaxEditableLabel extends Panel
 	 * @param labelModel
 	 * @return this for chaining
 	 */
-	public AjaxEditableLabel setLabel(final IModel labelModel)
+	public final AjaxEditableLabel setLabel(final IModel labelModel)
 	{
-		editor.setLabel(labelModel);
+		getEditor().setLabel(labelModel);
 		return this;
 	}
 
 	/**
 	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
 	 */
-	public Component setModel(IModel model)
+	public final Component setModel(IModel model)
 	{
 		super.setModel(model);
-		editor.setModel(model);
+		getEditor().setModel(model);
 		return this;
 	}
 
@@ -232,9 +232,9 @@ public class AjaxEditableLabel extends Panel
 	 * @param required
 	 * @return this for chaining
 	 */
-	public AjaxEditableLabel setRequired(final boolean required)
+	public final AjaxEditableLabel setRequired(final boolean required)
 	{
-		editor.setRequired(required);
+		getEditor().setRequired(required);
 		return this;
 	}
 
@@ -245,9 +245,9 @@ public class AjaxEditableLabel extends Panel
 	 * @param type
 	 * @return this for chaining
 	 */
-	public AjaxEditableLabel setType(Class type)
+	public final AjaxEditableLabel setType(Class type)
 	{
-		editor.setType(type);
+		getEditor().setType(type);
 		return this;
 	}
 
@@ -297,6 +297,10 @@ public class AjaxEditableLabel extends Panel
 	 */
 	protected final FormComponent getEditor()
 	{
+		if (editor == null)
+		{
+			initLabelAndEditor();
+		}
 		return editor;
 	}
 
@@ -317,16 +321,11 @@ public class AjaxEditableLabel extends Panel
 	{
 		super.onBeforeRender();
 
-		// add components once here (tempModel may not be null after
-		// construction) to get around nasty constructor issues
-		// for overriding classes
+		// if tempModel - set on construction - is not-null, the label and
+		// editor components have not yet been set.
 		if (tempModel != null)
 		{
-			label = newLabel(this, "label", tempModel);
-			editor = newEditor(this, "editor", tempModel);
-			add(label);
-			add(editor);
-			this.tempModel = null;
+			initLabelAndEditor();
 		}
 	}
 
@@ -399,5 +398,18 @@ public class AjaxEditableLabel extends Panel
 		target.addComponent(AjaxEditableLabel.this);
 
 		target.addJavascript("window.status='';");
+	}
+
+	/**
+	 * Lazy initialization of the label and editor components and set tempModel
+	 * to null.
+	 */
+	private void initLabelAndEditor()
+	{
+		editor = newEditor(this, "editor", tempModel);
+		label = newLabel(this, "label", tempModel);
+		add(label);
+		add(editor);
+		this.tempModel = null;
 	}
 }
