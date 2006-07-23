@@ -4,4 +4,5 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
     <display-name>WicketPortlet</display-name>
+    <description>Wicket Test Portlet</description>
 </web-app>
