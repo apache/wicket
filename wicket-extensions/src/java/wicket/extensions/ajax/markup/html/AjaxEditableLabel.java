@@ -8,9 +8,11 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractModel;
 import wicket.model.IModel;
+import wicket.util.string.JavascriptUtils;
 
 /**
  * A simple implementation of ajaxified edit-in-place component. Currently the
@@ -22,7 +24,7 @@ import wicket.model.IModel;
  * loses focus. Cancel if esc is pressed.
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ * @author eelcohillenius
  */
 public class AjaxEditableLabel extends Panel
 {
@@ -34,85 +36,7 @@ public class AjaxEditableLabel extends Panel
 	/** editor component */
 	private TextField editor;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 */
-	public AjaxEditableLabel(String id)
-	{
-		super(id);
-		init(new PassThroughModel());
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param id
-	 * @param model
-	 */
-	public AjaxEditableLabel(String id, IModel model)
-	{
-		super(id, model);
-		init(model);
-	}
-
-	/**
-	 * Internal init method
-	 * 
-	 * @param model
-	 */
-	private void init(IModel model)
-	{
-		setOutputMarkupId(true);
-
-		label = new Label("label", model);
-		label.setOutputMarkupId(true);
-		label.add(new LabeAjaxBehavior("onClick"));
-
-		editor = new TextField("editor", model);
-		editor.setOutputMarkupId(true);
-		editor.setVisible(false);
-		editor.add(new EditorAjaxBehavior());
-
-		add(label);
-		add(editor);
-	}
-
-	/**
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 * 
-	 */
-	private final class LabeAjaxBehavior extends AjaxEventBehavior
-	{
-		private static final long serialVersionUID = 1L;
-
-		private LabeAjaxBehavior(String event)
-		{
-			super(event);
-		}
-
-		protected void onEvent(AjaxRequestTarget target)
-		{
-			label.setVisible(false);
-			editor.setVisible(true);
-			target.addComponent(AjaxEditableLabel.this);
-			// put focus on the textfield and stupid explorer hack to move the
-			// caret to the end
-			target.addJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
-					+ "  el.focus(); " + "  if (el.createTextRange) { "
-					+ "     var v = el.value; var r = el.createTextRange(); "
-					+ "     r.moveStart('character', v.length); r.select(); } }");
-		}
-	}
-
-	/**
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 * 
-	 */
-	private class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
+	private final class EditorAjaxBehavior extends AbstractDefaultAjaxBehavior
 	{
 
 		private static final long serialVersionUID = 1L;
@@ -144,32 +68,62 @@ public class AjaxEditableLabel extends Panel
 
 		protected void respond(AjaxRequestTarget target)
 		{
-			RequestCycle rc = RequestCycle.get();
-			boolean save = Boolean.valueOf(rc.getRequest().getParameter("save")).booleanValue();
+			RequestCycle requestCycle = RequestCycle.get();
+			boolean save = Boolean.valueOf(requestCycle.getRequest().getParameter("save"))
+					.booleanValue();
+
 			if (save)
 			{
 				editor.processInput();
+
+				if (editor.isValid())
+				{
+					label.setVisible(true);
+					editor.setVisible(false);
+					target.addComponent(AjaxEditableLabel.this);
+
+					if (save)
+					{
+						onSubmit(target);
+					}
+				}
+				else
+				{
+					onError(target);
+				}
 			}
-			label.setVisible(true);
-			editor.setVisible(false);
-			target.addComponent(AjaxEditableLabel.this);
+			else
+			{
+				label.setVisible(true);
+				editor.setVisible(false);
+				target.addComponent(AjaxEditableLabel.this);
+
+				onCancel(target);
+			}
+		}
+	}
+
+	private final class LabelAjaxBehavior extends AjaxEventBehavior
+	{
+		private static final long serialVersionUID = 1L;
+
+		private LabelAjaxBehavior(String event)
+		{
+			super(event);
 		}
 
+		protected void onEvent(AjaxRequestTarget target)
+		{
+			onEdit(target);
+		}
 	}
 
 	/**
 	 * Model that allows other components to benefit of the compound model that
-	 * AjaxEditableLabel inherits
-	 * 
-	 * @author ivaynberg
-	 * 
+	 * AjaxEditableLabel inherits.
 	 */
-	private class PassThroughModel extends AbstractModel
+	private final class PassThroughModel extends AbstractModel
 	{
-
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -188,6 +142,195 @@ public class AjaxEditableLabel extends Panel
 		{
 			getModel().setObject(AjaxEditableLabel.this, object);
 		}
+	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 */
+	public AjaxEditableLabel(String id)
+	{
+		super(id);
+		init(new PassThroughModel());
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param id
+	 * @param model
+	 */
+	public AjaxEditableLabel(String id, IModel model)
+	{
+		super(id, model);
+		init(model);
+	}
+
+	/**
+	 * Adds a validator to this form component.
+	 * 
+	 * @param validator
+	 *            The validator
+	 * @return This
+	 */
+	public AjaxEditableLabel add(IValidator validator)
+	{
+		editor.add(validator);
+		return this;
+	}
+
+	/**
+	 * The value will be made available to the validator property by means of
+	 * ${label}. It does not have any specific meaning to FormComponent itself.
+	 * 
+	 * @param labelModel
+	 * @return this for chaining
+	 */
+	public AjaxEditableLabel setLabel(final IModel labelModel)
+	{
+		editor.setLabel(labelModel);
+		return this;
+	}
+
+	/**
+	 * @see wicket.MarkupContainer#setModel(wicket.model.IModel)
+	 */
+	public Component setModel(IModel model)
+	{
+		super.setModel(model);
+		editor.setModel(model);
+		return this;
+	}
+
+	/**
+	 * Sets the required flag
+	 * 
+	 * @param required
+	 * @return this for chaining
+	 */
+	public AjaxEditableLabel setRequired(final boolean required)
+	{
+		editor.setRequired(required);
+		return this;
+	}
+
+	/**
+	 * Sets the type that will be used when updating the model for this
+	 * component. If no type is specified String type is assumed.
+	 * 
+	 * @param type
+	 * @return this for chaining
+	 */
+	public AjaxEditableLabel setType(Class type)
+	{
+		editor.setType(type);
+		return this;
+	}
+
+	/**
+	 * Gets the editor component.
+	 * 
+	 * @return The editor component
+	 */
+	protected final TextField getEditor()
+	{
+		return editor;
+	}
+
+	/**
+	 * Gets the label component.
+	 * 
+	 * @return The label component
+	 */
+	protected final Label getLabel()
+	{
+		return label;
+	}
+
+	/**
+	 * Invoked when the label is in edit mode, and received a cancel event.
+	 * Typically, nothing should be done here.
+	 * 
+	 * @param target
+	 *            the ajax request target
+	 */
+	protected void onCancel(AjaxRequestTarget target)
+	{
+	}
+
+	/**
+	 * Called when the label is clicked and the component is put in edit mode.
+	 * 
+	 * @param target
+	 *            Ajax target
+	 */
+	protected void onEdit(AjaxRequestTarget target)
+	{
+		label.setVisible(false);
+		editor.setVisible(true);
+		target.addComponent(AjaxEditableLabel.this);
+		// put focus on the textfield and stupid explorer hack to move the
+		// caret to the end
+		target.addJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
+				+ "  el.focus(); " + "  if (el.createTextRange) { "
+				+ "     var v = el.value; var r = el.createTextRange(); "
+				+ "     r.moveStart('character', v.length); r.select(); } }");
+	}
+
+	/**
+	 * Invoked when the label is in edit mode, received a new input, but that
+	 * input didn't validate
+	 * 
+	 * @param target
+	 *            the ajax request target
+	 */
+	protected void onError(AjaxRequestTarget target)
+	{
+		String errorMessage = editor.getFeedbackMessage().getMessage();
+		if (errorMessage != null)
+		{
+			target.addJavascript("window.status='" + JavascriptUtils.escapeQuotes(errorMessage)
+					+ "';");
+		}
+		String editorMarkupId = editor.getMarkupId();
+		target.addJavascript(editorMarkupId + ".select();");
+		target.addJavascript(editorMarkupId + ".focus();");
+		target.addComponent(editor);
+	}
+
+	/**
+	 * Invoked when the editor was succesfully updated. Use this method e.g. to
+	 * persist the changed value. This implemention clears any window status
+	 * that might have been set in onError.
+	 * 
+	 * @param target
+	 *            The ajax request target
+	 */
+	protected void onSubmit(AjaxRequestTarget target)
+	{
+		target.addJavascript("window.status='';");
+	}
+
+	/**
+	 * Internal init method.
+	 * 
+	 * @param model
+	 */
+	private void init(IModel model)
+	{
+		setOutputMarkupId(true);
+
+		label = new Label("label", model);
+		label.setOutputMarkupId(true);
+		label.add(new LabelAjaxBehavior("onClick"));
+
+		editor = new TextField("editor", model);
+		editor.setOutputMarkupId(true);
+		editor.setVisible(false);
+		editor.add(new EditorAjaxBehavior());
+
+		add(label);
+		add(editor);
 	}
 }
