@@ -169,18 +169,6 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		// Does page exist?
 		if (page != null)
 		{
-
-			PortletRequestCycle cycle = (PortletRequestCycle)requestCycle;
-			IRequestTarget prevTarget=cycle.getRequestTarget();
-
-			page.setPortletMode(cycle.getPortletRequest().getPortletRequest().getPortletMode());
-			page.setWindowState(cycle.getPortletRequest().getPortletRequest().getWindowState());			
-
-			if(requestCycle.getRequestTarget()!=prevTarget){			
-				// setPortletMode or setWindowState changed the request target and we should continue to there.
-				return requestCycle.getRequestTarget();
-			}
-
 			// Set page on request
 			requestCycle.getRequest().setPage(page);
 			
