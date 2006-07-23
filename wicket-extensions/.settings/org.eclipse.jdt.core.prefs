@@ -1,4 +1,4 @@
-#Thu May 25 22:15:58 PDT 2006
+#Sun Jul 23 17:06:57 CEST 2006
 eclipse.preferences.version=1
 org.eclipse.jdt.core.builder.cleanOutputFolder=clean
 org.eclipse.jdt.core.builder.duplicateResourceTask=warning
@@ -204,7 +204,7 @@ org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_while=do not 
 org.eclipse.jdt.core.formatter.insert_space_after_postfix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_after_prefix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_after_question_in_conditional=insert
-org.eclipse.jdt.core.formatter.insert_space_after_question_in_wildcard=insert
+org.eclipse.jdt.core.formatter.insert_space_after_question_in_wildcard=do not insert
 org.eclipse.jdt.core.formatter.insert_space_after_semicolon_in_for=insert
 org.eclipse.jdt.core.formatter.insert_space_after_unary_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_and_in_type_parameter=insert
@@ -289,7 +289,7 @@ org.eclipse.jdt.core.formatter.insert_space_before_parenthesized_expression_in_r
 org.eclipse.jdt.core.formatter.insert_space_before_postfix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_prefix_operator=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_question_in_conditional=insert
-org.eclipse.jdt.core.formatter.insert_space_before_question_in_wildcard=insert
+org.eclipse.jdt.core.formatter.insert_space_before_question_in_wildcard=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_semicolon=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_semicolon_in_for=do not insert
 org.eclipse.jdt.core.formatter.insert_space_before_unary_operator=do not insert
