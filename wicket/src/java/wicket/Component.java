@@ -575,7 +575,14 @@ public abstract class Component implements Serializable
 	{
 		setId(id);
 		getApplication().notifyComponentInstantiationListeners(this);
-		setModel(model);
+
+		this.model = model;
+		// If a compound model is explicitly set on this component
+		if (model instanceof ICompoundModel)
+		{
+			// we need to remember this for getModelObject()
+			setFlag(FLAG_HAS_ROOT_MODEL, true);
+		}
 	}
 
 	/**
