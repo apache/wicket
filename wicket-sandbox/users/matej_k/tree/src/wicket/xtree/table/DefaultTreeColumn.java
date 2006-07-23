@@ -43,7 +43,8 @@ public class DefaultTreeColumn extends AbstractTreeColumn {
 		return 0;
 	}
 	
-	public IRenderable createCell(TreeTable treeTable, TreeNode node, int level) {
-		return null;
+	@Override
+	String renderNode(TreeNode node) {
+		return node.toString();
 	}
 }

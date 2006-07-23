@@ -1,5 +1,7 @@
 package wicket.xtree.table;
 
+import java.io.Serializable;
+
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 
@@ -14,43 +16,81 @@ import wicket.markup.html.panel.Fragment;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.xtree.DefaultAbstractTree;
-import wicket.xtree.SimpleTree;
+import wicket.xtree.Tree;
 import wicket.xtree.table.ColumnLocation.Alignment;
 
-public class TreeTable extends SimpleTree {
+/**
+ * TreeTable is a component that represents a grid with a tree. It's divided into columns. 
+ * One of the columns has to be column derived from {@link AbstractTreeColumn}.
+ * 
+ * @author Matej Knopp
+ */
+public class TreeTable extends Tree {
 
+	/**
+	 * Creates the TreeTable for the given TreeModel and array of columns.
+	 */
 	public TreeTable(MarkupContainer parent, String id, TreeModel model, IColumn columns[]) 
 	{
 		super(parent, id, model);
 		init(columns);
 	}	
 
+	/**
+	 * Creates the TreeTable for the given model and array of columns.
+	 */
 	public TreeTable(MarkupContainer parent, String id, IModel<TreeModel> model, IColumn columns[]) 
 	{
 		super(parent, id, model);
 		init(columns);
 	}
 
+	/**
+	 * Creates the TreeTable for the given array of columns.
+	 */	
 	public TreeTable(MarkupContainer parent, String id, IColumn columns[]) 
 	{
 		super(parent, id);
 		init(columns);
 	}
 	
+	/**
+	 * Internal initialization. Also checks if at least one of the columns
+	 * is derived from AbstractTreeColumn. 
+	 */
 	private void init(IColumn columns[])
-	{
+	{		
+		boolean found = false;
+		for (IColumn column : columns)
+		{
+			if (column instanceof AbstractTreeColumn)
+			{
+				found = true; 
+				break;
+			}
+		}
+		if (found == false)
+		{
+			throw new IllegalArgumentException("At least one column in TreeTable must be derived from AbstractTreeColumn.");
+		}
+	
 		this.columns = columns;
-		addHeader();
+		
+		addHeader();		
 	}
 
+	// columns of the TreeTable
 	private IColumn columns[];
 	
-		
+	/**
+	 * Adds the header to the TreeTable.
+	 */
 	protected void addHeader() 
 	{
 		int i = 0;
 		
-		SideColumnsView sideColumns = new SideColumnsView(this, "sideColumns");
+		// create the view for side columns
+		SideColumnsView sideColumns = new SideColumnsView(this, "sideColumns", null);
 		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.LEFT ||
@@ -63,6 +103,7 @@ public class TreeTable extends SimpleTree {
 		
 		i = 0;
 		
+		// create the view for middle columns
 		MiddleColumnsView middleColumns = new MiddleColumnsView(this, "middleColumns", null);
 		for (IColumn column: columns)
 		{
@@ -75,6 +116,9 @@ public class TreeTable extends SimpleTree {
 	}
 	
 	
+	/**
+	 * Populates one row of the tree.
+	 */
 	@Override
 	protected void populateTreeItem(WebMarkupContainer<TreeNode> item, int level) 
 	{	
@@ -82,17 +126,20 @@ public class TreeTable extends SimpleTree {
 
 		int i = 0;
 		
-		SideColumnsView sideColumns = new SideColumnsView(item, "sideColumns");
+		// add side columns
+		SideColumnsView sideColumns = new SideColumnsView(item, "sideColumns", null);
 		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.LEFT ||
 				column.getLocation().getAlignment() == Alignment.RIGHT)
 			{
 				Component component;
+				// first try to create a renderable
 				IRenderable renderable = column.createCell(this, node, level);			
 				
 				if (renderable == null)
 				{
+					// if renderable failed, try to create a regular component					
 					component = column.createCell(sideColumns, "" + i++, node, level);
 				}
 				else
@@ -106,16 +153,19 @@ public class TreeTable extends SimpleTree {
 		
 		i = 0;
 		
+		// add middle columns
 		MiddleColumnsView middleColumns = new MiddleColumnsView(item, "middleColumns", node);
 		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.MIDDLE)
 			{
 				Component component;
+				// first try to create a renderable
 				IRenderable renderable = column.createCell(this, node, level);			
 				
 				if (renderable == null)
 				{
+					// if renderable failed, try to create a regular component					
 					component = column.createCell(middleColumns, "" + i++, node, level);
 				}
 				else
@@ -141,9 +191,19 @@ public class TreeTable extends SimpleTree {
 		});		
 	}
 	
-	class TreePanel extends Fragment 
+	/**
+	 * Represents a content of a cell in TreeColumn (column containing the actual tree).
+	 * 
+	 * @author Matej Knopp
+	 */
+	private class TreeFragment extends Fragment 
 	{	
-		public TreePanel(MarkupContainer<?> parent, String id, final TreeNode node, int level) {
+		/**
+		 * Constructor.
+		 */
+		public TreeFragment(MarkupContainer<?> parent, String id, final TreeNode node, 
+				            int level, final IRenderNodeCallback renderNodeCallback) 
+		{
 			super(parent, id, "fragment");
 	
 			createIndentation(this, "indent", node, level);
@@ -157,24 +217,52 @@ public class TreeTable extends SimpleTree {
 			new Label(nodeLink, "label", new Model<String>() {
 				@Override
 				public String getObject() {				
-					return renderNode(node);
+					return renderNodeCallback.renderNode(node);
 				}
-			});
+			});						
 		}		
 	};
 	
-	protected TreePanel createTreePanel(MarkupContainer<?> parent, String id, final TreeNode node, int level)
+	/**
+	 * Callback for rendering three node text.
+	 * 
+	 * @author Matej Knopp
+	 */
+	private static interface IRenderNodeCallback extends Serializable
 	{
-		return new TreePanel(parent, id, node, level);
+		public String renderNode(TreeNode node);
 	}
 	
+	/**
+	 * Creates a new instance of the TreeFragment.
+	 */	
+	protected TreeFragment createTreePanel(MarkupContainer<?> parent, String id, final TreeNode node, 
+			                               int level, IRenderNodeCallback renderNodeCallback)
+	{
+		return new TreeFragment(parent, id, node, level, renderNodeCallback);
+	}
+	
+	/**
+	 * Very base class for the TreeColumn.
+
+	 * @author Matej Knopp
+	 */
 	protected static abstract class TreeColumn implements IColumn {
 					
-		public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level) {
+		public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level) 
+		{			
 			TreeTable table = parent.findParent(TreeTable.class);
-			return table.createTreePanel(parent, id, node, level);
+			
+			return table.createTreePanel(parent, id, node, level, new IRenderNodeCallback() 
+			{
+				public String renderNode(TreeNode node) 
+				{
+					return TreeColumn.this.renderNode(node);
+				}
+			});		
 		}
 		
+		abstract String renderNode(TreeNode node);
 	};
 
 	/** Reference to the css file. */
@@ -184,5 +272,14 @@ public class TreeTable extends SimpleTree {
 	@Override
 	protected PackageResourceReference getCSS() {
 		return CSS;
+	}
+	
+	/**
+	 * Prevent users from overriding this method. To specify how tree node
+	 * text renders override {@link AbstractTreeColumn#renderNode(TreeNode)}.
+	 */
+	@Override
+	final protected String renderNode(TreeNode node) {
+		throw new UnsupportedOperationException();
 	}
 }

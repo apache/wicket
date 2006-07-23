@@ -3,6 +3,8 @@ package wicket.xtree.table;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.tree.TreeNode;
+
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.RequestCycle;
@@ -12,21 +14,39 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.xtree.table.ColumnLocation.Alignment;
 import wicket.xtree.table.ColumnLocation.Unit;
 
-public class SideColumnsView extends WebMarkupContainer {
+/**
+ * Class that renders cell of columns aligned to the left or to the right. 
+ * 
+ * @author Matej Knopp
+ */
+class SideColumnsView extends WebMarkupContainer {
 
-	public SideColumnsView(MarkupContainer parent, String id) {
+	private TreeNode node;
+	
+	/**
+	 * Constructor.
+	 */
+	public SideColumnsView(MarkupContainer parent, String id, TreeNode node) {
 		super(parent, id);
 		setRenderBodyOnly(true);
+		this.node = node;
 	}
 
 	private List<IColumn> columns = new ArrayList<IColumn>();
 	private List<Component> components = new ArrayList<Component>();
 	private List<IRenderable> renderables = new ArrayList<IRenderable>();
 
+	/**
+	 * Adds a column to be rendered.
+	 */
 	public void addColumn(IColumn column, Component component, IRenderable renderable)
 	{
 		if (column.isVisible())
 		{
+			// if the column is aligned to the left, just append it. 
+			// Otherwise we prepend it, because we want columns aligned to right
+			// to be rendered reverse order (because they will have set float:right
+			// in css, so they will be displayed in reverse order too).
 			if (column.getLocation().getAlignment() == Alignment.LEFT)
 			{
 				columns.add(column);
@@ -42,6 +62,9 @@ public class SideColumnsView extends WebMarkupContainer {
 		}
 	}
 	
+	/**
+	 * Renders given unit as string.
+	 */
 	private String renderUnit(Unit unit)
 	{
 		if (unit == Unit.EM)
@@ -61,13 +84,19 @@ public class SideColumnsView extends WebMarkupContainer {
 			throw new IllegalStateException("Wrong column unit for column aligned left or right.");
 		}
 	}
-	
+
+	/**
+	 * Renders width of given column as string.
+	 */
 	private String renderColumnWidth(IColumn column)
 	{
 		ColumnLocation location = column.getLocation();
 		return "" + location.getSize() + renderUnit(location.getUnit());
 	}
-	
+
+	/**
+	 * Renders the float css atribute of the given column.
+	 */
 	private String renderColumnFloat(IColumn column)
 	{
 		ColumnLocation location = column.getLocation();
@@ -84,12 +113,18 @@ public class SideColumnsView extends WebMarkupContainer {
 			throw new IllegalStateException("Wrong column allignment.");
 		}
 	}
-	
+
+	/**
+	 * Renders content of the style attribute for the given column.
+	 */
 	private String renderColumnStyle(IColumn column)
 	{
 		return "width:" + renderColumnWidth(column) + "; float: " + renderColumnFloat(column);
 	}
 	
+	/**
+	 * Renders the columns.
+	 */
 	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
@@ -105,9 +140,11 @@ public class SideColumnsView extends WebMarkupContainer {
 			Component component = components.get(i);
 			IRenderable renderable = renderables.get(i);
 			
+			// write wrapping markup
 			response.write("<span class=\"column\" style=\"" + renderColumnStyle(column) + "\">");
 			if (column.getLocation().getAlignment() == Alignment.LEFT && firstLeft == true)
 			{
+				// for the first left column we have different style class (without the left border)
 				response.write("<span class=\"column-inner-first\">");
 				firstLeft = false;
 			}				
@@ -124,7 +161,7 @@ public class SideColumnsView extends WebMarkupContainer {
 			}
 			else if (renderable != null)
 			{
-				renderable.render(response);
+				renderable.render(node, response);
 			}
 			else
 			{
@@ -134,6 +171,7 @@ public class SideColumnsView extends WebMarkupContainer {
 			response.write("</span></span>\n");
 		}
 		
+		// if no component was rendered just advance in the markup stream 
 		if (rendered == false)
 		{
 			markupStream.skipComponent();

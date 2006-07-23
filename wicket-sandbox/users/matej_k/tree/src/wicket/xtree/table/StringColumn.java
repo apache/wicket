@@ -56,11 +56,11 @@ public class StringColumn implements IColumn {
 	
 	public IRenderable createCell(final TreeTable treeTable, final TreeNode node, int level) {		
 		return new IRenderable() {
-			public void render(Response response) {
-				if (treeTable.getTreeState().isNodeSelected(node) == false)
+			public void render(TreeNode node, Response response) {
+//				if (treeTable.getTreeState().isNodeSelected(node) == false)
 					response.write("<span class=\"text\"  title=\"" + cell + "\">" + cell + "</span>\n");
-				else
-					response.write("<input type=\"text\" style=\"width: 100%; margin: 0px;background-color: #CCDAFF; height: 1.5em;border: 0px solid gray;  \" value=\"" + cell + "\"/>");
+//				else
+//					response.write("<select type=\"text\" style=\"width: 100%; margin: 0px;\" value=\"" + cell + "\" size=\"1\"><option>A</option></select>");
 			}
 		};
 	}
