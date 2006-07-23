@@ -144,25 +144,28 @@ public class PortletPage extends Page
 		}
 	}
 
-	/*
+	/**
 	 * Get current portlet mode
 	 * 
 	 * @see javax.portlet.PortletMode
+	 * @return portlet mode
 	 */
 	public PortletMode getPortletMode(){
 		return portletMode;
 	}
-	
-	/*
+
+	/**
 	 * Get current window state
 	 * 
 	 * @see javax.portlet.WindowState
+	 *
+	 * @return portlet window state
 	 */
-         public WindowState getWindowState(){
+	public WindowState getWindowState(){
 		return windowState;
 	}
-	
-	/*
+
+	/**
 	 * Called when the portlet mode is changed.
 	 *
 	 * @param portletMode
