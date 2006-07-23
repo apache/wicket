@@ -182,7 +182,7 @@ public class AjaxEditableLabel extends Panel
 	public AjaxEditableLabel(String id, IModel model)
 	{
 		super(id, model);
-		init(model);
+		init((model != null) ? model : new PassThroughModel());
 	}
 
 	/**
@@ -375,6 +375,7 @@ public class AjaxEditableLabel extends Panel
 
 		target.addJavascript("window.status='';");
 	}
+
 
 	/**
 	 * Internal init method.
