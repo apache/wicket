@@ -25,14 +25,20 @@ public class PortletRenderRequestEventProcessorStrategy implements IEventProcess
 {
 
 	/*
-	 * Events are not processed in RenderRequests
+	 * Process only PortletMode and WindowState changes in the RenderRequests
 	 * 
 	 * @see wicket.request.compound.IEventProcessorStrategy#processEvents(wicket.RequestCycle)
 	 *      @param requestCycle
 	 */
 	public void processEvents(final RequestCycle requestCycle)
 	{
-
+		PortletPage page=(PortletPage)requestCycle.getRequest().getPage();
+		if(page!=null)
+		{
+			PortletRequestCycle cycle = (PortletRequestCycle)requestCycle;
+			page.setPortletMode(cycle.getPortletRequest().getPortletRequest().getPortletMode());
+			page.setWindowState(cycle.getPortletRequest().getPortletRequest().getWindowState());			
+		}
 	}
 
 }
