@@ -163,15 +163,27 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		final String componentPath = requestParameters.getComponentPath();
 		final Session session = requestCycle.getSession();
 
-		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+		final PortletPage page = (PortletPage)session.getPage(requestParameters.getPageMapName(), componentPath,
 				requestParameters.getVersionNumber());
 
 		// Does page exist?
 		if (page != null)
 		{
+
+			PortletRequestCycle cycle = (PortletRequestCycle)requestCycle;
+			IRequestTarget prevTarget=cycle.getRequestTarget();
+
+			page.setPortletMode(cycle.getPortletRequest().getPortletRequest().getPortletMode());
+			page.setWindowState(cycle.getPortletRequest().getPortletRequest().getWindowState());			
+
+			if(requestCycle.getRequestTarget()!=prevTarget){			
+				// setPortletMode or setWindowState changed the request target and we should continue to there.
+				return requestCycle.getRequestTarget();
+			}
+
 			// Set page on request
 			requestCycle.getRequest().setPage(page);
-
+			
 			// see whether this resolves to a component call or just the page
 			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)

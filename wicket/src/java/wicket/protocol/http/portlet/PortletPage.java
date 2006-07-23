@@ -14,6 +14,9 @@
  */
 package wicket.protocol.http.portlet;
 
+import javax.portlet.PortletMode;
+import javax.portlet.WindowState;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,12 +40,18 @@ public class PortletPage extends Page
 	/** log. */
 	private static final Log log = LogFactory.getLog(PortletPage.class);
 
+	/* Current portlet mode */
+	private PortletMode portletMode = PortletMode.VIEW;
+
+	/* Current window state */
+	private WindowState windowState = WindowState.NORMAL;
+
 	/**
-	 * Constructor. Having this constructor public means that your page is
-	 * 'bookmarkable' and hence can be called/ created from anywhere.
+	 * @see Page#Page()
 	 */
 	protected PortletPage()
 	{
+		super();
 	}
 
 	/**
@@ -103,5 +112,71 @@ public class PortletPage extends Page
 	protected final PortletRequestCycle getPortletRequestCycle()
 	{
 		return (PortletRequestCycle)getRequestCycle();
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * 
+	 * @param portletMode
+	 */
+	public final void setPortletMode(PortletMode portletMode)
+	{
+		if (!portletMode.equals(this.portletMode))
+		{
+			this.portletMode = portletMode;
+			onSetPortletMode(portletMode);
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * <p>
+	 * 
+	 * @param windowState
+	 */
+	public final void setWindowState(WindowState windowState)
+	{
+		if (!windowState.equals(this.windowState))
+		{
+			this.windowState = windowState;
+			onSetWindowState(windowState);
+		}
+	}
+
+	/*
+	 * Get current portlet mode
+	 * 
+	 * @see javax.portlet.PortletMode
+	 */
+	public PortletMode getPortletMode(){
+		return portletMode;
+	}
+	
+	/*
+	 * Get current window state
+	 * 
+	 * @see javax.portlet.WindowState
+	 */
+         public WindowState getWindowState(){
+		return windowState;
+	}
+	
+	/*
+	 * Called when the portlet mode is changed.
+	 *
+	 * @param portletMode
+	 */
+	protected void onSetPortletMode(PortletMode portletMode)
+	{
+	}
+
+	/*
+	 * Called when the window state is changed.
+	 *
+	 * @param portletMode
+	 */
+	protected void onSetWindowState(WindowState windowState)
+	{
 	}
 }
