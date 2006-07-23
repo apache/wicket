@@ -5,11 +5,16 @@ import javax.swing.tree.TreeNode;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.xtree.table.ColumnLocation.Alignment;
 
 public class DefaultTreeColumn extends AbstractTreeColumn {
 
 	public DefaultTreeColumn(ColumnLocation location, String header)
 	{
+		if (location.getAlignment() == Alignment.MIDDLE)
+		{
+			throw new IllegalArgumentException("Tree column must not be aligned in the middle.");
+		}
 		this.location = location;
 		this.header = header;
 	}
@@ -38,7 +43,7 @@ public class DefaultTreeColumn extends AbstractTreeColumn {
 		return 0;
 	}
 	
-	public Renderable createCell(TreeNode node, int level) {
+	public Renderable createCell(TreeTable treeTable, TreeNode node, int level) {
 		return null;
 	}
 }

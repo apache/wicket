@@ -54,10 +54,13 @@ public class StringColumn implements Column {
 		return 0;
 	}
 	
-	public Renderable createCell(TreeNode node, int level) {
+	public Renderable createCell(final TreeTable treeTable, final TreeNode node, int level) {		
 		return new Renderable() {
 			public void render(Response response) {
-				response.write("<span class=\"text\" title=\"" + cell + "\">" + cell + "</span>\n");
+				if (treeTable.getTreeState().isNodeSelected(node) == false)
+					response.write("<span class=\"text\"  title=\"" + cell + "\">" + cell + "</span>\n");
+				else
+					response.write("<input type=\"text\" style=\"width: 100%; margin: 0px;background-color: #CCDAFF; height: 1.5em;border: 0px solid gray;  \" value=\"" + cell + "\"/>");
 			}
 		};
 	}

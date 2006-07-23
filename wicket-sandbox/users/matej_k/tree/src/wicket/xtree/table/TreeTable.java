@@ -63,7 +63,7 @@ public class TreeTable extends SimpleTree {
 		
 		i = 0;
 		
-		MiddleColumnsView middleColumns = new MiddleColumnsView(this, "middleColumns");
+		MiddleColumnsView middleColumns = new MiddleColumnsView(this, "middleColumns", null);
 		for (Column column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.MIDDLE)
@@ -89,7 +89,7 @@ public class TreeTable extends SimpleTree {
 				column.getLocation().getAlignment() == Alignment.RIGHT)
 			{
 				Component component;
-				Renderable renderable = column.createCell(node, level);			
+				Renderable renderable = column.createCell(this, node, level);			
 				
 				if (renderable == null)
 				{
@@ -106,17 +106,17 @@ public class TreeTable extends SimpleTree {
 		
 		i = 0;
 		
-		MiddleColumnsView middleColumns = new MiddleColumnsView(item, "middleColumns");
+		MiddleColumnsView middleColumns = new MiddleColumnsView(item, "middleColumns", node);
 		for (Column column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.MIDDLE)
 			{
 				Component component;
-				Renderable renderable = column.createCell(node, level);			
+				Renderable renderable = column.createCell(this, node, level);			
 				
 				if (renderable == null)
 				{
-					component = column.createCell(sideColumns, "" + i++, node, level);
+					component = column.createCell(middleColumns, "" + i++, node, level);
 				}
 				else
 				{
