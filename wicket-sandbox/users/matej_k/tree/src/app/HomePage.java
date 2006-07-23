@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
@@ -38,16 +39,29 @@ public class HomePage extends WebPage {
 
 		
 		Column columns[] = new Column[] {
-			new StringColumn(new ColumnLocation(Alignment.LEFT, 20, Unit.PX), "L0", "Very first left column. Has solid width set to 20 pixels"),				
+//			new StringColumn(new ColumnLocation(Alignment.LEFT, 20, Unit.PX), "L0", "Very first left column. Has solid width set to 20 pixels"),				
 			new DefaultTreeColumn(new ColumnLocation(Alignment.LEFT, 15, Unit.EM), "Tree Column"),
-			new StringColumn(new ColumnLocation(Alignment.LEFT, 10, Unit.PERCENT), "L 2", "Second left column. This column has percentage width"),
-			new StringColumn(new ColumnLocation(Alignment.LEFT, 3, Unit.EM), "L 3", "Third left column. This column has width set in em."),
-			
-			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M1", "First middle column. Has weight 2."),
+//			new StringColumn(new ColumnLocation(Alignment.LEFT, 10, Unit.PERCENT), "L 2", "Second left column. This column has percentage width"),
+//			new StringColumn(new ColumnLocation(Alignment.LEFT, 3, Unit.EM), "L 3", "Third left column. This column has width set in em."),
+//			
+			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M1", "First middle column. Has weight 2.") {
+				@Override
+				public int getSpan(TreeNode node) {
+					if (node != null)
+					{
+						if (node.isLeaf())
+							return 0;
+						else
+							return 2;
+					}
+					return 1;
+				}
+			},
 			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 1, Unit.PROPORTIONAL), "M2", "Second middle column. Has weight 1."),
 			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 1, Unit.PROPORTIONAL), "M3", "Third middle column. Has weight 1."),
-			
-			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R1", "First right column. Width set to 2 em."),			
+//			
+//			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R1", "First right column. Width set to 2 em."),
+			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R2", "Second right column. Width set to 2 em."),
 		};
 		
 		SimpleTree tree = new TreeTable(this, "tree", treeModel, columns);
@@ -56,7 +70,7 @@ public class HomePage extends WebPage {
 		tree.getTreeState().setAllowSelectMultiple(true);
 //		//tree.getTreeState().collapseAll();
 //		//tree.getTreeState().expandNode((TreeNode)treeModel.getRoot());		
-		tree.setLinkType(DefaultAbstractTree.LinkType.AJAX);
+//		ee.setLinkType(DefaultAbstractTree.LinkType.AJAX);
 		
 //		Tree tree = new Tree(this, "tree", treeModel);
 //		tree.expandAll(true);

@@ -1,14 +1,13 @@
 package app;
 
 import wicket.Page;
-import wicket.markup.MarkupParserFactory;
-import wicket.markup.resolver.FragmentResolver;
 import wicket.protocol.http.WebApplication;
 
 public class TreeApplication extends WebApplication {
 
 	@Override
 	protected void init() {
+		getMarkupSettings().setStripWicketTags(true);
 		getAjaxSettings().setAjaxDebugModeEnabled(false);
 		getPageSettings().setAutomaticMultiWindowSupport(false);
 	}
