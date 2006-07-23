@@ -158,7 +158,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	{
 		super(parent, id);
 		this.choices = choices;
-		this.renderer = renderer;
+		setChoiceRenderer(renderer);
 	}
 
 	/**
@@ -196,7 +196,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	{
 		super(parent, id, model);
 		this.choices = choices;
-		this.renderer = renderer;
+		setChoiceRenderer(renderer);
 	}
 
 
@@ -266,6 +266,10 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 */
 	public final void setChoiceRenderer(IChoiceRenderer<E> renderer)
 	{
+		if (renderer == null)
+		{
+			renderer = new ChoiceRenderer<E>();
+		}
 		this.renderer = renderer;
 	}
 
