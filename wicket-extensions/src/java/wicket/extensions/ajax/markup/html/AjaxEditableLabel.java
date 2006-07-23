@@ -204,11 +204,20 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		super(parent, id);
 
 		// the #getModel() call below will resolve and assign any inheritable
-		// model this component can use. at least that is behavior right now.
+		// model this component can use. Set that directly to the label and
+		// editor so that those components work like this enclosing panel
+		// does not exist (must have that e.g. with CompoundPropertyModels
+		IModel<T> m = getModel();
 
-		checkModel(getModel());
-		
-		init(getModel());
+		// check that a model was found
+		if (m == null)
+		{
+			throw new IllegalStateException(
+					"No model found for this component, either pass one explicitly or "
+							+ "make sure an inheritable model is available");
+		}
+
+		init(m);
 	}
 
 	/**
@@ -218,29 +227,6 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	{
 		super(parent, id, model);
 		init(model);
-	}
-	
-	private void checkModel(IModel<T> model) {
-		if (model == null)
-		{
-			throw new IllegalStateException(
-					"No model found for this component, either pass one explicitly or "
-							+ "make sure an inheritable model is available");
-		}
-	}
-
-	private void init(IModel<T> model)
-	{
-		setOutputMarkupId(true);
-
-		label = new Label(this, "label", model);
-		label.setOutputMarkupId(true);
-		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
-
-		editor = new TextField<T>(this, "editor", model);
-		editor.setOutputMarkupId(true);
-		editor.setVisible(false);
-		editor.add(new EditorAjaxBehavior());
 	}
 
 	/**
@@ -323,5 +309,25 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	protected final Label getLabel()
 	{
 		return label;
+	}
+
+	/**
+	 * Initialize the label and editor components with a model.
+	 * 
+	 * @param model
+	 *            The model
+	 */
+	private void init(IModel<T> model)
+	{
+		setOutputMarkupId(true);
+
+		label = new Label(this, "label", model);
+		label.setOutputMarkupId(true);
+		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
+
+		editor = new TextField<T>(this, "editor", model);
+		editor.setOutputMarkupId(true);
+		editor.setVisible(false);
+		editor.add(new EditorAjaxBehavior());
 	}
 }
