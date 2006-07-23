@@ -23,7 +23,10 @@ import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WicketServlet;
 
 /**
- * @author janne
+ * 
+ * Dummy utility servlet to support resources from a portlet
+ * 
+ * @author Janne Hietam&auml;ki
  */
 public class WicketPortletServlet extends WicketServlet
 {
