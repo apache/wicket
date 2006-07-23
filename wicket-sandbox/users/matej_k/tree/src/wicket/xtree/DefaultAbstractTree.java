@@ -135,7 +135,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * Helper class for calling an action from a link.
 	 * @author Matej Knopp
 	 */
-	protected interface LinkCallback extends Serializable 
+	protected interface ILinkCallback extends Serializable 
 	{
 		public void onClick(AjaxRequestTarget target);
 	};
@@ -143,7 +143,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Creates a link of type specified by current linkType. When the links is clicked it calls the specified callback.
 	 */
-	protected WebMarkupContainer createLink(MarkupContainer parent, String id, final LinkCallback callback) 
+	protected WebMarkupContainer createLink(MarkupContainer parent, String id, final ILinkCallback callback) 
 	{
 		if (getLinkType() == LinkType.REGULAR)
 		{
@@ -247,7 +247,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 		if (node.isLeaf() == false)
 		{
-			junctionLink = createLink(parent, id, new LinkCallback() 
+			junctionLink = createLink(parent, id, new ILinkCallback() 
 			{
 				public void onClick(AjaxRequestTarget target)
 				{					
@@ -379,7 +379,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 */
 	protected WebMarkupContainer createNodeLink(MarkupContainer parent, String id, final TreeNode node)
 	{
-		return createLink(parent, id, new LinkCallback() 
+		return createLink(parent, id, new ILinkCallback() 
 		{
 			public void onClick(AjaxRequestTarget target) {
 				getTreeState().selectNode(node, !getTreeState().isNodeSelected(node));

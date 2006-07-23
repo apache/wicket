@@ -19,31 +19,31 @@ import wicket.xtree.table.ColumnLocation.Alignment;
 
 public class TreeTable extends SimpleTree {
 
-	public TreeTable(MarkupContainer parent, String id, TreeModel model, Column columns[]) 
+	public TreeTable(MarkupContainer parent, String id, TreeModel model, IColumn columns[]) 
 	{
 		super(parent, id, model);
 		init(columns);
 	}	
 
-	public TreeTable(MarkupContainer parent, String id, IModel<TreeModel> model, Column columns[]) 
+	public TreeTable(MarkupContainer parent, String id, IModel<TreeModel> model, IColumn columns[]) 
 	{
 		super(parent, id, model);
 		init(columns);
 	}
 
-	public TreeTable(MarkupContainer parent, String id, Column columns[]) 
+	public TreeTable(MarkupContainer parent, String id, IColumn columns[]) 
 	{
 		super(parent, id);
 		init(columns);
 	}
 	
-	private void init(Column columns[])
+	private void init(IColumn columns[])
 	{
 		this.columns = columns;
 		addHeader();
 	}
 
-	private Column columns[];
+	private IColumn columns[];
 	
 		
 	protected void addHeader() 
@@ -51,7 +51,7 @@ public class TreeTable extends SimpleTree {
 		int i = 0;
 		
 		SideColumnsView sideColumns = new SideColumnsView(this, "sideColumns");
-		for (Column column: columns)
+		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.LEFT ||
 				column.getLocation().getAlignment() == Alignment.RIGHT)
@@ -64,7 +64,7 @@ public class TreeTable extends SimpleTree {
 		i = 0;
 		
 		MiddleColumnsView middleColumns = new MiddleColumnsView(this, "middleColumns", null);
-		for (Column column: columns)
+		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.MIDDLE)
 			{
@@ -83,13 +83,13 @@ public class TreeTable extends SimpleTree {
 		int i = 0;
 		
 		SideColumnsView sideColumns = new SideColumnsView(item, "sideColumns");
-		for (Column column: columns)
+		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.LEFT ||
 				column.getLocation().getAlignment() == Alignment.RIGHT)
 			{
 				Component component;
-				Renderable renderable = column.createCell(this, node, level);			
+				IRenderable renderable = column.createCell(this, node, level);			
 				
 				if (renderable == null)
 				{
@@ -107,12 +107,12 @@ public class TreeTable extends SimpleTree {
 		i = 0;
 		
 		MiddleColumnsView middleColumns = new MiddleColumnsView(item, "middleColumns", node);
-		for (Column column: columns)
+		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.MIDDLE)
 			{
 				Component component;
-				Renderable renderable = column.createCell(this, node, level);			
+				IRenderable renderable = column.createCell(this, node, level);			
 				
 				if (renderable == null)
 				{
@@ -168,7 +168,7 @@ public class TreeTable extends SimpleTree {
 		return new TreePanel(parent, id, node, level);
 	}
 	
-	protected static abstract class TreeColumn implements Column {
+	protected static abstract class TreeColumn implements IColumn {
 					
 		public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level) {
 			TreeTable table = parent.findParent(TreeTable.class);

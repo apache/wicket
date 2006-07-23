@@ -8,7 +8,7 @@ import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 
-public class StringColumn implements Column {
+public class StringColumn implements IColumn {
 
 	private ColumnLocation location;
 	private boolean visible = true;
@@ -54,8 +54,8 @@ public class StringColumn implements Column {
 		return 0;
 	}
 	
-	public Renderable createCell(final TreeTable treeTable, final TreeNode node, int level) {		
-		return new Renderable() {
+	public IRenderable createCell(final TreeTable treeTable, final TreeNode node, int level) {		
+		return new IRenderable() {
 			public void render(Response response) {
 				if (treeTable.getTreeState().isNodeSelected(node) == false)
 					response.write("<span class=\"text\"  title=\"" + cell + "\">" + cell + "</span>\n");

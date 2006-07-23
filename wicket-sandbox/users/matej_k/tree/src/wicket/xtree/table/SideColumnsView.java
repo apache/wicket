@@ -19,11 +19,11 @@ public class SideColumnsView extends WebMarkupContainer {
 		setRenderBodyOnly(true);
 	}
 
-	private List<Column> columns = new ArrayList<Column>();
+	private List<IColumn> columns = new ArrayList<IColumn>();
 	private List<Component> components = new ArrayList<Component>();
-	private List<Renderable> renderables = new ArrayList<Renderable>();
+	private List<IRenderable> renderables = new ArrayList<IRenderable>();
 
-	public void addColumn(Column column, Component component, Renderable renderable)
+	public void addColumn(IColumn column, Component component, IRenderable renderable)
 	{
 		if (column.isVisible())
 		{
@@ -62,13 +62,13 @@ public class SideColumnsView extends WebMarkupContainer {
 		}
 	}
 	
-	private String renderColumnWidth(Column column)
+	private String renderColumnWidth(IColumn column)
 	{
 		ColumnLocation location = column.getLocation();
 		return "" + location.getSize() + renderUnit(location.getUnit());
 	}
 	
-	private String renderColumnFloat(Column column)
+	private String renderColumnFloat(IColumn column)
 	{
 		ColumnLocation location = column.getLocation();
 		if (location.getAlignment() == Alignment.LEFT)
@@ -85,7 +85,7 @@ public class SideColumnsView extends WebMarkupContainer {
 		}
 	}
 	
-	private String renderColumnStyle(Column column)
+	private String renderColumnStyle(IColumn column)
 	{
 		return "width:" + renderColumnWidth(column) + "; float: " + renderColumnFloat(column);
 	}
@@ -101,9 +101,9 @@ public class SideColumnsView extends WebMarkupContainer {
 		
 		for (int i = 0; i < columns.size(); ++i)
 		{
-			Column column = columns.get(i);
+			IColumn column = columns.get(i);
 			Component component = components.get(i);
-			Renderable renderable = renderables.get(i);
+			IRenderable renderable = renderables.get(i);
 			
 			response.write("<span class=\"column\" style=\"" + renderColumnStyle(column) + "\">");
 			if (column.getLocation().getAlignment() == Alignment.LEFT && firstLeft == true)

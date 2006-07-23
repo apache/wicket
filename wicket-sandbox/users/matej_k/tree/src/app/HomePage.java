@@ -14,7 +14,7 @@ import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
 import wicket.xtree.DefaultAbstractTree;
 import wicket.xtree.SimpleTree;
-import wicket.xtree.table.Column;
+import wicket.xtree.table.IColumn;
 import wicket.xtree.table.ColumnLocation;
 import wicket.xtree.table.DefaultTreeColumn;
 import wicket.xtree.table.StringColumn;
@@ -38,7 +38,7 @@ public class HomePage extends WebPage {
 		final DefaultTreeModel treeModel = (DefaultTreeModel) createTreeModel();
 
 		
-		Column columns[] = new Column[] {
+		IColumn columns[] = new IColumn[] {
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 20, Unit.PX), "L0", "Very first left column. Has solid width set to 20 pixels"),				
 			new DefaultTreeColumn(new ColumnLocation(Alignment.LEFT, 15, Unit.EM), "Tree Column"),
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 10, Unit.PERCENT), "L 2", "Second left column. This column has percentage width"),
@@ -62,6 +62,7 @@ public class HomePage extends WebPage {
 //			
 //			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R1", "First right column. Width set to 2 em."),
 			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R2", "Second right column. Width set to 2 em."),
+			
 		};
 		
 		SimpleTree tree = new TreeTable(this, "tree", treeModel, columns);

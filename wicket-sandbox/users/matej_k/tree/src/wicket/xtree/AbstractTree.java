@@ -287,7 +287,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			if (isRenderChildren()) 
 			{
 				// visit every child
-				visitItemChildren(this, new ItemCallback() 
+				visitItemChildren(this, new IItemCallback() 
 				{
 					public void visitItem(TreeItem item) 
 					{
@@ -331,7 +331,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			 			
 			// is there a root item? (non-empty tree)
 			if (rootItem != null) {
-				ItemCallback callback = new ItemCallback() 
+				IItemCallback callback = new IItemCallback() 
 				{				
 					public void visitItem(TreeItem item) 
 					{
@@ -380,7 +380,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 * Interface for visiting individual tree items.
 	 * @author Matej Knopp
 	 */
-	private interface ItemCallback 
+	private interface IItemCallback 
 	{
 		public void visitItem(TreeItem item);
 	}
@@ -388,7 +388,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	/**
 	 * Call the callback#visitItem method for the given item and all it's chilren.  
 	 */
-	private final void visitItemAndChildren(TreeItem item, ItemCallback callback) 
+	private final void visitItemAndChildren(TreeItem item, IItemCallback callback) 
 	{
 		callback.visitItem(item);
 		visitItemChildren(item, callback);
@@ -397,7 +397,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	/**
 	 * Call the callback#visitItem method for every child of given item.
 	 */
-	private final void visitItemChildren(TreeItem item, ItemCallback callback) 
+	private final void visitItemChildren(TreeItem item, IItemCallback callback) 
 	{
 		for (TreeItem i : item.getChildren()) 
 		{
@@ -646,7 +646,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		if (item != null) 
 		{
 			// go though item children and remove every one of them
-			visitItemChildren(item, new ItemCallback() {
+			visitItemChildren(item, new IItemCallback() {
 				public void visitItem(TreeItem item) {
 					removeItem(item);
 				}
@@ -682,7 +682,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 */
 	private final void clearAllItem() 
 	{
-		visitItemAndChildren(rootItem, new ItemCallback() 
+		visitItemAndChildren(rootItem, new IItemCallback() 
 		{
 			public void visitItem(TreeItem item) 
 			{
@@ -923,7 +923,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 					parentItem.getChildren().remove(item);
 
 					// go though item children and remove every one of them
-					visitItemChildren(item, new ItemCallback() {
+					visitItemChildren(item, new IItemCallback() {
 						public void visitItem(TreeItem item) {
 							removeItem(item);
 						}
