@@ -134,8 +134,8 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 				final String keypress = "var kc=wicketKeyCode(event); if (kc==27) " + cancelCall
 						+ "; ";
 
-				tag.put("onblur", saveCall);
-				tag.put("onkeypress", keypress);
+				tag.put(ClientEvent.BLUR.getEvent(), saveCall);
+				tag.put(ClientEvent.KEYPRESS.getEvent(), keypress);
 			}
 		});
 		return editor;
