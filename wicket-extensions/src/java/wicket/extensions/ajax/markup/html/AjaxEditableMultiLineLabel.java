@@ -75,12 +75,13 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	}
 
 	/**
-	 * @see wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(wicket.MarkupContainer, wicket.model.IModel)
+	 * @see wicket.extensions.ajax.markup.html.AjaxEditableLabel#newLabel(wicket.MarkupContainer,
+	 *      java.lang.String, wicket.model.IModel)
 	 */
 	@Override
-	protected Component newLabel(MarkupContainer parent, IModel<T> model)
+	protected Component newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		MultiLineLabel label = new MultiLineLabel(this, "label", model);
+		MultiLineLabel label = new MultiLineLabel(this, componentId, model);
 		label.setOutputMarkupId(true);
 		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
 		return label;
@@ -88,12 +89,12 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 
 	/**
 	 * @see wicket.extensions.ajax.markup.html.AjaxEditableLabel#newEditor(wicket.MarkupContainer,
-	 *      wicket.model.IModel)
+	 *      java.lang.String, wicket.model.IModel)
 	 */
 	@Override
-	protected FormComponent<T> newEditor(MarkupContainer parent, IModel<T> model)
+	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		TextArea<T> editor = new TextArea<T>(parent, "editor", model);
+		TextArea<T> editor = new TextArea<T>(parent, componentId, model);
 		editor.add(new AttributeModifier("rows", new AbstractReadOnlyModel<Integer>()
 		{
 			private static final long serialVersionUID = 1L;

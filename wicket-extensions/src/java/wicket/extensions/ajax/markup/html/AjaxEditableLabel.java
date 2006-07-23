@@ -290,13 +290,15 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * 
 	 * @param parent
 	 *            The parent component
+	 * @param componentId
+	 *            Id that should be used by the component
 	 * @param model
 	 *            The model
 	 * @return The editor
 	 */
-	protected FormComponent<T> newEditor(MarkupContainer parent, IModel<T> model)
+	protected FormComponent<T> newEditor(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		TextField<T> editor = new TextField<T>(parent, "editor", model);
+		TextField<T> editor = new TextField<T>(parent, componentId, model);
 		editor.setOutputMarkupId(true);
 		editor.setVisible(false);
 		editor.add(new EditorAjaxBehavior());
@@ -308,13 +310,15 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 * 
 	 * @param parent
 	 *            The parent component
+	 * @param componentId
+	 *            Id that should be used by the component
 	 * @param model
 	 *            The model
 	 * @return The editor
 	 */
-	protected Component newLabel(MarkupContainer parent, IModel<T> model)
+	protected Component newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		Label label = new Label(this, "label", model);
+		Label label = new Label(this, componentId, model);
 		label.setOutputMarkupId(true);
 		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
 		return label;
@@ -401,8 +405,8 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	{
 		setOutputMarkupId(true);
 
-		label = newLabel(this, model);
+		label = newLabel(this, "label", model);
 
-		editor = newEditor(this, model);
+		editor = newEditor(this, "editor", model);
 	}
 }
