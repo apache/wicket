@@ -123,13 +123,13 @@ public class DefaultTreeState implements ITreeState, Serializable
 			if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
 			{
 				for (Iterator<TreeNode> i = selectedNodes.iterator(); i.hasNext(); )
-				{
+				{					
 					TreeNode current = i.next();
+					i.remove();					
 					for (TreeStateListener l : listeners)
 					{
 						l.nodeUnselected(current);
-					}
-					i.remove();
+					}					
 				}					
 			}
 			selectedNodes.add(node);
