@@ -138,7 +138,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	public final CharSequence encode(final RequestCycle requestCycle,
 			final IRequestTarget requestTarget)
 	{
-		
+
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
 		{
 			return encodeRequest(requestCycle, (IBookmarkablePageRequestTarget)requestTarget);
@@ -347,12 +347,9 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 		if(IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
 		{
-			final CharSequence prefix = urlPrefix(requestCycle);
-			log.warn("Support for dynamic resources is not yet implemented");
-			// TODO: support for dynamic resources
-			return prefix;
+			return encodeServletRequest(requestCycle,requestTarget);
 		}
-		
+
 		try
 		{
 			url = getActionURL(requestCycle);
@@ -405,6 +402,70 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 		return url.toString();
 	}
+
+	/**
+	 * Encode a listener interface target.
+	 * 
+	 * If you override this method to behave different then also
+	 * {@link #addInterfaceParameters(Request, RequestParameters)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestTarget
+	 *            the target to encode
+	 * @return the encoded url
+	 */
+	protected CharSequence encodeServletRequest(RequestCycle requestCycle,
+			IListenerInterfaceRequestTarget requestTarget)
+	{
+		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
+
+		// Start string buffer for url
+		final AppendingStringBuffer url = new AppendingStringBuffer(64);
+		url.append(urlPrefix(requestCycle));
+		url.append('?');
+		url.append(INTERFACE_PARAMETER_NAME);
+		url.append('=');
+
+		// Get component and page for request target
+		final Component component = requestTarget.getTarget();
+		final Page page = component.getPage();
+
+		// Add pagemap
+		final PageMap pageMap = page.getPageMap();
+		if (!pageMap.isDefault())
+		{
+			url.append(pageMap.getName());
+		}
+		url.append(Component.PATH_SEPARATOR);
+
+		// Add path to component
+		url.append(component.getPath());
+		url.append(Component.PATH_SEPARATOR);
+
+		// Add version
+		final int versionNumber = component.getPage().getCurrentVersionNumber();
+		if (!rli.getRecordsPageVersion())
+		{
+			url.append(Page.LATEST_VERSION);
+		}
+		else if (versionNumber > 0)
+		{
+			url.append(versionNumber);
+		}
+		url.append(Component.PATH_SEPARATOR);
+
+		// Add listener interface
+		final String listenerName = rli.getName();
+		if (!IRedirectListener.INTERFACE.getName().equals(listenerName))
+		{
+			url.append(listenerName);
+		}
+
+		return requestCycle.getOriginalResponse().encodeURL(url);
+	}
+
 
 	/**
 	 * Encode a page class target.
