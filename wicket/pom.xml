@@ -63,8 +63,10 @@
 
 		<plugins>
 			<plugin>
+				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+<!--
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
@@ -74,6 +76,7 @@
 					<outputDirectory>target/distributions</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
 				</configuration>
+-->
 			</plugin>
 			<plugin>
 				<inherited>true</inherited>
@@ -104,13 +107,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<templateFile>src/site/template/wicket-site.vm</templateFile>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
