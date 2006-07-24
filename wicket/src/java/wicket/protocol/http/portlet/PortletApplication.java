@@ -440,7 +440,11 @@ public abstract class PortletApplication extends Application implements ISession
 			{
 				throw new WicketRuntimeException("unable to retrieve portlet context path");
 			}
-			sessionAttributePrefix = "wicket:" + contextPath + ":";
+			
+			// WARNING: this has to match the string which is returned from the WebApplication
+			// getServletPath is not available in portlets, so we have to use empty servlet path
+			// and a empty servlet path string here.
+			sessionAttributePrefix = "wicket::";
 		}
 		// Namespacing for session attributes is provided by
 		// adding the portlet path

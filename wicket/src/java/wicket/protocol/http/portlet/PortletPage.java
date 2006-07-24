@@ -40,11 +40,11 @@ public class PortletPage extends Page
 	/** log. */
 	private static final Log log = LogFactory.getLog(PortletPage.class);
 
-	/* Current portlet mode */
-	private PortletMode portletMode = PortletMode.VIEW;
+	/* Current portlet mode. PortletMode is not serializable, so this is stored as a String. */
+	private String portletMode = PortletMode.VIEW.toString();
 
-	/* Current window state */
-	private WindowState windowState = WindowState.NORMAL;
+	/* Current window state. WindowState is not serializable, so this is stored as a String.  */
+	private String windowState = WindowState.NORMAL.toString();
 
 	/**
 	 * @see Page#Page()
@@ -124,7 +124,7 @@ public class PortletPage extends Page
 	{
 		if (!portletMode.equals(this.portletMode))
 		{
-			this.portletMode = portletMode;
+			this.portletMode = portletMode.toString();
 			onSetPortletMode(portletMode);
 		}
 	}
@@ -139,7 +139,7 @@ public class PortletPage extends Page
 	{
 		if (!windowState.equals(this.windowState))
 		{
-			this.windowState = windowState;
+			this.windowState = windowState.toString();
 			onSetWindowState(windowState);
 		}
 	}
@@ -151,7 +151,7 @@ public class PortletPage extends Page
 	 * @return portlet mode
 	 */
 	public PortletMode getPortletMode(){
-		return portletMode;
+		return new PortletMode(portletMode);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class PortletPage extends Page
 	 * @return portlet window state
 	 */
 	public WindowState getWindowState(){
-		return windowState;
+		return new WindowState(windowState);
 	}
 
 	/**
