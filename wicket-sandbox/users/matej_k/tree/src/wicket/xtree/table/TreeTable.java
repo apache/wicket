@@ -126,7 +126,7 @@ public class TreeTable extends DefaultAbstractTree
 		int i = 0;
 		
 		// add side columns
-		SideColumnsView sideColumns = new SideColumnsView(item, "sideColumns", null);
+		SideColumnsView sideColumns = new SideColumnsView(item, "sideColumns", node);
 		for (IColumn column: columns)
 		{
 			if (column.getLocation().getAlignment() == Alignment.LEFT ||

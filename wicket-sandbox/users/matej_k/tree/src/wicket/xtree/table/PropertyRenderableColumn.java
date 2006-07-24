@@ -42,7 +42,8 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * @see AbstractRenderableColumn#getNodeValue(TreeNode)
 	 */
 	@Override
-	public String getNodeValue(TreeNode node) {
+	public String getNodeValue(TreeNode node) 
+	{
 		Object result = PropertyResolver.getValue(propertyExpression, node);
 		if (converter != null)
 		{
@@ -55,14 +56,15 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 		}
 		else
 		{
-			return result.toString();
+			return result != null ? result.toString() : "";
 		}
 	}
 		
 	/**
 	 * Returns the converter or null if no converter is specified.
 	 */
-	public IConverter getConverter() {
+	public IConverter getConverter() 
+	{
 		return converter;
 	} 
 
@@ -70,14 +72,16 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * By default the property is converted to string using <code>toString</code> method.
 	 * If you want to alter this behavior, you can specify a custom converter. 
 	 */
-	public void setConverter(IConverter converter) {
+	public void setConverter(IConverter converter) 
+	{
 		this.converter = converter;
 	}
 	
 	/**
 	 * Returns the locale or null if no locale is specified.
 	 */
-	public Locale getLocale() {
+	public Locale getLocale() 
+	{
 		return locale;
 	}
 
@@ -85,7 +89,16 @@ public class PropertyRenderableColumn extends AbstractRenderableColumn
 	 * Sets the locale to be used as parameter for custom converter (if one is specified).
 	 * If no locale is set, session locale is used.
 	 */
-	public void setLocale(Locale locale) {
+	public void setLocale(Locale locale) 
+	{
 		this.locale = locale;
+	}
+	
+	/**
+	 * Returns the property epression.
+	 */
+	protected String getPropertyExpression() 
+	{
+		return propertyExpression;
 	}
 }

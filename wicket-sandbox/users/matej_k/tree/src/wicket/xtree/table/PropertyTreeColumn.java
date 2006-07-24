@@ -56,14 +56,15 @@ public class PropertyTreeColumn extends AbstractTreeColumn {
 		}
 		else
 		{
-			return result.toString();
+			return result != null ? result.toString() : null;
 		}
 	}
 	
 	/**
 	 * Returns the converter or null if no converter is specified.
 	 */
-	public IConverter getConverter() {
+	public IConverter getConverter() 
+	{
 		return converter;
 	} 
 
@@ -71,14 +72,16 @@ public class PropertyTreeColumn extends AbstractTreeColumn {
 	 * By default the property is converted to string using <code>toString</code> method.
 	 * If you want to alter this behavior, you can specify a custom converter. 
 	 */
-	public void setConverter(IConverter converter) {
+	public void setConverter(IConverter converter) 
+	{
 		this.converter = converter;
 	}
 	
 	/**
 	 * Returns the locale or null if no locale is specified.
 	 */
-	public Locale getLocale() {
+	public Locale getLocale() 
+	{
 		return locale;
 	}
 
@@ -86,7 +89,8 @@ public class PropertyTreeColumn extends AbstractTreeColumn {
 	 * Sets the locale to be used as parameter for custom converter (if one is specified).
 	 * If no locale is set, session locale is used.
 	 */
-	public void setLocale(Locale locale) {
+	public void setLocale(Locale locale) 
+	{
 		this.locale = locale;
 	}
 }

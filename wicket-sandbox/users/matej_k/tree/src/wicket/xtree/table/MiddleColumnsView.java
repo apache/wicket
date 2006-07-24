@@ -1,8 +1,10 @@
 package wicket.xtree.table;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.tree.TreeNode;
 
@@ -56,15 +58,15 @@ class MiddleColumnsView extends WebMarkupContainer {
 	 * the widths of those columns will be zero.
 	 * @return
 	 */
-	protected int[] computeColumnWidths()
+	protected double[] computeColumnWidths()
 	{
 		// initialize the columns array
-		int result[] = new int[columns.size()];
-		Arrays.fill(result, 0);
+		double result[] = new double[columns.size()];
+		Arrays.fill(result, 0d);
 		
 		// the sum of weights of all columns
 		double sum = 0d;
-		double whole = 99d; // we can't do 100%, might cause formating errors
+		double whole = 99.8d; 
 		
 		// go over all columns, check their alignment and count sum of their weights
 		for (IColumn column : columns)			
@@ -92,7 +94,7 @@ class MiddleColumnsView extends WebMarkupContainer {
 				--spanLeft;  
 			}
 			// add the percentage size to the column
-			result[i] += (int) Math.round(((double) column.getLocation().getSize()) / sum * whole);
+			result[i] += Math.round(((double) column.getLocation().getSize()) / sum * whole);
 			
 			// wants this column to span and no other column is spanning over this column?
 			if (spanLeft == 0 && column.getSpan(node) > 1) 			
@@ -106,21 +108,22 @@ class MiddleColumnsView extends WebMarkupContainer {
 		}				
 		
 		// count the sum
-		int together = 0;
+		double together = 0d;
 		for (int i = 0; i < result.length; ++i)
 		{
 			together += result[i];
 		}
 		
-		// is it bigger than 99? that can cause layout problems
-		if (together > 99) 
+		
+		// is it bigger than 99.8? that can cause layout problems in IE
+		if (together > 99.8d) 
 		{
 			// this can happen - rounding error. just decrease the last one
 			for (int i = result.length - 1; i >= 0; --i)
 			{
-				if (result[i] != 0)
+				if (result[i] != 0d)
 				{
-					result[i] -= together - 99;
+					result[i] -= together - 99.8d;
 					break;
 				}
 			}
@@ -138,10 +141,14 @@ class MiddleColumnsView extends WebMarkupContainer {
 	{		
 		final int markupStart = markupStream.getCurrentIndex();
 		Response response = RequestCycle.get().getResponse();
-		int widths[] = computeColumnWidths();
+		double widths[] = computeColumnWidths();
 				
 		boolean rendered = false; // has been at least one column (component, not renderable) rendered?	
-				
+		
+		NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
+		nf.setMaximumFractionDigits(0);
+		nf.setMaximumFractionDigits(2);		
+		
 		for (int i = 0; i < columns.size(); ++i)
 		{
 			Component component = components.get(i);
@@ -149,7 +156,7 @@ class MiddleColumnsView extends WebMarkupContainer {
 			IColumn column = columns.get(i);
 		
 			// write the wrapping column markup
-			response.write("<span class=\"b_\" style=\"width:" + widths[i] + "%\">");
+			response.write("<span class=\"b_\" style=\"width:" + nf.format(widths[i]) + "%\">");
 			response.write("<span class=\"c_\">");						
 			
 			if (component != null) // is there a component for current column?
