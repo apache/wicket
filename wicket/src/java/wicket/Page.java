@@ -395,6 +395,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			public Object component(final Component component)
 			{
+				component.resetHeadRendered();
+				
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 

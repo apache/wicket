@@ -29,6 +29,7 @@ import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
+import wicket.markup.parser.filter.HeadForceTagIdHandler;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.markup.parser.filter.TagTypeHandler;
@@ -132,6 +133,11 @@ public class MarkupParser
 		filter = new WicketRemoveTagHandler(filter);
 		filter = new WicketLinkTagHandler(filter);
 
+		if (getMarkupResourceStream() != null && getMarkupResourceStream().getContainerInfo() != null)
+		{
+			filter = new HeadForceTagIdHandler(filter, getMarkupResourceStream().getContainerInfo().getContainerClass());
+		}
+		
 		// Provided the wicket component requesting the markup is known ...
 		MarkupResourceStream resource = markup.getResource();
 		if ((resource != null) && (resource.getContainerInfo() != null))
