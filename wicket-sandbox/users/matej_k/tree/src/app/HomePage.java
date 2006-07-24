@@ -13,10 +13,9 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
 import wicket.xtree.DefaultAbstractTree;
-import wicket.xtree.Tree;
-import wicket.xtree.table.IColumn;
 import wicket.xtree.table.ColumnLocation;
-import wicket.xtree.table.DefaultTreeColumn;
+import wicket.xtree.table.IColumn;
+import wicket.xtree.table.PropertyTreeColumn;
 import wicket.xtree.table.StringColumn;
 import wicket.xtree.table.TreeTable;
 import wicket.xtree.table.ColumnLocation.Alignment;
@@ -40,11 +39,11 @@ public class HomePage extends WebPage {
 		
 		IColumn columns[] = new IColumn[] {
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 20, Unit.PX), "L0", "Very first left column. Has solid width set to 20 pixels"),				
-			new DefaultTreeColumn(new ColumnLocation(Alignment.LEFT, 15, Unit.EM), "Tree Column"),
+			new PropertyTreeColumn(new ColumnLocation(Alignment.LEFT, 15, Unit.EM), "Tree Column", "userObject"),
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 10, Unit.PERCENT), "L 2", "Second left column. This column has percentage width"),
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 3, Unit.EM), "L 3", "Third left column. This column has width set in em."),
 //			
-			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 3, Unit.PROPORTIONAL), "M1", "First middle column. Has weight 2.") {
+			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 3, Unit.PROPORTIONAL), "M1", "First middle column. Has weight 3.") {
 				@Override
 				public int getSpan(TreeNode node) {
 					if (node != null)
@@ -59,15 +58,15 @@ public class HomePage extends WebPage {
 					return 1;
 				}
 			},
-			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M2", "Second middle column. Has weight 1."),
-			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M3", "Third middle column. Has weight 1."),
+			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M2", "Second middle column. Has weight 2."),
+			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M3", "Third middle column. Has weight 2."),
 //			
 			new StringColumn(new ColumnLocation(Alignment.RIGHT, 8, Unit.EM), "R1", "First right column. Width set to 8 em."),
 //			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R2", "Second right column. Width set to 2 em."),
 			
 		};
 		
-		Tree tree = new TreeTable(this, "tree", treeModel, columns);
+		DefaultAbstractTree tree = new TreeTable(this, "tree", treeModel, columns);
 			//new SimpleTree(this, "tree", treeModel);
 		
 		tree.getTreeState().setAllowSelectMultiple(true);

@@ -34,6 +34,7 @@ import wicket.model.Model;
  * <p>
  * This class allows you to choose between 3 types of links.
  * 		{@link DefaultAbstractTree#setLinkType(wicket.xtree.DefaultAbstractTree.LinkType)}
+ * 
  * @author Matej Knopp 
  */
 public abstract class DefaultAbstractTree extends AbstractTree 
@@ -353,7 +354,6 @@ public abstract class DefaultAbstractTree extends AbstractTree
 				for (int i = level - 1; i >= 0; --i)
 				{
 					response.write("<span class=\""+urls[i]+"\"></span>");
-
 				}
 			}
 		};
