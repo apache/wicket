@@ -2445,6 +2445,18 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 *
+	 * @param flag
+	 *            The flag to test
+	 * @return True if the flag is set
+	 */
+	protected final boolean getFlag(final short flag)
+	{
+		return getFlag((int)flag);
+	}
+
+	/**
 	 * Gets the value defaultModelComparator. Implementations of this interface
 	 * can be used in the Component.getComparator() for testing the current
 	 * value of the components model data with the new value that is given.
@@ -2799,6 +2811,19 @@ public abstract class Component implements Serializable
 		{
 			this.flags &= ~flag;
 		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
+	 *
+	 * @param flag
+	 *            The flag to set
+	 * @param set
+	 *            True to turn the flag on, false to turn it off
+	 */
+	protected final void setFlag(final short flag, final boolean set)
+	{
+		setFlag((int)flag, set);
 	}
 
 	/**
