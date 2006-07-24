@@ -6,14 +6,19 @@
 				font-family: Verdana;
 				font-size: 84%;
 			}
+			input {
+				font-family: Verdana;
+			}
 		</style>		
 	</head>
 		This tree uses Ajax links (no fallback). But it can be easily configured to use
 		Ajax fallback links or regular (non-ajax) links too.
 		Tree is in multi-select mode.
 		
+		<form wicket:id="form">
 		<div wicket:id="tree">
 		</div>	
+		</form>
 		
 		<a wicket:id="link" style="display:none">link</a>
 	<body>

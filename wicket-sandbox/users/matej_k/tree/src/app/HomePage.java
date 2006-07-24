@@ -12,6 +12,7 @@ import javax.swing.tree.TreeNode;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.form.Form;
 import wicket.xtree.DefaultAbstractTree;
 import wicket.xtree.table.ColumnLocation;
 import wicket.xtree.table.IColumn;
@@ -39,11 +40,11 @@ public class HomePage extends WebPage {
 		
 		IColumn columns[] = new IColumn[] {
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 20, Unit.PX), "L0", "Very first left column. Has solid width set to 20 pixels"),				
-			new PropertyTreeColumn(new ColumnLocation(Alignment.LEFT, 15, Unit.EM), "Tree Column", "userObject"),
+			new PropertyTreeColumn(new ColumnLocation(Alignment.LEFT, 15, Unit.EM), "Tree Column", "userObject.property1"),
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 10, Unit.PERCENT), "L 2", "Second left column. This column has percentage width"),
 //			new StringColumn(new ColumnLocation(Alignment.LEFT, 3, Unit.EM), "L 3", "Third left column. This column has width set in em."),
 //			
-			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 3, Unit.PROPORTIONAL), "M1", "First middle column. Has weight 3.") {
+			new PropertyEditableColumn(new ColumnLocation(Alignment.MIDDLE, 3, Unit.PROPORTIONAL), "M1", "userObject.property2") {
 				@Override
 				public int getSpan(TreeNode node) {
 					if (node != null)
@@ -58,18 +59,20 @@ public class HomePage extends WebPage {
 					return 1;
 				}
 			},
-			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M2", "Second middle column. Has weight 2."),
-			new StringColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M3", "Third middle column. Has weight 2."),
+			new PropertyEditableColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M2", "userObject.property3"),
+			new PropertyEditableColumn(new ColumnLocation(Alignment.MIDDLE, 2, Unit.PROPORTIONAL), "M3", "userObject.property4"),
 //			
-			new StringColumn(new ColumnLocation(Alignment.RIGHT, 8, Unit.EM), "R1", "First right column. Width set to 8 em."),
+			new PropertyEditableColumn(new ColumnLocation(Alignment.RIGHT, 8, Unit.EM), "R1", "userObject.property5"),
 //			new StringColumn(new ColumnLocation(Alignment.RIGHT, 4, Unit.EM), "R2", "Second right column. Width set to 2 em."),
 			
 		};
 		
-		DefaultAbstractTree tree = new TreeTable(this, "tree", treeModel, columns);
+		Form form = new Form(this, "form");
+		
+		DefaultAbstractTree tree = new TreeTable(form, "tree", treeModel, columns);
 			//new SimpleTree(this, "tree", treeModel);
 		
-		tree.getTreeState().setAllowSelectMultiple(true);
+		//tree.getTreeState().setAllowSelectMultiple(true);
 //		//tree.getTreeState().collapseAll();
 //		//tree.getTreeState().expandNode((TreeNode)treeModel.getRoot());		
 //		ee.setLinkType(DefaultAbstractTree.LinkType.AJAX);
@@ -78,6 +81,65 @@ public class HomePage extends WebPage {
 //		tree.expandAll(true);
 		
 		setVersioned(false);
+	}
+	
+	public static class ModelBean
+	{
+		private String property1;
+		private String property2;
+		private String property3;
+		private String property4;
+		private String property5;
+		private String property6;
+		
+		public ModelBean(String s)
+		{
+			property1 = "1:" + s;
+			property2 = "2:" + s;
+			property3 = "3:" + s;
+			property4 = "4:" + s;
+			property5 = "5:" + s;
+			property6 = "6:" + s;
+		}
+		
+		public String getProperty1() {
+			return property1;
+		}
+		public void setProperty1(String property1) {
+			this.property1 = property1;
+		}
+		public String getProperty2() {
+			return property2;
+		}
+		public void setProperty2(String property2) {
+			this.property2 = property2;
+		}
+		public String getProperty3() {
+			return property3;
+		}
+		public void setProperty3(String property3) {
+			this.property3 = property3;
+		}
+		public String getProperty4() {
+			return property4;
+		}
+		public void setProperty4(String property4) {
+			this.property4 = property4;
+		}
+		public String getProperty5() {
+			return property5;
+		}
+		public void setProperty5(String property5) {
+			this.property5 = property5;
+		}
+		public String getProperty6() {
+			return property6;
+		}
+		public void setProperty6(String property6) {
+			this.property6 = property6;
+		}
+		
+		
 	}
 	
 	private TreeModel createTreeModel() 
@@ -130,7 +192,7 @@ public class HomePage extends WebPage {
 	private TreeModel convertToTreeModel(List list)
 	{
 		TreeModel model = null;
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new ModelBean("ROOT"));
 		add(rootNode, list);
 		model = new DefaultTreeModel(rootNode);		
 		return model;
@@ -143,13 +205,13 @@ public class HomePage extends WebPage {
 			Object o = i.next();
 			if (o instanceof List)
 			{
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode("subtree...");
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean("subtree..."));
 				parent.add(child);
 				add(child, (List)o);
 			}
 			else
 			{
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode(new ModelBean(o.toString()));
 				parent.add(child);
 			}
 		}
