@@ -149,8 +149,8 @@ class MiddleColumnsView extends WebMarkupContainer {
 			IColumn column = columns.get(i);
 		
 			// write the wrapping column markup
-			response.write("<span class=\"column\" style=\"width:" + widths[i] + "%\">");
-			response.write("<span class=\"column-inner\">");						
+			response.write("<span class=\"b_\" style=\"width:" + widths[i] + "%\">");
+			response.write("<span class=\"c_\">");						
 			
 			if (component != null) // is there a component for current column?
 			{

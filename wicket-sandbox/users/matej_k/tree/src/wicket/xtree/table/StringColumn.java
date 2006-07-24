@@ -8,6 +8,10 @@ import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.basic.Label;
 
+/**
+ * Very basic (not very useful) column used while developing. Will be removed soon.
+ * @author Matej Knopp
+ */
 public class StringColumn implements IColumn {
 
 	private ColumnLocation location;
@@ -58,7 +62,7 @@ public class StringColumn implements IColumn {
 		return new IRenderable() {
 			public void render(TreeNode node, Response response) {
 //				if (treeTable.getTreeState().isNodeSelected(node) == false)
-					response.write("<span class=\"text\"  title=\"" + cell + "\">" + cell + "</span>\n");
+					response.write("<span class=\"text\" title=\"" + cell + "\">" + cell + "</span>");
 //				else
 //					response.write("<select type=\"text\" style=\"width: 100%; margin: 0px;\" value=\"" + cell + "\" size=\"1\"><option>A</option></select>");
 			}

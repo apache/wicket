@@ -16,7 +16,6 @@ import wicket.markup.html.panel.Fragment;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.xtree.DefaultAbstractTree;
-import wicket.xtree.Tree;
 import wicket.xtree.table.ColumnLocation.Alignment;
 
 /**
@@ -25,8 +24,8 @@ import wicket.xtree.table.ColumnLocation.Alignment;
  * 
  * @author Matej Knopp
  */
-public class TreeTable extends Tree {
-
+public class TreeTable extends DefaultAbstractTree 
+{
 	/**
 	 * Creates the TreeTable for the given TreeModel and array of columns.
 	 */
@@ -179,9 +178,11 @@ public class TreeTable extends Tree {
 		
 		// do distinguish between selected and unselected rows we add an behavior
 		// that modifies row css class.
-		item.add(new AbstractBehavior() {
+		item.add(new AbstractBehavior() 
+		{
 			@Override
-			public void onComponentTag(Component component, ComponentTag tag) {
+			public void onComponentTag(Component component, ComponentTag tag) 
+			{
 				super.onComponentTag(component, tag);
 				if (getTreeState().isNodeSelected(node))
 					tag.put("class", "row-selected");
@@ -214,9 +215,11 @@ public class TreeTable extends Tree {
 			
 			createNodeIcon(nodeLink, "icon", node);
 			
-			new Label(nodeLink, "label", new Model<String>() {
+			new Label(nodeLink, "label", new Model<String>() 
+			{
 				@Override
-				public String getObject() {				
+				public String getObject() 
+				{				
 					return renderNodeCallback.renderNode(node);
 				}
 			});						
@@ -228,7 +231,7 @@ public class TreeTable extends Tree {
 	 * 
 	 * @author Matej Knopp
 	 */
-	private static interface IRenderNodeCallback extends Serializable
+	public static interface IRenderNodeCallback extends Serializable
 	{
 		public String renderNode(TreeNode node);
 	}
@@ -243,43 +246,38 @@ public class TreeTable extends Tree {
 	}
 	
 	/**
-	 * Very base class for the TreeColumn.
-
-	 * @author Matej Knopp
+	 * Creates a tree cell for given node. This method is supposed to be used by TreeColumns (columns
+	 * that draw the actual tree).
+	 *   
+	 * @param parent 
+	 * 			Parent component
+	 * 
+	 * @param id
+	 * 			Component ID
+	 * 
+	 * @param node
+	 * 			Tree node for the row
+	 * 
+	 * @param level
+	 * 			How deep is the node nested (for convenience) 
+	 * 
+	 * @param callback 
+	 * 			Used to get the display string 
 	 */
-	protected static abstract class TreeColumn implements IColumn {
-					
-		public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level) 
-		{			
-			TreeTable table = parent.findParent(TreeTable.class);
-			
-			return table.createTreePanel(parent, id, node, level, new IRenderNodeCallback() 
-			{
-				public String renderNode(TreeNode node) 
-				{
-					return TreeColumn.this.renderNode(node);
-				}
-			});		
-		}
+	public static Component createTreeCell(MarkupContainer<?> parent, String id, TreeNode node, int level, IRenderNodeCallback callback)
+	{
+		TreeTable table = parent.findParent(TreeTable.class);
 		
-		abstract String renderNode(TreeNode node);
-	};
-
+		return table.createTreePanel(parent, id, node, level, callback);			
+	}
+	
 	/** Reference to the css file. */
 	private static final PackageResourceReference CSS = 
 		new PackageResourceReference(DefaultAbstractTree.class, "res/tree-table.css");
 	
 	@Override
-	protected PackageResourceReference getCSS() {
+	protected PackageResourceReference getCSS() 
+	{
 		return CSS;
-	}
-	
-	/**
-	 * Prevent users from overriding this method. To specify how tree node
-	 * text renders override {@link AbstractTreeColumn#renderNode(TreeNode)}.
-	 */
-	@Override
-	final protected String renderNode(TreeNode node) {
-		throw new UnsupportedOperationException();
 	}
 }

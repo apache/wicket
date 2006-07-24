@@ -119,7 +119,7 @@ class SideColumnsView extends WebMarkupContainer {
 	 */
 	private String renderColumnStyle(IColumn column)
 	{
-		return "width:" + renderColumnWidth(column) + "; float: " + renderColumnFloat(column);
+		return "width:" + renderColumnWidth(column) + ";float:" + renderColumnFloat(column);
 	}
 	
 	/**
@@ -141,16 +141,16 @@ class SideColumnsView extends WebMarkupContainer {
 			IRenderable renderable = renderables.get(i);
 			
 			// write wrapping markup
-			response.write("<span class=\"column\" style=\"" + renderColumnStyle(column) + "\">");
+			response.write("<span class=\"b_\" style=\"" + renderColumnStyle(column) + "\">");
 			if (column.getLocation().getAlignment() == Alignment.LEFT && firstLeft == true)
 			{
 				// for the first left column we have different style class (without the left border)
-				response.write("<span class=\"column-inner-first\">");
+				response.write("<span class=\"d_\">");
 				firstLeft = false;
 			}				
 			else
 			{
-				response.write("<span class=\"column-inner\">");
+				response.write("<span class=\"c_\">");
 			}
 			
 			if (component != null)
