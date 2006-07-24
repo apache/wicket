@@ -32,9 +32,12 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -76,7 +79,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final class EncodingResponse extends Response
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
-		
+
 		private boolean escaped = false;
 
 		private final Response originalResponse;
@@ -245,7 +248,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			AjaxRequestTarget that = (AjaxRequestTarget)obj;
 			return markupIdToComponent.equals(that.markupIdToComponent)
-					&& javascripts.equals(that.javascripts);
+			&& javascripts.equals(that.javascripts);
 		}
 		return false;
 	}
@@ -307,6 +310,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				final Map.Entry entry = (Entry)it.next();
 				final Component component = (Component)entry.getValue();
 				final String markupId = (String)entry.getKey();
+				respondHeaderContribution(response, component);
 				respondComponent(response, markupId, component);
 			}
 
@@ -336,7 +340,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
-				+ "], javascript [" + javascripts + "]";
+		+ "], javascript [" + javascripts + "]";
 	}
 
 	/**
@@ -396,7 +400,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			throw new IllegalStateException(
 					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: "
-							+ component.toString());
+					+ component.toString());
 		}
 
 		component.setOutputMarkupId(true);
@@ -412,7 +416,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (page == null)
 		{
 			throw new IllegalStateException(
-					"Ajax request attempted on a component that is not associated with a Page");
+			"Ajax request attempted on a component that is not associated with a Page");
 		}
 
 		final boolean versioned = page.isVersioned();
@@ -443,6 +447,70 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingResponse.reset();
 	}
 
+
+	/**
+	 * 
+	 * @param response
+	 * @param component
+	 */
+	private void respondHeaderContribution(final Response response, final Component component) 
+	{		
+		final HtmlHeaderContainer header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
+		if(component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID)!=null)
+		{
+			component.getPage().replace(header);				
+		} else {
+			component.getPage().add(header);
+		}
+
+		Response oldResponse = RequestCycle.get().setResponse(encodingResponse);
+
+		encodingResponse.reset();
+
+		component.renderHead(header);
+		if (component instanceof MarkupContainer) 
+		{
+			((MarkupContainer)component).visitChildren(new Component.IVisitor() 
+			{
+				public Object component(Component component) 
+				{
+					if (component.isVisible())
+					{
+						component.renderHead(header);
+						return CONTINUE_TRAVERSAL;
+					}					
+					else
+					{
+						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					}
+				}
+			});
+		}
+
+		RequestCycle.get().setResponse(oldResponse);
+
+		if (encodingResponse.getContents().length() != 0) 
+		{
+			response.write("<header-contribution");
+
+			if (encodingResponse.isContentsEncoded())
+			{
+				response.write(" encoding=\"");
+				response.write(getEncodingName());
+				response.write("\" ");
+			}
+
+			// we need to write response as CDATA and parse it on client, because
+			// konqueror crashes when there is a <script> element
+			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
+
+			response.write(encodingResponse.getContents());
+
+			response.write("</head>]]>");
+
+			response.write("</header-contribution>");			
+		}		
+	}
 
 	/**
 	 * 

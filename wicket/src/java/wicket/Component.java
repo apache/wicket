@@ -433,16 +433,16 @@ public abstract class Component implements Serializable
 	public static final Action RENDER = new Action(Action.RENDER);
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED1 = 0x0100;
+	protected static final int FLAG_RESERVED1 = 0x0100;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED2 = 0x0200;
+	protected static final int FLAG_RESERVED2 = 0x0200;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED3 = 0x0400;
+	protected static final int FLAG_RESERVED3 = 0x0400;
 
 	/** Reserved subclass-definable flag bit */
-	protected static final short FLAG_RESERVED4 = 0x0800;
+	protected static final int FLAG_RESERVED4 = 0x0800;
 
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
@@ -463,19 +463,19 @@ public abstract class Component implements Serializable
 	};
 
 	/** True when a component is being auto-added */
-	private static final short FLAG_AUTO = 0x0001;
+	private static final int FLAG_AUTO = 0x0001;
 
 	/** True when a component is enabled for model updates and is reachable. */
-	private static final short FLAG_ENABLED = 0x0080;
+	private static final int FLAG_ENABLED = 0x0080;
 
 	/** Flag for escaping HTML in model strings */
-	private static final short FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
+	private static final int FLAG_ESCAPE_MODEL_STRINGS = 0x0002;
 
 	/** Flag for Component holding root compound model */
-	private static final short FLAG_HAS_ROOT_MODEL = 0x0004;
+	private static final int FLAG_HAS_ROOT_MODEL = 0x0004;
 
 	/** Ignore attribute modifiers */
-	private static final short FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
+	private static final int FLAG_IGNORE_ATTRIBUTE_MODIFIER = 0x0040;
 
 	/**
 	 * Internal indicator of whether this component may be rendered given the
@@ -484,27 +484,30 @@ public abstract class Component implements Serializable
 	 * component (otherwise we would end up with a half rendered page in the
 	 * buffer)
 	 */
-	private static final short FLAG_IS_RENDER_ALLOWED = 0x2000;
+	private static final int FLAG_IS_RENDER_ALLOWED = 0x2000;
 
 	/** Boolean whether this component was rendered once for tracking changes. */
-	private static final short FLAG_IS_RENDERED_ONCE = 0x1000;
+	private static final int FLAG_IS_RENDERED_ONCE = 0x1000;
 
 	/**
 	 * Whether or not the component should print out its markup id into the id
 	 * attribute
 	 */
-	private static final short FLAG_OUTPUT_MARKUP_ID = 0x4000;
+	private static final int FLAG_OUTPUT_MARKUP_ID = 0x4000;
 
 	/** Render tag boolean */
-	private static final short FLAG_RENDER_BODY_ONLY = 0x0020;
+	private static final int FLAG_RENDER_BODY_ONLY = 0x0020;
 
 
 	/** Versioning boolean */
-	private static final short FLAG_VERSIONED = 0x0008;
+	private static final int FLAG_VERSIONED = 0x0008;
 
 	/** Visibility boolean */
-	private static final short FLAG_VISIBLE = 0x0010;
-
+	private static final int FLAG_VISIBLE = 0x0010;
+	
+	/** Whether the header has already been contributed */
+	private static final int FLAG_HEAD_RENDERED = 0x8000;
+	
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Component.class);
 
@@ -519,7 +522,7 @@ public abstract class Component implements Serializable
 	private List behaviors = null;
 
 	/** Component flags. See FLAG_* for possible non-exclusive flag values. */
-	private short flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
+	private int flags = FLAG_VISIBLE | FLAG_ESCAPE_MODEL_STRINGS | FLAG_VERSIONED | FLAG_ENABLED
 			| FLAG_IS_RENDER_ALLOWED;
 
 	/** Component id. */
@@ -1744,21 +1747,25 @@ public abstract class Component implements Serializable
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		// Ask all behaviors if they have something to contribute to the
-		// header or body onLoad tag.
-		if (this.behaviors != null)
+		if (isHeadRendered() == false) 
 		{
-			final WebPage webPage = (WebPage)getPage();
-
-			final Iterator iter = this.behaviors.iterator();
-			while (iter.hasNext())
+			// Ask all behaviors if they have something to contribute to the
+			// header or body onLoad tag.
+			if (this.behaviors != null)
 			{
-				IBehavior behavior = (IBehavior)iter.next();
-				if (behavior instanceof IHeaderContributor)
+				final WebPage webPage = (WebPage)getPage();
+	
+				final Iterator iter = this.behaviors.iterator();
+				while (iter.hasNext())
 				{
-					((IHeaderContributor)behavior).renderHead(container.getResponse());
+					IBehavior behavior = (IBehavior)iter.next();
+					if (behavior instanceof IHeaderContributor)
+					{
+						((IHeaderContributor)behavior).renderHead(container.getResponse());
+					}
 				}
 			}
+			setFlag(FLAG_HEAD_RENDERED, true);
 		}
 	}
 
@@ -2432,7 +2439,7 @@ public abstract class Component implements Serializable
 	 *            The flag to test
 	 * @return True if the flag is set
 	 */
-	protected final boolean getFlag(final short flag)
+	protected final boolean getFlag(final int flag)
 	{
 		return (this.flags & flag) != 0;
 	}
@@ -2782,7 +2789,7 @@ public abstract class Component implements Serializable
 	 * @param set
 	 *            True to turn the flag on, false to turn it off
 	 */
-	protected final void setFlag(final short flag, final boolean set)
+	protected final void setFlag(final int flag, final boolean set)
 	{
 		if (set)
 		{
@@ -2948,6 +2955,8 @@ public abstract class Component implements Serializable
 			log.debug("Replacing parent " + this.parent + " with " + parent);
 		}
 		this.parent = parent;
+//		
+//		resetHeadRendered();
 	}
 
 	/**
@@ -2985,5 +2994,22 @@ public abstract class Component implements Serializable
 			nestedModelObject = next;
 		}
 		return nestedModelObject;
+	}
+	
+	/**
+	 * Returns whether the head has already been rendered.
+	 * @return boolean
+	 */
+	final protected boolean isHeadRendered() {
+		return getFlag(FLAG_HEAD_RENDERED);
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * Resets the state of head rendering.
+	 */
+	final protected void resetHeadRendered() {
+		setFlag(FLAG_HEAD_RENDERED, false);
 	}
 }
