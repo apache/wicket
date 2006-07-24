@@ -18,18 +18,31 @@
  */
 package wicket.protocol.http.portlet;
 
+import java.io.IOException;
+import java.util.Enumeration;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.protocol.http.IWebApplicationFactory;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WicketServlet;
 
 /**
  * 
- * Dummy utility servlet to support resources from a portlet
+ * Dummy utility servlet to support dynamic resources with portlets
  * 
  * @author Janne Hietam&auml;ki
  */
 public class WicketPortletServlet extends WicketServlet
 {
+	private static final Log log = LogFactory.getLog(WicketPortletServlet.class);
 
 	/**
 	 * 
@@ -46,12 +59,11 @@ public class WicketPortletServlet extends WicketServlet
 
 					public Class getHomePage()
 					{
-						return null;
-					}
-					
+						return AccessDeniedPage.class;
+					}					
 				};
 			}
-			
+
 		};
-	}	
+	}
 }

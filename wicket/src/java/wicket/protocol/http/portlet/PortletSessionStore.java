@@ -45,6 +45,8 @@ import wicket.util.lang.Bytes;
  */
 public class PortletSessionStore implements ISessionStore
 {
+	//private final static int SCOPE=PortletSession.PORTLET_SCOPE;
+	private final static int SCOPE=PortletSession.APPLICATION_SCOPE;
 
 
 	/** log. */
@@ -233,7 +235,7 @@ public class PortletSessionStore implements ISessionStore
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
 			if (logger != null)
 			{
-				if (httpSession.getAttribute(attributeName) == null)
+				if (httpSession.getAttribute(attributeName,SCOPE) == null)
 				{
 					logger.objectCreated(value);
 				}
@@ -242,8 +244,7 @@ public class PortletSessionStore implements ISessionStore
 					logger.objectUpdated(value);
 				}
 			}
-
-			httpSession.setAttribute(attributeName, value, PortletSession.PORTLET_SCOPE);
+			httpSession.setAttribute(attributeName, value, SCOPE);
 		}
 	}
 
@@ -256,9 +257,9 @@ public class PortletSessionStore implements ISessionStore
 		WicketPortletRequest webRequest = toPortletRequest(request);
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)
-		{
+		{		
 			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name,
-					PortletSession.PORTLET_SCOPE);
+					SCOPE);
 		}
 		return null;
 	}
@@ -276,13 +277,13 @@ public class PortletSessionStore implements ISessionStore
 			RequestLogger logger = application.getRequestLogger();
 			if (logger != null)
 			{
-				Object value = httpSession.getAttribute(attributeName);
+				Object value = httpSession.getAttribute(attributeName,SCOPE);
 				if (value != null)
 				{
 					logger.objectRemoved(value);
 				}
 			}
-			httpSession.removeAttribute(attributeName);
+			httpSession.removeAttribute(attributeName,SCOPE);
 		}
 	}
 
