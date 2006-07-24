@@ -1,10 +1,10 @@
 /*
-* Wicket Ajax Autocomplete
-* Licensed under the Apache License, Version 2.0
-* @author Janne Hietam&auml;ki
-*/
-
-function WicketAutoComplete(elementId,callbackUrl){
+ * Wicket Ajax Autocomplete
+ * Licensed under the Apache License, Version 2.0
+ * @author Janne Hietam&auml;ki
+ */
+  
+Wicket.Ajax.AutoComplete=function(elementId,callbackUrl){
     var KEY_BACKSPACE=8;
     var KEY_TAB=9;
     var KEY_ENTER=13;
@@ -13,6 +13,9 @@ function WicketAutoComplete(elementId,callbackUrl){
     var KEY_UP=38;
     var KEY_RIGHT=39;
     var KEY_DOWN=40;
+    var KEY_SHIFT=16;
+    var KEY_CTRL=17;
+    var KEY_ALT=18;    
     
     var selected=-1;
     var elementCount=0;
@@ -21,11 +24,12 @@ function WicketAutoComplete(elementId,callbackUrl){
     
     function initialize(){
         var obj=wicketGet(elementId);
+
         obj.onblur=function(event){
-        	if(mouseactive==1)return false;        
-            hideAutoComplete();
+    		if(mouseactive==1)return false;
+          	hideAutoComplete();
         }
-        
+       
         obj.onkeydown=function(event){
             switch(wicketKeyCode(getEvent(event))){
                 case KEY_UP:
@@ -52,13 +56,14 @@ function WicketAutoComplete(elementId,callbackUrl){
                 case KEY_ESC:
             	    hideAutoComplete();
                 	return killEvent(event);
-                break;
+               		break;
                 case KEY_ENTER:
 	                if(selected>-1){
     	                obj.value=getSelectedValue();
         	            hideAutoComplete();
+	                	return killEvent(event);
             	    }
-                	return killEvent(event);
+            	    return true;
                 break;
                 default:
             }
@@ -74,6 +79,9 @@ function WicketAutoComplete(elementId,callbackUrl){
                 case KEY_TAB:
                 case KEY_RIGHT:
                 case KEY_LEFT:
+                case KEY_SHIFT:
+                case KEY_ALT:
+                case KEY_CTRL:
                 break;
                 default:
     	            updateChoices();
@@ -135,36 +143,10 @@ function WicketAutoComplete(elementId,callbackUrl){
     
     function updateChoices(){
         selected=-1;
-        var transport = wicketAjaxGetTransport();
-        if (transport == null){
-            if (wicketAjaxDebugEnabled()) {
-                var log=WicketAjaxDebug.logError;
-                log("Ajax-transport not available!");
-            }
-            return false;
-        }
-        
-        var value=wicketGet(elementId).value;
-        transport.open("GET",callbackUrl+"&random="+Math.random()+"&q="+processValue(value),true);
-        transport.onreadystatechange = function () {
-            if (transport.readyState == 4) {
-                if (transport.status == 200) {
-                    if (wicketAjaxDebugEnabled()) {
-                        var log=WicketAjaxDebug.logInfo;
-                        log("received ajax autocomplete response. "+transport.responseText.length+" characters.");
-                        log("elementId="+getMenuId());
-                        log(transport.responseText);
-                    }
-                    doUpdateChoices(transport.responseText);
-                    } else {
-                    if (wicketAjaxDebugEnabled()) {
-                        var log=WicketAjaxDebug.logError;
-                        log("received ajax response with code: "+transport.status);
-                    }
-                }
-            }
-        };
-        transport.send(null);
+
+        var value = wicketGet(elementId).value;
+       	var request = new Wicket.Ajax.Request(callbackUrl+"&q="+processValue(value), doUpdateChoices, false, true, false, "wicket-autocomplete|d");
+       	request.get();       	
     }
 
     function processValue(param) {
@@ -210,7 +192,8 @@ function WicketAutoComplete(elementId,callbackUrl){
         element.innerHTML=resp;
         if(element.firstChild && element.firstChild.childNodes) {
             elementCount=element.firstChild.childNodes.length;
-		    for(var i=0;i<elementCount;i++){
+        
+            for(var i=0;i<elementCount;i++){
 	            var node=element.firstChild.childNodes[i];
        	
 				node.onclick = function(event){
@@ -228,13 +211,14 @@ function WicketAutoComplete(elementId,callbackUrl){
 				node.onmouseout = function(event){
 					mouseactive=0;
 				}
-       		}
+       		}        
         } else {
             elementCount=0;
         }
+        
         if(elementCount>0){
             showAutoComplete();
-            } else {
+        } else {
             hideAutoComplete();
         }
         render();
@@ -251,7 +235,7 @@ function WicketAutoComplete(elementId,callbackUrl){
         }
         return stripHTML(value);
     }
-    
+
     function getElementIndex(element) {
 		for(var i=0;i<element.parentNode.childNodes.length;i++){
 	        var node=element.parentNode.childNodes[i];
@@ -268,6 +252,7 @@ function WicketAutoComplete(elementId,callbackUrl){
         var element= getAutocompleteMenu();
         for(var i=0;i<elementCount;i++){
             var node=element.firstChild.childNodes[i];
+
             var classNames = node.className.split(" ");
             for (var j=0; j<classNames.length; j++) {
                 if (classNames[j] == 'selected') {
@@ -283,19 +268,20 @@ function WicketAutoComplete(elementId,callbackUrl){
         }
     }
     
-       function isVisible(obj) {
-                var value = obj.style.visibility;
-                if (!value) {
-                        if (document.defaultView && typeof(document.defaultView.getComputedStyle)=="function") {
-                                value = document.defaultView.getComputedStyle(obj,"").getPropertyValue("visibility");
-                        } else if (obj.currentStyle) {
-                                value = obj.currentStyle.visibility;
-                        } else {
-                                value = '';
-                        }
-                }
-                return value;
-        }
+    
+    function isVisible(obj) {
+		var value = obj.style.visibility;
+		if (!value) {
+			if (document.defaultView && typeof(document.defaultView.getComputedStyle)=="function") {
+				value = document.defaultView.getComputedStyle(obj,"").getPropertyValue("visibility");
+			} else if (obj.currentStyle) {
+				value = obj.currentStyle.visibility;
+			} else {
+				value = '';
+			}
+		}
+		return value;
+	}
         
     function hideShowCovered(){
         if (!/msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent)) {
@@ -327,15 +313,15 @@ function WicketAutoComplete(elementId,callbackUrl){
                         tag.wicket_element_visibility=isVisible(tag);
                     }
                     tag.style.visibility=tag.wicket_element_visibility;
-                 } else {
-                	 if (!tag.wicket_element_visibility) {
-                    	tag.wicket_element_visibility=isVisible(tag);
-                     }
+				} else {
+					if (!tag.wicket_element_visibility) {
+						tag.wicket_element_visibility=isVisible(tag);
+					}
                     tag.style.visibility = "hidden";
                 }
             }
         }
     }
-        
+
     initialize();
 } 
