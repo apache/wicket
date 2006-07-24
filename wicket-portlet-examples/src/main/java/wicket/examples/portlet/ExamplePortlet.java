@@ -72,10 +72,9 @@ public class ExamplePortlet extends PortletPage
 				setResponsePage(new ExamplePortlet2(ExamplePortlet.this));
 			}
 		});
-
+		
 		add(new Image("image",new ResourceReference(ExamplePortlet.class,"wicket-logo.png")));
 		/*
-		 TODO: Dynamic resources are not yet supported
 		add(new Image("image", new RenderedDynamicImageResource(100, 100)
 		{
 			protected boolean render(Graphics2D graphics)
