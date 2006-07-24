@@ -262,6 +262,13 @@
 				<type>jar</type>
 				<optional>true</optional>
 			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring</artifactId>
+				<version>1.2.6</version>                       
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -286,6 +293,34 @@
 			<artifactId>log4j</artifactId>
 		</dependency>
 	</dependencies>
+	<profiles> 
+		<profile> 
+			<id>jdk1.4</id> 
+			<activation> 
+				<jdk>1.4</jdk> 
+			</activation> 
+			<modules> 
+				<module>../wicket</module>
+				<module>../wicket-extensions</module>
+				<module>../wicket-examples</module>
+				<module>../wicket-spring</module>
+				<module>../wicket-spring-examples</module>
+				<module>../wicket-quickstart</module>
+			</modules> 
+		</profile> 
+		<profile> 
+			<id>jdk1.5</id> 
+			<activation> 
+				<jdk>1.5</jdk> 
+			</activation> 
+			<modules> 
+				<module>../wicket-spring-annot</module>
+				<module>../wicket-spring-annot-examples</module>
+				<module>../wicket-auth-roles</module> 
+				<module>../wicket-auth-roles-examples</module> 
+			</modules> 
+		</profile> 
+	</profiles> 
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -293,6 +328,23 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.0.1</version>
+					<configuration>
+						<appendAssemblyId>false</appendAssemblyId>
+						<descriptors>
+							<descriptor>src/assembly/bin.xml</descriptor>
+						</descriptors>
+						<finalName>${artifactId}-${version}</finalName>
+						<outputDirectory>target/distributions</outputDirectory>
+						<workDirectory>target/assembly/work</workDirectory>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<configuration>
+						<templateDirectory>${basedir}/src/site/template/</templateDirectory>
+						<template>wicket-site.vm</template>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
