@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.extensions.util.resource;
+package wicket.util.resource;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -25,8 +25,6 @@ import wicket.Application;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.SharedResources;
-import wicket.util.resource.AbstractStringResourceStream;
-import wicket.util.resource.IResourceStream;
 
 /**
  * A resource (reference) factory that takes a TextTemplate and generates shared

@@ -16,11 +16,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.extensions.util.resource;
+package wicket.util.resource;
 
 import java.util.Map;
 
-import wicket.util.resource.AbstractStringResourceStream;
 import wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**

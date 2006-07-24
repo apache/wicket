@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.extensions.util.resource;
+package wicket.util.resource;
 
 import wicket.util.string.JavascriptUtils;
 
@@ -41,7 +41,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	}
 
 	/**
-	 * @see wicket.extensions.util.resource.TextTemplateDecorator#getBeforeTemplateContents()
+	 * @see wicket.util.resource.TextTemplateDecorator#getBeforeTemplateContents()
 	 */
 	@Override
 	public String getBeforeTemplateContents()
@@ -50,7 +50,7 @@ public final class JavaScriptTemplate extends TextTemplateDecorator
 	}
 
 	/**
-	 * @see wicket.extensions.util.resource.TextTemplateDecorator#getAfterTemplateContents()
+	 * @see wicket.util.resource.TextTemplateDecorator#getAfterTemplateContents()
 	 */
 	@Override
 	public String getAfterTemplateContents()

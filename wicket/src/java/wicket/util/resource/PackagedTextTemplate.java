@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.extensions.util.resource;
+package wicket.util.resource;
 
 import java.io.IOException;
 import java.util.Map;
@@ -26,8 +26,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.lang.Packages;
-import wicket.util.resource.IResourceStream;
-import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
 import wicket.util.string.interpolator.MapVariableInterpolator;
 

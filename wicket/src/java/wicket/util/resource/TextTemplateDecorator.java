@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.extensions.util.resource;
+package wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
 
 /**
@@ -59,7 +58,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @return the contents decorated with {@link #getBeforeTemplateContents()}
 	 *         and {@link #getAfterTemplateContents()}.
-	 * @see wicket.extensions.util.resource.TextTemplate#asString()
+	 * @see wicket.util.resource.TextTemplate#asString()
 	 */
 	@Override
 	public String asString()
@@ -74,7 +73,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	/**
 	 * @return the contents decorated with {@link #getBeforeTemplateContents()}
 	 *         and {@link #getAfterTemplateContents()}.
-	 * @see wicket.extensions.util.resource.TextTemplate#asString(java.util.Map)
+	 * @see wicket.util.resource.TextTemplate#asString(java.util.Map)
 	 */
 	@Override
 	public String asString(Map variables)
@@ -207,7 +206,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	}
 
 	/**
-	 * @see wicket.extensions.util.resource.TextTemplate#getString()
+	 * @see wicket.util.resource.TextTemplate#getString()
 	 */
 	@Override
 	public String getString()
