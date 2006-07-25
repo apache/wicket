@@ -30,6 +30,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.Component;
 import wicket.WicketRuntimeException;
@@ -44,37 +47,40 @@ import wicket.util.io.ByteCountingOutputStream;
  */
 public final class Objects
 {
-	private static final class ReplaceObjectInputStream extends ObjectInputStream
-	{
-		private HashMap<String, Object> replacedComponents;
+	/** Log for reporting. */
+	private static final Log log = LogFactory.getLog(Objects.class);
 
-		private ReplaceObjectInputStream(InputStream in, HashMap<String, Object> replacedComponents)
-				throws IOException
+	private static class ClassRecordingObjectInputStream extends ObjectInputStream
+	{
+		private final HashMap<String, Class> usedClasses;
+
+		/**
+		 * Construct.
+		 * @param in
+		 * @param classes 
+		 * @throws IOException
+		 */
+		public ClassRecordingObjectInputStream(InputStream in, HashMap<String, Class> classes) throws IOException
 		{
 			super(in);
-			this.replacedComponents = replacedComponents;
+			this.usedClasses = classes;
 			enableResolveObject(true);
 		}
-
-		@Override
-		protected Object resolveObject(Object obj) throws IOException
-		{
-			Object replaced = replacedComponents.get(obj);
-			if (replaced != null)
-			{
-				return replaced;
-			}
-			return super.resolveObject(obj);
-		}
-
-		// This overide is required to resolve classess inside in different
-		// bundle, i.e.
-		// The classess can be resolved by OSGI classresolver implementation
+		
 		@Override
 		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
 				ClassNotFoundException
 		{
 			String className = desc.getName();
+			Class clzz = usedClasses.get(className);
+			if(clzz != null)
+			{
+				return clzz;
+			}
+			else
+			{
+				log.debug("No Class  found for " + className + " trying through IClassResolver");
+			}
 			Application application = Application.get();
 			IApplicationSettings applicationSettings = application.getApplicationSettings();
 			IClassResolver classResolver = applicationSettings.getClassResolver();
@@ -98,17 +104,72 @@ public final class Objects
 			return candidate;
 		}
 	}
-
-	private static final class ReplaceObjectOutputStream extends ObjectOutputStream
+	
+	private static class ClassRecordingObjectOutputStream extends ObjectOutputStream
 	{
-		private HashMap<String, Object> replacedComponents;
 
-		private ReplaceObjectOutputStream(OutputStream out,
-				HashMap<String, Object> replacedComponents) throws IOException
+		private HashMap<String, Class> usedClasses;
+		/**
+		 * Construct.
+		 * @param out
+		 * @throws IOException
+		 */
+		public ClassRecordingObjectOutputStream(OutputStream out) throws IOException
 		{
 			super(out);
+			usedClasses = new HashMap<String, Class>();
+			enableReplaceObject(true);			
+		}
+		
+		@Override
+		protected void writeClassDescriptor(ObjectStreamClass desc) throws IOException
+		{
+			usedClasses.put(desc.getName(), desc.forClass());
+			super.writeClassDescriptor(desc);
+		}
+		
+		/**
+		 * @return The used classes that are recorded.
+		 */
+		public HashMap<String, Class> getUsedClasses()
+		{
+			return usedClasses;
+		}
+	}
+	
+	private static final class ReplaceObjectInputStream extends ClassRecordingObjectInputStream
+	{
+		private HashMap<String, Component> replacedComponents;
+
+		private ReplaceObjectInputStream(InputStream in, HashMap<String, Class> classLoaders,HashMap<String, Component> replacedComponents)
+				throws IOException
+		{
+			super(in,classLoaders);
 			this.replacedComponents = replacedComponents;
-			enableReplaceObject(true);
+		}
+
+		@Override
+		protected Object resolveObject(Object obj) throws IOException
+		{
+			Object replaced = replacedComponents.get(obj);
+			if (replaced != null)
+			{
+				return replaced;
+			}
+			return super.resolveObject(obj);
+		}
+
+
+	}
+
+	private static final class ReplaceObjectOutputStream extends ClassRecordingObjectOutputStream
+	{
+		private HashMap<String, Component> replacedComponents;
+
+		private ReplaceObjectOutputStream(OutputStream out) throws IOException
+		{
+			super(out);
+			this.replacedComponents = new HashMap<String, Component> ();
 		}
 
 		@Override
@@ -116,13 +177,21 @@ public final class Objects
 		{
 			if (obj instanceof Component)
 			{
-				String name = ((Component)obj).getPath();
-				replacedComponents.put(name, obj);
+				Component component = (Component)obj;
+				String name = component.getPath();
+				replacedComponents.put(name, component);
 				return name;
 			}
 			return super.replaceObject(obj);
 		}
 
+		/**
+		 * @return The replaced components as String->Component
+		 */
+		public HashMap<String, Component> getReplacedComponents()
+		{
+			return replacedComponents;
+		}
 
 	}
 
@@ -357,11 +426,10 @@ public final class Objects
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				final HashMap<String, Object> replacedObjects = new HashMap<String, Object>();
-				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
+				ReplaceObjectOutputStream oos = new ReplaceObjectOutputStream(out);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()), replacedObjects);
+						.toByteArray()),oos.getUsedClasses(),oos.getReplacedComponents() );
 				return (T)ois.readObject();
 			}
 			catch (ClassNotFoundException e)
@@ -397,45 +465,10 @@ public final class Objects
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
-				ObjectOutputStream oos = new ObjectOutputStream(out);
+				ClassRecordingObjectOutputStream oos = new ClassRecordingObjectOutputStream(out);
 				oos.writeObject(object);
-				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()))
-				{
-					// This overide is required to resolve classess inside in
-					// different
-					// bundle, i.e.
-					// The classess can be resolved by OSGI classresolver
-					// implementation
-					@Override
-					protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
-							ClassNotFoundException
-					{
-						String className = desc.getName();
-						Application application = Application.get();
-						IApplicationSettings applicationSettings = application
-								.getApplicationSettings();
-						IClassResolver classResolver = applicationSettings.getClassResolver();
-
-						Class candidate = null;
-						try
-						{
-							candidate = classResolver.resolveClass(className);
-							if (candidate == null)
-							{
-								candidate = super.resolveClass(desc);
-							}
-						}
-						catch (WicketRuntimeException ex)
-						{
-							if (ex.getCause() instanceof ClassNotFoundException)
-							{
-								throw (ClassNotFoundException)ex.getCause();
-							}
-						}
-						return candidate;
-					}
-				};
+				ClassRecordingObjectInputStream ois = new ClassRecordingObjectInputStream(new ByteArrayInputStream(out.toByteArray()),
+						oos.getUsedClasses());
 				return (T)ois.readObject();
 			}
 			catch (ClassNotFoundException e)
