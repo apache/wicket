@@ -188,5 +188,14 @@ public class LinksPage extends BasePage
 				};
 			};
 		};
+
+		new AjaxLink(this, "set-response-page")
+		{
+			@SuppressWarnings("unchecked")
+			public void onClick(AjaxRequestTarget target)
+			{
+				setResponsePage(LinksPage.class);
+			}
+		};
 	}
 }
