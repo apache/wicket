@@ -163,7 +163,7 @@ public class PortletSessionStore implements ISessionStore
 	 * 
 	 * @param request
 	 * 
-	 * @return The underlying HttpSession object.
+	 * @return The underlying PortletSession object.
 	 */
 	protected final PortletSession getPortletSession(WicketPortletRequest request)
 	{
@@ -189,7 +189,7 @@ public class PortletSessionStore implements ISessionStore
 
 	/**
 	 * Template method that is called when the session is being detached from
-	 * the store, which typically happens when the httpsession was invalidated.
+	 * the store, which typically happens when the portlet session was invalidated.
 	 * 
 	 * @param sessionId
 	 *            The session id of the session that was invalidated.

@@ -52,6 +52,6 @@ public class PortletRenderRequestCycle extends PortletRequestCycle
 	public final IRequestCycleProcessor getProcessor()
 	{
 		PortletApplication application = (PortletApplication)getApplication();
-		return application.getRequestCycleProcessor();
+		return application.getRenderRequestCycleProcessor();
 	}
 }

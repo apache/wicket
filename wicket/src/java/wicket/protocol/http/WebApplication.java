@@ -174,6 +174,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 		return wicketServlet;
 	}
 
+	/*
+	 * Set the application key value
+	 */
+	protected final void setApplicationKey(String applicationKey)
+	{
+		this.applicationKey=applicationKey;
+	}
+	
 	/**
 	 * @see wicket.Application#getApplicationKey()
 	 */
@@ -670,7 +678,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param sessionId
 	 *            The session id that was destroyed
 	 */
-	void sessionDestroyed(String sessionId)
+	public void sessionDestroyed(String sessionId)
 	{
 		bufferedResponses.remove(sessionId);
 
