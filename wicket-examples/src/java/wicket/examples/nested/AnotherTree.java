@@ -28,10 +28,10 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.extensions.markup.html.tree.Tree;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.tree.Tree;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 
@@ -118,7 +118,7 @@ public class AnotherTree extends Tree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.Tree#newNodePanel(MarkupContainer, java.lang.String,
+	 * @see wicket.extensions.markup.html.tree.Tree#newNodePanel(MarkupContainer, java.lang.String,
 	 *      javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override

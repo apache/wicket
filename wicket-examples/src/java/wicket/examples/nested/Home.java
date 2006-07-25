@@ -27,8 +27,8 @@ import javax.swing.tree.TreeModel;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.extensions.markup.html.tree.Tree;
 import wicket.markup.html.link.Link;
-import wicket.markup.html.tree.Tree;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case

@@ -29,9 +29,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
+import wicket.extensions.markup.html.tree.Tree;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.tree.Tree;
 
 /**
  * A customized tree implementation, with custom images for nodes.
@@ -65,7 +65,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.Tree#getNodeImage(MarkupContainer,
+	 * @see wicket.extensions.markup.html.tree.Tree#getNodeImage(MarkupContainer,
 	 *      javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
@@ -98,7 +98,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.Tree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.extensions.markup.html.tree.Tree#getNodeLabel(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
 	protected String getNodeLabel(DefaultMutableTreeNode node)
@@ -108,7 +108,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.extensions.markup.html.tree.Tree#junctionLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
 	protected void junctionLinkClicked(DefaultMutableTreeNode node)
@@ -118,7 +118,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see wicket.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.extensions.markup.html.tree.Tree#nodeLinkClicked(javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
 	protected void nodeLinkClicked(DefaultMutableTreeNode node)
