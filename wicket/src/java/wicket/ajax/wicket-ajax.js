@@ -22,7 +22,8 @@ Function.prototype.bind = function(object) {
 
 // Wicket Namespace
 
-var Wicket = { }
+if (typeof(Wicket) == "undefined")
+	Wicket = { };
 
 Wicket.emptyFunction = function() { };
 
