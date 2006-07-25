@@ -16,7 +16,8 @@ public abstract class AbstractColumn implements IColumn
 	private ColumnLocation location;
 	private boolean visible = true;
 	private String header;
-	
+	private TreeTable treeTable = null;
+			
 	/**
 	 * Creates the tree column.
 	 * 
@@ -26,10 +27,28 @@ public abstract class AbstractColumn implements IColumn
 	 * @param header
 	 * 			Header caption
 	 */
-	public AbstractColumn (ColumnLocation location, String header)
+	public AbstractColumn(ColumnLocation location, String header)
 	{
 		this.location = location;
 		this.header = header;		
+	}
+	
+	/**
+	 * @see IColumn#setTreeTable(TreeTable)
+	 */
+	public void setTreeTable(TreeTable treeTable) 
+	{
+		this.treeTable = treeTable;
+	}
+	
+	/**
+	 * Returns the tree table that this columns belongs to. 
+	 * If you call this method from constructor it will return null, as the
+	 * column is constructed before the tree is.
+	 */
+	protected TreeTable getTreeTable() 
+	{
+		return treeTable;
 	}
 	
 	/**

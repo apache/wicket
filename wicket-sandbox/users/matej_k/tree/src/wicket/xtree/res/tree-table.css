@@ -26,11 +26,31 @@ div.wicket-tree-table span.plus,
 div.wicket-tree-table span.minus,
 div.wicket-tree-table span.corner,
 div.wicket-tree-table span.indent-line {
-	float: left;
 	width: 18px;
+	float: left;
+}
+
+div.wicket-tree-table span.junction,
+div.wicket-tree-table span.junction-last,
+div.wicket-tree-table span.plus,
+div.wicket-tree-table span.minus,
+div.wicket-tree-table span.corner,
+div.wicket-tree-table span.indent-line,
+div.wicket-tree-table div.row,
+div.wicket-tree-table div.row-selected,
+div.wicket-tree-table div.a_,	
+div.wicket-tree-table span.b_,
+div.wicket-tree-table span.b_ span.c_ {
 	height: 1.5em;	
 	min-height: 18px;
 }
+
+div.wicket-tree-table div.row,
+div.wicket-tree-table div.row-selected {
+	/* explorer line-hiding fix */
+	_background-position: 0em 1.44em;
+}
+
 
 div.wicket-tree-table span.junction,
 div.wicket-tree-table span.junction-last {
@@ -83,9 +103,6 @@ div.wicket-tree-table img {
 	width: 18px; height: 18px;
 }
 
-div.wicket-tree-table a {
-	-moz-outline: none;
-}
 
 div.wicket-tree-table span.indent-blank {
 	width: 18px;
@@ -106,12 +123,31 @@ div.wicket-tree-table div.row-selected {
 	_width: 100%; /* ie float container height bug */
 }
 
+div.wicket-tree-table div.row,
+div.wicket-tree-table div.row-selected,
+div.wicket-tree-table div.a_,	
+div.wicket-tree-table span.b_,
+div.wicket-tree-table span.b_ span.c_ {
+	overflow: hidden;
+	width: auto;
+}
+
+
 div.wicket-tree-table div.row-selected  {
 	background-color: #E0E8FF;
 }
 
+div.wicket-tree-table a {
+	-moz-outline: none;
+}
+
+div.wicket-tree-table div.row a.node-link:active,
+div.wicket-tree-table div.row-selected a.node-link:active {
+
+}
+
 div.wicket-tree-table div.row-selected a.node-link span {
-	font-weight: bold;
+	font-weight: bold;	
 }
 
 div.wicket-tree-table span.text {
@@ -120,31 +156,13 @@ div.wicket-tree-table span.text {
 	display: block;
 }
 
-div.wicket-tree-table div.row,
-div.wicket-tree-table div.row-selected,
-div.wicket-tree-table div.a_,	
-div.wicket-tree-table span.b_,
-div.wicket-tree-table span.b_ span.c_ {
-	overflow: hidden;
-	width: auto;
-	height: 1.5em;	
-	min-height: 18px;
-}
-
-div.wicket-tree-table div.row /*, 
-div.wicket-tree-table div.row-selected,
-div.wicket-tree-table div.row-selected span.b_ */ {
+div.wicket-tree-table div.row , 
+div.wicket-tree-table div.row-selected
+/* div.wicket-tree-table div.row-selected span.b_ */ {
 	background-image: url("dotted-line.png");
 	background-repeat: repeat-x;
 	background-position: bottom;
 }
-
-div.wicket-tree-table div.row,
-div.wicket-tree-table div.row-selected {
-	/* explorer line-hiding fix */
-	_background-position: 0em 1.44em;
-}
-
 
 div.wicket-tree-table span.b_ {
 	float: left;

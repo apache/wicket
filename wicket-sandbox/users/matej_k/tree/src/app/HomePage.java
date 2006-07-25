@@ -17,7 +17,6 @@ import wicket.xtree.DefaultAbstractTree;
 import wicket.xtree.table.ColumnLocation;
 import wicket.xtree.table.IColumn;
 import wicket.xtree.table.PropertyTreeColumn;
-import wicket.xtree.table.StringColumn;
 import wicket.xtree.table.TreeTable;
 import wicket.xtree.table.ColumnLocation.Alignment;
 import wicket.xtree.table.ColumnLocation.Unit;
@@ -71,6 +70,8 @@ public class HomePage extends WebPage {
 		
 		DefaultAbstractTree tree = new TreeTable(form, "tree", treeModel, columns);
 			//new SimpleTree(this, "tree", treeModel);
+		
+		tree.setRootLess(true);
 		
 		//tree.getTreeState().setAllowSelectMultiple(true);
 //		//tree.getTreeState().collapseAll();

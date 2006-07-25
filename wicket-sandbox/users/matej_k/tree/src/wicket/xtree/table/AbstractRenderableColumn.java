@@ -35,7 +35,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn {
 	/**
 	 * @see IColumn#createCell(TreeTable, TreeNode, int)
 	 */
-	public IRenderable createCell(TreeTable treeTable, TreeNode node, int level) 
+	public IRenderable createCell(TreeNode node, int level) 
 	{
 		return new IRenderable() 
 		{

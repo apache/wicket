@@ -15,6 +15,14 @@ import wicket.MarkupContainer;
 public interface IColumn extends Serializable {
 
 	/**
+	 * Sets the tree table this cell belongs to. This function is guaranteed 
+	 * to be called before any other function. The treeTable instance
+	 * is fully initialized.
+	 *  
+	 */
+	public void setTreeTable(TreeTable treeTable);
+	
+	/**
 	 * Returns a location of this columns. Location specifies how is column
 	 * aligned and what is it's size.
 	 * <p>
@@ -56,7 +64,7 @@ public interface IColumn extends Serializable {
 	 * @param level
 	 * 			Convenience parameter that indicates how deep the node is in hierarchy
 	 */
-	public IRenderable createCell(TreeTable treeTable, TreeNode node, int level);
+	public IRenderable createCell(TreeNode node, int level);
 	
 	/**
 	 * This method is used to populate the cell for given node in case when

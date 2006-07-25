@@ -207,5 +207,5 @@ class MiddleColumnsView extends WebMarkupContainer {
 		{
 			markupStream.skipComponent();
 		}		
-	}
+	}	
 }

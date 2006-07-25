@@ -73,11 +73,31 @@ public class TreeTable extends DefaultAbstractTree
 			throw new IllegalArgumentException("At least one column in TreeTable must be derived from AbstractTreeColumn.");
 		}
 	
-		this.columns = columns;
-		
-		addHeader();		
+		this.columns = columns;					
 	}
 
+	/**
+	 * @see Component#onAttach()
+	 */
+	@Override
+	protected void onAttach() 
+	{						
+		// has the header been added yet?
+		if (get("sideColumns") == null)
+		{
+			// no. initialize columns first
+			for (IColumn column : columns)
+			{
+				column.setTreeTable(this);
+			}
+			
+			// add the tree table header 
+			addHeader();
+		}
+		
+		super.onAttach();
+	}
+	
 	// columns of the TreeTable
 	private IColumn columns[];
 	
@@ -134,7 +154,7 @@ public class TreeTable extends DefaultAbstractTree
 			{
 				Component component;
 				// first try to create a renderable
-				IRenderable renderable = column.createCell(this, node, level);			
+				IRenderable renderable = column.createCell(node, level);			
 				
 				if (renderable == null)
 				{
@@ -160,7 +180,7 @@ public class TreeTable extends DefaultAbstractTree
 			{
 				Component component;
 				// first try to create a renderable
-				IRenderable renderable = column.createCell(this, node, level);			
+				IRenderable renderable = column.createCell(node, level);			
 				
 				if (renderable == null)
 				{

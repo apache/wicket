@@ -166,11 +166,15 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			{				
 				TreeNode rootNode = (TreeNode) getModelObject().getRoot();
 				if (rootNode != null)
-				{
-					rootItem = createTreeItem(rootNode, 0);
+				{					
 					if (isRootLess())
 					{
+						rootItem = createTreeItem(rootNode, -1);
 						rootItem.setVisible(false);
+					}
+					else
+					{
+						rootItem = createTreeItem(rootNode, 0);
 					}
 					buildItemChildren(rootItem);
 				}
@@ -219,8 +223,8 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			
 			nodeToItemMap.put(node, this);			
 			this.level = level;
-			setOutputMarkupId(true);
-
+			setOutputMarkupId(true);			
+			
 			populateTreeItem(this, level);
 		}	
 		

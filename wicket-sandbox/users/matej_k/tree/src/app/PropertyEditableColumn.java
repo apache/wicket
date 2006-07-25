@@ -8,7 +8,6 @@ import wicket.model.PropertyModel;
 import wicket.xtree.table.ColumnLocation;
 import wicket.xtree.table.IRenderable;
 import wicket.xtree.table.PropertyRenderableColumn;
-import wicket.xtree.table.TreeTable;
 
 public class PropertyEditableColumn extends PropertyRenderableColumn 
 {
@@ -25,11 +24,11 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	}
 	
 	@Override
-	public IRenderable createCell(TreeTable treeTable, TreeNode node, int level) 
+	public IRenderable createCell(TreeNode node, int level) 
 	{
-		if (treeTable.getTreeState().isNodeSelected(node))
+		if (getTreeTable().getTreeState().isNodeSelected(node))
 			return null;
 		else
-			return super.createCell(treeTable, node, level);
+			return super.createCell(node, level);
 	}
 }
