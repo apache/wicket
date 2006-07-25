@@ -40,6 +40,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
+import wicket.model.IWrapModel;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.locator.IResourceStreamLocator;
 import wicket.util.string.Strings;
@@ -641,6 +642,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 				public Object component(Component component)
 				{
 					IModel compModel = component.getModel();
+					if (compModel instanceof IWrapModel)
+					{
+						compModel = ((IWrapModel)compModel).getNestedModel();
+					}
 					if (compModel == previous)
 					{
 						component.setModel(null);

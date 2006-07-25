@@ -1998,7 +1998,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		// state change?
 		if (prevModel instanceof IWrapModel)
 		{
-			prevModel = model.getNestedModel();
+			prevModel = prevModel.getNestedModel();
 		}
 
 		// Change model
