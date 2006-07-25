@@ -36,7 +36,6 @@ public class ViewBook extends WebPage
 	 */
 	public ViewBook(Book book)
 	{
-		setStatelessHint(true);
 		new Label(this, "id", new PropertyModel(book, "id"));
 		new Label(this, "name", new PropertyModel(book, "name"));
 		new BookmarkablePageLink(this, "link", CreateBook.class);
