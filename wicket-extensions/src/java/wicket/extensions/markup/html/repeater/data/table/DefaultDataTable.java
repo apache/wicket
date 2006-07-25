@@ -89,11 +89,6 @@ public class DefaultDataTable<T> extends DataTable<T>
 	{
 		super(parent, id, columns, dataProvider, rowsPerPage);
 
-		/*
-		 * TODO General: ivaynberg: this is rediculous, would be better to have
-		 * a onPopulateTopToolbars() callback
-		 */
-
 		addTopToolbar(new IToolbarFactory()
 		{
 
