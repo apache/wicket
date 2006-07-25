@@ -149,7 +149,7 @@ public class LinksPage extends BasePage
 				};
 			};
 		});
-		
+
 		add(new AjaxLink("failure-link")
 		{
 			public void onClick(AjaxRequestTarget target)
@@ -177,6 +177,14 @@ public class LinksPage extends BasePage
 					}
 				};
 			};
+		});
+
+		add(new AjaxLink("set-response-page")
+		{
+			public void onClick(AjaxRequestTarget target)
+			{
+				setResponsePage(LinksPage.class);
+			}
 		});
 	}
 }
