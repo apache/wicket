@@ -4,10 +4,10 @@ import javax.swing.tree.TreeNode;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.markup.html.tree.table.ColumnLocation;
+import wicket.markup.html.tree.table.IRenderable;
+import wicket.markup.html.tree.table.PropertyRenderableColumn;
 import wicket.model.PropertyModel;
-import wicket.xtree.table.ColumnLocation;
-import wicket.xtree.table.IRenderable;
-import wicket.xtree.table.PropertyRenderableColumn;
 
 public class PropertyEditableColumn extends PropertyRenderableColumn 
 {

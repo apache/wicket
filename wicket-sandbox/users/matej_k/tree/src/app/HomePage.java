@@ -13,13 +13,13 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
-import wicket.xtree.DefaultAbstractTree;
-import wicket.xtree.table.ColumnLocation;
-import wicket.xtree.table.IColumn;
-import wicket.xtree.table.PropertyTreeColumn;
-import wicket.xtree.table.TreeTable;
-import wicket.xtree.table.ColumnLocation.Alignment;
-import wicket.xtree.table.ColumnLocation.Unit;
+import wicket.markup.html.tree.DefaultAbstractTree;
+import wicket.markup.html.tree.table.ColumnLocation;
+import wicket.markup.html.tree.table.IColumn;
+import wicket.markup.html.tree.table.PropertyTreeColumn;
+import wicket.markup.html.tree.table.TreeTable;
+import wicket.markup.html.tree.table.ColumnLocation.Alignment;
+import wicket.markup.html.tree.table.ColumnLocation.Unit;
 
 public class HomePage extends WebPage {
 
