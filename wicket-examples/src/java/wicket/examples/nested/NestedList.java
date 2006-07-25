@@ -65,6 +65,7 @@ public final class NestedList extends Panel
 		 *            a list where each element is either a string or another
 		 *            list
 		 */
+		@SuppressWarnings("unchecked")
 		public Rows(MarkupContainer parent, String name, List list)
 		{
 			super(parent, name, list);
