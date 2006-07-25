@@ -1,5 +1,9 @@
 package wicket.examples.portlet;
 
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
+import java.util.Random;
+
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
@@ -8,6 +12,8 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Page;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.image.Image;
+import wicket.markup.html.image.resource.RenderedDynamicImageResource;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
 import wicket.protocol.http.portlet.PortletPage;
@@ -34,6 +40,23 @@ public class ExamplePortlet2 extends PortletPage
 		});
 		add(new Label("windowState",new PropertyModel(this,"windowState")));
 		add(new Label("portletMode",new PropertyModel(this,"portletMode")));
+		add(new Image("image", new RenderedDynamicImageResource(100, 100)
+		{
+			protected boolean render(Graphics2D graphics)
+			{
+				// Compute random size for circle
+				final Random random = new Random();
+				int dx = Math.abs(10 + random.nextInt(80));
+				int dy = Math.abs(10 + random.nextInt(80));
+				int x = Math.abs(random.nextInt(100 - dx));
+				int y = Math.abs(random.nextInt(100 - dy));
+
+				// Draw circle with thick stroke width
+				graphics.setStroke(new BasicStroke(5));
+				graphics.drawOval(x, y, dx, dy);
+				return true;
+			}
+		}));
 	}
 		
 	protected void onSetWindowState(WindowState state){
