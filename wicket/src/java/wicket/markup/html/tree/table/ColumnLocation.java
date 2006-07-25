@@ -32,6 +32,11 @@ import java.io.Serializable;
  */
 public class ColumnLocation implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public enum Alignment
 	{
 		LEFT,
@@ -82,6 +87,7 @@ public class ColumnLocation implements Serializable {
 	
 	/**
 	 * Returns the size of a column.
+	 * @return 
 	 */
 	public int getSize() {
 		return size;

@@ -27,7 +27,16 @@ import wicket.model.Model;
 public class TreeTable extends DefaultAbstractTree 
 {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Creates the TreeTable for the given TreeModel and array of columns.
+	 * @param parent 
+	 * @param id 
+	 * @param model 
+	 * @param columns 
 	 */
 	public TreeTable(MarkupContainer parent, String id, TreeModel model, IColumn columns[]) 
 	{
@@ -37,6 +46,10 @@ public class TreeTable extends DefaultAbstractTree
 
 	/**
 	 * Creates the TreeTable for the given model and array of columns.
+	 * @param parent 
+	 * @param id 
+	 * @param model 
+	 * @param columns 
 	 */
 	public TreeTable(MarkupContainer parent, String id, IModel<TreeModel> model, IColumn columns[]) 
 	{
@@ -46,6 +59,9 @@ public class TreeTable extends DefaultAbstractTree
 
 	/**
 	 * Creates the TreeTable for the given array of columns.
+	 * @param parent 
+	 * @param id 
+	 * @param columns 
 	 */	
 	public TreeTable(MarkupContainer parent, String id, IColumn columns[]) 
 	{
@@ -56,6 +72,7 @@ public class TreeTable extends DefaultAbstractTree
 	/**
 	 * Internal initialization. Also checks if at least one of the columns
 	 * is derived from AbstractTreeColumn. 
+	 * @param columns 
 	 */
 	private void init(IColumn columns[])
 	{		
@@ -200,6 +217,11 @@ public class TreeTable extends DefaultAbstractTree
 		// that modifies row css class.
 		item.add(new AbstractBehavior() 
 		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onComponentTag(Component component, ComponentTag tag) 
 			{
@@ -220,7 +242,17 @@ public class TreeTable extends DefaultAbstractTree
 	private class TreeFragment extends Fragment 
 	{	
 		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
 		 * Constructor.
+		 * @param parent 
+		 * @param id 
+		 * @param node 
+		 * @param level 
+		 * @param renderNodeCallback 
 		 */
 		public TreeFragment(MarkupContainer<?> parent, String id, final TreeNode node, 
 				            int level, final IRenderNodeCallback renderNodeCallback) 
@@ -237,6 +269,11 @@ public class TreeTable extends DefaultAbstractTree
 			
 			new Label(nodeLink, "label", new Model<String>() 
 			{
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public String getObject() 
 				{				
@@ -253,11 +290,21 @@ public class TreeTable extends DefaultAbstractTree
 	 */
 	public static interface IRenderNodeCallback extends Serializable
 	{
+		/**
+		 * @param node
+		 * @return
+		 */
 		public String renderNode(TreeNode node);
 	}
 	
 	/**
 	 * Creates a new instance of the TreeFragment.
+	 * @param parent 
+	 * @param id 
+	 * @param node 
+	 * @param level 
+	 * @param renderNodeCallback 
+	 * @return 
 	 */	
 	protected TreeFragment createTreePanel(MarkupContainer<?> parent, String id, final TreeNode node, 
 			                               int level, IRenderNodeCallback renderNodeCallback)
@@ -283,6 +330,7 @@ public class TreeTable extends DefaultAbstractTree
 	 * 
 	 * @param callback 
 	 * 			Used to get the display string 
+	 * @return 
 	 */
 	public static Component createTreeCell(MarkupContainer<?> parent, String id, TreeNode node, int level, IRenderNodeCallback callback)
 	{

@@ -65,6 +65,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Sets whether the root of the tree should be visible. 
+	 * @param rootLess 
 	 */
 	public void setRootLess(boolean rootLess) 
 	{
@@ -217,6 +218,18 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 */
 	private class TreeItem extends WebMarkupContainer<TreeNode> 
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * @param parent
+		 * @param id
+		 * @param node
+		 * @param level
+		 */
 		public TreeItem(MarkupContainer parent, String id, final TreeNode node, int level) 
 		{			
 			super(parent, id, new Model<TreeNode>(node));
@@ -242,20 +255,32 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 		// tree item level - how deep is this item in tree
 		private int level;
 		
+		/**
+		 * @return
+		 */
 		public List<TreeItem> getChildren()
 		{
 			return children;
 		}
 		
+		/**
+		 * @return
+		 */
 		public TreeItem getParentItem() {
 			return nodeToItemMap.get(getModelObject().getParent());
 		}
 		
+		/**
+		 * @return
+		 */
 		public int getLevel()
 		{
 			return level;
 		}
 		
+		/**
+		 * @param children
+		 */
 		public void setChildren(List<TreeItem> children)
 		{
 			this.children = children;
@@ -314,6 +339,16 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 */
 	private class TreeItemContainer extends WebMarkupContainer 
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * @param parent
+		 * @param id
+		 */
 		public TreeItemContainer(MarkupContainer parent, String id) 
 		{
 			super(parent, id);
@@ -386,11 +421,16 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	 */
 	private interface IItemCallback 
 	{
+		/**
+		 * @param item
+		 */
 		public void visitItem(TreeItem item);
 	}
 
 	/**
 	 * Call the callback#visitItem method for the given item and all it's chilren.  
+	 * @param item 
+	 * @param callback 
 	 */
 	private final void visitItemAndChildren(TreeItem item, IItemCallback callback) 
 	{
@@ -400,6 +440,8 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Call the callback#visitItem method for every child of given item.
+	 * @param item 
+	 * @param callback 
 	 */
 	private final void visitItemChildren(TreeItem item, IItemCallback callback) 
 	{
@@ -414,6 +456,9 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Creates a tree item for given node.
+	 * @param node 
+	 * @param level 
+	 * @return 
 	 */
 	private final TreeItem createTreeItem(TreeNode node, int level) 
 	{
@@ -422,6 +467,10 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Creates a tree item for given node with specified id.
+	 * @param node 
+	 * @param level 
+	 * @param id 
+	 * @return 
 	 */
 	private final TreeItem createTreeItem(TreeNode node, int level, String id) 
 	{
@@ -431,6 +480,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	/**
 	 * Builds the children for given TreeItem. It recursively traverses children of it's TreeNode 
 	 * and creates TreeItem for every visible TreeNode.  
+	 * @param item 
 	 */
 	private final void buildItemChildren(TreeItem item) 
 	{
@@ -453,6 +503,9 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Builds (recursively) TreeItems for the given Iterable of TreeNodes.
+	 * @param nodes 
+	 * @param level 
+	 * @return 
 	 */
 	private final List<TreeItem> buildTreeItems(Iterable<TreeNode> nodes, int level) 
 	{
@@ -488,6 +541,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Returns the TreeState of this tree.
+	 * @return 
 	 */
 	public ITreeState getTreeState() 
 	{
@@ -537,6 +591,9 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	
 	/**
 	 * Returns the enumeration as iterable interface.
+	 * @param enumeration 
+	 * @param <T> 
+	 * @return 
 	 */
 	private final <T> Iterable<T> toIterable(final Enumeration enumeration) 
 	{
@@ -593,6 +650,8 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	/**
 	 * Invalidates single node (without children). On the next render, this node will be updated.
 	 * Node will not be rebuilt, unless forceRebuild is true. TODO Implement forceRebuild
+	 * @param node 
+	 * @param forceRebuld 
 	 */
 	private final void invalidateNode(TreeNode node, boolean forceRebuld) 
 	{
@@ -651,6 +710,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 	/**
 	 * Invalidates node and it's children. On the next render, the node and children will be updated.
 	 * Node and children will be rebuilt.
+	 * @param node 
 	 */
 	private final void invalidateNodeWithChildren(TreeNode node) 
 	{
@@ -709,6 +769,7 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 
 	/**
 	 * Returns the javascript used to delete removed elements.
+	 * @return 
 	 */
 	private String getElementsDeleteJavascript() 
 	{

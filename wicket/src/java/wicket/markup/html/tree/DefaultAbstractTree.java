@@ -57,6 +57,9 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	
 	/**
 	 * Tree constructor.
+	 * @param parent 
+	 * @param id 
+	 * @param model 
 	 */
 	public DefaultAbstractTree(MarkupContainer parent, String id, TreeModel model) 
 	{
@@ -66,6 +69,9 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Tree constructor.
+	 * @param parent 
+	 * @param id 
+	 * @param model 
 	 */
 	public DefaultAbstractTree(MarkupContainer parent, String id, IModel<TreeModel> model) 
 	{
@@ -75,6 +81,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Tree contructor.
+	 * @param parent 
+	 * @param id 
 	 */
 	public DefaultAbstractTree(MarkupContainer parent, String id) 
 	{		
@@ -126,6 +134,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		
 	/**
 	 * Returns the current type of links on tree items.
+	 * @return 
 	 */
 	public LinkType getLinkType() 
 	{
@@ -150,6 +159,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			return new Link(parent, id) 
 			{
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick() {
 					callback.onClick(null);
@@ -160,6 +174,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			return new AjaxLink(parent, id)
 			{
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target) {
 					callback.onClick(target);
@@ -170,6 +189,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			return new AjaxFallbackLink(parent, id)
 			{
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onClick(AjaxRequestTarget target) {
 					callback.onClick(target);
@@ -180,11 +204,20 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	
 	/**
 	 * Creates the icon for current node. By default uses image reference specified by {@link DefaultAbstractTree#getNodeIcon(TreeNode)}.
+	 * @param parent 
+	 * @param id 
+	 * @param node 
+	 * @return 
 	 */
 	protected WebComponent createNodeIcon(MarkupContainer parent, String id, final TreeNode node)
 	{
 		return new Image(parent, id)
 		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected ResourceReference getImageResourceReference() {
 				return getNodeIcon(node);
@@ -194,6 +227,8 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference for icon of specified tree node.
+	 * @param node 
+	 * @return 
 	 */
 	protected ResourceReference getNodeIcon(TreeNode node)
 	{
@@ -250,6 +285,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			junctionLink = createLink(parent, id, new ILinkCallback() 
 			{
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
 				public void onClick(AjaxRequestTarget target)
 				{					
 					if (isNodeExpanded(node))
@@ -269,6 +309,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 		{
 			junctionLink = new WebMarkupContainer(parent, id)
 			{
+				/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				protected void onComponentTag(ComponentTag tag) {
 					super.onComponentTag(tag);
@@ -306,6 +351,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	{		
 		return (WebMarkupContainer) new WebMarkupContainer(parent, id) 
 		{			
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onComponentTag(ComponentTag tag) {
 				super.onComponentTag(tag);
@@ -335,6 +385,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	protected MarkupContainer createIndentation(MarkupContainer parent, String id, final TreeNode node, final int level) 
 	{
 		WebMarkupContainer result = new WebMarkupContainer(parent, id) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
 				Response response = RequestCycle.get().getResponse();
@@ -381,6 +436,11 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	{
 		return createLink(parent, id, new ILinkCallback() 
 		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void onClick(AjaxRequestTarget target) {
 				getTreeState().selectNode(node, !getTreeState().isNodeSelected(node));
 				onNodeLinkClicked(target, node);
@@ -391,6 +451,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	
 	/**
 	 * Returns the resource reference of default stylesheet.
+	 * @return 
 	 */
 	protected PackageResourceReference getCSS() 
 	{
@@ -399,6 +460,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference of default tree item (not folder).
+	 * @return 
 	 */
 	protected ResourceReference getItem()
 	{
@@ -407,6 +469,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference of default open tree folder.
+	 * @return 
 	 */
 	protected ResourceReference getFolderOpen()
 	{
@@ -415,6 +478,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 
 	/**
 	 * Returns the resource reference of default closed tree folder.
+	 * @return 
 	 */
 	protected ResourceReference getFolderClosed() 
 	{

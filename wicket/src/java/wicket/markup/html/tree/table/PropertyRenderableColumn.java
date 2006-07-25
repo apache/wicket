@@ -16,6 +16,10 @@ import wicket.util.lang.PropertyResolver;
  */
 public class PropertyRenderableColumn extends AbstractRenderableColumn 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String propertyExpression;
 	private IConverter converter;
 	private Locale locale;

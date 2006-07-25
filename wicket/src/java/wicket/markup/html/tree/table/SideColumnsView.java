@@ -21,10 +21,17 @@ import wicket.markup.html.tree.table.ColumnLocation.Unit;
  */
 class SideColumnsView extends WebMarkupContainer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private TreeNode node;
 	
 	/**
 	 * Constructor.
+	 * @param parent 
+	 * @param id 
+	 * @param node 
 	 */
 	public SideColumnsView(MarkupContainer parent, String id, TreeNode node) {
 		super(parent, id);
@@ -38,6 +45,9 @@ class SideColumnsView extends WebMarkupContainer {
 
 	/**
 	 * Adds a column to be rendered.
+	 * @param column 
+	 * @param component 
+	 * @param renderable 
 	 */
 	public void addColumn(IColumn column, Component component, IRenderable renderable)
 	{

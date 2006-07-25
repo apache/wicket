@@ -39,6 +39,11 @@ public abstract class AbstractRenderableColumn extends AbstractColumn {
 	{
 		return new IRenderable() 
 		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void render(TreeNode node, Response response) 
 			{				
 				String content = getNodeValue(node);
@@ -74,12 +79,14 @@ public abstract class AbstractRenderableColumn extends AbstractColumn {
 	 * 
 	 * @param node
 	 * 			Determines the position in tree
+	 * @return 
 	 * 
 	 */
 	public abstract String getNodeValue(TreeNode node);
 	
 	/**
 	 * Sets whether the special html characters of content should be escaped. 
+	 * @param escapeContent 
 	 */
 	public void setEscapeContent(boolean escapeContent) 
 	{
@@ -88,6 +95,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn {
 
 	/**
 	 * Returns whether the special html characters of content will be escaped.
+	 * @return 
 	 */
 	public boolean isEscapeContent() 
 	{
@@ -97,6 +105,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn {
 	/**
 	 * Sets whether the content should also be visible as tooltip (html title attribute)
 	 * of the cell.
+	 * @param contentAsTooltip 
 	 */
 	public void setContentAsTooltip(boolean contentAsTooltip) {
 		this.contentAsTooltip = contentAsTooltip;
@@ -104,6 +113,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn {
 
 	/**
 	 * Returns whether the content should also be visible as tooltip of the cell.
+	 * @return 
 	 */
 	public boolean isContentAsTooltip() {
 		return contentAsTooltip;

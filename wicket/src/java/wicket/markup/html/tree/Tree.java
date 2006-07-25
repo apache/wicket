@@ -19,7 +19,15 @@ import wicket.model.Model;
 public class Tree extends DefaultAbstractTree {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Tree constructor.
+	 * @param parent 
+	 * @param id 
+	 * @param model 
 	 */
 	public Tree(MarkupContainer parent, String id, TreeModel model) {
 		super(parent, id, model);
@@ -27,6 +35,9 @@ public class Tree extends DefaultAbstractTree {
 
 	/**
 	 * Tree constructor.
+	 * @param parent 
+	 * @param id 
+	 * @param model 
 	 */
 	public Tree(MarkupContainer parent, String id, IModel<TreeModel> model) {
 		super(parent, id, model);
@@ -34,6 +45,8 @@ public class Tree extends DefaultAbstractTree {
 
 	/**
 	 * Tree constructor.
+	 * @param parent 
+	 * @param id 
 	 */
 	public Tree(MarkupContainer parent, String id) {
 		super(parent, id);
@@ -57,6 +70,11 @@ public class Tree extends DefaultAbstractTree {
 		createNodeIcon(nodeLink, "icon", node);
 		
 		new Label(nodeLink, "label", new Model<String>() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public String getObject() {				
 				return renderNode(node);
@@ -66,6 +84,11 @@ public class Tree extends DefaultAbstractTree {
 		// do distinguish between selected and unselected rows we add an behavior
 		// that modifies row css class.
 		item.add(new AbstractBehavior() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void onComponentTag(Component component, ComponentTag tag) {
 				super.onComponentTag(component, tag);
@@ -79,6 +102,8 @@ public class Tree extends DefaultAbstractTree {
 
 	/**
 	 * This method is called for every node to get it's string representation.
+	 * @param node 
+	 * @return 
 	 */
 	protected String renderNode(TreeNode node) 
 	{

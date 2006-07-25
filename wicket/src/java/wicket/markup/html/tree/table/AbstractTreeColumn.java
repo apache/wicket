@@ -41,6 +41,11 @@ public abstract class AbstractTreeColumn extends AbstractColumn {
 	{
 		return TreeTable.createTreeCell(parent, id, node, level, new TreeTable.IRenderNodeCallback() 
 		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public String renderNode(TreeNode node) 
 			{
 				return AbstractTreeColumn.this.renderNode(node);
@@ -57,6 +62,8 @@ public abstract class AbstractTreeColumn extends AbstractColumn {
 	
 	/**
 	 * Returns the string representation of the node. 
+	 * @param node 
+	 * @return 
 	 */
 	public abstract String renderNode(TreeNode node);
 }

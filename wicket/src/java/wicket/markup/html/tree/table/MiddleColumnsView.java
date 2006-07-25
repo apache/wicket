@@ -25,6 +25,10 @@ import wicket.response.NullResponse;
  */
 class MiddleColumnsView extends WebMarkupContainer {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private TreeNode node;
 	
 	/**

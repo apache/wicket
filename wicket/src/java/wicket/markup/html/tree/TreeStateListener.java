@@ -10,11 +10,13 @@ public interface TreeStateListener
 {
 	/**
 	 * Fired when given node is expanded.
+	 * @param node 
 	 */
 	public void nodeExpanded(TreeNode node);
 
 	/**
 	 * Fired when given node is collapsed.
+	 * @param node 
 	 */
 	public void nodeCollapsed(TreeNode node);
 
@@ -30,11 +32,13 @@ public interface TreeStateListener
 
 	/**
 	 * Fired when given node gets selected. 
+	 * @param node 
 	 */
 	public void nodeSelected(TreeNode node);
 
 	/**
 	 * Fired when given node gets unselected.
+	 * @param node 
 	 */
 	public void nodeUnselected(TreeNode node);	
 }

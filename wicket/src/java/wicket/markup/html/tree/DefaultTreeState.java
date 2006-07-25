@@ -18,6 +18,11 @@ import javax.swing.tree.TreeNode;
  */
 public class DefaultTreeState implements ITreeState, Serializable 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// set of nodes which are collapsed or expanded (depends on nodesCollapsed veriable)
 	private Set<TreeNode> nodes = new HashSet<TreeNode>();
 	
