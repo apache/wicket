@@ -775,6 +775,23 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Returns a URL that references the given page. It also
+	 * {@link Session#touch(Page) touches} the page in the session so that it is
+	 * put in the front of the page stack. Use this method only if you plan to
+	 * use it the next request.
+	 * 
+	 * @param page
+	 *            The page
+	 * @return The url pointing to the provided page
+	 */
+	public final CharSequence urlFor(final Page page)
+	{
+		IRequestTarget target = new PageRequestTarget(page);
+		Session.get().touch(((IPageRequestTarget)target).getPage());
+		return urlFor(target);
+	}
+
+	/**
 	 * Returns a URL that references the given request target.
 	 * 
 	 * @param requestTarget
