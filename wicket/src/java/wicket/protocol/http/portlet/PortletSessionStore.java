@@ -48,7 +48,6 @@ public class PortletSessionStore implements ISessionStore
 	//private final static int SCOPE=PortletSession.PORTLET_SCOPE;
 	private final static int SCOPE=PortletSession.APPLICATION_SCOPE;
 
-
 	/** log. */
 	protected static Log log = LogFactory.getLog(PortletSessionStore.class);
 
@@ -168,7 +167,6 @@ public class PortletSessionStore implements ISessionStore
 	 */
 	protected final PortletSession getPortletSession(WicketPortletRequest request)
 	{
-		// FIXME post 1.2 allow for session-less operation
 		PortletSession httpSession = request.getPortletRequest().getPortletSession(true);
 		return httpSession;
 	}
@@ -223,7 +221,7 @@ public class PortletSessionStore implements ISessionStore
 			{
 				throw new WicketRuntimeException(
 						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
-								+ valueTypeName, e);
+						+ valueTypeName, e);
 			}
 		}
 

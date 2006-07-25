@@ -345,11 +345,6 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		PortletURL url;
 		final RequestListenerInterface rli = requestTarget.getRequestListenerInterface();
 
-		if(IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
-		{
-			return encodeServletRequest(requestCycle,requestTarget);
-		}
-
 		try
 		{
 			url = getActionURL(requestCycle);
@@ -373,6 +368,11 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			return null;
 		}
 
+		if(IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
+		{
+			return encodeServletRequest(requestCycle,requestTarget);
+		}
+		
 		// Get component and page for request target
 		final Component component = requestTarget.getTarget();
 		final Page page = component.getPage();
