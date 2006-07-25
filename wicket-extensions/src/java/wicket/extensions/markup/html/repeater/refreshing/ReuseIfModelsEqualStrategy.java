@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -56,7 +57,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 	 * @see wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy#getItems(wicket.extensions.markup.html.repeater.refreshing.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
+	public Iterator getItems(final MarkupContainer parent, final IItemFactory factory, final Iterator newModels,
 			Iterator existingItems)
 	{
 		final Map<IModel< ? >, Item> modelToItem = new HashMap<IModel< ? >, Item>();
@@ -83,7 +84,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 				final Item item;
 				if (oldItem == null)
 				{
-					item = factory.newItem(index, model);
+					item = factory.newItem(parent, index, model);
 				}
 				else
 				{

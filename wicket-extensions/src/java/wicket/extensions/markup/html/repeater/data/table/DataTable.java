@@ -135,13 +135,13 @@ public class DataTable<T> extends Panel<T> implements IPageable
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Item newRowItem(final String id, int index, IModel model)
+			protected Item newRowItem(MarkupContainer parent, final String id, int index, IModel model)
 			{
-				return DataTable.this.newRowItem(id, index, model);
+				return DataTable.this.newRowItem(parent, id, index, model);
 			}
 
 			@Override
-			protected Item newCellItem(WebMarkupContainer cellContainer, final String id,
+			protected Item newCellItem(MarkupContainer cellContainer, final String id,
 					int index, IModel model)
 			{
 				return DataTable.this.newCellItem(cellContainer, id, index, model);
@@ -291,9 +291,9 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newRowItem(final String id, int index, final IModel<T> model)
+	protected Item newRowItem(MarkupContainer parent, final String id, int index, final IModel<T> model)
 	{
-		return new Item<T>(this, id, index, model);
+		return new Item<T>(parent, id, index, model);
 	}
 
 	/**
@@ -313,7 +313,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index,
+	protected Item newCellItem(MarkupContainer cellContainer, final String id, int index,
 			final IModel model)
 	{
 		return new Item(cellContainer, id, index, model);

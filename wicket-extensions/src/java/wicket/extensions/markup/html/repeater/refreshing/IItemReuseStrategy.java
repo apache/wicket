@@ -21,6 +21,8 @@ package wicket.extensions.markup.html.repeater.refreshing;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
+
 /**
  * Interface for item reuse strategies.
  * <p>
@@ -49,5 +51,5 @@ public interface IItemReuseStrategy extends Serializable
 	 * @return iterator over items that will be added after all the old items
 	 *         are moved.
 	 */
-	Iterator getItems(IItemFactory factory, Iterator newModels, Iterator existingItems);
+	Iterator getItems(MarkupContainer container, IItemFactory factory, Iterator newModels, Iterator existingItems);
 }

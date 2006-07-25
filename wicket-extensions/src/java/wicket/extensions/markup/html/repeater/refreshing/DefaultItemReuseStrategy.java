@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.Iterator;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -49,7 +50,7 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 	 * @see wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy#getItems(wicket.extensions.markup.html.repeater.refreshing.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterator getItems(final IItemFactory factory, final Iterator newModels,
+	public Iterator getItems(final MarkupContainer parent, final IItemFactory factory, final Iterator newModels,
 			final Iterator existingItems)
 	{
 		return new Iterator()
@@ -70,7 +71,7 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 			{
 				final IModel model = (IModel)newModels.next();
 
-				Item item = factory.newItem(index, model);
+				Item item = factory.newItem(parent, index, model);
 				index++;
 
 				return item;

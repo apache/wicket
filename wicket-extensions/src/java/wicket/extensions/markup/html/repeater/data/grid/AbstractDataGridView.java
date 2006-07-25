@@ -141,9 +141,9 @@ public abstract class AbstractDataGridView extends DataViewBase
 			}
 
 			@Override
-			protected Item newItem(final String id, int index, IModel model)
+			protected Item newItem(MarkupContainer parent, final String id, int index, IModel model)
 			{
-				return newCellItem(this, id, index, model);
+				return newCellItem(parent, id, index, model);
 			}
 
 		};
@@ -154,9 +154,10 @@ public abstract class AbstractDataGridView extends DataViewBase
 		return populators;
 	}
 
+	@Override
 	protected final Item newItem(MarkupContainer parent, final String id, int index, IModel model)
 	{
-		return newRowItem(id, index, model);
+		return newRowItem(parent, id, index, model);
 	}
 
 
@@ -175,9 +176,9 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newRowItem(final String id, int index, final IModel model)
+	protected Item newRowItem(MarkupContainer parent, final String id, int index, final IModel model)
 	{
-		return new Item(this, id, index, model);
+		return new Item(parent, id, index, model);
 	}
 
 	/**
@@ -198,7 +199,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newCellItem(WebMarkupContainer cellContainer, final String id, int index,
+	protected Item newCellItem(MarkupContainer cellContainer, final String id, int index,
 			final IModel model)
 	{
 		return new Item(cellContainer, id, index, model);

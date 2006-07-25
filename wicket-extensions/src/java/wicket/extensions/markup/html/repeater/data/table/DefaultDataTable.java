@@ -126,9 +126,9 @@ public class DefaultDataTable<T> extends DataTable<T>
 	}
 
 	@Override
-	protected Item<T> newRowItem(final String id, int index, IModel<T> model)
+	protected Item<T> newRowItem(MarkupContainer parent, final String id, int index, IModel<T> model)
 	{
-		return new OddEvenItem<T>(this, id, index, model);
+		return new OddEvenItem<T>(parent, id, index, model);
 	}
 
 }

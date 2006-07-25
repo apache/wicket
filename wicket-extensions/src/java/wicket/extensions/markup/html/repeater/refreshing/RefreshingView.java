@@ -95,10 +95,10 @@ public abstract class RefreshingView extends RepeatingView
 			IItemFactory itemFactory = new IItemFactory()
 			{
 
-				public Item newItem(int index, IModel model)
+				public Item newItem(MarkupContainer parent, int index, IModel model)
 				{
 					String id = RefreshingView.this.newChildId();
-					Item item = RefreshingView.this.newItem(id, index, model);
+					Item item = RefreshingView.this.newItem(parent, id, index, model);
 					RefreshingView.this.populateItem(item);
 					return item;
 				}
@@ -106,7 +106,7 @@ public abstract class RefreshingView extends RepeatingView
 			};
 
 			Iterator models = getItemModels();
-			Iterator items = getItemReuseStrategy().getItems(itemFactory, models, getItems());
+			Iterator items = getItemReuseStrategy().getItems(RefreshingView.this, itemFactory, models, getItems());
 			removeAll();
 			addItems(items);
 		}
@@ -158,9 +158,9 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newItem(final String id, int index, final IModel model)
+	protected Item newItem(MarkupContainer parent, final String id, int index, final IModel model)
 	{
-		return new Item(this, id, index, model);
+		return new Item(parent, id, index, model);
 	}
 
 	/**

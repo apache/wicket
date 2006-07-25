@@ -120,9 +120,9 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 	}
 
 	@Override
-	protected Item newRowItem(final String id, int index, IModel model)
+	protected Item newRowItem(MarkupContainer parent, final String id, int index, IModel model)
 	{
-		return new OddEvenItem(this, id, index, model);
+		return new OddEvenItem(parent, id, index, model);
 	}
 
 }

@@ -18,6 +18,7 @@
  */
 package wicket.extensions.markup.html.repeater.refreshing;
 
+import wicket.MarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -42,6 +43,6 @@ public interface IItemFactory
 	 * 
 	 * @return DataItem new DataItem
 	 */
-	Item newItem(int index, IModel model);
+	Item newItem(MarkupContainer parent, int index, IModel model);
 
 }
