@@ -39,6 +39,7 @@ public class AppTester extends WicketTester
 	{
 		super.init();
 		configure(DEVELOPMENT);
+		getResourceSettings().setResourcePollFrequency(null);
 	}
 
 	@Override
