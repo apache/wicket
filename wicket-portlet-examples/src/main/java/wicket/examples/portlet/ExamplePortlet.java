@@ -72,25 +72,9 @@ public class ExamplePortlet extends PortletPage
 				setResponsePage(new ExamplePortlet2(ExamplePortlet.this));
 			}
 		});
-		
-		//add(new Image("image",new ResourceReference(ExamplePortlet.class,"wicket-logo.png")));
-		add(new Image("image", new RenderedDynamicImageResource(100, 100)
-		{
-			protected boolean render(Graphics2D graphics)
-			{
-				// Compute random size for circle
-				final Random random = new Random();
-				int dx = Math.abs(10 + random.nextInt(80));
-				int dy = Math.abs(10 + random.nextInt(80));
-				int x = Math.abs(random.nextInt(100 - dx));
-				int y = Math.abs(random.nextInt(100 - dy));
 
-				// Draw circle with thick stroke width
-				graphics.setStroke(new BasicStroke(5));
-				graphics.drawOval(x, y, dx, dy);
-				return true;
-			}
-		}));
+		add(new Image("image",new ResourceReference(ExamplePortlet.class,"wicket-logo.png")));
+
 	}
 
 	private String message = "[type your message to the world here]";

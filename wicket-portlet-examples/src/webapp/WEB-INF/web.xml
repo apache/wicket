@@ -12,7 +12,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
-
 	<!-- this is used for the resources -->
 	
 	<servlet-mapping>
