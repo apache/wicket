@@ -19,7 +19,6 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	@Override
 	public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level) 
 	{
-		//return super.createCell(parent, id, node, level);
 		return new EditablePanel(parent, id, new PropertyModel<String>(node, getPropertyExpression()));
 	}
 	
