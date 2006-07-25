@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SimpleAppletApplication.java 4739 2006-03-03 23:38:18 +0000 (Fri, 03 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-03 23:38:18 +0000 (Fri, 03
+ * Mar 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -41,13 +42,14 @@ public final class SimpleAppletApplication extends WebApplication
 	{
 		return Home.class;
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebApplication#init()
 	 */
 	@Override
 	protected void init()
 	{
-		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.ONE_PASS_RENDER);
+		getRequestCycleSettings().setRenderStrategy(
+				IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
 	}
 }

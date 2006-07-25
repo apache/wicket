@@ -1,11 +1,9 @@
 /*
-<<<<<<< Applet.java
- * $Id$ $Revision$
- * $Date$
-=======
- * $Id$ $Revision:
- * 1.71 $ $Date$
->>>>>>> 1.5
+ * <<<<<<< Applet.java $Id: Applet.java 5903 2006-05-26 23:23:23 +0000
+ * (Fri, 26 May 2006) joco01 $ $Revision$ $Date: 2006-05-26 23:23:23
+ * +0000 (Fri, 26 May 2006) $ ======= $Id: Applet.java 5903 2006-05-26 23:23:23
+ * +0000 (Fri, 26 May 2006) joco01 $ $Revision$ $Date: 2006-05-26
+ * 23:23:23 +0000 (Fri, 26 May 2006) $ >>>>>>> 1.5
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -104,9 +102,9 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 * @param appletClass
 	 *            The class that implement's this applet
 	 */
-	public Applet(MarkupContainer parent,final String id, final Class appletClass)
+	public Applet(MarkupContainer parent, final String id, final Class appletClass)
 	{
-		super(parent,id);
+		super(parent, id);
 		addAppletClass(appletClass);
 	}
 
@@ -120,9 +118,10 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 	 * @param appletClass
 	 *            The class that implements this applet's initialization
 	 */
-	public Applet(MarkupContainer parent,final String id, final IModel model, final Class appletClass)
+	public Applet(MarkupContainer parent, final String id, final IModel model,
+			final Class appletClass)
 	{
-		super(parent,id, model);
+		super(parent, id, model);
 		addAppletClass(appletClass);
 	}
 
@@ -270,7 +269,7 @@ public class Applet extends WebComponent implements IResourceListener, IFormSubm
 		{
 			tag.put("height", height);
 		}
-		tag.setType(XmlTag.OPEN);
+		tag.setType(XmlTag.Type.OPEN);
 		super.onComponentTag(tag);
 	}
 

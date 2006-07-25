@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: SprocketsApplication.java 4739 2006-03-03 23:38:18 +0000 (Fri, 03 Mar
+ * 2006) joco01 $ $Revision$ $Date: 2006-03-03 23:38:18 +0000 (Fri, 03
+ * Mar 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,6 +18,7 @@
  */
 package examples.applet.sprockets;
 
+import wicket.Page;
 import wicket.protocol.http.WebApplication;
 import wicket.settings.IRequestCycleSettings;
 
@@ -37,17 +39,18 @@ public final class SprocketsApplication extends WebApplication
 	/**
 	 * @see wicket.Application#getHomePage()
 	 */
-	public Class getHomePage()
+	public Class< ? extends Page> getHomePage()
 	{
 		return Home.class;
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebApplication#init()
 	 */
 	@Override
 	protected void init()
 	{
-		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.REDIRECT_TO_BUFFER);
+		getRequestCycleSettings().setRenderStrategy(
+				IRequestCycleSettings.RenderStrategy.REDIRECT_TO_BUFFER);
 	}
 }
