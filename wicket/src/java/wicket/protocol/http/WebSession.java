@@ -18,6 +18,7 @@
  */
 package wicket.protocol.http;
 
+import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.RequestCycle;
 import wicket.Session;
@@ -50,6 +51,18 @@ public class WebSession extends Session
 		super(application);
 	}
 
+	/**
+	 * Constructor
+	 * 
+	 * @param application
+	 *            The application
+	 */
+	public WebSession(final Application application)
+	{
+		super(application);
+	}
+	
+	
 	/**
 	 * Invalidates this session at the end of the current request. If you need
 	 * to invalidate the session immediately, you can do this by calling
@@ -120,7 +133,7 @@ public class WebSession extends Session
 	/**
 	 * Initializes this session for a request.
 	 */
-	final void initForRequest()
+	public final void initForRequest()
 	{
 		// Set the current session
 		set(this);

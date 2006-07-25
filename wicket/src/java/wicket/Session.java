@@ -139,9 +139,6 @@ public abstract class Session implements Serializable
 	/** Attribute prefix for page maps stored in the session */
 	private static final String pageMapAttributePrefix = "m:";
 
-	/** Application that this is a session of. */
-	private transient Application application;
-
 	/**
 	 * Cached instance of agent info which is typically designated by calling
 	 * {@link RequestCycle#newClientInfo()}.
@@ -249,9 +246,6 @@ public abstract class Session implements Serializable
 	 */
 	protected Session(final Application application)
 	{
-		// Save application
-		this.application = application;
-
 		// Set locale to default locale
 		setLocale(application.getApplicationSettings().getDefaultLocale());
 	}
@@ -278,7 +272,7 @@ public abstract class Session implements Serializable
 	 */
 	public final Application getApplication()
 	{
-		return application;
+		return Application.get();
 	}
 
 	/**
@@ -286,7 +280,7 @@ public abstract class Session implements Serializable
 	 */
 	public IAuthorizationStrategy getAuthorizationStrategy()
 	{
-		return application.getSecuritySettings().getAuthorizationStrategy();
+		return getApplication().getSecuritySettings().getAuthorizationStrategy();
 	}
 
 	/**
@@ -294,7 +288,7 @@ public abstract class Session implements Serializable
 	 */
 	public final IClassResolver getClassResolver()
 	{
-		return application.getApplicationSettings().getClassResolver();
+		return getApplication().getApplicationSettings().getClassResolver();
 	}
 
 	/**
@@ -426,7 +420,7 @@ public abstract class Session implements Serializable
 	 */
 	public final IPageFactory getPageFactory()
 	{
-		return application.getSessionSettings().getPageFactory();
+		return getApplication().getSessionSettings().getPageFactory();
 	}
 
 	/**
@@ -626,7 +620,6 @@ public abstract class Session implements Serializable
 	 */
 	public final void setApplication(final Application application)
 	{
-		this.application = application;
 		if (usedPages == null)
 		{
 			usedPages = new HashMap(3);
@@ -867,11 +860,11 @@ public abstract class Session implements Serializable
 	 * 
 	 * @return the session store
 	 */
-	protected final ISessionStore getSessionStore()
+	protected ISessionStore getSessionStore()
 	{
 		if (sessionStore == null)
 		{
-			sessionStore = application.getSessionStore(); 
+			sessionStore = getApplication().getSessionStore(); 
 		}
 		return sessionStore;
 	}

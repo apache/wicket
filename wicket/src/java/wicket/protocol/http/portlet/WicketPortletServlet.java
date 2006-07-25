@@ -18,14 +18,6 @@
  */
 package wicket.protocol.http.portlet;
 
-import java.io.IOException;
-import java.util.Enumeration;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -37,6 +29,11 @@ import wicket.protocol.http.WicketServlet;
 /**
  * 
  * Dummy utility servlet to support dynamic resources with portlets
+ * 
+ * See:
+ * 
+ * http://weblogs.java.net/blog/wholder/archive/2005/02/session_session.html
+ * http://issues.apache.org/jira/browse/PLUTO-53
  * 
  * @author Janne Hietam&auml;ki
  */
