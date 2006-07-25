@@ -19,8 +19,6 @@ public abstract class AbstractColumn implements IColumn
 
 	private TreeTable treeTable = null;
 
-	private boolean visible = true;
-
 	/**
 	 * Creates the tree column.
 	 * 
@@ -58,7 +56,7 @@ public abstract class AbstractColumn implements IColumn
 	 */
 	public boolean isVisible()
 	{
-		return visible;
+		return true;
 	}
 
 	/**
@@ -70,35 +68,11 @@ public abstract class AbstractColumn implements IColumn
 	}
 
 	/**
-	 * Sets the colation for this column. Every time you change location you
-	 * must call the <code>invalidateAll</code> method on tree.
-	 * 
-	 * @param location
-	 *            new location
-	 */
-	public void setLocation(ColumnLocation location)
-	{
-		this.location = location;
-	}
-
-	/**
 	 * @see IColumn#setTreeTable(TreeTable)
 	 */
 	public void setTreeTable(TreeTable treeTable)
 	{
 		this.treeTable = treeTable;
-	}
-
-	/**
-	 * Sets the visibility of this column. Every time you change visibility you
-	 * must call the <code>invalidateAll</code> method on tree.
-	 * 
-	 * @param visible
-	 *            Whether this colomn is visible
-	 */
-	public void setVisible(boolean visible)
-	{
-		this.visible = visible;
 	}
 
 	/**
