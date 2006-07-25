@@ -28,6 +28,9 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.resolver.AutoLinkResolver;
 import wicket.protocol.http.RequestLogger;
+import wicket.protocol.http.WebRequest;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.WebResponse;
 import wicket.protocol.http.WebSession;
 import wicket.protocol.http.portlet.pages.AccessDeniedPortletPage;
 import wicket.protocol.http.portlet.pages.InternalErrorPortletPage;
@@ -140,7 +143,7 @@ public abstract class PortletApplication extends Application implements ISession
 		{
 			throw new WicketRuntimeException(
 					"Session created by a PortletApplication session factory "
-							+ "must be a subclass of PortletSession");
+					+ "must be a subclass of PortletSession");
 		}
 
 		// Set application on session
@@ -315,22 +318,27 @@ public abstract class PortletApplication extends Application implements ISession
 
 			public RequestCycle newRequestCycle(Session session, Request request, Response response)
 			{
-				WicketPortletRequest req = (WicketPortletRequest)request;
-				WicketPortletResponse res = (WicketPortletResponse)response;
-				PortletRequest preq = req.getPortletRequest();
-				PortletResponse pres = res.getPortletResponse();
-				if (preq instanceof ActionRequest)
-				{
-					return new PortletActionRequestCycle((WicketPortletSession)session,
-							(WicketPortletRequest)request, (WicketPortletResponse)response);
+				if(request instanceof WicketPortletRequest){
 
-				}
-				else
-				{
-					return new PortletRenderRequestCycle((WicketPortletSession)session,
-							(WicketPortletRequest)request, (WicketPortletResponse)response);
+					WicketPortletRequest req = (WicketPortletRequest)request;
+					WicketPortletResponse res = (WicketPortletResponse)response;
+					PortletRequest preq = req.getPortletRequest();
+					PortletResponse pres = res.getPortletResponse();
+					if (preq instanceof ActionRequest)
+					{
+						return new PortletActionRequestCycle((WicketPortletSession)session,
+								(WicketPortletRequest)request, (WicketPortletResponse)response);
 
+					}
+					else
+					{
+						return new PortletRenderRequestCycle((WicketPortletSession)session,
+								(WicketPortletRequest)request, (WicketPortletResponse)response);
+
+					}
 				}
+				return new WebRequestCycle((WebSession)session, (WebRequest)request,
+						(WebResponse)response);
 			}
 		};
 	}
@@ -342,7 +350,7 @@ public abstract class PortletApplication extends Application implements ISession
 	 * 
 	 * @return IRequestCycleProcessor
 	 */
-	protected IRequestCycleProcessor newRequestCycleProcessor()
+	protected IRequestCycleProcessor newRenderRequestCycleProcessor()
 	{
 		return new PortletRenderRequestCycleProcessor();
 	}
@@ -379,11 +387,11 @@ public abstract class PortletApplication extends Application implements ISession
 	 * 
 	 * @return the default request cycle processor
 	 */
-	protected final IRequestCycleProcessor getRequestCycleProcessor()
+	protected final IRequestCycleProcessor getRenderRequestCycleProcessor()
 	{
 		if (requestCycleProcessor == null)
 		{
-			requestCycleProcessor = newRequestCycleProcessor();
+			requestCycleProcessor = newRenderRequestCycleProcessor();
 		}
 		return requestCycleProcessor;
 	}
@@ -440,7 +448,7 @@ public abstract class PortletApplication extends Application implements ISession
 			{
 				throw new WicketRuntimeException("unable to retrieve portlet context path");
 			}
-			
+
 			// WARNING: this has to match the string which is returned from the WebApplication
 			// getServletPath is not available in portlets, so we have to use empty servlet path
 			// and a empty servlet path string here.

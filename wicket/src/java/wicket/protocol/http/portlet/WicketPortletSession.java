@@ -14,9 +14,10 @@
  */
 package wicket.protocol.http.portlet;
 
+import wicket.Application;
 import wicket.IRequestCycleFactory;
-import wicket.RequestCycle;
-import wicket.Session;
+import wicket.protocol.http.WebSession;
+import wicket.session.ISessionStore;
 
 /**
  * A session subclass for the PortletSession
@@ -24,15 +25,12 @@ import wicket.Session;
  * @author Janne Hietam&auml;ki
  * 
  */
-public class WicketPortletSession extends Session
+public class WicketPortletSession extends WebSession
 {
 	private static final long serialVersionUID = 1L;
 
 	/** The request cycle factory for the session */
 	private transient IRequestCycleFactory requestCycleFactory;
-
-	/** True, if session has been invalidated */
-	private transient boolean sessionInvalidated = false;
 
 	/**
 	 * Constructor
@@ -46,79 +44,27 @@ public class WicketPortletSession extends Session
 	}
 
 	/**
-	 * Invalidates this session at the end of the current request. If you need
-	 * to invalidate the session immediately, you can do this by calling
-	 * invalidateNow(), however this will remove all Wicket components from this
-	 * session, which means that you will no longer be able to work with them.
-	 */
-	public void invalidate()
-	{
-		sessionInvalidated = true;
-	}
-
-	/**
-	 * Invalidates this session immediately. Calling this method will remove all
-	 * Wicket components from this session, which means that you will no longer
-	 * be able to work with them.
-	 */
-	public void invalidateNow()
-	{
-		getSessionStore().invalidate(RequestCycle.get().getRequest());
-	}
-
-	/**
-	 * Any attach logic for session subclasses.
-	 */
-	protected void attach()
-	{
-	}
-
-	/**
-	 * Called on the end of handling a request, when the RequestCycle is about
-	 * to be detached from the current thread.
-	 * 
-	 * @see wicket.Session#detach()
-	 */
-	protected void detach()
-	{
-		if (sessionInvalidated)
-		{
-			invalidateNow();
-		}
-	}
-
-	/**
 	 * @see wicket.Session#getRequestCycleFactory()
 	 */
 	protected IRequestCycleFactory getRequestCycleFactory()
 	{
 		if (requestCycleFactory == null)
 		{
-			this.requestCycleFactory = ((PortletApplication)getApplication())
-					.getDefaultRequestCycleFactory();
+			this.requestCycleFactory = ((PortletApplication)Application.get())
+			.getDefaultRequestCycleFactory();
 		}
 
 		return this.requestCycleFactory;
 	}
 
-	/**
-	 * Updates the session, e.g. for replication purposes.
-	 */
-	protected void update()
-	{
-		if (sessionInvalidated == false)
-		{
-			super.update();
-		}
-	}
 
 	/**
-	 * Initializes this session for a request.
+	 * Gets the session store.
+	 * 
+	 * @return the session store
 	 */
-	final void initForRequest()
+	protected final ISessionStore getSessionStore()
 	{
-		// Set the current session
-		set(this);
-		attach();
+		return getApplication().getSessionStore(); 
 	}
 }
