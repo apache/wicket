@@ -766,7 +766,6 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 			if (deleteIds.length() != 0) 
 			{
 				String js = getElementsDeleteJavascript();
-				System.out.println(js);
 
 				// add the javascript to target
 				target.prependJavascript(js);
@@ -929,8 +928,6 @@ public abstract class AbstractTree extends Panel<TreeModel> implements TreeState
 
 			for (int i = 0; i < e.getChildren().length; ++i) {
 				TreeNode node = (TreeNode) e.getChildren()[i];
-				
-				System.out.println("Removing node " + node);
 				
 				TreeItem item = nodeToItemMap.get(node);
 				if (item != null)
