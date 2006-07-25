@@ -18,11 +18,14 @@
  */
 package wicket;
 
+import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ajax.AjaxRequestTarget;
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCodingStrategy;
@@ -35,7 +38,6 @@ import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
-import wicket.util.collections.ArrayListStack;
 import wicket.util.value.ValueMap;
 
 /**
@@ -229,7 +231,102 @@ public abstract class RequestCycle
 	private boolean redirect;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient ArrayListStack/* <IRequestTarget> */requestTargets = new ArrayListStack(3);
+	private transient final RequestTargetStack requestTargets = new RequestTargetStack(3);
+
+	/**
+	 * Stack for request targets.
+	 */
+	private static final class RequestTargetStack extends ArrayList
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param initialCapacity
+		 *            Initial capacity of the stack
+		 */
+		public RequestTargetStack(final int initialCapacity)
+		{
+			super(initialCapacity);
+		}
+
+		/**
+		 * Pushes a request onto the top of this stack.
+		 * 
+		 * @param requestTarget
+		 *            The request target to be pushed onto this stack
+		 */
+		public final void push(final IRequestTarget requestTarget)
+		{
+			if (!isEmpty() && (peek() instanceof AjaxRequestTarget))
+			{
+				// adding more request targets on top of an ajax request is
+				// useless; there is no overriding anyway. But what we do
+				// is place a redirect issue in the ajax response
+				AjaxRequestTarget ajaxRequestTarget = (AjaxRequestTarget)peek();
+				CharSequence url = RequestCycle.get().urlFor(requestTarget);
+
+				// if this is a page target, make sure it is available in the
+				// page map
+				if (requestTarget instanceof IPageRequestTarget)
+				{
+					Session.get().touch(((IPageRequestTarget)requestTarget).getPage());
+				}
+
+				// append the redirect script
+				ajaxRequestTarget.prependJavascript("window.location='" + url + "';");
+			}
+			else
+			{
+				add(requestTarget);
+			}
+		}
+
+		/**
+		 * Removes the request target at the top of this stack and returns it.
+		 * 
+		 * @return The requestTarget at the top of this stack
+		 * @exception EmptyStackException
+		 *                If this stack is empty.
+		 */
+		public final IRequestTarget pop()
+		{
+			final Object top = peek();
+			remove(size() - 1);
+			return (IRequestTarget)top;
+		}
+
+		/**
+		 * Looks at the request target at the top of this stack without removing
+		 * it.
+		 * 
+		 * @return The request target at the top of this stack
+		 * @exception EmptyStackException
+		 *                If this stack is empty.
+		 */
+		public final IRequestTarget peek()
+		{
+			int size = size();
+			if (size == 0)
+			{
+				throw new EmptyStackException();
+			}
+			return (IRequestTarget)get(size - 1);
+		}
+
+		/**
+		 * Tests if this stack is empty.
+		 * 
+		 * @return <code>true</code> if and only if this stack contains no
+		 *         items; <code>false</code> otherwise.
+		 */
+		public final boolean empty()
+		{
+			return size() == 0;
+		}
+	}
+
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
@@ -340,7 +437,7 @@ public abstract class RequestCycle
 	 */
 	public final IRequestTarget getRequestTarget()
 	{
-		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
+		return (!requestTargets.isEmpty()) ? requestTargets.peek() : null;
 	}
 
 	/**
@@ -528,23 +625,11 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// FIXME post 1.2 Robustness: This has to be done after the unit tests are fixed
-		// // if we are already responding, we can't change the request target
-		// // as that would either have no effect, or - in case we would set
-		// // the currentStep back to PROCESS_EVENTS, we would have double
-		// // output (and it is not Wicket's intention to work as Servlet
-		// filters)
-		// if (currentStep >= RESPOND)
-		// {
-		// throw new WicketRuntimeException(
-		// "you cannot change the request cycle after rendering has commenced");
-		// }
-
 		if (log.isDebugEnabled())
 		{
 			if (!requestTargets.isEmpty())
 			{
-				IRequestTarget former = (IRequestTarget)requestTargets.peek();
+				IRequestTarget former = requestTargets.peek();
 				log.debug("replacing request target " + former + " with " + requestTarget);
 			}
 			else
