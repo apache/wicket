@@ -165,7 +165,9 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private final EncodingResponse encodingResponse;
 
-	private final List/* <String> */javascripts = new ArrayList();
+	private final List/* <String> */prependJavascripts = new ArrayList();
+	
+	private final List/* <String> */appendJavascripts = new ArrayList();
 
 	/** the component instances that will be rendered */
 	private final Map/* <String,Component> */markupIdToComponent = new HashMap();
@@ -218,18 +220,46 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Adds javascript that will be evaluated on the client side
+	 * Adds javascript that will be evaluated on the client side before components are replaced
 	 * 
 	 * @param javascript
 	 */
-	public final void addJavascript(String javascript)
+	public final void prependJavascript(String javascript)
 	{
 		if (javascript == null)
 		{
 			throw new IllegalArgumentException("javascript cannot be null");
 		}
 
-		javascripts.add(javascript);
+		prependJavascripts.add(javascript);
+	}
+
+	
+	/**
+	 * Adds javascript that will be evaluated on the client side after components are replaced
+	 * 
+	 * @param javascript
+	 */
+	public final void appendJavascript(String javascript)
+	{
+		if (javascript == null)
+		{
+			throw new IllegalArgumentException("javascript cannot be null");
+		}
+
+		appendJavascripts.add(javascript);
+	}
+	
+	
+	/**
+	 * Adds javascript that will be evaluated on the client side after components are replaced
+	 * 
+	 * @deprecated use appendJavascript(String javascript) instead
+	 * @param javascript
+	 */
+	public final void addJavascript(String javascript)
+	{
+		appendJavascript(javascript);
 	}
 
 	/**
@@ -248,7 +278,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			AjaxRequestTarget that = (AjaxRequestTarget)obj;
 			return markupIdToComponent.equals(that.markupIdToComponent)
-			&& javascripts.equals(that.javascripts);
+					&& prependJavascripts.equals(that.prependJavascripts)
+					&& appendJavascripts.equals(that.appendJavascripts);
 		}
 		return false;
 	}
@@ -268,7 +299,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		int result = "AjaxRequestTarget".hashCode();
 		result += markupIdToComponent.hashCode() * 17;
-		result += javascripts.hashCode() * 17;
+		result += prependJavascripts.hashCode() * 17;
+		result += appendJavascripts.hashCode() * 17;
 		return result;
 	}
 
@@ -303,8 +335,15 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write(encoding);
 			response.write("\"?>");
 			response.write("<ajax-response>");
-
-			Iterator it = markupIdToComponent.entrySet().iterator();
+			
+			Iterator it = prependJavascripts.iterator();
+			while (it.hasNext())
+			{
+				String js = (String)it.next();
+				respondInvocation(response, js);
+			}
+			
+			it = markupIdToComponent.entrySet().iterator();
 			while (it.hasNext())
 			{
 				final Map.Entry entry = (Entry)it.next();
@@ -314,7 +353,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondComponent(response, markupId, component);
 			}
 
-			it = javascripts.iterator();
+			it = appendJavascripts.iterator();
 			while (it.hasNext())
 			{
 				String js = (String)it.next();
@@ -340,7 +379,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
-		+ "], javascript [" + javascripts + "]";
+				+ "], prependJavascript [" + prependJavascripts + "], appendJavascript [" + appendJavascripts + "]";
 	}
 
 	/**
