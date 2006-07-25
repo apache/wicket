@@ -711,12 +711,20 @@ public abstract class WebApplication extends Application implements ISessionFact
 		}
 		return null;
 	}
+	
+	/*
+	 * Set the application key value
+	 */
+	protected final void setApplicationKey(String applicationKey)
+	{
+		this.applicationKey=applicationKey;
+	}
 
 	/**
 	 * @param sessionId
 	 *            The session id that was destroyed
 	 */
-	void sessionDestroyed(String sessionId)
+	public void sessionDestroyed(String sessionId)
 	{
 		bufferedResponses.remove(sessionId);
 
