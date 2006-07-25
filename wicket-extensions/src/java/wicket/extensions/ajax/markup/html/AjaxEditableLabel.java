@@ -356,7 +356,7 @@ public class AjaxEditableLabel extends Panel
 		target.addComponent(AjaxEditableLabel.this);
 		// put focus on the textfield and stupid explorer hack to move the
 		// caret to the end
-		target.addJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
+		target.appendJavascript("{ var el=wicketGet('" + editor.getMarkupId() + "');"
 				+ "  el.focus(); " + "  if (el.createTextRange) { "
 				+ "     var v = el.value; var r = el.createTextRange(); "
 				+ "     r.moveStart('character', v.length); r.select(); } }");
@@ -374,12 +374,12 @@ public class AjaxEditableLabel extends Panel
 		String errorMessage = editor.getFeedbackMessage().getMessage();
 		if (errorMessage != null)
 		{
-			target.addJavascript("window.status='" + JavascriptUtils.escapeQuotes(errorMessage)
+			target.appendJavascript("window.status='" + JavascriptUtils.escapeQuotes(errorMessage)
 					+ "';");
 		}
 		String editorMarkupId = editor.getMarkupId();
-		target.addJavascript(editorMarkupId + ".select();");
-		target.addJavascript(editorMarkupId + ".focus();");
+		target.appendJavascript(editorMarkupId + ".select();");
+		target.appendJavascript(editorMarkupId + ".focus();");
 		target.addComponent(editor);
 	}
 
@@ -397,7 +397,7 @@ public class AjaxEditableLabel extends Panel
 		editor.setVisible(false);
 		target.addComponent(AjaxEditableLabel.this);
 
-		target.addJavascript("window.status='';");
+		target.appendJavascript("window.status='';");
 	}
 
 	/**
