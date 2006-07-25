@@ -112,10 +112,10 @@ public class OIRPage extends BasePage
 			}
 
 			/**
-			 * @see wicket.extensions.markup.html.repeater.refreshing.RefreshingView#newItem(java.lang.String, int, wicket.model.IModel)
+			 * @see wicket.extensions.markup.html.repeater.refreshing.RefreshingView#newItem(wicket.MarkupContainer, java.lang.String, int, wicket.model.IModel)
 			 */
 			@Override
-			protected Item newItem(String id, int index, IModel model)
+			protected Item newItem(MarkupContainer parent, String id, int index, IModel model)
 			{
 				return new HighlitableDataItem(this, id, index, model);
 			}
