@@ -73,8 +73,7 @@ public class ExamplePortlet extends PortletPage
 			}
 		});
 		
-		add(new Image("image",new ResourceReference(ExamplePortlet.class,"wicket-logo.png")));
-		/*
+		//add(new Image("image",new ResourceReference(ExamplePortlet.class,"wicket-logo.png")));
 		add(new Image("image", new RenderedDynamicImageResource(100, 100)
 		{
 			protected boolean render(Graphics2D graphics)
@@ -92,7 +91,6 @@ public class ExamplePortlet extends PortletPage
 				return true;
 			}
 		}));
-		*/
 	}
 
 	private String message = "[type your message to the world here]";
@@ -116,7 +114,6 @@ public class ExamplePortlet extends PortletPage
 
 	protected void onSetWindowState(WindowState state){
 		log.info("WindowState set to "+state);
-		setResponsePage(new ExamplePortlet2(this));
 		// Here we could do for example setResponsePage(MaximizedPage.class);
 	}	
 }
