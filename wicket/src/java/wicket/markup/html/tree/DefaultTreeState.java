@@ -11,57 +11,91 @@ import java.util.Set;
 import javax.swing.tree.TreeNode;
 
 /**
- * Default implementation of TreeState. 
+ * Default implementation of TreeState.
  * <p>
  * This implementation tries to be as lightweight as possible.
+ * 
  * @author Matej Knopp
  */
-public class DefaultTreeState implements ITreeState, Serializable 
+public class DefaultTreeState implements ITreeState, Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	// set of nodes which are collapsed or expanded (depends on nodesCollapsed veriable)
-	private Set<TreeNode> nodes = new HashSet<TreeNode>();
-	
-	// wether the nodes set should be treated as collapsed or expanded
-	private boolean nodesCollapsed = true;  
-	
-	public void collapseAll() 
+	/** Whether multiple selections can be done. */
+	private boolean allowSelectMultiple = false;
+
+	/** Tree state listeners. */
+	private final List<ITreeStateListener> listeners = new ArrayList<ITreeStateListener>(1);
+
+	/**
+	 * set of nodes which are collapsed or expanded (depends on nodesCollapsed
+	 * veriable).
+	 */
+	private final Set<TreeNode> nodes = new HashSet<TreeNode>();
+
+	/** Whether the nodes set should be treated as collapsed or expanded. */
+	private boolean nodesCollapsed = true;
+
+	/** Set selected nodes. */
+	private final Set<TreeNode> selectedNodes = new HashSet<TreeNode>();
+
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#addTreeStateListener(wicket.markup.html.tree.ITreeStateListener)
+	 */
+	public void addTreeStateListener(ITreeStateListener l)
 	{
-		if (nodes.isEmpty() && nodesCollapsed == false) 
+		if (listeners.contains(l) == false)
+		{
+			listeners.add(l);
+		}
+	}
+
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#collapseAll()
+	 */
+	public void collapseAll()
+	{
+		if (nodes.isEmpty() && nodesCollapsed == false)
 		{
 			// all nodes are already collapsed, do nothing
 		}
 		else
-		{		
+		{
 			// clear all nodes from the set and sets the nodes as expanded
 			nodes.clear();
 			nodesCollapsed = false;
-			
-			for (TreeStateListener l : listeners)
+
+			for (ITreeStateListener l : listeners)
 			{
 				l.allNodesCollapsed();
 			}
 		}
 	}
-	
-	public void collapseNode(TreeNode node) 
+
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#collapseNode(javax.swing.tree.TreeNode)
+	 */
+	public void collapseNode(TreeNode node)
 	{
 		if (nodesCollapsed == true)
+		{
 			nodes.add(node);
+		}
 		else
+		{
 			nodes.remove(node);
-		
-		for (TreeStateListener l : listeners)
+		}
+
+		for (ITreeStateListener l : listeners)
 		{
 			l.nodeCollapsed(node);
 		}
 	}
 
-	public void expandAll() 
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#expandAll()
+	 */
+	public void expandAll()
 	{
 		if (nodes.isEmpty() && nodesCollapsed == true)
 		{
@@ -72,73 +106,103 @@ public class DefaultTreeState implements ITreeState, Serializable
 			// clear node set and set nodes policy as collapsed
 			nodes.clear();
 			nodesCollapsed = true;
-		
-			for (TreeStateListener l : listeners)
+
+			for (ITreeStateListener l : listeners)
+			{
 				l.allNodesCollapsed();
+			}
 		}
 	}
 
-	public void expandNode(TreeNode node) 
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#expandNode(javax.swing.tree.TreeNode)
+	 */
+	public void expandNode(TreeNode node)
 	{
 		if (nodesCollapsed == false)
+		{
 			nodes.add(node);
+		}
 		else
+		{
 			nodes.remove(node);
-		
-		for (TreeStateListener l : listeners)
+		}
+
+		for (ITreeStateListener l : listeners)
+		{
 			l.nodeExpanded(node);
+		}
 	}
 
-	public boolean isNodeExpanded(TreeNode node) 
-	{
-		if (nodesCollapsed == false)
-			return nodes.contains(node);
-		else
-			return nodes.contains(node) == false;
-	}
-		
-	private Set<TreeNode> selectedNodes = new HashSet<TreeNode>();
-	
-	public Collection<TreeNode> getSelectedNodes() 
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#getSelectedNodes()
+	 */
+	public Collection<TreeNode> getSelectedNodes()
 	{
 		return selectedNodes;
 	}
 
-	private boolean allowSelectMultiple = false;
-	
-	public boolean isAllowSelectMultiple() 
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#isAllowSelectMultiple()
+	 */
+	public boolean isAllowSelectMultiple()
 	{
 		return allowSelectMultiple;
 	}
-	
-	public void setAllowSelectMultiple(boolean value) 
+
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#isNodeExpanded(javax.swing.tree.TreeNode)
+	 */
+	public boolean isNodeExpanded(TreeNode node)
 	{
-		this.allowSelectMultiple = value;
+		if (nodesCollapsed == false)
+		{
+			return nodes.contains(node);
+		}
+		else
+		{
+			return nodes.contains(node) == false;
+		}
 	}
 
-	public boolean isNodeSelected(TreeNode node) 
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#isNodeSelected(javax.swing.tree.TreeNode)
+	 */
+	public boolean isNodeSelected(TreeNode node)
 	{
 		return selectedNodes.contains(node);
-	}	
+	}
 
-	public void selectNode(TreeNode node, boolean selected) 
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#removeTreeStateListener(wicket.markup.html.tree.ITreeStateListener)
+	 */
+	public void removeTreeStateListener(ITreeStateListener l)
+	{
+		listeners.remove(l);
+	}
+
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#selectNode(javax.swing.tree.TreeNode,
+	 *      boolean)
+	 */
+	public void selectNode(TreeNode node, boolean selected)
 	{
 		if (selected == true && selectedNodes.contains(node) == false)
 		{
 			if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
 			{
-				for (Iterator<TreeNode> i = selectedNodes.iterator(); i.hasNext(); )
-				{					
+				for (Iterator<TreeNode> i = selectedNodes.iterator(); i.hasNext();)
+				{
 					TreeNode current = i.next();
-					i.remove();					
-					for (TreeStateListener l : listeners)
+					i.remove();
+					for (ITreeStateListener l : listeners)
 					{
 						l.nodeUnselected(current);
-					}					
-				}					
+					}
+				}
 			}
 			selectedNodes.add(node);
-			for (TreeStateListener l : listeners)
+			for (ITreeStateListener l : listeners)
 			{
 				l.nodeSelected(node);
 			}
@@ -146,23 +210,18 @@ public class DefaultTreeState implements ITreeState, Serializable
 		else if (selected == false && selectedNodes.contains(node) == true)
 		{
 			selectedNodes.remove(node);
-			for (TreeStateListener l : listeners)
+			for (ITreeStateListener l : listeners)
 			{
 				l.nodeUnselected(node);
 			}
 		}
 	}
 
-	private List<TreeStateListener> listeners = new ArrayList<TreeStateListener>();
-	
-	public void addTreeStateListener(TreeStateListener l) 
+	/**
+	 * @see wicket.markup.html.tree.ITreeState#setAllowSelectMultiple(boolean)
+	 */
+	public void setAllowSelectMultiple(boolean value)
 	{
-		if (listeners.contains(l) == false)
-			listeners.add(l);
-	}
-
-	public void removeTreeStateListener(TreeStateListener l) 
-	{
-		listeners.remove(l);		
+		this.allowSelectMultiple = value;
 	}
 }

@@ -5,91 +5,111 @@ import java.util.Collection;
 import javax.swing.tree.TreeNode;
 
 /**
- * Tree state holds information about a tree such as which nodes are 
- * expanded / collapsed and which nodes are selected,
- * It can also fire callbacks on listener in case any of the information changed.
+ * Tree state holds information about a tree such as which nodes are expanded /
+ * collapsed and which nodes are selected, It can also fire callbacks on
+ * listener in case any of the information changed.
+ * 
  * @author Matej Knopp
  */
-public interface ITreeState  
+public interface ITreeState
 {
 	/**
-	 * Expands all nodes of the tree.
+	 * Adds a tree state listener. On state change events on the listener are
+	 * fired.
+	 * 
+	 * @param l
+	 *            Listener to add
 	 */
-	public void expandAll();
-	
+	void addTreeStateListener(ITreeStateListener l);
+
 	/**
 	 * Collapses all nodes of the tree.
 	 */
-	public void collapseAll();
-
-	/**
-	 * Expands the given node.
-	 * @param node 
-	 */
-	public void expandNode(TreeNode node);
+	void collapseAll();
 
 	/**
 	 * Collapses the given node.
-	 * @param node 
+	 * 
+	 * @param node
+	 *            Node to collapse
 	 */
-	public void collapseNode(TreeNode node);
+	void collapseNode(TreeNode node);
 
 	/**
-	 * Returns true if the given node is expanded.
-	 * @param node 
-	 * @return 
+	 * Expands all nodes of the tree.
 	 */
-	public boolean isNodeExpanded(TreeNode node);
-	
-	
+	void expandAll();
 
 	/**
-	 * Sets whether multiple nodes can be selected.
-	 * @param value 
+	 * Expands the given node.
+	 * 
+	 * @param node
+	 *            Node to expand
 	 */
-	public void setAllowSelectMultiple(boolean value);
-	
-	/**
-	 * Returns whether multiple nodes can be selected.
-	 * @return 
-	 */
-	public boolean isAllowSelectMultiple();
-	
-	/**
-	 * Marks given node as selected (or unselected) according to the
-	 * selected value.
-	 * <p>
-	 * If tree is in single selection mode and a new node is selected,
-	 * old node is automatically unselected (and the event is fired on listeners).
-	 * @param node 
-	 * @param selected 
-	 */
-	public void selectNode(TreeNode node, boolean selected);
-	
-	/**
-	 * Returns true if the given node is selected, false otherwise.
-	 * @param node 
-	 * @return 
-	 */
-	public boolean isNodeSelected(TreeNode node);
+	void expandNode(TreeNode node);
 
 	/**
 	 * Returns the collection of all selected nodes.
-	 * @return 
+	 * 
+	 * @return The collection of selected nodes
 	 */
-	public Collection<TreeNode> getSelectedNodes();
-	
-	
-	
+	Collection<TreeNode> getSelectedNodes();
+
 	/**
-	 * Adds a tree state listener. On state change events on the listener are fired.
-	 * @param l 
+	 * Returns whether multiple nodes can be selected.
+	 * 
+	 * @return True if mutliple nodes can be selected
 	 */
-	public void addTreeStateListener(TreeStateListener l);
-	
+	boolean isAllowSelectMultiple();
+
 	/**
-	 * Removes a tree state listener. 
-	 * @param l 
+	 * Returns true if the given node is expanded.
+	 * 
+	 * @param node
+	 *            The node to inspect
+	 * @return True if the node is expanded
 	 */
-	public void removeTreeStateListener(TreeStateListener l);
+	boolean isNodeExpanded(TreeNode node);
+
+	/**
+	 * Returns true if the given node is selected, false otherwise.
+	 * 
+	 * @param node
+	 *            The node to inspect
+	 * @return True if the node is selected
+	 */
+	boolean isNodeSelected(TreeNode node);
+
+	/**
+	 * Removes a tree state listener.
+	 * 
+	 * @param l
+	 *            The listener to remove
+	 */
+	void removeTreeStateListener(ITreeStateListener l);
+
+
+	/**
+	 * Marks given node as selected (or unselected) according to the selected
+	 * value.
+	 * <p>
+	 * If tree is in single selection mode and a new node is selected, old node
+	 * is automatically unselected (and the event is fired on listeners).
+	 * 
+	 * @param node
+	 *            The node to select or deselect
+	 * @param selected
+	 *            If true, the node will be selected, otherwise, the node will
+	 *            be unselected
+	 */
+	void selectNode(TreeNode node, boolean selected);
+
+	/**
+	 * Sets whether multiple nodes can be selected.
+	 * 
+	 * @param value
+	 *            If true, multiple nodes can be selected. If false, only one
+	 *            node at a time can be selected
+	 */
+	void setAllowSelectMultiple(boolean value);
 }

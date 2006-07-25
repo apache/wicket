@@ -8,52 +8,92 @@ import wicket.Response;
 import wicket.util.string.Strings;
 
 /**
- * Convenience class for creating non-interactive lightweight (IRenderable based)
- * columns.
+ * Convenience class for creating non-interactive lightweight (IRenderable
+ * based) columns.
  * 
  * @author Matej Knopp
  */
-public abstract class AbstractRenderableColumn extends AbstractColumn {
-	
-	private boolean escapeContent = true;
+public abstract class AbstractRenderableColumn extends AbstractColumn
+{
 	private boolean contentAsTooltip = false;
+
+	private boolean escapeContent = true;
 
 	/**
 	 * Creates the column
 	 * 
 	 * @param location
-	 *			Specifies how the column should be aligned and what his size should be 			
+	 *            Specifies how the column should be aligned and what his size
+	 *            should be
 	 * 
 	 * @param header
-	 * 			Header caption
+	 *            Header caption
 	 */
-	public AbstractRenderableColumn(ColumnLocation location, String header) 
+	public AbstractRenderableColumn(ColumnLocation location, String header)
 	{
 		super(location, header);
 	}
 
 	/**
+	 * Returns the string value for the provided node.
+	 * 
+	 * @param node
+	 *            Determines the position in tree
+	 * @return The
+	 */
+	public abstract String getNodeValue(TreeNode node);
+
+	/**
+	 * Returns whether the content should also be visible as tooltip of the
+	 * cell.
+	 * 
+	 * @return whether the content should also be visible as tooltip
+	 */
+	public boolean isContentAsTooltip()
+	{
+		return contentAsTooltip;
+	}
+
+	/**
+	 * Returns whether the special html characters of content will be escaped.
+	 * 
+	 * @return Whether html characters should be escaped
+	 */
+	public boolean isEscapeContent()
+	{
+		return escapeContent;
+	}
+
+	/**
+	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
+	 */
+	public Component newCell(MarkupContainer<?> parent, String id, TreeNode node, int level)
+	{
+		return null;
+	}
+
+	/**
 	 * @see IColumn#createCell(TreeTable, TreeNode, int)
 	 */
-	public IRenderable createCell(TreeNode node, int level) 
+	public IRenderable newCell(TreeNode node, int level)
 	{
-		return new IRenderable() 
+		return new IRenderable()
 		{
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 
-			public void render(TreeNode node, Response response) 
-			{				
+			public void render(TreeNode node, Response response)
+			{
 				String content = getNodeValue(node);
-				
+
 				// escape if necessary
 				if (isEscapeContent())
 				{
 					content = Strings.escapeMarkup(content).toString();
 				}
-				
+
 				response.write("<span class=\"text\"");
 				if (isContentAsTooltip())
 				{
@@ -62,60 +102,30 @@ public abstract class AbstractRenderableColumn extends AbstractColumn {
 				response.write(">");
 				response.write(content);
 				response.write("</span>");
-			}			
+			}
 		};
 	}
-	
-	/**
-	 * @see IColumn#createCell(MarkupContainer, String, TreeNode, int)
-	 */
-	public Component createCell(MarkupContainer<?> parent, String id, TreeNode node, int level) 
-	{
-		return null;
-	}
 
 	/**
-	 * Returns the string value for this column.
+	 * Sets whether the content should also be visible as tooltip (html title
+	 * attribute) of the cell.
 	 * 
-	 * @param node
-	 * 			Determines the position in tree
-	 * @return 
-	 * 
+	 * @param contentAsTooltip
+	 *            whether the content should also be visible as tooltip
 	 */
-	public abstract String getNodeValue(TreeNode node);
-	
-	/**
-	 * Sets whether the special html characters of content should be escaped. 
-	 * @param escapeContent 
-	 */
-	public void setEscapeContent(boolean escapeContent) 
+	public void setContentAsTooltip(boolean contentAsTooltip)
 	{
-		this.escapeContent = escapeContent;
-	}
-
-	/**
-	 * Returns whether the special html characters of content will be escaped.
-	 * @return 
-	 */
-	public boolean isEscapeContent() 
-	{
-		return escapeContent;
-	}
-
-	/**
-	 * Sets whether the content should also be visible as tooltip (html title attribute)
-	 * of the cell.
-	 * @param contentAsTooltip 
-	 */
-	public void setContentAsTooltip(boolean contentAsTooltip) {
 		this.contentAsTooltip = contentAsTooltip;
 	}
 
 	/**
-	 * Returns whether the content should also be visible as tooltip of the cell.
-	 * @return 
+	 * Sets whether the special html characters of content should be escaped.
+	 * 
+	 * @param escapeContent
+	 *            Whether to espcape html characters
 	 */
-	public boolean isContentAsTooltip() {
-		return contentAsTooltip;
+	public void setEscapeContent(boolean escapeContent)
+	{
+		this.escapeContent = escapeContent;
 	}
 }
