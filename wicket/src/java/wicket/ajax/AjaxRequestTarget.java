@@ -166,7 +166,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final EncodingResponse encodingResponse;
 
 	private final List/* <String> */prependJavascripts = new ArrayList();
-	
+
 	private final List/* <String> */appendJavascripts = new ArrayList();
 
 	/** the component instances that will be rendered */
@@ -220,7 +220,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Adds javascript that will be evaluated on the client side before components are replaced
+	 * Adds javascript that will be evaluated on the client side before
+	 * components are replaced
 	 * 
 	 * @param javascript
 	 */
@@ -234,9 +235,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		prependJavascripts.add(javascript);
 	}
 
-	
+
 	/**
-	 * Adds javascript that will be evaluated on the client side after components are replaced
+	 * Adds javascript that will be evaluated on the client side after
+	 * components are replaced
 	 * 
 	 * @param javascript
 	 */
@@ -249,10 +251,11 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		appendJavascripts.add(javascript);
 	}
-	
-	
+
+
 	/**
-	 * Adds javascript that will be evaluated on the client side after components are replaced
+	 * Adds javascript that will be evaluated on the client side after
+	 * components are replaced
 	 * 
 	 * @deprecated use appendJavascript(String javascript) instead
 	 * @param javascript
@@ -335,14 +338,14 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write(encoding);
 			response.write("\"?>");
 			response.write("<ajax-response>");
-			
+
 			Iterator it = prependJavascripts.iterator();
 			while (it.hasNext())
 			{
 				String js = (String)it.next();
 				respondInvocation(response, js);
 			}
-			
+
 			it = markupIdToComponent.entrySet().iterator();
 			while (it.hasNext())
 			{
@@ -379,7 +382,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
-				+ "], prependJavascript [" + prependJavascripts + "], appendJavascript [" + appendJavascripts + "]";
+				+ "], prependJavascript [" + prependJavascripts + "], appendJavascript ["
+				+ appendJavascripts + "]";
 	}
 
 	/**
@@ -439,7 +443,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			throw new IllegalStateException(
 					"Ajax render cannot be called on component that has setRenderBodyOnly enabled. Component: "
-					+ component.toString());
+							+ component.toString());
 		}
 
 		component.setOutputMarkupId(true);
@@ -455,7 +459,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		if (page == null)
 		{
 			throw new IllegalStateException(
-			"Ajax request attempted on a component that is not associated with a Page");
+					"Ajax request attempted on a component that is not associated with a Page");
 		}
 
 		final boolean versioned = page.isVersioned();
@@ -492,13 +496,16 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param response
 	 * @param component
 	 */
-	private void respondHeaderContribution(final Response response, final Component component) 
-	{		
-		final HtmlHeaderContainer header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
-		if(component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID)!=null)
+	private void respondHeaderContribution(final Response response, final Component component)
+	{
+		final HtmlHeaderContainer header = new HtmlHeaderContainer(
+				HtmlHeaderSectionHandler.HEADER_ID);
+		if (component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID) != null)
 		{
-			component.getPage().replace(header);				
-		} else {
+			component.getPage().replace(header);
+		}
+		else
+		{
 			component.getPage().add(header);
 		}
 
@@ -507,17 +514,17 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingResponse.reset();
 
 		component.renderHead(header);
-		if (component instanceof MarkupContainer) 
+		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer)component).visitChildren(new Component.IVisitor() 
+			((MarkupContainer)component).visitChildren(new Component.IVisitor()
 			{
-				public Object component(Component component) 
+				public Object component(Component component)
 				{
 					if (component.isVisible())
 					{
 						component.renderHead(header);
 						return CONTINUE_TRAVERSAL;
-					}					
+					}
 					else
 					{
 						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
@@ -528,7 +535,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		RequestCycle.get().setResponse(oldResponse);
 
-		if (encodingResponse.getContents().length() != 0) 
+		if (encodingResponse.getContents().length() != 0)
 		{
 			response.write("<header-contribution");
 
@@ -539,7 +546,8 @@ public class AjaxRequestTarget implements IRequestTarget
 				response.write("\" ");
 			}
 
-			// we need to write response as CDATA and parse it on client, because
+			// we need to write response as CDATA and parse it on client,
+			// because
 			// konqueror crashes when there is a <script> element
 			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
 
@@ -547,8 +555,8 @@ public class AjaxRequestTarget implements IRequestTarget
 
 			response.write("</head>]]>");
 
-			response.write("</header-contribution>");			
-		}		
+			response.write("</header-contribution>");
+		}
 	}
 
 	/**
