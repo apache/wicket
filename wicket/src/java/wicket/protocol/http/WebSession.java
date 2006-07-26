@@ -18,6 +18,7 @@
  */
 package wicket.protocol.http;
 
+import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.RequestCycle;
 import wicket.Session;
@@ -47,7 +48,7 @@ public class WebSession extends Session
 	 * @param application
 	 *            The application
 	 */
-	public WebSession(final WebApplication application)
+	public WebSession(final Application application)
 	{
 		super(application);
 	}
@@ -125,7 +126,7 @@ public class WebSession extends Session
 	/**
 	 * Initializes this session for a request.
 	 */
-	final void initForRequest()
+	public final void initForRequest()
 	{
 		// Set the current session
 		set(this);
