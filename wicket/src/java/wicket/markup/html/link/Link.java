@@ -578,18 +578,18 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 			final ComponentTag openTag)
 	{
 		// Draw anything before the body?
-		if (!isEnabled() && beforeDisabledLink != null)
+		if (!isEnabled() && getBeforeDisabledLink() != null)
 		{
-			getResponse().write(beforeDisabledLink);
+			getResponse().write(getBeforeDisabledLink());
 		}
 
 		// Render the body of the link
 		renderComponentTagBody(markupStream, openTag);
 
 		// Draw anything after the body?
-		if (!isEnabled() && afterDisabledLink != null)
+		if (!isEnabled() && getAfterDisabledLink() != null)
 		{
-			getResponse().write(afterDisabledLink);
+			getResponse().write(getAfterDisabledLink());
 		}
 	}
 }
