@@ -444,6 +444,18 @@ public abstract class Component implements Serializable
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED4 = 0x0800;
 
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED5 = 0x10000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED6 = 0x20000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED7 = 0x40000;
+
+	/** Reserved subclass-definable flag bit */
+	protected static final int FLAG_RESERVED8 = 0x80000;
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
