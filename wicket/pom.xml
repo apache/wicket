@@ -138,6 +138,12 @@
 			<email>jannehietamaki at users.sourceforge.net</email>
 			<roles />
 		</developer>
+		<developer>
+			<name>Matej Knopp</name>
+			<id>knopp</id>
+			<email>knopp at users.sourceforge.net</email>
+			<roles />
+		</developer>		
 	</developers>
 
 	<contributors>
@@ -199,10 +205,6 @@
 		</contributor>
 		<contributor>
 			<name>Phil Kulak</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Matej Knopp</name>
 			<email>-</email>
 		</contributor>
 		<contributor>
