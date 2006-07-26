@@ -36,9 +36,11 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.Session;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
+import wicket.request.target.component.IPageRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
@@ -69,8 +71,6 @@ import wicket.util.string.Strings;
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
-	private static final Log LOG = LogFactory.getLog(AjaxRequestTarget.class);
-
 	/**
 	 * Response that uses an encoder to encode its contents
 	 * 
@@ -162,18 +162,26 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	}
 
+	private static final Log LOG = LogFactory.getLog(AjaxRequestTarget.class);
+
+	private final List<String> appendJavascripts = new ArrayList<String>();
+
 	/**
 	 * create a response that will escape output to make it safe to use inside a
 	 * CDATA block
 	 */
 	private final EncodingResponse encodingResponse;
 
-	private final List<String> prependJavascripts = new ArrayList<String>();
-	
-	private final List<String> appendJavascripts = new ArrayList<String>();
-
 	/** the component instances that will be rendered */
 	private final Map<String, Component> markupIdToComponent = new HashMap<String, Component>();
+
+	private final List<String> prependJavascripts = new ArrayList<String>();
+
+	/**
+	 * Any request target to redirect to. if not null, overrides any other
+	 * response.
+	 */
+	private IRequestTarget requestTarget;
 
 	/**
 	 * Constructor
@@ -183,6 +191,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		Response response = RequestCycle.get().getResponse();
 		encodingResponse = new EncodingResponse(response);
 	}
+
 
 	/**
 	 * Adds a component to the list of components to be rendered
@@ -223,23 +232,20 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Adds javascript that will be evaluated on the client side before components are replaced
+	 * Adds javascript that will be evaluated on the client side after
+	 * components are replaced
 	 * 
+	 * @deprecated use appendJavascript(String javascript) instead
 	 * @param javascript
 	 */
-	public final void prependJavascript(String javascript)
+	public final void addJavascript(String javascript)
 	{
-		if (javascript == null)
-		{
-			throw new IllegalArgumentException("javascript cannot be null");
-		}
-
-		prependJavascripts.add(javascript);
+		appendJavascript(javascript);
 	}
 
-	
 	/**
-	 * Adds javascript that will be evaluated on the client side after components are replaced
+	 * Adds javascript that will be evaluated on the client side after
+	 * components are replaced
 	 * 
 	 * @param javascript
 	 */
@@ -252,18 +258,6 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		appendJavascripts.add(javascript);
 	}
-	
-	
-	/**
-	 * Adds javascript that will be evaluated on the client side after components are replaced
-	 * 
-	 * @deprecated use appendJavascript(String javascript) instead
-	 * @param javascript
-	 */
-	public final void addJavascript(String javascript)
-	{
-		appendJavascript(javascript);
-	}
 
 	/**
 	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
@@ -271,6 +265,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	public void detach(final RequestCycle requestCycle)
 	{
 	}
+
 
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -288,12 +283,25 @@ public class AjaxRequestTarget implements IRequestTarget
 		return false;
 	}
 
+
 	/**
 	 * @see wicket.IRequestTarget#getLock(RequestCycle)
 	 */
 	public Object getLock(final RequestCycle requestCycle)
 	{
 		return requestCycle.getSession();
+	}
+
+	/**
+	 * Gets any request target to redirect to. if not null, overrides any other
+	 * response. <strong>This method is not meant for to be used by framework
+	 * clients.</strong>
+	 * 
+	 * @return requestTarget any request target
+	 */
+	public final IRequestTarget getRequestTarget()
+	{
+		return requestTarget;
 	}
 
 	/**
@@ -307,6 +315,22 @@ public class AjaxRequestTarget implements IRequestTarget
 		result += prependJavascripts.hashCode() * 17;
 		result += appendJavascripts.hashCode() * 17;
 		return result;
+	}
+
+	/**
+	 * Adds javascript that will be evaluated on the client side before
+	 * components are replaced
+	 * 
+	 * @param javascript
+	 */
+	public final void prependJavascript(String javascript)
+	{
+		if (javascript == null)
+		{
+			throw new IllegalArgumentException("javascript cannot be null");
+		}
+
+		prependJavascripts.add(javascript);
 	}
 
 	/**
@@ -340,29 +364,49 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write(encoding);
 			response.write("\"?>");
 			response.write("<ajax-response>");
-			
-			for (String js : prependJavascripts)
-			{
-				respondInvocation(response, js);
-			}
-			
-			Iterator<Entry<String, Component>> it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
-			{
-				final Map.Entry<String, Component> entry = it.next();
-				final Component component = entry.getValue();				
-				final String markupId = entry.getKey();
-				respondHeaderContribution(response, component);
-				respondComponent(response, markupId, component);								
-			}			
 
-			for (String js : appendJavascripts)
+			if (requestTarget == null)
 			{
-				respondInvocation(response, js);
+				// normal behavior
+
+				for (String js : prependJavascripts)
+				{
+					respondInvocation(response, js);
+				}
+
+				Iterator<Entry<String, Component>> it = markupIdToComponent.entrySet().iterator();
+				while (it.hasNext())
+				{
+					final Map.Entry<String, Component> entry = it.next();
+					final Component component = entry.getValue();
+					final String markupId = entry.getKey();
+					respondHeaderContribution(response, component);
+					respondComponent(response, markupId, component);
+				}
+
+				for (String js : appendJavascripts)
+				{
+					respondInvocation(response, js);
+				}
 			}
-			
-			response.write("</ajax-response>");			
-			
+			else
+			{
+				// a request target was set. only do the redirect to that
+				CharSequence url = RequestCycle.get().urlFor(requestTarget);
+
+				// if this is a page target, make sure it is available in the
+				// page map
+				if (requestTarget instanceof IPageRequestTarget)
+				{
+					Session.get().touch(((IPageRequestTarget)requestTarget).getPage());
+				}
+
+				// append the redirect script
+				respondInvocation(response, "window.location='" + url + "';");
+			}
+
+			response.write("</ajax-response>");
+
 			// restore component use check
 			app.getDebugSettings().setComponentUseCheck(oldUseCheck);
 		}
@@ -378,13 +422,27 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * Sets Any request target to redirect to. if not null, overrides any other
+	 * response. <strong>This method is not meant for to be used by framework
+	 * clients.</strong>
+	 * 
+	 * @param requestTarget
+	 *            requestTarget the request target
+	 */
+	public final void setRequestTarget(IRequestTarget requestTarget)
+	{
+		this.requestTarget = requestTarget;
+	}
+
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
-				+ "], prependJavascript [" + prependJavascripts + "], appendJavascript [" + appendJavascripts + "]";
+				+ "], prependJavascript [" + prependJavascripts + "], appendJavascript ["
+				+ appendJavascripts + "]";
 	}
 
 	/**
@@ -489,8 +547,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("]]></component>");
 
 		encodingResponse.reset();
-		
-		
+
+
 	}
 
 
@@ -499,27 +557,27 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * @param response
 	 * @param component
 	 */
-	private void respondHeaderContribution(final Response response, final Component component) 
-	{		
+	private void respondHeaderContribution(final Response response, final Component component)
+	{
 		final HtmlHeaderContainer header = new HtmlHeaderContainer(component.getPage(),
 				HtmlHeaderSectionHandler.HEADER_ID);
-						
+
 		Response oldResponse = RequestCycle.get().setResponse(encodingResponse);
-		
+
 		encodingResponse.reset();
-		
+
 		component.renderHead(header);
-		if (component instanceof MarkupContainer) 
+		if (component instanceof MarkupContainer)
 		{
-			((MarkupContainer)component).visitChildren(new Component.IVisitor() 
+			((MarkupContainer)component).visitChildren(new Component.IVisitor()
 			{
-				public Object component(Component component) 
+				public Object component(Component component)
 				{
 					if (component.isVisible())
 					{
 						component.renderHead(header);
 						return CONTINUE_TRAVERSAL;
-					}					
+					}
 					else
 					{
 						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
@@ -527,32 +585,33 @@ public class AjaxRequestTarget implements IRequestTarget
 				}
 			});
 		}
-		
+
 		RequestCycle.get().setResponse(oldResponse);
-		
-		if (encodingResponse.getContents().length() != 0) 
+
+		if (encodingResponse.getContents().length() != 0)
 		{
 			response.write("<header-contribution");
-			
+
 			if (encodingResponse.isContentsEncoded())
 			{
 				response.write(" encoding=\"");
 				response.write(getEncodingName());
 				response.write("\" ");
 			}
-						
-			// we need to write response as CDATA and parse it on client, because
+
+			// we need to write response as CDATA and parse it on client,
+			// because
 			// konqueror crashes when there is a <script> element
 			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
-						
+
 			response.write(encodingResponse.getContents());
-			
+
 			response.write("</head>]]>");
-			
-			response.write("</header-contribution>");			
-		}		
+
+			response.write("</header-contribution>");
+		}
 	}
-	
+
 	/**
 	 * 
 	 * @param response
