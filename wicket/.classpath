@@ -7,5 +7,6 @@
 	<classpathentry sourcepath="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar" kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar"/>
 	<classpathentry sourcepath="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar" kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
 	<classpathentry sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar" kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar"/>
+        <classpathentry kind="var" path="M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
