@@ -154,13 +154,13 @@ public class WebClientInfo extends ClientInfo
 		if (majorVersion != -1)
 		{
 			properties.setProperty(ClientProperties.BROWSER_VERSION_MAJOR, Integer
-					.toString(majorVersion));
+					.valueOf(majorVersion));
 		}
 
 		if (minorVersion != -1)
 		{
 			properties.setProperty(ClientProperties.BROWSER_VERSION_MINOR, Integer
-					.toString(minorVersion));
+					.valueOf(minorVersion));
 		}
 
 		// Set quirk flags.
