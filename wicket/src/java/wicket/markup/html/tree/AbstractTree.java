@@ -393,8 +393,6 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	 *            The parent component
 	 * @param id
 	 *            The component id
-	 * @param rootLess
-	 *            whether the tree root should be hidden or shown
 	 */
 	public AbstractTree(MarkupContainer parent, String id)
 	{
@@ -411,8 +409,6 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	 *            The component id
 	 * @param model
 	 *            The tree model
-	 * @param rootLess
-	 *            whether the tree root should be hidden or shown
 	 */
 	public AbstractTree(MarkupContainer parent, String id, IModel<TreeModel> model)
 	{
@@ -498,6 +494,9 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		}
 	}
 
+	/**
+	 * @see wicket.MarkupContainer#internalDetach()
+	 */
 	@Override
 	public void internalDetach()
 	{

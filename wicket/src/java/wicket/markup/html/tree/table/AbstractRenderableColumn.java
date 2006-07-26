@@ -73,15 +73,12 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 	}
 
 	/**
-	 * @see IColumn#createCell(TreeTable, TreeNode, int)
+	 * @see IColumn#newCell(TreeNode, int)
 	 */
 	public IRenderable newCell(TreeNode node, int level)
 	{
 		return new IRenderable()
 		{
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			public void render(TreeNode node, Response response)

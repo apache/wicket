@@ -53,7 +53,7 @@ public interface IColumn extends Serializable
 
 	/**
 	 * This method is used to populate the cell for given node in case when
-	 * {@link IColumn#createCell(TreeTable, TreeNode, int)} returned null.
+	 * {@link IColumn#newCell(TreeNode, int)} returned null.
 	 * 
 	 * @param parent
 	 *            The parent to which the cell must be added. Can also be used
@@ -81,9 +81,6 @@ public interface IColumn extends Serializable
 	 * If this method returns null,
 	 * {@link IColumn#newCell(MarkupContainer, String, TreeNode, int)} is used
 	 * to popuplate the cell.
-	 * 
-	 * @param treeTable
-	 *            TreeTable to which the cell belongs
 	 * 
 	 * @param node
 	 *            TreeNode for the cell

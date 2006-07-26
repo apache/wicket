@@ -167,6 +167,9 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 	/**
 	 * Renders all columns.
+	 * 
+	 * @param markupStream
+	 *            The markup stream of this component
 	 */
 	@Override
 	protected void onRender(final MarkupStream markupStream)

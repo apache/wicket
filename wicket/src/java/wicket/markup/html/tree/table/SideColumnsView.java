@@ -84,6 +84,9 @@ final class SideColumnsView extends WebMarkupContainer
 
 	/**
 	 * Renders the columns.
+	 * 
+	 * @param markupStream
+	 *            The markup stream of this component
 	 */
 	@Override
 	protected void onRender(final MarkupStream markupStream)

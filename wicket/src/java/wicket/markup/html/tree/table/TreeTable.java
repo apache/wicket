@@ -117,7 +117,7 @@ public class TreeTable extends DefaultAbstractTree
 	 *            Used to get the display string
 	 * @return The tree cell
 	 */
-	public static Component newTreeCell(MarkupContainer<?> parent, String id, TreeNode node,
+	public static final Component newTreeCell(MarkupContainer<?> parent, String id, TreeNode node,
 			int level, IRenderNodeCallback callback)
 	{
 		TreeTable table = parent.findParent(TreeTable.class);
@@ -265,6 +265,11 @@ public class TreeTable extends DefaultAbstractTree
 
 	/**
 	 * Populates one row of the tree.
+	 * 
+	 * @param item
+	 *            the tree node component
+	 * @param level
+	 *            the current level
 	 */
 	@Override
 	protected void populateTreeItem(WebMarkupContainer<TreeNode> item, int level)

@@ -56,7 +56,7 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 	}
 
 	/**
-	 * @see IColumn#createCell(TreeTable, TreeNode, int)
+	 * @see IColumn#newCell(TreeNode, int)
 	 */
 	public IRenderable newCell(TreeNode node, int level)
 	{
