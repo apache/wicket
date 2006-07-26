@@ -85,7 +85,6 @@ public class Radio<T> extends WebMarkupContainer<T>
 
 		final RadioGroup group = findParent(RadioGroup.class);
 		final String path = getPath();
-		final String relativePath = path.substring(group.getPath().length() + 1);
 
 		if (group == null)
 		{
@@ -95,6 +94,8 @@ public class Radio<T> extends WebMarkupContainer<T>
 							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
+		final String relativePath = path.substring(group.getPath().length() + 1);
+		
 		// assign name and value
 		tag.put("name", group.getInputName());
 		tag.put("value", relativePath);
