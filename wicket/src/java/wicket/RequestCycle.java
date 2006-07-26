@@ -173,66 +173,6 @@ import wicket.util.value.ValueMap;
  */
 public abstract class RequestCycle
 {
-	/** Log */
-	private static final Log log = LogFactory.getLog(RequestCycle.class);
-
-	/** Thread-local that holds the current request cycle. */
-	private static final ThreadLocal current = new ThreadLocal();
-
-	/** No processing has been done. */
-	private static final int NOT_STARTED = 0;
-
-	/** Starting the actual request processing. */
-	private static final int PREPARE_REQUEST = 1;
-
-	/** Resolving the {@link RequestParameters} object to a request target. */
-	private static final int RESOLVE_TARGET = 2;
-
-	/** Dispatching and handling of events. */
-	private static final int PROCESS_EVENTS = 3;
-
-	/** Responding using the currently set {@link IRequestTarget}. */
-	private static final int RESPOND = 4;
-
-	/** Responding to an uncaught exception. */
-	private static final int HANDLE_EXCEPTION = 5;
-
-	/** Cleaning up after responding to a request. */
-	private static final int DETACH_REQUEST = 6;
-
-	/** Request cycle processing is done. */
-	private static final int DONE = 7;
-
-	/** The application object. */
-	protected final Application application;;
-
-	/** The current request. */
-	protected Request request;
-
-	/** The current response. */
-	protected Response response;
-
-	/** The session object. */
-	protected final Session session;
-
-	/** The processor for this request. */
-	protected final IRequestCycleProcessor processor;
-
-	/** The current stage of event processing. */
-	private int currentStep = NOT_STARTED;
-
-	/** The original response the request cycle was created with. */
-	private final Response originalResponse;
-
-	/**
-	 * True if request should be redirected to the resulting page instead of
-	 * just rendering it back to the user.
-	 */
-	private boolean redirect;
-
-	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient final RequestTargetStack requestTargets = new RequestTargetStack(3);
-
 	/**
 	 * Stack for request targets.
 	 */
@@ -249,6 +189,49 @@ public abstract class RequestCycle
 		public RequestTargetStack(final int initialCapacity)
 		{
 			super(initialCapacity);
+		}
+
+		/**
+		 * Tests if this stack is empty.
+		 * 
+		 * @return <code>true</code> if and only if this stack contains no
+		 *         items; <code>false</code> otherwise.
+		 */
+		public final boolean empty()
+		{
+			return size() == 0;
+		}
+
+		/**
+		 * Looks at the request target at the top of this stack without removing
+		 * it.
+		 * 
+		 * @return The request target at the top of this stack
+		 * @exception EmptyStackException
+		 *                If this stack is empty.
+		 */
+		public final IRequestTarget peek()
+		{
+			int size = size();
+			if (size == 0)
+			{
+				throw new EmptyStackException();
+			}
+			return (IRequestTarget)get(size - 1);
+		}
+
+		/**
+		 * Removes the request target at the top of this stack and returns it.
+		 * 
+		 * @return The requestTarget at the top of this stack
+		 * @exception EmptyStackException
+		 *                If this stack is empty.
+		 */
+		public final IRequestTarget pop()
+		{
+			final Object top = peek();
+			remove(size() - 1);
+			return (IRequestTarget)top;
 		}
 
 		/**
@@ -272,57 +255,37 @@ public abstract class RequestCycle
 				add(requestTarget);
 			}
 		}
-
-		/**
-		 * Removes the request target at the top of this stack and returns it.
-		 * 
-		 * @return The requestTarget at the top of this stack
-		 * @exception EmptyStackException
-		 *                If this stack is empty.
-		 */
-		public final IRequestTarget pop()
-		{
-			final Object top = peek();
-			remove(size() - 1);
-			return (IRequestTarget)top;
-		}
-
-		/**
-		 * Looks at the request target at the top of this stack without removing
-		 * it.
-		 * 
-		 * @return The request target at the top of this stack
-		 * @exception EmptyStackException
-		 *                If this stack is empty.
-		 */
-		public final IRequestTarget peek()
-		{
-			int size = size();
-			if (size == 0)
-			{
-				throw new EmptyStackException();
-			}
-			return (IRequestTarget)get(size - 1);
-		}
-
-		/**
-		 * Tests if this stack is empty.
-		 * 
-		 * @return <code>true</code> if and only if this stack contains no
-		 *         items; <code>false</code> otherwise.
-		 */
-		public final boolean empty()
-		{
-			return size() == 0;
-		}
 	}
 
+	/** Thread-local that holds the current request cycle. */
+	private static final ThreadLocal current = new ThreadLocal();
 
-	/** the time that this request cycle object was created. */
-	private final long startTime = System.currentTimeMillis();
+	/** Cleaning up after responding to a request. */
+	private static final int DETACH_REQUEST = 6;
 
-	/** True if the session should be updated (for clusterf purposes). */
-	private boolean updateSession;
+	/** Request cycle processing is done. */
+	private static final int DONE = 7;
+
+	/** Responding to an uncaught exception. */
+	private static final int HANDLE_EXCEPTION = 5;
+
+	/** Log */
+	private static final Log log = LogFactory.getLog(RequestCycle.class);
+
+	/** No processing has been done. */
+	private static final int NOT_STARTED = 0;
+
+	/** Starting the actual request processing. */
+	private static final int PREPARE_REQUEST = 1;
+
+	/** Dispatching and handling of events. */
+	private static final int PROCESS_EVENTS = 3;
+
+	/** Resolving the {@link RequestParameters} object to a request target. */
+	private static final int RESOLVE_TARGET = 2;
+
+	/** Responding using the currently set {@link IRequestTarget}. */
+	private static final int RESPOND = 4;;
 
 	/**
 	 * Gets request cycle for calling thread.
@@ -333,6 +296,43 @@ public abstract class RequestCycle
 	{
 		return (RequestCycle)current.get();
 	}
+
+	/** The application object. */
+	protected final Application application;
+
+	/** The processor for this request. */
+	protected final IRequestCycleProcessor processor;
+
+	/** The current request. */
+	protected Request request;
+
+	/** The current response. */
+	protected Response response;
+
+	/** The session object. */
+	protected final Session session;
+
+	/** The current stage of event processing. */
+	private int currentStep = NOT_STARTED;
+
+	/** The original response the request cycle was created with. */
+	private final Response originalResponse;
+
+	/**
+	 * True if request should be redirected to the resulting page instead of
+	 * just rendering it back to the user.
+	 */
+	private boolean redirect;
+
+
+	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
+	private transient final RequestTargetStack requestTargets = new RequestTargetStack(3);
+
+	/** the time that this request cycle object was created. */
+	private final long startTime = System.currentTimeMillis();
+
+	/** True if the session should be updated (for clusterf purposes). */
+	private boolean updateSession;
 
 	/**
 	 * Constructor.
@@ -749,6 +749,19 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Returns a URL that references the given request target.
+	 * 
+	 * @param requestTarget
+	 *            the request target to reference
+	 * @return a URL that references the given request target
+	 */
+	public final CharSequence urlFor(final IRequestTarget requestTarget)
+	{
+		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, requestTarget);
+	}
+
+	/**
 	 * Returns a URL that references the given page. It also
 	 * {@link Session#touch(Page) touches} the page in the session so that it is
 	 * put in the front of the page stack. Use this method only if you plan to
@@ -766,16 +779,28 @@ public abstract class RequestCycle
 	}
 
 	/**
-	 * Returns a URL that references the given request target.
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
 	 * 
-	 * @param requestTarget
-	 *            the request target to reference
-	 * @return a URL that references the given request target
+	 * @param pageMap
+	 *            Pagemap to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final IRequestTarget requestTarget)
+	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
+			final PageParameters parameters)
 	{
-		IRequestCodingStrategy requestCodingStrategy = getProcessor().getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, requestTarget);
+		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
+				? PageMap.DEFAULT_NAME
+				: pageMap.getName(), pageClass, parameters);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
 	}
 
 	/**
@@ -809,31 +834,6 @@ public abstract class RequestCycle
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
 				new SharedResourceRequestTarget(requestParameters));
 		return url;
-	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageMap
-	 *            Pagemap to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
-			final PageParameters parameters)
-	{
-		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
-				? PageMap.DEFAULT_NAME
-				: pageMap.getName(), pageClass, parameters);
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
 	}
 
 	/**
