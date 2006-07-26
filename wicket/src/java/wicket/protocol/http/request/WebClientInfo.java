@@ -64,8 +64,7 @@ public class WebClientInfo extends ClientInfo
 	public WebClientInfo(WebRequestCycle requestCycle)
 	{
 		super();
-		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
-				.getHttpServletRequest();
+		HttpServletRequest httpServletRequest = requestCycle.getRequest().getHttpServletRequest();
 		userAgent = httpServletRequest.getHeader("User-Agent");
 		if (userAgent == null)
 		{
@@ -222,4 +221,32 @@ public class WebClientInfo extends ClientInfo
 	{
 		return properties;
 	}
+
+	// TODO 2.0: add some more of these convinience getters, using properties is
+	// not the most intuitive thing in the world
+
+	/**
+	 * @return true if the client browser is internet explorer
+	 */
+	public final boolean isBrowserInternetExplorer()
+	{
+		return properties.getBoolean(ClientProperties.BROWSER_INTERNET_EXPLORER);
+	}
+
+	/**
+	 * @return major version of client browser or 0 if not available
+	 */
+	public final int getBrowserMajorVersion()
+	{
+		return properties.getInt(ClientProperties.BROWSER_VERSION_MAJOR, 0);
+	}
+
+	/**
+	 * @return minor version of client browser or 0 if not available
+	 */
+	public final int getBrowserMinorVersion()
+	{
+		return properties.getInt(ClientProperties.BROWSER_VERSION_MINOR, 0);
+	}
+
 }
