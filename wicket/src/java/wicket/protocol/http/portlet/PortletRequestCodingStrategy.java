@@ -59,6 +59,8 @@ import wicket.util.string.Strings;
  */
 
 //TODO: this should not really implement IRequestTargetMounter
+//TODO: move duplicate code from here and WebRequestCodingStrategy to AbstractRequestCodingStrategy
+
 public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** Name of interface target query parameter */

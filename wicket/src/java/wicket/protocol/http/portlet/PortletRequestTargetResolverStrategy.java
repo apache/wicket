@@ -46,6 +46,9 @@ import wicket.util.string.Strings;
  * @author Igor Vaynberg
  * @author Jonathan Locke
  */
+
+
+// TODO: Move duplicate code from here and DefaultRequestTargetResolverStrategy to AbstractRequestTargetResolverStrategy
 public class PortletRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
 {
 

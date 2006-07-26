@@ -22,7 +22,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.portlet.PortletSession;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
