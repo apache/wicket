@@ -736,7 +736,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		if (Strings.isEmpty(javascriptId))
 		{
-			javascriptId = getPageRelativePath();
+			javascriptId = getMarkupId();
 		}
 		return javascriptId;
 	}
