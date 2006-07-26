@@ -265,17 +265,7 @@ public abstract class RequestCycle
 				// useless; there is no overriding anyway. But what we do
 				// is place a redirect issue in the ajax response
 				AjaxRequestTarget ajaxRequestTarget = (AjaxRequestTarget)peek();
-				CharSequence url = RequestCycle.get().urlFor(requestTarget);
-
-				// if this is a page target, make sure it is available in the
-				// page map
-				if (requestTarget instanceof IPageRequestTarget)
-				{
-					Session.get().touch(((IPageRequestTarget)requestTarget).getPage());
-				}
-
-				// append the redirect script
-				ajaxRequestTarget.prependJavascript("window.location='" + url + "';");
+				ajaxRequestTarget.setRequestTarget(requestTarget);
 			}
 			else
 			{
