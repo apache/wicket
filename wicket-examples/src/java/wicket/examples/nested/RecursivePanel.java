@@ -33,7 +33,7 @@ import wicket.markup.html.panel.Panel;
  * 
  * @author Eelco Hillenius
  */
-public final class NestedList extends Panel
+public final class RecursivePanel extends Panel
 {
 	/**
 	 * Constructor.
@@ -44,7 +44,7 @@ public final class NestedList extends Panel
 	 * @param list
 	 *            a list where each element is either a string or another list
 	 */
-	public NestedList(MarkupContainer parent, final String id, List list)
+	public RecursivePanel(MarkupContainer parent, final String id, List list)
 	{
 		super(parent, id);
 		new Rows<String>(this, "rows", list);
@@ -82,7 +82,7 @@ public final class NestedList extends Panel
 			if (modelObject instanceof List)
 			{
 				// create a panel that renders the sub lis
-				new NestedList(listItem, "nested", (List)modelObject);
+				new RecursivePanel(listItem, "nested", (List)modelObject);
 				// if the current element is a list, we create a dummy row/
 				// label element
 				// as we have to confirm to our HTML definition, and set it's
@@ -99,7 +99,7 @@ public final class NestedList extends Panel
 				// to confirm to our HTML definition, and set this panel's
 				// visibility
 				// property to false to avoid having the UL tag rendered
-				NestedList nested = new NestedList(listItem, "nested", null);
+				RecursivePanel nested = new RecursivePanel(listItem, "nested", null);
 				nested.setVisible(false);
 				// add the row (with the LI element attached, and the label with
 				// the

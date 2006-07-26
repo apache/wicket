@@ -24,11 +24,12 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
-import wicket.extensions.markup.html.tree.Tree;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.tree.Tree;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case
@@ -63,18 +64,19 @@ public class Home extends WicketExamplePage
 		l1.add("test 1.3");
 
 		// construct the panel
-		new NestedList(this, "nestedList", l1);
+		new RecursivePanel(this, "panels", l1);
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
 		final Tree tree = new Tree(this, "tree", treeModel)
 		{
+			/**
+			 * @see wicket.markup.html.tree.Tree#renderNode(javax.swing.tree.TreeNode)
+			 */
 			@Override
-			protected String getNodeLabel(DefaultMutableTreeNode node)
+			protected String renderNode(TreeNode node)
 			{
-				Object userObject = node.getUserObject();
-				return (userObject instanceof List) ? "<sub>" : String
-						.valueOf(node.getUserObject());
+				return node.isLeaf() ? node.toString() : "<sub>";
 			}
 		};
 		new Link(this, "expandAll")
@@ -82,7 +84,7 @@ public class Home extends WicketExamplePage
 			@Override
 			public void onClick()
 			{
-				tree.expandAll(true);
+				tree.getTreeState().expandAll();
 			}
 		};
 
@@ -91,31 +93,9 @@ public class Home extends WicketExamplePage
 			@Override
 			public void onClick()
 			{
-				tree.expandAll(false);
+				tree.getTreeState().collapseAll();
 			}
 		};
-
-		// and another one
-		new MyTree(this, "tree2", treeModel);
-
-		// and yet another one
-		new AnotherTree(this, "tree3", treeModel);
-	}
-
-	/**
-	 * Convert the nested lists to a tree model
-	 * 
-	 * @param list
-	 *            the list
-	 * @return tree model
-	 */
-	private TreeModel convertToTreeModel(List list)
-	{
-		TreeModel model = null;
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-		add(rootNode, list);
-		model = new DefaultTreeModel(rootNode);
-		return model;
 	}
 
 	/**
@@ -143,5 +123,21 @@ public class Home extends WicketExamplePage
 				parent.add(child);
 			}
 		}
+	}
+
+	/**
+	 * Convert the nested lists to a tree model
+	 * 
+	 * @param list
+	 *            the list
+	 * @return tree model
+	 */
+	private TreeModel convertToTreeModel(List list)
+	{
+		TreeModel model = null;
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
+		add(rootNode, list);
+		model = new DefaultTreeModel(rootNode);
+		return model;
 	}
 }
