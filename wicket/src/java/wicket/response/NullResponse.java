@@ -22,13 +22,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import wicket.Response;
+import wicket.protocol.http.WebResponse;
 
 /**
  * Response implementation that discards all output.
  * 
  * @author Jonathan Locke
  */
-public class NullResponse extends Response
+public class NullResponse extends WebResponse
 {
 	/** The one and only instance of NullResponse */
 	private static final NullResponse instance = new NullResponse();
