@@ -969,9 +969,12 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 		if (id == null)
 		{
 			id = getPageRelativePath();
+			// first escape _ with __
+			id = id.replace("_", "__");
+			// then replace : with _ 
+			id = id.replace(':', '_');
 			getMarkupAttributes().put("id", id);
 		}
-		id = id.replace(':', '_');
 		return id;
 	}
 
