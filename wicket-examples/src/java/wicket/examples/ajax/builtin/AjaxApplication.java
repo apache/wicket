@@ -20,6 +20,7 @@ package wicket.examples.ajax.builtin;
 
 import wicket.Page;
 import wicket.examples.WicketExampleApplication;
+import wicket.markup.html.AjaxServerAndClientTimeFilter;
 import wicket.markup.html.ServerAndClientTimeFilter;
 
 /**
@@ -41,7 +42,7 @@ public class AjaxApplication extends WicketExampleApplication
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
-		getRequestCycleSettings().addResponseFilter(new ServerAndClientTimeFilter());
+		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 		getAjaxSettings().setAjaxDebugModeEnabled(true);
 	}
 
