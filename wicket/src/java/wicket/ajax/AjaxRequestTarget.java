@@ -340,6 +340,23 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		try
 		{
+			CharSequence url = null; 
+			
+			if(requestTarget != null)
+			{
+				// a request target was set. Try to get the url for a redirect to that
+				url = requestCycle.urlFor(requestTarget);
+				// there was a requestTarget, but couldn't generate a redirect url.
+				// then just call respond to it. It should be a request target that handles
+				// the complete output by itself.
+				if (url == null)
+				{
+					requestTarget.respond(requestCycle);
+					return;
+				}
+			}
+
+			
 			final Application app = Application.get();
 
 			// disable component use check since we want to ignore header
@@ -365,7 +382,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
-			if (requestTarget == null)
+			if (url == null)
 			{
 				// normal behavior
 
@@ -391,9 +408,6 @@ public class AjaxRequestTarget implements IRequestTarget
 			}
 			else
 			{
-				// a request target was set. only do the redirect to that
-				CharSequence url = RequestCycle.get().urlFor(requestTarget);
-
 				// if this is a page target, make sure it is available in the
 				// page map
 				if (requestTarget instanceof IPageRequestTarget)

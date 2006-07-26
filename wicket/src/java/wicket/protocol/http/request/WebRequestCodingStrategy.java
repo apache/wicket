@@ -219,8 +219,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			return url;
 		}
 
-		// this method was not able to produce a url; throw an exception
-		throw new WicketRuntimeException("unable to encode " + requestTarget);
+		// Just return null intead of throwing an exception. So that it can be handled better
+		return null;
 	}
 
 	/**
