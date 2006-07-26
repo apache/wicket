@@ -414,7 +414,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return Request object
 	 */
-	public final Request getRequest()
+	public Request getRequest()
 	{
 		return request;
 	}
@@ -434,7 +434,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return Response object
 	 */
-	public final Response getResponse()
+	public Response getResponse()
 	{
 		return response;
 	}

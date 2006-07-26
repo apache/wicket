@@ -21,6 +21,8 @@ package wicket.protocol.http;
 import wicket.IRequestCycleFactory;
 import wicket.RequestCycle;
 import wicket.Session;
+import wicket.protocol.http.request.WebClientInfo;
+import wicket.request.ClientInfo;
 
 /**
  * A session subclass for the HTTP protocol.
@@ -102,8 +104,7 @@ public class WebSession extends Session
 	{
 		if (requestCycleFactory == null)
 		{
-			this.requestCycleFactory = ((WebApplication)getApplication())
-					.getRequestCycleFactory();
+			this.requestCycleFactory = ((WebApplication)getApplication()).getRequestCycleFactory();
 		}
 
 		return this.requestCycleFactory;
@@ -130,5 +131,14 @@ public class WebSession extends Session
 		set(this);
 
 		attach();
+	}
+
+	/**
+	 * @see wicket.Session#getClientInfo()
+	 */
+	@Override
+	public WebClientInfo getClientInfo()
+	{
+		return (WebClientInfo)super.getClientInfo();
 	}
 }

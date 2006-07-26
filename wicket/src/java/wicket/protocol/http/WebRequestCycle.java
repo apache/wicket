@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.AbortException;
+import wicket.Application;
 import wicket.IRedirectListener;
 import wicket.MetaDataKey;
 import wicket.Page;
@@ -69,6 +70,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		return (WebRequestCycle)RequestCycle.get();
 	}
+
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
@@ -106,17 +108,26 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
-	 * @return Request as a WebRequest
+	 * @see wicket.RequestCycle#getApplication()
 	 */
-	public WebRequest getWebRequest()
+	@Override
+	public WebApplication getApplication()
+	{
+		return (WebApplication)super.getApplication();
+	}
+
+	/**
+	 * @see wicket.RequestCycle#getRequest()
+	 */
+	public WebRequest getRequest()
 	{
 		return (WebRequest)request;
 	}
 
 	/**
-	 * @return Response as a WebResponse
+	 * @see wicket.RequestCycle#getResponse()
 	 */
-	public WebResponse getWebResponse()
+	public WebResponse getResponse()
 	{
 		return (WebResponse)response;
 	}
@@ -124,9 +135,61 @@ public class WebRequestCycle extends RequestCycle
 	/**
 	 * @return Session as a WebSession
 	 */
-	public WebSession getWebSession()
+	public WebSession getSession()
 	{
 		return (WebSession)session;
+	}
+
+	/**
+	 * 
+	 * @see wicket.RequestCycle#getClientInfo()
+	 */
+	@Override
+	public WebClientInfo getClientInfo()
+	{
+		return (WebClientInfo)super.getClientInfo();
+	}
+	
+	/**
+	 * Returns web session
+	 * 
+	 * @deprecated use multivariant {@link #getSession()} instead
+	 * @return web session
+	 * 
+	 * TODO Post 2.0: remove
+	 */
+	@Deprecated
+	public WebSession getWebSession()
+	{
+		return getSession();
+	}
+
+	/**
+	 * Returns web request
+	 * 
+	 * @deprecated use multivariant {@link #getRequest()} instead
+	 * @return web response
+	 * 
+	 * TODO Post 2.0: remove
+	 */
+	@Deprecated
+	public WebRequest getWebRequest()
+	{
+		return getRequest();
+	}
+
+	/**
+	 * Returns web response
+	 * 
+	 * @deprecated use multivariant {@link #getResponse()} instead
+	 * @return web response
+	 * 
+	 * TODO Post 2.0: remove
+	 */
+	@Deprecated
+	public WebResponse getWebResponse()
+	{
+		return getResponse();
 	}
 
 	/**
@@ -150,7 +213,7 @@ public class WebRequestCycle extends RequestCycle
 				&& (application instanceof WebApplication))
 		{
 			// remember the current response
-			final WebResponse currentResponse = getWebResponse();
+			final WebResponse currentResponse = getResponse();
 			try
 			{
 				// create the redirect response.
@@ -244,7 +307,7 @@ public class WebRequestCycle extends RequestCycle
 	 * @see wicket.RequestCycle#newClientInfo()
 	 */
 	@Override
-	protected ClientInfo newClientInfo()
+	protected WebClientInfo newClientInfo()
 	{
 		if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
 		{

@@ -44,8 +44,10 @@ import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.protocol.http.WebSession;
 import wicket.protocol.http.request.urlcompressing.URLCompressor;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
 import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
@@ -205,17 +207,51 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	{
 		super.configureResponse();
 
-		final WebResponse response = getWebRequestCycle().getWebResponse();
+		final WebResponse response = getResponse();
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Cache-Control", "no-cache, max-age=0, must-revalidate"); // no-store
 	}
 
 	/**
 	 * @return The WebRequestCycle for this WebPage.
+	 * @deprecated use multivariant {@link #getRequestCycle()} instead
 	 */
 	protected final WebRequestCycle getWebRequestCycle()
 	{
-		return (WebRequestCycle)getRequestCycle();
+		return getRequestCycle();
+	}
+
+	/**
+	 * @see wicket.RequestCycle#getRequest()
+	 */
+	public WebRequest getRequest()
+	{
+		return (WebRequest)super.getRequest();
+	}
+
+	/**
+	 * @see wicket.RequestCycle#getResponse()
+	 */
+	public WebResponse getResponse()
+	{
+		return (WebResponse)super.getResponse();
+	}
+
+	/**
+	 * @return Session as a WebSession
+	 */
+	public WebSession getSession()
+	{
+		return (WebSession)super.getSession();
+	}
+
+	/**
+	 * @return The WebRequestCycle for this WebPage.
+	 */
+	@Override
+	public WebRequestCycle getRequestCycle()
+	{
+		return (WebRequestCycle)super.getRequestCycle();
 	}
 
 	/**
