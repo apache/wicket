@@ -76,7 +76,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private final class EncodingResponse extends Response
+	private final class EncodingResponse extends WebResponse
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
 
