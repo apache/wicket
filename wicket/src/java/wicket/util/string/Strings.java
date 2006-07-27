@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-05-26 03:12:48 -0700 (Fri, 26 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -389,6 +389,54 @@ public final class Strings
 			return buffer;
 		}
 	}
+
+	/**
+	 * Joins path fragments using the specified separator into a single path
+	 * 
+	 * @param separator
+	 * @param fragments
+	 * @return combined fragments
+	 */
+	public static String join(String separator, String... fragments)
+	{
+		if (fragments.length < 1)
+		{
+			// no elements
+			return "";
+		}
+		else if (fragments.length < 2)
+		{
+			// single element
+			return fragments[0];
+		}
+		else
+		{
+			// two or more elements
+
+			StringBuilder buff = new StringBuilder(128);
+			buff.append(fragments[0]);
+			for (int i = 1; i < fragments.length; i++)
+			{
+				boolean lhsClosed = fragments[i - 1].endsWith(separator);
+				boolean rhsClosed = fragments[i].startsWith(separator);
+				if (lhsClosed && rhsClosed)
+				{
+					buff.append(fragments[i].substring(1));
+				}
+				else if (!lhsClosed && !rhsClosed)
+				{
+					buff.append(separator).append(fragments[i]);
+				}
+				else
+				{
+					buff.append(fragments[i]);
+				}
+			}
+			return buff.toString();
+
+		}
+	}
+
 
 	/**
 	 * Replace HTML numbers like &#20540 by the appropriate character.

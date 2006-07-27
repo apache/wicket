@@ -440,24 +440,30 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	protected void addResourceParameters(Request request, RequestParameters parameters)
 	{
 		String pathInfo = request.getPath();
-		if (pathInfo != null && pathInfo.startsWith("/resources/"))
+		if (pathInfo != null)
 		{
-			int ix = "/resources/".length();
-			if (pathInfo.length() > ix)
+			if (pathInfo.startsWith("/")) {
+				pathInfo=pathInfo.substring(1);
+			}
+			if (pathInfo.startsWith("resources/"))
 			{
-				StringBuilder path = new StringBuilder(pathInfo.substring(ix));
-				int ixSemiColon = path.indexOf(";");
-				// strip off any jsession id
-				if (ixSemiColon != -1)
+				int ix = "resources/".length();
+				if (pathInfo.length() > ix)
 				{
-					int ixEnd = path.indexOf("?");
-					if (ixEnd == -1)
+					StringBuilder path = new StringBuilder(pathInfo.substring(ix));
+					int ixSemiColon = path.indexOf(";");
+					// strip off any jsession id
+					if (ixSemiColon != -1)
 					{
-						ixEnd = path.length();
+						int ixEnd = path.indexOf("?");
+						if (ixEnd == -1)
+						{
+							ixEnd = path.length();
+						}
+						path.delete(ixSemiColon, ixEnd);
 					}
-					path.delete(ixSemiColon, ixEnd);
+					parameters.setResourceKey(path.toString());
 				}
-				parameters.setResourceKey(path.toString());
 			}
 		}
 	}
@@ -530,7 +536,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		}
 
 		boolean firstParameter = true;
-		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName) || requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
+		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName)
+				|| requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
 		{
 			firstParameter = false;
 			url.append('?');
@@ -543,8 +550,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		}
 
 		// Is it a bookmarkable interface listener?
-		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget) {
-			BookmarkableListenerInterfaceRequestTarget listenerTarget = (BookmarkableListenerInterfaceRequestTarget) requestTarget;
+		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
+		{
+			BookmarkableListenerInterfaceRequestTarget listenerTarget = (BookmarkableListenerInterfaceRequestTarget)requestTarget;
 			if (firstParameter == true)
 			{
 				url.append("?");
@@ -560,9 +568,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			url.append(listenerTarget.getComponentPath());
 			url.append(Component.PATH_SEPARATOR);
 			url.append(Component.PATH_SEPARATOR);
-			url.append(listenerTarget.getInterfaceName());			
+			url.append(listenerTarget.getInterfaceName());
 		}
-		
+
 		// Get page parameters
 		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)

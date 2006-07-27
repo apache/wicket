@@ -486,7 +486,8 @@ public class WicketFilter implements Filter
 			return true;
 		}
 		// SharedResources
-		if (url.startsWith(fullRootPath + RESOURCES_PATH_PREFIX))
+		String tmp=Strings.join("/", fullRootPath, RESOURCES_PATH_PREFIX);
+		if (url.startsWith(Strings.join("/", fullRootPath, RESOURCES_PATH_PREFIX)))
 		{
 			return true;
 		}
