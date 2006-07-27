@@ -24,10 +24,12 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.tree.Tree;
+import wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType;
 import wicket.markup.html.link.Link;
 
 /**
@@ -69,13 +71,15 @@ public class Home extends WicketExamplePage
 		TreeModel treeModel = convertToTreeModel(l1);
 		final Tree tree = new Tree("tree", treeModel)
 		{
-			protected String getNodeLabel(DefaultMutableTreeNode node)
+			protected String renderNode(TreeNode node)
 			{
-				Object userObject = node.getUserObject();
-				return (userObject instanceof List) ? "<sub>" : String
-						.valueOf(node.getUserObject());
+				DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;				 
+				Object userObject = treeNode.getUserObject();
+				return (userObject instanceof List) ? "<subtree>" : String
+						.valueOf(treeNode.getUserObject());
 			}
 		};
+		tree.setLinkType(LinkType.REGULAR);
 		add(tree);
 		add(new Link("expandAll")
 		{
@@ -109,7 +113,7 @@ public class Home extends WicketExamplePage
 			Object o = i.next();
 			if (o instanceof List)
 			{
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode("<subtree>");
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
 				parent.add(child);
 				add(child, (List)o);
 			}
