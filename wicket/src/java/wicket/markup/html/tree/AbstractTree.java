@@ -1023,7 +1023,12 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			item = newTreeItem(node, level, id);
 			item.setChildren(children);
 
-			if (parent != null)
+			// was the item an root item?
+			if (parent == null)
+			{
+				rootItem = item;				
+			}
+			else
 			{
 				parent.getChildren().set(index, item);
 			}
