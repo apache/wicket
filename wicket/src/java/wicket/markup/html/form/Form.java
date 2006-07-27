@@ -869,16 +869,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	}
 
 	/**
-	 * Implemented by subclasses that want to perform custom form-level
-	 * validation. Errors should be reported using the standard error() call
-	 * either on one of the form components or the form itself.
-	 */
-	protected void onValidate()
-	{
-
-	}
-
-	/**
 	 * Process the form. Though you can override this method to provide your
 	 * whole own algorithm, it is not recommended to do so.
 	 * <p>
@@ -980,8 +970,6 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		validateValidators();
 
 		validateFormValidators();
-		
-		onValidate();
 	}
 
 	/**
