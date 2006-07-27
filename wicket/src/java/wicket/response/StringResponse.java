@@ -20,7 +20,7 @@ package wicket.response;
 
 import java.io.OutputStream;
 
-import wicket.protocol.http.WebResponse;
+import wicket.Response;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -30,7 +30,7 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Jonathan Locke
  */
-public class StringResponse extends WebResponse
+public class StringResponse extends Response
 {
 	/** StringWriter to write to */
 	protected final AppendingStringBuffer out;
