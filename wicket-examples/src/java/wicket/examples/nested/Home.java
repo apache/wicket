@@ -79,7 +79,9 @@ public class Home extends WicketExamplePage
 						.valueOf(treeNode.getUserObject());
 			}
 		};
+		// disable ajax links in this example
 		tree.setLinkType(LinkType.REGULAR);
+		
 		add(tree);
 		add(new Link("expandAll")
 		{
