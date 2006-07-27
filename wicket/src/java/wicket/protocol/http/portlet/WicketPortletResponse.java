@@ -17,12 +17,12 @@ package wicket.protocol.http.portlet;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.portlet.ActionResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.RenderResponse;
 
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.WebResponse;
 
 /**
  * A Response implementation that uses PortletResponse
@@ -44,8 +44,6 @@ public class WicketPortletResponse extends Response
 	public WicketPortletResponse(PortletResponse res)
 	{
 		this.res = res;
-
-		ActionResponse r = null;
 	}
 
 	/*
