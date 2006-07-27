@@ -964,6 +964,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final void init()
 	{
+		setVersioned(false);
+		
 		// we need id when we are replacing the whole tree
 		setOutputMarkupId(true);
 
@@ -1204,13 +1206,5 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			TreeItem child = (TreeItem)i.next();
 			visitItemAndChildren(child, callback);
 		}
-	}
-	
-	/**
-	 * @see Component#isVersioned()
-	 */
-	public boolean isVersioned()
-	{
-		return false;
-	}
+	}	
 }
