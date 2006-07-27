@@ -45,6 +45,7 @@ public final class RecursivePanel extends Panel
 	{
 		super(id);
 		add(new Rows("rows", list));
+		setVersioned(false);
 	}
 
 	/**
