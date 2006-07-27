@@ -800,9 +800,10 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			try
 			{
 				BookmarkableListenerInterfaceRequestTarget target = new BookmarkableListenerInterfaceRequestTarget(
-						page.getPageMap().getName(), page.getClass(), new PageParameters(), this, IFormSubmitListener.INTERFACE);
+						page.getPageMap().getName(), page.getClass(), new PageParameters(), this,
+						IFormSubmitListener.INTERFACE);
 				tag.put("action", urlFor(target));
-				addAction = false;				
+				addAction = false;
 			}
 			catch (Exception e)
 			{
@@ -865,6 +866,16 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	protected void onSubmit()
 	{
+	}
+
+	/**
+	 * Implemented by subclasses that want to perform custom form-level
+	 * validation. Errors should be reported using the standard error() call
+	 * either on one of the form components or the form itself.
+	 */
+	protected void onValidate()
+	{
+
 	}
 
 	/**
@@ -969,6 +980,8 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		validateValidators();
 
 		validateFormValidators();
+		
+		onValidate();
 	}
 
 	/**
@@ -1245,8 +1258,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		return new AppendingStringBuffer("document.getElementById('").append(
 				getHiddenFieldId(HIDDEN_FIELD_FAKE_SUBMIT)).append("').value='").append(url)
-				.append("';document.getElementById('").append(getMarkupId()).append(
-						"').submit();");
+				.append("';document.getElementById('").append(getMarkupId()).append("').submit();");
 	}
 
 	/**
