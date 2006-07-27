@@ -29,7 +29,7 @@ import wicket.protocol.http.WebResponse;
  * 
  * @author Jonathan Locke
  */
-public class NullResponse extends WebResponse
+public class NullResponse extends Response
 {
 	/** The one and only instance of NullResponse */
 	private static final NullResponse instance = new NullResponse();
