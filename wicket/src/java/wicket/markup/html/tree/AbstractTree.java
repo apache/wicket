@@ -1035,7 +1035,9 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		}
 
 		if (item != null)
+		{
 			dirtyItems.add(item);
+		}
 	}
 
 	/**
