@@ -18,7 +18,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -505,18 +504,17 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 */
 	protected Component newNodeIcon(MarkupContainer parent, String id, final TreeNode node)
 	{
-		return new Image(id)
+		return new WebMarkupContainer(id)
 		{
 			private static final long serialVersionUID = 1L;
 
-			/**
-			 * @see wicket.markup.html.image.Image#getImageResourceReference()
-			 */
-			protected ResourceReference getImageResourceReference()
+			protected void onComponentTag(ComponentTag tag)
 			{
-				return getNodeIcon(node);
+				super.onComponentTag(tag);
+				tag.put("style", "background-image: url('" + RequestCycle.get().urlFor(getNodeIcon(node)) + "')");
 			}
 		};
+
 	}
 
 	/**
