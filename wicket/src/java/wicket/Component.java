@@ -40,7 +40,6 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.WicketTag;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.WebPage;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
@@ -1765,8 +1764,6 @@ public abstract class Component implements Serializable
 			// header or body onLoad tag.
 			if (this.behaviors != null)
 			{
-				final WebPage webPage = (WebPage)getPage();
-	
 				final Iterator iter = this.behaviors.iterator();
 				while (iter.hasNext())
 				{

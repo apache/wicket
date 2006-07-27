@@ -38,6 +38,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.behavior.IBehaviorListener;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
@@ -368,7 +369,8 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			return null;
 		}
 
-		if(IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
+		if(IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass())
+				|| IBehaviorListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
 		{
 			return encodeServletRequest(requestCycle,requestTarget);
 		}
