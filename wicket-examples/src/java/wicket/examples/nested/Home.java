@@ -109,7 +109,7 @@ public class Home extends WicketExamplePage
 			Object o = i.next();
 			if (o instanceof List)
 			{
-				DefaultMutableTreeNode child = new DefaultMutableTreeNode(o);
+				DefaultMutableTreeNode child = new DefaultMutableTreeNode("<subtree>");
 				parent.add(child);
 				add(child, (List)o);
 			}
@@ -131,7 +131,7 @@ public class Home extends WicketExamplePage
 	private TreeModel convertToTreeModel(List list)
 	{
 		TreeModel model = null;
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("<root>");
 		add(rootNode, list);
 		model = new DefaultTreeModel(rootNode);
 		return model;
