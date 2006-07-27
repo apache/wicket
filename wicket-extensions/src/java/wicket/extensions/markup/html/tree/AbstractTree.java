@@ -460,6 +460,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					{
 						rootItem = newTreeItem(rootNode, 0);
 					}
+					itemContainer.add(rootItem);
 					buildItemChildren(rootItem);
 				}
 			}
@@ -607,6 +608,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				TreeNode node = (TreeNode)e.getChildren()[i];
 				int index = e.getChildIndices()[i];
 				TreeItem item = newTreeItem(node, parentItem.getLevel() + 1);
+				itemContainer.add(item);
 				parentItem.getChildren().add(index, item);
 
 				dirtyItems.add(item);
@@ -1003,16 +1005,24 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 			item = newTreeItem(node, level, id);
 			itemContainer.add(item);
+			
 			item.setChildren(children);
 
-			if (parent != null)
+			// was the item an root item?
+			if (parent == null)
+			{
+				rootItem = item;				
+			}
+			else
 			{
 				parent.getChildren().set(index, item);
 			}
 		}
 
 		if (item != null)
+		{
 			dirtyItems.add(item);
+		}
 	}
 
 	/**

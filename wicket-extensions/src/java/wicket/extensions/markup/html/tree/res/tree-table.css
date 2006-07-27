@@ -25,6 +25,7 @@ div.wicket-tree-table span.junction-last,
 div.wicket-tree-table span.plus,
 div.wicket-tree-table span.minus,
 div.wicket-tree-table span.corner,
+div.wicket-tree-table span.icon,
 div.wicket-tree-table span.indent-line {
 	width: 18px;
 	float: left;
@@ -36,6 +37,7 @@ div.wicket-tree-table span.plus,
 div.wicket-tree-table span.minus,
 div.wicket-tree-table span.corner,
 div.wicket-tree-table span.indent-line,
+div.wicket-tree-table span.icon,
 div.wicket-tree-table div.row,
 div.wicket-tree-table div.row-selected,
 div.wicket-tree-table div.a_,	
@@ -43,6 +45,14 @@ div.wicket-tree-table span.b_,
 div.wicket-tree-table span.b_ span.c_ {
 	height: 1.5em;	
 	min-height: 18px;
+}
+
+div.wicket-tree-table span.icon {
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	margin-left: 2px;
+	position: relative;
+	top: -1px;
 }
 
 div.wicket-tree-table div.row,
@@ -94,15 +104,6 @@ div.wicket-tree-table span.indent {
 div.wicket-tree-table a:hover {
 	text-decoration: underline;
 }
-
-div.wicket-tree-table img {
-	border-width: 0px;
-	float: left;
-	margin-left: 2px;
-	margin-right: 2px;
-	width: 18px; height: 18px;
-}
-
 
 div.wicket-tree-table span.indent-blank {
 	width: 18px;
