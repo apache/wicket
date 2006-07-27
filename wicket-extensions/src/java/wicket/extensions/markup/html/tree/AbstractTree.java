@@ -188,7 +188,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		protected final void setRenderChildren(boolean value)
 		{
 			setFlag(FLAG_RENDER_CHILDREN, value);
-		}
+		}		
 	}
 
 	/**
@@ -277,7 +277,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				// tree is empty, just move the markupStream
 				markupStream.skipComponent();
 			}
-		}
+		}		
 	}
 
 	/** Reference to the javascript file. */
@@ -971,7 +971,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		itemContainer = new TreeItemContainer("i");
 		add(itemContainer);
 
-		add(HeaderContributor.forJavaScript(JAVASCRIPT.getScope(), JAVASCRIPT.getName()));
+		add(HeaderContributor.forJavaScript(JAVASCRIPT.getScope(), JAVASCRIPT.getName()));		
 	}
 
 	/**
@@ -1204,5 +1204,13 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			TreeItem child = (TreeItem)i.next();
 			visitItemAndChildren(child, callback);
 		}
+	}
+	
+	/**
+	 * @see Component#isVersioned()
+	 */
+	public boolean isVersioned()
+	{
+		return false;
 	}
 }
