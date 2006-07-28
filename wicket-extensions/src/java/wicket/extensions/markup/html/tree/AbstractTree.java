@@ -751,10 +751,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				// add the component to target
 				target.addComponent(item);
 			}
-		}
 
-		// clear dirty flags
-		updated();
+			// clear dirty flags
+			updated();
+		}
 	}
 
 	/**
@@ -987,43 +987,46 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final void invalidateNode(TreeNode node, boolean forceRebuld)
 	{
-		// get item for this node
-		TreeItem item = (TreeItem)nodeToItemMap.get(node);
-
-		if (forceRebuld)
+		if (dirtyAll == false)
 		{
-			// recreate the item
-			int level = item.getLevel();
-			List children = item.getChildren();
-			String id = item.getId();
-
-			// store the parent of old item
-			TreeItem parent = item.getParentItem();
-
-			// if the old item has a parent, store it's index
-			int index = parent != null ? parent.getChildren().indexOf(item) : -1;
-
-			item.remove();
-
-			item = newTreeItem(node, level, id);
-			itemContainer.add(item);
-			
-			item.setChildren(children);
-
-			// was the item an root item?
-			if (parent == null)
+			// get item for this node
+			TreeItem item = (TreeItem)nodeToItemMap.get(node);
+	
+			if (forceRebuld)
 			{
-				rootItem = item;				
+				// recreate the item
+				int level = item.getLevel();
+				List children = item.getChildren();
+				String id = item.getId();
+	
+				// store the parent of old item
+				TreeItem parent = item.getParentItem();
+	
+				// if the old item has a parent, store it's index
+				int index = parent != null ? parent.getChildren().indexOf(item) : -1;
+	
+				item.remove();
+	
+				item = newTreeItem(node, level, id);
+				itemContainer.add(item);
+				
+				item.setChildren(children);
+	
+				// was the item an root item?
+				if (parent == null)
+				{
+					rootItem = item;				
+				}
+				else
+				{
+					parent.getChildren().set(index, item);
+				}
 			}
-			else
+	
+			if (item != null)
 			{
-				parent.getChildren().set(index, item);
+				dirtyItems.add(item);
 			}
-		}
-
-		if (item != null)
-		{
-			dirtyItems.add(item);
 		}
 	}
 
@@ -1036,26 +1039,29 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final void invalidateNodeWithChildren(TreeNode node)
 	{
-		// get item for this node
-		TreeItem item = (TreeItem)nodeToItemMap.get(node);
-
-		// is the item visible?
-		if (item != null)
+		if (dirtyAll == false)
 		{
-			// go though item children and remove every one of them
-			visitItemChildren(item, new IItemCallback()
+			// get item for this node
+			TreeItem item = (TreeItem)nodeToItemMap.get(node);
+	
+			// is the item visible?
+			if (item != null)
 			{
-				public void visitItem(TreeItem item)
+				// go though item children and remove every one of them
+				visitItemChildren(item, new IItemCallback()
 				{
-					removeItem(item);
-				}
-			});
-
-			// set children to null so that they get rebuild
-			item.setChildren(null);
-
-			// add item to dirty items
-			dirtyItems.add(item);
+					public void visitItem(TreeItem item)
+					{
+						removeItem(item);
+					}
+				});
+	
+				// set children to null so that they get rebuild
+				item.setChildren(null);
+	
+				// add item to dirty items
+				dirtyItems.add(item);
+			}
 		}
 	}
 
