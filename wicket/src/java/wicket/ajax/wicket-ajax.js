@@ -541,7 +541,7 @@ Wicket.Ajax.Request.prototype = {
         		
         		if (this.parseResponse == true) {        		
 					var xmldoc;
-					if (window.XMLHttpRequest) {
+					if (window.XMLHttpRequest && typeof(DOMParser) != "undefined") {
 						var parser = new DOMParser();
 						xmldoc = parser.parseFromString(responseAsText, "text/xml");
 					} else if (window.ActiveXObject) {
@@ -781,14 +781,14 @@ Wicket.Head.Contributor.prototype = {
 			}	
 			var content = Wicket.DOM.serializeNodeChildren(node);
 			var style = Wicket.Head.createElement("style");
-			style.id = node.getAttribute("id");							
+			style.id = node.getAttribute("id");										
 				
-			if (document.all && !window.opera) {  // IE
-				document.createStyleSheet("javascript:'" + content + "'")
-			} else {
+			if (document.all && !window.opera) {  // IE			
+				document.createStyleSheet().cssText = content;
+			} else {			
 				var textNode = document.createTextNode(content);
 				style.appendChild(textNode);
-			}
+			} 		
 			Wicket.Head.addElement(style);
 			notify();
 		});
