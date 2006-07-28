@@ -1,18 +1,17 @@
 package wicket.examples.ajax.builtin.tree;
 
-import wicket.markup.html.tree.AbstractTree;
-import wicket.markup.html.tree.table.ColumnLocation;
-import wicket.markup.html.tree.table.IColumn;
-import wicket.markup.html.tree.table.PropertyRenderableColumn;
-import wicket.markup.html.tree.table.PropertyTreeColumn;
-import wicket.markup.html.tree.table.TreeTable;
-import wicket.markup.html.tree.table.ColumnLocation.Alignment;
-import wicket.markup.html.tree.table.ColumnLocation.Unit;
-
+import wicket.extensions.markup.html.tree.AbstractTree;
+import wicket.extensions.markup.html.tree.table.ColumnLocation;
+import wicket.extensions.markup.html.tree.table.IColumn;
+import wicket.extensions.markup.html.tree.table.PropertyRenderableColumn;
+import wicket.extensions.markup.html.tree.table.PropertyTreeColumn;
+import wicket.extensions.markup.html.tree.table.TreeTable;
+import wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
+import wicket.extensions.markup.html.tree.table.ColumnLocation.Unit;
 
 /**
  * Page that shows a simple tree table.
- * 
+ *  
  * @author Matej Knopp
  */
 public class TreeTablePage extends BaseTreePage
@@ -33,8 +32,9 @@ public class TreeTablePage extends BaseTreePage
 			new PropertyRenderableColumn(new ColumnLocation(Alignment.RIGHT, 8, Unit.EM), "R1", "userObject.property6"),			
 		};
 		
-		tree = new TreeTable(this, "treeTable", createTreeModel(), columns);
+		tree = new TreeTable("treeTable", createTreeModel(), columns);
 		tree.getTreeState().setAllowSelectMultiple(true);
+		add(tree);
 	}
 	
 	protected AbstractTree getTree()

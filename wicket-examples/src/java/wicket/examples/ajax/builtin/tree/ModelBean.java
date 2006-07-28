@@ -3,7 +3,7 @@ package wicket.examples.ajax.builtin.tree;
 /**
  * Bean that is set to every node of tree as user object.
  * This bean has properties that are used to hold values for the cells.
- * 
+ *  
  * @author Matej Knopp
  */
 public class ModelBean
