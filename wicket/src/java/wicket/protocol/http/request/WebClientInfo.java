@@ -64,7 +64,7 @@ public class WebClientInfo extends ClientInfo
 	public WebClientInfo(WebRequestCycle requestCycle)
 	{
 		super();
-		HttpServletRequest httpServletRequest = requestCycle.getRequest().getHttpServletRequest();
+		HttpServletRequest httpServletRequest = requestCycle.getWebRequest().getHttpServletRequest();
 		userAgent = httpServletRequest.getHeader("User-Agent");
 		if (userAgent == null)
 		{
