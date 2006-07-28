@@ -3,13 +3,12 @@ package wicket.examples.ajax.builtin.tree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import wicket.markup.html.tree.AbstractTree;
-import wicket.markup.html.tree.Tree;
-
+import wicket.extensions.markup.html.tree.AbstractTree;
+import wicket.extensions.markup.html.tree.Tree;
 
 /**
- * Page that shouws a simple tree (not a table).
- * 
+ * Page that shuws a simple tree (not a table).
+ *  
  * @author Matej
  *
  */
@@ -28,7 +27,7 @@ public class SimpleTreePage extends BaseTreePage
 	 */
 	public SimpleTreePage()
 	{
-		tree = new Tree(this, "tree", createTreeModel()) 
+		tree = new Tree("tree", createTreeModel()) 
 		{
 			protected String renderNode(TreeNode node)
 			{
@@ -36,6 +35,7 @@ public class SimpleTreePage extends BaseTreePage
 				return bean.getProperty1();
 			}
 		};
+		add(tree);
 	}
 
 }
