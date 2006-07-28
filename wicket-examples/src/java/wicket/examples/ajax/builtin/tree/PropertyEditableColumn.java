@@ -4,10 +4,10 @@ import javax.swing.tree.TreeNode;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.tree.table.ColumnLocation;
-import wicket.extensions.markup.html.tree.table.IColumn;
-import wicket.extensions.markup.html.tree.table.IRenderable;
-import wicket.extensions.markup.html.tree.table.PropertyRenderableColumn;
+import wicket.markup.html.tree.table.ColumnLocation;
+import wicket.markup.html.tree.table.IColumn;
+import wicket.markup.html.tree.table.IRenderable;
+import wicket.markup.html.tree.table.PropertyRenderableColumn;
 import wicket.model.PropertyModel;
 
 /**
@@ -35,7 +35,7 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	 */
 	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level) 
 	{
-		return new EditablePanel(id, new PropertyModel(node, getPropertyExpression()));
+		return new EditablePanel(parent, id, new PropertyModel<String>(node, getPropertyExpression()));
 	}
 	
 	/**
