@@ -11,7 +11,8 @@ import javax.swing.tree.TreeModel;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.examples.ajax.builtin.BasePage;
-import wicket.extensions.markup.html.tree.AbstractTree;
+import wicket.markup.html.tree.AbstractTree;
+
 
 /**
  * This is a base class for all pages with tree example.
@@ -26,32 +27,32 @@ public abstract class BaseTreePage extends BasePage
 	 */
 	public BaseTreePage()
 	{				
-		add(new AjaxLink("expandAll") 
+		new AjaxLink(this, "expandAll") 
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
 				getTree().getTreeState().expandAll();
 				getTree().updateTree(target);
 			}
-		});
+		};
 		
-		add(new AjaxLink("collapseAll") 
+		new AjaxLink(this, "collapseAll") 
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
 				getTree().getTreeState().collapseAll();
 				getTree().updateTree(target);
 			}
-		});
+		};
 		
-		add(new AjaxLink("switchRootless") 
+		new AjaxLink(this, "switchRootless") 
 		{
 			public void onClick(AjaxRequestTarget target)
 			{
 				getTree().setRootLess(!getTree().isRootLess());
 				getTree().updateTree(target);
 			}
-		});
+		};
 	}
 
 	/**
@@ -70,15 +71,15 @@ public abstract class BaseTreePage extends BasePage
 	 */
 	protected TreeModel createTreeModel() 
 	{
-		List l1 = new ArrayList();
+		List<Object> l1 = new ArrayList<Object>();
 		l1.add("test 1.1");
 		l1.add("test 1.2");
 		l1.add("test 1.3");
-		List l2 = new ArrayList();
+		List<Object> l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
-		List l3 = new ArrayList();
+		List<Object> l3 = new ArrayList<Object>();
 		l3.add("test 3.1");
 		l3.add("test 3.2");
 		l3.add("test 3.3");
@@ -89,7 +90,7 @@ public abstract class BaseTreePage extends BasePage
 		l2.add("test 2.5");
 		l2.add("test 2.6");
 		
-		l3 = new ArrayList();
+		l3 = new ArrayList<Object>();
 		l3.add("test 3.1");
 		l3.add("test 3.2");
 		l3.add("test 3.3");
@@ -97,7 +98,7 @@ public abstract class BaseTreePage extends BasePage
 		
 		l1.add(l2);
 
-		l2 = new ArrayList();
+		l2 = new ArrayList<Object>();
 		l2.add("test 2.1");
 		l2.add("test 2.2");
 		l2.add("test 2.3");
