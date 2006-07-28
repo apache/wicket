@@ -1,3 +1,10 @@
+/*
+ * Wicket Ajax Support 
+ * Licensed under the Apache License, Version 2.0
+ * @author Igor Vaynberg
+ * @author Matej Knopp 
+ */
+
 var Class = {
 	create: function() {
 		return function() {
@@ -53,43 +60,7 @@ Wicket.Log = {
 	}
 },
 
-// Wait And Notify 
-
-Wicket.WaitNotify = Class.create();
-
-Wicket.WaitNotify.prototype = {
-	initialize: function(callback, frequency) {
-		this.callback = callback;
-		this.frequency = frequency;
-		this.waiting = true;    
-		
-		this.registerCallback();
-	},
-   
-	registerCallback: function() {
-		this.interval = setInterval(this.onTimerEvent.bind(this), this.frequency);
-	},
-
-	notify: function() {
-		this.waiting = false;
-	},
-  
-	stop: function() {
-		clearInterval(this.interval);
-	},
-   
-	onTimerEvent: function() {
-		if (!this.waiting) {
-			try {
-				this.waiting = true;
-				this.callback(this);
-			} finally {
-			}
-		}
-	}
-}
-
-// Functions Executer
+// Functions executer
 
 Wicket.FunctionsExecuter = Class.create();
 
@@ -97,22 +68,28 @@ Wicket.FunctionsExecuter.prototype = {
 	initialize: function(functions) {
 		this.functions = functions;
 		this.current = 0;
-		this.waitNotify = new Wicket.WaitNotify(this.notifyCallback.bind(this), 20);
 	},
 	
-	start: function() {		
-		this.waitNotify.notify();
-	},
-	
-	notifyCallback: function(waitNotify) {
-		if (this.current == this.functions.length) {		
-			waitNotify.stop();
-			this.functions = null;
-		} else {
-			this.functions[this.current++](waitNotify.notify.bind(waitNotify));
+	processNext: function() {
+		if (this.current < this.functions.length) {
+			var f = this.functions[this.current];
+			var run = function() {
+				f(this.notify.bind(this));
+			}.bind(this);
+			window.setTimeout(run, 1);
+			this.current++;		
 		}
+	},	
+	
+	start: function() {
+		this.processNext();
+	},
+	
+	notify: function() {
+		this.processNext();
 	}
 }
+
 
 /* Replaces the element's outer html with the given text. If it's needed
    (for all browsers except gecko based) it takes the newly created scripts elements 
@@ -121,17 +98,23 @@ Wicket.replaceOuterHtml = function(element, text) {
     if (element.outerHTML) { // internet explorer
        var parent = element.parentNode;
        
-       // find out the element's index. we need to access
+       // find out the element's index and next element (if any). we need to access
        // newly created elements to execute theirs <script elements
        var i;
+       var next = null;
        for (i = 0; i < parent.childNodes.length; ++i) {
-       		if (parent.childNodes[i] == element) 
-       			break;
+       		if (parent.childNodes[i] == element) {
+       			if (i != parent.childNodes.length - 1) {
+       				next = parent.childNodes[i+1]
+       			}
+       			break;       			
+       		}
        }
        element.outerHTML=text;
-       element = parent.childNodes[i];
-
-       Wicket.Head.addJavascripts(element);       
+       
+       for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {
+	       Wicket.Head.addJavascripts(parent.childNodes[j]);       
+	   }
 
     } else {
         
@@ -140,15 +123,18 @@ Wicket.replaceOuterHtml = function(element, text) {
         range.selectNode(element);
 		var fragment = range.createContextualFragment(text);
 		
-		// get the element to be added
-		var newElement = fragment.firstChild;		
-			
-        element.parentNode.replaceChild(fragment, element);
+		// get the elements to be added
+		var elements = new Array();
+		for (var i = 0; i < fragment.childNodes.length; ++i)
+			elements.push(fragment.childNodes[i]);
+
+        element.parentNode.replaceChild(fragment, element);        
 
 		if (document.all != null) {
-			// for all browsers except gecko based add scripts to head
-		    Wicket.Head.addJavascripts(newElement);
-		}		   
+			for (var i in elements) {
+				Wicket.Head.addJavascripts(elements[i]);
+			}
+		}
     }		
 }	
 
@@ -297,6 +283,71 @@ Wicket.DOM.containsElement = function(element) {
 		return false;
 }
 
+// Channel manager
+
+Wicket.Channel = Class.create();
+Wicket.Channel.prototype = {
+	initialize: function(name) {
+		var res = name.match(/^([^|]+)\|(d|s)$/)
+		if (res == null)
+			this.type ='s'; // default to stack 
+		else
+			this.type = res[2];
+		this.callbacks = new Array();
+		this.busy = false;
+	},	
+	
+	schedule: function(callback) {
+		if (this.busy == false) {
+			this.busy = true;			
+			return callback();
+		} else {
+			Wicket.Log.info("Chanel busy - postponing...");
+			if (this.type == 's') // stack 
+				this.callbacks.push(callback);
+			else /* drop */
+				this.callbacks[0] = callback;
+			return null;				
+		}
+	},
+	
+	done: function() {
+		var c = this.callbacks.shift();
+		if (c != null && typeof(c) != "undefined") {
+			Wicket.Log.info("Calling posponed function...");
+			// we can't call the callback from this call-stack
+			// therefore we set it on timer event
+			window.setTimeout(c, 1);			
+		} else {
+			this.busy = false;
+		}
+	}
+};
+
+Wicket.ChannelManager = Class.create();
+Wicket.ChannelManager.prototype = {
+	initialize: function() {
+		this.channels = new Array();
+	},
+  
+	schedule: function(channel, callback) {
+		var c = this.channels[channel];
+		if (c == null) {
+			c = new Wicket.Channel(channel);
+			this.channels[channel] = c;
+		}
+		return c.schedule(callback);
+	},
+	
+	done: function(channel) {
+		var c = this.channels[channel];
+		if (c != null)
+			c.done();
+	}
+};
+
+Wicket.channelManager = new Wicket.ChannelManager();
+
 // Ajax
 
 Wicket.Ajax = { 
@@ -380,13 +431,21 @@ Wicket.Ajax = {
 Wicket.Ajax.Request = Class.create();
 
 Wicket.Ajax.Request.prototype = {
-	initialize: function(url, loadedCallback, parseResponse, randomURL, failureHandler) {
+	initialize: function(url, loadedCallback, parseResponse, randomURL, failureHandler, channel) {
 		this.url = url;
 		this.loadedCallback = loadedCallback;
 		this.parseResponse = parseResponse != null ? parseResponse : true;
 		this.randomURL = randomURL != null ? randomURL : true;
 		this.failureHandler = failureHandler != null ? failureHandler : function() { };
 		this.async = true;
+		this.channel = channel;
+		this.suppressDone = false;
+		this.instance = Math.random();
+		this.debugContent = true;
+	},
+	
+	done: function() {
+		Wicket.channelManager.done(this.channel);
 	},
 	
 	createUrl: function() {
@@ -409,6 +468,15 @@ Wicket.Ajax.Request.prototype = {
 	},
 	
 	get: function() {
+		if (this.channel != null) {
+			var res = Wicket.channelManager.schedule(this.channel, this.doGet.bind(this));
+			return res != null ? res : true;
+		} else {
+			return this.doGet();
+		}
+	},
+	
+	doGet: function() {
 		this.transport = Wicket.Ajax.getTransport();
 	
 		var url = this.createUrl();	
@@ -429,6 +497,15 @@ Wicket.Ajax.Request.prototype = {
 	},
 	
 	post: function(body) {
+		if (this.channel != null) {
+			var res = Wicket.channelManager.schedule(this.channel, function() { this.doPost(body); }.bind(this));
+			return res != null ? res: true;
+		} else {
+			return doPost(this);
+		}
+	},
+	
+	doPost: function(body) {
 		this.transport = Wicket.Ajax.getTransport();	
 	
 		var url = this.createUrl();	
@@ -449,16 +526,18 @@ Wicket.Ajax.Request.prototype = {
 		}
 	},
 	
-	stateChangeCallback: function() {
+	stateChangeCallback: function() {	
 		var t = this.transport;
 
-		if (t.readyState == 4) {		
+		if (t.readyState == 4) {
 			if (t.status == 200) {				
 				var responseAsText = t.responseText;
 				
 				var log = Wicket.Log.info;				
-				log("Received ajax response (" + responseAsText.length + " characters), envelope following...");
-        		log("\n"+responseAsText);
+				log("Received ajax response (" + responseAsText.length + " characters)");
+				if (this.debugContent != false) {
+					log("\n" + responseAsText);
+				}
         		
         		if (this.parseResponse == true) {        		
 					var xmldoc;
@@ -472,15 +551,16 @@ Wicket.Ajax.Request.prototype = {
 				} else {
 					this.loadedCallback(responseAsText);
 				}        		
+				if (this.suppressDone == false)
+					this.done();
         	} else {
         		var log = Wicket.Log.error;
         		log("Received Ajax response with code: " + t.status);
+		   		this.done();        		
         		this.failure();
-        	}    
-        	
+        	}    	
         	t.onreadystatechange = Wicket.emptyFunction;
-        	this.transport = null;
-        	
+        	this.transport = null;       
         }        
 	}
 };
@@ -488,15 +568,18 @@ Wicket.Ajax.Request.prototype = {
 Wicket.Ajax.Call = Class.create();
 
 Wicket.Ajax.Call.prototype = {
-	initialize: function(url, successHandler, failureHandler) {
+	initialize: function(url, successHandler, failureHandler, channel) {
 		this.successHandler = successHandler != null ? successHandler : function() { };
 		this.failureHandler = failureHandler != null ? failureHandler : function() { };
-		this.request = new Wicket.Ajax.Request(url, this.loadedCallback.bind(this), true, true, failureHandler);
+		var c = channel != null ? channel : "0|s";
+		this.request = new Wicket.Ajax.Request(url, this.loadedCallback.bind(this), true, true, failureHandler, c);
+		this.request.suppressDone = true;
 	},
 	
 	failure: function(message) {
 		if (message != null)
 			Wicket.Log.error("Error while parsing response: " + message);
+		this.request.done();
 		this.failureHandler();
    		Wicket.Ajax.invokePostCallHandlers();
    		Wicket.Ajax.invokeFailureHandlers();
@@ -572,8 +655,9 @@ Wicket.Ajax.Call.prototype = {
 		steps.push(function(notify) {
 			Wicket.Log.info("Response processed successfully.");			
 			Wicket.Ajax.invokePostCallHandlers();
-			this.successHandler();
-			notify();
+			this.request.done();
+			this.successHandler();			
+			notify();			
 		}.bind(this));
 	},
 	
@@ -725,6 +809,7 @@ Wicket.Head.Contributor.prototype = {
 					notify();
 				}
 				var req = new Wicket.Ajax.Request(src, onLoad, false, false);
+				req.debugContent = false;
 				if (Wicket.Browser.isKHTML())
 					req.async = false;
 				req.get();
@@ -783,85 +868,99 @@ Wicket.Head.addJavascript = function(content, id, fakeSrc) {
 
 /* Goes through all script elements contained by the element and add them to head. */
 Wicket.Head.addJavascripts = function(element) {
-	var scripts = element.getElementsByTagName("script");
-	for (var i = 0; i < scripts.length; ++i) {
-		var content = Wicket.DOM.serializeNodeChildren(scripts[i]);
+	function add(element) {
+		var content = Wicket.DOM.serializeNodeChildren(element);
 		if (content == null || content == "")
-			content = scripts[i].text;
+			content = element.text;
 		Wicket.Head.addJavascript(content);		
 	}
-}
-
-// Throttle
-
-function WicketThrottlerEntry(func) {
-	this.func=func;
-	this.timestamp=new Date().getTime();
-}
-
-WicketThrottlerEntry.prototype.getTimestamp=function() {
-	return this.timestamp;
-}
-
-WicketThrottlerEntry.prototype.getFunc=function() {
-	return this.func;
-}
-
-WicketThrottlerEntry.prototype.setFunc=function(func) {
-	this.func=func;
-}
-
-function WicketThrottler() {
-	this.entries=new Array();
-}
-
-WicketThrottler.prototype.throttle=function(id, millis, func) {
-	var entry=this.entries[id];
-	var me=this;
-	if (entry==undefined) {
-		entry=new WicketThrottlerEntry(func);
-		this.entries[id]=entry;
-		window.setTimeout(function() { me.execute(id); }, millis);
+	if (element.tagName.toLowerCase() == "script") {
+		add(element);
 	} else {
-		entry.setFunc(func);
+		var scripts = element.getElementsByTagName("script");
+		for (var i = 0; i < scripts.length; ++i) {
+			add(scripts[i]);
+		}
 	}
 }
 
-WicketThrottler.prototype.execute=function(id) {
-	var entry=this.entries[id];
-	if (entry!=undefined) {
-		var func=entry.getFunc();
-		var tmp=func();
-	}
+// Throttler
+
+Wicket.ThrottlerEntry = Class.create();
+Wicket.ThrottlerEntry.prototype = {
+	initialize: function(func) {
+		this.func = func;
+		this.timestamp = new Date().getTime();
+	},
 	
-	this.entries[id]=undefined;
-}
+	getTimestamp: function() {
+		return this.timestamp;
+	},
+	
+	getFunc: function() {
+		return this.func;
+	},
+	
+	setFunc: function(func) {
+		this.func = func;
+	}
+};
 
-var wicketThrottler=new WicketThrottler();
+Wicket.Throttler = Class.create();
+Wicket.Throttler.prototype = {
+	initialize: function() {
+		this.entries = new Array();
+	},
+	
+	throttle: function(id, millis, func) {
+		var entry = this.entries[id];
+		var me = this;
+		if (entry == undefined) {
+			entry = new Wicket.ThrottlerEntry(func);
+			this.entries[id] = entry;
+			window.setTimeout(function() { me.execute(id); }, millis);
+		} else {
+			entry.setFunc(func);
+		}	
+	},
+	
+	execute: function(id) {
+		var entry = this.entries[id];
+		if (entry != undefined) {
+			var func = entry.getFunc();
+			var tmp = func();
+		}
+		
+		this.entries[id] = undefined;	
+	}
+};
+
+Wicket.throttler = new Wicket.Throttler();
 
 
 /*
  * Compatibility layer
  */
 
+var wicketThrottler = Wicket.throttler;
 
-function wicketAjaxGet(url, successHandler, failureHandler) {
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler);
+function wicketAjaxGet(url, successHandler, failureHandler, channel) {
+	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
 	return call.call();
 }
 
-function wicketAjaxPost(url, body, successHandler, failureHandler) {
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler);
+function wicketAjaxPost(url, body, successHandler, failureHandler, channel) {
+	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
 	return call.post(body);
 }
 
-function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler) {
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler);
+function wicketSubmitForm(form, url, submitButton, successHandler, failureHandler, channel) {
+	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
 	return call.submitForm(form, submitButton);
 }
 
-function wicketSubmitFormById(formId, url, submitButton, successHandler, failureHandler) {
-	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler);
+function wicketSubmitFormById(formId, url, submitButton, successHandler, failureHandler, channel) {
+	var call = new Wicket.Ajax.Call(url, successHandler, failureHandler, channel);
 	return call.submitFormById(formId, submitButton);
 }
 
@@ -870,6 +969,8 @@ wicketSerialize = Wicket.Form.serializeElement;
 wicketSerializeForm = Wicket.Form.serialize;
 
 wicketEncode = Wicket.Form.encode;
+
+wicketDecode = Wicket.decode;
 
 wicketAjaxGetTransport = Wicket.Ajax.getTransport;
 
@@ -933,3 +1034,4 @@ function wicketHide(id) {
     var e=wicketGet(id);
     e.style.display = "none";
 }
+
