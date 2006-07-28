@@ -13,6 +13,12 @@ div.wicket-tree a {
 	float: left;
 }
 
+div.wicket-tree div.row,
+div.wicket-tree div.row-selected {
+	height: 1.5em;		
+}
+	
+
 div.wicket-tree span.junction,
 div.wicket-tree span.junction-last,
 div.wicket-tree span.plus,
@@ -98,11 +104,11 @@ div.wicket-tree span.indent-line {
 div.wicket-tree div.row,
 div.wicket-tree div.row-selected {
 	overflow: hidden;
-	_width: 100%; /* ie float container height bug */
 	padding-left: 1em;	
+	clear: both;
 }
 
 div.wicket-tree div.row-selected {
 	background-color: #E0E8FF;
-	font-weight: bold;
+	font-weight: bold;	
 }
