@@ -38,6 +38,7 @@ public class EditableTreeTablePage extends BaseTreePage
 		
 		tree = new TreeTable("treeTable", createTreeModel(), columns);
 		form.add(tree);
+		tree.getTreeState().collapseAll();
 	}
 	
 	/**
