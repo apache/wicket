@@ -1,8 +1,6 @@
 package wicket.examples.ajax.builtin.tree;
 
-import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
-import wicket.ajax.ClientEvent;
 import wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.Panel;
@@ -10,7 +8,7 @@ import wicket.model.IModel;
 
 /**
  * Panel that contains an text field that submits automatically after it loses focus.
- * 
+ *  
  * @author Matej Knopp
  */
 public class EditablePanel extends Panel {
@@ -18,21 +16,19 @@ public class EditablePanel extends Panel {
 	/**
 	 * Panel constructor.
 	 * 
-	 * @param parent
-	 * 			Parent of this component
-	 * 
 	 * @param id 
 	 * 			Markup id
 	 * 
 	 * @param inputModel
 	 * 			Model of the text field
 	 */
-	public EditablePanel(MarkupContainer parent, String id, IModel<String> inputModel) {
-		super(parent, id);
+	public EditablePanel(String id, IModel inputModel) {
+		super(id);
 		
-		TextField<String> field = new TextField<String>(this, "textfield", inputModel);
+		TextField field = new TextField("textfield", inputModel);
+		add(field);
 		
-		field.add(new AjaxFormComponentUpdatingBehavior(ClientEvent.BLUR) 
+		field.add(new AjaxFormComponentUpdatingBehavior("onblur") 
 		{
 			protected void onUpdate(AjaxRequestTarget target) 
 			{
