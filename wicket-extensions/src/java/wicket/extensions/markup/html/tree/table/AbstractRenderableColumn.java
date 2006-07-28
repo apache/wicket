@@ -91,7 +91,7 @@ public abstract class AbstractRenderableColumn extends AbstractColumn
 					content = Strings.escapeMarkup(content).toString();
 				}
 
-				response.write("<span class=\"text\"");
+				response.write("<span");
 				if (isContentAsTooltip())
 				{
 					response.write(" title=\"" + content + "\"");

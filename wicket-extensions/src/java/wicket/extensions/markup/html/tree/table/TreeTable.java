@@ -115,13 +115,15 @@ public class TreeTable extends DefaultAbstractTree
 	 * 
 	 * @param callback
 	 *            Used to get the display string
+	 *            
+	 * @param table
+	 * 			  Tree table
+	 *            
 	 * @return The tree cell
 	 */
 	public static Component newTreeCell(MarkupContainer parent, String id, TreeNode node,
-			int level, IRenderNodeCallback callback)
-	{
-		TreeTable table = (TreeTable)parent.findParent(TreeTable.class);
-
+			int level, IRenderNodeCallback callback, TreeTable table)
+	{		
 		return table.newTreePanel(parent, id, node, level, callback);
 	}
 
@@ -276,7 +278,7 @@ public class TreeTable extends DefaultAbstractTree
 
 		// add side columns
 		SideColumnsView sideColumns = new SideColumnsView("sideColumns", node);
-		add(sideColumns);
+		item.add(sideColumns);
 		if (columns != null)
 			for (int i = 0; i < columns.length; i++)
 			{
@@ -321,6 +323,7 @@ public class TreeTable extends DefaultAbstractTree
 						// if renderable failed, try to create a regular
 						// component
 						component = column.newCell(middleColumns, "" + i, node, level);
+						middleColumns.add(component);
 					}
 					else
 					{
