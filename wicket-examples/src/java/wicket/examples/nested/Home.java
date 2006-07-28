@@ -28,8 +28,10 @@ import javax.swing.tree.TreeNode;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.examples.ajax.builtin.tree.SimpleTreePage;
 import wicket.extensions.markup.html.tree.Tree;
 import wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 
 /**
@@ -98,6 +100,8 @@ public class Home extends WicketExamplePage
 				tree.getTreeState().collapseAll();
 			}
 		});
+		
+		add(new BookmarkablePageLink("ajaxTreeLink", SimpleTreePage.class));
 	}
 
 	/**
