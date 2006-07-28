@@ -47,6 +47,7 @@ public final class RecursivePanel extends Panel
 	public RecursivePanel(MarkupContainer parent, final String id, List list)
 	{
 		super(parent, id);
+		setVersioned(false);
 		new Rows<String>(this, "rows", list);
 	}
 

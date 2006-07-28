@@ -28,8 +28,11 @@ import javax.swing.tree.TreeNode;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
+import wicket.examples.ajax.builtin.tree.SimpleTreePage;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.tree.Tree;
+import wicket.markup.html.tree.DefaultAbstractTree.LinkType;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case
@@ -79,6 +82,9 @@ public class Home extends WicketExamplePage
 				return node.isLeaf() ? node.toString() : "<sub>";
 			}
 		};
+		
+		tree.setLinkType(LinkType.REGULAR);
+		
 		new Link(this, "expandAll")
 		{
 			@Override
@@ -96,6 +102,8 @@ public class Home extends WicketExamplePage
 				tree.getTreeState().collapseAll();
 			}
 		};
+		
+		new BookmarkablePageLink(this, "ajaxTreeLink", SimpleTreePage.class);
 	}
 
 	/**
