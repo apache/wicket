@@ -49,7 +49,7 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 			{
 				return AbstractTreeColumn.this.renderNode(node);
 			}
-		});
+		}, getTreeTable());
 	}
 
 	/**

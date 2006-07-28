@@ -4,6 +4,7 @@ div.wicket-tree {
 	width: 20em;
 	overflow: auto;
 	margin: 10px;
+	line-height: 1.5em;
 }
 
 div.wicket-tree a {
@@ -104,10 +105,4 @@ div.wicket-tree div.row-selected {
 div.wicket-tree div.row-selected {
 	background-color: #E0E8FF;
 	font-weight: bold;
-}
-
-div.wicket-tree span.text {
-	position: relative;
-	top: 0.07em;
-	display: block;
 }
