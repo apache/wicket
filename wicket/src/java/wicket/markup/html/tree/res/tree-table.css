@@ -10,8 +10,8 @@ div.wicket-tree-table {
 	border: 1px solid #ccc;
 	overflow: auto;
 	margin: 10px;
-	height: 44em;
 	background-color: white;
+	line-height: 1.6em;
 }
 
 div.wicket-tree-table a {
@@ -43,7 +43,7 @@ div.wicket-tree-table div.row-selected,
 div.wicket-tree-table div.a_,	
 div.wicket-tree-table span.b_,
 div.wicket-tree-table span.b_ span.c_ {
-	height: 1.5em;	
+	height: 1.6em;	
 	min-height: 18px;
 }
 
@@ -151,12 +151,6 @@ div.wicket-tree-table div.row-selected a.node-link span {
 	font-weight: bold;	
 }
 
-div.wicket-tree-table span.text {
-	position: relative;
-	top: 0.07em;
-	display: block;
-}
-
 div.wicket-tree-table div.row , 
 div.wicket-tree-table div.row-selected
 /* div.wicket-tree-table div.row-selected span.b_ */ {
@@ -195,15 +189,11 @@ div.wicket-tree-table div.row-selected span.b_ {
 
 div.wicket-tree-table div.header {
 	border-bottom: 1px solid #ddd;
-	height: 1.5em;
+	height: 1.6em;
 	overflow: hidden;
 	margin-bottom: 0.1em;
 	font-weight: bold;
 	background-color: #eee;
 }
 
-div.wicket-tree-table div.header span.text {
-	position: relative;
-	top: 0.15em;
-}
 
