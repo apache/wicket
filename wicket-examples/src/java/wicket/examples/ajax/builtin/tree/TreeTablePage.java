@@ -34,7 +34,8 @@ public class TreeTablePage extends BaseTreePage
 		};
 		
 		tree = new TreeTable(this, "treeTable", createTreeModel(), columns);
-		tree.getTreeState().setAllowSelectMultiple(true);		
+		tree.getTreeState().setAllowSelectMultiple(true);
+		tree.getTreeState().collapseAll();
 	}
 	
 	protected AbstractTree getTree()

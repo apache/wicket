@@ -36,6 +36,7 @@ public class SimpleTreePage extends BaseTreePage
 				return bean.getProperty1();
 			}
 		};
+		tree.getTreeState().collapseAll();
 	}
 
 }
