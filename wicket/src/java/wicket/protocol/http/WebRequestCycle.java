@@ -69,6 +69,7 @@ public class WebRequestCycle extends RequestCycle
 	{
 		return (WebRequestCycle)RequestCycle.get();
 	}
+
 	/**
 	 * Constructor which simply passes arguments to superclass for storage
 	 * there.
@@ -241,10 +242,19 @@ public class WebRequestCycle extends RequestCycle
 	}
 
 	/**
+	 * @see wicket.RequestCycle#getClientInfo()
+	 */
+	@Override
+	public WebClientInfo getClientInfo()
+	{
+		return (WebClientInfo)super.getClientInfo();
+	}
+
+	/**
 	 * @see wicket.RequestCycle#newClientInfo()
 	 */
 	@Override
-	protected ClientInfo newClientInfo()
+	protected WebClientInfo newClientInfo()
 	{
 		if (getApplication().getRequestCycleSettings().getGatherExtendedBrowserInfo())
 		{
