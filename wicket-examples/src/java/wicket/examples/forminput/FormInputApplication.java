@@ -77,20 +77,6 @@ public class FormInputApplication extends WicketExampleApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
-	 *      protected WebRequest newWebRequest(HttpServletRequest
-	 *      servletRequest) { return new
-	 *      WebRequestWithCryptedUrl(servletRequest); }
-	 */
-
-	/**
-	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
-	 *      protected WebResponse newWebResponse(HttpServletResponse
-	 *      servletResponse) { return new
-	 *      WebResponseWithCryptedUrl(servletResponse); }
-	 */
-
-	/**
 	 * Special overwrite to have url compressing for this example.
 	 * 
 	 * @see URLCompressor
