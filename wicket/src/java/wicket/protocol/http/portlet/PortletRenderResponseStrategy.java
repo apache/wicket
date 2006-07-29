@@ -18,26 +18,26 @@
  */
 package wicket.protocol.http.portlet;
 
-import java.io.OutputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
-import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
-import wicket.request.compound.DefaultResponseStrategy;
 import wicket.request.compound.IResponseStrategy;
 import wicket.request.target.component.PageRequestTarget;
-import wicket.util.string.AppendingStringBuffer;
 
 /**
+ * Portlet render ResponseStrategy handles outputting of the header contributions 
+ * into the response. 
+ * 
+ * Portlets do not support real header contribution. 
+ * 
  * @author Janne Hietam&auml;ki
  */
 public class PortletRenderResponseStrategy implements IResponseStrategy
