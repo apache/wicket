@@ -25,11 +25,6 @@ import wicket.Page;
 import wicket.SharedResources;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.protocol.http.request.urlcompressing.URLCompressor;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
-import wicket.request.IRequestCycleProcessor;
-import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * Application class for form input example.
@@ -77,18 +72,5 @@ public class FormInputApplication extends WicketExampleApplication
 		imgResetJa.setFont(fontJa);
 		sharedResources.add("save", Locale.JAPANESE, imgSaveJa);
 		sharedResources.add("reset", Locale.JAPANESE, imgResetJa);
-	}
-
-	/**
-	 * Special overwrite to have url compressing for this example.
-	 * 
-	 * @see URLCompressor
-	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
-	 */
-	@Override
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
-				new WebURLCompressingTargetResolverStrategy(), null, null, null);
 	}
 }
