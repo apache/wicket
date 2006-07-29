@@ -28,16 +28,18 @@ public class ExamplePortlet2 extends PortletPage
 {
 	private static final Log log = LogFactory.getLog(ExamplePortlet.class);
 
-	/**
-	 * @param page
-	 */
-
 	long counter=0;
 
+	/**
+	 * @return
+	 */
 	public long getCounter(){
 		return counter;
 	}
 
+	/**
+	 * @param page
+	 */
 	public ExamplePortlet2(final Page page)
 	{
 		add(new Link("link")
