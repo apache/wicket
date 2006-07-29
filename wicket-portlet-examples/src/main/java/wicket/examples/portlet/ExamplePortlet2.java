@@ -11,6 +11,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Page;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.resource.RenderedDynamicImageResource;
@@ -29,6 +31,13 @@ public class ExamplePortlet2 extends PortletPage
 	/**
 	 * @param page
 	 */
+
+	long counter=0;
+
+	public long getCounter(){
+		return counter;
+	}
+
 	public ExamplePortlet2(final Page page)
 	{
 		add(new Link("link")
@@ -57,12 +66,24 @@ public class ExamplePortlet2 extends PortletPage
 				return true;
 			}
 		}));
-	}
 		
+		final Label counterValue=new Label("counter",new PropertyModel(this,"counter"));
+		counterValue.setOutputMarkupId(true);
+		add(counterValue);
+		add(new AjaxLink("counterLink"){
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				counter++;
+				target.addComponent(counterValue);
+			}
+		});
+	}
+
 	protected void onSetWindowState(WindowState state){
 		log.info("Window state changed to "+state);
 	}
-	
+
 	protected void onSetPortletMode(PortletMode mode){
 		log.info("Portlet mode changed to "+mode);
 	}	
