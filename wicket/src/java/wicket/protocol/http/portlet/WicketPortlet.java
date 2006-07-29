@@ -222,6 +222,8 @@ public class WicketPortlet extends GenericPortlet
 		// First, set the webapplication for this thread
 		Application.set(portletApplication);
 
+		res.setContentType("text/html");
+		
 		// Create a response object and set the output encoding according to
 		// wicket's application setttings.
 		final WicketPortletResponse response = portletApplication.newPortletResponse(res);

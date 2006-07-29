@@ -38,7 +38,6 @@ public class PortletRenderRequestEventProcessorStrategy implements IEventProcess
 			PortletRequestCycle cycle = (PortletRequestCycle)requestCycle;
 			page.setPortletMode(cycle.getPortletRequest().getPortletRequest().getPortletMode());
 			page.setWindowState(cycle.getPortletRequest().getPortletRequest().getWindowState());			
-		}
+		}		
 	}
-
 }
