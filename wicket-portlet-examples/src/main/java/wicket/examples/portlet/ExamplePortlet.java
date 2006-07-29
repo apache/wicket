@@ -1,10 +1,4 @@
 package wicket.examples.portlet;
-
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
-import java.util.Random;
-
-import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
 import org.apache.commons.logging.Log;
@@ -15,7 +9,6 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.image.Image;
-import wicket.markup.html.image.resource.RenderedDynamicImageResource;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
 import wicket.protocol.http.portlet.PortletPage;
@@ -52,6 +45,7 @@ public class ExamplePortlet extends PortletPage
 			}
 
 		};
+		
 		form.add(new TextField("msgInput", messageModel));
 
 		add(new Link("link")
