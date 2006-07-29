@@ -21,6 +21,7 @@ import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.IEventProcessorStrategy;
 import wicket.request.compound.IExceptionResponseStrategy;
 import wicket.request.compound.IRequestTargetResolverStrategy;
+import wicket.request.compound.IResponseStrategy;
 
 /**
  * A RequestCycleProcessor for portlet render requests. The events are not
@@ -65,4 +66,10 @@ public class PortletRenderRequestCycleProcessor extends CompoundRequestCycleProc
 	{
 		return new PortletRenderRequestEventProcessorStrategy();
 	}
+
+
+	protected IResponseStrategy newResponseStrategy()
+	{
+		return new PortletRenderResponseStrategy();
+	}	
 }
