@@ -25,7 +25,6 @@ import java.util.Map;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlTag;
 import wicket.util.collections.ArrayListStack;
 
@@ -52,14 +51,9 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 
 	/**
 	 * Construct.
-	 * 
-	 * @param parent
-	 *            The parent of this component The next MarkupFilter in the
-	 *            chain
 	 */
-	public TagTypeHandler(final IMarkupFilter parent)
+	public TagTypeHandler()
 	{
-		super(parent);
 	}
 
 	/**

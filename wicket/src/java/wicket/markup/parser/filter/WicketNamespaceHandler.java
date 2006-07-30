@@ -27,7 +27,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.util.value.ValueMap;
 
 /**
@@ -55,16 +54,11 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param parent
-	 *            The parent of this component The next MarkupFilter in the
-	 *            chain
 	 * @param markup
 	 *            The markup created by reading the markup file
 	 */
-	public WicketNamespaceHandler(final IMarkupFilter parent, final Markup markup)
+	public WicketNamespaceHandler(final Markup markup)
 	{
-		super(parent);
-
 		this.markup = markup;
 	}
 

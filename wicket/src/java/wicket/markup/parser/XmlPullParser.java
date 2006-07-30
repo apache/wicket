@@ -88,8 +88,6 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	 */
 	public XmlPullParser()
 	{
-		// The xml parser does not have a parent filter
-		super(null);
 	}
 
 	/**

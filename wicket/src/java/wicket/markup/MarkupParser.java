@@ -108,19 +108,18 @@ public class MarkupParser
 	/**
 	 * Create a new markup filter chain and initialize with all default filters
 	 * required.
-	 * 
-	 * @return a preconfigured markup filter chain
 	 */
-	private final IMarkupFilter newFilterChain()
+	private final void initializeMarkupFilters()
 	{
 		// Chain together all the different markup filters and configure them
-		IMarkupFilter filter = new WicketTagIdentifier(markup, xmlParser);
-
-		filter = new TagTypeHandler(filter);
-		filter = new HtmlHandler(filter);
-		filter = new WicketRemoveTagHandler(filter);
-		filter = new WicketLinkTagHandler(filter);
-		filter = new WicketNamespaceHandler(filter, markup);
+		this.markupFilterChain = xmlParser;
+		
+		registerMarkupFilter(new WicketTagIdentifier(markup));
+		registerMarkupFilter(new TagTypeHandler());
+		registerMarkupFilter(new HtmlHandler());
+		registerMarkupFilter(new WicketRemoveTagHandler());
+		registerMarkupFilter(new WicketLinkTagHandler());
+		registerMarkupFilter(new WicketNamespaceHandler(markup));
 
 		// Provided the wicket component requesting the markup is known ...
 		final MarkupResourceStream resource = markup.getResource();
@@ -131,22 +130,20 @@ public class MarkupParser
 			{
 				if (WicketMessageTagHandler.enable)
 				{
-					filter = new WicketMessageTagHandler(filter, containerInfo);
+					registerMarkupFilter(new WicketMessageTagHandler(containerInfo));
 				}
 	
-				filter = new BodyOnLoadHandler(filter);
+				registerMarkupFilter(new BodyOnLoadHandler());
 	
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
-					filter = new HtmlHeaderSectionHandler(this.markup, filter);
+					registerMarkupFilter(new HtmlHeaderSectionHandler(this.markup));
 				}
 				
-				filter = new HeadForceTagIdHandler(filter, containerInfo.getContainerClass());
+				registerMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
-
-		return filter;
 	}
 
 	/**
@@ -165,11 +162,25 @@ public class MarkupParser
 	 * 
 	 * @param filter
 	 *            The filter to be appended
+	 * @deprecated since 2.0 please use registerMarkupFilter() instead
 	 */
 	public final void appendMarkupFilter(final IMarkupFilter filter)
 	{
-		filter.setParent(markupFilterChain);
-		markupFilterChain = filter;
+		filter.setParent(this.markupFilterChain);
+		this.markupFilterChain = filter;
+	}
+
+	/**
+	 * Append a new filter to the list of already pre-configured markup filters.
+	 * To be used by subclasses which implement {@link #initFilterChain()}.
+	 * 
+	 * @param filter
+	 *            The filter to be appended
+	 */
+	public final void registerMarkupFilter(final IMarkupFilter filter)
+	{
+		filter.setParent(this.markupFilterChain);
+		this.markupFilterChain = filter;
 	}
 
 	/**
@@ -212,7 +223,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public final IMarkup parse(final String string) throws IOException,
+	final IMarkup parse(final String string) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
@@ -238,7 +249,7 @@ public class MarkupParser
 	private void parseMarkup()
 	{
 		// Initialize the markup filter chain
-		this.markupFilterChain = newFilterChain();
+		initializeMarkupFilters();
 
 		// Allow subclasses to extend the filter chain
 		initFilterChain();

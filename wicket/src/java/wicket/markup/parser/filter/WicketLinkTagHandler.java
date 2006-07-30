@@ -26,7 +26,6 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.util.collections.ArrayListStack;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
@@ -67,12 +66,9 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param parent
-	 *            The parent of this component The next element in the chain.
 	 */
-	public WicketLinkTagHandler(final IMarkupFilter parent)
+	public WicketLinkTagHandler()
 	{
-		super(parent);
 		setAutomaticLinking(Application.get().getMarkupSettings().getAutomaticLinking());
 	}
 

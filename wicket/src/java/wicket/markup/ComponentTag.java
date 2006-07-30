@@ -664,7 +664,6 @@ public class ComponentTag extends MarkupElement
 		this.id = id;
 	}
 
-
 	/**
 	 * @param flag
 	 *            True if the tag has not wicket namespace and no wicket:id.

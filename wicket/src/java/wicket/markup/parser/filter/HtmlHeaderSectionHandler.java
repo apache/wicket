@@ -25,7 +25,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlTag;
 
 /**
@@ -61,13 +60,9 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 * Construct.
 	 * 
 	 * @param markup The Markup object being filled while reading the markup resource
-	 * @param parent
-	 *            The parent of this component The next MarkupFilter in the
-	 *            chain
 	 */
-	public HtmlHeaderSectionHandler(final Markup markup, final IMarkupFilter parent)
+	public HtmlHeaderSectionHandler(final Markup markup)
 	{
-		super(parent);
 		this.markup = markup;
 	}
 

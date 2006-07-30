@@ -23,7 +23,6 @@ import java.text.ParseException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 
 /**
  * This is a markup inline filter. It identifies preview regions useful for HTML
@@ -47,13 +46,9 @@ public final class WicketRemoveTagHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param parent
-	 *            The parent of this component The next MarkupFilter in the
-	 *            processing chain
 	 */
-	public WicketRemoveTagHandler(final IMarkupFilter parent)
+	public WicketRemoveTagHandler()
 	{
-		super(parent);
 	}
 
 	/**

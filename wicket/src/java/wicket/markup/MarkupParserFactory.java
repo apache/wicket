@@ -67,7 +67,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 				{
 					for (IMarkupFilter element : filters)
 					{
-						appendMarkupFilter(element);
+						registerMarkupFilter(element);
 					}
 				}
 			}

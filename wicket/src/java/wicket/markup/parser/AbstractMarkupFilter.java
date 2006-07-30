@@ -40,6 +40,17 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	 * @param parent
 	 *            The parent of this component The next element in the chain.
 	 */
+	public AbstractMarkupFilter()
+	{
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent of this component The next element in the chain.
+	 * @deprecated since 1.2.2
+	 */
 	public AbstractMarkupFilter(final IMarkupFilter parent)
 	{
 		this.parent = parent;

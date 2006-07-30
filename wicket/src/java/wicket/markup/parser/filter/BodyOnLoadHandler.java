@@ -24,7 +24,6 @@ import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 
 /**
  * If you want to package and share ready-made components and if you want this
@@ -54,13 +53,9 @@ public final class BodyOnLoadHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param parent
-	 *            The parent of this component The next MarkupFilter in the
-	 *            chain
 	 */
-	public BodyOnLoadHandler(final IMarkupFilter parent)
+	public BodyOnLoadHandler()
 	{
-		super(parent);
 	}
 
 	/**
