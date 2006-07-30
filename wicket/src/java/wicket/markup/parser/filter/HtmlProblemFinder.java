@@ -74,8 +74,6 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	 */
 	public HtmlProblemFinder(final int problemEscalation)
 	{
-		super(null);
-		
 		this.problemEscalation = problemEscalation;
 	}
 

@@ -88,9 +88,8 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	 * @param application The application object
 	 *    
 	 */
-	public PrependContextPathHandler(Application application)
+	public PrependContextPathHandler(final Application application)
 	{
-		super(null);
 		this.application = application;
 	}
 

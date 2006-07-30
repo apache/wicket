@@ -26,6 +26,7 @@ import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
+import wicket.markup.parser.filter.HeadForceTagIdHandler;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.markup.parser.filter.TagTypeHandler;
@@ -132,7 +133,7 @@ public class MarkupParser
 					appendMarkupFilter(new WicketMessageTagHandler(containerInfo));
 				}
 	
-				appendMarkupFilter(new BodyOnLoadHandler(null));
+				appendMarkupFilter(new BodyOnLoadHandler());
 	
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
@@ -140,8 +141,7 @@ public class MarkupParser
 					appendMarkupFilter(new HtmlHeaderSectionHandler(this.markup));
 				}
 
-				// By default added since 2.0
-				// appendMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
+				appendMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
 	}
