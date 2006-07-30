@@ -24,7 +24,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -57,10 +56,8 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	 * @param parent
 	 * @param markupFileClass Used to generated the a common prefix for the id
 	 */
-	public HeadForceTagIdHandler(final IMarkupFilter parent, final Class markupFileClass)
+	public HeadForceTagIdHandler(final Class markupFileClass)
 	{
-		super(parent);
-
 		// generate the prefix from class name
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(markupFileClass.getName());
 		for (int i = 0; i < buffer.getValue().length; ++i)
@@ -111,7 +108,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 	/**
 	 * 
 	 * @param tag
-	 * @return
+	 * @return true, if id is needed
 	 */
 	private final boolean needId(final ComponentTag tag)
 	{
@@ -130,7 +127,7 @@ public class HeadForceTagIdHandler extends AbstractMarkupFilter
 
 	/**
 	 * 
-	 * @return
+	 * @return The next value
 	 */
 	private final int nextValue()
 	{
