@@ -82,6 +82,29 @@ public class ComponentTag extends MarkupElement
 	private boolean hasNoCloseTag = false;
 
 	/**
+	 * True if the tag has not wicket namespace and no wicket:id. E.g. <head> or
+	 * <body>
+	 */
+	private boolean internalTag = false;
+
+	/**
+	 * Automatically create a XmlTag, assign the name and the type, and
+	 * construct a ComponentTag based on this XmlTag.
+	 * 
+	 * @param name
+	 *            The name of html tag
+	 * @param type
+	 *            The type of tag
+	 */
+	public ComponentTag(final String name, final XmlTag.Type type)
+	{
+		final XmlTag tag = new XmlTag();
+		tag.setName(name);
+		tag.setType(type);
+		xmlTag = tag;
+	}
+
+	/**
 	 * Construct.
 	 * 
 	 * @param tag
@@ -419,6 +442,16 @@ public class ComponentTag extends MarkupElement
 	public final void setId(final String id)
 	{
 		this.id = id;
+	}
+
+	/**
+	 * @param flag
+	 *            True if the tag has not wicket namespace and no wicket:id.
+	 *            E.g. &lt;head&gt; or &lt;body&gt;
+	 */
+	public void setInternalTag(final boolean flag)
+	{
+		this.internalTag = flag;
 	}
 
 	/**

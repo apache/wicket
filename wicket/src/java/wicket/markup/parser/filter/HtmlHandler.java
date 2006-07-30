@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.util.collections.ArrayListStack;
 
 /**
@@ -62,13 +61,9 @@ public final class HtmlHandler extends AbstractMarkupFilter
 
 	/**
 	 * Construct.
-	 * 
-	 * @param parent
-	 *            The next MarkupFilter in the chain
 	 */
-	public HtmlHandler(final IMarkupFilter parent)
+	public HtmlHandler()
 	{
-		super(parent);
 	}
 
 	/**

@@ -27,7 +27,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.settings.IResourceSettings;
 
 /**
@@ -72,16 +71,12 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/**
 	 * Construct.
 	 * 
-	 * @param parent
-	 *            The next MarkupFilter in the processing chain
 	 * @param containerInfo
 	 *            The container requesting the current markup incl class, style
 	 *            and locale
 	 */
-	public WicketMessageTagHandler(final IMarkupFilter parent, final ContainerInfo containerInfo)
+	public WicketMessageTagHandler(final ContainerInfo containerInfo)
 	{
-		super(parent);
-
 		this.containerInfo = containerInfo;
 		this.settings = Application.get().getResourceSettings();
 
