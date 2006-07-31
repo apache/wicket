@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import wicket.Response;
-import wicket.protocol.http.WebResponse;
 
 /**
  * Response implementation that discards all output.

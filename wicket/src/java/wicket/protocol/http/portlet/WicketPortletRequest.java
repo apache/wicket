@@ -26,7 +26,6 @@ import wicket.WicketRuntimeException;
  * A Request implementation that uses PortletRequest
  * 
  * @author Janne Hietam&auml;ki
- * 
  */
 public class WicketPortletRequest extends Request
 {
@@ -34,6 +33,8 @@ public class WicketPortletRequest extends Request
 	PortletRequest req;
 
 	/**
+	 * Construct.
+	 * 
 	 * @param req
 	 */
 	public WicketPortletRequest(PortletRequest req)
@@ -49,36 +50,50 @@ public class WicketPortletRequest extends Request
 		return req.getContextPath();
 	}
 
-	/*
+	/**
 	 * @see wicket.Request#getLocale()
 	 */
+	@Override
 	public Locale getLocale()
 	{
 		return req.getLocale();
 	}
 
-	/*
+	/**
 	 * @see wicket.Request#getParameter(java.lang.String)
 	 */
+	@Override
 	public String getParameter(String key)
 	{
 		return req.getParameter(key);
 	}
 
-	/*
+	/**
 	 * @see wicket.Request#getParameterMap()
 	 */
-	public Map getParameterMap()
+	@Override
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getParameterMap()
 	{
-		return req.getParameterMap();
+		return (Map<String, Object>)req.getParameterMap();
 	}
 
-	/*
+	/**
 	 * @see wicket.Request#getParameters(java.lang.String)
 	 */
+	@Override
 	public String[] getParameters(String key)
 	{
 		return req.getParameterValues(key);
+	}
+
+	/**
+	 * @see wicket.Request#getPath()
+	 */
+	@Override
+	public String getPath()
+	{
+		throw new WicketRuntimeException("Path is not available in portlet request");
 	}
 
 	/**
@@ -89,16 +104,19 @@ public class WicketPortletRequest extends Request
 		return req;
 	}
 
-	public String getPath()
-	{
-		throw new WicketRuntimeException("Path is not available in portlet request");
-	}
-
+	/**
+	 * @see wicket.Request#getRelativeURL()
+	 */
+	@Override
 	public String getRelativeURL()
 	{
 		throw new WicketRuntimeException("Relative URL is not available in portlet request");
 	}
 
+	/**
+	 * @see wicket.Request#getURL()
+	 */
+	@Override
 	public String getURL()
 	{
 		throw new WicketRuntimeException("URL is not available in portlet request");

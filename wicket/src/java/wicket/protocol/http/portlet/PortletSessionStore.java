@@ -45,8 +45,8 @@ import wicket.util.lang.Bytes;
  */
 public class PortletSessionStore implements ISessionStore
 {
-	//private final static int SCOPE=PortletSession.PORTLET_SCOPE;
-	private final static int SCOPE=PortletSession.APPLICATION_SCOPE;
+	// private final static int SCOPE=PortletSession.PORTLET_SCOPE;
+	private final static int SCOPE = PortletSession.APPLICATION_SCOPE;
 
 	/** log. */
 	protected static Log log = LogFactory.getLog(PortletSessionStore.class);
@@ -89,8 +89,10 @@ public class PortletSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @param request 
-	 * @return 
+	 * Gets the session id.
+	 * 
+	 * @param request
+	 * @return The session id
 	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request)
 	 */
 	public final String getSessionId(Request request)
@@ -191,7 +193,8 @@ public class PortletSessionStore implements ISessionStore
 
 	/**
 	 * Template method that is called when the session is being detached from
-	 * the store, which typically happens when the portlet session was invalidated.
+	 * the store, which typically happens when the portlet session was
+	 * invalidated.
 	 * 
 	 * @param sessionId
 	 *            The session id of the session that was invalidated.
@@ -223,7 +226,7 @@ public class PortletSessionStore implements ISessionStore
 			{
 				throw new WicketRuntimeException(
 						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
-						+ valueTypeName, e);
+								+ valueTypeName, e);
 			}
 		}
 
@@ -235,7 +238,7 @@ public class PortletSessionStore implements ISessionStore
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
 			if (logger != null)
 			{
-				if (httpSession.getAttribute(attributeName,SCOPE) == null)
+				if (httpSession.getAttribute(attributeName, SCOPE) == null)
 				{
 					logger.objectCreated(value);
 				}
@@ -257,9 +260,8 @@ public class PortletSessionStore implements ISessionStore
 		WicketPortletRequest webRequest = toPortletRequest(request);
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)
-		{		
-			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name,
-					SCOPE);
+		{
+			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name, SCOPE);
 		}
 		return null;
 	}
@@ -277,22 +279,22 @@ public class PortletSessionStore implements ISessionStore
 			RequestLogger logger = application.getRequestLogger();
 			if (logger != null)
 			{
-				Object value = httpSession.getAttribute(attributeName,SCOPE);
+				Object value = httpSession.getAttribute(attributeName, SCOPE);
 				if (value != null)
 				{
 					logger.objectRemoved(value);
 				}
 			}
-			httpSession.removeAttribute(attributeName,SCOPE);
+			httpSession.removeAttribute(attributeName, SCOPE);
 		}
 	}
 
 	/**
 	 * @see wicket.session.ISessionStore#getAttributeNames(Request)
 	 */
-	public List getAttributeNames(Request request)
+	public List<String> getAttributeNames(Request request)
 	{
-		List list = new ArrayList();
+		List<String> list = new ArrayList<String>();
 		WicketPortletRequest webRequest = toPortletRequest(request);
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)
@@ -324,7 +326,7 @@ public class PortletSessionStore implements ISessionStore
 	{
 		return application.getSessionAttributePrefix(request);
 	}
-	
+
 	/**
 	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
 	 *      wicket.Session)
@@ -333,12 +335,13 @@ public class PortletSessionStore implements ISessionStore
 	{
 		return new AccessStackPageMap(name, session);
 	}
+
 	/**
 	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request, boolean)
 	 */
 	public final String getSessionId(Request request, boolean create)
 	{
-		WicketPortletRequest webRequest = toPortletRequest(request);		
+		WicketPortletRequest webRequest = toPortletRequest(request);
 		PortletSession httpSession = webRequest.getPortletRequest().getPortletSession(create);
 		return (httpSession != null) ? httpSession.getId() : null;
 	}

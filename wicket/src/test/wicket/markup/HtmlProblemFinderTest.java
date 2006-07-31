@@ -47,6 +47,7 @@ public class HtmlProblemFinderTest extends WicketTestCase
 			@Override
 			public void initFilterChain()
 			{
+				// FIXME uses a deprecated method: get rid of it
 				appendMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION));
 			}
 		};

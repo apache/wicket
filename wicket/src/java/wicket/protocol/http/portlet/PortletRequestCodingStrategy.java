@@ -110,7 +110,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 
 		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
 
-		Map map = request.getParameterMap();
+		Map<String, ? extends Object> map = request.getParameterMap();
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext())
 		{

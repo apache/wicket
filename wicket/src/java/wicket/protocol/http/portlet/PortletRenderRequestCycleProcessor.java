@@ -19,7 +19,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.IEventProcessorStrategy;
-import wicket.request.compound.IExceptionResponseStrategy;
 import wicket.request.compound.IRequestTargetResolverStrategy;
 
 /**

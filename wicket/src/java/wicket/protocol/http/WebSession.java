@@ -23,7 +23,6 @@ import wicket.IRequestCycleFactory;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.protocol.http.request.WebClientInfo;
-import wicket.request.ClientInfo;
 
 /**
  * A session subclass for the HTTP protocol.

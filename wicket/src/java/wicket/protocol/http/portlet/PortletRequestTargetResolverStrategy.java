@@ -218,7 +218,7 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			// Get the home page class
-			Class homePageClass = application.getHomePage();
+			Class<? extends Page> homePageClass = application.getHomePage();
 			PageParameters parameters = new PageParameters(requestParameters.getParameters());
 			BookmarkablePageRequestTarget homepageTarget = new BookmarkablePageRequestTarget(
 					homePageClass, parameters);

@@ -46,7 +46,7 @@ public class InternalErrorPage extends WebPage
 	protected void configureResponse()
 	{
 		super.configureResponse();
-		getWebRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
+		getRequestCycle().getWebResponse().getHttpServletResponse().setStatus(
 				HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 	}
 

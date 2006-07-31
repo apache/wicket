@@ -31,7 +31,6 @@ import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.request.WebClientInfo;
-import wicket.request.ClientInfo;
 import wicket.request.IRequestCycleProcessor;
 import wicket.settings.IRequestCycleSettings;
 import wicket.settings.IRequestCycleSettings.RenderStrategy;

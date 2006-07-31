@@ -28,22 +28,29 @@ import wicket.model.IModel;
 /**
  * Base class for portlet pages.
  * 
- * @author Janne Hietam&auml;ki
- * 
+ * @param <T>
+ *            The type
  * @see WebPage
  * @see Page
+ * @author Janne Hietam&auml;ki
  */
-public class PortletPage extends Page
+public class PortletPage<T> extends Page<T>
 {
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
 	private static final Log log = LogFactory.getLog(PortletPage.class);
 
-	/* Current portlet mode. PortletMode is not serializable, so this is stored as a String. */
+	/*
+	 * Current portlet mode. PortletMode is not serializable, so this is stored
+	 * as a String.
+	 */
 	private String portletMode = PortletMode.VIEW.toString();
 
-	/* Current window state. WindowState is not serializable, so this is stored as a String.  */
+	/*
+	 * Current window state. WindowState is not serializable, so this is stored
+	 * as a String.
+	 */
 	private String windowState = WindowState.NORMAL.toString();
 
 	/**
@@ -57,7 +64,7 @@ public class PortletPage extends Page
 	/**
 	 * @see Page#Page(IModel)
 	 */
-	protected PortletPage(final IModel model)
+	protected PortletPage(final IModel<T> model)
 	{
 		super(model);
 	}
@@ -73,7 +80,7 @@ public class PortletPage extends Page
 	/**
 	 * @see Page#Page(PageMap, IModel)
 	 */
-	protected PortletPage(final PageMap pageMap, final IModel model)
+	protected PortletPage(final PageMap pageMap, final IModel<T> model)
 	{
 		super(pageMap, model);
 	}
@@ -93,7 +100,7 @@ public class PortletPage extends Page
 	 */
 	protected PortletPage(final PageParameters parameters)
 	{
-		this((IModel)null);
+		this((IModel<T>)null);
 	}
 
 	/**
@@ -150,7 +157,8 @@ public class PortletPage extends Page
 	 * @see javax.portlet.PortletMode
 	 * @return portlet mode
 	 */
-	public PortletMode getPortletMode(){
+	public PortletMode getPortletMode()
+	{
 		return new PortletMode(portletMode);
 	}
 
@@ -158,16 +166,17 @@ public class PortletPage extends Page
 	 * Get current window state
 	 * 
 	 * @see javax.portlet.WindowState
-	 *
+	 * 
 	 * @return portlet window state
 	 */
-	public WindowState getWindowState(){
+	public WindowState getWindowState()
+	{
 		return new WindowState(windowState);
 	}
 
 	/**
 	 * Called when the portlet mode is changed.
-	 *
+	 * 
 	 * @param portletMode
 	 */
 	protected void onSetPortletMode(PortletMode portletMode)
@@ -176,7 +185,7 @@ public class PortletPage extends Page
 
 	/*
 	 * Called when the window state is changed.
-	 *
+	 * 
 	 * @param portletMode
 	 */
 	protected void onSetWindowState(WindowState windowState)

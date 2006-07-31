@@ -18,7 +18,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.portlet.PortletContext;
@@ -37,10 +36,10 @@ import wicket.util.string.StringList;
 public class PortletApplicationPath implements IResourcePath
 {
 	/** The list of urls in the path */
-	private final List webappPaths = new ArrayList();
+	private final List<String> webappPaths = new ArrayList<String>();
 
 	/** The list of folders in the path */
-	private final List folders = new ArrayList();
+	private final List<Folder> folders = new ArrayList<Folder>();
 
 	private final PortletContext portletContext;
 
@@ -90,9 +89,8 @@ public class PortletApplicationPath implements IResourcePath
 	 */
 	public URL find(final String pathname)
 	{
-		for (final Iterator iterator = folders.iterator(); iterator.hasNext();)
+		for (Folder folder : folders)
 		{
-			Folder folder = (Folder)iterator.next();
 			File file = new File(folder, pathname);
 			if (file.exists())
 			{
@@ -106,9 +104,8 @@ public class PortletApplicationPath implements IResourcePath
 				}
 			}
 		}
-		for (final Iterator iterator = webappPaths.iterator(); iterator.hasNext();)
+		for (String path : webappPaths)
 		{
-			final String path = (String)iterator.next();
 			try
 			{
 				final URL file = portletContext.getResource(path + pathname);
