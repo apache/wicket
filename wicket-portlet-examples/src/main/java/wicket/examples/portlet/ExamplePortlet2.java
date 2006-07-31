@@ -22,18 +22,18 @@ import wicket.protocol.http.portlet.PortletPage;
 
 /**
  * @author Janne Hietam&auml;ki
- * 
  */
 public class ExamplePortlet2 extends PortletPage
 {
 	private static final Log log = LogFactory.getLog(ExamplePortlet.class);
 
-	long counter=0;
+	long counter = 0;
 
 	/**
-	 * @return
+	 * @return The counter
 	 */
-	public long getCounter(){
+	public long getCounter()
+	{
 		return counter;
 	}
 
@@ -49,8 +49,8 @@ public class ExamplePortlet2 extends PortletPage
 				setResponsePage(page);
 			}
 		});
-		add(new Label("windowState",new PropertyModel(this,"windowState")));
-		add(new Label("portletMode",new PropertyModel(this,"portletMode")));
+		add(new Label("windowState", new PropertyModel(this, "windowState")));
+		add(new Label("portletMode", new PropertyModel(this, "portletMode")));
 		add(new Image("image", new RenderedDynamicImageResource(100, 100)
 		{
 			protected boolean render(Graphics2D graphics)
@@ -68,11 +68,13 @@ public class ExamplePortlet2 extends PortletPage
 				return true;
 			}
 		}));
-		
-		final Label counterValue=new Label("counter",new PropertyModel(this,"counter"));
+
+		final Label counterValue = new Label("counter",
+				new PropertyModel(this, "counter"));
 		counterValue.setOutputMarkupId(true);
 		add(counterValue);
-		add(new AjaxLink("counterLink"){
+		add(new AjaxLink("counterLink")
+		{
 			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
@@ -82,11 +84,13 @@ public class ExamplePortlet2 extends PortletPage
 		});
 	}
 
-	protected void onSetWindowState(WindowState state){
-		log.info("Window state changed to "+state);
+	protected void onSetWindowState(WindowState state)
+	{
+		log.info("Window state changed to " + state);
 	}
 
-	protected void onSetPortletMode(PortletMode mode){
-		log.info("Portlet mode changed to "+mode);
-	}	
+	protected void onSetPortletMode(PortletMode mode)
+	{
+		log.info("Portlet mode changed to " + mode);
+	}
 }
