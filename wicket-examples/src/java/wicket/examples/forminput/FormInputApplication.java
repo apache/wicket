@@ -53,6 +53,8 @@ public class FormInputApplication extends WicketExampleApplication
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+
+		// Chinese buttons
 		Font font = new Font("SimSun", Font.BOLD, 16);
 		DefaultButtonImageResource imgSave = new DefaultButtonImageResource("\u4FDD\u5B58");
 		imgSave.setFont(font);
@@ -61,6 +63,8 @@ public class FormInputApplication extends WicketExampleApplication
 		SharedResources sharedResources = getSharedResources();
 		sharedResources.add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
 		sharedResources.add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
+		
+		// Japanese buttons
 		Font fontJa = new Font("Serif", Font.BOLD, 16);
 		DefaultButtonImageResource imgSaveJa = new DefaultButtonImageResource("\u4fdd\u5b58");
 		imgSaveJa.setFont(fontJa);
@@ -69,5 +73,17 @@ public class FormInputApplication extends WicketExampleApplication
 		imgResetJa.setFont(fontJa);
 		sharedResources.add("save", Locale.JAPANESE, imgSaveJa);
 		sharedResources.add("reset", Locale.JAPANESE, imgResetJa);
+
+		// Persian buttons
+		Font fontFa = new Font("Serif", Font.BOLD, 16);
+		Locale farsi = new Locale("fa", "IR");
+		DefaultButtonImageResource imgSaveFa = new DefaultButtonImageResource(
+				"\u0630\u062e\u064a\u0631\u0647");
+		imgSaveFa.setFont(fontFa);
+		DefaultButtonImageResource imgResetFa = new DefaultButtonImageResource(
+				"\u0628\u0627\u0632\u0646\u0634\u0627\u0646\u064a");
+		imgResetFa.setFont(fontFa);
+		getSharedResources().add("save", farsi, imgSaveFa);
+		getSharedResources().add("reset", farsi, imgResetFa);
 	}
 }
