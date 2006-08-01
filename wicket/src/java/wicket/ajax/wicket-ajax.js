@@ -13,12 +13,15 @@ var Class = {
 	}
 }
 
-Function.prototype.bind = function(object) {
-	var __method = this;
-	return function() {
-		return __method.apply(object, arguments);
+if (typeof (Function.prototype.bind) == 'undefined') {
+	Function.prototype.bind = function(object) {
+		var __method = this;
+		return function() {
+			return __method.apply(object, arguments);
+		}
 	}
 }
+
 
 // Wicket Namespace
 
