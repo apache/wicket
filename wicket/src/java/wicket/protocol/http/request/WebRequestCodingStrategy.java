@@ -254,19 +254,21 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
-		String path = encoder.getMountPath();
-		if (path == null)
+
+		if (encoder == null)
 		{
-			throw new IllegalArgumentException("Argument path must be not-null");
+			throw new IllegalArgumentException("Argument encoder must be not-null");
+		}
+		
+		String path = encoder.getMountPath();
+		if (Strings.isEmpty(path))
+		{
+			throw new IllegalArgumentException("Argument path must be not be empty");
 		}
 		if (path.equals("/"))
 		{
 			throw new IllegalArgumentException(
 					"The mount path '/' is reserved for the application home page");
-		}
-		if (encoder == null)
-		{
-			throw new IllegalArgumentException("Argument encoder must be not-null");
 		}
 
 		// sanity check
