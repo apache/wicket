@@ -25,7 +25,7 @@ import wicket.util.convert.ConversionException;
 /**
  * Component used to connect instances of Radio components into a group.
  * Instances of Radio have to be in the component hierarchy somewhere below the
- * group component. The model object of the gorup is set to the model object of
+ * group component. The model object of the group is set to the model object of
  * the selected radio component or null if none selected.
  * 
  * ie
