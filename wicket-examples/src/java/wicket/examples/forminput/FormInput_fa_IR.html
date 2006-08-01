@@ -1,75 +1,76 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<html xmlns:wicket="http://wicket.sourceforge.net/">
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns:wicket="http://wicket.sourceforge.net/" dir="rtl">
 <head>
-    <title>Exemplos Wicket - Formul�rios</title>
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <title>Wicket Examples - forminput</title>
+    <link rel="stylesheet" type="text/css" href="style_fa_IR.css"/>
 </head>
 <body>
     <span wicket:id="mainNavigation"/>
+
     <form wicket:id="inputForm" id="inputForm">
  	 <div>
-		Usar localiza��o: 
+		استفاده از محلی سازی:
 		<select wicket:id="localeSelect"/>
 			<!--  option>locale1</option>
 			<option>locale2</option>
 		</select -->
-		<a href="#" wicket:id="defaultLocaleLink">[padr�o]</a>
+		<a href="#" wicket:id="defaultLocaleLink">[default]</a>
      </div>
 	  <p>
       <fieldset>
-        <legend>Formul�rio</legend>
-        <table id="inputFormTable">
+        <legend>فرم ورودی</legend>
+        <table id="inputFormTable"  style="float: left">
           <tr>
           <td valign="top">
-			  <label for="stringProperty">Texto</label>
+			  <label for="stringProperty">رشته</label>
 			  <input wicket:id="stringProperty" id="stringProperty" type="text" size="40"/>
-			  <label for="integerProperty">Inteiro</label>
+			  <label for="integerProperty">عدد صحیح</label>
 			  <input wicket:id="integerProperty" id="integerProperty" type="text" size="40"/>
-			  <label for="doubleProperty">Double</label>
+			  <label for="doubleProperty">اعشاری بزرگ</label>
 			  <input wicket:id="doubleProperty" id="doubleProperty" type="text" size="40"/>
-			  <label wicket:id="dateLabel" for="dateProperty">Data</label>
+			  <label wicket:id="dateLabel" for="dateProperty">تاریخ</label>
 			  <input wicket:id="dateProperty" id="dateProperty" type="text" size="40"/>
 			  <span wicket:id="datePicker"></span>
-	          <label>Listview no Formul�rio</label>			  
+	          <label>لیست در یک فرم</label>
 			  <ul>
 			   <li wicket:id="lines">
 			    <input type="text" wicket:id="lineEdit" /> 
 			   </li>
 			  </ul>
-			  <label for="booleanProperty">Booleano</label>
+			  <label for="booleanProperty">متغیر بولی</label>
 			  <input wicket:id="booleanProperty" id="booleanProperty" type="checkbox"/>
 	      </td>
 	      <td valign="top">
 			  
-			  <label for="integerInRangeProperty">Valor entre 0 e 100</label>
+			  <label for="integerInRangeProperty">عدد بین 0 تا 100</label>
 			  <input wicket:id="integerInRangeProperty" id="integerInRangeProperty" type="text" size="40"/>
-	          <label for="urlProperty">URL (deve ser uma url v�lida)</label>
+	          <label for="urlProperty">آدرس (باید یک آدرس معتبر باشد)</label>
 	          <input wicket:id="urlProperty" id="urlProperty" type="text" size="40"/>
-	          <label for="phoneNumberUS">N�mero Telef�nico EUA (m�scara: '(###) ###-####')</label>
+	          <label for="phoneNumberUS">شماره تلفن ایالات متحده (ماسک: '(###) ###-####')</label>
 	          <input wicket:id="phoneNumberUS" id="phoneNumberUS" type="text" size="40"/>        
-			  <label for="numberRadioChoice">selecione um n�mero (RadioChoice)</label>
+			  <label for="numberRadioChoice">یک شماره انتخاب کنید (گزینه ای)</label>
 			  <span valign="top" wicket:id="numberRadioChoice" id="numberRadioChoice">
-	    		<input type="radio">foo</input>
-				<input type="radio">bar</input>
+	    		<input type="radio">اتل</input>
+				<input type="radio">متل</input>
 			  </span>
 			  <span wicket:id="numbersGroup">
-			  <label>selecione um n�mero (RadioGroup)</label>			  
+			  <label>یک شماره انتخاب کنید (گزینه گروهی)</label>
 				<span wicket:id="numbers">
 					<input type="radio" wicket:id="radio"/>
-					<span wicket:id="number">[aqui � onde estar� o n�mero]</span>
+					<span wicket:id="number">[اینجا عدد قرار می گیرد]</span>
 				</span>
 			  </span>
 			  <span wicket:id="numbersCheckGroup">
-			  <label>selecione hum ou mais n�meros (CheckGroup)</label>			  
+			  <label>یک یا چند شماره انتخاب کنید (انتخاب گروهی)</label>
 				<span wicket:id="numbers">
 					<input type="checkbox" wicket:id="check"/>
-					<span wicket:id="number">[aqui � onde estar� o n�mero]</span>
+					<span wicket:id="number">[اینجا عدد قرار می گیرد]</span>
 				</span>
 			  </span>
-			  <label for="siteSelection">seus sites favoritos</label>
+			  <label for="siteSelection">سایت های محبوب شما</label>
 			  <select wicket:id="siteSelection" id="siteSelection">
-			  	<option>foo</option>
-			  	<option>bar</option>
+			  	<option>اتل</option>
+			  	<option>متل</option>
 			  </select>
 		  </td>
 		  </tr>
@@ -88,5 +89,6 @@
 	<div id="feedbackPanel">
 		<span wicket:id="feedback"/>
     </div>
+    
 </body>
 </html>

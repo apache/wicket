@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: FormInput.java 6427 2006-07-08 09:17:31 +0000 (Sat, 08 Jul 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-07-08 09:17:31 +0000 (Sat, 08 Jul
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -113,7 +114,8 @@ public class FormInput extends WicketExamplePage
 			new RequiredTextField<Integer>(this, "integerInRangeProperty", Integer.class)
 					.add(NumberValidator.range(0, 100));
 			new CheckBox(this, "booleanProperty");
-			RadioChoice<String> rc = new RadioChoice<String>(this, "numberRadioChoice", NUMBERS).setSuffix("");
+			RadioChoice<String> rc = new RadioChoice<String>(this, "numberRadioChoice", NUMBERS)
+					.setSuffix("");
 			rc.setLabel(new Model<String>("number"));
 			rc.setRequired(true);
 
@@ -191,14 +193,16 @@ public class FormInput extends WicketExamplePage
 			// and this is to show we can nest ListViews in Forms too
 			new LinesListView(this, "lines");
 
-			new ImageButton(this, "saveButton") {
+			new ImageButton(this, "saveButton")
+			{
 
 				@Override
-				protected void onSubmit() {
-					
-					
+				protected void onSubmit()
+				{
+
+
 				}
-				
+
 			};
 
 			Link link = new Link(this, "resetButtonLink")
@@ -248,7 +252,8 @@ public class FormInput extends WicketExamplePage
 			// add a text field that works on each list item model (returns
 			// objects of
 			// type FormInputModel.Line) using property text.
-			new TextField<String>(item, "lineEdit", new PropertyModel<String>(item.getModel(), "text"));
+			new TextField<String>(item, "lineEdit", new PropertyModel<String>(item.getModel(),
+					"text"));
 		}
 	}
 
@@ -325,7 +330,7 @@ public class FormInput extends WicketExamplePage
 	/** Relevant locales wrapped in a list. */
 	private static final List<Locale> LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
 			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-			new Locale("pt", "BR") });
+			new Locale("pt", "BR"), new Locale("fa", "IR") });
 
 	/** available sites for the multiple select. */
 	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
