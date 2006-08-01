@@ -603,7 +603,6 @@ public abstract class MarkupContainer extends Component
 		{
 			// Add to map
 			final Component replaced = put(child);
-			addedComponent(child);
 
 			// Look up to make sure it was already in the map
 			if (replaced == null)
@@ -613,7 +612,10 @@ public abstract class MarkupContainer extends Component
 								+ child.getId() + "', component=" + child));
 			}
 
+			// first remove the component.
 			removedComponent(replaced);
+			// then add the other one.
+			addedComponent(child);
 
 			// The position of the associated markup remains the same
 			child.markupIndex = replaced.markupIndex;
