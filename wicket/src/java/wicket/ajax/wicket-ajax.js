@@ -13,10 +13,12 @@ var Class = {
 	}
 }
 
-Function.prototype.bind = function(object) {
-	var __method = this;
-	return function() {
-		return __method.apply(object, arguments);
+if (Function.prototype.bind == null) {
+	Function.prototype.bind = function(object) {
+		var __method = this;
+		return function() {
+			return __method.apply(object, arguments);
+		}
 	}
 }
 
@@ -312,7 +314,12 @@ Wicket.Channel.prototype = {
 	},
 	
 	done: function() {
-		var c = this.callbacks.shift();
+		var c = null;
+		
+		if (this.callbacks.length > 0) {
+			c = this.callbacks.shift();
+		}
+			
 		if (c != null && typeof(c) != "undefined") {
 			Wicket.Log.info("Calling posponed function...");
 			// we can't call the callback from this call-stack
