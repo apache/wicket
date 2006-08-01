@@ -302,7 +302,7 @@ Wicket.Channel.prototype = {
 			this.busy = true;			
 			return callback();
 		} else {
-			Wicket.Log.info("Chanel busy - postponing...");
+			Wicket.Log.info("Channel busy - postponing...");
 			if (this.type == 's') // stack 
 				this.callbacks.push(callback);
 			else /* drop */
@@ -312,7 +312,12 @@ Wicket.Channel.prototype = {
 	},
 	
 	done: function() {
-		var c = this.callbacks.shift();
+		var c = null;	
+	
+		if (this.callbacks.length != 0) {
+			c = this.callbacks.shift();
+		}
+			
 		if (c != null && typeof(c) != "undefined") {
 			Wicket.Log.info("Calling posponed function...");
 			// we can't call the callback from this call-stack
