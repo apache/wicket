@@ -7,6 +7,7 @@
   </properties>
   <body>
     <release version="1.2.2" date="tbd" description="Wicket 1.2.2">
+    	<action type="fix" dev="Martijn Dashorst" issue="1522442">Fixed markup-id issue of datepicker so it works with ajax</action>
     	<action type="add" dev="Janne Hietamäki">Backported 2.0 wicket-ajax.js compatible version of the autocomplete</action>
 	</release>
     <release version="1.2.1" date="2006-07-24" description="Wicket 1.2.1">

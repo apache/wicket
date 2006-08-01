@@ -54,8 +54,8 @@ import wicket.util.string.AppendingStringBuffer;
  * (html)
  * 
  * <pre>
- *        &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
- *        &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
+ *         &lt;input type=&quot;text&quot; wicket:id=&quot;dateField&quot; size=&quot;10&quot; /&gt;
+ *         &lt;span wicket:id=&quot;dateFieldPicker&quot; /&gt;
  * </pre>
  * 
  * </p>
@@ -104,6 +104,10 @@ public class DatePicker extends Panel
 
 				public Object getObject(Component component)
 				{
+					if (pathProvider.getOutputMarkupId())
+					{
+						return pathProvider.getMarkupId();
+					}
 					// do this lazily, so we know for sure we have the whole
 					// path including the page etc.
 					return pathProvider.getPath();
@@ -279,10 +283,11 @@ public class DatePicker extends Panel
 		}));
 		add(new StyleSheetReference("calendarStyle", settings.getStyle()));
 	}
-	
+
 	/**
-	 * Sets the date converter to use for generating the javascript format string.
-	 * If this is not set or set to null the default DateConverter will be used.
+	 * Sets the date converter to use for generating the javascript format
+	 * string. If this is not set or set to null the default DateConverter will
+	 * be used.
 	 * 
 	 * @param dateConverter
 	 */
@@ -298,32 +303,33 @@ public class DatePicker extends Panel
 	 */
 	private CharSequence getInitScript()
 	{
-		String targetId = target.getPath();
+		String targetId = target.getOutputMarkupId() ? target.getMarkupId() : target.getPath();
 		AppendingStringBuffer b = new AppendingStringBuffer("\nCalendar.setup(\n{");
 		b.append("\n\t\tinputField : \"").append(targetId).append("\",");
 		b.append("\n\t\tbutton : \"").append(triggerButton.getPath()).append("\",");
-		
+
 		String pattern = null;
-		if(dateConverter == null)
+		if (dateConverter == null)
 		{
 			// TODO this should be much easier and nicer to do in 2.0
 			IConverter converter = target.getConverter();
-			if(converter instanceof Converter)
+			if (converter instanceof Converter)
 			{
 				ITypeConverter typeConverter = ((Converter)converter).get(Date.class);
-				if(typeConverter instanceof DateConverter)
+				if (typeConverter instanceof DateConverter)
 				{
 					dateConverter = (DateConverter)typeConverter;
 				}
 			}
-			if(dateConverter == null) dateConverter = new DateConverter();
+			if (dateConverter == null)
+				dateConverter = new DateConverter();
 		}
 		DateFormat df = dateConverter.getDateFormat(target.getLocale());
-		if(df instanceof SimpleDateFormat)
+		if (df instanceof SimpleDateFormat)
 		{
 			pattern = ((SimpleDateFormat)df).toPattern();
 		}
-		b.append(settings.toScript(target.getLocale(),pattern));
+		b.append(settings.toScript(target.getLocale(), pattern));
 		int last = b.length() - 1;
 		if (',' == b.charAt(last))
 		{
