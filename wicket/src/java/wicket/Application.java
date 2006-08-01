@@ -191,6 +191,14 @@ public abstract class Application
 		Application application = (Application)applicationKeyToApplication.get(applicationKey);
 		return application;
 	}
+	
+	/**
+	 * @return True if the current thread is attached to an application.
+	 */
+	public static boolean isAttached()
+	{
+		return current.get() != null;
+	}
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.

@@ -39,6 +39,29 @@ public final class Classes
 	private Classes()
 	{
 	}
+	
+	/**
+	 * @param className
+	 *            Class to resolve
+	 * @return Resolved class
+	 */
+	public static Class resolveClass(final String className)
+	{
+		if (Application.isAttached())
+		{
+			return Application.get().getApplicationSettings().getClassResolver().resolveClass(
+					className);
+		}
+		try
+		{
+			return Class.forName(className);
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	/**
 	 * Gets the name of a given class without the prefixed package path
