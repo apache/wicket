@@ -992,7 +992,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			// get item for this node
 			TreeItem item = (TreeItem)nodeToItemMap.get(node);
 	
-			if (forceRebuld)
+			if (forceRebuld && item != null)
 			{
 				// recreate the item
 				int level = item.getLevel();
@@ -1008,6 +1008,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				item.remove();
 	
 				item = newTreeItem(node, level, id);
+				if(level==-1) 
+				{
+					item.setVisible(false);
+				}
 				itemContainer.add(item);
 				
 				item.setChildren(children);
