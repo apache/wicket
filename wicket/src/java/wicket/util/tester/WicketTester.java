@@ -37,6 +37,7 @@ import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
+import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.ajax.markup.html.form.AjaxSubmitLink;
 import wicket.behavior.IBehavior;
@@ -168,6 +169,7 @@ import wicket.util.string.Strings;
  * 
  * @author Ingram Chen
  * @author Juergen Donnerstag
+ * @author Frank Bille
  */
 public class WicketTester extends MockWebApplication
 {
@@ -554,13 +556,28 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * Click the <code>Link</code> in the last rendered Page.
+	 * Click the {@link Link} in the last rendered Page.
 	 * <p>
-	 * This method also works for {@link AjaxLink} and {@link AjaxSubmitLink}.
+	 * Simulate that AJAX is enabled.
+	 * 
+	 * @see WicketTester#clickLink(String, boolean)
+	 * @param path
+	 *            Click the <code>Link</code> in the last rendered Page.
+	 */
+	public void clickLink(String path)
+	{
+		clickLink(path, true);
+	}
+
+	/**
+	 * Click the {@link Link} in the last rendered Page.
 	 * <p>
-	 * On AjaxLinks the onClick method is invoked with a valid
-	 * AjaxRequestTarget. In that way you can test the flow of your application
-	 * when using AJAX.
+	 * This method also works for {@link AjaxLink}, {@link AjaxFallbackLink}
+	 * and {@link AjaxSubmitLink}.
+	 * <p>
+	 * On AjaxLinks and AjaxFallbackLinks the onClick method is invoked with a
+	 * valid AjaxRequestTarget. In that way you can test the flow of your
+	 * application when using AJAX.
 	 * <p>
 	 * When clicking an AjaxSubmitLink the form, which the AjaxSubmitLink is
 	 * attached to is first submitted, and then the onSubmit method on
@@ -569,11 +586,21 @@ public class WicketTester extends MockWebApplication
 	 * as a replacement for the {@link FormTester} to test your forms. It should
 	 * be used to test that the code in your onSubmit method in AjaxSubmitLink
 	 * actually works.
+	 * <p>
+	 * This method is also able to simulate that AJAX (javascript) is disabled
+	 * on the client. This is done by setting the isAjax parameter to false. If
+	 * you have an AjaxFallbackLink you can then check that it doesn't fail when
+	 * invoked as a normal link.
 	 * 
 	 * @param path
 	 *            path to <code>Link</code> component
+	 * @param isAjax
+	 *            Whether to simulate that AJAX (javascript) is enabled or not.
+	 *            If it's false then AjaxLink and AjaxSubmitLink will fail,
+	 *            since it wouldn't work in real life. AjaxFallbackLink will be
+	 *            invoked with null as the AjaxRequestTarget parameter.
 	 */
-	public void clickLink(String path)
+	public void clickLink(String path, boolean isAjax)
 	{
 		Component linkComponent = getComponentFromLastRenderedPage(path);
 
@@ -581,7 +608,31 @@ public class WicketTester extends MockWebApplication
 		// than a normal link
 		if (linkComponent instanceof AjaxLink)
 		{
+			// If it's not ajax we fail
+			if (isAjax == false)
+			{
+				Assert.fail("Link " + path + "is an AjaxLink and will "
+						+ "not be invoked when AJAX (javascript) is disabled.");
+			}
+
 			AjaxLink link = (AjaxLink)linkComponent;
+
+			setupRequestAndResponse();
+			RequestCycle requestCycle = createRequestCycle();
+			AjaxRequestTarget target = new AjaxRequestTarget();
+			requestCycle.setRequestTarget(target);
+
+			link.onClick(target);
+
+			// process the request target
+			target.respond(requestCycle);
+		}
+		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
+		// If it's not handling of the linkComponent is passed through to the
+		// Link.
+		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
+		{
+			AjaxFallbackLink link = (AjaxFallbackLink)linkComponent;
 
 			setupRequestAndResponse();
 			RequestCycle requestCycle = createRequestCycle();
@@ -597,6 +648,13 @@ public class WicketTester extends MockWebApplication
 		// from it using reflection so we know what to submit.
 		else if (linkComponent instanceof AjaxSubmitLink)
 		{
+			// If it's not ajax we fail
+			if (isAjax == false)
+			{
+				Assert.fail("Link " + path + "is an AjaxSubmitLink and "
+						+ "will not be invoked when AJAX (javascript) is disabled.");
+			}
+
 			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
 
 			// We cycle through the attached behaviors and select the
@@ -605,17 +663,18 @@ public class WicketTester extends MockWebApplication
 			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = null;
 			for (Iterator iter = behaviors.iterator(); iter.hasNext();)
 			{
-				Object behavior = (Object)iter.next();
-				
-				if (behavior instanceof AjaxFormSubmitBehavior) {
-					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior) behavior;
+				Object behavior = iter.next();
+
+				if (behavior instanceof AjaxFormSubmitBehavior)
+				{
+					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior)behavior;
 					ajaxFormSubmitBehavior = submitBehavior;
 				}
 			}
-			
+
 			String failMessage = "No form submit behavior found on the submit link. Strange!!";
 			Assert.assertNotNull(failMessage, ajaxFormSubmitBehavior);
-			
+
 			// We need to get the form submitted, using reflection.
 			// It needs to be "submitted".
 			Form form = null;
@@ -629,13 +688,13 @@ public class WicketTester extends MockWebApplication
 			{
 				Assert.fail(e.getMessage());
 			}
-			
+
 			failMessage = "No form attached to the submitlink.";
 			Assert.assertNotNull(failMessage, form);
-			
+
 			setupRequestAndResponse();
 			RequestCycle requestCycle = createRequestCycle();
-			
+
 			// "Submit" the form
 			form.visitFormComponents(new FormComponent.IVisitor()
 			{
@@ -646,12 +705,12 @@ public class WicketTester extends MockWebApplication
 					{
 						String name = formComponent.getInputName();
 						String value = formComponent.getValue();
-						
+
 						getServletRequest().setParameter(name, value);
 					}
 				}
 			});
-			
+
 			// Ok, finally we "click" the link
 			ajaxFormSubmitBehavior.onRequest();
 
@@ -666,7 +725,8 @@ public class WicketTester extends MockWebApplication
 		}
 		else
 		{
-			Assert.fail("Link " + path + " is not a Link, AjaxLink or AjaxSubmitLink");
+			Assert.fail("Link " + path
+					+ " is not a Link, AjaxLink, AjaxFallbackLink or AjaxSubmitLink");
 		}
 	}
 
