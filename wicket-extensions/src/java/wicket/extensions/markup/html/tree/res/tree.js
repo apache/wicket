@@ -4,7 +4,7 @@ if (typeof(Wicket) == "undefined")
 Wicket.Tree = { };
 
 Wicket.Tree.removeNodes = function(prefix, nodeList) {
-	for (var i in nodeList) {
+	for(var i = 0; i < nodeList.length; i++ ) {
 		var e = document.getElementById(prefix + nodeList[i]);
 		if (e != null) {
 			e.parentNode.removeChild(e);
