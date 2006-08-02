@@ -21,7 +21,7 @@ var WicketAjaxDebug = {
 	    wicketHide(WicketAjaxDebug.debugWindowId);
 	},
 
-    log : function(msg) {
+    log : function(msg, prefix) {
         var d = wicketGet(WicketAjaxDebug.debugWindowLogId);
         var c = document.createElement("div");
         msg = msg.replace(/</g, "&lt;");
@@ -29,6 +29,8 @@ var WicketAjaxDebug = {
         msg = msg.replace(/\n/g, "<br/>");
         msg = msg.replace(/ /g, "&nbsp;");  
         msg = msg.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");          
+        if (prefix != null)
+        	msg = "<b>" + prefix + "</b> " + msg;
         c.innerHTML = msg;
         c.setAttribute("style","font-size: 82%; margin: 0px; padding:0px");        
         d.appendChild(c);
@@ -36,11 +38,11 @@ var WicketAjaxDebug = {
     },
     
     logError : function(msg) {
-        WicketAjaxDebug.log("ERROR: "+msg);
+        WicketAjaxDebug.log(msg, "ERROR: ");
     },
 
     logInfo : function(msg) {
-        WicketAjaxDebug.log(" INFO: "+msg);
+        WicketAjaxDebug.log(msg, "INFO: ");
     },
 
     clearLog : function() {
@@ -80,7 +82,7 @@ var WicketAjaxDebug = {
 			if (firstTime)            
 	            document.write(
 	            
-	             "<div style='position:absolute; left:10px; top:95%; z-index:100;'>"
+	             "<div style='position:fixed; _position: absolute; left:10px; bottom: 10px; z-index:100;'>"
 	            +"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"
 	            +"</div>");
         }
