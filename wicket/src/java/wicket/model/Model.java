@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-07-19 01:15:49 -0700 (Wed, 19 Jul 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -93,6 +93,18 @@ public class Model<T> extends AbstractModel<T>
 	public static <K> Model<List<K>> valueOf(final List<K> list)
 	{
 		return new Model<List<K>>(list instanceof Serializable ? list : new ArrayList<K>(list));
+	}
+
+	/**
+	 * Shortcut utility method so you dont have to use the long generics syntax
+	 * 
+	 * @param <K>
+	 * @param object
+	 * @return model that wraps the provided object
+	 */
+	public static <K> Model<K> valueOf(final K object)
+	{
+		return new Model<K>(object);
 	}
 
 	/**

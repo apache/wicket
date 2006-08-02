@@ -282,4 +282,12 @@ public class Fragment<T> extends WebMarkupContainer<T>
 			providerMarkupStream.setCurrentIndex(currentIndex);
 		}
 	}
+	
+	/**
+	 * @return markup provider or null if not set
+	 */
+	public final MarkupContainer getMarkupProvider()
+	{
+		return markupProvider;
+	}
 }

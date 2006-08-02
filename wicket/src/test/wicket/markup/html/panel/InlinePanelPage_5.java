@@ -62,7 +62,7 @@ public class InlinePanelPage_5 extends WebPage
 		}
 
 		@Override
-		protected MarkupStream chooseMarkupStream(MarkupStream markupStream)
+		public MarkupStream chooseMarkupStream(MarkupStream markupStream)
 		{
 			return getAssociatedMarkupStream(false);
 		}

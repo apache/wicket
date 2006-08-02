@@ -113,16 +113,29 @@ final class MarkupFragmentFinder
 			{
 				// if it is a child of a fragement. First find the fragement
 				MarkupContainer mc = component.findParent(Fragment.class);
-				if(mc != null)
+				if (mc != null)
 				{
-					String fragmentId = ((Fragment)mc).getFragmentMarkupId();
-					String componentId = getComponentRelativePath(mc, parentWithAssociatedMarkup) + mc.getId();
+					final Fragment fragment = (Fragment)mc;
+					final MarkupContainer markupProvider = fragment.getMarkupProvider();
+					if (markupProvider != null)
+					{
+						markupStream = markupProvider.getMarkupStream();
+						if (markupStream == null)
+						{
+							markupStream = markupProvider.getAssociatedMarkupStream(true);
+						}
+					}
+
+					String fragmentId = fragment.getFragmentMarkupId();
+					String componentId = getComponentRelativePath(mc, parentWithAssociatedMarkup)
+							+ Component.PATH_SEPARATOR + mc.getId();
 					relativePath = relativePath.replace(componentId, fragmentId);
 					// If the component is defined in the markup
 					index = markupStream.findComponentIndex(relativePath, component.getId());
 					if (index != -1)
 					{
-						// than position the stream at the beginning of the component
+						// than position the stream at the beginning of the
+						// component
 						markupStream.setCurrentIndex(index);
 						return markupStream;
 					}
@@ -138,7 +151,8 @@ final class MarkupFragmentFinder
 	}
 
 	/**
-	 * Gets component path relative to the parent container with associated markup.
+	 * Gets component path relative to the parent container with associated
+	 * markup.
 	 * 
 	 * @param component
 	 * @param parentWithAssociatedMarkup
