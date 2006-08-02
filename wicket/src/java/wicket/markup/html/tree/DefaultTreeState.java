@@ -33,10 +33,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 	 */
 	private final Set<TreeNode> nodes = new HashSet<TreeNode>();
 
-	/** Whether the nodes set should be treated as collapsed or expanded. */
+	/** Whether the nodes in set should be treated as collapsed or expanded. */
 	private boolean nodesCollapsed = true;
 
-	/** Set selected nodes. */
+	/** Set of selected nodes. */
 	private final Set<TreeNode> selectedNodes = new HashSet<TreeNode>();
 
 	/**
@@ -65,8 +65,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.clear();
 			nodesCollapsed = false;
 
-			for (ITreeStateListener l : listeners)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.allNodesCollapsed();
 			}
 		}
@@ -86,8 +88,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.remove(node);
 		}
 
-		for (ITreeStateListener l : listeners)
+		Object[] listenersCopy = listeners.toArray();
+		for(int i = 0; i < listenersCopy.length; i++) 
 		{
+			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 			l.nodeCollapsed(node);
 		}
 	}
@@ -107,8 +111,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.clear();
 			nodesCollapsed = true;
 
-			for (ITreeStateListener l : listeners)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.allNodesCollapsed();
 			}
 		}
@@ -128,8 +134,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.remove(node);
 		}
 
-		for (ITreeStateListener l : listeners)
+		Object[] listenersCopy = listeners.toArray();
+		for(int i = 0; i < listenersCopy.length; i++) 
 		{
+			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 			l.nodeExpanded(node);
 		}
 	}
@@ -195,23 +203,29 @@ public class DefaultTreeState implements ITreeState, Serializable
 				{
 					TreeNode current = i.next();
 					i.remove();
-					for (ITreeStateListener l : listeners)
+					Object[] listenersCopy = listeners.toArray();
+					for(int j = 0; j < listenersCopy.length; j++) 
 					{
+						ITreeStateListener l = (ITreeStateListener)listenersCopy[j];
 						l.nodeUnselected(current);
 					}
 				}
 			}
 			selectedNodes.add(node);
-			for (ITreeStateListener l : listeners)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.nodeSelected(node);
 			}
 		}
 		else if (selected == false && selectedNodes.contains(node) == true)
 		{
 			selectedNodes.remove(node);
-			for (ITreeStateListener l : listeners)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.nodeUnselected(node);
 			}
 		}

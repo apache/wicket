@@ -1010,7 +1010,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			// get item for this node
 			TreeItem item = nodeToItemMap.get(node);
 	
-			if (forceRebuld)
+			if (forceRebuld && item != null)
 			{
 				// recreate the item
 				int level = item.getLevel();
@@ -1026,6 +1026,10 @@ public abstract class AbstractTree extends Panel<TreeModel>
 				item.remove();
 	
 				item = newTreeItem(node, level, id);
+				if(level == -1) 
+				{
+					item.setVisible(false);
+				}
 				item.setChildren(children);
 	
 				// was the item an root item?
