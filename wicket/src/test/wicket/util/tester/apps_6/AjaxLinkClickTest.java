@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +21,7 @@ package wicket.util.tester.apps_6;
 import wicket.Page;
 import wicket.WicketTestCase;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.util.tester.ITestPageSource;
 
@@ -44,13 +45,14 @@ public class AjaxLinkClickTest extends WicketTestCase
 
 	/**
 	 * Make sure that our test flags are reset between every test.
+	 * 
 	 * @see wicket.WicketTestCase#setUp()
 	 */
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		
+
 		linkClicked = false;
 		ajaxRequestTarget = null;
 	}
@@ -61,7 +63,7 @@ public class AjaxLinkClickTest extends WicketTestCase
 	public void testBasicAjaxLinkClick()
 	{
 		final Page page = new MockPageWithLink();
-				
+
 		// Create a link, which we test is actually invoked
 		new AjaxLink(page, "ajaxLink")
 		{
@@ -92,5 +94,88 @@ public class AjaxLinkClickTest extends WicketTestCase
 
 		assertTrue(linkClicked);
 		assertNotNull(ajaxRequestTarget);
+	}
+
+	/**
+	 * Test that clickLink also works with AjaxFallbackLinks
+	 * 
+	 * AjaxFallbackLinks should be clicked and interpreted as an AjaxLink, which
+	 * means that AjaxRequestTarget is not null.
+	 */
+	public void testAjaxFallbackLinkClick()
+	{
+		final Page page = new MockPageWithLink();
+
+		// Create a link, which we test is actually invoked
+		new AjaxFallbackLink(page, "ajaxLink")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				linkClicked = true;
+				ajaxRequestTarget = target;
+			}
+		};
+
+		application.startPage(new ITestPageSource()
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public Page getTestPage()
+			{
+				return page;
+			}
+		});
+
+		application.clickLink("ajaxLink");
+
+		assertTrue(linkClicked);
+		assertNotNull(ajaxRequestTarget);
+	}
+
+	/**
+	 * Test that when AJAX is disabled, the AjaxFallbackLink is invoked with
+	 * null as AjaxRequestTarget.
+	 */
+	public void testFallbackLinkWithAjaxDisabled()
+	{
+		final Page page = new MockPageWithLink();
+
+		// Create a link, which we test is actually invoked
+		new AjaxFallbackLink(page, "ajaxLink")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick(AjaxRequestTarget target)
+			{
+				linkClicked = true;
+				ajaxRequestTarget = target;
+			}
+		};
+
+		application.startPage(new ITestPageSource()
+		{
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			public Page getTestPage()
+			{
+				return page;
+			}
+		});
+
+		// Click the link with ajax disabled
+		application.clickLink("ajaxLink", false);
+
+		assertTrue(linkClicked);
+		assertNull(ajaxRequestTarget);
 	}
 }
