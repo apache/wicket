@@ -65,9 +65,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.clear();
 			nodesCollapsed = false;
 
-			for (Iterator i = listeners.iterator(); i.hasNext();)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
-				ITreeStateListener l = (ITreeStateListener)i.next();
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.allNodesCollapsed();
 			}
 		}
@@ -87,9 +88,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.remove(node);
 		}
 
-		for (Iterator i = listeners.iterator(); i.hasNext();)
+		Object[] listenersCopy = listeners.toArray();
+		for(int i = 0; i < listenersCopy.length; i++) 
 		{
-			ITreeStateListener l = (ITreeStateListener)i.next();
+			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 			l.nodeCollapsed(node);
 		}
 	}
@@ -109,9 +111,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.clear();
 			nodesCollapsed = true;
 
-			for (Iterator i = listeners.iterator(); i.hasNext();)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
-				ITreeStateListener l = (ITreeStateListener)i.next();
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.allNodesCollapsed();
 			}
 		}
@@ -131,9 +134,10 @@ public class DefaultTreeState implements ITreeState, Serializable
 			nodes.remove(node);
 		}
 
-		for (Iterator i = listeners.iterator(); i.hasNext();)
+		Object[] listenersCopy = listeners.toArray();
+		for(int i = 0; i < listenersCopy.length; i++) 
 		{
-			ITreeStateListener l = (ITreeStateListener)i.next();
+			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 			l.nodeExpanded(node);
 		}
 	}
@@ -199,26 +203,29 @@ public class DefaultTreeState implements ITreeState, Serializable
 				{
 					TreeNode current = (TreeNode)i.next();
 					i.remove();
-					for (Iterator j = listeners.iterator(); j.hasNext();)
+					Object[] listenersCopy = listeners.toArray();
+					for(int j = 0; j < listenersCopy.length; j++) 
 					{
-						ITreeStateListener l = (ITreeStateListener)j.next();
+						ITreeStateListener l = (ITreeStateListener)listenersCopy[j];
 						l.nodeUnselected(current);
 					}
 				}
 			}
 			selectedNodes.add(node);
-			for (Iterator i = listeners.iterator(); i.hasNext();)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
-				ITreeStateListener l = (ITreeStateListener)i.next();
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.nodeSelected(node);
 			}
 		}
 		else if (selected == false && selectedNodes.contains(node) == true)
 		{
 			selectedNodes.remove(node);
-			for (Iterator i = listeners.iterator(); i.hasNext();)
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
 			{
-				ITreeStateListener l = (ITreeStateListener)i.next();
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
 				l.nodeUnselected(node);
 			}
 		}
