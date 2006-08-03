@@ -34,14 +34,10 @@ import wicket.ajax.AjaxRequestTarget;
  * the new request target; should it be handled by {@link AjaxRequestTarget} or
  * may the new request target be added on top of it.
  * </p>
- * <p>
- * This interface is only useful when it is implemented by a
- * {@link IRequestTarget request target}.
- * </p>
  * 
- * @author eelcohillenius
+ * @author Eelco Hillenius
  */
-public interface IRequestTargetInterceptor
+public interface IRequestTargetInterceptor extends IRequestTarget
 {
 	/**
 	 * Called when this request target is the current on and a request at
