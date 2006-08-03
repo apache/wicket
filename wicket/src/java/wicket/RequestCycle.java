@@ -25,12 +25,12 @@ import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ajax.AjaxRequestTarget;
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
+import wicket.request.target.IRequestTargetInterceptor;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ComponentRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -242,13 +242,22 @@ public abstract class RequestCycle
 		 */
 		public final void push(final IRequestTarget requestTarget)
 		{
-			if (!isEmpty() && (peek() instanceof AjaxRequestTarget))
+			if (!isEmpty() && (peek() instanceof IRequestTargetInterceptor))
 			{
 				// adding more request targets on top of an ajax request is
 				// useless; there is no overriding anyway. But what we do
 				// is place a redirect issue in the ajax response
-				AjaxRequestTarget ajaxRequestTarget = (AjaxRequestTarget)peek();
-				ajaxRequestTarget.setRequestTarget(requestTarget);
+				IRequestTargetInterceptor ajaxRequestTarget = (IRequestTargetInterceptor)peek();
+
+				// let target intercept
+				IRequestTarget vetod = ajaxRequestTarget.onSetRequestTarget(requestTarget);
+				if (vetod != null)
+				{
+					// if it returns a non-null request target, we set that as
+					// the current
+					add(vetod);
+				}
+				// else interceptor ate up the push request
 			}
 			else
 			{
