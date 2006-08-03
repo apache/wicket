@@ -40,7 +40,6 @@ import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.target.component.BookmarkableFormPageRequestTarget;
 import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ExpiredPageClassRequestTarget;
@@ -278,14 +277,21 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			if (requestParameters.getComponentPath() != null
 					&& requestParameters.getInterfaceName() != null)
 			{
-				return new BookmarkableListenerInterfaceRequestTarget(requestParameters
-						.getPageMapName(), pageClass, params, requestParameters.getComponentPath(),
-						requestParameters.getInterfaceName());
-			}
-			else if (requestParameters.getBookmarkableFormName() != null)
-			{
-				return new BookmarkableFormPageRequestTarget(requestParameters.getPageMapName(),
-						pageClass, params, requestParameters.getBookmarkableFormName());
+				final String componentPath = requestParameters.getComponentPath();
+				final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+						requestParameters.getVersionNumber());
+				
+				if(page != null && page.getClass() == pageClass)
+				{
+					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+							requestParameters.getInterfaceName(), requestParameters);
+				}
+				else
+				{
+					return new BookmarkableListenerInterfaceRequestTarget(requestParameters
+							.getPageMapName(), pageClass, params, requestParameters.getComponentPath(),
+							requestParameters.getInterfaceName());
+				}
 			}
 			else
 			{
@@ -323,24 +329,16 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			// and create a dummy target for looking up whether the home page is
 			// mounted
 			BookmarkablePageRequestTarget homepageTarget = null;
-			if (requestParameters.getBookmarkableFormName() != null)
-			{
-				homepageTarget = new BookmarkableFormPageRequestTarget(null, homePageClass,
-						parameters, requestParameters.getBookmarkableFormName());
-			}
-			else
-			{
-				homepageTarget = new BookmarkablePageRequestTarget(homePageClass, parameters);
-				IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
-						.getRequestCodingStrategy();
-				CharSequence path = requestCodingStrategy.pathForTarget(homepageTarget);
+			homepageTarget = new BookmarkablePageRequestTarget(homePageClass, parameters);
+			IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+					.getRequestCodingStrategy();
+			CharSequence path = requestCodingStrategy.pathForTarget(homepageTarget);
 
-				if (path != null)
-				{
-					// The home page was mounted at the given path.
-					// Issue a redirect to that path
-					requestCycle.setRedirect(true);
-				}
+			if (path != null)
+			{
+				// The home page was mounted at the given path.
+				// Issue a redirect to that path
+				requestCycle.setRedirect(true);
 			}
 
 			// else the home page was not mounted; render it now so

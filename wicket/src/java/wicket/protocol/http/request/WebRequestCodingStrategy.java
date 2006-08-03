@@ -74,9 +74,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/** Parameter name used all over the place */
 	public static final String BOOKMARKABLE_PAGE_PARAMETER_NAME = NAME_SPACE + "bookmarkablePage";
 
-	/** Bookmarkable form parameter name */
-	public static final String BOOKMARKABLE_FORM_PARAMETER_NAME = NAME_SPACE + "form";
-
 	/** Pagemap parameter constant */
 	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
 
@@ -150,7 +147,6 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		addResourceParameters(request, parameters);
 
 		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
-		parameters.setBookmarkableFormName(request.getParameter(BOOKMARKABLE_FORM_PARAMETER_NAME));
 
 		Map<String, ? extends Object> map = request.getParameterMap();
 		Iterator<String> iterator = map.keySet().iterator();

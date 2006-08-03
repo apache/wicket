@@ -338,23 +338,4 @@ public class RequestParameters implements Serializable
 		b.append("]");
 		return b.toString();
 	}
-
-	/**
-	 * Gets the bookmarkable form name if this was a request from a bookmarkable
-	 * form.
-	 * 
-	 * @return String the bookmarkable form name
-	 */
-	public String getBookmarkableFormName()
-	{
-		return bookmarkableFormName;
-	}
-
-	/**
-	 * @param bookmarkableFormName
-	 */
-	public void setBookmarkableFormName(String bookmarkableFormName)
-	{
-		this.bookmarkableFormName = bookmarkableFormName;
-	}
 }

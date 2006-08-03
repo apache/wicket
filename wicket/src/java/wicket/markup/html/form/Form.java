@@ -227,6 +227,13 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		super(parent, id, model);
 	}
+	
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
+	}
 
 	/**
 	 * Gets the default button. If set (not null), a hidden submit button will

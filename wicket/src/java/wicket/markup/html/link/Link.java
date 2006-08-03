@@ -19,17 +19,14 @@ package wicket.markup.html.link;
 
 import wicket.Application;
 import wicket.Component;
-import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
-import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -233,6 +230,12 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 		}
 		return super.isEnabled();
 	}
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return false;
+	}
 
 	/**
 	 * Called when a link is clicked.
@@ -435,18 +438,7 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 	 */
 	protected CharSequence getURL()
 	{
-		if (getPage().isStateless() == false)
-		{
-			return urlFor(ILinkListener.INTERFACE);
-		}
-		else
-		{
-			IRequestTarget requestTarget = new BookmarkableListenerInterfaceRequestTarget(
-					getPage().getPageMap().getName(), getPage().getClass(), new PageParameters(),
-					this, ILinkListener.INTERFACE);
-			
-			return urlFor(requestTarget);
-		}
+		return urlFor(ILinkListener.INTERFACE);
 	}
 
 	/**

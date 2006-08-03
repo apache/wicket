@@ -23,6 +23,7 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.util.string.Strings;
 
 /**
  * Request target for bookmarkable page links that also contain component path
@@ -66,7 +67,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 			Class<? extends Page> pageClass, PageParameters pageParameters, Component component,
 			RequestListenerInterface listenerInterface)
 	{
-		this(pageMapName, pageClass, pageParameters, component.getPageRelativePath(),
+		this(pageMapName, pageClass, pageParameters, component.getPath(),
 				listenerInterface.getName());
 	}
 
@@ -74,7 +75,9 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	public void processEvents(RequestCycle requestCycle)
 	{
 		Page page = getPage(requestCycle);
-		Component<?> component = page.get(componentPath);
+		final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
+				Component.PATH_SEPARATOR);
+		Component<?> component = page.get(pageRelativeComponentPath);
 		RequestListenerInterface listenerInterface = RequestListenerInterface
 				.forName(interfaceName);
 		listenerInterface.invoke(page, component);

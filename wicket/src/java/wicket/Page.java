@@ -1006,19 +1006,21 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	public final boolean isStateless()
 	{
-		if (getStatelessHint() == false || isBookmarkable() == false)
+		if (isBookmarkable() == false)
 		{
 			stateless = false;
 		}
 
 		if (stateless == null)
 		{
+			final Object[] returnArray = new Object[1]; 
 			Object returnValue = visitChildren(Component.class, new IVisitor()
 			{
 				public Object component(Component<?> component)
 				{
 					if (!component.getStatelessHint())
 					{
+						returnArray[0] = component;
 						return Boolean.FALSE;
 					}
 
@@ -1029,7 +1031,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 						IBehavior behavior = behaviors.next();
 						if (!behavior.getStatelessHint())
 						{
-							return false;
+							returnArray[0] = behavior;
+							return Boolean.FALSE;
 						}
 					}
 
@@ -1044,7 +1047,13 @@ public abstract class Page<T> extends MarkupContainer<T>
 			{
 				stateless = (Boolean)returnValue;
 			}
+			
+			if(!stateless  && getStatelessHint())
+			{
+				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0]+ "' but the stateless hint is set to true!");
+			}
 		}
+		
 		return stateless;
 	}
 

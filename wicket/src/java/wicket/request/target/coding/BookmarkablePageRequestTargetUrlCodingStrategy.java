@@ -25,7 +25,6 @@ import wicket.PageParameters;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.RequestParameters;
-import wicket.request.target.component.BookmarkableFormPageRequestTarget;
 import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -135,9 +134,6 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		final String bookmarkableInterfaceListener = (String) parameters.remove(
 				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
 		
-		final String bookmarkableFormName = (String)parameters.remove(
-				WebRequestCodingStrategy.BOOKMARKABLE_FORM_PARAMETER_NAME);
-		
 		// Do the parameters contain component path and listener interface?
 		if (bookmarkableInterfaceListener != null) {
 			// try to parse component path and listener interface 
@@ -155,12 +151,6 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			target = new BookmarkableListenerInterfaceRequestTarget(pageMapName, bookmarkablePageClass, parameters,
 					componentPath, interfaceName);
 		}										
-		else if (bookmarkableFormName != null) 
-		{		
-			requestParameters.setBookmarkableFormName(bookmarkableFormName);
-			target = new BookmarkableFormPageRequestTarget(pageMapName, 
-					bookmarkablePageClass, parameters, bookmarkableFormName);
-		} 
 		else 
 		{
 			target = new BookmarkablePageRequestTarget(pageMapName,

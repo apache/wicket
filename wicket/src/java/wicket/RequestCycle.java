@@ -31,6 +31,7 @@ import wicket.request.ClientInfo;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ComponentRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -753,12 +754,21 @@ public abstract class RequestCycle
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
-
-		// trigger creation of the actual session in case it was deferred
-		session.getSessionStore().getSessionId(request, true);
-
-		// Get the listener interface name
-		final IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, listener);
+		final IRequestTarget target; 
+		if (component.getStatelessHint() && page.isBookmarkable())
+		{
+			target = new BookmarkableListenerInterfaceRequestTarget(
+					page.getPageMap().getName(), page.getClass(), new PageParameters(),
+					component,listener);
+		}
+		else
+		{
+			// trigger creation of the actual session in case it was deferred
+			session.getSessionStore().getSessionId(request, true);
+	
+			// Get the listener interface name
+			target = new ListenerInterfaceRequestTarget(page, component, listener);
+		}
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);

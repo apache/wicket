@@ -127,6 +127,12 @@ public class BookmarkablePageLink extends Link<CharSequence>
 	{
 		return page.getClass() == pageClass;
 	}
+	
+	@Override
+	protected boolean getStatelessHint()
+	{
+		return true;
+	}
 
 	/**
 	 * THIS METHOD IS NOT USED! Bookmarkable links do not have a click handler.

@@ -373,7 +373,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 							remove(topPage);
 						}
 					}
-					else
+					else if(top != null)
 					{
 						// Remove entry
 						removeEntry(top);
