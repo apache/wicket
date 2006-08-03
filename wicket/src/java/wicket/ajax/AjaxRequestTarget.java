@@ -318,6 +318,23 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
+	 * Sets Any request target to redirect to. if not null, overrides any other
+	 * response. <strong>This method is not meant for to be used by framework
+	 * clients.</strong>
+	 * 
+	 * @param requestTarget
+	 *            requestTarget the request target
+	 * @return Null as it always 'eats' the request to set another request
+	 *         target as the current one at {@link RequestCycle}
+	 * @see wicket.request.target.IRequestTargetInterceptor#onSetRequestTarget(wicket.IRequestTarget)
+	 */
+	public IRequestTarget onSetRequestTarget(IRequestTarget requestTarget)
+	{
+		this.requestTarget = requestTarget;
+		return null;
+	}
+
+	/**
 	 * Adds javascript that will be evaluated on the client side before
 	 * components are replaced
 	 * 
@@ -340,14 +357,17 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		try
 		{
-			CharSequence url = null; 
-			
-			if(requestTarget != null)
+			CharSequence url = null;
+
+			if (requestTarget != null)
 			{
-				// a request target was set. Try to get the url for a redirect to that
+				// a request target was set. Try to get the url for a redirect
+				// to that
 				url = requestCycle.urlFor(requestTarget);
-				// there was a requestTarget, but couldn't generate a redirect url.
-				// then just call respond to it. It should be a request target that handles
+				// there was a requestTarget, but couldn't generate a redirect
+				// url.
+				// then just call respond to it. It should be a request target
+				// that handles
 				// the complete output by itself.
 				if (url == null)
 				{
@@ -356,7 +376,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				}
 			}
 
-			
+
 			final Application app = Application.get();
 
 			// disable component use check since we want to ignore header
@@ -433,19 +453,6 @@ public class AjaxRequestTarget implements IRequestTarget
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
 		}
-	}
-
-	/**
-	 * Sets Any request target to redirect to. if not null, overrides any other
-	 * response. <strong>This method is not meant for to be used by framework
-	 * clients.</strong>
-	 * 
-	 * @param requestTarget
-	 *            requestTarget the request target
-	 */
-	public final void setRequestTarget(IRequestTarget requestTarget)
-	{
-		this.requestTarget = requestTarget;
 	}
 
 	/**
