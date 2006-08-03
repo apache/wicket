@@ -46,17 +46,6 @@ public class WebSession extends Session
 	 * @param application
 	 *            The application
 	 */
-	public WebSession(final WebApplication application)
-	{
-		super(application);
-	}
-
-	/**
-	 * Constructor
-	 * 
-	 * @param application
-	 *            The application
-	 */
 	public WebSession(final Application application)
 	{
 		super(application);
