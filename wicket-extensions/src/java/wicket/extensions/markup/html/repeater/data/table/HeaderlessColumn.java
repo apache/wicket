@@ -22,11 +22,11 @@ import wicket.Component;
 import wicket.model.Model;
 
 /**
- * TODO docme
+ * A column that does not have a header
  * 
  * @author Igor Vaynberg
  */
-public abstract class HeaderlessColumn extends AbstractColumn implements IColumn
+public abstract class HeaderlessColumn extends AbstractColumn
 {
 	/**
 	 * Construct.
