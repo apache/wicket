@@ -885,7 +885,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component))
+		if (mayTrackChangesFor(component, component.getParent()))
 		{
 			versionManager.componentAdded(component);
 		}
@@ -902,7 +902,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component))
+		if (mayTrackChangesFor(component,null))
 		{
 			versionManager.componentModelChanging(component);
 		}
@@ -919,7 +919,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component))
+		if (mayTrackChangesFor(component, component.getParent()))
 		{
 			versionManager.componentRemoved(component);
 		}
@@ -959,7 +959,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component))
+		if (mayTrackChangesFor(component,null))
 		{
 			versionManager.componentStateChanging(change);
 		}
@@ -1194,13 +1194,16 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @param component
 	 *            The component which is affected
+	 * @param parent 
 	 * @return True if the change is okay to report
 	 */
-	private final boolean mayTrackChangesFor(final Component component)
+	private final boolean mayTrackChangesFor(final Component component, MarkupContainer parent)
 	{
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto() || (!component.isVersioned()))
+		if (component.isAuto() || 
+				(parent == null && !component.isVersioned()) || 
+				(parent != null && !parent.isVersioned()) )
 		{
 			return false;
 		}
