@@ -51,7 +51,17 @@ public class WebSession extends Session
 		super(application);
 	}
 	
-	
+	/**
+	 * Constructor
+	 * 
+	 * @param application
+	 *            The application
+	 */
+	public WebSession(final WebApplication application)
+	{
+		super(application);
+	}
+
 	/**
 	 * Invalidates this session at the end of the current request. If you need
 	 * to invalidate the session immediately, you can do this by calling
