@@ -22,6 +22,7 @@ import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
+import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 
@@ -66,7 +67,7 @@ public abstract class AjaxLink<T> extends WebMarkupContainer<T> implements IAjax
 	{
 		super(parent, id, model);
 
-		add(new AjaxEventBehavior(ClientEvent.HREF)
+		add(new AjaxEventBehavior(ClientEvent.CLICK)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -83,6 +84,13 @@ public abstract class AjaxLink<T> extends WebMarkupContainer<T> implements IAjax
 			}
 
 		});
+	}
+
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		// disable any href attr in markup
+		tag.put("href", "#");
 	}
 
 	/**
