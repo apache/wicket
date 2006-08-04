@@ -47,7 +47,7 @@ import wicket.Application;
  * @author Marco Geier
  * @author Juergen Donnerstag
  */
-public class WicketBundleStringResourceLoader extends ClassStringResourceLoader
+public class WicketBundleStringResourceLoader extends AbstractStringResourceLoader
 {
 	/**
 	 * Create and initialise the resource loader.
@@ -55,12 +55,25 @@ public class WicketBundleStringResourceLoader extends ClassStringResourceLoader
 	 * @param application
 	 *            The application that this resource loader is associated with
 	 * @param clazz
+	 * 			
+	 * @depricated remove in 2.0, class is not used at all.
 	 */
 	public WicketBundleStringResourceLoader(final Application application, final Class clazz)
 	{
-		super(application, clazz);
+		super(application);
 	}
 
+	/**
+	 * Create and initialise the resource loader.
+	 * 
+	 * @param application
+	 *            The application that this resource loader is associated with
+	 */
+	public WicketBundleStringResourceLoader(final Application application)
+	{
+		super(application);
+	}
+	
 	/**
 	 * 
 	 * @see wicket.resource.loader.ClassStringResourceLoader#loadStringResource(java.lang.Class,
@@ -71,11 +84,14 @@ public class WicketBundleStringResourceLoader extends ClassStringResourceLoader
 		String value = super.loadStringResource(clazz, key, locale, style);
 		if (value == null)
 		{
-			value = super.loadStringResource(clazz, key, locale, null);
+			// only try without style if style was not null in the first call.
+			if(style != null) value = super.loadStringResource(clazz, key, locale, null);
 			if (value == null)
 			{
-				value = super.loadStringResource(clazz, key, null, style);
-				if (value == null)
+				// only try without locale if it was not null in the first call.
+				if(locale != null) value = super.loadStringResource(clazz, key, null, style);
+				// only try without locale and style if both where not null in the first call.
+				if (value == null && style != null && locale != null ) 
 				{
 					value = super.loadStringResource(clazz, key, null, null);
 				}
