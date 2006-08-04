@@ -32,7 +32,7 @@ import wicket.model.IModel;
  */
 public abstract class AbstractTab implements ITab
 {
-	IModel title;
+	private final IModel title;
 
 	/**
 	 * Constructor
