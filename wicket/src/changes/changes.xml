@@ -14,6 +14,7 @@
     <release version="1.3" date="tbd" description="Wicket 1.3">
 	</release>
     <release version="1.2.2" date="tbd" description="Wicket 1.2.2">
+	   <action type="update" dev="Igor Vaynberg">AjaxLink can now be attached to anything that supports onclick</action>
 	   <action type="fix" dev="Igor Vaynberg">Link.getBefore/AfterDisabledLink() now behave properly when overridden</action>
        <action type="add" dev="Janne Hietamäki">Dynamic resource support for portlets</action>
        <action type="fix" dev="Eelco Hillenius" due-to="Paolo Di Tommaso" issue="1528244">Navigate to another page from ajax request (in other words break out of the ajax request). Like: public void onClick(AjaxRequestTarget target){ setResponsePage(LinksPage.class); }</action>
