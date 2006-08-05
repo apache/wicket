@@ -520,13 +520,6 @@ public abstract class MarkupContainer<T> extends Component<T>
 				public void undo()
 				{
 					MarkupContainer.this.children = removedChildren;
-					// int size = children_size();
-					// for (int i = 0; i < size; i++)
-					// {
-					// // Get next child
-					// final Component child = children_get(i);
-					// child.setParent(MarkupContainer.this);
-					// }
 				}
 
 				@Override
@@ -536,19 +529,6 @@ public abstract class MarkupContainer<T> extends Component<T>
 							+ removedChildren + "]";
 				}
 			});
-
-			// Loop through child components
-			// int size = children_size();
-			// for (int i = 0; i < size; i++)
-			// {
-			// // Get next child
-			// final Component child = children_get(i);
-			//
-			// // Do not call remove() because the state change would than be
-			// // recorded twice.
-			// child.detachModel();
-			// child.setParent(null);
-			// }
 
 			this.children = null;
 		}
@@ -597,34 +577,6 @@ public abstract class MarkupContainer<T> extends Component<T>
 			setIgnoreAttributeModifier(false);
 		}
 	}
-
-	/**
-	 * Replaces a child component of this container with another
-	 * 
-	 * @param child
-	 *            The child
-	 * @throws IllegalArgumentException
-	 *             Thrown if there was no child with the same id.
-	 * @return This public final MarkupContainer replace(final Component<?>
-	 *         child) { if (child == null) { throw new
-	 *         IllegalArgumentException("argument child must be not null"); }
-	 * 
-	 * if (log.isDebugEnabled()) { log.debug("Replacing " + child.getId() + " in " +
-	 * this); }
-	 * 
-	 * if (child.getParent() == this) { // Add to map final Component replaced =
-	 * put(child); addedComponent(child); // Look up to make sure it was already
-	 * in the map if (replaced == null) { throw new WicketRuntimeException(
-	 * exceptionMessage("Cannot replace a component which has not been added:
-	 * id='" + child.getId() + "', component=" + child)); }
-	 * 
-	 * removedComponent(replaced); // The position of the associated markup
-	 * remains the same child.markupIndex = replaced.markupIndex;
-	 * 
-	 * replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true); }
-	 * 
-	 * return this; }
-	 */
 
 	/**
 	 * @see wicket.Component#setModel(wicket.model.IModel)
