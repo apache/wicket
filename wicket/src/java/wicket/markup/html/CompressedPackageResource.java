@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.Locale;
 import java.util.zip.GZIPOutputStream;
 
@@ -42,9 +43,12 @@ import wicket.util.time.Time;
 public class CompressedPackageResource extends PackageResource
 {
 
+	CompressingResourceStream resourceStream;
+
 	protected CompressedPackageResource(Class scope, String path, Locale locale, String style)
 	{
 		super(scope, path, locale, style);
+		resourceStream=new CompressingResourceStream();
 	}
 
 	/**
@@ -75,7 +79,7 @@ public class CompressedPackageResource extends PackageResource
 			final String style)
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
-		
+
 		PackageResource resource = (PackageResource)sharedResources.get(scope, path, locale, style,
 				true);
 		if (resource == null)
@@ -89,102 +93,100 @@ public class CompressedPackageResource extends PackageResource
 	@Override
 	public IResourceStream getResourceStream()
 	{
-		return new CompressingResourceStream(super.getResourceStream());
+		return resourceStream;
 	}
 
 	/*
 	 *  IResourceStream implementation which compresses the data with gzip if the requests
 	 *  header Accept-Encoding contains string gzip
 	 */
-	
+
 	private class CompressingResourceStream implements IResourceStream {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		IResourceStream stream;
-		byte bytes[];
 
-		/**
-		 * Construct.
-		 * @param stream
-		 * @throws IOException 
-		 * @throws ResourceStreamNotFoundException 
-		 */
-		public CompressingResourceStream(IResourceStream stream){
-			this.stream=stream;
-		}
+		/* Cache for compressed data */
+		SoftReference<byte[]> cache=new SoftReference<byte[]>(null);
 
-		boolean initialized=false;
+		/* Timestamp of the cache */
+		Time timeStamp=null;
 
-		private boolean  init() {
-			if(!initialized)
+		private byte[] getCompressedContent() {
+			IResourceStream stream=CompressedPackageResource.super.getResourceStream();
+			try
 			{
-				if(!supportsCompression())return false;				
-				try
+				byte ret[]=cache.get();
+				if(ret!=null && timeStamp!=null)
 				{
-					ByteArrayOutputStream out=new ByteArrayOutputStream();
-					GZIPOutputStream zout=new GZIPOutputStream(out);
-					Streams.copy(stream.getInputStream(),zout);
-					zout.close();
-					this.bytes=out.toByteArray();
-					stream.close();
-					initialized=true;
-				} catch (IOException e)
-				{
-					throw new RuntimeException(e);
+					if(timeStamp.equals(stream.lastModifiedTime()))
+					{
+						return ret;
+					}
 				}
-				catch (ResourceStreamNotFoundException e)
-				{
-					throw new RuntimeException(e);
-				}
+
+				ByteArrayOutputStream out=new ByteArrayOutputStream();
+				GZIPOutputStream zout=new GZIPOutputStream(out);
+				Streams.copy(stream.getInputStream(),zout);
+				zout.close();
+				stream.close();
+				ret=out.toByteArray();
+				timeStamp=stream.lastModifiedTime();
+				cache=new SoftReference<byte[]>(ret);
+				return ret;
+			} catch (IOException e)
+			{
+				throw new RuntimeException(e);
 			}
-			return true;
+			catch (ResourceStreamNotFoundException e)
+			{
+				throw new RuntimeException(e);
+			}
 		}
 
 		public void close() throws IOException
 		{
-			stream.close();
-			bytes=null;
+
 		}
 
 		public String getContentType()
 		{
-			return stream.getContentType();
+			return CompressedPackageResource.super.getResourceStream().getContentType();
 		}
 
 		public InputStream getInputStream() throws ResourceStreamNotFoundException
 		{
-			if(init()){
-				return new ByteArrayInputStream(bytes);
+			if(supportsCompression()){
+				return new ByteArrayInputStream(getCompressedContent());
 			} else {
-				return stream.getInputStream();
+				return CompressedPackageResource.super.getResourceStream().getInputStream();
 			}
 		}
 
 		public Locale getLocale()
 		{
-			return stream.getLocale();		
+			return CompressedPackageResource.super.getResourceStream().getLocale();
 		}
 
 		public long length()
 		{
-			if(init())
+			if(supportsCompression())
 			{
-				return bytes.length;
+				return getCompressedContent().length;
 			} else {
-				return stream.length();
+				return CompressedPackageResource.super.getResourceStream().length();
 			}
 		}
 
 		public void setLocale(Locale locale)
 		{
-			stream.setLocale(locale);
+			CompressedPackageResource.super.getResourceStream().setLocale(locale);
 		}
 
 		public Time lastModifiedTime()
 		{
-			return stream.lastModifiedTime();
+			return CompressedPackageResource.super.getResourceStream().lastModifiedTime();
 		}
 	}
 
