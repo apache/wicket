@@ -374,9 +374,18 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 			// Remove the 'x' parameter which contains ALL the encoded params
 			this.parameterMap.remove("x");
+			String decodedParamReplacement = encodedParamReplacement;
+			try
+			{
+				decodedParamReplacement = URLDecoder.decode(encodedParamReplacement, Application.get().getRequestCycleSettings().getResponseRequestEncoding());
+			}
+			catch (UnsupportedEncodingException ex)
+			{
+				log.error("error decoding url: " + encodedParamReplacement, ex);
+			}
 
 			// Add ALL of the params from the decoded 'x' param
-			PageParameters params = new PageParameters(encodedParamReplacement, "&");
+			PageParameters params = new PageParameters(decodedParamReplacement, "&");
 			this.parameterMap.putAll(params);
 
 			// Rebuild the URL with the 'x' param removed
