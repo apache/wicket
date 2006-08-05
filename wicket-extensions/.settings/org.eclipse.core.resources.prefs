@@ -1,8 +1,9 @@
-#Sun Jul 31 20:05:33 CEST 2005
+#Sat Aug 05 09:15:37 PDT 2006
 eclipse.preferences.version=1
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-big5-utf8.js=UTF-8
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-cs-utf8.js=UTF-8
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-da.js=ISO-8859-1
+encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-el.js=UTF-8
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-es.js=ISO-8859-1
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-fr.js=ISO-8859-1
 encoding//src/java/wicket/extensions/markup/html/datepicker/lang/calendar-he-utf8.js=UTF-8
