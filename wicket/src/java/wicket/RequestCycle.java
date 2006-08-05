@@ -764,7 +764,7 @@ public abstract class RequestCycle
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
 		final IRequestTarget target; 
-		if (component.getStatelessHint() && page.isBookmarkable())
+		if (component.isStateless() && page.isBookmarkable())
 		{
 			target = new BookmarkableListenerInterfaceRequestTarget(
 					page.getPageMap().getName(), page.getClass(), new PageParameters(),

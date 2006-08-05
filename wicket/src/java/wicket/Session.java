@@ -1032,7 +1032,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 				if (object instanceof Page)
 				{
 					final Page page = (Page)object;
-					if (page.isStateless())
+					if (page.isPageStateless())
 					{
 						// check, can it be that stateless pages where added to
 						// the session?

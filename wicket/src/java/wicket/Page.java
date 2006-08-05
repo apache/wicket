@@ -19,7 +19,6 @@ package wicket;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +26,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.authorization.UnauthorizedActionException;
-import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
@@ -1004,7 +1002,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * 
 	 * @return Whether to page is stateless
 	 */
-	public final boolean isStateless()
+	public final boolean isPageStateless()
 	{
 		if (isBookmarkable() == false)
 		{
@@ -1018,22 +1016,10 @@ public abstract class Page<T> extends MarkupContainer<T>
 			{
 				public Object component(Component<?> component)
 				{
-					if (!component.getStatelessHint())
+					if (!component.isStateless())
 					{
 						returnArray[0] = component;
 						return Boolean.FALSE;
-					}
-
-					final Iterator<IBehavior> behaviors = component.getBehaviors().iterator();
-
-					while (behaviors.hasNext())
-					{
-						IBehavior behavior = behaviors.next();
-						if (!behavior.getStatelessHint())
-						{
-							returnArray[0] = behavior;
-							return Boolean.FALSE;
-						}
 					}
 
 					return CONTINUE_TRAVERSAL;
@@ -1286,7 +1272,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// Check rendering if it happened fully
 		checkRendering(this);
 
-		if (!isStateless())
+		if (!isPageStateless())
 		{
 			// trigger creation of the actual session in case it was deferred
 			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);

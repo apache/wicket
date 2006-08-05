@@ -254,7 +254,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 					page = ((BookmarkablePageRequestTarget)rt).getPage();
 				}
 
-				if (page == null || page.isStateless())
+				if (page == null || page.isPageStateless())
 				{
 					return responseBuffer;
 				}

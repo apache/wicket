@@ -297,7 +297,7 @@ public final class AccessStackPageMap extends PageMap implements Serializable
 	protected final void put(final Page page)
 	{
 		// Page only goes into session if it is stateless
-		if (!page.isStateless())
+		if (!page.isPageStateless())
 		{
 			Session session = getSession();
 			// Get page map entry from page

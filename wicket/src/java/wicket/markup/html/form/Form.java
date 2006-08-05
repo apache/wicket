@@ -800,28 +800,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		// already uses it to submit the forum. This should be fixed when we
 		// pre parse the markup so that we know the id is at front.
 		tag.put("method", "post");
-		Page page = getPage();
-		boolean addAction = true;
-		if (page.isStateless())
-		{
-			try
-			{
-				BookmarkableListenerInterfaceRequestTarget target = new BookmarkableListenerInterfaceRequestTarget(
-						page.getPageMap().getName(), page.getClass(), new PageParameters(), this,
-						IFormSubmitListener.INTERFACE);
-				tag.put("action", urlFor(target));
-				addAction = false;
-			}
-			catch (Exception e)
-			{
-				// ignore
-			}
-		}
-		if (addAction)
-		{
-			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
-					"&amp;"));
-		}
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&","&amp;"));
 
 		if (multiPart)
 		{

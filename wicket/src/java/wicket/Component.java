@@ -2662,12 +2662,38 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	 * Returns whether the component can be stateless. Being able to be
 	 * stateless doesn't necessary mean, that the component should be stateless.
 	 * Whether the component should be stateless depends on
-	 * {@link Page#isStateless()}.
 	 * 
 	 * @return whether the component can be stateless
 	 */
 	protected boolean getStatelessHint()
 	{
+		return true;
+	}
+	
+	/**
+	 * Returns if the component is stateless or not. It checks the stateless hint
+	 * if that is false it returns directly false. If that is still true it checks
+	 * all its behaviours if they can be stateless.
+	 * 
+	 * @return whether the component is stateless.
+	 */
+	public final boolean isStateless()
+	{
+		if (!getStatelessHint())
+		{
+			return false;
+		}
+
+		final Iterator<IBehavior> behaviors = getBehaviors().iterator();
+
+		while (behaviors.hasNext())
+		{
+			IBehavior behavior = behaviors.next();
+			if (!behavior.getStatelessHint())
+			{
+				return false;
+			}
+		}
 		return true;
 	}
 
