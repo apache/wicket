@@ -1323,7 +1323,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		 */
 		public String getRelativeURL()
 		{
-			return url.substring(url.indexOf("/", 1));
+			int tmp = url.indexOf("/", 1);
+			if (tmp != -1)
+			{
+				return url.substring(tmp);
+			}
+			return url;
 		}
 
 		/**
