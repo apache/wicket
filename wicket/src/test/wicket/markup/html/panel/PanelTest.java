@@ -20,7 +20,6 @@ package wicket.markup.html.panel;
 
 import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
-import wicket.markup.resolver.FragmentResolver;
 
 /**
  * Simple application that demonstrates the mock http application code (and
@@ -30,8 +29,6 @@ import wicket.markup.resolver.FragmentResolver;
  */
 public class PanelTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(PanelTest.class);
-
 	/**
 	 * Create the test.
 	 * 
@@ -90,7 +87,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel() throws Exception
 	{
-		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_1.class, "InlinePanelPageExpectedResult_1.html");
 	}
 
@@ -99,7 +95,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_2() throws Exception
 	{
-		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_2.class, "InlinePanelPageExpectedResult_2.html");
 	}
 
@@ -108,7 +103,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_3() throws Exception
 	{
-		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_3.class, "InlinePanelPageExpectedResult_3.html");
 	}
 
@@ -117,7 +111,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_4() throws Exception
 	{
-		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_4.class, "InlinePanelPageExpectedResult_4.html");
 	}
 
@@ -126,7 +119,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_5() throws Exception
 	{
-		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_5.class, "InlinePanelPageExpectedResult_5.html");
 	}
 
@@ -135,7 +127,6 @@ public class PanelTest extends WicketTestCase
 	 */
 	public void testInlinePanel_6() throws Exception
 	{
-		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
 	}
 
