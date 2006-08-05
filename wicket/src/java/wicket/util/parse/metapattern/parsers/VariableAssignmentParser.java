@@ -35,21 +35,11 @@ public final class VariableAssignmentParser extends MetaPatternParser
 			MetaPattern.VARIABLE_NAME, MetaPattern.COLON });
 
 	/** The key (lvalue) like "name" or "namespace:name" */
-	private static final Group key = new Group(new MetaPattern(new MetaPattern[] { namespace,
+	private final Group key = new Group(new MetaPattern(new MetaPattern[] { namespace,
 			MetaPattern.XML_ATTRIBUTE_NAME }));
 
 	/** The rvalue of the assignment */
-	private static final Group value = new Group(MetaPattern.STRING);
-
-	/** The whole assignment without optional leading and trailing spaces */
-	private static final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {
-			MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS, MetaPattern.OPTIONAL_WHITESPACE,
-			value });
-
-	/** Ignore leading and trailing spaces surrounding the assignment */
-	private static final MetaPattern pattern = new MetaPattern(new MetaPattern[] {
-			MetaPattern.OPTIONAL_WHITESPACE, key, new OptionalMetaPattern(variableAssignment),
-			MetaPattern.OPTIONAL_WHITESPACE });
+	private final Group value;
 
 	/**
 	 * Construct a variable assignment parser against a given input character
@@ -57,10 +47,38 @@ public final class VariableAssignmentParser extends MetaPatternParser
 	 * 
 	 * @param input
 	 *            The input to parse
+	 * @param valuePattern
+	 *            Value pattern
 	 */
 	public VariableAssignmentParser(final CharSequence input)
 	{
-		super(pattern, input);
+		this(input, MetaPattern.STRING);
+	}
+
+	/**
+	 * Construct a variable assignment parser against a given input character
+	 * sequence
+	 * 
+	 * @param input
+	 *            The input to parse
+	 * @param valuePattern
+	 *            Value pattern
+	 */
+	public VariableAssignmentParser(final CharSequence input, final MetaPattern valuePattern)
+	{
+		super(input);
+
+		// Create group for value pattern
+		value = new Group(valuePattern);
+
+		// Pattern for =<value>
+		final MetaPattern variableAssignment = new MetaPattern(new MetaPattern[] {
+				MetaPattern.OPTIONAL_WHITESPACE, MetaPattern.EQUALS,
+				MetaPattern.OPTIONAL_WHITESPACE, value });
+
+		// Set parse pattern to <key>=<value>?
+		setPattern(new MetaPattern(new MetaPattern[] { MetaPattern.OPTIONAL_WHITESPACE, key,
+				new OptionalMetaPattern(variableAssignment), MetaPattern.OPTIONAL_WHITESPACE }));
 	}
 
 	/**

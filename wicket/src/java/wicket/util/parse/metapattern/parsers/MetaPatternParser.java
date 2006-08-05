@@ -66,8 +66,16 @@ public abstract class MetaPatternParser
 	 */
 	public MetaPatternParser(final MetaPattern pattern, final CharSequence input)
 	{
-		this.input = input;
-		this.length = input.length();
+		this(input);
+		setPattern(pattern);
+	}
+
+	/**
+	 * @param pattern
+	 *            Pattern
+	 */
+	public void setPattern(final MetaPattern pattern)
+	{
 		this.matcher = pattern.matcher(input);
 	}
 
