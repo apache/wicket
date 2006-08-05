@@ -31,6 +31,11 @@ import wicket.Application;
  * The reason why Java's BundleResource can not be used is because with Wicket
  * the locale, the style and the variation must be evaluated as well. 
  * <p>
+ * This ResourceLoader is a all in one. It first tries to resolve through the 
+ * class that is given with all the possible style and location variations.
+ * Then if still not found it will fall back on the Applications class and tries
+ * to load the resources through that one.
+ * <p>
  * E.g.
  * <pre>
  * 1) Application_myskin_fi.properties
@@ -46,6 +51,7 @@ import wicket.Application;
  * 
  * @author Marco Geier
  * @author Juergen Donnerstag
+ * @author Johan Compagner
  */
 public class WicketBundleStringResourceLoader extends AbstractStringResourceLoader
 {
@@ -96,6 +102,11 @@ public class WicketBundleStringResourceLoader extends AbstractStringResourceLoad
 					value = super.loadStringResource(clazz, key, null, null);
 				}
 			}
+		}
+		// as a last resort look if the key can be found for the application class by this same loader.
+		if( value == null && clazz != application.getClass())
+		{
+			return loadStringResource(application.getClass(), key, locale, style);
 		}
 		return value;
 	}
