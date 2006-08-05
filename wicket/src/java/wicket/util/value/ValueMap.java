@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import wicket.util.string.IStringIterator;
 import wicket.util.string.StringList;
@@ -103,6 +104,24 @@ public class ValueMap extends HashMap
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
+		this(keyValuePairs, delimiter, MetaPattern.STRING);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param keyValuePairs
+	 *            List of key value pairs separated by a given delimiter. For
+	 *            example, "param1=foo,param2=bar" where delimiter is ",".
+	 * @param delimiter
+	 *            Delimiter string used to separate key/value pairs
+	 * @param valuePattern
+	 *            Pattern for value. To pass a simple regular expression pass
+	 *            "new MetaPattern(regexp)".
+	 */
+	public ValueMap(final String keyValuePairs, final String delimiter,
+			final MetaPattern valuePattern)
+	{
 		// Get list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 
@@ -113,7 +132,7 @@ public class ValueMap extends HashMap
 			final String pair = iterator.next();
 
 			// Parse using metapattern parser for variable assignments
-			final VariableAssignmentParser parser = new VariableAssignmentParser(pair);
+			final VariableAssignmentParser parser = new VariableAssignmentParser(pair, valuePattern);
 
 			// Does it parse?
 			if (parser.matches())
