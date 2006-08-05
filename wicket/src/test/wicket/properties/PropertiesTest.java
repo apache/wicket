@@ -53,7 +53,7 @@ public class PropertiesTest extends WicketTestCase
 		// Add the string resource loader with the special Bundle like
 		// behavior
 		application.getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(application, application.getClass()));
+				new WicketBundleStringResourceLoader(application));
 
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
@@ -76,7 +76,7 @@ public class PropertiesTest extends WicketTestCase
 		// Add the string resource loader with the special Bundle like
 		// behavior
 		application.getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(application, application.getClass()));
+				new WicketBundleStringResourceLoader(application));
 
 		application.setupRequestAndResponse();
 		WebRequestCycle cycle = application.createRequestCycle();
