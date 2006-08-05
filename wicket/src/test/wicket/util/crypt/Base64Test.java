@@ -52,6 +52,7 @@ public class Base64Test extends TestCase
 			new Random().nextBytes(bytes1);
 
 			byte[] s = new Base64().encode(bytes1);
+			assertNotNull(s);
 
 			byte[] bytes2 = new Base64().decode(s);
 			boolean isEqual = ByteBuffer.wrap(bytes1).equals(ByteBuffer.wrap(bytes2));
@@ -67,6 +68,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 
 		byte[] s = new Base64().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
@@ -82,6 +84,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
 
 		byte[] s = new Base64().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
@@ -97,6 +100,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
 
 		byte[] s = new Base64().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
@@ -112,6 +116,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
 
 		byte[] s = new Base64().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64().decode(s);
 		String output = new String(bytes2);
@@ -126,6 +131,7 @@ public class Base64Test extends TestCase
 	{
 		String input = "This is a text which is longer than 76 character and which contains some none-ascii chars like these: הצüßי?´`=";
 		String s = new NoCrypt().encrypt(input);
+		assertNotNull(s);
 
 		String output = new NoCrypt().decrypt(s);
 		assertEquals(input, output);
@@ -140,7 +146,9 @@ public class Base64Test extends TestCase
 		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY)
 				.newCrypt();
 		String s = crypt.encryptUrlSafe(input);
-
+		// TODO: java 1.6 obviously doesnt support yet CRYPT_METHOD = "PBEWithMD5AndDES";
+		assertNotNull(s);
+		
 		String output = crypt.decryptUrlSafe(s);
 		assertEquals(input, output);
 	}
@@ -156,6 +164,7 @@ public class Base64Test extends TestCase
 			new Random().nextBytes(bytes1);
 
 			byte[] s = new Base64UrlSafe().encode(bytes1);
+			assertNotNull(s);
 
 			byte[] bytes2 = new Base64UrlSafe().decode(s);
 			boolean isEqual = ByteBuffer.wrap(bytes1).equals(ByteBuffer.wrap(bytes2));
@@ -171,6 +180,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListener";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64UrlSafe().decode(s);
 		String output = new String(bytes2);
@@ -186,6 +196,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerA";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64UrlSafe().decode(s);
 		String output = new String(bytes2);
@@ -201,6 +212,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerAB";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64UrlSafe().decode(s);
 		String output = new String(bytes2);
@@ -216,6 +228,7 @@ public class Base64Test extends TestCase
 		String input = "wicket:interface=:2:entityTree:node:node:0:node:nodeLink::IBehaviorListenerABC";
 
 		byte[] s = new Base64UrlSafe().encode(input.getBytes());
+		assertNotNull(s);
 
 		byte[] bytes2 = new Base64UrlSafe().decode(s);
 		String output = new String(bytes2);
@@ -230,6 +243,7 @@ public class Base64Test extends TestCase
 	{
 		String input = "This is a text which is longer than 76 character and which contains some none-ascii chars like these: הצüßי?´`=";
 		String s = new NoCrypt().encryptUrlSafe(input);
+		assertNotNull(s);
 
 		String output = new NoCrypt().decryptUrlSafe(s);
 		assertEquals(input, output);
@@ -244,6 +258,7 @@ public class Base64Test extends TestCase
 		ICrypt crypt = new CachingSunJceCryptFactory(ISecuritySettings.DEFAULT_ENCRYPTION_KEY)
 				.newCrypt();
 		String s = crypt.encryptUrlSafe(input);
+		assertNotNull(s);
 
 		String output = crypt.decryptUrlSafe(s);
 		assertEquals(input, output);
