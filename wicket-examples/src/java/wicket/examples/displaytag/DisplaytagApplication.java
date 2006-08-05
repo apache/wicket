@@ -19,7 +19,6 @@
 package wicket.examples.displaytag;
 
 import wicket.Page;
-import wicket.markup.resolver.FragmentResolver;
 import wicket.protocol.http.WebApplication;
 
 /**
@@ -44,12 +43,5 @@ public class DisplaytagApplication extends WebApplication
 	public Class< ? extends Page> getHomePage()
 	{
 		return DisplaytagIndex.class;
-	}
-
-	@Override
-	protected void init()
-	{
-		getPageSettings().addComponentResolver(new FragmentResolver());
-		super.init();
 	}
 }
