@@ -22,7 +22,7 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.ajax.AjaxRequestTarget;
-import wicket.markup.html.PackageResourceReference;
+import wicket.markup.html.resources.CompressedPackageResourceReference;
 import wicket.util.string.JavascriptUtils;
 
 /**
@@ -34,7 +34,7 @@ import wicket.util.string.JavascriptUtils;
  */
 public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBehavior
 {
-	private static final PackageResourceReference AUTOCOMPLETE_JS = new PackageResourceReference(
+	private static final CompressedPackageResourceReference AUTOCOMPLETE_JS = new CompressedPackageResourceReference(
 			AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
 	private static final long serialVersionUID = 1L;
