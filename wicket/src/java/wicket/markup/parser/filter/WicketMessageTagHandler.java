@@ -41,9 +41,6 @@ import wicket.settings.IResourceSettings;
  */
 public final class WicketMessageTagHandler extends AbstractMarkupFilter
 {
-	/** Logging */
-	// private final static Log log =
-	// LogFactory.getLog(WicketMessageTagHandler.class);
 	/** TODO Post 1.2: General: Namespace should not be a constant */
 	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 

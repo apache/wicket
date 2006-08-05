@@ -86,15 +86,14 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 		final String namespace = this.markup.getWicketNamespace();
 
 		// Identify tags with Wicket namespace
-		ComponentTag tag;
+		ComponentTag tag = new ComponentTag(xmlTag);
 		if (namespace.equalsIgnoreCase(xmlTag.getNamespace()))
 		{
 			// It is <wicket:...>
-			tag = new ComponentTag(xmlTag);
 			tag.setWicketTag(true);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
-			tag.setId("_" + tag.getName());
+			tag.setId("<auto>_" + tag.getName());
 
 			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
 			{
@@ -103,11 +102,6 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 						+ "'. Might be you haven't installed the appropriate resolver?", tag
 						.getPos());
 			}
-		}
-		else
-		{
-			// Everything else, except tags with Wicket namespace
-			tag = new ComponentTag(xmlTag);
 		}
 
 		// If the form <tag wicket:id = "value"> is used
