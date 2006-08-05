@@ -127,8 +127,15 @@ final class MarkupFragmentFinder
 					}
 
 					String fragmentId = fragment.getFragmentMarkupId();
-					String componentId = getComponentRelativePath(mc, parentWithAssociatedMarkup)
-							+ Component.PATH_SEPARATOR + mc.getId();
+					String componentId = getComponentRelativePath(mc, parentWithAssociatedMarkup);
+					if ((componentId == null) || (componentId.length() == 0))
+					{
+						componentId = mc.getId();
+					}
+					else
+					{
+						componentId += Component.PATH_SEPARATOR + mc.getId();
+					}
 					relativePath = relativePath.replace(componentId, fragmentId);
 					// If the component is defined in the markup
 					index = markupStream.findComponentIndex(relativePath, component.getId());
@@ -141,7 +148,7 @@ final class MarkupFragmentFinder
 					}
 				}
 				throw new WicketRuntimeException(
-						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: "
+						"Unable to find the markup for the component: "
 								+ component.getId());
 			}
 
