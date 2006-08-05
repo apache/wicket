@@ -109,7 +109,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 				String f = getConverter(o.getClass()).convertToString(o, getLocale());
 				PackageResourceReference ref = new PackageResourceReference(Application.get(),
 						referer, f);
-				return getRequestCycle().urlFor(ref);
+				return urlFor(ref);
 			}
 		};
 		add(new AttributeModifier(attributeToReplace, true, srcReplacement));
