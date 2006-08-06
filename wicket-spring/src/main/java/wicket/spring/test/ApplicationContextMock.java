@@ -167,6 +167,8 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
+	 * @param type 
+	 * @return bean definition names
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames(java.lang.Class)
 	 */
 	public String[] getBeanDefinitionNames(Class type)
