@@ -51,26 +51,26 @@ class ParsedHTML
 	/** map of DOM elements to HTML elements * */
 	private HashMap<Node, HTMLElement> _elements = new HashMap<Node, HTMLElement>();
 
-	private ArrayList<WebForm> _formsList = new ArrayList<WebForm>();
+	private ArrayList<HTMLElement> _formsList = new ArrayList<HTMLElement>();
 	private WebForm[] _forms;
 	private WebForm _activeForm;
 
-	private ArrayList<WebImage> _imagesList = new ArrayList<WebImage>();
+	private ArrayList<HTMLElement> _imagesList = new ArrayList<HTMLElement>();
 	private WebImage[] _images;
 
 	private ArrayList<HTMLElement> _linkList = new ArrayList<HTMLElement>();
 	private WebLink[] _links;
 
-	private ArrayList<TextBlock> _blocksList = new ArrayList<TextBlock>();
+	private ArrayList<HTMLElement> _blocksList = new ArrayList<HTMLElement>();
 	private TextBlock[] _blocks;
 
-	private ArrayList<WebApplet> _appletList = new ArrayList<WebApplet>();
+	private ArrayList<HTMLElement> _appletList = new ArrayList<HTMLElement>();
 	private WebApplet[] _applets;
 
-	private ArrayList<WebTable> _tableList = new ArrayList<WebTable>();
+	private ArrayList<HTMLElement> _tableList = new ArrayList<HTMLElement>();
 	private WebTable[] _tables;
 
-	private ArrayList<WebFrame> _frameList = new ArrayList<WebFrame>();
+	private ArrayList<HTMLElement> _frameList = new ArrayList<HTMLElement>();
 	private WebFrame[] _frames;
 
 
@@ -200,7 +200,7 @@ class ParsedHTML
 		{
 			return null;
 		}
-		return _blocksList.get(index + 1);
+		return (TextBlock)_blocksList.get(index + 1);
 	}
 
 
@@ -1173,7 +1173,7 @@ class ParsedHTML
 
 	private void addToList(HTMLElement htmlElement)
 	{
-		ArrayList list = getListForElement(htmlElement);
+		ArrayList<HTMLElement> list = getListForElement(htmlElement);
 		if (list != null)
 		{
 			list.add(htmlElement);
@@ -1181,7 +1181,7 @@ class ParsedHTML
 	}
 
 
-	private ArrayList getListForElement(HTMLElement element)
+	private ArrayList<HTMLElement> getListForElement(HTMLElement element)
 	{
 		if (element instanceof WebLink)
 		{
@@ -1592,7 +1592,7 @@ class ParsedHTML
 	private WebTable[] getTablesSatisfyingPredicate(WebTable[] tables,
 			HTMLElementPredicate predicate, Object value)
 	{
-		ArrayList matches = new ArrayList();
+		ArrayList<WebTable> matches = new ArrayList<WebTable>();
 		for (int i = 0; i < tables.length; i++)
 		{
 			if (predicate.matchesCriteria(tables[i], value))

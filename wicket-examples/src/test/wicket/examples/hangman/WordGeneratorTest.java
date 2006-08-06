@@ -58,7 +58,7 @@ public class WordGeneratorTest extends TestCase
 	{
 		WordGenerator wg = new WordGenerator();
 		int wordCount = wg.size();
-		Set words = new HashSet();
+		Set<Word> words = new HashSet<Word>();
 		log.info("First iteration...");
 		for (int i = 0; i < wordCount; i++)
 		{

@@ -20,7 +20,7 @@ import wicket.model.Model;
  * @author igor
  * 
  */
-public class TabbedPanelPage extends WicketExamplePage
+public class TabbedPanelPage extends WicketExamplePage<String>
 {
 	/**
 	 * Constructor

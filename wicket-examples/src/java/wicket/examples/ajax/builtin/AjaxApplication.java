@@ -21,7 +21,6 @@ package wicket.examples.ajax.builtin;
 import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.AjaxServerAndClientTimeFilter;
-import wicket.markup.html.ServerAndClientTimeFilter;
 
 /**
  * Application object for the wicked ajax examples
