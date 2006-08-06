@@ -60,6 +60,7 @@ import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
+import wicket.util.tester.WicketTesterHelper.ComponentData;
 
 /**
  * A helper to ease unit testing of Wicket applications without the need for a
@@ -901,10 +902,9 @@ public class WicketTester extends MockWebApplication
 	public void debugComponentTrees()
 	{
 		log.info("debugging ----------------------------------------------");
-		for (Object element : WicketTesterHelper.getComponentData(getLastRenderedPage()))
+		for (ComponentData element : WicketTesterHelper.getComponentData(getLastRenderedPage()))
 		{
-			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)element;
-			log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
+			log.info("path\t" + element.path + " \t" + element.type + " \t[" + element.value + "]");
 		}
 	}
 
