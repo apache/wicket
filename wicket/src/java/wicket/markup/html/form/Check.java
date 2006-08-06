@@ -138,7 +138,7 @@ public class Check extends WebMarkupContainer
 			}
 		}
 
-		if (!isActionAuthorized(ENABLE) || !isEnabled())
+		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
 		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
