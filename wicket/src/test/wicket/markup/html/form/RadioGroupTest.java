@@ -207,4 +207,12 @@ public class RadioGroupTest extends WicketTestCase
 		// this was not the case in beta1
 		executeTest(RadioGroupTestPage3.class, "RadioGroupTestPage3_expected.html");
 	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void testDisabledRadioGroup()  throws Exception
+	{
+		executeTest(RadioGroupDisabledTestPage.class, "RadioGroupDisabledTestPage_expected.html");
+	}	
 }
