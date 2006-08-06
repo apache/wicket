@@ -17,6 +17,7 @@
  */
 package wicket.util.file;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -155,6 +156,43 @@ public class File extends java.io.File implements IModifiable
 	public boolean remove()
 	{
 		return Files.remove(this);
+	}
+	
+	/**
+	 * Force contents of file to physical storage
+	 * @throws IOException 
+	 */
+	public void sync() throws IOException
+	{	
+		final FileInputStream in = new FileInputStream(this);
+		try
+		{
+			in.getFD().sync();			
+		}
+		finally
+		{
+			in.close();
+		}
+	}
+	
+	/**
+	 * Writes the given file to this one
+	 * 
+	 * @param file 
+	 *            The file to copy
+	 * @throws IOException 
+	 */
+	public final void write(final File file) throws IOException
+	{
+        final InputStream in = new BufferedInputStream(new FileInputStream(file));
+        try
+        {
+        	write(in);
+        }
+        finally
+        {
+        	in.close();
+        }
 	}
 
 	/**
