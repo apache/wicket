@@ -41,6 +41,7 @@ public interface IItemReuseStrategy extends Serializable
 	 * Returns an iterator over items that will be added to the view. The
 	 * iterator needs to return all the items because the old ones are removed
 	 * prior to the new ones added.
+	 * @param container 
 	 * 
 	 * @param factory
 	 *            implementation of IItemFactory

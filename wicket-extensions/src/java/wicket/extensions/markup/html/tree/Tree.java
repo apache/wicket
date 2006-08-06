@@ -66,8 +66,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * to use other components than the default, provide a panel or fragment
 	 * instead (and that's probably what you want as the look and feel of what
 	 * this panel renders may be adjusted by overriding
-	 * {@link Tree#createJunctionLink(DefaultMutableTreeNode)} and
-	 * {@link Tree#createNodeLink(DefaultMutableTreeNode)}.
+	 * {@link Tree#createJunctionLink(MarkupContainer, DefaultMutableTreeNode)} and
+	 * {@link Tree#createNodeLink(MarkupContainer, DefaultMutableTreeNode)}.
 	 */
 	public static class DefaultNodePanel extends Panel
 	{

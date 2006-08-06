@@ -23,7 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -113,7 +113,7 @@ public final class CharSetMap
 	/**
 	 * An array of available charset mappers.
 	 */
-	private final Map mappers[] = new Map[6];
+	private final Map<String,String> mappers[] = new Map[6];
 
 	/**
 	 * Loads mappings from a stream.
@@ -124,13 +124,28 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect stream.
 	 */
-	protected final static Map loadStream(final InputStream input) throws IOException
+	protected final static Map<String, String> loadStream(final InputStream input) throws IOException
 	{
 		final Properties props = new Properties();
 		props.load(input);
-		return new HashMap<Object,Object>(props);
+		return getMap(props);
 	}
 
+	/**
+	 * Returns Properties as a Map<String,String>
+	 * @param props
+	 * @return map
+	 */
+	private static Map<String,String> getMap(Properties props){
+		Map<String,String> ret=new HashMap<String,String>();
+		Iterator i=props.keySet().iterator();
+		while(i.hasNext()){
+			String key=(String)i.next();
+			ret.put(key,(String)props.get(key));
+		}
+		return ret;		
+	}
+	
 	/**
 	 * Loads mappings from a file.
 	 * 
@@ -140,7 +155,7 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect file.
 	 */
-	protected final static Map loadFile(final File file) throws IOException
+	protected final static Map<String,String> loadFile(final File file) throws IOException
 	{
 		return loadStream(new FileInputStream(file));
 	}
@@ -154,7 +169,7 @@ public final class CharSetMap
 	 * @throws IOException
 	 *             for an incorrect file.
 	 */
-	protected final static Map loadPath(final String path) throws IOException
+	protected final static Map<String,String> loadPath(final String path) throws IOException
 	{
 		return loadFile(new File(path));
 	}
@@ -166,7 +181,7 @@ public final class CharSetMap
 	 *            a resource name.
 	 * @return the mappings.
 	 */
-	protected final static Map loadResource(final String name)
+	protected final static Map<String,String> loadResource(final String name)
 	{
 		final InputStream input = CharSetMap.class.getResourceAsStream(name);
 		if (input != null)
@@ -225,7 +240,7 @@ public final class CharSetMap
 		mappers[MAP_COM] = commonMapper;
 
 		// Set the cache mapper to have the highest priority.
-		mappers[MAP_CACHE] = new Hashtable();
+		mappers[MAP_CACHE] = new HashMap<String,String>();
 	}
 
 	/**
@@ -237,7 +252,7 @@ public final class CharSetMap
 	public CharSetMap(final Properties props)
 	{
 		this();
-		mappers[MAP_PROG] = new HashMap(props);
+		mappers[MAP_PROG] = getMap(props);
 	}
 
 	/**
@@ -290,10 +305,11 @@ public final class CharSetMap
 	 * @param charset
 	 *            the corresponding charset.
 	 */
+	@SuppressWarnings("unchecked")
 	public final synchronized void setCharSet(final String key, final String charset)
 	{
-		HashMap mapper = (HashMap)mappers[MAP_PROG];
-		mapper = (mapper != null ? (HashMap)mapper.clone() : new HashMap());
+		HashMap<String, String> mapper = (HashMap<String,String>)mappers[MAP_PROG];
+		mapper = (mapper != null ? (HashMap<String,String>)mapper.clone() : new HashMap<String,String>());
 		mapper.put(key, charset);
 		mappers[MAP_PROG] = mapper;
 		mappers[MAP_CACHE].clear();
@@ -552,9 +568,10 @@ public final class CharSetMap
 	 * @param charset
 	 *            the corresponding charset.
 	 */
+	@SuppressWarnings("unchecked")
 	protected final synchronized void setCommonCharSet(final String key, final String charset)
 	{
-		final HashMap mapper = (HashMap)((HashMap)mappers[MAP_COM]).clone();
+		final HashMap<String,String> mapper = (HashMap<String,String>)((HashMap<String,String>)mappers[MAP_COM]).clone();
 		mapper.put(key, charset);
 		mappers[MAP_COM] = mapper;
 		mappers[MAP_CACHE].clear();

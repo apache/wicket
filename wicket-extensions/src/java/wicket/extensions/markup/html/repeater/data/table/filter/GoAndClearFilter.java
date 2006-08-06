@@ -73,7 +73,7 @@ public class GoAndClearFilter extends GoFilter
 	 *            model for the label of the 'clear' button
 	 */
 	public GoAndClearFilter(MarkupContainer parent, final String id, FilterForm form,
-			IModel goModel, IModel clearModel)
+			IModel<String> goModel, IModel<String> clearModel)
 	{
 		super(parent, id, goModel);
 

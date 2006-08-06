@@ -35,6 +35,7 @@ public interface IItemFactory
 	/**
 	 * Factory method for instances of Item. Each generated item must have a
 	 * unique id with respect to other generated items.
+	 * @param parent 
 	 * 
 	 * @param index
 	 *            the index of the new data item

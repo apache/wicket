@@ -54,7 +54,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy#getItems(wicket.extensions.markup.html.repeater.refreshing.IItemFactory,
+	 * @see wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy#getItems(MarkupContainer, wicket.extensions.markup.html.repeater.refreshing.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
 	public Iterator getItems(final MarkupContainer parent, final IItemFactory factory, final Iterator newModels,

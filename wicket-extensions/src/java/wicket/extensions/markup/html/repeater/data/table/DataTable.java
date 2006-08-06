@@ -279,6 +279,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	/**
 	 * Factory method for Item container that represents a row in the underlying
 	 * DataGridView
+	 * @param parent 
 	 * 
 	 * @see Item
 	 * 

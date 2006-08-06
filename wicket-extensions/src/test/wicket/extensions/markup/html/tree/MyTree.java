@@ -65,7 +65,7 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.tree.Tree#getNodeImage(javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.extensions.markup.html.tree.Tree#getNodeImage(MarkupContainer, javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
 	protected Image getNodeImage(MarkupContainer parent, final DefaultMutableTreeNode node)

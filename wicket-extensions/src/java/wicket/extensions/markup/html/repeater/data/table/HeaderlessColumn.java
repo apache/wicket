@@ -39,7 +39,7 @@ public abstract class HeaderlessColumn<T> extends AbstractColumn<T>
 	}
 
 	@Override
-	public Component getHeader(MarkupContainer parent, String componentId)
+	public Component<String> getHeader(MarkupContainer parent, String componentId)
 	{
 		return super.getHeader(parent, componentId).setEscapeModelStrings(true);
 	}

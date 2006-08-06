@@ -27,7 +27,6 @@ import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.extensions.markup.html.repeater.util.ArrayIteratorAdapter;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -163,9 +162,10 @@ public abstract class AbstractDataGridView extends DataViewBase
 
 	/**
 	 * Factory method for Item container that represents a row.
+	 * @param parent 
 	 * 
 	 * @see Item
-	 * @see RefreshingView#newItem(String, int, IModel)
+	 * @see RefreshingView#newItem(MarkupContainer, String, int, IModel)
 	 * 
 	 * @param id
 	 *            component id for the new data item
@@ -188,7 +188,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 	 *            item's parent container
 	 * 
 	 * @see Item
-	 * @see RefreshingView#newItem(String, int, IModel)
+	 * @see RefreshingView#newItem(MarkupContainer, String, int, IModel)
 	 * 
 	 * @param id
 	 *            component id for the new data item

@@ -35,7 +35,7 @@ import wicket.version.undo.Change;
  * and {@link RefreshingView#populateItem(Item) } methods. RefreshingView builds
  * the items that will be rendered by looping over the models retrieved from
  * {@link RefreshingView#getItemModels() } and calling the
- * {@link RefreshingView#newItem(String, int, IModel) } to generate the child
+ * {@link RefreshingView#newItem(MarkupContainer, String, int, IModel) } to generate the child
  * item container followed by a call to
  * {@link RefreshingView#populateItem(Item) } to let the user populate the newly
  * created item container with custom components.
@@ -147,6 +147,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * Factory method for Item container. Item containers are simple
 	 * MarkupContainer used to aggregate the user added components for a row
 	 * inside the view.
+	 * @param parent 
 	 * 
 	 * @see Item
 	 * @param id
