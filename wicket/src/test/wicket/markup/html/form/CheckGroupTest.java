@@ -33,6 +33,9 @@ import wicket.model.Model;
 import wicket.protocol.http.MockPage;
 
 /**
+ * @author jcompagner
+ */
+/**
  * Test for RadioGroup and Radio components
  * 
  * @author igor
@@ -212,6 +215,14 @@ public class CheckGroupTest extends WicketTestCase
 			}
 
 		}
+	}
+	
+	/**
+	 * @throws Exception
+	 */
+	public void testDisabledCheckGroup()  throws Exception
+	{
+		executeTest(CheckGroupDisabledTestPage.class, "CheckGroupDisabledTestPage_expected.html");
 	}
 
 
