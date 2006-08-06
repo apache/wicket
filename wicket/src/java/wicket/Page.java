@@ -30,7 +30,6 @@ import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.request.RequestParameters;

@@ -34,7 +34,7 @@ import wicket.markup.html.PackageResourceReference;
  */
 public class CompressedPackageResourceReference extends PackageResourceReference
 {
-
+	
 	/**
 	 * 
 	 */

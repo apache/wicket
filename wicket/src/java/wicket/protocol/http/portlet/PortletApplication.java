@@ -146,9 +146,6 @@ public abstract class PortletApplication extends Application implements ISession
 							+ "must be a subclass of PortletSession");
 		}
 
-		// Set application on session
-		session.setApplication(this);
-
 		// Set session attribute name and attach/reattach portlet session
 		webSession.initForRequest();
 

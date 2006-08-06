@@ -458,6 +458,11 @@ public abstract class Session implements Serializable, ICoverterLocator
 		{
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+			if(usedPages==null)
+			{
+				usedPages = new HashMap<String, Thread>(3);
+			}
+			
 			Thread t = usedPages.get(id);
 			while (t != null && t != Thread.currentThread())
 			{
@@ -471,6 +476,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 				}
 				t = usedPages.get(id);
 			}
+			
 			usedPages.put(id, Thread.currentThread());
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 			if (page == null)
@@ -680,23 +686,6 @@ public abstract class Session implements Serializable, ICoverterLocator
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
-	 * Sets the application that this session is associated with.
-	 * 
-	 * @deprecated
-	 * @param application
-	 *            The application
-	 */
-	public final void setApplication(final Application application)
-	{
-		if (usedPages == null)
-		{
-			usedPages = new HashMap<String, Thread>(3);
-		}
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * <p>
 	 * Sets the client info object for this session. This will only work when
 	 * {@link #getClientInfo()} is not overriden.
 	 * 
@@ -856,7 +845,7 @@ public abstract class Session implements Serializable, ICoverterLocator
 		{
 			// Let the factory create a new converter
 			converterSupplier = getApplication().getApplicationSettings()
-					.getConverterSupplierFactory().newConverterSupplier();
+			.getConverterSupplierFactory().newConverterSupplier();
 		}
 		return converterSupplier.getConverter(type);
 	}
@@ -1109,7 +1098,10 @@ public abstract class Session implements Serializable, ICoverterLocator
 	 */
 	final synchronized void pageDetached(Page page)
 	{
-		usedPages.remove(page.getId());
+		if(usedPages!=null)
+		{
+			usedPages.remove(page.getId());
+		}
 		notifyAll();
 	}
 

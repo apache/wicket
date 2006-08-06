@@ -40,9 +40,14 @@ import wicket.util.time.Time;
  * 
  * @author Janne Hietam&auml;ki
  */
-public class CompressedPackageResource extends PackageResource
+public final class CompressedPackageResource extends PackageResource
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	CompressingResourceStream resourceStream;
 
 	protected CompressedPackageResource(Class scope, String path, Locale locale, String style)
@@ -50,11 +55,6 @@ public class CompressedPackageResource extends PackageResource
 		super(scope, path, locale, style);
 		resourceStream=new CompressingResourceStream();
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Gets the resource for a given set of criteria. Only one resource will be
@@ -157,7 +157,8 @@ public class CompressedPackageResource extends PackageResource
 
 		public InputStream getInputStream() throws ResourceStreamNotFoundException
 		{
-			if(supportsCompression()){
+			if(supportsCompression())
+			{
 				return new ByteArrayInputStream(getCompressedContent());
 			} else {
 				return CompressedPackageResource.super.getResourceStream().getInputStream();
@@ -205,7 +206,8 @@ public class CompressedPackageResource extends PackageResource
 	protected void setHeaders(WebResponse response)
 	{
 		super.setHeaders(response);
-		if(supportsCompression()){
+		if(supportsCompression())
+		{
 			response.setHeader("Content-Encoding","gzip");
 		}
 	}

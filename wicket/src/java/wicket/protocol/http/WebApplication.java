@@ -675,9 +675,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 					+ "must be a subclass of WebSession");
 		}
 
-		// Set application on session
-		session.setApplication(this);
-
 		// Set session attribute name and attach/reattach http servlet session
 		webSession.initForRequest();
 
