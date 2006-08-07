@@ -67,8 +67,8 @@ public class BasicColumns extends Displaytag
 
 		// ==========================================================================
 		// Add a simple table but get the model data from a
-		// CompoundPropertyModel
-		// avoiding redundant naming of the label id and the property name.
+		// CompoundPropertyModel avoiding redundant naming of the label 
+		// id and the property name.
 		new ListViewWithAlternatingRowStyle<ListObject>(this, "rows2", data)
 		{
 			@Override
@@ -93,8 +93,7 @@ public class BasicColumns extends Displaytag
 		// ==========================================================================
 		// SimpleListView implements what has been shown in the previous example
 		// plus that if a list item component is missing, it will automatically
-		// be
-		// created for you. Hence, it is even easier
+		// be created for you. Hence, it is even easier
 		new SimpleListView<ListObject>(this, "rows3", data)
 		{
 			@Override

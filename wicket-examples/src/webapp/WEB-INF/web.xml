@@ -106,7 +106,7 @@
 		</init-param>
 		<init-param>
 		  <param-name>filterPath</param-name>
-		  <param-value>hellobroser</param-value>
+		  <param-value>hellobrowser</param-value>
 		</init-param>
 	</filter>
 
@@ -262,7 +262,7 @@
 		</init-param>
 		<init-param>
 		  <param-name>filterPath</param-name>
-		  <param-value>sigin2</param-value>
+		  <param-value>signin2</param-value>
 		</init-param>
 	</filter>
 

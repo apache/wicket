@@ -24,9 +24,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.examples.WicketTestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
-import wicket.protocol.http.MockWebApplication;
 import wicket.settings.IRequestCycleSettings.RenderStrategy;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -55,7 +55,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
+		WicketTester application = new WicketTester(null);
 		application.getRequestCycleSettings().setRenderStrategy(
 				RenderStrategy.REDIRECT_TO_BUFFER);
 		application.setHomePage(SortableTableHeadersPage.class);
@@ -66,16 +66,16 @@ public class SortableTableHeadersTest extends WicketTestCase
 		assertTrue(DiffUtil.validatePage(document, this.getClass(),
 				"SortableTableHeadersExpectedResult_1.html"));
 
-		Link link = (Link)page.get("header:id:actionLink");
+		Link link = (Link)page.get("header:<auto>-id:actionLink");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("header:name:actionLink");
+		link = (Link)page.get("header:<auto>-name:actionLink");
 		assertTrue(link.isEnabled());
 
-		link = (Link)page.get("header:email:actionLink");
+		link = (Link)page.get("header:<auto>-email:actionLink");
 		assertNull(link);
 
-		link = (Link)page.get("header:name:actionLink");
+		link = (Link)page.get("header:<auto>-name:actionLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();
@@ -94,7 +94,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 				"SortableTableHeadersExpectedResult_2.html"));
 
 		// reverse sorting
-		link = (Link)page.get("header:name:actionLink");
+		link = (Link)page.get("header:<auto>-name:actionLink");
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(link);
 		application.processRequestCycle();

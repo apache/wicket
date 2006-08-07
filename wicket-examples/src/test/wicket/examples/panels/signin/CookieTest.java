@@ -33,11 +33,11 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.settings.ISecuritySettings;
 import wicket.util.crypt.ICrypt;
 import wicket.util.crypt.NoCryptFactory;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -50,7 +50,7 @@ public class CookieTest extends TestCase
 	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(CookieTest.class);
 
-	private MockWebApplication application;
+	private WicketTester application;
 	private SignInPanel panel;
 	private Form form;
 	private Cookie cookieUsername;
@@ -74,7 +74,7 @@ public class CookieTest extends TestCase
 	{
 		super.setUp();
 
-		application = new MockWebApplication(null);
+		application = new WicketTester(null);
 		application.setHomePage(MockPage.class);
 		application.setupRequestAndResponse();
 
