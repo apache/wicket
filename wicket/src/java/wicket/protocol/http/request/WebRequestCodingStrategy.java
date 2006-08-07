@@ -142,6 +142,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		final RequestParameters parameters = new RequestParameters();
 		final String pathInfo = getRequestPath(request);
 		parameters.setPath(pathInfo);
+		parameters.setPageMapName(request.getParameter(PAGEMAP));
 		addInterfaceParameters(request, parameters);
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);

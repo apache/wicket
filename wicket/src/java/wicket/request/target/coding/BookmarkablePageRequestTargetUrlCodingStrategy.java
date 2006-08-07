@@ -126,8 +126,15 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 				getMountPath().length());
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
-		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
-		requestParameters.setPageMapName(pageMapName);
+		String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		if(requestParameters.getPageMapName() == null)
+		{
+			requestParameters.setPageMapName(pageMapName);
+		}
+		else
+		{
+			pageMapName = requestParameters.getPageMapName();
+		}
 		
 		final BookmarkablePageRequestTarget target;
 		
