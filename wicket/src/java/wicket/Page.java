@@ -1258,15 +1258,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		});
 
 		// Handle request by rendering page
-		onBeforeRender();
-		try
-		{
-			render(null);
-		}
-		finally
-		{
-			onAfterRender();
-		}
+		render(null);
 
 		// Check rendering if it happened fully
 		checkRendering(this);
