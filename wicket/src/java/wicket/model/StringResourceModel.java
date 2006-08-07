@@ -248,6 +248,9 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	/** The key of message to get. */
 	private String resourceKey;
 
+	/** The default value of the message. */
+	private final String defaultValue;
+
 	/**
 	 * Construct.
 	 * 
@@ -262,9 +265,51 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	public StringResourceModel(final String resourceKey, final Component component,
 			final IModel model)
 	{
-		this(resourceKey, component, model, null);
+		this(resourceKey, component, model, null,null);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param resourceKey
+	 *            The resource key for this string resource
+	 * @param component
+	 *            The component that the resource is relative to
+	 * @param model
+	 *            The model to use for property substitutions
+	 * @param defaultValue 
+	 *            The default value if the resource key is not found.
+	 *            
+	 * @see #StringResourceModel(String, Component, IModel, Object[])
+	 */
+	public StringResourceModel(final String resourceKey, final Component component,
+			final IModel model, final String defaultValue)
+	{
+		this(resourceKey, component, model, null,defaultValue);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param resourceKey
+	 *            The resource key for this string resource
+	 * @param component
+	 *            The component that the resource is relative to
+	 * @param model
+	 *            The model to use for property substitutions
+	 * @param parameters
+	 *            The parameters to substitute using a Java MessageFormat object
+	 * @param defaultValue 
+	 *            The default value if the resource key is not found.
+	 *            
+	 * @see #StringResourceModel(String, Component, IModel, Object[])
+	 */
+	public StringResourceModel(final String resourceKey, final Component component,
+			final IModel model, final Object[] parameters)
+	{
+		this(resourceKey, component, model, parameters, null);
+	}
+	
 	/**
 	 * Creates a new string resource model using the supplied parameters.
 	 * <p>
@@ -287,9 +332,11 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	 *            The model to use for property substitutions
 	 * @param parameters
 	 *            The parameters to substitute using a Java MessageFormat object
+	 * @param defaultValue 
+	 *            The default value if the resource key is not found.
 	 */
 	public StringResourceModel(final String resourceKey, final Component component,
-			final IModel model, final Object[] parameters)
+			final IModel model, final Object[] parameters, final String defaultValue)
 	{
 		if (resourceKey == null)
 		{
@@ -299,6 +346,7 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 		this.component = component;
 		this.model = model;
 		this.parameters = parameters;
+		this.defaultValue = defaultValue;
 	}
 
 	/**
@@ -348,34 +396,38 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 		// Get the string resource, doing any property substitutions as part
 		// of the get operation
 		String s = localizer.getString(getResourceKey(), component, model);
+		if(s == null) s = defaultValue;
 
-		// Substitute any parameters if necessary
-		Object[] parameters = getParameters();
-		if (parameters != null)
+		if(s != null)
 		{
-			// Build the real parameters
-			Object[] realParams = new Object[parameters.length];
-			for (int i = 0; i < parameters.length; i++)
+			// Substitute any parameters if necessary
+			Object[] parameters = getParameters();
+			if (parameters != null)
 			{
-				if (parameters[i] instanceof IModel)
+				// Build the real parameters
+				Object[] realParams = new Object[parameters.length];
+				for (int i = 0; i < parameters.length; i++)
 				{
-					realParams[i] = ((IModel)parameters[i]).getObject();
+					if (parameters[i] instanceof IModel)
+					{
+						realParams[i] = ((IModel)parameters[i]).getObject();
+					}
+					else if (model != null && parameters[i] instanceof String)
+					{
+						realParams[i] = PropertyVariableInterpolator.interpolate((String)parameters[i],
+								model.getObject());
+					}
+					else
+					{
+						realParams[i] = parameters[i];
+					}
 				}
-				else if (model != null && parameters[i] instanceof String)
-				{
-					realParams[i] = PropertyVariableInterpolator.interpolate((String)parameters[i],
-							model.getObject());
-				}
-				else
-				{
-					realParams[i] = parameters[i];
-				}
+								
+				// Apply the parameters
+				final MessageFormat format = new MessageFormat(s, component != null ? component
+						.getLocale() : locale);
+				s = format.format(realParams);
 			}
-
-			// Apply the parameters
-			final MessageFormat format = new MessageFormat(s, component != null ? component
-					.getLocale() : locale);
-			s = format.format(realParams);
 		}
 
 		// Return the string resource
