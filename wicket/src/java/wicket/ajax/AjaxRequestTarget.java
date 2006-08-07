@@ -40,6 +40,7 @@ import wicket.Session;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
+import wicket.request.target.IRequestTargetInterceptor;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -69,7 +70,7 @@ import wicket.util.string.Strings;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class AjaxRequestTarget implements IRequestTarget
+public class AjaxRequestTarget implements IRequestTarget, IRequestTargetInterceptor
 {
 	/**
 	 * Response that uses an encoder to encode its contents
