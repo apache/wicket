@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.Iterator;
 
+import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
@@ -56,43 +57,31 @@ public class HeadersToolbar extends AbstractToolbar
 		super(table);
 
 
-		RefreshingView headers = new RefreshingView("headers")
-		{
-			private static final long serialVersionUID = 1L;
-
-			protected Iterator getItemModels()
-			{
-				return new ArrayIteratorAdapter(table.getColumns())
-				{
-
-					protected IModel model(Object object)
-					{
-						return new Model((IColumn)object);
-					}
-
-				};
-			}
-
-			protected void populateItem(Item item)
-			{
-				IColumn column = (IColumn)item.getModelObject();
-				WebMarkupContainer header = null;
-				if (column.isSortable())
-				{
-					header = newSortableHeader("header", column.getSortProperty(), stateLocator);
-				}
-				else
-				{
-					header = new WebMarkupContainer("header");
-				}
-				item.add(header);
-				item.setRenderBodyOnly(true);
-				header.add(column.getHeader("label"));
-
-			}
-
-		};
+		RepeatingView headers = new RepeatingView("headers");
 		add(headers);
+
+		final IColumn[] columns = table.getColumns();
+		for (int i = 0; i < columns.length; i++)
+		{
+			final IColumn column = columns[i];
+
+			WebMarkupContainer item = new WebMarkupContainer(headers.newChildId());
+			headers.add(item);
+
+			WebMarkupContainer header = null;
+			if (column.isSortable())
+			{
+				header = newSortableHeader("header", column.getSortProperty(), stateLocator);
+			}
+			else
+			{
+				header = new WebMarkupContainer("header");
+			}
+			item.add(header);
+			item.setRenderBodyOnly(true);
+			header.add(column.getHeader("label"));
+
+		}
 	}
 
 	/**
