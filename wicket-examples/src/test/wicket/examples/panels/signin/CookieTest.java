@@ -77,10 +77,11 @@ public class CookieTest extends TestCase
 		application = new WicketTester(null);
 		application.setHomePage(MockPage.class);
 		application.setupRequestAndResponse();
-
+		
 		final ISecuritySettings settings = application.getSecuritySettings();
 		settings.setCryptFactory(new NoCryptFactory());
 
+		this.page = new MockPage(null);
 		this.panel = new SignInPanel(page, "panel")
 		{
 			@Override
@@ -104,11 +105,6 @@ public class CookieTest extends TestCase
 
 		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(),
 				application.getWicketResponse());
-
-		this.page = new MockPage(null);
-
-		new WebRequestCycle(application.getWicketSession(), application
-				.getWicketRequest(), application.getWicketResponse());
 	}
 
 	/**
