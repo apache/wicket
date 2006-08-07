@@ -37,6 +37,7 @@ import wicket.model.Model;
  * Test for RadioGroup and Radio components
  * 
  * @author igor
+ * @author jcompagner
  */
 public class CheckGroupTest extends WicketTestCase
 {
@@ -197,5 +198,15 @@ public class CheckGroupTest extends WicketTestCase
 				fail("failed with wrong exception");
 			}
 		}
+	}	
+
+	/**
+	 * @throws Exception
+	 */
+	public void testDisabledCheckGroup()  throws Exception
+	{
+		executeTest(CheckGroupDisabledTestPage.class, "CheckGroupDisabledTestPage_expected.html");
 	}
+
+
 }

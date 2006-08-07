@@ -26,6 +26,7 @@ import wicket.WicketTestCase;
  * Test for RadioGroup and Radio components
  * 
  * @author igor
+ * @author jcompagner
  */
 public class RadioGroupTest extends WicketTestCase
 {
@@ -197,5 +198,13 @@ public class RadioGroupTest extends WicketTestCase
 		// this test fails. You can make the test pass by closing the input tags
 		// this was not the case in beta1
 		executeTest(RadioGroupTestPage3.class, "RadioGroupTestPage3_expected.html");
-	}
+	}	
+	
+	/**
+	 * @throws Exception
+	 */
+	public void testDisabledRadioGroup()  throws Exception
+	{
+		executeTest(RadioGroupDisabledTestPage.class, "RadioGroupDisabledTestPage_expected.html");
+	}	
 }

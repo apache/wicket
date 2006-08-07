@@ -1,0 +1,16 @@
+<html>
+<head><title>CheckGroupTestPage1</title></head>
+<body>
+    <!--  In addition test that chars are not converted from upper to lower and vice versa -->
+	<FORM action="/WicketTester/WicketTester?wicket:interface=:0:form::IFormSubmitListener" id="form" method="post" wicket:id="form">
+<div style="display:none"><input type="hidden" name="form:hf:fs" id="form:hf:fs"/>
+<input type="hidden" name="wicketState" id="form:hf:ws"/></div>
+		<span name="group" disabled="disabled" wicket:id="group">
+			<Input checked="checked" value="check1" type="checkbox" name="group" disabled="disabled" wicket:id="check1">check1</input>
+			<span wicket:id="container">
+				<input checked="checked" value="container:check2" type="checkbox" name="group" disabled="disabled" wicket:id="check2">check2</input>
+			</span>
+		</span>
+	</FORM>
+</body>
+</html>
