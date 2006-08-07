@@ -1330,7 +1330,12 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		@Override
 		public String getRelativeURL()
 		{
-			return url.substring(url.indexOf("/", 1));
+			int tmp = url.indexOf("/", 1);
+			if (tmp != -1)
+			{
+				return url.substring(tmp);
+			}
+			return url;
 		}
 
 		/**
