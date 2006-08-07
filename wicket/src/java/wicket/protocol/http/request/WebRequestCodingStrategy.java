@@ -644,6 +644,19 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				buffer.append("/resources/");
 			}
 			buffer.append(sharedResourceKey);
+			Map<String,? extends Object> map = requestTarget.getRequestParameters().getParameters();
+			if(map != null && map.size() > 0)
+			{
+				buffer.append('?');
+				for (String key : map.keySet())
+				{
+					buffer.append(key);
+					buffer.append('=');
+					buffer.append(map.get(key));
+					buffer.append('&');
+				}
+				buffer.setLength(buffer.length()-1);
+			}
 			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}
 	}
