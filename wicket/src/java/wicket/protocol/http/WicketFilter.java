@@ -20,7 +20,6 @@ package wicket.protocol.http;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -40,7 +39,6 @@ import wicket.RequestCycle;
 import wicket.Resource;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.session.ISessionStore;
 import wicket.settings.IRequestCycleSettings.RenderStrategy;
 import wicket.util.resource.IResourceStream;
@@ -54,6 +52,8 @@ import wicket.util.time.Time;
  */
 public class WicketFilter implements Filter
 {
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WicketFilter.class);
 
 	/**
 	 * The name of the context parameter that specifies application factory
@@ -67,18 +67,17 @@ public class WicketFilter implements Filter
 	 */
 	public static final String FILTER_PATH_PARAM = "filterPath";
 
-	/**
-	 * the servlet path holder when the WicketSerlvet is used. So that the
-	 * filter path will be computed with the first request
-	 */
-	static final String SERVLET_PATH_HOLDER = "<servlet>";
-
-	/** Log. */
-	private static final Log log = LogFactory.getLog(WicketFilter.class);
-
 	/** The URL path prefix expected for (so called) resources (not html pages). */
 	private static final String RESOURCES_PATH_PREFIX = "/resources/";
 
+	/**
+	 * The servlet path holder when the WicketSerlvet is used. So that the
+	 * filter path will be computed with the first request.
+	 * Note: This variable is by purpose package protected. See WicketServlet
+	 */
+	static final String SERVLET_PATH_HOLDER = "<servlet>";
+
+	/** See javax.servlet.FilterConfig */
 	private FilterConfig filterConfig;
 
 	/**
@@ -88,12 +87,13 @@ public class WicketFilter implements Filter
 	 */
 	private String filterPath;
 
-	/*
-	 * + This holds the complete full root path including context and filter or
+	/**
+	 * This holds the complete full root path including context and filter or
 	 * servlet path
 	 */
 	private String rootPath;
 
+	/** The Wicket Application associated with the Filter */  
 	private WebApplication webApplication;
 
 	/**
@@ -254,7 +254,6 @@ public class WicketFilter implements Filter
 
 			// Clean up thread local application
 			Application.unset();
-
 		}
 	}
 
@@ -306,6 +305,10 @@ public class WicketFilter implements Filter
 		return rootPath;
 	}
 
+	/**
+	 * 
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 */
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
@@ -481,38 +484,30 @@ public class WicketFilter implements Filter
 		String fullRootPath = getRootPath(request);
 		String url = request.getRequestURI();
 		// Homepage
-		if (Strings.isEmpty(request.getQueryString()) && url.equals(fullRootPath))
+		if (url.equals(fullRootPath))
 		{
 			return true;
 		}
 		// SharedResources
-		String tmp=Strings.join("/", fullRootPath, RESOURCES_PATH_PREFIX);
-		if (url.startsWith(Strings.join("/", fullRootPath, RESOURCES_PATH_PREFIX)))
+		String tmp = Strings.join("/", fullRootPath, RESOURCES_PATH_PREFIX);
+		if (url.startsWith(tmp))
 		{
 			return true;
 		}
-		// Url with wicket namespace in one of the params.
-		Enumeration enumeration = request.getParameterNames();
-		while (enumeration.hasMoreElements())
-		{
-			String name = (String)enumeration.nextElement();
-			if (name.startsWith(WebRequestCodingStrategy.NAME_SPACE))
-			{
-				return true;
-			}
-		}
-		// Mount url
+		// Mounted url
 		String path = url.substring(fullRootPath.length());
 		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy()
 				.urlCodingStrategyForPath(path) != null;
 	}
 
 	/**
-	 * 
+	 * If the response has not already a 'lastModified' header set and if
+	 * 'lastModified' >= 0 than set the response header accordingly.
+	 *  
 	 * @param resp
 	 * @param lastModified
 	 */
-	private void maybeSetLastModified(HttpServletResponse resp, long lastModified)
+	private void maybeSetLastModified(final HttpServletResponse resp, final long lastModified)
 	{
 		if (resp.containsHeader("Last-Modified"))
 		{
