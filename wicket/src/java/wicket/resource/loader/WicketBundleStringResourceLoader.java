@@ -31,6 +31,11 @@ import wicket.Application;
  * because with Wicket the locale, the style and the variation must be evaluated
  * as well.
  * <p>
+ * This ResourceLoader is a all in one. It first tries to resolve through the 
+ * class that is given with all the possible style and location variations.
+ * Then if still not found it will fall back on the Applications class and tries
+ * to load the resources through that one.
+ * <p>
  * E.g.
  * 
  * <pre>
@@ -48,19 +53,19 @@ import wicket.Application;
  * 
  * @author Marco Geier
  * @author Juergen Donnerstag
+ * @author Johan Compagner
  */
-public class WicketBundleStringResourceLoader extends ClassStringResourceLoader
+public class WicketBundleStringResourceLoader extends AbstractStringResourceLoader
 {
 	/**
 	 * Create and initialise the resource loader.
 	 * 
 	 * @param application
-	 *            The application that this resource loader is associated with
-	 * @param clazz
+	 *            Wickets application object
 	 */
-	public WicketBundleStringResourceLoader(final Application application, final Class clazz)
+	public WicketBundleStringResourceLoader(Application application)
 	{
-		super(application, clazz);
+		super(application);
 	}
 
 	/**
@@ -74,15 +79,23 @@ public class WicketBundleStringResourceLoader extends ClassStringResourceLoader
 		String value = super.loadStringResource(clazz, key, locale, style);
 		if (value == null)
 		{
-			value = super.loadStringResource(clazz, key, locale, null);
+			// only try without style if style was not null in the first call.
+			if(style != null) value = super.loadStringResource(clazz, key, locale, null);
 			if (value == null)
 			{
-				value = super.loadStringResource(clazz, key, null, style);
-				if (value == null)
+				// only try without locale if it was not null in the first call.
+				if(locale != null) value = super.loadStringResource(clazz, key, null, style);
+				// only try without locale and style if both where not null in the first call.
+				if (value == null && style != null && locale != null ) 
 				{
 					value = super.loadStringResource(clazz, key, null, null);
 				}
 			}
+		}
+		// as a last resort look if the key can be found for the application class by this same loader.
+		if( value == null && clazz != application.getClass())
+		{
+			return loadStringResource(application.getClass(), key, locale, style);
 		}
 		return value;
 	}
