@@ -634,8 +634,16 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
-				String typedResourceKey = "ConversionError." + e.getTargetType();
-				String[] resourceKeys = new String[] { typedResourceKey, "ConversionError" };
+				String[] resourceKeys  = null;
+				if(e.getTargetType() != null)
+				{
+					String typedResourceKey = "ConversionError." + Classes.simpleName(e.getTargetType());
+					resourceKeys = new String[] { typedResourceKey, "ConversionError" };
+				}
+				else
+				{
+					resourceKeys = new String[] {"ConversionError" };
+				}
 
 				error(Arrays.asList(resourceKeys), args);
 			}
@@ -664,7 +672,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 				}
 
 
-				final String typedResourceKey = "TypeValidator" + "." + Classes.simpleName(type);
+				final String typedResourceKey = "TypeValidator." + Classes.simpleName(type);
 
 				String[] resourceKeys = new String[] { typedResourceKey, "TypeValidator" };
 
