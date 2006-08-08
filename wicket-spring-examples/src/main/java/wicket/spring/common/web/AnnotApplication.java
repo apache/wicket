@@ -18,10 +18,14 @@
  */
 package wicket.spring.common.web;
 
-import wicket.spring.injection.AnnotSpringWebApplication;
+import wicket.protocol.http.WebApplication;
+import wicket.spring.injection.SpringComponentInjector;
 
-public class AnnotApplication extends AnnotSpringWebApplication {
-
+public class AnnotApplication extends WebApplication {
+	@Override
+	protected void init() {
+		addComponentInstantiationListener(new SpringComponentInjector(this));
+	}
 
 	@Override
 	public Class<HomePage> getHomePage() {

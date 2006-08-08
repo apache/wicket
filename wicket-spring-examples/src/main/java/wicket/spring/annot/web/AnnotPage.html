@@ -4,7 +4,7 @@ This approach allows users to quickly and easily inject any component with bean 
 Interesting classes:<br/>
 <ul>
 	<li>ComponentInjector - an implementation of IComponentInstantiationListener that performs the injection</li>
-	<li>AnnotApplication - serves as a link between wicket and spring ApplicationContext, also sets up an injector object and ComponentInjector that will be used to inject annotated components</li>
+	<li>AnnotApplication - sets up SpringComponentInjector used to inject annotated components</li>
 	<li>BasePage - extends InjectableWebPage instead of WebPage to allow subclasses to be injected automatically</li>
 	<li>AnnotPage - contains an annotated field whose value will be initialized with a proxy by the injector</li>
 </ul>
