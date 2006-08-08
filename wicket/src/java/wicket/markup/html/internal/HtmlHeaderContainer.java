@@ -94,6 +94,8 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		// No contribution usually only happens if none of the components
 		// including the page does have a <head> or <wicket:head> tag.
 		setRenderBodyOnly(true);
+		
+		setAuto(true);
 	}
 
 	/**
