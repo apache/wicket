@@ -24,6 +24,7 @@ import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
@@ -335,7 +336,23 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 */
 	protected Component newLabel(MarkupContainer parent, String componentId, IModel<T> model)
 	{
-		Label label = new Label(this, componentId, model);
+		Label label = new Label(this, componentId, model)
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			{
+				if (getModelObject() == null)
+				{
+					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+				}
+				else
+				{
+					super.onComponentTagBody(markupStream, openTag);
+				}
+			}
+		};
 		label.setOutputMarkupId(true);
 		label.add(new LabelAjaxBehavior(ClientEvent.CLICK));
 		return label;
@@ -444,4 +461,15 @@ public class AjaxEditableLabel<T> extends Panel<T>
 		return m;
 	}
 
+	/**
+	 * Override this to display a different value when the model object
+	 * is null. Default is <code>...</code>
+	 * 
+	 * @return The string which should be displayed when the model object
+	 * is null.
+	 */
+	protected String defaultNullLabel()
+	{
+		return "...";
+	}
 }
