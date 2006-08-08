@@ -2955,7 +2955,7 @@ public abstract class Component implements Serializable
 	 * @param auto
 	 *            True to put component into auto-add mode
 	 */
-	final void setAuto(final boolean auto)
+	protected final void setAuto(final boolean auto)
 	{
 		setFlag(FLAG_AUTO, auto);
 	}
