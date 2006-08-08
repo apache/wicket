@@ -11,16 +11,17 @@ import wicket.spring.SpringWebApplication;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @deprecated instead in application.init() do
+ *             <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
+ * 
  */
-public abstract class AnnotSpringWebApplication extends SpringWebApplication
-{
+public abstract class AnnotSpringWebApplication extends SpringWebApplication {
 
-	protected void internalInit()
-	{
+	protected void internalInit() {
 		super.internalInit();
-		InjectorHolder.setInjector(new AnnotSpringInjector(getSpringContextLocator()));
+		InjectorHolder.setInjector(new AnnotSpringInjector(
+				getSpringContextLocator()));
 		addComponentInstantiationListener(new ComponentInjector());
 	}
-	
 
 }
