@@ -18,10 +18,17 @@
  */
 package wicket.spring.common.web;
 
-import wicket.spring.injection.annot.AnnotSpringWebApplication;
+import wicket.protocol.http.WebApplication;
+import wicket.spring.injection.annot.SpringComponentInjector;
 
-public class AnnotApplication extends AnnotSpringWebApplication {
+public class AnnotApplication extends WebApplication {
 
+	@Override
+	protected void init() {
+		// THIS LINE IS IMPORTANT - IT INSTALLS THE COMPONENT INJECTOR THAT WILL
+		// INJECT NEWLY CREATED COMPONENTS WITH THEIR SPRING DEPENDENCIES
+		addComponentInstantiationListener(new SpringComponentInjector(this));
+	}
 
 	@Override
 	public Class getHomePage() {
