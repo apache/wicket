@@ -484,9 +484,18 @@ public class WicketFilter implements Filter
 		String fullRootPath = getRootPath(request);
 		String url = request.getRequestURI();
 		// Homepage
-		if (url.equals(fullRootPath))
+		if (url.startsWith(fullRootPath))
 		{
-			return true;
+			// url == fullRootPath
+			if (url.length() == fullRootPath.length())
+			{
+				return true;
+			}
+			//  
+			if ((url.length() > fullRootPath.length()) && (url.charAt(fullRootPath.length()) == ';'))
+			{
+				return true;
+			}
 		}
 		// SharedResources
 		String tmp = Strings.join("/", fullRootPath, RESOURCES_PATH_PREFIX);
