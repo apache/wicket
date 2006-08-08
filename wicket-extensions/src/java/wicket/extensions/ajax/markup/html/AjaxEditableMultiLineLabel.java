@@ -20,6 +20,7 @@ import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.MultiLineLabel;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextArea;
@@ -71,7 +72,22 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	 */
 	protected Component newLabel(MarkupContainer parent, String componentId, IModel model)
 	{
-		MultiLineLabel label = new MultiLineLabel(componentId, model);
+		MultiLineLabel label = new MultiLineLabel(componentId, model)
+		{
+			private static final long serialVersionUID = 1L;
+
+			protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+			{
+				if (getModelObject() == null)
+				{
+					replaceComponentTagBody(markupStream, openTag, defaultNullLabel());
+				}
+				else
+				{
+					super.onComponentTagBody(markupStream, openTag);
+				}
+			}
+		};
 		label.setOutputMarkupId(true);
 		label.add(new LabelAjaxBehavior("onclick"));
 		return label;
@@ -169,5 +185,17 @@ public class AjaxEditableMultiLineLabel extends AjaxEditableLabel
 	public final void setRows(int rows)
 	{
 		this.rows = rows;
+	}
+
+	/**
+	 * Override this to display a different value when the model object is null.
+	 * Default is <code>...</code>
+	 * 
+	 * @return The string which should be displayed when the model object is
+	 *         null.
+	 */
+	protected String defaultNullLabel()
+	{
+		return "...";
 	}
 }
