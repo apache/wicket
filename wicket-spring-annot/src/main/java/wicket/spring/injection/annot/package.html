@@ -1,0 +1,18 @@
+<!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 3.2 Final//NL">
+<html>
+<head>
+<title>wicket.spring.injection.annot package</title>
+</head>
+<body>
+<p>
+This package contains all the necessary files to make your wicket components and other pojos @SpringBean annotation aware.
+</p>
+<p>
+To setup automatic injection of wicket components in your application subclass init() method call:
+<code>
+addComponentInstantiationListener(new SpringComponentInjector(this));
+</code>
+To inject any pojo call <code>InjectorHolder.getInjector().inject(this)</code> in the pojo's constructor.
+</p>
+</body>
+</html>
