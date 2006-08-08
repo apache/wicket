@@ -42,6 +42,8 @@ public final class Home extends AuthenticatedWebPage
 	 */
 	public Home(final PageParameters parameters)
 	{
+		super();
+		
 		// Add table of books
 		final PageableListView listView;
 		listView = new PageableListView<Book>(this, "books", new PropertyModel<List<Book>>(this,

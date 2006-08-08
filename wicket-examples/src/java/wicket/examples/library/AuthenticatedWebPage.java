@@ -45,7 +45,6 @@ public class AuthenticatedWebPage extends WicketExamplePage
 		// Create border and add it to the page
 		border = new LibraryApplicationBorder(this, "border");
 		border.setTransparentResolver(true);
-
 	}
 
 	/**
