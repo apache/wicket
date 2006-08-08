@@ -13,7 +13,8 @@ import wicket.spring.SpringWebApplication;
  * 
  * @deprecated instead in application.init() do
  *             <code>addComponentInstantiationListener(new SpringComponentInjector(this));</code>
- * 
+ *
+ * TODO remove post 1.3
  */
 public abstract class AnnotSpringWebApplication extends SpringWebApplication {
 
