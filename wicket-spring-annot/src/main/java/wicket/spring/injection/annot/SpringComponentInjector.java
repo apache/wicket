@@ -1,10 +1,14 @@
 package wicket.spring.injection.annot;
 
+import java.io.Serializable;
+
 import javax.servlet.ServletContext;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import wicket.Application;
+import wicket.MetaDataKey;
 import wicket.Session;
 import wicket.application.IComponentInstantiationListener;
 import wicket.injection.ComponentInjector;
@@ -32,6 +36,17 @@ import wicket.spring.ISpringContextLocator;
 public class SpringComponentInjector extends ComponentInjector {
 
 	/**
+	 * Metadata key used to store application context holder in application's
+	 * metadata
+	 */
+	private static MetaDataKey CONTEXT_KEY = new MetaDataKey(
+			ApplicationContextHolder.class) {
+
+		private static final long serialVersionUID = 1L;
+
+	};
+
+	/**
 	 * Constructor for web appliactions
 	 * 
 	 * @param webapp
@@ -40,22 +55,14 @@ public class SpringComponentInjector extends ComponentInjector {
 		// locate spring's application context ...
 		ServletContext sc = webapp.getWicketServlet().getServletContext();
 
-		final ApplicationContext applicationContext = WebApplicationContextUtils
+		final ApplicationContext ctx = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(sc);
 
-		// ... stick it into a locator ...
-		ISpringContextLocator locator = new ISpringContextLocator() {
-
-			private static final long serialVersionUID = 1L;
-
-			public ApplicationContext getSpringContext() {
-				return applicationContext;
-			}
-
-		};
+		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
-		InjectorHolder.setInjector(new AnnotSpringInjector(locator));
+		InjectorHolder
+				.setInjector(new AnnotSpringInjector(new ContextLocator()));
 	}
 
 	/**
@@ -66,6 +73,62 @@ public class SpringComponentInjector extends ComponentInjector {
 	public SpringComponentInjector(PortletApplication portletapp) {
 		throw new IllegalStateException("THIS IS NOT YET SUPPORTED");
 		// FIXME add support for resolving app context through the portlet app
+	}
+
+	/**
+	 * This is a holder for the application context. The reason we need a holder
+	 * is that metadata only supports storing serializable objects but
+	 * application context is not. The holder acts as a serializable wrapper for
+	 * the context. Notice that although holder implements serializable it
+	 * really is not because it has a reference to non serializable context -
+	 * but this is ok because metadata objects in application are never
+	 * serialized.
+	 * 
+	 * @author ivaynberg
+	 * 
+	 */
+	private static class ApplicationContextHolder implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		private final ApplicationContext context;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param context
+		 */
+		public ApplicationContextHolder(ApplicationContext context) {
+			this.context = context;
+		}
+
+		/**
+		 * @return the context
+		 */
+		public ApplicationContext getContext() {
+			return context;
+		}
+	}
+
+	/**
+	 * A context locator that locates the context in application's metadata.
+	 * This locator also keeps a transient cache of the lookup.
+	 * 
+	 * @author ivaynberg
+	 * 
+	 */
+	private static class ContextLocator implements ISpringContextLocator {
+		private transient ApplicationContext context;
+
+		private static final long serialVersionUID = 1L;
+
+		public ApplicationContext getSpringContext() {
+			if (context == null) {
+				context = ((ApplicationContextHolder) Application.get()
+						.getMetaData(CONTEXT_KEY)).getContext();
+			}
+			return context;
+		}
+
 	}
 
 }
