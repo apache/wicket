@@ -160,8 +160,6 @@ public class WicketFilter implements Filter
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		long time = System.currentTimeMillis();
-
 		// First, set the webapplication for this thread
 		Application.set(webApplication);
 
@@ -242,12 +240,6 @@ public class WicketFilter implements Filter
 		{
 			// Close response
 			response.close();
-
-			RequestLogger requestLogger = webApplication.getRequestLogger();
-			if (requestLogger != null)
-			{
-				requestLogger.requestTime((System.currentTimeMillis() - time));
-			}
 
 			// Clean up thread local session
 			Session.unset();

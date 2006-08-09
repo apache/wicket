@@ -21,6 +21,7 @@ package wicket.request.compound;
 import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.protocol.http.IRequestLogger;
 
 /**
  * Default implementation of response strategy that just calls
@@ -45,7 +46,12 @@ public final class DefaultResponseStrategy implements IResponseStrategy
 		IRequestTarget requestTarget = requestCycle.getRequestTarget();
 		if (requestTarget != null)
 		{
-			Application.get().logResponseTarget(requestTarget);
+			IRequestLogger logger = Application.get().getRequestLogger();
+			if(logger != null)
+			{
+				logger.logResponseTarget(requestTarget);
+			}
+			
 			requestTarget.respond(requestCycle);
 		}
 	}

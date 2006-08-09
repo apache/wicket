@@ -73,7 +73,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
 			if (logger != null)
 			{
@@ -116,7 +116,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		if (httpSession != null)
 		{
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			if (logger != null)
 			{
 				Object value = httpSession.getAttribute(attributeName);

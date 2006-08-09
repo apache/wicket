@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.protocol.http.IRequestLogger;
 import wicket.request.target.IEventProcessor;
 
 /**
@@ -60,7 +61,11 @@ public final class DefaultEventProcessorStrategy implements IEventProcessorStrat
 				log.debug("commencing event handling for " + target);
 			}
 
-			Application.get().logEventTarget(target);
+			IRequestLogger logger = Application.get().getRequestLogger();
+			if(logger != null)
+			{
+				logger.logEventTarget(target);
+			}
 
 			((IEventProcessor)target).processEvents(requestCycle);
 		}

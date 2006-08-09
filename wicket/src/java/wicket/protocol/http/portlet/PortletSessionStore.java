@@ -32,7 +32,7 @@ import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.RequestLogger;
+import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.session.ISessionStore;
 import wicket.util.lang.Bytes;
@@ -234,7 +234,7 @@ public class PortletSessionStore implements ISessionStore
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)
 		{
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
 			if (logger != null)
 			{
@@ -276,7 +276,7 @@ public class PortletSessionStore implements ISessionStore
 		if (httpSession != null)
 		{
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			if (logger != null)
 			{
 				Object value = httpSession.getAttribute(attributeName, SCOPE);

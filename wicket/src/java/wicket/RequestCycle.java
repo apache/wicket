@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
+import wicket.protocol.http.IRequestLogger;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
@@ -960,6 +961,13 @@ public abstract class RequestCycle
 			log.error("Exception occurred during request detachement", e);
 		}
 
+
+		IRequestLogger requestLogger = getApplication().getRequestLogger();
+		if (requestLogger != null)
+		{
+			requestLogger.requestTime((System.currentTimeMillis() - startTime));
+		}
+		
 		// Release thread local resources
 		threadDetach();
 	}

@@ -40,6 +40,8 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
+import wicket.protocol.http.IRequestLogger;
+import wicket.protocol.http.RequestLogger;
 import wicket.session.ISessionStore;
 import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
@@ -160,6 +162,9 @@ public abstract class Application
 
 	/** The session facade. */
 	private ISessionStore sessionStore;
+
+	/** Request logger instance. */
+	private IRequestLogger requestLogger;
 
 	/**
 	 * Get Application for current thread.
@@ -656,24 +661,6 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * @param target
-	 */
-	public void logEventTarget(IRequestTarget target)
-	{
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
-	 * 
-	 * @param requestTarget
-	 */
-	public void logResponseTarget(IRequestTarget requestTarget)
-	{
-	}
-
-	/**
 	 * Gets the unique key of this application within a given context (like a
 	 * web application). NOT INTENDED FOR FRAMEWORK CLIENTS.
 	 * 
@@ -765,6 +752,20 @@ public abstract class Application
 
 	}
 
+	
+	/**
+	 * @param sessionId
+	 *            The session id that was destroyed
+	 */
+	public void sessionDestroyed(String sessionId)
+	{
+		IRequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			logger.sessionDestroyed(sessionId);
+		}
+	}
+
 	/**
 	 * Notifies the registered component instantiation listeners of the
 	 * construction of the provided component
@@ -819,5 +820,26 @@ public abstract class Application
 	{
 		initialize(properties.getProperty("initializer"));
 		initialize(properties.getProperty(getName() + "-initializer"));
+	}
+
+	/**
+	 * Gets the {@link RequestLogger}.
+	 * 
+	 * @return The RequestLogger
+	 */
+	public final IRequestLogger getRequestLogger()
+	{
+		return requestLogger;
+	}
+
+	/**
+	 * Sets the {@link RequestLogger}.
+	 * 
+	 * @param logger
+	 *            The request logger
+	 */
+	public final void setRequestLogger(IRequestLogger logger)
+	{
+		requestLogger = logger;
 	}
 }

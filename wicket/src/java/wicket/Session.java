@@ -232,7 +232,10 @@ public abstract class Session implements Serializable, ICoverterLocator
 	public static Session get(boolean forceBind)
 	{
 		Session session = get();
-		session.bind();
+		if(forceBind)
+		{
+			session.bind();
+		}
 		return session;
 	}
 

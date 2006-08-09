@@ -28,7 +28,6 @@ import javax.servlet.http.HttpSession;
 
 import wicket.Application;
 import wicket.IRequestCycleFactory;
-import wicket.IRequestTarget;
 import wicket.ISessionFactory;
 import wicket.Page;
 import wicket.PageMap;
@@ -130,9 +129,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 
 	/** The WicketServlet that this application is attached to */
 	private WicketFilter wicketFilter;
-
-	/** Request logger instance. */
-	private RequestLogger requestLogger;
 
 	/**
 	 * The cached application key. Will be set in
@@ -325,55 +321,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
 		}
-	}
-
-	/**
-	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
-	 */
-	@Override
-	public void logEventTarget(IRequestTarget target)
-	{
-		super.logEventTarget(target);
-		RequestLogger rl = getRequestLogger();
-		if (rl != null)
-		{
-			rl.logEventTarget(target);
-		}
-	}
-
-	/**
-	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
-	 */
-	@Override
-	public void logResponseTarget(IRequestTarget target)
-	{
-		super.logResponseTarget(target);
-		RequestLogger rl = getRequestLogger();
-		if (rl != null)
-		{
-			rl.logResponseTarget(target);
-		}
-	}
-
-	/**
-	 * Gets the {@link RequestLogger}.
-	 * 
-	 * @return The RequestLogger
-	 */
-	public final RequestLogger getRequestLogger()
-	{
-		return requestLogger;
-	}
-
-	/**
-	 * Sets the {@link RequestLogger}.
-	 * 
-	 * @param logger
-	 *            The request logger
-	 */
-	public final void setRequestLogger(RequestLogger logger)
-	{
-		requestLogger = logger;
 	}
 
 	/**
@@ -723,13 +670,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public void sessionDestroyed(String sessionId)
 	{
+		super.sessionDestroyed(sessionId);
 		bufferedResponses.remove(sessionId);
-
-		RequestLogger logger = getRequestLogger();
-		if (logger != null)
-		{
-			logger.sessionDestroyed(sessionId);
-		}
 	}
 
 	/**

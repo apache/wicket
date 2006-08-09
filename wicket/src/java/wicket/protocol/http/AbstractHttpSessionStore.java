@@ -142,8 +142,15 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	public final String getSessionId(Request request, boolean create)
 	{
 		WebRequest webRequest = toWebRequest(request);
+		boolean created = create && webRequest.getHttpServletRequest().getSession(false) == null;
 		HttpSession httpSession = webRequest.getHttpServletRequest().getSession(create);
-		return (httpSession != null) ? httpSession.getId() : null;
+		String id = (httpSession != null) ? httpSession.getId() : null;
+		if(created && id != null)
+		{
+			IRequestLogger logger = Application.get().getRequestLogger();
+			if(logger != null) logger.sessionCreated(id);
+		}
+		return id;
 	}
 
 	/**

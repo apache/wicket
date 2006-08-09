@@ -17,6 +17,7 @@ package wicket.protocol.http.portlet;
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpSession;
 
 import wicket.Application;
 import wicket.IRequestCycleFactory;
@@ -27,7 +28,6 @@ import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.resolver.AutoLinkResolver;
-import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
@@ -91,9 +91,6 @@ public abstract class PortletApplication extends Application implements ISession
 
 	/** Session factory for this web application */
 	private ISessionFactory sessionFactory = this;
-
-	/** Request logger instance. */
-	private RequestLogger requestLogger;
 
 	WicketPortlet portlet;
 
@@ -393,40 +390,6 @@ public abstract class PortletApplication extends Application implements ISession
 			requestCycleProcessor = newRenderRequestCycleProcessor();
 		}
 		return requestCycleProcessor;
-	}
-
-	/**
-	 * Gets the {@link RequestLogger}.
-	 * 
-	 * @return The RequestLogger
-	 */
-	public final RequestLogger getRequestLogger()
-	{
-		return requestLogger;
-	}
-
-	/**
-	 * Sets the {@link RequestLogger}.
-	 * 
-	 * @param logger
-	 *            The request logger
-	 */
-	public final void setRequestLogger(RequestLogger logger)
-	{
-		requestLogger = logger;
-	}
-
-	/**
-	 * @param sessionId
-	 *            The session id that was destroyed
-	 */
-	void sessionDestroyed(String sessionId)
-	{
-		RequestLogger logger = getRequestLogger();
-		if (logger != null)
-		{
-			logger.sessionDestroyed(sessionId);
-		}
 	}
 
 	/**
