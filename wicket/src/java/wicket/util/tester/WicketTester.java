@@ -897,12 +897,25 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void debugComponentTrees()
 	{
+		debugComponentTrees("");
+	}	
+	
+	/**
+	 * Dump the component trees to log.
+	 * 
+	 * @param filter
+	 *            Show only the components, which path contains the
+	 *            filterstring.
+	 */
+	public void debugComponentTrees(String filter) {
 		log.info("debugging ----------------------------------------------");
-		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter
-				.hasNext();)
-		{
-			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)iter.next();
-			log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
+		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage())
+				.iterator(); iter.hasNext();) {
+			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData) iter
+					.next();
+			if (obj.path.matches(".*" + filter + ".*")) {
+				log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
+			}
 		}
 	}
 	
