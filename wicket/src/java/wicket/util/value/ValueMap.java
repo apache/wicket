@@ -104,7 +104,43 @@ public class ValueMap extends HashMap
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
-		this(keyValuePairs, delimiter, MetaPattern.STRING);
+		int start = 0;
+		int equalsIndex = keyValuePairs.indexOf('=');
+		int delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
+		if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
+		while(equalsIndex != -1)
+		{
+			if(delimiterIndex < keyValuePairs.length())
+			{
+				int equalsIndex2 = keyValuePairs.indexOf('=', delimiterIndex+1);
+				if(equalsIndex2 != -1)
+				{
+					int delimiterIndex2 = keyValuePairs.lastIndexOf(delimiter, equalsIndex2);
+					delimiterIndex = delimiterIndex2;
+				}
+				else
+				{
+					delimiterIndex = keyValuePairs.length();
+				}
+			}
+			String key = keyValuePairs.substring(start,equalsIndex);
+			String value = keyValuePairs.substring(equalsIndex+1, delimiterIndex);
+			put(key,value);
+			if(delimiterIndex < keyValuePairs.length())
+			{
+				start = delimiterIndex+1;
+				equalsIndex = keyValuePairs.indexOf('=',start);
+				if(equalsIndex != -1)
+				{
+					delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
+					if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
+				}
+			}
+			else
+			{
+				equalsIndex = -1;
+			}
+		}
 	}
 
 	/**
