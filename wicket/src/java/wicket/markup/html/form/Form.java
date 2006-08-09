@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -225,8 +225,8 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	{
 		super(parent, id, model);
 	}
-	
-	
+
+
 	@Override
 	protected boolean getStatelessHint()
 	{
@@ -798,7 +798,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		// already uses it to submit the forum. This should be fixed when we
 		// pre parse the markup so that we know the id is at front.
 		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&","&amp;"));
+		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
 
 		if (multiPart)
 		{
@@ -1010,26 +1010,41 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		for (int i = 0; i < multiCount; i++)
 		{
 			final IFormValidator validator = formValidators_get(i);
-			final FormComponent[] dependents = validator.getDependentFormComponents();
+			validateFormValidator(validator);
+		}
+	}
 
-			boolean validate = true;
+	/**
+	 * Validates form with the given form validator
+	 * 
+	 * @param validator
+	 */
+	protected final void validateFormValidator(final IFormValidator validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("Argument [[validator]] cannot be null");
+		}
 
-			if (dependents != null)
+		final FormComponent[] dependents = validator.getDependentFormComponents();
+
+		boolean validate = true;
+
+		if (dependents != null)
+		{
+			for (final FormComponent dependent : dependents)
 			{
-				for (final FormComponent dependent : dependents)
+				if (!dependent.isValid())
 				{
-					if (!dependent.isValid())
-					{
-						validate = false;
-						break;
-					}
+					validate = false;
+					break;
 				}
 			}
+		}
 
-			if (validate)
-			{
-				validator.validate(this);
-			}
+		if (validate)
+		{
+			validator.validate(this);
 		}
 	}
 
