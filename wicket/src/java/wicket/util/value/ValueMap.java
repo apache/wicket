@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import wicket.util.string.IStringIterator;
-import wicket.util.string.StringList;
 import wicket.util.string.StringValue;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.time.Duration;
@@ -114,28 +111,41 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
-		// Get list of strings separated by the delimiter
-		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
-
-		// Go through each string in the list
-		for (IStringIterator iterator = pairs.iterator(); iterator.hasNext();)
+		int start = 0;
+		int equalsIndex = keyValuePairs.indexOf('=');
+		int delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
+		if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
+		while(equalsIndex != -1)
 		{
-			// Get the next key value pair
-			final String pair = iterator.next();
-
-			// Parse using metapattern parser for variable assignments
-			final VariableAssignmentParser parser = new VariableAssignmentParser(pair);
-
-			// Does it parse?
-			if (parser.matches())
+			if(delimiterIndex < keyValuePairs.length())
 			{
-				// Succeeded. Put key and value into map
-				put(parser.getKey(), parser.getValue());
+				int equalsIndex2 = keyValuePairs.indexOf('=', delimiterIndex+1);
+				if(equalsIndex2 != -1)
+				{
+					int delimiterIndex2 = keyValuePairs.lastIndexOf(delimiter, equalsIndex2);
+					delimiterIndex = delimiterIndex2;
+				}
+				else
+				{
+					delimiterIndex = keyValuePairs.length();
+				}
+			}
+			String key = keyValuePairs.substring(start,equalsIndex);
+			String value = keyValuePairs.substring(equalsIndex+1, delimiterIndex);
+			put(key,value);
+			if(delimiterIndex < keyValuePairs.length())
+			{
+				start = delimiterIndex+1;
+				equalsIndex = keyValuePairs.indexOf('=',start);
+				if(equalsIndex != -1)
+				{
+					delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
+					if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
+				}
 			}
 			else
 			{
-				throw new IllegalArgumentException("Invalid key value list: '" + keyValuePairs
-						+ "'");
+				equalsIndex = -1;
 			}
 		}
 	}
