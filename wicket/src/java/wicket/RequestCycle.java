@@ -764,20 +764,23 @@ public abstract class RequestCycle
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
-		final IRequestTarget target; 
-		if ( listener  != IRedirectListener.INTERFACE && component.isStateless() && page.isBookmarkable())
+		final IRequestTarget target;
+		if (listener != IRedirectListener.INTERFACE && component.isStateless()
+				&& page.isBookmarkable())
 		{
-			target = new BookmarkableListenerInterfaceRequestTarget(
-					page.getPageMap().getName(), page.getClass(), new PageParameters(),
-					component,listener);
+			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMap().getName(),
+					page.getClass(), new PageParameters(), component, listener);
 		}
 		else
 		{
-			if (listener  == IRedirectListener.INTERFACE) page.setPageStateless(Boolean.FALSE);
-			
+			if (listener == IRedirectListener.INTERFACE)
+			{
+				page.setPageStateless(Boolean.FALSE);
+			}
+
 			// trigger creation of the actual session in case it was deferred
 			session.getSessionStore().getSessionId(request, true);
-	
+
 			// Get the listener interface name
 			target = new ListenerInterfaceRequestTarget(page, component, listener);
 		}
@@ -967,7 +970,7 @@ public abstract class RequestCycle
 		{
 			requestLogger.requestTime((System.currentTimeMillis() - startTime));
 		}
-		
+
 		// Release thread local resources
 		threadDetach();
 	}
