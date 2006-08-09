@@ -1012,11 +1012,16 @@ public abstract class Page<T> extends MarkupContainer<T>
 		if (isBookmarkable() == false)
 		{
 			stateless = false;
+			if (getStatelessHint())
+			{
+				log.warn("Page '" + this + "' is not stateless because it is not bookmarkable, "
+						+ "but the stateless hint is set to true!");
+			}
 		}
 
 		if (stateless == null)
 		{
-			final Object[] returnArray = new Object[1]; 
+			final Object[] returnArray = new Object[1];
 			Object returnValue = visitChildren(Component.class, new IVisitor()
 			{
 				public Object component(Component<?> component)
@@ -1038,13 +1043,14 @@ public abstract class Page<T> extends MarkupContainer<T>
 			{
 				stateless = (Boolean)returnValue;
 			}
-			
-			if(!stateless  && getStatelessHint())
+
+			if (!stateless && getStatelessHint())
 			{
-				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0]+ "' but the stateless hint is set to true!");
+				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0]
+						+ "' but the stateless hint is set to true!");
 			}
 		}
-		
+
 		return stateless;
 	}
 
@@ -1060,9 +1066,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 	{
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto() || 
-				(parent == null && !component.isVersioned()) || 
-				(parent != null && !parent.isVersioned()) )
+		if (component.isAuto() || (parent == null && !component.isVersioned())
+				|| (parent != null && !parent.isVersioned()))
 		{
 			return false;
 		}
