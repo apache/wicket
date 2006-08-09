@@ -26,18 +26,18 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 		<tr><td>Peak session count</td><td><span wicket:id="peakSessions"></span></td></tr>
 	</table>	
 	
-	<p>Live Sessions</p>
+	<p wicket:id="requests">Requests</p>
+	
+	<p>Sessions</p>
 	<table border="1">
 		<tr>
 			<th>Session Id</th>
-			<th>Request Count</th>
-			<th>Total Request Time (s)</th>
+			<th>Last Request Time</th>
 			<th>Session size (B)</th>
 		</tr>
 		<tr wicket:id="sessions">
 			<td><a wicket:id="id" href="#"><span wicket:id="id"></span></a></td>
-			<td wicket:id="requestCount" align="right"></td>
-			<td wicket:id="requestsTime" align="right"></td>
+			<td wicket:id="lastRequestTime" align="right"></td>
 			<td wicket:id="sessionSize" align="right"></td>
 		</tr>
 	</table>

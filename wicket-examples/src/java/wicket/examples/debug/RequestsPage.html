@@ -17,23 +17,31 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
   <h1><img valign="center" border=0 wicket:id="bug" src="bug.png"/> Wicket Sessions Inspector</h1>
 	<a href="javascript:history.go(-1)">Go Back</a>
 
-    <span wicket:id="session">Session view here</span>
-    
+	<h2>Session</h2>
+	<ul>
+  	Id: <span wicket:id="id">9999</span><br/>
+	Session Size: <span wicket:id="size">none</span><br/>
+	</ul>
+	    
   	<h2>Request Information</h2>
 	<table border="1">
 		<tr>
 			<th>Start Date</th>
+			<th wicket:id="sessionid">SessionId</th>
 			<th>Time Taken</th>
 			<th>Event Target</th>
 			<th>Response Target</th>
 			<th>Altered Objects</th>
+			<th>Session Size</th>
 		</tr>
 		<tr wicket:id="requests">
 			<td wicket:id="startDate"></td>
+			<td wicket:id="id"></td>
 			<td wicket:id="timeTaken" align="right"></td>
 			<td wicket:id="eventTarget"></td>
 			<td wicket:id="responseTarget"></td>
 			<td wicket:id="alteredObjects"></td>
+			<td wicket:id="sessionSize"></td>
 		</tr>
 	</table>
 	<span wicket:id="navigator"/>

@@ -32,7 +32,9 @@
  */
 package wicket.examples.debug;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import wicket.Application;
@@ -45,9 +47,10 @@ import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.RequestLogger.SessionData;
+import wicket.protocol.http.RequestLogger.RequestData;
 import wicket.util.lang.Bytes;
 
 /**
@@ -74,7 +77,7 @@ public class LiveSessionsPage extends WebPage
 			public void onClick()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
-				RequestLogger requestLogger = webApplication.getRequestLogger();
+				IRequestLogger requestLogger = webApplication.getRequestLogger();
 				if (requestLogger == null)
 				{
 					webApplication.setRequestLogger(new RequestLogger());
@@ -93,7 +96,7 @@ public class LiveSessionsPage extends WebPage
 			public Object getObject()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
-				RequestLogger requestLogger = webApplication.getRequestLogger();
+				IRequestLogger requestLogger = webApplication.getRequestLogger();
 				if (requestLogger == null)
 				{
 					return "Enable request recording";
@@ -122,7 +125,7 @@ public class LiveSessionsPage extends WebPage
 			@Override
 			public Object getObject()
 			{
-				return new Integer(getRequestLogger().getLiveSessions().size());
+				return new Integer(getRequestLogger().getPeakSessions());
 			}
 		});
 		new Label(this, "liveSessions", new Model()
@@ -136,24 +139,51 @@ public class LiveSessionsPage extends WebPage
 			}
 		});
 
-		IModel<List<SessionData>> sessionModel = new Model<List<SessionData>>()
+		IModel<List<RequestData>> sessionModel = new Model<List<RequestData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public List<SessionData> getObject()
+			public List<RequestData> getObject()
 			{
-				return new ArrayList<SessionData>(getRequestLogger().getLiveSessions());
+				List<RequestData> returnLst =  new ArrayList<RequestData>();
+				HashSet<String> ids = new HashSet<String>();
+				List<RequestData> data = getRequestLogger().getRequests();
+				for (RequestData rd : data)
+				{
+					String sessionId = rd.getSessionId();
+					if(sessionId != null && !ids.contains(sessionId))
+					{
+						ids.add(sessionId);
+						returnLst.add(rd);
+					}
+				}
+				return returnLst;
 			}
 		};
-		PageableListView<SessionData> listView = new PageableListView<SessionData>(this, "sessions", sessionModel, 50)
+		new Link(this, "requests")
 		{
 			private static final long serialVersionUID = 1L;
 
+			/**
+			 * @see wicket.markup.html.link.Link#onClick()
+			 */
+			@Override
+			public void onClick()
+			{
+				setResponsePage(new RequestsPage(null));
+			}
+		};
+		PageableListView<RequestData> listView = new PageableListView<RequestData>(this, "sessions", sessionModel, 50)
+		{
+			private static final long serialVersionUID = 1L;
+
+			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
+			
 			@Override
 			protected void populateItem(ListItem item)
 			{
-				final SessionData sd = (SessionData)item.getModelObject();
+				final RequestData sd = (RequestData)item.getModelObject();
 				Link link = new Link(item, "id")
 				{
 					private static final long serialVersionUID = 1L;
@@ -167,9 +197,8 @@ public class LiveSessionsPage extends WebPage
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				new Label(link, "id", new Model<String>(sd.getId()));
-				new Label(item, "requestCount", new Model<Integer>(new Integer(sd.getRequests().size())));
-				new Label(item, "requestsTime", new Model<Double>(sd.getRequestsTime()));
+				new Label(link, "id", new Model<String>(sd.getSessionId()));
+				new Label(item, "lastRequestTime",new Model<String>(sdf.format(sd.getStartDate())));
 				new Label(item, "sessionSize", new Model<Bytes>(Bytes.bytes(sd.getSessionSize())));
 			}
 		};
@@ -177,10 +206,10 @@ public class LiveSessionsPage extends WebPage
 		new PagingNavigator(this, "navigator", listView);
 	}
 
-	RequestLogger getRequestLogger()
+	IRequestLogger getRequestLogger()
 	{
 		WebApplication webApplication = (WebApplication)Application.get();
-		final RequestLogger requestLogger;
+		final IRequestLogger requestLogger;
 		if (webApplication.getRequestLogger() == null)
 		{
 			// make default one.
