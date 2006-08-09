@@ -1012,12 +1012,17 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Validates a form validator
+	 * Validates form with the given form validator
 	 * 
 	 * @param validator
 	 */
-	protected final void validateFormValidator(IFormValidator validator)
+	protected final void validateFormValidator(final IFormValidator validator)
 	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("Argument [[validator]] cannot be null");
+		}
+
 		final FormComponent[] dependents = validator.getDependentFormComponents();
 
 		boolean validate = true;
