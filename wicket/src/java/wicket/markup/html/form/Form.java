@@ -1004,31 +1004,40 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void validateFormValidators()
 	{
-		final int multiCount = formValidators_size();
-		for (int i = 0; i < multiCount; i++)
+		final int count = formValidators_size();
+		for (int i = 0; i < count; i++)
 		{
-			final IFormValidator validator = formValidators_get(i);
-			final FormComponent[] dependents = validator.getDependentFormComponents();
+			validateFormValidator(formValidators_get(i));
+		}
+	}
 
-			boolean validate = true;
+	/**
+	 * Validates a form validator
+	 * 
+	 * @param validator
+	 */
+	protected final void validateFormValidator(IFormValidator validator)
+	{
+		final FormComponent[] dependents = validator.getDependentFormComponents();
 
-			if (dependents != null)
+		boolean validate = true;
+
+		if (dependents != null)
+		{
+			for (int j = 0; j < dependents.length; j++)
 			{
-				for (int j = 0; j < dependents.length; j++)
+				final FormComponent dependent = dependents[j];
+				if (!dependent.isValid())
 				{
-					final FormComponent dependent = dependents[j];
-					if (!dependent.isValid())
-					{
-						validate = false;
-						break;
-					}
+					validate = false;
+					break;
 				}
 			}
+		}
 
-			if (validate)
-			{
-				validator.validate(this);
-			}
+		if (validate)
+		{
+			validator.validate(this);
 		}
 	}
 
