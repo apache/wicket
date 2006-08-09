@@ -4,7 +4,12 @@ import java.io.Serializable;
 
 import javax.servlet.ServletContext;
 
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.Application;
@@ -58,6 +63,7 @@ public class SpringComponentInjector extends ComponentInjector {
 		final ApplicationContext ctx = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(sc);
 
+		// ... stash the holder to the context in the application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
@@ -71,8 +77,25 @@ public class SpringComponentInjector extends ComponentInjector {
 	 * @param portletapp
 	 */
 	public SpringComponentInjector(PortletApplication portletapp) {
-		throw new IllegalStateException("THIS IS NOT YET SUPPORTED");
-		// FIXME add support for resolving app context through the portlet app
+		// locate spring's application context ...
+		String configLocation = portletapp.getWicketPortlet().getInitParameter(
+				"contextConfigLocation");
+		GenericApplicationContext ctx = new GenericApplicationContext();
+		XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
+		Resource resource = new ClassPathResource(configLocation);
+		if (!resource.exists()) {
+			resource = new FileSystemResource(configLocation);
+		}
+		xmlReader.loadBeanDefinitions(resource);
+		ctx.refresh();
+
+		// ... stash the holder to the context in the application's metadata ...
+		portletapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
+
+		// ... and create and register the annotation aware injector
+		InjectorHolder
+				.setInjector(new AnnotSpringInjector(new ContextLocator()));
+
 	}
 
 	/**
