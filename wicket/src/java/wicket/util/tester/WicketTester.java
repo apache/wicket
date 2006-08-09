@@ -901,10 +901,26 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void debugComponentTrees()
 	{
+		debugComponentTrees("");
+	}
+	
+	
+	/**
+	 * Dump the component tree to log.
+	 * 
+	 * @param filter
+	 *            Show only the components, which path contains the
+	 *            filterstring.
+	 */
+	public void debugComponentTrees(String filter)
+	{
 		log.info("debugging ----------------------------------------------");
 		for (ComponentData element : WicketTesterHelper.getComponentData(getLastRenderedPage()))
 		{
-			log.info("path\t" + element.path + " \t" + element.type + " \t[" + element.value + "]");
+			if (element.path.matches(".*" + filter + ".*")) 
+			{
+				log.info("path\t" + element.path + " \t" + element.type + " \t[" + element.value + "]");
+			}
 		}
 	}
 
