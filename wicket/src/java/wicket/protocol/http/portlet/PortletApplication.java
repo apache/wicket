@@ -95,7 +95,7 @@ public abstract class PortletApplication extends Application implements ISession
 	/** Request logger instance. */
 	private RequestLogger requestLogger;
 
-	WicketPortlet portlet;
+	private WicketPortlet portlet;
 
 	/**
 	 * @param portlet
@@ -111,6 +111,14 @@ public abstract class PortletApplication extends Application implements ISession
 		{
 			throw new IllegalStateException("WicketPortlet cannot be changed once it is set");
 		}
+	}
+
+	/**
+	 * @return portlet
+	 */
+	public WicketPortlet getWicketPortlet()
+	{
+		return portlet;
 	}
 
 	/**
@@ -143,7 +151,7 @@ public abstract class PortletApplication extends Application implements ISession
 		{
 			throw new WicketRuntimeException(
 					"Session created by a PortletApplication session factory "
-					+ "must be a subclass of PortletSession");
+							+ "must be a subclass of PortletSession");
 		}
 
 		// Set application on session
@@ -318,7 +326,8 @@ public abstract class PortletApplication extends Application implements ISession
 
 			public RequestCycle newRequestCycle(Session session, Request request, Response response)
 			{
-				if(request instanceof WicketPortletRequest){
+				if (request instanceof WicketPortletRequest)
+				{
 
 					WicketPortletRequest req = (WicketPortletRequest)request;
 					WicketPortletResponse res = (WicketPortletResponse)response;
@@ -449,8 +458,10 @@ public abstract class PortletApplication extends Application implements ISession
 				throw new WicketRuntimeException("unable to retrieve portlet context path");
 			}
 
-			// WARNING: this has to match the string which is returned from the WebApplication
-			// getServletPath is not available in portlets, so we have to use empty servlet path
+			// WARNING: this has to match the string which is returned from the
+			// WebApplication
+			// getServletPath is not available in portlets, so we have to use
+			// empty servlet path
 			// and a empty servlet path string here.
 			sessionAttributePrefix = "wicket::";
 		}
