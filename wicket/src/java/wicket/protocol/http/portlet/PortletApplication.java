@@ -422,4 +422,16 @@ public abstract class PortletApplication extends Application implements ISession
 		// adding the portlet path
 		return sessionAttributePrefix;
 	}
+
+	/**
+	 * Gets portlet.
+	 * 
+	 * @return portlet
+	 */
+	public final WicketPortlet getWicketPortlet()
+	{
+		return portlet;
+	}
+
+
 }
