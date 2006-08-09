@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import wicket.Component;
+import wicket.Session;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
@@ -52,6 +53,8 @@ import wicket.model.Model;
 import wicket.protocol.http.RequestLogger.RequestData;
 import wicket.protocol.http.RequestLogger.SessionData;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Bytes;
+import wicket.util.lang.Objects;
 
 /**
  * @author jcompagner
@@ -68,7 +71,19 @@ public class RequestsPage extends WebPage
 	{
 		add(new Image("bug"));
 		
-		add(new SessionView("session", sessionData.getSession()));
+		final Session session = sessionData.getSession();
+		add(new Label("id", session.getId()));
+		add(new Label("locale", session.getLocale().toString()));
+		add(new Label("style", session.getStyle() == null ? "[None]" : session.getStyle()));
+		add(new Label("size", new Model()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject(Component component) 
+			{
+				return Bytes.bytes(Objects.sizeof(session));
+			}
+		}));
 		
 		Model requestsModel = new Model()
 		{

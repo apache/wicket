@@ -30,12 +30,14 @@ pre { border : 1px solid #ddd; margin-left : 2em; }
 	<table border="1">
 		<tr>
 			<th>Session Id</th>
+			<th>Last Request Time</th>
 			<th>Request Count</th>
 			<th>Total Request Time (s)</th>
 			<th>Session size (B)</th>
 		</tr>
 		<tr wicket:id="sessions">
 			<td><a wicket:id="id" href="#"><span wicket:id="id"></span></a></td>
+			<td wicket:id="lastRequestTime" align="right"></td>
 			<td wicket:id="requestCount" align="right"></td>
 			<td wicket:id="requestsTime" align="right"></td>
 			<td wicket:id="sessionSize" align="right"></td>

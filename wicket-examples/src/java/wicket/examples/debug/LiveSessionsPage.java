@@ -36,7 +36,12 @@
  */
 package wicket.examples.debug;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 import wicket.Application;
 import wicket.Component;
@@ -141,12 +146,22 @@ public class LiveSessionsPage extends WebPage
 			
 			public Object getObject(Component component)
 			{
-				return new ArrayList(getRequestLogger().getLiveSessions());
+				List lst = new ArrayList(getRequestLogger().getLiveSessions());
+				Collections.sort(lst,new Comparator()
+				{
+					public int compare(Object o1, Object o2)
+					{
+						return (int)(((SessionData)o2).getLastRequestTime() - ((SessionData)o1).getLastRequestTime());
+					}
+				});
+				return lst;
 			}
 		};
 		PageableListView listView = new PageableListView("sessions",sessionModel,50)
 		{
 			private static final long serialVersionUID = 1L;
+			
+			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
 			
 			protected void populateItem(ListItem item) 
 			{
@@ -164,6 +179,7 @@ public class LiveSessionsPage extends WebPage
 				};
 				link.add( new Label("id",new Model(sd.getId())));
 				item.add( link);
+				item.add( new Label("lastRequestTime",new Model(sdf.format(new Date(sd.getLastRequestTime())))) );
 				item.add( new Label("requestCount",new Model(new Integer(sd.getRequests().size()))) );
 				item.add( new Label("requestsTime",new Model(sd.getRequestsTime())) );
 				item.add( new Label("sessionSize",new Model(Bytes.bytes(sd.getSessionSize()))) );
