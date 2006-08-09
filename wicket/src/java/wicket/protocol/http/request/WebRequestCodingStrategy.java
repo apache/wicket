@@ -140,7 +140,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	public final RequestParameters decode(final Request request)
 	{
 		final RequestParameters parameters = new RequestParameters();
-		final String pathInfo = getRequestPath(request);
+		String pathInfo = getRequestPath(request);
+		if (pathInfo!=null&&!pathInfo.startsWith("/")) {
+			pathInfo="/"+pathInfo;
+		}
 		parameters.setPath(pathInfo);
 		parameters.setPageMapName(request.getParameter(PAGEMAP));
 		addInterfaceParameters(request, parameters);
@@ -223,7 +226,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	/**
 	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
-	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(final String path)
+	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
 		if (path == null)
 		{

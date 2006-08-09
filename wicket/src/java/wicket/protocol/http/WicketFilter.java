@@ -505,6 +505,9 @@ public class WicketFilter implements Filter
 		}
 		// Mounted url
 		String path = url.substring(fullRootPath.length());
+		if (!path.startsWith("/")) {
+			path="/"+path;
+		}
 		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy()
 				.urlCodingStrategyForPath(path) != null;
 	}
