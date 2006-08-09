@@ -35,7 +35,8 @@ import wicket.spring.ISpringContextLocator;
  * <code>InjectorHolder.getInjector().inject(this)</code> in their
  * constructor.
  * 
- * @author ivaynberg
+ * @author Igor Vaynberg (ivaynberg)
+ * @author <a href="mailto:jlee@antwerkz.com">Justin Lee</a>
  * 
  */
 public class SpringComponentInjector extends ComponentInjector {
