@@ -28,7 +28,7 @@ public class ValueMapTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	public void testStringParseConstructor() throws Exception
+	public void testStringParseConstructorSimple() throws Exception
 	{
 		ValueMap vm = new ValueMap("param=value");
 		assertEquals(1, vm.size());
@@ -44,8 +44,14 @@ public class ValueMapTest extends TestCase
 		assertEquals(2, vm.size());
 		assertEquals("value1", vm.get("param1"));
 		assertEquals("value2", vm.get("param2"));
+	}
 
-		vm = new ValueMap("param1=val>ue1;param2=value2", ";");
+	/**
+	 * @throws Exception
+	 */
+	public void testStringParseConstructorSpecialChars() throws Exception
+	{
+		ValueMap vm = new ValueMap("param1=val>ue1;param2=value2", ";");
 		assertEquals(2, vm.size());
 		assertEquals("val>ue1", vm.get("param1"));
 		assertEquals("value2", vm.get("param2"));
@@ -55,15 +61,43 @@ public class ValueMapTest extends TestCase
 		assertEquals("val:ue1", vm.get("param1"));
 		assertEquals("value2", vm.get("param2"));
 
-		vm = new ValueMap("param1=val?ue1;param2=value2", ";");
+		vm = new ValueMap("param1=val?ue1;param2=val<>ue2", ";");
 		assertEquals(2, vm.size());
 		assertEquals("val?ue1", vm.get("param1"));
-		assertEquals("value2", vm.get("param2"));
+		assertEquals("val<>ue2", vm.get("param2"));
 
-		vm = new ValueMap("param1=val=ue1;param2=value2", ";");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testStringParseConstructorDelimitersAndEqualsSign() throws Exception
+	{
+		ValueMap vm = new ValueMap("param1=val=ue1;param2=value2", ";");
 		assertEquals(2, vm.size());
 		assertEquals("val=ue1", vm.get("param1"));
 		assertEquals("value2", vm.get("param2"));
+
+		vm = new ValueMap("param1=value1;param2=val=ue2", ";");
+		assertEquals(2, vm.size());
+		assertEquals("value1", vm.get("param1"));
+		assertEquals("val=ue2", vm.get("param2"));
+		
+		vm = new ValueMap("param1=val;ue1;param2=value2", ";");
+		assertEquals(2, vm.size());
+		assertEquals("val;ue1", vm.get("param1"));
+		assertEquals("value2", vm.get("param2"));
+
+		vm = new ValueMap("param1=value1;param2=val;ue2", ";");
+		assertEquals(2, vm.size());
+		assertEquals("value1", vm.get("param1"));
+		assertEquals("val;ue2", vm.get("param2"));
+
+		vm = new ValueMap("param1=va=l;ue1;param2=val;ue2;param3=val=ue3", ";");
+		assertEquals(3, vm.size());
+		assertEquals("va=l;ue1", vm.get("param1"));
+		assertEquals("val;ue2", vm.get("param2"));
+		assertEquals("val=ue3", vm.get("param3"));
 		
 	}
 }
