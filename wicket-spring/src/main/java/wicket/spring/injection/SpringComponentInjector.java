@@ -1,5 +1,6 @@
 package wicket.spring.injection;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 
 import javax.servlet.ServletContext;
@@ -7,9 +8,9 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.Application;
@@ -66,6 +67,7 @@ public class SpringComponentInjector extends ComponentInjector
 		final ApplicationContext ctx = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(sc);
 
+		// ... store it in application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
@@ -79,25 +81,29 @@ public class SpringComponentInjector extends ComponentInjector
 	 */
 	public SpringComponentInjector(PortletApplication portletapp)
 	{
+		GenericApplicationContext ctx = new GenericApplicationContext();
+
 		// locate spring's application context ...
 		String configLocation = portletapp.getWicketPortlet().getInitParameter(
 				"contextConfigLocation");
-		GenericApplicationContext ctx = new GenericApplicationContext();
-		XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-		Resource resource = new ClassPathResource(configLocation);
-		if (!resource.exists())
+		Resource resource = null;
+		try
 		{
-			resource = new FileSystemResource(configLocation);
+			resource = new UrlResource(ResourceUtils.getURL(configLocation));
 		}
-		xmlReader.loadBeanDefinitions(resource);
+		catch (FileNotFoundException e)
+		{
+			throw new RuntimeException(e.getMessage());
+		}
+
+		new XmlBeanDefinitionReader(ctx).loadBeanDefinitions(resource);
 		ctx.refresh();
 
-		// ... stash the holder to the context in the application's metadata ...
+		// ... store it in application's metadata ...
 		portletapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
 		InjectorHolder.setInjector(new AnnotSpringInjector(new ContextLocator()));
-
 	}
 
 	/**
