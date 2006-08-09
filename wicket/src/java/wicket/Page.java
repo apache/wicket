@@ -993,6 +993,12 @@ public abstract class Page<T> extends MarkupContainer<T>
 		return false;
 	}
 
+
+	void setPageStateless(Boolean stateless)
+	{
+		this.stateless = stateless;
+	}
+
 	/**
 	 * Gets whether the page is stateless. Components on stateless page must not
 	 * render any statefull urls, and components on statefull page must not

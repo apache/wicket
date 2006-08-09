@@ -764,7 +764,7 @@ public abstract class RequestCycle
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
 		final IRequestTarget target; 
-		if (component.isStateless() && page.isBookmarkable())
+		if ( listener  != IRedirectListener.INTERFACE && component.isStateless() && page.isBookmarkable())
 		{
 			target = new BookmarkableListenerInterfaceRequestTarget(
 					page.getPageMap().getName(), page.getClass(), new PageParameters(),
@@ -772,6 +772,8 @@ public abstract class RequestCycle
 		}
 		else
 		{
+			if (listener  == IRedirectListener.INTERFACE) page.setPageStateless(Boolean.FALSE);
+			
 			// trigger creation of the actual session in case it was deferred
 			session.getSessionStore().getSessionId(request, true);
 	
