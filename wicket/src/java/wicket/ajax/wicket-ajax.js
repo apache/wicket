@@ -32,11 +32,36 @@ Wicket.emptyFunction = function() { };
 // Browser types
 
 Wicket.Browser = { 
-	// konqeror, webcore (?)
 	isKHTML: function() {
-		return /Konqueror|Safari|KHTML/.test(navigator.userAgent);
+		return /Konqueror|KHTML/.test(navigator.userAgent) && !/Apple/.test(navigator.userAgent);
+	},
+	
+	isSafari: function() {
+		return /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent);
+	},
+
+	isIE: function() {
+		return typeof(document.all) != "undefined" && typeof(window.opera) == "undefined";
+	},
+	
+	isGecko: function() {
+		return /Gecko/.test(navigator.userAgent) && !Wicket.Browser.isSafari();
 	}
 };
+
+/**
+ * Add a check for old Safari. It should not be our responsibility to check the 
+ * browser's version, but it's a minor version that makes a difference here,
+ * so we try to be at least user friendly.  
+ */
+if (typeof DOMParser == "undefined" && Wicket.Browser.isSafari()) {
+   DOMParser = function () {}
+
+   DOMParser.prototype.parseFromString = function (str, contentType) {
+   		alert('You are using an old version of Safari.\nTo be able to use this page you need at least version 2.0.1.');
+   }
+}
+
 
 // Logging functions
 
@@ -546,11 +571,11 @@ Wicket.Ajax.Request.prototype = {
 					log("\n" + responseAsText);
 				}
         		
-        		if (this.parseResponse == true) {        		
-					var xmldoc;
-					if (window.XMLHttpRequest && typeof(DOMParser) != "undefined") {
+        		if (this.parseResponse == true) {
+					var xmldoc;					
+					if (typeof(window.XMLHttpRequest) != "undefined" && typeof(DOMParser) != "undefined") {						
 						var parser = new DOMParser();
-						xmldoc = parser.parseFromString(responseAsText, "text/xml");
+						xmldoc = parser.parseFromString(responseAsText, "text/xml");						
 					} else if (window.ActiveXObject) {
 						xmldoc = t.responseXML;
 					}
@@ -616,12 +641,14 @@ Wicket.Ajax.Call.prototype = {
 	},
 	
 	loadedCallback: function(envelope) {	
-		try {
+		try {			
 			var root = envelope.getElementsByTagName("ajax-response")[0];
+						
 		    if (root == null || root.tagName != "ajax-response") {
 		    	this.failure("Could not find root <ajax-response> element");
 		    	return;
 		    }
+						
 		    var steps = new Array();
 
 		    if (Wicket.Browser.isKHTML()) {
@@ -632,9 +659,9 @@ Wicket.Ajax.Call.prototype = {
 			    	method(function() { });
 			    }
 			}
-
+			
 		    for (var i = 0; i < root.childNodes.length; ++i) {
-		    	var node = root.childNodes[i];
+		    	var node = root.childNodes[i];				
 
 		        if (node.tagName == "component") {
 		           this.processComponent(steps, node);
