@@ -96,7 +96,7 @@ public interface IHeaderResponse extends Serializable
 	 * 	    <code>renderCSSReference</code> mark the specified
 	 * 	    {@link PackageResourceReference} as rendered.
 	 *  <li>Method <code>renderJavascript</code> marks List of two elements
-	 *      (first in javascript body CharSequence and second is id) as rendered. 
+	 *      (first is javascript body CharSequence and second is id) as rendered. 
 	 * 	<li>Method <code>renderString</code> marks the whole string as rendered.
 	 *  <li>Method <code>markRendered</code> can be used to mark an arbitrary object as
 	 *      rendered
