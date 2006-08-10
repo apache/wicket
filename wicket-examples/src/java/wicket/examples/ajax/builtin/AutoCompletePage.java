@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxLink;
 import wicket.extensions.ajax.markup.html.autocomplete.AutoCompleteTextField;
 import wicket.markup.html.form.Form;
 import wicket.model.Model;
@@ -40,8 +42,18 @@ public class AutoCompletePage extends BasePage
 	 */
 	public AutoCompletePage()
 	{
+		new AjaxLink(this, "link") {
+			/* (non-Javadoc)
+			 * @see wicket.ajax.markup.html.AjaxLink#onClick(wicket.ajax.AjaxRequestTarget)
+			 */
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				target.appendJavascript("alert('This is just a dummy ajax link.');");
+			}
+		};
+		
 		Form form = new Form(this, "form");
-
+		
 		new AutoCompleteTextField<String>(form, "ac", new Model<String>(""))
 		{
 			@Override
