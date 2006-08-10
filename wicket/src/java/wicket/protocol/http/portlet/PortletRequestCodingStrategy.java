@@ -14,9 +14,6 @@
  */
 package wicket.protocol.http.portlet;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
@@ -38,8 +35,8 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
-import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -59,71 +56,29 @@ import wicket.util.string.Strings;
  */
 
 //TODO: this should not really implement IRequestTargetMounter
-//TODO: move duplicate code from here and WebRequestCodingStrategy to AbstractRequestCodingStrategy
 
-public class PortletRequestCodingStrategy implements IRequestCodingStrategy
+public final class PortletRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 {
-	/** Name of interface target query parameter */
-	public static final String NAME_SPACE = "wicket:";
 
-	/** Name of interface target query parameter */
-	public static final String INTERFACE_PARAMETER_NAME = NAME_SPACE + "interface";
-
-	/** Name of version number query parameter */
-	public static final String VERSION_PARAMETER_NAME = NAME_SPACE + "version";
-
-	/** Name of component path query parameter */
-	public static final String COMPONENT_PATH_PARAMETER_NAME = NAME_SPACE + "path";
-
-	/** AJAX query parameter name */
-	public static final String BEHAVIOR_ID_PARAMETER_NAME = NAME_SPACE + "behaviorId";
-
-	/** Resource key parameter name */
-	public static final String RESOURCES_PARAMETER_NAME = NAME_SPACE + "resources";
-
-	/** Pagemap parameter constant */
-	public static final String PAGEMAP = NAME_SPACE + "pageMapName";
-
-	/** cached url prefix. */
-	private CharSequence urlPrefix;
-
-
+    /** Name of component path query parameter */
+    public static final String COMPONENT_PATH_PARAMETER_NAME = NAME_SPACE + "path";
+	
+    /** Name of version number query parameter */
+    public static final String VERSION_PARAMETER_NAME = NAME_SPACE + "version";
+    
 	/** log. */
 	private static final Log log = LogFactory.getLog(PortletRequestCodingStrategy.class);
 
+	
+	/** cached url prefix. */
+	private CharSequence urlPrefix;
+	
 	/**
 	 * Construct.
 	 */
 	public PortletRequestCodingStrategy()
 	{
 	}
-
-	/**
-	 * @see wicket.request.IRequestCodingStrategy#decode(wicket.Request)
-	 */
-	public final RequestParameters decode(final Request request)
-	{
-		final RequestParameters parameters = new RequestParameters();
-		addInterfaceParameters(request, parameters);
-		addBookmarkablePageParameters(request, parameters);
-		addResourceParameters(request, parameters);
-
-		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
-
-		Map<String, ? extends Object> map = request.getParameterMap();
-		Iterator iterator = map.keySet().iterator();
-		while (iterator.hasNext())
-		{
-			String key = (String)iterator.next();
-			if (key.startsWith(NAME_SPACE))
-			{
-				iterator.remove();
-			}
-		}
-		parameters.setParameters(map);
-		return parameters;
-	}
-
 
 	/**
 	 * Encode the given request target and one of the delegation methods will be
@@ -170,47 +125,6 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * Adds bookmarkable page related parameters (page alias and optionally page
-	 * parameters). Any bookmarkable page alias mount will override this method;
-	 * hence if a mount is found, this method will not be called.
-	 * 
-	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should be
-	 * overridden to by in sync with that behaviour.
-	 * 
-	 * @param request
-	 *            the incoming request
-	 * @param parameters
-	 *            the parameters object to set the found values on
-	 */
-	protected void addBookmarkablePageParameters(final Request request,
-			final RequestParameters parameters)
-	{
-		final String requestString = request
-		.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
-		if (requestString != null)
-		{
-			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
-			if (components.length != 2)
-			{
-				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: "
-						+ requestString + ", expected: 'pageMapName:pageClassName'");
-			}
-
-			// Extract any pagemap name
-			final String pageMapName = components[0];
-			parameters.setPageMapName(pageMapName.length() == 0
-					? PageMap.DEFAULT_NAME
-							: pageMapName);
-
-			// Extract bookmarkable page class name
-			final String pageClassName = components[1];
-			parameters.setBookmarkablePageClass(pageClassName);
-		}
-	}
-
-
-	/**
 	 * Adds page related parameters (path and pagemap and optionally version and
 	 * interface).
 	 * 
@@ -249,25 +163,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 			parameters.setComponentPath(componentPath);
 		}
 	}
-
-	/**
-	 * Adds (shared) resource related parameters (resource key). Any shared
-	 * resource key mount will override this method
-	 * 
-	 * If you override this method to behave different then also
-	 * {@link #encode(RequestCycle, ISharedResourceRequestTarget)} should be
-	 * overridden to by in sync with that behaviour.
-	 * 
-	 * @param request
-	 *            the incomming request
-	 * @param parameters
-	 *            the parameters object to set the found values on
-	 */
-	protected void addResourceParameters(Request request, RequestParameters parameters)
-	{
-		// TODO: resources are not yet supported
-	}
-
+	
 	/**
 	 * In case you are using custom targets that are not part of the default
 	 * target hierarchy, you need to override this method, which will be called
@@ -672,6 +568,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		 * @see encodeRequest(RequestCycle requestCycle,
 		 *      IListenerInterfaceRequestTarget requestTarget)
 		 */
+		
 		page.urlFor(requestTarget);
 
 		// Touch the page to make sure it will be added to the PageMap
@@ -784,16 +681,6 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	}
 
 	/**
-	 * @see wicket.request.IRequestCodingStrategy#targetForRequest(wicket.request.RequestParameters)
-	 */
-	public final IRequestTarget targetForRequest(RequestParameters requestParameters)
-	{
-		IRequestTargetUrlCodingStrategy encoder = urlCodingStrategyForPath(requestParameters
-				.getPath());
-		return (encoder != null) ? encoder.decode(requestParameters) : null;
-	}
-
-	/**
 	 * Gets prefix.
 	 * 
 	 * @param requestCycle
@@ -827,5 +714,4 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		}
 		return urlPrefix;
 	}
-
 }
