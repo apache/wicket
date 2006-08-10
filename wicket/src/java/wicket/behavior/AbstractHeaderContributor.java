@@ -18,11 +18,8 @@
  */
 package wicket.behavior;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.IHeaderResponse;
 
 /**
  * Behaviour that delegates header contribution to a number of other
@@ -35,12 +32,6 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 		implements
 			IHeaderContributor
 {
-	/**
-	 * thread local for the entries that were processed during the current
-	 * request.
-	 */
-	private static final ThreadLocal<Set<IHeaderContributor>> processedEntries = new ThreadLocal<Set<IHeaderContributor>>();
-
 	/**
 	 * Construct.
 	 */
@@ -58,7 +49,7 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	/**
 	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 	 */
-	public final void renderHead(final Response response)
+	public final void renderHead(final IHeaderResponse response)
 	{
 		IHeaderContributor[] contributors = getHeaderContributors();
 		// do nothing if we don't need to
@@ -67,36 +58,13 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 			return;
 		}
 
-		// get the processed entries for this request
-		Set<IHeaderContributor> entries = processedEntries.get();
-
-		int len = contributors.length;
-		// were any contributors set?
-		if (entries == null)
+		for (int i = 0; i < contributors.length; i++)
 		{
-			entries = new HashSet<IHeaderContributor>(len);
-			processedEntries.set(entries);
-		}
-
-		for (int i = 0; i < len; i++)
-		{
-			if (!entries.contains(contributors[i]))
+			if (response.wasRendered(contributors[i]) == false) 
 			{
-				// not yet printed for this request: print it
 				contributors[i].renderHead(response);
-				entries.add(contributors[i]);
+				response.markRendered(contributors[i]);
 			}
-			// else the reference was already printed out: ignore it
 		}
-	}
-
-	/**
-	 * @see wicket.behavior.AbstractBehavior#cleanup()
-	 */
-	@Override
-	public final void cleanup()
-	{
-		// clean up thread
-		processedEntries.set(null);
 	}
 }

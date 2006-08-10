@@ -25,6 +25,7 @@ import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.PackageResourceReference;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.protocol.http.WebRequestCycle;
@@ -184,8 +185,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
-		public void renderHead(Response response)
+		public void renderHead(IHeaderResponse headerResponse)
 		{
+			Response response = headerResponse.getResponse();
 			final CharSequence url = RequestCycle.get().urlFor(getPackageResourceReference());
 			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 			response.write(url);
@@ -218,10 +220,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
-		public void renderHead(Response response)
+		public void renderHead(IHeaderResponse response)
 		{
 			final CharSequence url = RequestCycle.get().urlFor(getPackageResourceReference());
-			JavascriptUtils.writeJavascriptUrl(response, url);
+			JavascriptUtils.writeJavascriptUrl(response.getResponse(), url);
 		}
 	}
 

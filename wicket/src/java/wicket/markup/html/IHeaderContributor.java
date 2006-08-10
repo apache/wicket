@@ -20,12 +20,9 @@ package wicket.markup.html;
 
 import java.io.Serializable;
 
-import wicket.Response;
-
 /**
  * An interface to be implemented by components which are able to render the
- * header section associated with the markup. Default implementations are with
- * WebComponent and WebMarkupContainer.
+ * header section associated with the markup. 
  * 
  * @author Juergen Donnerstag
  */
@@ -34,12 +31,9 @@ public interface IHeaderContributor extends Serializable
 	/**
 	 * Render to the web response whatever the component wants to contribute to
 	 * the head section.
-	 * <p>
-	 * Note: This method is kind of dangerous as users are able to write to the
-	 * output whatever they like.
 	 * 
 	 * @param response
 	 *            Response object
 	 */
-	void renderHead(final Response response);
+	void renderHead(final IHeaderResponse response);
 }

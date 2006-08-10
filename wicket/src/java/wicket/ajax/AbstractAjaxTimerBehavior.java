@@ -18,7 +18,7 @@
  */
 package wicket.ajax;
 
-import wicket.Response;
+import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebPage;
 import wicket.util.time.Duration;
 
@@ -58,23 +58,23 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		super.onBind();
 	}
-
+	
 	/**
-	 * @see wicket.behavior.AbstractAjaxBehavior#onRenderHeadContribution(wicket.Response)
+	 * @see wicket.behavior.AbstractAjaxBehavior#renderHead(wicket.markup.html.IHeaderResponse)
 	 */
 	@Override
-	protected void onRenderHeadContribution(final Response response)
+	public void renderHead(IHeaderResponse response)
 	{
-		super.onRenderHeadContribution(response);
-
+		super.renderHead(response);
+		
 		if (this.attachedBodyOnLoadModifier == false)
 		{
 			this.attachedBodyOnLoadModifier = true;
 			((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(
 					getJsTimeoutCall(updateInterval), getComponent());
-		}
+		}		
 	}
-
+	
 	/**
 	 * @param updateInterval
 	 *            Duration between AJAX callbacks

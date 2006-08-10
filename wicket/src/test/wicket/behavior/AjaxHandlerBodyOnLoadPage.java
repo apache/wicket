@@ -19,7 +19,7 @@
 package wicket.behavior;
 
 import wicket.MarkupContainer;
-import wicket.Response;
+import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 
@@ -44,18 +44,16 @@ public class AjaxHandlerBodyOnLoadPage extends WebPage
 		panel.add(new AbstractAjaxBehavior()
 		{
 			private static final long serialVersionUID = 1L;
-
+			
 			@Override
-			protected String getImplementationId()
+			public void renderHead(IHeaderResponse response)
 			{
-				return "test";
-			}
-
-			@Override
-			protected void onRenderHeadInitContribution(Response response)
-			{
-				super.onRenderHeadInitContribution(response);
-				getBodyContainer().addOnLoadModifier("myFunction();", null);
+				super.renderHead(response);
+				if (response.wasRendered("test") == false) 
+				{				
+					getBodyContainer().addOnLoadModifier("myFunction();", null);
+					response.markRendered("test");
+				}
 			}
 
 			public void onRequest()

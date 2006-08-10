@@ -573,6 +573,7 @@ public class AjaxRequestTarget implements IRequestTarget, IRequestTargetIntercep
 
 	}
 
+	private HtmlHeaderContainer header = null;
 
 	/**
 	 * 
@@ -581,8 +582,10 @@ public class AjaxRequestTarget implements IRequestTarget, IRequestTargetIntercep
 	 */
 	private void respondHeaderContribution(final Response response, final Component component)
 	{
-		final HtmlHeaderContainer header = new HtmlHeaderContainer(component.getPage(),
-				HtmlHeaderSectionHandler.HEADER_ID);
+		if (header == null)
+		{
+			header = new HtmlHeaderContainer(component.getPage(),HtmlHeaderSectionHandler.HEADER_ID);
+		}
 
 		Response oldResponse = RequestCycle.get().setResponse(encodingResponse);
 

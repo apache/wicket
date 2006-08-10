@@ -1834,6 +1834,12 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 	{
 		if (isHeadRendered() == false)
 		{
+			// first try whether the component can contribute something?
+			if (this instanceof IHeaderContributor)
+			{
+				((IHeaderContributor)this).renderHead(container.getHeaderResponse());
+			}
+			
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
 			if (this.behaviors != null)
@@ -1844,7 +1850,7 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 					IBehavior behavior = iter.next();
 					if (behavior instanceof IHeaderContributor)
 					{
-						((IHeaderContributor)behavior).renderHead(container.getResponse());
+						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
 					}
 				}
 			}

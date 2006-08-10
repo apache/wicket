@@ -18,19 +18,14 @@
  */
 package wicket.behavior;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import wicket.Component;
-import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.PackageResourceReference;
+import wicket.markup.html.IHeaderResponse;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
-import wicket.util.string.JavascriptUtils;
 
 /**
  * Abstract class for handling Ajax roundtrips. This class serves as a base for
@@ -47,9 +42,6 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 			IHeaderContributor
 {
 	private static final long serialVersionUID = 1L;
-
-	/** thread local for head contributions. */
-	private static final ThreadLocal<Set<String>> headContribHolder = new ThreadLocal<Set<String>>();
 
 	/** the component that this handler is bound to. */
 	private Component component;
@@ -168,72 +160,12 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.AbstractBehavior#cleanup()
+	 * @see wicket.markup.html.IHeaderContributor#renderHead(IHeaderResponse)
 	 */
-	@Override
-	public void cleanup()
+	public void renderHead(final IHeaderResponse response)
 	{
-		headContribHolder.set(null);
 	}
 
-	/**
-	 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
-	 */
-	public final void renderHead(final Response response)
-	{
-		Set<String> contributors = headContribHolder.get();
-
-		// were any contributors set?
-		if (contributors == null)
-		{
-			contributors = new HashSet<String>(1);
-			headContribHolder.set(contributors);
-		}
-
-		// get the id of the implementation; we need this trick to be
-		// able to support multiple implementations
-		String implementationId = getImplementationId();
-
-		// was a contribution for this specific implementation done yet?
-		if (!contributors.contains(implementationId))
-		{
-			onRenderHeadInitContribution(response);
-			contributors.add(implementationId);
-		}
-
-		onRenderHeadContribution(response);
-	}
-
-	/**
-	 * Convenience method to add a javascript reference.
-	 * 
-	 * @param response
-	 * 
-	 * @param ref
-	 *            reference to add
-	 * @param id
-	 * 			  the unique identifier of created javascript element
-	 */
-	public void writeJsReference(final Response response, final PackageResourceReference ref, String id)
-	{
-		CharSequence url = RequestCycle.get().urlFor(ref);		
-		JavascriptUtils.writeJavascriptUrl(response, url, id);
-	}
-
-	/**
-	 * Convenience method to add a javascript reference.
-	 * 
-	 * @param response
-	 * 
-	 * @param ref
-	 *            reference to add
-	 */
-	protected void writeJsReference(final Response response, final PackageResourceReference ref)
-	{
-		CharSequence url = RequestCycle.get().urlFor(ref);		
-		JavascriptUtils.writeJavascriptUrl(response, url);
-	}
-	
 	/**
 	 * Gets the component that this handler is bound to.
 	 * 
@@ -243,17 +175,6 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	{
 		return component;
 	}
-
-	/**
-	 * Gets the unique id of an ajax implementation. This should be implemented
-	 * by base classes only - like the dojo or scriptaculous implementation - to
-	 * provide a means to differentiate between implementations while not going
-	 * to the level of concrete implementations. It is used to ensure 'static'
-	 * header contributions are done only once per implementation.
-	 * 
-	 * @return unique id of an ajax implementation
-	 */
-	protected abstract String getImplementationId();
 
 	/**
 	 * Called any time a component that has this handler registered is rendering
@@ -288,10 +209,12 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * Let this handler print out the needed header contributions. This
 	 * implementation does nothing.
 	 * 
+	 * TODO: REMOVE!
+	 * 
 	 * @param response
 	 *            head container
 	 */
-	protected void onRenderHeadContribution(final Response response)
+	protected final void onRenderHeadContribution(final Response response)
 	{
 	}
 
@@ -300,10 +223,12 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * ajax variant implementations (e.g. Dojo, Scriptaculous). This
 	 * implementation does nothing.
 	 * 
+	 * TODO: REMOVE!
+	 * 
 	 * @param response
 	 *            head container
 	 */
-	protected void onRenderHeadInitContribution(final Response response)
+	protected final void onRenderHeadInitContribution(final Response response)
 	{
 	}
 
