@@ -19,7 +19,9 @@
 package wicket.markup.parser;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 
 import wicket.markup.MarkupElement;
@@ -27,9 +29,7 @@ import wicket.util.io.FullyBufferedReader;
 import wicket.util.io.XmlReader;
 import wicket.util.parse.metapattern.parsers.TagNameParser;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
-import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.resource.StringResourceStream;
 
 /**
  * A fairly shallow markup pull parser which parses a markup string of a given
@@ -478,31 +478,31 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 	public void parse(final CharSequence string) throws IOException,
 			ResourceStreamNotFoundException
 	{
-		parse(new StringResourceStream(string), null);
+		parse(new ByteArrayInputStream(string.toString().getBytes()), null);
 	}
 
 	/**
 	 * Reads and parses markup from a resource such as file.
 	 * 
-	 * @param resource
+	 * @param inputStream
 	 *            The resource to read and parse
 	 * @param encoding
 	 *            The default character encoding of the input
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public void parse(final IResourceStream resource, final String encoding) throws IOException,
+	public void parse(final InputStream inputStream, final String encoding) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		try
 		{
 			this.xmlReader = new XmlReader(
-					new BufferedInputStream(resource.getInputStream(), 4000), encoding);
+					new BufferedInputStream(inputStream, 4000), encoding);
 			this.input = new FullyBufferedReader(this.xmlReader);
 		}
 		finally
 		{
-			resource.close();
+			inputStream.close();
 			this.xmlReader.close();
 		}
 	}

@@ -19,9 +19,9 @@
 package wicket.markup.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 
-import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
@@ -104,7 +104,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * Reads and parses markup from a resource like file. Use nextTag() to
 	 * access the tags contained, one after another.
 	 * 
-	 * @param resource
+	 * @param inputStream
 	 *            A resource like e.g. a file
 	 * @param encoding
 	 *            Use null to apply JVM/OS default
@@ -113,7 +113,7 @@ public interface IXmlPullParser extends IMarkupFilter
 	 * @throws ResourceStreamNotFoundException
 	 *             Resource not found
 	 */
-	void parse(final IResourceStream resource, final String encoding) throws IOException,
+	void parse(InputStream inputStream, final String encoding) throws IOException,
 			ResourceStreamNotFoundException;
 
 	/**

@@ -23,7 +23,6 @@ import java.text.ParseException;
 
 import junit.framework.TestCase;
 import wicket.markup.MarkupElement;
-import wicket.util.resource.StringResourceStream;
 
 /**
  * Quite some tests are already with MarkupParser.
@@ -130,34 +129,31 @@ public class XmlPullParserTest extends TestCase
 	public final void testEncoding() throws Exception
 	{
 		final XmlPullParser parser = new XmlPullParser();
-		parser.parse(new StringResourceStream("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>"),
-				null);
+		parser.parse("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
 		assertEquals("iso-8859-1", parser.getEncoding());
 		XmlTag tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
-		parser.parse(new StringResourceStream(
-				"<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test"), null);
+		parser.parse("<?xml version=\"1.0\" encoding='iso-8859-1' ?> test test");
 		assertEquals("iso-8859-1", parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		// re-order and move close (remove whitespaces
-		parser.parse(new StringResourceStream(
-				"   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test"), null);
+		parser.parse("   <?xml encoding='iso-8859-1'version=\"1.0\"?> test test");
 		assertEquals("iso-8859-1", parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		// attribute value must be enclosed by ""
-		parser.parse(new StringResourceStream("<?xml encoding=iso-8859-1 ?> test test"), null);
+		parser.parse("<?xml encoding=iso-8859-1 ?> test test");
 		assertEquals("iso-8859-1", parser.getEncoding());
 
 		// Invaluid encoding
 		Exception ex = null;
 		try
 		{
-			parser.parse(new StringResourceStream("<?xml encoding='XXX' ?>"), null);
+			parser.parse("<?xml encoding='XXX' ?>");
 		}
 		catch (UnsupportedEncodingException e)
 		{
@@ -167,21 +163,20 @@ public class XmlPullParserTest extends TestCase
 
 		// no extra characters allowed before <?xml>
 		// TODO General: I'd certainly prefer an exception
-		parser.parse(new StringResourceStream("xxxx <?xml encoding='iso-8859-1' ?>"), null);
+		parser.parse("xxxx <?xml encoding='iso-8859-1' ?>");
 		assertNull(parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		// no extra characters allowed before <?xml>
 		// Are comments allowed preceding the encoding string?
-		parser.parse(new StringResourceStream("<!-- Comment --> <?xml encoding='iso-8859-1' ?>"),
-				null);
+		parser.parse("<!-- Comment --> <?xml encoding='iso-8859-1' ?>");
 		assertNull(parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);
 
 		// 'test' is not a valid attribut. But we currently don't test it.
-		parser.parse(new StringResourceStream("<?xml test='123' >"), null);
+		parser.parse("<?xml test='123' >");
 		assertNull(parser.getEncoding());
 		tag = (XmlTag)parser.nextTag();
 		assertNull(tag);

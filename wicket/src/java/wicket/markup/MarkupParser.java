@@ -202,7 +202,7 @@ public class MarkupParser
 		this.markup.setResource(resource);
 
 		// Initialize the xml parser
-		this.xmlParser.parse(resource, this.markupSettings.getDefaultMarkupEncoding());
+		this.xmlParser.parse(resource.getInputStream(), this.markupSettings.getDefaultMarkupEncoding());
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
