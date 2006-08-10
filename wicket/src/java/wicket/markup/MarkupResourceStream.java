@@ -52,12 +52,18 @@ public class MarkupResourceStream implements IResourceStream
 	 */
 	private final Class<? extends MarkupContainer> markupClass;
 
+	/** The key used to cache the markup resource stream */
+	private CharSequence cacheKey;
+
 	/**
 	 * Construct.
 	 * 
 	 * @param resourceStream
 	 * @param containerInfo
 	 * @param markupClass
+	 * @param cacheKey
+	 *            The cache key which reference the markup resource stream in
+	 *            the markup cache
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream,
 			final ContainerInfo containerInfo, final Class<? extends MarkupContainer> markupClass)
@@ -156,6 +162,24 @@ public class MarkupResourceStream implements IResourceStream
 		return containerInfo;
 	}
 
+	/**
+	 * Gets cacheKey.
+	 * @return cacheKey
+	 */
+	public final CharSequence getCacheKey()
+	{
+		return cacheKey;
+	}
+
+	/**
+	 * Set the cache key
+	 * @param cacheKey
+	 */
+	public final void setCacheKey(final CharSequence cacheKey)
+	{
+		this.cacheKey = cacheKey;
+	}
+	
 	/**
 	 * 
 	 * @see java.lang.Object#toString()

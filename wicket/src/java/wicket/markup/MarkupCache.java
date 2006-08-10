@@ -19,7 +19,6 @@
 package wicket.markup;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,7 +31,6 @@ import wicket.WicketRuntimeException;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.string.AppendingStringBuffer;
 import wicket.util.watch.ModificationWatcher;
 import wicket.util.watch.Watcher;
 
@@ -162,43 +160,53 @@ public class MarkupCache
 			}
 		}
 
-		// Look up markup tag list by class, locale, style and markup type
-		final CharSequence key = markupKey(container, clazz);
-		IMarkup markup = markupCache.get(key);
+		// Get the cache key to be associated with the markup resource stream
+		final IMarkupCacheKeyProvider markupCacheKeyProvider = getMarkupCacheKeyProvider(container);
+		final CharSequence cacheKey = markupCacheKeyProvider.getCacheKey(container, clazz);
 
-		// If no markup in the cache
+		// Markup already in the cache? If cacheKey == null, than don't cache
+		// the markup resource stream
+		IMarkup markup = null;
+		if (cacheKey != null)
+		{
+			markup = markupCache.get(cacheKey);
+		}
+
+		// Must Markup be loaded?
 		if (markup == null)
 		{
 			synchronized (markupCache)
 			{
-				markup = markupCache.get(key);
+				markup = markupCache.get(cacheKey);
 
-				// If no markup is in the cache
+				// Must Markup be loaded?
 				if (markup == null)
 				{
-					// Ask the container to locate its associated markup
-					final MarkupResourceStreamLookupResult lookupResult = container
-							.newMarkupResourceStream(containerClass);
+					// Who is going to provide the markup resource stream?
+					final IMarkupResourceStreamProvider markupResourceStreamProvider = getMarkupResourceStreamProvider(container);
+
+					// Ask the provider to locate the markup resource stream
+					final IResourceStream resourceStream = markupResourceStreamProvider
+							.getMarkupResourceStream(container, containerClass);
 
 					// Found markup?
-					if (lookupResult != null)
+					if (resourceStream != null)
 					{
-						// TODO If lookupResult.getCacheKey() != null than caching is basically disabled. 
-						//    That was not the intend.
-						if (lookupResult.getCacheKey() == null)
+						final MarkupResourceStream markupResourceStream;
+						if (resourceStream instanceof MarkupResourceStream)
 						{
-							lookupResult.setCacheKey(key);
+							markupResourceStream = (MarkupResourceStream)resourceStream;
 						}
-						
-						final IResourceStream resourceStream = lookupResult.getResourceStream();
-						if (!(resourceStream instanceof MarkupResourceStream))
+						else
 						{
-							lookupResult.setResourceStream(new MarkupResourceStream(resourceStream,
-									new ContainerInfo(container), containerClass));
+							markupResourceStream = new MarkupResourceStream(resourceStream,
+									new ContainerInfo(container), containerClass);
 						}
 
+						markupResourceStream.setCacheKey(cacheKey);
+
 						// load the markup and watch for changes
-						markup = loadMarkupAndWatchForChanges(container, lookupResult);
+						markup = loadMarkupAndWatchForChanges(container, markupResourceStream);
 					}
 					else
 					{
@@ -209,7 +217,7 @@ public class MarkupCache
 
 						// Save any markup list (or absence of one) for next
 						// time
-						markupCache.put(key, markup);
+						markupCache.put(cacheKey, markup);
 					}
 				}
 			}
@@ -218,18 +226,53 @@ public class MarkupCache
 	}
 
 	/**
+	 * Determine the markup resource stream provider to be used
+	 * 
+	 * @param container
+	 *            The MarkupContainer requesting the markup resource stream
+	 * @return IMarkupResourceStreamProvider
+	 */
+	protected IMarkupResourceStreamProvider getMarkupResourceStreamProvider(
+			final MarkupContainer container)
+	{
+		if (container instanceof IMarkupResourceStreamProvider)
+		{
+			return (IMarkupResourceStreamProvider)container;
+		}
+
+		return new DefaultMarkupResourceStreamProvider();
+	}
+
+	/**
+	 * Determine the markup cache key provider to be used
+	 * 
+	 * @param container
+	 *            The MarkupContainer requesting the markup resource stream
+	 * @return IMarkupResourceStreamProvider
+	 */
+	protected IMarkupCacheKeyProvider getMarkupCacheKeyProvider(final MarkupContainer container)
+	{
+		if (container instanceof IMarkupCacheKeyProvider)
+		{
+			return (IMarkupCacheKeyProvider)container;
+		}
+
+		return new DefaultMarkupCacheKeyProvider();
+	}
+
+	/**
 	 * Remove the markup from the cache and trigger all associated listeners
 	 * 
-	 * @param lookupResult
+	 * @param markupResourceStream
 	 *            The resource stream
 	 */
-	private void removeMarkup(final MarkupResourceStreamLookupResult lookupResult)
+	private void removeMarkup(final MarkupResourceStream markupResourceStream)
 	{
-		markupCache.remove(lookupResult.getCacheKey());
+		markupCache.remove(markupResourceStream.getCacheKey());
 
 		// trigger all listeners registered on the markup that is removed
-		afterLoadListeners.notifyListeners(lookupResult.getResourceStream());
-		afterLoadListeners.remove(lookupResult.getResourceStream());
+		afterLoadListeners.notifyListeners(markupResourceStream);
+		afterLoadListeners.remove(markupResourceStream);
 	}
 
 	/**
@@ -237,44 +280,44 @@ public class MarkupCache
 	 * 
 	 * @param container
 	 *            The original requesting markup container
-	 * @param lookupResult
+	 * @param markupResourceStream
 	 *            The markup resource stream to load
 	 * @return The markup
 	 */
-	private final IMarkup loadMarkup(final MarkupContainer container, 
-			final MarkupResourceStreamLookupResult lookupResult)
+	private final IMarkup loadMarkup(final MarkupContainer container,
+			final MarkupResourceStream markupResourceStream)
 	{
 		try
 		{
 			// read and parse the markup
 			IMarkup markup = application.getMarkupSettings().getMarkupParserFactory()
-					.newMarkupParser().readAndParse(lookupResult.getMarkupResourceStream());
+					.newMarkupParser().readAndParse(markupResourceStream);
 
 			// Check for markup inheritance. If it contains <wicket:extend>
 			// the two markups get merged.
-			markup = checkForMarkupInheritance(container, lookupResult, markup);
+			markup = checkForMarkupInheritance(container, markup);
 
 			// add the markup to the cache
-			markupCache.put(lookupResult.getCacheKey(), markup);
+			markupCache.put(markupResourceStream.getCacheKey(), markup);
 
 			// trigger all listeners registered on the markup just loaded
-			afterLoadListeners.notifyListeners(lookupResult.getResourceStream());
+			afterLoadListeners.notifyListeners(markupResourceStream);
 
 			return markup;
 		}
 		catch (final ResourceStreamNotFoundException e)
 		{
-			log.error("Unable to find markup from " + lookupResult.getResourceStream(), e);
+			log.error("Unable to find markup from " + markupResourceStream, e);
 		}
 		catch (final IOException e)
 		{
-			log.error("Unable to read markup from " + lookupResult.getResourceStream(), e);
+			log.error("Unable to read markup from " + markupResourceStream, e);
 		}
 
 		synchronized (markupCache)
 		{
-			markupCache.remove(lookupResult.getCacheKey());
-			afterLoadListeners.remove(lookupResult.getResourceStream());
+			markupCache.remove(markupResourceStream.getCacheKey());
+			afterLoadListeners.remove(markupResourceStream);
 		}
 
 		return IMarkup.NO_MARKUP;
@@ -288,89 +331,43 @@ public class MarkupCache
 	 * 
 	 * @param container
 	 *            The original requesting markup container
-	 * @param lookupResult
+	 * @param markupResourceStream
 	 *            The markup stream to load and begin to watch
 	 * @return The markup in the stream
 	 */
 	private final IMarkup loadMarkupAndWatchForChanges(final MarkupContainer container,
-			final MarkupResourceStreamLookupResult lookupResult)
+			final MarkupResourceStream markupResourceStream)
 	{
-		if (lookupResult.isDisableCaching() == false)
+		if (markupResourceStream.getCacheKey() != null)
 		{
 			// Watch file in the future
-			final ModificationWatcher watcher = application.getResourceSettings().getResourceWatcher(true);
+			final ModificationWatcher watcher = application.getResourceSettings()
+					.getResourceWatcher(true);
 			if (watcher != null)
 			{
-				watcher.add(lookupResult.getResourceStream(), new IChangeListener()
+				watcher.add(markupResourceStream, new IChangeListener()
 				{
 					public void onChange()
 					{
 						if (log.isDebugEnabled())
 						{
-							log.debug("Remove markup from cache: " + lookupResult.getResourceStream());
+							log.debug("Remove markup from cache: " + markupResourceStream);
 						}
-	
+
 						// Remove the markup from the cache. It will be reloaded
 						// next time it the markup is requested.
-						removeMarkup(lookupResult);
-						watcher.remove(lookupResult.getResourceStream());
+						removeMarkup(markupResourceStream);
+						watcher.remove(markupResourceStream);
 					}
 				});
 			}
 		}
-		
+
 		if (log.isDebugEnabled())
 		{
-			log.debug("Loading markup from " + lookupResult.getResourceStream());
+			log.debug("Loading markup from " + markupResourceStream);
 		}
-		return loadMarkup(container, lookupResult);
-	}
-
-	/**
-	 * Construct a proper key value for the cache
-	 * 
-	 * @param container
-	 *            The container requesting the markup
-	 * @param clazz
-	 *            The clazz to get the key for
-	 * @return Key that uniquely identifies any markup that might be associated
-	 *         with this markup container.
-	 */
-	private final CharSequence markupKey(final MarkupContainer container,
-			final Class<? extends MarkupContainer> clazz)
-	{
-		final String classname = clazz.getName();
-		final Locale locale = container.getLocale();
-		final String style = container.getStyle();
-		final String markupType = container.getMarkupType();
-
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(classname.length() + 32);
-		buffer.append(classname);
-
-		if (locale != null)
-		{
-			// TODO What is wrong with locale.toString()?!?
-			final boolean l = locale.getLanguage().length() != 0;
-			final boolean c = locale.getCountry().length() != 0;
-			final boolean v = locale.getVariant().length() != 0;
-			buffer.append(locale.getLanguage());
-			if (c || (l && v))
-			{
-				buffer.append('_').append(locale.getCountry()); // This may just
-				// append '_'
-			}
-			if (v && (l || c))
-			{
-				buffer.append('_').append(locale.getVariant());
-			}
-		}
-		if (style != null)
-		{
-			buffer.append(style);
-		}
-
-		buffer.append(markupType);
-		return buffer;
+		return loadMarkup(container, markupResourceStream);
 	}
 
 	/**
@@ -390,15 +387,12 @@ public class MarkupCache
 	 * 
 	 * @param container
 	 *            The original requesting markup container
-	 * @param lookupResult
-	 *            Key under which markup should be cached
 	 * @param markup
 	 *            The markup to checked for inheritance
 	 * @return A markup object with the the base markup elements resolved.
 	 */
 	@SuppressWarnings("unchecked")
-	private IMarkup checkForMarkupInheritance(final MarkupContainer container,
-			final MarkupResourceStreamLookupResult lookupResult, final IMarkup markup)
+	private IMarkup checkForMarkupInheritance(final MarkupContainer container, final IMarkup markup)
 	{
 		// Check if markup contains <wicket:extend> which tells us that
 		// we need to read the inherited markup as well.
@@ -409,15 +403,15 @@ public class MarkupCache
 			return markup;
 		}
 
-		final Class<? extends MarkupContainer> markupClass = markup.getResource().getMarkupClass();
+		final Class<? extends MarkupContainer> markupClass = (Class<? extends MarkupContainer>)markup
+				.getResource().getMarkupClass().getSuperclass();
 		// get the base markup
-		final IMarkup baseMarkup = getMarkup(container,
-				(Class<? extends MarkupContainer>)markupClass.getSuperclass());
+		final IMarkup baseMarkup = getMarkup(container, markupClass);
 
 		if (baseMarkup == IMarkup.NO_MARKUP)
 		{
 			throw new MarkupNotFoundException(
-					"Parent markup of inherited markup not found. Component class: "
+					"Base markup of inherited markup not found. Component class: "
 							+ markup.getResource().getContainerInfo().getContainerClass().getName()
 							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
 		}
@@ -433,7 +427,7 @@ public class MarkupCache
 				{
 					log.debug("Remove derived markup from cache: " + markup.getResource());
 				}
-				removeMarkup(lookupResult);
+				removeMarkup(markup.getResource());
 			}
 
 			/**
@@ -455,7 +449,7 @@ public class MarkupCache
 			@Override
 			public int hashCode()
 			{
-				return lookupResult.getCacheKey().hashCode();
+				return markup.getResource().getCacheKey().hashCode();
 			}
 		});
 
