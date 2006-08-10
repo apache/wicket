@@ -52,8 +52,8 @@ public interface IHeaderResponse extends Serializable
 	 * 
 	 * @param id
 	 *            unique id for the javascript element. This can be null,
-	 *            however in that case the ajax header contribution can't decect
-	 *            duplicate script fragmens.
+	 *            however in that case the ajax header contribution can't detect
+	 *            duplicate script fragments.
 	 */
 	public void renderJavascript(CharSequence javascript, String id);
 
