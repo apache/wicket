@@ -149,7 +149,6 @@ public class FileStore implements IStore
 		File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
 		// TODO check can this be called everytime at this place? Putting should
 		// be called after the rendering so it should be ok.
-		page.detachModels();
 		page.internalDetach();
 		byte[] bytes = Objects.objectToByteArray(page);
 		FileOutputStream fos = null;
