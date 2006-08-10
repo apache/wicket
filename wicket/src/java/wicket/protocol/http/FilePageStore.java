@@ -29,30 +29,30 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Page;
-import wicket.protocol.http.SecondLevelCacheSessionStore.IStore;
+import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import wicket.util.lang.Objects;
 
 /**
  * @author jcompagner
  */
-public class FileStore implements IStore
+public class FilePageStore implements IPageStore
 {
 	/** log. */
-	protected static Log log = LogFactory.getLog(FileStore.class);
+	protected static Log log = LogFactory.getLog(FilePageStore.class);
 
 	private File workDir;
 
 	/**
 	 * Construct.
 	 */
-	public FileStore()
+	public FilePageStore()
 	{
 		workDir = (File)((WebApplication)Application.get()).getServletContext()
 				.getAttribute("javax.servlet.context.tempdir");
 	}
 
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#getPage(java.lang.String,
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
 	 *      int, int)
 	 */
 	public Page getPage(String sessionId, int id, int versionNumber)
@@ -121,7 +121,7 @@ public class FileStore implements IStore
 	}
 
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#removePage(java.lang.String,
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#removePage(java.lang.String,
 	 *      wicket.Page)
 	 */
 	public void removePage(String sessionId, Page page)
@@ -139,7 +139,7 @@ public class FileStore implements IStore
 	}
 
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#storePage(java.lang.String,
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#storePage(java.lang.String,
 	 *      wicket.Page)
 	 */
 	public void storePage(String sessionId, Page page)
@@ -182,15 +182,12 @@ public class FileStore implements IStore
 	}
 
 	/**
-	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IStore#unbind(java.lang.String)
+	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#unbind(java.lang.String)
 	 */
 	public void unbind(String sessionId)
 	{
 		File sessionDir = new File(workDir, sessionId);
 		if (sessionDir.exists())
-		{
-			;
-		}
 		{
 			File[] files = sessionDir.listFiles();
 			if (files != null)

@@ -558,7 +558,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	@Override
 	protected ISessionStore newSessionStore()
 	{
-		return new SecondLevelCacheSessionStore(new FileStore());
+		return new SecondLevelCacheSessionStore(new FilePageStore());
 	}
 
 	/**

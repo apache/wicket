@@ -100,7 +100,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			return null;
 		}
 
-		private IStore getStore()
+		private IPageStore getStore()
 		{
 			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
 		}
@@ -109,7 +109,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * FIXME document me!
 	 */
-	public interface IStore
+	public interface IPageStore
 	{
 
 		/**
@@ -139,23 +139,23 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 
 	}
 
-	private final IStore cachingStore;
+	private final IPageStore cachingStore;
 
 	/**
 	 * Construct.
 	 * 
-	 * @param store
+	 * @param pageStore
 	 */
-	public SecondLevelCacheSessionStore(final IStore store)
+	public SecondLevelCacheSessionStore(final IPageStore pageStore)
 	{
-		this.cachingStore = new IStore()
+		this.cachingStore = new IPageStore()
 		{
 			Map<String, SoftReference<Map<String, SoftReference<Page>>>> sessionMap = new ConcurrentHashMap<String, SoftReference<Map<String, SoftReference<Page>>>>();
 
 			public void unbind(String sessionId)
 			{
 				sessionMap.remove(sessionId);
-				store.unbind(sessionId);
+				pageStore.unbind(sessionId);
 			}
 
 			public void removePage(String sessionId, Page page)
@@ -169,7 +169,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 						map.remove(page.getId());
 					}
 				}
-				store.removePage(sessionId, page);
+				pageStore.removePage(sessionId, page);
 			}
 
 			public Page getPage(String sessionId, int id, int versionNumber)
@@ -195,7 +195,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 						}
 					}
 				}
-				return store.getPage(sessionId, id, versionNumber);
+				return pageStore.getPage(sessionId, id, versionNumber);
 			}
 
 			public void storePage(String sessionId, Page page)
@@ -209,7 +209,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 							pageMap));
 				}
 				pageMap.put(page.getId(), new SoftReference<Page>(page));
-				store.storePage(sessionId, page);
+				pageStore.storePage(sessionId, page);
 			}
 		};
 	}
@@ -240,7 +240,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	/**
 	 * @return The store to use
 	 */
-	public IStore getStore()
+	public IPageStore getStore()
 	{
 		return cachingStore;
 	}
