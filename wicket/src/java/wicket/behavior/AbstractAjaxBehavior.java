@@ -20,7 +20,6 @@ package wicket.behavior;
 
 import wicket.Component;
 import wicket.RequestListenerInterface;
-import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
@@ -202,33 +201,6 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * state
 	 */
 	protected void onComponentRendered()
-	{
-	}
-
-	/**
-	 * Let this handler print out the needed header contributions. This
-	 * implementation does nothing.
-	 * 
-	 * TODO: REMOVE!
-	 * 
-	 * @param response
-	 *            head container
-	 */
-	protected final void onRenderHeadContribution(final Response response)
-	{
-	}
-
-	/**
-	 * Do a one time (per page) header contribution that is the same for all
-	 * ajax variant implementations (e.g. Dojo, Scriptaculous). This
-	 * implementation does nothing.
-	 * 
-	 * TODO: REMOVE!
-	 * 
-	 * @param response
-	 *            head container
-	 */
-	protected final void onRenderHeadInitContribution(final Response response)
 	{
 	}
 
