@@ -298,7 +298,10 @@ public class MarkupCache
 			markup = checkForMarkupInheritance(container, markup);
 
 			// add the markup to the cache
-			markupCache.put(markupResourceStream.getCacheKey(), markup);
+			if (markupResourceStream.getCacheKey() != null)
+			{
+				markupCache.put(markupResourceStream.getCacheKey(), markup);
+			}
 
 			// trigger all listeners registered on the markup just loaded
 			afterLoadListeners.notifyListeners(markupResourceStream);
