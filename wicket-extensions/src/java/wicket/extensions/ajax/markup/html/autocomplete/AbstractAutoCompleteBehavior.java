@@ -22,6 +22,7 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.ajax.AjaxRequestTarget;
+import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedPackageResourceReference;
 import wicket.util.string.JavascriptUtils;
 
@@ -40,10 +41,10 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void onRenderHeadInitContribution(Response response)
+	public void renderHead(IHeaderResponse response)
 	{
-		super.onRenderHeadInitContribution(response);
-		writeJsReference(response, AUTOCOMPLETE_JS);
+		super.renderHead(response);
+		response.renderJavascriptReference(AUTOCOMPLETE_JS);
 	}
 
 	@Override
