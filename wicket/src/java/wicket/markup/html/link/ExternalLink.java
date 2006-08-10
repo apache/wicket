@@ -24,7 +24,6 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.string.Strings;
 
 /**
  * A simple anchor link (&lt;a href="http://url"&gt;) pointing to any URL.
@@ -172,7 +171,7 @@ public class ExternalLink extends WebMarkupContainer
 						|| tag.getName().equalsIgnoreCase("area"))
 				{
 					// generate the href attribute
-					tag.put("href", Strings.replaceAll(url, "&", "&amp;"));
+					tag.put("href", url);
 
 					// Add any popup script
 					if (popupSettings != null)
