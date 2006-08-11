@@ -638,12 +638,16 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 			}
 			catch (MarkupException ex)
 			{
-				throw ex;
+				log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
+						+ id + "'. You will not be able to use the component for AJAX calls.");
+//				throw ex;
 			}
 			catch (RuntimeException re)
 			{
-				throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
-						+ "' in parent " + parent.getPageRelativePath(), re);
+				log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
+						+ id + "'. You will not be able to use the component for AJAX calls.");
+//				throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
+//						+ "' in parent " + parent.getPageRelativePath(), re);
 			}
 			parent.add(this);
 		}

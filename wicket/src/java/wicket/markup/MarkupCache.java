@@ -291,7 +291,7 @@ public class MarkupCache
 		{
 			// read and parse the markup
 			IMarkup markup = application.getMarkupSettings().getMarkupParserFactory()
-					.newMarkupParser().readAndParse(markupResourceStream);
+					.newMarkupParser(markupResourceStream).readAndParse();
 
 			// Check for markup inheritance. If it contains <wicket:extend>
 			// the two markups get merged.

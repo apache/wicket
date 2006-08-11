@@ -21,10 +21,10 @@ package wicket.markup;
 import java.io.IOException;
 import java.text.ParseException;
 
-import wicket.Application;
 import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
+import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HeadForceTagIdHandler;
 import wicket.markup.parser.filter.HtmlHandler;
@@ -38,7 +38,6 @@ import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.settings.IMarkupSettings;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.AppendingStringBuffer;
-
 
 /**
  * This is a Wicket MarkupParser specifically for (X)HTML. It makes use of a
@@ -67,20 +66,48 @@ public class MarkupParser
 	/** The markup created by reading the markup file */
 	private final Markup markup;
 
-	/** Temporary variable: Application.get().getMarkupSettings() */
-	private final IMarkupSettings markupSettings;
+	/** True if comments are to be removed */
+	private boolean stripComments;
+
+	/** True if whitespaces are to be compressed */
+	private boolean compressWhitespace;
+
+	/**
+	 * The default markup encoding which is replaced by MarkupParserFactory with
+	 * the Application default
+	 */
+	private String defaultMarkupEncoding = "UTF-8";
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param resource
+	 *            The markup resource (file)
+	 */
+	public MarkupParser(final MarkupResourceStream resource)
+	{
+		this(new XmlPullParser(), resource);
+	}
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param xmlParser
-	 *            The streaming xml parser to read and parse the markup
+	 *            The XML parser to use instead of the default on
+	 * @param resource
+	 *            The markup resource (file)
 	 */
-	public MarkupParser(final IXmlPullParser xmlParser)
+	public MarkupParser(final IXmlPullParser xmlParser, final MarkupResourceStream resource)
 	{
-		this.xmlParser = xmlParser;
+		// Create the markup before we initialize the chain
 		this.markup = new Markup();
-		this.markupSettings = Application.get().getMarkupSettings();
+		this.markup.setResource(resource);
+
+		// Create a XML parser
+		this.xmlParser = xmlParser;
+
+		// Initialize the markup filter chain
+		initializeMarkupFilters();
 	}
 
 	/**
@@ -95,12 +122,57 @@ public class MarkupParser
 	}
 
 	/**
+	 * Sets compressWhitespace.
+	 * 
+	 * @param compressWhitespace
+	 *            compressWhitespace
+	 */
+	public final void setCompressWhitespace(final boolean compressWhitespace)
+	{
+		this.compressWhitespace = compressWhitespace;
+	}
+
+	/**
+	 * Sets defaultMarkupEncoding.
+	 * 
+	 * @param defaultMarkupEncoding
+	 *            defaultMarkupEncoding
+	 */
+	public final void setDefaultMarkupEncoding(final String defaultMarkupEncoding)
+	{
+		this.defaultMarkupEncoding = defaultMarkupEncoding;
+	}
+
+	/**
+	 * Sets stripComments.
+	 * 
+	 * @param stripComments
+	 *            stripComments
+	 */
+	public final void setStripComments(final boolean stripComments)
+	{
+		this.stripComments = stripComments;
+	}
+
+	/**
+	 * Like the internal filters, user specific filters might need access to the
+	 * markup as well.
+	 * 
+	 * @return The markup resource stream
+	 */
+	public final Markup getMarkup()
+	{
+		return this.markup;
+	}
+
+	/**
 	 * Applications which subclass initFilterChain() might also wish to access
 	 * the markup resource stream.
 	 * 
 	 * @return The markup resource stream
+	 * @deprecated since 2.0 please use getMarkup().getResource() instead.
 	 */
-	protected MarkupResourceStream getMarkupResourceStream()
+	public final MarkupResourceStream getMarkupResourceStream()
 	{
 		return this.markup.getResource();
 	}
@@ -113,7 +185,7 @@ public class MarkupParser
 	{
 		// Chain together all the different markup filters and configure them
 		this.markupFilterChain = xmlParser;
-		
+
 		registerMarkupFilter(new WicketTagIdentifier(markup));
 		registerMarkupFilter(new TagTypeHandler());
 		registerMarkupFilter(new HtmlHandler());
@@ -123,7 +195,7 @@ public class MarkupParser
 
 		// Provided the wicket component requesting the markup is known ...
 		final MarkupResourceStream resource = markup.getResource();
-		if (resource != null) 
+		if (resource != null)
 		{
 			final ContainerInfo containerInfo = resource.getContainerInfo();
 			if (containerInfo != null)
@@ -132,28 +204,18 @@ public class MarkupParser
 				{
 					registerMarkupFilter(new WicketMessageTagHandler(containerInfo));
 				}
-	
+
 				registerMarkupFilter(new BodyOnLoadHandler());
-	
+
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
 					registerMarkupFilter(new HtmlHeaderSectionHandler(this.markup));
 				}
-				
+
 				registerMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
-	}
-
-	/**
-	 * By default don't do anything. Subclasses may append additional markup
-	 * filters if required.
-	 * 
-	 * @see #appendMarkupFilter(IMarkupFilter)
-	 */
-	protected void initFilterChain()
-	{
 	}
 
 	/**
@@ -192,52 +254,19 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	final IMarkup readAndParse(final MarkupResourceStream resource) throws IOException,
-			ResourceStreamNotFoundException
+	final IMarkup readAndParse() throws IOException, ResourceStreamNotFoundException
 	{
-		// Remove all existing markup elements
-		this.markup.reset();
-
-		// For diagnostic purposes
-		this.markup.setResource(resource);
 
 		// Initialize the xml parser
-		this.xmlParser.parse(resource.getInputStream(), this.markupSettings.getDefaultMarkupEncoding());
+		this.xmlParser
+				.parse(this.markup.getResource().getInputStream(), this.defaultMarkupEncoding);
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
 		parseMarkup();
 
-		this.markup.setEncoding(xmlParser.getEncoding());
-		this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
-
-		return this.markup;
-	}
-
-	/**
-	 * Parse the markup.
-	 * 
-	 * @param string
-	 *            The markup
-	 * @return The markup
-	 * @throws IOException
-	 * @throws ResourceStreamNotFoundException
-	 */
-	final IMarkup parse(final String string) throws IOException,
-			ResourceStreamNotFoundException
-	{
-		// Remove all existing markup elements
-		this.markup.reset();
-
-		// Initialize the xml parser
-		this.xmlParser.parse(string);
-
-		// parse the xml markup and tokenize it into wicket relevant markup
-		// elements
-		parseMarkup();
-
-		this.markup.setEncoding(xmlParser.getEncoding());
-		this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
+		this.markup.setEncoding(this.xmlParser.getEncoding());
+		this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
 		return this.markup;
 	}
@@ -248,23 +277,13 @@ public class MarkupParser
 	 */
 	private void parseMarkup()
 	{
-		// Initialize the markup filter chain
-		initializeMarkupFilters();
-
-		// Allow subclasses to extend the filter chain
-		initFilterChain();
-
-		// Get relevant settings from the Application
-		final boolean stripComments = this.markupSettings.getStripComments();
-		final boolean compressWhitespace = this.markupSettings.getCompressWhitespace();
-
 		try
 		{
 			// allways remember the latest index (size)
 			int size = this.markup.size();
-			
+
 			// Loop through tags
-			for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
+			for (ComponentTag tag; null != (tag = (ComponentTag)this.markupFilterChain.nextTag());)
 			{
 				boolean add = (tag.getId() != null);
 				if (!add && tag.getXmlTag().isClose())
@@ -275,19 +294,20 @@ public class MarkupParser
 				// Add tag to list?
 				if (add || tag.isModified())
 				{
-					final CharSequence text = xmlParser.getInputFromPositionMarker(tag.getPos());
+					final CharSequence text = this.xmlParser.getInputFromPositionMarker(tag
+							.getPos());
 
 					// Add text from last position to tag position
 					if (text.length() > 0)
 					{
 						String rawMarkup = text.toString();
 
-						if (stripComments)
+						if (this.stripComments)
 						{
 							rawMarkup = removeComment(rawMarkup);
 						}
 
-						if (compressWhitespace)
+						if (this.compressWhitespace)
 						{
 							rawMarkup = compressWhitespace(rawMarkup);
 						}
@@ -299,7 +319,8 @@ public class MarkupParser
 
 					if (add)
 					{
-						// Add to list unless preview component tag remover flagged
+						// Add to list unless preview component tag remover
+						// flagged
 						// as removed
 						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
 						{
@@ -310,10 +331,10 @@ public class MarkupParser
 					{
 						this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
-					
-					xmlParser.setPositionMarker();
+
+					this.xmlParser.setPositionMarker();
 				}
-				
+
 				// allways remember the latest index (size)
 				size = this.markup.size();
 			}
@@ -321,22 +342,22 @@ public class MarkupParser
 		catch (final ParseException ex)
 		{
 			// Add remaining input string
-			final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
+			final CharSequence text = this.xmlParser.getInputFromPositionMarker(-1);
 			if (text.length() > 0)
 			{
 				this.markup.addMarkupElement(new RawMarkup(text));
 			}
 
-			this.markup.setEncoding(xmlParser.getEncoding());
-			this.markup.setXmlDeclaration(xmlParser.getXmlDeclaration());
+			this.markup.setEncoding(this.xmlParser.getEncoding());
+			this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
-			final MarkupStream markupStream = new MarkupStream(markup);
+			final MarkupStream markupStream = new MarkupStream(this.markup);
 			markupStream.setCurrentIndex(this.markup.size() - 1);
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
 
 		// Add tail?
-		final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
+		final CharSequence text = this.xmlParser.getInputFromPositionMarker(-1);
 		if (text.length() > 0)
 		{
 			this.markup.addMarkupElement(new RawMarkup(text));
@@ -358,11 +379,11 @@ public class MarkupParser
 		rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
 		return rawMarkup;
 	}
-	
+
 	/**
 	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For
 	 * reasons I don't understand, the following regex
-	 * <code>"<!--(.|\n|\r)*?-->"<code>
+	 * <code>"<!--(.|\n|\r)*-->"<code>
 	 * causes a stack overflow in some circumstances (jdk 1.5) 
 	 * 
 	 * @param rawMarkup

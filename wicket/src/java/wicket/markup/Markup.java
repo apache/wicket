@@ -413,17 +413,4 @@ public class Markup implements IMarkup
 		// earlier on.
 		initialize();
 	}
-
-	/**
-	 * Reset the markup to its defaults, except for the wicket namespace which
-	 * remains unchanged.
-	 */
-	final void reset()
-	{
-		this.markup = new MarkupFragment(this);
-		this.resource = null;
-		this.xmlDeclaration = null;
-		this.encoding = null;
-		this.currentPath = null;
-	}
 }
