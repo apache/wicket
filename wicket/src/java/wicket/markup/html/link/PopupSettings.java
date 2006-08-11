@@ -354,6 +354,11 @@ public class PopupSettings implements Serializable
 		}
 		else
 		{
+			if (callee == null)
+			{
+				throw new IllegalArgumentException(
+						"when the page map is not set, argument callee may not be null");
+			}
 			return callee.getPage().getPageMap();
 		}
 	}
