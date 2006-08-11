@@ -260,7 +260,7 @@ public abstract class Link<T> extends WebMarkupContainer<T> implements ILinkList
 		if (popupSettings != null)
 		{
 			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(
-					popupSettings.getPageMap().getName());
+					popupSettings.getPageMap(this).getName());
 		}
 		// Invoke subclass handler
 		onClick();

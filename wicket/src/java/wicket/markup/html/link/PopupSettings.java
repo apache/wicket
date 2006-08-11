@@ -20,8 +20,11 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.Component;
 import wicket.PageMap;
-import wicket.RequestCycle;
 
 /**
  * A popup specification can be used as a property of the {@link Link}classes
@@ -41,6 +44,9 @@ import wicket.RequestCycle;
  */
 public class PopupSettings implements Serializable
 {
+	/** The log. */
+	private static final Log log = LogFactory.getLog(PopupSettings.class);
+
 	private static final long serialVersionUID = 1L;
 
 	/** Flag to include location bar */
@@ -136,6 +142,7 @@ public class PopupSettings implements Serializable
 	public PopupSettings(PageMap pagemap)
 	{
 		this.pageMapName = pagemap.getName();
+		this.windowName = pageMapName;
 	}
 
 	/**
@@ -155,6 +162,7 @@ public class PopupSettings implements Serializable
 	{
 		this.displayFlags = displayFlags;
 		this.pageMapName = pagemap.getName();
+		this.windowName = pageMapName;
 	}
 
 	/**
@@ -281,7 +289,12 @@ public class PopupSettings implements Serializable
 	 * anything you want, although you should use alphanumeric characters only
 	 * (no spaces or punctuation). If you have a window already open and call
 	 * window.open a second time using the same windowName, the first window
-	 * will be reused rather than opening a second window
+	 * will be reused rather than opening a second window.
+	 * <p>
+	 * The window name and the name of the page map should have the same value.
+	 * If it is different, the page map will be set to the value of the
+	 * popupWindowName argument.
+	 * </p>
 	 * 
 	 * @param popupWindowName
 	 *            window name.
@@ -289,7 +302,17 @@ public class PopupSettings implements Serializable
 	 */
 	public PopupSettings setWindowName(String popupWindowName)
 	{
-		this.windowName = popupWindowName;
+		if (popupWindowName != null)
+		{
+			this.windowName = popupWindowName;
+			if (pageMapName != null && (!pageMapName.equals(popupWindowName)))
+			{
+				log.warn("the page map and window name should be the same. The page map was "
+						+ pageMapName + ", and the requested window name is " + popupWindowName
+						+ "; changing the page map to " + popupWindowName);
+			}
+			this.pageMapName = popupWindowName;
+		}
 		return this;
 	}
 
@@ -306,9 +329,11 @@ public class PopupSettings implements Serializable
 	/**
 	 * Gets the pagemap where the popup page must be created in.
 	 * 
+	 * @param callee
+	 *            Calling component
 	 * @return The pagemap where the popup page must be created in
 	 */
-	public PageMap getPageMap()
+	public PageMap getPageMap(Component callee)
 	{
 		if (pageMapName != null)
 		{
@@ -316,8 +341,7 @@ public class PopupSettings implements Serializable
 		}
 		else
 		{
-			// fallback on the current page map
-			return RequestCycle.get().getRequest().getPage().getPageMap();
+			return callee.getPage().getPageMap();
 		}
 	}
 }
