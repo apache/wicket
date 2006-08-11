@@ -252,6 +252,11 @@ public final class MarkupParserTest extends WicketTestCase
 		tokens = parser.readAndParse(resource);
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
+
+		resource = newMarkupResourceStream(locator, this.getClass(), "9", null, "html");
+		tokens = parser.readAndParse(resource);
+		log.info("tok(0)=" + tokens.get(0));
+		// Assert.assertEquals(docText, tokens.get(0).toString());
 	}
 
 	/**
