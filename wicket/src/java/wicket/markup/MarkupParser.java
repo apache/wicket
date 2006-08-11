@@ -20,6 +20,7 @@ package wicket.markup;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.regex.Pattern;
 
 import wicket.Page;
 import wicket.markup.parser.IMarkupFilter;
@@ -57,6 +58,9 @@ import wicket.util.string.AppendingStringBuffer;
  */
 public class MarkupParser
 {
+	/** Conditional comment section, which is NOT treated as a comment section */ 
+	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]-->");
+	
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
 
@@ -384,7 +388,10 @@ public class MarkupParser
 	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For
 	 * reasons I don't understand, the following regex
 	 * <code>"<!--(.|\n|\r)*-->"<code>
-	 * causes a stack overflow in some circumstances (jdk 1.5) 
+	 * causes a stack overflow in some circumstances (jdk 1.5)
+	 * <p>
+	 * Conditional comments such as <ocde>&lt;!--[if IE]&gt;...&lt;![endif]&gt;<code>
+	 * are NOT treated as comments. 
 	 * 
 	 * @param rawMarkup
 	 * @return raw markup
@@ -394,19 +401,20 @@ public class MarkupParser
 		int pos1 = rawMarkup.indexOf("<!--");
 		while (pos1 >= 0)
 		{
-			final AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
-			final int pos2 = rawMarkup.indexOf("-->", pos1);
+			final int pos2 = rawMarkup.indexOf("-->", pos1 + 4);
 
-			if (pos2 >= 0)
+			final AppendingStringBuffer buf = new AppendingStringBuffer(rawMarkup.length());
+			if ((pos2 >= 0) && (pos1 > 0))
 			{
-				if (pos1 > 0)
+				final String comment = rawMarkup.substring(pos1 + 4, pos2);
+				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
 				{
 					buf.append(rawMarkup.substring(0, pos1 - 1));
+					buf.append(rawMarkup.substring(pos2 + 4));
+					rawMarkup = buf.toString();
 				}
-				buf.append(rawMarkup.substring(pos2 + 4));
-				rawMarkup = buf.toString();
 			}
-			pos1 = rawMarkup.indexOf("<!--");
+			pos1 = rawMarkup.indexOf("<!--", pos1 + 4);
 		}
 		return rawMarkup;
 	}

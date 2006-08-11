@@ -311,4 +311,22 @@ public class XmlPullParserTest extends TestCase
 		assertTrue(tag.isClose());
 		assertEquals("html", tag.getName());
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public final void testConditionalComments() throws Exception
+	{
+		final XmlPullParser parser = new XmlPullParser();
+		parser.parse("<!--[if IE]><a href='test.html'>my link</a><![endif]-->");
+		XmlTag tag = (XmlTag)parser.nextTag();
+		assertTrue(tag.isOpen());
+		assertEquals("a", tag.getName());
+		tag = (XmlTag)parser.nextTag();
+		assertTrue(tag.isClose());
+		assertEquals("a", tag.getName());
+		tag = (XmlTag)parser.nextTag();
+		assertNull(tag);
+	}
 }

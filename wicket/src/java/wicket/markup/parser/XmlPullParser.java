@@ -322,6 +322,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		// Handle comments
 		if (tagText.startsWith("!--"))
 		{
+			// Normal comment section.
 			// Skip ahead to "-->". Note that you can not simply test for
 			// tagText.endsWith("--") as the comment might contain a '>'
 			// inside.
@@ -332,14 +333,34 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 						+ input.getLineNumber() + " column:" + input.getColumnNumber(),
 						openBracketIndex);
 			}
-
+			
 			pos += 3;
 			this.lastText = this.input.getSubstring(openBracketIndex, pos);
 			this.lastType = Type.COMMENT;
-			this.input.setPosition(pos);
+			
+			// Conditional comment? <!--[if ...]>..<![endif]-->
+			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") 
+					&& this.lastText.toString().endsWith("<![endif]-->"))
+			{
+				// Actually it is no longer a comment. It is now
+				// up to the browser to select the section appropriate.
+				this.input.setPosition(closeBracketIndex + 1);
+			}
+			else
+			{
+				this.input.setPosition(pos);
+			}
 			return;
 		}
-
+		
+		// The closing tag of a conditional comment <!--[if IE]>...<![endif]-->
+		if (tagText.equals("![endif]--"))
+		{
+			this.lastType = Type.COMMENT;
+			this.input.setPosition(closeBracketIndex + 1);
+			return;
+		}
+		
 		// CDATA sections might contain "<" which is not part of an XML tag.
 		// Make sure escaped "<" are treated right
 		if (tagText.startsWith("!["))
