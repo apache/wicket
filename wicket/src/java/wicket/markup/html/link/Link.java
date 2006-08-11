@@ -248,7 +248,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		if (popupSettings != null)
 		{
 			RequestCycle.get().getRequest().getRequestParameters().setPageMapName(
-					popupSettings.getPageMap().getName());
+					popupSettings.getPageMap(this).getName());
 		}
 		// Invoke subclass handler
 		onClick();
