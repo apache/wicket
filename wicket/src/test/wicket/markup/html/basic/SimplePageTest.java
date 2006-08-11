@@ -382,4 +382,12 @@ public class SimplePageTest extends WicketTestCase
 	{
 		executeTest(SimplePage_11.class, "SimplePageExpectedResult_11.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_12() throws Exception
+	{
+		executeTest(SimplePage_12.class, "SimplePageExpectedResult_12.html");
+	}
 }
