@@ -202,7 +202,7 @@ public class BookmarkablePageLink extends Link
 
 		if (getPopupSettings() != null)
 		{
-			return urlFor(getPopupSettings().getPageMap(), pageClass, parameters);
+			return urlFor(getPopupSettings().getPageMap(this), pageClass, parameters);
 		}
 		else
 		{
