@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketRuntimeException;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -39,7 +40,7 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Juergen Donnerstag
  */
-public class MarkupFragment
+public class MarkupFragment implements Iterable<MarkupElement>
 {
 	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(MarkupFragment.class);
@@ -63,26 +64,6 @@ public class MarkupFragment
 	{
 		this.markup = markup;
 		this.markupElements = new ArrayList<MarkupElement>();
-	}
-
-	/**
-	 * @return String representation of markup list
-	 */
-	@Override
-	public final String toString()
-	{
-		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
-		buf.append(this.markup.toString());
-		buf.append("\n");
-
-		final Iterator<MarkupElement> iter = this.markupElements.iterator();
-		while (iter.hasNext())
-		{
-			buf.append(iter.next());
-			buf.append(",");
-		}
-
-		return buf.toString();
 	}
 
 	/**
@@ -161,11 +142,51 @@ public class MarkupFragment
 	}
 
 	/**
-	 * Reset the markup to its defaults, except for the wicket namespace which
-	 * remains unchanged.
+	 * Iterator for MarkupElements
+	 * 
+	 * @see java.lang.Iterable#iterator()
 	 */
-	final void reset()
+	public final Iterator<MarkupElement> iterator()
 	{
-		this.markupElements = new ArrayList<MarkupElement>();
+		return new Iterator<MarkupElement>()
+		{
+			private int index = 0;
+
+			public boolean hasNext()
+			{
+				return (index < size());
+			}
+
+			public MarkupElement next()
+			{
+				return get(index++);
+			}
+
+			public void remove()
+			{
+				throw new WicketRuntimeException(
+						"remomve() not supported by MarkupFragment Iterator");
+			}
+		};
+	}
+
+	/**
+	 * @return String representation of markup list
+	 */
+	@Override
+	public final String toString()
+	{
+		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
+		buf.append(this.markup.toString());
+		buf.append("\n");
+
+		final Iterator<MarkupElement> iter = this.markupElements.iterator();
+		while (iter.hasNext())
+		{
+			buf.append(iter.next());
+			buf.append(",");
+		}
+
+		return buf.toString();
 	}
 }

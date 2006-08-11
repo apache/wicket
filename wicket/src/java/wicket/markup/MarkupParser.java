@@ -258,7 +258,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	final IMarkup readAndParse() throws IOException, ResourceStreamNotFoundException
+	public final IMarkup readAndParse() throws IOException, ResourceStreamNotFoundException
 	{
 
 		// Initialize the xml parser

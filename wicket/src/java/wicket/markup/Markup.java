@@ -18,6 +18,7 @@
 package wicket.markup;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,9 +81,9 @@ public class Markup implements IMarkup
 	}
 
 	/**
-	 * Initialize the index where <head> can be found.
+	 * Update internal Maps to find wicket tags easily
 	 */
-	protected void initialize()
+	private void initialize()
 	{
 		// Reset
 		this.componentMap = null;
@@ -113,30 +114,6 @@ public class Markup implements IMarkup
 		// The variable is only needed while adding markup elements.
 		// initialize() is invoked after all elements have been added.
 		this.currentPath = null;
-	}
-
-	/**
-	 * @see wicket.markup.IMarkup#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		if (resource != null)
-		{
-			return resource.toString();
-		}
-		else
-		{
-			return "(unknown resource)";
-		}
-	}
-
-	/**
-	 * @see wicket.markup.IMarkup#toDebugString()
-	 */
-	public String toDebugString()
-	{
-		return this.markup.toString();
 	}
 
 	/**
@@ -197,6 +174,11 @@ public class Markup implements IMarkup
 		if ((id == null) || (id.length() == 0))
 		{
 			throw new IllegalArgumentException("Parameter 'id' must not be null");
+		}
+
+		if ((this.markup != null) && (this.componentMap == null))
+		{
+			initialize();
 		}
 
 		// TODO Post 1.2: A component path e.g. "panel:label" does not match 1:1
@@ -299,7 +281,7 @@ public class Markup implements IMarkup
 	 * @param pos
 	 * @param markupElement
 	 */
-	final void addMarkupElement(final int pos, final MarkupElement markupElement)
+	public final void addMarkupElement(final int pos, final MarkupElement markupElement)
 	{
 		this.markup.addMarkupElement(pos, markupElement);
 	}
@@ -412,5 +394,36 @@ public class Markup implements IMarkup
 		// on the markup loaded, which could not be initialized
 		// earlier on.
 		initialize();
+	}
+
+	/**
+	 * Iterator for MarkupElements
+	 * 
+	 * @see java.lang.Iterable#iterator()
+	 */
+	public Iterator<MarkupElement> iterator()
+	{
+		return this.markup.iterator();
+	}
+
+	/**
+	 * @see wicket.markup.IMarkup#toDebugString()
+	 */
+	public String toDebugString()
+	{
+		return this.markup.toString();
+	}
+
+	/**
+	 * @see wicket.markup.IMarkup#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		if (resource != null)
+		{
+			return resource.toString();
+		}
+		return "(unknown resource)";
 	}
 }

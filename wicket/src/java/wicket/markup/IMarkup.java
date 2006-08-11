@@ -29,7 +29,7 @@ package wicket.markup;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public abstract interface IMarkup
+public abstract interface IMarkup extends Iterable<MarkupElement>
 {
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
