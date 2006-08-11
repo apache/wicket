@@ -196,8 +196,17 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 						openBracketIndex);
 			}
 
-			this.input.setPosition(pos + 3);
-			return nextTag();
+			// Conditional comment? <!--[if ...]>..<![endif]-->
+			if (tagText.startsWith("!--[if ") && tagText.endsWith("]") 
+					&& this.input.getSubstring(pos + 3 - 12, pos + 3).equals("<![endif]-->"))
+			{
+				// fall through
+			}
+			else
+			{
+				this.input.setPosition(pos + 3);
+				return nextTag();
+			}
 		}
 
 		// CDATA sections might contain "<" which is not part of an XML tag.
