@@ -29,6 +29,7 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
 import wicket.markup.html.link.IPageLink;
+import wicket.markup.html.link.ImageMap;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.link.PopupSettings;
@@ -119,13 +120,12 @@ public class Home extends WicketExamplePage
 		});
 
 		// FIXME image map doesn't work anymore!
-		// // Image map link example
-		// new ImageMap(this, "imageMap").addRectangleLink(0, 0, 100, 100,
-		// new BookmarkablePageLink(this, "page1",
-		// Page1.class)).addCircleLink(160, 50, 35,
-		// new BookmarkablePageLink(this, "page2", Page2.class)).addPolygonLink(
-		// new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
-		// new BookmarkablePageLink(this, "page3", Page3.class));
+		// Image map link example
+		new ImageMap(this, "imageMap").addRectangleLink(0, 0, 100, 100,
+				new BookmarkablePageLink(this, "page1", Page1.class)).addCircleLink(160, 50, 35,
+				new BookmarkablePageLink(this, "page2", Page2.class)).addPolygonLink(
+				new int[] { 212, 79, 241, 4, 279, 54, 212, 79 },
+				new BookmarkablePageLink(this, "page3", Page3.class));
 
 		// Popup example
 		PopupSettings popupSettings = new PopupSettings(PageMap.forName("popuppagemap")).setHeight(
