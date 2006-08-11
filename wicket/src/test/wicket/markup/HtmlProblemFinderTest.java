@@ -19,8 +19,8 @@
 package wicket.markup;
 
 import wicket.WicketTestCase;
-import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.filter.HtmlProblemFinder;
+import wicket.util.resource.StringResourceStream;
 
 /**
  * @author Juergen Donnerstag
@@ -37,23 +37,31 @@ public class HtmlProblemFinderTest extends WicketTestCase
 		super(name);
 	}
 
+	private MarkupResourceStream getResource(final String markup)
+	{
+		return new MarkupResourceStream(new StringResourceStream(markup), null, null);
+	}
+
 	/**
 	 * 
 	 */
 	public void testProblemFinder()
 	{
-		final MarkupParser parser = new MarkupParser(new XmlPullParser())
+		final IMarkupParserFactory parserFactory = new MarkupParserFactory()
 		{
 			@Override
-			public void initFilterChain()
+			protected void initMarkupFilters(final MarkupParser parser)
 			{
-				registerMarkupFilter(new HtmlProblemFinder(HtmlProblemFinder.ERR_THROW_EXCEPTION));
+				parser.registerMarkupFilter(new HtmlProblemFinder(
+						HtmlProblemFinder.ERR_THROW_EXCEPTION));
+				super.initMarkupFilters(parser);
 			}
 		};
 
+		final MarkupParser parser = parserFactory.newMarkupParser(getResource("<img src=\"\"/>"));
 		try
 		{
-			parser.parse("<img src=\"\"/>");
+			parser.readAndParse();
 			assertTrue("Should have thrown an exception", false);
 		}
 		catch (Exception ex)
