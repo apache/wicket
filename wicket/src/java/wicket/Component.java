@@ -2898,7 +2898,7 @@ public abstract class Component implements Serializable
 		return false;
 	}
 
-	final boolean isRenderAllowed()
+	protected final boolean isRenderAllowed()
 	{
 		return getFlag(FLAG_IS_RENDER_ALLOWED);
 	}
