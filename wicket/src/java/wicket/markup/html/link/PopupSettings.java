@@ -327,6 +327,19 @@ public class PopupSettings implements Serializable
 	}
 
 	/**
+	 * @return nada
+	 * @throws UnsupportedOperationException
+	 *             allways as this method is not supported anymore
+	 */
+	// FIXME remove this method in Wicket 2.0.1; kept this method to allow for
+	// easier transition
+	public final PageMap getPageMap()
+	{
+		throw new UnsupportedOperationException(
+				"getPageMap is not supported anymore and should be replaced by getPageMap(Component)");
+	}
+
+	/**
 	 * Gets the pagemap where the popup page must be created in.
 	 * 
 	 * @param callee
