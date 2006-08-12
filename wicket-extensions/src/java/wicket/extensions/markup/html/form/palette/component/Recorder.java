@@ -49,6 +49,8 @@ public class Recorder extends HiddenField
 		super(id);
 		this.palette = palette;
 
+		setOutputMarkupId(true);
+		
 		// construct the model string based on selection collection
 		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
 		StringBuffer modelStringBuffer = new StringBuffer();
