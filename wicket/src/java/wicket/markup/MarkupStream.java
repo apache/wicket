@@ -43,6 +43,7 @@ import wicket.util.string.Strings;
  * getResource().
  * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public final class MarkupStream
 {
@@ -54,15 +55,6 @@ public final class MarkupStream
 
 	/** The markup element list */
 	private final IMarkup markup;
-
-	/**
-	 * DO NOT YOU THIS CONSTRUCTOR. IT WILL MOST LIKELY BE REPLACED IN THE NEAR
-	 * FUTURE.
-	 */
-	protected MarkupStream()
-	{
-		markup = null;
-	}
 
 	/**
 	 * Constructor
@@ -310,56 +302,6 @@ public final class MarkupStream
 	}
 
 	/**
-	 * Throws a new markup exception
-	 * 
-	 * @param message
-	 *            The exception message
-	 * @throws MarkupException
-	 */
-	public void throwMarkupException(final String message)
-	{
-		throw new MarkupException(this, message);
-	}
-
-	/**
-	 * @return An HTML string highlighting the current position in the markup
-	 *         stream
-	 */
-	public String toHtmlDebugString()
-	{
-		final StringBuffer buffer = new StringBuffer();
-
-		for (int i = 0; i < markup.size(); i++)
-		{
-			if (i == currentIndex)
-			{
-				buffer.append("<font color = \"red\">");
-			}
-
-			final MarkupElement element = markup.get(i);
-
-			buffer.append(Strings.escapeMarkup(element.toString(), true));
-
-			if (i == currentIndex)
-			{
-				buffer.append("</font>");
-			}
-		}
-
-		return buffer.toString();
-	}
-
-	/**
-	 * @return String representation of markup stream
-	 */
-	@Override
-	public String toString()
-	{
-		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex + ", current = "
-				+ ((current == null) ? "null" : current.toUserDebugString()) + "]";
-	}
-
-	/**
 	 * @param index
 	 *            The index of a markup element
 	 * @return The MarkupElement element
@@ -450,7 +392,7 @@ public final class MarkupStream
 		{
 			return false;
 		}
-		return this.markup == markupStream.markup;
+		return (this.markup == markupStream.markup);
 	}
 
 	/**
@@ -473,6 +415,56 @@ public final class MarkupStream
 	 */
 	public final boolean isMergedMarkup()
 	{
-		return this.markup instanceof MergedMarkup;
+		return (this.markup instanceof MergedMarkup);
+	}
+
+	/**
+	 * Throws a new markup exception
+	 * 
+	 * @param message
+	 *            The exception message
+	 * @throws MarkupException
+	 */
+	public void throwMarkupException(final String message)
+	{
+		throw new MarkupException(this, message);
+	}
+
+	/**
+	 * @return An HTML string highlighting the current position in the markup
+	 *         stream
+	 */
+	public String toHtmlDebugString()
+	{
+		final StringBuffer buffer = new StringBuffer();
+
+		for (int i = 0; i < markup.size(); i++)
+		{
+			if (i == currentIndex)
+			{
+				buffer.append("<font color = \"red\">");
+			}
+
+			final MarkupElement element = markup.get(i);
+
+			buffer.append(Strings.escapeMarkup(element.toString(), true));
+
+			if (i == currentIndex)
+			{
+				buffer.append("</font>");
+			}
+		}
+
+		return buffer.toString();
+	}
+
+	/**
+	 * @return String representation of markup stream
+	 */
+	@Override
+	public String toString()
+	{
+		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex + ", current = "
+				+ ((current == null) ? "null" : current.toUserDebugString()) + "]";
 	}
 }

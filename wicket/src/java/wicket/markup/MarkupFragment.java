@@ -128,9 +128,8 @@ public class MarkupFragment implements Iterable<MarkupElement>
 	 */
 	final void makeImmutable()
 	{
-		for (int i = 0; i < this.markupElements.size(); i++)
+		for (MarkupElement elem : this)
 		{
-			final MarkupElement elem = this.markupElements.get(i);
 			if (elem instanceof ComponentTag)
 			{
 				// Make the tag immutable
@@ -171,6 +170,42 @@ public class MarkupFragment implements Iterable<MarkupElement>
 	}
 
 	/**
+	 * Iterator for ComponentTags. RawMarkups are skipped.
+	 * 
+	 * @return Iterator
+	 */
+	public final Iterator<ComponentTag> getComponentTagIterator()
+	{
+		return new Iterator<ComponentTag>()
+		{
+			private int index = 0;
+
+			public boolean hasNext()
+			{
+				while ((index < size()) && (get(index) instanceof ComponentTag))
+				{
+					index ++;
+				}
+				
+				return (index < size());
+			}
+
+			public ComponentTag next()
+			{
+				int currentIndex = this.index + 1;
+				hasNext();
+				return (ComponentTag)get(currentIndex);
+			}
+
+			public void remove()
+			{
+				throw new WicketRuntimeException(
+						"remomve() not supported by MarkupFragment Iterator");
+			}
+		};
+	}
+	
+	/**
 	 * @return String representation of markup list
 	 */
 	@Override
@@ -180,10 +215,9 @@ public class MarkupFragment implements Iterable<MarkupElement>
 		buf.append(this.markup.toString());
 		buf.append("\n");
 
-		final Iterator<MarkupElement> iter = this.markupElements.iterator();
-		while (iter.hasNext())
+		for (MarkupElement elem : this)
 		{
-			buf.append(iter.next());
+			buf.append(elem);
 			buf.append(",");
 		}
 
