@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,6 +38,20 @@ import wicket.model.Model;
 /**
  * Palette is a component that allows the user to easily select and order
  * multiple items by moving them from one select box into another.
+ * 
+ * <strong>Ajaxifying the palette</strong>: The palette itself cannot be
+ * ajaxified because it is a panel and therefore does not receive any javascript
+ * events. Instead ajax behaviors can be attached to the recorder component
+ * which supports the javascript <code>onchange</code> event. The recorder
+ * component can be retrieved via a call to {@link #getRecorderComponent()}.
+ * 
+ * Example:
+ * 
+ * <pre>
+ *   Form form=new Form(...);
+ *   Palette palette=new Palette(...);
+ *   palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 
@@ -166,6 +180,7 @@ public class Palette extends Panel
 
 	/**
 	 * Return true if the palette is enabled, false otherwise
+	 * 
 	 * @return true if the palette is enabled, false otherwise
 	 */
 	public final boolean isPaletteEnabled()
@@ -202,12 +217,6 @@ public class Palette extends Panel
 		return new Recorder("recorder", this)
 		{
 			private static final long serialVersionUID = 1L;
-
-			protected void onComponentTag(ComponentTag tag)
-			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("id", getPath());
-			}
 
 			public void updateModel()
 			{
@@ -350,7 +359,14 @@ public class Palette extends Panel
 		return selectionComponent;
 	}
 
-	private Recorder getRecorderComponent()
+	/**
+	 * Returns recorder component. Recorder component is a form component used
+	 * to track the selection of the palette. It receives <code>onchange</code>
+	 * javascript event whenever a change in selection occurs.
+	 * 
+	 * @return recorder component
+	 */
+	public final Recorder getRecorderComponent()
 	{
 		return recorderComponent;
 	}
@@ -416,9 +432,9 @@ public class Palette extends Panel
 	 */
 	protected String buildJSCall(String funcName)
 	{
-		return new StringBuffer(funcName).append("('").append(getChoicesComponent().getPath())
-				.append("','").append(getSelectionComponent().getPath()).append("','").append(
-						getRecorderComponent().getPath()).append("');").toString();
+		return new StringBuffer(funcName).append("('").append(getChoicesComponent().getMarkupId())
+				.append("','").append(getSelectionComponent().getMarkupId()).append("','").append(
+						getRecorderComponent().getMarkupId()).append("');").toString();
 	}
 
 

@@ -127,6 +127,8 @@
 				recorder.value=recorder.value+",";
 			}
 		}
+		
+		if (recorder.onchange!=null) { recorder.onchange(); }
 	}
 	
 	function paletteClearSelectionHelper(box) {
