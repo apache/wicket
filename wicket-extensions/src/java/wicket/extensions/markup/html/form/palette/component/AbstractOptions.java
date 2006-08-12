@@ -54,6 +54,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 	{
 		super(parent, id);
 		this.palette = palette;
+		setOutputMarkupId(true);
 	}
 
 	protected Palette getPalette()
@@ -98,7 +99,6 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 		ValueMap attrs = tag.getAttributes();
 		attrs.put("multiple", null);
 		attrs.put("size", new Integer(getPalette().getRows()));
-		attrs.put("id", getPath());
 		
 		if (!palette.isPaletteEnabled()) {
 			attrs.put("disabled","disabled");

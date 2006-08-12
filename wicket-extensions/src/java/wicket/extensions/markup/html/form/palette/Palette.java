@@ -41,10 +41,24 @@ import wicket.util.string.AppendingStringBuffer;
  * Palette is a component that allows the user to easily select and order
  * multiple items by moving them from one select box into another.
  * 
+ * <strong>Ajaxifying the palette</strong>: The palette itself cannot be
+ * ajaxified because it is a panel and therefore does not receive any javascript
+ * events. Instead ajax behaviors can be attached to the recorder component
+ * which supports the javascript <code>onchange</code> event. The recorder
+ * component can be retrieved via a call to {@link #getRecorderComponent()}.
+ * 
+ * Example:
+ * 
+ * <pre>
+ *      Form form=new Form(...);
+ *      Palette palette=new Palette(...);
+ *      palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ * </pre>
+ * 
  * @param <T>
  *            Type of model object this component holds
  * @param <E>
- *            Type of choices model object 
+ *            Type of choices model object
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
@@ -123,15 +137,15 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 * @param allowOrder
 	 *            allow user to move selections up and down
 	 */
-	public Palette(MarkupContainer parent, final String id, IModel<Collection<T>> model, IModel<E> choicesModel,
-			IChoiceRenderer choiceRenderer, int rows, boolean allowOrder)
+	public Palette(MarkupContainer parent, final String id, IModel<Collection<T>> model,
+			IModel<E> choicesModel, IChoiceRenderer choiceRenderer, int rows, boolean allowOrder)
 	{
 		super(parent, id, model);
 
 		this.choicesModel = choicesModel;
 		this.choiceRenderer = choiceRenderer;
 		this.rows = rows;
-		
+
 		recorderComponent = newRecorderComponent();
 		choicesComponent = newChoicesComponent();
 		selectionComponent = newSelectionComponent();
@@ -194,13 +208,6 @@ public class Palette<T, E> extends Panel<Collection<T>>
 		return new Recorder(this, "recorder", this)
 		{
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected void onComponentTag(ComponentTag tag)
-			{
-				super.onComponentTag(tag);
-				tag.getAttributes().put("id", getPath());
-			}
 
 			@Override
 			public void updateModel()
@@ -351,7 +358,14 @@ public class Palette<T, E> extends Panel<Collection<T>>
 		return selectionComponent;
 	}
 
-	private Recorder getRecorderComponent()
+	/**
+	 * Returns recorder component. Recorder component is a form component used
+	 * to track the selection of the palette. It receives <code>onchange</code>
+	 * javascript event whenever a change in selection occurs.
+	 * 
+	 * @return recorder component
+	 */
+	public final Recorder getRecorderComponent()
 	{
 		return recorderComponent;
 	}
@@ -415,9 +429,10 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 */
 	protected String buildJSCall(String funcName)
 	{
-		return new AppendingStringBuffer(funcName).append("('").append(getChoicesComponent().getPath())
-				.append("','").append(getSelectionComponent().getPath()).append("','").append(
-						getRecorderComponent().getPath()).append("');").toString();
+		return new AppendingStringBuffer(funcName).append("('").append(
+				getChoicesComponent().getMarkupId()).append("','").append(
+				getSelectionComponent().getMarkupId()).append("','").append(
+				getRecorderComponent().getMarkupId()).append("');").toString();
 	}
 
 	/**
@@ -477,9 +492,10 @@ public class Palette<T, E> extends Panel<Collection<T>>
 		// an alternative might be to attach it to one of the subcomponents
 		choicesModel.detach();
 	}
-	
+
 	/**
 	 * Return true if the palette is enabled, false otherwise
+	 * 
 	 * @return true if the palette is enabled, false otherwise
 	 */
 	public final boolean isPaletteEnabled()
@@ -494,7 +510,8 @@ public class Palette<T, E> extends Panel<Collection<T>>
 
 		/**
 		 * Constructor
-		 * @param parent 
+		 * 
+		 * @param parent
 		 * @param id
 		 */
 		public PaletteButton(MarkupContainer parent, String id)
