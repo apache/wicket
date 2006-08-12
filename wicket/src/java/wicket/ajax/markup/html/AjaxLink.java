@@ -22,6 +22,7 @@ import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
+import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -80,7 +81,7 @@ public abstract class AjaxLink<T> extends WebMarkupContainer<T> implements IAjax
 			@Override
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
-				return AjaxLink.this.getAjaxCallDecorator();
+				return new CancelEventIfNoAjaxDecorator(AjaxLink.this.getAjaxCallDecorator());
 			}
 
 		});
