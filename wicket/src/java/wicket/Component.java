@@ -2490,15 +2490,14 @@ public abstract class Component<T> implements Serializable, ICoverterLocator
 
 	/**
 	 * Gets the subset of the currently coupled {@link IBehavior}s that are of
-	 * the provided type as a unmodifiable list or null if there are no
-	 * behaviors attached. Returns an empty list rather than null if there are
-	 * no behaviors coupled to this component.
+	 * the provided type as a unmodifiable list. Returns an empty list rather 
+	 * than null if there are no behaviors coupled to this component.
 	 * 
 	 * @param type
 	 *            The type
 	 * 
 	 * @return The subset of the currently coupled behaviors that are of the
-	 *         provided type as a unmodifiable list or null
+	 *         provided type as a unmodifiable list or an empty list.
 	 */
 	protected final List<IBehavior> getBehaviors(Class<?> type)
 	{
