@@ -222,7 +222,7 @@ import wicket.version.undo.Change;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class Component<T> implements Serializable, ICoverterLocator
+public abstract class Component<T> implements Serializable, IConverterLocator
 {
 
 	/**

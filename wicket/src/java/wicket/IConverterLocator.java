@@ -20,7 +20,7 @@ package wicket;
 
 import java.io.Serializable;
 
-import wicket.util.convert.CoverterLocator;
+import wicket.util.convert.ConverterLocator;
 import wicket.util.convert.IConverter;
 
 /**
@@ -31,9 +31,9 @@ import wicket.util.convert.IConverter;
  * 
  * @see Component
  * @see Session
- * @see CoverterLocator
+ * @see ConverterLocator
  */
-public interface ICoverterLocator extends Serializable
+public interface IConverterLocator extends Serializable
 {
 
 	/**

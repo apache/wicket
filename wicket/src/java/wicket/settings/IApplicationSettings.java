@@ -7,7 +7,7 @@ import wicket.Page;
 import wicket.application.IClassResolver;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
-import wicket.util.convert.ICoverterLocatorFactory;
+import wicket.util.convert.IConverterLocatorFactory;
 
 /**
  * Settings interface for application settings.
@@ -48,7 +48,7 @@ public interface IApplicationSettings
 	 * 
 	 * @return the converter factory
 	 */
-	ICoverterLocatorFactory getConverterSupplierFactory();
+	IConverterLocatorFactory getConverterSupplierFactory();
 
 	/**
 	 * Gets context path to use for absolute path generation. For example an
@@ -109,7 +109,7 @@ public interface IApplicationSettings
 	 * 
 	 * @param factory
 	 */
-	public void setConverterSupplierFactory(ICoverterLocatorFactory factory);
+	public void setConverterSupplierFactory(IConverterLocatorFactory factory);
 
 	/**
 	 * Sets context path to use for absolute path generation. For example an

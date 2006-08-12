@@ -18,23 +18,20 @@
  */
 package wicket.util.convert;
 
-import wicket.ICoverterLocator;
+import wicket.IConverterLocator;
 
 /**
- * Factory that creates and configures instances of
- * {@link wicket.util.convert.IConverter}.
+ * Factory that creates and configures instances of {@link IConverterLocator}.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public interface ICoverterLocatorFactory
+public interface IConverterLocatorFactory
 {
 	/**
-	 * Creates and returns a new instance of {@link IConverter}.
+	 * Creates and returns a new instance of {@link IConverterLocator}.
 	 * 
-	 * @param locale
-	 *            The Locale to create the converter for
-	 * @return A new IConverter instance
+	 * @return A new {@link IConverterLocator} instance
 	 */
-	ICoverterLocator newConverterSupplier();
+	IConverterLocator newConverterSupplier();
 }

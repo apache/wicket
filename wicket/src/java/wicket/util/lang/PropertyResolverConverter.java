@@ -21,7 +21,7 @@ package wicket.util.lang;
 import java.io.Serializable;
 import java.util.Locale;
 
-import wicket.ICoverterLocator;
+import wicket.IConverterLocator;
 import wicket.util.convert.IConverter;
 
 /**
@@ -32,7 +32,7 @@ public class PropertyResolverConverter implements Serializable
 	private static final long serialVersionUID = 1L;
 
 
-	private final ICoverterLocator converterSupplier;
+	private final IConverterLocator converterSupplier;
 	private final Locale locale;
 
 	/**
@@ -41,7 +41,7 @@ public class PropertyResolverConverter implements Serializable
 	 * @param converterSupplier
 	 * @param locale
 	 */
-	public PropertyResolverConverter(ICoverterLocator converterSupplier, Locale locale)
+	public PropertyResolverConverter(IConverterLocator converterSupplier, Locale locale)
 	{
 		this.converterSupplier = converterSupplier;
 		this.locale = locale;

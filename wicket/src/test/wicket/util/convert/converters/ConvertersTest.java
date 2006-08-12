@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.TestCase;
-import wicket.ICoverterLocator;
+import wicket.IConverterLocator;
 import wicket.util.convert.ConversionException;
-import wicket.util.convert.CoverterLocator;
+import wicket.util.convert.ConverterLocator;
 
 /**
  * Tests for the base converters.
@@ -50,7 +50,7 @@ public final class ConvertersTest extends TestCase
 	 */
 	public void testConversion()
 	{
-		final ICoverterLocator converter = new CoverterLocator();
+		final IConverterLocator converter = new ConverterLocator();
 		assertEquals("7", converter.getConverter(Integer.class).convertToString(new Integer(7),
 				Locale.US));
 		assertEquals("7.1", converter.getConverter(Double.class).convertToString(new Double(7.1),

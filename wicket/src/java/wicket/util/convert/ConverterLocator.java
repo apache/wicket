@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.ICoverterLocator;
+import wicket.IConverterLocator;
 import wicket.util.convert.converters.BooleanConverter;
 import wicket.util.convert.converters.ByteConverter;
 import wicket.util.convert.converters.CharacterConverter;
@@ -64,11 +64,11 @@ import wicket.util.lang.Objects;
  * classes directly. There are convenient validators and conversion features
  * built into Wicket that you can use directly.
  * 
- * @see ICoverterLocatorFactory
+ * @see IConverterLocatorFactory
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class CoverterLocator implements ICoverterLocator
+public class ConverterLocator implements IConverterLocator
 {
 	private static final long serialVersionUID = 1L;
 
@@ -134,7 +134,7 @@ public class CoverterLocator implements ICoverterLocator
 	/**
 	 * Constructor
 	 */
-	public CoverterLocator()
+	public ConverterLocator()
 	{
 		set(Boolean.TYPE, BooleanConverter.INSTANCE);
 		set(Boolean.class, BooleanConverter.INSTANCE);

@@ -18,22 +18,22 @@
  */
 package wicket.util.convert;
 
-import wicket.ICoverterLocator;
+import wicket.IConverterLocator;
 
 /**
- * Implementation of {@link wicket.util.convert.IConverterFactory}which creates
- * an instance of CoverterLocator in order to fulfill the IConverter contract.
+ * Implementation of {@link IConverterLocatorFactory}which creates
+ * an instance of {@link IConverterLocator}.
  * 
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class CoverterLocatorFactory implements ICoverterLocatorFactory
+public final class CoverterLocatorFactory implements IConverterLocatorFactory
 {
 	/**
-	 * @see wicket.util.convert.ICoverterLocatorFactory#newConverterSupplier()
+	 * @see wicket.util.convert.IConverterLocatorFactory#newConverterSupplier()
 	 */
-	public ICoverterLocator newConverterSupplier()
+	public IConverterLocator newConverterSupplier()
 	{
-		return new CoverterLocator();
+		return new ConverterLocator();
 	}
 }

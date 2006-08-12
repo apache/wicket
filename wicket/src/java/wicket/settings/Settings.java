@@ -55,7 +55,7 @@ import wicket.session.DefaultPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
 import wicket.util.convert.CoverterLocatorFactory;
-import wicket.util.convert.ICoverterLocatorFactory;
+import wicket.util.convert.IConverterLocatorFactory;
 import wicket.util.crypt.CachingSunJceCryptFactory;
 import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
@@ -132,7 +132,7 @@ public final class Settings
 	/** The context path that should be used for url prefixing */
 	private String contextPath;
 
-	private ICoverterLocatorFactory converterFactory;
+	private IConverterLocatorFactory converterFactory;
 
 	/** Default values for persistence of form data (by means of cookies) */
 	private CookieValuePersisterSettings cookieValuePersisterSettings = new CookieValuePersisterSettings();
@@ -450,7 +450,7 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IApplicationSettings#getConverterSupplierFactory()
 	 */
-	public ICoverterLocatorFactory getConverterSupplierFactory()
+	public IConverterLocatorFactory getConverterSupplierFactory()
 	{
 		if (converterFactory == null)
 		{
@@ -889,9 +889,9 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#setConverterSupplierFactory(wicket.util.convert.ICoverterLocatorFactory)
+	 * @see wicket.settings.IApplicationSettings#setConverterSupplierFactory(wicket.util.convert.IConverterLocatorFactory)
 	 */
-	public void setConverterSupplierFactory(ICoverterLocatorFactory factory)
+	public void setConverterSupplierFactory(IConverterLocatorFactory factory)
 	{
 		if (factory == null)
 		{
