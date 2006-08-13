@@ -452,14 +452,14 @@ public final class MarkupParserTest extends WicketTestCase
 
 		ComponentTag t = (ComponentTag)markup.get(0);
 		assertEquals(t.getId(), "span");
-		assertEquals(t.getPath(), null);
+		assertNotNull(markup.findComponentIndex("span"));
 
 		t = (ComponentTag)markup.get(1);
 		assertEquals(t.getId(), "img");
-		assertEquals(t.getPath(), "span");
+		assertNotNull(markup.findComponentIndex("span:img"));
 
 		t = (ComponentTag)markup.get(2);
 		assertEquals(t.getId(), "span2");
-		assertEquals(t.getPath(), "span");
+		assertNotNull(markup.findComponentIndex("span:span2"));
 	}
 }

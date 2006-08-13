@@ -65,9 +65,6 @@ public class ComponentTag extends MarkupElement
 	/** The component's id identified by wicket:id="xxx" */
 	private String id;
 
-	/** The component's path in the markup */
-	private String path;
-
 	/** True, if attributes have been modified or added */
 	private boolean modified = false;
 
@@ -228,16 +225,6 @@ public class ComponentTag extends MarkupElement
 	public final ComponentTag getOpenTag()
 	{
 		return closes;
-	}
-
-	/**
-	 * Gets the component path of wicket elements
-	 * 
-	 * @return path
-	 */
-	public String getPath()
-	{
-		return path;
 	}
 
 	/**
@@ -550,7 +537,6 @@ public class ComponentTag extends MarkupElement
 			tag.id = id;
 			tag.setMarkupClass(this.markupClass);
 			tag.setHasNoCloseTag(this.hasNoCloseTag);
-			tag.setPath(this.path);
 			tag.setWicketTag(this.wicketTag);
 			tag.setInternalTag(this.internalTag);
 			return tag;
@@ -728,17 +714,6 @@ public class ComponentTag extends MarkupElement
 	{
 		this.closes = tag;
 		getXmlTag().setOpenTag(tag.getXmlTag());
-	}
-
-	/**
-	 * Sets the component path of wicket elements
-	 * 
-	 * @param path
-	 *            path
-	 */
-	void setPath(final String path)
-	{
-		this.path = path;
 	}
 
 	/**

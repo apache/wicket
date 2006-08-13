@@ -34,16 +34,17 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
 
+	/** The separator for tag path within the markup */
+	public static final String TAG_PATH_SEPARATOR = ":";
+
 	/**
 	 * Find the markup element index of the component with 'path'
 	 * 
 	 * @param path
 	 *            The component path expression
-	 * @param id
-	 *            The component's id to search for
 	 * @return -1, if not found
 	 */
-	int findComponentIndex(final String path, final String id);
+	int findComponentIndex(final String path);
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package

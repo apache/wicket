@@ -17,7 +17,11 @@
  */
 package wicket;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import wicket.markup.ComponentTag;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.border.Border;
@@ -91,9 +95,25 @@ final class MarkupFragmentFinder
 
 			// Make sure the markup stream is positioned at the correct element
 			String relativePath = getComponentRelativePath(component, parentWithAssociatedMarkup);
+			
+			relativePath = ((relativePath != null) && (relativePath.length() > 0) ? relativePath + IMarkup.TAG_PATH_SEPARATOR + component.getId(): component.getId());
+
+			// TODO Post 1.2: A component path e.g. "panel:label" does not match 1:1
+			// with the markup in case of ListView, where the path contains a number
+			// for each list item. E.g. list:0:label. What we currently do is simply
+			// remove the number from the path and hope that no user uses an integer
+			// for a component id. This is a hack only. A much better solution would
+			// delegate to the various components recursivly to search within there
+			// realm only for the components markup. ListItems could then simply
+			// do nothing and delegate to their parents.
+
+			// s/:\d+//g
+			final Pattern re = Pattern.compile(IMarkup.TAG_PATH_SEPARATOR + "\\d+");
+			final Matcher matcher = re.matcher(relativePath);
+			relativePath = matcher.replaceAll("");
 
 			// If the component is defined in the markup
-			int index = markupStream.findComponentIndex(relativePath, component.getId());
+			int index = markupStream.findComponentIndex(relativePath);
 			if (index != -1)
 			{
 				// than position the stream at the beginning of the component
@@ -137,8 +157,10 @@ final class MarkupFragmentFinder
 						componentId += Component.PATH_SEPARATOR + mc.getId();
 					}
 					relativePath = relativePath.replace(componentId, fragmentId);
+					relativePath = ((relativePath != null) && (relativePath.length() > 0) ? relativePath + IMarkup.TAG_PATH_SEPARATOR + component.getId(): component.getId());
+
 					// If the component is defined in the markup
-					index = markupStream.findComponentIndex(relativePath, component.getId());
+					index = markupStream.findComponentIndex(relativePath);
 					if (index != -1)
 					{
 						// than position the stream at the beginning of the
@@ -174,7 +196,7 @@ final class MarkupFragmentFinder
 		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup
 				.getPageRelativePath();
 		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-		if (relativePath.startsWith(":"))
+		if (relativePath.startsWith(IMarkup.TAG_PATH_SEPARATOR))
 		{
 			relativePath = relativePath.substring(1);
 		}

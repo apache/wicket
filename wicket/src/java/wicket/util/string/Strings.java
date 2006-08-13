@@ -433,10 +433,8 @@ public final class Strings
 				}
 			}
 			return buff.toString();
-
 		}
 	}
-
 
 	/**
 	 * Replace HTML numbers like &#20540 by the appropriate character.

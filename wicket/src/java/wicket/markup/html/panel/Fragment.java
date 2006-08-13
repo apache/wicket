@@ -253,7 +253,7 @@ public class Fragment<T> extends WebMarkupContainer<T>
 		int currentIndex = providerMarkupStream.getCurrentIndex();
 
 		// Find the markup fragment
-		int index = providerMarkupStream.findComponentIndex(null, markupId);
+		int index = providerMarkupStream.findComponentIndex(markupId);
 		if (index == -1)
 		{
 			throw new MarkupException("Markup does not contain a fragment with id=" + markupId
