@@ -121,7 +121,7 @@ Wicket.FunctionsExecuter.prototype = {
 /* Replaces the element's outer html with the given text. If it's needed
    (for all browsers except gecko based) it takes the newly created scripts elements 
    and adds them to head (execute them) */
-Wicket.replaceOuterHtml = function(element, text) {
+Wicket.replaceOuterHtml = function(element, text) {	
     if (element.outerHTML) { // internet explorer
        var parent = element.parentNode;
        
@@ -617,7 +617,7 @@ Wicket.Ajax.Call.prototype = {
    		Wicket.Ajax.invokeFailureHandlers();
 	},	
 	
-	call: function() {
+	call: function() {	
 		return this.request.get();
 	},
 	
@@ -727,7 +727,11 @@ Wicket.Ajax.Call.prototype = {
 		    if (encoding != null) {
 		        text = Wicket.decode(encoding, text);
 		    }
-		    eval(text);
+		    try {
+		    	eval(text);
+		    } catch (exception) {
+		    	Wicket.Log.error("Exception evaluating javascript: " + exception);
+		    }
 			notify();
 		});
 	},
