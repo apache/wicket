@@ -20,7 +20,6 @@ package wicket.markup.html.panel;
 
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
-import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.parser.XmlTag;
@@ -40,13 +39,13 @@ import wicket.version.undo.Change;
  * <p>
  * 
  * <pre>
- *                &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *  &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
  *               
- *                &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *                &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *  &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *  &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *                add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *  add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  *
  * @param <T>
@@ -253,15 +252,7 @@ public class Fragment<T> extends WebMarkupContainer<T>
 		int currentIndex = providerMarkupStream.getCurrentIndex();
 
 		// Find the markup fragment
-		int index = providerMarkupStream.findComponentIndex(markupId);
-		if (index == -1)
-		{
-			throw new MarkupException("Markup does not contain a fragment with id=" + markupId
-					+ "; Component: " + toString());
-		}
-
-		// Set the markup stream position to where the fragment begins
-		providerMarkupStream.setCurrentIndex(index);
+		int index = providerMarkupStream.positionAt(markupId, true);
 
 		try
 		{

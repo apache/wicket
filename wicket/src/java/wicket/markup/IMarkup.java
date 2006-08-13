@@ -44,7 +44,7 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	 *            The component path expression
 	 * @return -1, if not found
 	 */
-	int findComponentIndex(final String path);
+	int findTag(final String path);
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package

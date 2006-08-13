@@ -40,7 +40,7 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Juergen Donnerstag
  */
-public class MarkupFragment implements Iterable<MarkupElement>
+public class MarkupFragment extends MarkupElement implements Iterable<MarkupElement>
 {
 	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(MarkupFragment.class);
@@ -55,17 +55,65 @@ public class MarkupFragment implements Iterable<MarkupElement>
 	private final IMarkup markup;
 
 	/**
-	 * Constructor
+	 * If null, than markup fragment is associated with a whole Page or Panel
+	 * markup file. Else the parent Wicket tag's markup
+	 */
+	private final MarkupFragment parentFragment;
+
+	/**
+	 * Constructor.
+	 * <p>
+	 * This constructor should be used for Pages and Panels which have there own
+	 * associated markup file
 	 * 
 	 * @param markup
 	 *            The associated Markup
 	 */
 	MarkupFragment(final IMarkup markup)
 	{
-		this.markup = markup;
-		this.markupElements = new ArrayList<MarkupElement>();
+		this(markup, null, null);
 	}
 
+	/**
+	 * Constructor
+	 * <p>
+	 * This constructor should be used for tags inside a markup file.
+	 * 
+	 * @param markup
+	 *            The associated Markup
+	 * @param parentFragment
+	 *            The parent Wicket tag's markup fragment
+	 * @param openTag
+	 *            The initial (open) tag
+	 */
+	MarkupFragment(final IMarkup markup, final MarkupFragment parentFragment,
+			final ComponentTag openTag)
+	{
+		this.markup = markup;
+		this.parentFragment = parentFragment;
+		this.markupElements = new ArrayList<MarkupElement>();
+
+		if (this.parentFragment != null)
+		{
+			this.parentFragment.addMarkupElement(this);
+		}
+
+		if (openTag != null)
+		{
+			this.markupElements.add(openTag);
+		}
+	}
+
+	/**
+	 * Get the parent markup fragment. 
+	 * 
+	 * @return Null, if no parent available
+	 */
+	public final MarkupFragment getParentFragment()
+	{
+		return this.parentFragment;
+	}
+	
 	/**
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
@@ -211,16 +259,30 @@ public class MarkupFragment implements Iterable<MarkupElement>
 	@Override
 	public final String toString()
 	{
-		final AppendingStringBuffer buf = new AppendingStringBuffer(400);
-		buf.append(this.markup.toString());
-		buf.append("\n");
+		return this.markupElements.toString();
+	}
 
+	/**
+	 * @see wicket.markup.MarkupElement#toCharSequence()
+	 */
+	@Override
+	public CharSequence toCharSequence()
+	{
+		final AppendingStringBuffer buf = new AppendingStringBuffer(this.markup.size() * 40);
 		for (MarkupElement elem : this)
 		{
 			buf.append(elem);
 			buf.append(",");
 		}
+		return buf;
+	}
 
-		return buf.toString();
+	/**
+	 * @see wicket.markup.MarkupElement#toUserDebugString()
+	 */
+	@Override
+	public String toUserDebugString()
+	{
+		return toString();
 	}
 }

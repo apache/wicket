@@ -950,6 +950,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public final IValueMap getMarkupAttributes()
 	{
+		// Should only be null if markup tag doesn't have any attributes. 
+		// See Constructor
 		if (markupAttributes == null)
 		{
 			markupAttributes = new ValueMap(2);
@@ -1683,9 +1685,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					MarkupContainer<T> container = (MarkupContainer<T>)this;
 
 					// First, give priority to IFeedback instances, as they have
-					// to
-					// collect their messages before components like ListViews
-					// remove any child components
+					// to collect their messages before components like 
+					// ListViews remove any child components
 					container.visitChildren(IFeedback.class, new IVisitor()
 					{
 						public Object component(Component component)

@@ -216,7 +216,7 @@ public class Markup implements IMarkup
 	 * @see wicket.markup.IMarkup#findComponentIndex(java.lang.String,
 	 *      java.lang.String)
 	 */
-	public int findComponentIndex(final String path)
+	public int findTag(final String path)
 	{
 		if ((path == null) || (path.length() == 0))
 		{
@@ -256,19 +256,18 @@ public class Markup implements IMarkup
 
 		if (markup != null)
 		{
-			// HTML tags like <img> may not have a close tag. But because that
-			// can only be detected until later on in the sequential markup
-			// reading loop, we only can do it now.
+			// The current tag path
 			StringBuffer componentPath = new StringBuffer(100);
+
+			// For each ComponentTag
 			for (int i = 0; i < this.markup.size(); i++)
 			{
 				final MarkupElement elem = this.markup.get(i);
 				if (elem instanceof ComponentTag)
 				{
+					// Based on the tag and the current tag path, create a
+					// cache entry and update the tag path.
 					final ComponentTag tag = (ComponentTag)elem;
-
-					// Set the tags components path and add it to the local 
-					// cache if required
 					componentPath = setComponentPathForTag(componentPath, tag, i);
 				}
 			}
@@ -276,56 +275,60 @@ public class Markup implements IMarkup
 	}
 
 	/**
-	 * Set the components path within the markup and add the component tag to
-	 * the local cache
+	 * Based on the tag and its current tag path create a cache entry and update
+	 * the tag path again depending on the tag
 	 * 
-	 * @param componentPath
+	 * @param tagPath
+	 *            The current tag path in the markup
 	 * @param tag
+	 *            The current tag
 	 * @param tagIndex
-	 * @return componentPath
+	 *            The index of the tag within the markup
+	 * @return Updated tag path for the next ComponentTag in the markup
 	 */
-	private StringBuffer setComponentPathForTag(StringBuffer componentPath, final ComponentTag tag, final int tagIndex)
+	private StringBuffer setComponentPathForTag(final StringBuffer tagPath, final ComponentTag tag,
+			final int tagIndex)
 	{
 		// Only if the tag has wicket:id="xx" and open or open-close
 		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(wicketId))
 		{
-			int size = componentPath.length();
+			int size = tagPath.length();
 			if (size > 0)
 			{
-				componentPath.append(TAG_PATH_SEPARATOR);
+				tagPath.append(TAG_PATH_SEPARATOR);
 			}
-			componentPath.append(tag.getId());
-			
-			this.componentMap.put(componentPath.toString(), new Integer(tagIndex));
-			
+			tagPath.append(tag.getId());
+
+			this.componentMap.put(tagPath.toString(), new Integer(tagIndex));
+
 			// With open-close the path does not change. It can/will not have
 			// children. The same is true for HTML tags like <br> or <img>
 			// which might not have close tags.
 			if (tag.isOpenClose() || tag.hasNoCloseTag())
 			{
-				componentPath.setLength(size);
+				tagPath.setLength(size);
 			}
 		}
-		else if (tag.isClose() && (componentPath != null))
+		else if (tag.isClose() && (tagPath != null))
 		{
 			// For example <wicket:message> does not have an id
 			if ((tag.getOpenTag() == null)
 					|| tag.getOpenTag().getAttributes().containsKey(wicketId))
 			{
 				// Remove the last element from the component path
-				final int index = componentPath.lastIndexOf(TAG_PATH_SEPARATOR);
+				final int index = tagPath.lastIndexOf(TAG_PATH_SEPARATOR);
 				if (index != -1)
 				{
-					componentPath.setLength(index);
+					tagPath.setLength(index);
 				}
 				else
 				{
-					componentPath.setLength(0);
+					tagPath.setLength(0);
 				}
 			}
 		}
 
-		return componentPath;
+		return tagPath;
 	}
 
 	/**

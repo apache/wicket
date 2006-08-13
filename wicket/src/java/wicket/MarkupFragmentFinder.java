@@ -95,17 +95,19 @@ final class MarkupFragmentFinder
 
 			// Make sure the markup stream is positioned at the correct element
 			String relativePath = getComponentRelativePath(component, parentWithAssociatedMarkup);
-			
-			relativePath = ((relativePath != null) && (relativePath.length() > 0) ? relativePath + IMarkup.TAG_PATH_SEPARATOR + component.getId(): component.getId());
 
-			// TODO Post 1.2: A component path e.g. "panel:label" does not match 1:1
-			// with the markup in case of ListView, where the path contains a number
-			// for each list item. E.g. list:0:label. What we currently do is simply
-			// remove the number from the path and hope that no user uses an integer
-			// for a component id. This is a hack only. A much better solution would
-			// delegate to the various components recursivly to search within there
-			// realm only for the components markup. ListItems could then simply
-			// do nothing and delegate to their parents.
+			relativePath = ((relativePath != null) && (relativePath.length() > 0) ? relativePath
+					+ IMarkup.TAG_PATH_SEPARATOR + component.getId() : component.getId());
+
+			// TODO Post 1.2: A component path e.g. "panel:label" does not match
+			// 1:1 with the markup in case of ListView, where the path contains
+			// a number for each list item. E.g. list:0:label. What we currently
+			// do is simply remove the number from the path and hope that no
+			// user uses an integer for a component id. This is a hack only. A
+			// much better solution would delegate to the various components
+			// recursivly to search within there realm only for the components
+			// markup. ListItems could then simply do nothing and delegate to
+			// their parents.
 
 			// s/:\d+//g
 			final Pattern re = Pattern.compile(IMarkup.TAG_PATH_SEPARATOR + "\\d+");
@@ -113,11 +115,9 @@ final class MarkupFragmentFinder
 			relativePath = matcher.replaceAll("");
 
 			// If the component is defined in the markup
-			int index = markupStream.findComponentIndex(relativePath);
+			int index = markupStream.positionAt(relativePath, false);
 			if (index != -1)
 			{
-				// than position the stream at the beginning of the component
-				markupStream.setCurrentIndex(index);
 				return markupStream;
 			}
 
@@ -157,21 +157,19 @@ final class MarkupFragmentFinder
 						componentId += Component.PATH_SEPARATOR + mc.getId();
 					}
 					relativePath = relativePath.replace(componentId, fragmentId);
-					relativePath = ((relativePath != null) && (relativePath.length() > 0) ? relativePath + IMarkup.TAG_PATH_SEPARATOR + component.getId(): component.getId());
+					relativePath = ((relativePath != null) && (relativePath.length() > 0)
+							? relativePath + IMarkup.TAG_PATH_SEPARATOR + component.getId()
+							: component.getId());
 
 					// If the component is defined in the markup
-					index = markupStream.findComponentIndex(relativePath);
+					index = markupStream.positionAt(relativePath, false);
 					if (index != -1)
 					{
-						// than position the stream at the beginning of the
-						// component
-						markupStream.setCurrentIndex(index);
 						return markupStream;
 					}
 				}
-				throw new WicketRuntimeException(
-						"Unable to find the markup for the component: "
-								+ component.getId());
+				throw new WicketRuntimeException("Unable to find the markup for the component: "
+						+ component.getId());
 			}
 
 			// Not found, reset the stream

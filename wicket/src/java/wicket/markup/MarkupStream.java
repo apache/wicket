@@ -18,6 +18,8 @@
  */
 package wicket.markup;
 
+import java.util.Iterator;
+
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
@@ -45,7 +47,7 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public final class MarkupStream
+public final class MarkupStream implements Iterable<MarkupElement>
 {
 	/** Element at currentIndex */
 	private MarkupElement current;
@@ -211,6 +213,7 @@ public final class MarkupStream
 	 */
 	public MarkupElement next()
 	{
+		// @TODO I think it is a bug. You'll never be able to get(0). 
 		if (++currentIndex < markup.size())
 		{
 			return current = get(currentIndex);
@@ -400,11 +403,33 @@ public final class MarkupStream
 	 * 
 	 * @param path
 	 *            The component path expression
+	 * @param throwException
+	 *            If true, than throw an exception if not found
 	 * @return -1, if not found
 	 */
-	public final int findComponentIndex(final String path)
+	public final int positionAt(final String path, final boolean throwException)
 	{
-		return this.markup.findComponentIndex(path);
+		if ((path == null) || (path.length() == 0))
+		{
+			throw new IllegalArgumentException("Parameter 'path' must not be null or empty");
+		}
+
+		int index = this.markup.findTag(path);
+		if (index == -1)
+		{
+			if (throwException == true)
+			{
+				throw new MarkupException("Markup does not contain a Wicket tag with path '" + path
+						+ "'; Resource: " + this.markup.getResource().toString());
+			}
+		}
+		else
+		{
+			// Set the markup stream position to where the fragment begins
+			setCurrentIndex(index);
+		}
+		
+		return index;
 	}
 
 	/**
@@ -414,6 +439,14 @@ public final class MarkupStream
 	public final boolean isMergedMarkup()
 	{
 		return (this.markup instanceof MergedMarkup);
+	}
+
+	/**
+	 * @see java.lang.Iterable#iterator()
+	 */
+	public Iterator<MarkupElement> iterator()
+	{
+		return this.markup.iterator();
 	}
 
 	/**
