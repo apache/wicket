@@ -291,8 +291,26 @@ public class ModalWindow extends Panel<Object>
 	 *            Request target associated with current ajax request.
 	 */
 	public static final void close(AjaxRequestTarget target)
+	{		
+		target.appendJavascript(getCloseJavacript());
+	}
+	
+	/**
+	 * @return javascript that closes current modal window
+	 */
+	private static String getCloseJavacript() 
 	{
-		target.appendJavascript("Wicket.Window.close();");
+		return
+			"var win;\n" +
+			"try {\n" +		
+			"	win = window.parent.Wicket.Window;\n" + 
+			"} catch (ignore) {\n" +
+			"}\n" +			
+			"if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n" +
+			"	window.parent.setTimeout(function() {\n" +
+			"		win.current.close();\n" +	
+			"	}, 0);\n" +
+			"}";
 	}
 
 	/**
@@ -835,14 +853,14 @@ public class ModalWindow extends Panel<Object>
 		buffer.append("settings.className=\"" + getCssClassName() + "\";\n");
 		buffer.append("settings.width=\"" + getInitialWidth() + "\";\n");
 
-		if (isUseInitialHeight() == true)
+		if (isUseInitialHeight() == true || isCustomComponent() == false)
 			buffer.append("settings.height=\"" + getInitialHeight() + "\";\n");
 		else
 			buffer.append("settings.height=null;\n");
 
 		buffer.append("settings.resizable=" + Boolean.toString(isResizable()) + ";\n");
 
-		if (isResizable() == false && isCustomComponent() == true)
+		if (isResizable() == false)
 		{
 			buffer.append("settings.widthUnit=\"" + getWidthUnit() + "\";\n");
 			buffer.append("settings.heightUnit=\"" + getHeightUnit() + "\";\n");
