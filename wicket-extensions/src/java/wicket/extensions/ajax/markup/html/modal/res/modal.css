@@ -1,5 +1,5 @@
 div.wicket-mask-dark {	
-	position: absolute; 
+	position: fixed;	
 	top: 0px; 
 	left: 0px; 
 	width: 100%; 
@@ -12,7 +12,7 @@ div.wicket-mask-dark {
 }
 
 div.wicket-mask-transparent {
-	position: absolute;	
+	position: fixed;	
 	top: 0px; 
 	left: 0px; 
 	width: 100%; 
@@ -21,9 +21,9 @@ div.wicket-mask-transparent {
 	background-image: url('transparent1.gif');
 }
 
-
 div.wicket-modal {	
-	position: absolute;
+	position: fixed;
+	_position: absolute;
 	z-index: 20001; 
 	visibility: hidden;
 }
@@ -101,6 +101,8 @@ div.wicket-modal div.w_caption {
 	position: relative;
 	background-color: white;
 	cursor: default;
+	line-height: 1.4em;
+	color: #666;
 }
 
 div.wicket-modal a.w_close {	

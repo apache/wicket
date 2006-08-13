@@ -121,6 +121,11 @@ Wicket.Drag = {
 		e = Wicket.Drag.fixEvent(e);
 		var o = Wicket.Drag.current;
 
+		// this happens sometimes in Safari 
+		if (e.clientX < 0 || e.clientY < 0) {
+			return;
+		}
+
 		if (o != null) {		
 			var deltaX = e.clientX - o.lastMouseX;
 			var deltaY = e.clientY - o.lastMouseY;
@@ -226,9 +231,16 @@ Wicket.Iframe = {
 				if (evt == null)
 					evt = iframe.contentWindow.event;
 				var e = new Object();						
+				
+				var dx = 0;
+				var dy = 0;				
+				if (Wicket.Browser.isIE()) {
+					dx = doc.body.scrollLeft;
+					dy = doc.body.scrollTop;
+				}
 										
-				e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - doc.body.scrollLeft;
-				e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe) - doc.body.scrollTop;		
+				e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
+				e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe) - dy;		
 				doc.onmousemove(e);			
 			}	
 			idoc.old_onmouseup = idoc.old_onmousemove;
@@ -236,8 +248,16 @@ Wicket.Iframe = {
 				if (evt == null)
 					evt = iframe.contentWindow.event;
 				var e = new Object();
-				e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe);
-				e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe);			
+
+				var dx = 0;
+				var dy = 0;				
+				if (Wicket.Browser.isIE()) {
+					dx = doc.body.scrollLeft;
+					dy = doc.body.scrollTop;
+				}
+				
+				e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
+				e.clientY = evt.clientY + Wicket.Iframe.findPosY(iframe) - dy;			
 				doc.onmouseup(e);	
 			}	
 			revertList.push(iframe);
@@ -458,7 +478,10 @@ Wicket.Window.prototype = {
 			this.topLeft.style.marginRight = "-3px";
 			this.topRight.style.marginLeft = "-3px";
 			this.bottomLeft.style.marginRight = "-3px";
-			this.bottomRight.style.marginLeft = "-3px";						
+			this.bottomRight.style.marginLeft = "-3px";
+			
+			// IE doesn't support position: fixed, not even IE7!
+			this.window.style.position = "absolute";
 		} 			
 		
 		// fix the cursors
@@ -541,8 +564,13 @@ Wicket.Window.prototype = {
 	 * Places the window to the center of the viewport.
 	 */	
 	center: function() {
-		var scTop = document.body.scrollTop != null ? document.body.scrollTop : window.pageXOffset;
-		var scLeft = document.body.scrollLeft != null ? document.body.scrollLeft : window.pageYOffset;
+		var scTop = 0;
+		var scLeft = 0;
+
+		if (Wicket.Browser.isIE()) 	{
+			scTop = document.body.scrollTop != null ? document.body.scrollTop : window.pageXOffset;
+			scLeft = document.body.scrollLeft != null ? document.body.scrollLeft : window.pageYOffset;
+		}
 		
 		var width = Wicket.Window.getViewportWidth();
 		var height = Wicket.Window.getViewportHeight();
@@ -561,7 +589,8 @@ Wicket.Window.prototype = {
 	 * Saves the position (and size if resizable) as a cookie.
 	 */
 	savePosition: function() {
-		if (typeof(this.settings.cookieId) != "undefined") {
+		if (typeof(this.settings.cookieId) != "undefined" &&
+		    this.settings.cookieId != null) {
 			var key = "wicket-modal-" + this.settings.cookieId + "-";
 			var exp = 31;
 			
@@ -579,7 +608,8 @@ Wicket.Window.prototype = {
 	 * Restores the position (and size if resizable) from the cookie.
 	 */
 	loadPosition: function() {
-		if (typeof(this.settings.cookieId) != "undefined") {
+		if (typeof(this.settings.cookieId) != "undefined" &&
+		    this.settings.cookieId != null) {
 			var key = "wicket-modal-" + this.settings.cookieId + "-";			
 			
 			var g = Wicket.Cookie.get;
@@ -876,20 +906,10 @@ Wicket.Window.prototype = {
 	 * Called when dragging has started. 
 	 */
 	onBegin: function(object) {
-		if (this.isIframe()) {
-			this.revertList = new Array();		
+		if (this.isIframe() && (Wicket.Browser.isGecko() || Wicket.Browser.isIE())) {
+			this.revertList = new Array();				
 			Wicket.Iframe.documentFix(document, this.revertList);
-		}			 			 	
-		
-		// HACK
-		// Gecko browsers can move the window much smoother if the mask's position is fixed.
-		// However, if the position is fixed the window redraws much slower, therefore we set
-		// the mask to position: fixed only while dragging.
-		if (typeof(Wicket.Window.Mask.element) != "undefined" && Wicket.Browser.isGecko()) {
-			var s = Wicket.Window.Mask.element.style;
-			s.position = "fixed";
-			s.left = s.right = s.top = s.bottom = null;			
-		}				
+		}			 			 			
 	},
 	
 	/**
@@ -905,17 +925,7 @@ Wicket.Window.prototype = {
 			}
 			this.revertList = null;
 		}
-		
-		// HACK
-		// Gecko browsers can move the window much smoother if the mask's position is fixed.
-		// However, if the position is fixed the window redraws much slower, therfore we set
-		// the mask to position: fixed only while dragging.
-		if (typeof(Wicket.Window.Mask.element) != "undefined" && Wicket.Browser.isGecko()) {
-			var s = Wicket.Window.Mask.element.style;
-			s.position = "absolute";
-			window.onresize();
-		}				
-				
+						
 		this.savePosition();
 	},
 
@@ -940,10 +950,6 @@ Wicket.Window.prototype = {
 	 * Called when window is resizing.
 	 */
 	resizing: function() {	
-		// HACK on safari hide the frame contents, otherwise it does very funky things to events
-		if (this.isIframe() && Wicket.Browser.isSafari()) {
-			this.content.style.visibility='hidden';
-		}
 	},	
 	
 	/**
@@ -1042,6 +1048,7 @@ Wicket.Window.prototype = {
 		
 		this.width = parseInt(w.style.width, 10) + deltaX;
 		
+
 		this.clipSize();
 											
 		w.style.width = this.width + "px";
@@ -1254,6 +1261,10 @@ Wicket.Window.Mask.prototype = {
 				}
 			}
 
+			if (Wicket.Browser.isIE()) {
+				e.style.position = "absolute";
+			}
+
 			// set the element							 							
 			this.element = e;
 					
@@ -1314,16 +1325,11 @@ Wicket.Window.Mask.prototype = {
 	
 	/**
 	 * Used to update the position (ie) and size (ie, opera) of the mask.
-	 * We can't use position: fixed on background, because
-	 *   a) internet explorer doesn't support position: fixed
-	 *   b) firefox redraws iframe slower when there is element with position: fixed behind it
-	 * HACK we set position: fixed on browsers other then ie while resizing and then revert it back
-	 *      with a timeout. This way we get non-jerky resizing and iframe content scrolling fast on FF
 	 */
 	onScrollResize: function(dontChangePosition) {		
-		
+						
 		// if the iframe is not position:fixed fix it's position
-		if (this.element.style.position != "fixed") {
+		if (this.element.style.position == "absolute") {
 		
 			var w = Wicket.Window.getViewportWidth();
 			var h = Wicket.Window.getViewportHeight();
@@ -1341,27 +1347,7 @@ Wicket.Window.Mask.prototype = {
 			}	
 			this.element.style.height = h;		
 
-		} else {
-		    // if it is position:fixed, clear the timeout. new timeout
-		    // will be set couple of lines below
-			if (typeof(this.positionChangeTimeout != undefined))
-				window.clearTimeout(this.positionChangeTimeout);
-		}
-		
-		// if browser is not ie and we are not calling this method manually 
-		// from a handler, we set position: fixed and set a timeout that
-		// will revert to position:absolute one second after scrolling is done
-		if (Wicket.Browser.isIE() == false && dontChangePosition != true) {
-				this.element.style.top = 0;
-				this.element.style.left = 0;
-				this.element.style.position = "fixed";
-				this.positionChangeTimeout = window.setTimeout(function() {
-					if (this.element != null) {
-						this.element.style.position = "absolute";
-						this.onScrollResize(true);
-					}
-			}.bind(this), 1000);
-		}	
+		} 		
 	},
 
 	/**
