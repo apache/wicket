@@ -745,10 +745,10 @@ Wicket.Window.prototype = {
 		Wicket.Window.current = this;
 		
 		// show the window		
-		if (Wicket.Browser.isGecko()) {
+		if (Wicket.Browser.isGecko() && this.isIframe()) {
 			// HACK
 			// gecko flickers when showing the window
-			// unless the showing is postponed a little		
+			// unless the showing is postponed a little				
 			window.setTimeout(function() { doShow(); }, 0);
 		} else {
 			doShow();
@@ -855,8 +855,10 @@ Wicket.Window.prototype = {
 		// hids and cleanup the mask
 		this.destroyMask();
 		
-		// call onclose handler
-		this.settings.onClose();
+		if (force != true) {
+			// call onclose handler
+			this.settings.onClose();
+		}
 
 		// if there was a window shown before this one
 		if (this.oldWindow != null) {

@@ -18,10 +18,8 @@ import wicket.behavior.HeaderContributor;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.basic.Label;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.resources.CompressedPackageResourceReference;
-import wicket.model.AbstractReadOnlyModel;
 import wicket.request.RequestParameters;
 import wicket.settings.IPageSettings;
 import wicket.util.string.AppendingStringBuffer;
@@ -99,12 +97,7 @@ import wicket.util.string.AppendingStringBuffer;
  * can be either transparent or semitransparent.
  * <code>{@link #setMaskType(ModalWindow.MaskType)}</code> alters this.
  * </ul>
- * 
- * <p>
- * Note: If you are using a page as window content (iframe), it is recommended
- * to specify background color of the body tag of the content page. On certain
- * browsers this speeds up redrawing significantly.
- * 
+ *  
  * @see IPageSettings#setAutomaticMultiWindowSupport(boolean)
  * @author Matej Knopp
  */
@@ -135,19 +128,6 @@ public class ModalWindow extends Panel<Object>
 		add(new WindowClosedBehavior());
 		add(HeaderContributor.forJavaScript(JAVASCRIPT.getScope(), JAVASCRIPT.getName()));
 		add(HeaderContributor.forCss(CSS.getScope(), CSS.getName()));
-
-		new Label(this, "prefix", new AbstractReadOnlyModel()
-		{
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String getObject()
-			{
-				return "<div id=\"" + getComponentId() + "\">";
-			}
-		}).setEscapeModelStrings(false).setRenderBodyOnly(true);
-
-		new Label(this, "suffix", "</div>").setEscapeModelStrings(false).setRenderBodyOnly(true);
 	}
 
 	/**
@@ -688,7 +668,7 @@ public class ModalWindow extends Panel<Object>
 	@Override
 	protected void onAttach()
 	{
-		getContent().setRenderBodyOnly(true);
+		getContent().setOutputMarkupId(true);
 		getContent().setVisible(shown);
 	}
 
@@ -811,9 +791,9 @@ public class ModalWindow extends Panel<Object>
 	 * 
 	 * @return component id
 	 */
-	private String getComponentId()
+	private String getContentMarkupId()
 	{
-		return getMarkupId() + "__content";
+		return getContent().getMarkupId();
 	}
 
 	/**
@@ -844,7 +824,7 @@ public class ModalWindow extends Panel<Object>
 
 		if (isCustomComponent() == true)
 		{
-			buffer.append("var element = document.getElementById(\"" + getComponentId() + "\");\n");
+			buffer.append("var element = document.getElementById(\"" + getContentMarkupId() + "\");\n");
 		}
 
 		buffer.append("var settings = new Object();\n");
