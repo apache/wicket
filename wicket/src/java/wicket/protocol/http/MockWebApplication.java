@@ -421,6 +421,7 @@ public class MockWebApplication extends WebApplication
 		wicketSession = getSession(wicketRequest);
 		getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse = new WebResponse(servletResponse);
+		wicketResponse.setWebRequest(wicketRequest);
 	}
 
 	/**

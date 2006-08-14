@@ -143,4 +143,11 @@ public abstract class WebRequest extends Request
 	 * @return new WebRequest wrapper implementing MultipartWebRequest
 	 */
 	public abstract WebRequest newMultipartWebRequest(Bytes maxSize);
+	
+	/**
+	 * Is the request an ajax request?
+	 * 
+	 * @return True if the ajax is an ajax request. False if it's not.
+	 */
+	public abstract boolean isAjax();
 }

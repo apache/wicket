@@ -220,6 +220,7 @@ public class WicketFilter implements Filter
 		// Create a response object and set the output encoding according to
 		// wicket's application setttings.
 		final WebResponse response = webApplication.newWebResponse(servletResponse);
+		response.setWebRequest(request);
 		response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 				.getResponseRequestEncoding());
 

@@ -273,4 +273,24 @@ public class WebRequestCycle extends RequestCycle
 		}
 		return new WebClientInfo(this);
 	}
+
+	/**
+	 * If it's an ajax request we always redirects.
+	 * 
+	 * @see wicket.RequestCycle#getRedirect()
+	 */
+	@Override
+	public final boolean getRedirect()
+	{
+		if (getWebRequest().isAjax())
+		{
+			return true;
+		}
+		else
+		{
+			return super.getRedirect();
+		}
+	}
+	
+	
 }

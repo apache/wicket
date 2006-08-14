@@ -23,11 +23,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.util.lang.Bytes;
+import wicket.util.string.StringValueConversionException;
+import wicket.util.string.Strings;
 import wicket.util.upload.FileUploadException;
 
 /**
@@ -39,6 +44,9 @@ public class ServletWebRequest extends WebRequest
 {
 	/** Servlet request information. */
 	private final HttpServletRequest httpServletRequest;
+	
+	/** Log */
+	private static final Log log = LogFactory.getLog(ServletWebRequest.class); 
 
 	/**
 	 * Protected constructor.
@@ -246,5 +254,27 @@ public class ServletWebRequest extends WebRequest
 		{
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	@Override
+	public boolean isAjax()
+	{
+		boolean ajax = false;
+		
+		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
+		if (Strings.isEmpty(ajaxHeader) == false)
+		{
+			try
+			{
+				ajax = Strings.isTrue(ajaxHeader);
+			}
+			catch (StringValueConversionException e)
+			{
+				// We are not interested in this exception but we log it anyway
+				log.debug("Couldn't convert the Wicket-Ajax header: "+ajaxHeader);
+			}
+		}
+		
+		return ajax;
 	}
 }

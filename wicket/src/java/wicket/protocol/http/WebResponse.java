@@ -54,6 +54,9 @@ public class WebResponse extends Response
 
 	/** The underlying response object. */
 	private final HttpServletResponse httpServletResponse;
+	
+	/** A reference to the request */
+	private WebRequest webRequest;
 
 	/**
 	 * Constructor for testing harness.
@@ -197,7 +200,13 @@ public class WebResponse extends Response
 						log.debug("Redirecting to " + url);
 					}
 
-					httpServletResponse.sendRedirect(url);
+					if (getWebRequest().isAjax()) 
+					{
+						httpServletResponse.addHeader("Ajax-Location", url);
+					} else 
+					{
+						httpServletResponse.sendRedirect(url);
+					}
 					redirect = true;
 				}
 				catch (IOException e)
@@ -374,5 +383,25 @@ public class WebResponse extends Response
 	{
 		setHeader("Content-Disposition", "attachment"
 				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+	}
+
+	/**
+	 * Set the response
+	 * 
+	 * @param webRequest The webrequest which matches this response.
+	 */
+	public void setWebRequest(WebRequest webRequest)
+	{
+		this.webRequest = webRequest;
+	}
+	
+	/**
+	 * Get the webrequest which matches this response.
+	 * 
+	 * @return The webrequest which matches this response.
+	 */
+	public WebRequest getWebRequest()
+	{
+		return webRequest;
 	}
 }

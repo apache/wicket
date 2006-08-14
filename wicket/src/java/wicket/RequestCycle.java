@@ -415,7 +415,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return whether the page for this request should be redirected
 	 */
-	public final boolean getRedirect()
+	public boolean getRedirect()
 	{
 		return redirect;
 	}
