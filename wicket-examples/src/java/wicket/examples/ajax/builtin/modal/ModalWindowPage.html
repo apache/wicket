@@ -1,0 +1,19 @@
+<wicket:extend>
+	Last modal window result: <span wicket:id="result"></span>
+	
+	<div wicket:id="modal1"></div>
+	<a wicket:id="showModal1">Show modal dialog with a page</a>
+	<br/>
+	<script>
+		function show() {
+			var settings = new Object();
+			settings.src = "/we/ajax?wicket:bookmarkablePage=wicket-0:wicket.examples.ajax.builtin.modal.ModalContent1Page";
+			settings.cookieId = null;			
+			var win = Wicket.Window.create(settings);			
+			win.show();
+		}
+	</script>
+	<a href="javascript: show();">Show (js only)</a> 
+	<div wicket:id="modal2"></div><br/>
+	<a wicket:id="showModal2">Show modal dialog with panel</a>
+</wicket:extend>
