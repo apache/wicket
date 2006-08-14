@@ -198,6 +198,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
+			// special check if the prefix ends on '/' because a mount always starts with '/' 
+			if(prefix.charAt(prefix.length()-1) == '/') prefix = prefix.subSequence(0, prefix.length()-1);
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
 					+ path.length());
 			buffer.append(prefix);
@@ -807,7 +809,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					buffer.append(path);
 				}
 			}
-			urlPrefix = buffer;
+			// special check, if everything is empty then we need to define '/' as urlPrefix 
+			// else all urls get relative this is bad for mounts.
+			// Except for mounts who have to do a special check else mounts get: //mount
+			// see encode(RequestCycle,IRequestTarget) when a mount is found.
+			if(buffer.length() ==0)
+			{
+				urlPrefix = "/";
+			}
+			else
+			{
+				urlPrefix = buffer;
+			}
 		}
 		return urlPrefix;
 	}
