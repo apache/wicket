@@ -26,6 +26,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.panel.Fragment;
+import wicket.util.string.PrependingStringBuffer;
 
 /**
  * Responding to an AJAX request requires that we position the markup stream at
@@ -37,6 +38,9 @@ import wicket.markup.html.panel.Fragment;
  */
 final class MarkupFragmentFinder
 {
+	private static final Pattern LIST_VIEW_NUMBER = Pattern.compile(IMarkup.TAG_PATH_SEPARATOR
+			+ "\\d+");
+
 	/**
 	 * Construct
 	 */
@@ -95,9 +99,7 @@ final class MarkupFragmentFinder
 
 			// Make sure the markup stream is positioned at the correct element
 			String relativePath = getComponentRelativePath(component, parentWithAssociatedMarkup);
-
-			relativePath = ((relativePath != null) && (relativePath.length() > 0) ? relativePath
-					+ IMarkup.TAG_PATH_SEPARATOR + component.getId() : component.getId());
+			relativePath = joinPath(relativePath, component.getId());
 
 			// TODO Post 1.2: A component path e.g. "panel:label" does not match
 			// 1:1 with the markup in case of ListView, where the path contains
@@ -110,8 +112,7 @@ final class MarkupFragmentFinder
 			// their parents.
 
 			// s/:\d+//g
-			final Pattern re = Pattern.compile(IMarkup.TAG_PATH_SEPARATOR + "\\d+");
-			final Matcher matcher = re.matcher(relativePath);
+			final Matcher matcher = LIST_VIEW_NUMBER.matcher(relativePath);
 			relativePath = matcher.replaceAll("");
 
 			// If the component is defined in the markup
@@ -157,9 +158,7 @@ final class MarkupFragmentFinder
 						componentId += Component.PATH_SEPARATOR + mc.getId();
 					}
 					relativePath = relativePath.replace(componentId, fragmentId);
-					relativePath = ((relativePath != null) && (relativePath.length() > 0)
-							? relativePath + IMarkup.TAG_PATH_SEPARATOR + component.getId()
-							: component.getId());
+					relativePath = joinPath(relativePath, component.getId());
 
 					// If the component is defined in the markup
 					index = markupStream.positionAt(relativePath, false);
@@ -177,6 +176,16 @@ final class MarkupFragmentFinder
 		}
 	}
 
+	private static String joinPath(final String path, final String id)
+	{
+		if ((path != null) && (path.length() > 0))
+		{
+			return path + IMarkup.TAG_PATH_SEPARATOR + id;
+		}
+
+		return id;
+	}
+
 	/**
 	 * Gets component path relative to the parent container with associated
 	 * markup.
@@ -190,14 +199,22 @@ final class MarkupFragmentFinder
 	private static String getComponentRelativePath(final Component component,
 			final MarkupContainer parentWithAssociatedMarkup)
 	{
-		final String componentPath = component.getParent().getPageRelativePath();
-		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup
-				.getPageRelativePath();
-		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
-		if (relativePath.startsWith(IMarkup.TAG_PATH_SEPARATOR))
+		final MarkupContainer parent = component.getParent();
+		if ((parent == null) || (parent == parentWithAssociatedMarkup))
 		{
-			relativePath = relativePath.substring(1);
+			return "";
 		}
-		return relativePath;
+
+		final PrependingStringBuffer buffer = new PrependingStringBuffer(32);
+		for (Component c = parent; (c != parentWithAssociatedMarkup) && (c != null); c = c
+				.getParent())
+		{
+			if (buffer.length() > 0)
+			{
+				buffer.prepend(IMarkup.TAG_PATH_SEPARATOR);
+			}
+			buffer.prepend(c.getId());
+		}
+		return buffer.toString();
 	}
 }

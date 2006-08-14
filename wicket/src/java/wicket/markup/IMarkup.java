@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision$
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision$ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,7 +35,7 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	public static final Markup NO_MARKUP = new Markup();
 
 	/** The separator for tag path within the markup */
-	public static final String TAG_PATH_SEPARATOR = ":";
+	public static final char TAG_PATH_SEPARATOR = ':';
 
 	/**
 	 * Find the markup element index of the component with 'path'
@@ -45,6 +45,17 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	 * @return -1, if not found
 	 */
 	int findTag(final String path);
+
+	/**
+	 * Find the MarkupFragment associated with the tag path
+	 * 
+	 * @param path
+	 *            The path of the tag relative to the markup resource
+	 * @param throwException
+	 *            if true, throw an exception if not found
+	 * @return MarkupFragment
+	 */
+	MarkupFragment findMarkupFragment(final String path, final boolean throwException);
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package

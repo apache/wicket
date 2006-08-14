@@ -89,7 +89,8 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		MarkupResourceStream stream = new MarkupResourceStream(new StringResourceStream(markup),
 				null, null);
-		final MarkupParser parser = new MarkupParserFactory(this.application).newMarkupParser(stream);
+		final MarkupParser parser = new MarkupParserFactory(this.application)
+				.newMarkupParser(stream);
 		return parser.readAndParse();
 	}
 
@@ -453,13 +454,16 @@ public final class MarkupParserTest extends WicketTestCase
 		ComponentTag t = (ComponentTag)markup.get(0);
 		assertEquals(t.getId(), "span");
 		assertNotNull(markup.findTag("span"));
+		assertNotNull(markup.findMarkupFragment("span", false));
 
 		t = (ComponentTag)markup.get(1);
 		assertEquals(t.getId(), "img");
 		assertNotNull(markup.findTag("span:img"));
+		assertNotNull(markup.findMarkupFragment("span:img", false));
 
 		t = (ComponentTag)markup.get(2);
 		assertEquals(t.getId(), "span2");
 		assertNotNull(markup.findTag("span:span2"));
+		assertNotNull(markup.findMarkupFragment("span:span2", false));
 	}
 }

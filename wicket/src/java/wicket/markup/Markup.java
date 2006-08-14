@@ -24,6 +24,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.util.string.Strings;
+
 /**
  * Holds markup as a resource (the stream that the markup came from) and a list
  * of MarkupElements (the markup itself).
@@ -42,6 +44,9 @@ public class Markup implements IMarkup
 	/** The list of markup elements */
 	private MarkupFragment markup;
 
+	/** The new world: One fragment per Component */
+	private MarkupFragment markupFragments;
+
 	/** The markup's resource stream for diagnostic purposes */
 	private MarkupResourceStream resource;
 
@@ -58,7 +63,7 @@ public class Markup implements IMarkup
 	private String wicketId;
 
 	/**
-	 * A cache which maps (componentPath + id) to the componentTags index in the
+	 * A cache which maps (tag path + id) to the componentTags index in the
 	 * markup
 	 */
 	private Map<String, Integer> componentMap;
@@ -247,6 +252,53 @@ public class Markup implements IMarkup
 	}
 
 	/**
+	 */
+	public MarkupFragment findMarkupFragment(final String path, final boolean throwException)
+	{
+		if ((path == null) || (path.length() == 0))
+		{
+			throw new IllegalArgumentException("Parameter 'path' must not be null");
+		}
+
+		if ((this.markup != null) && (this.markupFragments == null))
+		{
+			initialize();
+		}
+
+		// All component tags are registered with the cache
+		if (this.componentMap == null)
+		{
+			if (throwException == true)
+			{
+				throw new MarkupException("Markup not found for tag with path: " + path
+						+ "; The markup does not have any Wicket tag");
+			}
+
+			// not found
+			return null;
+		}
+
+		String[] ids = Strings.split(path, TAG_PATH_SEPARATOR);
+		MarkupFragment fragment = this.markupFragments;
+		for (String id : ids)
+		{
+			fragment = fragment.getChildFragment(id);
+			if (fragment == null)
+			{
+				if (throwException == true)
+				{
+					throw new MarkupException("Markup not found for tag with path: " + path
+							+ "; Tag with id '" + id + "' not found");
+				}
+
+				return null;
+			}
+		}
+
+		return fragment;
+	}
+
+	/**
 	 * Update internal Maps to find wicket tags easily
 	 */
 	private void initialize()
@@ -269,6 +321,57 @@ public class Markup implements IMarkup
 					// cache entry and update the tag path.
 					final ComponentTag tag = (ComponentTag)elem;
 					componentPath = setComponentPathForTag(componentPath, tag, i);
+				}
+			}
+
+			initMarkupFragments();
+		}
+	}
+
+	/**
+	 * Until we started with AJAX we iterated over the markup and tried to find
+	 * the component. With AJAX however we need to find the Markup for a
+	 * Component. In an attempt to change Wicket internals step by step,
+	 * initMarkupFragments() create a hierarchal structure of MarkupFragments
+	 * and other MarkupElements based on the simple List of elements per Markup
+	 * file whixh we have now.
+	 * 
+	 */
+	private void initMarkupFragments()
+	{
+		this.markupFragments = new MarkupFragment(this);
+		MarkupFragment current = this.markupFragments;
+
+		for (MarkupElement elem : this.markup)
+		{
+			if (elem instanceof RawMarkup)
+			{
+				current.addMarkupElement(elem);
+			}
+			else
+			// if (elem instanceof ComponentTag)
+			{
+				final ComponentTag tag = (ComponentTag)elem;
+				if (tag.isOpen())
+				{
+					if (tag.hasNoCloseTag())
+					{
+						new MarkupFragment(this, current, tag);
+					}
+					else
+					{
+						current = new MarkupFragment(this, current, tag);
+					}
+				}
+				else if (tag.isOpenClose())
+				{
+					new MarkupFragment(this, current, tag);
+				}
+				else
+				// if (tag.isClose()
+				{
+					current.addMarkupElement(tag);
+					current = current.getParentFragment();
 				}
 			}
 		}
@@ -316,7 +419,7 @@ public class Markup implements IMarkup
 					|| tag.getOpenTag().getAttributes().containsKey(wicketId))
 			{
 				// Remove the last element from the component path
-				final int index = tagPath.lastIndexOf(TAG_PATH_SEPARATOR);
+				final int index = tagPath.lastIndexOf(String.valueOf(TAG_PATH_SEPARATOR));
 				if (index != -1)
 				{
 					tagPath.setLength(index);

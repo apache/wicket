@@ -105,7 +105,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
-	 * Get the parent markup fragment. 
+	 * Get the parent markup fragment.
 	 * 
 	 * @return Null, if no parent available
 	 */
@@ -113,7 +113,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	{
 		return this.parentFragment;
 	}
-	
+
 	/**
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
@@ -126,6 +126,37 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	public final MarkupElement get(final int index)
 	{
 		return markupElements.get(index);
+	}
+
+	/**
+	 * Get the markup fragment associated with the id
+	 * 
+	 * @param id
+	 *            The id of the child tag
+	 * @return Markup fragment
+	 */
+	public final MarkupFragment getChildFragment(final String id)
+	{
+		if ((id == null) || (id.length() == 0))
+		{
+			return null;
+		}
+
+		for (MarkupElement elem : this)
+		{
+			if (elem instanceof MarkupFragment)
+			{
+				MarkupFragment fragment = (MarkupFragment)elem;
+				ComponentTag tag = (ComponentTag)fragment.get(0);
+				String tagId = tag.getId();
+				if ((tagId != null) && tagId.equals(id))
+				{
+					return fragment;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -217,42 +248,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		};
 	}
 
-	/**
-	 * Iterator for ComponentTags. RawMarkups are skipped.
-	 * 
-	 * @return Iterator
-	 */
-	public final Iterator<ComponentTag> getComponentTagIterator()
-	{
-		return new Iterator<ComponentTag>()
-		{
-			private int index = 0;
-
-			public boolean hasNext()
-			{
-				while ((index < size()) && (get(index) instanceof ComponentTag))
-				{
-					index ++;
-				}
-				
-				return (index < size());
-			}
-
-			public ComponentTag next()
-			{
-				int currentIndex = this.index + 1;
-				hasNext();
-				return (ComponentTag)get(currentIndex);
-			}
-
-			public void remove()
-			{
-				throw new WicketRuntimeException(
-						"remomve() not supported by MarkupFragment Iterator");
-			}
-		};
-	}
-	
 	/**
 	 * @return String representation of markup list
 	 */
