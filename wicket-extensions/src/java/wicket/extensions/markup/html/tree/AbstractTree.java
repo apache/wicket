@@ -17,7 +17,6 @@ import javax.swing.tree.TreeNode;
 import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.HeaderContributor;
-import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
@@ -1196,7 +1195,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final void visitItemAndChildren(TreeItem item, IItemCallback callback)
 	{
-		callback.visitItem(item);
+		callback.visitItem(item);		
 		visitItemChildren(item, callback);
 	}
 
@@ -1210,10 +1209,13 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final void visitItemChildren(TreeItem item, IItemCallback callback)
 	{
-		for (Iterator i = item.getChildren().iterator(); i.hasNext();)
+		if (item.getChildren() != null)
 		{
-			TreeItem child = (TreeItem)i.next();
-			visitItemAndChildren(child, callback);
+			for (Iterator i = item.getChildren().iterator(); i.hasNext();)
+			{
+				TreeItem child = (TreeItem)i.next();
+				visitItemAndChildren(child, callback);
+			}
 		}
 	}	
 }
