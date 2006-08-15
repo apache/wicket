@@ -148,7 +148,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		{
 			this.children = children;
 		}
-		
+
 		/**
 		 * Whether to render children.
 		 * 
@@ -169,11 +169,12 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			{
 				// yes, write empty div with id
 				// this is necesary for createElement js to work correctly
-				getResponse().write("<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
+				getResponse().write(
+						"<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
 				markupStream.skipComponent();
 			}
 			else
-			{			
+			{
 				// remember current index
 				final int index = markupStream.getCurrentIndex();
 
@@ -203,7 +204,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		protected final void setRenderChildren(boolean value)
 		{
 			setFlag(FLAG_RENDER_CHILDREN, value);
-		}		
+		}
 	}
 
 	/**
@@ -284,7 +285,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				// tree is empty, just move the markupStream
 				markupStream.skipComponent();
 			}
-		}		
+		}
 	}
 
 	/** Reference to the javascript file. */
@@ -971,7 +972,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	private final void init()
 	{
 		setVersioned(false);
-		
+
 		// we need id when we are replacing the whole tree
 		setOutputMarkupId(true);
 
@@ -979,7 +980,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		itemContainer = new TreeItemContainer("i");
 		add(itemContainer);
 
-		add(HeaderContributor.forJavaScript(JAVASCRIPT.getScope(), JAVASCRIPT.getName()));		
+		add(HeaderContributor.forJavaScript(JAVASCRIPT.getScope(), JAVASCRIPT.getName()));
 	}
 
 	/**
@@ -997,38 +998,38 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		{
 			// get item for this node
 			TreeItem item = (TreeItem)nodeToItemMap.get(node);
-	
+
 			if (forceRebuld)
 			{
 				// recreate the item
 				int level = item.getLevel();
 				List children = item.getChildren();
 				String id = item.getId();
-	
+
 				// store the parent of old item
 				TreeItem parent = item.getParentItem();
-	
+
 				// if the old item has a parent, store it's index
 				int index = parent != null ? parent.getChildren().indexOf(item) : -1;
-	
+
 				item.remove();
-	
+
 				item = newTreeItem(node, level, id);
 				itemContainer.add(item);
-				
+
 				item.setChildren(children);
-	
+
 				// was the item an root item?
 				if (parent == null)
 				{
-					rootItem = item;				
+					rootItem = item;
 				}
 				else
 				{
 					parent.getChildren().set(index, item);
 				}
 			}
-	
+
 			if (item != null)
 			{
 				dirtyItems.add(item);
@@ -1049,7 +1050,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		{
 			// get item for this node
 			TreeItem item = (TreeItem)nodeToItemMap.get(node);
-	
+
 			// is the item visible?
 			if (item != null)
 			{
@@ -1061,10 +1062,10 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 						removeItem(item);
 					}
 				});
-	
+
 				// set children to null so that they get rebuild
 				item.setChildren(null);
-	
+
 				// add item to dirty items
 				dirtyItems.add(item);
 			}
@@ -1199,7 +1200,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 */
 	private final void visitItemAndChildren(TreeItem item, IItemCallback callback)
 	{
-		callback.visitItem(item);		
+		callback.visitItem(item);
 		visitItemChildren(item, callback);
 	}
 
@@ -1221,5 +1222,20 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				visitItemAndChildren(child, callback);
 			}
 		}
-	}	
+	}
+
+	/**
+	 * Returns the component associated with given node, or null, if node is not
+	 * visible. This is useful in situations when you want to touch the node
+	 * element in html.
+	 * 
+	 * @param node
+	 *            Tree node
+	 * @return Component associated with given node, or null if node is not
+	 *         visible.
+	 */
+	public Component getNodeComponent(TreeNode node)
+	{
+		return (Component) nodeToItemMap.get(node);
+	}
 }
