@@ -17,12 +17,12 @@ import javax.swing.tree.TreeNode;
 import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.HeaderContributor;
+import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.tree.Tree;
-import wicket.model.IDetachable;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
@@ -145,7 +145,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		{
 			this.children = children;
 		}
-
+		
 		/**
 		 * Whether to render children.
 		 * 
@@ -161,44 +161,46 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		 */
 		protected void onRender(final MarkupStream markupStream)
 		{
-			// remember current index
-			final int index = markupStream.getCurrentIndex();
-
-			// render the item
-			super.onRender(markupStream);
-
-			// should we also render children (ajax response)
-			if (isRenderChildren())
+			// is this root and tree is in rootless mode?
+			if (this == rootItem && isRootLess() == true)
 			{
-				// visit every child
-				visitItemChildren(this, new IItemCallback()
+				// yes, write empty div with id
+				// this is necesary for createElement js to work correctly
+				getResponse().write("<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
+				markupStream.skipComponent();
+			}
+			else
+			{			
+				// remember current index
+				final int index = markupStream.getCurrentIndex();
+
+				// render the item
+				super.onRender(markupStream);
+
+				// should we also render children (ajax response)
+				if (isRenderChildren())
 				{
-					public void visitItem(TreeItem item)
+					// visit every child
+					visitItemChildren(this, new IItemCallback()
 					{
-						// rewind markupStream
-						markupStream.setCurrentIndex(index);
-						// render child
-						item.onRender(markupStream);
-					}
-				});
-				// children are rendered, clear the flag
-				setRenderChildren(false);
+						public void visitItem(TreeItem item)
+						{
+							// rewind markupStream
+							markupStream.setCurrentIndex(index);
+							// render child
+							item.onRender(markupStream);
+						}
+					});
+					// children are rendered, clear the flag
+					setRenderChildren(false);
+				}
 			}
 		}
 
 		protected final void setRenderChildren(boolean value)
 		{
 			setFlag(FLAG_RENDER_CHILDREN, value);
-		}
-		
-		protected void onDetach()
-		{
-			super.onDetach();
-			Object object = getModelObject();
-			if(object instanceof IDetachable) {
-				((IDetachable)object).detach();
-			}
-		}
+		}		
 	}
 
 	/**
@@ -270,16 +272,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					}
 				};
 
-				if (isRootLess())
-				{
-					// vist just the children
-					visitItemChildren(rootItem, callback);
-				}
-				else
-				{
-					// visit item and it's children
-					visitItemAndChildren(rootItem, callback);
-				}
+				// visit item and it's children
+				visitItemAndChildren(rootItem, callback);
 			}
 
 			if (rendered.rendered == false)
@@ -464,7 +458,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 					if (isRootLess())
 					{
 						rootItem = newTreeItem(rootNode, -1);
-						rootItem.setVisible(false);
 					}
 					else
 					{
@@ -1002,7 +995,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			// get item for this node
 			TreeItem item = (TreeItem)nodeToItemMap.get(node);
 	
-			if (forceRebuld && item != null)
+			if (forceRebuld)
 			{
 				// recreate the item
 				int level = item.getLevel();
@@ -1018,10 +1011,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				item.remove();
 	
 				item = newTreeItem(node, level, id);
-				if(level==-1) 
-				{
-					item.setVisible(false);
-				}
 				itemContainer.add(item);
 				
 				item.setChildren(children);
