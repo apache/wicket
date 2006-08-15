@@ -18,16 +18,14 @@
 package wicket.request.compound;
 
 import wicket.Application;
-import wicket.IPageFactory;
-import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.RestartResponseAtInterceptPageException;
+import wicket.RestartResponseException;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.authorization.AuthorizationException;
 import wicket.markup.html.pages.ExceptionErrorPage;
-import wicket.request.target.component.IPageRequestTarget;
 import wicket.settings.IExceptionSettings;
 
 /**
@@ -66,7 +64,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		Page override = onRuntimeException(responsePage, e);
 		if (override != null)
 		{
-			requestCycle.setResponsePage(override);
+			throw new RestartResponseException(override);
 		}
 		else if(e instanceof AuthorizationException)
 		{
@@ -78,30 +76,24 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		}
 		else if (settings.getUnexpectedExceptionDisplay() != IExceptionSettings.SHOW_NO_EXCEPTION_PAGE)
 		{
-			Class internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();
+			// we do not want to redirect - we want to inline the error output
+			// and preserve the url so when the refresh button is pressed we
+			// rerun the code that caused the error
+			requestCycle.setRedirect(false);
+			
+			// figure out which error page to show
+			Class internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();			
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass
 					&& settings.getUnexpectedExceptionDisplay() == IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE)
 			{
-				// Show internal error page
-				final IPageFactory pageFactory;
-				IRequestTarget requestTarget = requestCycle.getRequestTarget();
-				if (requestTarget instanceof IPageRequestTarget)
-				{
-					pageFactory = session.getPageFactory(((IPageRequestTarget)requestTarget)
-							.getPage());
-				}
-				else
-				{
-					pageFactory = session.getPageFactory();
-				}
-				requestCycle.setResponsePage(pageFactory.newPage(internalErrorPageClass));
+				throw new RestartResponseException(internalErrorPageClass);
 			}
 			else if (responseClass != ExceptionErrorPage.class)
 			{
 				// Show full details
-				requestCycle.setResponsePage(new ExceptionErrorPage(e, responsePage));
+				throw new RestartResponseException(new ExceptionErrorPage(e, responsePage));
 			}
 			else
 			{
@@ -109,17 +101,6 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 				throw new WicketRuntimeException("Internal Error: Could not render error page "
 						+ internalErrorPageClass, e);
 			}
-		}
-
-		// We generally want to redirect the response because we
-		// were in the middle of rendering and the page may end up
-		// looking like spaghetti otherwise. If responsePage == null,
-		// than the Page constructor failed and we don't need to
-		// redirect and this allows to reload the page when the
-		// bug has been fixed.
-		if (responsePage != null)
-		{
-			requestCycle.setRedirect(true);
 		}
 	}
 
