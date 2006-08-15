@@ -564,40 +564,36 @@ Wicket.Ajax.Request.prototype = {
 		var t = this.transport;
 
 		if (t.readyState == 4) {
-		
-			// get a redirect header
-			var redirectUrl = t.getResponseHeader('Ajax-Location');
-			
-			// is there one?
-			if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
-				// cleanup some IE leaks
-				t.onreadystatechange = Wicket.emptyFunction;
+			if (t.status == 200) {				
+				var responseAsText = t.responseText;
+				var redirectUrl = t.getResponseHeader('Ajax-Location');
 				
-				// do the redirect
-				window.location = redirectUrl;
-										
-			} else if (t.status == 200) {				
-				var responseAsText = t.responseText;												
-				var log = Wicket.Log.info;				
-				log("Received ajax response (" + responseAsText.length + " characters)");
-				if (this.debugContent != false) {
-					log("\n" + responseAsText);
+				if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
+					t.onreadystatechange = Wicket.emptyFunction;
+					window.location = redirectUrl;
 				}
-        		
-        		if (this.parseResponse == true) {
-					var xmldoc;					
-					if (typeof(window.XMLHttpRequest) != "undefined" && typeof(DOMParser) != "undefined") {						
-						var parser = new DOMParser();
-						xmldoc = parser.parseFromString(responseAsText, "text/xml");						
-					} else if (window.ActiveXObject) {
-						xmldoc = t.responseXML;
+				else {
+					var log = Wicket.Log.info;				
+					log("Received ajax response (" + responseAsText.length + " characters)");
+					if (this.debugContent != false) {
+						log("\n" + responseAsText);
 					}
-					this.loadedCallback(xmldoc); 
-				} else {
-					this.loadedCallback(responseAsText);
-				}        		
-				if (this.suppressDone == false)
-					this.done();				
+	        		
+	        		if (this.parseResponse == true) {
+						var xmldoc;					
+						if (typeof(window.XMLHttpRequest) != "undefined" && typeof(DOMParser) != "undefined") {						
+							var parser = new DOMParser();
+							xmldoc = parser.parseFromString(responseAsText, "text/xml");						
+						} else if (window.ActiveXObject) {
+							xmldoc = t.responseXML;
+						}
+						this.loadedCallback(xmldoc); 
+					} else {
+						this.loadedCallback(responseAsText);
+					}        		
+					if (this.suppressDone == false)
+						this.done();
+				}
         	} else {
         		var log = Wicket.Log.error;
         		log("Received Ajax response with code: " + t.status);
