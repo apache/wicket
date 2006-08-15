@@ -36,12 +36,9 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
-import wicket.Session;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
-import wicket.request.target.IRequestTargetInterceptor;
-import wicket.request.target.component.IPageRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
@@ -70,7 +67,7 @@ import wicket.util.string.Strings;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class AjaxRequestTarget implements IRequestTarget, IRequestTargetInterceptor
+public class AjaxRequestTarget implements IRequestTarget
 {
 	/**
 	 * Response that uses an encoder to encode its contents
@@ -177,12 +174,6 @@ public class AjaxRequestTarget implements IRequestTarget, IRequestTargetIntercep
 	private final Map<String, Component> markupIdToComponent = new HashMap<String, Component>();
 
 	private final List<String> prependJavascripts = new ArrayList<String>();
-
-	/**
-	 * Any request target to redirect to. if not null, overrides any other
-	 * response.
-	 */
-	private IRequestTarget requestTarget;
 
 	/**
 	 * Constructor
@@ -294,18 +285,6 @@ public class AjaxRequestTarget implements IRequestTarget, IRequestTargetIntercep
 	}
 
 	/**
-	 * Gets any request target to redirect to. if not null, overrides any other
-	 * response. <strong>This method is not meant for to be used by framework
-	 * clients.</strong>
-	 * 
-	 * @return requestTarget any request target
-	 */
-	public final IRequestTarget getRequestTarget()
-	{
-		return requestTarget;
-	}
-
-	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -316,23 +295,6 @@ public class AjaxRequestTarget implements IRequestTarget, IRequestTargetIntercep
 		result += prependJavascripts.hashCode() * 17;
 		result += appendJavascripts.hashCode() * 17;
 		return result;
-	}
-
-	/**
-	 * Sets Any request target to redirect to. if not null, overrides any other
-	 * response. <strong>This method is not meant for to be used by framework
-	 * clients.</strong>
-	 * 
-	 * @param requestTarget
-	 *            requestTarget the request target
-	 * @return Null as it always 'eats' the request to set another request
-	 *         target as the current one at {@link RequestCycle}
-	 * @see wicket.request.target.IRequestTargetInterceptor#onSetRequestTarget(wicket.IRequestTarget)
-	 */
-	public IRequestTarget onSetRequestTarget(IRequestTarget requestTarget)
-	{
-		this.requestTarget = requestTarget;
-		return null;
 	}
 
 	/**
@@ -358,26 +320,6 @@ public class AjaxRequestTarget implements IRequestTarget, IRequestTargetIntercep
 	{
 		try
 		{
-			CharSequence url = null;
-
-			if (requestTarget != null)
-			{
-				// a request target was set. Try to get the url for a redirect
-				// to that
-				url = requestCycle.urlFor(requestTarget);
-				// there was a requestTarget, but couldn't generate a redirect
-				// url.
-				// then just call respond to it. It should be a request target
-				// that handles
-				// the complete output by itself.
-				if (url == null)
-				{
-					requestTarget.respond(requestCycle);
-					return;
-				}
-			}
-
-
 			final Application app = Application.get();
 
 			// disable component use check since we want to ignore header
@@ -403,43 +345,28 @@ public class AjaxRequestTarget implements IRequestTarget, IRequestTargetIntercep
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
-			if (url == null)
+			// normal behavior
+
+			for (String js : prependJavascripts)
 			{
-				// normal behavior
-
-				for (String js : prependJavascripts)
-				{
-					respondInvocation(response, js);
-				}
-
-				Iterator<Entry<String, Component>> it = markupIdToComponent.entrySet().iterator();
-				while (it.hasNext())
-				{
-					final Map.Entry<String, Component> entry = it.next();
-					final Component component = entry.getValue();
-					final String markupId = entry.getKey();
-					respondHeaderContribution(response, component);
-					respondComponent(response, markupId, component);
-				}
-
-				for (String js : appendJavascripts)
-				{
-					respondInvocation(response, js);
-				}
-			}
-			else
-			{
-				// if this is a page target, make sure it is available in the
-				// page map
-				if (requestTarget instanceof IPageRequestTarget)
-				{
-					Session.get().touch(((IPageRequestTarget)requestTarget).getPage());
-				}
-
-				// append the redirect script
-				respondInvocation(response, "window.location='" + url + "';");
+				respondInvocation(response, js);
 			}
 
+			Iterator<Entry<String, Component>> it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Map.Entry<String, Component> entry = it.next();
+				final Component component = entry.getValue();
+				final String markupId = entry.getKey();
+				respondHeaderContribution(response, component);
+				respondComponent(response, markupId, component);
+			}
+
+			for (String js : appendJavascripts)
+			{
+				respondInvocation(response, js);
+			}
+			
 			response.write("</ajax-response>");
 
 			// restore component use check

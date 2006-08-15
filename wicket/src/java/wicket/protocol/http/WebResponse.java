@@ -55,8 +55,8 @@ public class WebResponse extends Response
 	/** The underlying response object. */
 	private final HttpServletResponse httpServletResponse;
 	
-	/** A reference to the request */
-	private WebRequest webRequest;
+	/** Is the request an ajax request? */
+	private boolean ajax;
 
 	/**
 	 * Constructor for testing harness.
@@ -200,7 +200,7 @@ public class WebResponse extends Response
 						log.debug("Redirecting to " + url);
 					}
 
-					if (getWebRequest().isAjax()) 
+					if (isAjax()) 
 					{
 						httpServletResponse.addHeader("Ajax-Location", url);
 					} else 
@@ -386,22 +386,22 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Set the response
+	 * Is the request, which matches this response an ajax request.
 	 * 
-	 * @param webRequest The webrequest which matches this response.
+	 * @return True if the request is an ajax request.
 	 */
-	public void setWebRequest(WebRequest webRequest)
+	public boolean isAjax()
 	{
-		this.webRequest = webRequest;
+		return ajax;
 	}
-	
+
 	/**
-	 * Get the webrequest which matches this response.
+	 * Set that the request which matches this response is an ajax request.
 	 * 
-	 * @return The webrequest which matches this response.
+	 * @param ajax True if the request is an ajax request.
 	 */
-	public WebRequest getWebRequest()
+	public void setAjax(boolean ajax)
 	{
-		return webRequest;
+		this.ajax = ajax;
 	}
 }
