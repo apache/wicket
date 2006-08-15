@@ -51,6 +51,13 @@ public class StringResponse extends Response
 	}
 
 	/**
+	 * @see wicket.Response#reset()
+	 */
+	public void reset()
+	{
+		out.clear();
+	}
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString()
