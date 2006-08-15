@@ -96,7 +96,11 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			this.level = level;
 			setOutputMarkupId(true);
 
-			populateTreeItem(this, level);
+			// if this isn't a root item in rootless mode
+			if (level != -1)
+			{
+				populateTreeItem(this, level);
+			}
 		}
 
 		/**
