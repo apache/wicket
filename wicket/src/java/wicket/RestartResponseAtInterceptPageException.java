@@ -17,6 +17,8 @@
  */
 package wicket;
 
+import wicket.request.RequestParameters;
+
 /**
  * Causes Wicket to interrupt current request processing and immediately
  * redirect to an intercept page.
@@ -36,7 +38,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Redirects to the specified intercept page
+	 * Redirects to the specified intercept page.
 	 * 
 	 * @param interceptPage
 	 *            redirect page
@@ -52,7 +54,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 	}
 
 	/**
-	 * Redirects to the specified intercept page
+	 * Redirects to the specified intercept page, this will result in a bookmarkable redirect.
 	 * 
 	 * @param interceptPageClass
 	 *            Class of intercept page to instantiate
@@ -63,7 +65,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		{
 			throw new IllegalStateException("Argument pageClass cannot be null");
 		}
-		redirectToInterceptPage(Session.get().getPageFactory().newPage(interceptPageClass));
+		redirectToInterceptPage(interceptPageClass);
 	}
 
 	/**
@@ -93,4 +95,34 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 
 		pageMap.redirectToInterceptPage(interceptPage);
 	}
+	
+	/**
+	 * Redirects to intercept page using the page map for the current request
+	 * 
+	 * @param interceptPageClass
+	 *            The intercept page class to redirect to
+	 */
+	private void redirectToInterceptPage(final Class interceptPageClass)
+	{
+		final RequestCycle cycle = RequestCycle.get();
+		final Page requestPage = cycle.getRequest().getPage();
+
+		/*
+		 * requestPage can be null if we throw the restart response exception
+		 * before any page is instantiated in user's session. if this happens we
+		 * switch to the pagemap of the request.
+		 */
+		final PageMap pageMap;
+		if (requestPage != null)
+		{
+			pageMap = requestPage.getPageMap();
+		}
+		else
+		{
+			RequestParameters parameters = cycle.getRequest().getRequestParameters();
+			pageMap = PageMap.forName(parameters.getPageMapName());
+		}
+
+		pageMap.redirectToInterceptPage(interceptPageClass);
+	}	
 }
