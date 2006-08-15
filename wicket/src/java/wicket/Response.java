@@ -46,6 +46,15 @@ public abstract class Response
 	public void close()
 	{
 	}
+	
+	/**
+	 * Called when the Response needs to reset itself.
+	 * Subclasses can empty there buffer or build up state.
+	 */
+	public void reset()
+	{
+		
+	}
 
 	/**
 	 * An implementation of this method is only required if a subclass wishes to
