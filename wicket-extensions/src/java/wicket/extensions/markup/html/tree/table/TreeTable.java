@@ -8,6 +8,7 @@ import javax.swing.tree.TreeNode;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.behavior.AbstractBehavior;
+import wicket.extensions.markup.html.tree.AbstractTree;
 import wicket.extensions.markup.html.tree.DefaultAbstractTree;
 import wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 import wicket.markup.ComponentTag;
@@ -242,9 +243,9 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	/**
-	 * @see Component#onAttach()
+	 * @see AbstractTree#onBeforeAttach()
 	 */
-	protected void onAttach()
+	protected void onBeforeAttach()
 	{
 		// has the header been added yet?
 		if (get("sideColumns") == null)

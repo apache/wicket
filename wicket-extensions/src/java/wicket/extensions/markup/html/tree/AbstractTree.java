@@ -430,14 +430,23 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	}
 
 	/**
+	 * This method is called before the onAttach is called. Code here gets
+	 * executed before the items have been populated. 
+	 */
+	protected void onBeforeAttach() 
+	{	
+	}
+	
+	/**
 	 * Called at the beginning of the request (not ajax request, unless we are
 	 * rendering the entire component)
 	 */
 	public void internalAttach()
 	{
-		super.internalAttach();
 		if (attached == false)
 		{
+			onBeforeAttach();
+			
 			checkModel();
 
 			// Do we have to rebuld the whole tree?
@@ -474,6 +483,8 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 			attached = true;
 		}
+
+		super.internalAttach();
 	}
 
 	/**
@@ -715,29 +726,49 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 				target.prependJavascript(js);
 			}
 
-			for (Iterator i = dirtyItemsCreateDOM.iterator(); i.hasNext();)
+			// We have to repeat this as long as there are any dirty items to be created.
+			// The reason why we can't do this in one pass is that some of the items
+			// may need to be inserted after items that has not been inserted yet, so we have
+			// to detect those and wait until the items they depend on are inserted.
+			while (dirtyItemsCreateDOM.isEmpty() == false)
 			{
-				TreeItem item = (TreeItem)i.next();
-				TreeItem parent = item.getParentItem();
-				int index = parent.getChildren().indexOf(item);
-				TreeItem previous;
-				// we need item before this (in dom structure)
-				if (index == 0)
+				for (Iterator i = dirtyItemsCreateDOM.iterator(); i.hasNext();)
 				{
-					previous = parent;
-				}
-				else
-				{
-					previous = (TreeItem)parent.getChildren().get(index - 1);
-					// get the last item of previous item subtree
-					while (previous.getChildren() != null && previous.getChildren().size() > 0)
+					TreeItem item = (TreeItem)i.next();
+					TreeItem parent = item.getParentItem();
+					int index = parent.getChildren().indexOf(item);
+					TreeItem previous;
+					// we need item before this (in dom structure)
+					if (index == 0)
 					{
-						previous = (TreeItem)previous.getChildren().get(
-								previous.getChildren().size() - 1);
+						previous = parent;
+					}
+					else
+					{
+						previous = (TreeItem)parent.getChildren().get(index - 1);
+						// get the last item of previous item subtree
+						while (previous.getChildren() != null && previous.getChildren().size() > 0)
+						{
+							previous = (TreeItem)previous.getChildren().get(
+									previous.getChildren().size() - 1);
+						}
+					}
+					// check if the previous item isn't waiting to be inserted
+					if (dirtyItemsCreateDOM.contains(previous) == false)
+					{
+						// it's already in dom, so we can use it as point of insertion
+						target.prependJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId()
+								+ "\"," + "\"" + previous.getMarkupId() + "\")");
+						
+						// remove the item so we don't process it again
+						i.remove();
+					}
+					else
+					{
+						// we don't do anything here, inserting this item will have to wait 
+						// until the previous item gets inserted 
 					}
 				}
-				target.prependJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId()
-						+ "\"," + "\"" + previous.getMarkupId() + "\")");
 			}
 
 			// iterate through dirty items
