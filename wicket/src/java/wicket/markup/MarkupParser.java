@@ -260,7 +260,6 @@ public class MarkupParser
 	 */
 	public final IMarkup readAndParse() throws IOException, ResourceStreamNotFoundException
 	{
-
 		// Initialize the xml parser
 		this.xmlParser
 				.parse(this.markup.getResource().getInputStream(), this.defaultMarkupEncoding);

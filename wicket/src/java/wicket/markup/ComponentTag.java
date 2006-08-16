@@ -486,6 +486,14 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
+	 * @return True, if tag name equals 'wicket:enclosure'
+	 */
+	public final boolean isEnclosureTag()
+	{
+		return isWicketTag() && "enclosure".equalsIgnoreCase(getName());
+	}
+
+	/**
 	 * @return True if a wicket tag such as &lt;wicket:panel ...&gt;
 	 */
 	public boolean isWicketTag()
