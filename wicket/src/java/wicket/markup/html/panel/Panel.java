@@ -65,7 +65,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 
 	static
 	{
-		// register "wicket:fragement"
+		// register "wicket:panel"
 		WicketTagIdentifier.registerWellKnownTagName("panel");
 	}
 
