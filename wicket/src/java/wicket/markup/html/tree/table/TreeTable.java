@@ -242,10 +242,10 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	/**
-	 * @see Component#onAttach()
+	 * @see AbstractTree#onBeforeAttach()
 	 */
 	@Override
-	protected void onAttach()
+	protected void onBeforeAttach()
 	{
 		// has the header been added yet?
 		if (get("sideColumns") == null)

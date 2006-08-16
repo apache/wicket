@@ -101,7 +101,10 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			this.level = level;
 			setOutputMarkupId(true);
 
-			populateTreeItem(this, level);
+			if (level != -1)
+			{
+				populateTreeItem(this, level);
+			}
 		}
 
 		/**
@@ -158,31 +161,46 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			return getFlag(FLAG_RENDER_CHILDREN);
 		}
 
+		/**
+		 * @see wicket.MarkupContainer#onRender(wicket.markup.MarkupStream)
+		 */
 		@Override
 		protected void onRender(final MarkupStream markupStream)
 		{
-			// remember current index
-			final int index = markupStream.getCurrentIndex();
-
-			// render the item
-			super.onRender(markupStream);
-
-			// should we also render children (ajax response)
-			if (isRenderChildren())
+			// is this root and tree is in rootless mode?
+			if (this == rootItem && isRootLess() == true)
 			{
-				// visit every child
-				visitItemChildren(this, new IItemCallback()
+				// yes, write empty div with id
+				// this is necesary for createElement js to work correctly
+				getResponse().write(
+						"<div style=\"display:none\" id=\"" + getMarkupId() + "\"></div>");
+				markupStream.skipComponent();
+			}
+			else
+			{
+				// remember current index
+				final int index = markupStream.getCurrentIndex();
+
+				// render the item
+				super.onRender(markupStream);
+
+				// should we also render children (ajax response)
+				if (isRenderChildren())
 				{
-					public void visitItem(TreeItem item)
+					// visit every child
+					visitItemChildren(this, new IItemCallback()
 					{
-						// rewind markupStream
-						markupStream.setCurrentIndex(index);
-						// render child
-						item.onRender(markupStream);
-					}
-				});
-				// children are rendered, clear the flag
-				setRenderChildren(false);
+						public void visitItem(TreeItem item)
+						{
+							// rewind markupStream
+							markupStream.setCurrentIndex(index);
+							// render child
+							item.onRender(markupStream);
+						}
+					});
+					// children are rendered, clear the flag
+					setRenderChildren(false);
+				}
 			}
 		}
 
@@ -190,13 +208,13 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		{
 			setFlag(FLAG_RENDER_CHILDREN, value);
 		}
-		
+
 		@Override
 		protected void onDetach()
 		{
 			super.onDetach();
 			TreeNode node = getModelObject();
-			if(node instanceof IDetachable) 
+			if (node instanceof IDetachable)
 			{
 				((IDetachable)node).detach();
 			}
@@ -271,16 +289,8 @@ public abstract class AbstractTree extends Panel<TreeModel>
 					}
 				};
 
-				if (isRootLess())
-				{
-					// vist just the children
-					visitItemChildren(rootItem, callback);
-				}
-				else
-				{
-					// visit item and it's children
-					visitItemAndChildren(rootItem, callback);
-				}
+				// visit item and it's children
+				visitItemAndChildren(rootItem, callback);
 			}
 
 			if (rendered.rendered == false)
@@ -459,15 +469,24 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	}
 
 	/**
+	 * This method is called before the onAttach is called. Code here gets
+	 * executed before the items have been populated. 
+	 */
+	protected void onBeforeAttach() 
+	{	
+	}
+	
+	/**
 	 * Called at the beginning of the request (not ajax request, unless we are
 	 * rendering the entire component)
 	 */
 	@Override
 	public void internalAttach()
-	{
-		super.internalAttach();
+	{		
 		if (attached == false)
 		{
+			onBeforeAttach();
+			
 			checkModel();
 
 			// Do we have to rebuld the whole tree?
@@ -492,7 +511,6 @@ public abstract class AbstractTree extends Panel<TreeModel>
 					if (isRootLess())
 					{
 						rootItem = newTreeItem(rootNode, -1);
-						rootItem.setVisible(false);
 					}
 					else
 					{
@@ -504,6 +522,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 
 			attached = true;
 		}
+		super.internalAttach();
 	}
 
 	/**
@@ -743,28 +762,50 @@ public abstract class AbstractTree extends Panel<TreeModel>
 				target.prependJavascript(js);
 			}
 
-			for (TreeItem item : dirtyItemsCreateDOM)
+			// We have to repeat this as long as there are any dirty items to be created.
+			// The reason why we can't do this in one pass is that some of the items
+			// may need to be inserted after items that has not been inserted yet, so we have
+			// to detect those and wait until the items they depend on are inserted.
+			while (dirtyItemsCreateDOM.isEmpty() == false)
 			{
-				TreeItem parent = item.getParentItem();
-				int index = parent.getChildren().indexOf(item);
-				TreeItem previous;
-				// we need item before this (in dom structure)
-				if (index == 0)
+				for (Iterator<TreeItem> i = dirtyItemsCreateDOM.iterator(); i.hasNext();)
 				{
-					previous = parent;
-				}
-				else
-				{
-					previous = parent.getChildren().get(index - 1);
-					// get the last item of previous item subtree
-					while (previous.getChildren() != null && previous.getChildren().size() > 0)
+					TreeItem item = i.next();
+					TreeItem parent = item.getParentItem();
+					int index = parent.getChildren().indexOf(item);
+					TreeItem previous;
+					// we need item before this (in dom structure)
+					if (index == 0)
 					{
-						previous = previous.getChildren().get(previous.getChildren().size() - 1);
+						previous = parent;
+					}
+					else
+					{
+						previous = (TreeItem)parent.getChildren().get(index - 1);
+						// get the last item of previous item subtree
+						while (previous.getChildren() != null && previous.getChildren().size() > 0)
+						{
+							previous = (TreeItem)previous.getChildren().get(
+									previous.getChildren().size() - 1);
+						}
+					}
+					// check if the previous item isn't waiting to be inserted
+					if (dirtyItemsCreateDOM.contains(previous) == false)
+					{
+						// it's already in dom, so we can use it as point of insertion
+						target.prependJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId()
+								+ "\"," + "\"" + previous.getMarkupId() + "\")");
+						
+						// remove the item so we don't process it again
+						i.remove();
+					}
+					else
+					{
+						// we don't do anything here, inserting this item will have to wait 
+						// until the previous item gets inserted 
 					}
 				}
-				target.prependJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId()
-						+ "\"," + "\"" + previous.getMarkupId() + "\")");
-			}
+			}		
 
 			// iterate through dirty items
 			for (TreeItem item : dirtyItems)
@@ -783,10 +824,10 @@ public abstract class AbstractTree extends Panel<TreeModel>
 				// add the component to target
 				target.addComponent(item);
 			}
-			
+
 			// clear dirty flags
 			updated();
-		}		
+		}
 	}
 
 	/**
@@ -996,7 +1037,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	{
 		// disable versioning for the tree
 		setVersioned(false);
-		
+
 		// we need id when we are replacing the whole tree
 		setOutputMarkupId(true);
 
@@ -1021,40 +1062,36 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		{
 			// get item for this node
 			TreeItem item = nodeToItemMap.get(node);
-	
-			if (forceRebuld && item != null)
+
+			if (forceRebuld)
 			{
 				// recreate the item
 				int level = item.getLevel();
 				List<TreeItem> children = item.getChildren();
 				String id = item.getId();
-	
+
 				// store the parent of old item
 				TreeItem parent = item.getParentItem();
-	
+
 				// if the old item has a parent, store it's index
 				int index = parent != null ? parent.getChildren().indexOf(item) : -1;
-	
+
 				item.remove();
-	
+
 				item = newTreeItem(node, level, id);
-				if(level == -1) 
-				{
-					item.setVisible(false);
-				}
 				item.setChildren(children);
-	
+
 				// was the item an root item?
 				if (parent == null)
 				{
-					rootItem = item;				
+					rootItem = item;
 				}
 				else
 				{
 					parent.getChildren().set(index, item);
 				}
 			}
-	
+
 			if (item != null)
 			{
 				dirtyItems.add(item);
@@ -1075,7 +1112,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		{
 			// get item for this node
 			TreeItem item = nodeToItemMap.get(node);
-	
+
 			// is the item visible?
 			if (item != null)
 			{
@@ -1087,10 +1124,10 @@ public abstract class AbstractTree extends Panel<TreeModel>
 						removeItem(item);
 					}
 				});
-	
+
 				// set children to null so that they get rebuild
 				item.setChildren(null);
-	
+
 				// add item to dirty items
 				dirtyItems.add(item);
 			}
@@ -1238,9 +1275,27 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	 */
 	private final void visitItemChildren(TreeItem item, IItemCallback callback)
 	{
-		for (TreeItem i : item.getChildren())
+		if (item.getChildren() != null)
 		{
-			visitItemAndChildren(i, callback);
+			for (TreeItem i : item.getChildren())
+			{
+				visitItemAndChildren(i, callback);
+			}
 		}
+	}
+
+	/**
+	 * Returns the component associated with given node, or null, if node is not
+	 * visible. This is useful in situations when you want to touch the node
+	 * element in html.
+	 * 
+	 * @param node
+	 *            Tree node
+	 * @return Component associated with given node, or null if node is not
+	 *         visible.
+	 */
+	public Component getNodeComponent(TreeNode node)
+	{
+		return (Component)nodeToItemMap.get(node);
 	}
 }
