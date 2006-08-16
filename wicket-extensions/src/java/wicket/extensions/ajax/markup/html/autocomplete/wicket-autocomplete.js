@@ -304,9 +304,9 @@ Wicket.Ajax.AutoComplete=function(elementId,callbackUrl){
                 var tag=tagsFound[i];                
                 p=getPosition(tag);
                 var leftX = p[0];
-                var rightX = leftX+cc.offsetWidth;
+                var rightX = leftX+tag.offsetWidth;
                 var topY = p[1];
-                var bottomY = topY+cc.offsetHeight;
+                var bottomY = topY+tag.offsetHeight;
                 
                 if (this.hidden || (leftX>acRightX) || (rightX<acLeftX) || (topY>acBottomY) || (bottomY<acTopY)) {
                     if(!tag.wicket_element_visibility) {
