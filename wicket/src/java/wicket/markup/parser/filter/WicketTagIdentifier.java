@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
@@ -93,7 +94,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			tag.setWicketTag(true);
 
 			// Make it a wicket component. Otherwise it would be RawMarkup
-			tag.setId("<auto>_" + tag.getName());
+			tag.setId(Component.AUTO_COMPONENT_PREFIX + tag.getName());
 
 			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
 			{
