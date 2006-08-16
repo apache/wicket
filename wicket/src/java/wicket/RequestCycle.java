@@ -18,8 +18,6 @@
  */
 package wicket;
 
-import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
@@ -30,7 +28,6 @@ import wicket.request.ClientInfo;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
-import wicket.request.target.IRequestTargetInterceptor;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ComponentRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -38,6 +35,7 @@ import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.ListenerInterfaceRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
+import wicket.util.collections.ArrayListStack;
 import wicket.util.value.ValueMap;
 
 /**
@@ -173,99 +171,6 @@ import wicket.util.value.ValueMap;
  */
 public abstract class RequestCycle
 {
-	/**
-	 * Stack for request targets.
-	 */
-	private static final class RequestTargetStack extends ArrayList
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param initialCapacity
-		 *            Initial capacity of the stack
-		 */
-		public RequestTargetStack(final int initialCapacity)
-		{
-			super(initialCapacity);
-		}
-
-		/**
-		 * Tests if this stack is empty.
-		 * 
-		 * @return <code>true</code> if and only if this stack contains no
-		 *         items; <code>false</code> otherwise.
-		 */
-		public final boolean empty()
-		{
-			return size() == 0;
-		}
-
-		/**
-		 * Looks at the request target at the top of this stack without removing
-		 * it.
-		 * 
-		 * @return The request target at the top of this stack
-		 * @exception EmptyStackException
-		 *                If this stack is empty.
-		 */
-		public final IRequestTarget peek()
-		{
-			int size = size();
-			if (size == 0)
-			{
-				throw new EmptyStackException();
-			}
-			return (IRequestTarget)get(size - 1);
-		}
-
-		/**
-		 * Removes the request target at the top of this stack and returns it.
-		 * 
-		 * @return The requestTarget at the top of this stack
-		 * @exception EmptyStackException
-		 *                If this stack is empty.
-		 */
-		public final IRequestTarget pop()
-		{
-			final Object top = peek();
-			remove(size() - 1);
-			return (IRequestTarget)top;
-		}
-
-		/**
-		 * Pushes a request onto the top of this stack.
-		 * 
-		 * @param requestTarget
-		 *            The request target to be pushed onto this stack
-		 */
-		public final void push(final IRequestTarget requestTarget)
-		{
-			if (!isEmpty() && (peek() instanceof IRequestTargetInterceptor))
-			{
-				// adding more request targets on top of an ajax request is
-				// useless; there is no overriding anyway. But what we do
-				// is place a redirect issue in the ajax response
-				IRequestTargetInterceptor ajaxRequestTarget = (IRequestTargetInterceptor)peek();
-
-				// let target intercept
-				IRequestTarget vetod = ajaxRequestTarget.onSetRequestTarget(requestTarget);
-				if (vetod != null)
-				{
-					// if it returns a non-null request target, we set that as
-					// the current
-					add(vetod);
-				}
-				// else interceptor ate up the push request
-			}
-			else
-			{
-				add(requestTarget);
-			}
-		}
-	}
-
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
 
@@ -335,7 +240,7 @@ public abstract class RequestCycle
 
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient final RequestTargetStack requestTargets = new RequestTargetStack(3);
+	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
@@ -414,7 +319,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return whether the page for this request should be redirected
 	 */
-	public final boolean getRedirect()
+	public boolean getRedirect()
 	{
 		return redirect;
 	}
@@ -436,7 +341,7 @@ public abstract class RequestCycle
 	 */
 	public final IRequestTarget getRequestTarget()
 	{
-		return (!requestTargets.isEmpty()) ? requestTargets.peek() : null;
+		return (!requestTargets.isEmpty()) ? (IRequestTarget) requestTargets.peek() : null;
 	}
 
 	/**
@@ -628,7 +533,7 @@ public abstract class RequestCycle
 		{
 			if (!requestTargets.isEmpty())
 			{
-				IRequestTarget former = requestTargets.peek();
+				IRequestTarget former = (IRequestTarget) requestTargets.peek();
 				log.debug("replacing request target " + former + " with " + requestTarget);
 			}
 			else
