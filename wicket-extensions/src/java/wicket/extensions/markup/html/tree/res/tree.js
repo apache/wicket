@@ -27,7 +27,7 @@ Wicket.Tree.createElement = function(elementId, afterId) {
 			break;
 	}
 	if (i == p.childNodes.length - 1) {
-		p.appendNode(newNode);
+		p.appendChild(newNode);		
 	} else {
 		p.insertBefore(newNode, p.childNodes[i+1]);
 	}
