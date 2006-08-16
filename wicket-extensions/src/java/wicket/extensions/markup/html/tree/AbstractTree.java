@@ -22,6 +22,7 @@ import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.tree.Tree;
+import wicket.model.IDetachable;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
@@ -204,6 +205,15 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		protected final void setRenderChildren(boolean value)
 		{
 			setFlag(FLAG_RENDER_CHILDREN, value);
+		}
+		
+		protected void onDetach()
+		{
+			super.onDetach();
+			Object object = getModelObject();
+			if(object instanceof IDetachable) {
+				((IDetachable)object).detach();
+			}
 		}
 	}
 
