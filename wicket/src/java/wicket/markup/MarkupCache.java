@@ -227,7 +227,10 @@ public class MarkupCache
 		{
 			synchronized (markupCache)
 			{
-				markup = markupCache.get(cacheKey);
+				if (cacheKey != null)
+				{
+					markup = markupCache.get(cacheKey);
+				}
 
 				// Must Markup be loaded?
 				if (markup == null)
@@ -267,7 +270,10 @@ public class MarkupCache
 
 						// Save any markup list (or absence of one) for next
 						// time
-						markupCache.put(cacheKey, markup);
+						if (cacheKey != null)
+						{
+							markupCache.put(cacheKey, markup);
+						}
 					}
 				}
 			}
