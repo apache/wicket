@@ -31,6 +31,10 @@ public abstract class AbstractRestartResponseException extends AbortException
 	 */
 	public AbstractRestartResponseException()
 	{
-		RequestCycle.get().getResponse().reset();
+		RequestCycle rc = RequestCycle.get();
+		if(rc != null)
+		{
+			rc.getResponse().reset();
+		}
 	}
 }
