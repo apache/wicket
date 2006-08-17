@@ -520,7 +520,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				defaultButton.getInputName()).append("\"");
 		if (userAgent != null && userAgent.indexOf("MSIE") != -1)
 		{
-			buffer.append("style=\"width: 0px\"");
+			buffer.append("style=\"width: 0px; height: 0px; position: absolute;\"");
 		}
 		else
 		{
