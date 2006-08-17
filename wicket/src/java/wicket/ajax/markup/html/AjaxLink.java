@@ -91,7 +91,10 @@ public abstract class AjaxLink<T> extends WebMarkupContainer<T> implements IAjax
 	{
 		super.onComponentTag(tag);
 		// disable any href attr in markup
-		tag.put("href", "#");
+		if(tag.getAttributes().containsKey("href"))
+		{
+			tag.put("href", "#");
+		}
 	}
 
 	/**

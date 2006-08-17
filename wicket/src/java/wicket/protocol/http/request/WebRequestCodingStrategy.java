@@ -199,6 +199,9 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
+			// TODO has this to be done in 2.0?? special check if the prefix ends on '/' because a mount always starts with '/' 
+			// because rootPath see WicketServlet will always contain a "/" and context path and filterpath are both ""
+			if(prefix.charAt(prefix.length()-1) == '/') prefix = prefix.subSequence(0, prefix.length()-1);
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
 					+ path.length());
 			buffer.append(prefix);

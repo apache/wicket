@@ -458,8 +458,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
 						" type=\"radio\"").append(
 						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-						.append(" value=\"").append(id).append("\" id=\"").append(idAttr).append(
-								"\"");
+						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"").append(id)
+						.append("\" id=\"").append(idAttr).append("\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?

@@ -276,6 +276,7 @@ public class WicketFilter implements Filter
 			if (contextPath == null)
 			{
 				contextPath = request.getContextPath();
+				if(contextPath == null) contextPath = "";
 			}
 
 			if (SERVLET_PATH_HOLDER.equals(filterPath))
