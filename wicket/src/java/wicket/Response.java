@@ -49,6 +49,14 @@ public abstract class Response
 	}
 
 	/**
+	 * Called when the Response needs to reset itself.
+	 * Subclasses can empty there buffer or build up state.
+	 */
+	public void reset()
+	{
+	}
+	
+	/**
 	 * An implementation of this method is only required if a subclass wishes to
 	 * support sessions via URL rewriting. This default implementation simply
 	 * returns the URL String it is passed.

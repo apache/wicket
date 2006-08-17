@@ -79,6 +79,15 @@ public class BufferedWebResponse extends WebResponse
 	}
 
 	/**
+	 * @see wicket.Response#reset()
+	 */
+	public void reset()
+	{
+		redirectURL = null;
+		buffer.clear();
+	}
+	
+	/**
 	 * Saves url to redirect to when buffered response is flushed.
 	 * Implementations should encode the URL to make sure cookie-less operation
 	 * is supported in case clients forgot.

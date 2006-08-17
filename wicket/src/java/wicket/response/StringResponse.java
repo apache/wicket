@@ -44,6 +44,14 @@ public class StringResponse extends Response
 	}
 
 	/**
+	 * @see wicket.Response#reset()
+	 */
+	public void reset()
+	{
+		out.clear();
+	}
+	
+	/**
 	 * @see wicket.Response#write(CharSequence)
 	 */
 	@Override

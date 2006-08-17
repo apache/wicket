@@ -124,6 +124,8 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	 */
 	public void testAbortAndRespondContract()
 	{
+		application.setupRequestAndResponse();
+		application.createRequestCycle();
 		try
 		{
 			pageFactory.newPage(AbortAndRespondPage1.class);
