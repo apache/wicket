@@ -51,7 +51,7 @@ public class MarkupCache
 	private static final Log log = LogFactory.getLog(MarkupCache.class);
 
 	/** Markup Cache */
-	private final Map<CharSequence, IMarkup> markupCache = new ConcurrentHashMap<CharSequence, IMarkup>();
+	private Map<CharSequence, IMarkup> markupCache = new ConcurrentHashMap<CharSequence, IMarkup>();
 
 	/**
 	 * Markup inheritance requires that merged markup gets re-merged either
@@ -420,5 +420,17 @@ public class MarkupCache
 		loaderChain.setParent(new DefaultMarkupLoader(application));
 		
 		return loaderChain;
+	}
+	
+	/**
+	 * In case you need a more sophisticate cache implementation.
+	 * <p>
+	 * Make sure that you cache implementation is thread safe.
+	 * 
+	 * @param markupCache
+	 */
+	public void setCacheMap(Map<CharSequence, IMarkup> markupCache)
+	{
+		this.markupCache = markupCache;
 	}
 }
