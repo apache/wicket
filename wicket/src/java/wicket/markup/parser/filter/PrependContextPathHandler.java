@@ -59,8 +59,9 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src" };
 
-	private final Application application;
-
+	/** == application.getApplicationSettings().getContextPath(); */
+	private final String contextPath;
+	
 	/**
 	 * This constructor will get the context path from the application settings.
 	 * When it is not set the context path will be automatically resolved. This
@@ -93,7 +94,20 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	 */
 	public PrependContextPathHandler(final Application application)
 	{
-		this.application = application;
+		String contextPath = application.getApplicationSettings().getContextPath();
+
+		if (contextPath != null)
+		{
+			if (contextPath.length() == 0)
+			{
+				contextPath = null;
+			}
+			else if (contextPath.endsWith("/") == false)
+			{
+				contextPath += "/";
+			}
+		}
+		this.contextPath = contextPath;
 	}
 
 	/**
@@ -122,17 +136,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 
 		// this call should always get the default of the application or the
 		// overriden one.
-		String contextPath = application.getApplicationSettings().getContextPath();
-		if (contextPath == null)
-		{
-			contextPath = "";
-		}
-		else if (contextPath.endsWith("/") == false)
-		{
-			contextPath += "/";
-		}
-
-		if (contextPath.length() > 0)
+		if (contextPath != null)
 		{
 			for (final String attrName : attributeNames)
 			{
@@ -140,7 +144,15 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 				if ((attrValue != null) && (attrValue.startsWith("/") == false)
 						&& (attrValue.indexOf(":") < 0) && !(attrValue.startsWith("#")))
 				{
-					final String url = contextPath + attrValue;
+					final String url;
+					if (this.contextPath != null)
+					{
+						url = contextPath + attrValue;
+					}
+					else
+					{
+						url = attrValue;
+					}
 					tag.getAttributes().put(attrName, url);
 					tag.setModified(true);
 				}
