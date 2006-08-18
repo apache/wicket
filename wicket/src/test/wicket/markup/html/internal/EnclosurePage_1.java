@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.internal;
 
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 
@@ -39,5 +40,12 @@ public class EnclosurePage_1 extends WebPage
 		new Label(this, "label1", "Test Label 1");
 		new Label(this, "label2", "Test Label 2");
 		new Label(this, "label3", "Test Label 3").setVisible(false);
+		new Label(this, "label4", "Test Label 2");
+		new Label(this, "label5", "Test Label 2");
+		new Label(this, "label6", "Test Label 2");
+		new Label(this, "label7", "Test Label 2");
+		WebMarkupContainer container = new WebMarkupContainer(this, "container");
+		new Label(container, "label8", "Test Label 2");
+		new Label(this, "label9", "Test Label 2");
 	}
 }
