@@ -23,6 +23,8 @@ import wicket.markup.MarkupParser;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.parser.filter.EnclosureHandler;
+import wicket.markup.resolver.EnclosureResolver;
+import wicket.util.tester.WicketTester;
 
 /**
  * 
@@ -47,7 +49,15 @@ public class EnclosureTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		super.setUp();
+		application = new WicketTester(null)
+		{
+			protected void init() 
+			{
+				super.init();
+				getPageSettings().addComponentResolver(new EnclosureResolver());
+			}
+		};
+
 		this.application.getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory()
 		{
 			@Override
@@ -55,7 +65,7 @@ public class EnclosureTest extends WicketTestCase
 			{
 				MarkupParser parser = super.newMarkupParser(resource);
 				// register the additional EnclosureHandler
-				parser.registerMarkupFilter(new EnclosureHandler(application));
+				parser.registerMarkupFilter(new EnclosureHandler());
 				return parser;
 			}
 		});

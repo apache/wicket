@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.Component;
 import wicket.IPageFactory;
@@ -93,6 +96,8 @@ public final class Settings
 			IAjaxSettings,
 			IFrameworkSettings
 {
+	private final static Log log = LogFactory.getLog(Settings.class);
+	
 	/** Class of access denied page. */
 	private Class<? extends Page> accessDeniedPage;
 
@@ -296,9 +301,27 @@ public final class Settings
 	/**
 	 * @see wicket.settings.IPageSettings#addComponentResolver(wicket.markup.resolver.IComponentResolver)
 	 */
-	public void addComponentResolver(IComponentResolver resolver)
+	public void addComponentResolver(final IComponentResolver resolver)
 	{
-		componentResolvers.add(resolver);
+		boolean hit = false;
+		for (final IComponentResolver componentResolver : this.componentResolvers)
+		{
+			if (componentResolver.getClass().equals(resolver.getClass()))
+			{
+				hit = true;
+				break;
+			}
+		}
+		if (hit == false)
+		{
+			componentResolvers.add(resolver);
+		}
+		else
+		{
+			log.warn("A IComponentResolver of type " 
+					+ resolver.getClass().getName() 
+					+ " has already been registered. The new one will not be added");
+		}
 	}
 
 	/**

@@ -21,7 +21,6 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Stack;
 
-import wicket.Application;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.html.internal.Enclosure;
@@ -33,26 +32,28 @@ import wicket.markup.resolver.EnclosureResolver;
  * <p>
  * This is a markup inline filter. It identifies &lt;wicket:enclosure&gt; tags.
  * If the 'child' attribute is empty it determines the wicket:id of the child
- * component automatically by analysing the only wicket component allowed in
- * between the open and close tag. If the enclosure tag has a 'child' attribute
- * like <code>&lt;wicket:enclosure child="xxx"&gt;</code> than more than just
- * one wicket component inside the enclosure tags is allowed and the child
+ * component automatically by analysing the wicket component (in this case on
+ * one wicket component is allowed) in between the open and close tags. If the
+ * enclosure tag has a 'child' attribute like
+ * <code>&lt;wicket:enclosure child="xxx"&gt;</code> than more than just one
+ * wicket component inside the enclosure tags are allowed and the child
  * component which determines the visibility of the enclosure is identified by
- * the 'child' attribute value which must be equal to the child id.
+ * the 'child' attribute value which must be equal to the relative child id
+ * path.
  * <p>
  * This handler is no Wicket default handler and must be added manually such as
+ * 
  * <pre>
- * 		this.application.getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory()
- *		{
- *			@Override
- *			public MarkupParser newMarkupParser(MarkupResourceStream resource)
- *			{
- *				MarkupParser parser = super.newMarkupParser(resource);
- *				// register the additional EnclosureHandler
- *				parser.registerMarkupFilter(new EnclosureHandler(application));
- *				return parser;
- *			}
- *		});
+ * this.application.getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory()
+ * {
+ * 	@Override
+ * 	public MarkupParser newMarkupParser(MarkupResourceStream resource)
+ * 	{
+ * 		MarkupParser parser = super.newMarkupParser(resource);
+ * 		parser.registerMarkupFilter(new EnclosureHandler(application));
+ * 		return parser;
+ * 	}
+ * });
  * </pre>
  * 
  * @see EnclosureResolver
@@ -79,13 +80,9 @@ public final class EnclosureHandler extends AbstractMarkupFilter
 
 	/**
 	 * Construct.
-	 * 
-	 * @param application
-	 *            The Wicket application object
 	 */
-	public EnclosureHandler(final Application application)
+	public EnclosureHandler()
 	{
-		application.getPageSettings().addComponentResolver(new EnclosureResolver());
 	}
 
 	/**
