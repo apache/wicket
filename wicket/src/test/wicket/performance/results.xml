@@ -1,0 +1,30 @@
+<Wicket>
+  <Test>
+    <Contributor>
+      <Name>Juergen Donnerstag</Name>
+    </Contributor>
+    <Rechner>
+      <CPU>Intel Pentium M</CPU>
+      <Mem>1,00GB</Mem>
+      <Speed>2,00GHz</Speed>
+      <OS>Windows XP Professional SP2
+    <Rechner>
+    <MarkupParserTest>
+      <Files>4930</Files>
+      <Duration>1772ms</Duration>
+      <Cycles>10</Cycles>
+      <AveragePerMarkup>0.359ms</AveragePerMarkup>
+    </MarkupParserTest>
+    <RandomTest>
+      <Files>4000</Files>
+      <Duration>982ms</Duration>
+      <AveragePerMarkup>0.2455ms</AveragePerMarkup>
+    </RandomTest>
+    <MarkupCacheTest>
+      <Files>4400</Files>
+      <Duration>1882ms</Duration>
+      <Cycles>10</Cycles>
+      <AveragePerMarkup>0.369ms</AveragePerMarkup>
+    </MarkupCacheTest>
+  </Test>
+</Wicket>

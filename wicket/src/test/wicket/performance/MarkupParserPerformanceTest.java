@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,11 +30,14 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.MarkupContainer;
+import wicket.markup.MarkupCache;
+import wicket.markup.MarkupParser;
+import wicket.markup.MarkupParserFactory;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.loader.DefaultMarkupLoader;
+import wicket.markup.parser.filter.EnclosureHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
-import wicket.resource.DummyPage;
+import wicket.markup.resolver.EnclosureResolver;
 import wicket.util.file.Folder;
 import wicket.util.io.Streams;
 import wicket.util.resource.StringResourceStream;
@@ -44,7 +46,8 @@ import wicket.util.tester.WicketTester;
 /**
  * Gather the names of all *.html files, load the content into memory, and than
  * randomly select any and load it. You may repeat this as often as you want to
- * for regretion tests, to find memory leaks, or for performance tests.
+ * for regretion tests, to find memory leaks, or for performance tests. All
+ * tests are CPU bound.
  * 
  * @author Juergen Donnerstag
  */
@@ -64,15 +67,19 @@ public class MarkupParserPerformanceTest
 	/** List of all MarkupResourceStream; in the very same order as 'files' */
 	private List<MarkupResourceStream> resources;
 
-	/** List of all Wicket container classes; in the very same order as 'files' */
-	private List<Class<? extends MarkupContainer>> containers;
-	
 	/** Wicket application object */
-	private WicketTester application = new WicketTester(null);
+	private WicketTester application = new WicketTester(null)
+	{
+		protected void init()
+		{
+			super.init();
+			getPageSettings().addComponentResolver(new EnclosureResolver());
+		}
+	};
 
 	/** Time to execute a single test */
-	private long duration[];
-	
+	private double duration[];
+
 	static
 	{
 		// Register wicket tags which are usually registered by the components
@@ -137,41 +144,6 @@ public class MarkupParserPerformanceTest
 
 						// Try to load the corresponding class
 						String name = file.getPath();
-						int pos = name.indexOf("\\wicket");
-						name = name.substring(pos + 1);
-						name = name.substring(0, name.length() - 5);
-						name = name.replace('\\', '.');
-						name = name.replace("..", ".");
-						
-						// make sure the class loader loaded the class already
-						try
-						{
-							Class clazz = this.getClass().getClassLoader().loadClass(name);
-							
-							Constructor constructor = null;
-							try
-							{
-								constructor = clazz.getConstructor(new Class[] {});
-							}
-							catch (Exception ex)
-							{
-								try
-								{
-									constructor = clazz.getConstructor(new Class[] { MarkupContainer.class, String.class });
-								}
-								catch (Exception ex2)
-								{
-									log.error("Failed to load constructor for: " + clazz.toString());
-									throw ex2;
-								}
-							}
-//							Constructor constructor = containerClass.getConstructor(new Class[] { MarkupContainer.class, String.class, IModel.class }); 
-							this.containers.add((Class<? extends MarkupContainer>)clazz);
-						}
-						catch (Exception ex)
-						{
-							// ignore
-						}
 					}
 				}
 			}
@@ -211,16 +183,30 @@ public class MarkupParserPerformanceTest
 	/**
 	 * Initialize
 	 * 
+	 * @param srcDirs
 	 * @throws IOException
-	 * @throws ClassNotFoundException 
 	 */
-	private void init() throws IOException
+	private void init(final String[] srcDirs) throws IOException
 	{
-		this.containers = new ArrayList<Class<? extends MarkupContainer>>();
-		
+		this.application.getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory()
+		{
+			@Override
+			public MarkupParser newMarkupParser(MarkupResourceStream resource)
+			{
+				MarkupParser parser = super.newMarkupParser(resource);
+				// register the additional EnclosureHandler
+				parser.registerMarkupFilter(new EnclosureHandler());
+				return parser;
+			}
+		});
+
 		log.info("Scanning for HTML files");
-		List<File> files = getFileListing(new Folder("src/test"));
-		files.addAll(getFileListing(new Folder("src/java")));
+		final List<File> files = new ArrayList<File>();
+		for (final String srcDir : srcDirs)
+		{
+			files.addAll(getFileListing(new Folder(srcDir)));
+
+		}
 		this.files = Collections.unmodifiableList(files);
 		log.info("Found overall " + files.size() + " files");
 
@@ -231,141 +217,209 @@ public class MarkupParserPerformanceTest
 	}
 
 	/**
-	 * Parse the markup in sequentiell order. Usufull to identify hotspots.
+	 * Execute internalParseAllSequentially() N times to get better average
+	 * values and for the profiler (if used) to collect more data.
 	 * 
+	 * @param count
+	 */
+	private void parseAllSequentially(final int count)
+	{
+		long time = System.currentTimeMillis();
+		int anzFiles = 0;
+
+		for (int i = 0; i < count; i++)
+		{
+			anzFiles += internalParseAllSequentially();
+
+			if (((i % 10) == 0) && log.isDebugEnabled())
+			{
+				log.debug("Outer loop ... " + i + " / " + count);
+			}
+		}
+
+		long diff = System.currentTimeMillis() - time;
+		long avgDuration = diff / count;
+		double avgDurPerMarkup = (double)diff / count / this.files.size();
+
+		log.info(anzFiles + " files; " + count + " cycles; Time: " + diff + "ms; average per run: "
+				+ avgDuration + "ms; avg per markup: " + avgDurPerMarkup + "ms");
+
+		stats();
+	}
+
+	/**
+	 * Parse the markup in sequentiell order without markup inheritance and
+	 * without MarkupCache.
+	 * 
+	 * @return # of markup files parsed
 	 * @throws Exception
 	 */
-	private void parseAllSequentially() throws Exception
+	private int internalParseAllSequentially()
 	{
-		log.info("Sequentially parse all markups already loaded");
+		log.debug("Sequentially parse all markups already loaded");
+		long time = System.currentTimeMillis();
+
+		this.duration = new double[this.resources.size()];
 
 		int i = 0;
-		MarkupResourceStream resourceStream = null;
-
 		try
 		{
+			DefaultMarkupLoader loader = new DefaultMarkupLoader(this.application);
 			for (MarkupResourceStream stream : this.resources)
 			{
-				resourceStream = stream;
-				DefaultMarkupLoader loader = new DefaultMarkupLoader(this.application);
 				loader.loadMarkup(null, stream);
 
-				if ((++i % 100) == 0)
+				if (((++i % 100) == 0) && log.isDebugEnabled())
 				{
-					log.info("... " + i);
+					log.debug("... " + i);
 				}
 			}
 		}
 		catch (Exception ex)
 		{
 			log.error("Failed to load markup: " + this.files.get(i).toString());
-			throw ex;
 		}
 
-		log.info("Finished: " + i);
+		long diff = System.currentTimeMillis() - time;
+		log.info("Finished: " + i + " files; duration: " + diff + "ms; avg per file: "
+				+ ((double)diff / i) + "ms");
+
+		return i;
 	}
 
 	/**
-	 * Parse the markup in sequentiell order. Usufull to identify hotspots.
+	 * Execute internalParseAllSequentiallyWithMarkupCache() N times to get
+	 * better average values and for the profiler (if used) to collect more
+	 * data.
 	 * 
-	 * @throws Exception
+	 * @param count
 	 */
-	private void parseAllSequentiallyWithMarkupCache() throws Exception
+	private void parseAllSequentiallyWithMarkupCache(final int count)
 	{
-		log.info("Sequentially parse all markups (with MarkupCache)");
-
-		DummyPage page = new DummyPage();
-		
-		int i = 0;
-		Class<? extends MarkupContainer> markupContainerClass = null;
-
-		try
+		long time = System.currentTimeMillis();
+		int anzFiles = 0;
+		for (int i = 0; i < count; i++)
 		{
-			for (Class<? extends MarkupContainer>containerClass : this.containers)
-			{
-				markupContainerClass = containerClass;
-				
-				Constructor constructor = null;
-				try
-				{
-					constructor = containerClass.getConstructor(new Class[] {});
-				}
-				catch (Exception ex)
-				{
-					try
-					{
-						constructor = containerClass.getConstructor(new Class[] { MarkupContainer.class, String.class });
-					}
-					catch (Exception ex2)
-					{
-						log.error("Failed to load constructor for: " + markupContainerClass.toString());
-					}
-				}
-//				Constructor constructor = containerClass.getConstructor(new Class[] { MarkupContainer.class, String.class, IModel.class }); 
-//				this.application.getMarkupCache().getMarkupStream(container, true);
+			anzFiles += internalParseAllSequentiallyWithMarkupCache();
 
-				if ((++i % 100) == 0)
-				{
-					log.info("... " + i);
-				}
+			if ((i % 10) == 0)
+			{
+				log.info("Outer loop ... " + i);
 			}
 		}
-		catch (Exception ex)
-		{
-			log.error("Failed to load markup: " + markupContainerClass.toString());
-			throw ex;
-		}
+		long diff = System.currentTimeMillis() - time;
+		long avgDuration = diff / count;
+		double avgDurPerMarkup = (double)avgDuration / this.files.size();
+		log.info(anzFiles + " files; duration: " + diff + "ms; cycles: " + count
+				+ "; average per run: " + avgDuration + "ms; avg per markup: " + avgDurPerMarkup
+				+ "ms");
+		stats();
 
-		log.info("Finished: " + i);
 	}
 
 	/**
-	 * Parse the markup in random order: regression and stress test
+	 * Load the markup in sequentiell order. Though MarkupCache is used, the
+	 * container is configured to not cache the markup loaded. Markup
+	 * inheritance is tested and the markup is merged if needed.
+	 * 
+	 * @return file count
+	 */
+	private int internalParseAllSequentiallyWithMarkupCache()
+	{
+		log.debug("Sequentially parse all markups (with MarkupCache)");
+		long overallTime = System.currentTimeMillis();
+
+		this.duration = new double[this.files.size()];
+
+		int i = 0;
+		int failures = 0;
+		File markupFile = null;
+		MarkupCache cache = this.application.getMarkupCache();
+		DummyPage page = new DummyPage();
+		DummyContainer container = new DummyContainer(page);
+
+		for (final File file : this.files)
+		{
+			markupFile = file;
+			container.setMarkupFile(file);
+
+			try
+			{
+				long time = System.currentTimeMillis();
+				cache.getMarkupStream(container, true);
+				this.duration[i] = System.currentTimeMillis() - time;
+			}
+			catch (Exception ex)
+			{
+				failures += 1;
+				log.debug("Failed to load markup: " + this.files.get(i).toString());
+			}
+
+			if ((++i % 100) == 0)
+			{
+				log.debug("... " + i);
+			}
+		}
+
+		long diff = System.currentTimeMillis() - overallTime;
+		i -= failures;
+		log.info(i + " files; duration: " + diff + "ms; avg per file: " + ((double)diff / i)
+				+ "ms; failures: " + failures);
+
+		return i;
+	}
+
+	/**
+	 * Parse the markup in random order without markup inheritance and without
+	 * MarkupCache.
 	 * 
 	 * @param count
 	 *            No if iterations
-	 * @throws Exception
+	 * @return int
 	 */
-	private void parseRandomly(final int count) throws Exception
+	private int parseRandomly(final int count)
 	{
-		log.info("Randomly parse all markups already loaded");
+		log.debug("Randomly parse all markups already loaded");
 
-		this.duration = new long[count];
-		
+		long overallTime = System.currentTimeMillis();
+		this.duration = new double[count];
+
 		int index = 0;
-		MarkupResourceStream resourceStream = null;
-
 		try
 		{
 			Random random = new Random();
 			int size = this.resources.size();
+			DefaultMarkupLoader loader = new DefaultMarkupLoader(this.application);
 
 			for (int i = 0; i < count; i++)
 			{
 				index = random.nextInt(size);
 				MarkupResourceStream stream = this.resources.get(index);
-				resourceStream = stream;
 
 				long time = System.currentTimeMillis();
-				
-				DefaultMarkupLoader loader = new DefaultMarkupLoader(this.application);
 				loader.loadMarkup(null, stream);
-				
 				this.duration[i] = System.currentTimeMillis() - time;
-				
-				if ((i % 100) == 0)
+
+				if ((i % 500) == 0)
 				{
-					log.info("... " + i);
+					log.info("... " + i + " / " + count);
 				}
 			}
 		}
 		catch (Exception ex)
 		{
 			log.error("Failed to load markup: " + this.files.get(index).toString());
-			throw ex;
 		}
 
-		log.info("Finished: " + count);
+		long diff = System.currentTimeMillis() - overallTime;
+		double avgDurPerMarkup = (double)diff / count;
+
+		log.info("Finished: " + count + " files; Time: " + diff + "ms; avg per markup: "
+				+ avgDurPerMarkup + "ms");
+
+		stats();
+
+		return index;
 	}
 
 	/**
@@ -373,16 +427,12 @@ public class MarkupParserPerformanceTest
 	 */
 	private void stats()
 	{
-		int min = 0;
-		int max = 0;
-		int mean = 0;
-		int stdDeviation = 0;
-		int within15percent = 0;  
-		int within30percent = 0;  
-		int within45percent = 0;  
-		int within90percent = 0;  
+		Univariate stats = new Univariate(this.duration);
+		log.info("min: " + stats.min() + "; max: " + stats.max() + "; mean: " + stats.mean()
+				+ "; median: " + stats.median() + "; stdev: " + stats.stdev() + "; variance: "
+				+ stats.variance());
 	}
-	
+
 	/**
 	 * Execure the tests
 	 */
@@ -391,53 +441,24 @@ public class MarkupParserPerformanceTest
 		try
 		{
 			// Initialize
-			init();
+			final String[] htmlDirs = new String[] { "src/java", "src/test" };
+			init(htmlDirs);
 
 			// ------------------------------------------------------------------
 			// Sequential tests
 			// ------------------------------------------------------------------
-			{
-//				int count = 200;
-//				long time = System.currentTimeMillis();
-//				for (int i = 0; i < count; i++)
-//				{
-//					parseAllSequentially();
-//				}
-//				long diff = System.currentTimeMillis() - time;
-//				long avgDuration = diff / count;
-//				long avgDurPerMarkup = avgDuration * 1000 / this.files.size();
-//				log.info("Time: " + diff + "ms; average per run: " + avgDuration
-//						+ "ms; avg per markup: 0." + avgDurPerMarkup + "ms");
-			}
+			parseAllSequentially(10);
 
 			// ------------------------------------------------------------------
-			// Regression tests
+			// Random tests
 			// ------------------------------------------------------------------
-			{
-//				long time = System.currentTimeMillis();
-//				int count = 4000;
-//				parseRandomly(count);
-//				long diff = System.currentTimeMillis() - time;
-//				long avgDurPerMarkup = diff * 1000 / count;
-//				log.info("Time: " + diff + "ms; avg per markup: 0." + avgDurPerMarkup + "ms");
-			}
+			parseRandomly(4000);
 
 			// ------------------------------------------------------------------
-			// Sequential with MarkupCache
+			// Sequential with MarkupCache and inheritance
 			// ------------------------------------------------------------------
-			{
-				int count = 200;
-				long time = System.currentTimeMillis();
-				for (int i = 0; i < count; i++)
-				{
-					parseAllSequentiallyWithMarkupCache();
-				}
-				long diff = System.currentTimeMillis() - time;
-				long avgDuration = diff / count;
-				long avgDurPerMarkup = avgDuration * 1000 / this.files.size();
-				log.info("Time: " + diff + "ms; average per run: " + avgDuration
-						+ "ms; avg per markup: 0." + avgDurPerMarkup + "ms");
-			}
+			parseAllSequentiallyWithMarkupCache(10);
+
 		}
 		catch (Exception ex)
 		{
