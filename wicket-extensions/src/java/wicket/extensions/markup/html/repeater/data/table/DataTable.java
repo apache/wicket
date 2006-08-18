@@ -221,7 +221,8 @@ public class DataTable<T> extends Panel<T> implements IPageable
 		item.setRenderBodyOnly(true);
 
 		AbstractToolbar toolbar = toolbarFactory.newToolbar(item, TOOLBAR_COMPONENT_ID, this);
-
+		toolbar.setRenderBodyOnly(true);
+		
 		if (toolbar == null)
 		{
 			throw new IllegalArgumentException("argument [toolbar] cannot be null");
