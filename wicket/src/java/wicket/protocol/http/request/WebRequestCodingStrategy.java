@@ -43,9 +43,8 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy 
+public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 {
-	
 	/** cached url prefix. */
 	private CharSequence urlPrefix;
 
@@ -94,17 +93,23 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	};
 
 	/**
+	 * Construct.
+	 */
+	public WebRequestCodingStrategy()
+	{
+	}
+
+	/**
 	 * @see wicket.request.IRequestTargetMounter#mount(
 	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
 	 */
 	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
-
 		if (encoder == null)
 		{
 			throw new IllegalArgumentException("Argument encoder must be not-null");
 		}
-		
+
 		String path = encoder.getMountPath();
 		if (Strings.isEmpty(path))
 		{
@@ -129,7 +134,6 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		}
 		mountsOnPath.put(path, encoder);
 	}
-	
 
 	/**
 	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
@@ -140,8 +144,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		{
 			return mountsOnPath.get(null);
 		}
-		else if (!path.equals("/")) // ignore root paths.. is this the right
-		// path?
+		else if (!path.equals("/")) // ignore root paths.. is this the right path?
 		{
 			for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
 			{
@@ -155,6 +158,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		}
 		return null;
 	}
+
 	/**
 	 * @see wicket.request.IRequestCodingStrategy#pathForTarget(wicket.IRequestTarget)
 	 */
@@ -168,15 +172,6 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		}
 		return null;
 	}
-
-	
-	/**
-	 * Construct.
-	 */
-	public WebRequestCodingStrategy()
-	{
-	}
-
 
 	/**
 	 * Encode the given request target. If a mount is found, that mounted url
@@ -199,9 +194,12 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
-			// TODO has this to be done in 2.0?? special check if the prefix ends on '/' because a mount always starts with '/' 
-			// because rootPath see WicketServlet will always contain a "/" and context path and filterpath are both ""
-			if(prefix.charAt(prefix.length()-1) == '/') prefix = prefix.subSequence(0, prefix.length()-1);
+			// TODO has this to be done in 2.0?? special check if the prefix
+			// ends on '/' because a mount always starts with '/'
+			// because rootPath see WicketServlet will always contain a "/" and
+			// context path and filterpath are both ""
+			if (prefix.charAt(prefix.length() - 1) == '/')
+				prefix = prefix.subSequence(0, prefix.length() - 1);
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
 					+ path.length());
 			buffer.append(prefix);
@@ -234,10 +232,10 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 			return url;
 		}
 
-		// Just return null intead of throwing an exception. So that it can be handled better
+		// Just return null intead of throwing an exception. So that it can be
+		// handled better
 		return null;
 	}
-	
 
 	/**
 	 * @see wicket.request.IRequestCodingStrategy#unmount(java.lang.String)
@@ -258,7 +256,6 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		mountsOnPath.remove(path);
 	}
 
-	
 	/**
 	 * Gets prefix.
 	 * 
@@ -275,7 +272,6 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		}
 		return urlPrefix;
 	}
-	
 
 	/**
 	 * Gets the mount encoder for the given request target if any.
@@ -298,6 +294,4 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 
 		return null;
 	}
-
-	
 }
