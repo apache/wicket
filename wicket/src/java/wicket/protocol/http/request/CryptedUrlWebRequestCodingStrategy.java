@@ -290,7 +290,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 		// For debugging only: determine possibilities to further shorten
 		// the query string
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			// Every word with at least 3 letters
 			Pattern words = Pattern.compile("\\w\\w\\w+");
@@ -298,7 +298,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			while (matcher.find())
 			{
 				CharSequence word = queryString.subSequence(matcher.start(), matcher.end());
-				log.info("URL pattern NOT shortened: '" + word + "' - '" + queryString + "'");
+				log.debug("URL pattern NOT shortened: '" + word + "' - '" + queryString + "'");
 			}
 		}
 
