@@ -79,8 +79,6 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
-	private Form form;
-
 	/**
 	 * With this constructor the SubmitLink must be inside a Form.
 	 * 
@@ -115,8 +113,7 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 	 */
 	public SubmitLink(MarkupContainer parent, String id, Form form)
 	{
-		super(parent, id);
-		this.form = form;
+		super(parent, id, form);
 	}
 
 
@@ -143,8 +140,7 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 	 */
 	public SubmitLink(MarkupContainer parent, String id, IModel model, Form form)
 	{
-		super(parent, id);
-		this.form = form;
+		super(parent, id, form);
 	}
 
 	/**
@@ -162,21 +158,6 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 	public SubmitLink(MarkupContainer parent, String id, IModel<T> model)
 	{
 		super(parent, id, model);
-	}
-
-	/**
-	 * @return the Form for which this submit link submits. Null if there is no
-	 *         form.
-	 */
-	@Override
-	public final Form getForm()
-	{
-		if (form == null)
-		{
-			// Look for parent form
-			form = findParent(Form.class);
-		}
-		return form;
 	}
 
 	/**
@@ -222,52 +203,6 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 				tag.put("href", "#");
 			}
 			tag.put("onclick", getTriggerJavaScript());
-		}
-	}
-
-	/**
-	 * Controls whether or not clicking on this link will invoke form's
-	 * javascript onsubmit handler. True by default.
-	 * 
-	 * @return true if form's javascript onsubmit handler should be invoked,
-	 *         false otherwise
-	 */
-	protected boolean shouldInvokeJavascriptFormOnsubmit()
-	{
-		return true;
-	}
-
-	/**
-	 * The javascript which trigges this link
-	 * 
-	 * @return The javascript
-	 */
-	private String getTriggerJavaScript()
-	{
-		Form form = getForm();
-		if (form != null)
-		{
-			StringBuffer sb = new StringBuffer(100);
-			sb.append("var e=document.getElementById('");
-			sb.append(form.getHiddenFieldId(Form.HIDDEN_FIELD_FAKE_SUBMIT));
-			sb.append("'); e.name=\'");
-			sb.append(getInputName());
-			sb.append("'; e.value='x';");
-			sb.append("var f=document.getElementById('");
-			sb.append(form.getMarkupId());
-			sb.append("');");
-			if (shouldInvokeJavascriptFormOnsubmit())
-			{
-				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
-			}
-			sb.append("f.submit();return false;");
-			return sb.toString();
-		}
-		else
-		{
-			// if we didn't find a parent form, fall back on normal link
-			// behavior
-			return "location.href='" + urlFor(ILinkListener.INTERFACE).toString() + "';";
 		}
 	}
 }

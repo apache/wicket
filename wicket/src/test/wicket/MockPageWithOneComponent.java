@@ -28,4 +28,8 @@ public class MockPageWithOneComponent extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Use this wicketid when adding a component to the page.
+	 */
+	public static final String COMPONENT_ID = "component";
 }

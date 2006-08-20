@@ -18,8 +18,10 @@
 package wicket.markup.html.form;
 
 import wicket.MarkupContainer;
+import wicket.ajax.ClientEvent;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
+import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
 /**
@@ -67,6 +69,8 @@ public abstract class Button<T> extends FormComponent<T>
 	 */
 	private boolean defaultFormProcessing = true;
 
+	private Form form;
+	
 	/**
 	 * Constructor without a model. Buttons without models leave the markup
 	 * attribute &quot;value&quot;. Provide a model if you want to set the
@@ -77,6 +81,18 @@ public abstract class Button<T> extends FormComponent<T>
 	public Button(MarkupContainer parent, String id)
 	{
 		super(parent, id);
+	}
+	
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param form
+	 */
+	public Button(MarkupContainer parent, String id, Form form)
+	{
+		this(parent, id, null, form);
 	}
 
 	/**
@@ -99,6 +115,19 @@ public abstract class Button<T> extends FormComponent<T>
 	public Button(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
+	}
+	
+	/**
+	 * Construct.
+	 * @param parent
+	 * @param id
+	 * @param model
+	 * @param form
+	 */
+	public Button(MarkupContainer parent, final String id, final IModel<T> model, final Form form)
+	{
+		super(parent, id, model);
+		this.form = form;
 	}
 
 	/**
@@ -223,6 +252,48 @@ public abstract class Button<T> extends FormComponent<T>
 		{
 			tag.put("onclick", onClickJavaScript);
 		}
+		// If the button isn't added to the form's hierarchy
+		// we use javascript to submit the form instead
+		else 
+		{
+			Form parentForm = findParent(Form.class);
+			if (parentForm == null && form != null) 
+			{
+				// Lets see if we should add some on click javascript
+				String triggerJavaScript = getTriggerJavaScript();
+				if (Strings.isEmpty(triggerJavaScript) == false)
+				{
+					tag.put(ClientEvent.CLICK.getEvent(), triggerJavaScript);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Controls whether or not clicking on this link will invoke form's
+	 * javascript onsubmit handler. True by default.
+	 * 
+	 * @return true if form's javascript onsubmit handler should be invoked,
+	 *         false otherwise
+	 */
+	protected boolean shouldInvokeJavascriptFormOnsubmit()
+	{
+		return true;
+	}
+	
+	
+	
+	@Override
+	public Form getForm()
+	{
+		if (this.form != null)
+		{
+			return this.form;
+		}
+		else
+		{
+			return findParent(Form.class);
+		}
 	}
 
 	/**
@@ -231,4 +302,31 @@ public abstract class Button<T> extends FormComponent<T>
 	 */
 	protected abstract void onSubmit(); 
 
+	/**
+	 * The javascript which trigges this link
+	 * 
+	 * @return The javascript
+	 */
+	protected final String getTriggerJavaScript()
+	{
+		if (getForm() != null) {
+			StringBuffer sb = new StringBuffer(100);
+			sb.append("var e=document.getElementById('");
+			sb.append(getForm().getHiddenFieldId(Form.HIDDEN_FIELD_FAKE_SUBMIT));
+			sb.append("'); e.name=\'");
+			sb.append(getInputName());
+			sb.append("'; e.value='x';");
+			sb.append("var f=document.getElementById('");
+			sb.append(getForm().getMarkupId());
+			sb.append("');");
+			if (shouldInvokeJavascriptFormOnsubmit())
+			{
+				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
+			}
+			sb.append("f.submit();return false;");
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
 }

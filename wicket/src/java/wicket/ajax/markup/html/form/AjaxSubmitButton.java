@@ -24,7 +24,6 @@ import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebComponent;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.util.string.AppendingStringBuffer;
@@ -38,10 +37,12 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AjaxSubmitButton extends WebComponent
+public abstract class AjaxSubmitButton extends Button
 {
 	private static final long serialVersionUID = 1L;
 
+	private Form form;
+	
 	/**
 	 * Construct.
 	 * 
@@ -53,7 +54,8 @@ public abstract class AjaxSubmitButton extends WebComponent
 	 */
 	public AjaxSubmitButton(MarkupContainer parent, String id, final Form form)
 	{
-		super(parent, id);
+		super(parent, id, form);
+		this.form = form;
 
 		add(new AjaxFormSubmitBehavior(form, ClientEvent.CLICK)
 		{
@@ -115,7 +117,28 @@ public abstract class AjaxSubmitButton extends WebComponent
 							+ "'");
 		}
 
-		super.onComponentTag(tag);
+//		super.onComponentTag(tag);
+	}
+	
+	/**
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#getForm()
+	 */
+	@Override
+	public Form getForm()
+	{
+		return form;
+	}
+
+	/**
+	 * Final implementation of the Button's onSubmit. AjaxSubmitButtons have
+	 * there own onSubmit which is called.
+	 * 
+	 * @see wicket.markup.html.form.Button#onSubmit()
+	 */
+	@Override
+	protected final void onSubmit()
+	{
 	}
 
 	/**

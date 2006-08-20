@@ -602,7 +602,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	protected final Button findSubmittingButton()
 	{
-		Button button = (Button)visitChildren(Button.class, new IVisitor()
+		Button button = (Button)getPage().visitChildren(Button.class, new IVisitor()
 		{
 			public Object component(final Component component)
 			{
@@ -610,8 +610,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				final Button button = (Button)component;
 
 				// Check for button-name or button-name.x request string
-				if (getRequest().getParameter(button.getInputName()) != null
-						|| getRequest().getParameter(button.getInputName() + ".x") != null)
+				if (button.getForm() == Form.this
+						&& (getRequest().getParameter(button.getInputName()) != null
+						|| getRequest().getParameter(button.getInputName() + ".x") != null))
 				{
 					if (!button.isVisible())
 					{
@@ -623,31 +624,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-
-		if (button == null)
-		{
-			button = (Button)getPage().visitChildren(SubmitLink.class, new IVisitor()
-			{
-				public Object component(final Component component)
-				{
-					// Get button
-					final SubmitLink button = (SubmitLink)component;
-
-					// Check for button-name or button-name.x request string
-					if (button.getForm() == Form.this
-							&& (getRequest().getParameter(button.getInputName()) != null || getRequest()
-									.getParameter(button.getInputName() + ".x") != null))
-					{
-						if (!button.isVisible())
-						{
-							throw new WicketRuntimeException("Submit Button is not visible");
-						}
-						return button;
-					}
-					return CONTINUE_TRAVERSAL;
-				}
-			});
-		}
+		
 		return button;
 	}
 

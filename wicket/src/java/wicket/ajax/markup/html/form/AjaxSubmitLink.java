@@ -24,7 +24,7 @@ import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -37,7 +37,7 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AjaxSubmitLink extends WebMarkupContainer
+public abstract class AjaxSubmitLink extends Button
 {
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	 */
 	public AjaxSubmitLink(MarkupContainer parent, String id, final Form form)
 	{
-		super(parent, id);
+		super(parent, id, form);
 
 		add(new AjaxFormSubmitBehavior(form, ClientEvent.CLICK)
 		{
@@ -107,6 +107,17 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 		tag.put("href", "#");
 	}
 
+	/**
+	 * Final implementation of the Button's onSubmit. AjaxSubmitLinks have
+	 * there own onSubmit which is called.
+	 * 
+	 * @see wicket.markup.html.form.Button#onSubmit()
+	 */
+	@Override
+	protected final void onSubmit()
+	{
+	}
+	
 	/**
 	 * Listener method invoked on form submit
 	 * 

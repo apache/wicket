@@ -344,7 +344,8 @@ public class WicketTester extends MockWebApplication
 					{
 						try
 						{
-							Constructor c = panelClass.getConstructor(new Class[] { MarkupContainer.class, String.class });
+							Constructor c = panelClass.getConstructor(new Class[] {
+									MarkupContainer.class, String.class });
 							c.newInstance(new Object[] { parent, panelId });
 						}
 						catch (SecurityException e)
@@ -903,8 +904,8 @@ public class WicketTester extends MockWebApplication
 	{
 		debugComponentTrees("");
 	}
-	
-	
+
+
 	/**
 	 * Dump the component tree to log.
 	 * 
@@ -917,9 +918,10 @@ public class WicketTester extends MockWebApplication
 		log.info("debugging ----------------------------------------------");
 		for (ComponentData element : WicketTesterHelper.getComponentData(getLastRenderedPage()))
 		{
-			if (element.path.matches(".*" + filter + ".*")) 
+			if (element.path.matches(".*" + filter + ".*"))
 			{
-				log.info("path\t" + element.path + " \t" + element.type + " \t[" + element.value + "]");
+				log.info("path\t" + element.path + " \t" + element.type + " \t[" + element.value
+						+ "]");
 			}
 		}
 	}
@@ -982,30 +984,30 @@ public class WicketTester extends MockWebApplication
 		failMessage = "Component wasn't found in the AJAX response";
 		Assert.assertTrue(failMessage, isComponentInAjaxResponse);
 	}
-	
+
 	/**
 	 * Simulate that an AJAX event has been fired. You add an AJAX event to a
 	 * component by using:
 	 * 
 	 * <pre>
-	 *  ...
-	 *  component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
-	 *      public void onEvent(AjaxRequestTarget) {
-	 *          // Do something.
-	 *      }
-	 *  });
-	 *  ...
+	 *      ...
+	 *      component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *          public void onEvent(AjaxRequestTarget) {
+	 *              // Do something.
+	 *          }
+	 *      });
+	 *      ...
 	 * </pre>
 	 * 
 	 * You can then test that the code inside onEvent actually does what it's
 	 * supposed to, using the WicketTester:
 	 * 
 	 * <pre>
-	 *  ...
-	 *  tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
-	 *            
-	 *  // Test that the code inside onEvent is correct.
-	 *  ...
+	 *      ...
+	 *      tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *                
+	 *      // Test that the code inside onEvent is correct.
+	 *      ...
 	 * </pre>
 	 * 
 	 * PLEASE NOTE! This method doesn't actually insert the component in the
@@ -1059,5 +1061,32 @@ public class WicketTester extends MockWebApplication
 
 		// process the request target
 		requestCycle.getRequestTarget().respond(requestCycle);
+	}
+
+	/**
+	 * Get a TagTester based on a wicket:id. If more components exists with the
+	 * same wicket:id in the markup only the first one is returned.
+	 * 
+	 * @param wicketId
+	 *            The wicket:id to search for.
+	 * @return The TagTester for the tag which has the given wicket:id.
+	 */
+	public TagTester getTagByWicketId(String wicketId)
+	{
+		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "wicket:id",
+				wicketId);
+	}
+
+	/**
+	 * Get a TagTester based on an dom id. If more components exists with the
+	 * same id in the markup only the first one is returned.
+	 * 
+	 * @param id
+	 *            The dom id to search for.
+	 * @return The TagTester for the tag which has the given dom id.
+	 */
+	public TagTester getTagById(String id)
+	{
+		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "id", id);
 	}
 }
