@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
- * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
- * Mar 2006) $
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,7 +18,6 @@
  */
 package wicket.util.tester;
 
-import junit.framework.Assert;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.XmlPullParser;
 import wicket.markup.parser.XmlTag;
@@ -38,10 +37,10 @@ import wicket.util.value.AttributeMap;
  * Example:
  * 
  * <pre>
- *   ...
- *   TagTester tagTester = application.getTagByWicketId(&quot;form&quot;);
- *   assertTrue(tag.hasAttribute(&quot;action&quot;));
- *   ...
+ *  ...
+ *  TagTester tagTester = application.getTagByWicketId(&quot;form&quot;);
+ *  assertTrue(tag.hasAttribute(&quot;action&quot;));
+ *  ...
  * </pre>
  * 
  * @author Frank Bille (billen)
@@ -77,7 +76,7 @@ public class TagTester
 	{
 		return openTag.getName();
 	}
-	
+
 	/**
 	 * Does the tag contain the attribute. Please note that this is case
 	 * in-sensitive, because attributes in HTML may be case in-sensitive.
@@ -135,7 +134,7 @@ public class TagTester
 	 * <b>Markup:</b>
 	 * 
 	 * <pre>
-	 *         &lt;span wicket:id=&quot;helloComp&quot; class=&quot;style1 style2&quot;&gt;Hello&lt;/span&gt;
+	 *  &lt;span wicket:id=&quot;helloComp&quot; class=&quot;style1 style2&quot;&gt;Hello&lt;/span&gt;
 	 * </pre>
 	 * 
 	 * <p>
@@ -177,27 +176,24 @@ public class TagTester
 	 * 
 	 * @param attribute
 	 *            The attribute to test.
-	 * @param exptected
+	 * @param expected
 	 *            The value which should be the same at the attributes value
 	 * @return True if the attributes value is the same as the parameter.
 	 */
-	public boolean getAttributeIs(String attribute, String exptected)
+	public boolean getAttributeIs(String attribute, String expected)
 	{
 		boolean is = false;
 
-		if (exptected != null)
-		{
-			String val = getAttribute(attribute);
+		String val = getAttribute(attribute);
 
-			if (exptected.equals(val))
-			{
-				is = true;
-			}
+		if (val == null && expected == null || expected != null && expected.equals(val))
+		{
+			is = true;
 		}
 
 		return is;
 	}
-	
+
 	/**
 	 * Check if an attributes value ends with the given parameter.
 	 * 
@@ -287,79 +283,83 @@ public class TagTester
 	 */
 	public static TagTester createTagByAttribute(String markup, String attribute, String value)
 	{
-		XmlPullParser parser = new XmlPullParser();
+		TagTester tester = null;
 
-		try
+		if (Strings.isEmpty(markup) == false && Strings.isEmpty(attribute) == false
+				&& Strings.isEmpty(value) == false)
 		{
-			parser.parse(markup);
-
-			MarkupElement elm = null;
-			XmlTag openTag = null;
-			XmlTag closeTag = null;
-			int level = 0;
-			while ((elm = parser.nextTag()) != null && closeTag == null)
+			try
 			{
-				if (elm instanceof XmlTag)
+				XmlPullParser parser = new XmlPullParser();
+				parser.parse(markup);
+
+				MarkupElement elm = null;
+				XmlTag openTag = null;
+				XmlTag closeTag = null;
+				int level = 0;
+				while ((elm = parser.nextTag()) != null && closeTag == null)
 				{
-					XmlTag xmlTag = (XmlTag)elm;
-
-					if (openTag == null)
+					if (elm instanceof XmlTag)
 					{
-						AttributeMap attributeMap = xmlTag.getAttributes();
+						XmlTag xmlTag = (XmlTag)elm;
 
-						for (String attr : attributeMap.keySet())
+						if (openTag == null)
 						{
-							if (attr.equals(attribute) && value.equals(attributeMap.get(attr)))
+							AttributeMap attributeMap = xmlTag.getAttributes();
+
+							for (String attr : attributeMap.keySet())
 							{
-								if (xmlTag.isOpen())
+								if (attr.equals(attribute) && value.equals(attributeMap.get(attr)))
 								{
-									openTag = xmlTag;
-								}
-								else if (xmlTag.isOpenClose())
-								{
-									openTag = xmlTag;
-									closeTag = xmlTag;
+									if (xmlTag.isOpen())
+									{
+										openTag = xmlTag;
+									}
+									else if (xmlTag.isOpenClose())
+									{
+										openTag = xmlTag;
+										closeTag = xmlTag;
+									}
 								}
 							}
 						}
-					}
-					else
-					{
-						if (xmlTag.isOpen() && xmlTag.getName().equals(openTag.getName()))
+						else
 						{
-							level++;
-						}
-
-						if (xmlTag.isClose())
-						{
-							if (xmlTag.getName().equals(openTag.getName()))
+							if (xmlTag.isOpen() && xmlTag.getName().equals(openTag.getName()))
 							{
-								if (level == 0)
+								level++;
+							}
+
+							if (xmlTag.isClose())
+							{
+								if (xmlTag.getName().equals(openTag.getName()))
 								{
-									closeTag = xmlTag;
-									closeTag.setOpenTag(openTag);
-								}
-								else
-								{
-									level--;
+									if (level == 0)
+									{
+										closeTag = xmlTag;
+										closeTag.setOpenTag(openTag);
+									}
+									else
+									{
+										level--;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
 
-			if (openTag != null && closeTag != null)
+				if (openTag != null && closeTag != null)
+				{
+					tester = new TagTester(parser, openTag, closeTag);
+				}
+			}
+			catch (Exception e)
 			{
-				return new TagTester(parser, openTag, closeTag);
+				throw new IllegalStateException(e);
 			}
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		}
 
-		return null;
+		return tester;
 	}
 }
