@@ -65,7 +65,7 @@ public class CookieValuePersisterTestPage extends WebPage
 		{
 			super(parent, id);
 
-			new TextField<String>(this, "input", new Model<String>("test"));
+			new TextField<String>(this, "input", new Model<String>("test äöüßéèê"));
 		}
 
 		/**

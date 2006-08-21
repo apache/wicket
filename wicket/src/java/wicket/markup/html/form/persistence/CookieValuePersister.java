@@ -18,11 +18,18 @@
  */
 package wicket.markup.html.form.persistence;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.RequestCycle;
 import wicket.markup.html.form.FormComponent;
 import wicket.protocol.http.WebRequest;
@@ -47,10 +54,10 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	public void clear(final FormComponent component)
 	{
-		final Cookie cookie = getCookie(component);
+		final CookieWrapper cookie = getCookie(component);
 		if (cookie != null)
 		{
-			clear(cookie);
+			clear(cookie.getCookie());
 			if (log.isDebugEnabled())
 			{
 				log.debug("Cookie for " + component + " removed");
@@ -63,10 +70,10 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	public void load(final FormComponent component)
 	{
-		final Cookie cookie = getCookie(component);
+		final CookieWrapper cookie = getCookie(component);
 		if (cookie != null)
 		{
-			final String value = cookie.getValue();
+			String value = cookie.getValue();
 			if (value != null)
 			{
 				// Assign the retrieved/persisted value to the component
@@ -80,22 +87,19 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	public void save(final FormComponent component)
 	{
-		final String name = getName(component);
-		final String value = component.getValue();
-
-		Cookie cookie = getCookie(component);
+		CookieWrapper cookie = getCookie(component);
 		if (cookie == null)
 		{
-			cookie = new Cookie(name, value == null ? "" : value);
+			cookie = new CookieWrapper(getName(component), component.getModelObjectAsString());
 		}
 		else
 		{
-			cookie.setValue(value == null ? "" : value);
+			cookie.setValue(component.getModelObjectAsString());
 		}
-		cookie.setSecure(false);
-		cookie.setMaxAge(getSettings().getMaxAge());
+		cookie.getCookie().setSecure(false);
+		cookie.getCookie().setMaxAge(getSettings().getMaxAge());
 
-		save(cookie);
+		save(cookie.getCookie());
 	}
 
 	/**
@@ -134,12 +138,13 @@ public class CookieValuePersister implements IValuePersister
 	 *            the cookie to debug.
 	 * @return a string that represents the internals of the cookie.
 	 */
-	private String cookieToDebugString(final Cookie cookie)
+	private String cookieToDebugString(final CookieWrapper cookie)
 	{
 		return "[Cookie " + " name = " + cookie.getName() + ", value = " + cookie.getValue()
-				+ ", domain = " + cookie.getDomain() + ", path = " + cookie.getPath()
-				+ ", maxAge = " + Time.valueOf(cookie.getMaxAge()).toDateString() + "("
-				+ cookie.getMaxAge() + ")" + "]";
+				+ ", domain = " + cookie.getCookie().getDomain() + ", path = "
+				+ cookie.getCookie().getPath() + ", maxAge = "
+				+ Time.valueOf(cookie.getCookie().getMaxAge()).toDateString() + "("
+				+ cookie.getCookie().getMaxAge() + ")" + "]";
 	}
 
 	/**
@@ -153,16 +158,16 @@ public class CookieValuePersister implements IValuePersister
 	 *            The form component
 	 * @return The cookie for the component or null if none is available
 	 */
-	private Cookie getCookie(final FormComponent component)
+	private CookieWrapper getCookie(final FormComponent component)
 	{
 		// Gets the cookie's name
-		final String name = getName(component);
+		String name = getName(component);
 
 		// Get all cookies attached to the Request by the client browser
-		Cookie[] cookies = getCookies();
+		List<CookieWrapper> cookies = getCookies();
 		if (cookies != null)
 		{
-			for (Cookie cookie : cookies)
+			for (CookieWrapper cookie : cookies)
 			{
 				// Names must match and Value must not be empty
 				if (cookie.getName().equals(name))
@@ -196,18 +201,22 @@ public class CookieValuePersister implements IValuePersister
 	 * 
 	 * @return Any cookies for this request
 	 */
-	private Cookie[] getCookies()
+	private List<CookieWrapper> getCookies()
 	{
+		final List<CookieWrapper> cookies = new ArrayList<CookieWrapper>();
 		try
 		{
-			return getWebRequest().getCookies();
+			for (Cookie cookie : getWebRequest().getCookies())
+			{
+				cookies.add(new CookieWrapper(cookie));
+			}
 		}
 		catch (NullPointerException ex)
 		{
 			// Ignore any app server problem here
 		}
 
-		return new Cookie[0];
+		return cookies;
 	}
 
 	/**
@@ -217,8 +226,7 @@ public class CookieValuePersister implements IValuePersister
 	 */
 	private CookieValuePersisterSettings getSettings()
 	{
-		return RequestCycle.get().getApplication().getSecuritySettings()
-				.getCookieValuePersisterSettings();
+		return Application.get().getSecuritySettings().getCookieValuePersisterSettings();
 	}
 
 	/**
@@ -254,33 +262,154 @@ public class CookieValuePersister implements IValuePersister
 		{
 			return null;
 		}
-		else
+
+		final String comment = getSettings().getComment();
+		if (comment != null)
 		{
-			final String comment = getSettings().getComment();
-			if (comment != null)
+			cookie.setComment(comment);
+		}
+
+		final String domain = getSettings().getDomain();
+		if (domain != null)
+		{
+			cookie.setDomain(domain);
+		}
+
+		cookie.setPath(getWebRequest().getContextPath());
+
+		cookie.setVersion(getSettings().getVersion());
+		cookie.setSecure(getSettings().getSecure());
+
+		getWebResponse().addCookie(cookie);
+
+		if (log.isDebugEnabled())
+		{
+			log.debug("saved: " + cookieToDebugString(new CookieWrapper(cookie)));
+		}
+
+		return cookie;
+	}
+
+	/**
+	 * A wrapper class for Cookie which does the encoding/decoding of NON-ASCII
+	 * chars
+	 * 
+	 */
+	private static class CookieWrapper
+	{
+		/** The cookie with ASCII only */
+		private Cookie cookie;
+
+		/** real name */
+		private String name;
+
+		/** real value */
+		private String value;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param cookie
+		 */
+		private CookieWrapper(final Cookie cookie)
+		{
+			this.cookie = cookie;
+			this.name = EncoderDecoder.decode(cookie.getName());
+			this.value = EncoderDecoder.decode(cookie.getValue());
+		}
+
+		/**
+		 * Construct. Create a new Cookie.
+		 * 
+		 * @param name
+		 * @param value
+		 */
+		private CookieWrapper(final String name, final String value)
+		{
+			final String encodedName = EncoderDecoder.encode(name);
+			final String encodedValue = EncoderDecoder.encode(value == null ? "" : value);
+			this.cookie = new Cookie(encodedName, encodedValue);
+		}
+
+		/**
+		 * @return Cookie name
+		 */
+		public String getName()
+		{
+			return this.name;
+		}
+
+		/**
+		 * @return Cookie value
+		 */
+		public String getValue()
+		{
+			return this.value;
+		}
+
+		/**
+		 * @return The cookie
+		 */
+		public Cookie getCookie()
+		{
+			return this.cookie;
+		}
+
+		/**
+		 * @param value
+		 */
+		public void setValue(final String value)
+		{
+			final String encodedValue = EncoderDecoder.encode(value == null ? "" : value);
+			this.cookie.setValue(encodedValue);
+		}
+	}
+
+	/**
+	 * RFC 2109 defines that cookie only supports ASCII code.
+	 * 
+	 */
+	private static class EncoderDecoder
+	{
+		/** The encoding used */
+		private final static String UTF8 = "UTF-8";
+
+		/**
+		 * Encode
+		 * 
+		 * @param string
+		 * @return encoded string
+		 */
+		private static String encode(final String string)
+		{
+			try
 			{
-				cookie.setComment(comment);
+				return URLEncoder.encode(string, UTF8);
 			}
-
-			final String domain = getSettings().getDomain();
-			if (domain != null)
+			catch (UnsupportedEncodingException e)
 			{
-				cookie.setDomain(domain);
+				log.error(e.getMessage(), e);
 			}
+			return null;
+		}
 
-			cookie.setPath(getWebRequest().getContextPath());
-
-			cookie.setVersion(getSettings().getVersion());
-			cookie.setSecure(getSettings().getSecure());
-
-			getWebResponse().addCookie(cookie);
-
-			if (log.isDebugEnabled())
+		/**
+		 * Decode
+		 * 
+		 * @param string
+		 * @return decoded string
+		 */
+		private static String decode(final String string)
+		{
+			try
 			{
-				log.debug("saved: " + cookieToDebugString(cookie));
+				return URLDecoder.decode(string, UTF8);
 			}
-
-			return cookie;
+			catch (UnsupportedEncodingException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+			return null;
 		}
 	}
 }

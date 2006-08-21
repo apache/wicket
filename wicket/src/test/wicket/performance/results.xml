@@ -3,6 +3,10 @@
     <Contributor>
       <Name>Juergen Donnerstag</Name>
     </Contributor>
+    <Wicket>
+      <Version>pre 2.0 alpha</Version>
+      <Datum>2006-08-19</Datum>
+    </Wicket>
     <Rechner>
       <CPU>Intel Pentium M</CPU>
       <Mem>1,00GB</Mem>

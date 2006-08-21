@@ -109,8 +109,8 @@ public class CookieValuePersisterTest extends TestCase
 		persister.save(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", (getResponseCookies(cycle).get(0)).getName());
+		assertEquals("test+%C3%A4%C3%B6%C3%BC%C3%9F%C3%A9%C3%A8%C3%AA", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("form%3Ainput", (getResponseCookies(cycle).get(0)).getName());
 		assertEquals(cycle.getWebRequest().getContextPath(), (getResponseCookies(cycle)
 				.get(0)).getPath());
 
@@ -121,16 +121,15 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test", (getResponseCookies(cycle).get(0)).getValue());
-		assertEquals("form:input", (getResponseCookies(cycle).get(0)).getName());
+		assertEquals("test+%C3%A4%C3%B6%C3%BC%C3%9F%C3%A9%C3%A8%C3%AA", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("form%3Ainput", (getResponseCookies(cycle).get(0)).getName());
 		assertEquals(cycle.getWebRequest().getContextPath(), (getResponseCookies(cycle)
 				.get(0)).getPath());
 
 		// Try to load it. Because there is no Cookie matching the textfield's
-		// name
-		// it remains unchanged
+		// name it remains unchanged
 		persister.load(textField);
-		assertEquals("test", textField.getModelObjectAsString());
+		assertEquals("test äöüßéèê", textField.getModelObjectAsString());
 
 		// Simulate loading a textfield. Initialize textfield with a new
 		// (default) value, copy the cookie from respone to request (simulating
@@ -138,7 +137,7 @@ public class CookieValuePersisterTest extends TestCase
 		// textfields value should change.
 		// save means: add it to the respone
 		// load means: take it from request
-		assertEquals("test", textField.getModelObjectAsString());
+		assertEquals("test äöüßéèê", textField.getModelObjectAsString());
 		textField.setModelObject("new text");
 		assertEquals("new text", textField.getModelObjectAsString());
 		copyCookieFromResponseToRequest(cycle);
@@ -146,19 +145,18 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 
 		persister.load(textField);
-		assertEquals("test", textField.getModelObjectAsString());
+		assertEquals("test äöüßéèê", textField.getModelObjectAsString());
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(1, getResponseCookies(cycle).size());
 
 		// remove all cookies from mock response
 		// Because I'll find the cookie to be removed in the request, the
-		// persister will create
-		// a "delete" cookie to remove the cookie on the client and add it to
-		// the response.
+		// persister will create a "delete" cookie to remove the cookie 
+		// on the client and add it to the response.
 		persister.clear(textField);
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(2, getResponseCookies(cycle).size());
-		assertEquals("form:input", (getResponseCookies(cycle).get(1)).getName());
+		assertEquals("form%3Ainput", (getResponseCookies(cycle).get(1)).getName());
 		assertEquals(0, (getResponseCookies(cycle).get(1)).getMaxAge());
 	}
 
