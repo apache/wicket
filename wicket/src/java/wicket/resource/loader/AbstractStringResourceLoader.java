@@ -77,13 +77,13 @@ import wicket.util.value.ValueMap;
  * property in the following order:
  * 
  * <pre>
- *      page1.properties =&gt; form1.input1.RequiredValidator
- *      page1.properties =&gt; RequiredValidator
- *      form1.properties =&gt; input1.RequiredValidator
- *      form1.properties =&gt; RequiredValidator
- *      input1.properties =&gt; RequiredValidator
- *      myApplication.properties =&gt; page1.form1.input1.RequiredValidator
- *      myApplication.properties =&gt; RequiredValidator
+ *       page1.properties =&gt; form1.input1.RequiredValidator
+ *       page1.properties =&gt; RequiredValidator
+ *       form1.properties =&gt; input1.RequiredValidator
+ *       form1.properties =&gt; RequiredValidator
+ *       input1.properties =&gt; RequiredValidator
+ *       myApplication.properties =&gt; page1.form1.input1.RequiredValidator
+ *       myApplication.properties =&gt; RequiredValidator
  * </pre>
  * 
  * <p>
@@ -202,8 +202,7 @@ public abstract class AbstractStringResourceLoader implements IStringResourceLoa
 	 */
 	protected Properties getProperties(final Class clazz, final Locale locale, final String style)
 	{
-		return application.getResourceSettings().getPropertiesFactory().get(application, clazz,
-				style, locale);
+		return application.getResourceSettings().getPropertiesFactory().get(clazz, style, locale);
 	}
 
 	/**

@@ -20,8 +20,6 @@ package wicket.resource;
 
 import java.util.Locale;
 
-import wicket.Application;
-
 /**
  * Interface to be implemented by properties loaders
  * 
@@ -39,8 +37,6 @@ public interface IPropertiesFactory
 	/**
 	 * Get the properties for ...
 	 * 
-	 * @param application
-	 *            The application object
 	 * @param clazz
 	 *            The class that resources are bring loaded for
 	 * @param style
@@ -49,8 +45,7 @@ public interface IPropertiesFactory
 	 *            The locale to load reosurces for
 	 * @return The properties
 	 */
-	Properties get(final Application application, final Class clazz, final String style,
-			final Locale locale);
+	Properties get(final Class clazz, final String style, final Locale locale);
 
 	/**
 	 * Remove all cached properties

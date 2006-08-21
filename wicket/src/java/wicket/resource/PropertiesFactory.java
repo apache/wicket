@@ -33,6 +33,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.settings.IResourceSettings;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -63,11 +64,17 @@ public class PropertiesFactory implements IPropertiesFactory
 	/** Listeners will be invoked after properties have been reloaded */
 	private final List<IPropertiesReloadListener> afterReloadListeners = new ArrayList<IPropertiesReloadListener>();
 
+	/** Resource Settings */
+	private final IResourceSettings resourceSettings;
+
 	/**
 	 * Construct.
+	 * 
+	 * @param application
 	 */
-	public PropertiesFactory()
+	public PropertiesFactory(final Application application)
 	{
+		this.resourceSettings = application.getResourceSettings();
 	}
 
 	/**
@@ -83,19 +90,17 @@ public class PropertiesFactory implements IPropertiesFactory
 	}
 
 	/**
-	 * @see wicket.resource.IPropertiesFactory#get(wicket.Application,
-	 *      java.lang.Class, java.lang.String, java.util.Locale)
+	 * @see wicket.resource.IPropertiesFactory#get(java.lang.Class,
+	 *      java.lang.String, java.util.Locale)
 	 */
-	public Properties get(final Application application, final Class clazz, final String style,
-			final Locale locale)
+	public Properties get(final Class clazz, final String style, final Locale locale)
 	{
 		final String key = createResourceKey(clazz, locale, style);
 		Properties props = propertiesCache.get(key);
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
-			final IResourceStream resource = application.getResourceSettings()
-					.getResourceStreamLocator().locate(clazz, clazz.getName().replace('.', '/'),
-							style, locale, "properties");
+			final IResourceStream resource = resourceSettings.getResourceStreamLocator().locate(
+					clazz, clazz.getName().replace('.', '/'), style, locale, "properties");
 
 			if (resource != null)
 			{
@@ -271,8 +276,7 @@ public class PropertiesFactory implements IPropertiesFactory
 			final Locale locale)
 	{
 		// Watch file modifications
-		final ModificationWatcher watcher = Application.get().getResourceSettings()
-				.getResourceWatcher(true);
+		final ModificationWatcher watcher = resourceSettings.getResourceWatcher(true);
 		if (watcher != null)
 		{
 			watcher.add(resourceStream, new IChangeListener()

@@ -625,7 +625,7 @@ public final class Settings
 	{
 		if (propertiesFactory == null)
 		{
-			propertiesFactory = new PropertiesFactory();
+			propertiesFactory = new PropertiesFactory(this.application);
 		}
 		return propertiesFactory;
 	}
