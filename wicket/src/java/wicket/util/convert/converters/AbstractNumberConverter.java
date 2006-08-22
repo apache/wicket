@@ -51,6 +51,11 @@ public abstract class AbstractNumberConverter extends AbstractConverter
 	 */
 	protected Number parse(Object value, final double min, final double max, Locale locale)
 	{
+		if (locale == null)
+		{
+			locale = Locale.getDefault();
+		}
+
 		final NumberFormat numberFormat = getNumberFormat(locale);
 
 		if(value instanceof String)

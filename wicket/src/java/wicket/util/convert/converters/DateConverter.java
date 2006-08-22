@@ -79,6 +79,11 @@ public class DateConverter extends AbstractConverter
 	 */
 	public DateFormat getDateFormat(Locale locale)
 	{
+		if (locale == null)
+		{
+			locale = Locale.getDefault();
+		}
+
 		DateFormat dateFormat = (DateFormat)dateFormats.get(locale);
 		if (dateFormat == null)
 		{
