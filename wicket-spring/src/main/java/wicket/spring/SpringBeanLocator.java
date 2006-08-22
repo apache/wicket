@@ -42,7 +42,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 	private String beanTypeName;
 
-	private String beanName;
+	private String beanId;
 
 	private ISpringContextLocator springContextLocator;
 
@@ -62,15 +62,14 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	/**
 	 * Constructor
 	 * 
-	 * @param beanName
+	 * @param beanId
 	 *            bean name
 	 * @param beanType
 	 *            bean class
 	 * @param locator
 	 *            spring context locator
 	 */
-	public SpringBeanLocator(String beanName, Class beanType,
-			ISpringContextLocator locator)
+	public SpringBeanLocator(String beanId, Class beanType, ISpringContextLocator locator)
 	{
 		if (locator == null)
 		{
@@ -83,7 +82,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 		this.beanTypeCache = beanType;
 		this.beanTypeName = beanType.getName();
-		this.beanName = beanName;
+		this.beanId = beanId;
 		this.springContextLocator = locator;
 	}
 
@@ -103,7 +102,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			{
 				throw new RuntimeException("SpringBeanLocator could not find class ["
 						+ beanTypeName + "] needed to locate the ["
-						+ ((beanName != null) ? (beanName) : ("bean name not specified"))
+						+ ((beanId != null) ? (beanId) : ("bean name not specified"))
 						+ "] bean", e);
 			}
 		}
@@ -123,9 +122,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 					"spring application context locator returned null");
 		}
 
-		if (beanName != null && beanName.length() > 0)
+		if (beanId != null && beanId.length() > 0)
 		{
-			return lookupSpringBean(context, beanName, getBeanType());
+			return lookupSpringBean(context, beanId, getBeanType());
 		}
 		else
 		{
@@ -135,10 +134,22 @@ public class SpringBeanLocator implements IProxyTargetLocator
 
 	/**
 	 * @return bean name this locator is configured with
+	 * @deprecated use {@link #getBeanId()} instead
+	 * 
+	 * TODO Post 2.0: Remove
 	 */
+	@Deprecated
 	public final String getBeanName()
 	{
-		return beanName;
+		return beanId;
+	}
+
+	/**
+	 * @return bean id this locator is configured with
+	 */
+	public final String getBeanId()
+	{
+		return beanId;
 	}
 
 	/**
@@ -246,7 +257,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		{
 			SpringBeanLocator other = (SpringBeanLocator) obj;
 			return beanTypeName.equals(other.beanTypeName)
-					&& Objects.equal(beanName, other.beanName);
+					&& Objects.equal(beanId, other.beanId);
 		}
 		return false;
 	}
@@ -258,9 +269,9 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	public int hashCode()
 	{
 		int hashcode = beanTypeName.hashCode();
-		if (beanName != null)
+		if (beanId != null)
 		{
-			hashcode = hashcode + (127 * beanName.hashCode());
+			hashcode = hashcode + (127 * beanId.hashCode());
 		}
 		return hashcode;
 	}

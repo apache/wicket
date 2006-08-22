@@ -39,11 +39,10 @@ public @interface SpringBean {
 	 * 
 	 * @return name attr
 	 * 
-	 * TODO 2.1: Remove
-	 * 
-	 * This attribute has been deprecated, use {@link #id()} instead.
-	 * <code>id</code> matches closer to the xml declaration of a spring bean
-	 * than <code>name</code>.
+	 * TODO Post 2.0: Remove
+	 * @deprecated This attribute has been deprecated, use {@link #id()}
+	 *             instead. <code>id</code> matches closer to the xml
+	 *             declaration of a spring bean than <code>name</code>.
 	 */
 	@Deprecated
 	String name() default "";
