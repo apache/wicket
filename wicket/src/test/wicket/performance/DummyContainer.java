@@ -65,6 +65,21 @@ public class DummyContainer extends WebMarkupContainer
 
 	/**
 	 * 
+	 * @see wicket.Component#loadMarkupStream()
+	 */
+	@Override
+	protected void loadMarkupStream()
+	{
+		// Actually this is like never loading the markup as this.markupFile
+		// will allways be null when called by Component.<init>.
+		if (this.markupFile != null)
+		{
+			super.loadMarkupStream();
+		}
+	}
+
+	/**
+	 * 
 	 * @see wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(wicket.MarkupContainer,
 	 *      java.lang.Class)
 	 */
@@ -91,12 +106,12 @@ public class DummyContainer extends WebMarkupContainer
 		return null;
 
 		// Enable caching
-//		return this.markupFile.getPath();
+		// return this.markupFile.getPath();
 
 		// Some requests are cached, others are not
 		// Note: The range must be significantly larger (2-10) than the number
 		// of files which are scanned. The larger, the less likely it is that
 		// a file is found in the cache
-//		return String.valueOf(random.nextInt(1000));
+		// return String.valueOf(random.nextInt(1000));
 	}
 }

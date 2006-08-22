@@ -627,28 +627,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 		else
 		{
-			try
-			{
-				MarkupStream markupStream = MarkupFragmentFinder.find(this);
-				ComponentTag tag = markupStream.getTag();
-				if (tag.hasAttributes())
-				{
-					markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
-				}
-			}
-			catch (MarkupException ex)
-			{
-				log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
-						+ id + "'. You will not be able to use the component for AJAX calls.");
-//				throw ex;
-			}
-			catch (RuntimeException re)
-			{
-				log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
-						+ id + "'. You will not be able to use the component for AJAX calls.");
-//				throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
-//						+ "' in parent " + parent.getPageRelativePath(), re);
-			}
+			loadMarkupStream();
 			parent.add(this);
 		}
 
@@ -659,6 +638,48 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		else
 		{
 			this.model = model;
+		}
+	}
+
+	/**
+	 * This method is called in the Component's constructor. 
+	 * However some components may either require to load the markup later
+	 * or not at all in case the markup is fully dynamic. In both cases
+	 * override loadMarkupStream() and provide you own logic.
+	 * E.g. 
+	 * <pre>
+	 * 	protected void loadMarkupStream()
+	 *  {
+	 *     if (this.myDatasource != null)
+	 *     {
+	 *        super.loadMarkupStream();
+	 *     }
+     *  }
+	 * </pre> 
+	 */
+	protected void loadMarkupStream()
+	{
+		try
+		{
+			MarkupStream markupStream = Application.get().getMarkupSettings().getMarkupFragmentFinder().find(this);
+			ComponentTag tag = markupStream.getTag();
+			if (tag.hasAttributes())
+			{
+				markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
+			}
+		}
+		catch (MarkupException ex)
+		{
+			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
+					+ id + "'. You will not be able to use the component for AJAX calls.");
+//				throw ex;
+		}
+		catch (RuntimeException re)
+		{
+			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
+					+ id + "'. You will not be able to use the component for AJAX calls.");
+//				throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
+//						+ "' in parent " + parent.getPageRelativePath(), re);
 		}
 	}
 
@@ -1673,7 +1694,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			// Save the parent's markup stream to re-assign it at the end
 			MarkupContainer parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
-			MarkupStream markupStream = MarkupFragmentFinder.find(this);
+			MarkupStream markupStream = Application.get().getMarkupSettings().getMarkupFragmentFinder().find(this);
 
 			try
 			{
