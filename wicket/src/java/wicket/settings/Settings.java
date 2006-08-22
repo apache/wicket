@@ -34,6 +34,7 @@ import wicket.IPageFactory;
 import wicket.IResourceFactory;
 import wicket.IResponseFilter;
 import wicket.Localizer;
+import wicket.MarkupFragmentFinder;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.application.DefaultClassResolver;
@@ -174,6 +175,9 @@ public final class Settings
 
 	/** Factory for creating markup parsers */
 	private IMarkupParserFactory markupParserFactory;
+
+	/** Markup finder */
+	private MarkupFragmentFinder markupFragmentFinder;
 
 	/** To help prevent denial of service attacks */
 	private int maxPageMaps = 5;
@@ -568,6 +572,27 @@ public final class Settings
 	public IMarkupParserFactory getMarkupParserFactory()
 	{
 		return markupParserFactory;
+	}
+
+	/**
+	 * @see wicket.settings.IMarkupSettings#getMarkupFragmentFinder()
+	 */
+	public MarkupFragmentFinder getMarkupFragmentFinder()
+	{
+		if (this.markupFragmentFinder == null)
+		{
+			this.markupFragmentFinder = new MarkupFragmentFinder();
+		}
+		return this.markupFragmentFinder;
+	}
+
+	/**
+	 * 
+	 * @see wicket.settings.IMarkupSettings#setMarkupFragmentFinder(wicket.MarkupFragmentFinder)
+	 */
+	public void setMarkupFragmentFinder(final MarkupFragmentFinder markupFragmentFinder)
+	{
+		this.markupFragmentFinder = markupFragmentFinder;
 	}
 
 	/**

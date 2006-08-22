@@ -1,5 +1,6 @@
 package wicket.settings;
 
+import wicket.MarkupFragmentFinder;
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
 
@@ -159,4 +160,16 @@ public interface IMarkupSettings
 	 *            if true, xml declaration will be stripped from output
 	 */
 	void setStripXmlDeclarationFromOutput(final boolean strip);
+
+	/**
+	 * @since 2.0
+	 * @return The MarkupFragmentFinder to be used by the application
+	 */
+	MarkupFragmentFinder getMarkupFragmentFinder();
+
+	/**
+	 * @since 2.0
+	 * @param markupFragmentFinder The MarkupFragmentFinder to be used by the application
+	 */
+	void setMarkupFragmentFinder(MarkupFragmentFinder markupFragmentFinder);
 }
