@@ -90,7 +90,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		}
 
 		/** The view for this step. */
-		private class View extends Panel<User>
+		private class View extends Panel
 		{
 			/**
 			 * Construct.
@@ -132,7 +132,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		}
 
 		/** The view for this step. */
-		public final class View extends Panel<User>
+		public final class View extends Panel
 		{
 			/**
 			 * Construct.
@@ -165,7 +165,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	private class UserRolesStep extends WizardStep implements ICondition
 	{
 		/** The view for this step. */
-		private class View extends Panel<User>
+		private class View extends Panel<NewUserWizard>
 		{
 			/**
 			 * Construct.
