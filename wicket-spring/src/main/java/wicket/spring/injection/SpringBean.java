@@ -24,7 +24,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-
 /**
  * Annotation used to tag a field as a placeholder for a spring bean.
  * 
@@ -39,6 +38,21 @@ public @interface SpringBean {
 	 * the bean will be looked up by the type of the field with the annotation.
 	 * 
 	 * @return name attr
+	 * 
+	 * TODO 2.1: Remove
+	 * 
+	 * This attribute has been deprecated, use {@link #id()} instead.
+	 * <code>id</code> matches closer to the xml declaration of a spring bean
+	 * than <code>name</code>.
 	 */
+	@Deprecated
 	String name() default "";
+
+	/**
+	 * Optional attribute for specifying the id of the bean. If not specified,
+	 * the bean will be looked up by the type of the field with the annotation.
+	 * 
+	 * @return id attr
+	 */
+	String id() default "";
 }

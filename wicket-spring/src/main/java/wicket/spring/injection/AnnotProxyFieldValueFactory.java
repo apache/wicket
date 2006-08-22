@@ -87,8 +87,8 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 		if (field.isAnnotationPresent(SpringBean.class))
 		{
 			SpringBean annot = field.getAnnotation(SpringBean.class);
-			SpringBeanLocator locator = new SpringBeanLocator(annot.name(), field
-					.getType(), contextLocator);
+			SpringBeanLocator locator = new SpringBeanLocator(annot.id(),
+					field.getType(), contextLocator);
 
 			if (cache.containsKey(locator))
 			{
