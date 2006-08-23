@@ -45,6 +45,7 @@ import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
+import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
@@ -185,26 +186,10 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	protected void addBookmarkablePageParameters(final Request request,
 			final RequestParameters parameters)
 	{
-		final String requestString = request
-		.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+		final String requestString = request.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
-			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
-			if (components.length != 2)
-			{
-				throw new WicketRuntimeException("Invalid bookmarkablePage parameter: "
-						+ requestString + ", expected: 'pageMapName:pageClassName'");
-			}
-
-			// Extract any pagemap name
-			final String pageMapName = components[0];
-			parameters.setPageMapName(pageMapName.length() == 0
-					? PageMap.DEFAULT_NAME
-							: pageMapName);
-
-			// Extract bookmarkable page class name
-			final String pageClassName = components[1];
-			parameters.setBookmarkablePageClass(pageClassName);
+			parameters.setBookmarkablePageClass(requestString);
 		}
 	}
 
@@ -264,7 +249,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected void addResourceParameters(Request request, RequestParameters parameters)
 	{
-		// TODO: resources are not yet supported
+		// TODO: resources are not supported
 	}
 
 	/**
@@ -374,7 +359,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return encodeServletRequest(requestCycle,requestTarget);
 		}
-		
+
 		// Get component and page for request target
 		final Component component = requestTarget.getTarget();
 		final Page page = component.getPage();
@@ -484,44 +469,16 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	 */
 	protected CharSequence encodeRequest(RequestCycle requestCycle,
 			IBookmarkablePageRequestTarget requestTarget)
-	{
+	{		
 		final PortletURL url = getActionURL(requestCycle);
 
 		// Get page Class
 		final Class pageClass = requestTarget.getPageClass();
-		final Application application = Application.get();
-
-		// Find pagemap name
-		String pageMapName = requestTarget.getPageMapName();
-		if (pageMapName == null)
-		{
-			IRequestTarget currentTarget = requestCycle.getRequestTarget();
-			if (currentTarget instanceof IPageRequestTarget)
-			{
-				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
-				final PageMap pageMap = currentPage.getPageMap();
-				if (pageMap.isDefault())
-				{
-					pageMapName = "";
-				}
-				else
-				{
-					pageMapName = pageMap.getName();
-				}
-			}
-			else
-			{
-				pageMapName = "";
-			}
-		}
-
-		url.setParameter(WebRequestCodingStrategy.PAGEMAP, pageMapName);
-		url.setParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageClass
-				.getName());
-
 		// Get page parameters
 		final PageParameters parameters = requestTarget.getPageParameters();
 		url.setParameters(parameters);
+
+		url.setParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageClass.getName());		
 		return url.toString();
 	}
 
@@ -589,38 +546,13 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		final Class pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
 
-		// Find pagemap name
-		String pageMapName = requestTarget.getPageMapName();
-		if (pageMapName == null)
-		{
-			IRequestTarget currentTarget = requestCycle.getRequestTarget();
-			if (currentTarget instanceof IPageRequestTarget)
-			{
-				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
-				final PageMap pageMap = currentPage.getPageMap();
-				if (pageMap.isDefault())
-				{
-					pageMapName = "";
-				}
-				else
-				{
-					pageMapName = pageMap.getName();
-				}
-			}
-			else
-			{
-				pageMapName = "";
-			}
-		}
-
-		boolean firstParameter = true;
-		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName))
-		{
-			response.setRenderParameter(PAGEMAP, pageMapName);
-			response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-					pageClass.getName());
-		}
 		response.setRenderParameters(requestTarget.getPageParameters());
+		
+		if (!application.getHomePage().equals(pageClass))
+		{
+			response.setRenderParameter(PAGEMAP,"");
+			response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,pageClass.getName());
+		}
 	}
 
 	private void doSetRenderParameters(PortletRequestCycle requestCycle,
@@ -677,21 +609,13 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 		// Touch the page to make sure it will be added to the PageMap
 		requestCycle.getSession().touch(page);
 
-		// Add pagemap
-		final PageMap pageMap = page.getPageMap();
-
-		if (!pageMap.isDefault())
-		{
-			response.setRenderParameter(PAGEMAP, pageMap.getName());
-		}
 		// Add path to component
 		response.setRenderParameter(COMPONENT_PATH_PARAMETER_NAME, page.getPath());
 
 		// Add version
 		final int versionNumber = page.getCurrentVersionNumber();
 		response.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(versionNumber));
-		response
-		.setRenderParameter(INTERFACE_PARAMETER_NAME, IRedirectListener.INTERFACE.getName());
+		response.setRenderParameter(INTERFACE_PARAMETER_NAME, IRedirectListener.INTERFACE.getName());
 	}
 
 	/**

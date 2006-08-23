@@ -14,6 +14,8 @@
  */
 package wicket.protocol.http.portlet;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -31,6 +33,7 @@ import wicket.WicketRuntimeException;
 import wicket.PageMap.Access;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
+import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.request.RequestParameters;
 import wicket.request.compound.IRequestTargetResolverStrategy;
 import wicket.request.target.basic.EmptyRequestTarget;
@@ -62,7 +65,12 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	 */
 	public final IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
-	{
+	{		
+		if (requestParameters.getBookmarkablePageClass() != null)
+		{
+			return resolveBookmarkablePage(requestCycle, requestParameters);
+		}
+
 		// See whether this request points to a rendered page
 		final String path = requestParameters.getPath();
 
@@ -99,8 +107,8 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 							final Access access = (Access)pageMap.getAccessStack().peek();
 
 							final int pageId = Integer
-									.parseInt(Strings.firstPathComponent(requestParameters
-											.getComponentPath(), Component.PATH_SEPARATOR));
+							.parseInt(Strings.firstPathComponent(requestParameters
+									.getComponentPath(), Component.PATH_SEPARATOR));
 
 							if (pageId != access.getId())
 							{
@@ -146,6 +154,46 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	}
 
 	/**
+	 * Resolves to a bookmarkable page target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestParameters
+	 *            the request parameters object
+	 * @return the bookmarkable page as a request target
+	 */
+	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
+	{
+		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
+		Session session = requestCycle.getSession();
+		Application application = session.getApplication();
+		Class pageClass;
+		try
+		{
+			pageClass = session.getClassResolver().resolveClass(bookmarkablePageClass);
+		}
+		catch (RuntimeException e)
+		{
+			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
+			"Unable to load Bookmarkable Page");
+		}
+
+		try
+		{
+			PageParameters params = new PageParameters(requestParameters.getParameters());
+			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(), pageClass,
+					params);
+		}
+		catch (RuntimeException e)
+		{
+			throw new WicketRuntimeException("Unable to instantiate Page class: "
+					+ bookmarkablePageClass + ". See below for details.", e);
+		}
+	}
+
+
+	/**
 	 * Resolves to a page target that was previously rendered. Optionally
 	 * resolves to a component call target, which is a specialization of a page
 	 * target. If no corresponding page could be found, a expired page target
@@ -171,7 +219,7 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		{
 			// Set page on request
 			requestCycle.getRequest().setPage(page);
-			
+
 			// see whether this resolves to a component call or just the page
 			final String interfaceName = requestParameters.getInterfaceName();
 			if (interfaceName != null)
