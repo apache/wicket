@@ -18,6 +18,8 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
+import java.io.Serializable;
+
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.IDataProvider;
@@ -42,7 +44,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *                       &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *                        &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -92,7 +94,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * @author ivaynberg
 	 * 
 	 */
-	public static interface IToolbarFactory
+	public static interface IToolbarFactory extends Serializable
 	{
 		/**
 		 * Used to create a new toolbar
@@ -135,14 +137,15 @@ public class DataTable<T> extends Panel<T> implements IPageable
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected Item newRowItem(MarkupContainer parent, final String id, int index, IModel model)
+			protected Item newRowItem(MarkupContainer parent, final String id, int index,
+					IModel model)
 			{
 				return DataTable.this.newRowItem(parent, id, index, model);
 			}
 
 			@Override
-			protected Item newCellItem(MarkupContainer cellContainer, final String id,
-					int index, IModel model)
+			protected Item newCellItem(MarkupContainer cellContainer, final String id, int index,
+					IModel model)
 			{
 				return DataTable.this.newCellItem(cellContainer, id, index, model);
 			}
@@ -222,7 +225,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 
 		AbstractToolbar toolbar = toolbarFactory.newToolbar(item, TOOLBAR_COMPONENT_ID, this);
 		toolbar.setRenderBodyOnly(true);
-		
+
 		if (toolbar == null)
 		{
 			throw new IllegalArgumentException("argument [toolbar] cannot be null");
@@ -280,7 +283,8 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	/**
 	 * Factory method for Item container that represents a row in the underlying
 	 * DataGridView
-	 * @param parent 
+	 * 
+	 * @param parent
 	 * 
 	 * @see Item
 	 * 
@@ -293,7 +297,8 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newRowItem(MarkupContainer parent, final String id, int index, final IModel<T> model)
+	protected Item newRowItem(MarkupContainer parent, final String id, int index,
+			final IModel<T> model)
 	{
 		return new Item<T>(parent, id, index, model);
 	}
