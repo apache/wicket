@@ -91,6 +91,8 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 		addTopToolbar(new IToolbarFactory()
 		{
 
+			private static final long serialVersionUID = 1L;
+
 			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
 				return new NavigationToolbar(parent, id, dataTable);
@@ -100,6 +102,7 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 
 		addTopToolbar(new IToolbarFactory()
 		{
+			private static final long serialVersionUID = 1L;
 
 			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
@@ -110,6 +113,7 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 
 		addBottomToolbar(new IToolbarFactory()
 		{
+			private static final long serialVersionUID = 1L;
 
 			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{

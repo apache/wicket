@@ -91,6 +91,7 @@ public class DefaultDataTable<T> extends DataTable<T>
 
 		addTopToolbar(new IToolbarFactory()
 		{
+			private static final long serialVersionUID = 1L;
 
 			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
@@ -101,6 +102,7 @@ public class DefaultDataTable<T> extends DataTable<T>
 
 		addTopToolbar(new IToolbarFactory()
 		{
+			private static final long serialVersionUID = 1L;
 
 			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
@@ -111,6 +113,7 @@ public class DefaultDataTable<T> extends DataTable<T>
 
 		addBottomToolbar(new IToolbarFactory()
 		{
+			private static final long serialVersionUID = 1L;
 
 			public AbstractToolbar newToolbar(WebMarkupContainer parent, String id, DataTable dataTable)
 			{
