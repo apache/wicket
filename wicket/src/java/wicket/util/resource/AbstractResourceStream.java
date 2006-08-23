@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractResourceStream.java 2688 2005-08-28 19:51:31 +0000 (Sun, 28 Aug
+ * 2005) joco01 $ $Revision$ $Date: 2005-08-28 19:51:31 +0000 (Sun, 28
+ * Aug 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,10 +20,12 @@ package wicket.util.resource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
 import wicket.WicketRuntimeException;
+import wicket.util.io.IOUtils;
 import wicket.util.io.Streams;
 
 /**
@@ -52,16 +55,18 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	 */
 	public String asString()
 	{
+		Reader reader = null;
 		try
 		{
 			if (charset == null)
 			{
-				return Streams.readString(new InputStreamReader(getInputStream()));
+				reader = new InputStreamReader(getInputStream());
 			}
 			else
 			{
-				return Streams.readString(new InputStreamReader(getInputStream(), charset));
+				reader = new InputStreamReader(getInputStream(), charset);
 			}
+			return Streams.readString(reader);
 		}
 		catch (IOException e)
 		{
@@ -70,6 +75,18 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 		catch (ResourceStreamNotFoundException e)
 		{
 			throw new WicketRuntimeException("Unable to read resource as String", e);
+		}
+		finally
+		{
+			IOUtils.closeQuietly(reader);
+			try
+			{
+				close();
+			}
+			catch (IOException e)
+			{
+				// ignore
+			}
 		}
 	}
 
@@ -80,8 +97,8 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	{
 		return charset;
 	}
-	
-	
+
+
 	/**
 	 * @see wicket.util.resource.IResourceStream#getLocale()
 	 */
@@ -89,7 +106,7 @@ public abstract class AbstractResourceStream implements IStringResourceStream
 	{
 		return locale;
 	}
-	
+
 	/**
 	 * @see wicket.util.resource.IResourceStream#setLocale(java.util.Locale)
 	 */
