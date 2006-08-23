@@ -59,9 +59,10 @@ import wicket.util.string.AppendingStringBuffer;
  */
 public class MarkupParser
 {
-	/** Conditional comment section, which is NOT treated as a comment section */ 
-	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
-	
+	/** Conditional comment section, which is NOT treated as a comment section */
+	private static final Pattern CONDITIONAL_COMMENT = Pattern
+			.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
+
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
 
@@ -117,17 +118,17 @@ public class MarkupParser
 	{
 		// Chain together all the different markup filters and configure them
 		this.markupFilterChain = xmlParser;
-		
+
 		appendMarkupFilter(new WicketTagIdentifier(markup));
 		appendMarkupFilter(new TagTypeHandler());
 		appendMarkupFilter(new HtmlHandler());
 		appendMarkupFilter(new WicketRemoveTagHandler());
 		appendMarkupFilter(new WicketLinkTagHandler());
 		appendMarkupFilter(new WicketNamespaceHandler(markup));
-		
+
 		// Provided the wicket component requesting the markup is known ...
 		final MarkupResourceStream resource = markup.getResource();
-		if (resource != null) 
+		if (resource != null)
 		{
 			final ContainerInfo containerInfo = resource.getContainerInfo();
 			if (containerInfo != null)
@@ -136,9 +137,9 @@ public class MarkupParser
 				{
 					appendMarkupFilter(new WicketMessageTagHandler(containerInfo));
 				}
-	
+
 				appendMarkupFilter(new BodyOnLoadHandler());
-	
+
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
@@ -182,7 +183,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	final Markup readAndParse(final MarkupResourceStream resource) throws IOException,
+	public final Markup readAndParse(final MarkupResourceStream resource) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
@@ -213,7 +214,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	final Markup parse(final String string) throws IOException,
+	public final Markup parse(final String string) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// Remove all existing markup elements
@@ -252,7 +253,7 @@ public class MarkupParser
 		{
 			// allways remember the latest index (size)
 			int size = this.markup.size();
-			
+
 			// Loop through tags
 			for (ComponentTag tag; null != (tag = (ComponentTag)markupFilterChain.nextTag());)
 			{
@@ -289,7 +290,8 @@ public class MarkupParser
 
 					if (add)
 					{
-						// Add to list unless preview component tag remover flagged
+						// Add to list unless preview component tag remover
+						// flagged
 						// as removed
 						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
 						{
@@ -300,10 +302,10 @@ public class MarkupParser
 					{
 						this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
-					
+
 					xmlParser.setPositionMarker();
 				}
-				
+
 				// allways remember the latest index (size)
 				size = this.markup.size();
 			}
@@ -348,7 +350,7 @@ public class MarkupParser
 		rawMarkup = rawMarkup.replaceAll("( ?[\\r\\n] ?)+", "\n");
 		return rawMarkup;
 	}
-	
+
 	/**
 	 * Remove all comment sections (&lt;!-- .. --&gt;) from the raw markup. For
 	 * reasons I don't understand, the following regex
