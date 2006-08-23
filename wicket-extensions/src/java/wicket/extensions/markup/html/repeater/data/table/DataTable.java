@@ -273,6 +273,17 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	}
 
 	/**
+	 * Sets the number of items to be displayed per page
+	 * 
+	 * @param items
+	 *            number of items to display per page
+	 */
+	public void setItemsPerPage(int items)
+	{
+		datagrid.setRowsPerPage(items);
+	}
+	
+	/**
 	 * @return number of rows per page
 	 */
 	public final int getRowsPerPage()
