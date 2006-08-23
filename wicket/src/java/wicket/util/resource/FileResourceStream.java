@@ -87,7 +87,9 @@ public class FileResourceStream extends AbstractResourceStream
 	}
 
 	/**
-	 * @return A readable input stream for this resource.
+	 * @return A readable input stream for this resource. The same input stream
+	 *         is returned until <tt>FileResourceStream.close()</tt> is
+	 *         invoked.
 	 * @throws ResourceStreamNotFoundException
 	 */
 	public InputStream getInputStream() throws ResourceStreamNotFoundException
