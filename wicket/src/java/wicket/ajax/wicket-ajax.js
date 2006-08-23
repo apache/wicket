@@ -13,7 +13,7 @@ var Class = {
 	}
 }
 
-if (typeof (Function.prototype.bind) == 'undefined') {
+if (Function.prototype.bind == null) {
 	Function.prototype.bind = function(object) {
 		var __method = this;
 		return function() {
@@ -21,7 +21,6 @@ if (typeof (Function.prototype.bind) == 'undefined') {
 		}
 	}
 }
-
 
 // Wicket Namespace
 
@@ -33,11 +32,36 @@ Wicket.emptyFunction = function() { };
 // Browser types
 
 Wicket.Browser = { 
-	// konqeror, webcore (?)
 	isKHTML: function() {
-		return /Konqueror|Safari|KHTML/.test(navigator.userAgent);
+		return /Konqueror|KHTML/.test(navigator.userAgent) && !/Apple/.test(navigator.userAgent);
+	},
+	
+	isSafari: function() {
+		return /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent);
+	},
+
+	isIE: function() {
+		return typeof(document.all) != "undefined" && typeof(window.opera) == "undefined";
+	},
+	
+	isGecko: function() {
+		return /Gecko/.test(navigator.userAgent) && !Wicket.Browser.isSafari();
 	}
 };
+
+/**
+ * Add a check for old Safari. It should not be our responsibility to check the 
+ * browser's version, but it's a minor version that makes a difference here,
+ * so we try to be at least user friendly.  
+ */
+if (typeof DOMParser == "undefined" && Wicket.Browser.isSafari()) {
+   DOMParser = function () {}
+
+   DOMParser.prototype.parseFromString = function (str, contentType) {
+   		alert('You are using an old version of Safari.\nTo be able to use this page you need at least version 2.0.1.');
+   }
+}
+
 
 // Logging functions
 
@@ -97,7 +121,7 @@ Wicket.FunctionsExecuter.prototype = {
 /* Replaces the element's outer html with the given text. If it's needed
    (for all browsers except gecko based) it takes the newly created scripts elements 
    and adds them to head (execute them) */
-Wicket.replaceOuterHtml = function(element, text) {
+Wicket.replaceOuterHtml = function(element, text) {	
     if (element.outerHTML) { // internet explorer
        var parent = element.parentNode;
        
@@ -305,7 +329,7 @@ Wicket.Channel.prototype = {
 			this.busy = true;			
 			return callback();
 		} else {
-			Wicket.Log.info("Channel busy - postponing...");
+			Wicket.Log.info("Chanel busy - postponing...");
 			if (this.type == 's') // stack 
 				this.callbacks.push(callback);
 			else /* drop */
@@ -315,9 +339,9 @@ Wicket.Channel.prototype = {
 	},
 	
 	done: function() {
-		var c = null;	
-	
-		if (this.callbacks.length != 0) {
+		var c = null;
+		
+		if (this.callbacks.length > 0) {
 			c = this.callbacks.shift();
 		}
 			
@@ -602,7 +626,7 @@ Wicket.Ajax.Call.prototype = {
    		Wicket.Ajax.invokeFailureHandlers();
 	},	
 	
-	call: function() {
+	call: function() {	
 		return this.request.get();
 	},
 	
@@ -625,13 +649,15 @@ Wicket.Ajax.Call.prototype = {
 		return this.submitForm(form, submitButton);
 	},
 	
-	loadedCallback: function(envelope) {	
-		try {
+	loadedCallback: function(envelope) {
+		try {			
 			var root = envelope.getElementsByTagName("ajax-response")[0];
+						
 		    if (root == null || root.tagName != "ajax-response") {
 		    	this.failure("Could not find root <ajax-response> element");
 		    	return;
 		    }
+						
 		    var steps = new Array();
 
 		    if (Wicket.Browser.isKHTML()) {
@@ -642,9 +668,9 @@ Wicket.Ajax.Call.prototype = {
 			    	method(function() { });
 			    }
 			}
-
+			
 		    for (var i = 0; i < root.childNodes.length; ++i) {
-		    	var node = root.childNodes[i];
+		    	var node = root.childNodes[i];				
 
 		        if (node.tagName == "component") {
 		           this.processComponent(steps, node);
@@ -710,7 +736,11 @@ Wicket.Ajax.Call.prototype = {
 		    if (encoding != null) {
 		        text = Wicket.decode(encoding, text);
 		    }
-		    eval(text);
+		    try {
+		    	eval(text);
+		    } catch (exception) {
+		    	Wicket.Log.error("Exception evaluating javascript: " + exception);
+		    }
 			notify();
 		});
 	},
