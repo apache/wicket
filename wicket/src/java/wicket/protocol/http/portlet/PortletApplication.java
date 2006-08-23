@@ -75,7 +75,6 @@ public abstract class PortletApplication extends Application implements ISession
 	 */
 	private String applicationKey;
 
-
 	/** the default request cycle processor implementation for render requests */
 	private IRequestCycleProcessor requestCycleProcessor;
 
@@ -432,6 +431,4 @@ public abstract class PortletApplication extends Application implements ISession
 	{
 		return portlet;
 	}
-
-
 }

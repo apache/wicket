@@ -387,40 +387,40 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		final Class pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
 
-		// Find pagemap name
-		String pageMapName = requestTarget.getPageMapName();
-		if (pageMapName == null)
-		{
-			IRequestTarget currentTarget = requestCycle.getRequestTarget();
-			if (currentTarget instanceof IPageRequestTarget)
-			{
-				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
-				final PageMap pageMap = currentPage.getPageMap();
-				if (pageMap.isDefault())
-				{
-					pageMapName = "";
-				}
-				else
-				{
-					pageMapName = pageMap.getName();
-				}
-			}
-			else
-			{
-				pageMapName = "";
-			}
-		}
-
-		url.setParameter(WebRequestCodingStrategy.PAGEMAP, pageMapName);
-		url.setParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageClass
-				.getName());
-
 		// Get page parameters
 		final PageParameters parameters = requestTarget.getPageParameters();
 		url.setParameters(parameters);
+
+		url.setParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageClass
+				.getName());
+
 		return url.toString();
 	}
 
+	/**
+	 * Adds bookmarkable page related parameters (page alias and optionally page
+	 * parameters). Any bookmarkable page alias mount will override this method;
+	 * hence if a mount is found, this method will not be called.
+	 * 
+	 * If you override this method to behave different then also
+	 * {@link #encode(RequestCycle, IBookmarkablePageRequestTarget)} should be
+	 * overridden to by in sync with that behaviour.
+	 * 
+	 * @param request
+	 *            the incoming request
+	 * @param parameters
+	 *            the parameters object to set the found values on
+	 */
+	protected void addBookmarkablePageParameters(final Request request,
+			final RequestParameters parameters)
+	{
+		final String requestString = request
+				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+		if (requestString != null)
+		{
+			parameters.setBookmarkablePageClass(requestString);
+		}
+	}
 
 	/**
 	 * Encode a page target.

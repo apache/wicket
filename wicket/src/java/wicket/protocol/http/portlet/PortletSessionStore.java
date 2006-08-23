@@ -45,7 +45,6 @@ import wicket.util.lang.Bytes;
  */
 public class PortletSessionStore implements ISessionStore
 {
-	// private final static int SCOPE=PortletSession.PORTLET_SCOPE;
 	private final static int SCOPE = PortletSession.APPLICATION_SCOPE;
 
 	/** log. */

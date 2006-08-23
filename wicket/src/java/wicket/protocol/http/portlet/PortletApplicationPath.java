@@ -131,5 +131,4 @@ public class PortletApplicationPath implements IResourcePath
 		return "[folders = " + StringList.valueOf(folders) + ", webapppaths: "
 				+ StringList.valueOf(webappPaths) + "]";
 	}
-
 }

@@ -14,42 +14,33 @@
  */
 package wicket.protocol.http.portlet;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
-import wicket.Component;
-import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
+import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.request.RequestParameters;
-import wicket.request.compound.IRequestTargetResolverStrategy;
+import wicket.request.compound.AbstractRequestTargetResolverStrategy;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
-import wicket.request.target.component.ExpiredPageClassRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
-import wicket.request.target.component.listener.RedirectPageRequestTarget;
-import wicket.util.string.Strings;
 
 /**
- * Portlet target resolver strategy. Almost identical to the
- * DefaultRequestTargetResolverStrategy but does not support page mounting.
+ * Portlet request target resolver strategy. 
  * 
+ *   
  * @author Janne Hietam&auml;ki
- * @author Eelco Hillenius
- * @author Igor Vaynberg
- * @author Jonathan Locke
  */
 
-
-// TODO: Move duplicate code from here and DefaultRequestTargetResolverStrategy to AbstractRequestTargetResolverStrategy
-public class PortletRequestTargetResolverStrategy implements IRequestTargetResolverStrategy
+public class PortletRequestTargetResolverStrategy extends  AbstractRequestTargetResolverStrategy
 {
 
 	/** log. */
@@ -62,6 +53,12 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 	public final IRequestTarget resolve(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
+
+		if (requestParameters.getBookmarkablePageClass() != null)
+		{
+			return resolveBookmarkablePage(requestCycle, requestParameters);
+		}	
+
 		final String componentPath = requestParameters.getComponentPath();
 		final Session session = requestCycle.getSession();
 		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
@@ -93,112 +90,45 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 		throw new WicketRuntimeException("Unable to resolve request target " + requestParameters);
 	}
 
+
+
 	/**
-	 * Resolves to a page target that was previously rendered. Optionally
-	 * resolves to a component call target, which is a specialization of a page
-	 * target. If no corresponding page could be found, a expired page target
-	 * will be returned.
+	 * Resolves to a bookmarkable page target.
 	 * 
 	 * @param requestCycle
 	 *            the current request cycle
 	 * @param requestParameters
 	 *            the request parameters object
-	 * @return the previously rendered page as a request target
+	 * @return the bookmarkable page as a request target
 	 */
-	protected IRequestTarget resolveRenderedPage(final RequestCycle requestCycle,
+	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
-		final String componentPath = requestParameters.getComponentPath();
-		final Session session = requestCycle.getSession();
-
-		final PortletPage page = (PortletPage)session.getPage(requestParameters.getPageMapName(), componentPath,
-				requestParameters.getVersionNumber());
-
-		// Does page exist?
-		if (page != null)
+		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
+		Session session = requestCycle.getSession();
+		Application application = session.getApplication();
+		Class<? extends Page> pageClass;
+		try
 		{
-			// Set page on request
-			requestCycle.getRequest().setPage(page);
-			
-			// see whether this resolves to a component call or just the page
-			final String interfaceName = requestParameters.getInterfaceName();
-			if (interfaceName != null)
-			{
-				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-						interfaceName, requestParameters);
-			}
-			else
-			{
-				return new PageRequestTarget(page);
-			}
+			pageClass = (Class<? extends Page>)session.getClassResolver().resolveClass(bookmarkablePageClass);
 		}
-		else
+		catch (RuntimeException e)
 		{
-			// Page was expired from session, probably because backtracking
-			// limit was reached
-			return new ExpiredPageClassRequestTarget();
-		}
-	}
-
-	/**
-	 * Resolves the RequestTarget for the given interface. This method can be
-	 * overriden if some special interface needs to resolve to its own target.
-	 * 
-	 * @param requestCycle
-	 *            The current RequestCycle object
-	 * @param page
-	 *            The page object which holds the component for which this
-	 *            interface is called on.
-	 * @param componentPath
-	 *            The component path for looking up the component in the page.
-	 * @param interfaceName
-	 *            The interface to resolve.
-	 * @param requestParameters
-	 * @return The RequestTarget that was resolved
-	 */
-	protected IRequestTarget resolveListenerInterfaceTarget(final RequestCycle requestCycle,
-			final Page page, final String componentPath, final String interfaceName,
-			final RequestParameters requestParameters)
-	{
-
-		if (interfaceName.equals(IRedirectListener.INTERFACE.getName()))
-		{
-			return new RedirectPageRequestTarget(page);
+			return new WebErrorCodeResponseTarget(HttpServletResponse.SC_NOT_FOUND,
+			"Unable to load Bookmarkable Page");
 		}
 
-		// Get the listener interface we need to call
-		final RequestListenerInterface listener = RequestListenerInterface.forName(interfaceName);
-		if (listener == null)
+		try
 		{
-			throw new WicketRuntimeException(
-					"Attempt to access unknown request listener interface " + interfaceName);
+			PageParameters params = new PageParameters(requestParameters.getParameters());
+			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(), pageClass,
+					params);
 		}
-
-		// Get component
-		final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
-				Component.PATH_SEPARATOR);
-		if (Strings.isEmpty(pageRelativeComponentPath))
+		catch (RuntimeException e)
 		{
-			// We have an interface that is not a redirect, but no
-			// component... that must be wrong
-			throw new WicketRuntimeException("When trying to call " + listener
-					+ ", a component must be provided");
+			throw new WicketRuntimeException("Unable to instantiate Page class: "
+					+ bookmarkablePageClass + ". See below for details.", e);
 		}
-		final Component component = page.get(pageRelativeComponentPath);
-		if (component == null || !component.isEnabled() || !component.isVisibleInHierarchy())
-		{
-			log.info("component not enabled or visible, redirecting to calling page, component: "
-					+ component);
-			return new RedirectPageRequestTarget(page);
-		}
-		if (!component.isEnableAllowed())
-		{
-			throw new UnauthorizedActionException(component, Component.ENABLE);
-		}
-
-		// Ask the request listener interface object to create a request
-		// target
-		return listener.newRequestTarget(page, component, listener, requestParameters);
 	}
 
 	/**
