@@ -60,7 +60,7 @@ import wicket.util.string.AppendingStringBuffer;
 public class MarkupParser
 {
 	/** Conditional comment section, which is NOT treated as a comment section */ 
-	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]-->");
+	private static final Pattern CONDITIONAL_COMMENT = Pattern.compile("\\[if .+\\]>(.|\n|\r)*<!\\[endif\\]");
 	
 	/** The XML parser to use */
 	private final IXmlPullParser xmlParser;
