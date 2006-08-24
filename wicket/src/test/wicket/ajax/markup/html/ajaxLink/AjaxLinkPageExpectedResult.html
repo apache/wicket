@@ -8,6 +8,6 @@ wicketAjaxDebugEnable=true;
 <script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
 </head><body>
   <span wicket:id="ajaxLabel" id="ajaxLabel">UpdateMe</span>
-  <a href="#" wicket:id="ajaxLink" onclick="var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:ajaxLink::IBehaviorListener&wicket:behaviorId=0', function() { }, function() { });" id="ajaxLink">Update</a>
+  <a href="#" wicket:id="ajaxLink" onclick="var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:ajaxLink::IBehaviorListener&wicket:behaviorId=0', function() { }, function() { });return !wcall;" id="ajaxLink">Update</a>
 </body>
 </html>
