@@ -39,6 +39,6 @@ public class CaptchaApplication extends WicketExampleApplication
 	 */
 	public Class getHomePage()
 	{
-		return Index.class;
+		return Captcha.class;
 	}
 }
