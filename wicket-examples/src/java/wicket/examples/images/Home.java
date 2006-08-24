@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +18,7 @@
 package wicket.examples.images;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -25,11 +26,15 @@ import java.util.Random;
 import wicket.Resource;
 import wicket.ResourceReference;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.image.NonCachingImage;
+import wicket.markup.html.image.RenderedLabel;
 import wicket.markup.html.image.resource.BufferedDynamicImageResource;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.markup.html.image.resource.RenderedDynamicImageResource;
+import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
@@ -70,18 +75,13 @@ public final class Home extends WicketExamplePage
 
 		// Add cancel button image
 		new NonCachingImage(this, "cancelButton", new ResourceReference("cancelButton"));
-	}
 
-	final ResourceReference getOkButtonImage()
-	{
-		return new ResourceReference("okButton")
-		{
-			@Override
-			protected Resource newResource()
-			{
-				return new DefaultButtonImageResource("Ok");
-			}
-		};
+		// rendered label example
+		Form form = new Form(this, "renderedLabelForm");
+		IModel<String> model = new Model<String>("This is a rendered label");
+		new TextField<String>(form, "renderedLabelInput", model);
+		RenderedLabel renderedLabel = new RenderedLabel(form, "renderedLabel", model);
+		renderedLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
 	}
 
 	/**
@@ -121,5 +121,17 @@ public final class Home extends WicketExamplePage
 		// Draw circle with thick stroke width
 		graphics.setStroke(new BasicStroke(5));
 		graphics.drawOval(x, y, dx, dy);
+	}
+
+	final ResourceReference getOkButtonImage()
+	{
+		return new ResourceReference("okButton")
+		{
+			@Override
+			protected Resource newResource()
+			{
+				return new DefaultButtonImageResource("Ok");
+			}
+		};
 	}
 }
