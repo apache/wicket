@@ -16,9 +16,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.resolver;
+package wicket.markup.markupFinder;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
 
 /**
@@ -31,13 +32,34 @@ import wicket.markup.MarkupStream;
 public interface IMarkupFinder
 {
 	/**
-	 * Searches for the markup stream associated with the component and
-	 * positions the markup stream at the first tag of the component.
+	 * Searches for the markup stream associated with the component and position
+	 * the markup stream at the first tag of the component.
 	 * 
 	 * @param component
+	 *            The component search for its markup
 	 * @param <T>
 	 *            Component type
-	 * @return A MarkupStream which is positioned at the component
+	 * @return A MarkupStream which is positioned at the component. Null, if
+	 *         component markup not found
 	 */
 	<T> MarkupStream find(final Component<T> component);
+
+	/**
+	 * Search for the markup stream associated with the component within the
+	 * markup stream provided and position the markup stream at the first tag of
+	 * the component.
+	 * 
+	 * @param <T>
+	 *            Component type
+	 * @param component
+	 *            The component search for its markup
+	 * @param stream
+	 *            The markup stream to check for the component's markup
+	 * @param parentWithAssociatedMarkup
+	 *            The container associated with the stream provided
+	 * @return Same as the markup stream provided but positioned that component.
+	 *         Null, if component markup not found
+	 */
+	<T> MarkupStream find(final Component<T> component, final MarkupStream stream,
+			final MarkupContainer parentWithAssociatedMarkup);
 }
