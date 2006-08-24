@@ -271,6 +271,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 		{
 			super(scope, name);
 		}
+		
+		/**
+		 * Construct.
+		 * 
+		 * @param reference
+		 */
+		public CSSReferenceHeaderContributor(PackageResourceReference reference)
+		{
+			super(reference);
+		}		
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
@@ -359,6 +369,16 @@ public class HeaderContributor extends AbstractHeaderContributor
 		{
 			super(scope, name);
 		}
+		
+		/**
+		 * Construct.
+		 * 
+		 * @param reference
+		 */
+		public JavaScriptReferenceHeaderContributor(PackageResourceReference reference)
+		{
+			super(reference);
+		}
 
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
@@ -400,11 +420,21 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public PackageResourceReferenceHeaderContributor(Class scope, String name)
 		{
-			this.packageResourceReference = new PackageResourceReference(scope, name);
+			this(new PackageResourceReference(scope, name));
+		}
+		
+		/**
+		 * Construct.
+		 * 
+		 * @param reference
+		 */
+		public PackageResourceReferenceHeaderContributor(PackageResourceReference reference)
+		{
+			this.packageResourceReference = reference;
 			int result = 17;
 			result = 37 * result + getClass().hashCode();
 			result = 37 * result + packageResourceReference.hashCode();
-			hash = result;
+			hash = result;			
 		}
 
 		/**
@@ -457,6 +487,19 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path));
 	}
+	
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in a package.
+	 * 
+	 * @param reference
+	 * 
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(PackageResourceReference reference)
+	{
+		return new HeaderContributor(new CSSReferenceHeaderContributor(reference));
+	}	
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
@@ -489,6 +532,20 @@ public class HeaderContributor extends AbstractHeaderContributor
 		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(scope, path));
 	}
 
+	
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a java script file that lives in a package.
+	 * 
+	 * @param reference
+	 * 
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forJavaScript(final PackageResourceReference reference)
+	{
+		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(reference));
+	}
+	
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a JavaScript file that lives in the web
