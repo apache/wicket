@@ -106,7 +106,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 				}
 				String f = (String)component.getConverter().convert(file.getObject(component),
 						String.class);
-				PackageResourceReference ref = new PackageResourceReference(Application.get(),
+				PackageResourceReference ref = createPackageResourceReference(Application.get(),
 						referer, f);
 				return getRequestCycle().urlFor(ref);
 			}
@@ -114,6 +114,18 @@ public class PackagedResourceReference extends WebMarkupContainer
 		add(new AttributeModifier(attributeToReplace, true, srcReplacement));
 	}
 
+	/**
+	 * Creates new package resource reference.
+	 * @param app
+	 * @param scope
+	 * @param name
+	 * @return created resource reference
+	 */
+	protected PackageResourceReference createPackageResourceReference(Application app, Class scope, String name)
+	{
+		return new PackageResourceReference(app, scope, name);
+	}
+	
 	/**
 	 * Construct.
 	 * 
