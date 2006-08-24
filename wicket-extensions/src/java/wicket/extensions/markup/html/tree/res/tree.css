@@ -39,12 +39,14 @@ div.wicket-tree span.junction-last {
 }
 
 div.wicket-tree span.junction {
-	background-image: url("line.gif");
-	background-repeat: repeat-y;
+	background-image: url("tree-images.png");	
+	background-position: -36px 0px;
+	background-repeat: repeat-y;	
 }
 
 div.wicket-tree span.junction-last {
-	background-image: url("line-short.gif"); 
+	background-image: url("tree-images.png");	
+	background-position: -72px 0px;
 	background-repeat: no-repeat;
 }
 
@@ -52,19 +54,21 @@ div.wicket-tree span.plus,
 div.wicket-tree span.minus,
 div.wicket-tree span.corner {
 	background-repeat: no-repeat;
-	background-position: center;
 }
 
 div.wicket-tree span.plus {
-	background-image: url("plus.png");	
+	background-image: url("tree-images.png");	
+	background-position: 0px center;
 }
 
 div.wicket-tree span.minus {
-	background-image: url("minus.png");
+	background-image: url("tree-images.png");	
+	background-position: -18px center;
 }
 
 div.wicket-tree span.corner {
-	background-image: url("line-corner.gif");	
+	background-image: url("tree-images.png");	
+	background-position: -54px center;
 }
 div.wicket-tree span.indent {
 	clear: left;
@@ -97,7 +101,8 @@ div.wicket-tree span.indent-blank {
 div.wicket-tree span.indent-line {
 	_margin-left: 3px;	/* ie 3px bug fix*/
 	overflow: hidden;
-	background-image: url("line.gif");
+	background-image: url("tree-images.png");	
+	background-position: -36px 0px;
 	background-repeat: repeat-y;
 }
 
