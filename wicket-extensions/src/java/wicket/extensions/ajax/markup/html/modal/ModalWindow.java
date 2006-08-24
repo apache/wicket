@@ -23,6 +23,7 @@ import wicket.request.RequestParameters;
 import wicket.settings.IPageSettings;
 import wicket.util.lang.EnumeratedType;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 
 /**
  * Modal window component.
@@ -97,7 +98,7 @@ import wicket.util.string.AppendingStringBuffer;
  * can be either transparent or semitransparent.
  * <code>{@link #setMaskType(ModalWindow.MaskType)}</code> alters this.
  * </ul>
- *  
+ * 
  * @see IPageSettings#setAutomaticMultiWindowSupport(boolean)
  * @author Matej Knopp
  */
@@ -269,26 +270,20 @@ public class ModalWindow extends Panel
 	 *            Request target associated with current ajax request.
 	 */
 	public static final void close(AjaxRequestTarget target)
-	{		
+	{
 		target.appendJavascript(getCloseJavacript());
 	}
-	
+
 	/**
 	 * @return javascript that closes current modal window
 	 */
-	private static String getCloseJavacript() 
+	private static String getCloseJavacript()
 	{
-		return
-			"var win;\n" +
-			"try {\n" +		
-			"	win = window.parent.Wicket.Window;\n" + 
-			"} catch (ignore) {\n" +
-			"}\n" +			
-			"if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n" +
-			"	window.parent.setTimeout(function() {\n" +
-			"		win.current.close();\n" +	
-			"	}, 0);\n" +
-			"}";
+		return "var win;\n" + "try {\n" + "	win = window.parent.Wicket.Window;\n"
+				+ "} catch (ignore) {\n" + "}\n"
+				+ "if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n"
+				+ "	window.parent.setTimeout(function() {\n" + "		win.current.close();\n"
+				+ "	}, 0);\n" + "}";
 	}
 
 	/**
@@ -586,8 +581,9 @@ public class ModalWindow extends Panel
 	 * 
 	 * @author Matej Knopp
 	 */
-	public static final class MaskType extends EnumeratedType {
-						
+	public static final class MaskType extends EnumeratedType
+	{
+
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -602,12 +598,13 @@ public class ModalWindow extends Panel
 
 		/**
 		 * Constructor.
+		 * 
 		 * @param name
 		 */
 		public MaskType(String name)
 		{
 			super(name);
-		}				
+		}
 	};
 
 	/**
@@ -674,7 +671,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * @see wicket.Component#onAttach()
-	 */	
+	 */
 	protected void onAttach()
 	{
 		getContent().setOutputMarkupId(true);
@@ -715,7 +712,7 @@ public class ModalWindow extends Panel
 
 	/**
 	 * @see wicket.MarkupContainer#remove(wicket.Component)
-	 */	
+	 */
 	public void remove(Component component)
 	{
 		super.remove(component);
@@ -724,7 +721,7 @@ public class ModalWindow extends Panel
 			add(empty = new WebMarkupContainer(getContentId()));
 		}
 	}
-	
+
 	/**
 	 * Sets the content of the modal window.
 	 * 
@@ -745,7 +742,7 @@ public class ModalWindow extends Panel
 	private class WindowClosedBehavior extends AbstractDefaultAjaxBehavior
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		protected void respond(AjaxRequestTarget target)
 		{
 			shown = false;
@@ -770,7 +767,7 @@ public class ModalWindow extends Panel
 				windowClosedCallback.onClose(target);
 			}
 		}
-				
+
 		protected CharSequence getCallbackScript()
 		{
 			return super.getCallbackScript();
@@ -783,7 +780,7 @@ public class ModalWindow extends Panel
 	private class CloseButtonBehavior extends AbstractDefaultAjaxBehavior
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		protected void respond(AjaxRequestTarget target)
 		{
 			if (closeButtonCallback == null
@@ -792,7 +789,7 @@ public class ModalWindow extends Panel
 				target.appendJavascript("Wicket.Window.get().close();");
 			}
 		}
-		
+
 		protected IAjaxCallDecorator getAjaxCallDecorator()
 		{
 			return new CancelEventIfNoAjaxDecorator(super.getAjaxCallDecorator());
@@ -817,8 +814,8 @@ public class ModalWindow extends Panel
 	/**
 	 * Replaces all occurences of " in string with \".
 	 * 
-	 * @param string 
-	 * 			String to be escaped.
+	 * @param string
+	 *            String to be escaped.
 	 * 
 	 * @return escaped string
 	 */
@@ -826,7 +823,7 @@ public class ModalWindow extends Panel
 	{
 		if (string.indexOf('"') != -1)
 		{
-			string = string.replace("\"", "\\\"");
+			string = Strings.replaceAll(string, "\"", "\\\"").toString();
 		}
 		return string;
 	}
@@ -842,7 +839,8 @@ public class ModalWindow extends Panel
 
 		if (isCustomComponent() == true)
 		{
-			buffer.append("var element = document.getElementById(\"" + getContentMarkupId() + "\");\n");
+			buffer.append("var element = document.getElementById(\"" + getContentMarkupId()
+					+ "\");\n");
 		}
 
 		buffer.append("var settings = new Object();\n");
