@@ -16,7 +16,7 @@ wicketAjaxDebugEnable=true;
                             <td width = "100%">
                                 <wicket:body>
 	  <span wicket:id="ajaxLabel" id="ajaxLabel">AAAAAAA</span>
-	  <a href="#" wicket:id="ajaxLink" onclick="var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:ajaxLink::IBehaviorListener&wicket:behaviorId=0', function() { }, function() { });" id="ajaxLink">Update</a>
+	  <a href="#" wicket:id="ajaxLink" onclick="var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:ajaxLink::IBehaviorListener&wicket:behaviorId=0', function() { }, function() { });return !wcall;" id="ajaxLink">Update</a>
   </wicket:body>
                             </td>
                         </tr>
