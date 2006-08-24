@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -1037,5 +1038,32 @@ public class WicketTester extends MockWebApplication
 
 		// process the request target
 		requestCycle.getRequestTarget().respond(requestCycle);
+	}
+	
+	/**
+	 * Get a TagTester based on a wicket:id. If more components exists with the
+	 * same wicket:id in the markup only the first one is returned.
+	 * 
+	 * @param wicketId
+	 *            The wicket:id to search for.
+	 * @return The TagTester for the tag which has the given wicket:id.
+	 */
+	public TagTester getTagByWicketId(String wicketId)
+	{
+		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "wicket:id",
+				wicketId);
+	}
+
+	/**
+	 * Get a TagTester based on an dom id. If more components exists with the
+	 * same id in the markup only the first one is returned.
+	 * 
+	 * @param id
+	 *            The dom id to search for.
+	 * @return The TagTester for the tag which has the given dom id.
+	 */
+	public TagTester getTagById(String id)
+	{
+		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "id", id);
 	}
 }
