@@ -113,7 +113,14 @@ public class ConverterLocator implements IConverterLocator
 				return null;
 			}
 
-			return Objects.convertValue(value, type);
+			try
+			{
+				return Objects.convertValue(value, type);
+			}
+			catch (Exception e)
+			{
+				throw new ConversionException(e.getMessage(), e).setSourceValue(value);
+			}
 		}
 
 		/**
