@@ -29,7 +29,8 @@ import wicket.model.IModel;
 /**
  * <p>
  * A repeater view that renders all of its children, using its body markup, in
- * no specified order.
+ * order they were added.
+ * 
  * </p>
  * Example:
  * <p>
@@ -47,7 +48,7 @@ import wicket.model.IModel;
  * <u>Markup:</u>
  * 
  * <pre>
- *          &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
+ *  &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
  * </p>
@@ -55,8 +56,20 @@ import wicket.model.IModel;
  * <u>Yields:</u>
  * 
  * <pre>
- *          &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
+ *  &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
  * </pre>
+ * 
+ * To expand a bit: the repeater itself produces no markup, instead every direct
+ * child inherits the entire markup of the repeater. In the example above
+ * reeaters's markup is:
+ * 
+ * <pre>
+ *   &lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;
+ * </pre>
+ * 
+ * and so this is the markup that is available to the direct children - the
+ * Label components. So as each label renders it produces a line of the output
+ * that has the <code>li</code>tag.
  * 
  * @param <T>
  *            Type of model object this component holds
