@@ -1,7 +1,6 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 2913 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,14 +17,16 @@
  */
 package wicket.markup.html.resources;
 
+import wicket.Application;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
+import wicket.markup.html.PackageResourceReference;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
 /**
  * Link to a packaged JavaScript file.
- *
+ * 
  * @author Eelco Hillenius
  */
 public class JavaScriptReference extends PackagedResourceReference
@@ -34,10 +35,14 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param referer the class that is refering; is used as the relative
-	 * root for gettting the resource
-	 * @param file reference as a string
+	 * 
+	 * @param id
+	 *            component id
+	 * @param referer
+	 *            the class that is refering; is used as the relative root for
+	 *            gettting the resource
+	 * @param file
+	 *            reference as a string
 	 */
 	public JavaScriptReference(String id, Class referer, String file)
 	{
@@ -46,21 +51,28 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param referer the class that is refering; is used as the relative
-	 * root for gettting the resource
-	 * @param file reference as a string. The model must provide an instance
-	 * 		of {@link String}
+	 * 
+	 * @param id
+	 *            component id
+	 * @param referer
+	 *            the class that is refering; is used as the relative root for
+	 *            gettting the resource
+	 * @param file
+	 *            reference as a string. The model must provide an instance of
+	 *            {@link String}
 	 */
 	public JavaScriptReference(String id, Class referer, IModel file)
 	{
 		super(id, referer, file, "src");
 	}
-	
+
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param resourceReference resource reference
+	 * 
+	 * @param id
+	 *            component id
+	 * @param resourceReference
+	 *            resource reference
 	 */
 	public JavaScriptReference(String id, ResourceReference resourceReference)
 	{
@@ -69,9 +81,12 @@ public class JavaScriptReference extends PackagedResourceReference
 
 	/**
 	 * Construct.
-	 * @param id component id
-	 * @param resourceReference resource reference. The model must provide an instance
-	 * 		of {@link ResourceReference}
+	 * 
+	 * @param id
+	 *            component id
+	 * @param resourceReference
+	 *            resource reference. The model must provide an instance of
+	 *            {@link ResourceReference}
 	 */
 	public JavaScriptReference(String id, IModel resourceReference)
 	{
@@ -87,5 +102,15 @@ public class JavaScriptReference extends PackagedResourceReference
 		checkComponentTag(tag, "script");
 		ValueMap attributes = tag.getAttributes();
 		attributes.put("type", "text/javascript");
+	}
+
+	/**
+	 * @see wicket.markup.html.resources.PackagedResourceReference#createPackageResourceReference(wicket.Application,
+	 *      java.lang.Class, java.lang.String)
+	 */
+	protected PackageResourceReference createPackageResourceReference(Application app, Class scope,
+			String name)
+	{
+		return new CompressedPackageResourceReference(app, scope, name);
 	}
 }
