@@ -72,8 +72,8 @@ public class WicketFilter implements Filter
 
 	/**
 	 * The servlet path holder when the WicketSerlvet is used. So that the
-	 * filter path will be computed with the first request.
-	 * Note: This variable is by purpose package protected. See WicketServlet
+	 * filter path will be computed with the first request. Note: This variable
+	 * is by purpose package protected. See WicketServlet
 	 */
 	static final String SERVLET_PATH_HOLDER = "<servlet>";
 
@@ -93,7 +93,7 @@ public class WicketFilter implements Filter
 	 */
 	private String rootPath;
 
-	/** The Wicket Application associated with the Filter */  
+	/** The Wicket Application associated with the Filter */
 	private WebApplication webApplication;
 
 	/**
@@ -276,7 +276,8 @@ public class WicketFilter implements Filter
 			if (contextPath == null)
 			{
 				contextPath = request.getContextPath();
-				if(contextPath == null) contextPath = "";
+				if (contextPath == null)
+					contextPath = "";
 			}
 
 			if (SERVLET_PATH_HOLDER.equals(filterPath))
@@ -486,7 +487,8 @@ public class WicketFilter implements Filter
 				return true;
 			}
 			//  
-			if ((url.length() > fullRootPath.length()) && (url.charAt(fullRootPath.length()) == ';'))
+			if ((url.length() > fullRootPath.length())
+					&& (url.charAt(fullRootPath.length()) == ';'))
 			{
 				return true;
 			}
@@ -498,9 +500,19 @@ public class WicketFilter implements Filter
 			return true;
 		}
 		// Mounted url
-		String path = url.substring(fullRootPath.length());
-		if (!path.startsWith("/")) {
-			path="/"+path;
+		String path = null;
+		if (fullRootPath.length() < url.length())
+		{
+			path = url.substring(fullRootPath.length());
+		}
+		else
+		{
+			path = url;
+		}
+
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
 		}
 		return webApplication.getRequestCycleProcessor().getRequestCodingStrategy()
 				.urlCodingStrategyForPath(path) != null;
@@ -509,7 +521,7 @@ public class WicketFilter implements Filter
 	/**
 	 * If the response has not already a 'lastModified' header set and if
 	 * 'lastModified' >= 0 than set the response header accordingly.
-	 *  
+	 * 
 	 * @param resp
 	 * @param lastModified
 	 */
