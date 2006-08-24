@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -80,7 +80,7 @@ public class Converter implements IConverter
 	private IConverter defaultConverter = new IConverter()
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		/**
 		 * Converts the given value object to class c.
 		 * 
@@ -89,12 +89,19 @@ public class Converter implements IConverter
 		 */
 		public Object convert(Object value, Class c)
 		{
-			if(value == null || "".equals(value))
+			if (value == null || "".equals(value))
 			{
 				return null;
 			}
-			
-			return Objects.convertValue(value, c);
+
+			try
+			{
+				return Objects.convertValue(value, c);
+			}
+			catch (Exception e)
+			{
+				throw new ConversionException(e.getMessage(), e).setSourceValue(value);
+			}
 		}
 
 		public Locale getLocale()
@@ -197,7 +204,7 @@ public class Converter implements IConverter
 		try
 		{
 			// Use type converter to convert to value
-			return converter.convert(value,locale);
+			return converter.convert(value, locale);
 		}
 		catch (ConversionException e)
 		{
