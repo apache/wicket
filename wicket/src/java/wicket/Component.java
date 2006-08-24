@@ -224,7 +224,6 @@ import wicket.version.undo.Change;
  */
 public abstract class Component<T> implements Serializable, IConverterLocator
 {
-
 	/**
 	 * Change record of a model.
 	 */
@@ -672,14 +671,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		{
 			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
 					+ id + "'. You will not be able to use the component for AJAX calls.");
-//				throw ex;
+			throw ex;
 		}
 		catch (RuntimeException re)
 		{
 			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
 					+ id + "'. You will not be able to use the component for AJAX calls.");
-//				throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
-//						+ "' in parent " + parent.getPageRelativePath(), re);
+			throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
+					+ "' in parent " + parent.getPageRelativePath(), re);
 		}
 	}
 
@@ -3103,5 +3102,18 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	final protected void resetHeadRendered()
 	{
 		setFlag(FLAG_HEAD_RENDERED, false);
+	}
+	
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
+	 * 
+	 * @since 2.0 but will be removed soon again
+	 * @TODO This method only temporarily exists until markup fragment wip has finished 
+	 * 
+	 * @return The position of the component's markup within the markup stream
+	 */
+	public final int getMarkupIndex()
+	{
+		return this.markupIndex;
 	}
 }
