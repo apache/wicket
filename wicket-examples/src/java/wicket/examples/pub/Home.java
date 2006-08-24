@@ -104,5 +104,13 @@ public final class Home extends WicketExamplePage
 				getSession().setLocale(new Locale("zh", "CN"));
 			}
 		};
+		new Link(this, "goDanish")
+		{
+			@Override
+			public void onClick()
+			{
+				getSession().setLocale(new Locale("da", "DK"));
+			}
+		};
 	}
 }
