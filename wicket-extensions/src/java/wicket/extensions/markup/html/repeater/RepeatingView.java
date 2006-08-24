@@ -1,20 +1,19 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
- *
- * ====================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
+ * $Id$ $Revision:
+ * 3878 $ $Date$
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.repeater;
 
@@ -28,7 +27,8 @@ import wicket.model.IModel;
 /**
  * <p>
  * A repeater view that renders all of its children, using its body markup, in
- * no specified order.
+ * the order they were added.
+ * 
  * </p>
  * Example:
  * <p>
@@ -46,7 +46,7 @@ import wicket.model.IModel;
  * <u>Markup:</u>
  * 
  * <pre>
- *        &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
+ *  &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
  * </p>
@@ -54,8 +54,21 @@ import wicket.model.IModel;
  * <u>Yields:</u>
  * 
  * <pre>
- *        &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
+ *  &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
  * </pre>
+ * 
+ * To expand a bit: the repeater itself produces no markup, instead every direct
+ * child inherits the entire markup of the repeater. In the example above
+ * reeaters's markup is:
+ * 
+ * <pre>
+ *  &lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;
+ * </pre>
+ * 
+ * and so this is the markup that is available to the direct children - the
+ * Label components. So as each label renders it produces a line of the output
+ * that has the <code>li</code>tag.
+ * 
  * 
  * @author Igor Vaynberg ( ivaynberg )
  * 
@@ -105,7 +118,8 @@ public class RepeatingView extends WebMarkupContainer
 	/**
 	 * Renders all child items in no specified order
 	 * 
-	 * @param markupStream The markup stream
+	 * @param markupStream
+	 *            The markup stream
 	 */
 	protected void onRender(final MarkupStream markupStream)
 	{
