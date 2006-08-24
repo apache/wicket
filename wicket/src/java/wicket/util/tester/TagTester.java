@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -37,10 +36,10 @@ import wicket.util.value.AttributeMap;
  * Example:
  * 
  * <pre>
- *  ...
- *  TagTester tagTester = application.getTagByWicketId(&quot;form&quot;);
- *  assertTrue(tag.hasAttribute(&quot;action&quot;));
- *  ...
+ *   ...
+ *   TagTester tagTester = application.getTagByWicketId(&quot;form&quot;);
+ *   assertTrue(tag.hasAttribute(&quot;action&quot;));
+ *   ...
  * </pre>
  * 
  * @author Frank Bille (billen)
@@ -134,7 +133,7 @@ public class TagTester
 	 * <b>Markup:</b>
 	 * 
 	 * <pre>
-	 *  &lt;span wicket:id=&quot;helloComp&quot; class=&quot;style1 style2&quot;&gt;Hello&lt;/span&gt;
+	 *   &lt;span wicket:id=&quot;helloComp&quot; class=&quot;style1 style2&quot;&gt;Hello&lt;/span&gt;
 	 * </pre>
 	 * 
 	 * <p>
@@ -223,8 +222,6 @@ public class TagTester
 
 	/**
 	 * Check if the tag has a child with the tagName.
-	 * <p>
-	 * TODO unimplemented.
 	 * 
 	 * @param tagName
 	 *            The tag name to search for.
@@ -232,7 +229,45 @@ public class TagTester
 	 */
 	public boolean hasChildTag(String tagName)
 	{
-		throw new UnsupportedOperationException("Not implemented yet");
+		boolean hasChild = false;
+
+		if (Strings.isEmpty(tagName))
+		{
+			throw new IllegalArgumentException("You need to provide a not empty/not null argument.");
+		}
+		
+		if (openTag.isOpen())
+		{
+			try 
+			{
+				int startPos = openTag.getPos() + openTag.getLength();
+				int endPos = closeTag.getPos();
+				String markup = parser.getInput(startPos, endPos).toString();
+
+				if (Strings.isEmpty(markup) == false)
+				{
+					XmlPullParser p = new XmlPullParser();
+					p.parse(markup);
+
+					XmlTag tag = null;
+					while((tag = (XmlTag) p.nextTag()) != null)
+					{
+						if (tagName.equalsIgnoreCase(tag.getName()))
+						{
+							hasChild = true;
+							break;
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				throw new IllegalStateException(e);
+			}
+
+		}
+
+		return hasChild;
 	}
 
 	/**
@@ -252,9 +287,7 @@ public class TagTester
 		if (openTag.isOpen())
 		{
 			// Generate the markup for this tag
-			int openPos = openTag.getPos();
-			int closePos = closeTag.getPos() + closeTag.getLength();
-			String markup = parser.getInput(openPos, closePos).toString();
+			String markup = getMarkup();
 
 			if (Strings.isEmpty(markup) == false)
 			{
@@ -263,6 +296,21 @@ public class TagTester
 		}
 
 		return childTag;
+	}
+
+	/**
+	 * Get markup for this tag. This includes every markup which is between the
+	 * open tag and the close tag.
+	 * 
+	 * @return The entire markup between the open tag and the close tag.
+	 */
+	public String getMarkup()
+	{
+		int openPos = openTag.getPos();
+		int closePos = closeTag.getPos() + closeTag.getLength();
+		String markup = parser.getInput(openPos, closePos).toString();
+
+		return markup;
 	}
 
 	/**
