@@ -93,7 +93,7 @@ public class WicketPortletRequest extends Request
 	@Override
 	public String getPath()
 	{
-		throw new WicketRuntimeException("Path is not available in portlet request");
+		return null;
 	}
 
 	/**

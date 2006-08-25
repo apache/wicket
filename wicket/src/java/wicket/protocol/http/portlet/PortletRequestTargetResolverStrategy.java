@@ -60,29 +60,31 @@ public class PortletRequestTargetResolverStrategy extends  AbstractRequestTarget
 		}	
 
 		final String componentPath = requestParameters.getComponentPath();
-		final Session session = requestCycle.getSession();
-		final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
-				requestParameters.getVersionNumber());
-
-		// Does page exist?
-		if (page != null)
+		if(componentPath!=null)
 		{
-			// Set page on request
-			requestCycle.getRequest().setPage(page);
+			final Session session = requestCycle.getSession();
+			final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+					requestParameters.getVersionNumber());
 
-			// see whether this resolves to a component call or just the page
-			final String interfaceName = requestParameters.getInterfaceName();
-			if (interfaceName != null)
+			// Does page exist?
+			if (page != null)
 			{
-				return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
-						interfaceName, requestParameters);
-			}
-			else
-			{
-				return new PageRequestTarget(page);
+				// Set page on request
+				requestCycle.getRequest().setPage(page);
+
+				// see whether this resolves to a component call or just the page
+				final String interfaceName = requestParameters.getInterfaceName();
+				if (interfaceName != null)
+				{
+					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+							interfaceName, requestParameters);
+				}
+				else
+				{
+					return new PageRequestTarget(page);
+				}
 			}
 		}
-
 		if (requestParameters.getPath() == null && requestParameters.getComponentPath() == null)
 		{
 			return resolveHomePageTarget(requestCycle, requestParameters);

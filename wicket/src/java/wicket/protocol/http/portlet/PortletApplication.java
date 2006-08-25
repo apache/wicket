@@ -199,7 +199,7 @@ public abstract class PortletApplication extends Application implements ISession
 	 * @return session object
 	 * @see wicket.ISessionFactory#newSession()
 	 */
-	public Session newSession()
+	public Session newSession(Request request)
 	{
 		return new WicketPortletSession(this);
 	}

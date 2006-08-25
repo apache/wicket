@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.request.compound.CompoundRequestCycleProcessor;
+import wicket.request.compound.IExceptionResponseStrategy;
 import wicket.request.compound.IRequestTargetResolverStrategy;
 import wicket.request.compound.IResponseStrategy;
 
@@ -44,14 +45,22 @@ public class PortletActionRequestCycleProcessor extends CompoundRequestCycleProc
 	{
 		super(new PortletRequestCodingStrategy());
 	}
-
+	
+	@Override
 	protected IRequestTargetResolverStrategy newRequestTargetResolverStrategy()
 	{
 		return new PortletRequestTargetResolverStrategy();
 	}
 
+	@Override
 	protected IResponseStrategy newResponseStrategy()
 	{
 		return new PortletActionRequestResponseStrategy();
 	}
+	
+	@Override
+	protected IExceptionResponseStrategy newExceptionResponseStrategy()
+	{
+		return new PortletExceptionResponseStrategy();
+	}	
 }
