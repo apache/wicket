@@ -12,5 +12,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/springframework/spring/1.2.6/spring-1.2.6.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket-spring"/>
+	<classpathentry kind="var" path="M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
