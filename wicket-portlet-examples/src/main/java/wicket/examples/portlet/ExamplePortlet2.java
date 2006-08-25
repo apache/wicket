@@ -75,7 +75,6 @@ public class ExamplePortlet2 extends PortletPage
 		add(counterValue);
 		add(new AjaxLink("counterLink")
 		{
-			@Override
 			public void onClick(AjaxRequestTarget target)
 			{
 				counter++;
