@@ -68,7 +68,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * do not need to use this meta data key directly, but instead use one of
 	 * the bind methods of this class.
 	 */
-	private static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
+	public static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
 			InstantiationPermissions.class)
 	{
 		private static final long serialVersionUID = 1L;

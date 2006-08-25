@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: InstantiationPermissions.java 4319 2006-02-11 15:26:12 -0800 (Sat, 11
+ * Feb 2006) eelco12 $ $Revision$ $Date: 2006-02-11 15:26:12 -0800 (Sat,
+ * 11 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,11 +35,11 @@ import wicket.authorization.strategies.role.Roles;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-final class InstantiationPermissions implements Serializable
+public class InstantiationPermissions implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Holds roles object for a given component class */
+	/** Holds roles objects for component classes */
 	private final Map<Class< ? extends Component>, Roles> rolesForComponentClass = new HashMap<Class< ? extends Component>, Roles>();
 
 	/**
@@ -50,7 +50,8 @@ final class InstantiationPermissions implements Serializable
 	 * @param rolesToAdd
 	 *            The roles to add
 	 */
-	public final void authorize(final Class< ? extends Component> componentClass, final Roles rolesToAdd)
+	public final void authorize(final Class< ? extends Component> componentClass,
+			final Roles rolesToAdd)
 	{
 		if (componentClass == null)
 		{
@@ -95,7 +96,7 @@ final class InstantiationPermissions implements Serializable
 	 * @return the roles that have a binding with the given component class, or
 	 *         null if no entries are found
 	 */
-	public final Roles authorizedRoles(final Class< ? extends Component> componentClass)
+	public Roles authorizedRoles(final Class< ? extends Component> componentClass)
 	{
 		if (componentClass == null)
 		{
@@ -139,5 +140,13 @@ final class InstantiationPermissions implements Serializable
 		{
 			roles.add(MetaDataRoleAuthorizationStrategy.NO_ROLE);
 		}
+	}
+
+	/**
+	 * @return gets map with roles objects for a component classes
+	 */
+	protected final Map<Class< ? extends Component>, Roles> getRolesForComponentClass()
+	{
+		return rolesForComponentClass;
 	}
 }
