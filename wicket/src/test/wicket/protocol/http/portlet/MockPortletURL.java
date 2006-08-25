@@ -36,7 +36,7 @@ import javax.portlet.WindowStateException;
 public class MockPortletURL implements PortletURL
 {
 
-	Map parameters=new HashMap();
+	Map<String, Object> parameters=new HashMap<String, Object>();
 	boolean renderUrl;
 	
 	/**
@@ -57,6 +57,7 @@ public class MockPortletURL implements PortletURL
 		parameters.put(key,values);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setParameters(Map content)
 	{
 		parameters=content;

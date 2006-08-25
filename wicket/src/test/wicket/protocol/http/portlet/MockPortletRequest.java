@@ -239,6 +239,7 @@ public class MockPortletRequest implements PortletRequest
 	/**
 	 * @param parameters
 	 */
+	@SuppressWarnings("unchecked")
 	public void setParameters(Map parameters)
 	{
 		req.setParameters(parameters);

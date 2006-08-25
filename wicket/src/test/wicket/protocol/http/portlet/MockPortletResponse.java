@@ -35,7 +35,7 @@ public abstract class MockPortletResponse implements PortletResponse
 {
 	MockHttpServletResponse resp;
 
-	Map properties=new HashMap();
+	Map<String, String> properties=new HashMap<String, String>();
 
 	/**
 	 * Construct.
