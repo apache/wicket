@@ -112,5 +112,13 @@ public final class Home extends WicketExamplePage
 				getSession().setLocale(new Locale("da", "DK"));
 			}
 		};
+		new Link(this, "goFinnish")
+		{
+			@Override
+			public void onClick()
+			{
+				getSession().setLocale(new Locale("fi", "FI"));
+			}
+		};
 	}
 }

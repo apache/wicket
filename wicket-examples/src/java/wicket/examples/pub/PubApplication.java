@@ -17,7 +17,6 @@
  * the License.
  */
 package wicket.examples.pub;
-
 import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 
