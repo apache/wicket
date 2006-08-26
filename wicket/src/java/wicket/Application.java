@@ -169,17 +169,11 @@ public abstract class Application
 	/**
 	 * Get Application for current thread.
 	 * 
-	 * @return The current thread's Application
+	 * @return The current thread's Application, or null if not set
 	 */
 	public static Application get()
 	{
-		final Application application = current.get();
-		if (application == null)
-		{
-			throw new WicketRuntimeException("There is no application attached to current thread "
-					+ Thread.currentThread().getName());
-		}
-		return application;
+		return current.get();
 	}
 
 	/**
@@ -752,7 +746,7 @@ public abstract class Application
 
 	}
 
-	
+
 	/**
 	 * @param sessionId
 	 *            The session id that was destroyed

@@ -197,17 +197,11 @@ public abstract class Session implements Serializable, IConverterLocator
 	/**
 	 * Get the session for the calling thread.
 	 * 
-	 * @return Session for calling thread
+	 * @return Session for calling thread, or null if not set
 	 */
 	public static Session get()
 	{
-		final Session session = current.get();
-		if (session == null)
-		{
-			throw new WicketRuntimeException("there is no session attached to current thread "
-					+ Thread.currentThread().getName());
-		}
-		return session;
+		return current.get();
 	}
 
 	/**
@@ -232,7 +226,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	public static Session get(boolean forceBind)
 	{
 		Session session = get();
-		if(forceBind)
+		if (forceBind)
 		{
 			session.bind();
 		}
@@ -461,11 +455,11 @@ public abstract class Session implements Serializable, IConverterLocator
 		{
 			// Get page entry for id and version
 			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			if(usedPages==null)
+			if (usedPages == null)
 			{
 				usedPages = new HashMap<String, Thread>(3);
 			}
-			
+
 			Thread t = usedPages.get(id);
 			while (t != null && t != Thread.currentThread())
 			{
@@ -479,7 +473,7 @@ public abstract class Session implements Serializable, IConverterLocator
 				}
 				t = usedPages.get(id);
 			}
-			
+
 			usedPages.put(id, Thread.currentThread());
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 			if (page == null)
@@ -848,7 +842,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		{
 			// Let the factory create a new converter
 			converterSupplier = getApplication().getApplicationSettings()
-			.getConverterSupplierFactory().newConverterSupplier();
+					.getConverterSupplierFactory().newConverterSupplier();
 		}
 		return converterSupplier.getConverter(type);
 	}
@@ -1101,7 +1095,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final synchronized void pageDetached(Page page)
 	{
-		if(usedPages!=null)
+		if (usedPages != null)
 		{
 			usedPages.remove(page.getId());
 		}

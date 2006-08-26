@@ -11,6 +11,8 @@
   </properties>
   <body>
 	<release version="2.0-beta1" date="tbd" description="Wicket 2.0 beta 1">
+		<action type="fix" dev="Igor Vaynberg">Application.get() and Session.get() will now return null if threadlocal is not set as opposed to throwing an NPE</action>
+		
     <release version="1.2-rc4" date="tbd" description="Wicket 1.2 release candidate 4">
       <action type="add" dev="Juergen Donnerstag" issue="1357511">Markup inheritance extended to support &lt;wicket:child&gt; ... &lt;/wicket:child&gt; as well</action>
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Dzenan Ridjanovic">Added Bosnian/Herzegovinan translation of Application.properties</action>
