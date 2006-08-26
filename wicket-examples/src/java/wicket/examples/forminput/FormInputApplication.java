@@ -88,5 +88,11 @@ public class FormInputApplication extends WicketExampleApplication
 		imgResetFa.setFont(fontFa);
 		getSharedResources().add("save", farsi, imgSaveFa);
 		getSharedResources().add("reset", farsi, imgResetFa);
+		
+		// Danish buttons
+		DefaultButtonImageResource imgSaveDa = new DefaultButtonImageResource("Gem");
+		DefaultButtonImageResource imgResetDa = new DefaultButtonImageResource("Nulstil");
+		getSharedResources().add("save", new Locale("da", "DK"), imgSaveDa);
+		getSharedResources().add("reset", new Locale("da", "DK"), imgResetDa);
 	}
 }
