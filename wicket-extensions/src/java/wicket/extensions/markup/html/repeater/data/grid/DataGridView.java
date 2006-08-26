@@ -52,7 +52,7 @@ import wicket.extensions.markup.html.repeater.data.IDataProvider;
  * columns[0] = new PropertyPopulator(&quot;firstName&quot;);
  * columns[1] = new PropertyPopulator(&quot;lastName&quot;);
  * 
- * add(new DataGridView(&quot;rows&quot;, columns, new UserProvider()));
+ * new DataGridView(this, &quot;rows&quot;, columns, new UserProvider());
  * 
  * </pre>
  * 
