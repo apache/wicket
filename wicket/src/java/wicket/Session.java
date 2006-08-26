@@ -94,8 +94,8 @@ import wicket.util.string.Strings;
  * the application (see {@link Application} for details). To discourage
  * non-typesafe access to Session properties, no setProperty() or getProperty()
  * method is provided. In a clustered environment, you should take care to call
- * the dirty() method when you change a property or youre own. This way the 
- * session will be reset again in the http session so that the http session 
+ * the dirty() method when you change a property or youre own. This way the
+ * session will be reset again in the http session so that the http session
  * knows the session is changed.
  * 
  * <li><b>Class Resolver </b>- Sessions have a class resolver (
@@ -208,6 +208,17 @@ public abstract class Session implements Serializable
 					+ Thread.currentThread().getName());
 		}
 		return session;
+	}
+
+	/**
+	 * Checks if the <code>Session</code> threadlocal is set in this thread
+	 * 
+	 * @return true if {@link Session#get()} can return the instance of session,
+	 *         false otherwise
+	 */
+	public static boolean exists()
+	{
+		return current.get() != null;
 	}
 
 	/**
@@ -405,7 +416,7 @@ public abstract class Session implements Serializable
 			}
 			usedPages.put(id, Thread.currentThread());
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
-			if(page == null)
+			if (page == null)
 			{
 				usedPages.remove(id);
 				notifyAll();
@@ -659,8 +670,8 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Sets the metadata for this session using the given key. If the
-	 * metadata object is not of the correct type for the metadata key, an
+	 * Sets the metadata for this session using the given key. If the metadata
+	 * object is not of the correct type for the metadata key, an
 	 * IllegalArgumentException will be thrown. For information on creating
 	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
@@ -864,7 +875,7 @@ public abstract class Session implements Serializable
 	{
 		if (sessionStore == null)
 		{
-			sessionStore = getApplication().getSessionStore(); 
+			sessionStore = getApplication().getSessionStore();
 		}
 		return sessionStore;
 	}
@@ -902,7 +913,7 @@ public abstract class Session implements Serializable
 
 		ISessionStore store = getSessionStore();
 		Request request = cycle.getRequest();
-		
+
 		// extra check on session binding event
 		if (value == this)
 		{
@@ -959,12 +970,13 @@ public abstract class Session implements Serializable
 					final Page page = (Page)object;
 					if (page.isStateless())
 					{
-						// check, can it be that stateless pages where added to the session?
+						// check, can it be that stateless pages where added to
+						// the session?
 						// and should be removed now?
 						continue;
 					}
 					attribute = page.getPageMap().attributeForId(page.getNumericId());
-					if(getAttribute(attribute) == null)
+					if (getAttribute(attribute) == null)
 					{
 						// page removed by another thread. don't add it again.
 						continue;
