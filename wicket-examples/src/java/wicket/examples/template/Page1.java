@@ -33,8 +33,6 @@ public class Page1 extends TemplatePage
 	{
 		super();
 		setPageTitle("Template example, page 1");
-
-		// markup inheritance for panels (and borders probably doesn't work yet
-		// add(new Panel1("panel1"));
+		new Panel1(this, "panel1");
 	}
 }
