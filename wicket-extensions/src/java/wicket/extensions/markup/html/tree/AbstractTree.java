@@ -18,7 +18,6 @@ import wicket.Component;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.HeaderContributor;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
 import wicket.markup.html.tree.Tree;
@@ -297,10 +296,6 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			}
 		}
 	}
-
-	/** Reference to the javascript file. */
-	private static final PackageResourceReference JAVASCRIPT = new PackageResourceReference(
-			AbstractTree.class, "res/tree.js");
 
 	/**
 	 * Returns an iterator that iterates trough the enumeration.
@@ -1021,7 +1016,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		itemContainer = new TreeItemContainer("i");
 		add(itemContainer);
 
-		add(HeaderContributor.forJavaScript(JAVASCRIPT.getScope(), JAVASCRIPT.getName()));
+		add(HeaderContributor.forJavaScript(AbstractTree.class, "res/tree.js"));
 	}
 
 	/**
