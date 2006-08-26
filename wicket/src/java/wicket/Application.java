@@ -176,6 +176,18 @@ public abstract class Application
 	}
 
 	/**
+	 * Checks if the <code>Application</code> threadlocal is set in this
+	 * thread
+	 * 
+	 * @return true if {@link Application#get()} can return the instance of
+	 *         application, false otherwise
+	 */
+	public static boolean exists()
+	{
+		return current.get() != null;
+	}
+
+	/**
 	 * Gets the Application based on the application key of that application.
 	 * THIS METHOD IS NOT MEANT INTENDED FOR FRAMEWORK CLIENTS.
 	 * 
@@ -191,7 +203,7 @@ public abstract class Application
 		Application application = (Application)applicationKeyToApplication.get(applicationKey);
 		return application;
 	}
-	
+
 	/**
 	 * @return True if the current thread is attached to an application.
 	 */
