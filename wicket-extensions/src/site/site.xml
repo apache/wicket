@@ -2,14 +2,14 @@
 <project name="Wicket Extensions">
 	<bannerLeft>
 		<name>Wicket</name>
-		<src>http://wicket.sourceforge.net/images/logo.png</src>
-		<href>http://wicket.sourceforge.net</href>
+		<src>http://wicketframework.org/images/logo.png</src>
+		<href>wicketframework.org</href>
 	</bannerLeft>
 	<body>
 		<links>
-			<item name="Wicket 1.0" href="http://wicket.sf.net/wicket-1.0/index.html" />
-			<item name="Wicket 1.1" href="http://wicket.sf.net/wicket-1.1/index.html" />
-			<item name="Wicket 1.2" href="http://wicket.sf.net/wicket-1.2/index.html" />
+			<item name="Wicket 1.0" href="http://wicketframework.org/wicket-1.0/index.html" />
+			<item name="Wicket 1.1" href="http://wicketframework.org/wicket-1.1/index.html" />
+			<item name="Wicket 1.2" href="http://wicketframework.org/wicket-1.2/index.html" />
 		</links>
 
 		<menu name="Wicket Extensions">
@@ -23,14 +23,14 @@
 			</item>
 		</menu>
 		<menu name="Documentation">
-			<item name="Wiki" href="http://wicket.sourceforge.net/wiki" />
+			<item name="Wiki" href="http://wicketframework.org/wiki" />
 			<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
 			<item name="Dependencies" href="/dependencies.html" />
 		</menu>
 		<menu name="Project info">
-			<item name="Wicket home" href="http://wicket.sourceforge.net" />
-			<item name="Mailing Lists" href="http://wicket.sourceforge.net/mail-lists.html" />
-			<item name="SourceForge" href="http://wicket.sourceforge.net/SourceForge.html" />
+			<item name="Wicket home" href="http://wicketframework.org/" />
+			<item name="Mailing Lists" href="http://wicketframework.org/mail-lists.html" />
+			<item name="SourceForge" href="http://wicketframework.org/SourceForge.html" />
 			<item name="Issue tracker" href="http://sourceforge.net/tracker/?group_id=119783" />
 		</menu>
 
