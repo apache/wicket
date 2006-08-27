@@ -32,8 +32,6 @@ import wicket.model.IModel;
  */
 public class TextTemplateHeaderContributor extends StringHeaderContributor
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * This model holds the template and returns the interpolation of the
 	 * template with of any of the
@@ -51,7 +49,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 * The model that holds any variables for interpolation. It should
 		 * return a {@link Map} or null.
 		 */
-		private final IModel variablesModel;
+		private final IModel<Map> variablesModel;
 
 		/**
 		 * Construct.
@@ -62,7 +60,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 *            The model that holds any variables for interpolation. It
 		 *            should return a {@link Map} or null.
 		 */
-		protected TemplateModel(TextTemplate template, IModel variablesModel)
+		protected TemplateModel(TextTemplate template, IModel<Map> variablesModel)
 		{
 			if (template == null)
 			{
@@ -110,7 +108,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		{
 			if (variablesModel != null)
 			{
-				Map variables = (Map)variablesModel.getObject();
+				Map variables = variablesModel.getObject();
 				if (variables != null)
 				{
 					return template.asString(variables);
@@ -120,21 +118,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		}
 	}
 
-	/**
-	 * Gets a css header contributor based on the given text template. The
-	 * template will be interpolated with the given variables. The content will
-	 * be written as the body of a script tag pair.
-	 * 
-	 * @param template
-	 *            The text template that is the base for the contribution
-	 * @param variablesModel
-	 *            The variables to interpolate
-	 * @return The header contributor instance
-	 */
-	public static TextTemplateHeaderContributor forCss(TextTemplate template, IModel variablesModel)
-	{
-		return new TextTemplateHeaderContributor(new CssTemplate(template), variablesModel);
-	}
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Gets a css header contributor that will load the template from the given
@@ -152,15 +136,15 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return The header contributor instance
 	 */
 	public static TextTemplateHeaderContributor forCss(final Class clazz, final String fileName,
-			IModel variablesModel)
+			IModel<Map> variablesModel)
 	{
 		return forCss(new PackagedTextTemplate(clazz, fileName), variablesModel);
 	}
 
 	/**
-	 * Gets a javascript header contributor based on the given text template.
-	 * The template will be interpolated with the given variables. The content
-	 * will be written as the body of a script tag pair.
+	 * Gets a css header contributor based on the given text template. The
+	 * template will be interpolated with the given variables. The content will
+	 * be written as the body of a script tag pair.
 	 * 
 	 * @param template
 	 *            The text template that is the base for the contribution
@@ -168,10 +152,10 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 *            The variables to interpolate
 	 * @return The header contributor instance
 	 */
-	public static TextTemplateHeaderContributor forJavaScript(TextTemplate template,
-			IModel variablesModel)
+	public static TextTemplateHeaderContributor forCss(TextTemplate template,
+			IModel<Map> variablesModel)
 	{
-		return new TextTemplateHeaderContributor(new JavaScriptTemplate(template), variablesModel);
+		return new TextTemplateHeaderContributor(new CssTemplate(template), variablesModel);
 	}
 
 	/**
@@ -190,9 +174,26 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return The header contributor instance
 	 */
 	public static TextTemplateHeaderContributor forJavaScript(final Class clazz,
-			final String fileName, IModel variablesModel)
+			final String fileName, IModel<Map> variablesModel)
 	{
 		return forJavaScript(new PackagedTextTemplate(clazz, fileName), variablesModel);
+	}
+
+	/**
+	 * Gets a javascript header contributor based on the given text template.
+	 * The template will be interpolated with the given variables. The content
+	 * will be written as the body of a script tag pair.
+	 * 
+	 * @param template
+	 *            The text template that is the base for the contribution
+	 * @param variablesModel
+	 *            The variables to interpolate
+	 * @return The header contributor instance
+	 */
+	public static TextTemplateHeaderContributor forJavaScript(TextTemplate template,
+			IModel<Map> variablesModel)
+	{
+		return new TextTemplateHeaderContributor(new JavaScriptTemplate(template), variablesModel);
 	}
 
 	/**
@@ -203,7 +204,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @param variablesModel
 	 *            Optional model for variable substitution
 	 */
-	protected TextTemplateHeaderContributor(TextTemplate template, IModel variablesModel)
+	protected TextTemplateHeaderContributor(TextTemplate template, IModel<Map> variablesModel)
 	{
 		super(new TemplateModel(template, variablesModel));
 	}
