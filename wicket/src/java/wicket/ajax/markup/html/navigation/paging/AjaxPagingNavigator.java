@@ -156,5 +156,12 @@ public class AjaxPagingNavigator extends PagingNavigator
 			container = ((Component)pageable).findParent(MarkupContainer.class);
 		}
 		target.addComponent(container);
+		
+		// in case the navigator is not contained by the container, we have
+		// to add it to the response
+		if (((MarkupContainer)container).contains(this, true) == false)
+		{
+			target.addComponent(this);
+		}				
 	}
 }

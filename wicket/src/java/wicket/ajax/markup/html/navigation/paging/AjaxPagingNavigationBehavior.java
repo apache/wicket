@@ -93,10 +93,7 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 		}
 
 		// tell the PagingNavigator to update the IPageable
-		navigator.onAjaxEvent(target);
-
-		// add the navigator itself to the ajax request for updating
-		target.addComponent(navigator);
+		navigator.onAjaxEvent(target);		
 	}
 
 	/**
