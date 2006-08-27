@@ -59,9 +59,9 @@ Building using ant:
 
 Building using maven (2):
  - mvn package
-     creates wicket-1.2.jar in target/ subdirectory.
+     creates wicket-x.y.z.jar in target/ subdirectory.
  - mvn install
-     creates wicket-1.2.jar in target/ subdirectory and installs the file into your
+     creates wicket-x.y.z.jar in target/ subdirectory and installs the file into your
      local repository for use in other projects.
      
 Migrating from 1.1
