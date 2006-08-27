@@ -80,7 +80,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final CharSequence getEventHandler()
 	{
 		return getCallbackScript(new AppendingStringBuffer("wicketAjaxPost('").append(
-				getCallbackUrl()).append("', wicketSerialize(this)"), null, null);
+				getCallbackUrl()).append(
+				"', wicketSerialize(document.getElementById('" + getComponent().getMarkupId()
+						+ "'))"), null, null);
 	}
 
 	/**
@@ -102,19 +104,34 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	protected final void onEvent(final AjaxRequestTarget target)
 	{
 		final FormComponent formComponent = getFormComponent();
-		formComponent.inputChanged();
-		formComponent.validate();
-		if (formComponent.hasErrorMessage())
+		boolean callOnUpdate = true;
+
+		try
 		{
-			formComponent.invalid();
+			formComponent.inputChanged();
+			formComponent.validate();
+			if (formComponent.hasErrorMessage())
+			{
+				formComponent.invalid();
+			}
+			else
+			{
+				formComponent.valid();
+				formComponent.updateModel();
+			}
 		}
-		else
+		catch (RuntimeException e)
 		{
-			formComponent.valid();
-			formComponent.updateModel();
+			callOnUpdate = false;
+			onError(target, e);
+
 		}
 
-		onUpdate(target);
+		if (callOnUpdate)
+		{
+			onUpdate(target);
+		}
+
 	}
 
 	/**
@@ -123,5 +140,17 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	 * 
 	 * @param target
 	 */
-	protected abstract void onUpdate(final AjaxRequestTarget target);
+	protected abstract void onUpdate(AjaxRequestTarget target);
+
+	/**
+	 * Called to handle any error resulting from updating form component. Errors
+	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * 
+	 * @param target
+	 * @param e
+	 */
+	protected void onError(AjaxRequestTarget target, RuntimeException e)
+	{
+		throw e;
+	}
 }

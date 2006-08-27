@@ -190,6 +190,8 @@ public class DataTable extends Panel implements IPageable
 					"Toolbar must have component id equal to AbstractDataTable.TOOLBAR_COMPONENT_ID");
 		}
 
+		toolbar.setRenderBodyOnly(true);
+		
 		// create a container item for the toolbar (required by repeating view)
 		WebMarkupContainer item = new WebMarkupContainer(container.newChildId());
 		item.setRenderBodyOnly(true);
@@ -230,6 +232,18 @@ public class DataTable extends Panel implements IPageable
 		return datagrid.getRowCount();
 	}
 
+	/**
+	 * Sets the number of items to be displayed per page
+	 * 
+	 * @param items
+	 *            number of items to display per page
+	 * 
+	 */
+	public void setRowsPerPage(int items)
+	{
+		datagrid.setRowsPerPage(items);
+	}
+	
 	/**
 	 * @return number of rows per page
 	 */

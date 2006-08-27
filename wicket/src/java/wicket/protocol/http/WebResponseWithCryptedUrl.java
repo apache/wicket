@@ -42,7 +42,7 @@ import wicket.util.string.Strings;
 public class WebResponseWithCryptedUrl extends WebResponse
 {
     /** Logger */
-    private static Log log = LogFactory.getLog(WebResponseWithCryptedUrl.class);
+    private static final Log log = LogFactory.getLog(WebResponseWithCryptedUrl.class);
 
 	/**
 	 * Constructor.

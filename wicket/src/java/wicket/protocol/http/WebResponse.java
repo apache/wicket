@@ -54,6 +54,9 @@ public class WebResponse extends Response
 
 	/** The underlying response object. */
 	private final HttpServletResponse httpServletResponse;
+	
+	/**  */
+	private boolean ajax;
 
 	/**
 	 * Constructor for testing harness.
@@ -83,11 +86,11 @@ public class WebResponse extends Response
 	{
 		getHttpServletResponse().addCookie(cookie);
 	}
-	
+
 	/**
 	 * Convenience method for clearing a cookie.
 	 * 
-	 * @param cookie 
+	 * @param cookie
 	 *            The cookie to set
 	 * @see WebResponse#addCookie(Cookie)
 	 */
@@ -97,7 +100,7 @@ public class WebResponse extends Response
 		cookie.setValue(null);
 		addCookie(cookie);
 	}
-	
+
 	/**
 	 * Closes response output.
 	 */
@@ -159,17 +162,20 @@ public class WebResponse extends Response
 	}
 
 	/**
-	 * Redirects to the given url.
+	 * Redirects to the given url. Implementations should encode the URL to make
+	 * sure cookie-less operation is supported in case clients forgot.
 	 * 
 	 * @param url
 	 *            The URL to redirect to
 	 */
-	public void redirect(final String url)
+	public void redirect(String url)
 	{
 		if (!redirect)
 		{
 			if (httpServletResponse != null)
 			{
+				// encode to make sure no caller forgot this
+				url = encodeURL(url).toString();
 				try
 				{
 					if (httpServletResponse.isCommitted())
@@ -183,7 +189,13 @@ public class WebResponse extends Response
 						log.debug("Redirecting to " + url);
 					}
 
-					httpServletResponse.sendRedirect(url);
+					if (isAjax())
+					{
+						httpServletResponse.addHeader("Ajax-Location", url);
+					} else
+					{
+						httpServletResponse.sendRedirect(url);
+					}
 					redirect = true;
 				}
 				catch (IOException e)
@@ -336,6 +348,26 @@ public class WebResponse extends Response
 	public void setAttachmentHeader(String filename)
 	{
 		setHeader("Content-Disposition", "attachment"
-				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename+"\"") : ""));
+				+ ((!Strings.isEmpty(filename)) ? ("; filename=\"" + filename + "\"") : ""));
+	}
+
+	/**
+	 * Is the request, which matches this response an ajax request.
+	 * 
+	 * @return True if the request is an ajax request.
+	 */
+	public boolean isAjax()
+	{
+		return ajax;
+	}
+
+	/**
+	 * Set that the request which matches this response is an ajax request.
+	 * 
+	 * @param ajax True if the request is an ajax request.
+	 */
+	public void setAjax(boolean ajax)
+	{
+		this.ajax = ajax;
 	}
 }

@@ -20,12 +20,12 @@ package wicket.examples.displaytag.list;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.examples.DiffUtil;
 import wicket.examples.WicketTestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.MockWebApplication;
 import wicket.settings.IRequestCycleSettings;
+import wicket.util.diff.DiffUtil;
 
 
 /**
@@ -33,7 +33,7 @@ import wicket.settings.IRequestCycleSettings;
  */
 public class SortableTableHeadersTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(SortableTableHeadersTest.class);
+	private static final Log log = LogFactory.getLog(SortableTableHeadersTest.class);
 
 	/**
 	 * Construct.

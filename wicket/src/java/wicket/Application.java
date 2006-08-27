@@ -133,7 +133,7 @@ public abstract class Application
 	private static final ThreadLocal current = new ThreadLocal();
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(Application.class);
+	private static final Log log = LogFactory.getLog(Application.class);
 
 	/** list of {@link IComponentInstantiationListener}s. */
 	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
@@ -176,6 +176,18 @@ public abstract class Application
 	}
 
 	/**
+	 * Checks if the <code>Application</code> threadlocal is set in this
+	 * thread
+	 * 
+	 * @return true if {@link Application#get()} can return the instance of
+	 *         application, false otherwise
+	 */
+	public static boolean exists()
+	{
+		return current.get() != null;
+	}
+
+	/**
 	 * Gets the Application based on the application key of that application.
 	 * THIS METHOD IS NOT MEANT INTENDED FOR FRAMEWORK CLIENTS.
 	 * 
@@ -190,6 +202,14 @@ public abstract class Application
 	{
 		Application application = (Application)applicationKeyToApplication.get(applicationKey);
 		return application;
+	}
+
+	/**
+	 * @return True if the current thread is attached to an application.
+	 */
+	public static boolean isAttached()
+	{
+		return current.get() != null;
 	}
 
 	/**
@@ -327,6 +347,7 @@ public abstract class Application
 			log.info("You are in DEVELOPMENT mode");
 			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 			getDebugSettings().setComponentUseCheck(true);
+			getDebugSettings().setSerializeSessionAttributes(true);
 			getMarkupSettings().setStripWicketTags(false);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_EXCEPTION_PAGE);
@@ -336,6 +357,7 @@ public abstract class Application
 		{
 			getResourceSettings().setResourcePollFrequency(null);
 			getDebugSettings().setComponentUseCheck(false);
+			getDebugSettings().setSerializeSessionAttributes(false);
 			getMarkupSettings().setStripWicketTags(true);
 			getExceptionSettings().setUnexpectedExceptionDisplay(
 					IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);

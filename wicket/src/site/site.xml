@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="Wicket">
-  <bannerLeft>
-    <name>Wicket</name>
-    <src>http://wicket.sourceforge.net/images/logo.png</src>
-    <href>http://wicket.sourceforge.net/</href>
-  </bannerLeft>
-  <body>
-    <links>
-      <item name="1.0" href="/wicket-1.0/index.html" />
-      <item name="1.1" href="/wicket-1.1/index.html"/>
-      <item name="1.2" href="/wicket-1.2/index.html"/>
-    </links>
+	<bannerLeft>
+		<name>Wicket</name>
+		<src>http://wicket.sourceforge.net/images/logo.png</src>
+		<href>http://wicket.sourceforge.net/</href>
+	</bannerLeft>
+	<body>
+	<links>
+		<item name="1.0" href="/wicket-1.0/index.html" />
+		<item name="1.1" href="/wicket-1.1/index.html"/>
+		<item name="1.2" href="/wicket-1.2/index.html"/>
+	</links>
 
 	<menu name="Wicket">
 		<item name="Home" href="/index.html" />
@@ -47,9 +47,9 @@
 		<item name="Dependencies" href="/dependencies.html" />
 	</menu>
 	<menu name="Releases">
-		<item name="Wicket 1.2" href="/wicket-1.2/index.html"/>
-		<item name="Wicket 1.1" href="/wicket-1.1/index.html" />
-		<item name="Wicket 1.0" href="/wicket-1.0/index.html" />
+		<item name="Wicket 1.2" href="http://wicketframework.org/wicket-1.2/index.html"/>
+		<item name="Wicket 1.1" href="http://wicketframework.org/wicket-1.1/index.html" />
+		<item name="Wicket 1.0" href="http://wicketframework.org/wicket-1.0/index.html" />
 	</menu>
 	<menu name="Related projects">
 		<item name="Wicket Extensions" href="/wicket-extensions/index.html" />

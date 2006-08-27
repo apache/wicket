@@ -64,7 +64,7 @@ import wicket.util.string.Strings;
 public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(CryptedUrlWebRequestCodingStrategy.class);
+	private static final Log log = LogFactory.getLog(CryptedUrlWebRequestCodingStrategy.class);
 
 	/** The default request coding strategy most of the methods are delegated to */
 	private final IRequestCodingStrategy defaultStrategy;
@@ -290,7 +290,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 		// For debugging only: determine possibilities to further shorten
 		// the query string
-		if (log.isInfoEnabled())
+		if (log.isDebugEnabled())
 		{
 			// Every word with at least 3 letters
 			Pattern words = Pattern.compile("\\w\\w\\w+");
@@ -298,7 +298,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 			while (matcher.find())
 			{
 				CharSequence word = queryString.subSequence(matcher.start(), matcher.end());
-				log.info("URL pattern NOT shortened: '" + word + "' - '" + queryString + "'");
+				log.debug("URL pattern NOT shortened: '" + word + "' - '" + queryString + "'");
 			}
 		}
 
@@ -374,9 +374,18 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 
 			// Remove the 'x' parameter which contains ALL the encoded params
 			this.parameterMap.remove("x");
+			String decodedParamReplacement = encodedParamReplacement;
+			try
+			{
+				decodedParamReplacement = URLDecoder.decode(encodedParamReplacement, Application.get().getRequestCycleSettings().getResponseRequestEncoding());
+			}
+			catch (UnsupportedEncodingException ex)
+			{
+				log.error("error decoding url: " + encodedParamReplacement, ex);
+			}
 
 			// Add ALL of the params from the decoded 'x' param
-			PageParameters params = new PageParameters(encodedParamReplacement, "&");
+			PageParameters params = new PageParameters(decodedParamReplacement, "&");
 			this.parameterMap.putAll(params);
 
 			// Rebuild the URL with the 'x' param removed

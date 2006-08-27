@@ -174,6 +174,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 		return wicketServlet;
 	}
 
+	/*
+	 * Set the application key value
+	 */
+	protected final void setApplicationKey(String applicationKey)
+	{
+		this.applicationKey=applicationKey;
+	}
+	
 	/**
 	 * @see wicket.Application#getApplicationKey()
 	 */
@@ -608,12 +616,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			// Create session using session factory
 			session = getSessionFactory().newSession();
-
 			// Set the client Locale for this session
 			session.setLocale(request.getLocale());
-
-			// Bind the session to the session store
-			sessionStore.bind(request, session);
+			
+			if (sessionStore.getSessionId(request) != null)
+			{
+				// Bind the session to the session store
+				sessionStore.bind(request, session);
+			}
 		}
 
 		WebSession webSession;
@@ -668,7 +678,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param sessionId
 	 *            The session id that was destroyed
 	 */
-	void sessionDestroyed(String sessionId)
+	public void sessionDestroyed(String sessionId)
 	{
 		bufferedResponses.remove(sessionId);
 

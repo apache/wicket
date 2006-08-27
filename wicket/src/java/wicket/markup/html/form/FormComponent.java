@@ -59,9 +59,9 @@ import wicket.version.undo.Change;
  * FormComponents, you will need to call Form.setVersioned(true), which will set
  * versioning on for the form and all form component children.
  * <p>
- * If this component is required and that fails the error key that is used is
- * the "RequiredValidator" if the Type conversions failes it will be using the
- * key "TypeValidator" and the keys that can be used in both are :
+ * If this component is required and that fails, the error key that is used is
+ * the "RequiredValidator"; if the type conversion fails, it will use the key
+ * "TypeValidator". The keys that can be used in both are:
  * <ul>
  * <li>${input}: the input the user did give</li>
  * <li>${name}: the name of the component that failed</li>
@@ -76,6 +76,8 @@ import wicket.version.undo.Change;
 public abstract class FormComponent extends WebMarkupContainer
 {
 	private static final long serialVersionUID = 1L;
+
+	private static final String[] EMPTY_STRING_ARRAY = new String[] { "" };
 
 	/**
 	 * The value separator
@@ -306,7 +308,21 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public String[] getInputAsArray()
 	{
-		return getRequest().getParameters(getInputName());
+		String[] values = getRequest().getParameters(getInputName());
+		if (!isInputNullable())
+		{
+			if (values != null && values.length == 1 && values[0] == null)
+			{
+				// we the key got passed in (otherwise values would be null),
+				// but the value was set to null.
+				// As the servlet spec isn't clear on what to do with 'empty'
+				// request values - most return an empty string, but some null -
+				// we have to workaround here and deliberately set to an empty
+				// string if the the component is not nullable (text components)
+				return EMPTY_STRING_ARRAY;
+			}
+		}
+		return values;
 	}
 
 	/**
@@ -621,8 +637,16 @@ public abstract class FormComponent extends WebMarkupContainer
 					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
-				String typedResourceKey = "ConversionError." + e.getTargetType();
-				String[] resourceKeys = new String[] { typedResourceKey, "ConversionError" };
+				String[] resourceKeys  = null;
+				if(e.getTargetType() != null)
+				{
+					String typedResourceKey = "ConversionError." + Classes.simpleName(e.getTargetType());
+					resourceKeys = new String[] { typedResourceKey, "ConversionError" };
+				}
+				else
+				{
+					resourceKeys = new String[] {"ConversionError" };
+				}
 
 				error(Arrays.asList(resourceKeys), args);
 			}
@@ -651,7 +675,7 @@ public abstract class FormComponent extends WebMarkupContainer
 				}
 
 
-				final String typedResourceKey = "TypeValidator" + "." + Classes.simpleName(type);
+				final String typedResourceKey = "TypeValidator." + Classes.simpleName(type);
 
 				String[] resourceKeys = new String[] { typedResourceKey, "TypeValidator" };
 
@@ -676,7 +700,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	protected Object convertValue(String[] value) throws ConversionException
 	{
-		return value != null && value.length > 0 ? value[0].trim() : null;
+		return value != null && value.length > 0 && value[0] != null ? value[0].trim() : null;
 	}
 
 	/**
@@ -803,7 +827,7 @@ public abstract class FormComponent extends WebMarkupContainer
 	 * @return The values in the request for this component
 	 * @deprecated Use {@link #getInputAsArray()} instead
 	 */
-	//TODO Post 1.2: remove
+	// TODO Post 1.2: remove
 	protected final String[] inputAsStringArray()
 	{
 		return getInputAsArray();
@@ -937,7 +961,7 @@ public abstract class FormComponent extends WebMarkupContainer
 			final String[] input = getInputAsArray();
 
 			// If there is any input
-			if (input != null)
+			if (input != null && input.length > 0 && input[0] != null)
 			{
 				// join the values together with ";", for example, "id1;id2;id3"
 				rawInput = StringList.valueOf(input).join(VALUE_SEPARATOR);
@@ -1026,7 +1050,12 @@ public abstract class FormComponent extends WebMarkupContainer
 	 */
 	public String getValidatorKeyPrefix()
 	{
-		return getForm().getValidatorKeyPrefix();
+		Form form = (Form)findParent(Form.class);
+		if (form != null)
+		{
+			return getForm().getValidatorKeyPrefix();
+		}
+		return null;
 	}
 
 	/**

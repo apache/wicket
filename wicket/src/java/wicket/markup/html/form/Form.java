@@ -164,7 +164,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(Form.class);
+	private static final Log log = LogFactory.getLog(Form.class);
 
 	/** Maximum size of an upload in bytes */
 	private Bytes maxSize = Bytes.MAX;
@@ -274,10 +274,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * THIS METHOD IS NOT PART OF THE WICKET API. DO NOT ATTEMPT TO OVERRIDE OR
 	 * CALL IT.
 	 * 
-	 * Handles form submissions. By default, this method simply calls validate()
-	 * to validate the form and update the model if there is only one button. If
-	 * there is more than one button, it calls the onClick() method for the
-	 * button which submitted the form.
+	 * Handles form submissions.
 	 * 
 	 * @see Form#validate()
 	 */
@@ -523,13 +520,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				defaultButton.getInputName()).append("\"");
 		if (userAgent != null && userAgent.indexOf("MSIE") != -1)
 		{
-			buffer.append("style=\"width: 0px\"");
+			buffer.append("style=\"width: 0px; height: 0px; position: absolute;\"");
 		}
 		else
 		{
 			buffer.append(" style=\"display: none\"");
 		}
-		buffer.append("\" />");
+		buffer.append(" />");
 		getResponse().write(buffer);
 	}
 
@@ -596,7 +593,8 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				{
 					if (!button.isVisible())
 					{
-						throw new WicketRuntimeException("Submit Button is not visible");
+						throw new WicketRuntimeException("Submit Button " + button.getInputName()
+								+ " (path=" + button.getPageRelativePath() + ") is not visible");
 					}
 					return button;
 				}
@@ -646,7 +644,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * 
 	 * @return True if this form has at least one error.
 	 */
-	protected final boolean hasError()
+	public final boolean hasError()
 	{
 		// if this form itself has an error message
 		if (hasErrorMessage())
@@ -738,7 +736,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		if (Strings.isEmpty(javascriptId))
 		{
-			javascriptId = getPageRelativePath();
+			javascriptId = getMarkupId();
 		}
 		return javascriptId;
 	}
@@ -757,10 +755,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		// get the hidden field id
 		String nameAndId = getHiddenFieldId();
 
-		
+
 		// render the hidden field
-		AppendingStringBuffer buffer = new AppendingStringBuffer("<div style=\"display:none\"><input type=\"hidden\" name=\"")
-				.append(nameAndId).append("\" id=\"").append(nameAndId).append("\" /></div>");
+		AppendingStringBuffer buffer = new AppendingStringBuffer(
+				"<div style=\"display:none\"><input type=\"hidden\" name=\"").append(nameAndId)
+				.append("\" id=\"").append(nameAndId).append("\" /></div>");
 		getResponse().write(buffer);
 
 		// if a default button was set, handle the rendering of that
@@ -1005,31 +1004,45 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void validateFormValidators()
 	{
-		final int multiCount = formValidators_size();
-		for (int i = 0; i < multiCount; i++)
+		final int count = formValidators_size();
+		for (int i = 0; i < count; i++)
 		{
-			final IFormValidator validator = formValidators_get(i);
-			final FormComponent[] dependents = validator.getDependentFormComponents();
+			validateFormValidator(formValidators_get(i));
+		}
+	}
 
-			boolean validate = true;
+	/**
+	 * Validates form with the given form validator
+	 * 
+	 * @param validator
+	 */
+	protected final void validateFormValidator(final IFormValidator validator)
+	{
+		if (validator == null)
+		{
+			throw new IllegalArgumentException("Argument [[validator]] cannot be null");
+		}
 
-			if (dependents != null)
+		final FormComponent[] dependents = validator.getDependentFormComponents();
+
+		boolean validate = true;
+
+		if (dependents != null)
+		{
+			for (int j = 0; j < dependents.length; j++)
 			{
-				for (int j = 0; j < dependents.length; j++)
+				final FormComponent dependent = dependents[j];
+				if (!dependent.isValid())
 				{
-					final FormComponent dependent = dependents[j];
-					if (!dependent.isValid())
-					{
-						validate = false;
-						break;
-					}
+					validate = false;
+					break;
 				}
 			}
+		}
 
-			if (validate)
-			{
-				validator.validate(this);
-			}
+		if (validate)
+		{
+			validator.validate(this);
 		}
 	}
 
@@ -1324,7 +1337,12 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		 */
 		public String getRelativeURL()
 		{
-			return url.substring(url.indexOf("/", 1));
+			int tmp = url.indexOf("/", 1);
+			if (tmp != -1)
+			{
+				return url.substring(tmp);
+			}
+			return url;
 		}
 
 		/**

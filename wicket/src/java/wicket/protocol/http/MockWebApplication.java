@@ -82,7 +82,7 @@ import wicket.util.file.WebApplicationPath;
 public class MockWebApplication extends WebApplication
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(MockWebApplication.class);
+	private static final Log log = LogFactory.getLog(MockWebApplication.class);
 
 	/** Mock http servlet context. */
 	private final MockServletContext context;
@@ -128,7 +128,7 @@ public class MockWebApplication extends WebApplication
 	public MockWebApplication(final String path)
 	{
 		Application.set(this);
-
+		
 		context = new MockServletContext(this, path);
 
 		setWicketServlet(new WicketServlet()
@@ -160,6 +160,8 @@ public class MockWebApplication extends WebApplication
 		// Call internal init method of web application for default
 		// initialisation
 		this.internalInit();
+		
+		getDebugSettings().setSerializeSessionAttributes(false);
 		
 		// Call init method of web application
 		this.init();
@@ -364,6 +366,8 @@ public class MockWebApplication extends WebApplication
 				}
 				else if (target instanceof IBookmarkablePageRequestTarget)
 				{
+					// create a new request cycle (needed in newPage)
+					createRequestCycle();
 					IBookmarkablePageRequestTarget pageClassRequestTarget = (IBookmarkablePageRequestTarget)target;
 					Class pageClass = pageClassRequestTarget.getPageClass();
 					PageParameters parameters = pageClassRequestTarget.getPageParameters();
@@ -406,6 +410,7 @@ public class MockWebApplication extends WebApplication
 		wicketSession = getSession(wicketRequest);
 		getSessionStore().bind(wicketRequest, wicketSession);
 		wicketResponse = new WebResponse(servletResponse);
+		wicketResponse.setAjax(wicketRequest.isAjax());
 	}
 
 	/**

@@ -37,6 +37,8 @@ public final class User implements Serializable
 
 	private Set roles = new HashSet();
 
+	private String rolesSetName;
+
 	private String userName;
 
 	/**
@@ -87,6 +89,16 @@ public final class User implements Serializable
 	public Set getRoles()
 	{
 		return roles;
+	}
+
+	/**
+	 * Gets rolesSetName.
+	 * 
+	 * @return rolesSetName
+	 */
+	public String getRolesSetName()
+	{
+		return rolesSetName;
 	}
 
 	/**
@@ -156,6 +168,17 @@ public final class User implements Serializable
 	public void setRoles(Set roles)
 	{
 		this.roles = roles;
+	}
+
+	/**
+	 * Sets rolesSetName.
+	 * 
+	 * @param rolesSetName
+	 *            rolesSetName
+	 */
+	public void setRolesSetName(String rolesSetName)
+	{
+		this.rolesSetName = rolesSetName;
 	}
 
 	/**

@@ -44,25 +44,19 @@ public abstract class DynamicWebResource extends WebResource
 	 * 
 	 * @author jcompagner
 	 */
-	public static class ResourceState
+	public static abstract class ResourceState
 	{
 		protected Time lastModifiedTime;
 
 		/**
 		 * @return The Byte array for this resource
 		 */
-		public byte[] getData()
-		{
-			return null;
-		}
+		public abstract byte[] getData();
 
 		/**
 		 * @return The content type of this resource
 		 */
-		public String getContentType()
-		{
-			return null;
-		}
+		public abstract String getContentType();
 
 		/**
 		 * @return The last modified time of this resource
@@ -122,6 +116,7 @@ public abstract class DynamicWebResource extends WebResource
 	/**
 	 * @return Gets the resource to attach to the component.
 	 */
+	// this method is deliberately non-final. some users depend on it
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

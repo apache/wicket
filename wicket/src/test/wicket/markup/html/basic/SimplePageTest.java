@@ -38,7 +38,7 @@ import wicket.util.value.ValueMap;
  */
 public class SimplePageTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(SimplePageTest.class);
+	private static final Log log = LogFactory.getLog(SimplePageTest.class);
 
 	/**
 	 * Create the test.
@@ -381,5 +381,13 @@ public class SimplePageTest extends WicketTestCase
 	public void testRenderHomePage_11() throws Exception
 	{
 		executeTest(SimplePage_11.class, "SimplePageExpectedResult_11.html");
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testRenderHomePage_12() throws Exception
+	{
+		executeTest(SimplePage_12.class, "SimplePageExpectedResult_12.html");
 	}
 }

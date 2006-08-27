@@ -21,13 +21,9 @@ package wicket.examples.forminput;
 import java.awt.Font;
 import java.util.Locale;
 
+import wicket.SharedResources;
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
-import wicket.protocol.http.request.urlcompressing.URLCompressor;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingCodingStrategy;
-import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolverStrategy;
-import wicket.request.IRequestCycleProcessor;
-import wicket.request.compound.CompoundRequestCycleProcessor;
 
 /**
  * Application class for form input example.
@@ -57,46 +53,37 @@ public class FormInputApplication extends WicketExampleApplication
 	protected void init()
 	{
 		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+
+		// Chinese buttons
 		Font font = new Font("SimSun", Font.BOLD, 16);
 		DefaultButtonImageResource imgSave = new DefaultButtonImageResource("\u4FDD\u5B58");
 		imgSave.setFont(font);
 		DefaultButtonImageResource imgReset = new DefaultButtonImageResource("\u91CD\u7F6E");
 		imgReset.setFont(font);
-		getSharedResources().add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
-		getSharedResources().add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
+		SharedResources sharedResources = getSharedResources();
+		sharedResources.add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
+		sharedResources.add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
+		
+		// Japanese buttons
 		Font fontJa = new Font("Serif", Font.BOLD, 16);
 		DefaultButtonImageResource imgSaveJa = new DefaultButtonImageResource("\u4fdd\u5b58");
 		imgSaveJa.setFont(fontJa);
 		DefaultButtonImageResource imgResetJa = new DefaultButtonImageResource(
 				"\u30ea\u30bb\u30c3\u30c8");
 		imgResetJa.setFont(fontJa);
-		getSharedResources().add("save", Locale.JAPANESE, imgSaveJa);
-		getSharedResources().add("reset", Locale.JAPANESE, imgResetJa);
-	}
+		sharedResources.add("save", Locale.JAPANESE, imgSaveJa);
+		sharedResources.add("reset", Locale.JAPANESE, imgResetJa);
 
-	/**
-	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
-	 *      protected WebRequest newWebRequest(HttpServletRequest
-	 *      servletRequest) { return new
-	 *      WebRequestWithCryptedUrl(servletRequest); }
-	 */
-
-	/**
-	 * @see wicket.protocol.http.WebApplication#newWebResponse(javax.servlet.http.HttpServletResponse)
-	 *      protected WebResponse newWebResponse(HttpServletResponse
-	 *      servletResponse) { return new
-	 *      WebResponseWithCryptedUrl(servletResponse); }
-	 */
-
-	/**
-	 * Special overwrite to have url compressing for this example.
-	 * 
-	 * @see URLCompressor
-	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
-	 */
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new CompoundRequestCycleProcessor(new WebURLCompressingCodingStrategy(),
-				new WebURLCompressingTargetResolverStrategy(), null, null, null);
+		// Persian buttons
+		Font fontFa = new Font("Serif", Font.BOLD, 16);
+		Locale farsi = new Locale("fa", "IR");
+		DefaultButtonImageResource imgSaveFa = new DefaultButtonImageResource(
+				"\u0630\u062e\u064a\u0631\u0647");
+		imgSaveFa.setFont(fontFa);
+		DefaultButtonImageResource imgResetFa = new DefaultButtonImageResource(
+				"\u0628\u0627\u0632\u0646\u0634\u0627\u0646\u064a");
+		imgResetFa.setFont(fontFa);
+		getSharedResources().add("save", farsi, imgSaveFa);
+		getSharedResources().add("reset", farsi, imgResetFa);
 	}
 }

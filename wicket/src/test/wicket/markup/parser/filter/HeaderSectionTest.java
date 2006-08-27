@@ -34,7 +34,7 @@ import wicket.util.resource.IResourceStream;
  */
 public class HeaderSectionTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(HeaderSectionTest.class);
+	private static final Log log = LogFactory.getLog(HeaderSectionTest.class);
 	
 	/**
 	 * Create the test.

@@ -275,7 +275,7 @@ public class Markup
 	 * @param wicketNamespace
 	 *            wicketNamespace
 	 */
-	final void setWicketNamespace(final String wicketNamespace)
+	public final void setWicketNamespace(final String wicketNamespace)
 	{
 		this.wicketNamespace = wicketNamespace;
 		this.wicketId = wicketNamespace + ":id";
@@ -314,7 +314,7 @@ public class Markup
 	 * 
 	 * @param markupElement
 	 */
-	final void addMarkupElement(final MarkupElement markupElement)
+	public final void addMarkupElement(final MarkupElement markupElement)
 	{
 		this.markup.addMarkupElement(markupElement);
 	}

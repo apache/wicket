@@ -105,7 +105,12 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		tag.put(event, getEventHandler());
+		
+		// only add the event handler when the component is enabled.
+		if (this.getComponent().isEnabled()) 
+		{
+			tag.put(event, getEventHandler());
+		}
 	}
 
 	/**
@@ -122,10 +127,11 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
-	protected CharSequence getCallbackScript(String partialCall, String onSuccessScript,
-			String onFailureScript)
+	protected CharSequence getCallbackScript(CharSequence partialCall, CharSequence onSuccessScript,
+			CharSequence onFailureScript)
 	{
-		CharSequence script = super.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
+		CharSequence script = super
+				.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
 		final ThrottlingSettings ts = throttlingSettings;
 
 		if (ts != null)
@@ -147,7 +153,7 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	 * 
 	 * @return event
 	 */
-	protected final String getEvent()
+	public final String getEvent()
 	{
 		return event;
 	}

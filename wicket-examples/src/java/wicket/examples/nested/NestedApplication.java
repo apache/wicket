@@ -32,6 +32,16 @@ public class NestedApplication extends WicketExampleApplication
 	public NestedApplication()
 	{
 	}
+	
+	/**
+	 * Initialize the application
+	 */
+	protected void init()
+	{
+		super.init();
+		// disable debugging mode, because it slows down the tree
+		getAjaxSettings().setAjaxDebugModeEnabled(false);
+	}
 
 	/**
 	 * @see wicket.Application#getHomePage()

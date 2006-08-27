@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 public class WordGeneratorTest extends TestCase
 {
 
-	private static Log log = LogFactory.getLog(WordGeneratorTest.class);
+	private static final Log log = LogFactory.getLog(WordGeneratorTest.class);
 
 	/**
 	 * Create the test case.

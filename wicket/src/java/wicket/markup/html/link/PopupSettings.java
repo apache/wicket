@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id: PopupSettings.java 4824 2006-03-08 20:04:37 +0000 (Wed, 08 Mar 2006)
+ * eelco12 $ $Revision$ $Date: 2006-03-08 20:04:37 +0000 (Wed, 08 Mar
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,8 +20,12 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import wicket.Component;
+import wicket.Page;
 import wicket.PageMap;
-import wicket.RequestCycle;
 
 /**
  * A popup specification can be used as a property of the {@link Link}classes
@@ -40,6 +45,9 @@ import wicket.RequestCycle;
  */
 public class PopupSettings implements Serializable
 {
+	/** The log. */
+	private static final Log log = LogFactory.getLog(PopupSettings.class);
+
 	private static final long serialVersionUID = 1L;
 
 	/** Flag to include location bar */
@@ -135,6 +143,7 @@ public class PopupSettings implements Serializable
 	public PopupSettings(PageMap pagemap)
 	{
 		this.pageMapName = pagemap.getName();
+		this.windowName = pageMapName;
 	}
 
 	/**
@@ -154,6 +163,7 @@ public class PopupSettings implements Serializable
 	{
 		this.displayFlags = displayFlags;
 		this.pageMapName = pagemap.getName();
+		this.windowName = pageMapName;
 	}
 
 	/**
@@ -288,7 +298,17 @@ public class PopupSettings implements Serializable
 	 */
 	public PopupSettings setWindowName(String popupWindowName)
 	{
-		this.windowName = popupWindowName;
+		if (popupWindowName != null)
+		{
+			this.windowName = popupWindowName;
+			if (pageMapName != null && (!pageMapName.equals(popupWindowName)))
+			{
+				log.warn("the page map and window name should be the same. The page map was "
+						+ pageMapName + ", and the requested window name is " + popupWindowName
+						+ "; changing the page map to " + popupWindowName);
+			}
+			this.pageMapName = popupWindowName;
+		}
 		return this;
 	}
 
@@ -306,6 +326,8 @@ public class PopupSettings implements Serializable
 	 * Gets the pagemap where the popup page must be created in.
 	 * 
 	 * @return The pagemap where the popup page must be created in
+	 * @deprecated will be removed in Wicket 2.0; use
+	 *             {@link #getPageMap(Component)} instead
 	 */
 	public PageMap getPageMap()
 	{
@@ -315,8 +337,41 @@ public class PopupSettings implements Serializable
 		}
 		else
 		{
-			// fallback on the current page map
-			return RequestCycle.get().getRequest().getPage().getPageMap();
+			throw new UnsupportedOperationException(
+					"this method can only work when a page map is set. Either call"
+							+ " getPageMap(Component) or set the page map");
+		}
+	}
+
+	/**
+	 * Gets the pagemap where the popup page must be created in.
+	 * 
+	 * @param callee
+	 *            Calling component
+	 * @return The pagemap where the popup page must be created in
+	 */
+	public PageMap getPageMap(Component callee)
+	{
+		if (pageMapName != null)
+		{
+			return PageMap.forName(pageMapName);
+		}
+		else
+		{
+			if (callee == null)
+			{
+				throw new IllegalArgumentException(
+						"when the page map is not set, argument callee may not be null");
+			}
+			Page page = callee.getPage();
+			if (page == null)
+			{
+				throw new IllegalStateException(callee
+						+ " is not yet set on a page; if you want to use this method "
+						+ "without a page map being set, argument callee must be not null "
+						+ "and added to a page");
+			}
+			return page.getPageMap();
 		}
 	}
 }

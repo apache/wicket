@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,7 +42,7 @@ public class Check extends WebMarkupContainer
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final String ATTR_DISABLED = "disabled";
 
 
@@ -86,23 +87,29 @@ public class Check extends WebMarkupContainer
 							+ "] cannot find its parent CheckGroup. All Check components must be a child of or below in the hierarchy of a CheckGroup component.");
 		}
 
+		String relativePath = path.substring(group.getPath().length() + 1);
+			
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", path);
+		tag.put("value", relativePath);
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
 		Collection collection = (Collection)group.getModelObject();
 
 		// check for npe in group's model object
-		if (collection==null) {
-			throw new WicketRuntimeException("CheckGroup ["+group.getPath()+"] contains a null model object, must be an object of type java.util.Collection");
+		if (collection == null)
+		{
+			throw new WicketRuntimeException(
+					"CheckGroup ["
+							+ group.getPath()
+							+ "] contains a null model object, must be an object of type java.util.Collection");
 		}
-		
-		if(group.hasRawInput())
+
+		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if(rawInput != null && rawInput.indexOf(path) != -1)
+			if (rawInput != null && rawInput.indexOf(relativePath) != -1)
 			{
 				tag.put("checked", "checked");
 			}
@@ -111,30 +118,32 @@ public class Check extends WebMarkupContainer
 		{
 			tag.put("checked", "checked");
 		}
-		
+
 		if (group.wantOnSelectionChangedNotifications())
 		{
 			// url that points to this components IOnChangeListener method
 			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
-			try
+			Form form = (Form)group.findParent(Form.class);
+			if (form != null)
 			{
-				Form form = group.getForm();
-				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
-			catch (WicketRuntimeException ex)
+			else
 			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
+				// NOTE: do not encode the url as that would give invalid
+				// JavaScript
 				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}
-		
-		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+
+		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
+		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 
-		
+
 	}
 
 

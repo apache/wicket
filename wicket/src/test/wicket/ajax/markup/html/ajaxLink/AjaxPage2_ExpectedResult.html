@@ -1,8 +1,8 @@
 <html>
 <head><script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax.js"></script>
-<script type="text/javascript"><!--//--><![CDATA[//><!--
+<script type="text/javascript" id="wicket-ajax-debug-enable"><!--/*--><![CDATA[/*><!--*/
 wicketAjaxDebugEnable=true;
-//--><!]]></script>
+/*-->]]>*/</script>
 
 <script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug-drag.js"></script>
 <script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
@@ -16,7 +16,7 @@ wicketAjaxDebugEnable=true;
                             <td width = "100%">
                                 <wicket:body>
 	  <span wicket:id="ajaxLabel" id="ajaxLabel">AAAAAAA</span>
-	  <a href="javascript:var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:ajaxLink::IBehaviorListener&wicket:behaviorId=0', function() { }, function() { });" wicket:id="ajaxLink" id="ajaxLink">Update</a>
+	  <a href="#" wicket:id="ajaxLink" onclick="var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:ajaxLink::IBehaviorListener&wicket:behaviorId=0', function() { }, function() { });return !wcall;" id="ajaxLink">Update</a>
   </wicket:body>
                             </td>
                         </tr>

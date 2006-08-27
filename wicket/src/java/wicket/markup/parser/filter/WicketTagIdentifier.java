@@ -26,7 +26,6 @@ import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.WicketTag;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlTag;
 
 /**
@@ -54,12 +53,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	 * 
 	 * @param markup
 	 *            The markup as known by now
-	 * @param parent
-	 *            The next MarkupFilter in the chain
 	 */
-	public WicketTagIdentifier(final Markup markup, final IMarkupFilter parent)
+	public WicketTagIdentifier(final Markup markup)
 	{
-		super(parent);
 		this.markup = markup;
 	}
 

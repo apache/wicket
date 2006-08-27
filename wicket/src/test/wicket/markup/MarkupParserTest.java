@@ -45,7 +45,7 @@ import wicket.util.string.StringValueConversionException;
  */
 public final class MarkupParserTest extends WicketTestCase
 {
-	private static Log log = LogFactory.getLog(MarkupParserTest.class);
+	private static final Log log = LogFactory.getLog(MarkupParserTest.class);
 
 	/**
 	 * Construct.
@@ -252,6 +252,11 @@ public final class MarkupParserTest extends WicketTestCase
 		tokens = parser.readAndParse(resource);
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
+
+		resource = newMarkupResourceStream(locator, this.getClass(), "9", null, "html");
+		tokens = parser.readAndParse(resource);
+		log.info("tok(0)=" + tokens.get(0));
+		// Assert.assertEquals(docText, tokens.get(0).toString());
 	}
 
 	/**
@@ -266,6 +271,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		WicketTagIdentifier.registerWellKnownTagName("body");
 		WicketTagIdentifier.registerWellKnownTagName("border");
+		WicketTagIdentifier.registerWellKnownTagName("panel");
 
 		final MarkupParser parser = new MarkupParser(new XmlPullParser());
 

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import wicket.util.parse.metapattern.MetaPattern;
 import wicket.util.parse.metapattern.parsers.VariableAssignmentParser;
 import wicket.util.string.IStringIterator;
 import wicket.util.string.StringList;
@@ -103,6 +104,60 @@ public class ValueMap extends HashMap
 	 */
 	public ValueMap(final String keyValuePairs, final String delimiter)
 	{
+		int start = 0;
+		int equalsIndex = keyValuePairs.indexOf('=');
+		int delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
+		if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
+		while(equalsIndex != -1)
+		{
+			if(delimiterIndex < keyValuePairs.length())
+			{
+				int equalsIndex2 = keyValuePairs.indexOf('=', delimiterIndex+1);
+				if(equalsIndex2 != -1)
+				{
+					int delimiterIndex2 = keyValuePairs.lastIndexOf(delimiter, equalsIndex2);
+					delimiterIndex = delimiterIndex2;
+				}
+				else
+				{
+					delimiterIndex = keyValuePairs.length();
+				}
+			}
+			String key = keyValuePairs.substring(start,equalsIndex);
+			String value = keyValuePairs.substring(equalsIndex+1, delimiterIndex);
+			put(key,value);
+			if(delimiterIndex < keyValuePairs.length())
+			{
+				start = delimiterIndex+1;
+				equalsIndex = keyValuePairs.indexOf('=',start);
+				if(equalsIndex != -1)
+				{
+					delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
+					if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
+				}
+			}
+			else
+			{
+				equalsIndex = -1;
+			}
+		}
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param keyValuePairs
+	 *            List of key value pairs separated by a given delimiter. For
+	 *            example, "param1=foo,param2=bar" where delimiter is ",".
+	 * @param delimiter
+	 *            Delimiter string used to separate key/value pairs
+	 * @param valuePattern
+	 *            Pattern for value. To pass a simple regular expression pass
+	 *            "new MetaPattern(regexp)".
+	 */
+	public ValueMap(final String keyValuePairs, final String delimiter,
+			final MetaPattern valuePattern)
+	{
 		// Get list of strings separated by the delimiter
 		final StringList pairs = StringList.tokenize(keyValuePairs, delimiter);
 
@@ -113,7 +168,7 @@ public class ValueMap extends HashMap
 			final String pair = iterator.next();
 
 			// Parse using metapattern parser for variable assignments
-			final VariableAssignmentParser parser = new VariableAssignmentParser(pair);
+			final VariableAssignmentParser parser = new VariableAssignmentParser(pair, valuePattern);
 
 			// Does it parse?
 			if (parser.matches())

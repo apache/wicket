@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 4635 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,11 @@
  */
 package wicket.ajax.markup.html.navigation.paging;
 
+import wicket.Component;
+import wicket.MarkupContainer;
+import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import wicket.markup.html.navigation.paging.PagingNavigation;
@@ -41,6 +45,9 @@ import wicket.markup.html.navigation.paging.PagingNavigator;
 public class AjaxPagingNavigator extends PagingNavigator
 {
 	private static final long serialVersionUID = 1L;
+
+	/** The pageable component that needs to be updated. */
+	private IPageable pageable;
 
 	/**
 	 * Constructor.
@@ -69,6 +76,7 @@ public class AjaxPagingNavigator extends PagingNavigator
 			final IPagingLabelProvider labelProvider)
 	{
 		super(id, pageable, labelProvider);
+		this.pageable = pageable;
 		setOutputMarkupId(true);
 	}
 
@@ -122,4 +130,38 @@ public class AjaxPagingNavigator extends PagingNavigator
 		return new AjaxPagingNavigation("navigation", pageable, labelProvider);
 	}
 
+	/**
+	 * Override this method to specify the markup container where your IPageable
+	 * is part of. This implementation is a default implementation that tries to
+	 * find a parent markup container and update that container. This is
+	 * necessary as ListViews can't be updated themselves.
+	 * 
+	 * @param target
+	 *            the request target to add the components that need to be
+	 *            updated in the ajax event.
+	 */
+	protected void onAjaxEvent(AjaxRequestTarget target)
+	{
+		// update the container (parent) of the pageable, this assumes that
+		// the pageable is a component, and that it is a child of a web
+		// markup container.
+
+		Component container = ((Component)pageable);
+		if ((pageable instanceof MarkupContainer) && !(pageable instanceof ListView))
+		{
+			container = (MarkupContainer)pageable;
+		}
+		else
+		{
+			container = ((Component)pageable).findParent(MarkupContainer.class);
+		}
+		target.addComponent(container);
+		
+		// in case the navigator is not contained by the container, we have
+		// to add it to the response
+		if (((MarkupContainer)container).contains(this, true) == false)
+		{
+			target.addComponent(this);
+		}				
+	}
 }

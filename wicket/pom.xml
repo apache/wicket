@@ -3,269 +3,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>wicket</groupId>
+	<parent>
+		<groupId>wicket</groupId>
+		<artifactId>wicket-parent</artifactId>
+		<version>1.2-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>wicket</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2-SNAPSHOT</version>
 	<name>Wicket</name>
-	<description>Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted using your favourite technology.</description>
-	<url>http://wicket.sourceforge.net</url>
-	<inceptionYear>2004</inceptionYear>
-
-	<organization>
-		<name>Wicket developers</name>
-		<url>http://wicket.sourceforge.net</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<issueManagement>
-		<url>http://sourceforge.net/tracker/?group_id=119783</url>
-	</issueManagement>
-
-	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket</url>
-	</scm>
-
-	<mailingLists>
-		<mailingList>
-			<name>Wicket Announcements List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket User List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket Development List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-develop</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket CVS commit List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-autocvs</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket automated builds List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-builds</archive>
-		</mailingList>
-	</mailingLists>
-
-	<developers>
-		<developer>
-			<name>Jonathan Locke</name>
-			<id>jonathanlocke</id>
-			<email>jonathanlocke at users.sourceforge.net</email>
-		</developer>
-		<developer>
-			<name>Christopher Turner</name>
-			<id>skipoles</id>
-			<email>skipoles at users.sourceforge.net</email>
-		</developer>
-		<developer>
-			<name>Eelco Hillenius</name>
-			<id>eelco12</id>
-			<email>eelco12 at users.sourceforge.net</email>
-		</developer>
-		<developer>
-			<name>Johan Compagner</name>
-			<id>joco01</id>
-			<email>joco01 at users.sourceforge.net</email>
-		</developer>
-		<developer>
-			<name>Martijn Dashorst</name>
-			<id>dashorst</id>
-			<email>dashorst at users.sourceforge.net</email>
-		</developer>
-		<developer>
-			<name>Juergen Donnerstag</name>
-			<id>jdonnerstag</id>
-			<email>jdonnerstag at users.sourceforge.net</email>
-			<roles />
-		</developer>
-		<developer>
-			<name>Igor Vaynberg</name>
-			<id>ivaynberg</id>
-			<email>ivaynberg at users.sourceforge.net</email>
-		</developer>
-		<developer>
-			<name>Gwyn Evans</name>
-			<id>gwynevans</id>
-			<email>gwynevans at users.sourceforge.net</email>
-			<roles />
-		</developer>
-		<developer>
-			<name>Ate Douma</name>
-			<id>adouma</id>
-			<email>adouma at users.sourceforge.net</email>
-			<roles />
-		</developer>
-		<developer>
-			<name>Jan Blok</name>
-			<id>jan_blok</id>
-			<email>jan_blok at users.sourceforge.net</email>
-			<roles />
-		</developer>
-	</developers>
-
-	<contributors>
-		<contributor>
-			<name>Wouter de Jong</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Peter Veenendaal</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Maurice Marrink</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Gili Tzabari</name>
-			<email>cowwoc at users.sourceforge.net</email>
-		</contributor>
-		<contributor>
-			<name>Martin Fey</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Cameron Braid</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Jan Blok</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Wang Lei</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Xiaoyz</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Andrew de Torres</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Dan Gould</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Francois Denommee</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Timur Mehrvarz</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Cameron Braid</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Phil Kulak</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Matej Knopp</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Jonathan Carlson</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Anatol Pomozov</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Jan Mikkelsen</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Simon Berriman</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Ingram Chen</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Nick Heudecker</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Andrew Berman</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Gert Jan Verhoog</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Timothy Bennet</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Niclas Hedhman</name>
-			<email>-</email>
-		</contributor>
-		<contributor>
-			<name>Ralf Ebert</name>
-			<email>-</email>
-		</contributor>
-	</contributors>
-
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.3</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
+	<url>http://wicketframework.org/${project.artifactId}-1.2</url>
+	<description>Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted using your favorite technology.</description>
 
 	<build>
 		<extensions>
@@ -315,8 +63,10 @@
 
 		<plugins>
 			<plugin>
+				<inherited>true</inherited>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+<!--
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptors>
@@ -326,6 +76,7 @@
 					<outputDirectory>target/distributions</outputDirectory>
 					<workDirectory>target/assembly/work</workDirectory>
 				</configuration>
+-->
 			</plugin>
 			<plugin>
 				<inherited>true</inherited>
@@ -356,14 +107,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<templateDirectory>src/site/template/</templateDirectory>
-					<template>wicket-site.vm</template>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -411,11 +154,16 @@
 	<distributionManagement>
 		<site>
 			<id>wicket-site</id>
-			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/wicket-1.2</url>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs</url>
 		</site>
 		<repository>
 			<id>wicket-repo</id>
 			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
 		</repository>
+		<snapshotRepository>
+        	<id>maven.sateh.com</id>
+            <url>scpexe://maven.sateh.com/sateh/services/lighttpd/maven.sateh.com/www/wicket</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
 	</distributionManagement>
 </project>

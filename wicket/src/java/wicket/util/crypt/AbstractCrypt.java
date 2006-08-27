@@ -41,7 +41,7 @@ public abstract class AbstractCrypt implements ICrypt
 	private static final String CHARACTER_ENCODING = "UTF-8";
 
 	/** Log. */
-	private static Log log = LogFactory.getLog(AbstractCrypt.class);
+	private static final Log log = LogFactory.getLog(AbstractCrypt.class);
 
 	/** Key used to de-/encrypt the data */
 	private String encryptionKey = DEFAULT_ENCRYPTION_KEY;

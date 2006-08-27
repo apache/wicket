@@ -20,6 +20,8 @@ package wicket.ajax.markup.html;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
+import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
+import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 
@@ -55,7 +57,7 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 	{
 		super(id, model);
 
-		add(new AjaxEventBehavior("href")
+		add(new AjaxEventBehavior("onclick")
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -66,10 +68,21 @@ public abstract class AjaxLink extends WebMarkupContainer implements IAjaxLink
 
 			protected IAjaxCallDecorator getAjaxCallDecorator()
 			{
-				return AjaxLink.this.getAjaxCallDecorator();
+				return new CancelEventIfNoAjaxDecorator(AjaxLink.this.getAjaxCallDecorator());
 			}
 
 		});
+	}
+
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		// disable any href attr in markup
+		if (tag.getName().equalsIgnoreCase("a") || tag.getName().equalsIgnoreCase("link")
+				|| tag.getName().equalsIgnoreCase("area"))
+		{
+			tag.put("href", "#");
+		}
 	}
 
 	/**

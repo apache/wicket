@@ -53,10 +53,12 @@ public abstract class AbstractOptions extends FormComponent
 	{
 		super(id);
 		this.palette = palette;
+		setOutputMarkupId(true);
 	}
 
 	protected abstract Iterator getOptionsIterator();
 
+		
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		final AppendingStringBuffer buffer = new AppendingStringBuffer(128);
@@ -90,7 +92,9 @@ public abstract class AbstractOptions extends FormComponent
 		attrs.put("multiple", null);
 		attrs.put("size", new Integer(getPalette().getRows()));
 
-		attrs.put("id", getPath());
+		if (!palette.isPaletteEnabled()) {
+			attrs.put("disabled","disabled");
+		}
 
 	}
 

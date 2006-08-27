@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: HtmlHeaderSectionHandler.java 5857 2006-05-25 17:27:26 +0000 (Thu, 25
+ * May 2006) joco01 $ $Revision$ $Date: 2006-05-25 17:27:26 +0000 (Thu,
+ * 25 May 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,12 +19,11 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.List;
 
 import wicket.markup.ComponentTag;
+import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.XmlTag;
 
 /**
@@ -40,42 +40,29 @@ import wicket.markup.parser.XmlTag;
  */
 public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 {
+	private static final String BODY = "body";
+	private static final String HEAD = "head";
+
 	/** The automatically assigned wicket:id to &gt;head&lt; tag */
-	public static final String HEADER_ID = "_header";
+	public static final String HEADER_ID = "<auto>_header";
 
 	/** True if <head> has been found already */
 	private boolean foundHead = false;
 
 	/** True if all the rest of the markup file can be ignored */
 	private boolean ignoreTheRest = false;
-
-	/**
-	 * In case you want to add extra Components to the markup, just add them to
-	 * the list. MarkupParser will handle it.
-	 */
-	private List tagList;
-
+	
+	/** The Markup available so far for the resource */
+	private final Markup markup;
+	
 	/**
 	 * Construct.
 	 * 
-	 * @param tagList
-	 * @param parent
-	 *            The next MarkupFilter in the chain
+	 * @param markup The Markup object being filled while reading the markup resource
 	 */
-	public HtmlHeaderSectionHandler(final List tagList, final IMarkupFilter parent)
+	public HtmlHeaderSectionHandler(final Markup markup)
 	{
-		super(parent);
-		setTagList(tagList);
-	}
-
-	/**
-	 * In order to add ComponentTags which are NOT from markup file.
-	 * 
-	 * @param tagList
-	 */
-	public void setTagList(final List tagList)
-	{
-		this.tagList = tagList;
+		this.markup = markup;
 	}
 
 	/**
@@ -91,7 +78,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	{
 		// Get the next tag from the markup.
 		// If null, no more tags are available
-		ComponentTag tag = (ComponentTag)getParent().nextTag();
+		final ComponentTag tag = nextComponentTag();
 		if (tag == null)
 		{
 			return tag;
@@ -104,29 +91,35 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		}
 
 		// if it is <head> or </head>
-		if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
+		if (HEAD.equalsIgnoreCase(tag.getName()))
 		{
-			// we found <head>
-			if (tag.isClose())
+			if (tag.getNamespace() == null)
 			{
+				// we found <head>
+				if (tag.isClose())
+				{
+					foundHead = true;
+				}
+				else if (tag.getId() == null)
+				{
+					tag.setId(HEADER_ID);
+				}
+	
+				// Usually <head> is not a wicket special tag. But because we want
+				// transparent header support we insert it automatically if missing
+				// and while rendering its content all child components are asked if
+				// they want to contribute something to the header. Thus we have to
+				// handle <head> accordingly.
+				tag.setInternalTag(true);
+				return tag;
+			}
+			else 
+			{
+				// we found <wicket:head>
 				foundHead = true;
 			}
-
-			// Usually <head> is not a wicket special tag. But because we want
-			// transparent header support we insert it automatically if missing
-			// and while rendering its content all child components are asked if
-			// they want to contribute something to the header. Thus we have to
-			// handle <head> accordingly.
-			tag.setId(HEADER_ID);
-
-			return tag;
 		}
-		else if (("head".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() != null))
-		{
-			// we found <wicket:head>
-			foundHead = true;
-		}
-		else if (("body".equalsIgnoreCase(tag.getName()) == true) && (tag.getNamespace() == null))
+		else if (BODY.equalsIgnoreCase(tag.getName()) && (tag.getNamespace() == null))
 		{
 			// We found <body>
 			if (foundHead == false)
@@ -148,21 +141,15 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	 */
 	private void insertHeadTag()
 	{
-		final XmlTag headOpenTag = new XmlTag();
-		headOpenTag.setName("head");
-		headOpenTag.setType(XmlTag.OPEN);
-		final ComponentTag openTag = new ComponentTag(headOpenTag);
+		// Note: only the open-tag must be a AutoComponentTag
+		final ComponentTag openTag = new ComponentTag(HEAD, XmlTag.OPEN);
 		openTag.setId(HEADER_ID);
-
-		final XmlTag headCloseTag = new XmlTag();
-		headCloseTag.setName(headOpenTag.getName());
-		headCloseTag.setType(XmlTag.CLOSE);
-		final ComponentTag closeTag = new ComponentTag(headCloseTag);
+		
+		final ComponentTag closeTag = new ComponentTag(HEAD, XmlTag.CLOSE);
 		closeTag.setOpenTag(openTag);
-		closeTag.setId(HEADER_ID);
 
 		// insert the tags into the markup stream
-		tagList.add(openTag);
-		tagList.add(closeTag);
+		this.markup.addMarkupElement(openTag);
+		this.markup.addMarkupElement(closeTag);
 	}
 }

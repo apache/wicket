@@ -18,8 +18,17 @@
  */
 package wicket.extensions.wizard;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import wicket.Component;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.validation.IFormValidator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.CompoundPropertyModel;
@@ -50,18 +59,18 @@ import wicket.model.Model;
  * HTML (defined in e.g. file x/NewUserWizard$UserNameStep.html):
  * 
  * <pre>
- *              &lt;wicket:panel&gt;
- *               &lt;table&gt;
- *                &lt;tr&gt;
- *                 &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
- *                 &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
- *                &lt;/tr&gt;
- *                &lt;tr&gt;
- *                 &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
- *                 &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
- *                &lt;/tr&gt;
- *               &lt;/table&gt;
- *              &lt;/wicket:panel&gt;
+ *                        &lt;wicket:panel&gt;
+ *                         &lt;table&gt;
+ *                          &lt;tr&gt;
+ *                           &lt;td&gt;&lt;wicket:message key=&quot;username&quot;&gt;Username&lt;/wicket:message&gt;&lt;/td&gt;
+ *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.userName&quot; /&gt;&lt;/td&gt;
+ *                          &lt;/tr&gt;
+ *                          &lt;tr&gt;
+ *                           &lt;td&gt;&lt;wicket:message key=&quot;email&quot;&gt;Email Adress&lt;/wicket:message&gt;&lt;/td&gt;
+ *                           &lt;td&gt;&lt;input type=&quot;text&quot; wicket:id=&quot;user.email&quot; /&gt;&lt;/td&gt;
+ *                          &lt;/tr&gt;
+ *                         &lt;/table&gt;
+ *                        &lt;/wicket:panel&gt;
  * </pre>
  * 
  * </p>
@@ -71,6 +80,112 @@ import wicket.model.Model;
  */
 public class WizardStep extends Panel implements IWizardStep
 {
+	/**
+	 * Adds form validators. We don't need this in 2.0 as the hierarchy is know
+	 * at construction time from then.
+	 */
+	private final class AddFormValidatorAction
+	{
+		/**
+		 * Wrapper for any form validators.
+		 */
+		final FormValidatorWrapper formValidatorWrapper = new FormValidatorWrapper();
+
+		void execute()
+		{
+			Form form = (Form)WizardStep.this.findParent(Form.class);
+			form.add(formValidatorWrapper);
+		}
+	}
+
+	/**
+	 * @see wicket.Component#detachModel()
+	 */
+	protected void detachModel()
+	{
+		super.detachModel();
+		if (title != null)
+		{
+			title.detach();
+		}
+		if (summary != null)
+		{
+			summary.detach();
+		}
+	}
+
+	/**
+	 * Wraps form validators for this step such that they are only executed when
+	 * this step is active.
+	 */
+	private final class FormValidatorWrapper implements IFormValidator
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		private final List validators = new ArrayList();
+
+		/**
+		 * Adds a form validator.
+		 * 
+		 * @param validator
+		 *            The validator to add
+		 */
+		public final void add(IFormValidator validator)
+		{
+			validators.add(validator);
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.IFormValidator#getDependentFormComponents()
+		 */
+		public FormComponent[] getDependentFormComponents()
+		{
+			if (isActiveStep())
+			{
+				Set components = new HashSet();
+				for (Iterator i = validators.iterator(); i.hasNext();)
+				{
+					IFormValidator v = (IFormValidator)i.next();
+					FormComponent[] dependentComponents = v.getDependentFormComponents();
+					if (dependentComponents != null)
+					{
+						int len = dependentComponents.length;
+						for (int j = 0; j < len; j++)
+						{
+							components.add(dependentComponents[j]);
+						}
+					}
+				}
+				return (FormComponent[])components.toArray(new FormComponent[components.size()]);
+			}
+			return null;
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.IFormValidator#validate(wicket.markup.html.form.Form)
+		 */
+		public void validate(Form form)
+		{
+			if (isActiveStep())
+			{
+				for (Iterator i = validators.iterator(); i.hasNext();)
+				{
+					IFormValidator v = (IFormValidator)i.next();
+					v.validate(form);
+				}
+			}
+		}
+
+		/**
+		 * @return whether the step this wrapper is part of is the current step
+		 */
+		private final boolean isActiveStep()
+		{
+			return (wizardModel.getActiveStep().equals(WizardStep.this));
+		}
+	}
+
 	/**
 	 * Default header for wizards.
 	 */
@@ -119,6 +234,8 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	private boolean complete;
 
+	private transient AddFormValidatorAction onAttachAction;
+
 	/**
 	 * A summary of this step, or some usage advice.
 	 */
@@ -128,6 +245,11 @@ public class WizardStep extends Panel implements IWizardStep
 	 * The title of this step.
 	 */
 	private IModel title;
+
+	/**
+	 * The wizard model.
+	 */
+	private IWizardModel wizardModel;
 
 	/**
 	 * Construct without a title and a summary. Useful for when you provide a
@@ -202,7 +324,21 @@ public class WizardStep extends Panel implements IWizardStep
 	 */
 	public WizardStep(String title, String summary, IModel model)
 	{
-		this(new Model(title), new Model(summary), null);
+		this(new Model(title), new Model(summary), model);
+	}
+
+	/**
+	 * Adds a form validator.
+	 * 
+	 * @param validator
+	 */
+	public final void add(IFormValidator validator)
+	{
+		if (onAttachAction == null)
+		{
+			onAttachAction = new AddFormValidatorAction();
+		}
+		onAttachAction.formValidatorWrapper.add(validator);
 	}
 
 	/**
@@ -255,14 +391,16 @@ public class WizardStep extends Panel implements IWizardStep
 
 	/**
 	 * Called to initialize the step. This method will be called when the wizard
-	 * is first initialising. This implementation does nothing; override when
-	 * you need to do specific work when the step initializes
+	 * is first initialising. This method sets the wizard model and then calls
+	 * template method {@link #onInit(IWizardModel)}
 	 * 
-	 * @param model
+	 * @param wizardModel
 	 *            the model to which the step belongs.
 	 */
-	public void init(IWizardModel model)
+	public final void init(IWizardModel wizardModel)
 	{
+		this.wizardModel = wizardModel;
+		onInit(wizardModel);
 	}
 
 	/**
@@ -274,7 +412,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 *         <tt>false</tt> otherwise.
 	 * @see #setComplete
 	 */
-	public final boolean isComplete()
+	public boolean isComplete()
 	{
 		return complete;
 	}
@@ -288,7 +426,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 *            otherwise.
 	 * @see #isComplete
 	 */
-	public final void setComplete(boolean complete)
+	public void setComplete(boolean complete)
 	{
 		this.complete = complete;
 	}
@@ -299,7 +437,7 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param summary
 	 *            summary
 	 */
-	public final void setSummaryModel(IModel summary)
+	public void setSummaryModel(IModel summary)
 	{
 		this.summary = summary;
 	}
@@ -310,8 +448,31 @@ public class WizardStep extends Panel implements IWizardStep
 	 * @param title
 	 *            title
 	 */
-	public final void setTitleModel(IModel title)
+	public void setTitleModel(IModel title)
 	{
 		this.title = title;
+	}
+
+	/**
+	 * Workaround for adding the form validators; not needed in 2.0.
+	 * 
+	 * @see wicket.Component#onAttach()
+	 */
+	protected void onAttach()
+	{
+		if (onAttachAction != null)
+		{
+			onAttachAction.execute();
+			onAttachAction = null;
+		}
+	}
+
+	/**
+	 * Called when the step is being initialized.
+	 * 
+	 * @param wizardModel
+	 */
+	protected void onInit(IWizardModel wizardModel)
+	{
 	}
 }

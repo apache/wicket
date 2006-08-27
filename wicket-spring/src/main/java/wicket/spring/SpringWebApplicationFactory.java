@@ -47,7 +47,30 @@ import wicket.protocol.http.WicketServlet;
  *   &lt;/servlet&gt;
  * </pre>
  * 
+ * beanName init parameter can be used if there are multiple WebApplications defined
+ * on the spring application context. 
+ * 
+ * Example:
+ * 
+ * <pre>
+ *   &lt;servlet&gt;
+ *   &lt;servlet-name&gt;phonebook&lt;/servlet-name&gt;
+ *   &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *   &lt;init-param&gt;
+ *   &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *   &lt;param-value&gt;wicket.contrib.spring.SpringWebApplicationFactory&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;init-param&gt;
+ *   &lt;param-name&gt;beanName&lt;/param-name&gt;
+ *   &lt;param-value&gt;phonebookApplication&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *   &lt;/servlet&gt;
+ * </pre>
+ * 
+ * 
  * @author Igor Vaynberg (ivaynberg)
+ * @author Janne Hietam&auml;ki (jannehietamaki)
  * 
  */
 public class SpringWebApplicationFactory implements IWebApplicationFactory
@@ -59,20 +82,29 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 	{
 		ServletContext sc = servlet.getServletContext();
 		ApplicationContext ac = WebApplicationContextUtils
-				.getRequiredWebApplicationContext(sc);
+		.getRequiredWebApplicationContext(sc);
 
-		Map beans = ac.getBeansOfType(WebApplication.class, false, false);
-		if (beans.size() == 0)
-		{
-			throw new IllegalStateException("bean of type ["
-					+ WebApplication.class.getName() + "] not found");
+		String beanName = servlet.getInitParameter("applicationBean");
+		if(beanName!=null){
+			WebApplication application = (WebApplication)ac.getBean(beanName);
+			if(application == null)
+			{
+				throw new IllegalArgumentException("Unable to find WebApplication bean with name ["+beanName+"]");
+			}
+			return application;
+		} else {
+			Map beans = ac.getBeansOfType(WebApplication.class, false, false);
+			if (beans.size() == 0)
+			{
+				throw new IllegalStateException("bean of type ["
+						+ WebApplication.class.getName() + "] not found");
+			}
+			if (beans.size() > 1)
+			{
+				throw new IllegalStateException("more then one bean of type ["
+						+ WebApplication.class.getName() + "] found, must have only one");
+			}
+			return (WebApplication) beans.values().iterator().next();
 		}
-		if (beans.size() > 1)
-		{
-			throw new IllegalStateException("more then one bean of type ["
-					+ WebApplication.class.getName() + "] found, must have only one");
-		}
-		return (WebApplication) beans.values().iterator().next();
 	}
-
 }

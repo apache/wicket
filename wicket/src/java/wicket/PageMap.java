@@ -329,6 +329,13 @@ public final class PageMap implements Serializable
 	 */
 	public final void removeEntry(final IPageMapEntry entry)
 	{
+		if(entry == null)
+		{
+			// TODO this shouldn't happen but to many people are still getting this now and then/
+			// so first this "fix"
+			log.warn("PageMap.removeEntry called with an null entry");
+			return;
+		}
 		// Remove entry from session
 		synchronized (session)
 		{
@@ -556,6 +563,33 @@ public final class PageMap implements Serializable
 		cycle.setResponsePage(page);
 	}
 
+	/**
+	 * Redirects browser to an intermediate page such as a sign-in page. The
+	 * current request's URL is saved exactly as it was requested for future use
+	 * by continueToOriginalDestination(); Only use this method when you plan to
+	 * continue to the current URL at some later time; otherwise just use
+	 * setResponsePage or, when you are in a constructor, redirectTo.
+	 * 
+	 * @param pageClazz
+	 *            The page clazz to temporarily redirect to
+	 */
+	final void redirectToInterceptPage(final Class pageClazz)
+	{
+		// Get the request cycle
+		final RequestCycle cycle = RequestCycle.get();
+
+		// The intercept continuation URL should be saved exactly as the
+		// original request specified.
+		interceptContinuationURL = cycle.getRequest().getURL();
+
+		// Page map is dirty
+		session.dirtyPageMap(this);
+
+		// Redirect to the page
+		cycle.setRedirect(true);
+		cycle.setResponsePage(pageClazz);
+	}
+	
 	/**
 	 * @param session
 	 *            Session to set

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.36 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,15 +34,15 @@ import wicket.util.string.Strings;
 import wicket.util.string.interpolator.PropertyVariableInterpolator;
 
 /**
- * A utility class that encapsulates all of the localization related functionality
- * in a way that it can be accessed by all areas of the framework in a
- * consistent way. A singleton instance of this class is available via the
+ * A utility class that encapsulates all of the localization related
+ * functionality in a way that it can be accessed by all areas of the framework
+ * in a consistent way. A singleton instance of this class is available via the
  * <code>Application</code> object.
  * <p>
  * You may register additional IStringResourceLoader to extend or replace
  * Wickets default search strategy for the properties. E.g. string resource
- * loaders which load the properties from a database. There should be no
- * need to extend Localizer.
+ * loaders which load the properties from a database. There should be no need to
+ * extend Localizer.
  * 
  * @see wicket.settings.Settings#getLocalizer()
  * @see wicket.resource.loader.IStringResourceLoader
@@ -88,7 +88,8 @@ public class Localizer
 	{
 		if (component != null)
 		{
-			return getString(key, component, null, component.getLocale(), component.getStyle(), null);
+			return getString(key, component, null, component.getLocale(), component.getStyle(),
+					null);
 		}
 		else
 		{
@@ -115,7 +116,15 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model)
 			throws MissingResourceException
 	{
-		return getString(key, component, model, component.getLocale(), component.getStyle(), null);
+		if (component != null)
+		{
+			return getString(key, component, model, component.getLocale(), component.getStyle(), null);
+		}
+		else
+		{
+			Session session = Session.get();
+			return getString(key, component, model, session.getLocale(), session.getStyle(), null);
+		}
 	}
 
 	/**
@@ -138,8 +147,16 @@ public class Localizer
 	public String getString(final String key, final Component component, final IModel model,
 			final String defaultValue) throws MissingResourceException
 	{
-		return getString(key, component, model, component.getLocale(), component.getStyle(),
-				defaultValue);
+		if (component != null)
+		{
+			return getString(key, component, model, component.getLocale(), component.getStyle(),
+					defaultValue);
+		}
+		else
+		{
+			Session session = Session.get();
+			return getString(key, component, model, session.getLocale(), session.getStyle(), defaultValue);
+		}
 	}
 
 	/**
@@ -159,8 +176,15 @@ public class Localizer
 	public String getString(final String key, final Component component, final String defaultValue)
 			throws MissingResourceException
 	{
-		return getString(key, component, null, component.getLocale(), component.getStyle(),
-				defaultValue);
+		if (component != null)
+		{
+			return getString(key, component, null, component.getLocale(), component.getStyle(), defaultValue);
+		}
+		else
+		{
+			Session session = Session.get();
+			return getString(key, component, null, session.getLocale(), session.getStyle(), defaultValue);
+		}
 	}
 
 	/**
@@ -197,7 +221,7 @@ public class Localizer
 		if (component != null)
 		{
 			// The reason why need to create that stack is because we need to
-			// walk it downwards starting with Page down to the Component 
+			// walk it downwards starting with Page down to the Component
 			searchStack = getComponentStack(component);
 			path = Strings.replaceAll(component.getPageRelativePath(), ":", ".").toString();
 		}
@@ -228,21 +252,22 @@ public class Localizer
 
 		if (resourceSettings.getThrowExceptionOnMissingResource())
 		{
-			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: " + key);
-			if(component != null)
+			AppendingStringBuffer message = new AppendingStringBuffer("Unable to find resource: "
+					+ key);
+			if (component != null)
 			{
 				message.append(" for component: ");
 				message.append(component.getPageRelativePath());
 			}
-			throw new MissingResourceException( message.toString() ,
-					(component != null ? component.getClass().getName() : ""), key);
+			throw new MissingResourceException(message.toString(), (component != null ? component
+					.getClass().getName() : ""), key);
 		}
 		else
 		{
 			return "[Warning: String resource for '" + key + "' not found]";
 		}
 	}
-	
+
 	/**
 	 * Note: This implementation does NOT perform variable substitution
 	 * 
@@ -369,18 +394,18 @@ public class Localizer
 			final List searchStack, final Locale locale, final String style)
 	{
 		// Search each loader in turn and return the string if it is found
-		final Iterator iterator = application.getResourceSettings().getStringResourceLoaders()
-				.iterator();
+		final Iterator iterator = application.getResourceSettings()
+				.getStringResourceLoaders().iterator();
 
 		// The return value
 		String string = null;
-		
+
 		// Iterate until a property has been found
 		while (iterator.hasNext() && (string == null))
 		{
 			IStringResourceLoader loader = (IStringResourceLoader)iterator.next();
 
-			// The key prefix is equal to the component path relativ to the 
+			// The key prefix is equal to the component path relativ to the
 			// current component on the top of the stack.
 			String prefix = path;
 			if ((searchStack != null) && (searchStack.size() > 0))
@@ -389,18 +414,21 @@ public class Localizer
 				for (int i = searchStack.size() - 1; (i >= 0) && (string == null); i--)
 				{
 					Class clazz = (Class)searchStack.get(i);
-					
-					// First check if a property with the 'key' provided by the user
+
+					// First check if a property with the 'key' provided by the
+					// user
 					// is available.
 					string = loader.loadStringResource(clazz, key, locale, style);
-					
+
 					// If not, prepend the component relativ path to the key
 					if ((string == null) && (path != null) && (prefix.length() > 0))
 					{
-						string = loader.loadStringResource(clazz, prefix + '.' + key, locale, style);
-						
+						string = loader
+								.loadStringResource(clazz, prefix + '.' + key, locale, style);
+
 						// If still not found, adjust the component relativ path
-						// for the next component on the path from the page down.  
+						// for the next component on the path from the page
+						// down.
 						if (string == null)
 						{
 							prefix = Strings.afterFirst(prefix, '.');
@@ -410,7 +438,8 @@ public class Localizer
 			}
 			else
 			{
-				// A default string resource loader, e.g. the ApplicationStringResourceLoader,
+				// A default string resource loader, e.g. the
+				// ApplicationStringResourceLoader,
 				// does not necessarily require the component hierachy
 				string = loader.loadStringResource(null, key, locale, style);
 				if ((string == null) && (path != null) && (prefix.length() > 0))

@@ -203,14 +203,10 @@ public class RequestLogger
 	public void objectCreated(Object value)
 	{
 		SessionData sd = null;
-		// Special case, if session is created then getSessionData() 
-		// can't be called because Session.get() does fail. and there is no
-		// SessionData anyway so directly create one.
-		if(value instanceof Session)
-		{
-			sd = createSessionData((Session)value);
-		}
-		else
+		
+		//ignore the creation of sessions itself. 
+		// Because not much is set then (Session.get()/ RequestCycle.get())
+		if( !(value instanceof Session) )
 		{
 			sd = getSessionData();
 		}
@@ -221,10 +217,6 @@ public class RequestLogger
 		else if(value instanceof PageMap)
 		{
 			sd.pageMapCreated((PageMap)value);
-		}
-		else if(value instanceof WebSession)
-		{
-			sd.webSessionCreated((WebSession)value);
 		}
 		else
 		{
@@ -256,6 +248,7 @@ public class RequestLogger
 	private SessionData getSessionData()
 	{
 		Session session = Session.get();
+		// TODO when delayed sessions, do make sure this doesn't cause a http session creation.
 		SessionData sessionData = (SessionData)liveSessions.get(session.getId());
 		if(sessionData == null)
 		{
@@ -297,6 +290,8 @@ public class RequestLogger
 
 		private double totalRequestsTime; 
 		
+		private long lastRequestTime = System.currentTimeMillis();
+		
 		/**
 		 * Construct.
 		 * @param session
@@ -321,6 +316,15 @@ public class RequestLogger
 		public Session getSession()
 		{
 			return session;
+		}
+		
+		/**
+		 * Gets lastRequestTime.
+		 * @return lastRequestTime
+		 */
+		public long getLastRequestTime()
+		{
+			return lastRequestTime;
 		}
 
 		
@@ -499,6 +503,8 @@ public class RequestLogger
 			rd.setTimeTaken(timeTaken);
 			totalRequestsTime += timeTaken;
 			currentRequest = null;
+			
+			lastRequestTime = new Date().getTime() - timeTaken;
 		}
 		
 		private RequestData getCurrentRequest()

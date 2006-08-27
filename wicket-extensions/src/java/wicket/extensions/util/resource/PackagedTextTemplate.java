@@ -42,7 +42,7 @@ public class PackagedTextTemplate extends TextTemplate
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static Log log = LogFactory.getLog(PackagedTextTemplate.class);
+	private static final Log log = LogFactory.getLog(PackagedTextTemplate.class);
 
 	/** class loader stream locator. */
 	private static final ClassLoaderResourceStreamLocator streamLocator = new ClassLoaderResourceStreamLocator();
@@ -160,7 +160,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 *            The variables to interpolate
 	 * @return This for chaining
 	 */
-	public final PackagedTextTemplate interpolate(Map variables)
+	public final TextTemplate interpolate(Map variables)
 	{
 		if (variables != null)
 		{

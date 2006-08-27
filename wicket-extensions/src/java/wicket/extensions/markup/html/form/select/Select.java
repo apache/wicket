@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -23,6 +23,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
+import wicket.util.lang.Objects;
 
 /**
  * Component that represents a <code>&lt;select&gt;</code> box. Elements are
@@ -91,7 +92,7 @@ public class Select extends FormComponent
 		 * components unless nothing was selected in which case the input
 		 * contains null
 		 */
-		String[] paths = inputAsStringArray();
+		String[] paths = getInputAsArray();
 
 		/*
 		 * if the input is null we do not need to do anything since the model
@@ -155,4 +156,51 @@ public class Select extends FormComponent
 			modelChanged();
 		}
 	}
+
+	/**
+	 * Checks if the specified option is selected
+	 * 
+	 * @param option
+	 * @return true if the option is selected, false otherwise
+	 */
+	boolean isSelected(SelectOption option)
+	{
+		// if the raw input is specified use that, otherwise use model
+		if (hasRawInput()) {
+			String[] paths = getInputAsArray();
+			if (paths != null && paths.length > 0)
+			{
+				for (int i = 0; i < paths.length; i++)
+				{
+					String path = paths[i];
+					if (path.equals(option.getPath())) {
+						return true;
+					}
+				}
+			}
+		} else {
+			Object selected = getModelObject();
+			Object value = option.getModelObject();
+
+			if (selected != null && selected instanceof Collection)
+			{
+				if (value instanceof Collection)
+				{
+					return ((Collection)selected).containsAll((Collection)value);
+				}
+				else
+				{
+					return ((Collection)selected).contains(value);
+				}
+			}
+			else
+			{
+				return Objects.equal(selected, value);
+			}
+		}
+		
+		return false;
+		
+	}
+
 }

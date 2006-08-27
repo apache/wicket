@@ -324,6 +324,16 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+
+	<servlet>
+		<servlet-name>CaptchaApplication</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.captcha.CaptchaApplication</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>AjaxApplication</servlet-name>
@@ -468,6 +478,11 @@
 	<servlet-mapping>
 		<servlet-name>BreadCrumbApplication</servlet-name>
 		<url-pattern>/breadcrumb/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>CaptchaApplication</servlet-name>
+		<url-pattern>/captcha/*</url-pattern>
 	</servlet-mapping>
 
 	<session-config>

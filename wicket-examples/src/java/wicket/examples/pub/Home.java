@@ -99,5 +99,12 @@ public final class Home extends WicketExamplePage
 				getSession().setLocale(new Locale("zh", "CN"));
 			}
 		});
+		add(new Link("goDanish")
+		{
+			public void onClick()
+			{
+				getSession().setLocale(new Locale("da", "DK"));
+			}
+		});
 	}
 }

@@ -19,14 +19,14 @@
 package wicket.markup;
 
 import junit.framework.TestCase;
-import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.diff.DiffUtil;
 
 /**
  */
 public class WicketNamespaceTest extends TestCase
 {
-	// private static Log log = LogFactory.getLog(WicketNamespaceTest.class);
+	// private static final Log log = LogFactory.getLog(WicketNamespaceTest.class);
 
 	private MockWebApplication application;
 

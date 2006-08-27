@@ -35,7 +35,7 @@ public abstract class WicketExampleApplication extends WebApplication
 	/**
 	 * Used for logging.
 	 */
-	private static Log log = LogFactory.getLog(WicketExampleApplication.class);
+	private static final Log log = LogFactory.getLog(WicketExampleApplication.class);
 
 	/**
 	 * Constructor.
@@ -59,9 +59,5 @@ public abstract class WicketExampleApplication extends WebApplication
 		// box.
 		getSecuritySettings().setCryptFactory(
 				new ClassCryptFactory(NoCrypt.class, ISecuritySettings.DEFAULT_ENCRYPTION_KEY));
-
-		// Disable creation of javascript which jWebUnit (test only) 
-		// doesn't handle properly
-		getPageSettings().setAutomaticMultiWindowSupport(false);
 	}
 }

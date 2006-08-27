@@ -171,29 +171,8 @@ import wicket.util.value.ValueMap;
  */
 public abstract class RequestCycle
 {
-	/** Log */
-	private static final Log log = LogFactory.getLog(RequestCycle.class);
-
 	/** Thread-local that holds the current request cycle. */
 	private static final ThreadLocal current = new ThreadLocal();
-
-	/** No processing has been done. */
-	private static final int NOT_STARTED = 0;
-
-	/** Starting the actual request processing. */
-	private static final int PREPARE_REQUEST = 1;
-
-	/** Resolving the {@link RequestParameters} object to a request target. */
-	private static final int RESOLVE_TARGET = 2;
-
-	/** Dispatching and handling of events. */
-	private static final int PROCESS_EVENTS = 3;
-
-	/** Responding using the currently set {@link IRequestTarget}. */
-	private static final int RESPOND = 4;
-
-	/** Responding to an uncaught exception. */
-	private static final int HANDLE_EXCEPTION = 5;
 
 	/** Cleaning up after responding to a request. */
 	private static final int DETACH_REQUEST = 6;
@@ -201,8 +180,42 @@ public abstract class RequestCycle
 	/** Request cycle processing is done. */
 	private static final int DONE = 7;
 
+	/** Responding to an uncaught exception. */
+	private static final int HANDLE_EXCEPTION = 5;
+
+	/** Log */
+	private static final Log log = LogFactory.getLog(RequestCycle.class);
+
+	/** No processing has been done. */
+	private static final int NOT_STARTED = 0;
+
+	/** Starting the actual request processing. */
+	private static final int PREPARE_REQUEST = 1;
+
+	/** Dispatching and handling of events. */
+	private static final int PROCESS_EVENTS = 3;
+
+	/** Resolving the {@link RequestParameters} object to a request target. */
+	private static final int RESOLVE_TARGET = 2;
+
+	/** Responding using the currently set {@link IRequestTarget}. */
+	private static final int RESPOND = 4;;
+
+	/**
+	 * Gets request cycle for calling thread.
+	 * 
+	 * @return Request cycle for calling thread
+	 */
+	public final static RequestCycle get()
+	{
+		return (RequestCycle)current.get();
+	}
+
 	/** The application object. */
-	protected final Application application;;
+	protected final Application application;
+
+	/** The processor for this request. */
+	protected final IRequestCycleProcessor processor;
 
 	/** The current request. */
 	protected Request request;
@@ -212,9 +225,6 @@ public abstract class RequestCycle
 
 	/** The session object. */
 	protected final Session session;
-
-	/** The processor for this request. */
-	protected final IRequestCycleProcessor processor;
 
 	/** The current stage of event processing. */
 	private int currentStep = NOT_STARTED;
@@ -228,24 +238,15 @@ public abstract class RequestCycle
 	 */
 	private boolean redirect;
 
+
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient ArrayListStack/* <IRequestTarget> */requestTargets = new ArrayListStack(3);
+	private transient final ArrayListStack requestTargets = new ArrayListStack(3);
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
 
 	/** True if the session should be updated (for clusterf purposes). */
 	private boolean updateSession;
-
-	/**
-	 * Gets request cycle for calling thread.
-	 * 
-	 * @return Request cycle for calling thread
-	 */
-	public final static RequestCycle get()
-	{
-		return (RequestCycle)current.get();
-	}
 
 	/**
 	 * Constructor.
@@ -318,7 +319,7 @@ public abstract class RequestCycle
 	 * 
 	 * @return whether the page for this request should be redirected
 	 */
-	public final boolean getRedirect()
+	public boolean getRedirect()
 	{
 		return redirect;
 	}
@@ -340,7 +341,7 @@ public abstract class RequestCycle
 	 */
 	public final IRequestTarget getRequestTarget()
 	{
-		return (!requestTargets.isEmpty()) ? (IRequestTarget)requestTargets.peek() : null;
+		return (!requestTargets.isEmpty()) ? (IRequestTarget) requestTargets.peek() : null;
 	}
 
 	/**
@@ -528,23 +529,11 @@ public abstract class RequestCycle
 	 */
 	public final void setRequestTarget(IRequestTarget requestTarget)
 	{
-		// FIXME post 1.2 Robustness: This has to be done after the unit tests are fixed
-		// // if we are already responding, we can't change the request target
-		// // as that would either have no effect, or - in case we would set
-		// // the currentStep back to PROCESS_EVENTS, we would have double
-		// // output (and it is not Wicket's intention to work as Servlet
-		// filters)
-		// if (currentStep >= RESPOND)
-		// {
-		// throw new WicketRuntimeException(
-		// "you cannot change the request cycle after rendering has commenced");
-		// }
-
 		if (log.isDebugEnabled())
 		{
 			if (!requestTargets.isEmpty())
 			{
-				IRequestTarget former = (IRequestTarget)requestTargets.peek();
+				IRequestTarget former = (IRequestTarget) requestTargets.peek();
 				log.debug("replacing request target " + former + " with " + requestTarget);
 			}
 			else
@@ -687,6 +676,48 @@ public abstract class RequestCycle
 	}
 
 	/**
+	 * Returns a URL that references the given page. It also
+	 * {@link Session#touch(Page) touches} the page in the session so that it is
+	 * put in the front of the page stack. Use this method only if you plan to
+	 * use it the next request.
+	 * 
+	 * @param page
+	 *            The page
+	 * @return The url pointing to the provided page
+	 */
+	public final CharSequence urlFor(final Page page)
+	{
+		IRequestTarget target = new PageRequestTarget(page);
+		Session.get().touch(((IPageRequestTarget)target).getPage());
+		return urlFor(target);
+	}
+
+	/**
+	 * Returns a bookmarkable URL that references a given page class using a
+	 * given set of page parameters. Since the URL which is returned contains
+	 * all information necessary to instantiate and render the page, it can be
+	 * stored in a user's browser as a stable bookmark.
+	 * 
+	 * @param pageMap
+	 *            Pagemap to use
+	 * @param pageClass
+	 *            Class of page
+	 * @param parameters
+	 *            Parameters to page
+	 * @return Bookmarkable URL to page
+	 */
+	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
+			final PageParameters parameters)
+	{
+		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
+				? PageMap.DEFAULT_NAME
+				: pageMap.getName(), pageClass, parameters);
+		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
+				.getRequestCodingStrategy();
+		return requestCodingStrategy.encode(this, target);
+	}
+
+	/**
 	 * Returns a URL that references a shared resource through the provided
 	 * resource reference.
 	 * 
@@ -717,31 +748,6 @@ public abstract class RequestCycle
 		CharSequence url = getProcessor().getRequestCodingStrategy().encode(this,
 				new SharedResourceRequestTarget(requestParameters));
 		return url;
-	}
-
-	/**
-	 * Returns a bookmarkable URL that references a given page class using a
-	 * given set of page parameters. Since the URL which is returned contains
-	 * all information necessary to instantiate and render the page, it can be
-	 * stored in a user's browser as a stable bookmark.
-	 * 
-	 * @param pageMap
-	 *            Pagemap to use
-	 * @param pageClass
-	 *            Class of page
-	 * @param parameters
-	 *            Parameters to page
-	 * @return Bookmarkable URL to page
-	 */
-	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
-			final PageParameters parameters)
-	{
-		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null
-				? PageMap.DEFAULT_NAME
-				: pageMap.getName(), pageClass, parameters);
-		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
-				.getRequestCodingStrategy();
-		return requestCodingStrategy.encode(this, target);
 	}
 
 	/**

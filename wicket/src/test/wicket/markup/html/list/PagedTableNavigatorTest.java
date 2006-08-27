@@ -24,6 +24,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.diff.DiffUtil;
 
 
 /**

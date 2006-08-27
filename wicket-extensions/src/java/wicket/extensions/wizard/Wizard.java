@@ -20,12 +20,9 @@ package wicket.extensions.wizard;
 
 import java.util.Iterator;
 
-import wicket.Application;
 import wicket.Component;
-import wicket.IInitializer;
 import wicket.behavior.HeaderContributor;
 import wicket.feedback.ContainerFeedbackMessageFilter;
-import wicket.markup.html.PackageResource;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.FeedbackPanel;
@@ -54,20 +51,6 @@ import wicket.markup.html.panel.Panel;
  */
 public class Wizard extends Panel implements IWizardModelListener, IWizard
 {
-	/**
-	 * Initializer for this component; binds static resources.
-	 */
-	public final static class WizardInitializer implements IInitializer
-	{
-		/**
-		 * @see wicket.IInitializer#init(wicket.Application)
-		 */
-		public void init(Application application)
-		{
-			PackageResource.bind(application, Wizard.class, "Wizard.css");
-		}
-	}
-
 	/** Component id of the buttons panel as used by the default wizard panel. */
 	public static final String BUTTONS_ID = "buttons";
 
@@ -207,6 +190,17 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 	}
 
 	/**
+	 * Gets the form in which the view is nested, and on which the wizard
+	 * buttons work.
+	 * 
+	 * @return The wizard form
+	 */
+	public final Form getForm()
+	{
+		return form;
+	}
+
+	/**
 	 * @see wicket.extensions.wizard.IWizard#getWizardModel()
 	 */
 	public final IWizardModel getWizardModel()
@@ -235,6 +229,20 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		this.activeStep = newStep;
 		form.replace(activeStep.getView(VIEW_ID, this, this));
 		form.replace(activeStep.getHeader(HEADER_ID, this, this));
+	}
+
+	/**
+	 * Called when the wizard is cancelled.
+	 */
+	public void onCancel()
+	{
+	};
+
+	/**
+	 * Called when the wizard is finished.
+	 */
+	public void onFinish()
+	{
 	}
 
 	/**
@@ -275,7 +283,7 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 
 		// reset model to prepare for action
 		wizardModel.reset();
-	};
+	}
 
 	/**
 	 * Create a new button bar. Clients can override this method to provide a
@@ -319,19 +327,5 @@ public class Wizard extends Panel implements IWizardModelListener, IWizard
 		// return a dummy component by default as we don't have an overview
 		// component
 		return new WebMarkupContainer(id).setVisible(false);
-	}
-
-	/**
-	 * Called when the wizard is cancelled.
-	 */
-	public void onCancel()
-	{
-	}
-
-	/**
-	 * Called when the wizard is finished.
-	 */
-	public void onFinish()
-	{
 	}
 }

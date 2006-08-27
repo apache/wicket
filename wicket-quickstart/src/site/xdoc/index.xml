@@ -25,79 +25,11 @@
 			</p>
 		</section>
 		<section name="Latest News">
-			<subsection name="October 30, 2005 - Wicket 1.1 Available">
+			<subsection name="May 22, 2006 - Wicket QuickStart 1.2 released">
 				<p>
-					The Wicket team is proud to announce the availability of Wicket 1.1 for 
-					download! Wicket is a Java component oriented web application framework 
-					that takes simplicity, separation of concerns and easy of use to a whole 
-					new level. Wicket web applications consist of HTML markup and Java 
-					classes. No strange languages, no strange markup, no configuration files
-					, no specialized, expensive tools: just Java, HTML and you.
-				</p>
-				<p>
-					This Wicket version contains a lot of improvements from the 1.0 version. 
-					New features include:
-				</p>
-				<ul>
-					<li><b>Simplified feedback and validation</b> - enables custom feedback strategies</li>
-					<li><b>Live Component Reference</b> - the examples project contains a component reference showing how to use the components.</li>
-					<li><b>JavaScript and CSS support for components</b> - contribute JavaScript and CSS from your component to the using page</li>
-					<li><b>Markup Inheritance</b> - enables template pages and components</li>
-					<li><b>Inclusion of external markup</b></li>
-					<li><b>Simplified Choice component</b> - creating drop down, radio and list components was never this easy</li>
-					<li><b>Less dependencies</b> - we removed several library dependencies</li>
-					<li><b>Customizable Form handling</b> - easy for quick forms, easily enables full custom form processing</li>
-					<li><b>Improved resource handling</b></li>
-					<li><b>Date picker component</b> - will not get you dates, but a JavaScript and text field enabled localized calendar component.</li>
-					<li><b>Improved URL handling</b></li>
-					<li><b>AJAX request handling support</b> - support for two leading AJAX JavaScript libraries is available as separate downloads from our Wicket Stuff project: scriptaculous and DOJO toolkit</li>
-				</ul>
-				<p>
-					The Wicket team wishes to extend their gratitude to the user and 
-					developer community for their testing efforts and help, making this 
-					release a reality!
-				</p>
-				<p>
-					The Wicket 1.1 distribution can be downloaded from the SourceForge servers by 
-					following 
-					<a href="http://sourceforge.net/project/showfiles.php?group_id=119783">this link</a>.
-					The Wicket 1.1 release documentation can be found at: 
-					<a href="/wicket-1.1">http://wicket.sourceforge.net/wicket-1.1</a>
-				</p>
-				<p>
-					Thank you for downloading and using Wicket!
-				</p>
-				<p><i> - the Wicket Team</i></p>
-			</subsection>
-			<subsection name="October 19, 2005 - Moved to Wicket home">
-				<p>
-					The Wicket Quickstart project has been upgraded from the Wicket Stuff project
-					and moved to the Wicket core project.
-				</p>
-				<p>
-					In preparation for the Wicket 1.1 release, we have updated the project with regard
-					to the following sections:
-					<ul>
-						<li>
-							now includes an <a href="http://ant.apache.org">Ant</a> build.xml 
-							file for building your WAR archive using Apache Ant
-						</li>
-						<li>
-							now includes a <a href="http://maven.apache.org">Maven 1</a> project descriptor 
-							for those that want to build their project using Apache Maven (1.0.x and 1.1)
-						</li>
-						<li>
-							now also includes a sysdeo Tomcat plugin configuration file, so you can now run 
-							the project directly using the Eclipse tomcat plugin.
-						</li>
-					</ul>
+					The Wicket Quickstart project has been upgraded to use Wicket 1.2.
 				</p>
 			</subsection>
-			<p>
-				See
-				<a href="News.html">the news archive</a>
-				for more (older) news.
-			</p>
 		</section>
 		<section name="Special Thanks">
 			<p>

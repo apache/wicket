@@ -198,6 +198,7 @@ public class WicketServlet extends HttpServlet
 		// Create a response object and set the output encoding according to
 		// wicket's application setttings.
 		final WebResponse response = webApplication.newWebResponse(servletResponse);
+		response.setAjax(request.isAjax());
 		response.setCharacterEncoding(webApplication.getRequestCycleSettings()
 				.getResponseRequestEncoding());
 

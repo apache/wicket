@@ -24,10 +24,15 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
-import wicket.markup.html.tree.Tree;
+import wicket.examples.ajax.builtin.tree.SimpleTreePage;
+import wicket.extensions.markup.html.tree.Tree;
+import wicket.extensions.markup.html.tree.DefaultAbstractTree.LinkType;
+import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.Link;
 
 /**
  * Examples that shows how you can display a tree like structure (in this case
@@ -62,44 +67,41 @@ public class Home extends WicketExamplePage
 		l1.add("test 1.3");
 
 		// construct the panel
-		add(new NestedList("nestedList", l1));
+		add(new RecursivePanel("panels", l1));
 
 		// create a tree
 		TreeModel treeModel = convertToTreeModel(l1);
-		Tree tree = new Tree("tree", treeModel)
+		final Tree tree = new Tree("tree", treeModel)
 		{
-			protected String getNodeLabel(DefaultMutableTreeNode node)
+			protected String renderNode(TreeNode node)
 			{
-				Object userObject = node.getUserObject();
-				return (userObject instanceof List) ? "<sub>" : String
-						.valueOf(node.getUserObject());
+				DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;				 
+				Object userObject = treeNode.getUserObject();
+				return (userObject instanceof List) ? "<subtree>" : String
+						.valueOf(treeNode.getUserObject());
 			}
 		};
+		// disable ajax links in this example
+		tree.setLinkType(LinkType.REGULAR);
+		
 		add(tree);
+		add(new Link("expandAll")
+		{
+			public void onClick()
+			{
+				tree.getTreeState().expandAll();
+			}
+		});
 
-		// and another one
-		Tree tree2 = new MyTree("tree2", treeModel);
-		add(tree2);
-
-		// and yet another one
-		Tree tree3 = new AnotherTree("tree3", treeModel);
-		add(tree3);
-	}
-
-	/**
-	 * Convert the nested lists to a tree model
-	 * 
-	 * @param list
-	 *            the list
-	 * @return tree model
-	 */
-	private TreeModel convertToTreeModel(List list)
-	{
-		TreeModel model = null;
-		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-		add(rootNode, list);
-		model = new DefaultTreeModel(rootNode);
-		return model;
+		add(new Link("collapseAll")
+		{
+			public void onClick()
+			{
+				tree.getTreeState().collapseAll();
+			}
+		});
+		
+		add(new BookmarkablePageLink("ajaxTreeLink", SimpleTreePage.class));
 	}
 
 	/**
@@ -127,5 +129,21 @@ public class Home extends WicketExamplePage
 				parent.add(child);
 			}
 		}
+	}
+
+	/**
+	 * Convert the nested lists to a tree model
+	 * 
+	 * @param list
+	 *            the list
+	 * @return tree model
+	 */
+	private TreeModel convertToTreeModel(List list)
+	{
+		TreeModel model = null;
+		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("<root>");
+		add(rootNode, list);
+		model = new DefaultTreeModel(rootNode);
+		return model;
 	}
 }

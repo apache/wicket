@@ -11,6 +11,10 @@
 
     <a wicket:id = "actionLink">Action link clicked <span wicket:id = "linkClickCount">0</span> times</a>    
     <p>
+    <a wicket:id = "linkToAnchor">Execute link and go to the link's anchor</a>
+    </p><p>
+    <a wicket:id = "anotherlinkToAnchor" href="#anotherAnchor">Another anchor link, this time using href attribute's value</a>
+    </p><p>
     <input type="button" wicket:id = "actionOnClickLink" value="click me">
     	Button link clicked <span wicket:id = "onClickLinkClickCount">0</span> times
     </p><p>
@@ -39,7 +43,11 @@
 	<form wicket:id="redirectForm">
 		<input wicket:id="redirectUrl" type="text" size="50" /><input type="submit" value="go"/>
 	</form>
-	</p>
+	</p><p>
+    <div wicket:id="anchorLabel">[label for anchor]</div>
+	</p><p>
+    <div id="anotherAnchor">This is another div that serves as an anchor</div>
+    </p>
 
 	<p>
 		<span wicket:id="feedback" />

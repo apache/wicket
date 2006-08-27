@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.19 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -28,17 +28,22 @@ import wicket.util.string.Strings;
  * HTML checkbox input component.
  * <p>
  * Java:
+ * 
  * <pre>
- * form.add(new CheckBox("bool"));
+ * form.add(new CheckBox(&quot;bool&quot;));
  * </pre>
+ * 
  * HTML:
+ * 
  * <pre>
- * &lt;input type="checkbox" wicket:id="bool" /&gt;
+ *  &lt;input type=&quot;checkbox&quot; wicket:id=&quot;bool&quot; /&gt;
  * </pre>
+ * 
  * </p>
  * <p>
- * You can can extend this class and override method wantOnSelectionChangedNotifications()
- * to force server roundtrips on each selection change.
+ * You can can extend this class and override method
+ * wantOnSelectionChangedNotifications() to force server roundtrips on each
+ * selection change.
  * </p>
  * 
  * @author Jonathan Locke
@@ -46,7 +51,7 @@ import wicket.util.string.Strings;
 public class CheckBox extends FormComponent implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -92,12 +97,14 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 	}
 
 	/**
-	 * Whether this component's onSelectionChanged event handler should called using
-	 * javascript if the selection changes. If true, a roundtrip will be generated with
-	 * each selection change, resulting in the model being updated (of just this component)
-	 * and onSelectionChanged being called. This method returns false by default.
+	 * Whether this component's onSelectionChanged event handler should called
+	 * using javascript if the selection changes. If true, a roundtrip will be
+	 * generated with each selection change, resulting in the model being
+	 * updated (of just this component) and onSelectionChanged being called.
+	 * This method returns false by default.
+	 * 
 	 * @return True if this component's onSelectionChanged event handler should
-	 *			called using javascript if the selection changes
+	 *         called using javascript if the selection changes
 	 */
 	protected boolean wantOnSelectionChangedNotifications()
 	{
@@ -137,24 +144,25 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 			}
 		}
 
-		// Should a roundtrip be made (have onSelectionChanged called) when the checkbox is clicked?
+		// Should a roundtrip be made (have onSelectionChanged called) when the
+		// checkbox is clicked?
 		if (wantOnSelectionChangedNotifications())
 		{
 			final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-			// NOTE: do not encode the url as that would give invalid JavaScript
-			try
+			Form form = (Form)findParent(Form.class);
+			if (form != null)
 			{
-				Form form = getForm();
-				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
-			catch (WicketRuntimeException ex)
+			else
 			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
+				// NOTE: do not encode the url as that would give invalid
+				// JavaScript
 				tag.put("onclick", "location.href='" + url + "&" + getInputName()
 						+ "=' + this.checked;");
 			}
-			
+
 		}
 
 		super.onComponentTag(tag);
@@ -168,20 +176,21 @@ public class CheckBox extends FormComponent implements IOnChangeListener
 		return true;
 	}
 
-	
+
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
 	protected Object convertValue(String[] value)
 	{
-		String tmp = value != null && value.length > 0?value[0]:null;
+		String tmp = value != null && value.length > 0 ? value[0] : null;
 		try
 		{
 			return Strings.toBoolean(tmp);
 		}
 		catch (StringValueConversionException e)
 		{
-			throw new ConversionException("Invalid boolean input value posted \"" + getInput() + "\"", e).setTargetType(Boolean.class);
+			throw new ConversionException("Invalid boolean input value posted \"" + getInput()
+					+ "\"", e).setTargetType(Boolean.class);
 		}
 	}
 }

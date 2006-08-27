@@ -36,7 +36,7 @@ import wicket.util.resource.UrlResourceStream;
 public final class PathResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(PathResourceStreamLocator.class);
+	private static final Log log = LogFactory.getLog(PathResourceStreamLocator.class);
 
 	/** The path to search along */
 	private Path searchPath;

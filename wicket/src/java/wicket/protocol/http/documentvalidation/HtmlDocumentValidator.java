@@ -39,7 +39,7 @@ import wicket.util.collections.ArrayListStack;
  */
 public class HtmlDocumentValidator
 {
-	private static Log log = LogFactory.getLog(HtmlDocumentValidator.class);
+	private static final Log log = LogFactory.getLog(HtmlDocumentValidator.class);
 
     private final List elements = new ArrayList();
 

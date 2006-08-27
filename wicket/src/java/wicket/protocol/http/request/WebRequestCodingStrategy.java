@@ -83,7 +83,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	 * this parameter is not important, it simply has to be present to enable
 	 * the behavior
 	 */
-	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE + "ignoreIfNotActive";
+	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE
+			+ "ignoreIfNotActive";
 
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
@@ -113,7 +114,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 	};
 
 	/** log. */
-	private static Log log = LogFactory.getLog(WebRequestCodingStrategy.class);
+	private static final Log log = LogFactory.getLog(WebRequestCodingStrategy.class);
 
 	/**
 	 * map of path mounts for mount encoders on paths.
@@ -152,14 +153,16 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		final RequestParameters parameters = new RequestParameters();
 		final String pathInfo = getRequestPath(request);
 		parameters.setPath(pathInfo);
+		parameters.setPageMapName(request.getParameter(PAGEMAP));
 		addInterfaceParameters(request, parameters);
 		addBookmarkablePageParameters(request, parameters);
 		addResourceParameters(request, parameters);
 		parameters.setBehaviorId(request.getParameter(BEHAVIOR_ID_PARAMETER_NAME));
-		if (request.getParameter(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME)!=null) {
+		if (request.getParameter(IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME) != null)
+		{
 			parameters.setOnlyProcessIfPathActive(true);
 		}
-		
+
 		Map map = request.getParameterMap();
 		Iterator iterator = map.keySet().iterator();
 		while (iterator.hasNext())
@@ -195,6 +198,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
+			// special check if the prefix ends on '/' because a mount always starts with '/' 
+			if(prefix.charAt(prefix.length()-1) == '/') prefix = prefix.subSequence(0, prefix.length()-1);
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
 					+ path.length());
 			buffer.append(prefix);
@@ -226,9 +231,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return url;
 		}
-
-		// this method was not able to produce a url; throw an exception
-		throw new WicketRuntimeException("unable to encode " + requestTarget);
+		// Just return null intead of throwing an exception. So that it can be handled better
+		return null;
 	}
 
 	/**
@@ -449,7 +453,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		String pathInfo = request.getPath();
 		if (pathInfo != null && pathInfo.startsWith("/resources/"))
 		{
-			parameters.setResourceKey(pathInfo.substring("/resources/".length()));
+			int ix = "/resources/".length();
+			if (pathInfo.length() > ix)
+			{
+				StringBuffer path = new StringBuffer(pathInfo.substring(ix));
+				int ixSemiColon = path.indexOf(";");
+				// strip off any jsession id
+				if (ixSemiColon != -1)
+				{
+					int ixEnd = path.indexOf("?");
+					if (ixEnd == -1)
+					{
+						ixEnd = path.length();
+					}
+					path.delete(ixSemiColon, ixEnd);
+				}
+				parameters.setResourceKey(path.toString());
+			}
 		}
 	}
 
@@ -608,6 +628,21 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 				buffer.append("/resources/");
 			}
 			buffer.append(sharedResourceKey);
+			Map map = requestTarget.getRequestParameters().getParameters();
+			if(map != null && map.size() > 0)
+			{
+				buffer.append('?');
+				Iterator it = map.entrySet().iterator();
+				while(it.hasNext())
+				{
+					Map.Entry entry = (Entry)it.next();
+					buffer.append(entry.getKey());
+					buffer.append('=');
+					buffer.append(entry.getValue());
+					buffer.append('&');
+				}
+				buffer.setLength(buffer.length()-1);
+			}
 			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}
 	}
@@ -774,7 +809,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					buffer.append(path);
 				}
 			}
-			urlPrefix = buffer;
+			// special check, if everything is empty then we need to define '/' as urlPrefix 
+			// else all urls get relative this is bad for mounts.
+			// Except for mounts who have to do a special check else mounts get: //mount
+			// see encode(RequestCycle,IRequestTarget) when a mount is found.
+			if(buffer.length() ==0)
+			{
+				urlPrefix = "/";
+			}
+			else
+			{
+				urlPrefix = buffer;
+			}
 		}
 		return urlPrefix;
 	}

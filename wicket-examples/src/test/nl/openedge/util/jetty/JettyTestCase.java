@@ -64,7 +64,7 @@ public abstract class JettyTestCase extends AbstractJettyTestCase
 	private static Server jettyServer = null;
 
 	/** logger. */
-	private static Log log = LogFactory.getLog(JettyDecorator.class);
+	private static final Log log = LogFactory.getLog(JettyDecorator.class);
 
 	/**
 	 * Construct.

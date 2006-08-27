@@ -170,10 +170,18 @@ public abstract class BreadCrumbPanel extends Panel implements IBreadCrumbPartic
 	 */
 	public void onActivate(IBreadCrumbParticipant previous)
 	{
-		if (previous != null)
+		if (getParent() != null)
+		{
+			getParent().replace(this);
+		}
+
+		else if (previous != null)
 		{
 			MarkupContainer parent = previous.getComponent().getParent();
-			parent.replace(this);
+			if (parent != null && parent.get(getId()) != null)
+			{
+				parent.replace(this);
+			}
 		}
 	}
 

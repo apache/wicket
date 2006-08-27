@@ -23,6 +23,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.diff.DiffUtil;
 
 
 /**

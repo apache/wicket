@@ -49,7 +49,7 @@ import wicket.markup.parser.AbstractMarkupFilter;
 public final class HtmlProblemFinder extends AbstractMarkupFilter
 {
 	/** Logging */
-	private static Log log = LogFactory.getLog(HtmlProblemFinder.class);
+	private static final Log log = LogFactory.getLog(HtmlProblemFinder.class);
 
 	/** Ignore the issue detected */
 	public static final int ERR_INGORE          = 3;
@@ -74,8 +74,6 @@ public final class HtmlProblemFinder extends AbstractMarkupFilter
 	 */
 	public HtmlProblemFinder(final int problemEscalation)
 	{
-		super(null);
-		
 		this.problemEscalation = problemEscalation;
 	}
 

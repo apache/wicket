@@ -19,8 +19,8 @@ package wicket;
 
 import junit.framework.TestCase;
 import wicket.behavior.AbstractAjaxBehavior;
-import wicket.markup.html.list.DiffUtil;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.diff.DiffUtil;
 import wicket.util.tester.WicketTester;
 
 /**

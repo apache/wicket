@@ -67,7 +67,7 @@ public class FormInput extends WicketExamplePage
 	/** Relevant locales wrapped in a list. */
 	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
 			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-			new Locale("pt", "BR") });
+			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK")});
 
 	/** available numbers for the radio selection. */
 	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });

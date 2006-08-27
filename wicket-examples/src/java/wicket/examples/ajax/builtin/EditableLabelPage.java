@@ -17,12 +17,17 @@
  */
 package wicket.examples.ajax.builtin;
 
+import java.util.Arrays;
+import java.util.List;
+
 import wicket.Component;
+import wicket.extensions.ajax.markup.html.AjaxEditableChoiceLabel;
 import wicket.extensions.ajax.markup.html.AjaxEditableLabel;
+import wicket.extensions.ajax.markup.html.AjaxEditableMultiLineLabel;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.AbstractReadOnlyModel;
-import wicket.model.PropertyModel;
+import wicket.model.CompoundPropertyModel;
 
 /**
  * Page to demo the inplace edit label {@link AjaxEditableLabel}
@@ -31,8 +36,13 @@ import wicket.model.PropertyModel;
  */
 public class EditableLabelPage extends BasePage
 {
+	/** available sites for the multiple select. */
+	private static final List SITES = Arrays.asList(new String[] { "The Server Side", "Java Lobby",
+			"Java.Net" });
+	private String site = (String)SITES.get(0);
 	private String text1 = "fox";
 	private String text2 = "dog";
+	private String text3 = "multiple\nlines of\ntextual content";
 	private int refreshCounter = 0;
 
 	/**
@@ -40,8 +50,11 @@ public class EditableLabelPage extends BasePage
 	 */
 	public EditableLabelPage()
 	{
-		add(new AjaxEditableLabel("text1", new PropertyModel(this, "text1")));
-		add(new AjaxEditableLabel("text2", new PropertyModel(this, "text2")));
+		setModel(new CompoundPropertyModel(this));
+		add(new AjaxEditableLabel("text1"));
+		add(new AjaxEditableLabel("text2"));
+		add(new AjaxEditableMultiLineLabel("text3"));
+		add(new AjaxEditableChoiceLabel("site", SITES));
 
 		add(new Label("refresh-counter", new AbstractReadOnlyModel()
 		{
@@ -77,6 +90,14 @@ public class EditableLabelPage extends BasePage
 	}
 
 	/**
+	 * @return gets text3
+	 */
+	public String getText3()
+	{
+		return text3;
+	}
+
+	/**
 	 * @param text1
 	 */
 	public void setText1(String text1)
@@ -90,5 +111,31 @@ public class EditableLabelPage extends BasePage
 	public void setText2(String text2)
 	{
 		this.text2 = text2;
+	}
+
+	/**
+	 * @param text3
+	 *            the text3 to set
+	 */
+	public void setText3(String text3)
+	{
+		this.text3 = text3;
+	}
+
+	/**
+	 * @return gets site
+	 */
+	public String getSite()
+	{
+		return site;
+	}
+
+	/**
+	 * @param site
+	 *            the site to set
+	 */
+	public void setSite(String site)
+	{
+		this.site = site;
 	}
 }

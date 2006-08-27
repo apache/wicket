@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: BufferedWebResponse.java 5575 2006-04-30 11:39:48 +0000 (Sun, 30 Apr
+ * 2006) joco01 $ $Revision$ $Date: 2006-04-30 11:39:48 +0000 (Sun, 30
+ * Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -54,40 +55,54 @@ public class BufferedWebResponse extends WebResponse
 	}
 
 	/**
-     * Flushes the response buffer by doing a redirect or writing out the buffer.
-     * NOTE: The servlet container will close the response output stream.
+	 * Flushes the response buffer by doing a redirect or writing out the
+	 * buffer. NOTE: The servlet container will close the response output
+	 * stream.
 	 */
 	public void close()
 	{
-        // If a redirection was specified
-        if (redirectURL != null)
-        {
-            // actually redirect
-            super.redirect(redirectURL);
-        }
-        else
-        {
-            // Write the buffer to the response stream
-            if (buffer.length() != 0)
-            {
-                super.write(buffer);
-            }
-        }
+		// If a redirection was specified
+		if (redirectURL != null)
+		{
+			// actually redirect
+			super.redirect(redirectURL);
+		}
+		else
+		{
+			// Write the buffer to the response stream
+			if (buffer.length() != 0)
+			{
+				super.write(buffer);
+			}
+		}
+	}
+	
+	/**
+	 * @see wicket.Response#reset()
+	 */
+	public void reset()
+	{
+		redirectURL = null;
+		buffer.clear();
 	}
 
 	/**
 	 * Saves url to redirect to when buffered response is flushed.
+	 * Implementations should encode the URL to make sure cookie-less operation
+	 * is supported in case clients forgot.
 	 * 
 	 * @param url
 	 *            The URL to redirect to
 	 */
 	public final void redirect(final String url)
 	{
-        if (redirectURL != null)
-        {
-        	throw new WicketRuntimeException("Already redirecting to '" + redirectURL + "'. Cannot redirect more than once");
-        }
-		this.redirectURL = url;
+		if (redirectURL != null)
+		{
+			throw new WicketRuntimeException("Already redirecting to '" + redirectURL
+					+ "'. Cannot redirect more than once");
+		}
+		// encode to make sure no caller forgot this
+		this.redirectURL = encodeURL(url).toString();
 	}
 
 	/**
@@ -102,14 +117,14 @@ public class BufferedWebResponse extends WebResponse
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. 
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API.
 	 */
 	public final void filter()
 	{
-        if (redirectURL == null && buffer.length() != 0)
-        {
-        	this.buffer = filter(buffer);
+		if (redirectURL == null && buffer.length() != 0)
+		{
+			this.buffer = filter(buffer);
 
-        }
+		}
 	}
 }

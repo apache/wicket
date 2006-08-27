@@ -17,9 +17,9 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 
 	/**
 	 * @see wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer#render(java.lang.Object,
-	 *      wicket.Response)
+	 *      wicket.Response, String)
 	 */
-	public final void render(Object object, Response response)
+	public final void render(Object object, Response response, String criteria)
 	{
 		String textValue = getTextValue(object);
 		if (textValue == null)
@@ -31,7 +31,7 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 		textValue = textValue.replaceAll("\\\"", "&quot;");
 		
 		response.write("<li textvalue=\"" + textValue + "\">");
-		renderChoice(object, response);
+		renderChoice(object, response, criteria);
 		response.write("</li>");
 	}
 
@@ -60,8 +60,9 @@ public abstract class AbstractAutoCompleteRenderer implements IAutoCompleteRende
 	 * @param object
 	 *            current assist choice
 	 * @param response
+	 * @param criteria 
 	 */
-	protected abstract void renderChoice(Object object, Response response);
+	protected abstract void renderChoice(Object object, Response response, String criteria);
 
 	/**
 	 * Retrieves the text value that will be set on the textbox if this assist

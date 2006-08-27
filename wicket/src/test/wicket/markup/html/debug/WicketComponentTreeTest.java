@@ -26,7 +26,7 @@ import wicket.WicketTestCase;
  */
 public class WicketComponentTreeTest extends WicketTestCase
 {
-	// private static Log log = LogFactory.getLog(WicketComponentTreeTest.class);
+	// private static final Log log = LogFactory.getLog(WicketComponentTreeTest.class);
 
 	/**
 	 * Create the test.

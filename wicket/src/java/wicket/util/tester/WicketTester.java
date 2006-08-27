@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,13 +33,23 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.Page;
+import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
+import wicket.ajax.AjaxEventBehavior;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.form.AjaxFormSubmitBehavior;
+import wicket.ajax.markup.html.AjaxFallbackLink;
+import wicket.ajax.markup.html.AjaxLink;
+import wicket.ajax.markup.html.form.AjaxSubmitLink;
+import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
@@ -46,6 +57,7 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
 import wicket.util.lang.Classes;
+import wicket.util.string.Strings;
 
 /**
  * A helper to ease unit testing of Wicket applications without the need for a
@@ -158,11 +170,12 @@ import wicket.util.lang.Classes;
  * 
  * @author Ingram Chen
  * @author Juergen Donnerstag
+ * @author Frank Bille
  */
 public class WicketTester extends MockWebApplication
 {
 	/** log. */
-	private static Log log = LogFactory.getLog(WicketTester.class);
+	private static final Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
 	 * create WicketTester with null path
@@ -292,6 +305,8 @@ public class WicketTester extends MockWebApplication
 	{
 		return (Panel)startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				return new DummyPanelPage(testPanelSource);
@@ -311,10 +326,14 @@ public class WicketTester extends MockWebApplication
 	{
 		return (Panel)startPage(new ITestPageSource()
 		{
+			private static final long serialVersionUID = 1L;
+
 			public Page getTestPage()
 			{
 				return new DummyPanelPage(new TestPanelSource()
 				{
+					private static final long serialVersionUID = 1L;
+
 					public Panel getTestPanel(String panelId)
 					{
 						try
@@ -538,15 +557,178 @@ public class WicketTester extends MockWebApplication
 	}
 
 	/**
-	 * click the <code>Link</code> in the last rendered Page.
+	 * Click the {@link Link} in the last rendered Page.
+	 * <p>
+	 * Simulate that AJAX is enabled.
 	 * 
+	 * @see WicketTester#clickLink(String, boolean)
 	 * @param path
-	 *            path to <code>Link</code> component
+	 *            Click the <code>Link</code> in the last rendered Page.
 	 */
 	public void clickLink(String path)
 	{
-		Link link = (Link)getComponentFromLastRenderedPage(path);
-		newRequestToComponent(link);
+		clickLink(path, true);
+	}
+
+	/**
+	 * Click the {@link Link} in the last rendered Page.
+	 * <p>
+	 * This method also works for {@link AjaxLink}, {@link AjaxFallbackLink}
+	 * and {@link AjaxSubmitLink}.
+	 * <p>
+	 * On AjaxLinks and AjaxFallbackLinks the onClick method is invoked with a
+	 * valid AjaxRequestTarget. In that way you can test the flow of your
+	 * application when using AJAX.
+	 * <p>
+	 * When clicking an AjaxSubmitLink the form, which the AjaxSubmitLink is
+	 * attached to is first submitted, and then the onSubmit method on
+	 * AjaxSubmitLink is invoked. If you have changed some values in the form
+	 * during your test, these will also be submitted. This should not be used
+	 * as a replacement for the {@link FormTester} to test your forms. It should
+	 * be used to test that the code in your onSubmit method in AjaxSubmitLink
+	 * actually works.
+	 * <p>
+	 * This method is also able to simulate that AJAX (javascript) is disabled
+	 * on the client. This is done by setting the isAjax parameter to false. If
+	 * you have an AjaxFallbackLink you can then check that it doesn't fail when
+	 * invoked as a normal link.
+	 * 
+	 * @param path
+	 *            path to <code>Link</code> component
+	 * @param isAjax
+	 *            Whether to simulate that AJAX (javascript) is enabled or not.
+	 *            If it's false then AjaxLink and AjaxSubmitLink will fail,
+	 *            since it wouldn't work in real life. AjaxFallbackLink will be
+	 *            invoked with null as the AjaxRequestTarget parameter.
+	 */
+	public void clickLink(String path, boolean isAjax)
+	{
+		Component linkComponent = getComponentFromLastRenderedPage(path);
+
+		// if the link is an AjaxLink, we process it differently
+		// than a normal link
+		if (linkComponent instanceof AjaxLink)
+		{
+			// If it's not ajax we fail
+			if (isAjax == false)
+			{
+				Assert.fail("Link " + path + "is an AjaxLink and will "
+						+ "not be invoked when AJAX (javascript) is disabled.");
+			}
+
+			AjaxLink link = (AjaxLink)linkComponent;
+
+			setupRequestAndResponse();
+			RequestCycle requestCycle = createRequestCycle();
+			AjaxRequestTarget target = new AjaxRequestTarget();
+			requestCycle.setRequestTarget(target);
+
+			link.onClick(target);
+
+			// process the request target
+			target.respond(requestCycle);
+		}
+		// AjaxFallbackLinks is processed like an AjaxLink if isAjax is true
+		// If it's not handling of the linkComponent is passed through to the
+		// Link.
+		else if (linkComponent instanceof AjaxFallbackLink && isAjax)
+		{
+			AjaxFallbackLink link = (AjaxFallbackLink)linkComponent;
+
+			setupRequestAndResponse();
+			RequestCycle requestCycle = createRequestCycle();
+			AjaxRequestTarget target = new AjaxRequestTarget();
+			requestCycle.setRequestTarget(target);
+
+			link.onClick(target);
+
+			// process the request target
+			target.respond(requestCycle);
+		}
+		// if the link is an AjaxSubmitLink, we need to find the form
+		// from it using reflection so we know what to submit.
+		else if (linkComponent instanceof AjaxSubmitLink)
+		{
+			// If it's not ajax we fail
+			if (isAjax == false)
+			{
+				Assert.fail("Link " + path + "is an AjaxSubmitLink and "
+						+ "will not be invoked when AJAX (javascript) is disabled.");
+			}
+
+			AjaxSubmitLink link = (AjaxSubmitLink)linkComponent;
+
+			// We cycle through the attached behaviors and select the
+			// LAST matching behavior as the one we handle.
+			List behaviors = link.getBehaviors();
+			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = null;
+			for (Iterator iter = behaviors.iterator(); iter.hasNext();)
+			{
+				Object behavior = iter.next();
+
+				if (behavior instanceof AjaxFormSubmitBehavior)
+				{
+					AjaxFormSubmitBehavior submitBehavior = (AjaxFormSubmitBehavior)behavior;
+					ajaxFormSubmitBehavior = submitBehavior;
+				}
+			}
+
+			String failMessage = "No form submit behavior found on the submit link. Strange!!";
+			Assert.assertNotNull(failMessage, ajaxFormSubmitBehavior);
+
+			// We need to get the form submitted, using reflection.
+			// It needs to be "submitted".
+			Form form = null;
+			try
+			{
+				Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
+				formField.setAccessible(true);
+				form = (Form)formField.get(ajaxFormSubmitBehavior);
+			}
+			catch (Exception e)
+			{
+				Assert.fail(e.getMessage());
+			}
+
+			failMessage = "No form attached to the submitlink.";
+			Assert.assertNotNull(failMessage, form);
+
+			setupRequestAndResponse();
+			RequestCycle requestCycle = createRequestCycle();
+
+			// "Submit" the form
+			form.visitFormComponents(new FormComponent.IVisitor()
+			{
+				public void formComponent(FormComponent formComponent)
+				{
+					if (!(formComponent instanceof Button)
+							&& !(formComponent instanceof RadioGroup))
+					{
+						String name = formComponent.getInputName();
+						String value = formComponent.getValue();
+
+						getServletRequest().setParameter(name, value);
+					}
+				}
+			});
+
+			// Ok, finally we "click" the link
+			ajaxFormSubmitBehavior.onRequest();
+
+			// process the request target
+			requestCycle.getRequestTarget().respond(requestCycle);
+		}
+		// if the link is a normal link
+		else if (linkComponent instanceof Link)
+		{
+			Link link = (Link)linkComponent;
+			newRequestToComponent(link);
+		}
+		else
+		{
+			Assert.fail("Link " + path
+					+ " is not a Link, AjaxLink, AjaxFallbackLink or AjaxSubmitLink");
+		}
 	}
 
 	/**
@@ -716,12 +898,172 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void debugComponentTrees()
 	{
+		debugComponentTrees("");
+	}	
+	
+	/**
+	 * Dump the component trees to log.
+	 * 
+	 * @param filter
+	 *            Show only the components, which path contains the
+	 *            filterstring.
+	 */
+	public void debugComponentTrees(String filter) {
 		log.info("debugging ----------------------------------------------");
-		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter
-				.hasNext();)
-		{
-			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)iter.next();
-			log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
+		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage())
+				.iterator(); iter.hasNext();) {
+			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData) iter
+					.next();
+			if (obj.path.matches(".*" + filter + ".*")) {
+				log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
+			}
 		}
+	}
+	
+	/**
+	 * Test that a component has been added to a AjaxRequestTarget, using
+	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually
+	 * tests that a component is on the AJAX response sent back to the client.
+	 * <p>
+	 * PLEASE NOTE! This method doesn't actually insert the component in the
+	 * client DOM tree, using javascript. But it shouldn't be needed because you
+	 * have to trust that the Wicket Ajax Javascript just works.
+	 * 
+	 * @param component
+	 *            The component to test whether it's on the response.
+	 */
+	public void assertComponentOnAjaxResponse(Component component)
+	{
+		String failMessage = "A component which is null could not have been added to the AJAX response";
+		Assert.assertNotNull(failMessage, component);
+
+		// Get the AJAX response
+		String ajaxResponse = getServletResponse().getDocument();
+
+		// Test that the previous response was actually a AJAX response
+		failMessage = "The Previous response was not an AJAX response. "
+				+ "You need to execute an AJAX event, using clickLink, before using this assert";
+		boolean isAjaxResponse = ajaxResponse
+				.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ajax-response>");
+		Assert.assertTrue(failMessage, isAjaxResponse);
+
+		// See if the component has a markup id
+		String markupId = component.getMarkupId();
+
+		failMessage = "The component doesn't have a markup id, "
+				+ "which means that it can't have been added to the AJAX response";
+		Assert.assertFalse(failMessage, Strings.isEmpty(markupId));
+
+		// Look for that the component is on the response, using the markup id
+		boolean isComponentInAjaxResponse = ajaxResponse.matches(".*<component id=\"" + markupId
+				+ "\" ?>.*");
+		failMessage = "Component wasn't found in the AJAX response";
+		Assert.assertTrue(failMessage, isComponentInAjaxResponse);
+	}
+	
+	/**
+	 * Simulate that an AJAX event has been fired. You add an AJAX event to a
+	 * component by using:
+	 * 
+	 * <pre>
+	 *  ...
+	 *  component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *      public void onEvent(AjaxRequestTarget) {
+	 *          // Do something.
+	 *      }
+	 *  });
+	 *  ...
+	 * </pre>
+	 * 
+	 * You can then test that the code inside onEvent actually does what it's
+	 * supposed to, using the WicketTester:
+	 * 
+	 * <pre>
+	 *  ...
+	 *  tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *            
+	 *  // Test that the code inside onEvent is correct.
+	 *  ...
+	 * </pre>
+	 * 
+	 * PLEASE NOTE! This method doesn't actually insert the component in the
+	 * client DOM tree, using javascript.
+	 * 
+	 * 
+	 * @param component
+	 *            The component which has the AjaxEventBehavior we wan't to
+	 *            test. If the component is null, the test will fail.
+	 * @param event
+	 *            The event which we simulate is fired. If the event is null,
+	 *            the test will fail.
+	 */
+	public void executeAjaxEvent(Component component, String event)
+	{
+		String failMessage = "Can't execute event on a component which is null.";
+		Assert.assertNotNull(failMessage, component);
+
+		failMessage = "event must not be null";
+		Assert.assertNotNull(failMessage, event);
+
+		// Run through all the behavior and select the LAST ADDED behavior which
+		// matches the event parameter.
+		AjaxEventBehavior ajaxEventBehavior = null;
+		List behaviors = component.getBehaviors();
+		for (Iterator iter = behaviors.iterator(); iter.hasNext();)
+		{
+			IBehavior behavior = (IBehavior)iter.next();
+
+			// AjaxEventBehavior is the one to look for
+			if (behavior instanceof AjaxEventBehavior)
+			{
+				AjaxEventBehavior tmp = (AjaxEventBehavior)behavior;
+
+				if (event.equals(tmp.getEvent()))
+				{
+					ajaxEventBehavior = tmp;
+				}
+			}
+		}
+
+		// If there haven't been found any event behaviors on the component
+		// which maches the parameters we fail.
+		failMessage = "No AjaxEventBehavior found on component: " + component.getId()
+				+ " which matches the event: " + event.toString();
+		Assert.assertNotNull(failMessage, ajaxEventBehavior);
+
+		setupRequestAndResponse();
+		RequestCycle requestCycle = createRequestCycle();
+
+		ajaxEventBehavior.onRequest();
+
+		// process the request target
+		requestCycle.getRequestTarget().respond(requestCycle);
+	}
+	
+	/**
+	 * Get a TagTester based on a wicket:id. If more components exists with the
+	 * same wicket:id in the markup only the first one is returned.
+	 * 
+	 * @param wicketId
+	 *            The wicket:id to search for.
+	 * @return The TagTester for the tag which has the given wicket:id.
+	 */
+	public TagTester getTagByWicketId(String wicketId)
+	{
+		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "wicket:id",
+				wicketId);
+	}
+
+	/**
+	 * Get a TagTester based on an dom id. If more components exists with the
+	 * same id in the markup only the first one is returned.
+	 * 
+	 * @param id
+	 *            The dom id to search for.
+	 * @return The TagTester for the tag which has the given dom id.
+	 */
+	public TagTester getTagById(String id)
+	{
+		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "id", id);
 	}
 }

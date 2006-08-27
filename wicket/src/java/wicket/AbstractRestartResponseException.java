@@ -26,4 +26,15 @@ package wicket;
  */
 public abstract class AbstractRestartResponseException extends AbortException
 {
+	/**
+	 * Construct.
+	 */
+	public AbstractRestartResponseException()
+	{
+		RequestCycle rc = RequestCycle.get();
+		if(rc != null)
+		{
+			rc.getResponse().reset();
+		}
+	}
 }

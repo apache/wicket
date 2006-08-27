@@ -36,7 +36,7 @@ class ChangeList implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static Log log = LogFactory.getLog(ChangeList.class);
+	private static final Log log = LogFactory.getLog(ChangeList.class);
 
 	/** the changes. */
 	private List changes = new ArrayList();

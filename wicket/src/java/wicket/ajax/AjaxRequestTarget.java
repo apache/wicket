@@ -32,9 +32,12 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -63,11 +66,10 @@ import wicket.util.string.Strings;
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * @author Eelco Hillenius
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
-	private static final Log LOG = LogFactory.getLog(AjaxRequestTarget.class);
-
 	/**
 	 * Response that uses an encoder to encode its contents
 	 * 
@@ -76,7 +78,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final class EncodingResponse extends Response
 	{
 		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
-		
+
 		private boolean escaped = false;
 
 		private final Response originalResponse;
@@ -156,16 +158,20 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	}
 
+	private static final Log LOG = LogFactory.getLog(AjaxRequestTarget.class);
+
+	private final List/* <String> */appendJavascripts = new ArrayList();
+
 	/**
 	 * create a response that will escape output to make it safe to use inside a
 	 * CDATA block
 	 */
 	private final EncodingResponse encodingResponse;
 
-	private final List/* <String> */javascripts = new ArrayList();
-
 	/** the component instances that will be rendered */
 	private final Map/* <String,Component> */markupIdToComponent = new HashMap();
+
+	private final List/* <String> */prependJavascripts = new ArrayList();
 
 	/**
 	 * Constructor
@@ -215,19 +221,34 @@ public class AjaxRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Adds javascript that will be evaluated on the client side
+	 * Adds javascript that will be evaluated on the client side after
+	 * components are replaced
 	 * 
+	 * @deprecated use appendJavascript(String javascript) instead
 	 * @param javascript
 	 */
 	public final void addJavascript(String javascript)
+	{
+		appendJavascript(javascript);
+	}
+
+
+	/**
+	 * Adds javascript that will be evaluated on the client side after
+	 * components are replaced
+	 * 
+	 * @param javascript
+	 */
+	public final void appendJavascript(String javascript)
 	{
 		if (javascript == null)
 		{
 			throw new IllegalArgumentException("javascript cannot be null");
 		}
 
-		javascripts.add(javascript);
+		appendJavascripts.add(javascript);
 	}
+
 
 	/**
 	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
@@ -245,7 +266,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			AjaxRequestTarget that = (AjaxRequestTarget)obj;
 			return markupIdToComponent.equals(that.markupIdToComponent)
-					&& javascripts.equals(that.javascripts);
+					&& prependJavascripts.equals(that.prependJavascripts)
+					&& appendJavascripts.equals(that.appendJavascripts);
 		}
 		return false;
 	}
@@ -265,8 +287,25 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		int result = "AjaxRequestTarget".hashCode();
 		result += markupIdToComponent.hashCode() * 17;
-		result += javascripts.hashCode() * 17;
+		result += prependJavascripts.hashCode() * 17;
+		result += appendJavascripts.hashCode() * 17;
 		return result;
+	}
+
+	/**
+	 * Adds javascript that will be evaluated on the client side before
+	 * components are replaced
+	 * 
+	 * @param javascript
+	 */
+	public final void prependJavascript(String javascript)
+	{
+		if (javascript == null)
+		{
+			throw new IllegalArgumentException("javascript cannot be null");
+		}
+
+		prependJavascripts.add(javascript);
 	}
 
 	/**
@@ -291,7 +330,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.setCharacterEncoding(encoding);
 			response.setContentType("text/xml; charset=" + encoding);
 
-			// Make sure it is not cached by a
+			// Make sure it is not cached by a client
 			response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 			response.setHeader("Cache-Control", "no-cache, must-revalidate");
 			response.setHeader("Pragma", "no-cache");
@@ -301,21 +340,31 @@ public class AjaxRequestTarget implements IRequestTarget
 			response.write("\"?>");
 			response.write("<ajax-response>");
 
-			Iterator it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
-			{
-				final Map.Entry entry = (Entry)it.next();
-				final Component component = (Component)entry.getValue();
-				final String markupId = (String)entry.getKey();
-				respondComponent(response, markupId, component);
-			}
-
-			it = javascripts.iterator();
+			// normal behavior
+			Iterator it = prependJavascripts.iterator();
 			while (it.hasNext())
 			{
 				String js = (String)it.next();
 				respondInvocation(response, js);
 			}
+
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Map.Entry entry = (Entry)it.next();
+				final Component component = (Component)entry.getValue();
+				final String markupId = (String)entry.getKey();
+				respondHeaderContribution(response, component);
+				respondComponent(response, markupId, component);
+			}
+
+			it = appendJavascripts.iterator();
+			while (it.hasNext())
+			{
+				String js = (String)it.next();
+				respondInvocation(response, js);
+			}
+
 			response.write("</ajax-response>");
 
 			// restore component use check
@@ -323,7 +372,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 		catch (RuntimeException ex)
 		{
-			// log the error but output nothing in the response, parse failure
+			// log the error but output nothing in the response, parse
+			// failure
 			// of response will cause any javascript failureHandler to be
 			// invoked
 			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
@@ -336,7 +386,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	public String toString()
 	{
 		return "[AjaxRequestTarget@" + hashCode() + " markupIdToComponent [" + markupIdToComponent
-				+ "], javascript [" + javascripts + "]";
+				+ "], prependJavascript [" + prependJavascripts + "], appendJavascript ["
+				+ appendJavascripts + "]";
 	}
 
 	/**
@@ -351,6 +402,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		// more efficient replacement
 		return str.replaceAll("]", "]^");
 	}
+
 
 	/**
 	 * @return name of encoding used to possibly encode the contents of the
@@ -443,6 +495,73 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingResponse.reset();
 	}
 
+	/**
+	 * 
+	 * @param response
+	 * @param component
+	 */
+	private void respondHeaderContribution(final Response response, final Component component)
+	{
+		final HtmlHeaderContainer header = new HtmlHeaderContainer(
+				HtmlHeaderSectionHandler.HEADER_ID);
+		if (component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID) != null)
+		{
+			component.getPage().replace(header);
+		}
+		else
+		{
+			component.getPage().add(header);
+		}
+
+		Response oldResponse = RequestCycle.get().setResponse(encodingResponse);
+
+		encodingResponse.reset();
+
+		component.renderHead(header);
+		if (component instanceof MarkupContainer)
+		{
+			((MarkupContainer)component).visitChildren(new Component.IVisitor()
+			{
+				public Object component(Component component)
+				{
+					if (component.isVisible())
+					{
+						component.renderHead(header);
+						return CONTINUE_TRAVERSAL;
+					}
+					else
+					{
+						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					}
+				}
+			});
+		}
+
+		RequestCycle.get().setResponse(oldResponse);
+
+		if (encodingResponse.getContents().length() != 0)
+		{
+			response.write("<header-contribution");
+
+			if (encodingResponse.isContentsEncoded())
+			{
+				response.write(" encoding=\"");
+				response.write(getEncodingName());
+				response.write("\" ");
+			}
+
+			// we need to write response as CDATA and parse it on client,
+			// because
+			// konqueror crashes when there is a <script> element
+			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
+
+			response.write(encodingResponse.getContents());
+
+			response.write("</head>]]>");
+
+			response.write("</header-contribution>");
+		}
+	}
 
 	/**
 	 * 

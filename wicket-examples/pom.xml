@@ -3,37 +3,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>wicket</groupId>
+	<parent>
+		<groupId>wicket</groupId>
+		<artifactId>wicket-parent</artifactId>
+		<version>1.2-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>wicket-examples</artifactId>
 	<packaging>war</packaging>
-	<version>1.2-SNAPSHOT</version>
 	<name>Wicket Examples</name>
-	<description>Examples displaying a component reference and several componens in action.</description>
-	<url>http://wicket.sourceforge.net/</url>
-	<inceptionYear>2004</inceptionYear>
-
-	<organization>
-		<name>Wicket developers</name>
-		<url>http://wicket.sourceforge.net</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<issueManagement>
-		<url>http://sourceforge.net/tracker/?group_id=${maven.sourceforge.project.groupId}</url>
-	</issueManagement>
-
-	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-examples</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-examples</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-examples</url>
-	</scm>
+	<description>Examples displaying a component reference and several components in action.</description>
 
     <pluginRepositories>
         <pluginRepository>
@@ -47,23 +26,10 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket</artifactId>
-			<version>1.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>1.2-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.3</version>
-			<type>jar</type>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>dom4j</groupId>
@@ -149,6 +115,20 @@
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.octo.captcha</groupId>
+			<artifactId>jcaptcha-all</artifactId>
+			<version>1.0-RC-2.0.1</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+        <dependency>
+            <groupId>ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>1.1</version>
+            <type>jar</type>
+			<scope>compile</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -230,14 +210,14 @@
 				<artifactId>surefire-report-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-			    <groupId>org.mortbay.jetty</groupId>
-			    <artifactId>maven-jetty6-plugin</artifactId>
-			    <version>6.0-SNAPSHOT</version>
-			    <configuration>
-			            <scanIntervalSeconds>60</scanIntervalSeconds>
-			            <webAppSourceDirectory>src/webapp</webAppSourceDirectory>
-			    </configuration>
-		   </plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				  <artifactId>maven-jetty-plugin</artifactId>
+				  <version>6.0.0rc1</version>
+				  <configuration>
+				    <scanIntervalSeconds>60</scanIntervalSeconds>
+				    <webAppSourceDirectory>src/webapp</webAppSourceDirectory>
+				  </configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>

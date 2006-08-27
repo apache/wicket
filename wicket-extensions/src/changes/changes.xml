@@ -6,10 +6,22 @@
     <author email="igor at users.sourceforge.net">Igor Vaynberg</author>
   </properties>
   <body>
-    <release version="1.2-RC?" date="tbd" description="Wicket CVS HEAD development">
+    <release version="1.2.2" date="tbd" description="Wicket 1.2.2">
+    	<action type="add" dev="Matej Knopp">Backported 2.0 Modal Window</action>
+    	<action type="add" dev="Eelco Hillenius,Matej Knopp">Backported 2.0 Ajax enabled Tree and TreeTable</action>
+    	<action type="fix" dev="Martijn Dashorst" issue="1522442">Fixed markup-id issue of datepicker so it works with ajax</action>
+    	<action type="add" dev="Janne Hietamäki">Backported 2.0 wicket-ajax.js compatible version of the autocomplete</action>
+	</release>
+    <release version="1.2.1" date="2006-07-24" description="Wicket 1.2.1">
+    	<action type="add" dev="Janne Hietamäki">mouse selection in the autocomplete</action>
+    	<action type="fix" dev="Janne Hietamäki" issue="1518167" due-to="Yoav Hakman">URLEncode AutoComplete request</action>
+		<action type="add" dev="Martijn Dashorst">Added AjaxNavigationToolbar</action>
+		<action type="add" dev="Igor Vaynberg">Added AjaxFallbackDefaultDataTable</action>
+    	<action type="fix" dev="Janne Hietamäki">Set the AutoComplete response headers properly</action>
+    	<action type="fix" dev="Janne Hietamäki">Fixed AutoComplete bugs when running under IE</action>
+ 	</release> 
+    <release version="1.2" date="2006-05-24" description="Wicket 1.2">
 		<action type="add" dev="Eelco Hillenius">Added wizard component</action>
-    </release>
-    <release version="1.2-alpha1" date="tbd" description="Wicket CVS HEAD development">
 		<action type="add" dev="Igor Vaynberg">new ajax driven form upload progress bar (UploadProgressBar)</action>
 		<action type="add" dev="Igor Vaynberg">new ajax link variations with a busy indicator (IndicatingAjaxLink, IndicatingAjaxFallbackLink)</action>
 		<action type="add" dev="Igor Vaynberg">new AjaxEditableLabel</action>

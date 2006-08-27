@@ -195,6 +195,9 @@ public class WicketSessionFilter implements Filter
 
 		// go on with processing
 		chain.doFilter(request, response);
+		
+		// clean up
+		Session.unset();
 	}
 
 	/**

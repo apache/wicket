@@ -1,103 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>wicket</groupId>
+	<parent>
+		<groupId>wicket</groupId>
+		<artifactId>wicket-parent</artifactId>
+		<version>1.2-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>wicket-spring-annot-examples</artifactId>
 	<packaging>war</packaging>
-	<version>1.2-SNAPSHOT</version>
+
 	<name>Wicket Spring Annot Examples</name>
 	<description>Examples project for using annotation based Spring integration in Wicket applications. This requires Java 5.</description>
-	<url>http://wicket.sourceforge.net/spring</url>
+	<url>http://wicketframework.org/spring</url>
 	<inceptionYear>2005</inceptionYear>
-
-	<organization>
-		<name>Wicket developers</name>
-		<url>http://wicket.sourceforge.net</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
-
-	<issueManagement>
-		<url>http://sourceforge.net/tracker/?group_id=119783</url>
-	</issueManagement>
-
-	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-annot-examples</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-annot-examples</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-spring-annot-examples</url>
-	</scm>
-
-	<mailingLists>
-		<mailingList>
-			<name>Wicket Announcements List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket User List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket Development List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-develop</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket CVS commit List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-autocvs</archive>
-		</mailingList>
-		<mailingList>
-			<name>Wicket automated builds List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-builds</archive>
-		</mailingList>
-	</mailingLists>
-
-	<developers>
-		<developer>
-			<name>Igor Vaynberg</name>
-			<id>ivaynberg</id>
-			<email>ivaynberg at users.sf.net</email>
-		</developer>
-	</developers>
 
 	<dependencies>
 		<dependency>
 			<groupId>wicket</groupId>
-			<artifactId>wicket</artifactId>
-			<version>1.2-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
-			<version>1.2-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-spring-annot</artifactId>
-			<version>1.2-SNAPSHOT</version>
-		</dependency>
-
- 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.3</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- jetty launcher dependencies -->
@@ -123,9 +49,7 @@
 		</dependency>
 	</dependencies>
 
-
 	<build>
-
 		<resources>
 			<resource>
 				<filtering>false</filtering>

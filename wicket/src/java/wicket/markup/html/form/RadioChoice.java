@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.40 $ $Date$
+ * $Id: RadioChoice.java 5231 2006-04-01 23:34:49 +0000 (Sat, 01 Apr 2006)
+ * joco01 $ $Revision$ $Date: 2006-04-01 23:34:49 +0000 (Sat, 01 Apr
+ * 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +21,6 @@ package wicket.markup.html.form;
 import java.util.List;
 
 import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.model.IModel;
@@ -43,10 +43,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *  &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- * 	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
- * 	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
- *  &lt;/span&gt;
+ *   &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *  	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
+ *  	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
+ *   &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -104,6 +104,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 		/**
 		 * Construct.
+		 * 
 		 * @param prevSuffix
 		 */
 		PrefixChange(String prevSuffix)
@@ -395,9 +396,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	{
 		// Iterate through choices
 		final List choices = getChoices();
-		
+
 		// Buffer to hold generated body
-		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size()+1) * 70);
+		final AppendingStringBuffer buffer = new AppendingStringBuffer((choices.size() + 1) * 70);
 
 		// The selected value
 		final String selected = getValue();
@@ -409,7 +410,9 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 			final Object choice = choices.get(index);
 
 			// Get label for choice
-			final String label = (String)getConverter().convert(getChoiceRenderer().getDisplayValue(choice), String.class);;
+			final String label = (String)getConverter().convert(
+					getChoiceRenderer().getDisplayValue(choice), String.class);
+			;
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know
@@ -424,9 +427,11 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add radio tag
-				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"radio\"").append(
-						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
-						id).append("\" id=\"").append(idAttr).append("\"");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
+						" type=\"radio\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
+						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"").append(id)
+						.append("\" id=\"").append(idAttr).append("\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?
@@ -434,17 +439,18 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				{
 					final CharSequence url = urlFor(IOnChangeListener.INTERFACE);
 
-					try
+					Form form = (Form)findParent(Form.class);
+					if (form != null)
 					{
-						Form form = getForm();
-						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(";\"");
+						buffer.append(" onclick=\"").append(form.getJsForInterfaceUrl(url)).append(
+								";\"");
 					}
-					catch (WicketRuntimeException ex)
+					else
 					{
-						// NOTE: do not encode the url as that would give invalid
-						// JavaScript
-						buffer.append(" onclick=\"").append(url).append("&" + getInputName()).append("=").append(
-								id).append("';\"");
+						// NOTE: do not encode the url as that would give
+						// invalid JavaScript
+						buffer.append(" onclick=\"location.href='").append(url).append("&" + getInputName())
+								.append("=").append(id).append("';\"");
 					}
 				}
 
@@ -452,12 +458,13 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 				// Add label for radio button
 				String display = label;
-				if(localizeDisplayValues())
+				if (localizeDisplayValues())
 				{
 					display = getLocalizer().getString(label, this, label);
 				}
 				CharSequence escaped = Strings.escapeMarkup(display, false, true);
-				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append("</label>");
+				buffer.append("<label for=\"").append(idAttr).append("\">").append(escaped).append(
+						"</label>");
 
 				// Append option suffix
 				buffer.append(getSuffix());

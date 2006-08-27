@@ -41,10 +41,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *   &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *  	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
- *  	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
- *   &lt;/span&gt;
+ *    &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *   	&lt;input type=&quot;checkbox&quot;&gt;site 1&lt;/input&gt;
+ *   	&lt;input type=&quot;checkbox&quot;&gt;site 2&lt;/input&gt;
+ *    &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -99,6 +99,7 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 
 		/**
 		 * Construct.
+		 * 
 		 * @param prevSuffix
 		 */
 		PrefixChange(String prevSuffix)
@@ -349,11 +350,11 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 		final List choices = getChoices();
 
 		// Buffer to hold generated body
-		final AppendingStringBuffer buffer = new AppendingStringBuffer(70*(choices.size()+1));
+		final AppendingStringBuffer buffer = new AppendingStringBuffer(70 * (choices.size() + 1));
 
 		// Value of this choice
 		final String selected = getValue();
-		
+
 		// Loop through choices
 		for (int index = 0; index < choices.size(); index++)
 		{
@@ -361,7 +362,8 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 			final Object choice = choices.get(index);
 
 			// Get label for choice
-			final String label = (String)getConverter().convert(getChoiceRenderer().getDisplayValue(choice), String.class);
+			final String label = (String)getConverter().convert(
+					getChoiceRenderer().getDisplayValue(choice), String.class);
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know
@@ -376,13 +378,15 @@ public class CheckBoxMultipleChoice extends ListMultipleChoice
 				final String idAttr = getInputName() + "_" + id;
 
 				// Add checkbox element
-				buffer.append("<input name=\"").append(getInputName()).append("\"").append(" type=\"checkbox\"").append(
-						(isSelected(choice, index, selected) ? " checked=\"checked\"" : "")).append(" value=\"").append(
-						id).append("\" id=\"").append(idAttr).append("\"/>");
+				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
+						" type=\"checkbox\"").append(
+						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
+						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
+						.append(id).append("\" id=\"").append(idAttr).append("\"/>");
 
 				// Add label for checkbox
 				String display = label;
-				if(localizeDisplayValues())
+				if (localizeDisplayValues())
 				{
 					display = getLocalizer().getString(label, this, label);
 				}

@@ -29,7 +29,7 @@ import wicket.markup.resolver.FragmentResolver;
  */
 public class PanelTest extends WicketTestCase
 {
-	// private static Log log = LogFactory.getLog(PanelTest.class);
+	// private static final Log log = LogFactory.getLog(PanelTest.class);
 
 	/**
 	 * Create the test.
@@ -128,6 +128,16 @@ public class PanelTest extends WicketTestCase
 		application.getPageSettings().addComponentResolver(new FragmentResolver());
 		executeTest(InlinePanelPage_5.class, "InlinePanelPageExpectedResult_5.html");
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	// TODO FIX this test.
+//	public void testInlinePanel_6() throws Exception
+//	{
+//		application.getPageSettings().addComponentResolver(new FragmentResolver());
+//		executeTest(InlinePanelPage_6.class, "InlinePanelPageExpectedResult_6.html");
+//	}
 
 	/**
 	 * @throws Exception

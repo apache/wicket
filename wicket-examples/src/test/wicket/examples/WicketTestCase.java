@@ -19,6 +19,7 @@ package wicket.examples;
 
 import junit.framework.TestCase;
 import wicket.protocol.http.MockWebApplication;
+import wicket.util.diff.DiffUtil;
 
 /**
  * Base class for tests which require comparing wicket response with a file

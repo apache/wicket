@@ -27,12 +27,20 @@ import wicket.Response;
  */
 public class JavascriptUtils
 {
+	
 	/** Script open tag */
-	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--//--><![CDATA[//><!--\n";
+	public final static String SCRIPT_OPEN_TAG = "<script type=\"text/javascript\"><!--/*--><![CDATA[/*><!--*/\n";
 
 	/** Script close tag */
-	public final static String SCRIPT_CLOSE_TAG = "\n//--><!]]></script>\n";
+	public final static String SCRIPT_CLOSE_TAG = "\n/*-->]]>*/</script>\n";
 
+	/** Script open tag */
+	public final static String SCRIPT_CONTENT_PREFIX = "<!--/*--><![CDATA[/*><!--*/\n";
+
+	/** Script close tag */
+	public final static String SCRIPT_CONTENT_SUFFIX = "\n/*-->]]>*/";
+
+	
 	/** The response object */
 	private Response response;
 
@@ -41,11 +49,66 @@ public class JavascriptUtils
 	 * 
 	 * @param response
 	 *            The response object
+	 * @param id 
+	 */
+	public JavascriptUtils(final Response response, String id)
+	{
+		this.response = response;
+		writeOpenTag(response, id);
+	}
+
+	/**
+	 * Constructor without id for backward compatibility
+	 * 
+	 * @param response
+	 *            The response object
+	 * @param id 
 	 */
 	public JavascriptUtils(final Response response)
 	{
 		this.response = response;
 		writeOpenTag(response);
+	}
+
+	
+	/**
+	 * Escape quotes and double quotes so that they can be part of e.g. an alert
+	 * call.
+	 * 
+	 * @param input
+	 *            input
+	 * @return Escaped version of the input
+	 */
+	public static CharSequence escapeQuotes(final CharSequence input)
+	{
+		CharSequence s = input;
+		if (s != null)
+		{
+			s = Strings.replaceAll(s, "'", "\\'");
+		}
+		return s;
+	}
+
+	/**
+	 * Write a reference to a javascript file to the response object
+	 * 
+	 * @param response
+	 *            The HTTP response
+	 * @param url
+	 *            The javascript file URL
+	 * @param id
+	 *            Unique identifier of element
+	 */
+	public static void writeJavascriptUrl(final Response response, final CharSequence url, final String id)
+	{
+		response.write("<script type=\"text/javascript\" ");
+		if (id != null) 
+		{
+			response.write("id=\"" + id + "\" ");
+		}
+		response.write("src=\"");
+		response.write(url);
+		response.println("\"></script>");
 	}
 
 	/**
@@ -58,11 +121,26 @@ public class JavascriptUtils
 	 */
 	public static void writeJavascriptUrl(final Response response, final CharSequence url)
 	{
-		response.write("<script type=\"text/javascript\" src=\"");
-		response.write(url);
-		response.println("\"></script>");
+		writeJavascriptUrl(response, url, null);
 	}
-
+	
+	/**
+	 * Write the simple text to the response object surrounded by a script tag.
+	 * 
+	 * @param response
+	 *            The HTTP: response
+	 * @param text
+	 *            The text to added in between the script tags
+	 * @param id
+	 *            Unique identifier of element
+	 */
+	public static void writeJavascript(final Response response, final CharSequence text, String id)
+	{
+		writeOpenTag(response, id);
+		response.write(text);
+		writeCloseTag(response);
+	}
+	
 	/**
 	 * Write the simple text to the response object surrounded by a script tag.
 	 * 
@@ -73,27 +151,40 @@ public class JavascriptUtils
 	 */
 	public static void writeJavascript(final Response response, final CharSequence text)
 	{
-		writeOpenTag(response);
-		response.write(text);
-		writeCloseTag(response);
+		writeJavascript(response, text, null);
 	}
-
+	/**
+	 * 
+	 * @param response
+	 * @param id 
+	 */
+	public static void writeOpenTag(final Response response, String id)
+	{
+		response.write("<script type=\"text/javascript\" ");
+		if (id != null) 
+		{
+			response.write("id=\"" + id + "\"");
+		}
+		response.write(">");
+		response.write(SCRIPT_CONTENT_PREFIX);
+	}
 	/**
 	 * 
 	 * @param response
 	 */
 	public static void writeOpenTag(final Response response)
 	{
-		response.write(SCRIPT_OPEN_TAG);
+		writeOpenTag(response, null);
 	}
-
 	/**
 	 * 
 	 * @param response
 	 */
 	public static void writeCloseTag(final Response response)
 	{
-		response.println(SCRIPT_CLOSE_TAG);
+		response.write(SCRIPT_CONTENT_SUFFIX);
+		response.println("</script>\n");
+		
 	}
 
 	/**

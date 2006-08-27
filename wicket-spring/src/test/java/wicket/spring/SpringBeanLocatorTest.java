@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import wicket.spring.test.ApplicationContextMock;
 import wicket.spring.test.SpringContextLocatorMock;
 import wicket.util.lang.Objects;
+import wicket.util.tester.WicketTester;
 
 /**
  * Tests {@link SpringBeanLocator}
@@ -31,12 +32,21 @@ import wicket.util.lang.Objects;
  */
 public class SpringBeanLocatorTest extends TestCase
 {
+	/**
+	 * @param name
+	 */
+	public SpringBeanLocatorTest(String name)
+	{
+		super(name);
+	}
+
 	private ApplicationContextMock ctx;
 
 	private ISpringContextLocator ctxLocator;
 
 	protected void setUp() throws Exception
 	{
+		new WicketTester(null);
 		ctx=new ApplicationContextMock();
 		ctxLocator = new SpringContextLocatorMock(ctx);
 	}

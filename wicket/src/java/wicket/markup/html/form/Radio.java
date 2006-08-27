@@ -85,16 +85,18 @@ public class Radio extends WebMarkupContainer
 							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
+		String relativePath = path.substring(group.getPath().length() + 1);
+		
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", path);
+		tag.put("value", relativePath);
 
 		// compare the model objects of the group and self, if the same add the
 		// checked attribute, first check if there was a raw input on the group.
 		if(group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if(rawInput != null && rawInput.equals(path))
+			if(rawInput != null && rawInput.equals(relativePath))
 			{
 				tag.put("checked", "checked");
 			}
@@ -109,12 +111,12 @@ public class Radio extends WebMarkupContainer
 			// url that points to this components IOnChangeListener method
 			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
-			try
+			Form form = (Form)group.findParent(Form.class);
+			if (form != null)
 			{
-				Form form = group.getForm();
 				tag.put("onclick", form.getJsForInterfaceUrl(url) );
 			}
-			catch (WicketRuntimeException ex)
+			else
 			{
 				// NOTE: do not encode the url as that would give invalid JavaScript
 				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
@@ -123,7 +125,7 @@ public class Radio extends WebMarkupContainer
 		}
 		
 		
-		if (!isActionAuthorized(ENABLE) || !isEnabled()) {
+		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled()) {
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 	}

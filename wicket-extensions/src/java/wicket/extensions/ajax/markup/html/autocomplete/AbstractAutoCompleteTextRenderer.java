@@ -13,9 +13,9 @@ import wicket.Response;
 public abstract class AbstractAutoCompleteTextRenderer extends AbstractAutoCompleteRenderer
 {
 	/**
-	 * @see AbstractAutoCompleteRenderer#renderChoice(Object, Response)
+	 * @see AbstractAutoCompleteRenderer#renderChoice(Object, Response, String)
 	 */
-	protected void renderChoice(Object object, Response response)
+	protected void renderChoice(Object object, Response response, String criteria)
 	{
 		response.write(getTextValue(object));
 	}
