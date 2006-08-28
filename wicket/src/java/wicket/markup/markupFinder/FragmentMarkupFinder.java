@@ -42,6 +42,7 @@ public class FragmentMarkupFinder extends DefaultMarkupFinder
 	 * @see wicket.markup.markupFinder.IMarkupFinder#find(wicket.Component,
 	 *      wicket.markup.MarkupStream, wicket.MarkupContainer)
 	 */
+	@Override
 	public <T> MarkupStream find(final Component<T> component, MarkupStream markupStream,
 			final MarkupContainer parentWithAssociatedMarkup)
 	{
@@ -56,11 +57,7 @@ public class FragmentMarkupFinder extends DefaultMarkupFinder
 		final MarkupContainer markupProvider = fragment.getMarkupProvider();
 		if (markupProvider != null)
 		{
-			markupStream = markupProvider.getMarkupStream();
-			if (markupStream == null)
-			{
-				markupStream = markupProvider.getAssociatedMarkupStream(true);
-			}
+			markupStream = markupProvider.getAssociatedMarkupStream(true);
 		}
 
 		String relativePath = fragment.getFragmentMarkupId() + IMarkup.TAG_PATH_SEPARATOR
