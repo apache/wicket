@@ -27,7 +27,10 @@ import wicket.util.string.AppendingStringBuffer;
 
 /**
  * A behavior that updates the hosting FormComponent via ajax when an event it
- * is attached to is triggered.
+ * is attached to is triggered. This behavior encapsulates the entire
+ * form-processing workflow as relevant only to this component so if validation
+ * is successfull the component's model will be updated according to the
+ * submitted value.
  * <p>
  * NOTE: This behavior does not support persisting form component values into
  * cookie or other {@link IValuePersister}. If this is necessary please add a
