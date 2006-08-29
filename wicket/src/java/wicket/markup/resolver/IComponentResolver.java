@@ -20,6 +20,7 @@ package wicket.markup.resolver;
 
 import java.io.Serializable;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
@@ -35,7 +36,7 @@ public interface IComponentResolver extends Serializable
 {
 	/**
 	 * Try to resolve the tag, then create a component, add it to the container
-	 * and render it.
+	 * and render it by calling {@link Component#render(MarkupStream)}
 	 * 
 	 * @param container
 	 *            The container parsing its markup

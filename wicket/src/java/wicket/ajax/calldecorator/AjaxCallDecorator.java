@@ -22,6 +22,8 @@ import wicket.ajax.IAjaxCallDecorator;
 /**
  * An adapter for implementations of {@link IAjaxCallDecorator}.
  * 
+ * @see IAjaxCallDecorator for notes on escaping quotes in scripts
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
