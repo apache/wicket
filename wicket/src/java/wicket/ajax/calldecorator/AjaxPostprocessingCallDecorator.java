@@ -24,6 +24,8 @@ import wicket.ajax.IAjaxCallDecorator;
  * Ajax call decorator that decorates script after allowing the wrapped delegate
  * decorator to decorate it first.
  * 
+ * @see IAjaxCallDecorator for notes on escaping quotes in scripts
+ * 
  * @since 1.2
  * 
  * @author Igor Vaynberg (ivaynberg)
