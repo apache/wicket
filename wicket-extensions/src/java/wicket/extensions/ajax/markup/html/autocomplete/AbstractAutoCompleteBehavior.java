@@ -23,9 +23,8 @@ public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBe
 	 */
 	private static final long serialVersionUID = 1L;
 
-	protected void onRenderHeadInitContribution(Response response)
+	protected void onRenderHeadContribution(Response response)
 	{
-		super.onRenderHeadInitContribution(response);
 		writeJsReference(response, AUTOCOMPLETE_JS);
 	}
 
