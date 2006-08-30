@@ -118,12 +118,6 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 					"Behavior must be bound to a component to create the URL");
 		}
 
-		if (!(this instanceof IBehaviorListener))
-		{
-			throw new IllegalArgumentException(
-					"The behavior must implement IBehaviorListener to accept requests");
-		}
-
 		int index = getComponent().getBehaviors().indexOf(this);
 		if (index == -1)
 		{

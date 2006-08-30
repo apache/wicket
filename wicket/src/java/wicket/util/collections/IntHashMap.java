@@ -625,7 +625,7 @@ public class IntHashMap implements Cloneable, Serializable
 	 * 
 	 * @return a shallow copy of this map.
 	 */
-	public Object clone()
+	public Object clone() throws CloneNotSupportedException
 	{
 		IntHashMap result = null;
 		try
@@ -791,7 +791,7 @@ public class IntHashMap implements Cloneable, Serializable
 			{ // advance to first entry
 				while (i > 0 && (n = t[--i]) == null)
 				{
-					;
+					/* NoOp*/ ;
 				}
 			}
 			next = n;

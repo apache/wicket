@@ -105,6 +105,7 @@ public abstract class AbstractTree extends Panel
 		{
 			final TreePath siblingSelection = new TreePath(nextNode.getPath());
 			setExpandedState(siblingSelection, false); // inverse
+			// ToDo: Check if previousNode can be null? If so, needs trapping - Gwyn
 			nextNode = previousNode.getNextSibling();
 		}
 	}

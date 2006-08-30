@@ -138,7 +138,7 @@ public class MockWebApplication extends WebApplication
 			public ServletContext getServletContext()
 			{
 				return context;
-			};
+			}
 
 			/**
 			 * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)

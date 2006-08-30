@@ -149,7 +149,7 @@ public class WebRequestCycle extends RequestCycle
 					public CharSequence encodeURL(CharSequence url)
 					{
 						return currentResponse.encodeURL(url);
-					};
+					}
 				};
 				redirectResponse.setCharacterEncoding(currentResponse.getCharacterEncoding());
 
