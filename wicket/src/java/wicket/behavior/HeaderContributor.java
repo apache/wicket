@@ -580,7 +580,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public HeaderContributor(IHeaderContributor headerContributor)
 	{
-		headerContributors = new ArrayList();
+		headerContributors = new ArrayList(1);
 		headerContributors.add(headerContributor);
 	}
 
@@ -673,7 +673,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		if (headerContributors == null)
 		{
-			headerContributors = new ArrayList();
+			headerContributors = new ArrayList(1);
 		}
 	}
 }
