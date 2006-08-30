@@ -21,7 +21,7 @@ package wicket.markup.html.internal;
 import wicket.WicketTestCase;
 
 /**
- * Test for the {@link wicket.markup.html.internal.HtmlHeaderContainer}.
+ * Test for the {@link wicket.markup.html.internal.HeaderContainer}.
  * 
  * @author svenmeier
  */

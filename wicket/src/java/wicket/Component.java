@@ -39,7 +39,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.IAssignmentAware;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
@@ -1855,7 +1855,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @param container
 	 *            The HtmlHeaderContainer
 	 */
-	public void renderHead(final HtmlHeaderContainer container)
+	public void renderHead(final HeaderContainer container)
 	{
 		if (isHeadRendered() == false)
 		{

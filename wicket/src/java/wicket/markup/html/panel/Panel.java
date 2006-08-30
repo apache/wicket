@@ -21,7 +21,7 @@ import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.model.IModel;
@@ -128,10 +128,10 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	/**
 	 * Check the associated markup file for a wicket header tag
 	 * 
-	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HeaderContainer)
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
+	public void renderHead(HeaderContainer container)
 	{
 		if (isHeadRendered() == false) 
 		{

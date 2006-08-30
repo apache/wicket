@@ -24,6 +24,7 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
@@ -102,7 +103,7 @@ public class HtmlHeaderResolver implements IComponentResolver
 				header2.setRenderBodyOnly(true);
 				header.autoAdded();
 			}
-			else if (container instanceof HtmlHeaderContainer)
+			else if (container instanceof HeaderContainer)
 			{
 				// It is <wicket:head>. Because they do not provide any
 				// additional functionality there are merely a means of 

@@ -36,6 +36,7 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
@@ -402,9 +403,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	protected String encode(String str)
 	{
-		// TODO Post 1.2: Java5: we can use str.replace(charseq, charseq) for
-		// more efficient replacement
-		return str.replaceAll("]", "]^");
+		return str.replace("]", "]^");
 	}
 
 	/**
@@ -500,7 +499,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 	}
 
-	private HtmlHeaderContainer header = null;
+	private HeaderContainer header = null;
 
 	/**
 	 * 

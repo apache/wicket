@@ -20,7 +20,7 @@ package wicket.markup.parser.filter;
 
 import wicket.MarkupContainer;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.Model;
 
 
@@ -49,7 +49,7 @@ public class HeaderSectionMyLabel2 extends Label
 	 * @param container
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
+	public void renderHead(HeaderContainer container)
 	{
 		this.getResponse().write("text added by contributor");
 	}

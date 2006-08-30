@@ -44,22 +44,22 @@ public class PortletRenderRequestCycleProcessor extends CompoundRequestCycleProc
 	{
 		super(new PortletRequestCodingStrategy());
 	}
-	
+
 	@Override
 	protected IRequestTargetResolverStrategy newRequestTargetResolverStrategy()
 	{
 		return new PortletRequestTargetResolverStrategy();
 	}
-	
+
 	@Override
 	protected IEventProcessorStrategy newEventProcessorStrategy()
 	{
 		return new PortletRenderRequestEventProcessorStrategy();
 	}
-	
+
 	@Override
 	protected IExceptionResponseStrategy newExceptionResponseStrategy()
 	{
 		return new PortletExceptionResponseStrategy();
-	}	
+	}		
 }

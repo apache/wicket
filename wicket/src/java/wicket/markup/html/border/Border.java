@@ -23,7 +23,7 @@ import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.resolver.IComponentResolver;
@@ -252,10 +252,10 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 
 	/**
 	 * 
-	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HtmlHeaderContainer)
+	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HeaderContainer)
 	 */
 	@Override
-	public void renderHead(HtmlHeaderContainer container)
+	public void renderHead(HeaderContainer container)
 	{
 		if (isHeadRendered() == false) 
 		{

@@ -27,7 +27,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HeaderPartContainer;
-import wicket.markup.html.internal.HtmlHeaderContainer;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
 import wicket.util.lang.Classes;
@@ -100,7 +100,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	 * @param htmlContainer
 	 *            The HtmlHeaderContainer added to the Page
 	 */
-	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
+	protected final void renderHeadFromAssociatedMarkupFile(final HeaderContainer htmlContainer)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found

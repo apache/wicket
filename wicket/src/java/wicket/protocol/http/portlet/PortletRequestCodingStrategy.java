@@ -60,19 +60,19 @@ import wicket.util.string.Strings;
 public final class PortletRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 {
 
-    /** Name of component path query parameter */
-    public static final String COMPONENT_PATH_PARAMETER_NAME = NAME_SPACE + "path";
-	
-    /** Name of version number query parameter */
-    public static final String VERSION_PARAMETER_NAME = NAME_SPACE + "version";
-    
+	/** Name of component path query parameter */
+	public static final String COMPONENT_PATH_PARAMETER_NAME = NAME_SPACE + "path";
+
+	/** Name of version number query parameter */
+	public static final String VERSION_PARAMETER_NAME = NAME_SPACE + "version";
+
 	/** log. */
 	private static final Log log = LogFactory.getLog(PortletRequestCodingStrategy.class);
 
-	
+
 	/** cached url prefix. */
 	private CharSequence urlPrefix;
-	
+
 	/**
 	 * Construct.
 	 */
@@ -163,7 +163,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 			parameters.setComponentPath(componentPath);
 		}
 	}
-	
+
 	/**
 	 * In case you are using custom targets that are not part of the default
 	 * target hierarchy, you need to override this method, which will be called
@@ -270,7 +270,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		{
 			return encodeServletRequest(requestCycle,requestTarget);
 		}
-		
+
 		// Get component and page for request target
 		final Component component = requestTarget.getTarget();
 		final Page page = component.getPage();
@@ -415,7 +415,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 			final RequestParameters parameters)
 	{
 		final String requestString = request
-				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+		.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			parameters.setBookmarkablePageClass(requestString);
@@ -485,37 +485,9 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		final Class pageClass = requestTarget.getPageClass();
 		final Application application = Application.get();
 
-		// Find pagemap name
-		String pageMapName = requestTarget.getPageMapName();
-		if (pageMapName == null)
-		{
-			IRequestTarget currentTarget = requestCycle.getRequestTarget();
-			if (currentTarget instanceof IPageRequestTarget)
-			{
-				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
-				final PageMap pageMap = currentPage.getPageMap();
-				if (pageMap.isDefault())
-				{
-					pageMapName = "";
-				}
-				else
-				{
-					pageMapName = pageMap.getName();
-				}
-			}
-			else
-			{
-				pageMapName = "";
-			}
-		}
-
-		boolean firstParameter = true;
-		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName))
-		{
-			response.setRenderParameter(PAGEMAP, pageMapName);
-			response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
-					pageClass.getName());
-		}
+		response.setRenderParameter(PAGEMAP, "");
+		response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+				pageClass.getName());
 		response.setRenderParameters(requestTarget.getPageParameters());
 	}
 
@@ -568,7 +540,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		 * @see encodeRequest(RequestCycle requestCycle,
 		 *      IListenerInterfaceRequestTarget requestTarget)
 		 */
-		
+
 		page.urlFor(requestTarget);
 
 		// Touch the page to make sure it will be added to the PageMap
