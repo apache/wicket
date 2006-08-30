@@ -44,7 +44,7 @@ public class ListMultipleChoice extends AbstractChoice
 	private static int defaultMaxRows = 8;
 
 	/** The maximum number of rows to display. */
-	private int maxRows;
+	private int maxRows = defaultMaxRows;
 
 	/**
 	 * Gets the default maximum number of rows to display.
