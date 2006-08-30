@@ -916,7 +916,7 @@ public class ConcurrentReaderHashMap extends AbstractMap implements Map, Cloneab
 	 * 
 	 * @return a shallow copy of this map.
 	 */
-	public synchronized Object clone()
+	public synchronized Object clone() throws CloneNotSupportedException
 	{
 		try
 		{
