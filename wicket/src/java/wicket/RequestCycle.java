@@ -199,11 +199,11 @@ public abstract class RequestCycle
 	private static final int RESOLVE_TARGET = 2;
 
 	/** Responding using the currently set {@link IRequestTarget}. */
-	private static final int RESPOND = 4;;
+	private static final int RESPOND = 4;
 
 	/**
 	 * Gets request cycle for calling thread.
-	 * 
+	 *
 	 * @return Request cycle for calling thread
 	 */
 	public final static RequestCycle get()

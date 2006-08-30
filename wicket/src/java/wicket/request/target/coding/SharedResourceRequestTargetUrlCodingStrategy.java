@@ -91,7 +91,7 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 	{
 		if (requestTarget instanceof ISharedResourceRequestTarget)
 		{
-			SharedResourceRequestTarget target = (SharedResourceRequestTarget)requestTarget;
+			ISharedResourceRequestTarget target = (ISharedResourceRequestTarget)requestTarget;
 			return target.getRequestParameters().getResourceKey().equals(resourceKey);
 		}
 		else
