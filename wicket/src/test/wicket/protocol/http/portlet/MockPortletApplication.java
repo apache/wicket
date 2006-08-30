@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
+import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
 import wicket.protocol.http.MockHttpServletRequest;
@@ -55,6 +56,8 @@ public class MockPortletApplication extends PortletApplication
 	/** Logging */
 	private static final Log log = LogFactory.getLog(MockPortletApplication.class);
 
+	Map<String,Object> renderParameters=new HashMap<String,Object>();
+	
 	ServletContext context=null;
 
 	/** Parameters to be set on the next request. */
@@ -75,7 +78,7 @@ public class MockPortletApplication extends PortletApplication
 	private PortletPage previousRenderedPage;
 
 	/** The homepage */
-	private Class homePage;
+	private Class<? extends Page> homePage;
 
 	/** Mock http servlet request. */
 	private MockPortletRequest portletRequest;
@@ -169,7 +172,7 @@ public class MockPortletApplication extends PortletApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 
-	public Class getHomePage()
+	public Class<? extends Page> getHomePage()
 	{
 		return homePage;
 	}
@@ -192,7 +195,7 @@ public class MockPortletApplication extends PortletApplication
 	{
 		MockHttpServletRequest req=new MockHttpServletRequest(null, servletSession, context);
 		MockHttpServletResponse res=new MockHttpServletResponse();
-		portletRequest=new MockPortletRequest(this,portletSession,req);
+		portletRequest=new MockPortletRequest(this,portletSession,req,renderParameters);
 		portletResponse=new MockPortletRenderResponse(res);
 		portletRequest.initialize();
 		portletResponse.initialize();
@@ -223,10 +226,11 @@ public class MockPortletApplication extends PortletApplication
 	 */
 	public void createActionRequest()
 	{
+		renderParameters=new HashMap<String,Object>();
 		MockHttpServletRequest req=new MockHttpServletRequest(null, servletSession, context);
 		MockHttpServletResponse res=new MockHttpServletResponse();
-		portletRequest=new MockPortletRequest(this,portletSession,req);
-		portletResponse=new MockPortletActionResponse(res);
+		portletRequest=new MockPortletRequest(this,portletSession,req,renderParameters);
+		portletResponse=new MockPortletActionResponse(res,renderParameters);
 		portletRequest.initialize();
 		portletResponse.initialize();
 		portletRequest.setParameters(parametersForNextRequest);

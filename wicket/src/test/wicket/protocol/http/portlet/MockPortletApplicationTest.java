@@ -37,6 +37,7 @@ package wicket.protocol.http.portlet;
  */
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.markup.html.link.Link;
 import wicket.util.diff.DiffUtil;
 
 /**
@@ -88,14 +89,11 @@ public class MockPortletApplicationTest extends TestCase
 	/**
 	 * @throws Exception
 	 */
-	
-	// TODO: this does not work yet
-	/*
 	public void testClickLink() throws Exception
 	{		
 		application.createRenderRequest();
 		application.processRenderRequestCycle(application.createRenderRequestCycle());
-		
+
 		application.createActionRequest();
 		PortletActionRequestCycle requestCycle=application.createActionRequestCycle();
 		MockPortletPage p = (MockPortletPage)application.getLastRenderedPage();
@@ -113,6 +111,5 @@ public class MockPortletApplicationTest extends TestCase
 		// Inspect the page & model
 		p = (MockPortletPage)application.getLastRenderedPage();
 		Assert.assertEquals("Link should have been clicked 1 time", 1, p.getLinkClickCount());
-	}
-	*/
+	}	 
 }

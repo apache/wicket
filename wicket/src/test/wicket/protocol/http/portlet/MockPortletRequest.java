@@ -28,7 +28,15 @@ import javax.portlet.PortletSession;
 import javax.portlet.WindowState;
 
 import wicket.Component;
+import wicket.IRedirectListener;
+import wicket.IResourceListener;
+import wicket.PageMap;
+import wicket.markup.html.form.IFormSubmitListener;
+import wicket.markup.html.form.IOnChangeListener;
+import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.ILinkListener;
 import wicket.protocol.http.MockHttpServletRequest;
+import wicket.util.lang.Classes;
 
 /**
  * Mock implementation of PortletRequest
@@ -42,18 +50,21 @@ public class MockPortletRequest implements PortletRequest
 	WindowState windowState=WindowState.NORMAL;
 	MockPortletApplication application;
 	MockPortletSession portletSession;
-	
+	Map<String,Object> renderParameters;
+
 	/**
 	 * Construct.
 	 * @param application
 	 * @param portletSession
 	 * @param req
+	 * @param renderParameters 
 	 */
-	public MockPortletRequest(MockPortletApplication application, MockPortletSession portletSession, MockHttpServletRequest req)
+	public MockPortletRequest(MockPortletApplication application, MockPortletSession portletSession, MockHttpServletRequest req,Map<String,Object> renderParameters)
 	{		
 		this.req=req;
 		this.portletSession=portletSession;
 		this.application=application;
+		this.renderParameters=renderParameters;
 	}
 
 	public Object getAttribute(String key)
@@ -88,22 +99,23 @@ public class MockPortletRequest implements PortletRequest
 
 	public String getParameter(String key)
 	{
-		return req.getParameter(key);
+		return (String)renderParameters.get(key);
 	}
 
 	public Map getParameterMap()
 	{
-		return req.getParameterMap();
+		return renderParameters;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Enumeration getParameterNames()
 	{
-		return req.getParameterNames();
+		return new Vector(renderParameters.keySet()).elements();
 	}
 
 	public String[] getParameterValues(String key)
 	{
-		return req.getParameterValues(key);
+		return (String[])renderParameters.get(key);
 	}
 
 	public PortalContext getPortalContext()
@@ -262,7 +274,47 @@ public class MockPortletRequest implements PortletRequest
 	 */
 	public void setRequestToComponent(Component component)
 	{
-		req.setRequestToComponent(component);
-	}
+		if (component instanceof BookmarkablePageLink)
+		{
+			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
+			renderParameters.put(PortletRequestCodingStrategy.PAGEMAP,PageMap.DEFAULT_NAME);
+			renderParameters.put(PortletRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,clazz.getName());
+		}
+		else
+		{
+			int version = component.getPage().getCurrentVersionNumber();
+			Class clazz = null;
+			if (component instanceof IRedirectListener)
+			{
+				clazz = IRedirectListener.class;
+			}
+			else if (component instanceof IResourceListener)
+			{
+				clazz = IResourceListener.class;
+			}
+			else if (component instanceof IFormSubmitListener)
+			{
+				clazz = IFormSubmitListener.class;
+			}
+			else if (component instanceof ILinkListener)
+			{
+				clazz = ILinkListener.class;
+			}
+			else if (component instanceof IOnChangeListener)
+			{
+				clazz = IOnChangeListener.class;
+			}
+			else
+			{
+				throw new IllegalArgumentException(
+						"The component class doesn't seem to implement any of the known *Listener Interfaces: "
+						+ component.getClass());
+			}
 
+			renderParameters.put(PortletRequestCodingStrategy.VERSION_PARAMETER_NAME,version==0?"":""+version);
+			renderParameters.put(PortletRequestCodingStrategy.COMPONENT_PATH_PARAMETER_NAME, component.getPath());
+			renderParameters.put(PortletRequestCodingStrategy.INTERFACE_PARAMETER_NAME,Classes.simpleName(clazz));
+			renderParameters.put(PortletRequestCodingStrategy.PAGEMAP,PageMap.DEFAULT_NAME);
+		}
+	}
 }

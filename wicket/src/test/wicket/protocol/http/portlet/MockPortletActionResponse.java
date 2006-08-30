@@ -19,7 +19,6 @@
 package wicket.protocol.http.portlet;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.ActionResponse;
@@ -39,15 +38,16 @@ import wicket.protocol.http.MockHttpServletResponse;
 public class MockPortletActionResponse extends MockPortletResponse implements ActionResponse
 {
 
-	Map<String, Object> renderParameters=new HashMap<String,Object>();
-
+	Map<String, Object> renderParameters;
 	/**
 	 * Construct.
 	 * @param resp
+	 * @param renderParameters 
 	 */
-	public MockPortletActionResponse(MockHttpServletResponse resp)
+	public MockPortletActionResponse(MockHttpServletResponse resp,Map<String,Object> renderParameters)
 	{
 		super(resp);
+		this.renderParameters=renderParameters;
 	}
 
 	public void sendRedirect(String url) throws IOException

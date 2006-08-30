@@ -18,6 +18,7 @@
  */
 package wicket.protocol.http.portlet;
 
+import wicket.behavior.HeaderContributor;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
@@ -42,7 +43,6 @@ public class MockPortletPage extends PortletPage
 	 * 
 	 */
 	public MockPortletPage() {
-
 		// Action link counts link clicks
 		final Link actionLink = new Link(this, "actionLink")
 		{
@@ -55,6 +55,7 @@ public class MockPortletPage extends PortletPage
 			}
 		};
 		new Label(actionLink, "linkClickCount", new PropertyModel(this, "linkClickCount"));
+		add(HeaderContributor.forCss(MockPortletPage.class,"style.css"));
 	}
 
 	/**
