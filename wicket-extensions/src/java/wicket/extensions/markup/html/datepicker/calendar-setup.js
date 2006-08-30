@@ -155,7 +155,7 @@ Calendar.setup = function (params) {
 		var dateFmt = params.inputField ? params.ifFormat : params.daFormat;
 		var mustCreate = false;
 		var cal = window.calendar;
-		if (dateEl)
+		if (dateEl && (dateEl.value || dateEl.innerHTML))
 			params.date = Date.parseDate(dateEl.value || dateEl.innerHTML, dateFmt);
 		if (!(cal && params.cache)) {
 			window.calendar = cal = new Calendar(params.firstDay,
