@@ -51,12 +51,17 @@ Building
 svn co https://svn.sourceforge.net/svnroot/wicket/releases/<VERSION>
 ---------------------------------------------------------------------------
 	
- substituting the <VERSION> part with "wicket_X_Y_Z", where X, Y and Z are the major, minor and
+ substituting the <VERSION> part with "wicket-X.Y.Z", where X, Y and Z are the major, minor and
  bugfix version. So for Wicket-1.2.1 you would check out:
 	
 ---------------------------------------------------------------------------
 svn co https://svn.sourceforge.net/svnroot/wicket/releases/wicket-1.2.1
 ---------------------------------------------------------------------------
+
+The development version of wicket 1.x can be found in branch wicket-1.x, and
+the latest and greatest development version (currently Wicket 2.x) can be found in trunk.
+The branches 1.0.x, 1.1.x and 1.2.x are for versions that are no longer actively
+developed, but which may in exception cases receive bug fixes.
 
  In the root of the wicket-parent project do the following to build all Wicket projects:
 
