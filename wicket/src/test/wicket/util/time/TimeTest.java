@@ -21,6 +21,7 @@ package wicket.util.time;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Locale;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -42,17 +43,26 @@ public final class TimeTest extends TestCase
 
 		// TODO Post 1.2: Bug: Eelco mentioned this test fails on his computer
 		// from time to time. I have seen this and it's very weird -- Jonathan
-		// Assert.assertTrue(Time.now().after(start) ||
-		// Time.now().equals(start));
+		// Assert.assertTrue(Time.now().after(start) || Time.now().equals(start));
 
-		final Time birthday = Time.parseDate("1966.06.01");
-
-		Assert.assertEquals(1966, birthday.getYear());
-		Assert.assertEquals(Calendar.JUNE, birthday.getMonth());
-		Assert.assertEquals(1, birthday.getDayOfMonth());
-
-		final String y2k = "2000.01.01-12.00am";
-
-		Assert.assertEquals(y2k, Time.valueOf(y2k).toString());
+		// Make sure it works in China as well
+		Locale cur = Locale.getDefault();
+		try
+		{
+			Locale.setDefault(Locale.CHINA);
+			final Time birthday = Time.parseDate("1966.06.01");
+	
+			Assert.assertEquals(1966, birthday.getYear());
+			Assert.assertEquals(Calendar.JUNE, birthday.getMonth());
+			Assert.assertEquals(1, birthday.getDayOfMonth());
+	
+			final String y2k = "2000.01.01-12.00am";
+	
+			Assert.assertEquals(y2k, Time.valueOf(y2k).toString());
+		}
+		finally
+		{
+			Locale.setDefault(cur);
+		}
 	}
 }
