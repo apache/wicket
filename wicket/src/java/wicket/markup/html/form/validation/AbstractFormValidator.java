@@ -85,12 +85,9 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * Gets the resource key for validator's error message from the
 	 * ApplicationSettings class.
 	 * 
-	 * @param components
-	 *            form components being validated
-	 * 
 	 * @return the resource key based on the form component
 	 */
-	protected String resourceKey(FormComponent[] components)
+	protected String resourceKey()
 	{
 		return Classes.simpleName(getClass());
 	}
