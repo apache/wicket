@@ -48,14 +48,14 @@ Building
  all in one sweep, then use subversion to checkout the whole project structure in one go.
 	
 ---------------------------------------------------------------------------
-svn co https://svn.sourceforge.net/svnroot/wicket/tags/<VERSION>
+svn co https://svn.sourceforge.net/svnroot/wicket/releases/<VERSION>
 ---------------------------------------------------------------------------
 	
- substituting the <VERSION> part with "WICKET_X_Y_Z", where X, Y and Z are the major, minor and
+ substituting the <VERSION> part with "wicket_X_Y_Z", where X, Y and Z are the major, minor and
  bugfix version. So for Wicket-1.2.1 you would check out:
 	
 ---------------------------------------------------------------------------
-svn co https://svn.sourceforge.net/svnroot/wicket/tags/WICKET_1_2_1
+svn co https://svn.sourceforge.net/svnroot/wicket/releases/wicket-1.2.1
 ---------------------------------------------------------------------------
 
  In the root of the wicket-parent project do the following to build all Wicket projects:
