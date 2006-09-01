@@ -55,6 +55,22 @@ public class AjaxFormValidatingBehavior extends AjaxFormSubmitBehavior
 
 	protected void onSubmit(final AjaxRequestTarget target)
 	{
+		addFeedbackPanels(target);
+	}
+
+	protected void onError(AjaxRequestTarget target)
+	{
+		addFeedbackPanels(target);
+	}
+
+	/**
+	 * Adds all feedback panels on the page to the ajax request target so they
+	 * are updated
+	 * 
+	 * @param target
+	 */
+	private void addFeedbackPanels(final AjaxRequestTarget target)
+	{
 		getComponent().getPage().visitChildren(IFeedback.class, new IVisitor()
 		{
 			public Object component(Component component)
