@@ -16,6 +16,7 @@
 	</release>
 	<release version="1.2.3" description="Wicket 1.2.3">
 		<action type="fix" dev="Igor Vaynberg" due-to="Ingram Chen">Fixed AjaxPreprocessingCallDecorator</action>
+		<action type="fix" dev="Igor Vaynberg" due-to="Adam Smyczek">AjaxFormValidatingBehavior now property updates feedback panels when form error occurs</action>
 	</release>
     <release version="1.2.2" date="2006-08-27" description="Wicket 1.2.2">
 	   <action type="add" dev="Igor Vaynberg">Added Application.exists() and Session.exists() to check for existence of threadlocals</action>
