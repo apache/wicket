@@ -218,7 +218,7 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 		if (isNullValid())
 		{
 			// Null is valid, so look up the value for it
-			final String option = getLocalizer().getString("nullValid", this, "");
+			final String option = getDefaultChoiceText();
 
 			// The <option> tag buffer
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(32 + option.length());
@@ -250,6 +250,21 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 			}
 		}
 		return "";
+	}
+
+	/**
+	 * Returns the string value of the default choice (the "Choose One" analog).
+	 * This method is useful if you only need to override the string value of
+	 * the default option and do not want to implement the construction of
+	 * markup that is performed in the {@link #getDefaultChoice(Object)}.
+	 * 
+	 * By default this method looks for a resource with key "nullValid"
+	 * 
+	 * @return string representation of the text of the default choice option
+	 */
+	protected String getDefaultChoiceText()
+	{
+		return getLocalizer().getString("nullValid", this, "");
 	}
 
 
