@@ -94,6 +94,9 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 				return cache.get(locator);
 			}
 
+			// fail early - see if the locator can locate the spring bean
+			locator.locateProxyTarget();
+			
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(), locator);
 			cache.put(locator, proxy);
 			return proxy;
