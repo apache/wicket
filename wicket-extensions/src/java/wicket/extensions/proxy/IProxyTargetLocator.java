@@ -57,7 +57,7 @@ public interface IProxyTargetLocator extends Serializable
 	 * Returns the object that will be used as target object for a lazy init
 	 * proxy.
 	 * 
-	 * @throws RuntimeException
+	 * @throws IllegalStateException
 	 *             if object cannot be located
 	 * 
 	 * @return retrieved object
