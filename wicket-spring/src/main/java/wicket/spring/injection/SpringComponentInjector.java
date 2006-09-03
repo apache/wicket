@@ -55,19 +55,42 @@ public class SpringComponentInjector extends ComponentInjector
 	};
 
 	/**
-	 * Constructor for web appliactions
+	 * Constructor used when spring application context is declared in the
+	 * spring standard way and can be located through
+	 * {@link WebApplicationContextUtils#getRequiredWebApplicationContext(ServletContext)}
 	 * 
 	 * @param webapp
+	 *            wicket web application
 	 */
 	public SpringComponentInjector(WebApplication webapp)
 	{
-		// locate spring's application context ...
-		ServletContext sc = webapp.getServletContext();
+		// locate application context through spring's default location
+		// mechanism and pass it on to the proper constructor
+		this(webapp, WebApplicationContextUtils.getRequiredWebApplicationContext(webapp
+				.getServletContext()));
+	}
 
-		final ApplicationContext ctx = WebApplicationContextUtils
-				.getRequiredWebApplicationContext(sc);
+	/**
+	 * Constructor
+	 * 
+	 * @param webapp
+	 *            wicket web application
+	 * @param ctx
+	 *            spring's application context
+	 */
+	public SpringComponentInjector(WebApplication webapp, ApplicationContext ctx)
+	{
+		if (webapp == null)
+		{
+			throw new IllegalArgumentException("Argument [[webapp]] cannot be null");
+		}
 
-		// ... store it in application's metadata ...
+		if (ctx == null)
+		{
+			throw new IllegalArgumentException("Argument [[ctx]] cannot be null");
+		}
+
+		// store context in application's metadata ...
 		webapp.setMetaData(CONTEXT_KEY, new ApplicationContextHolder(ctx));
 
 		// ... and create and register the annotation aware injector
