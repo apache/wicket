@@ -95,7 +95,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			}
 
 			// fail early - see if the locator can locate the spring bean
-			locator.locateProxyTarget();
+			testLocator(locator, fieldOwner, field);
 			
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(), locator);
 			cache.put(locator, proxy);
@@ -106,6 +106,35 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			return null;
 		}
 	}
+	
+	/**
+	 * Tests if the locator can retrieve the bean it is responsible for.
+	 * 
+	 * @param locator
+	 * @param fieldOwner
+	 * @param field
+	 */
+	private void testLocator(SpringBeanLocator locator, Object fieldOwner, Field field)
+	{
+		try
+		{
+			locator.locateProxyTarget();
+		}
+		catch (Throwable e)
+		{
+			String errorMessage = "Could not locate spring bean of class [["
+					+ locator.getBeanType().getName() + "]] ";
+			if (locator.getBeanName() != null && locator.getBeanName().length() > 0)
+			{
+				errorMessage += "and id [[" + locator.getBeanName() + "]] ";
+			}
+			errorMessage += "needed in class [["
+					+ fieldOwner.getClass().getName() + "]] field [[" + field.getName()
+					+ "]]";
+			throw new RuntimeException(errorMessage, e);
+		}
+	}
+
 
 	/**
 	 * @see wicket.injection.IFieldValueFactory#supportsField(java.lang.reflect.Field)
