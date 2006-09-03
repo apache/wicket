@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
@@ -174,7 +175,8 @@ public class SpringBeanLocator implements IProxyTargetLocator
 	 */
 	private final Object lookupSpringBean(ApplicationContext ctx, Class clazz)
 	{
-		Map beans = ctx.getBeansOfType(clazz);
+		Map beans = BeanFactoryUtils.beansOfTypeIncludingAncestors(ctx, clazz);
+		
 		if (beans.size() == 0)
 		{
 			throw new IllegalStateException("bean of type ["
