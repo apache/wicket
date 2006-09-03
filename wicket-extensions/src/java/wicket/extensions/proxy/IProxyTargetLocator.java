@@ -1,7 +1,7 @@
 /*
- * $Id: IProxyTargetLocator.java 3480 2005-12-23 23:00:29 +0000 (Fri, 23 Dec 2005) ivaynberg $
- * $Revision: 3480 $
- * $Date: 2005-12-23 23:00:29 +0000 (Fri, 23 Dec 2005) $
+ * $Id: IProxyTargetLocator.java 3480 2005-12-23 23:00:29 +0000 (Fri, 23 Dec
+ * 2005) ivaynberg $ $Revision: 3480 $ $Date: 2005-12-23 23:00:29 +0000 (Fri, 23
+ * Dec 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -40,7 +40,7 @@ import java.io.Serializable;
  * {
  * 	Object locateProxyObject()
  * 	{
- * 		MyApplication app = (MyApplication) Application.get();
+ * 		MyApplication app = (MyApplication)Application.get();
  * 		return app.getUserService();
  * 	}
  * }
@@ -56,6 +56,9 @@ public interface IProxyTargetLocator extends Serializable
 	/**
 	 * Returns the object that will be used as target object for a lazy init
 	 * proxy.
+	 * 
+	 * @throws RuntimeException
+	 *             if object cannot be located
 	 * 
 	 * @return retrieved object
 	 */
