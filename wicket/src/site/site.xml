@@ -47,13 +47,13 @@
 		<item name="Dependencies" href="/dependencies.html" />
 	</menu>
 	<menu name="Releases">
-		<item name="Wicket 1.2" href="http://wicketframework.org/wicket-1.2/index.html"/>
+		<item name="Wicket 1.2" href="http://wicketframework.org/wicket-1.2/index.html" />
 		<item name="Wicket 1.1" href="http://wicketframework.org/wicket-1.1/index.html" />
 		<item name="Wicket 1.0" href="http://wicketframework.org/wicket-1.0/index.html" />
 	</menu>
 	<menu name="Related projects">
-		<item name="Wicket Extensions" href="/wicket-extensions/index.html" />
-		<item name="Wicket QuickStart" href="/wicket-quickstart/index.html" />
+		<item name="Wicket Extensions" href="http://wicketframework.org/wicket-extensions/index.html" />
+		<item name="Wicket QuickStart" href="http://wicketframework.org/wicket-quickstart/index.html" />
 		<item name="Wicket Stuff" href="http://wicket-stuff.sourceforge.net" />
 		<item name="Wicket Library" href="http://www.wicket-library.com" />
 	</menu>
