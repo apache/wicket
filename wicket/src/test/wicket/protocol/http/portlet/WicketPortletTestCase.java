@@ -20,6 +20,7 @@ package wicket.protocol.http.portlet;
 
 import junit.framework.TestCase;
 import wicket.Component;
+import wicket.Page;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.util.diff.DiffUtil;
 
@@ -58,7 +59,7 @@ public abstract class WicketPortletTestCase extends TestCase
 	 * @param filename
 	 * @throws Exception
 	 */
-	protected void executeTest(final Class pageClass, final String filename) throws Exception
+	protected void executeTest(final Class<? extends Page> pageClass, final String filename) throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 

@@ -43,12 +43,13 @@ import wicket.session.DefaultPageFactory;
 import wicket.util.file.WebApplicationPath;
 
 /**
- * This class provides a mock implementation of a Wicket portlet based application
- * that can be used for testing. It emulates all of the functionality of an
- * Portlet in a controlled, single-threaded environment. It is supported
- * with mock objects for PortletSession, PortletRequest, PortletResponse and
- * PortletContext.
+ * This class provides a mock implementation of a Wicket portlet based
+ * application that can be used for testing. It emulates all of the
+ * functionality of an Portlet in a controlled, single-threaded environment. It
+ * is supported with mock objects for PortletSession, PortletRequest,
+ * PortletResponse and PortletContext.
  * <p>
+ * 
  * @author Janne Hietam&auml;ki (jannehietamaki)
  */
 public class MockPortletApplication extends PortletApplication
@@ -56,20 +57,20 @@ public class MockPortletApplication extends PortletApplication
 	/** Logging */
 	private static final Log log = LogFactory.getLog(MockPortletApplication.class);
 
-	Map<String,Object> renderParameters=new HashMap<String,Object>();
-	
-	ServletContext context=null;
+	Map<String, Object> renderParameters = new HashMap<String, Object>();
+
+	ServletContext context = null;
 
 	/** Parameters to be set on the next request. */
 	private Map parametersForNextRequest = new HashMap();
 
-	PortletMode portletMode=PortletMode.VIEW;
+	PortletMode portletMode = PortletMode.VIEW;
 
-	WindowState windowState=WindowState.NORMAL;
+	WindowState windowState = WindowState.NORMAL;
 
-	String title="WicketPortletTest";
+	String title = "WicketPortletTest";
 
-	String contextPath="/portlet";
+	String contextPath = "/portlet";
 
 	/** The last rendered page. */
 	private PortletPage lastRenderedPage;
@@ -98,13 +99,15 @@ public class MockPortletApplication extends PortletApplication
 
 	/**
 	 * Construct.
+	 * 
 	 * @param path
 	 */
-	public MockPortletApplication(String path){	
+	public MockPortletApplication(String path)
+	{
 		Application.set(this);
 
 		context = new MockServletContext(this, path);
-		final PortletContext portletContext=new MockPortletContext(context);
+		final PortletContext portletContext = new MockPortletContext(context);
 		setWicketPortlet(new WicketPortlet()
 		{
 			private static final long serialVersionUID = 1L;
@@ -114,11 +117,13 @@ public class MockPortletApplication extends PortletApplication
 				return portletContext;
 			};
 
-			public String getPortletName(){
+			public String getPortletName()
+			{
 				return "MockPortlet";
 			}
 
-			public String getInitParameter(String key){
+			public String getInitParameter(String key)
+			{
 				return null;
 			}
 		});
@@ -136,14 +141,14 @@ public class MockPortletApplication extends PortletApplication
 		// component.
 		this.initializeComponents();
 
-		servletSession=new MockHttpSession(context);
-		portletSession=new MockPortletSession(servletSession);
+		servletSession = new MockHttpSession(context);
+		portletSession = new MockPortletSession(servletSession);
 
 		// set the default context path
 		getApplicationSettings().setContextPath(context.getServletContextName());
 
 		getResourceSettings().setResourceFinder(new WebApplicationPath(context));
-		getPageSettings().setAutomaticMultiWindowSupport(false);		
+		getPageSettings().setAutomaticMultiWindowSupport(false);
 	}
 
 	/**
@@ -182,65 +187,70 @@ public class MockPortletApplication extends PortletApplication
 	 * 
 	 * @param clazz
 	 */
-	public void setHomePage(Class clazz)
+	public void setHomePage(Class<? extends Page> clazz)
 	{
 		homePage = clazz;
 	}
 
 	/**
 	 * Initialize a new RenderRequest
-	 *
+	 * 
 	 */
 	public void createRenderRequest()
 	{
-		MockHttpServletRequest req=new MockHttpServletRequest(null, servletSession, context);
-		MockHttpServletResponse res=new MockHttpServletResponse();
-		portletRequest=new MockPortletRequest(this,portletSession,req,renderParameters);
-		portletResponse=new MockPortletRenderResponse(res);
+		MockHttpServletRequest req = new MockHttpServletRequest(null, servletSession, context);
+		MockHttpServletResponse res = new MockHttpServletResponse();
+		portletRequest = new MockPortletRequest(this, portletSession, req, renderParameters);
+		portletResponse = new MockPortletRenderResponse(res);
 		portletRequest.initialize();
 		portletResponse.initialize();
 		portletRequest.setParameters(parametersForNextRequest);
 		parametersForNextRequest.clear();
 		wicketPortletRequest = new WicketPortletRequest(portletRequest);
 		wicketPortletResponse = new WicketPortletResponse(portletResponse);
-		wicketPortletSession=getSession(wicketPortletRequest);
+		wicketPortletSession = getSession(wicketPortletRequest);
 	}
 
 	/**
 	 * Create new PortletRenderRequestCycle
+	 * 
 	 * @return PortletRenderRequestCycle
 	 */
 	public PortletRenderRequestCycle createRenderRequestCycle()
 	{
-		if(wicketPortletRequest==null){
+		if (wicketPortletRequest == null)
+		{
 			throw new IllegalStateException("PortletRequest is not initialized");
 		}
-		if(!(wicketPortletResponse.getPortletResponse() instanceof RenderResponse)){
-			throw new IllegalStateException("Unable to initialize PortletRenderRequestCycle, response is not RenderResponse");
+		if (!(wicketPortletResponse.getPortletResponse() instanceof RenderResponse))
+		{
+			throw new IllegalStateException(
+					"Unable to initialize PortletRenderRequestCycle, response is not RenderResponse");
 		}
-		return new PortletRenderRequestCycle(wicketPortletSession, wicketPortletRequest, wicketPortletResponse);
+		return new PortletRenderRequestCycle(wicketPortletSession, wicketPortletRequest,
+				wicketPortletResponse);
 	}
 
 	/**
-	 *  Initialize a new ActionRequest
+	 * Initialize a new ActionRequest
 	 */
 	public void createActionRequest()
 	{
-		renderParameters=new HashMap<String,Object>();
-		MockHttpServletRequest req=new MockHttpServletRequest(null, servletSession, context);
-		MockHttpServletResponse res=new MockHttpServletResponse();
-		portletRequest=new MockPortletRequest(this,portletSession,req,renderParameters);
-		portletResponse=new MockPortletActionResponse(res,renderParameters);
+		renderParameters = new HashMap<String, Object>();
+		MockHttpServletRequest req = new MockHttpServletRequest(null, servletSession, context);
+		MockHttpServletResponse res = new MockHttpServletResponse();
+		portletRequest = new MockPortletRequest(this, portletSession, req, renderParameters);
+		portletResponse = new MockPortletActionResponse(res, renderParameters);
 		portletRequest.initialize();
 		portletResponse.initialize();
 		portletRequest.setParameters(parametersForNextRequest);
 		parametersForNextRequest.clear();
 		wicketPortletRequest = new WicketPortletRequest(portletRequest);
 		wicketPortletResponse = new WicketPortletResponse(portletResponse);
-		wicketPortletSession=getSession(wicketPortletRequest);
+		wicketPortletSession = getSession(wicketPortletRequest);
 	}
 
-	
+
 	/**
 	 * Create and process the request cycle using the current request and
 	 * response information.
@@ -249,20 +259,25 @@ public class MockPortletApplication extends PortletApplication
 	 */
 	public PortletActionRequestCycle createActionRequestCycle()
 	{
-		if(wicketPortletRequest==null){
+		if (wicketPortletRequest == null)
+		{
 			throw new IllegalStateException("PortletRequest is not initialized");
 		}
-		if(!(wicketPortletResponse.getPortletResponse() instanceof ActionResponse)){
-			throw new IllegalStateException("Unable to initialize PortletActionRequestCycle, request is not ActionResponse");
+		if (!(wicketPortletResponse.getPortletResponse() instanceof ActionResponse))
+		{
+			throw new IllegalStateException(
+					"Unable to initialize PortletActionRequestCycle, request is not ActionResponse");
 		}
-		return new PortletActionRequestCycle(wicketPortletSession, wicketPortletRequest, wicketPortletResponse);
+		return new PortletActionRequestCycle(wicketPortletSession, wicketPortletRequest,
+				wicketPortletResponse);
 	}
 
 
 	/**
 	 * Create and process the request cycle using the current request and
 	 * response information.
-	 * @param cycle 
+	 * 
+	 * @param cycle
 	 */
 	public void processActionRequestCycle(PortletActionRequestCycle cycle)
 	{
@@ -272,7 +287,8 @@ public class MockPortletApplication extends PortletApplication
 	/**
 	 * Create and process the request cycle using the current request and
 	 * response information.
-	 * @param cycle 
+	 * 
+	 * @param cycle
 	 */
 	public void processRenderRequestCycle(PortletRenderRequestCycle cycle)
 	{
@@ -280,7 +296,8 @@ public class MockPortletApplication extends PortletApplication
 
 		previousRenderedPage = lastRenderedPage;
 
-		final MockPortletResponse httpResponse = (MockPortletResponse)cycle.getPortletResponse().getPortletResponse();
+		final MockPortletResponse httpResponse = (MockPortletResponse)cycle.getPortletResponse()
+				.getPortletResponse();
 
 		generateLastRenderedPage(cycle);
 
@@ -288,10 +305,10 @@ public class MockPortletApplication extends PortletApplication
 
 		if (getLastRenderedPage() instanceof ExceptionErrorPortletPage)
 		{
-			throw (RuntimeException)((ExceptionErrorPortletPage)getLastRenderedPage()).getThrowable();
+			throw (RuntimeException)((ExceptionErrorPortletPage)getLastRenderedPage())
+					.getThrowable();
 		}
 	}
-
 
 
 	@SuppressWarnings("unchecked")
@@ -322,12 +339,14 @@ public class MockPortletApplication extends PortletApplication
 					}
 					else
 					{
-						lastRenderedPage = (PortletPage)new DefaultPageFactory().newPage(pageClass, parameters);
+						lastRenderedPage = (PortletPage)new DefaultPageFactory().newPage(pageClass,
+								parameters);
 					}
 				}
 			}
 		}
 	}
+
 	/**
 	 * Get the page that was just rendered by the last request cycle processing.
 	 * 
@@ -361,6 +380,7 @@ public class MockPortletApplication extends PortletApplication
 
 	/**
 	 * Get the current PortletRequest
+	 * 
 	 * @return MockPortletRequest
 	 */
 	public MockPortletRequest getPortletRequest()
@@ -368,12 +388,13 @@ public class MockPortletApplication extends PortletApplication
 		return portletRequest;
 	}
 
-	/** 
+	/**
 	 * Get the current PortletResponse
 	 * 
 	 * @return MockPortletResponse
 	 */
-	public MockPortletResponse getPortletResponse(){
+	public MockPortletResponse getPortletResponse()
+	{
 		return portletResponse;
 	}
 }
