@@ -42,7 +42,7 @@ public interface IAuthorizationStrategy
 		/**
 		 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 		 */
-		public boolean isInstantiationAuthorized(final Class c)
+		public boolean isInstantiationAuthorized(final Class<? extends Component> c)
 		{
 			return true;
 		}
@@ -72,7 +72,7 @@ public interface IAuthorizationStrategy
 	 *            The component class to check
 	 * @return Whether the given component may be created
 	 */
-	boolean isInstantiationAuthorized(Class componentClass);
+	boolean isInstantiationAuthorized(Class<? extends Component> componentClass);
 
 	/**
 	 * Gets whether the given action is permitted. If it is, this method should

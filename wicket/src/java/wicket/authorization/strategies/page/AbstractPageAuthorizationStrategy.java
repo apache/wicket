@@ -45,11 +45,12 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	/**
 	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public final boolean isInstantiationAuthorized(final Class/* <Component> */componentClass)
+	@SuppressWarnings("unchecked")
+	public final boolean isInstantiationAuthorized(final Class<? extends Component> componentClass)
 	{
 		if (instanceOf(componentClass, Page.class))
 		{
-			return isPageAuthorized(componentClass);
+			return isPageAuthorized((Class<? extends Page>)componentClass);
 		}
 		return true;
 	}
@@ -65,7 +66,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 *            or extend
 	 * @return True if the type is an instance of the superType
 	 */
-	protected boolean instanceOf(final Class type, final Class<?> superType)
+	protected boolean instanceOf(final Class<? extends Component> type, final Class<?> superType)
 	{
 		return superType.isAssignableFrom(type);
 	}
@@ -77,7 +78,7 @@ public abstract class AbstractPageAuthorizationStrategy implements IAuthorizatio
 	 *            The Page class
 	 * @return True if to page may be created
 	 */
-	protected boolean isPageAuthorized(Class/* <Page> */pageClass)
+	protected boolean isPageAuthorized(Class<? extends Page> pageClass)
 	{
 		return true;
 	}
