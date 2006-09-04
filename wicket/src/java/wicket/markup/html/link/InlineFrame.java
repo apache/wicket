@@ -27,13 +27,15 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.util.string.Strings;
 
 /**
- * Implementation of an internal frame component. Must be used with an iframe
- * (&lt;iframe src...) element. The src attribute will be generated.
+ * Implementation of an <a
+ * href="http://www.w3.org/TR/REC-html40/present/frames.html#h-16.5">inline
+ * frame</a> component. Must be used with an iframe (&lt;iframe src...)
+ * element. The src attribute will be generated.
  * 
  * @author Sven Meier
  * @author Ralf Ebert
  */
-public class InternalFrame extends WebMarkupContainer implements ILinkListener
+public class InlineFrame extends WebMarkupContainer implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,14 +43,14 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	private final IPageLink pageLink;
 
 	/**
-	 * The pagemap name where the page that will be created by this internal
-	 * frame will be created in.
+	 * The pagemap name where the page that will be created by this inline frame
+	 * will be created in.
 	 */
 	private final String pageMapName;
 
 	/**
-	 * Constructs an internal frame that instantiates the given Page class when
-	 * the content of the internal frame is requested. The instantiated Page is
+	 * Constructs an inline frame that instantiates the given Page class when
+	 * the content of the inline frame is requested. The instantiated Page is
 	 * used to render a response to the user.
 	 * 
 	 * @param parent
@@ -57,11 +59,11 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * @param id
 	 *            See Component
 	 * @param pageMap
-	 *            the pagemap where the page of the internal frame must be in
+	 *            the pagemap where the page of the inline frame must be in
 	 * @param c
 	 *            Page class
 	 */
-	public InternalFrame(MarkupContainer parent, final String id, final PageMap pageMap,
+	public InlineFrame(MarkupContainer parent, final String id, final PageMap pageMap,
 			final Class<? extends Page> c)
 	{
 		this(parent, id, pageMap, new IPageLink()
@@ -89,7 +91,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 
 	/**
 	 * This constructor is ideal if a Page object was passed in from a previous
-	 * Page. Construct an internal frame containing the given Page.
+	 * Page. Construct an inline frame containing the given Page.
 	 * 
 	 * @param parent
 	 *            The parent of this component
@@ -97,11 +99,11 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * @param id
 	 *            See component
 	 * @param pageMap
-	 *            the pagemap where the page of the internal frame must be in
+	 *            the pagemap where the page of the inline frame must be in
 	 * @param page
 	 *            The page
 	 */
-	public InternalFrame(MarkupContainer parent, final String id, final PageMap pageMap,
+	public InlineFrame(MarkupContainer parent, final String id, final PageMap pageMap,
 			final Page page)
 	{
 		this(parent, id, pageMap, new IPageLink()
@@ -124,8 +126,8 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	/**
 	 * This constructor is ideal for constructing pages lazily.
 	 * 
-	 * Constructs an internal frame which invokes the getPage() method of the
-	 * IPageLink interface when the content of the internal frame is requested.
+	 * Constructs an inline frame which invokes the getPage() method of the
+	 * IPageLink interface when the content of the inline frame is requested.
 	 * Whatever Page objects is returned by this method will be rendered back to
 	 * the user.
 	 * 
@@ -135,13 +137,13 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * @param id
 	 *            See Component
 	 * @param pageMap
-	 *            the pagemap where the page of the internal frame must be in
+	 *            the pagemap where the page of the inline frame must be in
 	 * @param pageLink
 	 *            An implementation of IPageLink which will create the page to
-	 *            be contained in the internal frame if and when the content is
+	 *            be contained in the inline frame if and when the content is
 	 *            requested
 	 */
-	public InternalFrame(MarkupContainer parent, final String id, final PageMap pageMap,
+	public InlineFrame(MarkupContainer parent, final String id, final PageMap pageMap,
 			IPageLink pageLink)
 	{
 		super(parent, id);
