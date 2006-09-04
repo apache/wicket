@@ -18,20 +18,53 @@
  */
 package wicket.extensions.markup.html.form;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.List;
 
 import wicket.MarkupContainer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.model.IModel;
 
+/**
+ * Drop down that works with an enumeration. It will list the choiced by calling
+ * getEnumConstants.
+ * 
+ * @author ivaynberg
+ * @param <T>
+ *            The type
+ */
 public class EnumDropDown<T extends Enum> extends DropDownChoice<T>
 {
+	private static class EnumRenderer<T extends Enum> implements IChoiceRenderer<T>
+	{
+		private static final long serialVersionUID = 1L;
+
+		public Object getDisplayValue(T object)
+		{
+			return object.toString();
+		}
+
+		public String getIdValue(T object, int index)
+		{
+			return object.name();
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
-	public EnumDropDown(MarkupContainer parent, String id, IModel<T> model, Class enumType)
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 *            The parent component
+	 * @param id
+	 *            The component id
+	 * @param model
+	 *            The model
+	 * @param enumType
+	 *            The class of the enumeration
+	 */
+	public EnumDropDown(MarkupContainer parent, String id, IModel<T> model, Class<T> enumType)
 	{
 		super(parent, id);
 
@@ -44,29 +77,8 @@ public class EnumDropDown<T extends Enum> extends DropDownChoice<T>
 			throw new IllegalArgumentException("Argument [[enumType]] must be an enum");
 		}
 
-
 		setModel(model);
-		setChoices((List<T>)Arrays.asList(enumType.getEnumConstants()));
+		setChoices(Arrays.asList(enumType.getEnumConstants()));
 		setChoiceRenderer(new EnumRenderer<T>());
-
 	}
-
-	private static class EnumRenderer<T extends Enum> implements IChoiceRenderer<T>
-	{
-
-		private static final long serialVersionUID = 1L;
-
-		public Object getDisplayValue(T object)
-		{
-			return object.toString();
-		}
-
-		public String getIdValue(T object, int index)
-		{
-			return object.name();
-		}
-
-	}
-
-
 }
