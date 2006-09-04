@@ -33,11 +33,8 @@ import wicket.util.string.Strings;
  * 
  * @author Sven Meier
  * @author Ralf Ebert
- * 
- * @deprecated will be replaced by {@link InlineFrame} in Wicket 2.0 as that's a
- *             better name for it.
  */
-public class InternalFrame extends WebMarkupContainer implements ILinkListener
+public class InlineFrame extends WebMarkupContainer implements ILinkListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -45,8 +42,8 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	private final IPageLink pageLink;
 
 	/**
-	 * The pagemap name where the page that will be created by this inline frame
-	 * will be created in.
+	 * The pagemap name where the page that will be created by this inline
+	 * frame will be created in.
 	 */
 	private final String pageMapName;
 
@@ -62,7 +59,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * @param c
 	 *            Page class
 	 */
-	public InternalFrame(final String id, final PageMap pageMap, final Class c)
+	public InlineFrame(final String id, final PageMap pageMap, final Class c)
 	{
 		this(id, pageMap, new IPageLink()
 		{
@@ -98,7 +95,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 * @param page
 	 *            The page
 	 */
-	public InternalFrame(final String id, final PageMap pageMap, final Page page)
+	public InlineFrame(final String id, final PageMap pageMap, final Page page)
 	{
 		this(id, pageMap, new IPageLink()
 		{
@@ -134,7 +131,7 @@ public class InternalFrame extends WebMarkupContainer implements ILinkListener
 	 *            be contained in the inline frame if and when the content is
 	 *            requested
 	 */
-	public InternalFrame(final String id, final PageMap pageMap, IPageLink pageLink)
+	public InlineFrame(final String id, final PageMap pageMap, IPageLink pageLink)
 	{
 		super(id);
 
