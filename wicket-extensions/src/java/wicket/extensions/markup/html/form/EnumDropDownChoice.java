@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.form;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,16 +32,16 @@ import wicket.model.IModel;
  * <code>toString()</code> is used for text.
  * 
  * <pre>
- *    public enum Color {
- *      WHITE(&quot;White&quot;),BLACK(&quot;Black&quot;);
- *      
- *      private String text;
- *      private Color(String text) { this.text=text; }
- *      
- *      public String toString() { return text; }
- *    }
- *    
- *    new EnumDropDownChoice&lt;Color&gt;(this, &quot;color&quot;, new PropertyModel(...), Color.class);
+ *     public enum Color {
+ *       WHITE(&quot;White&quot;),BLACK(&quot;Black&quot;);
+ *       
+ *       private String text;
+ *       private Color(String text) { this.text=text; }
+ *       
+ *       public String toString() { return text; }
+ *     }
+ *     
+ *     new EnumDropDownChoice&lt;Color&gt;(this, &quot;color&quot;, new PropertyModel(...), Color.class);
  * </pre>
  * 
  * 
