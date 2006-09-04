@@ -725,22 +725,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * @return fixed true;
-	 * 
-	 * @deprecated this method is to be removed in future version in favor of
-	 *             instances of
-	 *             {@link wicket.authorization.IAuthorizationStrategy} such as
-	 *             {@link wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy}.
-	 *             It isn't called anymore and made final so that people see
-	 *             what must be changed.
-	 */
-	@Deprecated
-	public final boolean checkAccess()
-	{
-		return true;
-	}
-
-	/**
 	 * Checks whether the hierarchy may be changed at all, and throws an
 	 * exception if this is not the case.
 	 * 

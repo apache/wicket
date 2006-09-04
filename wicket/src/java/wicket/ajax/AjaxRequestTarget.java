@@ -228,18 +228,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	 * Adds javascript that will be evaluated on the client side after
 	 * components are replaced
 	 * 
-	 * @deprecated use appendJavascript(String javascript) instead
-	 * @param javascript
-	 */
-	public final void addJavascript(String javascript)
-	{
-		appendJavascript(javascript);
-	}
-
-	/**
-	 * Adds javascript that will be evaluated on the client side after
-	 * components are replaced
-	 * 
 	 * @param javascript
 	 */
 	public final void appendJavascript(String javascript)

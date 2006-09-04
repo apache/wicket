@@ -170,18 +170,6 @@ public class MarkupParser
 	}
 
 	/**
-	 * Applications which subclass initFilterChain() might also wish to access
-	 * the markup resource stream.
-	 * 
-	 * @return The markup resource stream
-	 * @deprecated since 2.0 please use getMarkup().getResource() instead.
-	 */
-	public final MarkupResourceStream getMarkupResourceStream()
-	{
-		return this.markup.getResource();
-	}
-
-	/**
 	 * Create a new markup filter chain and initialize with all default filters
 	 * required.
 	 */

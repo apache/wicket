@@ -213,15 +213,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @return The WebRequestCycle for this WebPage.
-	 * @deprecated use multivariant {@link #getRequestCycle()} instead
-	 */
-	protected final WebRequestCycle getWebRequestCycle()
-	{
-		return getRequestCycle();
-	}
-
-	/**
 	 * @see wicket.RequestCycle#getRequest()
 	 */
 	public WebRequest getRequest()
