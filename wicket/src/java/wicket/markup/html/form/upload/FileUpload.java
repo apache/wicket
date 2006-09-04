@@ -1,7 +1,7 @@
 /*
- * $Id: FileUpload.java 5069 2006-03-21 17:50:48 -0800 (Tue, 21 Mar 2006)
- * ivaynberg $ $Revision$ $Date: 2006-03-21 17:50:48 -0800 (Tue, 21 Mar
- * 2006) $
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -85,6 +85,16 @@ public class FileUpload implements Serializable
 
 
 	/**
+	 * Get an input stream for the file uploaded. Use this input stream if you
+	 * can't use {@link #writeTo(File)} for persisting the uploaded file. This
+	 * can be if you need to react upon the content of the file or need to
+	 * persist it elsewhere, i.e. a database or external filesystem.
+	 * <p>
+	 * <b>PLEASE NOTE!</b><br>
+	 * The InputStream returned is not closed by Wicket, so you must close it
+	 * yourself, when finished with it. This is done by calling
+	 * {@link InputStream#close() close()} on the returned InputStream.
+	 * 
 	 * @return Input stream with file contents.
 	 * @throws IOException
 	 */
