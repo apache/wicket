@@ -289,7 +289,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isInstantiationAuthorized(final Class componentClass)
+	public boolean isInstantiationAuthorized(final Class<? extends Component> componentClass)
 	{
 		if (componentClass == null)
 		{

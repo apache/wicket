@@ -47,7 +47,7 @@ public class AnnotationsRoleAuthorizationStrategy extends AbstractRoleAuthorizat
 	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isInstantiationAuthorized(final Class componentClass)
+	public boolean isInstantiationAuthorized(final Class<? extends Component> componentClass)
 	{
 		// We are authorized unless we are found not to be
 		boolean authorized = true;
