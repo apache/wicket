@@ -170,7 +170,7 @@ public class PackageResource extends WebResource
 						throw new IllegalStateException("unable to read resources from directory "
 								+ basedir);
 					}
-					// should not be necesarry anymore
+					// should not be necessary anymore
 					// addResources(scope, pattern, resources, new
 					// StringBuffer(""), basedir, recurse);
 				}

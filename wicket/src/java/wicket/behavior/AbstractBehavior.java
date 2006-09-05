@@ -107,7 +107,7 @@ public abstract class AbstractBehavior implements IBehavior
 	 * This method is called either by {@link #onRendered(Component)} or
 	 * {@link #onException(Component, RuntimeException)} AFTER they called their
 	 * respective template methods. Override this template method to do any
-	 * necesarry cleanup.
+	 * necessary cleanup.
 	 */
 	public void cleanup()
 	{
