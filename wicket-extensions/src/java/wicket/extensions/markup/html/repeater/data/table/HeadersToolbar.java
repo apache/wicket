@@ -18,17 +18,10 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import java.util.Iterator;
-
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
-import wicket.extensions.markup.html.repeater.util.ArrayIteratorAdapter;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.model.IModel;
-import wicket.model.Model;
 
 /**
  * Toolbars that displays column headers. If the column is sortable a sortable
