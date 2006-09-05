@@ -42,6 +42,8 @@ public class FileUploadField extends FormComponent<FileUpload>
 
 	/** True if a model has been set explicitly */
 	private boolean hasExplicitModel;
+	
+	private FileUpload fileUpload;
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
@@ -66,6 +68,8 @@ public class FileUploadField extends FormComponent<FileUpload>
 	}
 
 	/**
+	 * Get the uploaded file. This will always return the same FileUpload instance.
+	 * 
 	 * @return The uploaded file
 	 */
 	public FileUpload getFileUpload()
@@ -83,7 +87,11 @@ public class FileUploadField extends FormComponent<FileUpload>
 			// bytes)
 			if (item != null && item.getSize() > 0)
 			{
-				return new FileUpload(item);
+				if (fileUpload == null) {
+					fileUpload = new FileUpload(item);
+				}
+				
+				return fileUpload;
 			}
 		}
 		return null;
@@ -161,5 +169,19 @@ public class FileUploadField extends FormComponent<FileUpload>
 	protected boolean supportsPersistence()
 	{
 		return false;
+	}
+
+	/**
+	 * Clean up at the end of the request. This means closing all inputstreams
+	 * which might have been opened from the fileUpload.
+	 * 
+	 * @see wicket.markup.html.form.FormComponent#onDetach()
+	 */
+	@Override
+	protected final void onDetach()
+	{
+		super.onDetach();
+		
+		fileUpload.closeStreams();
 	}
 }
