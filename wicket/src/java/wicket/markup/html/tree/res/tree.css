@@ -84,8 +84,7 @@ div.wicket-tree span.icon {
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
 	margin-left: 2px;
-	position: relative;
-	top: -1px;
+	margin-top: -1px;
 }
 
 div.wicket-tree a {
