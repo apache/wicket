@@ -65,7 +65,7 @@ public abstract class AbstractTextComponent<T> extends FormComponent<T>
 
 	/**
 	 * TextFields return an empty string even if the user didn't type anything
-	 * in them. To be able to work nice with validation, this method returns
+	 * in them. To be able to work nicely with validation, this method returns
 	 * false.
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#isInputNullable()
