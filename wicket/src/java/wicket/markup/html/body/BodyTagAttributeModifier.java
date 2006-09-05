@@ -31,15 +31,15 @@ import wicket.model.IModel;
 /**
  * An attribute modifier specifically for body tags.
  * <p>
- * Panel have associated markup files and if that contains &lt;wicket:head&gt;
- * and &lt;body onLoad="..."&gt; than the body onLoad attribute will be appended
- * to the page's body onLoad attribute. That appending happens by means of an
- * AttributeModifier which the Panel add to the body container. In case the
- * Panel is removed or replaced, than the AttributeModifier must be removed or
- * at least disabled. That exactly is what this special purpose
- * AttributeModifier does. It disables itself if the owner component (Panel) is
- * removed or replaced.
- * 
+ * Panels have associated markup files and if they contain
+ * <code>&lt;wicket:head&gt;</code> and <code>&lt;body onLoad="..."&gt;<code>
+ * than the body's <code>onLoad</code> attribute will be appended to the page's
+ * onLoad attribute. That appendation happens by means of an AttributeModifier
+ * which the Panel adds to the body container. In the case where the Panel is
+ * removed or replaced, than the AttributeModifier must be removed or at least
+ * disabled. That exactly is what this special purpose AttributeModifier does,
+ * i.e. it disables itself if the owner component (Panel) is removed or replaced.
+ *
  * @author Juergen Donnerstag
  */
 public final class BodyTagAttributeModifier extends AttributeModifier
