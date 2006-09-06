@@ -294,7 +294,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 * @return Any default choice, such as "Choose One", depending on the
 	 *         subclass
 	 */
-	protected CharSequence getDefaultChoice(final Object selected)
+	protected CharSequence getDefaultChoiceMarkup(final Object selected)
 	{
 		return "";
 	}
@@ -329,7 +329,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 		final String selected = getValue();
 
 		// Append default option
-		buffer.append(getDefaultChoice(selected));
+		buffer.append(getDefaultChoiceMarkup(selected));
 
 		for (int index = 0; index < choices.size(); index++)
 		{

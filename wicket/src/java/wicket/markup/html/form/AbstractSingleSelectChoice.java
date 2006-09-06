@@ -209,10 +209,10 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * The choice for null is valid will always be returned. The choice when
 	 * null is not valid will only be returned if the selected object is null.
 	 * 
-	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoice(Object)
+	 * @see wicket.markup.html.form.AbstractChoice#getDefaultChoiceMarkup(Object)
 	 */
 	@Override
-	protected CharSequence getDefaultChoice(final Object selected)
+	protected CharSequence getDefaultChoiceMarkup(final Object selected)
 	{
 		// Is null a valid selection value?
 		if (isNullValid())
@@ -256,7 +256,7 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * Returns the string value of the default choice (the "Choose One" analog).
 	 * This method is useful if you only need to override the string value of
 	 * the default option and do not want to implement the construction of
-	 * markup that is performed in the {@link #getDefaultChoice(Object)}.
+	 * markup that is performed in the {@link #getDefaultChoiceMarkup(Object)}.
 	 * 
 	 * By default this method looks for a resource with key "nullValid"
 	 * 
