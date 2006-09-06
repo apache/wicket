@@ -41,7 +41,9 @@ public interface IItemReuseStrategy extends Serializable
 	 * Returns an iterator over items that will be added to the view. The
 	 * iterator needs to return all the items because the old ones are removed
 	 * prior to the new ones added.
-	 * @param container 
+	 * 
+	 * @param parent
+	 *            parent for returned item components
 	 * 
 	 * @param factory
 	 *            implementation of IItemFactory
@@ -52,5 +54,6 @@ public interface IItemReuseStrategy extends Serializable
 	 * @return iterator over items that will be added after all the old items
 	 *         are moved.
 	 */
-	Iterator getItems(MarkupContainer container, IItemFactory factory, Iterator newModels, Iterator existingItems);
+	Iterator getItems(MarkupContainer parent, IItemFactory factory, Iterator newModels,
+			Iterator existingItems);
 }
