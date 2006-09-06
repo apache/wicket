@@ -93,7 +93,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 */
 	public CharSequence getCallbackUrl()
 	{
-		return getCallbackUrl(true, false);
+		return getCallbackUrl(false, true);
 	}
 
 	/**
