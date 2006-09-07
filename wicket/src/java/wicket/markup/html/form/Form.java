@@ -578,7 +578,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @return The button which submitted this form or null if the processing
 	 *         was not trigger by a registered button component
 	 */
-	protected final Button findSubmittingButton()
+	public final Button findSubmittingButton()
 	{
 		Button button = (Button)visitChildren(Button.class, new IVisitor()
 		{
