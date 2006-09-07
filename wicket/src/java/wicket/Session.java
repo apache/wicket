@@ -460,9 +460,13 @@ public abstract class Session implements Serializable, IConverterLocator
 				usedPages = new HashMap<String, Thread>(3);
 			}
 
+			// set up a barrier so that on thread can only access one page at the time of the complete request.
+			// check the usedPages map if the page id is already used by a thread.
 			Thread t = usedPages.get(id);
 			while (t != null && t != Thread.currentThread())
 			{
+				// if it isn't used by this thread wait, we could make this indefinitly or better
+				// report error if after X number of tries this still fails!
 				try
 				{
 					wait(1000);
@@ -473,7 +477,9 @@ public abstract class Session implements Serializable, IConverterLocator
 				}
 				t = usedPages.get(id);
 			}
-
+			// set the current thread as an owner of this page id.
+			// This will be released in Page.internalDetach() that will call Session.pageDetached()
+			// which will clean up this entry and call notify.
 			usedPages.put(id, Thread.currentThread());
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 			if (page == null)
@@ -1095,10 +1101,12 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final synchronized void pageDetached(Page page)
 	{
+		// Remove the entry.
 		if (usedPages != null)
 		{
 			usedPages.remove(page.getId());
 		}
+		// and call notify so that request wanting the same page can now go on.
 		notifyAll();
 	}
 
