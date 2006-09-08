@@ -133,11 +133,14 @@ public abstract class Response
 	}
 
 	/**
+	 * CLIENTS SHOULD NEVER CALL THIS METHOD FOR DAY TO DAY USE!
+	 * <p>
 	 * A subclass may override this method to implement redirection. Subclasses
 	 * which have no need to do redirection may choose not to override this
 	 * default implementation, which does nothing. For example, if a subclass
 	 * wishes to write output to a file or is part of a testing harness, there
 	 * may be no meaning to redirection.
+	 * </p>
 	 * 
 	 * @param url
 	 *            The URL to redirect to

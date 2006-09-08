@@ -172,8 +172,11 @@ public class WebResponse extends Response
 	}
 
 	/**
+	 * CLIENTS SHOULD NEVER CALL THIS METHOD FOR DAY TO DAY USE!
+	 * <p>
 	 * Redirects to the given url. Implementations should encode the URL to make
 	 * sure cookie-less operation is supported in case clients forgot.
+	 * </p>
 	 * 
 	 * @param url
 	 *            The URL to redirect to
