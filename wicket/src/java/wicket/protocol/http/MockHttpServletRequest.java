@@ -1,7 +1,7 @@
 /*
- * $Id: MockHttpServletRequest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May
- * 2006) joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24
- * May 2006) $
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,8 +19,11 @@
 package wicket.protocol.http;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.CharArrayReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -60,6 +63,7 @@ import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ILinkListener;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.util.file.File;
 import wicket.util.lang.Classes;
 import wicket.util.value.ValueMap;
 
@@ -71,6 +75,81 @@ import wicket.util.value.ValueMap;
  */
 public class MockHttpServletRequest implements HttpServletRequest
 {
+	/**
+	 * A holder class for an uploaded file.
+	 * 
+	 * @author Frank Bille (billen)
+	 */
+	private class UploadedFile
+	{
+		private String fieldName;
+		private File file;
+		private String contentType;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param fieldName
+		 * @param file
+		 * @param contentType
+		 */
+		public UploadedFile(String fieldName, File file, String contentType)
+		{
+			this.fieldName = fieldName;
+			this.file = file;
+			this.contentType = contentType;
+		}
+
+		/**
+		 * @return The content type of the file. Mime type.
+		 */
+		public String getContentType()
+		{
+			return contentType;
+		}
+
+		/**
+		 * @param contentType
+		 *            The content type.
+		 */
+		public void setContentType(String contentType)
+		{
+			this.contentType = contentType;
+		}
+
+		/**
+		 * @return The field name.
+		 */
+		public String getFieldName()
+		{
+			return fieldName;
+		}
+
+		/**
+		 * @param fieldName
+		 */
+		public void setFieldName(String fieldName)
+		{
+			this.fieldName = fieldName;
+		}
+
+		/**
+		 * @return The uploaded file.
+		 */
+		public File getFile()
+		{
+			return file;
+		}
+
+		/**
+		 * @param file
+		 */
+		public void setFile(File file)
+		{
+			this.file = file;
+		}
+	}
+
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(MockHttpServletRequest.class);
 
@@ -98,6 +177,12 @@ public class MockHttpServletRequest implements HttpServletRequest
 	private final HttpSession session;
 
 	private String url;
+
+	private String contentType;
+
+	private int contentLength = -1;
+
+	private Map<String, UploadedFile> uploadedFiles;
 
 	/**
 	 * Create the request using the supplied session object.
@@ -127,6 +212,47 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void addCookie(final Cookie cookie)
 	{
 		cookies.add(cookie);
+	}
+
+	/**
+	 * Add an uploaded file to the request. Use this to simulate a file that has
+	 * been uploaded to a field.
+	 * 
+	 * @param fieldName
+	 *            The fieldname of the upload field.
+	 * @param file
+	 *            The file to upload.
+	 * @param contentType
+	 *            The content type of the file. Must be a correct mimetype.
+	 */
+	public void addFile(String fieldName, File file, String contentType)
+	{
+		if (file == null)
+		{
+			throw new IllegalArgumentException("File must not be null");
+		}
+
+		if (file.exists() == false)
+		{
+			throw new IllegalArgumentException(
+					"File does not exists. You must provide an existing file: "
+							+ file.getAbsolutePath());
+		}
+
+		if (file.isFile() == false)
+		{
+			throw new IllegalArgumentException(
+					"You can only add a File, which is not a directory. Only files can be uploaded.");
+		}
+
+		if (uploadedFiles == null)
+		{
+			uploadedFiles = new HashMap<String, UploadedFile>();
+		}
+
+		UploadedFile uf = new UploadedFile(fieldName, file, contentType);
+
+		uploadedFiles.put(fieldName, uf);
 	}
 
 	/**
@@ -199,7 +325,16 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public int getContentLength()
 	{
-		return -1;
+		if (uploadedFiles != null && uploadedFiles.size() > 0)
+		{
+			String request = buildRequest();
+			if (request.length() > 0)
+			{
+				contentLength = request.length();
+			}
+		}
+
+		return contentLength;
 	}
 
 	/**
@@ -209,7 +344,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getContentType()
 	{
-		return null;
+		String ct = contentType;
+
+		if (uploadedFiles != null && uploadedFiles.size() > 0)
+		{
+			ct += "; boundary=abcdefgABCDEFG";
+		}
+
+		return ct;
 	}
 
 	/**
@@ -315,8 +457,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * This feature is not implemented at this time as we are not supporting
-	 * binary servlet input. This functionality may be added in the future.
+	 * Returns an input stream if there has been added some uploaded files. Use
+	 * {@link #addFile(String, File, String)} to add some uploaded files.
 	 * 
 	 * @return The input stream
 	 * @throws IOException
@@ -324,14 +466,34 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public ServletInputStream getInputStream() throws IOException
 	{
-		return new ServletInputStream()
+		if (uploadedFiles != null && uploadedFiles.size() > 0)
 		{
-			@Override
-			public int read()
+			String request = buildRequest();
+
+			// Ok lets make an input stream to return
+			final ByteArrayInputStream bais = new ByteArrayInputStream(request
+					.getBytes("ISO-8859-1"));
+
+			return new ServletInputStream()
 			{
-				return -1;
-			}
-		};
+				@Override
+				public int read()
+				{
+					return bais.read();
+				}
+			};
+		}
+		else
+		{
+			return new ServletInputStream()
+			{
+				@Override
+				public int read()
+				{
+					return -1;
+				}
+			};
+		}
 	}
 
 	/**
@@ -628,7 +790,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public String getRequestURI()
 	{
-		if(url == null)
+		if (url == null)
 		{
 			return "";
 		}
@@ -869,6 +1031,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setCharacterEncoding(final String encoding) throws UnsupportedEncodingException
 	{
 		this.characterEncoding = encoding;
+	}
+
+	/**
+	 * Set the content type
+	 * 
+	 * @param contentType
+	 *            The content type
+	 */
+	public void setContentType(final String contentType)
+	{
+		this.contentType = contentType;
 	}
 
 	/**
@@ -1143,5 +1316,69 @@ public class MockHttpServletRequest implements HttpServletRequest
 				+ l.getCountry().toLowerCase() + "," + l.getLanguage().toLowerCase() + ";q=0.5");
 		addHeader("User-Agent",
 				"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
+	}
+
+
+	private String buildRequest()
+	{
+		// Build up the input stream based on the files and parameters
+		StringBuffer issb = new StringBuffer();
+		String crlf = "\r\n";
+		String boundary = "--abcdefgABCDEFG";
+		// System.out.println(boundary.length());
+
+		// Add parameters
+		for (String parameter : parameters.keySet())
+		{
+			issb.append(boundary).append(crlf);
+			issb.append("Content-Disposition: form-data; name=\"").append(parameter).append("\"")
+					.append(crlf).append(crlf);
+			issb.append(parameters.get(parameter)).append(crlf);
+		}
+
+
+		try
+		{
+			// Add files
+			if (uploadedFiles != null)
+			{
+				for (String fieldName : uploadedFiles.keySet())
+				{
+					UploadedFile uf = uploadedFiles.get(fieldName);
+
+					issb.append(boundary).append(crlf);
+					issb.append("Content-Disposition: form-data; name=\"").append(fieldName)
+							.append("\"; filename=\"").append(uf.getFile().getName()).append("\"")
+							.append(crlf);
+					issb.append("Content-Type: ").append(uf.getContentType()).append(crlf).append(
+							crlf);
+
+					// Load the file and put it into the the inputstream
+					FileInputStream fis = new FileInputStream(uf.getFile());
+					StringWriter sw = new StringWriter();
+
+					byte[] data = new byte[1024];
+					int read = 0;
+					while ((read = fis.read(data)) > 0)
+					{
+						sw.write(new String(data, 0, read));
+					}
+
+					fis.close();
+
+					issb.append(sw.getBuffer()).append(crlf);
+
+					sw.close();
+				}
+			}
+		}
+		catch (IOException e)
+		{
+			throw new IllegalStateException(e);
+		}
+
+		issb.append(boundary).append("--").append(crlf);
+
+		return issb.toString();
 	}
 }

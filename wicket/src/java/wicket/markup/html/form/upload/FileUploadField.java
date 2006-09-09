@@ -172,16 +172,22 @@ public class FileUploadField extends FormComponent<FileUpload>
 	}
 
 	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
 	 * Clean up at the end of the request. This means closing all inputstreams
 	 * which might have been opened from the fileUpload.
 	 * 
-	 * @see wicket.markup.html.form.FormComponent#onDetach()
+	 * @see wicket.Component#internalOnDetach()
 	 */
 	@Override
-	protected final void onDetach()
+	protected void internalOnDetach()
 	{
-		super.onDetach();
+		super.internalOnDetach();
 		
-		fileUpload.closeStreams();
+		if (fileUpload != null)
+		{
+			fileUpload.closeStreams();
+		}
 	}
 }

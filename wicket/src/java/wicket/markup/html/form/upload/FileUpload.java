@@ -173,16 +173,22 @@ public class FileUpload implements Serializable
 	 */
 	void closeStreams()
 	{
-		for (InputStream inputStream : inputStreams)
+		if (inputStreams != null)
 		{
-			try
+			for (InputStream inputStream : inputStreams)
 			{
-				inputStream.close();
+				try
+				{
+					inputStream.close();
+				}
+				catch (IOException e)
+				{
+					// We don't care aobut the exceptions thrown here.
+				}
 			}
-			catch (IOException e)
-			{
-				// We don't care aobut the exceptions thrown here.
-			}
+			
+			// Reset the list
+			inputStreams = null;
 		}
 	}
 }
