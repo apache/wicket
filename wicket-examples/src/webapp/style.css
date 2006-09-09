@@ -350,21 +350,21 @@ div.tabpanel3 div.tab-row li.selected a {
 
 
 
-div.tabpanel4 ul {
+div.tabpanel4 div.tab-row ul {
     height: 20px;
     margin: 0;
     padding-left: 10px;
     background: url( tabs4/tab_bottom.gif ) repeat-x bottom;
 }
 
-div.tabpanel4 li {
+div.tabpanel4 div.tab-row li {
     margin: 0;
     padding: 0;
     display: inline;
     list-style-type: none;
 }
 
-div.tabpanel4 a:link, div.tabpanel4  a:visited {
+div.tabpanel4 div.tab-row a:link, div.tabpanel4 div.tab-row a:visited {
     float: left;
     background: #f3f3f3;
     font-size: 12px;
@@ -377,13 +377,13 @@ div.tabpanel4 a:link, div.tabpanel4  a:visited {
     color: #666;
 }
 
-div.tabpanel4 li.selected a:link, div.tabpanel4  a:visited.active {
+div.tabpanel4 div.tab-row li.selected a:link, div.tabpanel4 div.tab-row a:visited.active {
     border-bottom: 1px solid #fff;
     background: #fff;
     color: #000;
 }
 
-div.tabpanel4  a:hover {
+div.tabpanel4 div.tab-row a:hover {
     background: #fff;
 }
 
