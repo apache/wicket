@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.7 $ $Date$
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -41,6 +42,8 @@ public class FileUploadField extends FormComponent
 
 	/** True if a model has been set explicitly */
 	private boolean hasExplicitModel;
+	
+	private FileUpload fileUpload;
 
 	/**
 	 * @see wicket.Component#Component(String)
@@ -80,7 +83,11 @@ public class FileUploadField extends FormComponent
 			// bytes)
 			if (item != null && item.getSize() > 0)
 			{
-				return new FileUpload(item);
+				if (fileUpload == null) {
+					fileUpload = new FileUpload(item);
+				}
+				
+				return fileUpload;
 			}
 		}
 		return null;
@@ -148,5 +155,24 @@ public class FileUploadField extends FormComponent
 	protected boolean supportsPersistence()
 	{
 		return false;
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
+	 * OVERRIDE.
+	 * 
+	 * Clean up at the end of the request. This means closing all inputstreams
+	 * which might have been opened from the fileUpload.
+	 * 
+	 * @see wicket.Component#internalOnDetach()
+	 */
+	protected void internalOnDetach()
+	{
+		super.internalOnDetach();
+		
+		if (fileUpload != null)
+		{
+			fileUpload.closeStreams();
+		}
 	}
 }

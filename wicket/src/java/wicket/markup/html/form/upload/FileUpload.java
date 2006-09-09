@@ -1,7 +1,7 @@
 /*
- * $Id: FileUpload.java 5069 2006-03-21 17:50:48 -0800 (Tue, 21 Mar 2006)
- * ivaynberg $ $Revision$ $Date: 2006-03-21 17:50:48 -0800 (Tue, 21 Mar
- * 2006) $
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import wicket.Session;
 import wicket.util.file.Files;
@@ -37,6 +40,8 @@ public class FileUpload implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	final FileItem item;
+	
+	private List/*<InputStream>*/ inputStreams;
 
 	/**
 	 * Constructor
@@ -100,16 +105,22 @@ public class FileUpload implements Serializable
 	 * persist it elsewhere, i.e. a database or external filesystem.
 	 * <p>
 	 * <b>PLEASE NOTE!</b><br>
-	 * The InputStream returned is not closed by Wicket, so you must close it
-	 * yourself, when finished with it. This is done by calling
-	 * {@link InputStream#close() close()} on the returned InputStream.
-	 * 
+	 * The InputStream return will be closed be Wicket at the end of the request.
+	 * If you need it across a request you need to hold on to this FileUpload
+	 * instead.
 	 * @return Input stream with file contents.
 	 * @throws IOException
 	 */
 	public InputStream getInputStream() throws IOException
 	{
-		return item.getInputStream();
+		if (inputStreams == null) {
+			inputStreams = new ArrayList/*<InputStream>*/();
+		}
+		
+		InputStream is = item.getInputStream();
+		inputStreams.add(is);
+		
+		return is;
 	}
 
 	/**
@@ -157,5 +168,37 @@ public class FileUpload implements Serializable
 		File temp = File.createTempFile(Session.get().getId(), item.getFieldName());
 		writeTo(temp);
 		return temp;
+	}
+
+	/**
+	 * Close the streams which has been opened when getting the InputStream
+	 * using {@link #getInputStream()}. All the input streams are closed at the
+	 * end of the request. This is done when the FileUploadField, which is
+	 * associated with this FileUpload is detached.
+	 * <p>
+	 * If an exception is thrown when closing the input streams, we ignore it,
+	 * because the stream might have been closed already.
+	 */
+	void closeStreams()
+	{
+		if (inputStreams != null)
+		{
+			for (Iterator inputStreamsIterator = inputStreams.iterator(); inputStreamsIterator.hasNext();)
+			{
+				InputStream inputStream = (InputStream)inputStreamsIterator.next();
+
+				try
+				{
+					inputStream.close();
+				}
+				catch (IOException e)
+				{
+					// We don't care aobut the exceptions thrown here.
+				}
+			}
+			
+			// Reset the list
+			inputStreams = null;
+		}
 	}
 }
