@@ -1,7 +1,7 @@
 /*
- * $Id: DataTable.java 5847 2006-05-24 23:52:28 +0000 (Wed, 24 May 2006)
- * ivaynberg $ $Revision$ $Date: 2006-05-24 23:52:28 +0000 (Wed, 24 May
- * 2006) $
+ * $Id$
+ * $Revision$
+ * $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -57,12 +57,11 @@ import wicket.model.IModel;
  * columns[0] = new PropertyColumn(new Model(&quot;First Name&quot;), &quot;name.first&quot;, &quot;name.first&quot;);
  * columns[1] = new PropertyColumn(new Model(&quot;Last Name&quot;), &quot;name.last&quot;);
  * 
- * DataTable table = new DataTable(&quot;datatable&quot;, columns, new UserProvider(), 10);
+ * DataTable table = new DataTable(this, &quot;datatable&quot;, columns, new UserProvider(), 10);
  * table.add(new NavigationToolbar(table));
  * table.add(new HeadersToolbar(table));
- * add(table);
  * 
- * </pre> *
+ * </pre>
  * 
  * @param <T>
  *            type of model object this item holds
