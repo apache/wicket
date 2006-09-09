@@ -29,7 +29,6 @@ import wicket.protocol.http.servlet.MultipartServletWebRequest;
 import wicket.util.file.File;
 import wicket.util.lang.Bytes;
 import wicket.util.tester.ITestPageSource;
-import wicket.util.upload.ServletFileUpload;
 
 /**
  * Test of FileUploadField
@@ -71,7 +70,6 @@ public class FileUploadFieldTest extends WicketTestCase
 		// Setup the request. It should be a IMultipartWebRequest
 		RequestCycle requestCycle = application.createRequestCycle();
 		MockHttpServletRequest servletRequest = application.getServletRequest();
-		servletRequest.setContentType(ServletFileUpload.MULTIPART_FORM_DATA);
 		servletRequest.setMethod("POST");
 		servletRequest.setParameter("form2:hf:fs", "");
 		servletRequest.setParameter("wicketState", "");

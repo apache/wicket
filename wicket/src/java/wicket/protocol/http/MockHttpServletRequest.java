@@ -65,6 +65,7 @@ import wicket.markup.html.link.ILinkListener;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.file.File;
 import wicket.util.lang.Classes;
+import wicket.util.upload.ServletFileUpload;
 import wicket.util.value.ValueMap;
 
 /**
@@ -177,10 +178,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	private final HttpSession session;
 
 	private String url;
-
-	private String contentType;
-
-	private int contentLength = -1;
 
 	private Map<String, UploadedFile> uploadedFiles;
 
@@ -319,39 +316,38 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Always returns -1 for this implementation.
+	 * Return the length of the content. This is always -1 except if there has
+	 * been added uploaded files. Then the length will be the length of the
+	 * generated request.
 	 * 
-	 * @return -1
+	 * @return -1 if no uploaded files has been added. Else the length of the
+	 *         generated request.
 	 */
 	public int getContentLength()
 	{
 		if (uploadedFiles != null && uploadedFiles.size() > 0)
 		{
 			String request = buildRequest();
-			if (request.length() > 0)
-			{
-				contentLength = request.length();
-			}
+			return request.length();
 		}
 
-		return contentLength;
+		return -1;
 	}
 
 	/**
-	 * Content type is always null in this implementation.
+	 * If there has been added uploaded files return the correct content-type.
 	 * 
-	 * @return Always null
+	 * @return The correct multipart content-type if there has been added
+	 *         uploaded files. Else null.
 	 */
 	public String getContentType()
 	{
-		String ct = contentType;
-
 		if (uploadedFiles != null && uploadedFiles.size() > 0)
 		{
-			ct += "; boundary=abcdefgABCDEFG";
+			return ServletFileUpload.MULTIPART_FORM_DATA + "; boundary=abcdefgABCDEFG";
 		}
 
-		return ct;
+		return null;
 	}
 
 	/**
@@ -1034,17 +1030,6 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Set the content type
-	 * 
-	 * @param contentType
-	 *            The content type
-	 */
-	public void setContentType(final String contentType)
-	{
-		this.contentType = contentType;
-	}
-
-	/**
 	 * Set the cookies.
 	 * 
 	 * @param theCookies
@@ -1318,14 +1303,17 @@ public class MockHttpServletRequest implements HttpServletRequest
 				"Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US; rv:1.7) Gecko/20040707 Firefox/0.9.2");
 	}
 
-
+	/**
+	 * Build the request based on the uploaded files and the parameters.
+	 * 
+	 * @return The request as a string.
+	 */
 	private String buildRequest()
 	{
 		// Build up the input stream based on the files and parameters
 		StringBuffer issb = new StringBuffer();
 		String crlf = "\r\n";
 		String boundary = "--abcdefgABCDEFG";
-		// System.out.println(boundary.length());
 
 		// Add parameters
 		for (String parameter : parameters.keySet())
