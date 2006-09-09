@@ -48,7 +48,20 @@ public class MarkupContainerTest extends WicketTestCase
 		MarkupContainer container = new WebMarkupContainer(new MockPageWithOneComponent(), "component");
 		for (int i = 0; i < 10; i++)
 		{
-			new WebComponent(container, Integer.toString(i));
+			new WebComponent(container, Integer.toString(i))
+			{
+				private static final long serialVersionUID = 1L;
+
+				/**
+				 * 
+				 * @see wicket.Component#getMarkupPathName()
+				 */
+				@Override
+				public String getMarkupPathName()
+				{
+					return null;
+				}
+			};
 		}
 		int i = 0;
 		Iterator iter = container.iterator();

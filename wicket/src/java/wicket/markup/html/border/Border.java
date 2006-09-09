@@ -21,7 +21,11 @@ package wicket.markup.html.border;
 import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.markup.ComponentTag;
+import wicket.markup.IMarkup;
+import wicket.markup.MarkupFragment;
+import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.IMarkupProvider;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.parser.XmlTag;
@@ -29,6 +33,7 @@ import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
+import wicket.util.string.PrependingStringBuffer;
 
 /**
  * A border component has associated markup which is drawn and determines
@@ -43,35 +48,35 @@ import wicket.response.NullResponse;
  * For example, if a border's associated markup looked like this:
  * 
  * <pre>
- *                 &lt;html&gt;
- *                 &lt;body&gt;
- *                   &lt;wicket:border&gt;
- *                       First &lt;wicket:body/&gt; Last
- *                   &lt;/wicket:border&gt;
- *                 &lt;/body&gt;
- *                 &lt;/html&gt;
+ * &lt;html&gt;
+ * &lt;body&gt;
+ *   &lt;wicket:border&gt;
+ *     First &lt;wicket:body/&gt; Last
+ *   &lt;/wicket:border&gt;
+ * &lt;/body&gt;
+ * &lt;/html&gt;
  * </pre>
  * 
  * And the border was used on a page like this:
  * 
  * <pre>
- *                 &lt;html&gt;
- *                 &lt;body&gt;
- *                   &lt;span wicket:id = &quot;myBorder&quot;&gt;
- *                       Middle
- *                   &lt;/span&gt;
- *                 &lt;/body&gt;
- *                 &lt;/html&gt;
+ * &lt;html&gt;
+ * &lt;body&gt;
+ *   &lt;span wicket:id = &quot;myBorder&quot;&gt;
+ *     Middle
+ *   &lt;/span&gt;
+ * &lt;/body&gt;
+ * &lt;/html&gt;
  * </pre>
  * 
  * Then the resulting HTML would look like this:
  * 
  * <pre>
- *                 &lt;html&gt;
- *                 &lt;body&gt;
- *                       First Middle Last
- *                 &lt;/body&gt;
- *                 &lt;/html&gt;
+ * &lt;html&gt;
+ * &lt;body&gt;
+ *   First Middle Last
+ * &lt;/body&gt;
+ * &lt;/html&gt;
  * </pre>
  * 
  * In other words, the body of the myBorder component is substituted into the
@@ -166,6 +171,75 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	}
 
 	/**
+	 * Like Panels, Borders have associated Markup files and hence must
+	 * implement IMarkupProvider. But Border are different in that they allow to
+	 * have child components with markup either in the associated markup file
+	 * (between the wicket:border and wicket:body tags) or the span tag which
+	 * declares the border component.
+	 * <p>
+	 * 
+	 * @see wicket.markup.html.WebMarkupContainerWithAssociatedMarkup#getMarkupFragment(java.lang.String)
+	 */
+	@Override
+	public MarkupFragment getMarkupFragment(final String path)
+	{
+		// First try to find the markup associated with 'path' in the external
+		// markup file
+		try
+		{
+			return super.getMarkupFragment(path);
+		}
+		catch (RuntimeException ex)
+		{
+			// ignore
+		}
+
+		// If not found in the external markup file, than try the markup which
+		// contains the <span wicket:id="myBorder> tag.
+
+		// Find the parent container with an associated external markup file
+		// which contains the span tag and extend the 'path' accordingly.
+		PrependingStringBuffer buf = new PrependingStringBuffer(80);
+		buf.prepend(path);
+		buf.prepend(IMarkup.TAG_PATH_SEPARATOR);
+		buf.prepend(getMarkupPathName());
+
+		MarkupContainer parent = getParent();
+		while ((parent != null) && !(parent instanceof IMarkupProvider))
+		{
+			String pathName = parent.getMarkupPathName();
+			if ((pathName != null) && (pathName.length() > 0))
+			{
+				if (buf.length() > 0)
+				{
+					buf.prepend(IMarkup.TAG_PATH_SEPARATOR);
+				}
+				buf.prepend(parent.getMarkupPathName());
+			}
+			parent = parent.getParent();
+		}
+
+		if (parent == null)
+		{
+			throw new MarkupNotFoundException("Border has no parent with external markup file: "
+					+ getId());
+		}
+
+		// Get the MarkupFragmen from the parent with associated markup file and
+		// the updated 'path'
+		String newPath = buf.toString();
+		MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(newPath);
+		if (fragment == null)
+		{
+			throw new MarkupNotFoundException(
+					"Unable to find the markup fragment with markup path '" + path
+							+ "'. Component: " + getId());
+		}
+
+		return fragment;
+	}
+
+	/**
 	 * Border makes use of a &lt;wicket:body&gt; tag to identify the position to
 	 * insert within the border's body. As &lt;wicket:body&gt; is a special tag
 	 * and MarkupContainer is not able to handle it, we do that here.
@@ -257,9 +331,9 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	@Override
 	public void renderHead(HeaderContainer container)
 	{
-		if (isHeadRendered() == false) 
+		if (isHeadRendered() == false)
 		{
-			this.renderHeadFromAssociatedMarkupFile(container);			
+			this.renderHeadFromAssociatedMarkupFile(container);
 		}
 		super.renderHead(container);
 	}

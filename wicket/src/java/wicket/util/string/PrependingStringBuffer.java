@@ -92,6 +92,10 @@ public class PrependingStringBuffer
 	 */
 	public PrependingStringBuffer prepend(String str)
 	{
+		if (str == null)
+		{
+			return this;
+		}
 		int len = str.length();
 		if (position < len)
 		{
@@ -103,6 +107,10 @@ public class PrependingStringBuffer
 		return this;
 	}
 
+	/**
+     * 
+     * @param minimumCapacity
+     */
 	private void expandCapacity(int minimumCapacity)
 	{
 		int newCapacity = (buffer.length + 1) * 2;

@@ -20,11 +20,12 @@ package wicket.markup;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.util.string.Strings;
+import wicket.Component;
 
 /**
  * Holds markup as a resource (the stream that the markup came from) and a list
@@ -46,6 +47,9 @@ public class Markup implements IMarkup
 
 	/** The new world: One fragment per Component */
 	private MarkupFragment markupFragments;
+
+	/** The new world: markup relativ path => markup fragment */
+	private Map<String, MarkupFragment> pathToFragment = new HashMap<String, MarkupFragment>();
 
 	/** The markup's resource stream for diagnostic purposes */
 	private MarkupResourceStream resource;
@@ -208,6 +212,21 @@ public class Markup implements IMarkup
 	}
 
 	/**
+	 * Get the markup fragments associated with the markup file
+	 * 
+	 * @return Tree of MarkupFragments and RawMarkup
+	 */
+	public final MarkupFragment getMarkupFragments()
+	{
+		if ((this.markup != null) && (this.markupFragments == null))
+		{
+			initialize();
+		}
+
+		return this.markupFragments;
+	}
+
+	/**
 	 * Iterator for MarkupElements
 	 * 
 	 * @see java.lang.Iterable#iterator()
@@ -252,6 +271,13 @@ public class Markup implements IMarkup
 	}
 
 	/**
+	 * Find the markup fragment for the component with 'path'
+	 * 
+	 * @param path
+	 *            The markup path to find the fragment
+	 * @param throwException
+	 *            If true, throw an exception if fragment not found
+	 * @return MarkupFragment Might be null, if fragment not found
 	 */
 	public MarkupFragment findMarkupFragment(final String path, final boolean throwException)
 	{
@@ -266,7 +292,7 @@ public class Markup implements IMarkup
 		}
 
 		// All component tags are registered with the cache
-		if (this.componentMap == null)
+		if (this.pathToFragment == null)
 		{
 			if (throwException == true)
 			{
@@ -278,21 +304,16 @@ public class Markup implements IMarkup
 			return null;
 		}
 
-		String[] ids = Strings.split(path, TAG_PATH_SEPARATOR);
-		MarkupFragment fragment = this.markupFragments;
-		for (String id : ids)
+		// Get the fragment from the cache
+		MarkupFragment fragment = this.pathToFragment.get(path);
+		if (fragment == null)
 		{
-			fragment = fragment.getChildFragment(id);
-			if (fragment == null)
+			if (throwException == true)
 			{
-				if (throwException == true)
-				{
-					throw new MarkupException("Markup not found for tag with path: " + path
-							+ "; Tag with id '" + id + "' not found");
-				}
-
-				return null;
+				throw new MarkupException("Markup not found for tag with path: " + path);
 			}
+
+			return null;
 		}
 
 		return fragment;
@@ -324,7 +345,7 @@ public class Markup implements IMarkup
 				}
 			}
 
-			initMarkupFragments();
+			initializeMarkupFragments();
 		}
 	}
 
@@ -332,18 +353,26 @@ public class Markup implements IMarkup
 	 * Until we started with AJAX we iterated over the markup and tried to find
 	 * the component. With AJAX however we need to find the Markup for a
 	 * Component. In an attempt to change Wicket internals step by step,
-	 * initMarkupFragments() create a hierarchal structure of MarkupFragments
-	 * and other MarkupElements based on the simple List of elements per Markup
-	 * file whixh we have now.
-	 * 
+	 * initializeMarkupFragments() creates a hierarchal structure of
+	 * MarkupFragments and other MarkupElements based on the simple List of
+	 * elements per Markup file which we have today.
 	 */
-	private void initMarkupFragments()
+	private void initializeMarkupFragments()
 	{
+		// The root element for the markup file. The root element should be only
+		// fragment which not necessarily has a ComponentTag as first element
 		this.markupFragments = new MarkupFragment(this);
 		MarkupFragment current = this.markupFragments;
 
+		// Remember the path associated with a ComponentTag to properly walk up
+		// and down the hierarchy of wicket markup tags
+		Stack<String> stack = new Stack<String>();
+		String basePath = null;
+
+		// For all markup element in the external markup file
 		for (MarkupElement elem : this.markup)
 		{
+			// If RawMarkup simply add the element to the current fragment
 			if (elem instanceof RawMarkup)
 			{
 				current.addMarkupElement(elem);
@@ -351,27 +380,50 @@ public class Markup implements IMarkup
 			else
 			// if (elem instanceof ComponentTag)
 			{
+				// Construct the markup path for the tag
 				final ComponentTag tag = (ComponentTag)elem;
+				final String path = (basePath == null ? tag.getId() : basePath
+						+ IMarkup.TAG_PATH_SEPARATOR + tag.getId());
+
+				// Depending on tag type (open, close, open-close) ...
 				if (tag.isOpen())
 				{
+					// Open tags with no close tags (HTML) are treated like
+					// open-close.
 					if (tag.hasNoCloseTag())
 					{
-						new MarkupFragment(this, current, tag);
+						MarkupFragment fragment = new MarkupFragment(this, current, tag);
+						this.pathToFragment.put(path, fragment);
 					}
 					else
 					{
+						// If open tag and auto component (BODY, HEAD, etc.)
+						// than the markup path gets not updated as the markup
+						// for BODY e.g. does not have a wicket:id.
 						current = new MarkupFragment(this, current, tag);
+						stack.push(basePath);
+						if (tag.getId().startsWith(Component.AUTO_COMPONENT_PREFIX))
+						{
+							this.pathToFragment.put(path, current);
+						}
+						else
+						{
+							basePath = path;
+							this.pathToFragment.put(basePath, current);
+						}
 					}
 				}
 				else if (tag.isOpenClose())
 				{
-					new MarkupFragment(this, current, tag);
+					MarkupFragment fragment = new MarkupFragment(this, current, tag);
+					this.pathToFragment.put(path, fragment);
 				}
 				else
 				// if (tag.isClose()
 				{
 					current.addMarkupElement(tag);
 					current = current.getParentFragment();
+					basePath = stack.pop();
 				}
 			}
 		}

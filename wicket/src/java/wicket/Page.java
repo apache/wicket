@@ -29,7 +29,10 @@ import wicket.authorization.UnauthorizedActionException;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.IMarkupProvider;
+import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.request.RequestParameters;
@@ -139,7 +142,8 @@ import wicket.version.undo.UndoPageVersionManager;
 public abstract class Page<T> extends MarkupContainer<T>
 		implements
 			IRedirectListener,
-			IPageMapEntry
+			IPageMapEntry,
+			IMarkupProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -977,7 +981,11 @@ public abstract class Page<T> extends MarkupContainer<T>
 		return false;
 	}
 
-
+	/**
+	 * Set page stateless
+	 * 
+	 * @param stateless
+	 */
 	void setPageStateless(Boolean stateless)
 	{
 		this.stateless = stateless;
@@ -1145,7 +1153,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 		}
 	}
 
-
 	/**
 	 * Convenience method. Search for children of type fromClass and invoke
 	 * their respective removePersistedFormData() methods.
@@ -1185,7 +1192,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 		});
 	}
 
-
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 */
@@ -1208,7 +1214,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 		// Reset it to stateless so that it can be tested again
 		this.stateless = null;
-
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
@@ -1349,6 +1354,24 @@ public abstract class Page<T> extends MarkupContainer<T>
 		renderedComponents = null;
 	}
 
+	/**
+	 * @see wicket.IMarkupProvider#getMarkupFragment(String path)
+	 */
+	public final MarkupFragment getMarkupFragment(final String path)
+	{
+		return getAssociatedMarkupStream(true).getMarkup().findMarkupFragment(path, true);
+	}
+
+	/**
+	 * Get the markup fragments associated with the Component
+	 * 
+	 * @return MarkupFragment
+	 */
+	public final MarkupFragment getMarkupFragment()
+	{
+		return getAssociatedMarkupStream(true).getMarkup().getMarkupFragments();
+	}
+	
 	/**
 	 * Get the string representation of this container.
 	 * 

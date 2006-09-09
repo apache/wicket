@@ -18,11 +18,11 @@
 package wicket.properties;
 
 import wicket.MarkupContainer;
+import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.panel.Panel;
 
 /**
  * 
@@ -47,11 +47,11 @@ public class TestPage extends WebPage
 
 		Form form2 = new TestForm(this, "form2");
 
-		Panel panel1 = new Panel(form2, "panel1");
+		WebMarkupContainer panel1 = new WebMarkupContainer(form2, "panel1");
 		new MyTextField(panel1, "text3", "input-3");
 		new MyTextField(panel1, "text4", "input-4");
 
-		Panel panel2 = new TestPanel(form2, "panel2");
+		WebMarkupContainer panel2 = new TestContainer(form2, "panel2");
 		new MyTextField(panel2, "text5", "input-5");
 		new MyTextField(panel2, "text6", "input-6");
 		new MyTextField(panel2, "text8", "input-8");

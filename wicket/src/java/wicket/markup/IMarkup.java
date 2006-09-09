@@ -97,6 +97,13 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	 * @return Null, if not found.
 	 */
 	String getXmlDeclaration();
+	
+	/**
+	 * Get the markup fragments associated with the markup file
+	 * 
+	 * @return Tree of MarkupFragments and RawMarkup
+	 */
+	MarkupFragment getMarkupFragments();
 
 	/**
 	 * For Wicket it would be sufficient for this method to be package

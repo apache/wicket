@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.WicketRuntimeException;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 
 /**
  * A list of markup elements associated with a Markup. Might be all elements of
@@ -129,7 +130,8 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
-	 * Get the markup fragment associated with the id
+	 * Get the markup fragment associated with the id. The id might as well be a
+	 * path to get grand child markup.
 	 * 
 	 * @param id
 	 *            The id of the child tag
@@ -142,18 +144,38 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 			return null;
 		}
 
-		for (MarkupElement elem : this)
+		// If id has not further path elements, than ...
+		if (id.indexOf(IMarkup.TAG_PATH_SEPARATOR) == -1)
 		{
-			if (elem instanceof MarkupFragment)
+			// .. search all (immediate) child fragments
+			for (MarkupElement elem : this)
 			{
-				MarkupFragment fragment = (MarkupFragment)elem;
-				ComponentTag tag = (ComponentTag)fragment.get(0);
-				String tagId = tag.getId();
-				if ((tagId != null) && tagId.equals(id))
+				if (elem instanceof MarkupFragment)
 				{
-					return fragment;
+					MarkupFragment fragment = (MarkupFragment)elem;
+					ComponentTag tag = (ComponentTag)fragment.get(0);
+					String tagId = tag.getId();
+					if ((tagId != null) && tagId.equals(id))
+					{
+						return fragment;
+					}
 				}
 			}
+		}
+		else
+		{
+			// Split the 'id' into the first element (which is the immediate
+			// child) and the remaining path. Get the immediate child and
+			// recursively call getChildFragment() with the remaining path ids.
+			String root = Strings.firstPathComponent(id, IMarkup.TAG_PATH_SEPARATOR);
+			MarkupFragment child = getChildFragment(root);
+			if (child == null)
+			{
+				return null;
+			}
+
+			String remainingPath = Strings.afterFirst(id, IMarkup.TAG_PATH_SEPARATOR);
+			return child.getChildFragment(remainingPath);
 		}
 
 		return null;
@@ -247,6 +269,38 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 			}
 		};
 	}
+
+	/**
+	 * Flatten the hierarchy of MarkupFragments and RawMarkup and return a list
+	 * of ComponentTag and RawMarkup
+	 * 
+	 * @return List
+	 * @TODO This is a temporary helper which will be removed once work in
+	 *       progress is completed
+	 */
+	public List<MarkupElement> getAllElementsFlat()
+	{
+		List<MarkupElement> elems = new ArrayList<MarkupElement>();
+
+		for (MarkupElement elem : this.markupElements)
+		{
+			if (elem instanceof RawMarkup)
+			{
+				elems.add(elem);
+			}
+			else if (elem instanceof ComponentTag)
+			{
+				elems.add(elem);
+			}
+			else
+			{
+				elems.addAll(((MarkupFragment)elem).getAllElementsFlat());
+			}
+		}
+
+		return elems;
+	}
+
 
 	/**
 	 * @return String representation of markup list

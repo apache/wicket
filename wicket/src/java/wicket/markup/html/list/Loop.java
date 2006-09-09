@@ -72,6 +72,23 @@ public abstract class Loop extends WebMarkupContainer<Integer>
 		{
 			return iteration;
 		}
+
+		/**
+		 * Usually getId() is returned to construct the path to find the markup
+		 * fragment within a markup file. LoopItem as child of Loop however is
+		 * different. We do not expect a markup tag for LoopItems as the markup
+		 * tag associated with the Loop is equal to the LoopItem markup tag and
+		 * it is this markup tag that will be rendered as many times as there
+		 * are items in the list. Hence, as LoopItem doesn't have markup, null
+		 * is returned.
+		 * 
+		 * @see wicket.Component#getMarkupPathName()
+		 */
+		@Override
+		public String getMarkupPathName()
+		{
+			return null;
+		}
 	}
 
 	/**

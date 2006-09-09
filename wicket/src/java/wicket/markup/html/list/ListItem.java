@@ -63,4 +63,20 @@ public class ListItem<T> extends WebMarkupContainer<T>
 	{
 		return index;
 	}
+
+	/**
+	 * Usually getId() is returned to construct the path to find the markup
+	 * fragment within a markup file. ListItem as child of List however is
+	 * different. We do not expect a markup tag for ListItems as the markup tag
+	 * associated with the List is equal to the ListItem markup tag and it is
+	 * this markup tag that will be rendered as many times as there are items in
+	 * the list. Hence, as ListItem doesn't have markup, null is returned.
+	 * 
+	 * @see wicket.Component#getMarkupPathName()
+	 */
+	@Override
+	public String getMarkupPathName()
+	{
+		return null;
+	}
 }

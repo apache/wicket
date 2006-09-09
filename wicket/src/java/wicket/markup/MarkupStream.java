@@ -442,6 +442,16 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
+	 * Get the immutable markup associated with the stream
+	 * 
+	 * @return markup
+	 */
+	public final IMarkup getMarkup()
+	{
+		return this.markup;
+	}
+	
+	/**
 	 * @see java.lang.Iterable#iterator()
 	 */
 	public Iterator<MarkupElement> iterator()

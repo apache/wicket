@@ -20,6 +20,8 @@ package wicket.markup;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import junit.framework.Assert;
@@ -189,8 +191,69 @@ public final class MarkupParserTest extends WicketTestCase
 
 		log.info(aClose);
 		Assert.assertTrue(aClose.getName().equals("a"));
+	}
 
-		Assert.assertNull(markupStream.next());
+	/**
+	 * 
+	 * @throws StringValueConversionException
+	 * @throws Exception
+	 */
+	public final void testTagParsingFragments() throws Exception
+	{
+		final IMarkup markup = parse(
+				"componentName",
+				"This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
+						+ "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
+
+		final List<MarkupElement> elems = markup.getMarkupFragments().getAllElementsFlat();
+		final Iterator<MarkupElement> markupStream = elems.iterator();
+		markupStream.next();
+		final ComponentTag aOpen = (ComponentTag)markupStream.next();
+
+		log.info(aOpen);
+		Assert.assertTrue(aOpen.getName().equals("a"));
+		Assert.assertEquals("foo.html", aOpen.getAttributes().getString("href"));
+
+		markupStream.next();
+
+		final ComponentTag boldOpen = (ComponentTag)markupStream.next();
+
+		log.info(boldOpen);
+		Assert.assertTrue(boldOpen.getName().equals("b"));
+		Assert.assertEquals(XmlTag.Type.OPEN, boldOpen.getType());
+
+		markupStream.next();
+
+		final ComponentTag boldClose = (ComponentTag)markupStream.next();
+
+		log.info(boldClose);
+		Assert.assertTrue(boldClose.getName().equals("b"));
+		Assert.assertEquals(XmlTag.Type.CLOSE, boldClose.getType());
+
+		markupStream.next();
+
+		final ComponentTag img = (ComponentTag)markupStream.next();
+
+		log.info(img);
+		Assert.assertTrue(img.getName().equals("img"));
+		Assert.assertEquals(9, img.getAttributes().getInt("width"));
+		Assert.assertEquals(10, img.getAttributes().getInt("height"));
+		Assert.assertEquals(XmlTag.Type.OPEN, img.getType());
+
+		markupStream.next();
+
+		final ComponentTag marker = (ComponentTag)markupStream.next();
+
+		log.info(marker);
+		Assert.assertTrue(marker.getName().equals("marker"));
+		Assert.assertEquals(XmlTag.Type.OPEN_CLOSE, marker.getType());
+
+		markupStream.next();
+
+		final ComponentTag aClose = (ComponentTag)markupStream.next();
+
+		log.info(aClose);
+		Assert.assertTrue(aClose.getName().equals("a"));
 	}
 
 	/**

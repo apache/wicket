@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision$ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,27 +16,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.properties;
+package wicket.markup.html;
 
-import wicket.MarkupContainer;
-import wicket.markup.html.panel.Panel;
+import wicket.markup.MarkupFragment;
 
 /**
+ * To be implemented by Components which have associated (external) markup files
  * 
  * @author Juergen Donnerstag
  */
-public class TestPanel extends Panel
+public interface IMarkupProvider
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
-	 * Construct.
+	 * Get the associate markup fragment for the component identified by the
+	 * markup 'path'
 	 * 
-	 * @param parent
-	 * @param id
+	 * @param path
+	 * @return MarkupFragment
 	 */
-	public TestPanel(MarkupContainer parent, final String id)
-	{
-		super(parent, id);
-	}
+	MarkupFragment getMarkupFragment(final String path);
 }

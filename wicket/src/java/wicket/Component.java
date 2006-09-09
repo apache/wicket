@@ -36,9 +36,13 @@ import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupException;
+import wicket.markup.MarkupFragment;
+import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.IMarkupProvider;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.IAssignmentAware;
 import wicket.model.IInheritableModel;
@@ -641,48 +645,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * This method is called in the Component's constructor. 
-	 * However some components may either require to load the markup later
-	 * or not at all in case the markup is fully dynamic. In both cases
-	 * override loadMarkupStream() and provide you own logic.
-	 * E.g. 
-	 * <pre>
-	 * 	protected void loadMarkupStream()
-	 *  {
-	 *     if (this.myDatasource != null)
-	 *     {
-	 *        super.loadMarkupStream();
-	 *     }
-     *  }
-	 * </pre> 
-	 */
-	protected void loadMarkupStream()
-	{
-		try
-		{
-			MarkupStream markupStream = Application.get().getMarkupSettings().getMarkupFragmentFinder().find(this);
-			ComponentTag tag = markupStream.getTag();
-			if (tag.hasAttributes())
-			{
-				markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
-			}
-		}
-		catch (MarkupException ex)
-		{
-			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
-					+ id + "'. You will not be able to use the component for AJAX calls.");
-			throw ex;
-		}
-		catch (RuntimeException re)
-		{
-			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '" 
-					+ id + "'. You will not be able to use the component for AJAX calls.");
-			throw new WicketRuntimeException("Couldn't find the markup of the component '" + id
-					+ "' in parent " + parent.getPageRelativePath(), re);
-		}
-	}
-
-	/**
 	 * package scope Constructor, only used by pages.
 	 * 
 	 * @throws WicketRuntimeException
@@ -698,6 +660,121 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		getApplication().notifyComponentInstantiationListeners(this);
 	}
 
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
+	 * <p>
+	 * Wicket Components have an id which must be equal to the wicket:id in the
+	 * markup. However there are very very few exceptions such as ListItem and
+	 * LoopItem which have no associated markup and hence require special
+	 * treatment.
+	 * 
+	 * @return The markup path name
+	 */
+	public String getMarkupPathName()
+	{
+		return getId();
+	}
+
+	/**
+	 * Gets the markup fragment associated with the component. Except for Pages
+	 * it is assumed that the first markup element of the fragment is a tag.
+	 * 
+	 * @return markup fragment.
+	 */
+	public MarkupFragment getMarkupFragment()
+	{
+		// Create the markup path for the component to find the associated
+		// markup fragment within the markup file.
+		PrependingStringBuffer buf = new PrependingStringBuffer(80);
+		buf.prepend(getMarkupPathName());
+
+		// The markup path must be relativ to the markup file, hence we need to
+		// find the first parent with associated markup file and update the
+		// markup path accordingly.
+		MarkupContainer parent = getParent();
+		while ((parent != null) && !(parent instanceof IMarkupProvider))
+		{
+			String pathName = parent.getMarkupPathName();
+			if ((pathName != null) && (pathName.length() > 0))
+			{
+				if (buf.length() > 0)
+				{
+					buf.prepend(IMarkup.TAG_PATH_SEPARATOR);
+				}
+				buf.prepend(pathName);
+			}
+			parent = parent.getParent();
+		}
+
+		if (parent == null)
+		{
+			throw new MarkupNotFoundException("Component has no parent with external markup file: "
+					+ getId());
+		}
+
+		// We found the markup file and created the markup path. Now go and get
+		// the fragment.
+		String path = buf.toString();
+		MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(path);
+		if (fragment == null)
+		{
+			throw new MarkupNotFoundException(
+					"Unable to find the markup fragment with markup path '" + path
+							+ "'. Component: " + getId());
+		}
+
+		return fragment;
+	}
+
+	/**
+	 * This method is called in the Component's constructor. However some
+	 * components may either require to load the markup later or not at all in
+	 * case the markup is fully dynamic. In both cases override
+	 * loadMarkupStream() and provide you own logic. E.g.
+	 * 
+	 * <pre>
+	 * protected void loadMarkupStream()
+	 * {
+	 * 	if (this.myDatasource != null)
+	 * 	{
+	 * 		super.loadMarkupStream();
+	 * 	}
+	 * }
+	 * </pre>
+	 * 
+	 * @return MarkupStream
+	 * @TODO The solution is bad and doesn't always work.
+	 */
+	protected MarkupStream loadMarkupStream()
+	{
+		try
+		{
+			MarkupStream markupStream = Application.get().getMarkupSettings()
+					.getMarkupFragmentFinder().find(this);
+			ComponentTag tag = markupStream.getTag();
+			if (tag.hasAttributes())
+			{
+				markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
+			}
+
+			MarkupFragment markupFragment = getMarkupFragment();
+
+			return markupStream;
+		}
+		catch (MarkupException ex)
+		{
+			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
+							+ id + "'. You will not be able to use the component for AJAX calls.");
+			throw ex;
+		}
+		catch (RuntimeException re)
+		{
+			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
+							+ id + "'. You will not be able to use the component for AJAX calls.");
+			throw new MarkupNotFoundException("Couldn't find the markup of the component '" + id
+					+ "' in parent '" + parent.getPageRelativePath() + "'", re);
+		}
+	}
 
 	/**
 	 * Adds an behavior modifier to the component.
@@ -970,7 +1047,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public final IValueMap getMarkupAttributes()
 	{
-		// Should only be null if markup tag doesn't have any attributes. 
+		// Should only be null if markup tag doesn't have any attributes.
 		// See Constructor
 		if (markupAttributes == null)
 		{
@@ -997,7 +1074,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			id = getPageRelativePath();
 			// first escape _ with __
 			id = id.replace("_", "__");
-			// then replace : with _ 
+			// then replace : with _
 			id = id.replace(':', '_');
 			getMarkupAttributes().put("id", id);
 		}
@@ -1693,7 +1770,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			// Save the parent's markup stream to re-assign it at the end
 			MarkupContainer parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
-			MarkupStream markupStream = Application.get().getMarkupSettings().getMarkupFragmentFinder().find(this);
+			MarkupStream markupStream = Application.get().getMarkupSettings()
+					.getMarkupFragmentFinder().find(this);
 
 			try
 			{
@@ -1705,7 +1783,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					MarkupContainer<T> container = (MarkupContainer<T>)this;
 
 					// First, give priority to IFeedback instances, as they have
-					// to collect their messages before components like 
+					// to collect their messages before components like
 					// ListViews remove any child components
 					container.visitChildren(IFeedback.class, new IVisitor()
 					{
@@ -1864,7 +1942,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				((IHeaderContributor)this).renderHead(container.getHeaderResponse());
 			}
-			
+
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
 			if (this.behaviors != null)
@@ -2511,7 +2589,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/**
 	 * Gets the subset of the currently coupled {@link IBehavior}s that are of
-	 * the provided type as a unmodifiable list. Returns an empty list rather 
+	 * the provided type as a unmodifiable list. Returns an empty list rather
 	 * than null if there are no behaviors coupled to this component.
 	 * 
 	 * @param type
@@ -2699,11 +2777,11 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		return true;
 	}
-	
+
 	/**
-	 * Returns if the component is stateless or not. It checks the stateless hint
-	 * if that is false it returns directly false. If that is still true it checks
-	 * all its behaviours if they can be stateless.
+	 * Returns if the component is stateless or not. It checks the stateless
+	 * hint if that is false it returns directly false. If that is still true it
+	 * checks all its behaviours if they can be stateless.
 	 * 
 	 * @return whether the component is stateless.
 	 */
@@ -3103,12 +3181,13 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		setFlag(FLAG_HEAD_RENDERED, false);
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * @since 2.0 but will be removed soon again
-	 * @TODO This method only temporarily exists until markup fragment wip has finished 
+	 * @TODO This method only temporarily exists until markup fragment wip has
+	 *       finished
 	 * 
 	 * @return The position of the component's markup within the markup stream
 	 */
