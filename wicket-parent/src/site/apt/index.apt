@@ -1,0 +1,58 @@
+                             ---------------------
+                             Wicket Parent project
+                             ---------------------
+                                Martijn Dashorst
+                             ---------------------
+
+Introduction
+
+ This is the Wicket parent project, creating default settings for all Wicket projects.
+ The defaults entail plug-in settings, versioning of the Wicket projects, managing the
+ various dependencies and more.
+	
+ For more information on the project structure, please read the 'Better Builds With Maven'
+ book which has a detailed description on how to structure a maintainable, enterprise ready
+ build. The book is available for free from the Mergere website.
+
+Building
+
+ Here's a list of the projects:
+
+---------------------------------------------------------------------------
+ * wicket
+ * wicket-extensions
+ * wicket-examples
+ * wicket-quickstart
+ * wicket-spring
+ * wicket-spring-examples
+ * wicket-portlet-examples
+ * wicket-auth-roles
+ * wicket-auth-roles-examples
+ * wicket-spring-annot
+ * wicket-spring-annot-examples
+---------------------------------------------------------------------------
+
+ To build the projects, make sure you have downloaded and installed all projects in one
+ directory structure, each project a subdirectory next to one another. If you want to get it
+ all in one sweep, then use subversion to checkout the whole project structure in one go.
+	
+---------------------------------------------------------------------------
+svn co https://svn.sourceforge.net/svnroot/wicket/tags/<VERSION>
+---------------------------------------------------------------------------
+	
+ substituting the <VERSION> part with "WICKET_X_Y_Z", where X, Y and Z are the major, minor and
+ bugfix version. So for Wicket-2.0 you would check out:
+	
+---------------------------------------------------------------------------
+svn co https://svn.sourceforge.net/svnroot/wicket/tags/WICKET_2_0
+---------------------------------------------------------------------------
+
+ In the root of the wicket-parent project do the following to build all Wicket projects:
+
+---------------------------------------------------------------------------
+mvn compile             <- compiles the projects
+mvn package             <- creates the jar files in the target/ subdirectories
+mvn install             <- installs the jar files in your local repository
+---------------------------------------------------------------------------
+
+ You can just run the install target, as Maven will build the previous stages automatically.
