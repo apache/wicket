@@ -23,7 +23,7 @@ import java.util.Iterator;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.list.AbstractRepeater;
 import wicket.model.IModel;
 
 /**
@@ -48,7 +48,7 @@ import wicket.model.IModel;
  * <u>Markup:</u>
  * 
  * <pre>
- *  &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
+ *     &lt;ul&gt;&lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
  * </p>
@@ -56,7 +56,7 @@ import wicket.model.IModel;
  * <u>Yields:</u>
  * 
  * <pre>
- *  &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
+ *     &lt;ul&gt;&lt;li&gt;goodbye&lt;/li&gt;&lt;li&gt;hello&lt;/li&gt;&lt;li&gt;good morning&lt;/li&gt;&lt;/ul&gt;
  * </pre>
  * 
  * To expand a bit: the repeater itself produces no markup, instead every direct
@@ -64,7 +64,7 @@ import wicket.model.IModel;
  * reeaters's markup is:
  * 
  * <pre>
- *   &lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;
+ *      &lt;li wicket:id=&quot;repeater&quot;&gt;&lt;/li&gt;
  * </pre>
  * 
  * and so this is the markup that is available to the direct children - the
@@ -76,7 +76,7 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg ( ivaynberg )
  */
-public class RepeatingView<T> extends WebMarkupContainer<T>
+public class RepeatingView<T> extends AbstractRepeater<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -171,4 +171,6 @@ public class RepeatingView<T> extends WebMarkupContainer<T>
 	{
 		child.render(getMarkupStream());
 	}
+
+
 }
