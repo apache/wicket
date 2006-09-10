@@ -54,8 +54,8 @@ public class StockQuotePage extends WicketExamplePage
 		final IModel<String> model = new PropertyModel<String>(quote, "symbol");
 
 		// form holding the input field.
-		new Form(this, "form");
-		new TextField<String>(this, "symbol", model);
+		Form form = new Form(this, "form");
+		new TextField<String>(form, "symbol", model);
 
 		// labels for displaying the chosen symbol
 		new Label(this, "symbol", model);
