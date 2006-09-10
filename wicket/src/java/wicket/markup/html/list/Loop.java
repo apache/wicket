@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,7 +38,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public abstract class Loop extends WebMarkupContainer<Integer>
+public abstract class Loop extends AbstractRepeater<Integer>
 {
 	/**
 	 * Item container for a Loop iteration.
@@ -210,15 +210,5 @@ public abstract class Loop extends WebMarkupContainer<Integer>
 	{
 		item.render(getMarkupStream());
 	}
-	
-	/**
-	 * 
-	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
-	 */
-	@Override
-	public String getMarkupFragmentPath(final String subPath)
-	{
-		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
-		return super.getMarkupFragmentPath(path);
-	}
+
 }

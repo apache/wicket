@@ -41,10 +41,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *                &lt;tbody&gt;
- *                  &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                      &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                  ...    
+ *                   &lt;tbody&gt;
+ *                     &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                         &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                     ...    
  * </pre>
  * 
  * <p>
@@ -88,7 +88,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Eelco Hillenius
  */
-public abstract class ListView<T> extends WebMarkupContainer<List<T>>
+public abstract class ListView<T> extends AbstractRepeater<List<T>>
 {
 	/** Index of the first item to show */
 	private int firstIndex = 0;
@@ -666,15 +666,5 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	{
 		item.render(getMarkupStream());
 	}
-	
-	/**
-	 * 
-	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
-	 */
-	@Override
-	public String getMarkupFragmentPath(final String subPath)
-	{
-		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
-		return super.getMarkupFragmentPath(path);
-	}
+
 }
