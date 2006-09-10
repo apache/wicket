@@ -807,8 +807,12 @@ public final class Strings
 	 *            The unicode string
 	 * @return The escaped unicode string, like '\u4F60\u597D'.
 	 */
-	public static String toEscapedUnicode(String unicodeString)
+	public static String toEscapedUnicode(final String unicodeString)
 	{
+		if ((unicodeString == null) || (unicodeString.length() == 0))
+		{
+			return unicodeString;
+		}
 		int len = unicodeString.length();
 		int bufLen = len * 2;
 		StringBuffer outBuffer = new StringBuffer(bufLen);
