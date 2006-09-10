@@ -25,13 +25,10 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
 /**

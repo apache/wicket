@@ -19,12 +19,10 @@ package wicket.markup.html.list;
 
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
-import wicket.util.string.Strings;
 
 /**
  * A very simple loop component whose model is an Integer defining the number of
