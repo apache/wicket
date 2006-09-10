@@ -36,7 +36,6 @@ import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
@@ -661,21 +660,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT.
-	 * <p>
-	 * Wicket Components have an id which must be equal to the wicket:id in the
-	 * markup. However there are very very few exceptions such as ListItem and
-	 * LoopItem which have no associated markup and hence require special
-	 * treatment.
-	 * 
-	 * @return The markup path name
-	 */
-	public String getMarkupPathName()
-	{
-		return getId();
-	}
-
-	/**
 	 * Gets the markup fragment associated with the component. Except for Pages
 	 * it is assumed that the first markup element of the fragment is a tag.
 	 * 
@@ -685,8 +669,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		// Create the markup path for the component to find the associated
 		// markup fragment within the markup file.
-		PrependingStringBuffer buf = new PrependingStringBuffer(80);
-		buf.prepend(getMarkupPathName());
+		String path = getId();
 
 		// The markup path must be relativ to the markup file, hence we need to
 		// find the first parent with associated markup file and update the
@@ -694,15 +677,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		MarkupContainer parent = getParent();
 		while ((parent != null) && !(parent instanceof IMarkupProvider))
 		{
-			String pathName = parent.getMarkupPathName();
-			if ((pathName != null) && (pathName.length() > 0))
-			{
-				if (buf.length() > 0)
-				{
-					buf.prepend(IMarkup.TAG_PATH_SEPARATOR);
-				}
-				buf.prepend(pathName);
-			}
+			path = parent.getMarkupFragmentPath(path);
 			parent = parent.getParent();
 		}
 
@@ -714,7 +689,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 		// We found the markup file and created the markup path. Now go and get
 		// the fragment.
-		String path = buf.toString();
 		MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(path);
 		if (fragment == null)
 		{

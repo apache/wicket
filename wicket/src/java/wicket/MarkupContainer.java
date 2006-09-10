@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
@@ -157,7 +158,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 		if (log.isDebugEnabled())
 		{
-			log.debug("Add " + child.getId() + " to component " + this.getClass().getName()+" with path "+getPath());
+			log.debug("Add " + child.getId() + " to component " + this.getClass().getName()
+					+ " with path " + getPath());
 		}
 
 		// Add to map
@@ -553,7 +555,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && associatedMarkupOpenTag.isWicketTag()))
+		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && associatedMarkupOpenTag
+				.isWicketTag()))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -1241,8 +1244,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 			final String id = tag.getId();
 			if (id == null)
 			{
-				throw new WicketRuntimeException(
-						"Prgamming error: tag id must not be null: " 
+				throw new WicketRuntimeException("Prgamming error: tag id must not be null: "
 						+ tag.toString());
 			}
 
@@ -1273,14 +1275,14 @@ public abstract class MarkupContainer<T> extends Component<T>
 				}
 
 				// 3rd try: Try application's component resolvers
-				final List<IComponentResolver> componentResolvers = this.getApplication().getPageSettings()
-						.getComponentResolvers();
-				for (IComponentResolver resolver: componentResolvers)
+				final List<IComponentResolver> componentResolvers = this.getApplication()
+						.getPageSettings().getComponentResolvers();
+				for (IComponentResolver resolver : componentResolvers)
 				{
 					if (resolver.resolve(this, markupStream, tag))
 					{
 						return;
-					}	
+					}
 				}
 
 				if (tag.isWicketTag())
@@ -1328,5 +1330,24 @@ public abstract class MarkupContainer<T> extends Component<T>
 	public boolean isTransparentResolver()
 	{
 		return false;
+	}
+
+	/**
+	 * Return the markup fragment path for the component. if 'subPath' is
+	 * present, it is the relative markup fragment path the component requesting
+	 * the path.
+	 * 
+	 * @param subPath
+	 *            The relative markup fragment path to the component requesting
+	 *            its markup path
+	 * @return markup fragment path
+	 */
+	public String getMarkupFragmentPath(final String subPath)
+	{
+		if ((subPath == null) || (subPath.length() == 0))
+		{
+			return getId();
+		}
+		return getId() + IMarkup.TAG_PATH_SEPARATOR + subPath;
 	}
 }

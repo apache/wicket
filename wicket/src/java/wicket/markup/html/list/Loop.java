@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -19,10 +19,12 @@ package wicket.markup.html.list;
 
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.Strings;
 
 /**
  * A very simple loop component whose model is an Integer defining the number of
@@ -71,23 +73,6 @@ public abstract class Loop extends WebMarkupContainer<Integer>
 		public int getIteration()
 		{
 			return iteration;
-		}
-
-		/**
-		 * Usually getId() is returned to construct the path to find the markup
-		 * fragment within a markup file. LoopItem as child of Loop however is
-		 * different. We do not expect a markup tag for LoopItems as the markup
-		 * tag associated with the Loop is equal to the LoopItem markup tag and
-		 * it is this markup tag that will be rendered as many times as there
-		 * are items in the list. Hence, as LoopItem doesn't have markup, null
-		 * is returned.
-		 * 
-		 * @see wicket.Component#getMarkupPathName()
-		 */
-		@Override
-		public String getMarkupPathName()
-		{
-			return null;
 		}
 	}
 
@@ -224,5 +209,16 @@ public abstract class Loop extends WebMarkupContainer<Integer>
 	protected void renderItem(final LoopItem item)
 	{
 		item.render(getMarkupStream());
+	}
+	
+	/**
+	 * 
+	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
+	 */
+	@Override
+	public String getMarkupFragmentPath(final String subPath)
+	{
+		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+		return super.getMarkupFragmentPath(path);
 	}
 }

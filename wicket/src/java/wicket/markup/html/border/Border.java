@@ -33,7 +33,6 @@ import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IModel;
 import wicket.response.NullResponse;
-import wicket.util.string.PrependingStringBuffer;
 
 /**
  * A border component has associated markup which is drawn and determines
@@ -176,12 +175,11 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * have child components with markup either in the associated markup file
 	 * (between the wicket:border and wicket:body tags) or the span tag which
 	 * declares the border component.
-	 * <p>
 	 * 
 	 * @see wicket.markup.html.WebMarkupContainerWithAssociatedMarkup#getMarkupFragment(java.lang.String)
 	 */
 	@Override
-	public MarkupFragment getMarkupFragment(final String path)
+	public MarkupFragment getMarkupFragment(String path)
 	{
 		// First try to find the markup associated with 'path' in the external
 		// markup file
@@ -196,39 +194,27 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 
 		// If not found in the external markup file, than try the markup which
 		// contains the <span wicket:id="myBorder> tag.
-
-		// Find the parent container with an associated external markup file
-		// which contains the span tag and extend the 'path' accordingly.
-		PrependingStringBuffer buf = new PrependingStringBuffer(80);
-		buf.prepend(path);
-		buf.prepend(IMarkup.TAG_PATH_SEPARATOR);
-		buf.prepend(getMarkupPathName());
-
+		path = getId() + IMarkup.TAG_PATH_SEPARATOR + path;
+		
+		// The markup path must be relativ to the markup file, hence we need to
+		// find the first parent with associated markup file and update the
+		// markup path accordingly.
 		MarkupContainer parent = getParent();
 		while ((parent != null) && !(parent instanceof IMarkupProvider))
 		{
-			String pathName = parent.getMarkupPathName();
-			if ((pathName != null) && (pathName.length() > 0))
-			{
-				if (buf.length() > 0)
-				{
-					buf.prepend(IMarkup.TAG_PATH_SEPARATOR);
-				}
-				buf.prepend(parent.getMarkupPathName());
-			}
+			path = parent.getMarkupFragmentPath(path);
 			parent = parent.getParent();
 		}
 
 		if (parent == null)
 		{
-			throw new MarkupNotFoundException("Border has no parent with external markup file: "
+			throw new MarkupNotFoundException("Component has no parent with external markup file: "
 					+ getId());
 		}
 
-		// Get the MarkupFragmen from the parent with associated markup file and
-		// the updated 'path'
-		String newPath = buf.toString();
-		MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(newPath);
+		// We found the markup file and created the markup path. Now go and get
+		// the fragment.
+		MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(path);
 		if (fragment == null)
 		{
 			throw new MarkupNotFoundException(

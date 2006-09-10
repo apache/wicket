@@ -25,11 +25,13 @@ import java.util.List;
 
 import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 import wicket.model.Model;
+import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
 /**
@@ -663,5 +665,16 @@ public abstract class ListView<T> extends WebMarkupContainer<List<T>>
 	protected void renderItem(final ListItem item)
 	{
 		item.render(getMarkupStream());
+	}
+	
+	/**
+	 * 
+	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
+	 */
+	@Override
+	public String getMarkupFragmentPath(final String subPath)
+	{
+		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+		return super.getMarkupFragmentPath(path);
 	}
 }

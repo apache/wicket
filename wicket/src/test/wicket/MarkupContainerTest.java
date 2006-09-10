@@ -20,8 +20,10 @@ package wicket;
 
 import java.util.Iterator;
 
+import wicket.markup.IMarkup;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.util.string.Strings;
 
 /**
  * 
@@ -45,23 +47,25 @@ public class MarkupContainerTest extends WicketTestCase
 	 */
 	public void testIteratorOrder()
 	{
-		MarkupContainer container = new WebMarkupContainer(new MockPageWithOneComponent(), "component");
+		MarkupContainer container = new WebMarkupContainer(new MockPageWithOneComponent(), "component")
+		{
+			private static final long serialVersionUID = 1L;
+			
+			/**
+			 * 
+			 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
+			 */
+			@Override
+			public String getMarkupFragmentPath(final String subPath)
+			{
+				String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+				return super.getMarkupFragmentPath(path);
+			}
+		};
+		
 		for (int i = 0; i < 10; i++)
 		{
-			new WebComponent(container, Integer.toString(i))
-			{
-				private static final long serialVersionUID = 1L;
-
-				/**
-				 * 
-				 * @see wicket.Component#getMarkupPathName()
-				 */
-				@Override
-				public String getMarkupPathName()
-				{
-					return null;
-				}
-			};
+			new WebComponent(container, Integer.toString(i));
 		}
 		int i = 0;
 		Iterator iter = container.iterator();
