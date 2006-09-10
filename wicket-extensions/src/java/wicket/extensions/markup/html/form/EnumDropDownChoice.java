@@ -19,7 +19,6 @@
 package wicket.extensions.markup.html.form;
 
 import java.util.Arrays;
-import java.util.List;
 
 import wicket.MarkupContainer;
 import wicket.markup.html.form.DropDownChoice;
@@ -62,7 +61,7 @@ public class EnumDropDownChoice<T extends Enum> extends DropDownChoice<T>
 	 * @param enumType
 	 *            class of enum used to provide choices
 	 */
-	public EnumDropDownChoice(MarkupContainer parent, String id, Class enumType)
+	public EnumDropDownChoice(MarkupContainer parent, String id, Class<T> enumType)
 	{
 		this(parent, id, null, enumType);
 	}
@@ -77,7 +76,7 @@ public class EnumDropDownChoice<T extends Enum> extends DropDownChoice<T>
 	 *            class of enum used to provide choices
 	 */
 	@SuppressWarnings("unchecked")
-	public EnumDropDownChoice(MarkupContainer parent, String id, IModel<T> model, Class enumType)
+	public EnumDropDownChoice(MarkupContainer parent, String id, IModel<T> model, Class<T> enumType)
 	{
 		super(parent, id);
 
@@ -92,7 +91,7 @@ public class EnumDropDownChoice<T extends Enum> extends DropDownChoice<T>
 
 
 		setModel(model);
-		setChoices((List<T>)Arrays.asList(enumType.getEnumConstants()));
+		setChoices(Arrays.asList(enumType.getEnumConstants()));
 		setChoiceRenderer(new EnumRenderer<T>());
 
 	}
