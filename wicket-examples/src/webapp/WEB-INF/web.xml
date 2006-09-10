@@ -119,7 +119,7 @@
         </init-param>
 		<init-param>
 		  <param-name>filterPath</param-name>
-		  <param-value>stockquote</param-value>
+		  <param-value>stock</param-value>
 		</init-param>
     </filter>
     
