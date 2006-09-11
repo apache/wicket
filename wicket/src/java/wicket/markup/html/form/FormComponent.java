@@ -64,6 +64,10 @@ import wicket.version.undo.Change;
  * If this component is required and that fails, the error key that is used is
  * the "RequiredValidator"; if the type conversion fails, it will use the key
  * "TypeValidator".
+ * 
+ * FIXME 2.0: johan: document TypeValidator.type-name key and Conversion,
+ * Conversion.type-name keys
+ * 
  * <p>
  * Resolution of error messages:
  * <ul>
