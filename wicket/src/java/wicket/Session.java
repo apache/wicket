@@ -1091,17 +1091,20 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final synchronized void requestDetached()
 	{
-		Thread t = Thread.currentThread();
-		Iterator<Map.Entry<PageMap,Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
-		while(it.hasNext())
+		if(pageMapsUsedInRequest != null)
 		{
-			Entry<PageMap, Thread> entry = it.next();
-			if(entry.getValue() == t)
+			Thread t = Thread.currentThread();
+			Iterator<Map.Entry<PageMap,Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
+			while(it.hasNext())
 			{
-				it.remove();
+				Entry<PageMap, Thread> entry = it.next();
+				if(entry.getValue() == t)
+				{
+					it.remove();
+				}
 			}
+			notifyAll();
 		}
-		notifyAll();
 	}
 	
 	/**
