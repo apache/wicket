@@ -142,8 +142,8 @@ public class ModalWindow extends Panel<Object>
 
 		add(new CloseButtonBehavior());
 		add(new WindowClosedBehavior());
-		add(HeaderContributor.forJavaScript(JAVASCRIPT.getScope(), JAVASCRIPT.getName()));
-		add(HeaderContributor.forCss(CSS.getScope(), CSS.getName()));
+		add(HeaderContributor.forJavaScript(JAVASCRIPT));
+		add(HeaderContributor.forCss(CSS));
 	}
 
 	/**
