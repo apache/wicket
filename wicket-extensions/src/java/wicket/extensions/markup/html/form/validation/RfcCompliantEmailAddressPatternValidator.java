@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) eelco12 $
- * $Revision: 5004 $
- * $Date: 2006-03-17 20:47:08 -0800 (Fri, 17 Mar 2006) $
+ * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
+ * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
+ * Mar 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,7 +18,6 @@
  */
 package wicket.extensions.markup.html.form.validation;
 
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
 import wicket.markup.html.form.validation.PatternValidator;
 
@@ -127,14 +126,14 @@ public class RfcCompliantEmailAddressPatternValidator extends PatternValidator
 			+ "?:\\r\\n)?[ \\t])*))*)?;\\s*)";
 
 	/** Singleton instance */
-	private static final RfcCompliantEmailAddressPatternValidator instance = new RfcCompliantEmailAddressPatternValidator();
+	private static final RfcCompliantEmailAddressPatternValidator INSTANCE = new RfcCompliantEmailAddressPatternValidator();
 
 	/**
 	 * @return Instance of RFC compliant emailaddress validator
 	 */
 	public static RfcCompliantEmailAddressPatternValidator getInstance()
 	{
-		return instance;
+		return INSTANCE;
 	}
 
 	protected RfcCompliantEmailAddressPatternValidator()
@@ -143,10 +142,10 @@ public class RfcCompliantEmailAddressPatternValidator extends PatternValidator
 	}
 
 	/**
-	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
+	 * @see wicket.markup.html.form.validation.PatternValidator#resourceKey()
 	 */
 	@Override
-	protected String resourceKey(FormComponent formComponent)
+	protected String resourceKey()
 	{
 		return "RfcCompliantEmailAddressPatternValidator";
 	}
