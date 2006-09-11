@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.string.StringList;
 
 /**
@@ -46,7 +47,7 @@ public final class FeedbackMessages implements Serializable
 	/**
 	 * Holds a list of {@link wicket.feedback.FeedbackMessage}s.
 	 */
-	private ArrayList messages = null;
+	private List messages = null;
 
 	/**
 	 * Package local constructor; clients are not allowed to create instances as
@@ -57,17 +58,30 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public FeedbackMessages()
 	{
+		messages = new ArrayList();
 	}
 
+	/**
+	 * Call this constructor if you want to replace the internal
+	 * store with another implemention then the default (ArrayList). 
+	 * This could be a {@link CopyOnWriteArrayList} if this feedbackmessages 
+	 * instance is used by multiply threads.
+	 * 
+	 * @param messagesList 
+	 * 
+	 */
+	public FeedbackMessages(List messagesList)
+	{
+		if(messagesList == null) throw new IllegalArgumentException("messages list can't be null");
+		messages = messagesList;
+	}
+	
 	/**
 	 * Clears any existing messages
 	 */
 	public final void clear()
 	{
-		if (messages != null)
-		{
-			messages.clear();
-		}
+		messages.clear();
 	}
 
 	/**
@@ -77,14 +91,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final int size()
 	{
-		if (messages == null)
-		{
-			return 0;
-		}
-		else
-		{
-			return messages.size();
-		}
+		return messages.size();
 	}
 
 	/**
@@ -215,7 +222,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final boolean isEmpty()
 	{
-		return messages == null || messages.isEmpty();
+		return messages.isEmpty();
 	}
 
 	/**
@@ -228,15 +235,12 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final FeedbackMessage messageForComponent(final Component component)
 	{
-		if (messages != null)
+		for (Iterator iterator = messages.iterator(); iterator.hasNext();)
 		{
-			for (Iterator iterator = messages.iterator(); iterator.hasNext();)
+			FeedbackMessage message = (FeedbackMessage)iterator.next();
+			if (message.getReporter() == component)
 			{
-				FeedbackMessage message = (FeedbackMessage)iterator.next();
-				if (message.getReporter() == component)
-				{
-					return message;
-				}
+				return message;
 			}
 		}
 		return null;
@@ -251,7 +255,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final List messages(final IFeedbackMessageFilter filter)
 	{
-		if (messages == null)
+		if (messages.size() == 0)
 		{
 			return Collections.EMPTY_LIST;
 		}
@@ -313,10 +317,6 @@ public final class FeedbackMessages implements Serializable
 		{
 			log.debug("Adding feedback message " + message);
 		}
-		if (messages == null)
-		{
-			messages = new ArrayList();
-		}
 		messages.add(message);
 	}
 
@@ -327,14 +327,7 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final Iterator iterator()
 	{
-		if (messages == null)
-		{
-			return Collections.EMPTY_LIST.iterator();
-		}
-		else
-		{
-			return messages.iterator();
-		}
+		return messages.iterator();
 	}
 
 	/**
@@ -342,8 +335,9 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void trimToSize()
 	{
-		if (messages!=null) {
-			messages.trimToSize();
+		if(messages instanceof ArrayList)
+		{
+			((ArrayList)messages).trimToSize();
 		}
 	}
 }

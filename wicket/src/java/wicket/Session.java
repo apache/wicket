@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +37,7 @@ import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessages;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
+import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
@@ -164,9 +166,9 @@ public abstract class Session implements Serializable
 	private String style;
 
 	/** feedback messages */
-	private FeedbackMessages feedbackMessages;
+	private FeedbackMessages feedbackMessages = new FeedbackMessages(new CopyOnWriteArrayList());
 
-	private transient Map usedPages;
+	private transient Map pageMapsUsedInRequest;
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -399,26 +401,34 @@ public abstract class Session implements Serializable
 		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (pageMap != null)
 		{
+			long startTime = System.currentTimeMillis();
 			// Get page entry for id and version
-			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			Thread t = (Thread)usedPages.get(id);
+			Thread t = (Thread)pageMapsUsedInRequest.get(pageMap);
 			while (t != null && t != Thread.currentThread())
 			{
 				try
 				{
-					wait(1000);
+					wait(20000); // wait 20 seconds max.
 				}
 				catch (InterruptedException ex)
 				{
 					throw new WicketRuntimeException(ex);
 				}
-				t = (Thread)usedPages.get(id);
+				t = (Thread)pageMapsUsedInRequest.get(pageMap);
+				if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
+				{
+					// if it is still not the right thread.. 
+					// This must be a wicket bug or some other (dead)lock in the code.
+					throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
+							" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
+				}
 			}
-			usedPages.put(id, Thread.currentThread());
+			pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
+			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 			if (page == null)
 			{
-				usedPages.remove(id);
+				pageMapsUsedInRequest.remove(pageMap);
 				notifyAll();
 			}
 			return page;
@@ -631,9 +641,9 @@ public abstract class Session implements Serializable
 	 */
 	public final void setApplication(final Application application)
 	{
-		if (usedPages == null)
+		if (pageMapsUsedInRequest == null)
 		{
-			usedPages = new HashMap(3);
+			pageMapsUsedInRequest = new HashMap(2);
 		}
 	}
 
@@ -775,10 +785,6 @@ public abstract class Session implements Serializable
 	 */
 	public final FeedbackMessages getFeedbackMessages()
 	{
-		if (feedbackMessages == null)
-		{
-			feedbackMessages = new FeedbackMessages();
-		}
 		return feedbackMessages;
 	}
 
@@ -1000,7 +1006,7 @@ public abstract class Session implements Serializable
 	 */
 	final void cleanupFeedbackMessages()
 	{
-		if (feedbackMessages != null)
+		if (feedbackMessages.size() > 0)
 		{
 			Iterator msgs = feedbackMessages.iterator();
 			while (msgs.hasNext())
@@ -1012,15 +1018,7 @@ public abstract class Session implements Serializable
 					dirty();
 				}
 			}
-			if (feedbackMessages.size() == 0)
-			{
-				feedbackMessages = null;
-				dirty();
-			}
-			else
-			{
-				feedbackMessages.trimToSize();
-			}
+			feedbackMessages.trimToSize();
 		}
 	}
 
@@ -1038,14 +1036,21 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * INTERNAL API. Page was detached event.
+	 * INTERNAL API. The request cycle when detached will call this.
 	 * 
-	 * @param page
-	 *            The page that was detached
 	 */
-	final synchronized void pageDetached(Page page)
+	final synchronized void requestDetached()
 	{
-		usedPages.remove(page.getId());
+		Thread t = Thread.currentThread();
+		Iterator it = pageMapsUsedInRequest.entrySet().iterator();
+		while(it.hasNext())
+		{
+			Entry entry = (Entry)it.next();
+			if(entry.getValue() == t)
+			{
+				it.remove();
+			}
+		}
 		notifyAll();
 	}
 

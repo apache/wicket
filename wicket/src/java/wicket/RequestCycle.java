@@ -815,8 +815,7 @@ public abstract class RequestCycle
 
 		// remove any rendered feedback messages from the session
 		session.cleanupFeedbackMessages();
-
-
+		
 		if (updateSession)
 		{
 			// At the end of our response, we need to set any session
@@ -824,11 +823,22 @@ public abstract class RequestCycle
 			session.update();
 		}
 
+		// clear the used pagemap for this thread, 
+		// maybe we can move this a few lines above to have a but more
+		// concurrency (session.update)
+		session.requestDetached();
+		
 		if (getResponse() instanceof BufferedWebResponse)
 		{
 			((BufferedWebResponse)getResponse()).filter();
 		}
 
+//		IRequestLogger requestLogger = getApplication().getRequestLogger();
+//		if (requestLogger != null)
+//		{
+//			requestLogger.requestTime((System.currentTimeMillis() - startTime));
+//		}
+		
 		try
 		{
 			onEndRequest();
