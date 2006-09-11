@@ -28,10 +28,10 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.IValidator;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.util.string.JavascriptUtils;
+import wicket.validation.IValidator;
 
 /**
  * An implementation of ajaxified edit-in-place component using a

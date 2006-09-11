@@ -18,8 +18,8 @@
  */
 package wicket.extensions.markup.html.form.validation;
 
-import wicket.markup.html.form.validation.EmailAddressPatternValidator;
-import wicket.markup.html.form.validation.PatternValidator;
+import wicket.validation.validator.EmailAddressPatternValidator;
+import wicket.validation.validator.PatternValidator;
 
 /**
  * Validator for validating email addresses according to the RFC 822. This
@@ -142,7 +142,7 @@ public class RfcCompliantEmailAddressPatternValidator extends PatternValidator
 	}
 
 	/**
-	 * @see wicket.markup.html.form.validation.PatternValidator#resourceKey()
+	 * @see wicket.validation.validator.PatternValidator#resourceKey()
 	 */
 	@Override
 	protected String resourceKey()
