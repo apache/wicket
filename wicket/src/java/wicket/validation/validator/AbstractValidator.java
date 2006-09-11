@@ -21,6 +21,7 @@ package wicket.validation.validator;
 import java.util.HashMap;
 import java.util.Map;
 
+import wicket.markup.html.form.FormComponent;
 import wicket.util.lang.Classes;
 import wicket.validation.IValidatable;
 import wicket.validation.IValidator;
@@ -185,4 +186,83 @@ public abstract class AbstractValidator<T> implements IValidator<T>
 		return resourceModel;
 	}
 
+	// deprecated methods
+
+
+	/**
+	 * DEPRECATED/UNSUPPORTED
+	 * 
+	 * Gets the default variables for interpolation. These are:
+	 * <ul>
+	 * <li>${input}: the user's input</li>
+	 * <li>${name}: the name of the component</li>
+	 * <li>${label}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
+	 * </ul>
+	 * 
+	 * @param formComponent
+	 *            form component
+	 * @return a map with the variables for interpolation
+	 * 
+	 * @deprecated use {@link #variablesMap(IValidatable)} instead
+	 * @throws UnsupportedOperationException
+	 * 
+	 * 
+	 * FIXME 2.0: remove asap
+	 */
+	@Deprecated
+	protected final Map messageModel(final FormComponent formComponent)
+	{
+		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
+	}
+
+	/**
+	 * DEPRECATED/UNSUPPORTED
+	 * 
+	 * Gets the resource key for validator's error message from the
+	 * ApplicationSettings class.
+	 * 
+	 * @param formComponent
+	 *            form component that is being validated
+	 * 
+	 * @return the resource key based on the form component
+	 * 
+	 * @deprecated use {@link #resourceKey()} instead
+	 * @throws UnsupportedOperationException
+	 * 
+	 * 
+	 * FIXME 2.0: remove asap
+	 * 
+	 */
+	protected final String resourceKey(final FormComponent formComponent)
+	{
+		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
+	}
+
+	/**
+	 * DEPRECATED/UNSUPPORTED
+	 * 
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT IMPLEMENT IT.
+	 * <p>
+	 * Instead of subclassing IValidator, you should use one of the existing
+	 * validators, which cover a huge number of cases, or if none satisfies your
+	 * need, subclass CustomValidator.
+	 * <p>
+	 * Validates the given input. The input corresponds to the input from the
+	 * request for a component.
+	 * 
+	 * @param component
+	 *            Component to validate
+	 * 
+	 * @deprecated use {@link #variablesMap(IValidatable)} instead
+	 * @throws UnsupportedOperationException
+	 * 
+	 * 
+	 * FIXME 2.0: remove asap
+	 */
+	public final void validate(final FormComponent component)
+	{
+		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
+	}
 }
