@@ -18,40 +18,56 @@
  */
 package wicket.validation;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ValidationError implements IValidationError
+/**
+ * A versatile implementation of {@link IValidationError} that supports message
+ * resolution from {@link IMessageSource}, default message (if none of the keys
+ * matched), and variable substitution.
+ * 
+ * The final error message is constructed via the following process:
+ * <ol>
+ * <li>Try all keys added by calls to {@link #addMessageKey(String)} via
+ * provided {@link IMessageSource}</li>
+ * <li>If none of the keys yielded a message, use the message set by
+ * {@link #setMessage(String)} if any</li>
+ * <li>Perform variable subsitution on the message if any</li>
+ * </ol>
+ * 
+ * @author ivaynberg
+ */
+public final class ValidationError implements IValidationError
 {
+	// XXX 2.0: optimization - keys can be null by default until a key is added
+	/** List of message keys to try against the {@link IMessageSource} */
 	private List<String> keys = new ArrayList<String>(1);
-	private Map<String, Object> params;
 
+	/** Variable map to use in variable substitution */
+	private Map<String, Object> vars;
+
+	/** Default message used when all keys yield no message */
+	private String message;
+
+	/**
+	 * Constructor
+	 */
 	public ValidationError()
 	{
 
 	}
 
-	public ValidationError(String key)
-	{
-		addKey(key);
-	}
-
-	public ValidationError(String key, Map<String, Object> params)
-	{
-		if (params == null)
-		{
-			throw new IllegalArgumentException("Argument [[params]] cannot be null");
-		}
-		addKey(key);
-		this.params = params;
-	}
-
-
-	public ValidationError addKey(String key)
+	/**
+	 * Adds a key to the list of keys that will be tried against
+	 * {@link IMessageSource} to locate the error message string
+	 * 
+	 * @param key
+	 * @return this for chaining
+	 */
+	public ValidationError addMessageKey(String key)
 	{
 		if (key == null || key.trim().length() == 0)
 		{
@@ -61,13 +77,16 @@ public class ValidationError implements IValidationError
 		return this;
 	}
 
-
-	public List<String> getKeys()
-	{
-		return keys;
-	}
-
-	public ValidationError setParam(String name, Object value)
+	/**
+	 * Sets a variable that will be used in substitution
+	 * 
+	 * @param name
+	 *            variable name
+	 * @param value
+	 *            variable value
+	 * @return this for chaining
+	 */
+	public ValidationError setVar(String name, Object value)
 	{
 		if (name == null || name.trim().length() == 0)
 		{
@@ -80,36 +99,105 @@ public class ValidationError implements IValidationError
 					"Argument [[value]] cannot be null or an empty string");
 		}
 
-		getParams().put(name, value);
+		getVars().put(name, value);
 
 		return this;
 	}
 
-	public Map<String, Object> getParams()
+	/**
+	 * Returns the map of variables for this error. User is free to modify the
+	 * contents.
+	 * 
+	 * @return map of variables for this error
+	 */
+	public Map<String, Object> getVars()
 	{
-		if (params == null)
+		if (vars == null)
 		{
-			params = new HashMap<String, Object>(2);
+			vars = new HashMap<String, Object>(2);
 		}
-		return params;
+		return vars;
 	}
 
-	@SuppressWarnings("unchecked")
-	public String getMessage(IMessageSource messageSource)
+	/**
+	 * Sets the variable map for this error
+	 * 
+	 * @param vars
+	 *            variable map
+	 * @return this for chaining
+	 */
+	public ValidationError setVars(Map<String, Object> vars)
 	{
-		final Map<String, Object> p = (params == null) ? Collections.EMPTY_MAP : params;
+		if (vars == null)
+		{
+			throw new IllegalArgumentException("Argument [[params]] cannot be null");
+		}
+		this.vars = vars;
+		return this;
+	}
 
-		String message = null;
+	/**
+	 * @see wicket.validation.IValidationError#getErrorMessage(wicket.validation.IMessageSource)
+	 */
+	@SuppressWarnings("unchecked")
+	public String getErrorMessage(IMessageSource messageSource)
+	{
+		String errorMessage = null;
 
+		// try any message keys ...
 		for (String key : keys)
 		{
-			message = messageSource.getMessage(key, p);
-			if (message != null)
+			errorMessage = messageSource.getMessage(key);
+			if (errorMessage != null)
 			{
 				break;
 			}
 		}
+
+		// ... if no keys matched try the default
+		if (errorMessage == null && this.message != null)
+		{
+			errorMessage = this.message;
+		}
+
+		// if a message was found perform variable substitution
+		if (errorMessage != null)
+		{
+			final Map<String, Object> p = (vars == null) ? Collections.EMPTY_MAP : vars;
+			errorMessage = messageSource.substitute(errorMessage, p);
+		}
+		return errorMessage;
+	}
+
+
+	/**
+	 * Gets message that will be used when no message could be located via
+	 * message keys
+	 * 
+	 * @return message
+	 */
+	public String getMessage()
+	{
 		return message;
+	}
+
+	/**
+	 * Sets message that will be used when no message could be located via
+	 * message keys
+	 * 
+	 * @param message
+	 *            the message
+	 * 
+	 * @return this for chaining
+	 */
+	public ValidationError setMessage(String message)
+	{
+		if (message == null)
+		{
+			throw new IllegalArgumentException("Argument [[defaultMessage]] cannot be null");
+		}
+		this.message = message;
+		return this;
 	}
 
 	@Override

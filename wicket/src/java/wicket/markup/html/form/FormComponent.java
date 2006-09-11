@@ -43,6 +43,7 @@ import wicket.util.lang.Classes;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
+import wicket.util.string.interpolator.MapVariableInterpolator;
 import wicket.validation.IMessageSource;
 import wicket.validation.IValidatable;
 import wicket.validation.IValidationError;
@@ -62,12 +63,28 @@ import wicket.version.undo.Change;
  * <p>
  * If this component is required and that fails, the error key that is used is
  * the "RequiredValidator"; if the type conversion fails, it will use the key
- * "TypeValidator". The keys that can be used in both are:
+ * "TypeValidator".
+ * <p>
+ * Resolution of error messages:
  * <ul>
- * <li>${input}: the input the user did give</li>
- * <li>${name}: the name of the component that failed</li>
- * <li>${label}: the label of the component</li>
+ * <li> Error keys tried by this message source are:
+ * <ol>
+ * <li><code>prefix + getId() + "." + key</code></li>
+ * <li><code>prefix + key</code></li>
+ * </ol>
+ * where prefix is the result of {@link FormComponent#getValidatorKeyPrefix()}
+ * </li>
+ * <li> The following variable are added (if not already present) to the
+ * variable substituion map:
+ * <ul>
+ * <li>input - the raw string value entered by the user</li>
+ * <li>name - the id of the this form component</li>
+ * <li>label - the label of the component - either comes from
+ * FormComponent.labelModel or resource key [form-component-id] in that order</li>
  * </ul>
+ * </li>
+ * </ul>
+ * 
  * 
  * @param <T>
  *            Type of model object this component holds
@@ -599,7 +616,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	{
 		if (!checkRequired())
 		{
-			error(new ValidationError("RequiredValidator"));
+			error(new ValidationError().addMessageKey("RequiredValidator"));
 		}
 	}
 
@@ -624,20 +641,20 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 				ValidationError error = new ValidationError();
 				if (e.getTargetType() != null)
 				{
-					error.addKey("ConversionError." + Classes.simpleName(e.getTargetType()));
+					error.addMessageKey("ConversionError." + Classes.simpleName(e.getTargetType()));
 				}
-				error.addKey("ConversionError");
+				error.addMessageKey("ConversionError");
 
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{
-					error.setParam("locale", locale);
+					error.setVar("locale", locale);
 				}
-				error.setParam("exception", e);
+				error.setVar("exception", e);
 				Format format = e.getFormat();
 				if (format instanceof SimpleDateFormat)
 				{
-					error.setParam("format", ((SimpleDateFormat)format).toLocalizedPattern());
+					error.setVar("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
 				error(error);
@@ -654,21 +671,21 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			catch (ConversionException e)
 			{
 				ValidationError error = new ValidationError();
-				error.addKey("TypeValidator." + Classes.simpleName(type));
-				error.addKey("TypeValidator");
+				error.addMessageKey("TypeValidator." + Classes.simpleName(type));
+				error.addMessageKey("TypeValidator");
 
 
-				error.setParam("type", Classes.simpleName(type));
+				error.setVar("type", Classes.simpleName(type));
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{
-					error.setParam("locale", locale);
+					error.setVar("locale", locale);
 				}
-				error.setParam("exception", e);
+				error.setVar("exception", e);
 				Format format = e.getFormat();
 				if (format instanceof SimpleDateFormat)
 				{
-					error.setParam("format", ((SimpleDateFormat)format).toLocalizedPattern());
+					error.setVar("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
 				error(error);
@@ -1061,7 +1078,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			throw new IllegalArgumentException("Argument [[error]] cannot be null");
 		}
 
-		String message = error.getMessage(new MessageSource());
+		String message = error.getErrorMessage(new MessageSource());
 
 		if (message == null)
 		{
@@ -1126,29 +1143,8 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * Default message source implementation that uses component's localizer to
-	 * retrieve messages.
-	 * 
-	 * This message source performs the following wicket-specific actions:
-	 * <ul>
-	 * <li> Error keys tried by this message source are:
-	 * <ol>
-	 * <li><code>prefix + getId() + "." + key</code></li>
-	 * <li><code>prefix + key</code></li>
-	 * </ol>
-	 * 
-	 * where prefix is the result of
-	 * {@link FormComponent#getValidatorKeyPrefix()} </li>
-	 * <li> The following variable are added to the params map
-	 * <ul>
-	 * <li>input - the raw string value entered by the user</li>
-	 * <li>name - the id of the this form component</li>
-	 * <li>label - the label of the component - either comes from
-	 * FormComponent.labelModel or resource key [form-component-id] in that
-	 * order</li>
-	 * </ul>
-	 * </li>
-	 * </ul>
+	 * {@link IMessageSource} used for error messags against this form
+	 * components.
 	 * 
 	 * @author ivaynberg
 	 */
@@ -1156,10 +1152,9 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	{
 
 		/**
-		 * @see wicket.validation.IMessageSource#getMessage(java.lang.String,
-		 *      java.util.Map)
+		 * @see wicket.validation.IMessageSource#getMessage(java.lang.String)
 		 */
-		public String getMessage(String key, Map<String, Object> params)
+		public String getMessage(String key)
 		{
 			// retrieve prefix that will be used to construct message keys
 			String prefix = FormComponent.this.getValidatorKeyPrefix();
@@ -1170,15 +1165,12 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 
 			final Localizer localizer = FormComponent.this.getLocalizer();
 
-			final IModel<Map<String, Object>> paramsModel = new Model<Map<String, Object>>(
-					addDefaultParams(params));
-
 			String resource = prefix + getId() + "." + key;
 
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
 			// return a default string like "[Warning: String ..."
-			String message = localizer.getString(resource, FormComponent.this, paramsModel, "");
+			String message = localizer.getString(resource, FormComponent.this, "");
 
 			// If not found, than ...
 			if (Strings.isEmpty(message))
@@ -1187,7 +1179,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 
 				resource = prefix + key;
 
-				message = localizer.getString(resource, FormComponent.this, paramsModel, "");
+				message = localizer.getString(resource, FormComponent.this, "");
 			}
 
 			// convert empty string to null in case our default value of "" was
@@ -1207,7 +1199,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		 *            original params map
 		 * @return new params map
 		 */
-		private Map<String, Object> addDefaultParams(Map<String, Object> params)
+		private Map<String, Object> addDefaultVars(Map<String, Object> params)
 		{
 			// create and fill the new params map
 			final HashMap<String, Object> fullParams;
@@ -1262,6 +1254,17 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 				label = localizer.getString(id, FormComponent.this, id);
 			}
 			return label;
+		}
+
+
+		/**
+		 * @see wicket.validation.IMessageSource#substitute(java.lang.String,
+		 *      java.util.Map)
+		 */
+		public String substitute(String string, Map<String, Object> vars)
+				throws IllegalStateException
+		{
+			return new MapVariableInterpolator(string, addDefaultVars(vars), true).toString();
 		}
 	}
 

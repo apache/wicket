@@ -18,7 +18,6 @@
  */
 package wicket.validation.validator;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -126,9 +125,9 @@ public class PatternValidator extends StringValidator
 
 
 	@Override
-	protected Map<String, Serializable> messageModel(IValidatable<String> validatable)
+	protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 	{
-		final Map<String, Serializable> map = super.messageModel(validatable);
+		final Map<String, Object> map = super.variablesMap(validatable);
 		map.put("pattern", pattern);
 		return map;
 	}

@@ -20,25 +20,38 @@ package wicket.validation;
 
 import java.util.Map;
 
+
 /**
- * Represents a message store that stores messages by a <code>key</code>.
- * This store is usually localized.
+ * Represents a message source that stores messages by a <code>key</code> and
+ * can perform variable substitution.
  * 
  * @author ivaynberg
  */
 public interface IMessageSource
 {
 	/**
-	 * Retrieves a message with the given <code>key</code>. Performs variable
-	 * substitution for variables defined in
-	 * <code>params:varname->varvalue</code> map using the
-	 * <code>${varname}</code> syntax to identify variables in the message.
+	 * Retrieves a message with the given <code>key</code>.
 	 * 
 	 * @param key
 	 *            message key
-	 * @param params
-	 *            variable substitution map:varname->varvalue
 	 * @return message or null if not found
 	 */
-	String getMessage(String key, Map<String, Object> params);
+	String getMessage(String key);
+
+	/**
+	 * Performs variable substitution on the specified <code>string</code>
+	 * using variables declared in the <code>vars</code> map.
+	 * 
+	 * Variables in the message are identified using ${varname} syntax
+	 * 
+	 * @param string
+	 * @param vars
+	 * 
+	 * @throws IllegalStateException
+	 *             if a variable defined in the string cannot be found in the
+	 *             <code>vars</code> map
+	 * 
+	 * @return string with variables subsituted
+	 */
+	String substitute(String string, Map<String, Object> vars) throws IllegalStateException;
 }

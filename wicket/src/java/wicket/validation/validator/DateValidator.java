@@ -16,7 +16,6 @@
  */
 package wicket.validation.validator;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -127,9 +126,9 @@ public abstract class DateValidator extends AbstractValidator<Date>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Date> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", minimum);
 			map.put("maximum", maximum);
 			return map;
@@ -169,9 +168,9 @@ public abstract class DateValidator extends AbstractValidator<Date>
 
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Date> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", minimum);
 			return map;
 		}
@@ -208,9 +207,9 @@ public abstract class DateValidator extends AbstractValidator<Date>
 
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Date> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Date> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", maximum);
 			return map;
 		}

@@ -19,17 +19,17 @@
 package wicket.validation;
 
 /**
- * Represents a validation error
+ * A validation error
  * 
  * @author ivaynberg
  */
 public interface IValidationError
 {
 	/**
-	 * Retrieves user-facing error message
+	 * Retrieves error message (usually user-facing)
 	 * 
 	 * @param messageSource
 	 * @return error message
 	 */
-	String getMessage(IMessageSource messageSource);
+	String getErrorMessage(IMessageSource messageSource);
 }

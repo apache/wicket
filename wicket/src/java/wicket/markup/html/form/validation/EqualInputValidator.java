@@ -91,7 +91,7 @@ public class EqualInputValidator extends AbstractFormValidator
 		if (!Objects.equal(formComponent1.getInput(), formComponent2.getInput()))
 		{
 			final String key = resourceKey();
-			formComponent2.error(new ValidationError(key, messageModel()));
+			formComponent2.error(new ValidationError().addMessageKey(key).setVars(messageModel()));
 		}
 	}
 }

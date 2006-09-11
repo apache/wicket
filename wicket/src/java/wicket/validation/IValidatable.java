@@ -22,8 +22,11 @@ package wicket.validation;
 /**
  * Represents any object that can be validated
  * 
- * @author ivaynberg
  * @param <T>
+ *            type of value that will be validated
+ * 
+ * @author ivaynberg
+ * 
  */
 public interface IValidatable<T>
 {

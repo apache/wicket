@@ -16,7 +16,6 @@
  */
 package wicket.validation.validator;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import wicket.validation.IValidatable;
@@ -216,9 +215,9 @@ public abstract class NumberValidator extends AbstractValidator<Number>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Number> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Long(minimum));
 			map.put("maximum", new Long(maximum));
 			return map;
@@ -256,9 +255,9 @@ public abstract class NumberValidator extends AbstractValidator<Number>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Number> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Long(minimum));
 			return map;
 		}
@@ -295,9 +294,9 @@ public abstract class NumberValidator extends AbstractValidator<Number>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Number> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", new Long(maximum));
 			return map;
 		}
@@ -335,9 +334,9 @@ public abstract class NumberValidator extends AbstractValidator<Number>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Number> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Double(minimum));
 			map.put("maximum", new Double(maximum));
 			return map;
@@ -372,9 +371,9 @@ public abstract class NumberValidator extends AbstractValidator<Number>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Number> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Double(minimum));
 			return map;
 		}
@@ -410,9 +409,9 @@ public abstract class NumberValidator extends AbstractValidator<Number>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<Number> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", new Double(maximum));
 			return map;
 		}

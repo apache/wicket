@@ -23,9 +23,11 @@ import java.io.Serializable;
 /**
  * A validator that can validate a {@link IValidatable} object.
  * 
+ * @param <T>
+ *            type of value returned by {@link IValidatable#getValue()}
+ * 
  * @author Jonathan Locke
  * @author Igor Vaynberg (ivaynberg)
- * @param <T>
  */
 public interface IValidator<T> extends Serializable
 {

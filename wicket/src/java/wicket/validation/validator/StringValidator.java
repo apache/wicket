@@ -18,7 +18,6 @@
  */
 package wicket.validation.validator;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import wicket.validation.IValidatable;
@@ -158,9 +157,9 @@ public abstract class StringValidator extends AbstractValidator<String>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<String> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
 			map.put("maximum", new Integer(maximum));
 			map.put("length", new Integer(validatable.getValue().length()));
@@ -200,9 +199,9 @@ public abstract class StringValidator extends AbstractValidator<String>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<String> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("minimum", new Integer(minimum));
 			map.put("length", new Integer(validatable.getValue().length()));
 			return map;
@@ -239,9 +238,9 @@ public abstract class StringValidator extends AbstractValidator<String>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<String> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("length", new Integer(validatable.getValue().length()));
 			map.put("exact", this.length);
 			return map;
@@ -278,9 +277,9 @@ public abstract class StringValidator extends AbstractValidator<String>
 		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(IValidatable<String> validatable)
+		protected Map<String, Object> variablesMap(IValidatable<String> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(validatable);
+			final Map<String, Object> map = super.variablesMap(validatable);
 			map.put("maximum", new Integer(maximum));
 			map.put("length", new Integer(validatable.getValue().length()));
 			return map;
