@@ -197,8 +197,8 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 						{
 							if ("".equals(rolesSetNameField.getInput()))
 							{
-								rolesSetNameField.error(new ValidationError(
-										"error.noSetNameForRoles"));
+								rolesSetNameField.error(new ValidationError()
+										.addMessageKey("error.noSetNameForRoles"));
 							}
 						}
 					}
