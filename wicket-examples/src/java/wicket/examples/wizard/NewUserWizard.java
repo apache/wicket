@@ -19,7 +19,6 @@
 package wicket.examples.wizard;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import wicket.Component;
@@ -38,6 +37,7 @@ import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractFormValidator;
 import wicket.markup.html.form.validation.EmailAddressPatternValidator;
+import wicket.markup.html.form.validation.ValidationError;
 import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
@@ -197,8 +197,8 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 						{
 							if ("".equals(rolesSetNameField.getInput()))
 							{
-								rolesSetNameField.error(Collections
-										.singletonList("error.noSetNameForRoles"), null);
+								rolesSetNameField.error(new ValidationError(
+										"error.noSetNameForRoles"));
 							}
 						}
 					}
