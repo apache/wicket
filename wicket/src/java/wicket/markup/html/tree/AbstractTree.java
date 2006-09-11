@@ -33,6 +33,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.HeaderContributor;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
@@ -40,6 +41,7 @@ import wicket.model.IDetachable;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 
 /**
  * This class encapsulates the logic for displaying and (partial) updating the
@@ -1308,5 +1310,25 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	public Component getNodeComponent(TreeNode node)
 	{
 		return (Component)nodeToItemMap.get(node);
+	}
+
+	/**
+	 * 
+	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
+	 */
+	@Override
+	public final String getMarkupFragmentPath(final String subPath)
+	{
+		/*
+		 * we need to cut out the path of direct children because they inherit
+		 * the markup so their markup path must look as if they are the listview
+		 * themselves
+		 * 
+		 * page:listview:1:label -> page:listview:label
+		 * 
+		 * where 1 was the id of the listitem
+		 */
+		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+		return super.getMarkupFragmentPath(path);
 	}
 }

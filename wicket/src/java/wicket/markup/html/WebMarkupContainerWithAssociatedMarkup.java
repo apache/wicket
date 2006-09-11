@@ -27,6 +27,7 @@ import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
+import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.HeaderPartContainer;
@@ -337,6 +338,13 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 		{
 			this.markup = getAssociatedMarkupStream(true).getMarkup();
 		}
-		return this.markup.findMarkupFragment(path, true);
+		try
+		{
+			return this.markup.findMarkupFragment(path, true);
+		}
+		catch (WicketRuntimeException ex)
+		{
+			throw new MarkupNotFoundException(ex.getMessage() + "; Component: " + toString(), ex);
+		}
 	}
 }

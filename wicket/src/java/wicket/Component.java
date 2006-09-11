@@ -723,6 +723,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		try
 		{
+			// new 
+			MarkupFragment markupFragment = getMarkupFragment();
+			
+			// old
 			MarkupStream markupStream = Application.get().getMarkupSettings()
 					.getMarkupFragmentFinder().find(this);
 			ComponentTag tag = markupStream.getTag();
@@ -730,8 +734,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
 			}
-
-			MarkupFragment markupFragment = getMarkupFragment();
 
 			return markupStream;
 		}
