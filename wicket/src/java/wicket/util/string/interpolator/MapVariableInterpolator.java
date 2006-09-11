@@ -44,6 +44,28 @@ public class MapVariableInterpolator extends VariableInterpolator
 		this.variables = variables;
 	}
 
+
+	/**
+	 * Constructor
+	 * 
+	 * @param string
+	 *            The string to interpolate into
+	 * @param variables
+	 *            The variables to substitute
+	 * @param exceptionOnNullVarValue
+	 *            if true an {@link IllegalStateException} will be thrown if a
+	 *            {@link #getValue(String)} returns null, otherwise the
+	 *            ${varname} string will be left in the <code>string</code> so
+	 *            multiple interpolators can be chained
+	 */
+	public MapVariableInterpolator(String string, final Map variables,
+			boolean exceptionOnNullVarValue)
+	{
+		super(string, exceptionOnNullVarValue);
+		this.variables = variables;
+	}
+
+
 	/**
 	 * Accessor to set variables
 	 * 

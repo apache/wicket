@@ -51,6 +51,27 @@ public final class PropertyVariableInterpolator extends VariableInterpolator
 	}
 
 	/**
+	 * Constructor
+	 * 
+	 * @param string
+	 *            The string to interpolate into
+	 * @param model
+	 *            The root model to apply property expressions to
+	 * @param exceptionOnNullVarValue
+	 *            if true an {@link IllegalStateException} will be thrown if a
+	 *            {@link #getValue(String)} returns null, otherwise the
+	 *            ${varname} string will be left in the <code>string</code> so
+	 *            multiple interpolators can be chained
+	 */
+	public PropertyVariableInterpolator(String string, final Object model,
+			boolean exceptionOnNullVarValue)
+	{
+		super(string, exceptionOnNullVarValue);
+		this.model = model;
+	}
+
+
+	/**
 	 * Interpolates string, substituting values for property expressions
 	 * 
 	 * @param string
