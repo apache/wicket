@@ -36,14 +36,14 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractFormValidator;
-import wicket.markup.html.form.validation.EmailAddressPatternValidator;
-import wicket.markup.html.form.validation.ValidationError;
 import wicket.markup.html.panel.Panel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.ResourceModel;
 import wicket.model.StringResourceModel;
+import wicket.validation.ValidationError;
+import wicket.validation.validator.EmailAddressPatternValidator;
 
 /**
  * This wizard shows some basic form use. It uses custom panels for the form

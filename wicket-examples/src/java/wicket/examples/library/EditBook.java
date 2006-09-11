@@ -34,11 +34,11 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.FormComponentFeedbackBorder;
-import wicket.markup.html.form.validation.StringValidator;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.PageLink;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
+import wicket.validation.validator.StringValidator;
 
 /**
  * A page that contains a form that allows editing of books.

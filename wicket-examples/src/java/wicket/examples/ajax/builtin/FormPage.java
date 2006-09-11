@@ -28,12 +28,12 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.SimpleFormComponentLabel;
-import wicket.markup.html.form.validation.EmailAddressPatternValidator;
-import wicket.markup.html.form.validation.StringValidator;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ResourceModel;
 import wicket.util.time.Duration;
+import wicket.validation.validator.EmailAddressPatternValidator;
+import wicket.validation.validator.StringValidator;
 
 /**
  * Page to demonstrate instant ajax validaion feedback. Validation is triggered

@@ -43,7 +43,6 @@ import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.form.validation.NumberValidator;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -57,6 +56,7 @@ import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
 import wicket.util.convert.MaskConverter;
 import wicket.util.convert.SimpleConverterAdapter;
+import wicket.validation.validator.NumberValidator;
 
 /**
  * Example for form input.
