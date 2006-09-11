@@ -149,12 +149,6 @@
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.octo.captcha</groupId>
-			<artifactId>jcaptcha-all</artifactId>
-			<version>1.0-RC-2.0.1</version>
-			<type>jar</type>
-		</dependency>
         <dependency>
             <groupId>ehcache</groupId>
             <artifactId>ehcache</artifactId>

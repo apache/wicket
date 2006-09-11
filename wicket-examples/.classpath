@@ -31,6 +31,5 @@
 	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6.jar"/>
 	<classpathentry sourcepath="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar" kind="var" path="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/octo/captcha/jcaptcha-all/1.0-RC-2.0.1/jcaptcha-all-1.0-RC-2.0.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
