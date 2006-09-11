@@ -1,7 +1,7 @@
 /*
- * $Id: org.eclipse.jdt.ui.prefs 5004 2006-03-17 20:47:08 -0800 (Fri, 17 Mar
- * 2006) eelco12 $ $Revision: 5004 $ $Date: 2006-03-17 20:47:08 -0800 (Fri, 17
- * Mar 2006) $
+ * $Id: IValidator.java 3585 2006-01-02 07:37:31 +0000 (Mon, 02 Jan 2006)
+ * jonathanlocke $ $Revision: 7269 $ $Date: 2006-01-02 07:37:31 +0000 (Mon, 02
+ * Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,28 +16,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.validation;
 
+import java.io.Serializable;
 
 /**
- * Represents any object that can be validated
+ * A validator that can validate a {@link IValidatable} object.
  * 
- * @author ivaynberg
+ * @author Jonathan Locke
+ * @author Igor Vaynberg (ivaynberg)
  * @param <T>
  */
-public interface IValidatable<T>
+public interface IValidator<T> extends Serializable
 {
 	/**
-	 * @return the value to be validated
-	 */
-	T getValue();
-
-	/**
-	 * Reports an error against the validatable value. Multiple errors can be
-	 * reported by calling this method multiple times.
+	 * Validates the <code>validatable</code> object. Validation errors should
+	 * be reported using {@link IValidatable#error(IValidationError)} method.
 	 * 
-	 * @param error
-	 *            reported error
+	 * @param validatable
 	 */
-	void error(IValidationError error);
+	void validate(IValidatable<T> validatable);
 }

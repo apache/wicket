@@ -35,11 +35,6 @@ import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.markup.html.form.validation.IMessageSource;
-import wicket.markup.html.form.validation.IValidatable;
-import wicket.markup.html.form.validation.IValidationError;
-import wicket.markup.html.form.validation.IValidator;
-import wicket.markup.html.form.validation.ValidationError;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.convert.ConversionException;
@@ -48,6 +43,11 @@ import wicket.util.lang.Classes;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.StringList;
 import wicket.util.string.Strings;
+import wicket.validation.IMessageSource;
+import wicket.validation.IValidatable;
+import wicket.validation.IValidationError;
+import wicket.validation.IValidator;
+import wicket.validation.ValidationError;
 import wicket.version.undo.Change;
 
 /**
@@ -1108,7 +1108,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	{
 
 		/**
-		 * @see wicket.markup.html.form.validation.IValidatable#error(wicket.markup.html.form.validation.IValidationError)
+		 * @see wicket.validation.IValidatable#error(wicket.validation.IValidationError)
 		 */
 		public void error(IValidationError error)
 		{
@@ -1116,7 +1116,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		}
 
 		/**
-		 * @see wicket.markup.html.form.validation.IValidatable#getValue()
+		 * @see wicket.validation.IValidatable#getValue()
 		 */
 		public T getValue()
 		{
@@ -1156,7 +1156,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	{
 
 		/**
-		 * @see wicket.markup.html.form.validation.IMessageSource#getMessage(java.lang.String,
+		 * @see wicket.validation.IMessageSource#getMessage(java.lang.String,
 		 *      java.util.Map)
 		 */
 		public String getMessage(String key, Map<String, Object> params)

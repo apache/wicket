@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.validation;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -16,32 +16,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.validation;
+
+import java.util.Map;
 
 /**
- * A validator that skips validation if {@link IValidatable#getValue()} returns
- * null
+ * Represents a message store that stores messages by a <code>key</code>.
+ * This store is usually localized.
  * 
  * @author ivaynberg
- * @param <T>
  */
-public abstract class NullIgnoringValidator<T> implements IValidator<T>
+public interface IMessageSource
 {
-
-	public final void validate(IValidatable<T> validatable)
-	{
-		if (validatable.getValue() != null)
-		{
-			onValidate(validatable);
-		}
-	}
-
 	/**
-	 * Validates the validatable. This method is only called if
-	 * {@link IValidatable#getValue()} is not null
+	 * Retrieves a message with the given <code>key</code>. Performs variable
+	 * substitution for variables defined in
+	 * <code>params:varname->varvalue</code> map using the
+	 * <code>${varname}</code> syntax to identify variables in the message.
 	 * 
-	 * @param validatable
+	 * @param key
+	 *            message key
+	 * @param params
+	 *            variable substitution map:varname->varvalue
+	 * @return message or null if not found
 	 */
-	protected abstract void onValidate(IValidatable<T> validatable);
-
+	String getMessage(String key, Map<String, Object> params);
 }

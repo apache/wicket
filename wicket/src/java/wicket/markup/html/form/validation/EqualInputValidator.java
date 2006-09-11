@@ -21,6 +21,7 @@ package wicket.markup.html.form.validation;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.lang.Objects;
+import wicket.validation.ValidationError;
 
 /**
  * FIXME 2.0: ivaynberg: look over javadoc

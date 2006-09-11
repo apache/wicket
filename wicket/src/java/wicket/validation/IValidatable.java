@@ -16,29 +16,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.html.form.validation;
+package wicket.validation;
 
-import java.util.Map;
 
 /**
- * Represents a message store that stores messages by a <code>key</code>.
- * This store is usually localized.
+ * Represents any object that can be validated
  * 
  * @author ivaynberg
+ * @param <T>
  */
-public interface IMessageSource
+public interface IValidatable<T>
 {
 	/**
-	 * Retrieves a message with the given <code>key</code>. Performs variable
-	 * substitution for variables defined in
-	 * <code>params:varname->varvalue</code> map using the
-	 * <code>${varname}</code> syntax to identify variables in the message.
-	 * 
-	 * @param key
-	 *            message key
-	 * @param params
-	 *            variable substitution map:varname->varvalue
-	 * @return message or null if not found
+	 * @return the value to be validated
 	 */
-	String getMessage(String key, Map<String, Object> params);
+	T getValue();
+
+	/**
+	 * Reports an error against the validatable value. Multiple errors can be
+	 * reported by calling this method multiple times.
+	 * 
+	 * @param error
+	 *            reported error
+	 */
+	void error(IValidationError error);
 }
