@@ -303,10 +303,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		{
 			throw re;
 		}
-		finally
-		{
-			getSession().pageDetached(this);
-		}
 	}
 	/**
 	 * Detaches any attached models referenced by this page.
