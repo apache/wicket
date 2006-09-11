@@ -20,21 +20,20 @@ package wicket.markup.html.form.validation;
 
 import java.util.regex.Pattern;
 
-import wicket.markup.html.form.FormComponent;
-
 /**
  * Validator for checking the form/pattern of email addresses.
  * 
  * @author Chris Turner
  * @author Jonathan Locke
  * @author Martijn Dashorst
+ * 
  */
 public class EmailAddressPatternValidator extends PatternValidator
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Singleton instance */
-	private static final EmailAddressPatternValidator instance = new EmailAddressPatternValidator();
+	private static final EmailAddressPatternValidator INSTANCE = new EmailAddressPatternValidator();
 
 
 	/**
@@ -42,7 +41,7 @@ public class EmailAddressPatternValidator extends PatternValidator
 	 */
 	public static EmailAddressPatternValidator getInstance()
 	{
-		return instance;
+		return INSTANCE;
 	}
 
 	/**
@@ -55,11 +54,8 @@ public class EmailAddressPatternValidator extends PatternValidator
 				Pattern.CASE_INSENSITIVE);
 	}
 
-	/**
-	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
-	 */
 	@Override
-	protected String resourceKey(FormComponent formComponent)
+	protected String resourceKey()
 	{
 		return "EmailAddressPatternValidator";
 	}

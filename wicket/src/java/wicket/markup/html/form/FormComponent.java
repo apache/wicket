@@ -18,14 +18,11 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,7 +35,11 @@ import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.form.validation.IMessageSource;
+import wicket.markup.html.form.validation.IValidatable;
+import wicket.markup.html.form.validation.IValidationError;
 import wicket.markup.html.form.validation.IValidator;
+import wicket.markup.html.form.validation.ValidationError;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.convert.ConversionException;
@@ -598,8 +599,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	{
 		if (!checkRequired())
 		{
-			error(Collections.singletonList("RequiredValidator"),
-					new HashMap<String, Serializable>());
+			error(new ValidationError("RequiredValidator"));
 		}
 	}
 
@@ -621,31 +621,27 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			}
 			catch (ConversionException e)
 			{
-				Map<String, Serializable> args = new HashMap<String, Serializable>();
+				ValidationError error = new ValidationError();
+				if (e.getTargetType() != null)
+				{
+					error.addKey("ConversionError." + Classes.simpleName(e.getTargetType()));
+				}
+				error.addKey("ConversionError");
+
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{
-					args.put("locale", locale);
+					error.setParam("locale", locale);
 				}
-				args.put("exception", e);
+				error.setParam("exception", e);
 				Format format = e.getFormat();
 				if (format instanceof SimpleDateFormat)
 				{
-					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+					error.setParam("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
-				String[] resourceKeys  = null;
-				if(e.getTargetType() != null)
-				{
-					String typedResourceKey = "ConversionError." + Classes.simpleName(e.getTargetType());
-					resourceKeys = new String[] { typedResourceKey, "ConversionError" };
-				}
-				else
-				{
-					resourceKeys = new String[] {"ConversionError" };
-				}
+				error(error);
 
-				error(Arrays.asList(resourceKeys), args);
 			}
 		}
 		else if (!Strings.isEmpty(getInput()))
@@ -657,26 +653,25 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			}
 			catch (ConversionException e)
 			{
-				Map<String, Serializable> args = new HashMap<String, Serializable>();
-				args.put("type", Classes.simpleName(type));
+				ValidationError error = new ValidationError();
+				error.addKey("TypeValidator." + Classes.simpleName(type));
+				error.addKey("TypeValidator");
+
+
+				error.setParam("type", Classes.simpleName(type));
 				final Locale locale = e.getLocale();
 				if (locale != null)
 				{
-					args.put("locale", locale);
+					error.setParam("locale", locale);
 				}
-				args.put("exception", e);
+				error.setParam("exception", e);
 				Format format = e.getFormat();
 				if (format instanceof SimpleDateFormat)
 				{
-					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
+					error.setParam("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
-
-				final String typedResourceKey = "TypeValidator." + Classes.simpleName(type);
-
-				String[] resourceKeys = new String[] { typedResourceKey, "TypeValidator" };
-
-				error(Arrays.asList(resourceKeys), args);
+				error(error);
 			}
 		}
 	}
@@ -717,18 +712,22 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	/**
 	 * Validates this component using the component's validators.
 	 */
+	@SuppressWarnings("unchecked")
 	protected final void validateValidators()
 	{
 		final int size = validators_size();
 
+		final IValidatable<T> validatable = new ValidatableAdapter();
+
 		int i = 0;
-		IValidator validator = null;
+		IValidator<T> validator = null;
+
 		try
 		{
 			for (i = 0; i < size; i++)
 			{
 				validator = validators_get(i);
-				validator.validate(this);
+				validator.validate(validatable);
 				if (!isValid())
 				{
 					break;
@@ -1050,136 +1049,32 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * Builds and reports an error message. Typically called from a validator.
-	 * <p>
-	 * This function will iterate over the list of resource keys and try to find
-	 * a resource message that matches. Each key is first tried verbatim, and
-	 * then a key of form prefix.key is tried; prefix comes from
-	 * {@link #getValidatorKeyPrefix()}.
-	 * <p>
-	 * If a message is found, any variables in it with form ${varname} will be
-	 * interpolated given the arguments in the args parameter.
-	 * <p>
-	 * This method will add a few default arguments to the args map if they are
-	 * not already present:
-	 * <ul>
-	 * <li>input - the raw string value entered by the user</li>
-	 * <li>name - the id of the this form component</li>
-	 * <li>label - string value of object returned from the {@link #getLabel()}
-	 * model</li>
-	 * </ul>
+	 * Reports a validation error against this form component
 	 * 
-	 * 
-	 * @param resourceKeys
-	 *            list of resource keys to try
-	 * @param args
-	 *            argument substituion map with format map:varname->varvalue
+	 * @param error
+	 *            validation error
 	 */
-	public final void error(List<String> resourceKeys, Map<String, Serializable> args)
+	public void error(IValidationError error)
 	{
-		String prefix = getValidatorKeyPrefix();
-		if (Strings.isEmpty(prefix))
+		if (error == null)
 		{
-			prefix = "";
+			throw new IllegalArgumentException("Argument [[error]] cannot be null");
 		}
 
-		// prepare the arguments map by adding default arguments such as input,
-		// name, and label
-		final HashMap<String, Object> fullArgs;
-		if (args == null)
+		String message = error.getMessage(new MessageSource());
+
+		if (message == null)
 		{
-			fullArgs = new HashMap<String, Object>(6);
+			// XXX maybe make message source remember tried resource keys so a
+			// more specific error message can be created
+			error("Could not locate error message for error: " + error.toString());
 		}
 		else
 		{
-			fullArgs = new HashMap<String, Object>(args.size() + 6);
-			fullArgs.putAll(args);
+			error(message);
 		}
 
-		if (!fullArgs.containsKey("input"))
-		{
-			fullArgs.put("input", getInput());
-		}
-		if (!fullArgs.containsKey("name"))
-		{
-			fullArgs.put("name", getId());
-		}
-		if (!fullArgs.containsKey("label"))
-		{
-			Object label = null;
-			if (getLabel() != null)
-			{
-				label = getLabel().getObject();
-			}
-			if (label != null)
-			{
-				fullArgs.put("label", label);
-			}
-			else
-			{
-				// apply default value (component id) if key/value can not be
-				// found
-				fullArgs.put("label", getLocalizer().getString(getId(), getParent(), getId()));
-			}
-		}
-
-		final IModel<HashMap<String, Object>> argsModel = new Model<HashMap<String, Object>>(
-				fullArgs);
-
-		// iterate through keys in order they were provided
-
-		final Localizer localizer = getLocalizer();
-		final Iterator<String> keys = resourceKeys.iterator();
-
-		String message = null;
-
-		while (keys.hasNext())
-		{
-			final String key = keys.next();
-
-			String resource = prefix + getId() + "." + key;
-
-			// Note: It is important that the default value of "" is provided
-			// to getString() not to throw a MissingResourceException or to
-			// return a default string like "[Warning: String ..."
-			message = localizer.getString(resource, getParent(), argsModel, "");
-
-			// If not found, than ..
-			if (Strings.isEmpty(message))
-			{
-				// Have a 2nd try with the class name as the key. This makes for
-				// keys like "RequiredValidator" in any of the properties files
-				// along the path.
-
-				resource = prefix + key;
-
-				if (keys.hasNext())
-				{
-					message = localizer.getString(resource, this, argsModel, "");
-				}
-				else
-				{
-					/*
-					 * Note: This is the last key we are going to try. It is
-					 * important that the default value of "" is NOT provided to
-					 * getString() throw either MissingResourceException or to
-					 * to return a default string like "[Warning: String ..." in
-					 * case the property could not be found.
-					 */
-					message = localizer.getString(resource, this, argsModel);
-				}
-			}
-
-			if (!Strings.isEmpty(message))
-			{
-				break;
-			}
-
-		}
-
-		error(message);
 	}
-
 
 	/**
 	 * This method will retrieve the request parameter, validate it, and if
@@ -1203,4 +1098,171 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			updateModel();
 		}
 	}
+
+	/**
+	 * Adapter that makes this component appear as {@link IValidatable}
+	 * 
+	 * @author ivaynberg
+	 */
+	private class ValidatableAdapter implements IValidatable<T>
+	{
+
+		/**
+		 * @see wicket.markup.html.form.validation.IValidatable#error(wicket.markup.html.form.validation.IValidationError)
+		 */
+		public void error(IValidationError error)
+		{
+			FormComponent.this.error(error);
+		}
+
+		/**
+		 * @see wicket.markup.html.form.validation.IValidatable#getValue()
+		 */
+		public T getValue()
+		{
+			return FormComponent.this.getConvertedInput();
+		}
+
+	}
+
+	/**
+	 * Default message source implementation that uses component's localizer to
+	 * retrieve messages.
+	 * 
+	 * This message source performs the following wicket-specific actions:
+	 * <ul>
+	 * <li> Error keys tried by this message source are:
+	 * <ol>
+	 * <li><code>prefix + getId() + "." + key</code></li>
+	 * <li><code>prefix + key</code></li>
+	 * </ol>
+	 * 
+	 * where prefix is the result of
+	 * {@link FormComponent#getValidatorKeyPrefix()} </li>
+	 * <li> The following variable are added to the params map
+	 * <ul>
+	 * <li>input - the raw string value entered by the user</li>
+	 * <li>name - the id of the this form component</li>
+	 * <li>label - the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-component-id] in that
+	 * order</li>
+	 * </ul>
+	 * </li>
+	 * </ul>
+	 * 
+	 * @author ivaynberg
+	 */
+	private class MessageSource implements IMessageSource
+	{
+
+		/**
+		 * @see wicket.markup.html.form.validation.IMessageSource#getMessage(java.lang.String,
+		 *      java.util.Map)
+		 */
+		public String getMessage(String key, Map<String, Object> params)
+		{
+			// retrieve prefix that will be used to construct message keys
+			String prefix = FormComponent.this.getValidatorKeyPrefix();
+			if (Strings.isEmpty(prefix))
+			{
+				prefix = "";
+			}
+
+			final Localizer localizer = FormComponent.this.getLocalizer();
+
+			final IModel<Map<String, Object>> paramsModel = new Model<Map<String, Object>>(
+					addDefaultParams(params));
+
+			String resource = prefix + getId() + "." + key;
+
+			// Note: It is important that the default value of "" is provided
+			// to getString() not to throw a MissingResourceException or to
+			// return a default string like "[Warning: String ..."
+			String message = localizer.getString(resource, FormComponent.this, paramsModel, "");
+
+			// If not found, than ...
+			if (Strings.isEmpty(message))
+			{
+				// Try a variation of the resource key
+
+				resource = prefix + key;
+
+				message = localizer.getString(resource, FormComponent.this, paramsModel, "");
+			}
+
+			// convert empty string to null in case our default value of "" was
+			// returned from localizer
+			if (Strings.isEmpty(message))
+			{
+				message = null;
+			}
+			return message;
+		}
+
+		/**
+		 * Creates a new params map that additionaly contains the default input,
+		 * name, label parameters
+		 * 
+		 * @param params
+		 *            original params map
+		 * @return new params map
+		 */
+		private Map<String, Object> addDefaultParams(Map<String, Object> params)
+		{
+			// create and fill the new params map
+			final HashMap<String, Object> fullParams;
+			if (params == null)
+			{
+				fullParams = new HashMap<String, Object>(6);
+			}
+			else
+			{
+				fullParams = new HashMap<String, Object>(params.size() + 6);
+				fullParams.putAll(params);
+			}
+
+			// add the input param if not already present
+			if (!fullParams.containsKey("input"))
+			{
+				fullParams.put("input", FormComponent.this.getInput());
+			}
+
+			// add the name param if not already present
+			if (!fullParams.containsKey("name"))
+			{
+				fullParams.put("name", FormComponent.this.getId());
+			}
+
+			// add the label param if not already present
+			if (!fullParams.containsKey("label"))
+			{
+				fullParams.put("label", getLabel());
+			}
+			return fullParams;
+		}
+
+		/**
+		 * @return value of label param for this form component
+		 */
+		private Object getLabel()
+		{
+			Object label = null;
+
+			// first try the label model ...
+			if (FormComponent.this.getLabel() != null)
+			{
+				label = FormComponent.this.getLabel().getObject();
+			}
+			// ... then try a resource of format [form-component-id] with
+			// default of [form-component-id]
+			if (label == null)
+			{
+				final String id = FormComponent.this.getId();
+				final Localizer localizer = FormComponent.this.getLocalizer();
+				label = localizer.getString(id, FormComponent.this, id);
+			}
+			return label;
+		}
+	}
+
 }

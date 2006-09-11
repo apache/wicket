@@ -19,17 +19,18 @@
 package wicket.markup.html.form.validation;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.lang.Classes;
 
 /**
+ * FIXME 2.0: ivaynberg: cleanup javadoc
+ * 
+ * FIXME 2.0: ivaynberg: explain validate on null value
+ * 
  * Base class for form component validators. This class is thread-safe and
  * therefore it is safe to share validators across sessions/threads.
  * <p>
@@ -59,12 +60,46 @@ import wicket.util.lang.Classes;
  * but specific validator subclasses may add more values.
  * </p>
  * 
+ * @param <T>
+ *            type of value being validated
+ * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * @author Igor Vaynberg (ivaynbeg)
+ * 
  */
-public abstract class AbstractValidator implements IValidator
+public abstract class AbstractValidator<T> implements IValidator<T>
 {
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Whether or not to validate the value if it is null. We usually want to
+	 * skip validation if the value is null - unless we want to make sure the
+	 * value is in fact null which is a rare usecases. Validators that extend
+	 * this and wish to validate that the value is null should override this
+	 * method and return tru.
+	 * 
+	 * @return true to validate on null value, false to skip validation on null
+	 *         value
+	 */
+	public boolean validateOnNullValue()
+	{
+		return false;
+	}
+
+	protected abstract void onValidate(IValidatable<T> validatable);
+
+	/**
+	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.validation.IValidatable)
+	 */
+	public final void validate(IValidatable<T> validatable)
+	{
+		if (validatable.getValue() != null || validateOnNullValue())
+		{
+			onValidate(validatable);
+		}
+	}
+
 
 	/**
 	 * Sets an error on the component being validated using the map returned by
@@ -73,29 +108,30 @@ public abstract class AbstractValidator implements IValidator
 	 * See class comments for details about how error messages are loaded and
 	 * formatted.
 	 * 
-	 * @param formComponent
-	 *            form component
+	 * @param validatable
+	 *            validatble being validated
+	 * 
 	 */
-	public void error(final FormComponent formComponent)
+	public void error(final IValidatable<T> validatable)
 	{
-		error(formComponent, resourceKey(formComponent), messageModel(formComponent));
+		error(validatable, resourceKey(), messageModel(validatable));
 	}
 
 	/**
 	 * Sets an error on the component being validated using the given map for
 	 * variable interpolations.
 	 * 
-	 * @param formComponent
-	 *            form component
+	 * @param validatable
+	 *            validatble being validated
 	 * @param resourceKey
 	 *            The resource key to use
 	 * @param map
 	 *            The model for variable interpolation
 	 */
-	public void error(final FormComponent formComponent, final String resourceKey,
+	public void error(final IValidatable<T> validatable, final String resourceKey,
 			final Map<String, Serializable> map)
 	{
-		error(formComponent, resourceKey, (map == null)
+		error(validatable, resourceKey, (map == null)
 				? new Model<Map<String, Serializable>>()
 				: Model.valueOf(map));
 	}
@@ -104,14 +140,14 @@ public abstract class AbstractValidator implements IValidator
 	 * Sets an error on the component being validated using the given map for
 	 * variable interpolations.
 	 * 
-	 * @param formComponent
-	 *            form component
+	 * @param validatable
+	 *            validatble being validated
 	 * @param map
 	 *            The model for variable interpolation
 	 */
-	public void error(final FormComponent formComponent, final Map<String, Serializable> map)
+	public void error(final IValidatable<T> validatable, final Map<String, Serializable> map)
 	{
-		error(formComponent, resourceKey(formComponent), (map == null)
+		error(validatable, resourceKey(), (map == null)
 				? new Model<Map<String, Serializable>>()
 				: Model.valueOf(map));
 	}
@@ -123,59 +159,58 @@ public abstract class AbstractValidator implements IValidator
 	 * resourceModel is used for variable interpolation. If that one is null the
 	 * default one is created from messageModel(formComponent)
 	 * 
-	 * @param formComponent
-	 *            form component
+	 * @param validatable
+	 *            validatble being validated
 	 * @param resourceKey
 	 *            The resource key to use
 	 * @param resourceModel
 	 *            The model for variable interpolation, it needs to have a map
 	 *            inside it.
 	 */
-	public void error(final FormComponent<?> formComponent, final String resourceKey,
+	public void error(final IValidatable<T> validatable, final String resourceKey,
 			IModel<Map<String, Serializable>> resourceModel)
 	{
+		if (validatable == null)
+		{
+			throw new IllegalArgumentException("Argument [[validatable]] cannot be null");
+		}
 		if (resourceModel == null)
 		{
-			resourceModel = Model.valueOf(messageModel(formComponent));
-		}
-		if (formComponent == null)
-		{
-			throw new IllegalArgumentException("formComponent cannot be null");
+			resourceModel = Model.valueOf(messageModel(validatable));
 		}
 		if (resourceKey == null)
 		{
-			throw new IllegalArgumentException("resourceKey cannot be null");
+			throw new IllegalArgumentException("Argument [[resourceKey]] cannot be null");
 		}
 
-		final List<String> keys = new ArrayList<String>(2);
-		keys.add(resourceKey);
 
+		ValidationError error = new ValidationError(resourceKey);
 		final String defaultKey = Classes.simpleName(getClass());
-		if (!keys.contains(defaultKey))
+		if (!resourceKey.equals(defaultKey))
 		{
-			keys.add(defaultKey);
+			error.addKey(defaultKey);
 		}
 
 		Map<String, Serializable> args = resourceModel.getObject();
-
-		formComponent.error(keys, args);
+		error.getParams().putAll(args);
+		validatable.error(error);
 	}
 
 	/**
 	 * Gets the resource key for validator's error message from the
 	 * ApplicationSettings class.
 	 * 
-	 * @param formComponent
-	 *            form component that is being validated
-	 * 
-	 * @return the resource key based on the form component
+	 * @return the resource key for the validator
 	 */
-	protected String resourceKey(final FormComponent formComponent)
+	protected String resourceKey()
 	{
 		return Classes.simpleName(getClass());
 	}
 
 	/**
+	 * FIXME 2.0: ivaynberg: clean up javadoc - defaults come from wicket's
+	 * messagesource
+	 * 
 	 * Gets the default variables for interpolation. These are:
 	 * <ul>
 	 * <li>${input}: the user's input</li>
@@ -185,32 +220,17 @@ public abstract class AbstractValidator implements IValidator
 	 * that order</li>
 	 * </ul>
 	 * 
+	 * @param validatable
+	 *            validatable being validated
+	 * 
 	 * @param formComponent
 	 *            form component
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map<String, Serializable> messageModel(final FormComponent formComponent)
+	protected Map<String, Serializable> messageModel(IValidatable<T> validatable)
 	{
-		final Map<String, Serializable> resourceModel = new HashMap<String, Serializable>(4);
-		resourceModel.put("input", formComponent.getInput());
-		resourceModel.put("name", formComponent.getId());
-
-		Object label = null;
-		if (formComponent.getLabel() != null)
-		{
-			label = formComponent.getLabel().getObject();
-		}
-
-		if (label != null)
-		{
-			resourceModel.put("label", (Serializable)label);
-		}
-		else
-		{
-			// apply default value (component id) if key/value can not be found
-			resourceModel.put("label", formComponent.getLocalizer().getString(
-					formComponent.getId(), formComponent.getParent(), formComponent.getId()));
-		}
+		final Map<String, Serializable> resourceModel = new HashMap<String, Serializable>(1);
 		return resourceModel;
 	}
+
 }

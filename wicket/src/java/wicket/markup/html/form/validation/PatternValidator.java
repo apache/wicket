@@ -22,11 +22,11 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import wicket.markup.html.form.FormComponent;
 import wicket.util.parse.metapattern.MetaPattern;
-import wicket.util.string.Strings;
 
 /**
+ * FIXME 2.0: ivaynberg: look over javadoc
+ * 
  * Validates component by matching the component's value against a regular
  * expression pattern. A PatternValidator can be constructed with either a Java
  * regular expression (compiled or not) or a MetaPattern. If the pattern matches
@@ -55,7 +55,9 @@ import wicket.util.string.Strings;
  * 
  * @see java.util.regex.Pattern
  * @see wicket.util.parse.metapattern.MetaPattern
- * @author Jonathan Locke
+ * @author Jonathan Locke *
+ * @author Igor Vaynberg(ivaynberg)
+ * 
  */
 public class PatternValidator extends StringValidator
 {
@@ -110,23 +112,6 @@ public class PatternValidator extends StringValidator
 		this(pattern.pattern());
 	}
 
-	/**
-	 * Validates the set pattern.
-	 * 
-	 * @see StringValidator#onValidate(wicket.markup.html.form.FormComponent,String)
-	 */
-	@Override
-	public void onValidate(FormComponent formComponent, String value)
-	{
-		if (!Strings.isEmpty(value))
-		{
-			// Check value against pattern
-			if (!pattern.matcher(value).matches())
-			{
-				error(formComponent);
-			}
-		}
-	}
 
 	/**
 	 * Gets the regexp pattern.
@@ -140,18 +125,15 @@ public class PatternValidator extends StringValidator
 
 
 	@Override
-	protected Map<String, Serializable> messageModel(FormComponent formComponent)
+	protected Map<String, Serializable> messageModel(IValidatable<String> validatable)
 	{
-		final Map<String, Serializable> map = super.messageModel(formComponent);
+		final Map<String, Serializable> map = super.messageModel(validatable);
 		map.put("pattern", pattern);
 		return map;
 	}
 
-	/**
-	 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
-	 */
 	@Override
-	protected String resourceKey(FormComponent formComponent)
+	protected String resourceKey()
 	{
 		return "PatternValidator";
 	}
@@ -164,4 +146,16 @@ public class PatternValidator extends StringValidator
 	{
 		return "[PatternValidator pattern = " + pattern + "]";
 	}
+
+	@Override
+	protected void onValidate(IValidatable<String> validatable)
+	{
+		// Check value against pattern
+		if (!pattern.matcher(validatable.getValue()).matches())
+		{
+			error(validatable);
+		}
+
+	}
+
 }

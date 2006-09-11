@@ -19,16 +19,18 @@ package wicket.markup.html.form.validation;
 import java.io.Serializable;
 import java.util.Map;
 
-import wicket.markup.html.form.FormComponent;
-
 /**
+ * FIXME 2.0: ivaynberg: look over javadoc
+ * 
+ * 
  * A validator for numbers. See the static factory methods to make range/minimum
  * or maximum validators for doubles or longs
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
+ * @author Igor Vaynberg(ivaynberg)
  */
-public abstract class NumberValidator extends AbstractValidator
+public abstract class NumberValidator extends AbstractValidator<Number>
 {
 	/**
 	 * A validatior for testing if it is a positive number value
@@ -198,25 +200,6 @@ public abstract class NumberValidator extends AbstractValidator
 		return new DoubleMaximumValidator(maximum);
 	}
 
-	/**
-	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
-	 */
-	public void validate(final FormComponent formComponent)
-	{
-		onValidate(formComponent, (Number)formComponent.getConvertedInput());
-	}
-
-	/**
-	 * Subclasses should override this method to validate the string value for a
-	 * component.
-	 * 
-	 * @param formComponent
-	 *            form component
-	 * @param value
-	 *            The string value to validate
-	 */
-	public abstract void onValidate(FormComponent formComponent, Number value);
-
 	private static class RangeValidator extends NumberValidator
 	{
 		private static final long serialVersionUID = 1L;
@@ -230,26 +213,10 @@ public abstract class NumberValidator extends AbstractValidator
 
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.NumberValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Number)
-		 */
 		@Override
-		public void onValidate(FormComponent formComponent, Number value)
+		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
 		{
-			if (value != null)
-			{
-				if (value.longValue() < minimum || value.longValue() > maximum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
-		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("minimum", new Long(minimum));
 			map.put("maximum", new Long(maximum));
 			return map;
@@ -259,9 +226,19 @@ public abstract class NumberValidator extends AbstractValidator
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "NumberValidator.range";
+		}
+
+		@Override
+		protected void onValidate(IValidatable<Number> validatable)
+		{
+			Number value = validatable.getValue();
+			if (value.longValue() < minimum || value.longValue() > maximum)
+			{
+				error(validatable);
+			}
 		}
 
 	}
@@ -276,26 +253,10 @@ public abstract class NumberValidator extends AbstractValidator
 			this.minimum = minimum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.NumberValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Number)
-		 */
 		@Override
-		public void onValidate(FormComponent formComponent, Number value)
+		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
 		{
-			if (value != null)
-			{
-				if (value.longValue() < minimum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
-		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("minimum", new Long(minimum));
 			return map;
 		}
@@ -304,9 +265,19 @@ public abstract class NumberValidator extends AbstractValidator
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "NumberValidator.minimum";
+		}
+
+		@Override
+		protected void onValidate(IValidatable<Number> validatable)
+		{
+			if (validatable.getValue().longValue() < minimum)
+			{
+				error(validatable);
+			}
+
 		}
 
 	}
@@ -321,26 +292,10 @@ public abstract class NumberValidator extends AbstractValidator
 			this.maximum = maximum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.NumberValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Number)
-		 */
 		@Override
-		public void onValidate(FormComponent formComponent, Number value)
+		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
 		{
-			if (value != null)
-			{
-				if (value.longValue() > maximum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
-		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("maximum", new Long(maximum));
 			return map;
 		}
@@ -349,9 +304,18 @@ public abstract class NumberValidator extends AbstractValidator
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "NumberValidator.maximum";
+		}
+
+		@Override
+		protected void onValidate(IValidatable<Number> validatable)
+		{
+			if (validatable.getValue().longValue() > maximum)
+			{
+				error(validatable);
+			}
 		}
 	}
 
@@ -368,38 +332,29 @@ public abstract class NumberValidator extends AbstractValidator
 
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.NumberValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Number)
-		 */
 		@Override
-		public void onValidate(FormComponent formComponent, Number value)
+		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
 		{
-			if (value != null)
-			{
-				if (value.doubleValue() < minimum || value.doubleValue() > maximum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
-		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("minimum", new Double(minimum));
 			map.put("maximum", new Double(maximum));
 			return map;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
-		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "NumberValidator.range";
+		}
+
+		@Override
+		protected void onValidate(IValidatable<Number> validatable)
+		{
+			Number value = validatable.getValue();
+			if (value.doubleValue() < minimum || value.doubleValue() > maximum)
+			{
+				error(validatable);
+			}
 		}
 
 	}
@@ -414,26 +369,10 @@ public abstract class NumberValidator extends AbstractValidator
 			this.minimum = minimum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.NumberValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Number)
-		 */
 		@Override
-		public void onValidate(FormComponent formComponent, Number value)
+		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
 		{
-			if (value != null)
-			{
-				if (value.doubleValue() < minimum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
-		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("minimum", new Double(minimum));
 			return map;
 		}
@@ -442,9 +381,18 @@ public abstract class NumberValidator extends AbstractValidator
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "NumberValidator.minimum";
+		}
+
+		@Override
+		protected void onValidate(IValidatable<Number> validatable)
+		{
+			if (validatable.getValue().doubleValue() < minimum)
+			{
+				error(validatable);
+			}
 		}
 
 	}
@@ -459,37 +407,27 @@ public abstract class NumberValidator extends AbstractValidator
 			this.maximum = maximum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.NumberValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Number)
-		 */
 		@Override
-		public void onValidate(FormComponent formComponent, Number value)
+		protected Map<String, Serializable> messageModel(IValidatable<Number> validatable)
 		{
-			if (value != null)
-			{
-				if (value.doubleValue() > maximum)
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
-		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("maximum", new Double(maximum));
 			return map;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
-		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "NumberValidator.maximum";
+		}
+
+		@Override
+		protected void onValidate(IValidatable<Number> validatable)
+		{
+			if (validatable.getValue().doubleValue() > maximum)
+			{
+				error(validatable);
+			}
 		}
 	}
 

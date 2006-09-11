@@ -18,13 +18,13 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.util.Collections;
-
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.util.lang.Objects;
 
 /**
+ * FIXME 2.0: ivaynberg: look over javadoc
+ * 
  * Validates that the input of two form components is identical. Errors are
  * reported on the second form component with key 'EqualInputValidator' and the
  * variables:
@@ -90,7 +90,7 @@ public class EqualInputValidator extends AbstractFormValidator
 		if (!Objects.equal(formComponent1.getInput(), formComponent2.getInput()))
 		{
 			final String key = resourceKey();
-			formComponent2.error(Collections.singletonList(key), messageModel());
+			formComponent2.error(new ValidationError(key, messageModel()));
 		}
 	}
 }

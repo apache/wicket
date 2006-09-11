@@ -20,8 +20,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
-import wicket.markup.html.form.FormComponent;
-
 /**
  * A validator for dates that can be used for subclassing or use one of the
  * static factory methods to get the default date validators as range, maximum
@@ -29,8 +27,9 @@ import wicket.markup.html.form.FormComponent;
  * 
  * @author Jonathan Locke
  * @author Johan Compagner
+ * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class DateValidator extends AbstractValidator
+public abstract class DateValidator extends AbstractValidator<Date>
 {
 
 	/**
@@ -111,25 +110,6 @@ public abstract class DateValidator extends AbstractValidator
 		return new MaximumValidator(maximum);
 	}
 
-	/**
-	 * @see wicket.markup.html.form.validation.IValidator#validate(wicket.markup.html.form.FormComponent)
-	 */
-	public void validate(final FormComponent formComponent)
-	{
-		onValidate(formComponent, (Date)formComponent.getConvertedInput());
-	}
-
-	/**
-	 * Subclasses should override this method to validate the string value for a
-	 * component.
-	 * 
-	 * @param formComponent
-	 *            form component
-	 * @param value
-	 *            The string value to validate
-	 */
-	public abstract void onValidate(FormComponent formComponent, Date value);
-
 
 	private static class RangeValidator extends DateValidator
 	{
@@ -144,26 +124,10 @@ public abstract class DateValidator extends AbstractValidator
 
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.DateValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Date)
-		 */
 		@Override
-		public void onValidate(FormComponent formComponent, Date value)
+		protected Map<String, Serializable> messageModel(IValidatable<Date> validatable)
 		{
-			if (value != null)
-			{
-				if (value.before(minimum) || value.after(maximum))
-				{
-					error(formComponent);
-				}
-			}
-		}
-
-		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
-		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("minimum", minimum);
 			map.put("maximum", maximum);
 			return map;
@@ -173,9 +137,20 @@ public abstract class DateValidator extends AbstractValidator
 		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
 		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "DateValidator.range";
+		}
+
+		@Override
+		protected void onValidate(IValidatable<Date> validatable)
+		{
+			Date value = validatable.getValue();
+			if (value.before(minimum) || value.after(maximum))
+			{
+				error(validatable);
+			}
+
 		}
 
 	}
@@ -190,37 +165,31 @@ public abstract class DateValidator extends AbstractValidator
 			this.minimum = minimum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.DateValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Date)
-		 */
-		@Override
-		public void onValidate(FormComponent formComponent, Date value)
-		{
-			if (value != null)
-			{
-				if (value.before(minimum))
-				{
-					error(formComponent);
-				}
-			}
-		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
+		protected Map<String, Serializable> messageModel(IValidatable<Date> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("minimum", minimum);
 			return map;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
-		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "DateValidator.minimum";
+		}
+
+
+		@Override
+		protected void onValidate(IValidatable<Date> validatable)
+		{
+			Date value = validatable.getValue();
+			if (value.before(minimum))
+			{
+				error(validatable);
+			}
+
 		}
 
 	}
@@ -235,37 +204,31 @@ public abstract class DateValidator extends AbstractValidator
 			this.maximum = maximum;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.DateValidator#onValidate(wicket.markup.html.form.FormComponent,
-		 *      Date)
-		 */
-		@Override
-		public void onValidate(FormComponent formComponent, Date value)
-		{
-			if (value != null)
-			{
-				if (value.after(maximum))
-				{
-					error(formComponent);
-				}
-			}
-		}
 
 		@Override
-		protected Map<String, Serializable> messageModel(FormComponent formComponent)
+		protected Map<String, Serializable> messageModel(IValidatable<Date> validatable)
 		{
-			final Map<String, Serializable> map = super.messageModel(formComponent);
+			final Map<String, Serializable> map = super.messageModel(validatable);
 			map.put("maximum", maximum);
 			return map;
 		}
 
-		/**
-		 * @see wicket.markup.html.form.validation.AbstractValidator#resourceKey(wicket.markup.html.form.FormComponent)
-		 */
 		@Override
-		protected String resourceKey(FormComponent formComponent)
+		protected String resourceKey()
 		{
 			return "DateValidator.maximum";
+		}
+
+
+		@Override
+		protected void onValidate(IValidatable<Date> validatable)
+		{
+			Date value = validatable.getValue();
+			if (value.after(maximum))
+			{
+				error(validatable);
+			}
+
 		}
 
 	}
