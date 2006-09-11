@@ -852,6 +852,12 @@ public abstract class RequestCycle
 			session.update();
 		}
 
+		// clear the used pagemap for this thread, 
+		// maybe we can move this a few lines above to have a but more
+		// concurrency (session.update)
+		session.requestDetached();
+		
+
 		if (getResponse() instanceof BufferedWebResponse)
 		{
 			((BufferedWebResponse)getResponse()).filter();

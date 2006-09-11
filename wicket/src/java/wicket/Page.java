@@ -880,10 +880,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 		{
 			throw re;
 		}
-		finally
-		{
-			getSession().pageDetached(this);
-		}
 	}
 
 	/**

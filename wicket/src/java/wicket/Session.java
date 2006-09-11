@@ -26,6 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -164,9 +166,9 @@ public abstract class Session implements Serializable, IConverterLocator
 	private String style;
 
 	/** feedback messages */
-	private FeedbackMessages feedbackMessages;
+	private FeedbackMessages feedbackMessages = new FeedbackMessages(new CopyOnWriteArrayList<FeedbackMessage>());
 
-	private transient Map<String, Thread> usedPages;
+	private transient Map<PageMap,Thread> pageMapsUsedInRequest;
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -453,38 +455,40 @@ public abstract class Session implements Serializable, IConverterLocator
 		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (pageMap != null)
 		{
-			// Get page entry for id and version
-			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			if (usedPages == null)
+			long startTime = System.currentTimeMillis();
+			
+			if (pageMapsUsedInRequest == null)
 			{
-				usedPages = new HashMap<String, Thread>(3);
+				pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
 			}
-
-			// set up a barrier so that on thread can only access one page at the time of the complete request.
-			// check the usedPages map if the page id is already used by a thread.
-			Thread t = usedPages.get(id);
+			
+			// Get page entry for id and version
+			Thread t = pageMapsUsedInRequest.get(pageMap);
 			while (t != null && t != Thread.currentThread())
 			{
-				// if it isn't used by this thread wait, we could make this indefinitly or better
-				// report error if after X number of tries this still fails!
 				try
 				{
-					wait(1000);
+					wait(20000); // wait 20 seconds max.
 				}
 				catch (InterruptedException ex)
 				{
 					throw new WicketRuntimeException(ex);
 				}
-				t = usedPages.get(id);
+				t = pageMapsUsedInRequest.get(pageMap);
+				if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
+				{
+					// if it is still not the right thread.. 
+					// This must be a wicket bug or some other (dead)lock in the code.
+					throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
+							" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
+				}
 			}
-			// set the current thread as an owner of this page id.
-			// This will be released in Page.internalDetach() that will call Session.pageDetached()
-			// which will clean up this entry and call notify.
-			usedPages.put(id, Thread.currentThread());
+			pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
+			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
 			if (page == null)
 			{
-				usedPages.remove(id);
+				pageMapsUsedInRequest.remove(pageMap);
 				notifyAll();
 			}
 			return page;
@@ -824,10 +828,6 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	public final FeedbackMessages getFeedbackMessages()
 	{
-		if (feedbackMessages == null)
-		{
-			feedbackMessages = new FeedbackMessages();
-		}
 		return feedbackMessages;
 	}
 
@@ -1056,7 +1056,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final void cleanupFeedbackMessages()
 	{
-		if (feedbackMessages != null)
+		if (feedbackMessages.size() > 0)
 		{
 			Iterator msgs = feedbackMessages.iterator();
 			while (msgs.hasNext())
@@ -1068,15 +1068,7 @@ public abstract class Session implements Serializable, IConverterLocator
 					dirty();
 				}
 			}
-			if (feedbackMessages.size() == 0)
-			{
-				feedbackMessages = null;
-				dirty();
-			}
-			else
-			{
-				feedbackMessages.trimToSize();
-			}
+			feedbackMessages.trimToSize();
 		}
 	}
 
@@ -1094,22 +1086,24 @@ public abstract class Session implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * INTERNAL API. Page was detached event.
+	 * INTERNAL API. The request cycle when detached will call this.
 	 * 
-	 * @param page
-	 *            The page that was detached
 	 */
-	final synchronized void pageDetached(Page page)
+	final synchronized void requestDetached()
 	{
-		// Remove the entry.
-		if (usedPages != null)
+		Thread t = Thread.currentThread();
+		Iterator<Map.Entry<PageMap,Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
+		while(it.hasNext())
 		{
-			usedPages.remove(page.getId());
+			Entry<PageMap, Thread> entry = it.next();
+			if(entry.getValue() == t)
+			{
+				it.remove();
+			}
 		}
-		// and call notify so that request wanting the same page can now go on.
 		notifyAll();
 	}
-
+	
 	/**
 	 * @param map
 	 *            The page map to add to dirty objects list
