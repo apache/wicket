@@ -20,6 +20,8 @@ package wicket.extensions.markup.html.form.validation;
 
 import java.util.regex.Matcher;
 
+import wicket.validation.validator.RfcCompliantEmailAddressPatternValidator;
+
 import junit.framework.TestCase;
 
 /**
