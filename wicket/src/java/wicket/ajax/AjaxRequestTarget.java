@@ -311,11 +311,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			final Application app = Application.get();
 
-			// disable component use check since we want to ignore header
-			// contribs
-			final boolean oldUseCheck = app.getDebugSettings().getComponentUseCheck();
-			app.getDebugSettings().setComponentUseCheck(false);
-
 			// Determine encoding
 			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
@@ -357,9 +352,6 @@ public class AjaxRequestTarget implements IRequestTarget
 			}
 			
 			response.write("</ajax-response>");
-
-			// restore component use check
-			app.getDebugSettings().setComponentUseCheck(oldUseCheck);
 		}
 		catch (RuntimeException ex)
 		{
