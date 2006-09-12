@@ -25,6 +25,7 @@ import java.util.Map;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
+import wicket.validation.ValidationError;
 
 /**
  * Base class for {@link wicket.markup.html.form.validation.IFormValidator}s.
@@ -49,7 +50,82 @@ public abstract class AbstractFormValidator implements IFormValidator
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
 	}
-	
+
+
+	/**
+	 * Reports an error against validatable using the map returned by
+	 * {@link #variablesMap(IValidatable)}for variable interpolations and
+	 * message key returned by {@link #resourceKey()}.
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * 
+	 */
+	public void error(FormComponent fc)
+	{
+		error(fc, resourceKey(), variablesMap());
+	}
+
+	/**
+	 * Reports an error against the validatalbe using the given map for variable
+	 * interpolations and message resource key provided by
+	 * {@link #resourceKey()}
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * @param vars
+	 *            variables for variable interpolation
+	 */
+	public void error(FormComponent fc, final Map<String, Object> vars)
+	{
+		if (vars == null)
+		{
+			throw new IllegalArgumentException("Argument [[vars]] cannot be null");
+		}
+		error(fc, resourceKey(), vars);
+	}
+
+	/**
+	 * Reports an error against the validatable using the specified resource key
+	 * and variable map
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * 
+	 * @param validatable
+	 *            validatble being validated
+	 * @param resourceKey
+	 *            The message resource key to use
+	 * @param vars
+	 *            The model for variable interpolation
+	 */
+	public void error(FormComponent fc, final String resourceKey, Map<String, Object> vars)
+	{
+		if (fc == null)
+		{
+			throw new IllegalArgumentException("Argument [[fc]] cannot be null");
+		}
+		if (vars == null)
+		{
+			throw new IllegalArgumentException("Argument [[vars]] cannot be null");
+		}
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("Argument [[resourceKey]] cannot be null");
+		}
+
+
+		ValidationError error = new ValidationError().addMessageKey(resourceKey);
+		final String defaultKey = Classes.simpleName(getClass());
+		if (!resourceKey.equals(defaultKey))
+		{
+			error.addMessageKey(defaultKey);
+		}
+
+		error.setVars(vars);
+		fc.error(error);
+	}
+
 	/**
 	 * Gets the default variables for interpolation. These are for every
 	 * component:
@@ -63,13 +139,13 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * @return a map with the variables for interpolation
 	 */
-	protected Map<String, Serializable> variablesMap()
+	protected Map<String, Object> variablesMap()
 	{
 		FormComponent[] formComponents = getDependentFormComponents();
 
 		if (formComponents != null && formComponents.length > 0)
 		{
-			Map<String, Serializable> args = new HashMap<String, Serializable>(
+			Map<String, Object> args = new HashMap<String, Object>(
 					formComponents.length * 3);
 			for (int i = 0; i < formComponents.length; i++)
 			{
@@ -94,7 +170,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 		}
 		else
 		{
-			return new HashMap<String, Serializable>(2);
+			return new HashMap<String, Object>(2);
 		}
 	}
 
