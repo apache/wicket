@@ -239,7 +239,7 @@ public class SubmitLink extends Button implements ILinkListener
 			{
 				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
 			}
-			sb.append("f.submit();return false;");
+			sb.append("f.submit();e.value='';e.name='';return false;");
 			return sb.toString();
 		}
 		else
