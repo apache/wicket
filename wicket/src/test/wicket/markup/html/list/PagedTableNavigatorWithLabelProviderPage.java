@@ -72,6 +72,7 @@ public class PagedTableNavigatorWithLabelProviderPage extends WebPage
 
 		IPagingLabelProvider labelProvider = new IPagingLabelProvider()
 		{
+			private static final long serialVersionUID = 1L;
 
 			public String getPageLabel(int page)
 			{

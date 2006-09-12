@@ -168,7 +168,7 @@ public final class PageView<T> extends Panel<T>
 	 * 
 	 * @author Juergen Donnerstag
 	 */
-	private class ComponentData implements Serializable
+	private static class ComponentData implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 

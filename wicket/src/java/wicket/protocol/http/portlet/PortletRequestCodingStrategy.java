@@ -483,7 +483,6 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		ActionResponse response = getActionResponse(requestCycle);
 		// Get page Class
 		final Class pageClass = requestTarget.getPageClass();
-		final Application application = Application.get();
 
 		response.setRenderParameter(PAGEMAP, "");
 		response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,

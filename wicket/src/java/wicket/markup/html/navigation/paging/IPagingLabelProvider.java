@@ -18,6 +18,8 @@
  */
 package wicket.markup.html.navigation.paging;
 
+import java.io.Serializable;
+
 /**
  * This interface is used by the PagingNavigator components to get the label of
  * the pages there are for a IPageable component. By default this is only the
@@ -25,7 +27,7 @@ package wicket.markup.html.navigation.paging;
  * 
  * @author jcompagner
  */
-public interface IPagingLabelProvider
+public interface IPagingLabelProvider extends Serializable
 {
 	/**
 	 * @param page

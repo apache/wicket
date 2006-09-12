@@ -454,7 +454,7 @@ public class Markup implements IMarkup
 			}
 			tagPath.append(tag.getId());
 
-			this.componentMap.put(tagPath.toString(), new Integer(tagIndex));
+			this.componentMap.put(tagPath.toString(), Integer.valueOf(tagIndex));
 
 			// With open-close the path does not change. It can/will not have
 			// children. The same is true for HTML tags like <br> or <img>

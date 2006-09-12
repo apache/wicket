@@ -107,7 +107,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	/**
 	 * The value separator
 	 */
-	public static String VALUE_SEPARATOR = ";";
+	public static final String VALUE_SEPARATOR = ";";
 
 	/**
 	 * Typesafe interface to code that is called when visiting a form component.

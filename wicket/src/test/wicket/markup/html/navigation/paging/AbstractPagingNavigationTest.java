@@ -33,6 +33,8 @@ public abstract class AbstractPagingNavigationTest extends WicketTestCase
 	 */
 	public class MockPageable implements IPageable
 	{
+		private static final long serialVersionUID = 1L;
+	
 		/** expected page which is set by the link. */
 		private int expectedPage = 0;
 
