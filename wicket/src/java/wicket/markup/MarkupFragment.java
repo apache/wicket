@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -158,6 +159,24 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 					if ((tagId != null) && tagId.equals(id))
 					{
 						return fragment;
+					}
+					/*
+					 * if this component tag represents an auto component we
+					 * need to recurse into it because auto components are
+					 * transparent from the point of view of the markup path of
+					 * a component
+					 * 
+					 * eg <wicket:extend> generates an auto component that is
+					 * not in the markup path expressions
+					 * 
+					 */
+					if (tagId.startsWith(Component.AUTO_COMPONENT_PREFIX))
+					{
+						MarkupFragment frag = fragment.getChildFragment(id);
+						if (frag != null)
+						{
+							return frag;
+						}
 					}
 				}
 			}
