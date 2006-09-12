@@ -36,6 +36,9 @@ import wicket.util.string.AppendingStringBuffer;
  * NOTE: This behavior does not support persisting form component values into
  * cookie or other {@link IValuePersister}. If this is necessary please add a
  * request for enhancement.
+ * <p>
+ * NOTE: This behavior does not validate any {@link IFormValidator}s attached
+ * to this form even though they may reference the component being updated.
  * 
  * @since 1.2
  * 
