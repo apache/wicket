@@ -452,7 +452,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		}
 
 		// Get page map by name, creating the default page map automatically
-		PageMap pageMap = pageMapForName(pageMapName, pageMapName.equals(PageMap.DEFAULT_NAME));
+		PageMap pageMap = pageMapForName(pageMapName, Objects.equal(PageMap.DEFAULT_NAME,pageMapName));
 		if (pageMap != null)
 		{
 			long startTime = System.currentTimeMillis();
