@@ -323,7 +323,7 @@ public abstract class Button<T> extends FormComponent<T>
 			{
 				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
 			}
-			sb.append("f.submit();return false;");
+			sb.append("f.submit();e.value='';e.name='';return false;");
 			return sb.toString();
 		} else {
 			return null;
