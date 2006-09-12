@@ -15,6 +15,7 @@
     <release version="1.3" date="tbd" description="Wicket 1.3">
 	</release>
 	<release version="1.2.3" description="Wicket 1.2.3">
+		<action type="fix" dev="Igor Vaynberg" due-to="Erik Brakkee">SubmitLink now properly supports back button</action>
 		<action type="fix" dev="Igor Vaynberg" due-to="Ingram Chen">Fixed AjaxPreprocessingCallDecorator</action>
 		<action type="fix" dev="Igor Vaynberg" due-to="Adam Smyczek">AjaxFormValidatingBehavior now property updates feedback panels when form error occurs</action>
 		<action type="fix" dev="Matej Knopp" due-to="Tomer Mevorach">AjaxRequestTarget now doesn't switch component use check off, as it is no longer needed.</action>
