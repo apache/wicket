@@ -18,9 +18,12 @@
  */
 package wicket.markup.html.form.validation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import wicket.markup.html.form.FormComponent;
+import wicket.model.IModel;
 import wicket.util.lang.Classes;
 
 /**
@@ -31,13 +34,68 @@ import wicket.util.lang.Classes;
 public abstract class AbstractFormValidator implements IFormValidator
 {
 	/**
+	 * DEPRECATED/UNSUPPORTED
+	 * 
 	 * Gets the default variables for interpolation.
 	 * 
 	 * @return a map with the variables for interpolation
+	 * 
+	 * @deprecated use {@link #variablesMap(IValidatable)} instead
+	 * @throws UnsupportedOperationException
+	 * 
+	 * FIXME 2.0: remove asap
 	 */
-	protected Map<String, Object> messageModel()
+	protected final Map<String, Object> messageModel()
 	{
-		return new HashMap<String, Object>(2);
+		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
+	}
+	
+	/**
+	 * Gets the default variables for interpolation. These are for every
+	 * component:
+	 * <ul>
+	 * <li>${input(n)}: the user's input</li>
+	 * <li>${name(n)}: the name of the component</li>
+	 * <li>${label(n)}: the label of the component - either comes from
+	 * FormComponent.labelModel or resource key [form-id].[form-component-id] in
+	 * that order</li>
+	 * </ul>
+	 * 
+	 * @return a map with the variables for interpolation
+	 */
+	protected Map<String, Serializable> variablesMap()
+	{
+		FormComponent[] formComponents = getDependentFormComponents();
+
+		if (formComponents != null && formComponents.length > 0)
+		{
+			Map<String, Serializable> args = new HashMap<String, Serializable>(
+					formComponents.length * 3);
+			for (int i = 0; i < formComponents.length; i++)
+			{
+				final FormComponent formComponent = formComponents[i];
+
+				String arg = "label" + i;
+				IModel label = formComponent.getLabel();
+				if (label != null)
+				{
+					args.put(arg, (Serializable)label.getObject());
+				}
+				else
+				{
+					args.put(arg, formComponent.getLocalizer().getString(formComponent.getId(),
+							formComponent.getParent(), formComponent.getId()));
+				}
+
+				args.put("input" + i, formComponent.getInput());
+				args.put("name" + i, formComponent.getId());
+			}
+			return args;
+		}
+		else
+		{
+			return new HashMap<String, Serializable>(2);
+		}
 	}
 
 	/**
