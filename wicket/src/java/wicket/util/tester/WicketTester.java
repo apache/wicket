@@ -47,6 +47,7 @@ import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedbackMessageFilter;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
+import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RadioGroup;
@@ -702,7 +703,8 @@ public class WicketTester extends MockWebApplication
 				public void formComponent(FormComponent formComponent)
 				{
 					if (!(formComponent instanceof Button)
-							&& !(formComponent instanceof RadioGroup))
+							&& !(formComponent instanceof RadioGroup)
+							&& !(formComponent instanceof CheckGroup))
 					{
 						String name = formComponent.getInputName();
 						String value = formComponent.getValue();
