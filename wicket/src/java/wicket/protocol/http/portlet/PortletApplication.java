@@ -170,6 +170,7 @@ public abstract class PortletApplication extends Application implements ISession
 	/*
 	 * @see wicket.Application#getApplicationKey()
 	 */
+	@Override
 	public String getApplicationKey()
 	{
 
@@ -182,11 +183,13 @@ public abstract class PortletApplication extends Application implements ISession
 		return applicationKey;
 	}
 
+	@Override
 	protected ISessionFactory getSessionFactory()
 	{
 		return this.sessionFactory;
 	}
 
+	@Override
 	protected ISessionStore newSessionStore()
 	{
 		return new PortletSessionStore();
@@ -228,6 +231,7 @@ public abstract class PortletApplication extends Application implements ISession
 	 * parameter is also set, then resources in that folder will be polled for
 	 * changes.
 	 */
+	@Override
 	protected void internalInit()
 	{
 		super.internalInit();

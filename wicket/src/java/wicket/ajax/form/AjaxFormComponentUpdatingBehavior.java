@@ -24,6 +24,7 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.persistence.IValuePersister;
+import wicket.markup.html.form.validation.IFormValidator;
 import wicket.util.string.AppendingStringBuffer;
 
 /**

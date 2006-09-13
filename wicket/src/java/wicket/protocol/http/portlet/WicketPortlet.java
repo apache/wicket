@@ -116,6 +116,7 @@ public class WicketPortlet extends GenericPortlet
 	/*
 	 * @see javax.portlet.GenericPortlet#destroy()
 	 */
+	@Override
 	public final void destroy()
 	{
 		if (this.portletApplication != null)
@@ -125,6 +126,7 @@ public class WicketPortlet extends GenericPortlet
 		}
 	}
 
+	@Override
 	public final void init(PortletConfig cfg) throws PortletException
 	{
 		super.init(cfg);
@@ -168,6 +170,7 @@ public class WicketPortlet extends GenericPortlet
 	 * @see javax.portlet.GenericPortlet#processAction(javax.portlet.ActionRequest,
 	 *      javax.portlet.ActionResponse)
 	 */
+	@Override
 	public final void processAction(ActionRequest req, ActionResponse res)
 	{
 		// First, set the webapplication for this thread
@@ -216,6 +219,7 @@ public class WicketPortlet extends GenericPortlet
 	/*
 	 * public void doView(RenderRequest req, RenderResponse res){
 	 */
+	@Override
 	public final void render(RenderRequest req, RenderResponse res) throws PortletException,
 			IOException
 	{

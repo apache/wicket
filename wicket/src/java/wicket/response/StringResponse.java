@@ -46,6 +46,7 @@ public class StringResponse extends Response
 	/**
 	 * @see wicket.Response#reset()
 	 */
+	@Override
 	public void reset()
 	{
 		out.clear();

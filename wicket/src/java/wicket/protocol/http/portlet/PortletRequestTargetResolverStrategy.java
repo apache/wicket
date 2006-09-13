@@ -103,6 +103,7 @@ public class PortletRequestTargetResolverStrategy extends  AbstractRequestTarget
 	 *            the request parameters object
 	 * @return the bookmarkable page as a request target
 	 */
+	@Override
 	protected IRequestTarget resolveBookmarkablePage(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{
@@ -142,6 +143,7 @@ public class PortletRequestTargetResolverStrategy extends  AbstractRequestTarget
 	 *            the request parameters object
 	 * @return the home page as a request target
 	 */
+	@Override
 	protected IRequestTarget resolveHomePageTarget(final RequestCycle requestCycle,
 			final RequestParameters requestParameters)
 	{

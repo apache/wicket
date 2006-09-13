@@ -38,6 +38,7 @@ public class AccessDeniedPortletPage extends PortletPage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;
@@ -46,6 +47,7 @@ public class AccessDeniedPortletPage extends PortletPage
 	/**
 	 * @see wicket.Page#isErrorPage()
 	 */
+	@Override
 	public boolean isErrorPage()
 	{
 		return true;

@@ -1363,6 +1363,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * 
 	 * @return MarkupFragment
 	 */
+	@Override
 	public final MarkupFragment getMarkupFragment()
 	{
 		return getAssociatedMarkupStream(true).getMarkup().getMarkupFragments();

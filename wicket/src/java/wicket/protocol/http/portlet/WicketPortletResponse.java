@@ -49,6 +49,7 @@ public class WicketPortletResponse extends Response
 	/*
 	 * @see wicket.Response#getOutputStream()
 	 */
+	@Override
 	public OutputStream getOutputStream()
 	{
 		try
@@ -71,6 +72,7 @@ public class WicketPortletResponse extends Response
 	/*
 	 * @see wicket.Response#write(java.lang.CharSequence)
 	 */
+	@Override
 	public void write(final CharSequence string)
 	{
 		try
@@ -93,6 +95,7 @@ public class WicketPortletResponse extends Response
 	/*
 	 * @see wicket.Response#setContentType(java.lang.String)
 	 */
+	@Override
 	public void setContentType(final String mimeType)
 	{
 		if (res instanceof RenderResponse)
@@ -105,6 +108,7 @@ public class WicketPortletResponse extends Response
 	/*
 	 * @see wicket.Response#encodeURL(java.lang.CharSequence)
 	 */
+	@Override
 	public CharSequence encodeURL(CharSequence url)
 	{
 		return res.encodeURL(url.toString());
@@ -113,6 +117,7 @@ public class WicketPortletResponse extends Response
 	/*
 	 * @see wicket.Response#redirect(java.lang.String)
 	 */
+	@Override
 	public void redirect(String url)
 	{
 		throw new WicketRuntimeException("Portlet can't send a redirect");

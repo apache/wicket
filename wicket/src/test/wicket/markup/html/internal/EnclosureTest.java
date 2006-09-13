@@ -51,6 +51,7 @@ public class EnclosureTest extends WicketTestCase
 	{
 		application = new WicketTester(null)
 		{
+			@Override
 			protected void init() 
 			{
 				super.init();

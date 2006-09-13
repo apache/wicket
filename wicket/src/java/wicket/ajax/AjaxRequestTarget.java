@@ -133,6 +133,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		 * Resets the response to a clean state so it can be reused to save on
 		 * garbage.
 		 */
+		@Override
 		public void reset()
 		{
 			buffer.clear();

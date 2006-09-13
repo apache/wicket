@@ -46,6 +46,7 @@ public abstract class WicketPortletTestCase extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		application = new MockPortletApplication(null);

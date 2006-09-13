@@ -70,6 +70,7 @@ public class MarkupParserPerformanceTest
 	/** Wicket application object */
 	private WicketTester application = new WicketTester(null)
 	{
+		@Override
 		protected void init()
 		{
 			super.init();

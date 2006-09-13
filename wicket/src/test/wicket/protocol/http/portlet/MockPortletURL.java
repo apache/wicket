@@ -75,6 +75,7 @@ public class MockPortletURL implements PortletURL
 	{
 	}
 
+	@Override
 	public String toString(){
 		return "portlet:"+parameters;
 	}

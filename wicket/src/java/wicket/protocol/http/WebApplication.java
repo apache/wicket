@@ -668,6 +668,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param sessionId
 	 *            The session id that was destroyed
 	 */
+	@Override
 	public void sessionDestroyed(String sessionId)
 	{
 		super.sessionDestroyed(sessionId);

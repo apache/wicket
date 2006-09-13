@@ -215,6 +215,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	/**
 	 * @see wicket.RequestCycle#getRequest()
 	 */
+	@Override
 	public WebRequest getRequest()
 	{
 		return (WebRequest)super.getRequest();
@@ -223,6 +224,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	/**
 	 * @see wicket.RequestCycle#getResponse()
 	 */
+	@Override
 	public WebResponse getResponse()
 	{
 		return (WebResponse)super.getResponse();
@@ -231,6 +233,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	/**
 	 * @return Session as a WebSession
 	 */
+	@Override
 	public WebSession getSession()
 	{
 		return (WebSession)super.getSession();

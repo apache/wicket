@@ -264,6 +264,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	 * 
 	 * @return prefix
 	 */
+	@Override
 	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
 	{
 		if (urlPrefix == null)

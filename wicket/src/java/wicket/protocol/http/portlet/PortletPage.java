@@ -117,6 +117,7 @@ public class PortletPage<T> extends Page<T>
 	 * 
 	 * @return Markup type
 	 */
+	@Override
 	public final String getMarkupType()
 	{
 		return "html";

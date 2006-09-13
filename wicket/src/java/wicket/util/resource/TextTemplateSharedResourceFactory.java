@@ -109,12 +109,14 @@ public class TextTemplateSharedResourceFactory
 				/**
 				 * @see wicket.Resource#getResourceStream()
 				 */
+				@Override
 				public IResourceStream getResourceStream()
 				{
 					return new AbstractStringResourceStream()
 					{
 						private static final long serialVersionUID = 1L;
 
+						@Override
 						protected String getString()
 						{
 							return templateValue;

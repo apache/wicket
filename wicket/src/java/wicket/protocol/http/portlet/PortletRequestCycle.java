@@ -86,6 +86,7 @@ public abstract class PortletRequestCycle extends RequestCycle
 	/*
 	 * @see wicket.RequestCycle#redirectTo(wicket.Page)
 	 */
+	@Override
 	public final void redirectTo(final Page page)
 	{
 		throw new WicketRuntimeException("Portlet can't do a redirect");
@@ -94,6 +95,7 @@ public abstract class PortletRequestCycle extends RequestCycle
 	/**
 	 * @see wicket.RequestCycle#newClientInfo()
 	 */
+	@Override
 	protected ClientInfo newClientInfo()
 	{
 		throw new WicketRuntimeException("ClientInfo not yet implemented");

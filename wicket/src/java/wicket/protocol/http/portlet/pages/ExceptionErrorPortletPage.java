@@ -94,6 +94,7 @@ public class ExceptionErrorPortletPage extends PortletPage
 	/**
 	 * @see wicket.markup.html.WebPage#configureResponse()
 	 */
+	@Override
 	protected void configureResponse()
 	{
 		super.configureResponse();
@@ -113,6 +114,7 @@ public class ExceptionErrorPortletPage extends PortletPage
 	/**
 	 * @see wicket.Page#isErrorPage()
 	 */
+	@Override
 	public boolean isErrorPage()
 	{
 		return true;
@@ -121,6 +123,7 @@ public class ExceptionErrorPortletPage extends PortletPage
 	/**
 	 * @see wicket.Component#isVersioned()
 	 */
+	@Override
 	public boolean isVersioned()
 	{
 		return false;

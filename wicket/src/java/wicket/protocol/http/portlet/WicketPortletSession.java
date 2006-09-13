@@ -46,6 +46,7 @@ public class WicketPortletSession extends WebSession
 	/**
 	 * @see wicket.Session#getRequestCycleFactory()
 	 */
+	@Override
 	protected IRequestCycleFactory getRequestCycleFactory()
 	{
 		if (requestCycleFactory == null)
@@ -63,6 +64,7 @@ public class WicketPortletSession extends WebSession
 	 * 
 	 * @return the session store
 	 */
+	@Override
 	protected final ISessionStore getSessionStore()
 	{
 		return getApplication().getSessionStore(); 

@@ -55,6 +55,7 @@ public class WicketPortletServlet extends WicketServlet
 				return new WebApplication()
 				{
 
+					@Override
 					public Class<? extends Page> getHomePage()
 					{
 						return AccessDeniedPage.class;

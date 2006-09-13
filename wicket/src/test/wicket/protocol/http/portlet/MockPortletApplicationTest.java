@@ -62,6 +62,7 @@ public class MockPortletApplicationTest extends TestCase
 		super(name);
 	}
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();

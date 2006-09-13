@@ -137,6 +137,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
+	@Override
 	protected void addInterfaceParameters(final Request request, final RequestParameters parameters)
 	{
 		final String requestString = request.getParameter(INTERFACE_PARAMETER_NAME);
@@ -178,6 +179,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 	 *            the request target
 	 * @return the url to the provided target
 	 */
+	@Override
 	protected String doEncode(RequestCycle requestCycle, IRequestTarget requestTarget)
 	{
 		return null;
@@ -411,6 +413,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 	 * @param parameters
 	 *            the parameters object to set the found values on
 	 */
+	@Override
 	protected void addBookmarkablePageParameters(final Request request,
 			final RequestParameters parameters)
 	{
@@ -659,6 +662,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 	 * 
 	 * @return prefix
 	 */
+	@Override
 	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
 	{
 		if (urlPrefix == null)

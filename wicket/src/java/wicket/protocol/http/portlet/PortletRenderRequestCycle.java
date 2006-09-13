@@ -49,6 +49,7 @@ public class PortletRenderRequestCycle extends PortletRequestCycle
 	 * @see wicket.RequestCycle#getProcessor()
 	 */
 
+	@Override
 	public final IRequestCycleProcessor getProcessor()
 	{
 		PortletApplication application = (PortletApplication)getApplication();

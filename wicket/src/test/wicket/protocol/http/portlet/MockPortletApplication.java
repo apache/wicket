@@ -112,16 +112,19 @@ public class MockPortletApplication extends PortletApplication
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
 			public PortletContext getPortletContext()
 			{
 				return portletContext;
 			};
 
+			@Override
 			public String getPortletName()
 			{
 				return "MockPortlet";
 			}
 
+			@Override
 			public String getInitParameter(String key)
 			{
 				return null;
@@ -177,6 +180,7 @@ public class MockPortletApplication extends PortletApplication
 	 * @see wicket.Application#getHomePage()
 	 */
 
+	@Override
 	public Class<? extends Page> getHomePage()
 	{
 		return homePage;

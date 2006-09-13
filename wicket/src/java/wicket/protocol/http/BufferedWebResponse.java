@@ -81,6 +81,7 @@ public class BufferedWebResponse extends WebResponse
 	/**
 	 * @see wicket.Response#reset()
 	 */
+	@Override
 	public void reset()
 	{
 		redirectURL = null;

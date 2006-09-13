@@ -44,6 +44,7 @@ public class BorderMarkupFinder extends DefaultMarkupFinder
 	 *            Component type
 	 * @return A MarkupStream which is positioned at the component
 	 */
+	@Override
 	public final <T> MarkupStream find(final Component<T> component)
 	{
 		// Get the parent's associated markup stream.

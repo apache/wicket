@@ -77,6 +77,7 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 	 * @see wicket.markup.loader.IMarkupLoader#loadMarkup(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupResourceStream)
 	 */
+	@Override
 	public final IMarkup loadMarkup(final MarkupContainer container,
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException

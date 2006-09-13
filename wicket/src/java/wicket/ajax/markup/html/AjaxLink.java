@@ -87,6 +87,7 @@ public abstract class AjaxLink<T> extends WebMarkupContainer<T> implements IAjax
 		});
 	}
 
+	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
