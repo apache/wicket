@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: ConversionException.java 2913 2005-10-02 03:06:33 -0700 (Sun, 02 Oct
+ * 2005) joco01 $ $Revision$ $Date: 2005-10-02 03:06:33 -0700 (Sun, 02
+ * Oct 2005) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +23,10 @@ import java.util.Locale;
 
 /**
  * Thrown for conversion exceptions.
+ * 
+ * If it is desirable to override the default resource key used to construct the
+ * error message (<code>TypeValidator</code>), users should call
+ * {@link #setResourceKey(String)}
  * 
  * @author Eelco Hillenius
  */
@@ -48,6 +53,12 @@ public final class ConversionException extends RuntimeException
 	private ITypeConverter typeConverter;
 
 	/**
+	 * Resource key that will be used to construct an error message. If this
+	 * field is not set the default "TypeValidator" key will be used.
+	 */
+	private String resourceKey;
+
+	/**
 	 * Construct exception with message.
 	 * 
 	 * @param message
@@ -57,6 +68,30 @@ public final class ConversionException extends RuntimeException
 	{
 		super(message);
 	}
+
+
+	/**
+	 * Gets resourceKey
+	 * 
+	 * @return resourceKey
+	 */
+	public String getResourceKey()
+	{
+		return resourceKey;
+	}
+
+
+	/**
+	 * Sets resourceKey.
+	 * 
+	 * @param resourceKey
+	 *            resourceKey
+	 */
+	public void setResourceKey(String resourceKey)
+	{
+		this.resourceKey = resourceKey;
+	}
+
 
 	/**
 	 * Construct exception with message and cause.
@@ -91,22 +126,22 @@ public final class ConversionException extends RuntimeException
 	{
 		return converter;
 	}
-    
-    /**
-     * @return Locale
-     */
-    public final Locale getLocale()
-    {
+
+	/**
+	 * @return Locale
+	 */
+	public final Locale getLocale()
+	{
 		if (locale != null)
 		{
 			return locale;
 		}
-    	if (converter != null)
-        {
-    		return converter.getLocale();
-        }
-        return null;
-    }
+		if (converter != null)
+		{
+			return converter.getLocale();
+		}
+		return null;
+	}
 
 	/**
 	 * Get the used format.
@@ -184,7 +219,7 @@ public final class ConversionException extends RuntimeException
 		this.locale = locale;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the tried value.
 	 * 
