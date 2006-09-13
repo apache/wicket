@@ -413,6 +413,19 @@
 		</init-param>
 	</filter>
 
+	<filter>
+		<filter-name>ThreadDumpApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.threadDump.ThreadDumpApplication</param-value>
+		</init-param>
+		<init-param>
+		  <param-name>filterPath</param-name>
+		  <param-value>ThreadDump</param-value>
+		</init-param>
+	</filter>
+
 	<filter-mapping>
 		<filter-name>AjaxApplication</filter-name>
 		<url-pattern>/ajax/*</url-pattern>
@@ -556,6 +569,11 @@
 	<filter-mapping>
 		<filter-name>CaptchaApplication</filter-name>
 		<url-pattern>/captcha/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>ThreadDumpApplication</filter-name>
+		<url-pattern>/ThreadDump/*</url-pattern>
 	</filter-mapping>
 
 	<servlet>

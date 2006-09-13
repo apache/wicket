@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - helloworld</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+    I wouldn't use this little demo in a production environment, but for development it may be helpful.
+    
+    <h2>Thread Summary:</h2>
+    <table cellpadding="5" cellspacing="5">
+      <tr>
+        <th>Thread</th>
+        <th>State</th>
+        <th>Priority</th>
+        <th>Daemon</th>
+      </tr>
+      <tr wicket:id="threads">
+          <td><a wicket:id="anchor" href="#thread"><span wicket:id="name">name</span></a></td>
+          <td><span wicket:id="state">state</span></td>
+          <td><span wicket:id="priority">prio</span></td>
+          <td><span wicket:id="daemon">daemon</span></td>
+      </tr>
+    </table>
+
+    <h2>Stack Trace of JVM:</h2>
+    <span wicket:id="traces">
+      <h4><a wicket:id="anchor" name="traceId"><span wicket:id="key">key</span></a></h4>
+      <pre><span wicket:id="lines">    at <span wicket:id="line"></span><p/></span></pre>
+    </span>
+</body>
+</html>
