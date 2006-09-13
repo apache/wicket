@@ -19,7 +19,6 @@
 	<classpathentry kind="var" path="M2_REPO/rhino/js/1.6R1/js-1.6R1.jar"/>
 	<classpathentry sourcepath="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar" kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar"/>
 	<classpathentry sourcepath="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar" kind="var" path="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar"/>
-	<classpathentry sourcepath="M2_REPO/ehcache/ehcache/1.1/ehcache-1.1-sources.jar" kind="var" path="M2_REPO/ehcache/ehcache/1.1/ehcache-1.1.jar"/>
 	<classpathentry sourcepath="M2_REPO/commons-lang/commons-lang/2.0/commons-lang-2.0-sources.jar" kind="var" path="M2_REPO/commons-lang/commons-lang/2.0/commons-lang-2.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jetty/org.mortbay.jetty/4.2.24/org.mortbay.jetty-4.2.24.jar"/>
 	<classpathentry sourcepath="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar" kind="var" path="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar"/>
@@ -28,7 +27,7 @@
 	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.6.2/xmlParserAPIs-2.6.2.jar"/>
 	<classpathentry sourcepath="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6-sources.jar" kind="var" path="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6.jar"/>
 	<classpathentry sourcepath="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar" kind="var" path="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-1.2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions-1.2"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
