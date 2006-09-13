@@ -201,6 +201,37 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
+	 * Recursively search for a Wicket tag with 'name', such as wicket:panel, wicket:border, etc.
+	 * 
+	 * @param name Such as "panel"
+	 * @return Null, if not found
+	 */
+	public final MarkupFragment getWicketFragment(final String name)
+	{
+		for (MarkupElement elem : this)
+		{
+			if (elem instanceof MarkupFragment)
+			{
+				MarkupFragment fragment = (MarkupFragment)elem;
+				ComponentTag tag = (ComponentTag)fragment.get(0);
+				if (tag.isWicketTag(name))
+				{
+					return fragment;
+				}
+				else
+				{
+					fragment = fragment.getWicketFragment(name);
+					if (fragment != null)
+					{
+						return fragment;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Gets the associate markup
 	 * 
 	 * @return The associated markup

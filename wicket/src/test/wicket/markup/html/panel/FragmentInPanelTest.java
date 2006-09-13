@@ -35,7 +35,6 @@ import wicket.util.resource.StringResourceStream;
  */
 public class FragmentInPanelTest extends WicketTestCase
 {
-
 	/**
 	 * Test markup resolution of children components of a fragment that is
 	 * embedded in a panel
@@ -47,7 +46,6 @@ public class FragmentInPanelTest extends WicketTestCase
 		assertTrue(accessPage(TestPage.class).getDocument().contains("[[SUCCESS]]"));
 	}
 
-
 	/**
 	 * Test page
 	 * 
@@ -55,7 +53,6 @@ public class FragmentInPanelTest extends WicketTestCase
 	 */
 	public static class TestPage extends WebPage implements IMarkupResourceStreamProvider
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -64,7 +61,6 @@ public class FragmentInPanelTest extends WicketTestCase
 		public TestPage()
 		{
 			new TestPanel(this, "panel");
-
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -82,7 +78,6 @@ public class FragmentInPanelTest extends WicketTestCase
 	 */
 	public static class TestPanel extends Panel implements IMarkupResourceStreamProvider
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -94,9 +89,9 @@ public class FragmentInPanelTest extends WicketTestCase
 		public TestPanel(MarkupContainer parent, String id)
 		{
 			super(parent, id);
+			
 			Fragment fragment = new Fragment(this, "fragment", "frag-id", TestPanel.this);
 			new Label(fragment, "label", new Model<String>("[[SUCCESS]]"));
-
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -106,8 +101,5 @@ public class FragmentInPanelTest extends WicketTestCase
 					"<wicket:panel><span wicket:id='fragment'></span></wicket:panel>"
 							+ "<wicket:fragment wicket:id='frag-id'><span wicket:id='label'></span></wicket:fragment>");
 		}
-
 	}
-
-
 }

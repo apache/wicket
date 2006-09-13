@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 07:46:36 +0200 (vr, 26 mei 2006) $
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,25 +32,25 @@ import wicket.model.IModel;
  * Whereas WebMarkupContainer is an inline container like
  * 
  * <pre>
- *    ...
- *    &lt;span wicket:id=&quot;xxx&quot;&gt;
- *      &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
- *      ....
- *    &lt;/span&gt;
- *    ...
+ *      ...
+ *      &lt;span wicket:id=&quot;xxx&quot;&gt;
+ *        &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
+ *        ....
+ *      &lt;/span&gt;
+ *      ...
  * </pre>
  * 
  * a Panel has its own associated markup file and the container content is taken
  * from that file, like:
  * 
  * <pre>
- *    &lt;span wicket:id=&quot;mypanel&quot;/&gt;
- *   
- *    TestPanel.html
- *    &lt;wicket:panel&gt;
- *      &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
- *      ....
- *    &lt;/wicket:panel&gt;
+ *      &lt;span wicket:id=&quot;mypanel&quot;/&gt;
+ *     
+ *      TestPanel.html
+ *      &lt;wicket:panel&gt;
+ *        &lt;span wicket:id=&quot;mylabel&quot;&gt;My label&lt;/span&gt;
+ *        ....
+ *      &lt;/wicket:panel&gt;
  * </pre>
  * 
  * @param <T>
@@ -62,11 +62,13 @@ import wicket.model.IModel;
 public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 {
 	private static final long serialVersionUID = 1L;
+	
+	private static final String PANEL = "panel";
 
 	static
 	{
 		// register "wicket:panel"
-		WicketTagIdentifier.registerWellKnownTagName("panel");
+		WicketTagIdentifier.registerWellKnownTagName(PANEL);
 	}
 
 	/** If if tag was an open-close tag */
@@ -115,7 +117,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// Render the associated markup
-		renderAssociatedMarkup("panel",
+		renderAssociatedMarkup(PANEL,
 				"Markup for a panel component has to contain part '<wicket:panel>'");
 
 		if (this.wasOpenCloseTag == false)
@@ -133,9 +135,9 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	@Override
 	public void renderHead(HeaderContainer container)
 	{
-		if (isHeadRendered() == false) 
+		if (isHeadRendered() == false)
 		{
-			this.renderHeadFromAssociatedMarkupFile(container);			
+			this.renderHeadFromAssociatedMarkupFile(container);
 		}
 		super.renderHead(container);
 	}

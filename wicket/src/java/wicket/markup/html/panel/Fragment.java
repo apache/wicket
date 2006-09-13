@@ -50,13 +50,13 @@ import wicket.version.undo.Change;
  * be searched for the wicket:fragment tag with the appropriate id.
  * 
  * <pre>
- *                &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *                             
- *                &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *                &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *    &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *                          
+ *    &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *    &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *                add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *    add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @param <T>
@@ -155,8 +155,8 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 			throw new IllegalArgumentException("Parameter 'markupId' cannot be null");
 		}
 
-		if (!(markupProvider instanceof Panel) && !(markupProvider instanceof Page)
-				&& !(markupProvider instanceof Border))
+		if ((markupProvider != null) && !(markupProvider instanceof Panel)
+				&& !(markupProvider instanceof Page) && !(markupProvider instanceof Border))
 		{
 			throw new IllegalArgumentException(
 					"Argument [[markupProvider]] must be an instance of one of the following types: "
@@ -352,8 +352,8 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 
 		// Find the fragment based on the markup path and the Container provided
 		// by the user
-		MarkupFragment fragment = this.markupProvider.getMarkupFragment().getChildFragment(
-				this.markupId);
+		MarkupFragment fragment = ((IMarkupProvider)this.markupProvider)
+				.getMarkupFragment(this.markupId);
 		if (fragment == null)
 		{
 			throw new WicketRuntimeException(
@@ -364,5 +364,4 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 
 		return fragment;
 	}
-
 }

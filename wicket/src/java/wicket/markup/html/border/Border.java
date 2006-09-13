@@ -47,35 +47,35 @@ import wicket.response.NullResponse;
  * For example, if a border's associated markup looked like this:
  * 
  * <pre>
- * &lt;html&gt;
- * &lt;body&gt;
- *   &lt;wicket:border&gt;
- *     First &lt;wicket:body/&gt; Last
- *   &lt;/wicket:border&gt;
- * &lt;/body&gt;
- * &lt;/html&gt;
+ *  &lt;html&gt;
+ *  &lt;body&gt;
+ *    &lt;wicket:border&gt;
+ *      First &lt;wicket:body/&gt; Last
+ *    &lt;/wicket:border&gt;
+ *  &lt;/body&gt;
+ *  &lt;/html&gt;
  * </pre>
  * 
  * And the border was used on a page like this:
  * 
  * <pre>
- * &lt;html&gt;
- * &lt;body&gt;
- *   &lt;span wicket:id = &quot;myBorder&quot;&gt;
- *     Middle
- *   &lt;/span&gt;
- * &lt;/body&gt;
- * &lt;/html&gt;
+ *  &lt;html&gt;
+ *  &lt;body&gt;
+ *    &lt;span wicket:id = &quot;myBorder&quot;&gt;
+ *      Middle
+ *    &lt;/span&gt;
+ *  &lt;/body&gt;
+ *  &lt;/html&gt;
  * </pre>
  * 
  * Then the resulting HTML would look like this:
  * 
  * <pre>
- * &lt;html&gt;
- * &lt;body&gt;
- *   First Middle Last
- * &lt;/body&gt;
- * &lt;/html&gt;
+ *  &lt;html&gt;
+ *  &lt;body&gt;
+ *    First Middle Last
+ *  &lt;/body&gt;
+ *  &lt;/html&gt;
  * </pre>
  * 
  * In other words, the body of the myBorder component is substituted into the
@@ -98,11 +98,14 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		implements
 			IComponentResolver
 {
+	private static final String BODY = "body";
+	private static final String BORDER = "border";
+
 	static
 	{
 		// register "wicket:fragement"
-		WicketTagIdentifier.registerWellKnownTagName("border");
-		WicketTagIdentifier.registerWellKnownTagName("body");
+		WicketTagIdentifier.registerWellKnownTagName(BORDER);
+		WicketTagIdentifier.registerWellKnownTagName(BODY);
 	}
 
 	/** Will be true, once the first <wicket:body> has been seen */
@@ -195,7 +198,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		// If not found in the external markup file, than try the markup which
 		// contains the <span wicket:id="myBorder> tag.
 		path = getId() + IMarkup.TAG_PATH_SEPARATOR + path;
-		
+
 		// The markup path must be relativ to the markup file, hence we need to
 		// find the first parent with associated markup file and update the
 		// markup path accordingly.
@@ -299,7 +302,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		this.haveSeenBodyTag = false;
 
 		// Render the associated markup
-		renderAssociatedMarkup("border",
+		renderAssociatedMarkup(BORDER,
 				"Markup for a border component must begin a tag like '<wicket:border>'");
 
 		// There shall exactly only one body tag per border

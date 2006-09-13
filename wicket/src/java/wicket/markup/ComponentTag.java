@@ -319,7 +319,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isBorderTag()
 	{
-		return isWicketTag() && "border".equalsIgnoreCase(getName());
+		return isWicketTag("border");
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isChildTag()
 	{
-		return isWicketTag() && "child".equalsIgnoreCase(getName());
+		return isWicketTag("child");
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isComponentTag()
 	{
-		return isWicketTag() && "component".equalsIgnoreCase(getName());
+		return isWicketTag("component");
 	}
 
 	/**
@@ -352,7 +352,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isExtendTag()
 	{
-		return isWicketTag() && "extend".equalsIgnoreCase(getName());
+		return isWicketTag("extend");
 	}
 
 	/**
@@ -360,7 +360,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isFragementTag()
 	{
-		return isWicketTag() && "fragment".equalsIgnoreCase(getName());
+		return isWicketTag("fragment");
 	}
 
 	/**
@@ -385,7 +385,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isLinkTag()
 	{
-		return isWicketTag() && "link".equalsIgnoreCase(getName());
+		return isWicketTag("link");
 	}
 
 	/**
@@ -401,7 +401,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isMessageTag()
 	{
-		return isWicketTag() && "message".equalsIgnoreCase(getName());
+		return isWicketTag("message");
 	}
 
 	/**
@@ -452,13 +452,23 @@ public class ComponentTag extends MarkupElement
 	{
 		return xmlTag.isOpenClose() && this.id.equals(id);
 	}
+	
+	/**
+	 * 
+	 * @param name The name of the tag, such as "panel" for wicket:panel 
+	 * @return True, if tag name equals wicket:'name'
+	 */
+	public final boolean isWicketTag(final String name)
+	{
+		return isWicketTag() && name.equalsIgnoreCase(getName());
+	}
 
 	/**
 	 * @return True, if tag name equals 'wicket:panel'
 	 */
 	public final boolean isPanelTag()
 	{
-		return isWicketTag() && "panel".equalsIgnoreCase(getName());
+		return isWicketTag("panel");
 	}
 
 	/**
@@ -466,7 +476,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isRemoveTag()
 	{
-		return isWicketTag() && "remove".equalsIgnoreCase(getName());
+		return isWicketTag("remove");
 	}
 
 	/**
@@ -474,7 +484,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isWicketBodyTag()
 	{
-		return isWicketTag() && "body".equalsIgnoreCase(getName());
+		return isWicketTag("body");
 	}
 
 	/**
@@ -482,7 +492,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isWicketHeadTag()
 	{
-		return isWicketTag() && "head".equalsIgnoreCase(getName());
+		return isWicketTag("head");
 	}
 
 	/**
@@ -490,7 +500,7 @@ public class ComponentTag extends MarkupElement
 	 */
 	public final boolean isEnclosureTag()
 	{
-		return isWicketTag() && "enclosure".equalsIgnoreCase(getName());
+		return isWicketTag("enclosure");
 	}
 
 	/**
