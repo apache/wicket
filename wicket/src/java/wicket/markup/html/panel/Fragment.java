@@ -44,17 +44,17 @@ import wicket.version.undo.Change;
  * contains the definition of the fragment. <code>markupProvider</code> should
  * either be Panel, Border, or Page. The markup lookup wil be performed in the
  * markup file belonging to that component, eg if a Panel is specified that
- * panel's <code>[markupProvider.getClass().getName()].html</code> file will be search for
- * the wicket:fragment tag with the appropriate id.
+ * panel's <code>[markupProvider.getClass().getName()].html</code> file will
+ * be searched for the wicket:fragment tag with the appropriate id.
  * 
  * <pre>
- *           &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *                        
- *           &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *           &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *            &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *                         
+ *            &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *            &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *           add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *            add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @param <T>
