@@ -81,6 +81,7 @@ public abstract class Button<T> extends FormComponent<T>
 	public Button(MarkupContainer parent, String id)
 	{
 		super(parent, id);
+		setVersioned(true);
 	}
 	
 	/**
@@ -115,6 +116,7 @@ public abstract class Button<T> extends FormComponent<T>
 	public Button(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
+		setVersioned(true);
 	}
 	
 	/**
@@ -128,6 +130,7 @@ public abstract class Button<T> extends FormComponent<T>
 	{
 		super(parent, id, model);
 		this.form = form;
+		setVersioned(true);
 	}
 
 	/**
