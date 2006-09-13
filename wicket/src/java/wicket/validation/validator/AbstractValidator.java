@@ -119,7 +119,6 @@ public abstract class AbstractValidator<T> implements IValidator<T>
 		error(validatable, resourceKey, variablesMap(validatable));
 	}
 
-
 	/**
 	 * Reports an error against the validatalbe using the given map for variable
 	 * interpolations and message resource key provided by
