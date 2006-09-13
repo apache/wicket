@@ -67,6 +67,23 @@ public abstract class AbstractFormValidator implements IFormValidator
 	}
 
 	/**
+	 * Reports an error against the validatalbe using the given resource key
+	 * 
+	 * @param fc
+	 *            form component against which the error is reported
+	 * @param resourceKey
+	 *            The message resource key to use
+	 */
+	public void error(FormComponent fc, final String resourceKey)
+	{
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("Argument [[resourceKey]] cannot be null");
+		}
+		error(fc, resourceKey, variablesMap());
+	}
+
+	/**
 	 * Reports an error against the validatalbe using the given map for variable
 	 * interpolations and message resource key provided by
 	 * {@link #resourceKey()}
@@ -145,8 +162,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 
 		if (formComponents != null && formComponents.length > 0)
 		{
-			Map<String, Object> args = new HashMap<String, Object>(
-					formComponents.length * 3);
+			Map<String, Object> args = new HashMap<String, Object>(formComponents.length * 3);
 			for (int i = 0; i < formComponents.length; i++)
 			{
 				final FormComponent formComponent = formComponents[i];
