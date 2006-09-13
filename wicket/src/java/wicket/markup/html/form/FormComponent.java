@@ -1170,21 +1170,23 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		 */
 		public String getMessage(String key)
 		{
+			final FormComponent fc = FormComponent.this;
+
 			// retrieve prefix that will be used to construct message keys
-			String prefix = FormComponent.this.getValidatorKeyPrefix();
+			String prefix = fc.getValidatorKeyPrefix();
 			if (Strings.isEmpty(prefix))
 			{
 				prefix = "";
 			}
 
-			final Localizer localizer = FormComponent.this.getLocalizer();
+			final Localizer localizer = fc.getLocalizer();
 
 			String resource = prefix + getId() + "." + key;
 
 			// Note: It is important that the default value of "" is provided
 			// to getString() not to throw a MissingResourceException or to
 			// return a default string like "[Warning: String ..."
-			String message = localizer.getString(resource, FormComponent.this, "");
+			String message = localizer.getString(resource, fc.getParent(), "");
 
 			// If not found, than ...
 			if (Strings.isEmpty(message))
@@ -1193,7 +1195,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 
 				resource = prefix + key;
 
-				message = localizer.getString(resource, FormComponent.this, "");
+				message = localizer.getString(resource, fc.getParent(), "");
 			}
 
 			// convert empty string to null in case our default value of "" was
@@ -1252,20 +1254,20 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		 */
 		private Object getLabel()
 		{
+			final FormComponent fc = FormComponent.this;
 			Object label = null;
 
 			// first try the label model ...
-			if (FormComponent.this.getLabel() != null)
+			if (fc.getLabel() != null)
 			{
-				label = FormComponent.this.getLabel().getObject();
+				label = fc.getLabel().getObject();
 			}
 			// ... then try a resource of format [form-component-id] with
-			// default of [form-component-id]
+			// default of '[form-component-id]'
 			if (label == null)
 			{
-				final String id = FormComponent.this.getId();
-				final Localizer localizer = FormComponent.this.getLocalizer();
-				label = localizer.getString(id, FormComponent.this, id);
+
+				label = fc.getLocalizer().getString(fc.getId(), fc.getParent(), fc.getId());
 			}
 			return label;
 		}
