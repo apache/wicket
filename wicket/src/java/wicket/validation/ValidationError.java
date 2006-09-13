@@ -130,7 +130,7 @@ public final class ValidationError implements IValidationError
 	{
 		if (vars == null)
 		{
-			throw new IllegalArgumentException("Argument [[params]] cannot be null");
+			throw new IllegalArgumentException("Argument [[vars]] cannot be null");
 		}
 		this.vars = vars;
 		return this;
