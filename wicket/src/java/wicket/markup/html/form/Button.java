@@ -73,6 +73,7 @@ public class Button extends FormComponent
 	public Button(String id)
 	{
 		super(id);
+		setVersioned(true);
 	}
 
 	/**
@@ -92,6 +93,7 @@ public class Button extends FormComponent
 	public Button(final String id, final IModel model)
 	{
 		super(id, model);
+		setVersioned(true);
 	}
 
 	/**
