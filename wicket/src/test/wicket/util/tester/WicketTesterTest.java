@@ -1,6 +1,7 @@
 /*
  * $Id$
- * $Revision$ $Date$
+ * $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,12 +44,12 @@ import wicket.util.tester.apps_1.ViewBook;
 public class WicketTesterTest extends TestCase
 {
 	private boolean eventExecuted;
-	
+
 	protected void setUp() throws Exception
 	{
 		eventExecuted = false;
 	}
-	
+
 	/**
 	 * 
 	 * @throws Exception
@@ -62,7 +63,7 @@ public class WicketTesterTest extends TestCase
 		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
-			
+
 			public Page getTestPage()
 			{
 				Book mockBook = new Book("xxId", "xxName");
@@ -122,7 +123,7 @@ public class WicketTesterTest extends TestCase
 		// TODO Post 1.2: General: No longer a valid test
 		// tester.assertExpirePreviousPage();
 	}
-	
+
 	/**
 	 * 
 	 * @throws Exception
@@ -149,7 +150,7 @@ public class WicketTesterTest extends TestCase
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
 	}
-	
+
 	/**
 	 * 
 	 * @throws Exception
@@ -166,7 +167,7 @@ public class WicketTesterTest extends TestCase
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -174,7 +175,7 @@ public class WicketTesterTest extends TestCase
 	{
 		// Start the tester
 		WicketTester tester = new WicketTester();
-		
+
 		final Page page = new MockPageWithLink();
 		AjaxLink ajaxLink = new AjaxLink(MockPageWithLink.LINK_ID)
 		{
@@ -183,7 +184,8 @@ public class WicketTesterTest extends TestCase
 			public void onClick(AjaxRequestTarget target)
 			{
 				// Replace the link with a normal Link
-				Link link = new Link(MockPageWithLink.LINK_ID) {
+				Link link = new Link(MockPageWithLink.LINK_ID)
+				{
 					private static final long serialVersionUID = 1L;
 
 					public void onClick()
@@ -192,17 +194,18 @@ public class WicketTesterTest extends TestCase
 					}
 				};
 				link.setOutputMarkupId(true);
-				
+
 				page.replace(link);
-				
+
 				target.addComponent(link);
 			}
 		};
 		ajaxLink.setOutputMarkupId(true);
-		
+
 		page.add(ajaxLink);
-		
-		tester.startPage(new ITestPageSource() {
+
+		tester.startPage(new ITestPageSource()
+		{
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -210,21 +213,21 @@ public class WicketTesterTest extends TestCase
 				return page;
 			}
 		});
-		
-		
+
+
 		// Click the link
 		tester.clickLink(MockPageWithLink.LINK_ID);
 
 		// The link must be a Link :)
 		tester.assertComponent(MockPageWithLink.LINK_ID, Link.class);
-		
+
 		// Get the new link component
 		Component component = tester.getComponentFromLastRenderedPage(MockPageWithLink.LINK_ID);
-		
+
 		// This must not fail
 		tester.assertComponentOnAjaxResponse(component);
 	}
-	
+
 	/**
 	 * Test that the executeAjaxEvent on the WicketTester works.
 	 */
@@ -263,5 +266,19 @@ public class WicketTesterTest extends TestCase
 		tester.executeAjaxEvent(label, "ondblclick");
 
 		assertTrue(eventExecuted);
+	}
+
+	/**
+	 * Test that the clickLink works when submitting a form with a checkgroup
+	 * inside.
+	 */
+	public void testClickLink_ajaxSubmitLink_checkGroup()
+	{
+		WicketTester tester = new WicketTester();
+		
+		tester.startPage(MockPageWithFormAndCheckGroup.class);
+		
+		// Click the submit
+		tester.clickLink("submitLink");
 	}
 }
