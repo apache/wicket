@@ -40,15 +40,21 @@ import wicket.version.undo.Change;
  * Fragments provide a means to maintain the panels tiny piece of markup in the
  * parents markup file.
  * <p>
+ * <code>markupProvider</code> is used to specify which component's markup
+ * contains the definition of the fragment. <code>markupProvider</code> should
+ * either be Panel, Border, or Page. The markup lookup wil be performed in the
+ * markup file belonging to that component, eg if a Panel is specified that
+ * panel's <code>[markupProvider.getClass().getName()].html</code> file will be search for
+ * the wicket:fragment tag with the appropriate id.
  * 
  * <pre>
- *      &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
- *                   
- *      &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
- *      &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
+ *           &lt;span wicket:id=&quot;myPanel&quot;&gt;Example input (will be removed)&lt;/span&gt;
+ *                        
+ *           &lt;wicket:fragment wicket:id=&quot;frag1&quot;&gt;panel 1&lt;/wicket:fragment&gt;
+ *           &lt;wicket:fragment wicket:id=&quot;frag2&quot;&gt;panel 2&lt;/wicket:fragment&gt;
  * </pre> 
  * <pre>
- *      add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
+ *           add(new Fragment(&quot;myPanel1&quot;, &quot;frag1&quot;);
  * </pre>
  * 
  * @param <T>
@@ -110,7 +116,8 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 	 * @param id
 	 *            The component id
 	 * @param markupId
-	 *            The associated id of the associated markup fragment
+	 *            The associated id of the associated markup fragment. See
+	 *            javadoc on the class for more details.
 	 * @param markupProvider
 	 *            The component whose markup contains the fragment's markup
 	 */
@@ -130,7 +137,8 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 	 * @param markupId
 	 *            The associated id of the associated markup fragment
 	 * @param markupProvider
-	 *            The component whose markup contains the fragment's markup
+	 *            The component whose markup contains the fragment's markup. See
+	 *            javadoc on the class for more details.
 	 * @param model
 	 *            The model for this fragment
 	 */
@@ -167,10 +175,10 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 		{
 			throw new IllegalArgumentException("markupId cannot be null");
 		}
-		
-		// Make sure the associated markup exists 
+
+		// Make sure the associated markup exists
 		loadMarkupStream();
-		
+
 		if (!Objects.equal(this.markupId, markupId))
 		{
 			addStateChange(new Change()
