@@ -637,15 +637,16 @@ public abstract class FormComponent extends WebMarkupContainer
 					args.put("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
-				String[] resourceKeys  = null;
-				if(e.getTargetType() != null)
+				String[] resourceKeys = null;
+				if (e.getTargetType() != null)
 				{
-					String typedResourceKey = "ConversionError." + Classes.simpleName(e.getTargetType());
+					String typedResourceKey = "ConversionError."
+							+ Classes.simpleName(e.getTargetType());
 					resourceKeys = new String[] { typedResourceKey, "ConversionError" };
 				}
 				else
 				{
-					resourceKeys = new String[] {"ConversionError" };
+					resourceKeys = new String[] { "ConversionError" };
 				}
 
 				error(Arrays.asList(resourceKeys), args);
@@ -675,11 +676,18 @@ public abstract class FormComponent extends WebMarkupContainer
 				}
 
 
-				final String typedResourceKey = "TypeValidator." + Classes.simpleName(type);
+				if (e.getResourceKey() == null)
+				{
+					final String typedResourceKey = "TypeValidator." + Classes.simpleName(type);
 
-				String[] resourceKeys = new String[] { typedResourceKey, "TypeValidator" };
+					String[] resourceKeys = new String[] { typedResourceKey, "TypeValidator" };
 
-				error(Arrays.asList(resourceKeys), args);
+					error(Arrays.asList(resourceKeys), args);
+				}
+				else
+				{
+					error(Collections.singletonList(e.getResourceKey()), args);
+				}
 			}
 		}
 	}
