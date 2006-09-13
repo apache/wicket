@@ -18,8 +18,6 @@
  */
 package wicket;
 
-import javax.servlet.ServletResponse;
-
 import junit.framework.TestCase;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.protocol.http.MockHttpServletResponse;
