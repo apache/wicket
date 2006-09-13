@@ -53,5 +53,12 @@ public class EqualPasswordInputValidator extends EqualInputValidator
 		super(formComponent1, formComponent2);
 	}
 
+	/**
+	 * @see wicket.markup.html.form.validation.AbstractFormValidator#resourceKey(wicket.markup.html.form.FormComponent[])
+	 */
+	protected String resourceKey(FormComponent[] components)
+	{
+		return getClass().getSimpleName();
+	}
 
 }
