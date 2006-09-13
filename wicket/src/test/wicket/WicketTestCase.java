@@ -18,8 +18,11 @@
  */
 package wicket;
 
+import javax.servlet.ServletResponse;
+
 import junit.framework.TestCase;
 import wicket.behavior.AbstractAjaxBehavior;
+import wicket.protocol.http.MockHttpServletResponse;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.diff.DiffUtil;
 import wicket.util.tester.WicketTester;
@@ -74,6 +77,22 @@ public abstract class WicketTestCase extends TestCase
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
+		String document = accessPage(pageClass).getDocument();
+
+		// Validate the document
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+	}
+
+	/**
+	 * Simulates a bookmarkable page access from the browser
+	 * 
+	 * @param pageClass
+	 * @return mock servlet response
+	 * @throws Exception
+	 */
+	protected MockHttpServletResponse accessPage(final Class<? extends Page> pageClass)
+			throws Exception
+	{
 		application.setHomePage(pageClass);
 
 		// Do the processing
@@ -81,10 +100,7 @@ public abstract class WicketTestCase extends TestCase
 		application.processRequestCycle();
 
 		assertEquals(pageClass, application.getLastRenderedPage().getClass());
-
-		// Validate the document
-		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+		return application.getServletResponse();
 	}
 
 	/**
