@@ -100,6 +100,27 @@ public abstract class AbstractValidator<T> implements IValidator<T>
 	}
 
 	/**
+	 * Reports an error against validatable using the map returned by
+	 * {@link #variablesMap(IValidatable)}for variable interpolations and the
+	 * specified resourceKey
+	 * 
+	 * @param validatable
+	 *            validatble being validated
+	 * @param resourceKey
+	 *            the message resource key to use
+	 * 
+	 */
+	public void error(final IValidatable<T> validatable, String resourceKey)
+	{
+		if (resourceKey == null)
+		{
+			throw new IllegalArgumentException("Argument [[resourceKey]] cannot be null");
+		}
+		error(validatable, resourceKey, variablesMap(validatable));
+	}
+
+
+	/**
 	 * Reports an error against the validatalbe using the given map for variable
 	 * interpolations and message resource key provided by
 	 * {@link #resourceKey()}
