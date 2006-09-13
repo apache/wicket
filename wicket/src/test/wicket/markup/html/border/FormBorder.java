@@ -18,7 +18,6 @@
  */
 package wicket.markup.html.border;
 
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.form.Form;
 
@@ -43,15 +42,5 @@ public class FormBorder extends Border
 		super(parent, id);
 
 		new Form(this, "myForm");
-	}
-
-	/**
-	 * 
-	 * @param child
-	 * @return MarkupContainer
-	 */
-	public MarkupContainer addToForm(final Component child)
-	{
-		return this;
 	}
 }
