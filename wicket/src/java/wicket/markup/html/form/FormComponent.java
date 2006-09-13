@@ -35,6 +35,7 @@ import wicket.Page;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.model.IAssignmentAware;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.convert.ConversionException;
@@ -283,9 +284,18 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 * @param labelModel
 	 * @return this for chaining
 	 */
+	@SuppressWarnings("unchecked")
 	public FormComponent setLabel(final IModel labelModel)
 	{
 		this.labelModel = labelModel;
+
+		if (this.labelModel != null)
+		{
+			if (this.labelModel instanceof IAssignmentAware)
+			{
+				this.labelModel = ((IAssignmentAware)this.labelModel).wrapOnAssignment(this);
+			}
+		}
 		return this;
 	}
 
