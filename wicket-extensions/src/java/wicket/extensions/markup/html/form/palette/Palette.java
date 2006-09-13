@@ -50,9 +50,9 @@ import wicket.util.string.AppendingStringBuffer;
  * Example:
  * 
  * <pre>
- *      Form form=new Form(...);
- *      Palette palette=new Palette(...);
- *      palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *       Form form=new Form(...);
+ *       Palette palette=new Palette(...);
+ *       palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
  * </pre>
  * 
  * @param <T>
@@ -527,5 +527,25 @@ public class Palette<T, E> extends Panel<Collection<T>>
 				tag.getAttributes().put("disabled", "disabled");
 			}
 		}
+	}
+
+	/**
+	 * Sets the required flag
+	 * 
+	 * @param required
+	 * @return this for chaining
+	 */
+	public final Palette setRequired(boolean required)
+	{
+		recorderComponent.setRequired(required);
+		return this;
+	}
+
+	/**
+	 * @return the required flag
+	 */
+	public final boolean isRequired()
+	{
+		return recorderComponent.isRequired();
 	}
 }
