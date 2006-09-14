@@ -160,9 +160,30 @@ public class WicketFilter implements Filter
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		// First, set the webapplication for this thread
-		Application.set(webApplication);
-
+		// If the request does not provide information about the encoding of its
+		// body (which includes POST parameters), than assume the default
+		// encoding as defined by the wicket application. Bear in mind that the
+		// encoding of the request usually is equal to the previous response.
+		// However it is a known bug of IE that it does not provide this
+		// information. Please see the wiki for more details and why all other
+		// browser deliberately copied that bug.
+		if (servletRequest.getCharacterEncoding() == null)
+		{
+			try
+			{
+				// The encoding defined by the wicket settings is used to encode
+				// the responses. Thus, it is reasonable to assume the request
+				// has the same encoding. This is especially important for
+				// forms and form parameters.
+				servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
+						.getResponseRequestEncoding());
+			}
+			catch (UnsupportedEncodingException ex)
+			{
+				throw new WicketRuntimeException(ex.getMessage());
+			}
+		}
+		
 		// Create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
@@ -190,29 +211,9 @@ public class WicketFilter implements Filter
 			}
 		}
 
-		// If the request does not provide information about the encoding of its
-		// body (which includes POST parameters), than assume the default
-		// encoding as defined by the wicket application. Bear in mind that the
-		// encoding of the request usually is equal to the previous response.
-		// However it is a known bug of IE that it does not provide this
-		// information. Please see the wiki for more details and why all other
-		// browser deliberately copied that bug.
-		if (servletRequest.getCharacterEncoding() == null)
-		{
-			try
-			{
-				// The encoding defined by the wicket settings is used to encode
-				// the responses. Thus, it is reasonable to assume the request
-				// has the same encoding. This is especially important for
-				// forms and form parameters.
-				servletRequest.setCharacterEncoding(webApplication.getRequestCycleSettings()
-						.getResponseRequestEncoding());
-			}
-			catch (UnsupportedEncodingException ex)
-			{
-				throw new WicketRuntimeException(ex.getMessage());
-			}
-		}
+		// First, set the webapplication for this thread
+		Application.set(webApplication);
+
 
 		// Get session for request
 		final WebSession session = webApplication.getSession(request);
