@@ -141,9 +141,6 @@ public class WicketServlet extends HttpServlet
 	{
 		long time = System.currentTimeMillis();
 
-		// First, set the webapplication for this thread
-		Application.set(webApplication);
-
 		// Create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
@@ -192,6 +189,9 @@ public class WicketServlet extends HttpServlet
 			}
 		}
 
+		// First, set the webapplication for this thread
+		Application.set(webApplication);
+		
 		// Get session for request
 		final WebSession session = webApplication.getSession(request);
 
