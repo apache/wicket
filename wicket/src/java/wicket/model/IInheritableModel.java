@@ -22,7 +22,7 @@ import wicket.Component;
 
 /**
  * This is a marker interface for models that can be inherited from components
- * higher in the hierarchy
+ * higher in the hierarchy.
  * 
  * If a model implements this interface then you can give the parent container
  * this model and all the child (recursively) components will also get and then
