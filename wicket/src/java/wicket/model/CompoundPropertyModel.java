@@ -50,7 +50,7 @@ public class CompoundPropertyModel<T> extends AbstractPropertyInheritableModel<T
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyAssignmentAwareModel#propertyExpression(wicket.Component)
+	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
 	 */
 	@Override
 	protected String propertyExpression(final Component component)
@@ -64,7 +64,7 @@ public class CompoundPropertyModel<T> extends AbstractPropertyInheritableModel<T
 	}
 
 	/**
-	 * @see wicket.model.AbstractPropertyAssignmentAwareModel#propertyType(wicket.Component)
+	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
 	 */
 	@Override
 	protected Class propertyType(final Component component)

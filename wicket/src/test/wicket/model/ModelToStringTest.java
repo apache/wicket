@@ -49,25 +49,28 @@ public class ModelToStringTest extends WicketTestCase
 	public void testPropertyModel()
 	{
 		PropertyModel emptyModel = new PropertyModel("", null);
-		String expected = "Model:classname=[wicket.model.PropertyModel]:attached=false:nestedModel=[]:expression=[null]:propertyType=[null]";
+		
+		
+		String expected = "Model:classname=[wicket.model.PropertyModel]:attached=false:nestedModel=[]:expression=[null]";
 		assertEquals(expected, emptyModel.toString());
 
 		Properties properties = new Properties();
 		properties.put("name", "foo");
 		PropertyModel stringProperty = new PropertyModel(properties, "name");
 
-		expected = "Model:classname=[wicket.model.PropertyModel]:attached=false:nestedModel=[{name=foo}]:expression=[name]:propertyType=[null]";
+		expected = "Model:classname=[wicket.model.PropertyModel]:attached=false:nestedModel=[{name=foo}]:expression=[name]";
 		assertEquals(expected, stringProperty.toString());
 
 		stringProperty.attach();
-		expected = "Model:classname=[wicket.model.PropertyModel]:attached=true:nestedModel=[{name=foo}]:expression=[name]:propertyType=[null]";
+		expected = "Model:classname=[wicket.model.PropertyModel]:attached=true:nestedModel=[{name=foo}]:expression=[name]";
 		assertEquals(expected, stringProperty.toString());
 
 		InnerPOJO innerPOJO = new InnerPOJO();
-		PropertyModel pojoProperty = new PropertyModel(innerPOJO, "pojo", Integer.class);
+		PropertyModel<Integer> pojoProperty = new PropertyModel<Integer>(innerPOJO, "pojo");
 
 		expected = "Model:classname=[wicket.model.PropertyModel]:attached=false:nestedModel=["
-				+ innerPOJO + "]:expression=[pojo]:propertyType=[class java.lang.Integer]";
+				+ innerPOJO + "]:expression=[pojo]";
+		
 		assertEquals(expected, pojoProperty.toString());
 	}
 

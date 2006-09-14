@@ -66,6 +66,8 @@ public class ValidatorPropertiesTest extends TestCase
 		page.getText11().validateRequired();
 		page.getText12().setInput("");
 		page.getText12().validateRequired();
+		
+		String msg=page.getText1().getFeedbackMessage().getMessage();
 
 		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage());
 		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage());
