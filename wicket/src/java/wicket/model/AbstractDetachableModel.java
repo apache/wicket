@@ -185,6 +185,7 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	 * @return nada
 	 * @deprecated THIS METHOD IS NOT SUPPORTED ANYMORE AND WILL BE REMOVED IN
 	 *             WICKET 2.0.1.
+	 * TODO 2.0.1: Remove
 	 */
 	@Deprecated
 	protected final Object onGetObject(final Component component)
@@ -198,6 +199,8 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 	 * @param object
 	 * @deprecated THIS METHOD IS NOT SUPPORTED ANYMORE AND WILL BE REMOVED IN
 	 *             WICKET 2.0.1.
+	 *             
+	 * TODO 2.0.1: Remove
 	 */
 	@Deprecated
 	protected final void onSetObject(final Component component, final Object object)
