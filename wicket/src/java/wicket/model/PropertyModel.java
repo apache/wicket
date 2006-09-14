@@ -66,17 +66,6 @@ import wicket.util.lang.PropertyResolver;
  * </pre>
  * 
  * </p>
- * <p>
- * To force conversion of property value to a specific type, you can provide
- * constructor argument 'propertyType'. if that is set, that type is used for
- * conversion instead of the type that is figured out by
- * {@link PropertyResolver}. This can be especially useful for when you have a
- * generic property (like Serializable myProp) that you want to be converted to
- * a narrower type (e.g. an Integer). {@link PropertyResolver} sees an incomming
- * string being compatible with the target property, and will then bypass the
- * converter. Hence, to force myProp being converted to and from an integer,
- * propertyType should be set to Integer.
- * </p>
  * 
  * @see wicket.model.IModel
  * @see wicket.model.Model
