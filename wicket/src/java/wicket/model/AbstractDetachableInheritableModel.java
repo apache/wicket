@@ -91,7 +91,7 @@ public abstract class AbstractDetachableInheritableModel<T> implements IInherita
 		}
 	}
 
-	public <C> IWrapModel<C> wrapOnInhertance(final Component<C> component)
+	public <C> IWrapModel<C> wrapOnInheritance(final Component<C> component)
 	{
 		return new IWrapModel<C>()
 		{

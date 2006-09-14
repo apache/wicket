@@ -22,7 +22,7 @@ package wicket.model;
  * A marker interface that represents a model that serves as a wrapper for
  * another. Typically these models are produced by the following methods:
  * {@link IAssignmentAware#wrapOnAssignment(wicket.Component)} and
- * {@link IInhertanceAware#wrapOnInhertance(wicket.Component)}
+ * {@link IInheritanceAware#wrapOnInheritance(wicket.Component)}
  * 
  * @param <T>
  *            Type of model object this model holds

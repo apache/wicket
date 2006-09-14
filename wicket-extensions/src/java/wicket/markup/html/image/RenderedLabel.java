@@ -362,7 +362,7 @@ public class RenderedLabel extends Image
 				setVersioned(false);
 
 				// return the shared inherited
-				model = ((IInheritableModel)model).wrapOnInhertance(this);
+				model = ((IInheritableModel)model).wrapOnInheritance(this);
 				if (model != null && (model instanceof IAssignmentAware))
 				{
 					model = ((IAssignmentAware)model).wrapOnAssignment(this);
