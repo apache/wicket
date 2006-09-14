@@ -21,21 +21,26 @@ package wicket.model;
 import wicket.Component;
 
 /**
- * Models that wish to substitute themselves with a wraper when they are bound
- * to a component ( either through IModel parameter in a constructor or via a
- * call to {@link Component#setModel(IModel)} ) should implement this interface.
+ * Models that wish to substitute themselves with a wrapper when they are bound
+ * to a component (either through IModel parameter in a constructor or via a
+ * call to {@link Component#setModel(IModel)}) should implement this interface.
  * One reason for a model to want to do this is if it needs to be aware of the
  * component it is bound to.
  * 
  * The algorithm wicket employes is similar to this:
  * 
  * <pre>
- *   void Component.setModel(IModel model) {
- *     if (model instanceof IAssignementAware) {
- *        this.model=((IAssignmentAware)model).wrapOnAssignment(this);
- *     } else {
- *        this.model=model;
+ * void Component.setModel(IModel model) 
+ * {
+ *     if (model instanceof IAssignementAware) 
+ *     {
+ *        this.model = ((IAssignmentAware)model).wrapOnAssignment(this);
+ *     } 
+ *     else 
+ *     {
+ *        this.model = model;
  *     }
+ * }
  * </pre>
  * 
  * For an example see {@link ResourceModel}
