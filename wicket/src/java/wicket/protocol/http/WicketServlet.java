@@ -141,29 +141,6 @@ public class WicketServlet extends HttpServlet
 	{
 		long time = System.currentTimeMillis();
 
-		// Create a new webrequest
-		final WebRequest request = webApplication.newWebRequest(servletRequest);
-
-		if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
-		{
-			String queryString = servletRequest.getQueryString();
-			if (queryString != null)
-			{
-				// Try to see if there is a redirect stored
-				ISessionStore sessionStore = webApplication.getSessionStore();
-				String sessionId = sessionStore.getSessionId(request);
-				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
-						sessionId, queryString);
-
-				if (bufferedResponse != null)
-				{
-					bufferedResponse.writeTo(servletResponse);
-					// redirect responses are ignored for the request
-					// logger...
-					return;
-				}
-			}
-		}
 
 		// If the request does not provide information about the encoding of its
 		// body (which includes POST parameters), than assume the default
@@ -186,6 +163,30 @@ public class WicketServlet extends HttpServlet
 			catch (UnsupportedEncodingException ex)
 			{
 				throw new WicketRuntimeException(ex.getMessage());
+			}
+		}
+		
+		// Create a new webrequest
+		final WebRequest request = webApplication.newWebRequest(servletRequest);
+
+		if (webApplication.getRequestCycleSettings().getRenderStrategy() == IRequestCycleSettings.REDIRECT_TO_BUFFER)
+		{
+			String queryString = servletRequest.getQueryString();
+			if (queryString != null)
+			{
+				// Try to see if there is a redirect stored
+				ISessionStore sessionStore = webApplication.getSessionStore();
+				String sessionId = sessionStore.getSessionId(request);
+				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
+						sessionId, queryString);
+
+				if (bufferedResponse != null)
+				{
+					bufferedResponse.writeTo(servletResponse);
+					// redirect responses are ignored for the request
+					// logger...
+					return;
+				}
 			}
 		}
 
