@@ -1362,11 +1362,30 @@ Wicket.Window.Mask.prototype = {
 	 * have always bigger z-order than any other elements).
 	 */
 	hideSelectBoxes : function() {
+		
+		// returns true if 'element' is a child (anywhere in hierarchy) of 'parent'
+		function isParent(element, parent) {
+			if (element.parentNode == parent)
+				return true;
+			if (typeof(element.parentNode) == "undefined" ||
+				element.parentNode == document.body)
+				return false;
+			return isParent(element.parentNode, parent);			
+		}
+				
 		if (Wicket.Browser.isIE()) {
+			var win = Wicket.Window.current;					
+			
 			this.boxes = new Array();
 			var selects = document.getElementsByTagName("select");
-			for (var i = 0; i < selects.length; i++) {
+			for (var i = 0; i < selects.length; i++) {				
 				var element = selects[i];
+				
+				// if this is not an iframewindo and the select is child of window content,
+				// don't hide it
+				if (win.isIframe() == false && isParent(element, win.content))
+					continue;
+				
 				if (element.style.visibility != "hidden") {
 					element.style.visibility = "hidden";
 					this.boxes.push(element);
