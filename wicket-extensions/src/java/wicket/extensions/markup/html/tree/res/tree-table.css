@@ -152,8 +152,12 @@ div.wicket-tree-table div.row-selected a.node-link:active {
 
 }
 
+div.wicket-tree-table a.node-link span {
+	cursor: pointer;
+}
+
 div.wicket-tree-table div.row-selected a.node-link span {
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 div.wicket-tree-table div.row , 
@@ -173,6 +177,11 @@ div.wicket-tree-table span.b_ span.c_ {
 	padding-left: 6px;
 	margin-left: 6px;
 	display: block;
+}
+
+div.wicket-tree-table span.c_,
+div.wicket-tree-table span.d_ {
+	width: 1000px;
 }
 
 div.wicket-tree-table span.b_ span.d_ {
