@@ -45,14 +45,6 @@ public abstract class AbstractCheckBoxModel implements IModel<Boolean>
 	public abstract void unselect();
 
 	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
 	 * 
 	 * @see wicket.model.IModel#getObject()
 	 */

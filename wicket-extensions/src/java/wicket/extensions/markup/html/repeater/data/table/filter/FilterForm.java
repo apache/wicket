@@ -25,7 +25,6 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.HiddenField;
 import wicket.model.AbstractModel;
-import wicket.model.IModel;
 import wicket.model.Model;
 
 /**

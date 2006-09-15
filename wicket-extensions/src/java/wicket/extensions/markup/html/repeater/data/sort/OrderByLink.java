@@ -24,7 +24,6 @@ import wicket.AttributeModifier;
 import wicket.MarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.AbstractModel;
-import wicket.model.IModel;
 import wicket.util.lang.Objects;
 import wicket.version.undo.Change;
 

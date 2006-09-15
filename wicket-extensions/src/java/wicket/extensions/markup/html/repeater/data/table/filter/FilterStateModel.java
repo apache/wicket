@@ -19,7 +19,6 @@
 package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.model.AbstractModel;
-import wicket.model.IModel;
 
 /**
  * Model that wraps filter state locator to make its use transparent to wicket
