@@ -1373,7 +1373,7 @@ Wicket.Window.Mask.prototype = {
 			return isParent(element.parentNode, parent);			
 		}
 				
-		if (Wicket.Browser.isIE()) {
+		if (Wicket.Browser.isIE() && Wicket.Browser.isIE7() == false) {
 			var win = Wicket.Window.current;					
 			
 			this.boxes = new Array();
