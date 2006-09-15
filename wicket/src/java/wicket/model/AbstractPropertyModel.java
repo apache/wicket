@@ -48,11 +48,6 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	 */
 	public AbstractPropertyModel(final Object target)
 	{
-		if (target == null)
-		{
-			throw new IllegalArgumentException("Argument [[target]] cannot be null");
-		}
-
 		this.target = target;
 	}
 
@@ -63,7 +58,7 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	 *         model in the hierarchy
 	 */
 	@Override
-	public final IModel getNestedModel()
+	public IModel getNestedModel()
 	{
 		if (target instanceof IModel)
 		{
