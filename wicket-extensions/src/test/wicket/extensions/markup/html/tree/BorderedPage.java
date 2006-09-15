@@ -35,10 +35,13 @@ public abstract class BorderedPage extends WebPage implements IAlternateParentPr
 	public BorderedPage()
 	{
 		border = new PageBorder(this, "border");
-//		border.setTransparentResolver(true);
 	}
 
-	public MarkupContainer getAlternateParent()
+	/**
+	 * 
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class, java.lang.String)
+	 */
+	public MarkupContainer getAlternateParent(final Class childClass, final String childId)
 	{
 		return (this.border == null ? this : this.border);
 	}
