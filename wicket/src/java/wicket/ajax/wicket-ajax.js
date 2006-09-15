@@ -925,7 +925,7 @@ Wicket.Head.addJavascript = function(content, id, fakeSrc) {
 }
 
 /* Goes through all script elements contained by the element and add them to head. */
-Wicket.Head.addJavascripts = function(element) {
+Wicket.Head.addJavascripts = function(element) {	
 	function add(element) {
 		var content = Wicket.DOM.serializeNodeChildren(element);
 		if (content == null || content == "")
@@ -935,9 +935,13 @@ Wicket.Head.addJavascripts = function(element) {
 	if (element.tagName.toLowerCase() == "script") {
 		add(element);
 	} else {
-		var scripts = element.getElementsByTagName("script");
-		for (var i = 0; i < scripts.length; ++i) {
-			add(scripts[i]);
+		// we need to check if there are any children, becase Safari
+		// aborts when the element is a text node			
+		if (element.childNodes.length > 0) {			
+			var scripts = element.getElementsByTagName("script");
+			for (var i = 0; i < scripts.length; ++i) {
+				add(scripts[i]);
+			}
 		}
 	}
 }
