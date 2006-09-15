@@ -44,6 +44,17 @@ Wicket.Browser = {
 		return typeof(document.all) != "undefined" && typeof(window.opera) == "undefined";
 	},
 	
+	isIEQuirks: function() {
+		// is the borwser internet explorer in quirks mode (we could use document.compantMode too)		
+		return Wicket.Browser.isIE() && document.documentElement.clientHeight == 0;
+	},		
+	
+	isIE7: function() {
+		var index = navigator.userAgent.indexOf("MSIE");
+		var version = parseFloat(navigator.userAgent.substring(index + 5));
+		return Wicket.Browser.isIE() && version >= 7;
+	},
+	
 	isGecko: function() {
 		return /Gecko/.test(navigator.userAgent) && !Wicket.Browser.isSafari();
 	}
