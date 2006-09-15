@@ -8,20 +8,23 @@ var WicketAjaxDebug = {
 	
 	debugWindowLogId : "wicketAjaxDebugWindowLogId",
 	
-	getDebugWindow : function()
-	{
+	getDebugWindow : function() {
+		WicketAjaxDebug.init();
 	    wicketGet(WicketAjaxDebug.debugWindowId);
 	},
 	
 	showDebugWindow : function() {
+		WicketAjaxDebug.init();
 	    wicketShow(WicketAjaxDebug.debugWindowId);
 	},
 	
 	hideDebugWindow : function() {
+		WicketAjaxDebug.init();
 	    wicketHide(WicketAjaxDebug.debugWindowId);
 	},
 
     log : function(msg) {
+		WicketAjaxDebug.init();
         var d = wicketGet(WicketAjaxDebug.debugWindowLogId);
         var c = document.createElement("div");
         msg = msg.replace(/</g, "&lt;");
@@ -36,19 +39,22 @@ var WicketAjaxDebug = {
     },
     
     logError : function(msg) {
+		WicketAjaxDebug.init();
         WicketAjaxDebug.log("ERROR: "+msg);
     },
 
     logInfo : function(msg) {
+		WicketAjaxDebug.init();
         WicketAjaxDebug.log(" INFO: "+msg);
     },
 
     clearLog : function() {
+		WicketAjaxDebug.init();
         var d = wicketGet(WicketAjaxDebug.debugWindowLogId);
 		d.innerHTML = "";
     },
 
-	init : function() {
+	init : function() {		
 
         if ( wicketAjaxDebugEnabled()) {
         	var wad=WicketAjaxDebug;
@@ -57,8 +63,9 @@ var WicketAjaxDebug = {
 
 			var firstTime = document.getElementById(dwid) == null;
 
-			if (firstTime)
-	            document.write(	        	
+			if (firstTime) {
+				
+	            var html = 	        	
 					"<div style='width: 50em; display: none; position: absolute; left: 200px; top: 300px; z-index: 1000;' id='"+dwid+"'>"+
 					"	<div style='border: 1px solid black; padding: 1px; background-color: #eee'>"+
 					"		<div style='overflow: auto; width: 100%'>"+
@@ -73,21 +80,25 @@ var WicketAjaxDebug = {
 					"			</div>"+
 					"		</div>"+					
 					"	</div>" +
-					"</div>" 
-	            );
-            WicketDrag.init(wicketGet(dwdhid), wicketGet(dwid));
+					"</div>"+
+					"<div style='position:absolute; left:10px; top:95%; z-index:100;'>"+
+					"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"+
+					"</div>";
+												
+				
+				WicketAjaxDebug.addElement(html);
+            	WicketDrag.init(wicketGet(dwdhid), wicketGet(dwid));
+			}
 
-			if (firstTime)            
-	            document.write(
-	            
-	             "<div style='position:absolute; left:10px; top:95%; z-index:100;'>"
-	            +"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"
-	            +"</div>");
         }
+	},
+	
+	addElement : function(html) {
+		var element = document.createElement("div");				
+		element.innerHTML = html;
+		document.body.appendChild(element);
 	}
 
 };
-
-WicketAjaxDebug.init();
 
 
