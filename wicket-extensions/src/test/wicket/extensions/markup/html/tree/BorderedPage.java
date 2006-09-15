@@ -16,13 +16,15 @@
  */
 package wicket.extensions.markup.html.tree;
 
+import wicket.MarkupContainer;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.border.Border;
 
 /**
  * Base page with norder.
  */
-public abstract class BorderedPage extends WebPage
+public abstract class BorderedPage extends WebPage implements IAlternateParentProvider
 {
 	/** Border. */
 	private Border border;
@@ -33,6 +35,11 @@ public abstract class BorderedPage extends WebPage
 	public BorderedPage()
 	{
 		border = new PageBorder(this, "border");
-		border.setTransparentResolver(true);
+//		border.setTransparentResolver(true);
+	}
+
+	public MarkupContainer getAlternateParent()
+	{
+		return (this.border == null ? this : this.border);
 	}
 }
