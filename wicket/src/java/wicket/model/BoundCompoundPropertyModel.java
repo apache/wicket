@@ -56,13 +56,11 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 
 		private final Component component;
 		private final String propertyExpression;
-		private final Class type;
 
-		private Binding(final Component component, final String propertyExpression, final Class type)
+		private Binding(final Component component, final String propertyExpression)
 		{
 			this.component = component;
 			this.propertyExpression = propertyExpression;
-			this.type = type;
 		}
 
 		/**
@@ -74,7 +72,6 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 			StringBuffer sb = new StringBuffer("Binding(");
 			sb.append(":component=[").append(component).append("]");
 			sb.append(":expression=[").append(propertyExpression).append("]");
-			sb.append(":type=[").append(type).append("]");
 			sb.append(")");
 			return sb.toString();
 		}
@@ -102,7 +99,7 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	 */
 	public Component bind(final Component component, final String propertyExpression)
 	{
-		bind(component, propertyExpression, null);
+		bindings.add(new Binding(component, propertyExpression));
 		return component;
 	}
 
@@ -111,32 +108,11 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	 * 
 	 * @param component
 	 *            The component to bind
-	 * @param type
-	 *            The type of the property
 	 * @return The component, for convenience in adding components
 	 */
-	public Component bind(final Component component, final Class type)
+	public Component bind(final Component component)
 	{
-		bind(component, component.getId(), type);
-		return component;
-	}
-
-	/**
-	 * Adds a property and type conversion binding.
-	 * 
-	 * @param component
-	 *            The component to bind
-	 * @param propertyExpression
-	 *            A property expression pointing to the property in this model
-	 * @param type
-	 *            The type of the property
-	 * @return The component, for convenience in adding components
-	 */
-	public Component bind(final Component component, final String propertyExpression,
-			final Class type)
-	{
-		// Add new binding
-		bindings.add(new Binding(component, propertyExpression, type));
+		bind(component, component.getId());
 		return component;
 	}
 
@@ -144,17 +120,14 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 	 * @see wicket.model.CompoundPropertyModel#onDetach()
 	 */
 	@Override
-	protected void onDetach()
+	public void detach()
 	{
-		super.onDetach();
+		super.detach();
 
 		// Minimize the size of the bindings list
 		bindings.trimToSize();
 	}
 
-	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyExpression(wicket.Component)
-	 */
 	@Override
 	protected String propertyExpression(final Component component)
 	{
@@ -170,15 +143,6 @@ public class BoundCompoundPropertyModel<T> extends CompoundPropertyModel<T>
 		return null;
 	}
 
-	/**
-	 * @see wicket.model.AbstractPropertyModel#propertyType(wicket.Component)
-	 */
-	@Override
-	protected Class propertyType(final Component component)
-	{
-		final Binding binding = getBinding(component);
-		return (binding != null) ? binding.type : null;
-	}
 
 	/**
 	 * @param component

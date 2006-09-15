@@ -82,20 +82,8 @@ public abstract class AbstractDetachableModel<T> implements IModel<T>
 			onDetach();
 		}
 
-		IModel nestedModel = getNestedModel();
-		if (nestedModel != null)
-		{
-			// do detach the nested model because this one could be attached
-			// if the model is used not through this compound model
-			nestedModel.detach();
-		}
 	}
-
-	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	public abstract IModel getNestedModel();
-
+	
 	/**
 	 * @see wicket.model.IModel#getObject()
 	 */

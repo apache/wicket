@@ -48,20 +48,7 @@ public abstract class AbstractModel<T> implements IModel<T>
 		sb.append(getClass().getName()).append("]");
 		return sb.toString();
 	}
-
-	/**
-	 * This default implementation of getNestedModel unconditionally returns
-	 * null.
-	 * 
-	 * @see wicket.model.IModel#getNestedModel()
-	 * 
-	 * @return null
-	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
+	
 	/**
 	 * @param component
 	 * @return nada

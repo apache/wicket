@@ -182,13 +182,4 @@ public class FeedbackMessagesModel implements IModel<List<FeedbackMessage>>
 		messages = null;
 	}
 
-	/**
-	 * 
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
 }

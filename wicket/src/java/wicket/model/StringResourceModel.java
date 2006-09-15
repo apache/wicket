@@ -360,17 +360,6 @@ public class StringResourceModel extends AbstractReadOnlyDetachableModel<String>
 	}
 
 	/**
-	 * Gets the model used for property substitutions.
-	 * 
-	 * @return The model
-	 */
-	@Override
-	public final IModel getNestedModel()
-	{
-		return model;
-	}
-
-	/**
 	 * Gets the string currently represented by this string resource model. The
 	 * string that is returned may vary for each call to this method depending
 	 * on the values contained in the model and an the parameters that were

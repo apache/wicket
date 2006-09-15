@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 6854 $ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -158,15 +158,6 @@ public class FilterForm extends Form
 				throw new IllegalArgumentException("argument [locator] cannot be null");
 			}
 			this.locator = locator;
-		}
-
-		/**
-		 * @see wicket.model.IModel#getNestedModel()
-		 */
-		@Override
-		public IModel getNestedModel()
-		{
-			return null;
 		}
 
 		/**

@@ -57,15 +57,6 @@ class FilterStateModel extends AbstractModel
 	}
 
 	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	@Override
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
 	 * @see wicket.model.IModel#getObject()
 	 */
 	public Object getObject()

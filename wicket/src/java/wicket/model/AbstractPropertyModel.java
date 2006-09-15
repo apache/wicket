@@ -34,8 +34,9 @@ import wicket.util.string.Strings;
  * @author Chris Turner
  * @author Eelco Hillenius
  * @author Jonathan Locke
+ * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T>
+public abstract class AbstractPropertyModel<T> implements IModel<T>
 {
 	/** Any target object (which may or may not implement IModel) */
 	private Object target;
@@ -49,15 +50,6 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	public AbstractPropertyModel(final Object target)
 	{
 		this.target = target;
-	}
-
-	/**
-	 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-	 */
-	@Override
-	public IModel getNestedModel()
-	{
-		return null;
 	}
 
 	/**
@@ -78,20 +70,9 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	protected abstract String propertyExpression();
 
 	/**
-	 * @see wicket.model.AbstractDetachableModel#onAttach()
+	 * @see wicket.model.AbstractDetachableModel#detach()
 	 */
-	@Override
-	protected void onAttach()
-	{
-	}
-
-	/**
-	 * Unsets this property model's instance variables and detaches the model.
-	 * 
-	 * @see AbstractDetachableModel#onDetach()
-	 */
-	@Override
-	protected void onDetach()
+	public void detach()
 	{
 		// Detach nested object if it's an IModel
 		if (target instanceof IModel)
@@ -103,11 +84,10 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	/**
 	 * Retrieves the value of the property expression against the target object
 	 * 
-	 * @see wicket.model.AbstractDetachableModel#onGetObject()
+	 * @see wicket.model.IModel#getObject()
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
-	protected T onGetObject()
+	public T getObject()
 	{
 		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))
@@ -124,19 +104,15 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 		return null;
 	}
 
+
 	/**
 	 * Applies the property expression on the target object using the given
 	 * object argument.
 	 * 
-	 * @param object
-	 *            The object that will be used when setting a value on the model
-	 *            object
-	 * 
-	 * @see AbstractDetachableModel#onSetObject(Object)
+	 * @see wicket.model.IModel#setObject(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
-	protected void onSetObject(T object)
+	public void setObject(T object)
 	{
 		final String expression = propertyExpression();
 		if (Strings.isEmpty(expression))

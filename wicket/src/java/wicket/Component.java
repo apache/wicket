@@ -723,9 +723,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		try
 		{
-			// new 
+			// new
 			MarkupFragment markupFragment = getMarkupFragment();
-			
+
 			// old
 			MarkupStream markupStream = Application.get().getMarkupSettings()
 					.getMarkupFragmentFinder().find(this);
@@ -739,13 +739,15 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 		catch (MarkupException ex)
 		{
-			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
+			log
+					.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
 							+ id + "'. You will not be able to use the component for AJAX calls.");
 			throw ex;
 		}
 		catch (RuntimeException re)
 		{
-			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
+			log
+					.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
 							+ id + "'. You will not be able to use the component for AJAX calls.");
 			throw new MarkupNotFoundException("Couldn't find the markup of the component '" + id
 					+ "' in parent '" + parent.getPageRelativePath() + "'", re);
@@ -1978,22 +1980,17 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	private final IModel getRootModel(final IModel model)
 	{
-		IModel nestedModelObject = model;
-		while (true)
+		IModel nested = model;
+		while (nested != null && nested instanceof IWrapModel)
 		{
-			final IModel next = nestedModelObject.getNestedModel();
-			if (next == null)
+			final IModel next = ((IWrapModel)nested).getNestedModel();
+			if (nested == next)
 			{
-				break;
+				throw new WicketRuntimeException("Model for " + nested + " is self-referential");
 			}
-			if (nestedModelObject == next)
-			{
-				throw new WicketRuntimeException("Model for " + nestedModelObject
-						+ " is self-referential");
-			}
-			nestedModelObject = next;
+			nested = next;
 		}
-		return nestedModelObject;
+		return nested;
 	}
 
 	/**
@@ -2086,7 +2083,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		// state change?
 		if (prevModel instanceof IWrapModel)
 		{
-			prevModel = prevModel.getNestedModel();
+			prevModel = ((IWrapModel)prevModel).getNestedModel();
 		}
 
 		// Change model

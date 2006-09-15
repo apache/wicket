@@ -207,12 +207,6 @@ public class OrderByLink extends Link
 			{
 				private static final long serialVersionUID = 1L;
 
-				@Override
-				public IModel getNestedModel()
-				{
-					return null;
-				}
-
 				public Object getObject()
 				{
 

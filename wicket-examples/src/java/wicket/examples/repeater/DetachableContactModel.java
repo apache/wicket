@@ -59,15 +59,6 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 		this.id = id;
 	}
 
-	/**
-	 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-	 */
-	@Override
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
 	@Override
 	protected void onAttach()
 	{

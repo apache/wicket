@@ -234,17 +234,11 @@ public class StringResourceModelTest extends TestCase
 				return station;
 			}
 
-			@Override
-			public IModel getNestedModel()
-			{
-				return null;
-			}
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
 		application.setupRequestAndResponse();
 		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(), application.getWicketResponse());
 		model.attach();
-		Assert.assertNotNull(model.getNestedModel().getObject());
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
 		// Removed this because getObject() will reattach now...

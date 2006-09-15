@@ -24,12 +24,30 @@ package wicket.model;
  * {@link IAssignmentAware#wrapOnAssignment(wicket.Component)} and
  * {@link IInheritanceAware#wrapOnInheritance(wicket.Component)}
  * 
+ * <b>Nested Models </b>- IModels can be nested and the innermost model is also
+ * known as the "root" model since it is the model on which the outer models
+ * rely. The getNestedModel() method on IModel gets any nested model within the
+ * given model. This allows Component.sameRootModel() to compare two models to
+ * see if they both have the same root model (the same most nested model).
+ * <p>
+ * For example, a Form might have a Person model and then a TextField might have
+ * a PropertyModel which is the "name" property of the Person model. In this
+ * case, PropertyModel will implement getNestedModel(), returning the Person
+ * model which is the root model of the property model.
+ * 
  * @param <T>
  *            Type of model object this model holds
  * 
  * @author jcompagner
+ * @author Igor Vaynberg (ivaynberg)
  */
 public interface IWrapModel<T> extends IModel<T>
 {
+	/**
+	 * Gets the nested model.
+	 * 
+	 * @return The nested model object.
+	 */
+	IModel getNestedModel();
 
 }

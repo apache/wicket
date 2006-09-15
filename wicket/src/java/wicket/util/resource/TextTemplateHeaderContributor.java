@@ -72,15 +72,6 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		}
 
 		/**
-		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-		 */
-		@Override
-		public IModel getNestedModel()
-		{
-			return null;
-		}
-
-		/**
 		 * @see wicket.model.AbstractDetachableModel#onAttach()
 		 */
 		@Override

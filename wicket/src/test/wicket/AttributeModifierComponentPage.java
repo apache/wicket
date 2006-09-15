@@ -21,7 +21,6 @@ package wicket;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.AbstractDetachableModel;
-import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
@@ -82,12 +81,6 @@ public class AttributeModifierComponentPage extends WebPage
 				text = object.toString();
 			}
 
-			@Override
-			public IModel getNestedModel()
-			{
-				// TODO General: Remove return text
-				return null;
-			}
 		}));
 	}
 }

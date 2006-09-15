@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-07-19 01:15:49 -0700 (Wed, 19 Jul 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -108,15 +108,6 @@ public class Model<T> extends AbstractModel<T>
 	}
 
 	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	@Override
-	public IModel getNestedModel()
-	{
-		return null;
-	}
-
-	/**
 	 * @see wicket.model.IModel#getObject()
 	 */
 	public T getObject()
@@ -152,7 +143,6 @@ public class Model<T> extends AbstractModel<T>
 	public String toString()
 	{
 		StringBuffer sb = new StringBuffer(super.toString());
-		sb.append(":nestedModel=[").append(getNestedModel()).append("]");
 		sb.append(":object=[").append(this.object).append("]");
 		return sb.toString();
 	}

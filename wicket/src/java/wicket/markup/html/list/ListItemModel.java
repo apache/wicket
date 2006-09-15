@@ -19,7 +19,6 @@
 package wicket.markup.html.list;
 
 import wicket.model.AbstractDetachableModel;
-import wicket.model.IModel;
 
 /**
  * Model for list items.
@@ -55,15 +54,6 @@ public class ListItemModel<T> extends AbstractDetachableModel<T>
 		this.listView = listView;
 		this.index = index;
 		attach();
-	}
-
-	/**
-	 * @see wicket.model.IModel#getNestedModel()
-	 */
-	@Override
-	public IModel<T> getNestedModel()
-	{
-		return null;
 	}
 
 	/**

@@ -110,7 +110,6 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 			setComponent(component);
 		}
 
-		@Override
 		public IModel getNestedModel()
 		{
 			return ResourceModel.this;

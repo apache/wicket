@@ -94,15 +94,6 @@ public class UnicodeConverter extends WicketExamplePage
 			// and ignore any input there.
 		}
 
-		/**
-		 * @see wicket.model.IModel#getNestedModel()
-		 */
-		@Override
-		public IModel getNestedModel()
-		{
-			// Return null as we never have to operate as part of a nested model
-			return null;
-		}
 	}
 
 	/**

@@ -234,15 +234,6 @@ public class Tree extends AbstractTree implements TreeModelListener
 		private List<DefaultMutableTreeNode> paths = new ArrayList<DefaultMutableTreeNode>();
 
 		/**
-		 * @see wicket.model.AbstractDetachableModel#getNestedModel()
-		 */
-		@Override
-		public IModel getNestedModel()
-		{
-			return null;
-		}
-
-		/**
 		 * @see wicket.model.AbstractDetachableModel#onAttach()
 		 */
 		@Override
