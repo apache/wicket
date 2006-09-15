@@ -60,10 +60,6 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	@Override
 	public IModel getNestedModel()
 	{
-		if (target instanceof IModel)
-		{
-			return ((IModel)target);
-		}
 		return null;
 	}
 
