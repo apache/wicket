@@ -614,6 +614,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	@SuppressWarnings("unchecked")
 	public Component(MarkupContainer<?> parent, final String id, final IModel<T> model)
 	{
+		// Make sure it is called before getAlternateParent() is called.
+		setId(id);
+		
 		if (parent == null)
 		{
 			if (!(this instanceof Page))
@@ -623,14 +626,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 		// Bordered pages might implement the interface to allow to redirect
 		// to another parent without the need to change to code of adding a
-		// component.
+		// component. Another use case is where you want the parent to automatically
+		// add a container in between the parent and new component.
 		else if (parent instanceof IAlternateParentProvider)
 		{
 			parent = ((IAlternateParentProvider)parent).getAlternateParent();
 		}
 
 		this.parent = parent;
-		setId(id);
 
 		getApplication().notifyComponentInstantiationListeners(this);
 		if (id.startsWith(AUTO_COMPONENT_PREFIX))
