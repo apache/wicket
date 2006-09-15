@@ -28,7 +28,6 @@ import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextArea;
 import wicket.model.AbstractModel;
 import wicket.model.CompoundPropertyModel;
-import wicket.model.IModel;
 import wicket.util.string.Strings;
 
 /**

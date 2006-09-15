@@ -20,7 +20,6 @@ package wicket.examples.repeater;
 
 import wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy;
 import wicket.model.AbstractReadOnlyDetachableModel;
-import wicket.model.IModel;
 
 /**
  * detachable model for an instance of contact
