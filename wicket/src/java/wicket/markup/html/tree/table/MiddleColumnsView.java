@@ -28,10 +28,12 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.tree.table.ColumnLocation.Unit;
 import wicket.response.NullResponse;
+import wicket.util.string.Strings;
 
 /**
  * Class that renders cells of columns aligned in the middle. This class also
@@ -263,5 +265,25 @@ final class MiddleColumnsView extends WebMarkupContainer
 		{
 			markupStream.skipComponent();
 		}
+	}
+	
+	/**
+	 * 
+	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
+	 */
+	@Override
+	public final String getMarkupFragmentPath(final String subPath)
+	{
+		/*
+		 * we need to cut out the path of direct children because they inherit
+		 * the markup so their markup path must look as if they are the listview
+		 * themselves
+		 * 
+		 * page:listview:1:label -> page:listview:label
+		 * 
+		 * where 1 was the id of the listitem
+		 */
+		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+		return super.getMarkupFragmentPath(path);
 	}
 }
