@@ -101,7 +101,8 @@ import wicket.util.string.AppendingStringBuffer;
  * in a cookie, so that it is preserved when window is close. The name of the
  * cookie is specified via <code>{@link #setCookieName(String)}</code>. If
  * the name is <code>null</code>, position is not stored (initial width and
- * height are always used).
+ * height are always used). Default cookie name is generated using
+ * <code>hashCode()</code>.
  * <li><code>{@link #setMinimalWidth(int)}</code> and
  * <code>{@link #setMinimalHeight(int)}</code> set the minimal dimensions of
  * resizable window.
@@ -113,7 +114,7 @@ import wicket.util.string.AppendingStringBuffer;
  * can be either transparent or semitransparent.
  * <code>{@link #setMaskType(ModalWindow.MaskType)}</code> alters this.
  * </ul>
- *  
+ * 
  * @see IPageSettings#setAutomaticMultiWindowSupport(boolean)
  * @author Matej Knopp
  */
@@ -140,6 +141,8 @@ public class ModalWindow extends Panel<Object>
 		super(parent, id);
 		empty = new WebMarkupContainer(this, getContentId());
 
+		this.cookieName = "modal-window-" + hashCode();		
+		
 		add(new CloseButtonBehavior());
 		add(new WindowClosedBehavior());
 		add(HeaderContributor.forJavaScript(JAVASCRIPT));
@@ -933,7 +936,7 @@ public class ModalWindow extends Panel<Object>
 	private boolean resizable = true;
 	private String widthUnit = "px";
 	private String heightUnit = "px";
-	private String cookieName = "modal-dialog";
+	private String cookieName;
 	private String title = null;
 	private MaskType maskType = MaskType.SEMI_TRANSPARENT;
 
