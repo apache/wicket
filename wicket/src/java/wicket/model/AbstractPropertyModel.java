@@ -52,10 +52,7 @@ public abstract class AbstractPropertyModel<T> extends AbstractDetachableModel<T
 	}
 
 	/**
-	 * Gets the nested model.
-	 * 
-	 * @return The nested model, <code>null</code> when this is the final
-	 *         model in the hierarchy
+	 * @see wicket.model.AbstractDetachableModel#getNestedModel()
 	 */
 	@Override
 	public IModel getNestedModel()
