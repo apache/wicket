@@ -18,6 +18,8 @@
  */
 package wicket.markup.parser.filter;
 
+import wicket.MarkupContainer;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.border.Border;
 import wicket.markup.parser.filter.sub.HeaderSectionBorder;
@@ -26,7 +28,7 @@ import wicket.markup.parser.filter.sub.HeaderSectionBorder;
  * 
  * @author Jonathan Locke
  */
-public class HeaderSectionBasePage_12 extends WebPage
+public class HeaderSectionBasePage_12 extends WebPage implements IAlternateParentProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,6 +41,14 @@ public class HeaderSectionBasePage_12 extends WebPage
 	{
 		// Create border and add it to the page
 		border = new HeaderSectionBorder(this, "border");
-		border.setTransparentResolver(true);
+	}
+
+	/**
+	 * 
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent()
+	 */
+	public MarkupContainer getAlternateParent()
+	{
+		return (this.border == null ? this : this.border);
 	}
 }

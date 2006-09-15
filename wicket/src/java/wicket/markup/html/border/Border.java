@@ -114,9 +114,6 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	/** The open tag for this border component. */
 	private transient ComponentTag openTag;
 
-	/** Should be true for bordered pages */
-	private boolean transparentResolver = false;
-
 	/** If false, the content of <wicket:body> will not be printed */
 	private boolean bodyVisible = true;
 
@@ -146,29 +143,6 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	public Border setBorderBodyVisible(boolean bodyVisible)
 	{
 		this.bodyVisible = bodyVisible;
-		return this;
-	}
-
-	/**
-	 * 
-	 * @see wicket.MarkupContainer#isTransparentResolver()
-	 */
-	@Override
-	public boolean isTransparentResolver()
-	{
-		return transparentResolver;
-	}
-
-	/**
-	 * Borders used for bordered pages should set it to "true". Default is
-	 * "false".
-	 * 
-	 * @param transparentResolver
-	 * @return this for chaining
-	 */
-	public final Border setTransparentResolver(final boolean transparentResolver)
-	{
-		this.transparentResolver = transparentResolver;
 		return this;
 	}
 

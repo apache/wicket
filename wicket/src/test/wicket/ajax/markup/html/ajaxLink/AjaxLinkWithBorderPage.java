@@ -39,7 +39,6 @@ public class AjaxLinkWithBorderPage extends WebPage
 	public AjaxLinkWithBorderPage()
 	{
 		AjaxTestBorder ajaxTestBorder = new AjaxTestBorder(this, "border");
-		ajaxTestBorder.setTransparentResolver(true);
 
 		final Label label = new Label(ajaxTestBorder, "ajaxLabel", new PropertyModel(this, "labelText"));
 		label.setOutputMarkupId(true);

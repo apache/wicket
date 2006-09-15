@@ -17,8 +17,10 @@
  */
 package wicket.ajax.markup.html.ajaxLink;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.border.BoxBorder;
@@ -26,7 +28,7 @@ import wicket.markup.html.border.BoxBorder;
 /**
  * 
  */
-public class AjaxPage2 extends WebPage
+public class AjaxPage2 extends WebPage implements IAlternateParentProvider
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,7 +43,6 @@ public class AjaxPage2 extends WebPage
 		super();
 
 		myBorder = new BoxBorder(this, "pageLayout");
-		myBorder.setTransparentResolver(true);
 
 		ajaxLabel = new Label(myBorder, "ajaxLabel", "AAAAAAA");
 		ajaxLabel.setOutputMarkupId(true);
@@ -61,5 +62,14 @@ public class AjaxPage2 extends WebPage
 				}
 			}
 		};
+	}
+
+	/**
+	 * 
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent()
+	 */
+	public MarkupContainer getAlternateParent()
+	{
+		return (this.myBorder == null ? this : this.myBorder);
 	}
 }

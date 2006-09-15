@@ -36,12 +36,14 @@ import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IMarkupProvider;
+import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.IAssignmentAware;
 import wicket.model.IInheritableModel;
@@ -600,7 +602,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * This constructor includes a model.
 	 * 
 	 * @param parent
-	 *            The parent of this component The parent of this component.
+	 *            The parent of this component.
 	 * @param id
 	 *            The non-null id of this component
 	 * @param model
@@ -619,6 +621,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				throw new WicketRuntimeException("component without a parent is not allowed.");
 			}
 		}
+		// Bordered pages might implement the interface to allow to redirect
+		// to another parent without the need to change to code of adding a
+		// component.
+		else if (parent instanceof IAlternateParentProvider)
+		{
+			parent = ((IAlternateParentProvider)parent).getAlternateParent();
+		}
+
 		this.parent = parent;
 		setId(id);
 
@@ -689,15 +699,35 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 		// We found the markup file and created the markup path. Now go and get
 		// the fragment.
-		MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(path);
-		if (fragment == null)
+		try
 		{
-			throw new MarkupNotFoundException(
-					"Unable to find the markup fragment with markup path '" + path
-							+ "'. Component: " + getId());
+			return ((IMarkupProvider)parent).getMarkupFragment(path);
+		}
+		catch (WicketRuntimeException ex)
+		{
+			// ignore
 		}
 
-		return fragment;
+		Iterator iter = parent.iterator();
+		while (iter.hasNext())
+		{
+			Component child = (Component)iter.next();
+			if (child instanceof WebMarkupContainerWithAssociatedMarkup)
+			{
+				WebMarkupContainerWithAssociatedMarkup container = (WebMarkupContainerWithAssociatedMarkup)child;
+				if (container.isTransparentResolver())
+				{
+					MarkupFragment fragment = container.getMarkupFragment(path);
+					if (fragment != null)
+					{
+						return fragment;
+					}
+				}
+			}
+		}
+
+		throw new MarkupNotFoundException("Unable to find the markup fragment with markup path '"
+				+ path + "'. Component: " + getId());
 	}
 
 	/**

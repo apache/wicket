@@ -333,7 +333,7 @@ public class SimplePageTest extends WicketTestCase
 		{
 			executeTest(SimplePage_6.class, "SimplePageExpectedResult_6.html");
 		}
-		catch (MarkupException ex)
+		catch (MarkupNotFoundException ex)
 		{
 			hit = true;
 		}
