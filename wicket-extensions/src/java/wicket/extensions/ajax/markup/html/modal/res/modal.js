@@ -235,8 +235,8 @@ Wicket.Iframe = {
 				var dx = 0;
 				var dy = 0;				
 				if (Wicket.Browser.isIE()) {
-					dx = doc.body.scrollLeft;
-					dy = doc.body.scrollTop;
+					dx = Wicket.Window.getScrollX();
+					dy = Wicket.Window.getScrollY();
 				}
 										
 				e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
@@ -252,8 +252,8 @@ Wicket.Iframe = {
 				var dx = 0;
 				var dy = 0;				
 				if (Wicket.Browser.isIE()) {
-					dx = doc.body.scrollLeft;
-					dy = doc.body.scrollTop;
+					dx = Wicket.Window.getScrollX();
+					dy = Wicket.Window.getScrollY();
 				}
 				
 				e.clientX = evt.clientX + Wicket.Iframe.findPosX(iframe) - dx;
@@ -474,11 +474,13 @@ Wicket.Window.prototype = {
 		this.captionText = _(idCaptionText);
 				
 		if (Wicket.Browser.isIE()) {
-			// IE stupid 3px bug - not fixed even in IE7!
-			this.topLeft.style.marginRight = "-3px";
-			this.topRight.style.marginLeft = "-3px";
-			this.bottomLeft.style.marginRight = "-3px";
-			this.bottomRight.style.marginLeft = "-3px";
+			// IE stupid 3px bug - not fixed even in IE7 quirks!
+			if (Wicket.Browser.isIE7() == false || Wicket.Browser.isIEQuirks()) {
+				this.topLeft.style.marginRight = "-3px";
+				this.topRight.style.marginLeft = "-3px";
+				this.bottomLeft.style.marginRight = "-3px";
+				this.bottomRight.style.marginLeft = "-3px";
+			}
 			
 			// IE doesn't support position: fixed, not even IE7!
 			this.window.style.position = "absolute";
@@ -568,8 +570,8 @@ Wicket.Window.prototype = {
 		var scLeft = 0;
 
 		if (Wicket.Browser.isIE()) 	{
-			scTop = document.body.scrollTop != null ? document.body.scrollTop : window.pageXOffset;
-			scLeft = document.body.scrollLeft != null ? document.body.scrollLeft : window.pageYOffset;
+			scLeft = Wicket.Window.getScrollX();
+			scTop = Wicket.Window.getScrollY();
 		}
 		
 		var width = Wicket.Window.getViewportWidth();
@@ -1333,14 +1335,17 @@ Wicket.Window.Mask.prototype = {
 		// if the iframe is not position:fixed fix it's position
 		if (this.element.style.position == "absolute") {
 		
+		
+		
 			var w = Wicket.Window.getViewportWidth();
 			var h = Wicket.Window.getViewportHeight();
 	
 			var scTop = 0;
-			var scLeft = 0;
+			var scLeft = 0;	 	
 	 
-			scTop = document.body.scrollTop;
-			scLeft = document.body.scrollLeft;
+ 			scLeft = Wicket.Window.getScrollX();
+			scTop = Wicket.Window.getScrollY();
+	 		
 			this.element.style.top = scTop + "px";
 			this.element.style.left = scLeft + "px";
 	
@@ -1499,6 +1504,22 @@ Wicket.Window.getViewportWidth =  function() {
 		return document.body.clientWidth;
 		 
 	return window.undefined;
+}
+
+/**
+ * Returns the horizontal scroll offset
+ */
+Wicket.Window.getScrollX = function() {
+	var iebody = (document.compatMode && document.compatMode != "BackCompat") ? document.documentElement : document.body	
+	return document.all? iebody.scrollLeft : pageXOffset
+}
+
+/**
+ * Returns the vertical scroll offset
+ */
+Wicket.Window.getScrollY = function() {
+	var iebody = (document.compatMode && document.compatMode != "BackCompat") ? document.documentElement : document.body	
+	return document.all? iebody.scrollTop : pageYOffset
 }
 
 /**
