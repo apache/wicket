@@ -44,13 +44,11 @@ public final class WicketExampleHeader extends Panel
 	 *            id of the component
 	 * @param exampleTitle
 	 *            title of the example
-	 * @param page
-	 *            The example page
 	 */
-	public WicketExampleHeader(MarkupContainer parent, final String id, String exampleTitle,
-			WebPage page)
+	public WicketExampleHeader(MarkupContainer parent, final String id, String exampleTitle)
 	{
-		super(page, id);
+		super(parent, id);
+		WebPage page = (WebPage)parent.getPage();
 		new InspectorBug(this, "inspector", page);
 		new Label(this, "exampleTitle", exampleTitle);
 		Link link = new Link(this, "sources")

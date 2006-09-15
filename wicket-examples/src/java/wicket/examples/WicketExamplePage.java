@@ -48,9 +48,21 @@ public class WicketExamplePage<T> extends WebPage<T>
 	public WicketExamplePage(IModel<T> model)
 	{
 		super(model);
+		
+		// Allow a subclass to add a border component first, if required
+		init();
+		
 		final String packageName = getClass().getPackage().getName();
-		new WicketExampleHeader(this, "mainNavigation", Strings.afterLast(packageName, '.'), this);
+		new WicketExampleHeader(this, "mainNavigation", Strings.afterLast(packageName, '.'));
+		
 		explain();
+	}
+
+	/**
+	 * If a subclass needs to add a component prior to the example header
+	 */
+	protected void init()
+	{
 	}
 
 	/**

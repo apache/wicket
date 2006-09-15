@@ -18,7 +18,9 @@
  */
 package wicket.examples.library;
 
+import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.html.border.Border;
 
 /**
@@ -33,7 +35,7 @@ import wicket.markup.html.border.Border;
  * 
  * @author Jonathan Locke
  */
-public class AuthenticatedWebPage extends WicketExamplePage
+public class AuthenticatedWebPage extends WicketExamplePage implements IAlternateParentProvider
 {
 	private Border border;
 
@@ -42,11 +44,20 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	 */
 	public AuthenticatedWebPage()
 	{
-		// Create border and add it to the page
-		border = new LibraryApplicationBorder(this, "border");
-		border.setTransparentResolver(true);
 	}
 
+	/**
+	 * @see wicket.examples.WicketExamplePage#init()
+	 */
+	@Override
+	protected void init()
+	{
+		super.init();
+		
+		// Create border and add it to the page
+		border = new LibraryApplicationBorder(this, "border");
+	}
+	
 	/**
 	 * @see wicket.Component#getSession()
 	 */
@@ -54,5 +65,13 @@ public class AuthenticatedWebPage extends WicketExamplePage
 	public LibrarySession getSession()
 	{
 		return (LibrarySession)super.getSession();
+	}
+
+	/**
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent()
+	 */
+	public MarkupContainer getAlternateParent()
+	{
+		return (this.border == null ? this : this.border);
 	}
 }
