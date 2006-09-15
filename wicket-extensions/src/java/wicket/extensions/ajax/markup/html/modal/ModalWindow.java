@@ -102,7 +102,8 @@ import wicket.util.string.Strings;
  * in a cookie, so that it is preserved when window is close. The name of the
  * cookie is specified via <code>{@link #setCookieName(String)}</code>. If
  * the name is <code>null</code>, position is not stored (initial width and
- * height are always used).
+ * height are always used). Default cookie name is generated using
+ * <code>hashCode();</code>.
  * <li><code>{@link #setMinimalWidth(int)}</code> and
  * <code>{@link #setMinimalHeight(int)}</code> set the minimal dimensions of
  * resizable window.
@@ -137,6 +138,7 @@ public class ModalWindow extends Panel
 	public ModalWindow(String id)
 	{
 		super(id);
+		this.cookieName = "modal-window-" + hashCode();
 		add(empty = new WebMarkupContainer(getContentId()));
 
 		add(new CloseButtonBehavior());
@@ -949,7 +951,7 @@ public class ModalWindow extends Panel
 	private boolean resizable = true;
 	private String widthUnit = "px";
 	private String heightUnit = "px";
-	private String cookieName = "modal-dialog";
+	private String cookieName;
 	private String title = null;
 	private MaskType maskType = MaskType.SEMI_TRANSPARENT;
 
