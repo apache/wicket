@@ -45,7 +45,7 @@ Wicket.Browser = {
 	},
 	
 	isIEQuirks: function() {
-		// is the borwser internet explorer in quirks mode (we could use document.compantMode too)		
+		// is the browser internet explorer in quirks mode (we could use document.compatMode too)		
 		return Wicket.Browser.isIE() && document.documentElement.clientHeight == 0;
 	},		
 	
