@@ -51,7 +51,11 @@ public interface IAlternateParentProvider
 	/**
 	 * Get the altnernate component parent
 	 * 
+	 * @param childClass
+	 *            the Class of the new child to be added
+	 * @param childId
+	 *            the id of the component to be added
 	 * @return The alternate parent container
 	 */
-	MarkupContainer getAlternateParent();
+	MarkupContainer getAlternateParent(final Class childClass, final String childId);
 }

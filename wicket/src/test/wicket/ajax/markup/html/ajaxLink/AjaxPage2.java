@@ -66,9 +66,9 @@ public class AjaxPage2 extends WebPage implements IAlternateParentProvider
 
 	/**
 	 * 
-	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent()
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(Class childClass, String childId)
 	 */
-	public MarkupContainer getAlternateParent()
+	public MarkupContainer getAlternateParent(final Class childClass, final String childId)
 	{
 		return (this.myBorder == null ? this : this.myBorder);
 	}

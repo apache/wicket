@@ -614,7 +614,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	@SuppressWarnings("unchecked")
 	public Component(MarkupContainer<?> parent, final String id, final IModel<T> model)
 	{
-		// Make sure it is called before getAlternateParent() is called.
 		setId(id);
 		
 		if (parent == null)
@@ -630,7 +629,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		// add a container in between the parent and new component.
 		else if (parent instanceof IAlternateParentProvider)
 		{
-			parent = ((IAlternateParentProvider)parent).getAlternateParent();
+			parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
 		}
 
 		this.parent = parent;

@@ -45,9 +45,9 @@ public class HeaderSectionBasePage_12 extends WebPage implements IAlternateParen
 
 	/**
 	 * 
-	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent()
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(Class childClass, String childId)
 	 */
-	public MarkupContainer getAlternateParent()
+	public MarkupContainer getAlternateParent(final Class childClass, final String childId)
 	{
 		return (this.border == null ? this : this.border);
 	}
