@@ -52,8 +52,6 @@ public class ModalContent1Page extends WebPage {
 		final ModalWindow modal = new ModalWindow(this, "modal");
 		modal.setPageMapName("modal-1");
 				
-		modal.setCookieName("modal window 2");
-		
 		modal.setResizable(false);		
 		modal.setInitialWidth(30);
 		modal.setInitialHeight(15);

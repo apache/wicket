@@ -31,7 +31,6 @@ public class ModalWindowPage extends BasePage
 		final ModalWindow modal1 = new ModalWindow(this, "modal1");
 
 		modal1.setPageMapName("modal-1");
-		modal1.setCookieName("modal-1");
 
 		modal1.setPageCreator(new ModalWindow.PageCreator()
 		{
@@ -72,8 +71,7 @@ public class ModalWindowPage extends BasePage
 		final ModalWindow modal2 = new ModalWindow(this, "modal2");
 
 		new ModalPanel1(modal2, modal2.getContentId());
-		modal2.setTitle("This is modal window with panel content.");
-		modal2.setCookieName("modal-2");
+		modal2.setTitle("This is modal window with panel content.");	
 
 		modal2.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
 		{
