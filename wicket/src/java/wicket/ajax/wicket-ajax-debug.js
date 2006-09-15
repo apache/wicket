@@ -23,15 +23,20 @@ var WicketAjaxDebug = {
 	    wicketHide(WicketAjaxDebug.debugWindowId);
 	},
 
-    log : function(msg) {
+    log : function(msg, label) {
 		WicketAjaxDebug.init();
         var d = wicketGet(WicketAjaxDebug.debugWindowLogId);
         var c = document.createElement("div");
+		
         msg = msg.replace(/</g, "&lt;");
         msg = msg.replace(/>/g, "&gt;");
         msg = msg.replace(/\n/g, "<br/>");
         msg = msg.replace(/ /g, "&nbsp;");  
-        msg = msg.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");          
+        msg = msg.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+		
+		if (typeof(label) != "undefined")
+			msg = "<b>" + label + "</b>" + msg;
+		          
         c.innerHTML = msg;
         c.setAttribute("style","font-size: 82%; margin: 0px; padding:0px");        
         d.appendChild(c);
@@ -40,12 +45,12 @@ var WicketAjaxDebug = {
     
     logError : function(msg) {
 		WicketAjaxDebug.init();
-        WicketAjaxDebug.log("ERROR: "+msg);
+        WicketAjaxDebug.log(msg, "ERROR: ");
     },
 
     logInfo : function(msg) {
 		WicketAjaxDebug.init();
-        WicketAjaxDebug.log(" INFO: "+msg);
+        WicketAjaxDebug.log(msg, "INFO: ");
     },
 
     clearLog : function() {
