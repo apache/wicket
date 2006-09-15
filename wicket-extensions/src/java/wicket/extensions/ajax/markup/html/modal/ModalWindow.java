@@ -103,7 +103,7 @@ import wicket.util.string.Strings;
  * cookie is specified via <code>{@link #setCookieName(String)}</code>. If
  * the name is <code>null</code>, position is not stored (initial width and
  * height are always used). Default cookie name is generated using
- * <code>hashCode();</code>.
+ * <code>hashCode()</code>.
  * <li><code>{@link #setMinimalWidth(int)}</code> and
  * <code>{@link #setMinimalHeight(int)}</code> set the minimal dimensions of
  * resizable window.
