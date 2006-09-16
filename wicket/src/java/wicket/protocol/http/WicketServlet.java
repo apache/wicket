@@ -265,10 +265,17 @@ public class WicketServlet extends HttpServlet
 	 */
 	public void init()
 	{
-		IWebApplicationFactory factory = getApplicationFactory();
+		if (this.webApplication == null) 
+		{
+			IWebApplicationFactory factory = getApplicationFactory();
 
-		// Construct WebApplication subclass
-		this.webApplication = factory.createApplication(this);
+			// Construct WebApplication subclass
+			this.webApplication = factory.createApplication(this);
+
+			// Finished
+			log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
+					+ factory.getClass().getName() + " factory");
+		}
 
 		// Set this WicketServlet as the servlet for the web application
 		this.webApplication.setWicketServlet(this);
@@ -277,10 +284,6 @@ public class WicketServlet extends HttpServlet
 		// integration with outside world easier
 		String contextKey = "wicket:" + getServletConfig().getServletName();
 		getServletContext().setAttribute(contextKey, this.webApplication);
-
-		// Finished
-		log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
-				+ factory.getClass().getName() + " factory");
 
 		try
 		{
