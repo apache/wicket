@@ -183,10 +183,11 @@ public class WicketFilter implements Filter
 				throw new WicketRuntimeException(ex.getMessage());
 			}
 		}
-		
+
 		// Create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
+		// Are we using REDIRECT_TO_BUFFER?
 		if (webApplication.getRequestCycleSettings().getRenderStrategy() == RenderStrategy.REDIRECT_TO_BUFFER)
 		{
 			String queryString = servletRequest.getQueryString();
@@ -213,7 +214,6 @@ public class WicketFilter implements Filter
 
 		// First, set the webapplication for this thread
 		Application.set(webApplication);
-
 
 		// Get session for request
 		final WebSession session = webApplication.getSession(request);
@@ -278,7 +278,9 @@ public class WicketFilter implements Filter
 			{
 				contextPath = request.getContextPath();
 				if (contextPath == null)
+				{
 					contextPath = "";
+				}
 			}
 
 			if (SERVLET_PATH_HOLDER.equals(filterPath))
@@ -479,6 +481,7 @@ public class WicketFilter implements Filter
 	{
 		String fullRootPath = getRootPath(request);
 		String url = request.getRequestURI();
+
 		// Homepage
 		if (url.startsWith(fullRootPath))
 		{

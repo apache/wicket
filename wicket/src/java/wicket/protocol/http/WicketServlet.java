@@ -39,15 +39,15 @@ import org.apache.commons.logging.LogFactory;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *                       &lt;servlet&gt;
- *                           &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                           &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                           &lt;init-param&gt;
- *                               &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                               &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                           &lt;/init-param&gt;
- *                           &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *                       &lt;/servlet&gt;
+ * &lt;servlet&gt;
+ *   &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *   &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *   &lt;init-param&gt;
+ *     &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *     &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *   &lt;/init-param&gt;
+ *   &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ * &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -59,10 +59,10 @@ import org.apache.commons.logging.LogFactory;
  * looks like:
  * 
  * <pre>
- *                       &lt;init-param&gt;
- *                         &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *                           &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *                       &lt;/init-param&gt;
+ * &lt;init-param&gt;
+ *   &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *   &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ * &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -79,11 +79,11 @@ import org.apache.commons.logging.LogFactory;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *                       public void init() throws ServletException
- *                       {
- *                           ServletConfig config = getServletConfig();
- *                           String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                           ...
+ * public void init() throws ServletException
+ * {
+ *     ServletConfig config = getServletConfig();
+ *     String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *     ...
  * </pre>
  * 
  * </p>
@@ -154,31 +154,41 @@ public class WicketServlet extends HttpServlet
 		wicketFilter = new WicketFilter();
 		wicketFilter.init(new FilterConfig()
 		{
-		
+			/**
+			 * @see javax.servlet.FilterConfig#getServletContext()
+			 */
 			public ServletContext getServletContext()
 			{
 				return WicketServlet.this.getServletContext();
 			}
-		
+
+			/**
+			 * @see javax.servlet.FilterConfig#getInitParameterNames()
+			 */
 			public Enumeration getInitParameterNames()
 			{
 				return WicketServlet.this.getInitParameterNames();
 			}
-		
+
+			/**
+			 * @see javax.servlet.FilterConfig#getInitParameter(java.lang.String)
+			 */
 			public String getInitParameter(String name)
 			{
-				if(WicketFilter.FILTER_PATH_PARAM.equals(name))
+				if (WicketFilter.FILTER_PATH_PARAM.equals(name))
 				{
 					return WicketFilter.SERVLET_PATH_HOLDER;
 				}
 				return WicketServlet.this.getInitParameter(name);
 			}
-		
+
+			/**
+			 * @see javax.servlet.FilterConfig#getFilterName()
+			 */
 			public String getFilterName()
 			{
 				return WicketServlet.this.getServletName();
 			}
-		
 		});
 	}
 
@@ -191,6 +201,7 @@ public class WicketServlet extends HttpServlet
 		wicketFilter.destroy();
 		wicketFilter = null;
 	}
+
 	/**
 	 * @see javax.servlet.http.HttpServlet#getLastModified(javax.servlet.http.HttpServletRequest)
 	 */
@@ -199,5 +210,4 @@ public class WicketServlet extends HttpServlet
 	{
 		return wicketFilter.getLastModified(servletRequest);
 	}
-
 }
