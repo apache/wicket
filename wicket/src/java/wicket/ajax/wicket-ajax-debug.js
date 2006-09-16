@@ -102,8 +102,19 @@ var WicketAjaxDebug = {
 		var element = document.createElement("div");				
 		element.innerHTML = html;
 		document.body.appendChild(element);
-	}
+	},
 
+	addEvent: function(obj, evType, fn) { 
+		if (obj.addEventListener) { 
+			obj.addEventListener(evType, fn, false); 
+			return true; 
+		} else if (obj.attachEvent) { 
+			var r = obj.attachEvent("on"+evType, fn); 
+   			return r; 
+		} else { 
+   			return false; 
+		} 
+	}
 };
 
-
+WicketAjaxDebug.addEvent(window, "load", WicketAjaxDebug.init);
