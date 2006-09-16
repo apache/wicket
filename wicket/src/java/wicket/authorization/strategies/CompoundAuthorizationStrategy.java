@@ -19,6 +19,7 @@
 package wicket.authorization.strategies;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import wicket.Component;
 import wicket.authorization.Action;
@@ -33,7 +34,7 @@ import wicket.authorization.IAuthorizationStrategy;
 public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 {
 	/** List of strategies to consult */
-	private ArrayList<IAuthorizationStrategy> strategies = new ArrayList<IAuthorizationStrategy>();
+	private List<IAuthorizationStrategy> strategies = new ArrayList<IAuthorizationStrategy>();
 
 	/**
 	 * Adds a strategy to the chain
@@ -51,15 +52,14 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
+	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
+	 *      wicket.authorization.Action)
 	 */
-	public final boolean isInstantiationAuthorized(Class<? extends Component> componentClass)
+	public final boolean isActionAuthorized(Component component, Action action)
 	{
-		int size = strategies.size();
-		for (int i = 0; i < size; i++)
+		for (IAuthorizationStrategy strategy : strategies)
 		{
-			IAuthorizationStrategy strategy = strategies.get(i);
-			if (!strategy.isInstantiationAuthorized(componentClass))
+			if (!strategy.isActionAuthorized(component, action))
 			{
 				return false;
 			}
@@ -68,16 +68,13 @@ public class CompoundAuthorizationStrategy implements IAuthorizationStrategy
 	}
 
 	/**
-	 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
-	 *      wicket.authorization.Action)
+	 * @see wicket.authorization.IAuthorizationStrategy#isInstantiationAuthorized(java.lang.Class)
 	 */
-	public final boolean isActionAuthorized(Component component, Action action)
+	public final boolean isInstantiationAuthorized(Class<? extends Component> componentClass)
 	{
-		int size = strategies.size();
-		for (int i = 0; i < size; i++)
+		for (IAuthorizationStrategy strategy : strategies)
 		{
-			IAuthorizationStrategy strategy = strategies.get(i);
-			if (!strategy.isActionAuthorized(component, action))
+			if (!strategy.isInstantiationAuthorized(componentClass))
 			{
 				return false;
 			}
