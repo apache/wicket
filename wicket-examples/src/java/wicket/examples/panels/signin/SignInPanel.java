@@ -21,8 +21,8 @@ import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.CheckBox;
-import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
+import wicket.markup.html.form.StatelessForm;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.html.panel.Panel;
@@ -58,7 +58,7 @@ public abstract class SignInPanel extends Panel
 	/**
 	 * Sign in form.
 	 */
-	public final class SignInForm extends Form
+	public final class SignInForm extends StatelessForm
 	{
 		/** El-cheapo model for form. */
 		private final ValueMap properties = new ValueMap();

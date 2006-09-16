@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id: SignIn.java 6427 2006-07-08 09:17:31 +0000 (Sat, 08 Jul 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-05-26 00:57:30 +0200 (vr, 26 mei
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -20,8 +21,8 @@ package wicket.examples.signin;
 import wicket.MarkupContainer;
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
-import wicket.markup.html.form.Form;
 import wicket.markup.html.form.PasswordTextField;
+import wicket.markup.html.form.StatelessForm;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.PropertyModel;
@@ -63,7 +64,7 @@ public final class SignIn extends WicketExamplePage
 	 * 
 	 * @author Jonathan Locke
 	 */
-	public final class SignInForm extends Form
+	public final class SignInForm extends StatelessForm
 	{
 		// El-cheapo model for form
 		private final ValueMap properties = new ValueMap();
@@ -80,8 +81,10 @@ public final class SignIn extends WicketExamplePage
 			super(parent, id);
 
 			// Attach textfield components that edit properties map model
-			new TextField<String>(this, "username", new PropertyModel<String>(properties, "username"));
-			new PasswordTextField(this, "password", new PropertyModel<String>(properties, "password"));
+			new TextField<String>(this, "username", new PropertyModel<String>(properties,
+					"username"));
+			new PasswordTextField(this, "password", new PropertyModel<String>(properties,
+					"password"));
 		}
 
 		/**
