@@ -964,12 +964,29 @@ public class WicketTester extends MockWebApplication
 	}
 	
 	/**
+	 * Simulate that an AJAX event has been fired.
+	 * 
+	 * @see #executeAjaxEvent(Component, String)
+	 * 
+	 * @param componentPath
+	 *            The component path.
+	 * @param event
+	 *            The event which we simulate is fired. If the event is null,
+	 *            the test will fail.
+	 */
+	public void executeAjaxEvent(String componentPath, String event)
+	{
+		Component component = getComponentFromLastRenderedPage(componentPath);
+		executeAjaxEvent(component, event);
+	}
+	
+	/**
 	 * Simulate that an AJAX event has been fired. You add an AJAX event to a
 	 * component by using:
 	 * 
 	 * <pre>
 	 *  ...
-	 *  component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *  component.add(new AjaxEventBehavior("ondblclick") {
 	 *      public void onEvent(AjaxRequestTarget) {
 	 *          // Do something.
 	 *      }
@@ -982,7 +999,7 @@ public class WicketTester extends MockWebApplication
 	 * 
 	 * <pre>
 	 *  ...
-	 *  tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *  tester.executeAjaxEvent(component, "ondblclick");
 	 *            
 	 *  // Test that the code inside onEvent is correct.
 	 *  ...
