@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 4564 $ $Date$
+ * $Id: NiceUrlApplication.java 5398 2006-04-17 00:26:51 -0700 (Mon, 17 Apr
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 00:26:51 -0700 (Mon,
+ * 17 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,6 +20,7 @@ package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
+import wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import wicket.util.lang.PackageName;
 
 /**
@@ -37,11 +39,19 @@ public class NiceUrlApplication extends WicketExampleApplication
 	}
 
 	/**
+	 * @see wicket.Application#getHomePage()
+	 */
+	public Class getHomePage()
+	{
+		return Home.class;
+	}
+
+	/**
 	 * @see wicket.examples.WicketExampleApplication#init()
 	 */
 	protected void init()
 	{
-		// Disable creation of javascript which jWebUnit (test only) 
+		// Disable creation of javascript which jWebUnit (test only)
 		// doesn't handle properly
 		getPageSettings().setAutomaticMultiWindowSupport(false);
 
@@ -49,6 +59,8 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountBookmarkablePage("/the/homepage/path", Home.class);
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
+
+		mountBookmarkablePageWithUrlCoding("/path/to/page2qpencoded/", Page2QP.class);
 
 		// mount a whole package at once (all bookmarkable pages,
 		// the relative class name will be part of the url
@@ -60,11 +72,8 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mount("/my/mounted/package", PackageName.forClass(Page3.class));
 	}
 
-	/**
-	 * @see wicket.Application#getHomePage()
-	 */
-	public Class getHomePage()
+	private void mountBookmarkablePageWithUrlCoding(String path, Class pageClass)
 	{
-		return Home.class;
+		mount(path, new QueryStringUrlCodingStrategy(path, pageClass));
 	}
 }
