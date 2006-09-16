@@ -58,6 +58,10 @@ public class CompoundPropertyModel<T> implements IInheritableModel<T>
 	@SuppressWarnings("unchecked")
 	public T getObject()
 	{
+		if (target instanceof IModel)
+		{
+			return (T)((IModel)target).getObject();
+		}
 		return (T)target;
 	}
 
