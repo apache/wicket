@@ -480,11 +480,15 @@ Wicket.Window.prototype = {
 				this.topRight.style.marginLeft = "-3px";
 				this.bottomLeft.style.marginRight = "-3px";
 				this.bottomRight.style.marginLeft = "-3px";
-			}
-			
-			// IE doesn't support position: fixed, not even IE7!
-			this.window.style.position = "absolute";
+			}								
 		} 			
+		
+		// HACK - IE doesn't support position:fixed. Gecko does, however for a reason
+		// we need to have background position: absolute, which makes the movement of 
+		// the window really jerky if the window stays position: fixed
+		if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
+			this.window.style.position = "absolute";
+		}
 		
 		// fix the cursors
 		if (this.settings.resizable == false) {
@@ -1265,7 +1269,10 @@ Wicket.Window.Mask.prototype = {
 				}
 			}
 
-			if (Wicket.Browser.isIE()) {
+			// HACK - it really sucks that we have to set this to absolute even for gecko.
+			// however background with position:fixed makes the text cursor in textfieds
+			// in modal window disappear
+			if (Wicket.Browser.isIE() || Wicket.Browser.isGecko()) {
 				e.style.position = "absolute";
 			}
 
@@ -1330,12 +1337,9 @@ Wicket.Window.Mask.prototype = {
 	/**
 	 * Used to update the position (ie) and size (ie, opera) of the mask.
 	 */
-	onScrollResize: function(dontChangePosition) {		
-						
+	onScrollResize: function(dontChangePosition) {							
 		// if the iframe is not position:fixed fix it's position
 		if (this.element.style.position == "absolute") {
-		
-		
 		
 			var w = Wicket.Window.getViewportWidth();
 			var h = Wicket.Window.getViewportHeight();
@@ -1353,26 +1357,27 @@ Wicket.Window.Mask.prototype = {
 				this.element.style.width = w;
 			}	
 			this.element.style.height = h;		
-
 		} 		
 	},
+
+	/**
+	 * Returns true if 'element' is a child (anywhere in hierarchy) of 'parent'
+	 */ 
+	isParent: function(element, parent) {		
+		if (element.parentNode == parent)
+			return true;
+		if (typeof(element.parentNode) == "undefined" ||
+			element.parentNode == document.body)
+			return false;
+		return this.isParent(element.parentNode, parent);			
+	},
+
 
 	/**
 	 * For internet explorer hides the select boxes (because they
 	 * have always bigger z-order than any other elements).
 	 */
-	hideSelectBoxes : function() {
-		
-		// returns true if 'element' is a child (anywhere in hierarchy) of 'parent'
-		function isParent(element, parent) {
-			if (element.parentNode == parent)
-				return true;
-			if (typeof(element.parentNode) == "undefined" ||
-				element.parentNode == document.body)
-				return false;
-			return isParent(element.parentNode, parent);			
-		}
-				
+	hideSelectBoxes : function() {				
 		if (Wicket.Browser.isIE() && Wicket.Browser.isIE7() == false) {
 			var win = Wicket.Window.current;					
 			
@@ -1381,10 +1386,11 @@ Wicket.Window.Mask.prototype = {
 			for (var i = 0; i < selects.length; i++) {				
 				var element = selects[i];
 				
-				// if this is not an iframewindo and the select is child of window content,
-				// don't hide it
-				if (win.isIframe() == false && isParent(element, win.content))
+				// if this is not an iframe window and the select is child of window content,
+				// don't hide it					
+				if (win.isIframe() == false && this.isParent(element, win.content)) {
 					continue;
+				}				
 				
 				if (element.style.visibility != "hidden") {
 					element.style.visibility = "hidden";
@@ -1457,16 +1463,22 @@ Wicket.Window.Mask.prototype = {
 	/**
 	 * Disable tab indexes (ie).
 	 */
-	disableTabs: function () {
+	disableTabs: function () {		
 		this.tabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME");
-		if (Wicket.Browser.isIE()) {			
+		if (Wicket.Browser.isIE()) {
+			var win = Wicket.Window.current;			
 			var i = 0;			
 			this.tabIndexes = new Array();
 			for (var j = 0; j < this.tabbableTags.length; j++) {
 				var tagElements = document.getElementsByTagName(this.tabbableTags[j]);
 				for (var k = 0 ; k < tagElements.length; k++) {
-					this.tabIndexes[i] = tagElements[k].tabIndex;
-					tagElements[k].tabIndex="-1";
+					
+					// if this is not an iframe window and the element is child of window content,
+					// don't disable tab on it
+					if (win.isIframe() == true || this.isParent(tagElements[k], win.content) == false) {				
+						this.tabIndexes[i] = tagElements[k].tabIndex;
+						tagElements[k].tabIndex="-1";
+					}
 					i++;
 				}
 			}
