@@ -325,6 +325,9 @@ public class WicketFilter implements Filter
 		filterConfig.getServletContext().setAttribute(contextKey, this.webApplication);
 
 		filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
+		
+		if (filterPath == null)
+			filterPath = "";
 
 		try
 		{
