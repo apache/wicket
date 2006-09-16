@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$ $Date:
- * 2006-05-26 00:57:30 +0200 (vr, 26 mei 2006) $
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -61,7 +61,7 @@ public class Page2 extends WicketExamplePage
 		params.put("param1", newP1 + " " + newP2);
 		params.put("param2", newP2 + " " + newP1);
 
-		new BookmarkablePageLink(this, "refreshLink", Page2.class, params);
+		new BookmarkablePageLink(this, "refreshLink", getClass(), params);
 
 		new BookmarkablePageLink(this, "homeLink", Home.class);
 	}
