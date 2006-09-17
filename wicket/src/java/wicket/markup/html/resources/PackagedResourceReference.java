@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: PackagedResourceReference.java 7050 2006-08-24 01:41:10 -0700 (Thu, 24
+ * Aug 2006) knopp $ $Revision$ $Date: 2006-08-24 01:41:10 -0700 (Thu, 24
+ * Aug 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -106,8 +107,8 @@ public class PackagedResourceReference extends WebMarkupContainer
 				}
 				String f = (String)component.getConverter().convert(file.getObject(component),
 						String.class);
-				PackageResourceReference ref = createPackageResourceReference(Application.get(),
-						referer, f);
+				ResourceReference ref = createPackageResourceReference(Application.get(), referer,
+						f);
 				return getRequestCycle().urlFor(ref);
 			}
 		};
@@ -116,16 +117,18 @@ public class PackagedResourceReference extends WebMarkupContainer
 
 	/**
 	 * Creates new package resource reference.
+	 * 
 	 * @param app
 	 * @param scope
 	 * @param name
 	 * @return created resource reference
 	 */
-	protected PackageResourceReference createPackageResourceReference(Application app, Class scope, String name)
+	protected PackageResourceReference createPackageResourceReference(Application app, Class scope,
+			String name)
 	{
 		return new PackageResourceReference(app, scope, name);
 	}
-	
+
 	/**
 	 * Construct.
 	 * 

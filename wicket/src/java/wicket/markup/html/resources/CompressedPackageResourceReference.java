@@ -31,13 +31,11 @@ import wicket.markup.html.PackageResourceReference;
  * see {@link PackageResourceReference} and {@link CompressedPackageResource}
  * 
  * @author Janne Hietam&auml;ki
+ *
+ * @deprecated Will be renamed to CompressedResourceReference in Wicket 2.0
  */
 public class CompressedPackageResourceReference extends PackageResourceReference
 {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
