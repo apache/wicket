@@ -36,16 +36,12 @@ import wicket.util.time.Time;
 /**
  * Identical to PackageResource, but supports gzip compression of data
  * 
- * See {@link PackageResource} and {@link CompressedPackageResourceReference}
+ * See {@link PackageResource} and {@link CompressedResourceReference}
  * 
  * @author Janne Hietam&auml;ki
  */
 public final class CompressedPackageResource extends PackageResource
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	CompressingResourceStream resourceStream;
