@@ -24,6 +24,7 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.RequestCycle;
+import wicket.ResourceReference;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
@@ -32,10 +33,9 @@ import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.behavior.HeaderContributor;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
-import wicket.markup.html.resources.CompressedPackageResourceReference;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.request.RequestParameters;
 import wicket.settings.IPageSettings;
 import wicket.util.string.AppendingStringBuffer;
@@ -122,10 +122,10 @@ public class ModalWindow extends Panel<Object>
 {
 	private static final long serialVersionUID = 1L;
 
-	private static PackageResourceReference JAVASCRIPT = new CompressedPackageResourceReference(
+	private static ResourceReference JAVASCRIPT = new CompressedResourceReference(
 			ModalWindow.class, "res/modal.js");
 
-	private static PackageResourceReference CSS = new CompressedPackageResourceReference(
+	private static ResourceReference CSS = new CompressedResourceReference(
 			ModalWindow.class, "res/modal.css");
 
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id: Tree.java 6483 2006-07-17 21:54:09Z jdonnerstag $
- * $Revision: 6483 $ $Date: 2006-07-17 23:54:09 +0200 (po, 17 VII 2006) $
+ * $Id: Tree.java 6483 2006-07-17 21:54:09Z jdonnerstag $ $Revision: 6483 $
+ * $Date: 2006-07-17 23:54:09 +0200 (po, 17 VII 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -33,7 +33,6 @@ import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.behavior.HeaderContributor;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
@@ -66,8 +65,8 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * to use other components than the default, provide a panel or fragment
 	 * instead (and that's probably what you want as the look and feel of what
 	 * this panel renders may be adjusted by overriding
-	 * {@link Tree#createJunctionLink(MarkupContainer, DefaultMutableTreeNode)} and
-	 * {@link Tree#createNodeLink(MarkupContainer, DefaultMutableTreeNode)}.
+	 * {@link Tree#createJunctionLink(MarkupContainer, DefaultMutableTreeNode)}
+	 * and {@link Tree#createNodeLink(MarkupContainer, DefaultMutableTreeNode)}.
 	 */
 	public static class DefaultNodePanel extends Panel
 	{
@@ -316,22 +315,18 @@ public class Tree extends AbstractTree implements TreeModelListener
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
 	/** Blank image. */
-	private static final ResourceReference BLANK = new PackageResourceReference(Tree.class,
-			"blank.gif");
+	private static final ResourceReference BLANK = new ResourceReference(Tree.class, "blank.gif");
 
 	/**
 	 * Reference to the css file.
 	 */
-	private static final PackageResourceReference CSS = new PackageResourceReference(Tree.class,
-			"tree.css");
+	private static final ResourceReference CSS = new ResourceReference(Tree.class, "tree.css");
 
 	/** Minus sign image. */
-	private static final ResourceReference MINUS = new PackageResourceReference(Tree.class,
-			"minus.gif");
+	private static final ResourceReference MINUS = new ResourceReference(Tree.class, "minus.gif");
 
 	/** Plus sign image. */
-	private static final ResourceReference PLUS = new PackageResourceReference(Tree.class,
-			"plus.gif");
+	private static final ResourceReference PLUS = new ResourceReference(Tree.class, "plus.gif");
 
 	private static final long serialVersionUID = 1L;
 
@@ -366,7 +361,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		this.treePathsModel = new TreePathsModel();
 		createTreePathsListView(this);
 
-		PackageResourceReference css = getCss();
+		ResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
 	}
 
@@ -387,7 +382,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		this.treePathsModel = new TreePathsModel();
 		createTreePathsListView(this);
 
-		PackageResourceReference css = getCss();
+		ResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
 	}
 
@@ -612,7 +607,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * 
 	 * @return the stylesheet
 	 */
-	protected PackageResourceReference getCss()
+	protected ResourceReference getCss()
 	{
 		return CSS;
 	}

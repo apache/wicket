@@ -36,7 +36,7 @@ import wicket.util.time.Time;
 /**
  * Identical to PackageResource, but supports gzip compression of data
  * 
- * See {@link PackageResource} and {@link CompressedPackageResourceReference}
+ * See {@link PackageResource} and {@link CompressedResourceReference}
  * 
  * @author Janne Hietam&auml;ki
  */

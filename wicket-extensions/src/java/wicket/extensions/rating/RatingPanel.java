@@ -23,7 +23,6 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.behavior.HeaderContributor;
 import wicket.behavior.SimpleAttributeModifier;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.Loop;
@@ -83,8 +82,8 @@ import wicket.model.StringResourceModel;
  * votes. The complete message shows the text 'Rating xx.yy from zz votes'.
  * 
  * <pre>
- *            rating.simple=Rated {0,number,#.#}
- *            rating.complete=Rated {0,number,#.#} from {1,number,#} votes
+ *              rating.simple=Rated {0,number,#.#}
+ *              rating.complete=Rated {0,number,#.#} from {1,number,#} votes
  * </pre>
  * 
  * <h2>Customizing the star images</h2>
@@ -158,13 +157,13 @@ public abstract class RatingPanel extends Panel<Integer>
 	/**
 	 * Star image for no selected star
 	 */
-	public static final ResourceReference STAR0 = new PackageResourceReference(RatingPanel.class,
+	public static final ResourceReference STAR0 = new ResourceReference(RatingPanel.class,
 			"star0.gif");
 
 	/**
 	 * Star image for selected star
 	 */
-	public static final ResourceReference STAR1 = new PackageResourceReference(RatingPanel.class,
+	public static final ResourceReference STAR1 = new ResourceReference(RatingPanel.class,
 			"star1.gif");
 
 	/** For serialization. */

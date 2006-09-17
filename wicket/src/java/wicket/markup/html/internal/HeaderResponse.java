@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Set;
 
 import wicket.RequestCycle;
+import wicket.ResourceReference;
 import wicket.Response;
 import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.PackageResourceReference;
 import wicket.util.string.JavascriptUtils;
 
 /**
@@ -62,9 +62,9 @@ class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(wicket.markup.html.PackageResourceReference)
+	 * @see wicket.markup.html.IHeaderResponse#renderCSSReference(wicket.markup.html.ResourceReference)
 	 */
-	public final void renderCSSReference(PackageResourceReference reference)
+	public final void renderCSSReference(ResourceReference reference)
 	{
 		if (wasRendered(reference) == false)
 		{
@@ -77,9 +77,9 @@ class HeaderResponse implements IHeaderResponse
 	}
 
 	/**
-	 * @see wicket.markup.html.IHeaderResponse#renderJavascriptReference(wicket.markup.html.PackageResourceReference)
+	 * @see wicket.markup.html.IHeaderResponse#renderJavascriptReference(wicket.markup.html.ResourceReference)
 	 */
-	public final void renderJavascriptReference(PackageResourceReference reference)
+	public final void renderJavascriptReference(ResourceReference reference)
 	{
 		if (wasRendered(reference) == false)
 		{

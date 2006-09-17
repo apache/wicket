@@ -21,10 +21,10 @@ package wicket.ajax;
 import wicket.Application;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.ResourceReference;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.PackageResourceReference;
-import wicket.markup.html.resources.CompressedPackageResourceReference;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.settings.IAjaxSettings;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -43,19 +43,19 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	private static final long serialVersionUID = 1L;
 
 	/** reference to the default indicator gif file. */
-	public static final PackageResourceReference INDICATOR = new PackageResourceReference(
+	public static final ResourceReference INDICATOR = new ResourceReference(
 			AbstractDefaultAjaxBehavior.class, "indicator.gif");
 
 	/** reference to the default ajax support javascript file. */
-	private static final PackageResourceReference JAVASCRIPT = new CompressedPackageResourceReference(
+	private static final ResourceReference JAVASCRIPT = new CompressedResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax.js");
 
 	/** reference to the default ajax debug support javascript file. */
-	private static final PackageResourceReference JAVASCRIPT_DEBUG_DRAG = new CompressedPackageResourceReference(
+	private static final ResourceReference JAVASCRIPT_DEBUG_DRAG = new CompressedResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug-drag.js");
 
 	/** reference to the default ajax debug support javascript file. */
-	private static final PackageResourceReference JAVASCRIPT_DEBUG = new CompressedPackageResourceReference(
+	private static final ResourceReference JAVASCRIPT_DEBUG = new CompressedResourceReference(
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 
 

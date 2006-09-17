@@ -32,7 +32,6 @@ import wicket.ajax.markup.html.AjaxLink;
 import wicket.behavior.HeaderContributor;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
@@ -105,19 +104,19 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	/**
 	 * Reference to the css file.
 	 */
-	private static final PackageResourceReference CSS = new PackageResourceReference(
+	private static final ResourceReference CSS = new ResourceReference(
 			DefaultAbstractTree.class, "res/tree.css");
 
 	/** Reference to the icon of closed tree folder */
-	private static final PackageResourceReference FOLDER_CLOSED = new PackageResourceReference(
+	private static final ResourceReference FOLDER_CLOSED = new ResourceReference(
 			DefaultAbstractTree.class, "res/folder-closed.gif");
 
 	/** Reference to the icon of open tree folder */
-	private static final PackageResourceReference FOLDER_OPEN = new PackageResourceReference(
+	private static final ResourceReference FOLDER_OPEN = new ResourceReference(
 			DefaultAbstractTree.class, "res/folder-open.gif");
 
 	/** Reference to the icon of tree item (not a folder) */
-	private static final PackageResourceReference ITEM = new PackageResourceReference(
+	private static final ResourceReference ITEM = new ResourceReference(
 			DefaultAbstractTree.class, "res/item.gif");
 
 	/** The link type, default is {@link LinkType#AJAX ajax}. */
@@ -200,7 +199,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 * 
 	 * @return The package resource reference
 	 */
-	protected PackageResourceReference getCSS()
+	protected ResourceReference getCSS()
 	{
 		return CSS;
 	}
@@ -571,7 +570,7 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	 */
 	private void init()
 	{
-		PackageResourceReference css = getCSS();
+		ResourceReference css = getCSS();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
 	}
 

@@ -21,7 +21,6 @@ import wicket.AttributeModifier;
 import wicket.IInitializer;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.panel.Panel;
@@ -50,7 +49,7 @@ public class UploadProgressBar extends Panel
 		}
 	}
 
-	private static final PackageResourceReference JS_PROGRESSBAR = new PackageResourceReference(
+	private static final ResourceReference JS_PROGRESSBAR = new ResourceReference(
 			UploadProgressBar.class, "progressbar.js");
 
 	private static final String RESOURCE_NAME = UploadProgressBar.class.getName();

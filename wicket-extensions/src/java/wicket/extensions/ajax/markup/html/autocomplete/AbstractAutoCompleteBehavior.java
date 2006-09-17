@@ -18,13 +18,12 @@
  */
 package wicket.extensions.ajax.markup.html.autocomplete;
 
-import wicket.Application;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.ajax.AbstractDefaultAjaxBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.resources.CompressedPackageResourceReference;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.util.string.JavascriptUtils;
 
 /**
@@ -36,7 +35,7 @@ import wicket.util.string.JavascriptUtils;
  */
 public abstract class AbstractAutoCompleteBehavior extends AbstractDefaultAjaxBehavior
 {
-	private static final CompressedPackageResourceReference AUTOCOMPLETE_JS = new CompressedPackageResourceReference(Application.get(),
+	private static final CompressedResourceReference AUTOCOMPLETE_JS = new CompressedResourceReference(
 			AutoCompleteBehavior.class, "wicket-autocomplete.js");
 
 	private static final long serialVersionUID = 1L;

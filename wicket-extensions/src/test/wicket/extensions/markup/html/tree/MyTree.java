@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: MyTree.java 6854 2006-08-06 07:56:17 -0700 (Sun, 06 Aug 2006)
+ * jannehietamaki $ $Revision$ $Date: 2006-08-06 07:56:17 -0700 (Sun, 06
+ * Aug 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,10 +26,8 @@ import javax.swing.tree.TreeModel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.image.Image;
 
 /**
@@ -38,15 +37,16 @@ import wicket.markup.html.image.Image;
  */
 public class MyTree extends Tree
 {
-	private static final ResourceReference folder = new PackageResourceReference(Application.get(),
-			MyTree.class, "folder.gif");
+	private static final ResourceReference folder = new ResourceReference(MyTree.class,
+			"folder.gif");
 
-	private static final ResourceReference folderOpen = new PackageResourceReference(Application
-			.get(), MyTree.class, "folderopen.gif");
+	private static final ResourceReference folderOpen = new ResourceReference(MyTree.class,
+			"folderopen.gif");
 	/** Log. */
 	private static final Log log = LogFactory.getLog(MyTree.class);
-	private static final ResourceReference nodeImage = new PackageResourceReference(Application
-			.get(), MyTree.class, "node.gif");
+
+	private static final ResourceReference nodeImage = new ResourceReference(MyTree.class,
+			"node.gif");
 
 	private static final long serialVersionUID = 1L;
 
@@ -65,7 +65,8 @@ public class MyTree extends Tree
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.tree.Tree#getNodeImage(MarkupContainer, javax.swing.tree.DefaultMutableTreeNode)
+	 * @see wicket.extensions.markup.html.tree.Tree#getNodeImage(MarkupContainer,
+	 *      javax.swing.tree.DefaultMutableTreeNode)
 	 */
 	@Override
 	protected Image getNodeImage(MarkupContainer parent, final DefaultMutableTreeNode node)

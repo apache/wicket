@@ -36,7 +36,6 @@ import wicket.application.IClassResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResource;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
@@ -103,7 +102,7 @@ public final class AutoLinkResolver implements IComponentResolver
 
 		// register autolink resolver delegates
 		AnchorResolverDelegate bookmarkablePageLinkResolver = new AnchorResolverDelegate();
-		PackageResourceReferenceResolverDelegate packageResourceReferenceResolver = new PackageResourceReferenceResolverDelegate();
+		ResourceReferenceResolverDelegate packageResourceReferenceResolver = new ResourceReferenceResolverDelegate();
 		tagNameToAutolinkResolverDelegates.put("a", bookmarkablePageLinkResolver);
 		tagNameToAutolinkResolverDelegates.put("link", packageResourceReferenceResolver);
 		tagNameToAutolinkResolverDelegates.put("script", packageResourceReferenceResolver);
@@ -350,7 +349,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 *            link reference
 		 * @return a new auto component or null if the path was absolute
 		 */
-		protected final Component newPackageResourceReferenceAutoComponent(
+		protected final Component newResourceReferenceAutoComponent(
 				final MarkupContainer container, final String autoId, final PathInfo pathInfo)
 		{
 			if (!pathInfo.absolute)
@@ -375,7 +374,7 @@ public final class AutoLinkResolver implements IComponentResolver
 				}
 
 				// Create the component implementing the link
-				PackageResourceReferenceAutolink autoLink = new PackageResourceReferenceAutolink(
+				ResourceReferenceAutolink autoLink = new ResourceReferenceAutolink(
 						container, autoId, clazz, pathInfo.reference);
 				if (autoLink.resourceReference != null)
 				{
@@ -493,7 +492,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			{
 				// not a registered type for bookmarkable pages; create a link
 				// to a resource instead
-				return newPackageResourceReferenceAutoComponent(container, autoId, pathInfo);
+				return newResourceReferenceAutoComponent(container, autoId, pathInfo);
 			}
 
 			// fallthrough
@@ -502,10 +501,10 @@ public final class AutoLinkResolver implements IComponentResolver
 	}
 
 	/**
-	 * Resolves to {@link PackageResourceReference} link components. Typcically
+	 * Resolves to {@link ResourceReference} link components. Typcically
 	 * used for header contributions like javascript and css files.
 	 */
-	private static final class PackageResourceReferenceResolverDelegate
+	private static final class ResourceReferenceResolverDelegate
 			extends
 				AbstractAutolinkResolverDelegate
 	{
@@ -517,7 +516,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		public Component newAutoComponent(final MarkupContainer container, final String autoId,
 				final PathInfo pathInfo)
 		{
-			return newPackageResourceReferenceAutoComponent(container, autoId, pathInfo);
+			return newResourceReferenceAutoComponent(container, autoId, pathInfo);
 		}
 	}
 
@@ -614,7 +613,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	}
 
 	/**
-	 * Autolink component that points to a {@link PackageResourceReference}.
+	 * Autolink component that points to a {@link ResourceReference}.
 	 * Autolink component delegate component resolution to their parent
 	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
 	 * know where to add the component to.
@@ -622,7 +621,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	 * @param <T>
 	 *            The type
 	 */
-	private final static class PackageResourceReferenceAutolink<T> extends WebMarkupContainer<T>
+	private final static class ResourceReferenceAutolink<T> extends WebMarkupContainer<T>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -635,7 +634,7 @@ public final class AutoLinkResolver implements IComponentResolver
 		 * @param clazz
 		 * @param href
 		 */
-		public PackageResourceReferenceAutolink(MarkupContainer parent, final String id,
+		public ResourceReferenceAutolink(MarkupContainer parent, final String id,
 				final Class clazz, final String href)
 		{
 			super(parent, id);
@@ -644,8 +643,9 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
 			{
 				// Create the component implementing the link
-				resourceReference = new PackageResourceReference(getApplication(), clazz, href,
-						getLocale(), getStyle());
+				resourceReference = new ResourceReference(clazz, href);
+				resourceReference.setLocale(getLocale());
+				resourceReference.setStyle(getStyle());
 			}
 			else
 			{

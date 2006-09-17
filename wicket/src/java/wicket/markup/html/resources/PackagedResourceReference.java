@@ -18,11 +18,9 @@
  */
 package wicket.markup.html.resources;
 
-import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -103,12 +101,10 @@ public class PackagedResourceReference extends WebMarkupContainer
 				String o = file.getObject();
 				if (o == null)
 				{
-					throw new IllegalArgumentException(
-							"The model must provide a non-null object");
+					throw new IllegalArgumentException("The model must provide a non-null object");
 				}
 				String f = getConverter(o.getClass()).convertToString(o, getLocale());
-				PackageResourceReference ref = new PackageResourceReference(Application.get(),
-						referer, f);
+				ResourceReference ref = new ResourceReference(referer, f);
 				return urlFor(ref);
 			}
 		};
@@ -172,8 +168,7 @@ public class PackagedResourceReference extends WebMarkupContainer
 				ResourceReference o = resourceReference.getObject();
 				if (o == null)
 				{
-					throw new IllegalArgumentException(
-							"The model must provide a non-null object");
+					throw new IllegalArgumentException("The model must provide a non-null object");
 				}
 				return urlFor(o);
 			}

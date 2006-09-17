@@ -14,72 +14,32 @@
  */
 package wicket.markup.html.resources;
 
-import java.util.Locale;
-
-import wicket.Application;
 import wicket.Resource;
+import wicket.ResourceReference;
 import wicket.markup.html.CompressedPackageResource;
 import wicket.markup.html.PackageResource;
-import wicket.markup.html.PackageResourceReference;
 
 /**
  * 
- * A static resource reference which can be transferred to the browser
- * using the gzip compression. Reduces the download size of for example 
- * javascript resources.
+ * A static resource reference which can be transferred to the browser using the
+ * gzip compression. Reduces the download size of for example javascript
+ * resources.
  * 
- * see {@link PackageResourceReference} and {@link CompressedPackageResource}
+ * see {@link ResourceReference} and {@link CompressedPackageResource}
  * 
  * @author Janne Hietam&auml;ki
  */
-public class CompressedPackageResourceReference extends PackageResourceReference
+public class CompressedResourceReference extends ResourceReference
 {
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Construct.
-	 * @param application
-	 * @param scope
-	 * @param name
-	 * @param locale
-	 * @param style
-	 */
-	public CompressedPackageResourceReference(Application application, Class scope, String name, Locale locale, String style)
-	{
-		super(application, scope, name, locale, style);
-	}
-
-	/**
-	 * Construct.
-	 * @param application
+	 * 
 	 * @param scope
 	 * @param name
 	 */
-	public CompressedPackageResourceReference(Application application, Class scope, String name)
-	{
-		super(application, scope, name);
-	}
-
-	/**
-	 * Construct.
-	 * @param application
-	 * @param name
-	 */
-	public CompressedPackageResourceReference(Application application, String name)
-	{
-		super(application, name);
-	}
-
-	/**
-	 * Construct.
-	 * @param scope
-	 * @param name
-	 */
-	public CompressedPackageResourceReference(Class scope, String name)
+	public CompressedResourceReference(Class scope, String name)
 	{
 		super(scope, name);
 	}
@@ -87,8 +47,8 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 	@Override
 	protected Resource newResource()
 	{
-		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(), getLocale(),
-				getStyle());
+		PackageResource packageResource = CompressedPackageResource.get(getScope(), getName(),
+				getLocale(), getStyle());
 		if (packageResource != null)
 		{
 			locale = packageResource.getLocale();
@@ -99,6 +59,6 @@ public class CompressedPackageResourceReference extends PackageResourceReference
 					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
 		}
 		return packageResource;
-		
-	}	
+
+	}
 }

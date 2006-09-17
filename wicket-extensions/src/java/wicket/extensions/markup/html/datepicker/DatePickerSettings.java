@@ -28,9 +28,7 @@ import java.util.Properties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.Application;
 import wicket.ResourceReference;
-import wicket.markup.html.PackageResourceReference;
 
 /**
  * The settings of the date picker component. Use this to customize the
@@ -151,18 +149,17 @@ public class DatePickerSettings implements Serializable
 		String ref = (String)localeToLanguageReference.get(currentLocale.toString());
 		if (ref != null)
 		{
-			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
+			return new ResourceReference(DatePickerSettings.class, ref);
 		}
 		// now try only the language
 		ref = (String)localeToLanguageReference.get(currentLocale.getLanguage());
 		if (ref != null)
 		{
-			return new PackageResourceReference(Application.get(), DatePickerSettings.class, ref);
+			return new ResourceReference(DatePickerSettings.class, ref);
 		}
 
 		// we didn't find a mapping; just return English
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"lang/calendar-en.js");
+		return new ResourceReference(DatePickerSettings.class, "lang/calendar-en.js");
 	}
 
 	/**
@@ -437,10 +434,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a button icon.
 	 */
-	public final PackageResourceReference newButtonIconBlue()
+	public final ResourceReference newButtonIconBlue()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"calendar_icon_3.gif");
+		return new ResourceReference(DatePickerSettings.class, "calendar_icon_3.gif");
 	}
 
 	/**
@@ -448,10 +444,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a button icon.
 	 */
-	public final PackageResourceReference newButtonIconPlain()
+	public final ResourceReference newButtonIconPlain()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"calendar_icon_2.gif");
+		return new ResourceReference(DatePickerSettings.class, "calendar_icon_2.gif");
 	}
 
 	/**
@@ -459,10 +454,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a button icon.
 	 */
-	public final PackageResourceReference newButtonIconRed()
+	public final ResourceReference newButtonIconRed()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"calendar_icon_1.gif");
+		return new ResourceReference(DatePickerSettings.class, "calendar_icon_1.gif");
 	}
 
 	/**
@@ -470,10 +464,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleAqua()
+	public final ResourceReference newStyleAqua()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/aqua/theme.css");
+		return new ResourceReference(DatePickerSettings.class, "style/aqua/theme.css");
 	}
 
 	/**
@@ -481,10 +474,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleBlue()
+	public final ResourceReference newStyleBlue()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-blue2.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-blue2.css");
 	}
 
 	/**
@@ -492,10 +484,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleGreen()
+	public final ResourceReference newStyleGreen()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-green.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-green.css");
 	}
 
 	/**
@@ -503,10 +494,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleSummer()
+	public final ResourceReference newStyleSummer()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-brown.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-brown.css");
 	}
 
 	/**
@@ -514,10 +504,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleSystem()
+	public final ResourceReference newStyleSystem()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-system.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-system.css");
 	}
 
 	/**
@@ -525,10 +514,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleTas()
+	public final ResourceReference newStyleTas()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-tas.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-tas.css");
 	}
 
 	/**
@@ -536,10 +524,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleWin2k1()
+	public final ResourceReference newStyleWin2k1()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-win2k-1.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-win2k-1.css");
 	}
 
 	/**
@@ -547,10 +534,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleWin2k2()
+	public final ResourceReference newStyleWin2k2()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-win2k-2.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-win2k-2.css");
 	}
 
 	/**
@@ -558,10 +544,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleWin2kCold1()
+	public final ResourceReference newStyleWin2kCold1()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-win2k-cold-1.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-1.css");
 	}
 
 	/**
@@ -569,10 +554,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleWin2kCold2()
+	public final ResourceReference newStyleWin2kCold2()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-win2k-cold-2.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-win2k-cold-2.css");
 	}
 
 	/**
@@ -580,10 +564,9 @@ public class DatePickerSettings implements Serializable
 	 * 
 	 * @return a style
 	 */
-	public final PackageResourceReference newStyleWinter()
+	public final ResourceReference newStyleWinter()
 	{
-		return new PackageResourceReference(Application.get(), DatePickerSettings.class,
-				"style/calendar-blue.css");
+		return new ResourceReference(DatePickerSettings.class, "style/calendar-blue.css");
 	}
 
 	/**

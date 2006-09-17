@@ -23,10 +23,10 @@ import java.util.List;
 
 import wicket.Application;
 import wicket.RequestCycle;
+import wicket.ResourceReference;
 import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.PackageResourceReference;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.util.string.AppendingStringBuffer;
@@ -165,7 +165,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final class CSSReferenceHeaderContributor
 			extends
-				PackageResourceReferenceHeaderContributor
+				ResourceReferenceHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -187,18 +187,18 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 * 
 		 * @param reference
 		 */
-		public CSSReferenceHeaderContributor(PackageResourceReference reference)
+		public CSSReferenceHeaderContributor(ResourceReference reference)
 		{
 			super(reference);
 		}
-		
+
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
 		public void renderHead(IHeaderResponse headerResponse)
 		{
 			Response response = headerResponse.getResponse();
-			final CharSequence url = RequestCycle.get().urlFor(getPackageResourceReference());
+			final CharSequence url = RequestCycle.get().urlFor(getResourceReference());
 			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 			response.write(url);
 			response.println("\"></link>");
@@ -210,7 +210,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final class JavaScriptReferenceHeaderContributor
 			extends
-				PackageResourceReferenceHeaderContributor
+				ResourceReferenceHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -232,31 +232,29 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 * 
 		 * @param reference
 		 */
-		public JavaScriptReferenceHeaderContributor(PackageResourceReference reference)
+		public JavaScriptReferenceHeaderContributor(ResourceReference reference)
 		{
 			super(reference);
 		}
-		
+
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
 		public void renderHead(IHeaderResponse response)
 		{
-			final CharSequence url = RequestCycle.get().urlFor(getPackageResourceReference());
+			final CharSequence url = RequestCycle.get().urlFor(getResourceReference());
 			JavascriptUtils.writeJavascriptUrl(response.getResponse(), url);
 		}
 	}
 
 	/**
-	 * Wraps a {@link PackageResourceReference} and knows how to print a header
+	 * Wraps a {@link ResourceReference} and knows how to print a header
 	 * statement based on that resource. Default implementations are
 	 * {@link JavaScriptReferenceHeaderContributor} and
 	 * {@link CSSReferenceHeaderContributor}, which print out javascript
 	 * statements and css ref statements respectively.
 	 */
-	public static abstract class PackageResourceReferenceHeaderContributor
-			implements
-				IHeaderContributor
+	public static abstract class ResourceReferenceHeaderContributor implements IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -264,7 +262,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		private final int hash;
 
 		/** the package resource reference. */
-		private final PackageResourceReference packageResourceReference;
+		private final ResourceReference resourceReference;
 
 		/**
 		 * Construct.
@@ -275,23 +273,23 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 *            The name of the reference (typically the name of the
 		 *            packaged resource, like 'myscripts.js').
 		 */
-		public PackageResourceReferenceHeaderContributor(Class scope, String name)
+		public ResourceReferenceHeaderContributor(Class scope, String name)
 		{
-			this(new PackageResourceReference(scope, name));
+			this(new ResourceReference(scope, name));
 		}
-		
+
 		/**
 		 * Construct.
 		 * 
 		 * @param reference
 		 */
-		public PackageResourceReferenceHeaderContributor(PackageResourceReference reference)
+		public ResourceReferenceHeaderContributor(ResourceReference reference)
 		{
-			this.packageResourceReference = reference;
+			this.resourceReference = reference;
 			int result = 17;
 			result = 37 * result + getClass().hashCode();
-			result = 37 * result + packageResourceReference.hashCode();
-			hash = result;			
+			result = 37 * result + resourceReference.hashCode();
+			hash = result;
 		}
 
 		/**
@@ -302,8 +300,8 @@ public class HeaderContributor extends AbstractHeaderContributor
 		{
 			if (obj.getClass().equals(getClass()))
 			{
-				PackageResourceReferenceHeaderContributor that = (PackageResourceReferenceHeaderContributor)obj;
-				return this.packageResourceReference.equals(that.packageResourceReference);
+				ResourceReferenceHeaderContributor that = (ResourceReferenceHeaderContributor)obj;
+				return this.resourceReference.equals(that.resourceReference);
 			}
 			return false;
 		}
@@ -322,9 +320,9 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 * 
 		 * @return the package resource reference
 		 */
-		protected final PackageResourceReference getPackageResourceReference()
+		protected final ResourceReference getResourceReference()
 		{
-			return packageResourceReference;
+			return resourceReference;
 		}
 	}
 
@@ -343,7 +341,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		return new HeaderContributor(new CSSHeaderContributor(location));
 	}
-	
+
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
@@ -352,10 +350,10 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * 
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forCss(PackageResourceReference reference)
+	public static final HeaderContributor forCss(ResourceReference reference)
 	{
 		return new HeaderContributor(new CSSReferenceHeaderContributor(reference));
-	}	
+	}
 
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
@@ -404,7 +402,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	{
 		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(scope, path));
 	}
-	
+
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a java script file that lives in a package.
@@ -413,7 +411,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * 
 	 * @return the new header contributor instance
 	 */
-	public static final HeaderContributor forJavaScript(final PackageResourceReference reference)
+	public static final HeaderContributor forJavaScript(final ResourceReference reference)
 	{
 		return new HeaderContributor(new JavaScriptReferenceHeaderContributor(reference));
 	}
