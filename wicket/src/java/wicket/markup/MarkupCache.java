@@ -19,6 +19,7 @@
 package wicket.markup;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -229,6 +230,32 @@ public class MarkupCache
 		// trigger all listeners registered on the markup that is removed
 		afterLoadListeners.notifyListeners(markupResourceStream);
 		afterLoadListeners.remove(markupResourceStream);
+	}
+	
+	/**
+	 * Remove the markup from the cache and trigger all associated listeners
+	 * 
+	 * @since 1.2.3
+	 * @param markupResourceStream The resource stream
+	 */
+	public void removeMarkup(final MarkupResourceStream markupResourceStream)
+	{
+		CharSequence key = null;
+		Iterator iter = this.markupCache.entrySet().iterator();
+		while (iter.hasNext())
+		{
+			Map.Entry entry = (Map.Entry)iter.next();
+			if (entry.getValue() == markupResourceStream)
+			{
+				key = (CharSequence) entry.getKey();
+				break;
+			}
+		}
+		
+		if (key != null)
+		{
+			removeMarkup(key, markupResourceStream);
+		}
 	}
 
 	/**
