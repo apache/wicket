@@ -3,7 +3,6 @@
 <profile name="Wicket" version="6">
 <setting id="comment_clear_blank_lines" value="false"/>
 <setting id="comment_format_comments" value="true"/>
-<setting id="comment_format_header" value="true"/>
 <setting id="comment_format_html" value="true"/>
 <setting id="comment_format_source_code" value="true"/>
 <setting id="comment_indent_parameter_description" value="true"/>
