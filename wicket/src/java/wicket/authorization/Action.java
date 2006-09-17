@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: Action.java 4426 2006-02-13 15:56:35 -0800 (Mon, 13 Feb 2006)
+ * jonathanlocke $ $Revision$ $Date: 2006-02-13 15:56:35 -0800 (Mon, 13
+ * Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -38,11 +39,43 @@ import wicket.util.string.Strings;
 public class Action implements Serializable
 {
 	private static final long serialVersionUID = -1L;
-	
-	/** RENDER action name (for consistent name and use in annotations) */
+
+	/**
+	 * RENDER action name (for consistent name and use in annotations).
+	 * <p>
+	 * DO NOT use for equals on Action, like
+	 * 
+	 * <pre>
+	 * action.equals(Action.RENDER)
+	 * </pre>
+	 * 
+	 * as you'll compare an action with a string. Rather, do:
+	 * 
+	 * <pre>
+	 * action.equals(Component.RENDER)
+	 * </pre>
+	 * 
+	 * </p>
+	 */
 	public static final String RENDER = "RENDER";
-	
-	/** ENABLE action name (for consistent name and use in annotations) */
+
+	/**
+	 * ENABLE action name (for consistent name and use in annotations).
+	 * <p>
+	 * DO NOT use for equals on Action, like
+	 * 
+	 * <pre>
+	 * action.equals(Action.ENABLE)
+	 * </pre>
+	 * 
+	 * as you'll compare an action with a string. Rather, do:
+	 * 
+	 * <pre>
+	 * action.equals(Component.ENABLE)
+	 * </pre>
+	 * 
+	 * </p>
+	 */
 	public static final String ENABLE = "ENABLE";
 
 	/** The name of this action. */
@@ -58,7 +91,8 @@ public class Action implements Serializable
 	{
 		if (Strings.isEmpty(name))
 		{
-			throw new IllegalArgumentException("Name argument may not be null, whitespace or the empty string");
+			throw new IllegalArgumentException(
+					"Name argument may not be null, whitespace or the empty string");
 		}
 
 		this.name = name;
@@ -76,7 +110,7 @@ public class Action implements Serializable
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @return The name of this action
 	 */
