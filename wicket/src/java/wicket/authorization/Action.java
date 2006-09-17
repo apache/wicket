@@ -39,10 +39,42 @@ public class Action implements Serializable
 {
 	private static final long serialVersionUID = -1L;
 
-	/** RENDER action name (for consistent name and use in annotations) */
+	/**
+	 * RENDER action name (for consistent name and use in annotations).
+	 * <p>
+	 * DO NOT use for equals on Action, like
+	 * 
+	 * <pre>
+	 * action.equals(Action.RENDER)
+	 * </pre>
+	 * 
+	 * as you'll compare an action with a string. Rather, do:
+	 * 
+	 * <pre>
+	 * action.equals(Component.RENDER)
+	 * </pre>
+	 * 
+	 * </p>
+	 */
 	public static final String RENDER = "RENDER";
 
-	/** ENABLE action name (for consistent name and use in annotations) */
+	/**
+	 * ENABLE action name (for consistent name and use in annotations).
+	 * <p>
+	 * DO NOT use for equals on Action, like
+	 * 
+	 * <pre>
+	 * action.equals(Action.ENABLE)
+	 * </pre>
+	 * 
+	 * as you'll compare an action with a string. Rather, do:
+	 * 
+	 * <pre>
+	 * action.equals(Component.ENABLE)
+	 * </pre>
+	 * 
+	 * </p>
+	 */
 	public static final String ENABLE = "ENABLE";
 
 	/** The name of this action. */
