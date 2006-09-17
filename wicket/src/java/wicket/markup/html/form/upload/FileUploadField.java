@@ -173,6 +173,7 @@ public class FileUploadField extends FormComponent
 		if (fileUpload != null)
 		{
 			fileUpload.closeStreams();
+			fileUpload = null;
 		}
 	}
 }
