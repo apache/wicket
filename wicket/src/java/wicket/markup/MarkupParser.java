@@ -331,7 +331,21 @@ public class MarkupParser
 		final CharSequence text = xmlParser.getInputFromPositionMarker(-1);
 		if (text.length() > 0)
 		{
-			this.markup.addMarkupElement(new RawMarkup(text));
+			String rawMarkup = text.toString();
+
+			if (stripComments)
+			{
+				rawMarkup = removeComment(rawMarkup);
+			}
+
+			if (compressWhitespace)
+			{
+				rawMarkup = compressWhitespace(rawMarkup);
+			}
+
+			// Make sure you add it at the correct location.
+			// IMarkupFilters might have added elements as well.
+			this.markup.addMarkupElement(new RawMarkup(rawMarkup));
 		}
 
 		// Make all tags immutable and the list of elements unmodifable
