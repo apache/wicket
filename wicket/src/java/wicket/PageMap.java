@@ -224,6 +224,7 @@ public abstract class PageMap implements Serializable
 	 */
 	final void redirectToInterceptPage(final Page page)
 	{
+		Session.get().bind();
 		// Get the request cycle
 		final RequestCycle cycle = RequestCycle.get();
 
@@ -251,6 +252,7 @@ public abstract class PageMap implements Serializable
 	 */
 	final void redirectToInterceptPage(final Class<? extends Page> pageClazz)
 	{
+		Session.get().bind();
 		// Get the request cycle
 		final RequestCycle cycle = RequestCycle.get();
 
