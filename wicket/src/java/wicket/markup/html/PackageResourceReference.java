@@ -29,6 +29,8 @@ import wicket.ResourceReference;
  * 
  * @author Jonathan Locke
  * @author Eelco Hillenius
+ * 
+ * @deprecated Use {@link ResourceReference} instead. This class will be removed in Wicket 2.0
  */
 public class PackageResourceReference extends ResourceReference
 {
