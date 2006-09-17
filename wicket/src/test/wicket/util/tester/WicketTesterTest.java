@@ -31,6 +31,7 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.util.tester.MockPageWithFormAndAjaxFormSubmitBehavior.Pojo;
 import wicket.util.tester.apps_1.Book;
 import wicket.util.tester.apps_1.CreateBook;
 import wicket.util.tester.apps_1.MyMockApplication;
@@ -275,10 +276,42 @@ public class WicketTesterTest extends TestCase
 	public void testClickLink_ajaxSubmitLink_checkGroup()
 	{
 		WicketTester tester = new WicketTester();
-		
+
 		tester.startPage(MockPageWithFormAndCheckGroup.class);
-		
+
 		// Click the submit
 		tester.clickLink("submitLink");
+	}
+
+	/**
+	 * Test that the executeAjaxEvent "submits" the form if the event is a
+	 * AjaxFormSubmitBehavior.
+	 */
+	public void testExecuteAjaxEvent_ajaxFormSubmitLink()
+	{
+		WicketTester tester = new WicketTester();
+
+		tester.startPage(MockPageWithFormAndAjaxFormSubmitBehavior.class);
+
+		// Get the page
+		MockPageWithFormAndAjaxFormSubmitBehavior page = (MockPageWithFormAndAjaxFormSubmitBehavior)tester
+				.getLastRenderedPage();
+
+		Pojo pojo = page.getPojo();
+
+		assertEquals("Mock name", pojo.getName());
+
+		assertFalse(page.isExecuted());
+
+		// Execute the ajax event
+		tester.executeAjaxEvent("eventComponent", "onclick");
+
+		// The name of the pojo should still be the same. If the
+		// executeAjaxEvent weren't submitting the form the name would have been
+		// reset to null, because the form would have been updated but there
+		// wouldn't be any date to update it with.
+		assertEquals("Mock name", pojo.getName());
+
+		assertTrue(page.isExecuted());
 	}
 }
