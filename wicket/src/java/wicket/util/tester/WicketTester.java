@@ -462,9 +462,9 @@ public class WicketTester extends MockWebApplication
 	public void assertComponent(String path, Class expectedComponentClass)
 	{
 		Component component = getComponentFromLastRenderedPage(path);
-		Assert.assertTrue("component '" + Classes.simpleName(component.getClass()) + "' is not type:"
-				+ Classes.simpleName(expectedComponentClass), expectedComponentClass
-				.isAssignableFrom(component.getClass()));
+		Assert.assertTrue("component '" + Classes.simpleName(component.getClass())
+				+ "' is not type:" + Classes.simpleName(expectedComponentClass),
+				expectedComponentClass.isAssignableFrom(component.getClass()));
 	}
 
 	/**
@@ -481,9 +481,8 @@ public class WicketTester extends MockWebApplication
 			Assert.fail("path: '" + path + "' does no exist for page: "
 					+ Classes.simpleName(getLastRenderedPage().getClass()));
 		}
-		
-		Assert.assertTrue("component '" + path + "' is not visible",
-				component.isVisible());
+
+		Assert.assertTrue("component '" + path + "' is not visible", component.isVisible());
 	}
 
 	/**
@@ -677,42 +676,10 @@ public class WicketTester extends MockWebApplication
 			String failMessage = "No form submit behavior found on the submit link. Strange!!";
 			Assert.assertNotNull(failMessage, ajaxFormSubmitBehavior);
 
-			// We need to get the form submitted, using reflection.
-			// It needs to be "submitted".
-			Form form = null;
-			try
-			{
-				Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
-				formField.setAccessible(true);
-				form = (Form)formField.get(ajaxFormSubmitBehavior);
-			}
-			catch (Exception e)
-			{
-				Assert.fail(e.getMessage());
-			}
-
-			failMessage = "No form attached to the submitlink.";
-			Assert.assertNotNull(failMessage, form);
-
 			setupRequestAndResponse();
 			RequestCycle requestCycle = createRequestCycle();
 
-			// "Submit" the form
-			form.visitFormComponents(new FormComponent.IVisitor()
-			{
-				public void formComponent(FormComponent formComponent)
-				{
-					if (!(formComponent instanceof Button)
-							&& !(formComponent instanceof RadioGroup)
-							&& !(formComponent instanceof CheckGroup))
-					{
-						String name = formComponent.getInputName();
-						String value = formComponent.getValue();
-
-						getServletRequest().setParameter(name, value);
-					}
-				}
-			});
+			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
 
 			// Ok, finally we "click" the link
 			ajaxFormSubmitBehavior.onRequest();
@@ -871,8 +838,8 @@ public class WicketTester extends MockWebApplication
 	/**
 	 * assert previous rendered page expired
 	 * 
-	 * TODO Post 1.2: General: This test is no longer valid because it depends on an
-	 * implementation detail that just changed!
+	 * TODO Post 1.2: General: This test is no longer valid because it depends
+	 * on an implementation detail that just changed!
 	 * 
 	 * public void assertExpirePreviousPage() { PageMap pageMap =
 	 * getWicketSession().getPageMap(null); Field internalMapCacheField; try {
@@ -901,8 +868,8 @@ public class WicketTester extends MockWebApplication
 	public void debugComponentTrees()
 	{
 		debugComponentTrees("");
-	}	
-	
+	}
+
 	/**
 	 * Dump the component trees to log.
 	 * 
@@ -910,18 +877,20 @@ public class WicketTester extends MockWebApplication
 	 *            Show only the components, which path contains the
 	 *            filterstring.
 	 */
-	public void debugComponentTrees(String filter) {
+	public void debugComponentTrees(String filter)
+	{
 		log.info("debugging ----------------------------------------------");
-		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage())
-				.iterator(); iter.hasNext();) {
-			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData) iter
-					.next();
-			if (obj.path.matches(".*" + filter + ".*")) {
+		for (Iterator iter = WicketTesterHelper.getComponentData(getLastRenderedPage()).iterator(); iter
+				.hasNext();)
+		{
+			WicketTesterHelper.ComponentData obj = (WicketTesterHelper.ComponentData)iter.next();
+			if (obj.path.matches(".*" + filter + ".*"))
+			{
 				log.info("path\t" + obj.path + " \t" + obj.type + " \t[" + obj.value + "]");
 			}
 		}
 	}
-	
+
 	/**
 	 * Test that a component has been added to a AjaxRequestTarget, using
 	 * {@link AjaxRequestTarget#addComponent(Component)}. This method actually
@@ -962,12 +931,13 @@ public class WicketTester extends MockWebApplication
 		failMessage = "Component wasn't found in the AJAX response";
 		Assert.assertTrue(failMessage, isComponentInAjaxResponse);
 	}
-	
+
 	/**
 	 * Simulate that an AJAX event has been fired.
 	 * 
 	 * @see #executeAjaxEvent(Component, String)
 	 * 
+	 * @since 1.2.3
 	 * @param componentPath
 	 *            The component path.
 	 * @param event
@@ -979,14 +949,14 @@ public class WicketTester extends MockWebApplication
 		Component component = getComponentFromLastRenderedPage(componentPath);
 		executeAjaxEvent(component, event);
 	}
-	
+
 	/**
 	 * Simulate that an AJAX event has been fired. You add an AJAX event to a
 	 * component by using:
 	 * 
 	 * <pre>
 	 *  ...
-	 *  component.add(new AjaxEventBehavior("ondblclick") {
+	 *  component.add(new AjaxEventBehavior(&quot;ondblclick&quot;) {
 	 *      public void onEvent(AjaxRequestTarget) {
 	 *          // Do something.
 	 *      }
@@ -999,12 +969,15 @@ public class WicketTester extends MockWebApplication
 	 * 
 	 * <pre>
 	 *  ...
-	 *  tester.executeAjaxEvent(component, "ondblclick");
+	 *  tester.executeAjaxEvent(component, &quot;ondblclick&quot;);
 	 *            
 	 *  // Test that the code inside onEvent is correct.
 	 *  ...
 	 * </pre>
 	 * 
+	 * This also works with AjaxFormSubmitBehavior, where it will "submit" the
+	 * form before executing the command.
+	 * <p>
 	 * PLEASE NOTE! This method doesn't actually insert the component in the
 	 * client DOM tree, using javascript.
 	 * 
@@ -1053,12 +1026,19 @@ public class WicketTester extends MockWebApplication
 		setupRequestAndResponse();
 		RequestCycle requestCycle = createRequestCycle();
 
+		// If the event is an FormSubmitBehavior then also "submit" the form
+		if (ajaxEventBehavior instanceof AjaxFormSubmitBehavior)
+		{
+			AjaxFormSubmitBehavior ajaxFormSubmitBehavior = (AjaxFormSubmitBehavior)ajaxEventBehavior;
+			submitAjaxFormSubmitBehavior(ajaxFormSubmitBehavior);
+		}
+
 		ajaxEventBehavior.onRequest();
 
 		// process the request target
 		requestCycle.getRequestTarget().respond(requestCycle);
 	}
-	
+
 	/**
 	 * Get a TagTester based on a wicket:id. If more components exists with the
 	 * same wicket:id in the markup only the first one is returned.
@@ -1084,5 +1064,47 @@ public class WicketTester extends MockWebApplication
 	public TagTester getTagById(String id)
 	{
 		return TagTester.createTagByAttribute(getServletResponse().getDocument(), "id", id);
+	}
+
+	/**
+	 * Helper method for all the places where an AjaxCall should submit an
+	 * associated form.
+	 * 
+	 * @param behavior
+	 *            The AjaxFormSubmitBehavior with the form to "submit"
+	 */
+	private void submitAjaxFormSubmitBehavior(AjaxFormSubmitBehavior behavior)
+	{
+		// We need to get the form submitted, using reflection.
+		// It needs to be "submitted".
+		Form form = null;
+		try
+		{
+			Field formField = AjaxFormSubmitBehavior.class.getDeclaredField("form");
+			formField.setAccessible(true);
+			form = (Form)formField.get(behavior);
+		}
+		catch (Exception e)
+		{
+			Assert.fail(e.getMessage());
+		}
+
+		String failMessage = "No form attached to the submitlink.";
+		Assert.assertNotNull(failMessage, form);
+
+		form.visitFormComponents(new FormComponent.IVisitor()
+		{
+			public void formComponent(FormComponent formComponent)
+			{
+				if (!(formComponent instanceof Button) && !(formComponent instanceof RadioGroup)
+						&& !(formComponent instanceof CheckGroup))
+				{
+					String name = formComponent.getInputName();
+					String value = formComponent.getValue();
+
+					getServletRequest().setParameter(name, value);
+				}
+			}
+		});
 	}
 }
