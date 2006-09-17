@@ -249,7 +249,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * absolutely sure this session object will be available in next requests.
 	 * </p>
 	 */
-	protected final void bind()
+	public final void bind()
 	{
 		ISessionStore store = getSessionStore();
 		Request request = RequestCycle.get().getRequest();
