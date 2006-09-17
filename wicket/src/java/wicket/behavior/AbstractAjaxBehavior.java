@@ -24,10 +24,10 @@ import java.util.Set;
 import wicket.Component;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.ResourceReference;
 import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.PackageResourceReference;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
@@ -213,7 +213,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * @param ref
 	 *            reference to add
 	 */
-	protected void writeJsReference(final Response response, final PackageResourceReference ref)
+	protected void writeJsReference(final Response response, final ResourceReference ref)
 	{
 		CharSequence url = RequestCycle.get().urlFor(ref);
 		JavascriptUtils.writeJavascriptUrl(response, url);

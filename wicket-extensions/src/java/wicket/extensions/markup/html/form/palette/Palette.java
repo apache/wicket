@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,11 +22,11 @@ import java.util.Iterator;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.ResourceReference;
 import wicket.extensions.markup.html.form.palette.component.Choices;
 import wicket.extensions.markup.html.form.palette.component.Recorder;
 import wicket.extensions.markup.html.form.palette.component.Selection;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.IChoiceRenderer;
@@ -48,9 +48,9 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *   Form form=new Form(...);
- *   Palette palette=new Palette(...);
- *   palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *    Form form=new Form(...);
+ *    Palette palette=new Palette(...);
+ *    palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -95,24 +95,23 @@ public class Palette extends Panel
 	private Component selectionComponent;
 
 	/** reference to the palette's javascript resource */
-	private static final PackageResourceReference javascript = new PackageResourceReference(
-			Palette.class, "palette.js");
+	private static final ResourceReference javascript = new ResourceReference(Palette.class,
+			"palette.js");
 
 	/** reference to default up buttom image */
-	private static final PackageResourceReference upImage = new PackageResourceReference(
-			Palette.class, "up.gif");
+	private static final ResourceReference upImage = new ResourceReference(Palette.class, "up.gif");
 
 	/** reference to default down button image */
-	private static final PackageResourceReference downImage = new PackageResourceReference(
-			Palette.class, "down.gif");
+	private static final ResourceReference downImage = new ResourceReference(Palette.class,
+			"down.gif");
 
 	/** reference to default remove button image */
-	private static final PackageResourceReference removeImage = new PackageResourceReference(
-			Palette.class, "remove.gif");
+	private static final ResourceReference removeImage = new ResourceReference(Palette.class,
+			"remove.gif");
 
 	/** reference to default add buttom image */
-	private static final PackageResourceReference addImage = new PackageResourceReference(
-			Palette.class, "add.gif");
+	private static final ResourceReference addImage = new ResourceReference(Palette.class,
+			"add.gif");
 
 	/**
 	 * @param id

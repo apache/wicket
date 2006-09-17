@@ -5,7 +5,6 @@ import java.io.Serializable;
 import wicket.ResourceReference;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.extensions.rating.RatingPanel;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.link.Link;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -21,14 +20,14 @@ public class RatingsPage extends BasePage
 	/**
 	 * Star image for no selected star
 	 */
-	public static final ResourceReference WICKETSTAR0 = new PackageResourceReference(
-			RatingsPage.class, "WicketStar0.png");
+	public static final ResourceReference WICKETSTAR0 = new ResourceReference(RatingsPage.class,
+			"WicketStar0.png");
 
 	/**
 	 * Star image for selected star
 	 */
-	public static final ResourceReference WICKETSTAR1 = new PackageResourceReference(
-			RatingsPage.class, "WicketStar1.png");
+	public static final ResourceReference WICKETSTAR1 = new ResourceReference(RatingsPage.class,
+			"WicketStar1.png");
 
 	/** For serialization. */
 	private static final long serialVersionUID = 1L;
