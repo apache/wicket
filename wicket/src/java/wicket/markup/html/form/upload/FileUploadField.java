@@ -43,7 +43,7 @@ public class FileUploadField extends FormComponent<FileUpload>
 	/** True if a model has been set explicitly */
 	private boolean hasExplicitModel;
 	
-	private FileUpload fileUpload;
+	private transient FileUpload fileUpload;
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
