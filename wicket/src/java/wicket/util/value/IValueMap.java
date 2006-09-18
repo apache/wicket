@@ -29,7 +29,7 @@ import wicket.util.time.Time;
 /**
  * @author jcompagner
  */
-public interface IValueMap extends Map<String,Object>
+public interface IValueMap extends Map<String, Object>
 {
 
 	/**
@@ -56,6 +56,19 @@ public interface IValueMap extends Map<String,Object>
 	 * @throws StringValueConversionException
 	 */
 	public abstract double getDouble(final String key) throws StringValueConversionException;
+
+	/**
+	 * Gets a double using a default if not found.
+	 * 
+	 * @param key
+	 *            The key
+	 * @param defaultValue
+	 *            Value to use if no value in map
+	 * @return The value
+	 * @throws StringValueConversionException
+	 */
+	public abstract double getDouble(final String key, final double defaultValue)
+			throws StringValueConversionException;
 
 	/**
 	 * Gets a duration.
@@ -184,6 +197,7 @@ public interface IValueMap extends Map<String,Object>
 	 * representation to a collections "unmodifiableMap". After calling this
 	 * method, any attempt to modify this map will result in a runtime exception
 	 * being thrown by the collections classes.
+	 * 
 	 * @return this
 	 */
 	public abstract IValueMap makeImmutable();

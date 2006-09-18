@@ -105,6 +105,11 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 		return wrapped.getDouble(key);
 	}
 
+	public double getDouble(String key, double defaultValue) throws StringValueConversionException
+	{
+		return wrapped.getDouble(key, defaultValue);
+	}
+
 	public Duration getDuration(String key) throws StringValueConversionException
 	{
 		return wrapped.getDuration(key);

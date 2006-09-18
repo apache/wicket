@@ -177,6 +177,15 @@ public class ValueMap extends HashMap<String, Object> implements IValueMap
 	}
 
 	/**
+	 * @see wicket.util.value.IValueMap#getDouble(java.lang.String, long)
+	 */
+	public final double getDouble(final String key, final double defaultValue)
+			throws StringValueConversionException
+	{
+		return getStringValue(key).toDouble(defaultValue);
+	}
+
+	/**
 	 * @see wicket.util.value.IValueMap#getDuration(java.lang.String)
 	 */
 	public final Duration getDuration(final String key) throws StringValueConversionException
