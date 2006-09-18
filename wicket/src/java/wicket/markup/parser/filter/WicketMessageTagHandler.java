@@ -140,7 +140,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				final String value = settings.getLocalizer().getString(messageKey, null, searchStack,
 						containerInfo.getLocale(), containerInfo.getStyle());
 
-				if (value.length() > 0)
+				if (value != null && (value.length() > 0))
 				{
 					tag.getAttributes().put(attrName, value);
 					tag.setModified(true);
