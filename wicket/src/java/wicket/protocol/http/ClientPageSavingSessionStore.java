@@ -40,7 +40,14 @@ import wicket.util.string.JavascriptUtils;
  */
 public class ClientPageSavingSessionStore extends HttpSessionStore
 {
-	private ThreadLocal<Map<String, Object>> pages = new ThreadLocal<Map<String, Object>>();
+	private ThreadLocal<Map<String, Object>> pages = new ThreadLocal<Map<String, Object>>()
+	{
+		@Override
+		protected Map<String, Object> initialValue()
+		{
+			return new HashMap<String, Object>();
+		}
+	};
 
 	/**
 	 * Construct.
@@ -52,27 +59,12 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	}
 
 	/**
-	 * @param request
-	 * @return The thread local map for temp page storage.
-	 */
-	private Map<String, Object> getStore(Request request)
-	{
-		Map<String, Object> map = pages.get();
-		if (map == null)
-		{
-			map = new HashMap<String, Object>();
-			pages.set(map);
-		}
-		return map;
-	}
-
-	/**
 	 * @see wicket.protocol.http.AbstractHttpSessionStore#onBeginRequest(wicket.Request)
 	 */
 	@Override
 	public void onBeginRequest(Request request)
 	{
-		Map<String, Object> map = getStore(request);
+		Map<String, Object> map = pages.get();
 
 		String wicketState = request.getParameter("wicketState");
 		if (wicketState != null)
@@ -112,7 +104,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	@Override
 	public final Object getAttribute(Request request, String name)
 	{
-		Map<String, Object> store = getStore(request);
+		Map<String, Object> store = pages.get();
 		Object o = store.get(name);
 		if (o == null)
 		{
@@ -128,7 +120,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	public final List<String> getAttributeNames(Request request)
 	{
 		List<String> lst = super.getAttributeNames(request);
-		lst.addAll(getStore(request).keySet());
+		lst.addAll(pages.get().keySet());
 		return lst;
 	}
 
@@ -139,7 +131,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	@Override
 	public final void removeAttribute(Request request, String name)
 	{
-		Map<String, Object> store = getStore(request);
+		Map<String, Object> store = pages.get();
 		if (store.remove(name) == null)
 		{
 			super.removeAttribute(request, name);
@@ -158,7 +150,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 			// set the page to none versioning. this is not needed for client
 			// page saving.
 			((Page)value).setVersioned(false);
-			Map<String, Object> store = getStore(request);
+			Map<String, Object> store = pages.get();
 			store.put(name, value);
 		}
 		else
