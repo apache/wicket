@@ -19,6 +19,7 @@ package wicket.extensions.ajax.markup.html.autocomplete;
 import java.util.Iterator;
 
 import wicket.MarkupContainer;
+import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.form.TextField;
 import wicket.model.IModel;
 
@@ -149,7 +150,10 @@ public abstract class AutoCompleteTextField<T> extends TextField<T>
 			IAutoCompleteRenderer renderer)
 	{
 		super(parent, id, model, type);
-
+		
+		// this disables Firefox autocomplete
+		add(new SimpleAttributeModifier("autocomplete","off"));
+		
 		add(new AutoCompleteBehavior(renderer)
 		{
 
