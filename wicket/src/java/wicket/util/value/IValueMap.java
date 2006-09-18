@@ -27,15 +27,17 @@ import wicket.util.time.Time;
 
 
 /**
+ * A Map interface that holds values, parses strings and exposes a variety of
+ * convenience methods.
+ * 
  * @author jcompagner
  */
 public interface IValueMap extends Map<String, Object>
 {
-
 	/**
 	 * @see java.util.Map#clear()
 	 */
-	public abstract void clear();
+	void clear();
 
 	/**
 	 * Gets a boolean value by key.
@@ -45,7 +47,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract boolean getBoolean(final String key) throws StringValueConversionException;
+	boolean getBoolean(final String key) throws StringValueConversionException;
 
 	/**
 	 * Gets a double value by key.
@@ -55,7 +57,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract double getDouble(final String key) throws StringValueConversionException;
+	double getDouble(final String key) throws StringValueConversionException;
 
 	/**
 	 * Gets a double using a default if not found.
@@ -67,7 +69,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract double getDouble(final String key, final double defaultValue)
+	double getDouble(final String key, final double defaultValue)
 			throws StringValueConversionException;
 
 	/**
@@ -78,7 +80,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract Duration getDuration(final String key) throws StringValueConversionException;
+	Duration getDuration(final String key) throws StringValueConversionException;
 
 	/**
 	 * Gets an int.
@@ -88,7 +90,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract int getInt(final String key) throws StringValueConversionException;
+	int getInt(final String key) throws StringValueConversionException;
 
 	/**
 	 * Gets an int, using a default if not found.
@@ -100,8 +102,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract int getInt(final String key, final int defaultValue)
-			throws StringValueConversionException;
+	int getInt(final String key, final int defaultValue) throws StringValueConversionException;
 
 	/**
 	 * Gets a long.
@@ -111,7 +112,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract long getLong(final String key) throws StringValueConversionException;
+	long getLong(final String key) throws StringValueConversionException;
 
 	/**
 	 * Gets a long using a default if not found.
@@ -123,8 +124,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract long getLong(final String key, final long defaultValue)
-			throws StringValueConversionException;
+	long getLong(final String key, final long defaultValue) throws StringValueConversionException;
 
 	/**
 	 * Gets a string by key.
@@ -135,7 +135,7 @@ public interface IValueMap extends Map<String, Object>
 	 *            Default value to return if value is null
 	 * @return The string
 	 */
-	public abstract String getString(final String key, final String defaultValue);
+	String getString(final String key, final String defaultValue);
 
 	/**
 	 * Gets a string by key.
@@ -144,7 +144,7 @@ public interface IValueMap extends Map<String, Object>
 	 *            The get
 	 * @return The string
 	 */
-	public abstract String getString(final String key);
+	String getString(final String key);
 
 	/**
 	 * Gets a string by key.
@@ -153,7 +153,7 @@ public interface IValueMap extends Map<String, Object>
 	 *            The get
 	 * @return The string
 	 */
-	public abstract CharSequence getCharSequence(final String key);
+	CharSequence getCharSequence(final String key);
 
 	/**
 	 * Gets a String array by key. If the value was a String[] it will be
@@ -164,7 +164,7 @@ public interface IValueMap extends Map<String, Object>
 	 * @param key
 	 * @return The String array of that key
 	 */
-	public abstract String[] getStringArray(final String key);
+	String[] getStringArray(final String key);
 
 	/**
 	 * Gets a StringValue by key.
@@ -173,7 +173,7 @@ public interface IValueMap extends Map<String, Object>
 	 *            The key
 	 * @return The string value object
 	 */
-	public abstract StringValue getStringValue(final String key);
+	StringValue getStringValue(final String key);
 
 	/**
 	 * Gets a time.
@@ -183,14 +183,14 @@ public interface IValueMap extends Map<String, Object>
 	 * @return The value
 	 * @throws StringValueConversionException
 	 */
-	public abstract Time getTime(final String key) throws StringValueConversionException;
+	Time getTime(final String key) throws StringValueConversionException;
 
 	/**
 	 * Gets whether this value map is made immutable.
 	 * 
 	 * @return whether this value map is made immutable
 	 */
-	public abstract boolean isImmutable();
+	boolean isImmutable();
 
 	/**
 	 * Makes this value map immutable by changing the underlying map
@@ -200,22 +200,22 @@ public interface IValueMap extends Map<String, Object>
 	 * 
 	 * @return this
 	 */
-	public abstract IValueMap makeImmutable();
+	IValueMap makeImmutable();
 
 	/**
 	 * @see java.util.Map#put(K, V)
 	 */
-	public abstract Object put(final String key, final Object value);
+	Object put(final String key, final Object value);
 
 	/**
 	 * @see java.util.Map#putAll(java.util.Map)
 	 */
-	public abstract void putAll(final Map<? extends String, ? extends Object> map);
+	void putAll(final Map<? extends String, ? extends Object> map);
 
 	/**
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
-	public abstract Object remove(final Object key);
+	Object remove(final Object key);
 
 	/**
 	 * Provided the hash key is a string and you need to access the value
@@ -225,6 +225,5 @@ public interface IValueMap extends Map<String, Object>
 	 * @param key
 	 * @return The key with the correct writing
 	 */
-	public abstract String getKey(final String key);
-
+	String getKey(final String key);
 }
