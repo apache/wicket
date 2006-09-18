@@ -106,14 +106,15 @@ public class ValueMap extends HashMap
 	{
 		int start = 0;
 		int equalsIndex = keyValuePairs.indexOf('=');
-		int delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
-		if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
-		while(equalsIndex != -1)
+		int delimiterIndex = keyValuePairs.indexOf(delimiter, equalsIndex);
+		if (delimiterIndex == -1)
+			delimiterIndex = keyValuePairs.length();
+		while (equalsIndex != -1)
 		{
-			if(delimiterIndex < keyValuePairs.length())
+			if (delimiterIndex < keyValuePairs.length())
 			{
-				int equalsIndex2 = keyValuePairs.indexOf('=', delimiterIndex+1);
-				if(equalsIndex2 != -1)
+				int equalsIndex2 = keyValuePairs.indexOf('=', delimiterIndex + 1);
+				if (equalsIndex2 != -1)
 				{
 					int delimiterIndex2 = keyValuePairs.lastIndexOf(delimiter, equalsIndex2);
 					delimiterIndex = delimiterIndex2;
@@ -123,17 +124,18 @@ public class ValueMap extends HashMap
 					delimiterIndex = keyValuePairs.length();
 				}
 			}
-			String key = keyValuePairs.substring(start,equalsIndex);
-			String value = keyValuePairs.substring(equalsIndex+1, delimiterIndex);
-			put(key,value);
-			if(delimiterIndex < keyValuePairs.length())
+			String key = keyValuePairs.substring(start, equalsIndex);
+			String value = keyValuePairs.substring(equalsIndex + 1, delimiterIndex);
+			put(key, value);
+			if (delimiterIndex < keyValuePairs.length())
 			{
-				start = delimiterIndex+1;
-				equalsIndex = keyValuePairs.indexOf('=',start);
-				if(equalsIndex != -1)
+				start = delimiterIndex + 1;
+				equalsIndex = keyValuePairs.indexOf('=', start);
+				if (equalsIndex != -1)
 				{
-					delimiterIndex = keyValuePairs.indexOf(delimiter,equalsIndex);
-					if(delimiterIndex == -1) delimiterIndex = keyValuePairs.length();
+					delimiterIndex = keyValuePairs.indexOf(delimiter, equalsIndex);
+					if (delimiterIndex == -1)
+						delimiterIndex = keyValuePairs.length();
 				}
 			}
 			else
@@ -217,6 +219,22 @@ public class ValueMap extends HashMap
 	public final double getDouble(final String key) throws StringValueConversionException
 	{
 		return getStringValue(key).toDouble();
+	}
+
+	/**
+	 * Gets a double using a default if not found.
+	 * 
+	 * @param key
+	 *            The key
+	 * @param defaultValue
+	 *            Value to use if no value in map
+	 * @return The value
+	 * @throws StringValueConversionException
+	 */
+	public final double getDouble(final String key, final double defaultValue)
+			throws StringValueConversionException
+	{
+		return getStringValue(key).toDouble(defaultValue);
 	}
 
 	/**
