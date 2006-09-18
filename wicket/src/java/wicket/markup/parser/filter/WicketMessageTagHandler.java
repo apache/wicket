@@ -143,9 +143,12 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				Component c = null;
 				Page page = RequestCycle.get().getResponsePage();
 				String path = containerInfo.getComponentPath();
-				c = page.get(path);
-
-				final String value = settings.getLocalizer().getString(messageKey, c);
+				String value = null;
+				if (page != null)
+				{
+					c = page.get(path);
+					value = settings.getLocalizer().getString(messageKey, c);
+				}
 
 				if (value != null && (value.length() > 0))
 				{
