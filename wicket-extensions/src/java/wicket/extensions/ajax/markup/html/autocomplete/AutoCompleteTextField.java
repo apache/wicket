@@ -113,6 +113,9 @@ public abstract class AutoCompleteTextField extends TextField
 	{
 		super(id, model, type);
 
+		// this disables Firefox autocomplete
+		add(new SimpleAttributeModifier("autocomplete","off"));
+		
 		add(new AutoCompleteBehavior(renderer)
 		{
 
