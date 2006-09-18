@@ -293,8 +293,6 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	@Override
 	protected void internalOnAttach()
 	{
-		super.onBeforeRender();
-
 		// if tempModel - set on construction - is not-null, the label and
 		// editor components have not yet been set.
 		if (tempModel != null)
