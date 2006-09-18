@@ -33,12 +33,12 @@ import wicket.MarkupContainer;
  */
 public class ContainerInfo
 {
-	private Class containerClass;
-	private Locale locale;
-	private String style;
-	private String variation;
-	private String fileExtension;
-
+	private final Class containerClass;
+	private final Locale locale;
+	private final String style;
+	private final String variation;
+	private final String fileExtension;
+	
 	/**
 	 * Construct.
 	 * 
