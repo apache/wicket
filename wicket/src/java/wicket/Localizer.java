@@ -317,7 +317,7 @@ public class Localizer
 	 *            The component to evaluate
 	 * @return The stack of classes
 	 */
-	private List<Class> getComponentStack(final Component component)
+	public static List<Class> getComponentStack(final Component component)
 	{
 		// No component, no stack
 		if (component == null)

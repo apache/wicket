@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import wicket.Application;
+import wicket.Component;
+import wicket.Page;
+import wicket.RequestCycle;
 import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
@@ -48,7 +51,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * globally enable wicket:message; If accepted by user, we should use an
 	 * apps setting
 	 */
-	public static boolean enable = false;
+	public static boolean enable = true;
 
 	/**
 	 * The MarkupContainer requesting the information incl. class, locale and
@@ -137,8 +140,12 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 							+ text + "; Must be: key=value[, key=value]", tag.getPos());
 				}
 
-				final String value = settings.getLocalizer().getString(messageKey, null, searchStack,
-						containerInfo.getLocale(), containerInfo.getStyle());
+				Component c = null;
+				Page page = RequestCycle.get().getResponsePage();
+				String path = containerInfo.getComponentPath();
+				c = page.get(path);
+
+				final String value = settings.getLocalizer().getString(messageKey, c);
 
 				if (value != null && (value.length() > 0))
 				{

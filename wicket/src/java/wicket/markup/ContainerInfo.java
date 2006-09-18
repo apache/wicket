@@ -33,12 +33,13 @@ import wicket.MarkupContainer;
  */
 public class ContainerInfo
 {
+	private final String componentPath;
 	private final Class containerClass;
+	private final String fileExtension;
 	private final Locale locale;
 	private final String style;
 	private final String variation;
-	private final String fileExtension;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -52,10 +53,20 @@ public class ContainerInfo
 		this.style = container.getStyle();
 		this.variation = null;
 		this.fileExtension = container.getMarkupType();
+		this.componentPath = container.getPageRelativePath();
 	}
 
 	/**
+	 * Gets componentPath.
 	 * 
+	 * @return componentPath
+	 */
+	public String getComponentPath()
+	{
+		return componentPath;
+	}
+
+	/**
 	 * @return The container class
 	 */
 	public Class getContainerClass()
@@ -64,7 +75,6 @@ public class ContainerInfo
 	}
 
 	/**
-	 * 
 	 * @return The container markup type (== file extension)
 	 */
 	public String getFileExtension()
@@ -73,7 +83,6 @@ public class ContainerInfo
 	}
 
 	/**
-	 * 
 	 * @return The container locale
 	 */
 	public Locale getLocale()
@@ -82,7 +91,6 @@ public class ContainerInfo
 	}
 
 	/**
-	 * 
 	 * @return The container style
 	 */
 	public String getStyle()
@@ -91,7 +99,6 @@ public class ContainerInfo
 	}
 
 	/**
-	 * 
 	 * @return The containers variation
 	 */
 	public String getVariation()
@@ -100,7 +107,6 @@ public class ContainerInfo
 	}
 
 	/**
-	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
