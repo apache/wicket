@@ -28,6 +28,7 @@ import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.WebResponse;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 
@@ -40,40 +41,95 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 {
 	/** Logger */
 	private static final Log log = LogFactory.getLog(ResourceStreamRequestTarget.class);
-	
-	
+
+	/**
+	 * Optional filename, used to set the content disposition header. Only
+	 * meaningful when using with web requests.
+	 */
+	private String fileName;
+
 	/** the resource stream for the response. */
 	private final IResourceStream resourceStream;
-
-	/** the response type, eg 'text/html' . */
-	private final String responseType;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param resourceStream
 	 *            the resource stream for the response
-	 * @param responseType
-	 *            the response type, eg 'text/html'
 	 */
-	public ResourceStreamRequestTarget(IResourceStream resourceStream, String responseType)
+	public ResourceStreamRequestTarget(IResourceStream resourceStream)
 	{
 		if (resourceStream == null)
 		{
 			throw new IllegalArgumentException("Argument resourceStream must be not null");
 		}
 
-		if (responseType == null)
-		{
-			throw new IllegalArgumentException("Argument responseType must be not null");
-		}
-
 		this.resourceStream = resourceStream;
-		this.responseType = responseType;
 	}
 
 	/**
-	 * Does nothing at all.
+	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
+	 */
+	public void detach(RequestCycle requestCycle)
+	{
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof ResourceStreamRequestTarget)
+		{
+			ResourceStreamRequestTarget that = (ResourceStreamRequestTarget)obj;
+			return resourceStream.equals(that.resourceStream)
+					&& ((fileName != null) ? fileName.equals(this.fileName) : true);
+		}
+		return false;
+	}
+
+	/**
+	 * @return Optional filename, used to set the content disposition header.
+	 *         Only meaningful when using with web requests.
+	 */
+	public String getFileName()
+	{
+		return fileName;
+	}
+
+	/**
+	 * @see wicket.IRequestTarget#getLock(RequestCycle)
+	 */
+	public Object getLock(RequestCycle requestCycle)
+	{
+		return null;
+	}
+
+	/**
+	 * Gets the resource stream for the response.
+	 * 
+	 * @return the resource stream for the response
+	 */
+	public final IResourceStream getResourceStream()
+	{
+		return resourceStream;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		int result = "ResourceStreamRequestTarget".hashCode();
+		result += resourceStream.hashCode();
+		result += (fileName != null) ? fileName.hashCode() : 0;
+		return 17 * result;
+	}
+
+	/**
+	 * Responds by sending the contents of the resource stream.
 	 * 
 	 * @see wicket.IRequestTarget#respond(wicket.RequestCycle)
 	 */
@@ -136,7 +192,28 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	}
 
 	/**
-	 * Configures the response, default by setting the content type and length.
+	 * @param fileName
+	 *            Optional filename, used to set the content disposition header.
+	 *            Only meaningful when using with web requests.
+	 */
+	public void setFileName(String fileName)
+	{
+		this.fileName = fileName;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "[ResourceStreamRequestTarget[resourceStream=" + resourceStream + ",fileName="
+				+ fileName + "]";
+	}
+
+	/**
+	 * Configures the response, default by setting the content type and length
+	 * and content disposition (in case the fileName property was set).
 	 * 
 	 * @param response
 	 *            the response
@@ -146,80 +223,17 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	protected void configure(final Response response, final IResourceStream resourceStream)
 	{
 		// Configure response with content type of resource
-		response.setContentType(responseType + ";charset=" + response.getCharacterEncoding());
+		response.setContentType(resourceStream.getContentType() + ";charset="
+				+ response.getCharacterEncoding());
+
 		// and the content length
 		response.setContentLength((int)resourceStream.length());
-	}
 
-	/**
-	 * @see wicket.IRequestTarget#detach(wicket.RequestCycle)
-	 */
-	public void detach(RequestCycle requestCycle)
-	{
-	}
-
-	/**
-	 * @see wicket.IRequestTarget#getLock(RequestCycle)
-	 */
-	public Object getLock(RequestCycle requestCycle)
-	{
-		return null;
-	}
-
-	/**
-	 * Gets the resource stream for the response.
-	 * 
-	 * @return the resource stream for the response
-	 */
-	public final IResourceStream getResourceStream()
-	{
-		return resourceStream;
-	}
-
-	/**
-	 * Gets the response type, eg 'text/html'.
-	 * 
-	 * @return the response type, eg 'text/html'
-	 */
-	public final String getResponseType()
-	{
-		return responseType;
-	}
-
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (obj instanceof ResourceStreamRequestTarget)
+		// and content disposition if any
+		String file = getFileName();
+		if (file != null && (response instanceof WebResponse))
 		{
-			ResourceStreamRequestTarget that = (ResourceStreamRequestTarget)obj;
-			return resourceStream.equals(that.resourceStream)
-					&& responseType.equals(that.responseType);
+			((WebResponse)response).setAttachmentHeader(file);
 		}
-		return false;
-	}
-
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode()
-	{
-		int result = "ResourceStreamRequestTarget".hashCode();
-		result += resourceStream.hashCode();
-		result += responseType.hashCode();
-		return 17 * result;
-	}
-
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString()
-	{
-		return "[ResourceStreamRequestTarget@" + hashCode() + " resourceStream=" + resourceStream
-				+ ",responseType=" + responseType + "]";
 	}
 }
