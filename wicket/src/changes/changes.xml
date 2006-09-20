@@ -15,6 +15,7 @@
     <release version="1.3" date="tbd" description="Wicket 1.3">
 	</release>
 	<release version="1.2.3" description="Wicket 1.2.3">
+		<action type="fix" dev="Eelco Hillenius">ResourceReference and PackageResourceReference evolved in doing almost the same thing with ResourceReference falling back to package resources. The two classes were used mixed for the same purposes, so it obviously was confusing. PackageResourceReference is now deprecated (and removed in 2.0) and ResourceReference uses package resources as the explicit default now.</action>
 		<action type="fix" dev="Eelco Hillenius">FileUploadField's fileUpload member is now transient, and nulled at the end of a request; fileUpload depends on non-serializable classes and should be used for the upload request only anyway.</action>
 		<action type="fix" dev="Frank Bille Jensen" issue="1543832">InputStreams returned from FileUpload is now closed at the end of the request</action>
 		<action type="fix" dev="Frank Bille Jensen">Fixed a bug in WicketTester.clickLink. When clicking an AjaxSubmitLink which submitted a form with a CheckGroup inside it, the test would fail. This was because I had only checked for RadioGroup when copying the data from the form to the request.</action>
