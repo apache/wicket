@@ -635,16 +635,17 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				MarkupContainer oldParent = parent;
 				parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
 
+				if (parent == oldParent)
+				{
+					break;
+				}
+				
 				if (!oldParent.contains(parent, true))
 				{
 					throw new WicketRuntimeException(
 							"IAlternateParentProvider cannot return alternate parent containers that are outside its hierarchy.");
 				}
 
-				if (parent == oldParent)
-				{
-					break;
-				}
 			}
 		}
 
