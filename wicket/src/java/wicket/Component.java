@@ -615,7 +615,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	public Component(MarkupContainer<?> parent, final String id, final IModel<T> model)
 	{
 		setId(id);
-		
+
 		if (parent == null)
 		{
 			if (!(this instanceof Page))
@@ -625,11 +625,24 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 		// Bordered pages might implement the interface to allow to redirect
 		// to another parent without the need to change to code of adding a
-		// component. Another use case is where you want the parent to automatically
+		// component. Another use case is where you want the parent to
+		// automatically
 		// add a container in between the parent and new component.
 		else if (parent instanceof IAlternateParentProvider)
 		{
-			parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
+			// TODO 2.0:juergen: check comment below
+			// maybe even keep a list of all previously returned alt-parents in
+			// case impl of getAlternateParent() returns getParent() ???
+			// otherwise might have infinite loop
+			MarkupContainer recursiveCheck = parent;
+			while (parent instanceof IAlternateParentProvider)
+			{
+				parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
+				if (parent == recursiveCheck)
+				{
+					break;
+				}
+			}
 		}
 
 		this.parent = parent;
