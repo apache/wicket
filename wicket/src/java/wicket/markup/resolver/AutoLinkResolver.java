@@ -374,8 +374,8 @@ public final class AutoLinkResolver implements IComponentResolver
 				}
 
 				// Create the component implementing the link
-				ResourceReferenceAutolink autoLink = new ResourceReferenceAutolink(
-						container, autoId, clazz, pathInfo.reference);
+				ResourceReferenceAutolink autoLink = new ResourceReferenceAutolink(container,
+						autoId, clazz, pathInfo.reference);
 				if (autoLink.resourceReference != null)
 				{
 					// if the resource reference is null, it means that it the
@@ -501,8 +501,8 @@ public final class AutoLinkResolver implements IComponentResolver
 	}
 
 	/**
-	 * Resolves to {@link ResourceReference} link components. Typcically
-	 * used for header contributions like javascript and css files.
+	 * Resolves to {@link ResourceReference} link components. Typcically used
+	 * for header contributions like javascript and css files.
 	 */
 	private static final class ResourceReferenceResolverDelegate
 			extends
@@ -613,10 +613,10 @@ public final class AutoLinkResolver implements IComponentResolver
 	}
 
 	/**
-	 * Autolink component that points to a {@link ResourceReference}.
-	 * Autolink component delegate component resolution to their parent
-	 * components. Reason: autolink tags don't have wicket:id and users wouldn't
-	 * know where to add the component to.
+	 * Autolink component that points to a {@link ResourceReference}. Autolink
+	 * component delegate component resolution to their parent components.
+	 * Reason: autolink tags don't have wicket:id and users wouldn't know where
+	 * to add the component to.
 	 * 
 	 * @param <T>
 	 *            The type
@@ -643,9 +643,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
 			{
 				// Create the component implementing the link
-				resourceReference = new ResourceReference(clazz, href);
-				resourceReference.setLocale(getLocale());
-				resourceReference.setStyle(getStyle());
+				resourceReference = new ResourceReference(clazz, href, getLocale(), getStyle());
 			}
 			else
 			{
