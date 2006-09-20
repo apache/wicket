@@ -292,33 +292,6 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
-	 * Checks the type of resource this refers to, and when it is a
-	 * {@link PackageResource} it will check whether the resource can be found.
-	 * If it can't be found, an {@link IllegalStateException} will be thrown. If
-	 * it was found, this method just returns.
-	 * 
-	 * @param scope
-	 *            the scope of the resource
-	 * @param name
-	 *            the name of the resource
-	 * @param locale
-	 *            the optional locale for the resource
-	 * @param style
-	 *            the optional style for the resource
-	 */
-	public void validate()
-	{
-		if (getResource() instanceof PackageResource)
-		{
-			if (!PackageResource.exists(scope, name, locale, style))
-			{
-				throw new IllegalStateException("resource [scope=" + scope + ",name=" + name
-						+ ",locale=" + locale + "style=" + style + "] not found");
-			}
-		}
-	}
-
-	/**
 	 * Factory method for lazy initialization of shared resources.
 	 * 
 	 * @return The resource
