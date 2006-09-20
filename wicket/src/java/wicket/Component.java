@@ -630,15 +630,18 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		// add a container in between the parent and new component.
 		else if (parent instanceof IAlternateParentProvider)
 		{
-			// TODO 2.0:juergen: check comment below
-			// maybe even keep a list of all previously returned alt-parents in
-			// case impl of getAlternateParent() returns getParent() ???
-			// otherwise might have infinite loop
-			MarkupContainer recursiveCheck = parent;
 			while (parent instanceof IAlternateParentProvider)
 			{
+				MarkupContainer oldParent = parent;
 				parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
-				if (parent == recursiveCheck)
+
+				if (!oldParent.contains(parent, true))
+				{
+					throw new WicketRuntimeException(
+							"IAlternateParentProvider cannot return alternate parent containers that are outside its hierarchy.");
+				}
+
+				if (parent == oldParent)
 				{
 					break;
 				}
