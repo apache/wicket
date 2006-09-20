@@ -36,7 +36,6 @@ import wicket.application.IClassResolver;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.PackageResource;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ExternalLink;
@@ -503,7 +502,7 @@ public final class AutoLinkResolver implements IComponentResolver
 	}
 
 	/**
-	 * Resolves to {@link PackageResourceReference} link components. Typcically
+	 * Resolves to {@link ResourceReference} link components. Typcically
 	 * used for header contributions like javascript and css files.
 	 */
 	private static final class PackageResourceReferenceResolverDelegate
@@ -635,9 +634,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			if (PackageResource.exists(clazz, href, getLocale(), getStyle()))
 			{
 				// Create the component implementing the link
-				resourceReference = new ResourceReference(clazz, href);
-				resourceReference.setLocale(getLocale());
-				resourceReference.setStyle(getStyle());
+				resourceReference = new ResourceReference(clazz, href, getLocale(), getStyle());
 			}
 			else
 			{

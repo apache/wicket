@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import wicket.markup.html.PackageResource;
+import wicket.util.lang.Objects;
 
 /**
  * ResourceReference is essentially a reference to an actual resource which is
@@ -32,22 +33,24 @@ import wicket.markup.html.PackageResource;
  * the resource is being used. For example, if a ResourceReference is attached
  * to an Image component, when the locale for the page switches, the Image
  * component will notice this and automatically change the locale for the
- * referenced resource as appropriate. It's for this reason that there are no
- * constructor overloads taking a Locale or style (these details are essentially
- * internal and so the framework uses setLocale/setStyle internally so you don't
- * have to worry about it).
+ * referenced resource as appropriate. It's for this reason that you don't
+ * typically have to use the constructor overloads taking a Locale or style
+ * (these details are essentially internal and so the framework uses
+ * setLocale/setStyle internally so you don't have to worry about it).
  * <p>
- * Resources may be added to the Application when the Application is constructed
- * using {@link Application#getSharedResources()} followed by
+ * Package resources (resources which can be pulled from the classpath) do not
+ * have to be pre-registered. For custom situations though, resources may be
+ * added to the Application when the Application is constructed using
+ * {@link Application#getSharedResources()} followed by
  * {@link SharedResources#add(Class, String, Locale, String, Resource)},
  * {@link SharedResources#add(String, Locale, Resource)}or
  * {@link SharedResources#add(String, Resource)}.
  * <p>
  * If a component has its own shared resource which should not be added to the
  * application construction logic in this way, it can lazy-initialize the
- * resource by overriding the {@link ResourceReference#newResource()}method. In
- * this method, the component should supply logic that creates the shared
- * resource.
+ * resource by overriding the {@link #newResource()} method. In this method, the
+ * component should supply logic that creates the shared resource. By default
+ * the {@link #newResource()} method tries to resolve to a package resource.
  * 
  * @author Jonathan Locke
  */
@@ -82,8 +85,32 @@ public class ResourceReference implements Serializable
 	 */
 	public ResourceReference(final Class scope, final String name)
 	{
+		this(scope, name, null, null);
+	}
+
+	/**
+	 * Constructs a ResourceReference with the given scope and name. The scope
+	 * is used as a namespace and the scope together with the name must uniquely
+	 * identify the reference. This constructor takes in the locale and style
+	 * arguments. The locale might be overruled if this resource resolves to a
+	 * package resource.
+	 * 
+	 * @param scope
+	 *            The scope of the name
+	 * @param name
+	 *            The name of the resource
+	 * @param locale
+	 *            The Locale from which the search for the PackageResource must
+	 *            start
+	 * @param style
+	 *            The Style of the PackageResource
+	 */
+	public ResourceReference(final Class scope, final String name, Locale locale, String style)
+	{
 		this.scope = scope;
 		this.name = name;
+		this.locale = locale;
+		this.style = style;
 	}
 
 	/**
@@ -144,6 +171,21 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof ResourceReference)
+		{
+			ResourceReference that = (ResourceReference)obj;
+			return Objects.equal(this.scope, that.scope) && Objects.equal(this.name, that.name)
+					&& Objects.equal(this.locale, that.locale)
+					&& Objects.equal(this.style, that.style);
+		}
+		return false;
+	}
+
+	/**
 	 * @return Returns the locale.
 	 */
 	public final Locale getLocale()
@@ -199,6 +241,19 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode()
+	{
+		int result = 17;
+		result = 37 * result + (scope != null ? scope.hashCode() : 0);
+		result = 37 * result + (name != null ? name.hashCode() : 0);
+		result = 37 * result + (locale != null ? locale.hashCode() : 0);
+		result = 37 * result + (style != null ? style.hashCode() : 0);
+		return result;
+	}
+
+	/**
 	 * Sets any loaded resource to null, thus forcing a reload on the next
 	 * request.
 	 */
@@ -237,12 +292,50 @@ public class ResourceReference implements Serializable
 	}
 
 	/**
+	 * Checks the type of resource this refers to, and when it is a
+	 * {@link PackageResource} it will check whether the resource can be found.
+	 * If it can't be found, an {@link IllegalStateException} will be thrown. If
+	 * it was found, this method just returns.
+	 * 
+	 * @param scope
+	 *            the scope of the resource
+	 * @param name
+	 *            the name of the resource
+	 * @param locale
+	 *            the optional locale for the resource
+	 * @param style
+	 *            the optional style for the resource
+	 */
+	public void validate()
+	{
+		if (getResource() instanceof PackageResource)
+		{
+			if (!PackageResource.exists(scope, name, locale, style))
+			{
+				throw new IllegalStateException("resource [scope=" + scope + ",name=" + name
+						+ ",locale=" + locale + "style=" + style + "] not found");
+			}
+		}
+	}
+
+	/**
 	 * Factory method for lazy initialization of shared resources.
 	 * 
 	 * @return The resource
 	 */
 	protected Resource newResource()
 	{
-		return null;
+		PackageResource packageResource = PackageResource.get(getScope(), getName(), getLocale(),
+				getStyle());
+		if (packageResource != null)
+		{
+			locale = packageResource.getLocale();
+		}
+		else
+		{
+			throw new IllegalArgumentException("package resource [scope=" + getScope() + ",name="
+					+ getName() + ",locale=" + getLocale() + "style=" + getStyle() + "] not found");
+		}
+		return packageResource;
 	}
 }
