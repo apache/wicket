@@ -311,6 +311,9 @@
 				class="logoLink">
 				<img alt="Topicus B.V." src="images/topicus.gif" />
 			</a>
+			<a href="http://www.servoy.com" target="_blank" class="logoLink">
+				<img alt="Servoy" src="images/servoy-logo-plain.png" />
+			</a>
 			<a href="http://www.yourkit.com" target="_blank"
 				class="logoLink">
 				<img alt="YourKit" src="images/yip_logo.gif" />
