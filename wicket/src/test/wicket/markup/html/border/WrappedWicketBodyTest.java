@@ -42,9 +42,25 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	 * 
 	 * @throws Exception
 	 */
+	public void testSimpleBorder() throws Exception
+	{
+		String document = accessPage(TestPage3.class).getDocument();
+		assertTrue(document.contains("[[SUCCESS]]"));
+		assertTrue(document.contains("[[TEST]]"));
+	}
+
+	/**
+	 * Test borders where wicket:body is a child of border's child instead of a
+	 * direct child of the border
+	 * 
+	 * @throws Exception
+	 */
 	public void testWicketBodyContainer() throws Exception
 	{
-		assertTrue(accessPage(TestPage.class).getDocument().contains("[[SUCCESS]]"));
+		String document = accessPage(TestPage.class).getDocument();
+		assertTrue(document.contains("[[SUCCESS]]"));
+		assertTrue(document.contains("[[TEST]]"));
+		assertTrue(document.contains("[[TEST-2]]"));
 	}
 
 	/**
@@ -55,7 +71,10 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	 */
 	public void testMultiLevelWicketBodyContainer() throws Exception
 	{
-		assertTrue(accessPage(TestPage2.class).getDocument().contains("[[SUCCESS]]"));
+		String document = accessPage(TestPage2.class).getDocument();
+		assertTrue(document.contains("[[SUCCESS]]"));
+		assertTrue(document.contains("[[TEST]]"));
+		assertTrue(document.contains("[[TEST-2]]"));
 	}
 
 	/**
@@ -112,14 +131,37 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	}
 
 	/**
+	 * Test page
+	 * 
+	 * @author ivaynberg
+	 */
+	public static class TestPage3 extends WebPage implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 */
+		public TestPage3()
+		{
+			Border border = new TestBorder2(this, "border");
+			new Label(border, "label", "[[SUCCESS]]");
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<? extends MarkupContainer> containerClass)
+		{
+			return new StringResourceStream(
+					"<html><body><span wicket:id='border'><span wicket:id='label'></span></span></body></html>");
+		}
+	}
+
+	/**
 	 * Test border that implemetns {@link IAlternateParentProvider}
 	 * 
 	 * @author ivaynberg
 	 */
-	public static class TestBorder extends Border
-			implements
-				IAlternateParentProvider,
-				IMarkupResourceStreamProvider
+	public static class TestBorder extends Border implements IMarkupResourceStreamProvider
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -136,20 +178,44 @@ public class WrappedWicketBodyTest extends WicketTestCase
 		{
 			super(parent, id);
 			bodyParent = new WebMarkupContainer(this, "body-parent");
-		}
-
-		public MarkupContainer getAlternateParent(Class childClass, String childId)
-		{
-			return (bodyParent == null) ? this : bodyParent;
+			new Label(this, "borderLabel", "[[TEST]]");
+			new Label(bodyParent, "borderLabel2", "[[TEST-2]]");
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 				Class<? extends MarkupContainer> containerClass)
 		{
 			return new StringResourceStream(
-					"<wicket:border><span wicket:id='body-parent'><wicket:body/></span></wicket:border>");
+					"<wicket:border><span wicket:id='body-parent'><wicket:body/><span wicket:id='borderLabel2'></span></span><span wicket:id='borderLabel'></span></wicket:border>");
 		}
-
 	}
 
+	/**
+	 * Test border that implemetns {@link IAlternateParentProvider}
+	 * 
+	 * @author ivaynberg
+	 */
+	public static class TestBorder2 extends Border implements IMarkupResourceStreamProvider
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
+		 * @param id
+		 */
+		public TestBorder2(MarkupContainer parent, String id)
+		{
+			super(parent, id);
+			new Label(this, "borderLabel", "[[TEST]]");
+		}
+
+		public IResourceStream getMarkupResourceStream(MarkupContainer container,
+				Class<? extends MarkupContainer> containerClass)
+		{
+			return new StringResourceStream(
+					"<wicket:border><span wicket:id='borderLabel'></span><wicket:body/></wicket:border>");
+		}
+	}
 }
