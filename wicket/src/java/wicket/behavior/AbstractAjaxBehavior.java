@@ -254,6 +254,9 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	 * header contributions are done only once per implementation.
 	 * 
 	 * @return unique id of an ajax implementation
+	 * 
+	 * @deprecated The mechanism will be changed for Wicket 2.0, where doubles
+	 *             are filtered in (future) class IHeaderResponse.
 	 */
 	protected abstract String getImplementationId();
 
