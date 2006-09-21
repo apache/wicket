@@ -28,6 +28,7 @@ import wicket.ResourceReference;
 import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.PackageResourceReference;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
@@ -204,6 +205,22 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 
 		onRenderHeadContribution(response);
 	}
+
+	/**
+	 * Convenience method to add a javascript reference.
+	 * 
+	 * @param response
+	 * 
+	 * @param ref
+	 *            reference to add
+	 * @deprecated use {@link #writeJsReference(Response, ResourceReference)} instead
+	 */
+	protected void writeJsReference(final Response response, final PackageResourceReference ref)
+	{
+		CharSequence url = RequestCycle.get().urlFor(ref);
+		JavascriptUtils.writeJavascriptUrl(response, url);
+	}
+
 
 	/**
 	 * Convenience method to add a javascript reference.
