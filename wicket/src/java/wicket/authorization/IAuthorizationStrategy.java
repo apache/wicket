@@ -19,6 +19,7 @@
 package wicket.authorization;
 
 import wicket.Component;
+import wicket.settings.ISecuritySettings;
 
 /**
  * Authorization strategies specify aspect-like constraints on significant
@@ -59,9 +60,11 @@ public interface IAuthorizationStrategy
 
 	/**
 	 * Checks whether an instance of the given component class may be created.
-	 * If this method returns false, an
-	 * {@link UnauthorizedInstantiationException} will be thrown by the
-	 * framework.
+	 * If this method returns false, the
+	 * {@link IUnauthorizedComponentInstantiationListener} that is configured in
+	 * the {@link ISecuritySettings security settings} will be called. The
+	 * default implementation of that listener throws a
+	 * {@link UnauthorizedInstantiationException}.
 	 * <p>
 	 * If you wish to implement a strategy that authenticates users which cannot
 	 * access a given Page (or other Component), you can simply throw a
