@@ -10,14 +10,22 @@ div.wicket-tree {
 div.wicket-tree a {
 	text-decoration: none;
 	color: #3311aa;
-	float: left;
+	float: left;	
 }
 
 div.wicket-tree div.row,
 div.wicket-tree div.row-selected {
-	height: 1.5em;		
+	height: 1.5em;
+	overflow:hidden;	
+	width: 100%;
+	padding: 0px; margin: 0px;
 }
 	
+div.wicket-tree div.a_ {
+	/* prevent hiding text */
+	padding-left: 1em; margin: 0px; 
+	width: 2000px;
+}
 
 div.wicket-tree span.junction,
 div.wicket-tree span.junction-last,
@@ -108,7 +116,6 @@ div.wicket-tree span.indent-line {
 div.wicket-tree div.row,
 div.wicket-tree div.row-selected {
 	overflow: hidden;
-	padding-left: 1em;	
 	clear: both;
 }
 
