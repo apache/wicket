@@ -109,7 +109,7 @@ public class DefaultButtonImageResourceFactory implements IResourceFactory
 		 */
 		public int getHeight()
 		{
-			return width.getInt(matcher(), -1);
+			return height.getInt(matcher(), -1);
 		}
 	}
 }
