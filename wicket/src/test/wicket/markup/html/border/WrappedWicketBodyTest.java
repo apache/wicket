@@ -161,13 +161,15 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	 * 
 	 * @author ivaynberg
 	 */
-	public static class TestBorder extends Border implements IMarkupResourceStreamProvider
+	public static class TestBorder extends Border implements IMarkupResourceStreamProvider, IAlternateParentProvider
 	{
 		private static final long serialVersionUID = 1L;
 
 		/** container for wicket:body components */
 		private final WebMarkupContainer bodyParent;
 
+		private boolean constr = true;
+		
 		/**
 		 * Construct.
 		 * 
@@ -180,6 +182,7 @@ public class WrappedWicketBodyTest extends WicketTestCase
 			bodyParent = new WebMarkupContainer(this, "body-parent");
 			new Label(this, "borderLabel", "[[TEST]]");
 			new Label(bodyParent, "borderLabel2", "[[TEST-2]]");
+			this.constr = false;
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -187,6 +190,15 @@ public class WrappedWicketBodyTest extends WicketTestCase
 		{
 			return new StringResourceStream(
 					"<wicket:border><span wicket:id='body-parent'><wicket:body/><span wicket:id='borderLabel2'></span></span><span wicket:id='borderLabel'></span></wicket:border>");
+		}
+
+		/**
+		 * 
+		 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class, java.lang.String)
+		 */
+		public MarkupContainer getAlternateParent(Class childClass, String childId)
+		{
+			return (this.constr == true && this.bodyParent != null && !"borderLabel".equals(childId) ? this.bodyParent : this);
 		}
 	}
 
