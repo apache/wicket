@@ -25,7 +25,7 @@ import wicket.util.lang.Packages;
 
 /**
  * Default implementation of {@link IPackageResourceGuard}. By default, the
- * extensions 'properties', 'class' and 'java' are blocked.
+ * extensions 'properties', 'html', 'class' and 'java' are blocked.
  * 
  * @author eelcohillenius
  */
@@ -42,6 +42,7 @@ public class PackageResourceGuard implements IPackageResourceGuard
 		blockedExtensions.add("properties");
 		blockedExtensions.add("class");
 		blockedExtensions.add("java");
+		blockedExtensions.add("html");
 	}
 
 	/**
