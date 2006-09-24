@@ -167,10 +167,16 @@ public class AjaxRequestTarget implements IRequestTarget
 	private final List<String> appendJavascripts = new ArrayList<String>();
 
 	/**
-	 * create a response that will escape output to make it safe to use inside a
-	 * CDATA block
+	 * create a response for component body and javascript that will escape
+	 * output to make it safe to use inside a CDATA block
 	 */
-	private final EncodingResponse encodingResponse;
+	private final EncodingResponse encodingBodyResponse;
+
+	/**
+	 * Response for header contributon that will escape output to make it safe
+	 * to use inside a CDATA block
+	 */
+	private final EncodingResponse encodingHeaderResponse;
 
 	/** the component instances that will be rendered */
 	private final Map<String, Component> markupIdToComponent = new HashMap<String, Component>();
@@ -183,7 +189,8 @@ public class AjaxRequestTarget implements IRequestTarget
 	public AjaxRequestTarget()
 	{
 		Response response = RequestCycle.get().getResponse();
-		encodingResponse = new EncodingResponse(response);
+		encodingBodyResponse = new EncodingResponse(response);
+		encodingHeaderResponse = new EncodingResponse(response);
 	}
 
 
@@ -343,7 +350,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				final Map.Entry<String, Component> entry = it.next();
 				final Component component = entry.getValue();
 				final String markupId = entry.getKey();
-				respondHeaderContribution(response, component);
+				
 				respondComponent(response, markupId, component);
 			}
 
@@ -351,7 +358,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			{
 				respondInvocation(response, js);
 			}
-			
+
 			response.write("</ajax-response>");
 		}
 		catch (RuntimeException ex)
@@ -439,8 +446,8 @@ public class AjaxRequestTarget implements IRequestTarget
 		// substitute our encoding response for the real one so we can capture
 		// component's markup in a manner safe for transport inside CDATA block
 		final Response originalResponse = response;
-		encodingResponse.reset();
-		RequestCycle.get().setResponse(encodingResponse);
+		encodingBodyResponse.reset();
+		RequestCycle.get().setResponse(encodingBodyResponse);
 
 		// Initialize temporary variables
 		final Page page = component.getPage();
@@ -455,6 +462,9 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		page.startComponentRender(component);
 		component.renderComponent();
+		
+		respondHeaderContribution(response, component);
+		
 		page.endComponentRender(component);
 
 		page.setVersioned(versioned);
@@ -465,17 +475,17 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("<component id=\"");
 		response.write(markupId);
 		response.write("\" ");
-		if (encodingResponse.isContentsEncoded())
+		if (encodingBodyResponse.isContentsEncoded())
 		{
 			response.write(" encoding=\"");
 			response.write(getEncodingName());
 			response.write("\" ");
 		}
 		response.write("><![CDATA[");
-		response.write(encodingResponse.getContents());
+		response.write(encodingBodyResponse.getContents());
 		response.write("]]></component>");
 
-		encodingResponse.reset();
+		encodingBodyResponse.reset();
 
 
 	}
@@ -491,12 +501,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 		if (header == null)
 		{
-			header = new HtmlHeaderContainer(component.getPage(),HtmlHeaderSectionHandler.HEADER_ID);
+			header = new HtmlHeaderContainer(component.getPage(),
+					HtmlHeaderSectionHandler.HEADER_ID);
 		}
 
-		Response oldResponse = RequestCycle.get().setResponse(encodingResponse);
+		Response oldResponse = RequestCycle.get().setResponse(encodingHeaderResponse);
 
-		encodingResponse.reset();
+		encodingHeaderResponse.reset();
 
 		component.renderHead(header);
 		if (component instanceof MarkupContainer)
@@ -520,11 +531,11 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		RequestCycle.get().setResponse(oldResponse);
 
-		if (encodingResponse.getContents().length() != 0)
+		if (encodingHeaderResponse.getContents().length() != 0)
 		{
 			response.write("<header-contribution");
 
-			if (encodingResponse.isContentsEncoded())
+			if (encodingHeaderResponse.isContentsEncoded())
 			{
 				response.write(" encoding=\"");
 				response.write(getEncodingName());
@@ -536,7 +547,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			// konqueror crashes when there is a <script> element
 			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
 
-			response.write(encodingResponse.getContents());
+			response.write(encodingHeaderResponse.getContents());
 
 			response.write("</head>]]>");
 
@@ -574,6 +585,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("]]>");
 		response.write("</evaluate>");
 
-		encodingResponse.reset();
+		encodingBodyResponse.reset();
 	}
 }
