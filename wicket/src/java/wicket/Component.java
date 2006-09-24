@@ -639,7 +639,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				{
 					break;
 				}
-				
+
 				if (!oldParent.contains(parent, true))
 				{
 					throw new WicketRuntimeException(
@@ -779,10 +779,29 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			MarkupStream markupStream = Application.get().getMarkupSettings()
 					.getMarkupFragmentFinder().find(this);
 			ComponentTag tag = markupStream.getTag();
+
+			// TODO 2.0:juergen: the attributes and behavior additions are bad
+			// here since this method is meant to be overridden to provide
+			// custom markup (at least thats what the javadoc says) the
+			// overriders have to implement the two functionalities below
+			// otherwise all kinds of things can break. better to move this up
+			// the call hierarchy?
+
 			if (tag.hasAttributes())
 			{
 				markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
 			}
+
+			// add any behaviors attached to the component tag
+			if (tag.hasBehaviors())
+			{
+				Iterator<IBehavior> behaviors = tag.getBehaviors();
+				while (behaviors.hasNext())
+				{
+					add(behaviors.next());
+				}
+			}
+
 
 			return markupStream;
 		}

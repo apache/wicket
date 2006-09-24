@@ -18,10 +18,15 @@
  */
 package wicket.markup;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import wicket.Response;
+import wicket.behavior.IBehavior;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.XmlTag.Type;
 import wicket.markup.parser.filter.HtmlHandler;
@@ -38,8 +43,14 @@ import wicket.util.value.ValueMap;
  * component nesting) are coalesced into instances of RawMarkup (also a subclass
  * of MarkupElement).
  * 
+ * Tag handlers can attach behaviors to component tags, these behaviors will
+ * then be added to components attached to these tags upon component
+ * construction
+ * 
+ * 
  * @author Jonathan Locke
  * @author Juergen Donnerstag
+ * @author Igor Vaynberg
  */
 public class ComponentTag extends MarkupElement
 {
@@ -91,6 +102,11 @@ public class ComponentTag extends MarkupElement
 	private boolean internalTag = false;
 
 	/**
+	 * added behaviors
+	 */
+	private Collection<IBehavior> behaviors;
+
+	/**
 	 * Automatically create a XmlTag, assign the name and the type, and
 	 * construct a ComponentTag based on this XmlTag.
 	 * 
@@ -117,6 +133,50 @@ public class ComponentTag extends MarkupElement
 	{
 		super();
 		xmlTag = tag;
+	}
+
+	/**
+	 * Adds a behavior to this component tag.
+	 * 
+	 * @param behavior
+	 */
+	public final void addBehavior(IBehavior behavior)
+	{
+		if (behavior == null)
+		{
+			throw new IllegalArgumentException("Argument [[behavior]] cannot be null");
+		}
+
+		if (behaviors == null)
+		{
+			behaviors = new LinkedList<IBehavior>();
+		}
+		behaviors.add(behavior);
+	}
+
+	/**
+	 * @return true if this tag has any behaviors added, false otherwise
+	 */
+	public final boolean hasBehaviors()
+	{
+		return behaviors != null;
+	}
+
+	/**
+	 * @return read only iterator over added behaviors
+	 */
+	public final Iterator<IBehavior> getBehaviors()
+	{
+		if (behaviors == null)
+		{
+			List<IBehavior> empty = Collections.emptyList();
+			return empty.iterator();
+		}
+		else
+		{
+			Collection<IBehavior> locked = Collections.unmodifiableCollection(behaviors);
+			return locked.iterator();
+		}
 	}
 
 	/**
@@ -452,10 +512,11 @@ public class ComponentTag extends MarkupElement
 	{
 		return xmlTag.isOpenClose() && this.id.equals(id);
 	}
-	
+
 	/**
 	 * 
-	 * @param name The name of the tag, such as "panel" for wicket:panel 
+	 * @param name
+	 *            The name of the tag, such as "panel" for wicket:panel
 	 * @return True, if tag name equals wicket:'name'
 	 */
 	public final boolean isWicketTag(final String name)

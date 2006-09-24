@@ -19,28 +19,26 @@
 package wicket.markup.parser.filter;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
-import wicket.Application;
 import wicket.Component;
-import wicket.Page;
-import wicket.RequestCycle;
+import wicket.WicketRuntimeException;
+import wicket.behavior.AbstractBehavior;
+import wicket.behavior.IBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.ContainerInfo;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.settings.IResourceSettings;
+import wicket.util.string.Strings;
 
 /**
- * THIS IS EXPERIMENTAL ONLY AND DISABLED BY DEFAULT
- * <p>
  * This is a markup inline filter. It identifies wicket:message attributes and
- * replaces the attributes referenced. E.g. wicket:message="value=key" would
- * replace or add the attribute "value" with the message associated with "key".
+ * adds an attribute modifier to the component tag that can localize
+ * wicket:message="attr-name:i18n-key,attr-name-2:i18n-key-2,..." expressions,
+ * replacing values of attributes specified by attr-name with a localizer lookup
+ * with key i18n-key. If an attribute being localized has a set value that value
+ * will be used as the default value for the localization lookup.
  * 
  * @author Juergen Donnerstag
+ * @author Igor Vaynberg
  */
 public final class WicketMessageTagHandler extends AbstractMarkupFilter
 {
@@ -48,41 +46,10 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 
 	/**
-	 * globally enable wicket:message; If accepted by user, we should use an
-	 * apps setting
-	 */
-	public static boolean enable = true;
-
-	/**
-	 * The MarkupContainer requesting the information incl. class, locale and
-	 * style
-	 */
-	private final ContainerInfo containerInfo;
-
-	/** temporary storage unomdified while the object instance exists */
-	private final List<Class> searchStack;
-
-	/**
-	 * The application settings required. Note: you can rely on
-	 * Application.get().getResourceSettings() as reading the markup happens in
-	 * another thread due to ModificationWatcher.
-	 */
-	private IResourceSettings settings;
-
-	/**
 	 * Construct.
-	 * 
-	 * @param containerInfo
-	 *            The container requesting the current markup incl class, style
-	 *            and locale
 	 */
-	public WicketMessageTagHandler(final ContainerInfo containerInfo)
+	public WicketMessageTagHandler()
 	{
-		this.containerInfo = containerInfo;
-		this.settings = Application.get().getResourceSettings();
-
-		this.searchStack = new ArrayList<Class>();
-		searchStack.add(containerInfo.getContainerClass());
 	}
 
 	/**
@@ -105,68 +72,70 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				WICKET_MESSAGE_ATTRIBUTE_NAME);
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
-			if (this.containerInfo == null)
-			{
-				throw new ParseException(
-						"Found "
-								+ WICKET_MESSAGE_ATTRIBUTE_NAME
-								+ " but the message can not be resolved, because the associated Page is not known."
-								+ " This might be caused by using the wrong MarkupParser constructor",
-						tag.getPos());
-			}
-
-			final StringTokenizer attrTokenizer = new StringTokenizer(wicketMessageAttribute, ",");
-			while (attrTokenizer.hasMoreTokens())
-			{
-				String text = attrTokenizer.nextToken().trim();
-				if (text == null)
-				{
-					text = wicketMessageAttribute;
-				}
-
-				final StringTokenizer valueTokenizer = new StringTokenizer(text, "=");
-				if (valueTokenizer.countTokens() != 2)
-				{
-					throw new ParseException("Wrong format of wicket:message attribute value. "
-							+ text + "; Must be: key=value[, key=value]", tag.getPos());
-				}
-
-				final String attrName = valueTokenizer.nextToken();
-				final String messageKey = valueTokenizer.nextToken();
-				if ((attrName == null) || (attrName.trim().length() == 0) || (messageKey == null)
-						|| (messageKey.trim().length() == 0))
-				{
-					throw new ParseException("Wrong format of wicket:message attribute value. "
-							+ text + "; Must be: key=value[, key=value]", tag.getPos());
-				}
-
-				Component c = null;
-				Page page = RequestCycle.get().getResponsePage();
-				String path = containerInfo.getComponentPath();
-				String value = null;
-				if (page != null)
-				{
-					c = page.get(path);
-					value = settings.getLocalizer().getString(messageKey, c);
-				}
-
-				if (value != null && (value.length() > 0))
-				{
-					tag.getAttributes().put(attrName, value);
-					tag.setModified(true);
-				}
-				else if (tag.getAttributes().get(attrName) == null)
-				{
-					tag.getAttributes().put(attrName, value);
-					tag.setModified(true);
-				}
-				else
-				{
-					// Do not modify the existing value
-				}
-			}
+			tag.addBehavior(ATTRIBUTE_LOCALIZER);
 		}
 
 		return tag;
+	}
+
+	/** singleton instance of {@link AttributeLocalizer} */
+	private final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
+
+	/**
+	 * Attribute localizing behavior. See the javadoc of
+	 * {@link WicketMessageTagHandler} for details.
+	 * 
+	 * @author Igor Vaynberg (ivaynberg)
+	 */
+	private static class AttributeLocalizer extends AbstractBehavior
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see wicket.behavior.AbstractBehavior#onComponentTag(wicket.Component,
+		 *      wicket.markup.ComponentTag)
+		 */
+		@Override
+		public void onComponentTag(Component component, ComponentTag tag)
+		{
+			String expr = tag.getAttributes().getString(WICKET_MESSAGE_ATTRIBUTE_NAME);
+			if (!Strings.isEmpty(expr))
+			{
+				expr = expr.trim();
+
+				String[] attrsAndKeys = expr.split(",");
+
+				for (String attrAndKey : attrsAndKeys)
+				{
+					int colon = attrAndKey.indexOf(":");
+					// make sure the attribute-key pair is valid
+					if (attrAndKey.length() < 3 || colon < 1 || colon > attrAndKey.length() - 2)
+					{
+						throw new WicketRuntimeException(
+								"wicket:message attribute contains an invalid value [[" + expr
+										+ "]], must be of form (attr:key)+");
+					}
+
+					String attr = attrAndKey.substring(0, colon);
+					String key = attrAndKey.substring(colon + 1);
+
+					String value;
+					// we need to call the proper getString() method based on
+					// whether or not we have a default value
+					if (tag.getAttributes().containsKey(attr))
+					{
+						value = component.getString(key, null, tag.getAttributes().getKey(attr));
+					}
+					else
+					{
+						value = component.getString(key);
+					}
+					tag.put(attr, value);
+				}
+			}
+
+
+		}
 	}
 }
