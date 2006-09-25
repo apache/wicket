@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.panel;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.WicketRuntimeException;
@@ -339,7 +340,7 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 
 			// Find the markup fragment with the markup path provided by the
 			// user
-			MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(this.markupId);
+			MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(this.markupId + Component.PATH_SEPARATOR + path);
 			if (fragment == null)
 			{
 				throw new WicketRuntimeException(

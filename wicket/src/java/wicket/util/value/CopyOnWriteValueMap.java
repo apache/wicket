@@ -209,9 +209,14 @@ public class CopyOnWriteValueMap implements IValueMap, Serializable
 		return wrapped.size();
 	}
 
-
 	public Collection<Object> values()
 	{
 		return wrapped.values();
+	}
+	
+	@Override
+	public String toString()
+	{
+		return super.toString();
 	}
 }
