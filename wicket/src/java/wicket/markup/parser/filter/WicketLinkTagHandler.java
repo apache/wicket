@@ -29,6 +29,7 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.util.collections.ArrayListStack;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 
 /**
  * This is a markup inline filter. It identifies xml tags which include a href
@@ -174,12 +175,26 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	 */
 	protected boolean analyzeAutolinkCondition(final ComponentTag tag)
 	{
-		final String href = tag.getAttributes().getString("href");
-		if ((tag.getId() == null) && (href != null) && (href.indexOf(":") == -1))
+		if (tag.getId() == null)
 		{
-			return true;
+			ValueMap attributes = tag.getAttributes();
+			String ref = attributes.getString("href");
+			if (checkRef(ref))
+			{
+				return true;
+			}
+			ref = attributes.getString("src");
+			if (checkRef(ref))
+			{
+				return true;
+			}
 		}
 
 		return false;
+	}
+
+	private final boolean checkRef(String ref)
+	{
+		return (ref != null) && (ref.indexOf(":") == -1);
 	}
 }
