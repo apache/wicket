@@ -18,8 +18,8 @@
  */
 package wicket.markup.html.list;
 
+import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.markup.IMarkup;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
@@ -78,7 +78,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 		 * 
 		 * where 1 was the id of the listitem
 		 */
-		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+		String path = Strings.afterFirst(subPath, Component.PATH_SEPARATOR );
 		return super.getMarkupFragmentPath(path);
 	}
 }

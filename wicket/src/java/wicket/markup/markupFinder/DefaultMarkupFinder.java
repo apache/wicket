@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupStream;
 
@@ -34,8 +33,7 @@ import wicket.markup.MarkupStream;
  */
 public class DefaultMarkupFinder implements IMarkupFinder
 {
-	static private final Pattern LIST_VIEW_NUMBER = Pattern.compile(IMarkup.TAG_PATH_SEPARATOR
-			+ "\\d+");
+	static private final Pattern LIST_VIEW_NUMBER = Pattern.compile(Component.PATH_SEPARATOR + "\\d+");
 
 	/**
 	 * Construct.
@@ -125,7 +123,7 @@ public class DefaultMarkupFinder implements IMarkupFinder
 	{
 		if ((path != null) && (path.length() > 0))
 		{
-			return path + IMarkup.TAG_PATH_SEPARATOR + id;
+			return path + Component.PATH_SEPARATOR + id;
 		}
 
 		return id;
@@ -156,12 +154,12 @@ public class DefaultMarkupFinder implements IMarkupFinder
 		{
 			if (buffer.length() > 0)
 			{
-				buffer.insert(0, IMarkup.TAG_PATH_SEPARATOR);
+				buffer.insert(0, Component.PATH_SEPARATOR);
 			}
 			buffer.insert(0, parent.getId());
 		}
 
-		buffer.append(IMarkup.TAG_PATH_SEPARATOR);
+		buffer.append(Component.PATH_SEPARATOR);
 		buffer.append(component.getId());
 
 		// TODO Post 1.2: A component path e.g. "panel:label" does not match

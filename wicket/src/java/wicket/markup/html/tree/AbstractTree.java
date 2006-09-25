@@ -33,7 +33,6 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.behavior.HeaderContributor;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
@@ -333,7 +332,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			 * 
 			 * where 1 was the id of the listitem
 			 */
-			String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+			String path = Strings.afterFirst(subPath, Component.PATH_SEPARATOR);
 			return super.getMarkupFragmentPath(path);
 		}
 	}

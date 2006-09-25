@@ -34,9 +34,6 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
 
-	/** The separator for tag path within the markup */
-	public static final char TAG_PATH_SEPARATOR = ':';
-
 	/**
 	 * Find the markup element index of the component with 'path'
 	 * 

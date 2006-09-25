@@ -146,7 +146,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		}
 
 		// If id has not further path elements, than ...
-		if (id.indexOf(IMarkup.TAG_PATH_SEPARATOR) == -1)
+		if (id.indexOf(Component.PATH_SEPARATOR) == -1)
 		{
 			// .. search all (immediate) child fragments
 			for (MarkupElement elem : this)
@@ -186,14 +186,14 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 			// Split the 'id' into the first element (which is the immediate
 			// child) and the remaining path. Get the immediate child and
 			// recursively call getChildFragment() with the remaining path ids.
-			String root = Strings.firstPathComponent(id, IMarkup.TAG_PATH_SEPARATOR);
+			String root = Strings.firstPathComponent(id, Component.PATH_SEPARATOR);
 			MarkupFragment child = getChildFragment(root);
 			if (child == null)
 			{
 				return null;
 			}
 
-			String remainingPath = Strings.afterFirst(id, IMarkup.TAG_PATH_SEPARATOR);
+			String remainingPath = Strings.afterFirst(id, Component.PATH_SEPARATOR);
 			return child.getChildFragment(remainingPath);
 		}
 

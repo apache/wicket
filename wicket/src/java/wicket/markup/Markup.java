@@ -383,7 +383,7 @@ public class Markup implements IMarkup
 				// Construct the markup path for the tag
 				final ComponentTag tag = (ComponentTag)elem;
 				final String path = (basePath == null ? tag.getId() : basePath
-						+ IMarkup.TAG_PATH_SEPARATOR + tag.getId());
+						+ Component.PATH_SEPARATOR + tag.getId());
 
 				// Depending on tag type (open, close, open-close) ...
 				if (tag.isOpen())
@@ -450,7 +450,7 @@ public class Markup implements IMarkup
 			int size = tagPath.length();
 			if (size > 0)
 			{
-				tagPath.append(TAG_PATH_SEPARATOR);
+				tagPath.append(Component.PATH_SEPARATOR);
 			}
 			tagPath.append(tag.getId());
 
@@ -471,7 +471,7 @@ public class Markup implements IMarkup
 					|| tag.getOpenTag().getAttributes().containsKey(wicketId))
 			{
 				// Remove the last element from the component path
-				final int index = tagPath.lastIndexOf(String.valueOf(TAG_PATH_SEPARATOR));
+				final int index = tagPath.lastIndexOf(String.valueOf(Component.PATH_SEPARATOR));
 				if (index != -1)
 				{
 					tagPath.setLength(index);

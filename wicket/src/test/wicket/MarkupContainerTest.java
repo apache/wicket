@@ -20,7 +20,6 @@ package wicket;
 
 import java.util.Iterator;
 
-import wicket.markup.IMarkup;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.util.string.Strings;
@@ -58,7 +57,7 @@ public class MarkupContainerTest extends WicketTestCase
 			@Override
 			public String getMarkupFragmentPath(final String subPath)
 			{
-				String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+				String path = Strings.afterFirst(subPath, Component.PATH_SEPARATOR);
 				return super.getMarkupFragmentPath(path);
 			}
 		};

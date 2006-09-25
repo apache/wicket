@@ -19,7 +19,6 @@ package wicket.markup.markupFinder;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.panel.Fragment;
 
@@ -60,7 +59,7 @@ public class FragmentMarkupFinder extends DefaultMarkupFinder
 			markupStream = markupProvider.getAssociatedMarkupStream(true);
 		}
 
-		String relativePath = fragment.getFragmentMarkupId() + IMarkup.TAG_PATH_SEPARATOR
+		String relativePath = fragment.getFragmentMarkupId() + Component.PATH_SEPARATOR 
 				+ getComponentRelativePath(component, mc);
 
 		// If the component is defined in the markup

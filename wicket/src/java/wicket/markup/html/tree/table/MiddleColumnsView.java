@@ -28,7 +28,6 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.Response;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.tree.table.ColumnLocation.Unit;
@@ -283,7 +282,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 		 * 
 		 * where 1 was the id of the listitem
 		 */
-		String path = Strings.afterFirst(subPath, IMarkup.TAG_PATH_SEPARATOR);
+		String path = Strings.afterFirst(subPath, Component.PATH_SEPARATOR);
 		return super.getMarkupFragmentPath(path);
 	}
 }

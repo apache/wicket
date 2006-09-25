@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupNotFoundException;
@@ -1348,6 +1347,6 @@ public abstract class MarkupContainer<T> extends Component<T>
 		{
 			return getId();
 		}
-		return getId() + IMarkup.TAG_PATH_SEPARATOR + subPath;
+		return getId() + Component.PATH_SEPARATOR + subPath;
 	}
 }
