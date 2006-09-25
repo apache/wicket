@@ -28,6 +28,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.parser.XmlTag;
+import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
@@ -70,9 +71,21 @@ public class WicketMessageResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// It must be <body onload>
+
+		if (tag.isRawWicketMessageTag())
+		{
+			// this is a raw tag with wicket:message attribute, we need to
+			// create a transparent auto container to stand in.
+			final String id = newAutoId(container);
+			new WebMarkupContainer(container, id).add(WicketMessageTagHandler.ATTRIBUTE_LOCALIZER)
+					.autoAdded();
+			// yes, we handled the tag
+			return true;
+		}
+
 		if (tag.isMessageTag())
 		{
+			// this is a <wicket:message> tag
 			String messageKey = tag.getAttributes().getString("key");
 			if ((messageKey == null) || (messageKey.trim().length() == 0))
 			{
@@ -80,11 +93,10 @@ public class WicketMessageResolver implements IComponentResolver
 						"Wrong format of <wicket:message key='xxx'>: attribute 'key' is missing");
 			}
 
-			final String value = container.getApplication().getResourceSettings()
-					.getLocalizer().getString(messageKey, container, "");
+			final String value = container.getApplication().getResourceSettings().getLocalizer()
+					.getString(messageKey, container, "");
 
-			final String id = Component.AUTO_COMPONENT_PREFIX + "_message_"
-					+ container.getPage().getAutoIndex();
+			final String id = newAutoId(container);
 			Component component = null;
 			if ((value != null) && (value.trim().length() > 0))
 			{
@@ -107,6 +119,17 @@ public class WicketMessageResolver implements IComponentResolver
 
 		// We were not able to handle the tag
 		return false;
+	}
+
+	/**
+	 * Creates a page-wide unique component auto-id
+	 * 
+	 * @param container
+	 * @return page-wide unique component auto-id
+	 */
+	private String newAutoId(final MarkupContainer container)
+	{
+		return Component.AUTO_COMPONENT_PREFIX + "_message_" + container.getPage().getAutoIndex();
 	}
 
 	/**

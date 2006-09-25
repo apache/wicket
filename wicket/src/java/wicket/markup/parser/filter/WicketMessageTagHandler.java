@@ -72,17 +72,29 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				WICKET_MESSAGE_ATTRIBUTE_NAME);
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
-			tag.addBehavior(ATTRIBUTE_LOCALIZER);
-
 			// check if this tag is raw markup
 			if (tag.getId() == null)
 			{
 				// if this is a raw tag we need to set the id to something so
-				// that wicket will not merge this as raw markup
+				// that wicket will not merge this as raw markup and instead
+				// pass it on to a resolver
 				tag.setId(getClass().getSimpleName());
 				// we also mark the tag so that the resolver knows how to
 				// identify it
 				tag.setRawWicketMessageTag(true);
+				// there is no point attaching the attributelocalizer to this
+				// tag because it will be represented by an auto component and
+				// they do not inherit the behaviors from their component tag
+				// unlike regular components, instead the attributelocalizer
+				// will be added by the code that creates the auto component
+
+			}
+			else
+			{
+				// if this is a component tag we attach a behavior to it that
+				// will in turn be attached to the component that is attached to
+				// this tag
+				tag.addBehavior(ATTRIBUTE_LOCALIZER);
 			}
 		}
 

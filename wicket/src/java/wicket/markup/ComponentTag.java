@@ -106,6 +106,10 @@ public class ComponentTag extends MarkupElement
 	 */
 	private Collection<IBehavior> behaviors;
 
+	/** identifies tags that have wicket:message attr but no wicket:id */
+	private boolean rawWicketMessageTag = false;
+
+
 	/**
 	 * Automatically create a XmlTag, assign the name and the type, and
 	 * construct a ComponentTag based on this XmlTag.
@@ -195,6 +199,28 @@ public class ComponentTag extends MarkupElement
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * @return true if this is a component tag with a wicket:message attr but no
+	 *         wicket:id
+	 */
+	public boolean isRawWicketMessageTag()
+	{
+		return rawWicketMessageTag;
+	}
+
+	/**
+	 * Setter for the rawWicketMessageTag property.
+	 * 
+	 * @see #isRawWicketMessageTag()
+	 * 
+	 * @param rawWicketMessageTag
+	 */
+	public void setRawWicketMessageTag(boolean rawWicketMessageTag)
+	{
+		this.rawWicketMessageTag = rawWicketMessageTag;
 	}
 
 	/**
