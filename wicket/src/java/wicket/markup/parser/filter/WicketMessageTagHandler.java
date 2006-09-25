@@ -73,13 +73,24 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		if ((wicketMessageAttribute != null) && (wicketMessageAttribute.trim().length() > 0))
 		{
 			tag.addBehavior(ATTRIBUTE_LOCALIZER);
+
+			// check if this tag is raw markup
+			if (tag.getId() == null)
+			{
+				// if this is a raw tag we need to set the id to something so
+				// that wicket will not merge this as raw markup
+				tag.setId(getClass().getSimpleName());
+				// we also mark the tag so that the resolver knows how to
+				// identify it
+				tag.setRawWicketMessageTag(true);
+			}
 		}
 
 		return tag;
 	}
 
 	/** singleton instance of {@link AttributeLocalizer} */
-	private final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
+	public static final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
 
 	/**
 	 * Attribute localizing behavior. See the javadoc of
@@ -125,7 +136,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 					// whether or not we have a default value
 					if (tag.getAttributes().containsKey(attr))
 					{
-						value = component.getString(key, null, tag.getAttributes().getKey(attr));
+						value = component.getString(key, null, tag.getAttributes().getString(attr));
 					}
 					else
 					{
