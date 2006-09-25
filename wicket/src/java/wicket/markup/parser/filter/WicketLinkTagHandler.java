@@ -28,6 +28,7 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.util.collections.ArrayListStack;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
+import wicket.util.value.ValueMap;
 
 /**
  * This is a markup inline filter. It identifies xml tags which include a href
@@ -163,24 +164,39 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	}
 	
 	/**
-	 * Analyze the tag. If return value == true, a autolink component will
-	 * be created. <p>
+	 * Analyze the tag. If return value == true, a autolink component will be
+	 * created.
+	 * <p>
 	 * Subclass analyzeAutolinkCondition() to implement you own implementation
 	 * and register the new tag handler with the markup parser through
 	 * Application.newMarkupParser().
 	 * 
-	 * @param tag The current tag being parsed
+	 * @param tag
+	 *            The current tag being parsed
 	 * @return If true, tag will become auto-component
 	 */
 	protected boolean analyzeAutolinkCondition(final ComponentTag tag)
 	{
-		final String href = tag.getAttributes().getString("href");
-		if ((tag.getId() == null) && (href != null)
-				&& (href.indexOf(":") == -1))
+		if (tag.getId() == null)
 		{
-		    return true;
+			ValueMap attributes = tag.getAttributes();
+			String ref = attributes.getString("href");
+			if (checkRef(ref))
+			{
+				return true;
+			}
+			ref = attributes.getString("src");
+			if (checkRef(ref))
+			{
+				return true;
+			}
 		}
-		
+
 		return false;
+	}
+
+	private final boolean checkRef(String ref)
+	{
+		return (ref != null) && (ref.indexOf(":") == -1);
 	}
 }
