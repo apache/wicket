@@ -45,6 +45,12 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/** TODO Post 1.2: General: Namespace should not be a constant */
 	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 
+	/** The id automatically assigned to tags with wicket:message attribute but without id */
+	public final static String WICKET_MESSAGE_CONTAINER_ID = Component.AUTO_COMPONENT_PREFIX + "message";
+	
+	/** singleton instance of {@link AttributeLocalizer} */
+	public static final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
+
 	/**
 	 * Construct.
 	 */
@@ -78,16 +84,13 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				// if this is a raw tag we need to set the id to something so
 				// that wicket will not merge this as raw markup and instead
 				// pass it on to a resolver
-				tag.setId(getClass().getSimpleName());
-				// we also mark the tag so that the resolver knows how to
-				// identify it
-				tag.setRawWicketMessageTag(true);
-				// there is no point attaching the attributelocalizer to this
+				tag.setId(WICKET_MESSAGE_CONTAINER_ID);
+				
+				// There is no point attaching the attributelocalizer to this
 				// tag because it will be represented by an auto component and
 				// they do not inherit the behaviors from their component tag
 				// unlike regular components, instead the attributelocalizer
 				// will be added by the code that creates the auto component
-
 			}
 			else
 			{
@@ -101,9 +104,6 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		return tag;
 	}
 
-	/** singleton instance of {@link AttributeLocalizer} */
-	public static final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
-
 	/**
 	 * Attribute localizing behavior. See the javadoc of
 	 * {@link WicketMessageTagHandler} for details.
@@ -112,7 +112,6 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 */
 	private static class AttributeLocalizer extends AbstractBehavior
 	{
-
 		private static final long serialVersionUID = 1L;
 
 		/**
@@ -120,7 +119,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 		 *      wicket.markup.ComponentTag)
 		 */
 		@Override
-		public void onComponentTag(Component component, ComponentTag tag)
+		public void onComponentTag(final Component component, final ComponentTag tag)
 		{
 			String expr = tag.getAttributes().getString(WICKET_MESSAGE_ATTRIBUTE_NAME);
 			if (!Strings.isEmpty(expr))
@@ -157,8 +156,6 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 					tag.put(attr, value);
 				}
 			}
-
-
 		}
 	}
 }
