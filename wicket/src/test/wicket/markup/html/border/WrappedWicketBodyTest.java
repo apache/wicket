@@ -92,14 +92,15 @@ public class WrappedWicketBodyTest extends WicketTestCase
 		public TestPage()
 		{
 			Border border = new TestBorder(this, "border");
-			new Label(border, "label", "[[SUCCESS]]");
+			WebMarkupContainer container = new WebMarkupContainer(border, "container");
+			new Label(container, "label", "[[SUCCESS]]");
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
 				Class<? extends MarkupContainer> containerClass)
 		{
 			return new StringResourceStream(
-					"<html><body><span wicket:id='border'><span wicket:id='label'></span></span></body></html>");
+					"<html><body><span wicket:id='border'><span wicket:id='container'><span wicket:id='label'></span></span></span></body></html>");
 		}
 	}
 
@@ -161,15 +162,16 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	 * 
 	 * @author ivaynberg
 	 */
-	public static class TestBorder extends Border implements IMarkupResourceStreamProvider, IAlternateParentProvider
+	public static class TestBorder extends Border
+			implements
+				IMarkupResourceStreamProvider,
+				IAlternateParentProvider
 	{
 		private static final long serialVersionUID = 1L;
 
 		/** container for wicket:body components */
 		private final WebMarkupContainer bodyParent;
 
-		private boolean constr = true;
-		
 		/**
 		 * Construct.
 		 * 
@@ -182,7 +184,6 @@ public class WrappedWicketBodyTest extends WicketTestCase
 			bodyParent = new WebMarkupContainer(this, "body-parent");
 			new Label(this, "borderLabel", "[[TEST]]");
 			new Label(bodyParent, "borderLabel2", "[[TEST-2]]");
-			this.constr = false;
 		}
 
 		public IResourceStream getMarkupResourceStream(MarkupContainer container,
@@ -194,11 +195,14 @@ public class WrappedWicketBodyTest extends WicketTestCase
 
 		/**
 		 * 
-		 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class, java.lang.String)
+		 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class,
+		 *      java.lang.String)
 		 */
 		public MarkupContainer getAlternateParent(Class childClass, String childId)
 		{
-			return (this.constr == true && this.bodyParent != null && !"borderLabel".equals(childId) ? this.bodyParent : this);
+			return (this.bodyParent != null && !"borderLabel".equals(childId)
+					? this.bodyParent
+					: this);
 		}
 	}
 
