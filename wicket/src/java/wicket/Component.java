@@ -2118,8 +2118,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 
 		IModel prevModel = this.model;
-		// TODO really need such a check? Can we just store the wrapper in the
-		// state change?
 		if (prevModel instanceof IWrapModel)
 		{
 			prevModel = ((IWrapModel)prevModel).getNestedModel();
@@ -2683,11 +2681,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 				// return the shared inherited
 				model = ((IInheritableModel)model).wrapOnInheritance(this);
-				if (model != null && (model instanceof IAssignmentAware))
-				{
-					model = ((IAssignmentAware)model).wrapOnAssignment(this);
-				}
-
 				return model;
 			}
 		}
