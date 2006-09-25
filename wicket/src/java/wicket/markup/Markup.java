@@ -296,7 +296,7 @@ public class Markup implements IMarkup
 		{
 			if (throwException == true)
 			{
-				throw new MarkupException("Markup not found for tag with path: " + path
+				throw new MarkupNotFoundException("Markup not found for tag with path: " + path
 						+ "; The markup does not have any Wicket tag");
 			}
 
@@ -310,7 +310,7 @@ public class Markup implements IMarkup
 		{
 			if (throwException == true)
 			{
-				throw new MarkupException("Markup not found for tag with path: " + path);
+				throw new MarkupNotFoundException("Markup not found for tag with path: " + path);
 			}
 
 			return null;

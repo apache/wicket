@@ -43,7 +43,6 @@ import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IMarkupProvider;
-import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.IAssignmentAware;
 import wicket.model.IInheritableModel;
@@ -718,35 +717,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 		// We found the markup file and created the markup path. Now go and get
 		// the fragment.
-		try
-		{
-			return ((IMarkupProvider)parent).getMarkupFragment(path);
-		}
-		catch (WicketRuntimeException ex)
-		{
-			// ignore
-		}
-
-		Iterator iter = parent.iterator();
-		while (iter.hasNext())
-		{
-			Component child = (Component)iter.next();
-			if (child instanceof WebMarkupContainerWithAssociatedMarkup)
-			{
-				WebMarkupContainerWithAssociatedMarkup container = (WebMarkupContainerWithAssociatedMarkup)child;
-				if (container.isTransparentResolver())
-				{
-					MarkupFragment fragment = container.getMarkupFragment(path);
-					if (fragment != null)
-					{
-						return fragment;
-					}
-				}
-			}
-		}
-
-		throw new MarkupNotFoundException("Unable to find the markup fragment with markup path '"
-				+ path + "'. Component: " + getId());
+		return ((IMarkupProvider)parent).getMarkupFragment(path);
 	}
 
 	/**
