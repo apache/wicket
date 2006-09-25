@@ -71,29 +71,6 @@ public class WicketMessageResolver implements IComponentResolver
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		if (tag.getId().equals(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID))
-		{
-			// this is a raw tag with wicket:message attribute, we need to
-			// create a transparent auto container to stand in.
-			final String id = newAutoId(container);
-			MarkupContainer messageContainer = new WebMarkupContainer(container, id)
-			{
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public boolean isTransparentResolver()
-				{
-					return true;
-				}
-			};
-			
-			messageContainer.add(WicketMessageTagHandler.ATTRIBUTE_LOCALIZER);
-			messageContainer.autoAdded();
-			
-			// yes, we handled the tag
-			return true;
-		}
-
 		if (tag.isMessageTag())
 		{
 			// this is a <wicket:message> tag
@@ -125,6 +102,29 @@ public class WicketMessageResolver implements IComponentResolver
 			component.autoAdded();
 
 			// Yes, we handled the tag
+			return true;
+		}
+
+		if (tag.getId().equals(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID))
+		{
+			// this is a raw tag with wicket:message attribute, we need to
+			// create a transparent auto container to stand in.
+			final String id = newAutoId(container);
+			MarkupContainer messageContainer = new WebMarkupContainer(container, id)
+			{
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public boolean isTransparentResolver()
+				{
+					return true;
+				}
+			};
+			
+			messageContainer.add(WicketMessageTagHandler.ATTRIBUTE_LOCALIZER);
+			messageContainer.autoAdded();
+			
+			// yes, we handled the tag
 			return true;
 		}
 

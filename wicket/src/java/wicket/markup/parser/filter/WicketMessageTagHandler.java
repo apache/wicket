@@ -46,7 +46,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	private final static String WICKET_MESSAGE_ATTRIBUTE_NAME = "wicket:message";
 
 	/** The id automatically assigned to tags with wicket:message attribute but without id */
-	public final static String WICKET_MESSAGE_CONTAINER_ID = Component.AUTO_COMPONENT_PREFIX + "message";
+	public final static String WICKET_MESSAGE_CONTAINER_ID = Component.AUTO_COMPONENT_PREFIX + "message_attr";
 	
 	/** singleton instance of {@link AttributeLocalizer} */
 	public static final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
