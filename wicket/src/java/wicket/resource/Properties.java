@@ -27,7 +27,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Juergen Donnerstag
  */
-public class Properties
+public final class Properties
 {
 	/** Log. */
 	// private static final Log log = LogFactory.getLog(Properties.class);
@@ -45,7 +45,7 @@ public class Properties
 	 * @param strings
 	 *            Properties values
 	 */
-	Properties(final String key, final ValueMap strings)
+	public Properties(final String key, final ValueMap strings)
 	{
 		this.key = key;
 		this.strings = strings;
