@@ -82,11 +82,17 @@ public class WebExternalResourceRequestTarget implements IRequestTarget
 			final ServletContext context = ((WebApplication)requestCycle.getApplication())
 					.getServletContext();
 
-			// Set content type
-			webResponse.setContentType(context.getMimeType(url));
 			final InputStream in = context.getResourceAsStream(url);
 			if (in != null)
 			{
+				// TODO check can this really by done by any kind of url??
+				// Is this class really only used internally with a relative url to a resource in the servlet context.
+				// Set content type. 
+				String contentType = context.getMimeType(url);
+				if(contentType != null)
+				{
+					webResponse.setContentType(contentType);
+				}				
 				try
 				{
 					// Copy resource input stream to servlet output stream

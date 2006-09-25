@@ -143,6 +143,9 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		
 		// Do the parameters contain component path and listener interface?
 		if (bookmarkableInterfaceListener != null) {
+			// TODO check if the page already exists and reuse that?
+			
+			
 			// try to parse component path and listener interface 
 			final String[] pathComponents = Strings.split(bookmarkableInterfaceListener, Component.PATH_SEPARATOR);
 			// There must be at least 4 path components
