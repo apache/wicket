@@ -1135,7 +1135,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 
 	/**
 	 * Invalidates node and it's children. On the next render, the node and
-	 * children will be updated. Node  children will be rebuilt.
+	 * children will be updated. Node children will be rebuilt.
 	 * 
 	 * @param node
 	 *            The node to invalidate
