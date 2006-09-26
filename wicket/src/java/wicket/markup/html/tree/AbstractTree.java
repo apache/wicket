@@ -324,9 +324,9 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		public final String getMarkupFragmentPath(final String subPath)
 		{
 			/*
-			 * we need to cut out the path of direct children because they inherit
-			 * the markup so their markup path must look as if they are the listview
-			 * themselves
+			 * we need to cut out the path of direct children because they
+			 * inherit the markup so their markup path must look as if they are
+			 * the listview themselves
 			 * 
 			 * page:listview:1:label -> page:listview:label
 			 * 
@@ -502,23 +502,23 @@ public abstract class AbstractTree extends Panel<TreeModel>
 
 	/**
 	 * This method is called before the onAttach is called. Code here gets
-	 * executed before the items have been populated. 
+	 * executed before the items have been populated.
 	 */
-	protected void onBeforeAttach() 
-	{	
+	protected void onBeforeAttach()
+	{
 	}
-	
+
 	/**
 	 * Called at the beginning of the request (not ajax request, unless we are
 	 * rendering the entire component)
 	 */
 	@Override
 	public void internalAttach()
-	{		
+	{
 		if (attached == false)
 		{
 			onBeforeAttach();
-			
+
 			checkModel();
 
 			// Do we have to rebuld the whole tree?
@@ -680,12 +680,12 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	};
 
 	/**
-	 * Marks the last but one visible child node of the given item as dirty,
-	 * if give child is the last item of parent.
+	 * Marks the last but one visible child node of the given item as dirty, if
+	 * give child is the last item of parent.
 	 * 
-	 * We need this to refresh the previous visible item in case the 
-	 * inserted / deleteditem was last. The reason is that  the line 
-	 * shape of previous item chages from L to |- .
+	 * We need this to refresh the previous visible item in case the inserted /
+	 * deleteditem was last. The reason is that the line shape of previous item
+	 * chages from L to |- .
 	 * 
 	 * @param parent
 	 * @param child
@@ -694,22 +694,36 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	{
 		if (parent.getChildren().indexOf(child) == parent.getChildren().size() - 1)
 		{
-			for (int i = parent.getChildren().size() - 2; i >= 0; --i)
+			// we need final mutable flag to be able to set it from visit
+			// callback
+			final Boolean[] stop = new Boolean[] { Boolean.FALSE };
+
+			// go through the childrend backwards, start at the last but one
+			// item
+			// loop until we get though all children or the flag is set
+			for (int i = parent.getChildren().size() - 2; i >= 0 && stop[0] == Boolean.FALSE; --i)
 			{
-				TreeItem item = (TreeItem) parent.getChildren().get(i);
-				
-				// is the item visible?
-				if (dirtyItems.contains(item) == false &&
-						dirtyItemsCreateDOM.contains(item) == false)
+				TreeItem item = (TreeItem)parent.getChildren().get(i);
+
+				// we need to refresh item and it's children 
+				visitItemAndChildren(item, new IItemCallback()
 				{
-					// yes, refresh it and quit the loop
-					dirtyItems.add(item);
-					break;
-				}
+					public void visitItem(TreeItem item)
+					{
+						// is the item visible?
+						if (dirtyItems.contains(item) == false
+								&& dirtyItemsCreateDOM.contains(item) == false)
+						{
+							// yes, refresh it and quit the loop
+							dirtyItems.add(item);
+							stop[0] = Boolean.TRUE;
+						}
+					}
+				});
 			}
 		}
 	}
-	
+
 	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesInserted(javax.swing.event.TreeModelEvent)
 	 */
@@ -729,7 +743,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 				parentItem.getChildren().add(index, item);
 
 				markTheLastButOneChildDirty(parentItem, item);
-				
+
 				dirtyItems.add(item);
 				dirtyItemsCreateDOM.add(item);
 			}
@@ -755,6 +769,8 @@ public abstract class AbstractTree extends Panel<TreeModel>
 				TreeItem item = nodeToItemMap.get(node);
 				if (item != null)
 				{
+					markTheLastButOneChildDirty(parentItem, item);
+
 					parentItem.getChildren().remove(item);
 
 					// go though item children and remove every one of them
@@ -765,8 +781,6 @@ public abstract class AbstractTree extends Panel<TreeModel>
 							removeItem(item);
 						}
 					});
-					
-					markTheLastButOneChildDirty(parentItem, item);
 
 					removeItem(item);
 				}
@@ -829,10 +843,14 @@ public abstract class AbstractTree extends Panel<TreeModel>
 				target.prependJavascript(js);
 			}
 
-			// We have to repeat this as long as there are any dirty items to be created.
-			// The reason why we can't do this in one pass is that some of the items
-			// may need to be inserted after items that has not been inserted yet, so we have
-			// to detect those and wait until the items they depend on are inserted.
+			// We have to repeat this as long as there are any dirty items to be
+			// created.
+			// The reason why we can't do this in one pass is that some of the
+			// items
+			// may need to be inserted after items that has not been inserted
+			// yet, so we have
+			// to detect those and wait until the items they depend on are
+			// inserted.
 			while (dirtyItemsCreateDOM.isEmpty() == false)
 			{
 				for (Iterator<TreeItem> i = dirtyItemsCreateDOM.iterator(); i.hasNext();)
@@ -859,20 +877,23 @@ public abstract class AbstractTree extends Panel<TreeModel>
 					// check if the previous item isn't waiting to be inserted
 					if (dirtyItemsCreateDOM.contains(previous) == false)
 					{
-						// it's already in dom, so we can use it as point of insertion
-						target.prependJavascript("Wicket.Tree.createElement(\"" + item.getMarkupId()
-								+ "\"," + "\"" + previous.getMarkupId() + "\")");
-						
+						// it's already in dom, so we can use it as point of
+						// insertion
+						target.prependJavascript("Wicket.Tree.createElement(\""
+								+ item.getMarkupId() + "\"," + "\"" + previous.getMarkupId()
+								+ "\")");
+
 						// remove the item so we don't process it again
 						i.remove();
 					}
 					else
 					{
-						// we don't do anything here, inserting this item will have to wait 
-						// until the previous item gets inserted 
+						// we don't do anything here, inserting this item will
+						// have to wait
+						// until the previous item gets inserted
 					}
 				}
-			}		
+			}
 
 			// iterate through dirty items
 			for (TreeItem item : dirtyItems)
@@ -1132,30 +1153,30 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			if (item != null)
 			{
 				boolean createDOM = false;
-				
+
 				if (forceRebuild)
 				{
 					// recreate the item
 					int level = item.getLevel();
 					List<TreeItem> children = item.getChildren();
 					String id = item.getId();
-	
+
 					// store the parent of old item
 					TreeItem parent = item.getParentItem();
-	
+
 					// if the old item has a parent, store it's index
 					int index = parent != null ? parent.getChildren().indexOf(item) : -1;
-	
+
 					createDOM = dirtyItemsCreateDOM.contains(item);
-					
+
 					dirtyItems.remove(item);
 					dirtyItemsCreateDOM.remove(item);
-					
+
 					item.remove();
-	
+
 					item = newTreeItem(node, level, id);
 					item.setChildren(children);
-	
+
 					// was the item an root item?
 					if (parent == null)
 					{
@@ -1166,7 +1187,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 						parent.getChildren().set(index, item);
 					}
 				}
-				
+
 				dirtyItems.add(item);
 				if (createDOM)
 					dirtyItemsCreateDOM.add(item);
@@ -1303,13 +1324,14 @@ public abstract class AbstractTree extends Panel<TreeModel>
 
 		// if the item was about to be created
 		if (dirtyItemsCreateDOM.contains(item))
-		{		
+		{
 			// we needed to create DOM element, we no longer do
 			dirtyItemsCreateDOM.remove(item);
 		}
 		else
 		{
-			// add items id (it's short version) to ids of DOM elements that will be
+			// add items id (it's short version) to ids of DOM elements that
+			// will be
 			// removed
 			deleteIds.append(getShortItemId(item));
 			deleteIds.append(",");
@@ -1318,6 +1340,9 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		// remove the id
 		// note that this doesn't update item's parent's children list
 		item.remove();
+
+		// unselect the node
+		getTreeState().selectNode(item.getModelObject(), false);
 	}
 
 	/**
