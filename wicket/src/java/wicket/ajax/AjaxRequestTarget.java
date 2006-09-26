@@ -473,7 +473,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		page.startComponentRender(component);
 		component.renderComponent();
 		
-		respondHeaderContribution(response, component);
+		respondHeaderContribution(response, component);		
 		
 		page.endComponentRender(component);
 
@@ -521,6 +521,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingHeaderResponse.reset();
 
 		component.renderHead(header);
+		component.renderedBehaviors();
 		if (component instanceof MarkupContainer)
 		{
 			((MarkupContainer)component).visitChildren(new Component.IVisitor()
@@ -530,6 +531,7 @@ public class AjaxRequestTarget implements IRequestTarget
 					if (component.isVisible())
 					{
 						component.renderHead(header);
+						component.renderedBehaviors();
 						return CONTINUE_TRAVERSAL;
 					}
 					else
@@ -538,7 +540,7 @@ public class AjaxRequestTarget implements IRequestTarget
 					}
 				}
 			});
-		}
+		}				
 
 		RequestCycle.get().setResponse(oldResponse);
 
