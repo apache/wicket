@@ -699,8 +699,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			final Boolean[] stop = new Boolean[] { Boolean.FALSE };
 
 			// go through the childrend backwards, start at the last but one
-			// item
-			// loop until we get though all children or the flag is set
+			// item, loop until we get though all children or the flag is set
 			for (int i = parent.getChildren().size() - 2; i >= 0 && stop[0] == Boolean.FALSE; --i)
 			{
 				TreeItem item = (TreeItem)parent.getChildren().get(i);
@@ -844,13 +843,10 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			}
 
 			// We have to repeat this as long as there are any dirty items to be
-			// created.
-			// The reason why we can't do this in one pass is that some of the
-			// items
-			// may need to be inserted after items that has not been inserted
-			// yet, so we have
-			// to detect those and wait until the items they depend on are
-			// inserted.
+			// created. The reason why we can't do this in one pass is that some 
+			// of the items may need to be inserted after items that has not been 
+			// inserted yet, so we have to detect those and wait until the items 
+			// they depend on are  inserted.
 			while (dirtyItemsCreateDOM.isEmpty() == false)
 			{
 				for (Iterator<TreeItem> i = dirtyItemsCreateDOM.iterator(); i.hasNext();)
@@ -889,8 +885,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 					else
 					{
 						// we don't do anything here, inserting this item will
-						// have to wait
-						// until the previous item gets inserted
+						// have to wait until the previous item gets inserted
 					}
 				}
 			}
