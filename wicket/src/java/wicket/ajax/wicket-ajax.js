@@ -114,8 +114,13 @@ Wicket.FunctionsExecuter.prototype = {
 			var run = function() {
 				f(this.notify.bind(this));
 			}.bind(this);
-			window.setTimeout(run, 1);
-			this.current++;		
+			this.current++;
+			
+			if (Wicket.Browser.isKHTML())
+				// to prevent khtml bug that crashes entire browser
+				window.setTimeout(run, 1);
+			else
+				run();				
 		}
 	},	
 	
