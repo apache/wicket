@@ -680,6 +680,37 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	};
 
 	/**
+	 * Marks the last but one visible child node of the given item as dirty,
+	 * if give child is the last item of parent.
+	 * 
+	 * We need this to refresh the previous visible item in case the 
+	 * inserted / deleteditem was last. The reason is that  the line 
+	 * shape of previous item chages from L to |- .
+	 * 
+	 * @param parent
+	 * @param child
+	 */
+	private void markTheLastButOneChildDirty(TreeItem parent, TreeItem child)
+	{
+		if (parent.getChildren().indexOf(child) == parent.getChildren().size() - 1)
+		{
+			for (int i = parent.getChildren().size() - 2; i >= 0; --i)
+			{
+				TreeItem item = (TreeItem) parent.getChildren().get(i);
+				
+				// is the item visible?
+				if (dirtyItems.contains(item) == false &&
+						dirtyItemsCreateDOM.contains(item) == false)
+				{
+					// yes, refresh it and quit the loop
+					dirtyItems.add(item);
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
 	 * @see javax.swing.event.TreeModelListener#treeNodesInserted(javax.swing.event.TreeModelEvent)
 	 */
 	public final void treeNodesInserted(TreeModelEvent e)
@@ -697,6 +728,8 @@ public abstract class AbstractTree extends Panel<TreeModel>
 				TreeItem item = newTreeItem(node, parentItem.getLevel() + 1);
 				parentItem.getChildren().add(index, item);
 
+				markTheLastButOneChildDirty(parentItem, item);
+				
 				dirtyItems.add(item);
 				dirtyItemsCreateDOM.add(item);
 			}
@@ -732,6 +765,8 @@ public abstract class AbstractTree extends Panel<TreeModel>
 							removeItem(item);
 						}
 					});
+					
+					markTheLastButOneChildDirty(parentItem, item);
 
 					removeItem(item);
 				}
@@ -1082,58 +1117,66 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	/**
 	 * Invalidates single node (without children). On the next render, this node
 	 * will be updated. Node will not be rebuilt, unless forceRebuild is true.
-	 * TODO Implement forceRebuild
 	 * 
 	 * @param node
 	 *            The node to invalidate
-	 * @param forceRebuld
+	 * @param forceRebuild
 	 */
-	private final void invalidateNode(TreeNode node, boolean forceRebuld)
+	private final void invalidateNode(TreeNode node, boolean forceRebuild)
 	{
 		if (dirtyAll == false)
 		{
 			// get item for this node
 			TreeItem item = nodeToItemMap.get(node);
 
-			if (forceRebuld)
-			{
-				// recreate the item
-				int level = item.getLevel();
-				List<TreeItem> children = item.getChildren();
-				String id = item.getId();
-
-				// store the parent of old item
-				TreeItem parent = item.getParentItem();
-
-				// if the old item has a parent, store it's index
-				int index = parent != null ? parent.getChildren().indexOf(item) : -1;
-
-				item.remove();
-
-				item = newTreeItem(node, level, id);
-				item.setChildren(children);
-
-				// was the item an root item?
-				if (parent == null)
-				{
-					rootItem = item;
-				}
-				else
-				{
-					parent.getChildren().set(index, item);
-				}
-			}
-
 			if (item != null)
 			{
+				boolean createDOM = false;
+				
+				if (forceRebuild)
+				{
+					// recreate the item
+					int level = item.getLevel();
+					List<TreeItem> children = item.getChildren();
+					String id = item.getId();
+	
+					// store the parent of old item
+					TreeItem parent = item.getParentItem();
+	
+					// if the old item has a parent, store it's index
+					int index = parent != null ? parent.getChildren().indexOf(item) : -1;
+	
+					createDOM = dirtyItemsCreateDOM.contains(item);
+					
+					dirtyItems.remove(item);
+					dirtyItemsCreateDOM.remove(item);
+					
+					item.remove();
+	
+					item = newTreeItem(node, level, id);
+					item.setChildren(children);
+	
+					// was the item an root item?
+					if (parent == null)
+					{
+						rootItem = item;
+					}
+					else
+					{
+						parent.getChildren().set(index, item);
+					}
+				}
+				
 				dirtyItems.add(item);
+				if (createDOM)
+					dirtyItemsCreateDOM.add(item);
 			}
 		}
 	}
 
 	/**
 	 * Invalidates node and it's children. On the next render, the node and
-	 * children will be updated. Node and children will be rebuilt.
+	 * children will be updated. Node children will be rebuilt.
 	 * 
 	 * @param node
 	 *            The node to invalidate
@@ -1258,13 +1301,19 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		// even if the item is dirty it's no longer necessary to update id
 		dirtyItems.remove(item);
 
-		// if we needed to create DOM element, we no longer do
-		dirtyItemsCreateDOM.remove(item);
-
-		// add items id (it's short version) to ids of DOM elements that will be
-		// removed
-		deleteIds.append(getShortItemId(item));
-		deleteIds.append(",");
+		// if the item was about to be created
+		if (dirtyItemsCreateDOM.contains(item))
+		{		
+			// we needed to create DOM element, we no longer do
+			dirtyItemsCreateDOM.remove(item);
+		}
+		else
+		{
+			// add items id (it's short version) to ids of DOM elements that will be
+			// removed
+			deleteIds.append(getShortItemId(item));
+			deleteIds.append(",");
+		}
 
 		// remove the id
 		// note that this doesn't update item's parent's children list
