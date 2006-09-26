@@ -26,7 +26,9 @@ import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * May be used to chain MarkupLoaders.
+ * IMarkupLoader are loading the actual markup for specific Wicket container and
+ * resource stream. The interface has been designed in a way that multiple
+ * IMarkupLoader can be chained to easily build up more complex loaders.
  * 
  * @author Juergen Donnerstag
  */

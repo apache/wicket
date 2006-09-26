@@ -44,10 +44,9 @@ import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.Strings;
 
 /**
- * Load markup and cache it for fast retrieval. If markup file changes, it'll be
- * removed and subsequently reloaded when needed.
+ * Merge the 2+ markups involved in markup inheritance. From a users perspective
+ * there is only one markup associated with the component, the merged one.
  * 
- * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
 public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
@@ -582,11 +581,15 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 	 * Append the wicket:head regions from the extended markup to the current
 	 * markup
 	 * 
-	 * @param mergedMarkup The destination Markup object
-	 * @param markup The source Markup object
-	 * @param extendIndex startIndex
+	 * @param mergedMarkup
+	 *            The destination Markup object
+	 * @param markup
+	 *            The source Markup object
+	 * @param extendIndex
+	 *            startIndex
 	 */
-	private void copyWicketHead(final Markup mergedMarkup, final IMarkup markup, final int extendIndex)
+	private void copyWicketHead(final Markup mergedMarkup, final IMarkup markup,
+			final int extendIndex)
 	{
 		boolean copy = false;
 		for (int i = 0; i < extendIndex; i++)

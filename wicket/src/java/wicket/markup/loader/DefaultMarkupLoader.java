@@ -27,10 +27,9 @@ import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * Load markup and cache it for fast retrieval. If markup file changes, it'll be
- * removed and subsequently reloaded when needed.
+ * Load the markup via the MarkupParser, not more, not less. Caching is provided
+ * separately as well as Inherited-Markup merging.
  * 
- * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
 public class DefaultMarkupLoader implements IMarkupLoader
