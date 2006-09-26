@@ -28,6 +28,7 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ajax.AjaxRequestTarget;
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
@@ -515,10 +516,10 @@ public abstract class Component implements Serializable
 
 	/** Visibility boolean */
 	private static final int FLAG_VISIBLE = 0x0010;
-	
+
 	/** Whether the header has already been contributed */
 	private static final int FLAG_HEAD_RENDERED = 0x8000;
-	
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Component.class);
 
@@ -1738,6 +1739,22 @@ public abstract class Component implements Serializable
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
 
+		// notify the behaviors that component has been rendered
+		renderedBehaviors();
+	}
+
+	/**
+	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
+	 * 
+	 * Notifies the behaviors that the component has been rendered. This is
+	 * decoupled from {@link #rendered()} because we don't want to call
+	 * <code>getPage().componentRendered(this)</code> every time. This method
+	 * is necessary for {@link AjaxRequestTarget} to be able to cleanup
+	 * component's behaviors after header contribution has been done (which is
+	 * separated from component render).
+	 */
+	public final void renderedBehaviors()
+	{
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -1758,7 +1775,7 @@ public abstract class Component implements Serializable
 	 */
 	public void renderHead(final HtmlHeaderContainer container)
 	{
-		if (isHeadRendered() == false) 
+		if (isHeadRendered() == false)
 		{
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
@@ -2455,7 +2472,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 *
+	 * 
 	 * @param flag
 	 *            The flag to test
 	 * @return True if the flag is set
@@ -2824,7 +2841,7 @@ public abstract class Component implements Serializable
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT USE IT!
-	 *
+	 * 
 	 * @param flag
 	 *            The flag to set
 	 * @param set
@@ -2989,8 +3006,8 @@ public abstract class Component implements Serializable
 			log.debug("Replacing parent " + this.parent + " with " + parent);
 		}
 		this.parent = parent;
-//		
-//		resetHeadRendered();
+		//		
+		// resetHeadRendered();
 	}
 
 	/**
@@ -3029,21 +3046,24 @@ public abstract class Component implements Serializable
 		}
 		return nestedModelObject;
 	}
-	
+
 	/**
 	 * Returns whether the head has already been rendered.
+	 * 
 	 * @return boolean
 	 */
-	final protected boolean isHeadRendered() {
+	final protected boolean isHeadRendered()
+	{
 		return getFlag(FLAG_HEAD_RENDERED);
 	}
-	
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL.
 	 * 
 	 * Resets the state of head rendering.
 	 */
-	final protected void resetHeadRendered() {
+	final protected void resetHeadRendered()
+	{
 		setFlag(FLAG_HEAD_RENDERED, false);
 	}
 }
