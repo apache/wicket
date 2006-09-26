@@ -1077,9 +1077,9 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 	 * 
 	 * @param node
 	 *            The node to invalidate
-	 * @param forceRebuld
+	 * @param forceRebuild
 	 */
-	private final void invalidateNode(TreeNode node, boolean forceRebuld)
+	private final void invalidateNode(TreeNode node, boolean forceRebuild)
 	{
 		if (dirtyAll == false)
 		{
@@ -1090,7 +1090,7 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 			{
 				boolean createDOM = false;
 				
-				if (forceRebuld)
+				if (forceRebuild)
 				{
 					// recreate the item
 					int level = item.getLevel();
