@@ -19,6 +19,7 @@ package wicket.markup.html.tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -163,7 +164,7 @@ public class DefaultTreeState implements ITreeState, Serializable
 	 */
 	public Collection<TreeNode> getSelectedNodes()
 	{
-		return selectedNodes;
+		return Collections.unmodifiableList(new ArrayList<TreeNode>(selectedNodes));
 	}
 
 	/**
