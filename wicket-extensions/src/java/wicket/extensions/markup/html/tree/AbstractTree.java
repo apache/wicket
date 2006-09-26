@@ -1292,6 +1292,9 @@ public abstract class AbstractTree extends Panel implements ITreeStateListener, 
 		// remove the id
 		// note that this doesn't update item's parent's children list
 		item.remove();
+		
+		// unselect the node
+		getTreeState().selectNode((TreeNode)item.getModelObject(), false);
 	}
 
 	/**
