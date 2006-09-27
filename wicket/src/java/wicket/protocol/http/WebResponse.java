@@ -195,6 +195,9 @@ public class WebResponse extends Response
 					if (isAjax())
 					{
 						httpServletResponse.addHeader("Ajax-Location", url);
+
+						// safari chokes on empty response. but perhaps this is not the best place?
+						httpServletResponse.getWriter().write(" ");
 					} else
 					{
 						httpServletResponse.sendRedirect(url);
