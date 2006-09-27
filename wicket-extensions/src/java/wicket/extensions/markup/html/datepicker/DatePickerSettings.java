@@ -58,30 +58,36 @@ public class DatePickerSettings implements Serializable
 		localeToLanguageReference.put(new Locale("br", "", "").toString(), "lang/calendar-br.js");
 		localeToLanguageReference.put(new Locale("cs", "", "").toString(),
 				"lang/calendar-cs-utf8.js");
-		localeToLanguageReference.put(new Locale("da", "", "").toString(), "lang/calendar-da.js");
+		localeToLanguageReference.put(new Locale("da", "", "").toString(),
+				"lang/calendar-da-utf8.js");
 		localeToLanguageReference.put(new Locale("de", "", "").toString(), "lang/calendar-de.js");
 		localeToLanguageReference.put(new Locale("el", "", "").toString(), "lang/calendar-el.js");
 		localeToLanguageReference.put(new Locale("en", "", "").toString(), "lang/calendar-en.js");
 		localeToLanguageReference.put(new Locale("en", "ZA", "").toString(),
 				"lang/calendar-en_ZA.js");
-		localeToLanguageReference.put(new Locale("es", "", "").toString(), "lang/calendar-es.js");
+		localeToLanguageReference.put(new Locale("es", "", "").toString(),
+				"lang/calendar-es-utf8.js");
 		localeToLanguageReference.put(new Locale("eu", "", "").toString(), "lang/calendar-eu.js");
 		localeToLanguageReference.put(new Locale("fi", "", "").toString(), "lang/calendar-fi.js");
-		localeToLanguageReference.put(new Locale("fr", "", "").toString(), "lang/calendar-fr.js");
+		localeToLanguageReference.put(new Locale("fr", "", "").toString(),
+				"lang/calendar-fr-utf8.js");
 		localeToLanguageReference.put(new Locale("he", "", "").toString(),
 				"lang/calendar-he-utf8.js");
 		localeToLanguageReference.put(new Locale("hr", "", "").toString(),
 				"lang/calendar-hr-utf8.js");
-		localeToLanguageReference.put(new Locale("hu", "", "").toString(), "lang/calendar-hu.js");
+		localeToLanguageReference.put(new Locale("hu", "", "").toString(),
+				"lang/calendar-hu-utf8.js");
 		localeToLanguageReference.put(new Locale("it", "", "").toString(),
 				"lang/calendar-it-utf8.js");
 		localeToLanguageReference.put(new Locale("ko", "", "").toString(),
 				"lang/calendar-ko-utf8.js");
 		localeToLanguageReference.put(new Locale("lt", "", "").toString(),
 				"lang/calendar-lt-utf8.js");
-		localeToLanguageReference.put(new Locale("lv", "", "").toString(), "lang/calendar-lv.js");
+		localeToLanguageReference.put(new Locale("lv", "", "").toString(),
+				"lang/calendar-lv-utf8.js");
 		localeToLanguageReference.put(new Locale("nl", "", "").toString(), "lang/calendar-nl.js");
-		localeToLanguageReference.put(new Locale("no", "", "").toString(), "lang/calendar-no.js");
+		localeToLanguageReference.put(new Locale("no", "", "").toString(),
+				"lang/calendar-no-utf8.js");
 		localeToLanguageReference.put(new Locale("pl", "", "").toString(),
 				"lang/calendar-pl-utf8.js");
 		localeToLanguageReference.put(new Locale("pt", "", "").toString(), "lang/calendar-pt.js");
@@ -97,7 +103,8 @@ public class DatePickerSettings implements Serializable
 				"lang/calendar-sr-utf8.js");
 		localeToLanguageReference.put(new Locale("sv", "", "").toString(),
 				"lang/calendar-sv-utf8.js");
-		localeToLanguageReference.put(new Locale("tr", "", "").toString(), "lang/calendar-tr.js");
+		localeToLanguageReference.put(new Locale("tr", "", "").toString(),
+				"lang/calendar-tr-utf8.js");
 		localeToLanguageReference.put(new Locale("zh", "", "").toString(),
 				"lang/calendar-zh-utf8.js");
 		localeToLanguageReference.put(new Locale("zh", "TW", "").toString(),
