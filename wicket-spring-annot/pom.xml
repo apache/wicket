@@ -20,6 +20,7 @@
 		<dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-spring</artifactId>
+			<version>1.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
