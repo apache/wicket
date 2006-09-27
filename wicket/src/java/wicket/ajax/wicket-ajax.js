@@ -133,7 +133,6 @@ Wicket.FunctionsExecuter.prototype = {
 	}
 }
 
-
 /* Replaces the element's outer html with the given text. If it's needed
    (for all browsers except gecko based) it takes the newly created scripts elements 
    and adds them to head (execute them) */
@@ -871,11 +870,15 @@ Wicket.Head.Contributor.prototype = {
 					Wicket.Ajax.invokePostCallHandlers();
 					notify();
 				}
-				var req = new Wicket.Ajax.Request(src, onLoad, false, false);
-				req.debugContent = false;
-				if (Wicket.Browser.isKHTML())
-					req.async = false;
-				req.get();
+				// we need to schedule the request as timeout
+				// calling xml http request from another request call stack doesn't work
+				window.setTimeout(function() {
+					var req = new Wicket.Ajax.Request(src, onLoad, false, false);
+					req.debugContent = false;
+					if (Wicket.Browser.isKHTML())
+						req.async = false;
+					req.get();					
+				},1);
 			} else {
 				var text = Wicket.DOM.serializeNodeChildren(node);
 				Wicket.Head.addJavascript(text, node.getAttribute("id"));
