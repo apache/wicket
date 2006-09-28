@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: LeftFrame.java 5394 2006-04-16 06:36:52 -0700 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 06:36:52 -0700 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -17,7 +18,10 @@
  */
 package wicket.examples.frames;
 
+import wicket.PageMap;
+import wicket.examples.linkomatic.Home;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 
 /**
@@ -31,8 +35,6 @@ import wicket.markup.html.link.Link;
  */
 public class LeftFrame extends WebPage
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Link that, when clicked, changes the frame target's frame class (and as
 	 * that is a shared model which is also being used by the 'master page'
@@ -78,6 +80,8 @@ public class LeftFrame extends WebPage
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 * 
@@ -88,6 +92,9 @@ public class LeftFrame extends WebPage
 	{
 		add(new ChangeFramePageLink("linkToPage1", index, Page1.class));
 		add(new ChangeFramePageLink("linkToPage2", index, Page2.class));
+		BookmarkablePageLink link = new BookmarkablePageLink("directLink", Home.class);
+		link.setPageMap(PageMap.forName(BodyFrame.RIGHT_FRAME_NAME));
+		add(link);
 	}
 
 	/**
