@@ -29,6 +29,8 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.Loop;
 import wicket.markup.html.panel.Panel;
+import wicket.model.AbstractReadOnlyModel;
+import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
@@ -38,32 +40,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *                           
- *                           List tabs=new ArrayList();
- *                           
- *                           tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *                          
- *                           public Panel getPanel(String panelId)
- *                           {
- *                           return new TabPanel1(panelId);
- *                           }
- *                           
- *                           });
- *                          
- *                           tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *                          
- *                           public Panel getPanel(String panelId)
- *                           {
- *                           return new TabPanel2(panelId);
- *                           }
- *                           
- *                           });
- *                          
- *                           add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *                       
- *                           
- *                           &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *                       
+ *                                     
+ *                                     List tabs=new ArrayList();
+ *                                     
+ *                                     tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
+ *                                    
+ *                                     public Panel getPanel(String panelId)
+ *                                     {
+ *                                     return new TabPanel1(panelId);
+ *                                     }
+ *                                     
+ *                                     });
+ *                                    
+ *                                     tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
+ *                                    
+ *                                     public Panel getPanel(String panelId)
+ *                                     {
+ *                                     return new TabPanel2(panelId);
+ *                                     }
+ *                                     
+ *                                     });
+ *                                    
+ *                                     add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *                                 
+ *                                     
+ *                                     &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *                                 
  * </pre>
  * 
  * </p>
@@ -78,7 +80,7 @@ import wicket.model.Model;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-public class TabbedPanel extends Panel
+public class TabbedPanel extends Panel<Integer>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -88,7 +90,7 @@ public class TabbedPanel extends Panel
 	public static final String TAB_PANEL_ID = "panel";
 
 
-	private List tabs;
+	private List<ITab> tabs;
 
 	/**
 	 * Constructor
@@ -100,9 +102,9 @@ public class TabbedPanel extends Panel
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(MarkupContainer parent, final String id, List tabs)
+	public TabbedPanel(MarkupContainer parent, final String id, List<ITab> tabs)
 	{
-		super(parent, id, new Model(new Integer(-1)));
+		super(parent, id, new Model<Integer>(new Integer(-1)));
 
 		if (tabs == null)
 		{
@@ -117,8 +119,20 @@ public class TabbedPanel extends Panel
 
 		this.tabs = tabs;
 
+		final IModel<Integer> tabCount = new AbstractReadOnlyModel<Integer>()
+		{
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Integer getObject()
+			{
+				return TabbedPanel.this.size();
+			}
+		};
+
 		// add the loop used to generate tab names
-		new Loop(this, "tabs", tabs.size())
+		new Loop(this, "tabs", tabCount)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -159,13 +173,22 @@ public class TabbedPanel extends Panel
 	}
 
 	/**
+	 * @return list of tabs that can be used by the user to add/remove/reorder
+	 *         tabs in the panel
+	 */
+	public final List<ITab> getTabs()
+	{
+		return tabs;
+	}
+
+	/**
 	 * Factory method for links used to switch between tabs.
 	 * 
 	 * The created component is attached to the following markup. Label
 	 * component with id: title will be added for you by the tabbed panel.
 	 * 
 	 * <pre>
-	 *      &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
+	 *                &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
 	 * </pre>
 	 * 
 	 * Example implementation:
