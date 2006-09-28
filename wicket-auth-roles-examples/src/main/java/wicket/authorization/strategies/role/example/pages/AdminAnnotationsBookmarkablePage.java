@@ -1,5 +1,6 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,6 +17,7 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
+import wicket.authorization.strategies.role.Roles;
 import wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import wicket.markup.html.WebPage;
 
@@ -24,7 +26,7 @@ import wicket.markup.html.WebPage;
  * 
  * @author Eelco Hillenius
  */
-@AuthorizeInstantiation("ADMIN")
+@AuthorizeInstantiation(Roles.ADMIN)
 public class AdminAnnotationsBookmarkablePage extends WebPage
 {
 	/**
