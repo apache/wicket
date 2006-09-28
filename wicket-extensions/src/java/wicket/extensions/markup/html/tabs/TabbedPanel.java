@@ -20,6 +20,7 @@ package wicket.extensions.markup.html.tabs;
 
 import java.util.List;
 
+import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AttributeAppender;
 import wicket.behavior.SimpleAttributeModifier;
@@ -28,6 +29,8 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.Loop;
 import wicket.markup.html.panel.Panel;
+import wicket.model.AbstractReadOnlyModel;
+import wicket.model.IModel;
 import wicket.model.Model;
 
 /**
@@ -37,32 +40,32 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *                         
- *                         List tabs=new ArrayList();
- *                         
- *                         tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
- *                        
- *                         public Panel getPanel(String panelId)
- *                         {
- *                         return new TabPanel1(panelId);
- *                         }
- *                         
- *                         });
- *                        
- *                         tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
- *                        
- *                         public Panel getPanel(String panelId)
- *                         {
- *                         return new TabPanel2(panelId);
- *                         }
- *                         
- *                         });
- *                        
- *                         add(new TabbedPanel(&quot;tabs&quot;, tabs);
- *                     
- *                         
- *                         &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
- *                     
+ *                                 
+ *                                 List tabs=new ArrayList();
+ *                                 
+ *                                 tabs.add(new AbstractTab(new Model(&quot;first tab&quot;)) {
+ *                                
+ *                                 public Panel getPanel(String panelId)
+ *                                 {
+ *                                 return new TabPanel1(panelId);
+ *                                 }
+ *                                 
+ *                                 });
+ *                                
+ *                                 tabs.add(new AbstractTab(new Model(&quot;second tab&quot;)) {
+ *                                
+ *                                 public Panel getPanel(String panelId)
+ *                                 {
+ *                                 return new TabPanel2(panelId);
+ *                                 }
+ *                                 
+ *                                 });
+ *                                
+ *                                 add(new TabbedPanel(&quot;tabs&quot;, tabs);
+ *                             
+ *                                 
+ *                                 &lt;span wicket:id=&quot;tabs&quot; class=&quot;tabpanel&quot;&gt;[tabbed panel will be here]&lt;/span&gt;
+ *                             
  * </pre>
  * 
  * </p>
@@ -114,8 +117,18 @@ public class TabbedPanel extends Panel
 
 		this.tabs = tabs;
 
+		final IModel tabCount = new AbstractReadOnlyModel()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public Object getObject(Component component)
+			{
+				return Integer.valueOf(TabbedPanel.this.size());
+			}
+		};
+
 		// add the loop used to generate tab names
-		add(new Loop("tabs", tabs.size())
+		add(new Loop("tabs", tabCount)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -155,13 +168,22 @@ public class TabbedPanel extends Panel
 	}
 
 	/**
+	 * @return list of tabs that can be used by the user to add/remove/reorder
+	 *         tabs in the panel
+	 */
+	public final List getTabs()
+	{
+		return tabs;
+	}
+
+	/**
 	 * Factory method for links used to switch between tabs.
 	 * 
 	 * The created component is attached to the following markup. Label
 	 * component with id: title will be added for you by the tabbed panel.
 	 * 
 	 * <pre>
-	 *    &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
+	 *            &lt;a href=&quot;#&quot; wicket:id=&quot;link&quot;&gt;&lt;span wicket:id=&quot;title&quot;&gt;[[tab title]]&lt;/span&gt;&lt;/a&gt;
 	 * </pre>
 	 * 
 	 * Example implementation:
