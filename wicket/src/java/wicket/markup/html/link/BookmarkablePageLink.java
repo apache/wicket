@@ -17,9 +17,11 @@
  */
 package wicket.markup.html.link;
 
+import wicket.AttributeModifier;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
+import wicket.model.Model;
 
 /**
  * Renders a stable link which can be cached in a web browser and used at a
@@ -139,6 +141,10 @@ public class BookmarkablePageLink extends Link
 	public final BookmarkablePageLink setPageMap(final PageMap pageMap)
 	{
 		this.pageMapName = pageMap.getName();
+		if (pageMap != null)
+		{
+			add(new AttributeModifier("target", false, new Model(pageMapName)));
+		}
 		return this;
 	}
 
