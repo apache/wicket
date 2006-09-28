@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -21,13 +21,11 @@ import java.io.Serializable;
 
 import wicket.AttributeModifier;
 import wicket.Component;
+import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebPage;
 import wicket.model.Model;
-import wicket.request.IRequestCodingStrategy;
-import wicket.request.target.component.BookmarkablePageRequestTarget;
-import wicket.request.target.component.PageRequestTarget;
 
 /**
  * Body frame page for the frames example.
@@ -36,8 +34,6 @@ import wicket.request.target.component.PageRequestTarget;
  */
 public class BodyFrame extends WebPage
 {
-	private final FrameTarget frameTarget = new FrameTarget(Page1.class);
-
 	/**
 	 * Model that returns the url to the bookmarkable page that is set in the
 	 * current frame target.
@@ -49,25 +45,25 @@ public class BodyFrame extends WebPage
 		 */
 		public Object getObject(Component component)
 		{
-			RequestCycle cycle = getRequestCycle();
-			IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
-			return encoder.encode(cycle, new BookmarkablePageRequestTarget("rightFrame",
-					frameTarget.getFrameClass()));
+			return RequestCycle.get().urlFor(PageMap.forName(RIGHT_FRAME_NAME),
+					frameTarget.getFrameClass(), null);
 		}
 	}
+
+	/** name for page map etc. */
+	public static final String RIGHT_FRAME_NAME = "right";
+
+	private final FrameTarget frameTarget = new FrameTarget(Page1.class);
 
 	/**
 	 * Constructor
 	 */
 	public BodyFrame()
 	{
-		RequestCycle cycle = getRequestCycle();
-
 		// create a new page instance, passing this 'master page' as an argument
 		LeftFrame leftFrame = new LeftFrame(this);
 		// get the url to that page
-		IRequestCodingStrategy encoder = cycle.getProcessor().getRequestCodingStrategy();
-		CharSequence leftFrameSrc = encoder.encode(cycle, new PageRequestTarget(leftFrame));
+		CharSequence leftFrameSrc = RequestCycle.get().urlFor(leftFrame);
 		// and create a simple component that modifies it's src attribute to
 		// hold the url to that frame
 		WebComponent leftFrameTag = new WebComponent("leftFrame");
