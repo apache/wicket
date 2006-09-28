@@ -340,7 +340,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 		}
 		try
 		{
-			return this.markup.findMarkupFragment(path, true);
+			return this.markup.getMarkupFragments().getChildFragment(path, true);
 		}
 		catch (WicketRuntimeException ex)
 		{

@@ -48,9 +48,6 @@ public class Markup implements IMarkup
 	/** The new world: One fragment per Component */
 	private MarkupFragment markupFragments;
 
-	/** The new world: markup relativ path => markup fragment */
-	private Map<String, MarkupFragment> pathToFragment = new HashMap<String, MarkupFragment>();
-
 	/** The markup's resource stream for diagnostic purposes */
 	private MarkupResourceStream resource;
 
@@ -206,9 +203,48 @@ public class Markup implements IMarkup
 	/**
 	 * Make all tags immutable and the list of elements unmodifable.
 	 */
-	final void makeImmutable()
+	public final void makeImmutable()
 	{
+		if ((this.markup != null) && (this.markupFragments == null))
+		{
+			initialize();
+		}
+
 		this.markup.makeImmutable();
+
+		if (this.markupFragments != null)
+		{
+			this.markupFragments.makeImmutable();
+		}
+	}
+
+	/**
+	 * Create a mutable copy of the Markup
+	 * 
+	 * @param emptyCopy
+	 *            If true, do NOT copy the markup elements
+	 * @return markup
+	 */
+	public final Markup mutable(final boolean emptyCopy)
+	{
+		Markup markup = new Markup();
+
+		markup.resource = this.resource;
+		markup.xmlDeclaration = this.xmlDeclaration;
+		markup.encoding = this.encoding;
+		markup.wicketNamespace = this.wicketNamespace;
+		markup.wicketId = this.wicketId;
+
+		if (emptyCopy == false)
+		{
+			markup.markup = new MarkupFragment(markup);
+			for (MarkupElement elem : this.markup)
+			{
+				markup.markup.addMarkupElement(elem);
+			}
+		}
+
+		return markup;
 	}
 
 	/**
@@ -271,58 +307,18 @@ public class Markup implements IMarkup
 	}
 
 	/**
-	 * Find the markup fragment for the component with 'path'
-	 * 
-	 * @param path
-	 *            The markup path to find the fragment
-	 * @param throwException
-	 *            If true, throw an exception if fragment not found
-	 * @return MarkupFragment Might be null, if fragment not found
-	 */
-	public MarkupFragment findMarkupFragment(final String path, final boolean throwException)
-	{
-		if ((path == null) || (path.length() == 0))
-		{
-			throw new IllegalArgumentException("Parameter 'path' must not be null");
-		}
-
-		if ((this.markup != null) && (this.markupFragments == null))
-		{
-			initialize();
-		}
-
-		// All component tags are registered with the cache
-		if (this.pathToFragment == null)
-		{
-			if (throwException == true)
-			{
-				throw new MarkupNotFoundException("Markup not found for tag with path: " + path
-						+ "; The markup does not have any Wicket tag");
-			}
-
-			// not found
-			return null;
-		}
-
-		// Get the fragment from the cache
-		MarkupFragment fragment = this.pathToFragment.get(path);
-		if (fragment == null)
-		{
-			if (throwException == true)
-			{
-				throw new MarkupNotFoundException("Markup not found for tag with path: " + path);
-			}
-
-			return null;
-		}
-
-		return fragment;
-	}
-
-	/**
 	 * Update internal Maps to find wicket tags easily
 	 */
 	private void initialize()
+	{
+		initializeComponentPathCache();
+		initializeMarkupFragments();
+	}
+
+	/**
+	 * Initialize the internal component-path-for-tag cache
+	 */
+	private void initializeComponentPathCache()
 	{
 		// Reset
 		this.componentMap = new HashMap<String, Integer>();
@@ -344,30 +340,31 @@ public class Markup implements IMarkup
 					componentPath = setComponentPathForTag(componentPath, tag, i);
 				}
 			}
-
-			initializeMarkupFragments();
 		}
 	}
 
 	/**
-	 * Until we started with AJAX we iterated over the markup and tried to find
-	 * the component. With AJAX however we need to find the Markup for a
-	 * Component. In an attempt to change Wicket internals step by step,
+	 * In an attempt to change Wicket internals step by step,
 	 * initializeMarkupFragments() creates a hierarchal structure of
 	 * MarkupFragments and other MarkupElements based on the simple List of
 	 * elements per Markup file which we have today.
 	 */
 	private void initializeMarkupFragments()
 	{
-		// The root element for the markup file. The root element should be only
-		// fragment which not necessarily has a ComponentTag as first element
+		if (markup == null)
+		{
+			return;
+		}
+
 		this.markupFragments = new MarkupFragment(this);
-		MarkupFragment current = this.markupFragments;
 
 		// Remember the path associated with a ComponentTag to properly walk up
 		// and down the hierarchy of wicket markup tags
 		Stack<String> stack = new Stack<String>();
 		String basePath = null;
+
+		Stack<MarkupFragment> fragmentStack = new Stack<MarkupFragment>();
+		MarkupFragment current = this.markupFragments;
 
 		// For all markup element in the external markup file
 		for (MarkupElement elem : this.markup)
@@ -392,40 +389,46 @@ public class Markup implements IMarkup
 					// open-close.
 					if (tag.hasNoCloseTag())
 					{
-						MarkupFragment fragment = new MarkupFragment(this, current, tag);
-						this.pathToFragment.put(path, fragment);
+						current.addMarkupElement(new MarkupFragment(this, tag));
 					}
 					else
 					{
 						// If open tag and auto component (BODY, HEAD, etc.)
 						// than the markup path gets not updated as the markup
 						// for BODY e.g. does not have a wicket:id.
-						current = new MarkupFragment(this, current, tag);
+
 						stack.push(basePath);
-						if (tag.getId().startsWith(Component.AUTO_COMPONENT_PREFIX))
-						{
-							this.pathToFragment.put(path, current);
-						}
-						else
+						fragmentStack.push(current);
+
+						MarkupFragment newFragment = new MarkupFragment(this, tag);
+						current.addMarkupElement(newFragment);
+						current = newFragment;
+
+						if (!tag.getId().startsWith(Component.AUTO_COMPONENT_PREFIX))
 						{
 							basePath = path;
-							this.pathToFragment.put(basePath, current);
 						}
 					}
 				}
 				else if (tag.isOpenClose())
 				{
-					MarkupFragment fragment = new MarkupFragment(this, current, tag);
-					this.pathToFragment.put(path, fragment);
+					MarkupFragment newFragment = new MarkupFragment(this, tag);
+					current.addMarkupElement(newFragment);
 				}
 				else
 				// if (tag.isClose()
 				{
 					current.addMarkupElement(tag);
-					current = current.getParentFragment();
+					current = fragmentStack.pop();
 					basePath = stack.pop();
 				}
 			}
+		}
+
+		if ((this.markupFragments.size() == 1)
+				&& (this.markupFragments.get(0) instanceof MarkupFragment))
+		{
+			this.markupFragments = (MarkupFragment)this.markupFragments.get(0);
 		}
 	}
 

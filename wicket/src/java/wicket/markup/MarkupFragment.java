@@ -57,12 +57,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	private final IMarkup markup;
 
 	/**
-	 * If null, than markup fragment is associated with a whole Page or Panel
-	 * markup file. Else the parent Wicket tag's markup
-	 */
-	private final MarkupFragment parentFragment;
-
-	/**
 	 * Constructor.
 	 * <p>
 	 * This constructor should be used for Pages and Panels which have there own
@@ -73,7 +67,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 */
 	MarkupFragment(final IMarkup markup)
 	{
-		this(markup, null, null);
+		this(markup, null);
 	}
 
 	/**
@@ -83,37 +77,18 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 * 
 	 * @param markup
 	 *            The associated Markup
-	 * @param parentFragment
-	 *            The parent Wicket tag's markup fragment
 	 * @param openTag
 	 *            The initial (open) tag
 	 */
-	MarkupFragment(final IMarkup markup, final MarkupFragment parentFragment,
-			final ComponentTag openTag)
+	public MarkupFragment(final IMarkup markup, final ComponentTag openTag)
 	{
 		this.markup = markup;
-		this.parentFragment = parentFragment;
 		this.markupElements = new ArrayList<MarkupElement>();
-
-		if (this.parentFragment != null)
-		{
-			this.parentFragment.addMarkupElement(this);
-		}
 
 		if (openTag != null)
 		{
 			this.markupElements.add(openTag);
 		}
-	}
-
-	/**
-	 * Get the parent markup fragment.
-	 * 
-	 * @return Null, if no parent available
-	 */
-	public final MarkupFragment getParentFragment()
-	{
-		return this.parentFragment;
 	}
 
 	/**
@@ -131,18 +106,54 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
+	 * Same as get(index), except that is returns a ComponentTag, of course
+	 * assuming that 'index' references a ComponentTag.
+	 * 
+	 * @param index
+	 * @return ComponentTag
+	 */
+	public final ComponentTag getTag(final int index)
+	{
+		return (ComponentTag)markupElements.get(index);
+	}
+
+	/**
+	 * Get the wicket:id of the underlying tag
+	 * 
+	 * @return id
+	 */
+	public final String getId()
+	{
+		MarkupElement elem = get(0);
+		if (elem instanceof ComponentTag)
+		{
+			return ((ComponentTag)elem).getId();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get the markup fragment associated with the id. The id might as well be a
 	 * path to get grand child markup.
 	 * 
 	 * @param id
 	 *            The id of the child tag
+	 * @param throwException
+	 *            If true and tag was not found, than throw an exception
 	 * @return Markup fragment
 	 */
-	public final MarkupFragment getChildFragment(final String id)
+	public final MarkupFragment getChildFragment(final String id, final boolean throwException)
 	{
 		if ((id == null) || (id.length() == 0))
 		{
 			return null;
+		}
+		
+		String tagId = getId();
+		if ((tagId != null) && tagId.equals(id))
+		{
+			return this;
 		}
 
 		// If id has not further path elements, than ...
@@ -154,12 +165,12 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				if (elem instanceof MarkupFragment)
 				{
 					MarkupFragment fragment = (MarkupFragment)elem;
-					ComponentTag tag = (ComponentTag)fragment.get(0);
-					String tagId = tag.getId();
+					tagId = fragment.getId();
 					if ((tagId != null) && tagId.equals(id))
 					{
 						return fragment;
 					}
+
 					/*
 					 * if this component tag represents an auto component we
 					 * need to recurse into it because auto components are
@@ -172,7 +183,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 					 */
 					if (tagId.startsWith(Component.AUTO_COMPONENT_PREFIX))
 					{
-						MarkupFragment frag = fragment.getChildFragment(id);
+						MarkupFragment frag = fragment.getChildFragment(id, false);
 						if (frag != null)
 						{
 							return frag;
@@ -187,50 +198,59 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 			// child) and the remaining path. Get the immediate child and
 			// recursively call getChildFragment() with the remaining path ids.
 			String root = Strings.firstPathComponent(id, Component.PATH_SEPARATOR);
-			MarkupFragment child = getChildFragment(root);
-			if (child == null)
+			MarkupFragment child = getChildFragment(root, false);
+			if (child != null)
 			{
-				return null;
+				String remainingPath = Strings.afterFirst(id, Component.PATH_SEPARATOR);
+				return child.getChildFragment(remainingPath, throwException);
 			}
+		}
 
-			String remainingPath = Strings.afterFirst(id, Component.PATH_SEPARATOR);
-			return child.getChildFragment(remainingPath);
+		if (throwException == true)
+		{
+			throw new MarkupException("Markup fragment with id '" + id
+					+ "' not found: Markup Fragment: " + this.getId());
 		}
 
 		return null;
 	}
 
 	/**
-	 * Recursively search for a Wicket tag with 'name', such as wicket:panel, wicket:border, etc.
+	 * Recursively search for a Wicket tag with 'name', such as wicket:panel,
+	 * wicket:border, etc.
 	 * 
-	 * @param name Such as "panel"
+	 * @param name
+	 *            Such as "panel"
 	 * @return Null, if not found
 	 */
 	public final MarkupFragment getWicketFragment(final String name)
 	{
+		MarkupElement element = get(0);
+		if (element instanceof ComponentTag)
+		{
+			ComponentTag tag = getTag(0);
+			if (tag.isWicketTag(name))
+			{
+				return this;
+			}
+		}
+		
 		for (MarkupElement elem : this)
 		{
 			if (elem instanceof MarkupFragment)
 			{
 				MarkupFragment fragment = (MarkupFragment)elem;
-				ComponentTag tag = (ComponentTag)fragment.get(0);
-				if (tag.isWicketTag(name))
+				fragment = fragment.getWicketFragment(name);
+				if (fragment != null)
 				{
 					return fragment;
 				}
-				else
-				{
-					fragment = fragment.getWicketFragment(name);
-					if (fragment != null)
-					{
-						return fragment;
-					}
-				}
 			}
 		}
+		
 		return null;
 	}
-	
+
 	/**
 	 * Gets the associate markup
 	 * 

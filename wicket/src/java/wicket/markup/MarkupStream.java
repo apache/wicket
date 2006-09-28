@@ -64,10 +64,30 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 * @param markup
 	 *            List of markup elements
 	 */
+	// TODO remove when markup change completed
 	public MarkupStream(final IMarkup markup)
 	{
 		this.markup = markup;
 
+		if (markup.size() > 0)
+		{
+			current = get(currentIndex);
+		}
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param fragment
+	 */
+	public MarkupStream(final MarkupFragment fragment)
+	{
+		this.markup = fragment.getMarkup().mutable(true);
+		for (MarkupElement elem : fragment.getAllElementsFlat())
+		{
+			((Markup)this.markup).addMarkupElement(elem);
+		}
+		
 		if (markup.size() > 0)
 		{
 			current = get(currentIndex);

@@ -28,6 +28,7 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.ajax.AjaxRequestTarget;
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
@@ -37,7 +38,6 @@ import wicket.feedback.FeedbackMessage;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.IAlternateParentProvider;
-import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
@@ -720,43 +720,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		// the fragment.
 		return ((IMarkupProvider)parent).getMarkupFragment(path);
 	}
-
-	/**
-	 * Get the markup stream for the fragment. This is a temporary solution 
-	 * only until MarkupStream can be created with MarkupFragment _and_ the 
-	 * render process properly handles the markup fragments.
-	 * 
-	 * @param markupFragment The markup fragment
-	 * @return markup stream The associated markup stream
-	 */
-	private MarkupStream getMarkupStream(final MarkupFragment markupFragment)
-	{
-		// @TODO This is a temporary solution only until MarkupStream can be 
-		// created with MarkupFragment _and_ the render process properly handles
-		// the markup fragments.
-		MarkupStream markupStream = new MarkupStream(markupFragment.getMarkup());
-		markupStream.setCurrentIndex(0);
-		MarkupElement element = markupStream.get();
-		if (!(element instanceof ComponentTag) || (element != markupFragment.get(0)))
-		{
-			boolean hit = false;
-			while (markupStream.hasMore())
-			{
-				element = markupStream.next();
-				if ((element instanceof ComponentTag) && (element == markupFragment.get(0)))
-				{
-					hit = true;
-					break;
-				}
-			}
-			if (hit == false)
-			{
-				throw new MarkupException("Something has gone wrong here. We should found the MarkupElement: " + this.toString());
-			}
-		}			
-
-		return markupStream;
-	}
 	
 	/**
 	 * This method is called in the Component's constructor. However some
@@ -784,7 +747,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			// new
 			final MarkupFragment markupFragment = getMarkupFragment();
 
-			final MarkupStream markupStream = getMarkupStream(markupFragment);
+			final MarkupStream markupStream = new MarkupStream(markupFragment);
 			final ComponentTag tag = markupStream.getTag();
 			
 			// TODO 2.0:juergen: the attributes and behavior additions are bad
@@ -1823,7 +1786,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			// Save the parent's markup stream to re-assign it at the end
 			MarkupContainer parent = getParent();
 			MarkupStream originalMarkupStream = parent.getMarkupStream();
-			MarkupStream markupStream = getMarkupStream(getMarkupFragment());
+			MarkupStream markupStream = new MarkupStream(getMarkupFragment());
 
 			try
 			{

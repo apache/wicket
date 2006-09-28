@@ -44,17 +44,6 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	int findTag(final String path);
 
 	/**
-	 * Find the MarkupFragment associated with the tag path
-	 * 
-	 * @param path
-	 *            The path of the tag relative to the markup resource
-	 * @param throwException
-	 *            if true, throw an exception if not found
-	 * @return MarkupFragment
-	 */
-	MarkupFragment findMarkupFragment(final String path, final boolean throwException);
-
-	/**
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
@@ -94,7 +83,7 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	 * @return Null, if not found.
 	 */
 	String getXmlDeclaration();
-	
+
 	/**
 	 * Get the markup fragments associated with the markup file
 	 * 
@@ -110,6 +99,20 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	 * @return Number of markup elements
 	 */
 	int size();
+
+	/**
+	 * Make all markup fragment modifiable.
+	 * 
+	 * @param emptyCopy
+	 *            If true, do NOT copy the markup elements
+	 * @return Markup
+	 */
+	Markup mutable(boolean emptyCopy);
+
+	/**
+	 * Make all markup fragmends unmodifable.
+	 */
+	void makeImmutable();
 
 	/**
 	 * @return String representation of markup list

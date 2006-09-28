@@ -1355,7 +1355,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	public final MarkupFragment getMarkupFragment(final String path)
 	{
-		return getAssociatedMarkupStream(true).getMarkup().findMarkupFragment(path, true);
+		return getAssociatedMarkupStream(true).getMarkup().getMarkupFragments().getChildFragment(path, true);
 	}
 
 	/**
