@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision$ $Date:
+ * 2006-06-22 11:51:12 -0700 (Thu, 22 Jun 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,7 +17,6 @@
  */
 package wicket.authorization.strategies.role.example;
 
-import wicket.Session;
 import wicket.authorization.strategies.role.example.pages.AdminAnnotationsBookmarkablePage;
 import wicket.authorization.strategies.role.example.pages.AdminAnnotationsInternalPage;
 import wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
@@ -45,29 +44,28 @@ public class Index extends WebPage
 	 */
 	public Index()
 	{
-		new Label(this,"currentUser", new PropertyModel(this, "session.user"));
-		new ListView<User>(this,"users", RolesApplication.USERS)
+		new Label(this, "currentUser", new PropertyModel(this, "session.user"));
+		new ListView<User>(this, "users", RolesApplication.USERS)
 		{
 			@Override
 			protected void populateItem(ListItem<User> item)
 			{
 				final User user = item.getModelObject();
-				Link link = new Link(item,"selectUserLink")
+				Link link = new Link(item, "selectUserLink")
 				{
 					@Override
 					public void onClick()
 					{
-						RolesSession session = (RolesSession)Session.get();
-						session.setUser(user);
+						RolesSession.get().setUser(user);
 					}
 				};
-				new Label(link,"userId", new Model<User>(user));
+				new Label(link, "userId", new Model<User>(user));
 			}
 		};
 
 		// pages that are proteced using wicket meta data
-		new BookmarkablePageLink(this,"adminBookmarkableLink", AdminBookmarkablePage.class);
-		new Link(this,"adminInternalLink")
+		new BookmarkablePageLink(this, "adminBookmarkableLink", AdminBookmarkablePage.class);
+		new Link(this, "adminInternalLink")
 		{
 			@Override
 			public void onClick()
@@ -75,11 +73,12 @@ public class Index extends WebPage
 				setResponsePage(new AdminInternalPage("foo"));
 			}
 		};
-		new BookmarkablePageLink(this,"panelsPageLink", PanelsPage.class);
+		new BookmarkablePageLink(this, "panelsPageLink", PanelsPage.class);
 
 		// pages that are protected using annotations
-		new BookmarkablePageLink(this,"adminAnnotBookmarkableLink", AdminAnnotationsBookmarkablePage.class);
-		new Link(this,"adminAnnotInternalLink")
+		new BookmarkablePageLink(this, "adminAnnotBookmarkableLink",
+				AdminAnnotationsBookmarkablePage.class);
+		new Link(this, "adminAnnotInternalLink")
 		{
 			@Override
 			public void onClick()
@@ -87,6 +86,6 @@ public class Index extends WebPage
 				setResponsePage(new AdminAnnotationsInternalPage("bar"));
 			}
 		};
-		new BookmarkablePageLink(this,"panelsAnnotPageLink", AnnotationsPanelsPage.class);
+		new BookmarkablePageLink(this, "panelsAnnotPageLink", AnnotationsPanelsPage.class);
 	}
 }

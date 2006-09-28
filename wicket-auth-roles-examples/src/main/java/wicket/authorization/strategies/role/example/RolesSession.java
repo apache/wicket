@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.authorization.strategies.role.example;
 
+import wicket.Session;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
@@ -27,6 +28,14 @@ import wicket.protocol.http.WebSession;
  */
 public class RolesSession extends WebSession
 {
+	/**
+	 * @return The current session
+	 */
+	public static RolesSession get()
+	{
+		return (RolesSession)Session.get();
+	}
+
 	/** the current user. */
 	private User user = RolesApplication.USERS.get(0);
 

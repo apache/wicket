@@ -1,5 +1,7 @@
 /*
- * $Id$ $Revision$ $Date$
+ * $Id: UserRolesAuthorizer.java 4289 2006-02-10 22:14:33 -0800 (Fri, 10 Feb
+ * 2006) jonathanlocke $ $Revision$ $Date: 2006-02-10 22:14:33 -0800
+ * (Fri, 10 Feb 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,7 +18,6 @@
  */
 package wicket.authorization.strategies.role.example;
 
-import wicket.Session;
 import wicket.authorization.strategies.role.IRoleCheckingStrategy;
 import wicket.authorization.strategies.role.Roles;
 
@@ -42,8 +43,7 @@ public class UserRolesAuthorizer implements IRoleCheckingStrategy
 	 */
 	public boolean hasAnyRole(Roles roles)
 	{
-		RolesSession authSession = (RolesSession)Session.get();
-		return authSession.getUser().hasAnyRole(roles);
+		return RolesSession.get().getUser().hasAnyRole(roles);
 	}
 
 }
