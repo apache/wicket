@@ -19,7 +19,10 @@ package wicket.examples.frames;
 
 import wicket.MarkupContainer;
 import wicket.Page;
+import wicket.PageMap;
+import wicket.examples.linkomatic.Home;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
 
 /**
@@ -33,8 +36,6 @@ import wicket.markup.html.link.Link;
  */
 public class LeftFrame extends WebPage
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Link that, when clicked, changes the frame target's frame class (and as
 	 * that is a shared model which is also being used by the 'master page'
@@ -51,7 +52,7 @@ public class LeftFrame extends WebPage
 		private final BodyFrame bodyFrame;
 
 		/** this link's target. */
-		private final Class<? extends Page> pageClass;
+		private final Class< ? extends Page> pageClass;
 
 		/**
 		 * Construct.
@@ -62,7 +63,7 @@ public class LeftFrame extends WebPage
 		 * @param pageClass
 		 */
 		public ChangeFramePageLink(MarkupContainer parent, final String id, BodyFrame bodyFrame,
-				Class<? extends Page> pageClass)
+				Class< ? extends Page> pageClass)
 		{
 			super(parent, id);
 			this.bodyFrame = bodyFrame;
@@ -83,6 +84,8 @@ public class LeftFrame extends WebPage
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Constructor
 	 * 
@@ -93,6 +96,8 @@ public class LeftFrame extends WebPage
 	{
 		new ChangeFramePageLink(this, "linkToPage1", index, Page1.class);
 		new ChangeFramePageLink(this, "linkToPage2", index, Page2.class);
+		BookmarkablePageLink link = new BookmarkablePageLink(this, "directLink", Home.class);
+		link.setPageMap(PageMap.forName(BodyFrame.RIGHT_FRAME_NAME));
 	}
 
 	/**
