@@ -337,7 +337,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		if (border.getMarkupStream() == null)
 		{
 			// Find Border at or above parent of this border
-			final MarkupContainer<?> borderParent = border.getParent();
+			MarkupContainer<?> borderParent = border.getParent();
 			border = (Border)((borderParent instanceof Border) ? borderParent : borderParent
 					.findParent(Border.class));
 		}

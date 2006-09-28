@@ -20,6 +20,7 @@ package wicket.markup.resolver;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.MarkupStream;
 
 /**
@@ -74,6 +75,22 @@ public class ParentResolver implements IComponentResolver
 		{
 			return ((IComponentResolver)parent).resolve(container, markupStream, tag);
 		}
+		
+		// Check for containers which re-parent there children
+		if (container instanceof IAlternateParentProvider)
+		{
+			parent = ((IAlternateParentProvider)container).getAlternateParent(null, tag.getId());
+			if (parent != null)
+			{
+				Component component = parent.get(tag.getId());
+				if (component != null)
+				{
+					component.render(markupStream);
+					return true;
+				}
+			}
+		}
+		
 		return false;
 	}
 }
