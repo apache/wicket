@@ -19,6 +19,7 @@
 package wicket.examples.library;
 
 import wicket.MarkupContainer;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.border.BoxBorder;
 
@@ -27,8 +28,10 @@ import wicket.markup.html.border.BoxBorder;
  * 
  * @author Jonathan Locke
  */
-public class LibraryApplicationBorder extends Border
+public class LibraryApplicationBorder extends Border implements IAlternateParentProvider
 {
+	private Border boxBorder;
+	
 	/**
 	 * Constructor
 	 * 
@@ -40,6 +43,15 @@ public class LibraryApplicationBorder extends Border
 	public LibraryApplicationBorder(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
-		new BoxBorder(this, "boxBorder");
+		
+		this.boxBorder = new BoxBorder(this, "boxBorder");
+	}
+
+	/**
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class, java.lang.String)
+	 */
+	public MarkupContainer getAlternateParent(Class childClass, String childId)
+	{
+		return ((this.boxBorder == null) || "mainNavigation".equals(childId) ? this : this.boxBorder);
 	}
 }

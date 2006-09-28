@@ -55,7 +55,7 @@ public class AuthenticatedWebPage extends WicketExamplePage implements IAlternat
 		super.init();
 		
 		// Create border and add it to the page
-		border = new LibraryApplicationBorder(this, "border");
+		this.border = new LibraryApplicationBorder(this, "border");
 	}
 	
 	/**
