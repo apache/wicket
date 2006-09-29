@@ -65,7 +65,7 @@ public final class Roles extends HashSet<String> implements Serializable
 	 * @param roles
 	 *            Roles
 	 */
-	public Roles(final String[] roles)
+	public Roles(final String... roles)
 	{
 		for (final String role : roles)
 		{
