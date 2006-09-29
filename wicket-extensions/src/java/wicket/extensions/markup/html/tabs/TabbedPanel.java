@@ -90,7 +90,7 @@ public class TabbedPanel extends Panel<Integer>
 	public static final String TAB_PANEL_ID = "panel";
 
 
-	private List<ITab> tabs;
+	private List<? extends ITab> tabs;
 
 	/**
 	 * Constructor
@@ -102,7 +102,7 @@ public class TabbedPanel extends Panel<Integer>
 	 * @param tabs
 	 *            list of ITab objects used to represent tabs
 	 */
-	public TabbedPanel(MarkupContainer parent, final String id, List<ITab> tabs)
+	public TabbedPanel(MarkupContainer parent, final String id, List<? extends ITab> tabs)
 	{
 		super(parent, id, new Model<Integer>(new Integer(-1)));
 
@@ -176,7 +176,7 @@ public class TabbedPanel extends Panel<Integer>
 	 * @return list of tabs that can be used by the user to add/remove/reorder
 	 *         tabs in the panel
 	 */
-	public final List<ITab> getTabs()
+	public final List<? extends ITab> getTabs()
 	{
 		return tabs;
 	}
