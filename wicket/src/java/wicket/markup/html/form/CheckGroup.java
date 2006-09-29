@@ -128,7 +128,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 
 				if (path != null)
 				{
-					
+
 					// retrieve the selected checkbox component
 					Check<T> checkbox = (Check<T>)get(path);
 
@@ -171,6 +171,8 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 			collection.clear();
 			collection.addAll(getConvertedInput());
 			modelChanged();
+			// call model.setObject()
+			getModel().setObject(collection);
 		}
 	}
 
