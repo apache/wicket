@@ -106,6 +106,7 @@ Wicket.FunctionsExecuter.prototype = {
 	initialize: function(functions) {
 		this.functions = functions;
 		this.current = 0;
+		this.depth = 0; // we need to limit call stack depth
 	},
 	
 	processNext: function() {
@@ -115,12 +116,16 @@ Wicket.FunctionsExecuter.prototype = {
 				f(this.notify.bind(this));
 			}.bind(this);
 			this.current++;
-			
-			if (Wicket.Browser.isKHTML())
+						
+			if (this.depth > 50 || Wicket.Browser.isKHTML()) {
 				// to prevent khtml bug that crashes entire browser
+				// or to prevent stack overflow
+				this.depth = 0;
 				window.setTimeout(run, 1);
-			else
-				run();				
+			} else {
+				this.depth ++;
+				run();
+			}				
 		}
 	},	
 	
@@ -845,7 +850,7 @@ Wicket.Head.Contributor.prototype = {
 			var style = Wicket.Head.createElement("style");
 			style.id = node.getAttribute("id");										
 				
-			if (document.all && !window.opera) {  // IE			
+			if (Wicket.Browser.isIE()) { 			
 				document.createStyleSheet().cssText = content;
 			} else {			
 				var textNode = document.createTextNode(content);
