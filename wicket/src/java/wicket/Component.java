@@ -551,7 +551,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/**
 	 * I really dislike it, but for now we need it. Reason: due to transparent
-	 * containers and IComponentResolver there is guaranteed 1:1 mapping between
+	 * containers and IComponentResolver there is NO guaranteed 1:1 mapping between
 	 * component and markup
 	 */
 	int markupIndex = -1;
@@ -566,9 +566,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/** Component id. */
 	private String id;
 
-	/**
-	 * MetaDataEntry array.
-	 */
+	/** MetaDataEntry array. */
 	private MetaDataEntry[] metaData;
 
 	/** The model for this component. */
@@ -580,6 +578,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/** The markup attributes for this component */
 	private IValueMap markupAttributes;
 
+	/** The markup fragment associated with the component */
+	private transient MarkupFragment markupFragment;
+	
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This is the minimal constructor of component. It does not register a
@@ -612,54 +613,21 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 *             Thrown if the component has been given a null id.
 	 */
 	@SuppressWarnings("unchecked")
-	public Component(MarkupContainer<?> parent, final String id, final IModel<T> model)
+	public Component(final MarkupContainer<?> parent, final String id, final IModel<T> model)
 	{
 		setId(id);
-
-		if (parent == null)
-		{
-			if (!(this instanceof Page))
-			{
-				throw new WicketRuntimeException("component without a parent is not allowed.");
-			}
-		}
-		// Bordered pages might implement the interface to allow to redirect
-		// to another parent without the need to change to code of adding a
-		// component. Another use case is where you want the parent to
-		// automatically
-		// add a container in between the parent and new component.
-		else if (parent instanceof IAlternateParentProvider)
-		{
-			while (parent instanceof IAlternateParentProvider)
-			{
-				MarkupContainer oldParent = parent;
-				parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
-
-				if (parent == oldParent)
-				{
-					break;
-				}
-
-				if (!oldParent.contains(parent, true))
-				{
-					throw new WicketRuntimeException(
-							"IAlternateParentProvider cannot return alternate parent containers that are outside its hierarchy.");
-				}
-
-			}
-		}
-
-		this.parent = parent;
+		
+		this.parent = getRealParent(parent, id);
 
 		getApplication().notifyComponentInstantiationListeners(this);
 		if (id.startsWith(AUTO_COMPONENT_PREFIX))
 		{
-			parent.autoAdd(this);
+			this.parent.autoAdd(this);
 		}
 		else
 		{
 			loadMarkupStream();
-			parent.add(this);
+			this.parent.add(this);
 		}
 
 		if (model instanceof IAssignmentAware)
@@ -689,6 +657,52 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
+	 * Get the real parent for the component taking IAlternateParent into account if
+	 * necessary.
+	 * 
+	 * @param parent
+	 *            The parent of this component The parent of this component.
+	 * @param id
+	 *            The non-null id of this component.
+	 * @return The real parent
+	 */
+	private MarkupContainer<?> getRealParent(MarkupContainer<?> parent, final String id)
+	{
+		if (parent == null)
+		{
+			if (!(this instanceof Page))
+			{
+				throw new WicketRuntimeException("Component without a parent is not allowed.");
+			}
+		}
+		// Bordered pages might implement the interface to allow to redirect
+		// to another parent without the need to change to code of adding a
+		// component. Another use case is where you want the parent to
+		// automatically
+		// add a container in between the parent and new component.
+		else if (parent instanceof IAlternateParentProvider)
+		{
+			while (parent instanceof IAlternateParentProvider)
+			{
+				MarkupContainer oldParent = parent;
+				parent = ((IAlternateParentProvider)parent).getAlternateParent(this.getClass(), id);
+				if (parent == oldParent)
+				{
+					return parent;
+				}
+
+				if (!oldParent.contains(parent, true))
+				{
+					throw new WicketRuntimeException(
+							"IAlternateParentProvider cannot return alternate parent containers that are outside its hierarchy.");
+				}
+			}
+		}
+		
+		return parent;
+	}
+	
+	/**
 	 * Gets the markup fragment associated with the component. Except for Pages
 	 * it is assumed that the first markup element of the fragment is a tag.
 	 * 
@@ -696,6 +710,11 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public MarkupFragment getMarkupFragment()
 	{
+		if (this.markupFragment != null)
+		{
+			return this.markupFragment;
+		}
+		
 		// Create the markup path for the component to find the associated
 		// markup fragment within the markup file.
 		String path = getId();
@@ -744,8 +763,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		try
 		{
-			// new
-			final MarkupFragment markupFragment = getMarkupFragment();
+			// Get the markup fragment for the component
+			this.markupFragment = getMarkupFragment();
 
 			final MarkupStream markupStream = new MarkupStream(markupFragment);
 			final ComponentTag tag = markupStream.getTag();
