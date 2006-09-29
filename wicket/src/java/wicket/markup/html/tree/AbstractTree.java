@@ -694,33 +694,16 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	{
 		if (parent.getChildren().indexOf(child) == parent.getChildren().size() - 1)
 		{
-			// we need final mutable flag to be able to set it from visit
-			// callback
-			final Boolean[] stop = new Boolean[] { Boolean.FALSE };
-
 			// go through the childrend backwards, start at the last but one
-			// item, loop until we get though all children or the flag is set
-			for (int i = parent.getChildren().size() - 2; i >= 0 && stop[0] == Boolean.FALSE; --i)
+			// item
+			for (int i = parent.getChildren().size() - 2; i >= 0; --i)
 			{
 				TreeItem item = (TreeItem)parent.getChildren().get(i);
 
-				// we need to refresh item and it's children 
-				visitItemAndChildren(item, new IItemCallback()
-				{
-					public void visitItem(TreeItem item)
-					{
-						// is the item visible?
-						if (dirtyItems.contains(item) == false
-								&& dirtyItemsCreateDOM.contains(item) == false)
-						{
-							// yes, refresh it and quit the loop
-							dirtyItems.add(item);
-							stop[0] = Boolean.TRUE;
-						}
-					}
-				});
+				// invalidate the node and it's children, so that they are redrawn
+				invalidateNodeWithChildren((TreeNode)item.getModelObject());					
 			}
-		}
+		}		
 	}
 
 	/**
