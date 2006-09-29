@@ -70,7 +70,6 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	@Override
 	protected void init()
 	{
-		setSessionFactory(this);
 		getSecuritySettings().setAuthorizationStrategy(
 				new RoleAuthorizationStrategy(new UserRolesAuthorizer()));
 		MetaDataRoleAuthorizationStrategy.authorize(AdminBookmarkablePage.class, "ADMIN");
