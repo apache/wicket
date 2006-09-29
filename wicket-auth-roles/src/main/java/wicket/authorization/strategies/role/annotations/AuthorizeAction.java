@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id$ $Revision$
+ * $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,9 +25,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A mapping of 1..n roles to an action. This annotions must be embedded in the
- * {@link wicket.authorization.strategies.role.annotations.AuthorizeActions}
- * annotation.
+ * A mapping of 1..n roles to an action. Can be used like:
+ * 
+ * <pre>
+ *   @AuthorizeAction(action = Action.RENDER, roles = Roles.ADMIN)
+ *   private static final class ForAdmins extends Panel
+ *   {
+ *   ...
+ * </pre>
  * 
  * @see wicket.authorization.IAuthorizationStrategy
  * @see wicket.authorization.strategies.role.annotations.AnnotationsRoleAuthorizationStrategy
