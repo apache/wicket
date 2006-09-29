@@ -157,6 +157,8 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 			collection.clear();
 			collection.addAll((Collection)getConvertedInput());
 			modelChanged();
+			// call model.setObject()
+			getModel().setObject(this, collection);
 		}
 	}
 
