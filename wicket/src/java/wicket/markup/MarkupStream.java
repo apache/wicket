@@ -19,6 +19,7 @@
 package wicket.markup;
 
 import java.util.Iterator;
+import java.util.List;
 
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
@@ -56,25 +57,10 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	private int currentIndex = 0;
 
 	/** The markup element list */
-	private final IMarkup markup;
+	private final MarkupFragment markup;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param markup
-	 *            List of markup elements
-	 */
-	// TODO remove when markup change completed
-	public MarkupStream(final IMarkup markup)
-	{
-		this.markup = markup;
-
-		if (markup.size() > 0)
-		{
-			current = get(currentIndex);
-		}
-	}
-
+	private final List<MarkupElement> markupElements;
+	
 	/**
 	 * Construct.
 	 * 
@@ -82,13 +68,11 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public MarkupStream(final MarkupFragment fragment)
 	{
-		this.markup = fragment.getMarkup().mutable(true);
-		for (MarkupElement elem : fragment.getAllElementsFlat())
-		{
-			((Markup)this.markup).addMarkupElement(elem);
-		}
+		this.markup = fragment;
+		this.markup.makeImmutable();
+		this.markupElements = fragment.getAllElementsFlat();
 		
-		if (markup.size() > 0)
+		if (this.markupElements.size() > 0)
 		{
 			current = get(currentIndex);
 		}
@@ -198,7 +182,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public IResourceStream getResource()
 	{
-		return markup.getResource();
+		return this.markup.getMarkup().getResource();
 	}
 
 	/**
@@ -206,7 +190,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public boolean hasMore()
 	{
-		return currentIndex < markup.size();
+		return currentIndex < markupElements.size();
 	}
 
 	/**
@@ -234,7 +218,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	public MarkupElement next()
 	{
 		// @TODO I think it is a bug. You'll never be able to get(0). 
-		if (++currentIndex < markup.size())
+		if (++currentIndex < markupElements.size())
 		{
 			return current = get(currentIndex);
 		}
@@ -331,7 +315,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	private MarkupElement get(final int index)
 	{
-		return markup.get(index);
+		return markupElements.get(index);
 	}
 
 	/**
@@ -365,7 +349,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public String getXmlDeclaration()
 	{
-		return markup.getXmlDeclaration();
+		return this.markup.getMarkup().getXmlDeclaration();
 	}
 
 	/**
@@ -377,7 +361,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public final String getEncoding()
 	{
-		return markup.getEncoding();
+		return this.markup.getMarkup().getEncoding();
 	}
 
 	/**
@@ -388,7 +372,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public final Class getContainerClass()
 	{
-		return markup.getResource().getMarkupClass();
+		return this.markup.getMarkup().getResource().getMarkupClass();
 	}
 
 	/**
@@ -398,7 +382,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public final String getWicketNamespace()
 	{
-		return this.markup.getWicketNamespace();
+		return this.markup.getMarkup().getWicketNamespace();
 	}
 
 	/**
@@ -427,6 +411,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 *            If true, than throw an exception if not found
 	 * @return -1, if not found
 	 */
+	// TODO This is a hack; remove when markup fragment loading finished
 	public final int positionAt(final String path, final boolean throwException)
 	{
 		if ((path == null) || (path.length() == 0))
@@ -434,14 +419,31 @@ public final class MarkupStream implements Iterable<MarkupElement>
 			throw new IllegalArgumentException("Parameter 'path' must not be null or empty");
 		}
 
-		int index = this.markup.findTag(path);
-		if (index == -1)
+		MarkupFragment fragment = this.markup.getChildFragment(path, false);
+		if (fragment == null)
 		{
 			if (throwException == true)
 			{
 				throw new MarkupException("Markup does not contain a Wicket tag with path '" + path
-						+ "'; Resource: " + this.markup.getResource().toString());
+						+ "'; Resource: " + this.markup.getMarkup().getResource().toString());
 			}
+			
+			return -1;
+		}
+		
+		int index = -1;
+		for (MarkupElement element : this)
+		{
+			index ++;
+			if (element == fragment.get(0))
+			{
+				break;
+			}
+		}
+		
+		if (index >= this.markupElements.size())
+		{
+			index = -1;
 		}
 		else
 		{
@@ -453,22 +455,13 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * 
-	 * @return true, if underlying markup has been merged (inheritance)
-	 */
-	public final boolean isMergedMarkup()
-	{
-		return (this.markup instanceof MergedMarkup);
-	}
-
-	/**
 	 * Get the immutable markup associated with the stream
 	 * 
 	 * @return markup
 	 */
 	public final IMarkup getMarkup()
 	{
-		return this.markup;
+		return this.markup.getMarkup();
 	}
 	
 	/**
@@ -476,7 +469,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public Iterator<MarkupElement> iterator()
 	{
-		return this.markup.iterator();
+		return this.markupElements.iterator();
 	}
 
 	/**
@@ -499,14 +492,14 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	{
 		final StringBuffer buffer = new StringBuffer();
 
-		for (int i = 0; i < markup.size(); i++)
+		for (int i = 0; i < markupElements.size(); i++)
 		{
 			if (i == currentIndex)
 			{
 				buffer.append("<font color = \"red\">");
 			}
 
-			final MarkupElement element = markup.get(i);
+			final MarkupElement element = markupElements.get(i);
 
 			buffer.append(Strings.escapeMarkup(element.toString(), true));
 
@@ -525,7 +518,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	@Override
 	public String toString()
 	{
-		return "[markup = " + String.valueOf(markup) + ", index = " + currentIndex + ", current = "
+		return "[markup = " + String.valueOf(markup.getMarkup()) + ", index = " + currentIndex + ", current = "
 				+ ((current == null) ? "null" : current.toUserDebugString()) + "]";
 	}
 }

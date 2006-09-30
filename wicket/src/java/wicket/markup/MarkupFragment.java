@@ -58,14 +58,11 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 
 	/**
 	 * Constructor.
-	 * <p>
-	 * This constructor should be used for Pages and Panels which have there own
-	 * associated markup file
 	 * 
 	 * @param markup
 	 *            The associated Markup
 	 */
-	MarkupFragment(final IMarkup markup)
+	public MarkupFragment(final IMarkup markup)
 	{
 		this(markup, null);
 	}
@@ -179,7 +176,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 					 * 
 					 * eg <wicket:extend> generates an auto component that is
 					 * not in the markup path expressions
-					 * 
 					 */
 					if (tagId.startsWith(Component.AUTO_COMPONENT_PREFIX))
 					{
@@ -278,9 +274,19 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 * 
 	 * @param markupElement
 	 */
-	final void addMarkupElement(final MarkupElement markupElement)
+	public final void addMarkupElement(final MarkupElement markupElement)
 	{
 		this.markupElements.add(markupElement);
+	}
+	
+	/**
+	 * Remove the element from the list
+	 * 
+	 * @param elem
+	 */
+	public final void removeMarkupElement(final MarkupElement elem)
+	{
+		this.markupElements.remove(elem);
 	}
 
 	/**
@@ -289,7 +295,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 * @param pos
 	 * @param markupElement
 	 */
-	final void addMarkupElement(final int pos, final MarkupElement markupElement)
+	public final void addMarkupElement(final int pos, final MarkupElement markupElement)
 	{
 		this.markupElements.add(pos, markupElement);
 	}
@@ -297,7 +303,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	/**
 	 * Make all tags immutable and the list of elements unmodifable.
 	 */
-	final void makeImmutable()
+	public final void makeImmutable()
 	{
 		for (MarkupElement elem : this)
 		{
@@ -371,6 +377,109 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		return elems;
 	}
 
+	/**
+	 * Traverses all child components of the given class in this container,
+	 * calling the visitor's visit method at each one.
+	 * 
+	 * @param clazz
+	 *            The class of child to visit, or null to visit all children
+	 * @param visitor
+	 *            The visitor to call back to
+	 * @return The return value from a visitor which halted the traversal, or
+	 *         null if the entire traversal occurred
+	 */
+	public final Object visitChildren(final Class<? extends MarkupElement> clazz, final IVisitor visitor)
+	{
+		if (visitor == null)
+		{
+			throw new IllegalArgumentException("Argument visitor may not be null");
+		}
+
+		// Iterate through children of this container
+		for (MarkupElement element : this)
+		{
+			Object value = null;
+			
+			// Is the child of the correct class (or was no class specified)?
+			if ((clazz == null) || clazz.isInstance(element))
+			{
+				// Call visitor
+				value = visitor.visit(element);
+
+				// If visitor returns a non-null value, it halts the traversal
+				if ((value != IVisitor.CONTINUE_TRAVERSAL)
+						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				{
+					return value;
+				}
+			}
+
+			// If child is a container
+			if ((element instanceof MarkupFragment)
+					&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+			{
+				// visit the children in the container
+				value = ((MarkupFragment)element).visitChildren(clazz, visitor);
+
+				// If visitor returns a non-null value, it halts the traversal
+				if ((value != IVisitor.CONTINUE_TRAVERSAL)
+						&& (value != IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER))
+				{
+					return value;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Traverses all child components in this container, calling the visitor's
+	 * visit method at each one.
+	 * 
+	 * @param visitor
+	 *            The visitor to call back to
+	 * @return The return value from a visitor which halted the traversal, or
+	 *         null if the entire traversal occurred
+	 */
+	public final Object visitChildren(final IVisitor visitor)
+	{
+		return visitChildren(null, visitor);
+	}
+
+	/**
+	 * Generic component visitor interface for component traversals.
+	 */
+	public static interface IVisitor
+	{
+		/**
+		 * Value to return to continue a traversal.
+		 */
+		public static final Object CONTINUE_TRAVERSAL = null;
+
+		/**
+		 * A generic value to return to contiue a traversal, but if the
+		 * component is a container, don't visit its children.
+		 */
+		public static final Object CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER = new Object();
+
+		/**
+		 * A generic value to return to stop a traversal.
+		 */
+		public static final Object STOP_TRAVERSAL = new Object();
+
+		/**
+		 * Called at each component in a traversal.
+		 * 
+		 * @param element
+		 *            The markup element
+		 * @return CONTINUE_TRAVERSAL (null) if the traversal should continue,
+		 *         or a non-null return value for the traversal method if it
+		 *         should stop. If no return value is useful, the generic
+		 *         non-null value STOP_TRAVERSAL can be used.
+		 */
+		public Object visit(MarkupElement element);
+	}
 
 	/**
 	 * @return String representation of markup list

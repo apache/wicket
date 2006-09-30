@@ -87,6 +87,19 @@ public class Markup implements IMarkup
 	}
 
 	/**
+	 * This is realy for the old world only and will be removed once the changes
+	 * have been made. It return a flat list of all MarkupElements in the Markup
+	 * instead of a tree-like structure which is equal to the markup structure.
+	 * 
+	 * @return MarkupFragment which contains a single list of all MarkupElements
+	 *         of the Markup
+	 */
+	public final MarkupFragment getAllMarkupElementsFlat()
+	{
+		return this.markup;
+	}
+
+	/**
 	 * Gets the resource that contains this markup
 	 * 
 	 * @return The resource where this markup came from
@@ -101,6 +114,10 @@ public class Markup implements IMarkup
 	 */
 	public int size()
 	{
+		if ((this.markup != null) && (this.markupFragments == null))
+		{
+			initialize();
+		}
 		return this.markup.size();
 	}
 
@@ -180,31 +197,20 @@ public class Markup implements IMarkup
 	}
 
 	/**
-	 * Add a MarkupElement
-	 * 
-	 * @param markupElement
-	 */
-	public final void addMarkupElement(final MarkupElement markupElement)
-	{
-		this.markup.addMarkupElement(markupElement);
-	}
-
-	/**
-	 * Add a MarkupElement
-	 * 
-	 * @param pos
-	 * @param markupElement
-	 */
-	public final void addMarkupElement(final int pos, final MarkupElement markupElement)
-	{
-		this.markup.addMarkupElement(pos, markupElement);
-	}
-
-	/**
 	 * Make all tags immutable and the list of elements unmodifable.
 	 */
 	public final void makeImmutable()
 	{
+		// TODO This is realy for historical reasons only and should be removed
+		// once the markup fragment changes have been finished.
+		// See MarkupParser.parseMarkup() last line.
+		if ((this.markup != null) && (this.markup.size() == 0) && (this.markupFragments != null)
+				&& (this.markupFragments.size() != 0))
+		{
+			this.markup = this.markupFragments;
+			this.markupFragments = null;
+		}
+
 		if ((this.markup != null) && (this.markupFragments == null))
 		{
 			initialize();
@@ -270,40 +276,6 @@ public class Markup implements IMarkup
 	public Iterator<MarkupElement> iterator()
 	{
 		return this.markup.iterator();
-	}
-
-	/**
-	 * @see wicket.markup.IMarkup#findComponentIndex(java.lang.String,
-	 *      java.lang.String)
-	 */
-	public int findTag(final String path)
-	{
-		if ((path == null) || (path.length() == 0))
-		{
-			throw new IllegalArgumentException("Parameter 'path' must not be null");
-		}
-
-		if ((this.markup != null) && (this.componentMap == null))
-		{
-			initialize();
-		}
-
-		// All component tags are registered with the cache
-		if (this.componentMap == null)
-		{
-			// not found
-			return -1;
-		}
-
-		final Integer value = this.componentMap.get(path);
-		if (value == null)
-		{
-			// not found
-			return -1;
-		}
-
-		// return the components position in the markup stream
-		return value.intValue();
 	}
 
 	/**

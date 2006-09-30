@@ -449,7 +449,7 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @return True if <wicket:panel>, <wicket:border>, <wicket:ex
+	 * @return True if wicket:panel, wicket:border or wicket:extend
 	 */
 	public final boolean isMajorWicketComponentTag()
 	{
@@ -549,7 +549,7 @@ public class ComponentTag extends MarkupElement
 	}
 
 	/**
-	 * @return True, if tag name equals 'wicket:extend'
+	 * @return True, if tag name equals 'wicket:head'
 	 */
 	public final boolean isWicketHeadTag()
 	{

@@ -314,6 +314,7 @@ public class XmlTag extends MarkupElement
 			if (attributes != null)
 			{
 				attributes.makeImmutable();
+				text = null;
 			}
 		}
 	}
@@ -345,7 +346,14 @@ public class XmlTag extends MarkupElement
 			tag.isMutable = true;
 			tag.closes = closes;
 			tag.copyOf = copyOf;
-			tag.attributes = markupAttributes;
+			if (markupAttributes == null)
+			{
+				tag.attributes = new AttributeMap(attributes);
+			}
+			else
+			{
+				tag.attributes = markupAttributes;
+			}
 			return tag;
 		}
 	}

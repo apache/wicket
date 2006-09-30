@@ -68,7 +68,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	private IMarkup parse(final String namespace, final String markup) throws IOException,
+	private MarkupFragment parse(final String namespace, final String markup) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		MarkupResourceStream stream = new MarkupResourceStream(new StringResourceStream(markup),
@@ -87,7 +87,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	private IMarkup parse(final String markup) throws IOException, ResourceStreamNotFoundException
+	private MarkupFragment parse(final String markup) throws IOException, ResourceStreamNotFoundException
 	{
 		MarkupResourceStream stream = new MarkupResourceStream(new StringResourceStream(markup),
 				null, null);
@@ -124,7 +124,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	private IMarkup parse(final MarkupResourceStream resource) throws IOException,
+	private MarkupFragment parse(final MarkupResourceStream resource) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		final MarkupParser parser = new MarkupParserFactory(this.application)
@@ -139,7 +139,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 */
 	public final void testTagParsing() throws Exception
 	{
-		final IMarkup markup = parse(
+		final MarkupFragment markup = parse(
 				"componentName",
 				"This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
 						+ "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
@@ -200,12 +200,12 @@ public final class MarkupParserTest extends WicketTestCase
 	 */
 	public final void testTagParsingFragments() throws Exception
 	{
-		final IMarkup markup = parse(
+		final MarkupFragment markup = parse(
 				"componentName",
 				"This is a test <a componentName:id=\"a\" href=\"foo.html\"> <b componentName:id=\"b\">Bold!</b> "
 						+ "<img componentName:id=\"img\" width=9 height=10 src=\"foo\"> <marker componentName:id=\"marker\"/> </a>");
 
-		final List<MarkupElement> elems = markup.getMarkupFragments().getAllElementsFlat();
+		final List<MarkupElement> elems = markup.getAllElementsFlat();
 		final Iterator<MarkupElement> markupStream = elems.iterator();
 		markupStream.next();
 		final ComponentTag aOpen = (ComponentTag)markupStream.next();
@@ -262,10 +262,11 @@ public final class MarkupParserTest extends WicketTestCase
 	 */
 	public final void test() throws Exception
 	{
-		final IMarkup tokens = parse(
+		MarkupFragment tokens = parse(
 				"componentName",
 				"This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10/></a> of the emergency broadcasting system");
 
+		tokens = tokens.getMarkup().getAllMarkupElementsFlat();
 		log.info("tok(0)=" + tokens.get(0));
 		log.info("tok(1)=" + tokens.get(1));
 		log.info("tok(2)=" + tokens.get(2));
@@ -301,7 +302,7 @@ public final class MarkupParserTest extends WicketTestCase
 				+ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">"
 				+ "<html>" + "<head><title>Some Page</title></head>"
 				+ "<body><h1>XHTML Test</h1></body>" + "</html>";
-		final IMarkup tokens = parse("componentName", docText);
+		final MarkupFragment tokens = parse("componentName", docText);
 
 		log.info("tok(0)=" + tokens.get(0));
 		Assert.assertEquals(docText.substring(44), tokens.get(0).toString());
@@ -320,7 +321,7 @@ public final class MarkupParserTest extends WicketTestCase
 		MarkupResourceStream resource = newMarkupResourceStream(locator, this.getClass(), "1",
 				null, "html");
 
-		IMarkup tokens = parse(resource);
+		MarkupFragment tokens = parse(resource);
 		log.info("tok(0)=" + tokens.get(0));
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
@@ -414,7 +415,7 @@ public final class MarkupParserTest extends WicketTestCase
 			// ignore
 		}
 
-		IMarkup markup = parse("<wicket:remove>  </wicket:remove>");
+		MarkupFragment markup = parse("<wicket:remove>  </wicket:remove>");
 		assertEquals(0, markup.size());
 
 		markup = parse("<wicket:remove> <span id=\"test\"/> </wicket:remove>");
@@ -453,7 +454,7 @@ public final class MarkupParserTest extends WicketTestCase
 	public final void testDefaultWicketTag() throws ParseException,
 			ResourceStreamNotFoundException, IOException
 	{
-		IMarkup markup = parse("wcn", "<span wcn:id=\"test\"/>");
+		MarkupFragment markup = parse("wcn", "<span wcn:id=\"test\"/>");
 		assertEquals(1, markup.size());
 
 		markup = parse("wcn", "<span wicket:id=\"test\"/>");
@@ -474,7 +475,7 @@ public final class MarkupParserTest extends WicketTestCase
 	public final void testScript() throws ParseException, ResourceStreamNotFoundException,
 			IOException
 	{
-		IMarkup markup = parse("<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
+		MarkupFragment markup = parse("<html wicket:id=\"test\"><script language=\"JavaScript\">... <x a> ...</script></html>");
 		assertEquals(3, markup.size());
 		assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		assertEquals("html", ((ComponentTag)markup.get(2)).getName());
@@ -493,7 +494,7 @@ public final class MarkupParserTest extends WicketTestCase
 	public final void testCDATA() throws ParseException, ResourceStreamNotFoundException,
 			IOException
 	{
-		IMarkup markup = parse("<html><![CDATA[ test ]]></html>");
+		MarkupFragment markup = parse("<html><![CDATA[ test ]]></html>");
 		assertEquals(1, markup.size());
 		// assertEquals("html", ((ComponentTag)markup.get(0)).getName());
 		// assertEquals("html", ((ComponentTag)markup.get(1)).getName());
@@ -512,21 +513,18 @@ public final class MarkupParserTest extends WicketTestCase
 	public final void testBalancing() throws IOException, ResourceStreamNotFoundException
 	{
 		// Note: <img> is one of these none-balanced HTML tags
-		IMarkup markup = parse("<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
-
-		ComponentTag t = (ComponentTag)markup.get(0);
+		MarkupFragment markup = parse("<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
+		
+		ComponentTag t = markup.getTag(0);
 		assertEquals(t.getId(), "span");
-		assertNotNull(markup.findTag("span"));
-		assertNotNull(markup.getMarkupFragments().getChildFragment("span", false));
+		assertNotNull(markup.getChildFragment("span", false));
 
-		t = (ComponentTag)markup.get(1);
-		assertEquals(t.getId(), "img");
-		assertNotNull(markup.findTag("span:img"));
-		assertNotNull(markup.getMarkupFragments().getChildFragment("span:img", false));
+		MarkupFragment fragment = (MarkupFragment)markup.get(1);
+		assertEquals(fragment.getId(), "img");
+		assertNotNull(markup.getChildFragment("span:img", false));
 
-		t = (ComponentTag)markup.get(2);
-		assertEquals(t.getId(), "span2");
-		assertNotNull(markup.findTag("span:span2"));
-		assertNotNull(markup.getMarkupFragments().getChildFragment("span:span2", false));
+		fragment = (MarkupFragment)markup.get(2);
+		assertEquals(fragment.getId(), "span2");
+		assertNotNull(markup.getChildFragment("span:span2", false));
 	}
 }

@@ -21,7 +21,7 @@ package wicket.markup.loader;
 import java.io.IOException;
 
 import wicket.MarkupContainer;
-import wicket.markup.IMarkup;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
@@ -57,7 +57,7 @@ public abstract class AbstractMarkupLoader implements IMarkupLoader
 	 * @see wicket.markup.loader.IMarkupLoader#loadMarkup(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupResourceStream)
 	 */
-	public IMarkup loadMarkup(final MarkupContainer container,
+	public MarkupFragment loadMarkup(final MarkupContainer container,
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException
 	{

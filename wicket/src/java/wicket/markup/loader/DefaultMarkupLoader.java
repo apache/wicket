@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import wicket.Application;
 import wicket.MarkupContainer;
-import wicket.markup.IMarkup;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
@@ -51,13 +51,13 @@ public class DefaultMarkupLoader implements IMarkupLoader
 	 * @see wicket.markup.loader.IMarkupLoader#loadMarkup(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupResourceStream)
 	 */
-	public final IMarkup loadMarkup(final MarkupContainer container,
+	public final MarkupFragment loadMarkup(final MarkupContainer container,
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException
 	{
 		// read and parse the markup
-		IMarkup markup = application.getMarkupSettings().getMarkupParserFactory().newMarkupParser(
-				markupResourceStream).readAndParse();
+		MarkupFragment markup = application.getMarkupSettings().getMarkupParserFactory()
+				.newMarkupParser(markupResourceStream).readAndParse();
 
 		return markup;
 	}

@@ -200,7 +200,8 @@ public class MarkupParser
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
-					registerMarkupFilter(new HtmlHeaderSectionHandler(this.markup));
+					registerMarkupFilter(new HtmlHeaderSectionHandler(this.markup
+							.getMarkupFragments()));
 				}
 
 				registerMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
@@ -244,7 +245,7 @@ public class MarkupParser
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	public final IMarkup readAndParse() throws IOException, ResourceStreamNotFoundException
+	public final MarkupFragment readAndParse() throws IOException, ResourceStreamNotFoundException
 	{
 		// Initialize the xml parser
 		this.xmlParser
@@ -252,24 +253,27 @@ public class MarkupParser
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
-		parseMarkup();
+		MarkupFragment fragment = parseMarkup();
 
 		this.markup.setEncoding(this.xmlParser.getEncoding());
 		this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
-		return this.markup;
+		return fragment;
 	}
 
 	/**
 	 * Scans the given markup and extracts balancing tags.
 	 * 
+	 * @return The markup associated with the resource
 	 */
-	private void parseMarkup()
+	private MarkupFragment parseMarkup()
 	{
+		MarkupFragment markupFragment = this.markup.getMarkupFragments();
+
 		try
 		{
 			// allways remember the latest index (size)
-			int size = this.markup.size();
+			int size = markupFragment.size();
 
 			// Loop through tags
 			for (ComponentTag tag; null != (tag = (ComponentTag)this.markupFilterChain.nextTag());)
@@ -303,7 +307,7 @@ public class MarkupParser
 
 						// Make sure you add it at the correct location.
 						// IMarkupFilters might have added elements as well.
-						this.markup.addMarkupElement(size, new RawMarkup(rawMarkup));
+						markupFragment.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
 					if (add)
@@ -313,19 +317,19 @@ public class MarkupParser
 						// as removed
 						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
 						{
-							this.markup.addMarkupElement(tag);
+							markupFragment.addMarkupElement(tag);
 						}
 					}
 					else if (tag.isModified())
 					{
-						this.markup.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+						markupFragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
 
 					this.xmlParser.setPositionMarker();
 				}
 
 				// allways remember the latest index (size)
-				size = this.markup.size();
+				size = markupFragment.size();
 			}
 		}
 		catch (final ParseException ex)
@@ -334,14 +338,14 @@ public class MarkupParser
 			final CharSequence text = this.xmlParser.getInputFromPositionMarker(-1);
 			if (text.length() > 0)
 			{
-				this.markup.addMarkupElement(new RawMarkup(text));
+				markupFragment.addMarkupElement(new RawMarkup(text));
 			}
 
 			this.markup.setEncoding(this.xmlParser.getEncoding());
 			this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
-			final MarkupStream markupStream = new MarkupStream(this.markup);
-			markupStream.setCurrentIndex(this.markup.size() - 1);
+			final MarkupStream markupStream = new MarkupStream(markupFragment);
+			markupStream.setCurrentIndex(markupFragment.size() - 1);
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
 
@@ -361,11 +365,13 @@ public class MarkupParser
 				rawMarkup = compressWhitespace(rawMarkup);
 			}
 
-			this.markup.addMarkupElement(new RawMarkup(rawMarkup));
+			markupFragment.addMarkupElement(new RawMarkup(rawMarkup));
 		}
 
 		// Make all tags immutable and the list of elements unmodifable
 		this.markup.makeImmutable();
+
+		return this.markup.getMarkupFragments();
 	}
 
 	/**

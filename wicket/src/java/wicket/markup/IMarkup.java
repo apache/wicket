@@ -35,15 +35,6 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	public static final Markup NO_MARKUP = new Markup();
 
 	/**
-	 * Find the markup element index of the component with 'path'
-	 * 
-	 * @param path
-	 *            The component path expression
-	 * @return -1, if not found
-	 */
-	int findTag(final String path);
-
-	/**
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
@@ -113,6 +104,16 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	 * Make all markup fragmends unmodifable.
 	 */
 	void makeImmutable();
+
+	/**
+	 * This is realy for the old world only and will be removed once the changes
+	 * have been made. It return a flat list of all MarkupElements in the Markup
+	 * instead of a tree-like structure which is equal to the markup structure.
+	 * 
+	 * @return MarkupFragment which contains a single list of all MarkupElements
+	 *         of the Markup
+	 */
+	MarkupFragment getAllMarkupElementsFlat();
 
 	/**
 	 * @return String representation of markup list

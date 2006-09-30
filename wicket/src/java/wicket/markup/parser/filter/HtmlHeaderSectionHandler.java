@@ -22,8 +22,8 @@ import java.text.ParseException;
 
 import wicket.Component;
 import wicket.markup.ComponentTag;
-import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
+import wicket.markup.MarkupFragment;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.XmlTag;
 
@@ -54,14 +54,14 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 	private boolean ignoreTheRest = false;
 	
 	/** The Markup available so far for the resource */
-	private final Markup markup;
+	private final MarkupFragment markup;
 	
 	/**
 	 * Construct.
 	 * 
 	 * @param markup The Markup object being filled while reading the markup resource
 	 */
-	public HtmlHeaderSectionHandler(final Markup markup)
+	public HtmlHeaderSectionHandler(final MarkupFragment markup)
 	{
 		this.markup = markup;
 	}

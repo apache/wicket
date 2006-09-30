@@ -51,7 +51,7 @@ public class MarkupCache
 	private static final Log log = LogFactory.getLog(MarkupCache.class);
 
 	/** Markup Cache */
-	private Map<CharSequence, IMarkup> markupCache = new ConcurrentHashMap<CharSequence, IMarkup>();
+	private Map<CharSequence, MarkupFragment> markupCache = new ConcurrentHashMap<CharSequence, MarkupFragment>();
 
 	/**
 	 * Markup inheritance requires that merged markup gets re-merged either
@@ -148,10 +148,10 @@ public class MarkupCache
 		}
 
 		// Look for associated markup
-		final IMarkup markup = getMarkup(container, container.getClass());
+		final MarkupFragment markup = getMarkup(container, container.getClass());
 
 		// If we found markup for this container
-		if (markup != IMarkup.NO_MARKUP)
+		if (markup != MarkupFragment.NO_MARKUP_FRAGMENT)
 		{
 			return new MarkupStream(markup);
 		}
@@ -177,7 +177,7 @@ public class MarkupCache
 	 */
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
-		return getMarkup(container, container.getClass()) != IMarkup.NO_MARKUP;
+		return getMarkup(container, container.getClass()) != MarkupFragment.NO_MARKUP_FRAGMENT;
 	}
 
 	/**
@@ -194,7 +194,7 @@ public class MarkupCache
 	 *            container as well (markup inheritance)
 	 * @return Markup resource
 	 */
-	public final IMarkup getMarkup(final MarkupContainer<?> container,
+	public final MarkupFragment getMarkup(final MarkupContainer<?> container,
 			final Class<? extends MarkupContainer> clazz)
 	{
 		Class<? extends MarkupContainer> containerClass = clazz;
@@ -216,7 +216,7 @@ public class MarkupCache
 
 		// Markup already in the cache? If cacheKey == null, than don't cache
 		// the markup resource stream
-		IMarkup markup = null;
+		MarkupFragment markup = null;
 		if (cacheKey != null)
 		{
 			markup = markupCache.get(cacheKey);
@@ -266,7 +266,7 @@ public class MarkupCache
 						// flag markup as non-existent (as opposed to null,
 						// which might mean that it's simply not loaded into
 						// the cache)
-						markup = IMarkup.NO_MARKUP;
+						markup = MarkupFragment.NO_MARKUP_FRAGMENT;
 
 						// Save any markup list (or absence of one) for next
 						// time
@@ -325,12 +325,12 @@ public class MarkupCache
 	 *            The markup resource stream to load
 	 * @return The markup
 	 */
-	private final IMarkup loadMarkup(final MarkupContainer container,
+	private final MarkupFragment loadMarkup(final MarkupContainer container,
 			final MarkupResourceStream markupResourceStream)
 	{
 		try
 		{
-			final IMarkup markup = newMarkupLoader().loadMarkup(container, markupResourceStream);
+			final MarkupFragment markup = newMarkupLoader().loadMarkup(container, markupResourceStream);
 
 			// add the markup to the cache
 			if (markupResourceStream.getCacheKey() != null)
@@ -359,7 +359,7 @@ public class MarkupCache
 			afterLoadListeners.remove(markupResourceStream);
 		}
 
-		return IMarkup.NO_MARKUP;
+		return MarkupFragment.NO_MARKUP_FRAGMENT;
 	}
 
 	/**
@@ -374,7 +374,7 @@ public class MarkupCache
 	 *            The markup stream to load and begin to watch
 	 * @return The markup in the stream
 	 */
-	private final IMarkup loadMarkupAndWatchForChanges(final MarkupContainer container,
+	private final MarkupFragment loadMarkupAndWatchForChanges(final MarkupContainer container,
 			final MarkupResourceStream markupResourceStream)
 	{
 		if (markupResourceStream.getCacheKey() != null)
@@ -416,7 +416,7 @@ public class MarkupCache
 	 */
 	protected IMarkupLoader newMarkupLoader()
 	{
-		AbstractMarkupLoader loaderChain = new InheritedMarkupMarkupLoader(application, this);
+		AbstractMarkupLoader loaderChain = new InheritedMarkupMarkupLoader(application);
 		loaderChain.setParent(new DefaultMarkupLoader(application));
 		
 		return loaderChain;
@@ -429,7 +429,7 @@ public class MarkupCache
 	 * 
 	 * @param markupCache
 	 */
-	public void setCacheMap(Map<CharSequence, IMarkup> markupCache)
+	public void setCacheMap(Map<CharSequence, MarkupFragment> markupCache)
 	{
 		this.markupCache = markupCache;
 	}

@@ -277,7 +277,6 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 						{
 							Collections.swap(getList(), oldIndex + 1, oldIndex);
 						}
-
 					});
 
 					// Swap list items and invalidate listView
@@ -327,7 +326,6 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 				final int index = getList().indexOf(item.getModelObject());
 				if (index != -1)
 				{
-
 					addStateChange(new Change()
 					{
 						private static final long serialVersionUID = 1L;
@@ -339,7 +337,6 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 						{
 							Collections.swap(getList(), oldIndex - 1, oldIndex);
 						}
-
 					});
 
 					// Swap items and invalidate listView
@@ -385,7 +382,6 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 					{
 						getList().add(oldIndex, removedObject);
 					}
-
 				});
 
 				item.modelChanging();
