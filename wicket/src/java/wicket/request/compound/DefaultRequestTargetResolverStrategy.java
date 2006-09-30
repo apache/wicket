@@ -18,12 +18,18 @@
  */
 package wicket.request.compound;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
+import wicket.Session;
+import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
+import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
@@ -58,56 +64,60 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 			final RequestParameters requestParameters)
 	{
 		// first, see whether we can find any mount
-		IRequestTarget mounted = requestCycle.getProcessor().getRequestCodingStrategy()
-				.targetForRequest(requestParameters);
+		IRequestCodingStrategy requestCodingStrategy = requestCycle.getProcessor()
+				.getRequestCodingStrategy();
+		IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
 		if (mounted != null)
 		{
 			// the path was mounted, so return that directly
 			return mounted;
 		}
 
+		IRequestTarget target = null;
 		final String path = requestParameters.getPath();
 
 		// see whether this request points to a bookmarkable page
 		if (requestParameters.getBookmarkablePageClass() != null)
 		{
-			return resolveBookmarkablePage(requestCycle, requestParameters);
+			target = resolveBookmarkablePage(requestCycle, requestParameters);
 		}
 		// See whether this request points to a rendered page
 		else if (requestParameters.getComponentPath() != null)
 		{
-			return resolveRenderedPage(requestCycle, requestParameters);
+			target = resolveRenderedPage(requestCycle, requestParameters);
 		}
 		// see whether this request points to a shared resource
 		else if (requestParameters.getResourceKey() != null)
 		{
-			return resolveSharedResource(requestCycle, requestParameters);
+			target = resolveSharedResource(requestCycle, requestParameters);
 		}
 		// see whether this request points to the home page
 		else if (Strings.isEmpty(path) || ("/".equals(path)))
 		{
-			return resolveHomePageTarget(requestCycle, requestParameters);
+			target = resolveHomePageTarget(requestCycle, requestParameters);
 		}
 
-		// if we get here, we have no regconized Wicket target, and thus
-		// regard this as a external (non-wicket) resource request on
-		// this server
-		return resolveExternalResource(requestCycle);
-	}
-
-	/**
-	 * Resolves to a shared resource target.
-	 * 
-	 * @param requestCycle
-	 *            the current request cycle
-	 * @param requestParameters
-	 *            the request parameters object
-	 * @return the shared resource as a request target
-	 */
-	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
-			final RequestParameters requestParameters)
-	{
-		return new SharedResourceRequestTarget(requestParameters);
+		if (target != null)
+		{
+			if (Application.get().getSecuritySettings().getEnforceMounts()
+					&& requestCodingStrategy.pathForTarget(target) != null)
+			{
+				String msg = "Direct access not allowed for mounted targets";
+				// the target was mounted, but we got here via another path
+				// : deny the request
+				log.error(msg + " [request=" + requestCycle.getRequest() + ",target=" + target
+						+ ",session=" + Session.get() + "]");
+				target = new WebErrorCodeResponseTarget(HttpServletResponse.SC_FORBIDDEN, msg);
+			}
+			return target;
+		}
+		else
+		{
+			// if we get here, we have no regconized Wicket target, and thus
+			// regard this as a external (non-wicket) resource request on
+			// this server
+			return resolveExternalResource(requestCycle);
+		}
 	}
 
 	/**
@@ -126,5 +136,20 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 		// like '/mysubdir/myfile.css'
 		final String url = '/' + requestCycle.getRequest().getRelativeURL();
 		return new WebExternalResourceRequestTarget(url);
+	}
+
+	/**
+	 * Resolves to a shared resource target.
+	 * 
+	 * @param requestCycle
+	 *            the current request cycle
+	 * @param requestParameters
+	 *            the request parameters object
+	 * @return the shared resource as a request target
+	 */
+	protected IRequestTarget resolveSharedResource(final RequestCycle requestCycle,
+			final RequestParameters requestParameters)
+	{
+		return new SharedResourceRequestTarget(requestParameters);
 	}
 }

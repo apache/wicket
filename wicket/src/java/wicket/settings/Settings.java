@@ -97,7 +97,7 @@ public final class Settings
 			IFrameworkSettings
 {
 	private final static Log log = LogFactory.getLog(Settings.class);
-	
+
 	/** Class of access denied page. */
 	private Class<? extends Page> accessDeniedPage;
 
@@ -156,6 +156,14 @@ public final class Settings
 
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
+
+	/**
+	 * Whether mounts should be enforced. If true, requests for mounted targets
+	 * have to done through the mounted paths. If, for instance, a bookmarkable
+	 * page is mounted to a path, a request to that same page via the
+	 * bookmarkablePage parameter will be denied.
+	 */
+	private boolean enforceMounts = false;
 
 	/**
 	 * Whether Wicket should try to get extensive client info by redirecting to
@@ -226,9 +234,6 @@ public final class Settings
 	/** List of {@link IResponseFilter}s. */
 	private List<IResponseFilter> responseFilters;
 
-	/** Flag for serialize session attributes feature */
-	private boolean serializeSessionAttributes = false;
-
 	/**
 	 * In order to do proper form parameter decoding it is important that the
 	 * response and the following request have the same encoding. see
@@ -236,6 +241,9 @@ public final class Settings
 	 * additional information.
 	 */
 	private String responseRequestEncoding = "UTF-8";
+
+	/** Flag for serialize session attributes feature */
+	private boolean serializeSessionAttributes = false;
 
 	/** Chain of string resource loaders to use */
 	private List<IStringResourceLoader> stringResourceLoaders = new ArrayList<IStringResourceLoader>(
@@ -318,8 +326,7 @@ public final class Settings
 		}
 		else
 		{
-			log.warn("A IComponentResolver of type " 
-					+ resolver.getClass().getName() 
+			log.warn("A IComponentResolver of type " + resolver.getClass().getName()
 					+ " has already been registered. The new one will not be added");
 		}
 	}
@@ -535,6 +542,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISecuritySettings#getEnforceMounts()
+	 */
+	public boolean getEnforceMounts()
+	{
+		return enforceMounts;
+	}
+
+	/**
 	 * @see wicket.settings.IRequestCycleSettings#getGatherExtendedBrowserInfo()
 	 */
 	public boolean getGatherExtendedBrowserInfo()
@@ -716,6 +731,15 @@ public final class Settings
 	}
 
 	/**
+	 * 
+	 * @see wicket.settings.IDebugSettings#getSerializeSessionAttributes()
+	 */
+	public boolean getSerializeSessionAttributes()
+	{
+		return serializeSessionAttributes;
+	}
+
+	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List<IStringResourceLoader> getStringResourceLoaders()
@@ -755,6 +779,7 @@ public final class Settings
 		return throwExceptionOnMissingResource;
 	}
 
+
 	/**
 	 * @see wicket.settings.ISecuritySettings#getUnauthorizedComponentInstantiationListener()
 	 */
@@ -770,7 +795,6 @@ public final class Settings
 	{
 		return unexpectedExceptionDisplay;
 	}
-
 
 	/**
 	 * @see wicket.settings.IResourceSettings#getUseDefaultOnMissingResource()
@@ -977,6 +1001,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.ISecuritySettings#setEnforceMounts(boolean)
+	 */
+	public void setEnforceMounts(boolean enforce)
+	{
+		this.enforceMounts = enforce;
+	}
+
+	/**
 	 * @see wicket.settings.IRequestCycleSettings#setGatherExtendedBrowserInfo(boolean)
 	 */
 	public void setGatherExtendedBrowserInfo(boolean gatherExtendedBrowserInfo)
@@ -1125,6 +1157,15 @@ public final class Settings
 	}
 
 	/**
+	 * 
+	 * @see wicket.settings.IDebugSettings#setSerializeSessionAttributes(boolean)
+	 */
+	public void setSerializeSessionAttributes(boolean serialize)
+	{
+		this.serializeSessionAttributes = serialize;
+	}
+
+	/**
 	 * @see wicket.settings.IMarkupSettings#setStripComments(boolean)
 	 */
 	public void setStripComments(boolean stripComments)
@@ -1209,23 +1250,5 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
-	}
-
-	/**
-	 * 
-	 * @see wicket.settings.IDebugSettings#getSerializeSessionAttributes()
-	 */
-	public boolean getSerializeSessionAttributes()
-	{
-		return serializeSessionAttributes;
-	}
-
-	/**
-	 * 
-	 * @see wicket.settings.IDebugSettings#setSerializeSessionAttributes(boolean)
-	 */
-	public void setSerializeSessionAttributes(boolean serialize)
-	{
-		this.serializeSessionAttributes = serialize;
 	}
 }
