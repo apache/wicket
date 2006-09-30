@@ -39,23 +39,6 @@ public interface IRequestTargetMounter
 	void mount(IRequestTargetUrlCodingStrategy urlCodingStrategy);
 
 	/**
-	 * Unmounts a request target.
-	 * 
-	 * @param path
-	 *            the path to unmount
-	 */
-	void unmount(String path);
-
-	/**
-	 * Gets the encoder that was mounted on the provided path if any.
-	 * 
-	 * @param path
-	 *            the path
-	 * @return The encoder/decoder that was mounted on the provided path, if any
-	 */
-	IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path);
-
-	/**
 	 * Gets the url that the provided request target conforms to.
 	 * 
 	 * @param requestTarget
@@ -73,4 +56,21 @@ public interface IRequestTargetMounter
 	 *         request parameters
 	 */
 	IRequestTarget targetForRequest(RequestParameters requestParameters);
+
+	/**
+	 * Unmounts a request target.
+	 * 
+	 * @param path
+	 *            the path to unmount
+	 */
+	void unmount(String path);
+
+	/**
+	 * Gets the encoder that was mounted on the provided path if any.
+	 * 
+	 * @param path
+	 *            the path
+	 * @return The encoder/decoder that was mounted on the provided path, if any
+	 */
+	IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path);
 }
