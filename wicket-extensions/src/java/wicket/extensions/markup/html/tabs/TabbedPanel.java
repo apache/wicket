@@ -127,7 +127,7 @@ public class TabbedPanel extends Panel<Integer>
 			@Override
 			public Integer getObject()
 			{
-				return TabbedPanel.this.size();
+				return TabbedPanel.this.tabs.size();
 			}
 		};
 
