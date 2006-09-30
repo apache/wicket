@@ -123,7 +123,7 @@ public class TabbedPanel extends Panel
 
 			public Object getObject(Component component)
 			{
-				return new Integer(TabbedPanel.this.size());
+				return new Integer(TabbedPanel.this.tabs.size());
 			}
 		};
 
