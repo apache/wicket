@@ -65,7 +65,6 @@ public final class LibraryApplication extends WicketExampleApplication
 		getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
 	}
 
-
 	/**
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */

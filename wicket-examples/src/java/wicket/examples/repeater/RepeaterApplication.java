@@ -26,12 +26,10 @@ import wicket.protocol.http.WebApplication;
  * application class for repeater examples application
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
  */
 public class RepeaterApplication extends WebApplication
 {
 	private ContactsDatabase contactsDB = new ContactsDatabase(50);
-
 
 	/**
 	 * Constructor.
@@ -65,6 +63,4 @@ public class RepeaterApplication extends WebApplication
 	{
 		return Index.class;
 	}
-
-
 }

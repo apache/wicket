@@ -18,6 +18,7 @@
  */
 package wicket.examples;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.model.IModel;
 import wicket.util.string.Strings;
@@ -45,24 +46,29 @@ public class WicketExamplePage<T> extends WebPage<T>
 	 * 
 	 * @param model
 	 */
-	public WicketExamplePage(IModel<T> model)
+	public WicketExamplePage(final IModel<T> model)
 	{
 		super(model);
 		
-		// Allow a subclass to add a border component first, if required
-		init();
-		
-		final String packageName = getClass().getPackage().getName();
-		new WicketExampleHeader(this, "mainNavigation", Strings.afterLast(packageName, '.'));
+		addWicketExampleHeader();
 		
 		explain();
 	}
-
-	/**
-	 * If a subclass needs to add a component prior to the example header
-	 */
-	protected void init()
+	
+	protected void addWicketExampleHeader()
 	{
+		newWicketExampleHeader(this);
+	}
+	
+	/**
+	 * Add the examples header
+	 *
+	 * @param parent
+	 */
+	protected final void newWicketExampleHeader(final MarkupContainer parent)
+	{
+		final String packageName = Strings.afterLast(getClass().getPackage().getName(), '.');
+		new WicketExampleHeader(parent, "mainNavigation", packageName);
 	}
 
 	/**

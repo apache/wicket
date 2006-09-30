@@ -44,18 +44,20 @@ public class AuthenticatedWebPage extends WicketExamplePage implements IAlternat
 	 */
 	public AuthenticatedWebPage()
 	{
-	}
-
-	/**
-	 * @see wicket.examples.WicketExamplePage#init()
-	 */
-	@Override
-	protected void init()
-	{
-		super.init();
-		
 		// Create border and add it to the page
 		this.border = new LibraryApplicationBorder(this, "border");
+		
+		newWicketExampleHeader(this);
+	}
+	
+	/**
+	 * @see wicket.examples.WicketExamplePage#addWicketExampleHeader()
+	 */
+	@Override
+	protected void addWicketExampleHeader()
+	{
+		// We manually add the header
+		return;
 	}
 	
 	/**

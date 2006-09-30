@@ -24,9 +24,29 @@ import wicket.examples.WicketExamplePage;
  * Base class for all pages in the QuickStart application. Any page which
  * subclasses this page can get session properties from QuickStartSession via
  * getQuickStartSession().
+ * 
+ * @param <T> 
  */
-public abstract class ExamplePage extends WicketExamplePage
+public abstract class ExamplePage<T> extends WicketExamplePage<T> 
 {
+	/**
+	 * Construct 
+	 */
+	public ExamplePage()
+	{
+		newWicketExampleHeader(this);
+	}
+	
+	/**
+	 * @see wicket.examples.WicketExamplePage#addWicketExampleHeader()
+	 */
+	@Override
+	protected void addWicketExampleHeader()
+	{
+		// We manually add the example header
+		return;
+	}
+	
 	/**
 	 * Get downcast session object for easy access by subclasses
 	 * 
