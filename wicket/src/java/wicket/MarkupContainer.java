@@ -1279,6 +1279,11 @@ public abstract class MarkupContainer<T> extends Component<T>
 						+ tag.toString());
 			}
 
+			if (log.isDebugEnabled())
+			{
+				log.debug("Render component: " + id);
+			}
+
 			// Get the component for the id from the given container
 			final Component<?> component = get(id);
 
@@ -1339,10 +1344,6 @@ public abstract class MarkupContainer<T> extends Component<T>
 		else
 		{
 			// Render as raw markup
-			if (log.isDebugEnabled())
-			{
-				log.debug("Rendering raw markup");
-			}
 			getResponse().write(element.toCharSequence());
 			markupStream.next();
 		}
