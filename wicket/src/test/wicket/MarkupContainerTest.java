@@ -20,9 +20,9 @@ package wicket;
 
 import java.util.Iterator;
 
+import wicket.markup.MarkupFragment;
 import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
-import wicket.util.string.Strings;
 
 /**
  * 
@@ -51,14 +51,12 @@ public class MarkupContainerTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 			
 			/**
-			 * 
-			 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
+			 * @see wicket.MarkupContainer#getMarkupFragment(java.lang.String)
 			 */
 			@Override
-			public String getMarkupFragmentPath(final String subPath)
+			public final MarkupFragment getMarkupFragment(final String subPath)
 			{
-				String path = Strings.afterFirst(subPath, Component.PATH_SEPARATOR);
-				return super.getMarkupFragmentPath(path);
+				return getMarkupFragment();
 			}
 		};
 		

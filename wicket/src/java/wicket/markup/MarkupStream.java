@@ -60,7 +60,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	private final MarkupFragment markup;
 
 	private final List<MarkupElement> markupElements;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -68,10 +68,14 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public MarkupStream(final MarkupFragment fragment)
 	{
+		if (fragment == null)
+		{
+			throw new MarkupException("You can not create a MarkupStream without a markup fragment");
+		}
 		this.markup = fragment;
 		this.markup.makeImmutable();
 		this.markupElements = fragment.getAllElementsFlat();
-		
+
 		if (this.markupElements.size() > 0)
 		{
 			current = get(currentIndex);
@@ -217,7 +221,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public MarkupElement next()
 	{
-		// @TODO I think it is a bug. You'll never be able to get(0). 
+		// @TODO I think it is a bug. You'll never be able to get(0).
 		if (++currentIndex < markupElements.size())
 		{
 			return current = get(currentIndex);
@@ -324,7 +328,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 * @param openTag
 	 *            The open tag
 	 */
-	private void skipToMatchingCloseTag(final ComponentTag openTag)
+	public void skipToMatchingCloseTag(final ComponentTag openTag)
 	{
 		// Loop through the markup in this container
 		while (hasMore())
@@ -427,20 +431,20 @@ public final class MarkupStream implements Iterable<MarkupElement>
 				throw new MarkupException("Markup does not contain a Wicket tag with path '" + path
 						+ "'; Resource: " + this.markup.getMarkup().getResource().toString());
 			}
-			
+
 			return -1;
 		}
-		
+
 		int index = -1;
 		for (MarkupElement element : this)
 		{
-			index ++;
+			index++;
 			if (element == fragment.get(0))
 			{
 				break;
 			}
 		}
-		
+
 		if (index >= this.markupElements.size())
 		{
 			index = -1;
@@ -450,7 +454,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 			// Set the markup stream position to where the fragment begins
 			setCurrentIndex(index);
 		}
-		
+
 		return index;
 	}
 
@@ -463,7 +467,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	{
 		return this.markup.getMarkup();
 	}
-	
+
 	/**
 	 * @see java.lang.Iterable#iterator()
 	 */
@@ -518,7 +522,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	@Override
 	public String toString()
 	{
-		return "[markup = " + String.valueOf(markup.getMarkup()) + ", index = " + currentIndex + ", current = "
-				+ ((current == null) ? "null" : current.toUserDebugString()) + "]";
+		return "[markup = " + String.valueOf(markup.getMarkup()) + ", index = " + currentIndex
+				+ ", current = " + ((current == null) ? "null" : current.toUserDebugString()) + "]";
 	}
 }

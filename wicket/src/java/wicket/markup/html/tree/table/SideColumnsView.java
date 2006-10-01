@@ -25,11 +25,11 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.tree.table.ColumnLocation.Alignment;
 import wicket.markup.html.tree.table.ColumnLocation.Unit;
-import wicket.util.string.Strings;
 
 /**
  * Class that renders cell of columns aligned to the left or to the right.
@@ -239,21 +239,20 @@ final class SideColumnsView extends WebMarkupContainer
 	
 	/**
 	 * 
-	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
+	 * @see wicket.MarkupContainer#getMarkupFragment(java.lang.String)
 	 */
 	@Override
-	public final String getMarkupFragmentPath(final String subPath)
+	public final MarkupFragment getMarkupFragment(final String subPath)
 	{
 		/*
-		 * we need to cut out the path of direct children because they inherit
-		 * the markup so their markup path must look as if they are the listview
-		 * themselves
+		 * we need to cut out the path of direct children because they
+		 * inherit the markup so their markup path must look as if they are
+		 * the listview themselves
 		 * 
 		 * page:listview:1:label -> page:listview:label
 		 * 
 		 * where 1 was the id of the listitem
 		 */
-		String path = Strings.afterFirst(subPath, Component.PATH_SEPARATOR);
-		return super.getMarkupFragmentPath(path);
+		return getMarkupFragment();
 	}
 }

@@ -73,10 +73,10 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	{
 		// FIXME I wasn't able to make this work (JDo 2006-09-28); need to make
 		// some other changes first
-//		String document = accessPage(TestPage2.class).getDocument();
-//		assertTrue(document.contains("[[SUCCESS]]"));
-//		assertTrue(document.contains("[[TEST]]"));
-//		assertTrue(document.contains("[[TEST-2]]"));
+		String document = accessPage(TestPage2.class).getDocument();
+		assertTrue(document.contains("[[SUCCESS]]"));
+		assertTrue(document.contains("[[TEST]]"));
+		assertTrue(document.contains("[[TEST-2]]"));
 	}
 
 	/**
@@ -171,9 +171,6 @@ public class WrappedWicketBodyTest extends WicketTestCase
 	{
 		private static final long serialVersionUID = 1L;
 
-		/** container for wicket:body components */
-		private final WebMarkupContainer bodyParent;
-
 		/**
 		 * Construct.
 		 * 
@@ -183,7 +180,8 @@ public class WrappedWicketBodyTest extends WicketTestCase
 		public TestBorder(MarkupContainer parent, String id)
 		{
 			super(parent, id);
-			bodyParent = new WebMarkupContainer(this, "body-parent");
+			MarkupContainer bodyParent = new WebMarkupContainer(this, "body-parent");
+			newBorderBodyContainer(bodyParent);
 
 			new Label(this, "borderLabel", "[[TEST]]");
 			new Label(bodyParent, "borderLabel2", "[[TEST-2]]");
@@ -203,9 +201,8 @@ public class WrappedWicketBodyTest extends WicketTestCase
 		 */
 		public MarkupContainer getAlternateParent(Class childClass, String childId)
 		{
-			return (this.bodyParent != null && !"borderLabel".equals(childId)
-					? this.bodyParent
-					: this);
+			return (getBodyContainer() != null && !"borderLabel".equals(childId) 
+					? getBodyContainer() : this);
 		}
 	}
 

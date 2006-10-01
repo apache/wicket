@@ -32,6 +32,7 @@ import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.resolver.IComponentResolver;
@@ -131,6 +132,17 @@ public abstract class MarkupContainer<T> extends Component<T>
 	public MarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
+	}
+
+	/**
+	 * Get the child markup fragment with the 'id'
+	 * 
+	 * @param id
+	 * @return MarkupFragment
+	 */
+	protected MarkupFragment getMarkupFragment(final String id)
+	{
+		return getMarkupFragment().getChildFragment(id, true);
 	}
 
 	/**
@@ -544,7 +556,16 @@ public abstract class MarkupContainer<T> extends Component<T>
 	{
 		// Get markup associated with Border or Panel component
 		final MarkupStream originalMarkupStream = getMarkupStream();
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(true);
+		final MarkupStream associatedMarkupStream;
+		try
+		{
+			associatedMarkupStream = new MarkupStream(getAssociatedMarkupFragment(true)
+					.getWicketFragment(openTagName));
+		}
+		catch (WicketRuntimeException ex)
+		{
+			throw new MarkupException("Unable to load associated markup file for " + this, ex);
+		}
 
 		// skip until the targetted tag is found
 		associatedMarkupStream.skipUntil(openTagName);
@@ -803,6 +824,17 @@ public abstract class MarkupContainer<T> extends Component<T>
 							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
 					ex);
 		}
+	}
+
+	/**
+	 * Get the associated markup from the external
+	 * 
+	 * @param throwException
+	 * @return MarkupFragment
+	 */
+	public MarkupFragment getAssociatedMarkupFragment(boolean throwException)
+	{
+		return getAssociatedMarkupStream(throwException).getMarkup().getMarkupFragments();
 	}
 
 	/**
@@ -1329,24 +1361,5 @@ public abstract class MarkupContainer<T> extends Component<T>
 	public boolean isTransparentResolver()
 	{
 		return false;
-	}
-
-	/**
-	 * Return the markup fragment path for the component. if 'subPath' is
-	 * present, it is the relative markup fragment path the component requesting
-	 * the path.
-	 * 
-	 * @param subPath
-	 *            The relative markup fragment path to the component requesting
-	 *            its markup path
-	 * @return markup fragment path
-	 */
-	public String getMarkupFragmentPath(final String subPath)
-	{
-		if ((subPath == null) || (subPath.length() == 0))
-		{
-			return getId();
-		}
-		return getId() + Component.PATH_SEPARATOR + subPath;
 	}
 }

@@ -659,5 +659,4 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	{
 		item.render(getMarkupStream());
 	}
-
 }

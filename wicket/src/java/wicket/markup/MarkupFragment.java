@@ -204,8 +204,8 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 
 		if (throwException == true)
 		{
-			throw new MarkupException("Markup fragment with id '" + id
-					+ "' not found: Markup Fragment: " + this.getId());
+			throw new MarkupException("Markup with path '" + id
+					+ "' not found in fragment: " + this.getId());
 		}
 
 		return null;

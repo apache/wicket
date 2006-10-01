@@ -31,7 +31,6 @@ import wicket.feedback.IFeedback;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.IMarkupProvider;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
 import wicket.model.IModel;
@@ -142,8 +141,7 @@ import wicket.version.undo.UndoPageVersionManager;
 public abstract class Page<T> extends MarkupContainer<T>
 		implements
 			IRedirectListener,
-			IPageMapEntry,
-			IMarkupProvider
+			IPageMapEntry
 {
 	private static final long serialVersionUID = 1L;
 
@@ -1348,14 +1346,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 	public final void startComponentRender(Component component)
 	{
 		renderedComponents = null;
-	}
-
-	/**
-	 * @see wicket.IMarkupProvider#getMarkupFragment(String path)
-	 */
-	public final MarkupFragment getMarkupFragment(final String path)
-	{
-		return getAssociatedMarkupStream(true).getMarkup().getMarkupFragments().getChildFragment(path, true);
 	}
 
 	/**

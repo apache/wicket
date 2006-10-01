@@ -19,6 +19,7 @@
 package wicket.markup.html.border;
 
 import wicket.MarkupContainer;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.html.form.Form;
 
 
@@ -27,10 +28,14 @@ import wicket.markup.html.form.Form;
  * 
  * @author Juergen Donnerstag
  */
-public class FormBorder extends Border
+public class FormBorder extends Border implements IAlternateParentProvider
 {
 	private static final long serialVersionUID = 1L;
 
+	private Form form;
+
+	private MarkupContainer body;
+	
 	/**
 	 * Construct.
 	 * 
@@ -41,6 +46,16 @@ public class FormBorder extends Border
 	{
 		super(parent, id);
 
-		new Form(this, "myForm");
+		this.form = new Form(this, "myForm");
+		this.body = newBorderBodyContainer(this.form);
+	}
+
+	/**
+	 * 
+	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class, java.lang.String)
+	 */
+	public MarkupContainer getAlternateParent(Class childClass, String childId)
+	{
+		return (getBodyContainer() == null ? this : getBodyContainer());
 	}
 }

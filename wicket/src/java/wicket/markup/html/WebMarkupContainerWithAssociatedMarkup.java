@@ -23,11 +23,8 @@ import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.IMarkup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
-import wicket.markup.MarkupFragment;
-import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.HeaderPartContainer;
@@ -44,7 +41,7 @@ import wicket.util.lang.Classes;
  * 
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContainer<T> implements IMarkupProvider
+public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContainer<T> 
 {
 	private static final long serialVersionUID = 1L;
 
@@ -53,9 +50,6 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 
 	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
 	private boolean noMoreWicketHeadTagsAllowed = false;
-
-	/** The external markup associated with the container */
-	private transient IMarkup markup;
 	
 	/**
 	 * @see Component#Component(MarkupContainer,String)
@@ -327,24 +321,5 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 
 		// No (more) wicket:head found
 		return -1;
-	}
-	
-	/**
-	 * @see wicket.markup.html.IMarkupProvider#getMarkupFragment()
-	 */
-	public MarkupFragment getMarkupFragment(final String path)
-	{
-		if (this.markup == null)
-		{
-			this.markup = getAssociatedMarkupStream(true).getMarkup();
-		}
-		try
-		{
-			return this.markup.getMarkupFragments().getChildFragment(path, true);
-		}
-		catch (WicketRuntimeException ex)
-		{
-			throw new MarkupNotFoundException(ex.getMessage() + "; Component: " + toString(), ex);
-		}
 	}
 }

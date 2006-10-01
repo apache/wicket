@@ -43,7 +43,6 @@ import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.IMarkupProvider;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.IAssignmentAware;
 import wicket.model.IInheritableModel;
@@ -714,30 +713,22 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		{
 			return this.markupFragment;
 		}
-		
-		// Create the markup path for the component to find the associated
-		// markup fragment within the markup file.
-		String path = getId();
 
-		// The markup path must be relativ to the markup file, hence we need to
-		// find the first parent with associated markup file and update the
-		// markup path accordingly.
 		MarkupContainer parent = getParent();
-		while ((parent != null) && !(parent instanceof IMarkupProvider))
-		{
-			path = parent.getMarkupFragmentPath(path);
-			parent = parent.getParent();
-		}
-
 		if (parent == null)
 		{
-			throw new MarkupNotFoundException("Component has no parent with external markup file: "
+			throw new MarkupNotFoundException("The component is expected to have a parent: "
 					+ getId());
 		}
 
-		// We found the markup file and created the markup path. Now go and get
-		// the fragment.
-		return ((IMarkupProvider)parent).getMarkupFragment(path);
+		MarkupFragment markupFragment = parent.getMarkupFragment(getId());
+		if (markupFragment == null)
+		{
+			throw new MarkupNotFoundException("Unable to find markup for Component: "
+					+ getId());
+		}
+
+		return markupFragment;
 	}
 	
 	/**
@@ -765,46 +756,45 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		{
 			// Get the markup fragment for the component
 			this.markupFragment = getMarkupFragment();
-
-			final MarkupStream markupStream = new MarkupStream(markupFragment);
-			final ComponentTag tag = markupStream.getTag();
-			
-			// TODO 2.0:juergen: the attributes and behavior additions are bad
-			// here since this method is meant to be overridden to provide
-			// custom markup (at least thats what the javadoc says) the
-			// overriders have to implement the two functionalities below
-			// otherwise all kinds of things can break. better to move this up
-			// the call hierarchy?
-
-			if (tag.hasAttributes())
+			if ((this.markupFragment.size() > 0) && (this.markupFragment.get(0) instanceof ComponentTag))
 			{
-				markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
-			}
-
-			// add any behaviors attached to the component tag
-			if (tag.hasBehaviors())
-			{
-				Iterator<IBehavior> behaviors = tag.getBehaviors();
-				while (behaviors.hasNext())
+				final ComponentTag tag = this.markupFragment.getTag(0);
+				
+				// TODO 2.0:juergen: the attributes and behavior additions are bad
+				// here since this method is meant to be overridden to provide
+				// custom markup (at least thats what the javadoc says) the
+				// overriders have to implement the two functionalities below
+				// otherwise all kinds of things can break. better to move this up
+				// the call hierarchy?
+	
+				if (tag.hasAttributes())
 				{
-					add(behaviors.next());
+					markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
+				}
+	
+				// add any behaviors attached to the component tag
+				if (tag.hasBehaviors())
+				{
+					Iterator<IBehavior> behaviors = tag.getBehaviors();
+					while (behaviors.hasNext())
+					{
+						add(behaviors.next());
+					}
 				}
 			}
-
-
+			
+			final MarkupStream markupStream = new MarkupStream(markupFragment);
 			return markupStream;
 		}
 		catch (MarkupException ex)
 		{
-			log
-					.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
+			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
 							+ id + "'. You will not be able to use the component for AJAX calls.");
 			throw ex;
 		}
 		catch (RuntimeException re)
 		{
-			log
-					.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
+			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
 							+ id + "'. You will not be able to use the component for AJAX calls.");
 			throw new MarkupNotFoundException("Couldn't find the markup of the component '" + id
 					+ "' in parent '" + parent.getPageRelativePath() + "'", re);
@@ -1802,16 +1792,17 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 		else
 		{
-			// Save the parent's markup stream to re-assign it at the end
+			// Get the markup associated with the component. 
 			MarkupContainer parent = getParent();
-			MarkupStream originalMarkupStream = parent.getMarkupStream();
+			if (parent == null)
+			{
+				throw new WicketRuntimeException("Expected the Component to have a parent container: " + getId());
+			}
 			MarkupStream markupStream = new MarkupStream(getMarkupFragment());
+			parent.setMarkupStream(markupStream);
 
 			try
 			{
-				// Make sure that while rendering the markup stream is found
-				parent.setMarkupStream(markupStream);
-
 				if (this instanceof MarkupContainer)
 				{
 					MarkupContainer<T> container = (MarkupContainer<T>)this;
@@ -1843,8 +1834,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			}
 			finally
 			{
-				// Make sure the original markup stream is back in place
-				parent.setMarkupStream(originalMarkupStream);
 				onAfterRender();
 			}
 		}

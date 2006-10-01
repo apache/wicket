@@ -74,10 +74,7 @@ public class PanelTest extends WicketTestCase
 		catch (MarkupException mex)
 		{
 			hit = true;
-
-			assertNotNull(mex.getMarkupStream());
-			assertTrue(mex.getMessage().indexOf("has to contain part '<wicket:panel>'") != -1);
-			assertTrue(mex.getMessage().indexOf("SimplePanel_2.html") != -1);
+			assertTrue(mex.getMessage().indexOf("Unable to load associated markup file") != -1);
 		}
 		assertTrue("Did expect a MarkupException", hit);
 	}
@@ -112,14 +109,6 @@ public class PanelTest extends WicketTestCase
 	public void testInlinePanel_4() throws Exception
 	{
 		executeTest(InlinePanelPage_4.class, "InlinePanelPageExpectedResult_4.html");
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	public void testInlinePanel_5() throws Exception
-	{
-		executeTest(InlinePanelPage_5.class, "InlinePanelPageExpectedResult_5.html");
 	}
 
 	/**

@@ -46,6 +46,20 @@ public final class MarkupException extends WicketRuntimeException
 	}
 
 	/**
+	 * Constructor
+	 * 
+	 * @param message
+	 *            The problem description
+	 * @param cause
+	 *            The causing exception
+	 */
+	public MarkupException(final String message, final Throwable cause)
+	{
+		super(message);
+		markupStream = null;
+	}
+
+	/**
 	 * @param resource
 	 *            The markup resource where this exception occurred
 	 * @param message

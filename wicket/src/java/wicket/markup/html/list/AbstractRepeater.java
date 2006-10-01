@@ -18,11 +18,10 @@
  */
 package wicket.markup.html.list;
 
-import wicket.Component;
 import wicket.MarkupContainer;
+import wicket.markup.MarkupFragment;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
-import wicket.util.string.Strings;
 
 /**
  * This is the base class for any component that wishes to act as a repeater.
@@ -38,7 +37,6 @@ import wicket.util.string.Strings;
  */
 public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 {
-
 	/**
 	 * Construct.
 	 * 
@@ -67,7 +65,7 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 	 * @see wicket.MarkupContainer#getMarkupFragmentPath(java.lang.String)
 	 */
 	@Override
-	public final String getMarkupFragmentPath(final String subPath)
+	public final MarkupFragment getMarkupFragment(final String subPath)
 	{
 		/*
 		 * we need to cut out the path of direct children because they inherit
@@ -78,7 +76,6 @@ public abstract class AbstractRepeater<T> extends WebMarkupContainer<T>
 		 * 
 		 * where 1 was the id of the listitem
 		 */
-		String path = Strings.afterFirst(subPath, Component.PATH_SEPARATOR );
-		return super.getMarkupFragmentPath(path);
+		return getMarkupFragment();
 	}
 }

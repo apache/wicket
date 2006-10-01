@@ -18,14 +18,11 @@
  */
 package wicket.markup.html.panel;
 
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.IMarkupProvider;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.parser.XmlTag;
@@ -66,7 +63,7 @@ import wicket.version.undo.Change;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  */
-public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvider
+public class Fragment<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -79,6 +76,9 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 	 */
 	private MarkupContainer markupProvider;
 
+	/** The markup associated with the Fragment. Make transient to better support Clusters */
+	private transient MarkupFragment fragment;
+	
 	/**
 	 * Constructor.
 	 * 
@@ -165,11 +165,31 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 							+ markupProvider.getClass().getName() + "]]");
 		}
 
-
 		this.markupId = markupId;
 		this.markupProvider = markupProvider;
+		if (this.markupProvider == null)
+		{
+			this.markupProvider = this.findParentWithAssociatedMarkup();
+		}
+		
+		this.fragment = getFragment();
 	}
 
+	/**
+	 * 
+	 * @return The Fragments markup
+	 */
+	private MarkupFragment getFragment()
+	{
+		MarkupFragment fragment = this.markupProvider.getAssociatedMarkupFragment(false);
+		if (fragment == null)
+		{
+			fragment = this.markupProvider.getMarkupFragment();
+		}
+		fragment = fragment.getChildFragment(markupId, true);
+		return fragment;
+	}
+	
 	/**
 	 * @return The fragment's markup id in the parent markup.
 	 */
@@ -191,7 +211,7 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 		}
 
 		// Make sure the associated markup exists
-		loadMarkupStream();
+		this.fragment = getFragment();
 
 		if (!Objects.equal(this.markupId, markupId))
 		{
@@ -207,7 +227,21 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 				}
 			});
 		}
+		
 		this.markupId = markupId;
+	}
+	
+	/**
+	 * 
+	 * @see wicket.MarkupContainer#getMarkupFragment(java.lang.String)
+	 */
+	protected MarkupFragment getMarkupFragment(final String id)
+	{
+		if (this.fragment == null)
+		{
+			this.fragment = getFragment();
+		}
+		return this.fragment.getChildFragment(id, true);
 	}
 
 	/**
@@ -236,7 +270,12 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 		// Skip the components body. It will be replaced by the fragment
 		markupStream.skipRawMarkup();
 
-		final MarkupStream providerMarkupStream = chooseMarkupStream(markupStream);
+		if (this.fragment == null)
+		{
+			this.fragment = getFragment();
+		}
+		
+		final MarkupStream providerMarkupStream = new MarkupStream(this.fragment);
 		if (providerMarkupStream == null)
 		{
 			throw new IllegalStateException(
@@ -244,26 +283,6 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 		}
 
 		renderFragment(providerMarkupStream, openTag);
-	}
-
-	/**
-	 * Get the markup stream which shall be used to search for the fragment
-	 * 
-	 * @param markupStream
-	 *            The markup stream is associated with the component (not the
-	 *            fragment)
-	 * @return The markup stream to be used to find the fragment markup
-	 */
-	protected MarkupStream chooseMarkupStream(final MarkupStream markupStream)
-	{
-		if (this.markupProvider == null)
-		{
-			return markupStream;
-		}
-
-		// The following statement assumes that the markup provider is a
-		// parent along the line up to the Page
-		return this.markupProvider.getMarkupStream();
 	}
 
 	/**
@@ -276,31 +295,15 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 	 */
 	private void renderFragment(final MarkupStream providerMarkupStream, final ComponentTag openTag)
 	{
-		// remember the current position in the markup. Will have to come back
-		// to it.
-		int currentIndex = providerMarkupStream.getCurrentIndex();
+		// Get the fragments open tag
+		ComponentTag fragmentOpenTag = providerMarkupStream.getTag();
 
-		// Find the markup fragment
-		int index = providerMarkupStream.positionAt(markupId, true);
+		// We'll completely ignore the fragments open tag. It'll not be
+		// rendered
+		providerMarkupStream.next();
 
-		try
-		{
-			// Get the fragments open tag
-			ComponentTag fragmentOpenTag = providerMarkupStream.getTag();
-
-			// We'll completely ignore the fragments open tag. It'll not be
-			// rendered
-			providerMarkupStream.next();
-
-			// Render the body of the fragment
-			super.onComponentTagBody(providerMarkupStream, fragmentOpenTag);
-		}
-		finally
-		{
-			// Make sure the markup stream is positioned where we started back
-			// at the original component
-			providerMarkupStream.setCurrentIndex(currentIndex);
-		}
+		// Render the body of the fragment
+		super.onComponentTagBody(providerMarkupStream, fragmentOpenTag);
 	}
 
 	/**
@@ -309,60 +312,5 @@ public class Fragment<T> extends WebMarkupContainer<T> implements IMarkupProvide
 	public final MarkupContainer getMarkupProvider()
 	{
 		return markupProvider;
-	}
-
-	/**
-	 * Components which have associated markup files or which need special
-	 * treatment to find the markup, such as Fragment, must implement
-	 * IMarkupProvider. Fragment is similar to Panel, which has an associated
-	 * markup file, and hence requires to implement IMarkupProvider as well.
-	 * 
-	 * @see wicket.markup.html.IMarkupProvider#getMarkupFragment(java.lang.String)
-	 */
-	public MarkupFragment getMarkupFragment(final String path)
-	{
-		// If markupProvider == null, than we assume the markup fragment to be
-		// in the fragment's parent markup.
-		if (this.markupProvider == null)
-		{
-			// Find the Fragment's parent with associated markup file
-			MarkupContainer parent = getParent();
-			while ((parent != null) && !(parent instanceof IMarkupProvider))
-			{
-				parent = parent.getParent();
-			}
-
-			if (parent == null)
-			{
-				throw new WicketRuntimeException(
-						"Component has no parent with external markup file: " + getId());
-			}
-
-			// Find the markup fragment with the markup path provided by the
-			// user
-			MarkupFragment fragment = ((IMarkupProvider)parent).getMarkupFragment(this.markupId + Component.PATH_SEPARATOR + path);
-			if (fragment == null)
-			{
-				throw new WicketRuntimeException(
-						"Unable to find the markup fragment with markup path '" + path
-								+ "'. Component: " + getId());
-			}
-
-			return fragment;
-		}
-
-		// Find the fragment based on the markup path and the Container provided
-		// by the user
-		MarkupFragment fragment = ((IMarkupProvider)this.markupProvider)
-				.getMarkupFragment(this.markupId);
-		if (fragment == null)
-		{
-			throw new WicketRuntimeException(
-					"Unable to find the markup fragment with markup path '" + path
-							+ "' in markup provided by container: " + this.markupProvider.getId()
-							+ ". Component: " + getId());
-		}
-
-		return fragment;
 	}
 }

@@ -432,30 +432,30 @@ public final class AutoLinkResolver implements IComponentResolver
 				}
 
 				// Make sure base markup pages (inheritance) are handled correct
-				MarkupContainer parentWithContainer = container.findParentWithAssociatedMarkup();
-				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
-						/* TODO && page.getMarkupStream().isMergedMarkup() */ )
-				{
-					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
-					if (clazz != null)
-					{
-						// Href is relative. Resolve the url given relative to
-						// the current page
-						className = Packages.extractPackageName(clazz) + "." + infoPath;
-
-						try
-						{
-							clazz = defaultClassResolver.resolveClass(className);
-							return new AutolinkBookmarkablePageLink(container, autoId, clazz,
-									pathInfo.getPageParameters(), pathInfo.anchor);
-						}
-						catch (WicketRuntimeException ex)
-						{
-							log.warn("Did not find corresponding java class: " + className + "("
-									+ ex.getMessage() + ")");
-						}
-					}
-				}
+//				MarkupContainer parentWithContainer = container.findParentWithAssociatedMarkup();
+//				if ((parentWithContainer instanceof Page) && !infoPath.startsWith(".")
+//						/* TODO && page.getMarkupStream().isMergedMarkup() */ )
+//				{
+//					Class clazz = container.getMarkupStream().getTag().getMarkupClass();
+//					if (clazz != null)
+//					{
+//						// Href is relative. Resolve the url given relative to
+//						// the current page
+//						className = Packages.extractPackageName(clazz) + "." + infoPath;
+//
+//						try
+//						{
+//							clazz = defaultClassResolver.resolveClass(className);
+//							return new AutolinkBookmarkablePageLink(container, autoId, clazz,
+//									pathInfo.getPageParameters(), pathInfo.anchor);
+//						}
+//						catch (WicketRuntimeException ex)
+//						{
+//							log.warn("Did not find corresponding java class: " + className + "("
+//									+ ex.getMessage() + ")");
+//						}
+//					}
+//				}
 			}
 			else
 			{

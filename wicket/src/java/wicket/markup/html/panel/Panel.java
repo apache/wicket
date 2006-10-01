@@ -19,6 +19,7 @@ package wicket.markup.html.panel;
 
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
 import wicket.markup.html.internal.HeaderContainer;
@@ -88,6 +89,17 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	public Panel(MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
+	}
+
+	/**
+	 * Get the child markup fragment with the 'id'
+	 *  
+	 * @param id
+	 * @return MarkupFragment
+	 */
+	protected MarkupFragment getMarkupFragment(final String id)
+	{
+		return getAssociatedMarkupFragment(true).getChildFragment(id, true);
 	}
 
 	/**
