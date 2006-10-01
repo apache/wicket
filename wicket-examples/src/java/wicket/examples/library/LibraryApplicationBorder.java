@@ -30,8 +30,6 @@ import wicket.markup.html.border.BoxBorder;
  */
 public class LibraryApplicationBorder extends Border implements IAlternateParentProvider
 {
-	private Border boxBorder;
-	
 	/**
 	 * Constructor
 	 * 
@@ -44,7 +42,8 @@ public class LibraryApplicationBorder extends Border implements IAlternateParent
 	{
 		super(parent, id);
 		
-		this.boxBorder = new BoxBorder(this, "boxBorder");
+		Border boxBorder = new BoxBorder(this, "boxBorder");
+		newBorderBodyContainer(boxBorder);
 	}
 
 	/**
@@ -52,6 +51,7 @@ public class LibraryApplicationBorder extends Border implements IAlternateParent
 	 */
 	public MarkupContainer getAlternateParent(Class childClass, String childId)
 	{
-		return ((this.boxBorder == null) || "mainNavigation".equals(childId) ? this : this.boxBorder);
+		return (getBodyContainer() != null && !"mainNavigation".equals(childId) 
+				? getBodyContainer() : this);
 	}
 }
