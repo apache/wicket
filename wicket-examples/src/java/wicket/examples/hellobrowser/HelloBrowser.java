@@ -28,6 +28,7 @@ import wicket.markup.html.basic.Label;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 import wicket.protocol.http.ClientProperties;
+import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.request.WebClientInfo;
 
 /**
@@ -53,7 +54,7 @@ public class HelloBrowser extends WicketExamplePage
 		// don't use a property model here or anything else that is resolved
 		// during rendering, as changing the request target during rendering
 		// is not allowed.
-		WebClientInfo clientInfo = getRequestCycle().getClientInfo();
+		WebClientInfo clientInfo = WebRequestCycle.get().getClientInfo();
 		final ClientProperties properties = clientInfo.getProperties();
 
 		new Label(this, "clientinfo", properties.toString());
