@@ -53,8 +53,8 @@ public class HelloBrowser extends WicketExamplePage
 		// don't use a property model here or anything else that is resolved
 		// during rendering, as changing the request target during rendering
 		// is not allowed.
-		final ClientProperties properties = ((WebClientInfo)getRequestCycle().getClientInfo())
-				.getProperties();
+		WebClientInfo clientInfo = getRequestCycle().getClientInfo();
+		final ClientProperties properties = clientInfo.getProperties();
 
 		new Label(this, "clientinfo", properties.toString());
 
