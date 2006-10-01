@@ -31,10 +31,6 @@ import wicket.request.ClientInfo;
 /**
  * Default client info object for web applications.
  * 
- * Based on <code>nextapp.echo2.webrender.ClientAnalyzerProcessor</code> from
- * collegue java webapplication framework <a
- * href="http://www.nextapp.com/platform/echo2/echo/">NextApp Echo 2</a>.
- * 
  * @author Eelco Hillenius
  */
 public class WebClientInfo extends ClientInfo
@@ -64,7 +60,8 @@ public class WebClientInfo extends ClientInfo
 	public WebClientInfo(WebRequestCycle requestCycle)
 	{
 		super();
-		HttpServletRequest httpServletRequest = requestCycle.getWebRequest().getHttpServletRequest();
+		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
+				.getHttpServletRequest();
 		userAgent = httpServletRequest.getHeader("User-Agent");
 		if (userAgent == null)
 		{
