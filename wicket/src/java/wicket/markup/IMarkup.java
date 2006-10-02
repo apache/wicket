@@ -29,21 +29,10 @@ package wicket.markup;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public abstract interface IMarkup extends Iterable<MarkupElement>
+public abstract interface IMarkup // extends Iterable<MarkupElement>
 {
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
-
-	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
-	 * 
-	 * @param index
-	 *            Index into markup list
-	 * @return Markup element
-	 */
-	MarkupElement get(final int index);
 
 	/**
 	 * Gets the markup encoding. A markup encoding may be specified in a markup
@@ -83,15 +72,6 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	MarkupFragment getMarkupFragments();
 
 	/**
-	 * For Wicket it would be sufficient for this method to be package
-	 * protected. However to allow wicket-bench easy access to the information
-	 * ...
-	 * 
-	 * @return Number of markup elements
-	 */
-	int size();
-
-	/**
 	 * Make all markup fragment modifiable.
 	 * 
 	 * @param emptyCopy
@@ -104,16 +84,6 @@ public abstract interface IMarkup extends Iterable<MarkupElement>
 	 * Make all markup fragmends unmodifable.
 	 */
 	void makeImmutable();
-
-	/**
-	 * This is realy for the old world only and will be removed once the changes
-	 * have been made. It return a flat list of all MarkupElements in the Markup
-	 * instead of a tree-like structure which is equal to the markup structure.
-	 * 
-	 * @return MarkupFragment which contains a single list of all MarkupElements
-	 *         of the Markup
-	 */
-	MarkupFragment getAllMarkupElementsFlat();
 
 	/**
 	 * @return String representation of markup list

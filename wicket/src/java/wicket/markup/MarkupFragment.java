@@ -318,6 +318,22 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
+	 * Create a mutable copy of the fragment and all its child fragments. 
+	 * <p>
+	 * Note: ComponentTags which are elements of a Fragment are not made mutable, only
+	 * the fragments are.
+	 * 
+	 * @return A mutable copy of the fragment
+	 */
+	public final MarkupFragment mutable()
+	{
+		throw new WicketRuntimeException("Fragment.mutable() is not yet available");
+		
+//		MarkupFragment copy = new MarkupFragment(this.markup);
+//		return null;
+	}
+	
+	/**
 	 * Iterator for MarkupElements
 	 * 
 	 * @see java.lang.Iterable#iterator()
@@ -496,7 +512,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	@Override
 	public CharSequence toCharSequence()
 	{
-		final AppendingStringBuffer buf = new AppendingStringBuffer(this.markup.size() * 40);
+		final AppendingStringBuffer buf = new AppendingStringBuffer(500);
 		for (MarkupElement elem : this)
 		{
 			buf.append(elem);

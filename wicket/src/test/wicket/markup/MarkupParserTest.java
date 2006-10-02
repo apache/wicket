@@ -262,11 +262,11 @@ public final class MarkupParserTest extends WicketTestCase
 	 */
 	public final void test() throws Exception
 	{
-		MarkupFragment tokens = parse(
+		MarkupFragment fragment = parse(
 				"componentName",
 				"This is a test <a componentName:id=9> <b>bold</b> <b componentName:id=10/></a> of the emergency broadcasting system");
 
-		tokens = tokens.getMarkup().getAllMarkupElementsFlat();
+		List<MarkupElement> tokens = fragment.getAllElementsFlat();
 		log.info("tok(0)=" + tokens.get(0));
 		log.info("tok(1)=" + tokens.get(1));
 		log.info("tok(2)=" + tokens.get(2));

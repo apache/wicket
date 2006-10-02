@@ -17,9 +17,6 @@
  */
 package wicket.markup;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Stack;
 
 import org.apache.commons.logging.Log;
@@ -42,10 +39,7 @@ public class Markup implements IMarkup
 {
 	private static final Log log = LogFactory.getLog(Markup.class);
 
-	/** The list of markup elements */
-	private MarkupFragment markup;
-
-	/** The new world: One fragment per Component */
+	/** Tree of markup fragments; one per component */
 	private MarkupFragment markupFragments;
 
 	/** The markup's resource stream for diagnostic purposes */
@@ -64,39 +58,12 @@ public class Markup implements IMarkup
 	private String wicketId;
 
 	/**
-	 * A cache which maps (tag path + id) to the componentTags index in the
-	 * markup
-	 */
-	private Map<String, Integer> componentMap;
-
-	/**
 	 * Constructor
 	 */
 	Markup()
 	{
-		this.markup = new MarkupFragment(this);
+		this.markupFragments = new MarkupFragment(this);
 		setWicketNamespace(ComponentTag.DEFAULT_WICKET_NAMESPACE);
-	}
-
-	/**
-	 * @see wicket.markup.IMarkup#get(int)
-	 */
-	public MarkupElement get(final int index)
-	{
-		return this.markup.get(index);
-	}
-
-	/**
-	 * This is realy for the old world only and will be removed once the changes
-	 * have been made. It return a flat list of all MarkupElements in the Markup
-	 * instead of a tree-like structure which is equal to the markup structure.
-	 * 
-	 * @return MarkupFragment which contains a single list of all MarkupElements
-	 *         of the Markup
-	 */
-	public final MarkupFragment getAllMarkupElementsFlat()
-	{
-		return this.markup;
 	}
 
 	/**
@@ -107,18 +74,6 @@ public class Markup implements IMarkup
 	public final MarkupResourceStream getResource()
 	{
 		return this.resource;
-	}
-
-	/**
-	 * @see wicket.markup.IMarkup#size()
-	 */
-	public int size()
-	{
-		if ((this.markup != null) && (this.markupFragments == null))
-		{
-			initialize();
-		}
-		return this.markup.size();
 	}
 
 	/**
@@ -201,27 +156,7 @@ public class Markup implements IMarkup
 	 */
 	public final void makeImmutable()
 	{
-		// TODO This is realy for historical reasons only and should be removed
-		// once the markup fragment changes have been finished.
-		// See MarkupParser.parseMarkup() last line.
-		if ((this.markup != null) && (this.markup.size() == 0) && (this.markupFragments != null)
-				&& (this.markupFragments.size() != 0))
-		{
-			this.markup = this.markupFragments;
-			this.markupFragments = null;
-		}
-
-		if ((this.markup != null) && (this.markupFragments == null))
-		{
-			initialize();
-		}
-
-		this.markup.makeImmutable();
-
-		if (this.markupFragments != null)
-		{
-			this.markupFragments.makeImmutable();
-		}
+		this.markupFragments.makeImmutable();
 	}
 
 	/**
@@ -243,11 +178,8 @@ public class Markup implements IMarkup
 
 		if (emptyCopy == false)
 		{
-			markup.markup = new MarkupFragment(markup);
-			for (MarkupElement elem : this.markup)
-			{
-				markup.markup.addMarkupElement(elem);
-			}
+			// Create a mutable copy of the fragments
+			this.markupFragments = this.markupFragments.mutable();
 		}
 
 		return markup;
@@ -260,22 +192,7 @@ public class Markup implements IMarkup
 	 */
 	public final MarkupFragment getMarkupFragments()
 	{
-		if ((this.markup != null) && (this.markupFragments == null))
-		{
-			initialize();
-		}
-
 		return this.markupFragments;
-	}
-
-	/**
-	 * Iterator for MarkupElements
-	 * 
-	 * @see java.lang.Iterable#iterator()
-	 */
-	public Iterator<MarkupElement> iterator()
-	{
-		return this.markup.iterator();
 	}
 
 	/**
@@ -283,52 +200,17 @@ public class Markup implements IMarkup
 	 */
 	private void initialize()
 	{
-		initializeComponentPathCache();
-		initializeMarkupFragments();
+		convertFlatIntoTreeStructure();
 	}
 
 	/**
-	 * Initialize the internal component-path-for-tag cache
+	 * MarkupParser until now creates a flat list of RawMarkup and ComponentTag
+	 * elements. However, what we want is a tree like structure with one
+	 * fragment per Component.
 	 */
-	private void initializeComponentPathCache()
+	private void convertFlatIntoTreeStructure()
 	{
-		// Reset
-		this.componentMap = new HashMap<String, Integer>();
-
-		if (markup != null)
-		{
-			// The current tag path
-			StringBuffer componentPath = new StringBuffer(100);
-
-			// For each ComponentTag
-			for (int i = 0; i < this.markup.size(); i++)
-			{
-				final MarkupElement elem = this.markup.get(i);
-				if (elem instanceof ComponentTag)
-				{
-					// Based on the tag and the current tag path, create a
-					// cache entry and update the tag path.
-					final ComponentTag tag = (ComponentTag)elem;
-					componentPath = setComponentPathForTag(componentPath, tag, i);
-				}
-			}
-		}
-	}
-
-	/**
-	 * In an attempt to change Wicket internals step by step,
-	 * initializeMarkupFragments() creates a hierarchal structure of
-	 * MarkupFragments and other MarkupElements based on the simple List of
-	 * elements per Markup file which we have today.
-	 */
-	private void initializeMarkupFragments()
-	{
-		if (markup == null)
-		{
-			return;
-		}
-
-		this.markupFragments = new MarkupFragment(this);
+		MarkupFragment rootFragment = new MarkupFragment(this);
 
 		// Remember the path associated with a ComponentTag to properly walk up
 		// and down the hierarchy of wicket markup tags
@@ -336,10 +218,10 @@ public class Markup implements IMarkup
 		String basePath = null;
 
 		Stack<MarkupFragment> fragmentStack = new Stack<MarkupFragment>();
-		MarkupFragment current = this.markupFragments;
+		MarkupFragment current = rootFragment;
 
 		// For all markup element in the external markup file
-		for (MarkupElement elem : this.markup)
+		for (MarkupElement elem : this.markupFragments)
 		{
 			// If RawMarkup simply add the element to the current fragment
 			if (elem instanceof RawMarkup)
@@ -397,68 +279,12 @@ public class Markup implements IMarkup
 			}
 		}
 
-		if ((this.markupFragments.size() == 1)
-				&& (this.markupFragments.get(0) instanceof MarkupFragment))
+		if ((rootFragment.size() == 1) && (rootFragment.get(0) instanceof MarkupFragment))
 		{
-			this.markupFragments = (MarkupFragment)this.markupFragments.get(0);
-		}
-	}
-
-	/**
-	 * Based on the tag and its current tag path create a cache entry and update
-	 * the tag path again depending on the tag
-	 * 
-	 * @param tagPath
-	 *            The current tag path in the markup
-	 * @param tag
-	 *            The current tag
-	 * @param tagIndex
-	 *            The index of the tag within the markup
-	 * @return Updated tag path for the next ComponentTag in the markup
-	 */
-	private StringBuffer setComponentPathForTag(final StringBuffer tagPath, final ComponentTag tag,
-			final int tagIndex)
-	{
-		// Only if the tag has wicket:id="xx" and open or open-close
-		if ((tag.isOpen() || tag.isOpenClose()) && tag.getAttributes().containsKey(wicketId))
-		{
-			int size = tagPath.length();
-			if (size > 0)
-			{
-				tagPath.append(Component.PATH_SEPARATOR);
-			}
-			tagPath.append(tag.getId());
-
-			this.componentMap.put(tagPath.toString(), Integer.valueOf(tagIndex));
-
-			// With open-close the path does not change. It can/will not have
-			// children. The same is true for HTML tags like <br> or <img>
-			// which might not have close tags.
-			if (tag.isOpenClose() || tag.hasNoCloseTag())
-			{
-				tagPath.setLength(size);
-			}
-		}
-		else if (tag.isClose() && (tagPath != null))
-		{
-			// For example <wicket:message> does not have an id
-			if ((tag.getOpenTag() == null)
-					|| tag.getOpenTag().getAttributes().containsKey(wicketId))
-			{
-				// Remove the last element from the component path
-				final int index = tagPath.lastIndexOf(String.valueOf(Component.PATH_SEPARATOR));
-				if (index != -1)
-				{
-					tagPath.setLength(index);
-				}
-				else
-				{
-					tagPath.setLength(0);
-				}
-			}
+			rootFragment = (MarkupFragment)rootFragment.get(0);
 		}
 
-		return tagPath;
+		this.markupFragments = rootFragment;
 	}
 
 	/**
@@ -466,7 +292,7 @@ public class Markup implements IMarkup
 	 */
 	public String toDebugString()
 	{
-		return this.markup.toString();
+		return this.markupFragments.toString();
 	}
 
 	/**
