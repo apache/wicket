@@ -71,6 +71,9 @@ public class MarkupParser
 	/** The markup created by reading the markup file */
 	private final Markup markup;
 
+	/** The root markup fragment of the markup being parsed */
+	private final MarkupFragment rootFragment;
+
 	/** True if comments are to be removed */
 	private boolean stripComments;
 
@@ -107,6 +110,7 @@ public class MarkupParser
 		// Create the markup before we initialize the chain
 		this.markup = new Markup();
 		this.markup.setResource(resource);
+		this.rootFragment = new MarkupFragment(this.markup);
 
 		// Create a XML parser
 		this.xmlParser = xmlParser;
@@ -160,14 +164,26 @@ public class MarkupParser
 	}
 
 	/**
-	 * Like the internal filters, user specific filters might need access to the
+	 * Like internal filters, user provided filters might need access to the
+	 * markup as well.
+	 * 
+	 * @return The markup resource stream
+	 * @deprecated Since 2.0 please use getMarkupFragment().getMarkup() instead
+	 */
+	public final IMarkup getMarkup()
+	{
+		return this.rootFragment.getMarkup();
+	}
+
+	/**
+	 * Like internal filters, user provided filters might need access to the
 	 * markup as well.
 	 * 
 	 * @return The markup resource stream
 	 */
-	public final Markup getMarkup()
+	public final MarkupFragment getMarkupFragment()
 	{
-		return this.markup;
+		return this.rootFragment;
 	}
 
 	/**
@@ -200,8 +216,7 @@ public class MarkupParser
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
-					registerMarkupFilter(new HtmlHeaderSectionHandler(this.markup
-							.getMarkupFragments()));
+					registerMarkupFilter(new HtmlHeaderSectionHandler(this.rootFragment));
 				}
 
 				registerMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
@@ -253,7 +268,7 @@ public class MarkupParser
 
 		// parse the xml markup and tokenize it into wicket relevant markup
 		// elements
-		MarkupFragment fragment = parseMarkup();
+		final MarkupFragment fragment = parseMarkup();
 
 		this.markup.setEncoding(this.xmlParser.getEncoding());
 		this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
@@ -268,12 +283,10 @@ public class MarkupParser
 	 */
 	private MarkupFragment parseMarkup()
 	{
-		MarkupFragment markupFragment = this.markup.getMarkupFragments();
-
 		try
 		{
 			// allways remember the latest index (size)
-			int size = markupFragment.size();
+			int size = rootFragment.size();
 
 			// Loop through tags
 			for (ComponentTag tag; null != (tag = (ComponentTag)this.markupFilterChain.nextTag());)
@@ -307,7 +320,7 @@ public class MarkupParser
 
 						// Make sure you add it at the correct location.
 						// IMarkupFilters might have added elements as well.
-						markupFragment.addMarkupElement(size, new RawMarkup(rawMarkup));
+						rootFragment.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
 					if (add)
@@ -317,19 +330,19 @@ public class MarkupParser
 						// as removed
 						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
 						{
-							markupFragment.addMarkupElement(tag);
+							rootFragment.addMarkupElement(tag);
 						}
 					}
 					else if (tag.isModified())
 					{
-						markupFragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+						rootFragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
 
 					this.xmlParser.setPositionMarker();
 				}
 
 				// allways remember the latest index (size)
-				size = markupFragment.size();
+				size = rootFragment.size();
 			}
 		}
 		catch (final ParseException ex)
@@ -338,14 +351,14 @@ public class MarkupParser
 			final CharSequence text = this.xmlParser.getInputFromPositionMarker(-1);
 			if (text.length() > 0)
 			{
-				markupFragment.addMarkupElement(new RawMarkup(text));
+				rootFragment.addMarkupElement(new RawMarkup(text));
 			}
 
 			this.markup.setEncoding(this.xmlParser.getEncoding());
 			this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
-			final MarkupStream markupStream = new MarkupStream(markupFragment);
-			markupStream.setCurrentIndex(markupFragment.size() - 1);
+			final MarkupStream markupStream = new MarkupStream(rootFragment);
+			markupStream.setCurrentIndex(rootFragment.size() - 1);
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
 
@@ -365,13 +378,17 @@ public class MarkupParser
 				rawMarkup = compressWhitespace(rawMarkup);
 			}
 
-			markupFragment.addMarkupElement(new RawMarkup(rawMarkup));
+			rootFragment.addMarkupElement(new RawMarkup(rawMarkup));
 		}
 
-		// Make all tags immutable and the list of elements unmodifable
-		this.markup.makeImmutable();
+		// Convert the list of MarkupElements into a tree like structure with
+		// one MarkupFragment per Wicket Component.
+		MarkupFragment fragment = rootFragment.translateFlatIntoTreeStructure();
 
-		return this.markup.getMarkupFragments();
+		// Make all tags immutable and the list of elements unmodifable
+		fragment.makeImmutable();
+
+		return fragment;
 	}
 
 	/**

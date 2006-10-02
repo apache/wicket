@@ -35,6 +35,7 @@ import wicket.Response;
 import wicket.Session;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HtmlBodyContainer;
@@ -270,14 +271,15 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	{
 		// Add a Body container if the associated markup contains a <body> tag
 		// get markup stream gracefully
-		MarkupStream markupStream = getAssociatedMarkupStream(false);
-		if (markupStream == null)
+		MarkupFragment fragment = getAssociatedMarkup(false);
+		if (fragment == null)
 		{
 			throw new MarkupNotFoundException(
 					"Each Page must have associated markup. Unable to find the markup file for Page: "
 							+ this.toString());
 		}
-
+		MarkupStream markupStream = new MarkupStream(fragment);
+		
 		// The <body> container. It can be accessed, replaced
 		// and attribute modifiers can be attached. <body> tags without
 		// wicket:id get automatically a wicket:id assigned.

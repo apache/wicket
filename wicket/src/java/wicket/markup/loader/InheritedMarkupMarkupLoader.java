@@ -33,7 +33,6 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupResourceStream;
-import wicket.markup.MergedMarkup;
 import wicket.markup.RawMarkup;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -228,15 +227,8 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 
 		// Merge derived and base markup
 		MarkupFragment mergedMarkup = merge(derivedMarkup, baseMarkup, extendFragment);
-		
-		MergedMarkup markup = new MergedMarkup(derivedMarkup.getMarkup(), baseMarkup.getMarkup());
-		for (MarkupElement element : mergedMarkup)
-		{
-			markup.getMarkupFragments().addMarkupElement(element);
-		}
-		markup.makeImmutable();
-		
-		mergedMarkup = markup.getMarkupFragments();
+		mergedMarkup = mergedMarkup.translateFlatIntoTreeStructure();
+		mergedMarkup.makeImmutable();
 		
 		if (log.isDebugEnabled())
 		{

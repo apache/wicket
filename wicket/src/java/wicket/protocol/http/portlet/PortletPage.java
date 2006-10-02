@@ -207,7 +207,7 @@ public class PortletPage<T> extends Page<T>
 	 */
 	private void commonInit()
 	{
-		MarkupStream markupStream = getAssociatedMarkupStream(false);
+		MarkupStream markupStream = new MarkupStream(getAssociatedMarkup(false));
 		if (markupStream == null)
 		{
 			throw new MarkupNotFoundException(

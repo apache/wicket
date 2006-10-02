@@ -346,13 +346,13 @@ public class XmlTag extends MarkupElement
 			tag.isMutable = true;
 			tag.closes = closes;
 			tag.copyOf = copyOf;
-			if (markupAttributes == null)
-			{
-				tag.attributes = new AttributeMap(attributes);
-			}
-			else
+			if (markupAttributes != null)
 			{
 				tag.attributes = markupAttributes;
+			}
+			else if (attributes != null)
+			{
+				tag.attributes = new AttributeMap(attributes);
 			}
 			return tag;
 		}

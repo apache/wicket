@@ -44,6 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Juergen Donnerstag
  */
+@Deprecated  // TODO remove as soon as possible 
 public final class MergedMarkup extends Markup
 {
 	private final static Log log = LogFactory.getLog(MergedMarkup.class);

@@ -122,24 +122,11 @@ public class MarkupCache
 	 * 
 	 * @param container
 	 *            The container the markup should be associated with
-	 * @return A stream of MarkupElement elements
-	 */
-	public final MarkupStream getMarkupStream(final MarkupContainer container)
-	{
-		return getMarkupStream(container, true);
-	}
-
-	/**
-	 * Gets a fresh markup stream that contains the (immutable) markup resource
-	 * for this class.
-	 * 
-	 * @param container
-	 *            The container the markup should be associated with
 	 * @param throwException
 	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	public final MarkupStream getMarkupStream(final MarkupContainer container,
+	public final MarkupFragment getMarkup(final MarkupContainer container,
 			final boolean throwException)
 	{
 		if (container == null)
@@ -153,7 +140,7 @@ public class MarkupCache
 		// If we found markup for this container
 		if (markup != MarkupFragment.NO_MARKUP_FRAGMENT)
 		{
-			return new MarkupStream(markup);
+			return markup;
 		}
 
 		if (throwException == true)

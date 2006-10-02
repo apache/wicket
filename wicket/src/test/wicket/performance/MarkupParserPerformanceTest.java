@@ -347,7 +347,7 @@ public class MarkupParserPerformanceTest
 			try
 			{
 				long time = System.currentTimeMillis();
-				cache.getMarkupStream(container, true);
+				cache.getMarkup(container, true);
 				this.duration[i] = System.currentTimeMillis() - time;
 			}
 			catch (Exception ex)

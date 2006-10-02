@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -146,7 +147,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		{
 			return null;
 		}
-		
+
 		String tagId = getId();
 		if ((tagId != null) && tagId.equals(id))
 		{
@@ -204,8 +205,8 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 
 		if (throwException == true)
 		{
-			throw new MarkupException("Markup with path '" + id
-					+ "' not found in fragment: " + this.getId());
+			throw new MarkupException("Markup with path '" + id + "' not found in fragment: "
+					+ this.getId());
 		}
 
 		return null;
@@ -230,7 +231,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				return this;
 			}
 		}
-		
+
 		for (MarkupElement elem : this)
 		{
 			if (elem instanceof MarkupFragment)
@@ -243,7 +244,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				}
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -278,7 +279,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	{
 		this.markupElements.add(markupElement);
 	}
-	
+
 	/**
 	 * Remove the element from the list
 	 * 
@@ -312,27 +313,15 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				// Make the tag immutable
 				((ComponentTag)elem).makeImmutable();
 			}
+			else if (elem instanceof MarkupFragment)
+			{
+				((MarkupFragment)elem).makeImmutable();
+			}
 		}
 
 		this.markupElements = Collections.unmodifiableList(this.markupElements);
 	}
 
-	/**
-	 * Create a mutable copy of the fragment and all its child fragments. 
-	 * <p>
-	 * Note: ComponentTags which are elements of a Fragment are not made mutable, only
-	 * the fragments are.
-	 * 
-	 * @return A mutable copy of the fragment
-	 */
-	public final MarkupFragment mutable()
-	{
-		throw new WicketRuntimeException("Fragment.mutable() is not yet available");
-		
-//		MarkupFragment copy = new MarkupFragment(this.markup);
-//		return null;
-	}
-	
 	/**
 	 * Iterator for MarkupElements
 	 * 
@@ -360,6 +349,92 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 						"remomve() not supported by MarkupFragment Iterator");
 			}
 		};
+	}
+
+	/**
+	 * MarkupParser until now creates a flat list of RawMarkup and ComponentTag
+	 * elements. However, what we want is a tree like structure with one
+	 * fragment per Component.
+	 * 
+	 * @return MarkupFragment A converted copy of the fragment
+	 */
+	public final MarkupFragment translateFlatIntoTreeStructure()
+	{
+		MarkupFragment rootFragment = new MarkupFragment(this.getMarkup());
+
+		// Remember the path associated with a ComponentTag to properly walk up
+		// and down the hierarchy of wicket markup tags
+		Stack<String> stack = new Stack<String>();
+		String basePath = null;
+
+		Stack<MarkupFragment> fragmentStack = new Stack<MarkupFragment>();
+		MarkupFragment current = rootFragment;
+
+		// For all markup element in the external markup file
+		for (MarkupElement elem : this.markupElements)
+		{
+			// If RawMarkup simply add the element to the current fragment
+			if (elem instanceof RawMarkup)
+			{
+				current.addMarkupElement(elem);
+			}
+			else
+			// if (elem instanceof ComponentTag)
+			{
+				// Construct the markup path for the tag
+				final ComponentTag tag = (ComponentTag)elem;
+				final String path = (basePath == null ? tag.getId() : basePath
+						+ Component.PATH_SEPARATOR + tag.getId());
+
+				// Depending on tag type (open, close, open-close) ...
+				if (tag.isOpen())
+				{
+					// Open tags with no close tags (HTML) are treated like
+					// open-close.
+					if (tag.hasNoCloseTag())
+					{
+						current.addMarkupElement(new MarkupFragment(this.getMarkup(), tag));
+					}
+					else
+					{
+						// If open tag and auto component (BODY, HEAD, etc.)
+						// than the markup path gets not updated as the markup
+						// for BODY e.g. does not have a wicket:id.
+
+						stack.push(basePath);
+						fragmentStack.push(current);
+
+						MarkupFragment newFragment = new MarkupFragment(this.getMarkup(), tag);
+						current.addMarkupElement(newFragment);
+						current = newFragment;
+
+						if (!tag.getId().startsWith(Component.AUTO_COMPONENT_PREFIX))
+						{
+							basePath = path;
+						}
+					}
+				}
+				else if (tag.isOpenClose())
+				{
+					MarkupFragment newFragment = new MarkupFragment(this.getMarkup(), tag);
+					current.addMarkupElement(newFragment);
+				}
+				else
+				// if (tag.isClose()
+				{
+					current.addMarkupElement(tag);
+					current = fragmentStack.pop();
+					basePath = stack.pop();
+				}
+			}
+		}
+
+		if ((rootFragment.size() == 1) && (rootFragment.get(0) instanceof MarkupFragment))
+		{
+			rootFragment = (MarkupFragment)rootFragment.get(0);
+		}
+
+		return rootFragment;
 	}
 
 	/**
@@ -404,7 +479,8 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
-	public final Object visitChildren(final Class<? extends MarkupElement> clazz, final IVisitor visitor)
+	public final Object visitChildren(final Class<? extends MarkupElement> clazz,
+			final IVisitor visitor)
 	{
 		if (visitor == null)
 		{
@@ -415,7 +491,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		for (MarkupElement element : this)
 		{
 			Object value = null;
-			
+
 			// Is the child of the correct class (or was no class specified)?
 			if ((clazz == null) || clazz.isInstance(element))
 			{

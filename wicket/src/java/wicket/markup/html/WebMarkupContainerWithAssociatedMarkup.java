@@ -104,7 +104,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream markupStream = getAssociatedMarkupStream(false);
+		final MarkupStream markupStream = new MarkupStream(getAssociatedMarkup(false));
 
 		// No associated markup => no header section
 		if (markupStream == null)
@@ -174,7 +174,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream associatedMarkupStream = getAssociatedMarkupStream(false);
+		final MarkupStream associatedMarkupStream = new MarkupStream(getAssociatedMarkup(false));
 
 		// No associated markup => no body tag
 		if (associatedMarkupStream == null)
@@ -235,7 +235,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream markupStream = getAssociatedMarkupStream(false);
+		final MarkupStream markupStream = new MarkupStream(getAssociatedMarkup(false));
 
 		// Position markup stream at beginning of header tag
 		markupStream.setCurrentIndex(index);

@@ -559,7 +559,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		final MarkupStream associatedMarkupStream;
 		try
 		{
-			associatedMarkupStream = new MarkupStream(getAssociatedMarkupFragment(true)
+			associatedMarkupStream = new MarkupStream(getAssociatedMarkup(true)
 					.getWicketFragment(openTagName));
 		}
 		catch (WicketRuntimeException ex)
@@ -800,11 +800,11 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 *            If true, throw an exception, if markup could not be found
 	 * @return A stream of MarkupElement elements
 	 */
-	public final MarkupStream getAssociatedMarkupStream(final boolean throwException)
+	public final MarkupFragment getAssociatedMarkup(final boolean throwException)
 	{
 		try
 		{
-			return getApplication().getMarkupCache().getMarkupStream(this, throwException);
+			return getApplication().getMarkupCache().getMarkup(this, throwException);
 		}
 		catch (MarkupException ex)
 		{
@@ -824,17 +824,6 @@ public abstract class MarkupContainer<T> extends Component<T>
 							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
 					ex);
 		}
-	}
-
-	/**
-	 * Get the associated markup from the external
-	 * 
-	 * @param throwException
-	 * @return MarkupFragment
-	 */
-	public MarkupFragment getAssociatedMarkupFragment(boolean throwException)
-	{
-		return getAssociatedMarkupStream(throwException).getMarkup().getMarkupFragments();
 	}
 
 	/**

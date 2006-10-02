@@ -99,7 +99,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	 */
 	protected MarkupFragment getMarkupFragment(final String id)
 	{
-		return getAssociatedMarkupFragment(true).getChildFragment(id, true);
+		return getAssociatedMarkup(true).getChildFragment(id, true);
 	}
 
 	/**

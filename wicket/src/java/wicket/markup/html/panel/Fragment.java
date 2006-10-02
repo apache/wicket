@@ -181,7 +181,7 @@ public class Fragment<T> extends WebMarkupContainer<T>
 	 */
 	private MarkupFragment getFragment()
 	{
-		MarkupFragment fragment = this.markupProvider.getAssociatedMarkupFragment(false);
+		MarkupFragment fragment = this.markupProvider.getAssociatedMarkup(false);
 		if (fragment == null)
 		{
 			fragment = this.markupProvider.getMarkupFragment();

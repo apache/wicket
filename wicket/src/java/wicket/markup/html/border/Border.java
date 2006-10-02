@@ -183,7 +183,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	public MarkupFragment getMarkupFragment(String path)
 	{
 		// First try the associated markup
-		MarkupFragment fragment = getAssociatedMarkupFragment(false);
+		MarkupFragment fragment = getAssociatedMarkup(false);
 		if (fragment != null)
 		{
 			fragment = fragment.getChildFragment(path, false);

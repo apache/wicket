@@ -29,7 +29,7 @@ package wicket.markup;
  * @author Jonathan Locke
  * @author Juergen Donnerstag
  */
-public abstract interface IMarkup // extends Iterable<MarkupElement>
+public abstract interface IMarkup
 {
 	/** Placeholder that indicates no markup */
 	public static final Markup NO_MARKUP = new Markup();
@@ -63,32 +63,6 @@ public abstract interface IMarkup // extends Iterable<MarkupElement>
 	 * @return Null, if not found.
 	 */
 	String getXmlDeclaration();
-
-	/**
-	 * Get the markup fragments associated with the markup file
-	 * 
-	 * @return Tree of MarkupFragments and RawMarkup
-	 */
-	MarkupFragment getMarkupFragments();
-
-	/**
-	 * Make all markup fragment modifiable.
-	 * 
-	 * @param emptyCopy
-	 *            If true, do NOT copy the markup elements
-	 * @return Markup
-	 */
-	Markup mutable(boolean emptyCopy);
-
-	/**
-	 * Make all markup fragmends unmodifable.
-	 */
-	void makeImmutable();
-
-	/**
-	 * @return String representation of markup list
-	 */
-	String toDebugString();
 
 	/**
 	 * @return String representation of markup list
