@@ -2837,6 +2837,12 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	protected void onAfterRender()
 	{
+		// Clear the component's markup cache and allow changes to locale,
+		// style etc to take effect. Note that the MarkupCache maintain
+		// a copy of the markup resource as well and reloads the 
+		// associated markup only if necessary. Hence, removing the 
+		// local cache is no negative impact on perfermance.
+		this.markupFragment = null;
 	}
 
 	/**

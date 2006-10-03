@@ -407,58 +407,6 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * Find the markup element index of the component with 'path'
-	 * 
-	 * @param path
-	 *            The component path expression
-	 * @param throwException
-	 *            If true, than throw an exception if not found
-	 * @return -1, if not found
-	 */
-	// TODO This is a hack; remove when markup fragment loading finished
-	public final int positionAt(final String path, final boolean throwException)
-	{
-		if ((path == null) || (path.length() == 0))
-		{
-			throw new IllegalArgumentException("Parameter 'path' must not be null or empty");
-		}
-
-		MarkupFragment fragment = this.markup.getChildFragment(path, false);
-		if (fragment == null)
-		{
-			if (throwException == true)
-			{
-				throw new MarkupException("Markup does not contain a Wicket tag with path '" + path
-						+ "'; Resource: " + this.markup.getMarkup().getResource().toString());
-			}
-
-			return -1;
-		}
-
-		int index = -1;
-		for (MarkupElement element : this)
-		{
-			index++;
-			if (element == fragment.get(0))
-			{
-				break;
-			}
-		}
-
-		if (index >= this.markupElements.size())
-		{
-			index = -1;
-		}
-		else
-		{
-			// Set the markup stream position to where the fragment begins
-			setCurrentIndex(index);
-		}
-
-		return index;
-	}
-
-	/**
 	 * Get the immutable markup associated with the stream
 	 * 
 	 * @return markup

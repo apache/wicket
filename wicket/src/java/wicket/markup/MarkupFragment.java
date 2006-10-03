@@ -143,6 +143,24 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 */
 	public final MarkupFragment getChildFragment(final String id, final boolean throwException)
 	{
+		return getChildFragment(id, false, throwException);
+	}
+
+	/**
+	 * Get the markup fragment associated with the id. The id might as well be a
+	 * path to get grand child markup.
+	 * 
+	 * @param id
+	 *            The id of the child tag
+	 * @param ignoreFirstTag
+	 *            If true, do not check the very first ComponentTag.
+	 * @param throwException
+	 *            If true and tag was not found, than throw an exception
+	 * @return Markup fragment
+	 */
+	public final MarkupFragment getChildFragment(final String id, final boolean ignoreFirstTag,
+			final boolean throwException)
+	{
 		if ((id == null) || (id.length() == 0))
 		{
 			return null;
@@ -218,9 +236,11 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 * 
 	 * @param name
 	 *            Such as "panel"
+	 * @param throwException
+	 *            If true and tag not found, than throw an exception
 	 * @return Null, if not found
 	 */
-	public final MarkupFragment getWicketFragment(final String name)
+	public final MarkupFragment getWicketFragment(final String name, final boolean throwException)
 	{
 		MarkupElement element = get(0);
 		if (element instanceof ComponentTag)
@@ -237,7 +257,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 			if (elem instanceof MarkupFragment)
 			{
 				MarkupFragment fragment = (MarkupFragment)elem;
-				fragment = fragment.getWicketFragment(name);
+				fragment = fragment.getWicketFragment(name, false);
 				if (fragment != null)
 				{
 					return fragment;
@@ -245,6 +265,10 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 			}
 		}
 
+		if (throwException == true)
+		{
+			throw new MarkupException("Wicket tag with name 'wicket:" + name + "' not found");
+		}
 		return null;
 	}
 

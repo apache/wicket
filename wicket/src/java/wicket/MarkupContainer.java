@@ -142,7 +142,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 */
 	protected MarkupFragment getMarkupFragment(final String id)
 	{
-		return getMarkupFragment().getChildFragment(id, true);
+		return getMarkupFragment().getChildFragment(id, true, true);
 	}
 
 	/**
@@ -560,7 +560,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		try
 		{
 			associatedMarkupStream = new MarkupStream(getAssociatedMarkup(true)
-					.getWicketFragment(openTagName));
+					.getWicketFragment(openTagName, true));
 		}
 		catch (WicketRuntimeException ex)
 		{
