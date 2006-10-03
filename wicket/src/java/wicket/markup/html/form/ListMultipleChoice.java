@@ -273,7 +273,7 @@ public class ListMultipleChoice extends AbstractChoice
 	/**
 	 * @see FormComponent#updateModel()
 	 */
-	public final void updateModel()
+	public void updateModel()
 	{
 		Collection selectedValues = (Collection)getModelObject();
 		if (selectedValues != null)
