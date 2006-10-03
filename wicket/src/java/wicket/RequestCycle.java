@@ -849,7 +849,14 @@ public abstract class RequestCycle
 		{
 			// At the end of our response, we need to set any session
 			// attributes that might be required to update the cluster
-			session.update();
+			try
+			{
+				session.update();
+			} 
+			catch(RuntimeException re)
+			{
+				log.error("there was an error updating the session " + session + ".", re);
+			}
 		}
 
 		// clear the used pagemap for this thread, 
@@ -860,7 +867,14 @@ public abstract class RequestCycle
 
 		if (getResponse() instanceof BufferedWebResponse)
 		{
-			((BufferedWebResponse)getResponse()).filter();
+			try
+			{
+				((BufferedWebResponse)getResponse()).filter();
+			}
+			catch(RuntimeException re)
+			{
+				log.error("there was an error filtering the response.", re);
+			}
 		}
 
 		try
