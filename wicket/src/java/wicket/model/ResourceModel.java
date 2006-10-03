@@ -39,13 +39,6 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 
 	private String resourceKey;
 
-	private Component component;
-
-	void setComponent(Component c)
-	{
-		component = c;
-	}
-
 	/**
 	 * Constructor
 	 * 
@@ -78,8 +71,8 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 	@Override
 	public String getObject()
 	{
-		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
-				component, defaultValue);
+		// this shouldn't be called always wrapped!
+		return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,null, defaultValue);
 	}
 
 
@@ -94,8 +87,10 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 
 	private class AssignmentWrapper extends ResourceModel implements IWrapModel<String>
 	{
-
 		private static final long serialVersionUID = 1L;
+
+
+		private Component component;
 
 		/**
 		 * Construct.
@@ -107,12 +102,21 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 		public AssignmentWrapper(String resourceKey, String defaultValue, Component component)
 		{
 			super(resourceKey, defaultValue);
-			setComponent(component);
+			this.component = component;
 		}
 
 		public IModel getNestedModel()
 		{
 			return ResourceModel.this;
+		}
+		/**
+		 * @see wicket.model.AbstractReadOnlyModel#getObject()
+		 */
+		@Override
+		public String getObject()
+		{
+			return Application.get().getResourceSettings().getLocalizer().getString(resourceKey,
+					component, defaultValue);
 		}
 	}
 
