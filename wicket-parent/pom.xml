@@ -50,9 +50,9 @@
 		</mailingList>
 		<mailingList>
 			<name>Wicket Development List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-develop</archive>
+			<subscribe>mailto:wicket-dev-subscribe@incubator.apache.org</subscribe>
+			<unsubscribe>mailto:wicket-dev-unsubscribe@incubator.apache.org</unsubscribe>
+			<archive>http://www.nabble.com/Wicket---Dev-f13977.html</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket CVS commit List</name>
