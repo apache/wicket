@@ -27,7 +27,7 @@ import wicket.markup.ComponentTag;
 import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.parser.AbstractMarkupFilter;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * This is a markup inline filter. It determines the Wicket namespace name from
@@ -102,7 +102,7 @@ public final class WicketNamespaceHandler extends AbstractMarkupFilter
 	private String determineWicketNamespace(final ComponentTag tag)
 	{
 		// For all tags attributes
-		final ValueMap attributes = tag.getAttributes();
+		final IValueMap attributes = tag.getAttributes();
 		final Iterator it = attributes.entrySet().iterator();
 		while (it.hasNext())
 		{

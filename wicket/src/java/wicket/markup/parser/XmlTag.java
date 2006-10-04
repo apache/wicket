@@ -24,7 +24,8 @@ import wicket.markup.MarkupElement;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.StringValue;
 import wicket.util.string.Strings;
-import wicket.util.value.AttributeMap;
+import wicket.util.value.IValueMap;
+import wicket.util.value.ValueMap;
 
 /**
  * A subclass of MarkupElement which represents a tag including namespace and
@@ -46,7 +47,7 @@ public class XmlTag extends MarkupElement
 	}
 
 	/** Attribute map. */
-	private AttributeMap attributes;
+	private IValueMap attributes;
 
 	/** Column number. */
 	int columnNumber;
@@ -109,17 +110,17 @@ public class XmlTag extends MarkupElement
 	 * 
 	 * @return The tag's attributes
 	 */
-	public AttributeMap getAttributes()
+	public IValueMap getAttributes()
 	{
 		if (attributes == null)
 		{
 			if (copyOf == this)
 			{
-				attributes = new AttributeMap();
+				attributes = new ValueMap();
 			}
 			else
 			{
-				attributes = new AttributeMap(copyOf.attributes);
+				attributes = new ValueMap(copyOf.attributes);
 			}
 		}
 		return attributes;
@@ -327,7 +328,7 @@ public class XmlTag extends MarkupElement
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
-	public XmlTag mutable(final AttributeMap markupAttributes)
+	public XmlTag mutable(final IValueMap markupAttributes)
 	{
 		if (isMutable)
 		{
@@ -352,7 +353,7 @@ public class XmlTag extends MarkupElement
 			}
 			else if (attributes != null)
 			{
-				tag.attributes = new AttributeMap(attributes);
+				tag.attributes = new ValueMap(attributes);
 			}
 			return tag;
 		}
@@ -595,7 +596,7 @@ public class XmlTag extends MarkupElement
 
 		buffer.append(name);
 
-		final AttributeMap attributes = getAttributes();
+		final IValueMap attributes = getAttributes();
 		if (attributes.size() > 0)
 		{
 			final Iterator iterator = attributes.keySet().iterator();

@@ -22,7 +22,7 @@ import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * Link to a packaged style sheet.
@@ -115,7 +115,7 @@ public final class StyleSheetReference extends PackagedResourceReference
 	{
 		// Must be attached to a style tag
 		checkComponentTag(tag, "link");
-		ValueMap attributes = tag.getAttributes();
+		IValueMap attributes = tag.getAttributes();
 		attributes.put("rel", "stylesheet");
 		attributes.put("type", "text/css");
 	}

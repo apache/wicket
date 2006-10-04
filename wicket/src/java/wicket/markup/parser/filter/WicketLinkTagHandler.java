@@ -29,7 +29,7 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.util.collections.ArrayListStack;
 import wicket.util.string.StringValueConversionException;
 import wicket.util.string.Strings;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * This is a markup inline filter. It identifies xml tags which include a href
@@ -177,7 +177,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 	{
 		if (tag.getId() == null)
 		{
-			ValueMap attributes = tag.getAttributes();
+			IValueMap attributes = tag.getAttributes();
 			String ref = attributes.getString("href");
 			if (checkRef(ref))
 			{

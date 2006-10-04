@@ -22,7 +22,7 @@ import wicket.MarkupContainer;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * Link to a packaged JavaScript file.
@@ -115,7 +115,7 @@ public class JavaScriptReference extends PackagedResourceReference
 	{
 		// Must be attached to a script tag
 		checkComponentTag(tag, "script");
-		ValueMap attributes = tag.getAttributes();
+		IValueMap attributes = tag.getAttributes();
 		attributes.put("type", "text/javascript");
 	}
 }

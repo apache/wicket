@@ -54,7 +54,6 @@ import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
-import wicket.util.value.AttributeMap;
 import wicket.util.value.CopyOnWriteValueMap;
 import wicket.util.value.IValueMap;
 import wicket.util.value.ValueMap;
@@ -1856,7 +1855,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 		// Get mutable copy of next tag
 		final ComponentTag openTag = markupStream.getTag();
-		final AttributeMap attributeMap = markupAttributes != null ? new AttributeMap(
+		final IValueMap attributeMap = markupAttributes != null ? new ValueMap(
 				markupAttributes) : null;
 		final ComponentTag tag = openTag.mutable(attributeMap);
 
@@ -2938,7 +2937,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					&& (isIgnoreAttributeModifier() == false))
 			{
 
-				AttributeMap attributeMap = markupAttributes != null ? new AttributeMap(
+				IValueMap attributeMap = markupAttributes != null ? new ValueMap(
 						markupAttributes) : null;
 				tag = tag.mutable(attributeMap);
 

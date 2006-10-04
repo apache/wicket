@@ -24,6 +24,8 @@ import java.util.Map;
  * ValueMap for attributes.
  * 
  * @author Eelco Hillenius
+ * 
+ * @deprecated since 2.0 use ValueMap instead
  */
 public final class AttributeMap extends ValueMap
 {

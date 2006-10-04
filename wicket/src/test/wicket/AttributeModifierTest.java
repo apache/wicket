@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 import wicket.markup.ComponentTag;
 import wicket.markup.parser.XmlTag;
 import wicket.model.Model;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * Test case for the component tag attribute modifer test.
@@ -159,7 +159,7 @@ public class AttributeModifierTest extends TestCase
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		ValueMap attributes = tag.getAttributes();
+		IValueMap attributes = tag.getAttributes();
 		attributes.put("test", "My mother rocks");
 		modifier.replaceAttibuteValue(null, tag);
 		String replacement = (String)attributes.get("test");
@@ -178,7 +178,7 @@ public class AttributeModifierTest extends TestCase
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		ValueMap attributes = tag.getAttributes();
+		IValueMap attributes = tag.getAttributes();
 		attributes.put("test", "My mother rocks");
 		modifier.replaceAttibuteValue(null, tag);
 		String replacement = (String)attributes.get("test");
@@ -232,7 +232,7 @@ public class AttributeModifierTest extends TestCase
 		ComponentTag tag = new ComponentTag(xmlTag);
 		tag.setId("test");
 		tag.setName("id");
-		ValueMap attributes = tag.getAttributes();
+		IValueMap attributes = tag.getAttributes();
 		attributes.put("test", "one");
 		modifier.replaceAttibuteValue(null, tag);
 		String replacement = (String)attributes.get("test");
