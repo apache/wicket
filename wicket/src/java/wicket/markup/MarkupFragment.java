@@ -166,10 +166,13 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 			return null;
 		}
 
-		String tagId = getId();
-		if ((tagId != null) && tagId.equals(id))
+		if (ignoreFirstTag == false)
 		{
-			return this;
+			String tagId = getId();
+			if ((tagId != null) && tagId.equals(id))
+			{
+				return this;
+			}
 		}
 
 		// If id has not further path elements, than ...
@@ -181,7 +184,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				if (elem instanceof MarkupFragment)
 				{
 					MarkupFragment fragment = (MarkupFragment)elem;
-					tagId = fragment.getId();
+					String tagId = fragment.getId();
 					if ((tagId != null) && tagId.equals(id))
 					{
 						return fragment;

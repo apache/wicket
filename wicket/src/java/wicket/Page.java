@@ -1349,6 +1349,17 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
+	 * Get the child markup fragment with the 'id'
+	 * 
+	 * @param id
+	 * @return MarkupFragment
+	 */
+	protected MarkupFragment getMarkupFragment(final String id)
+	{
+		return getMarkupFragment().getChildFragment(id, true);
+	}
+
+	/**
 	 * Get the markup fragments associated with the Component
 	 * 
 	 * @return MarkupFragment

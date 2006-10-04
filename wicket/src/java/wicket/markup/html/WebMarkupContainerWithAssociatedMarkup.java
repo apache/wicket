@@ -25,6 +25,7 @@ import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
+import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.HeaderPartContainer;
@@ -66,6 +67,17 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 			IModel<T> model)
 	{
 		super(parent, id, model);
+	}
+
+	/**
+	 * Get the child markup fragment with the 'id'
+	 * 
+	 * @param id
+	 * @return MarkupFragment
+	 */
+	protected MarkupFragment getMarkupFragment(final String id)
+	{
+		return getMarkupFragment().getChildFragment(id, true);
 	}
 
 	/**
