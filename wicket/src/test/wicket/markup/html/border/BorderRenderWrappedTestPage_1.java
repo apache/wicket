@@ -18,6 +18,7 @@
  */
 package wicket.markup.html.border;
 
+import wicket.MarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.image.Image;
@@ -36,7 +37,8 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 	public BorderRenderWrappedTestPage_1()
 	{
 		BoxBorder border = new BoxBorder(this, "box");
-		border.setBorderBodyVisible(false);
+		MarkupContainer body = border.newBorderBodyContainer(border);
+		body.setVisible(false);
 
 		new TextField(border, "text");
 		new Image(border, "img");

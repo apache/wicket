@@ -1087,13 +1087,12 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * If the id attribute is present in the markup attributes of this component
 	 * it will be used, otherwise the page-relative path of this component will
 	 * be used.
-	 * <p>
 	 * 
 	 * @return the Markup id
 	 */
 	public String getMarkupId()
 	{
-		String id = getMarkupAttributes().getString("id");
+		String id = getMarkupAttributes().getString(MARKUP_ID_ATTR_NAME);
 		if (id == null)
 		{
 			id = getPageRelativePath();
@@ -1101,7 +1100,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			id = id.replace("_", "__");
 			// then replace : with _
 			id = id.replace(':', '_');
-			getMarkupAttributes().put("id", id);
+			getMarkupAttributes().put(MARKUP_ID_ATTR_NAME, id);
 		}
 		return id;
 	}
@@ -1709,6 +1708,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public final void render(final MarkupStream markupStream)
 	{
+		// TODO The markup stream parameter is no longer required
+		// and the following can be removed as well, once the parameter has been removed
+//		if (markupStreamXX != null)
+//		{
+//			markupStreamXX.skipComponent();
+//		}
+//		
+//		final MarkupStream markupStream = new MarkupStream(getMarkupFragment());
 		setMarkupStream(markupStream);
 		setFlag(FLAG_IS_RENDERED_ONCE, true);
 
