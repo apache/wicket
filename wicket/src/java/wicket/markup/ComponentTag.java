@@ -588,22 +588,7 @@ public class ComponentTag extends MarkupElement
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
-	public final ComponentTag mutable()
-	{
-		return mutable(null);
-	}
-
-	/**
-	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
-	 * it is immutable.
-	 * 
-	 * @param markupAttributes
-	 *            The attributes that must be used for this mutable tag.
-	 * 
-	 * @return This tag if it is already mutable, or a mutable copy of this tag
-	 *         if it is immutable.
-	 */
-	public ComponentTag mutable(final IValueMap markupAttributes)
+	public ComponentTag mutable()
 	{
 		if (xmlTag.isMutable())
 		{
@@ -611,7 +596,7 @@ public class ComponentTag extends MarkupElement
 		}
 		else
 		{
-			final ComponentTag tag = new ComponentTag(xmlTag.mutable(markupAttributes));
+			final ComponentTag tag = new ComponentTag(xmlTag.mutable());
 			tag.id = id;
 			tag.setMarkupClass(this.markupClass);
 			tag.setHasNoCloseTag(this.hasNoCloseTag);

@@ -54,9 +54,8 @@ import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
-import wicket.util.value.CopyOnWriteValueMap;
 import wicket.util.value.IValueMap;
-import wicket.util.value.ValueMap;
+import wicket.util.value.MarkupAttributeValueMap;
 import wicket.version.undo.Change;
 
 /**
@@ -574,7 +573,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	private MarkupContainer<?> parent;
 
 	/** The markup attributes for this component */
-	private IValueMap markupAttributes;
+	private MarkupAttributeValueMap markupAttributes;
 
 	/** The markup fragment associated with the component */
 	private transient MarkupFragment markupFragment;
@@ -765,11 +764,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				// overriders have to implement the two functionalities below
 				// otherwise all kinds of things can break. better to move this up
 				// the call hierarchy?
-	
-				if (tag.hasAttributes())
-				{
-					markupAttributes = new CopyOnWriteValueMap(tag.getAttributes());
-				}
 	
 				// add any behaviors attached to the component tag
 				if (tag.hasBehaviors())
@@ -1075,7 +1069,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		// See Constructor
 		if (markupAttributes == null)
 		{
-			markupAttributes = new ValueMap(2);
+			MarkupFragment fragment = getMarkupFragment();
+			if ((fragment != null) && (fragment.size() > 0))
+			{
+				if (fragment.get(0) instanceof ComponentTag)
+				{
+					this.markupAttributes = new MarkupAttributeValueMap(fragment.getTag(0).getAttributes());
+				}
+			}
 		}
 		return markupAttributes;
 	}
@@ -1853,11 +1854,13 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		this.markupIndex = markupStream.getCurrentIndex();
 
-		// Get mutable copy of next tag
+		// Get mutable copy of next tag and apply the changes recorded in markupAttributes
 		final ComponentTag openTag = markupStream.getTag();
-		final IValueMap attributeMap = markupAttributes != null ? new ValueMap(
-				markupAttributes) : null;
-		final ComponentTag tag = openTag.mutable(attributeMap);
+		final ComponentTag tag = openTag.mutable();
+		if (this.markupAttributes != null)
+		{
+			tag.getAttributes().putAll(this.markupAttributes.getChangeMap());
+		}
 
 		// Call any tag handler
 		onComponentTag(tag);
@@ -2936,11 +2939,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			if ((behaviors != null) && !behaviors.isEmpty() && !tag.isClose()
 					&& (isIgnoreAttributeModifier() == false))
 			{
-
-				IValueMap attributeMap = markupAttributes != null ? new ValueMap(
-						markupAttributes) : null;
-				tag = tag.mutable(attributeMap);
-
 				for (IBehavior behavior : behaviors)
 				{
 					// Components may reject some behavior components
@@ -3127,7 +3125,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				if (openTag.getNameChanged())
 				{
 					// change the id of the close tag
-					closeTag = closeTag.mutable(null);
+					closeTag = closeTag.mutable();
 					closeTag.setName(openTag.getName());
 				}
 

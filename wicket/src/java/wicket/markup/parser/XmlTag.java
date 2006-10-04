@@ -323,12 +323,11 @@ public class XmlTag extends MarkupElement
 	/**
 	 * Gets this tag if it is already mutable, or a mutable copy of this tag if
 	 * it is immutable.
-	 * @param markupAttributes 
 	 * 
 	 * @return This tag if it is already mutable, or a mutable copy of this tag
 	 *         if it is immutable.
 	 */
-	public XmlTag mutable(final IValueMap markupAttributes)
+	public XmlTag mutable()
 	{
 		if (isMutable)
 		{
@@ -347,11 +346,7 @@ public class XmlTag extends MarkupElement
 			tag.isMutable = true;
 			tag.closes = closes;
 			tag.copyOf = copyOf;
-			if (markupAttributes != null)
-			{
-				tag.attributes = markupAttributes;
-			}
-			else if (attributes != null)
+			if (attributes != null)
 			{
 				tag.attributes = new ValueMap(attributes);
 			}
