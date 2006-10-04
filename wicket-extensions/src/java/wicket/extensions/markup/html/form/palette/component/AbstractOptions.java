@@ -27,7 +27,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.util.string.AppendingStringBuffer;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * Generats html option elements based on iterator specified by
@@ -96,7 +96,7 @@ public abstract class AbstractOptions<T> extends FormComponent<T>
 
 		super.onComponentTag(tag);
 		
-		ValueMap attrs = tag.getAttributes();
+		IValueMap attrs = tag.getAttributes();
 		attrs.put("multiple", null);
 		attrs.put("size", new Integer(getPalette().getRows()));
 		

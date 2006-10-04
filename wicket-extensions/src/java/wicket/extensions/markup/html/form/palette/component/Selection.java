@@ -22,7 +22,7 @@ import java.util.Iterator;
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.form.palette.Palette;
 import wicket.markup.ComponentTag;
-import wicket.util.value.ValueMap;
+import wicket.util.value.IValueMap;
 
 /**
  * select box containg selected choices of the palette
@@ -54,7 +54,7 @@ public class Selection extends AbstractOptions
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		ValueMap attrs = tag.getAttributes();
+		IValueMap attrs = tag.getAttributes();
 
 		String onFocus = getPalette().getSelectionOnFocusJS();
 		if (onFocus != null)
