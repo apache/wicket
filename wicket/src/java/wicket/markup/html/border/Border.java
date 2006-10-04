@@ -45,35 +45,35 @@ import wicket.model.IModel;
  * For example, if a border's associated markup looked like this:
  * 
  * <pre>
- *             &lt;html&gt;
- *             &lt;body&gt;
- *               &lt;wicket:border&gt;
- *                 First &lt;wicket:body/&gt; Last
- *               &lt;/wicket:border&gt;
- *             &lt;/body&gt;
- *             &lt;/html&gt;
+ *  &lt;html&gt;
+ *  &lt;body&gt;
+ *    &lt;wicket:border&gt;
+ *      First &lt;wicket:body/&gt; Last
+ *    &lt;/wicket:border&gt;
+ *  &lt;/body&gt;
+ *  &lt;/html&gt;
  * </pre>
  * 
  * And the border was used on a page like this:
  * 
  * <pre>
- *             &lt;html&gt;
- *             &lt;body&gt;
- *               &lt;span wicket:id = &quot;myBorder&quot;&gt;
- *                 Middle
- *               &lt;/span&gt;
- *             &lt;/body&gt;
- *             &lt;/html&gt;
+ *  &lt;html&gt;
+ *  &lt;body&gt;
+ *    &lt;span wicket:id = &quot;myBorder&quot;&gt;
+ *      Middle
+ *    &lt;/span&gt;
+ *  &lt;/body&gt;
+ *  &lt;/html&gt;
  * </pre>
  * 
  * Then the resulting HTML would look like this:
  * 
  * <pre>
- *             &lt;html&gt;
- *             &lt;body&gt;
- *               First Middle Last
- *             &lt;/body&gt;
- *             &lt;/html&gt;
+ *  &lt;html&gt;
+ *  &lt;body&gt;
+ *    First Middle Last
+ *  &lt;/body&gt;
+ *  &lt;/html&gt;
  * </pre>
  * 
  * In other words, the body of the myBorder component is substituted into the
@@ -91,6 +91,7 @@ import wicket.model.IModel;
  *            Type of model object this component holds
  * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 		implements
@@ -141,10 +142,10 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class,
 	 *      java.lang.String)
 	 */
-	public MarkupContainer getAlternateParent(Class childClass, String childId)
+	public MarkupContainer getAlternateParent(final Class childClass, final String childId)
 	{
-		// If, and if, a body container exists, than redirect new components to
-		// become children of the body.
+		// If, and only if, a body container exists, than redirect new
+		// components to become children of the body.
 		return (this.body != null ? this.body : this);
 	}
 
@@ -172,7 +173,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @see wicket.markup.html.MarkupContainer#getMarkupFragment(java.lang.String)
 	 */
 	@Override
-	public MarkupFragment getMarkupFragment(String path)
+	public MarkupFragment getMarkupFragment(final String path)
 	{
 		// First try the associated markup
 		MarkupFragment fragment = getAssociatedMarkup(false);
@@ -202,7 +203,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		renderAssociatedMarkup(BORDER,
 				"Markup for a border component must begin a tag like '<wicket:border>'");
 
-		// Skip the whole body of <span wicket:id="myBorder>
+		// Skip the whole border markup: <span wicket:id="myBorder> ... </span>
 		markupStream.skipToMatchingCloseTag(openTag);
 	}
 
@@ -214,11 +215,16 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
 			final ComponentTag tag)
 	{
-		// If no wicket:body container has been created yet, than automatically
-		// create one and render it.
+		// If wicket:body container has not yet been created and 'tag' is
+		// wicket:body, than automatically create and render it.
 		if ((this.body == null) && tag.isWicketBodyTag())
 		{
+			// The body container become the child of 'container', which if an
+			// alternate parent has been provided, may not be the border itself,
+			// but a (grand-) child of him.
 			this.body = newBorderBodyContainer(container);
+
+			// Render the body and its children
 			this.body.render(markupStream);
 			return true;
 		}
@@ -232,7 +238,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HeaderContainer)
 	 */
 	@Override
-	public void renderHead(HeaderContainer container)
+	public void renderHead(final HeaderContainer container)
 	{
 		if (isHeadRendered() == false)
 		{
@@ -259,17 +265,57 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		public BorderBody(final MarkupContainer parent)
 		{
 			super(parent, Component.AUTO_COMPONENT_PREFIX + BODY);
+
+			// Make sure the fragment is attached which does not automatically
+			// happen with auto-components.
+			getMarkupFragment();
 		}
 
 		/**
+		 * Get the wicket:body fragment
+		 * 
 		 * @see wicket.Component#getMarkupFragment()
 		 */
 		@Override
 		public MarkupFragment getMarkupFragment()
 		{
-			// Get the border's markup
-			// <span wicket:id="myBorder"> xxxx </span>
-			return Border.this.getMarkupFragment();
+			MarkupContainer parent = getParent();
+			MarkupFragment fragment;
+
+			// If the parent is a Border, than search for <wicket:body> in the
+			// associated markup
+			if (parent instanceof Border)
+			{
+				fragment = Border.this.getAssociatedMarkup(true).getWicketFragment(BORDER, true);
+			}
+			else
+			{
+				// If the parent is not a Border, than at least one
+				// MarkupContainer is in between the Border and the Body
+				fragment = parent.getMarkupFragment();
+			}
+
+			// Search for the <wicket:body> tag
+			return fragment.getWicketFragment(BODY, true);
+		}
+
+		/**
+		 * @see wicket.MarkupContainer#getMarkupFragment(java.lang.String)
+		 */
+		@Override
+		protected MarkupFragment getMarkupFragment(final String id)
+		{
+			// First search for the 'id' in the <span
+			// wicket:id="myBorder">...</span> markup
+			MarkupFragment fragment = Border.this.getMarkupFragment(id);
+			if (fragment != null)
+			{
+				return fragment;
+			}
+
+			// Else, check for the 'id' in the border's associated markup
+			return Border.this.getAssociatedMarkup(true).getWicketFragment(BORDER, true)
+					.getChildFragment(id, true);
 		}
 
 		/**
@@ -300,7 +346,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 		{
 			// Get the body's markup which is equal to the border's markup
 			// <span wicket:id="myBorder"> xxxx </span>
-			MarkupFragment borderFragment = getMarkupFragment();
+			MarkupFragment borderFragment = Border.this.getMarkupFragment();
 			MarkupStream borderMarkupStream = new MarkupStream(borderFragment);
 
 			// Skip the <span wicket:id="myBorder> tag

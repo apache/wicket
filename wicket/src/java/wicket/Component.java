@@ -623,7 +623,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 		else
 		{
-			loadMarkupStream();
+			this.markupFragment = getMarkupFragment();
 			this.parent.add(this);
 		}
 
@@ -726,72 +726,24 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					+ getId());
 		}
 
-		return markupFragment;
-	}
-	
-	/**
-	 * This method is called in the Component's constructor. However some
-	 * components may either require to load the markup later or not at all in
-	 * case the markup is fully dynamic. In both cases override
-	 * loadMarkupStream() and provide you own logic. E.g.
-	 * 
-	 * <pre>
-	 * protected void loadMarkupStream()
-	 * {
-	 * 	if (this.myDatasource != null)
-	 * 	{
-	 * 		super.loadMarkupStream();
-	 * 	}
-	 * }
-	 * </pre>
-	 * 
-	 * @return MarkupStream
-	 * @TODO The solution is bad and doesn't always work.
-	 */
-	protected MarkupStream loadMarkupStream()
-	{
-		try
+		// Attached behaviors provided by the ComponentTag which
+		// one of the markup handlers might have added.
+		if ((markupFragment.size() > 0) && (markupFragment.get(0) instanceof ComponentTag))
 		{
-			// Get the markup fragment for the component
-			this.markupFragment = getMarkupFragment();
-			if ((this.markupFragment.size() > 0) && (this.markupFragment.get(0) instanceof ComponentTag))
+			final ComponentTag tag = markupFragment.getTag(0);
+			
+			// add any behaviors attached to the component tag
+			if (tag.hasBehaviors())
 			{
-				final ComponentTag tag = this.markupFragment.getTag(0);
-				
-				// TODO 2.0:juergen: the attributes and behavior additions are bad
-				// here since this method is meant to be overridden to provide
-				// custom markup (at least thats what the javadoc says) the
-				// overriders have to implement the two functionalities below
-				// otherwise all kinds of things can break. better to move this up
-				// the call hierarchy?
-	
-				// add any behaviors attached to the component tag
-				if (tag.hasBehaviors())
+				Iterator<IBehavior> behaviors = tag.getBehaviors();
+				while (behaviors.hasNext())
 				{
-					Iterator<IBehavior> behaviors = tag.getBehaviors();
-					while (behaviors.hasNext())
-					{
-						add(behaviors.next());
-					}
+					add(behaviors.next());
 				}
 			}
-			
-			final MarkupStream markupStream = new MarkupStream(markupFragment);
-			return markupStream;
 		}
-		catch (MarkupException ex)
-		{
-			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
-							+ id + "'. You will not be able to use the component for AJAX calls.");
-			throw ex;
-		}
-		catch (RuntimeException re)
-		{
-			log.warn("MarkupFragmentFinder was unable to find the markup associated with Component '"
-							+ id + "'. You will not be able to use the component for AJAX calls.");
-			throw new MarkupNotFoundException("Couldn't find the markup of the component '" + id
-					+ "' in parent '" + parent.getPageRelativePath() + "'", re);
-		}
+		
+		return markupFragment;
 	}
 
 	/**

@@ -24,7 +24,7 @@ import java.util.Random;
 import wicket.MarkupContainer;
 import wicket.markup.IMarkupCacheKeyProvider;
 import wicket.markup.IMarkupResourceStreamProvider;
-import wicket.markup.MarkupStream;
+import wicket.markup.MarkupFragment;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.util.resource.FileResourceStream;
 import wicket.util.resource.IResourceStream;
@@ -64,23 +64,12 @@ public class DummyContainer extends WebMarkupContainer
 		this.markupFile = file;
 	}
 
-	/**
-	 * 
-	 * @see wicket.Component#loadMarkupStream()
-	 */
 	@Override
-	protected MarkupStream loadMarkupStream()
+	public MarkupFragment getMarkupFragment()
 	{
-		// Actually this is like never loading the markup as this.markupFile
-		// will allways be null when called by Component.<init>.
-		if (this.markupFile != null)
-		{
-			return super.loadMarkupStream();
-		}
-		
-		return null;
+		return getAssociatedMarkup(true);
 	}
-
+	
 	/**
 	 * 
 	 * @see wicket.markup.IMarkupResourceStreamProvider#getMarkupResourceStream(wicket.MarkupContainer,
