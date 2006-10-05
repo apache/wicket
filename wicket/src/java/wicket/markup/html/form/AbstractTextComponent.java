@@ -40,7 +40,7 @@ public abstract class AbstractTextComponent extends FormComponent
 	/**
 	 * @see wicket.Component#Component(String, IModel)
 	 */
-	AbstractTextComponent(final String id, final IModel model)
+	public AbstractTextComponent(final String id, final IModel model)
 	{
 		super(id, model);
 		setConvertEmptyInputStringToNull(true);
