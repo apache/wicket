@@ -1660,14 +1660,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public final void render(final MarkupStream markupStream)
 	{
-		// TODO The markup stream parameter is no longer required
-		// and the following can be removed as well, once the parameter has been removed
-//		if (markupStreamXX != null)
-//		{
-//			markupStreamXX.skipComponent();
-//		}
-//		
-//		final MarkupStream markupStream = new MarkupStream(getMarkupFragment());
 		setMarkupStream(markupStream);
 		setFlag(FLAG_IS_RENDERED_ONCE, true);
 
@@ -1809,7 +1801,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @param markupStream
 	 *            The markup stream
 	 */
-	public final void renderComponent(final MarkupStream markupStream)
+	public final void renderComponent(MarkupStream markupStream)
 	{
 		this.markupIndex = markupStream.getCurrentIndex();
 
@@ -1871,7 +1863,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					if (getRenderBodyOnly() == false)
 					{
 						// Close the manually opened panel tag.
-						getResponse().write(openTag.syntheticCloseTagString());
+						if(tag.getNameChanged())
+						{
+                            getResponse().write(tag.syntheticCloseTagString());
+						}
+						else
+						{
+							getResponse().write(openTag.syntheticCloseTagString());
+						}
 					}
 				}
 			}
@@ -3086,6 +3085,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					// change the id of the close tag
 					closeTag = closeTag.mutable();
 					closeTag.setName(openTag.getName());
+					closeTag.setNamespace(openTag.getNamespace());
 				}
 
 				// Render the close tag
