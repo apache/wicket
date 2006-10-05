@@ -52,7 +52,7 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	/**
 	 * Header response that is responsible for filtering duplicate contributions.
 	 */
-	private IHeaderResponse headerResponse = null;	
+	private transient IHeaderResponse headerResponse = null;	
 	/**
 	 * Construct
 	 * 

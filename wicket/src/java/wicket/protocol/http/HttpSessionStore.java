@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 
 import wicket.AccessStackPageMap;
 import wicket.Application;
+import wicket.Page;
 import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
@@ -53,6 +54,10 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		// session replication
 		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
 		{
+			if(value instanceof Page)
+			{
+				((Page)value).internalDetach();
+			}
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try
 			{
