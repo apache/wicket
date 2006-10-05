@@ -701,9 +701,10 @@ public class WicketTester extends MockWebApplication
 			RequestCycle requestCycle = createRequestCycle();
 
 			// "Submit" the form
-			form.visitFormComponents(new FormComponent.IVisitor()
+			form.visitFormComponents(new FormComponent.AbstractVisitor()
 			{
-				public void formComponent(FormComponent formComponent)
+				@Override
+				public void onFormComponent(FormComponent formComponent)
 				{
 					if (!(formComponent instanceof Button)
 							&& !(formComponent instanceof RadioGroup))

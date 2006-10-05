@@ -99,7 +99,7 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class FormComponent<T> extends WebMarkupContainer<T>
+public abstract class FormComponent<T> extends WebMarkupContainer<T> implements IFormProcessingListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -121,7 +121,23 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		 * @param formComponent
 		 *            The form component
 		 */
-		public void formComponent(FormComponent formComponent);
+		public Object formComponent(IFormProcessingListener formComponent);
+	}
+
+	public static abstract class AbstractVisitor implements IVisitor
+	{
+		/**
+		 * @see wicket.markup.html.form.FormComponent.IVisitor#formComponent(wicket.markup.html.form.FormComponent)
+		 */
+		public Object formComponent(IFormProcessingListener component)
+		{
+			if (component instanceof FormComponent) {
+				onFormComponent((FormComponent) component);
+			}
+			return Component.IVisitor.CONTINUE_TRAVERSAL;
+		}
+
+		protected abstract void onFormComponent(FormComponent formComponent);
 	}
 
 	/**
@@ -1284,4 +1300,11 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 		}
 	}
 
+	/**
+	 * @see wicket.markup.html.form.IFormProcessingListener#processChildren(boolean)
+	 */
+	public boolean processChildren()
+	{
+	    return true;
+	}
 }
