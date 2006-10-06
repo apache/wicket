@@ -74,7 +74,7 @@ public class HeadersToolbar extends AbstractToolbar
 				{
 
 					@Override
-					protected IModel model(Object object)
+					protected IModel model(Object object, int index)
 					{
 						return new Model((IColumn)object);
 					}

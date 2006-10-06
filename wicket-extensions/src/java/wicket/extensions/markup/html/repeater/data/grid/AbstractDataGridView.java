@@ -87,7 +87,7 @@ public abstract class AbstractDataGridView extends DataViewBase
 			{
 
 				@Override
-				protected IModel model(Object object)
+				protected IModel model(Object object, int index)
 				{
 					return new Model(object);
 				}
