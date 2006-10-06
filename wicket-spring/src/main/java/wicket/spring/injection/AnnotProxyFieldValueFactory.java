@@ -89,12 +89,6 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 			SpringBean annot = field.getAnnotation(SpringBean.class);
 
 			String id = annot.id();
-			// TODO 2.0: Remove the workaround for deprecated annot.name()
-			if (id == null || id.length() == 0)
-			{
-				id = annot.name();
-			}
-
 			SpringBeanLocator locator = new SpringBeanLocator(id, field.getType(),
 					contextLocator);
 
@@ -105,7 +99,7 @@ public class AnnotProxyFieldValueFactory implements IFieldValueFactory
 
 			// fail early - see if the locator can locate the spring bean
 			testLocator(locator, fieldOwner, field);
-			
+
 			Object proxy = LazyInitProxyFactory.createProxy(field.getType(), locator);
 			cache.put(locator, proxy);
 			return proxy;

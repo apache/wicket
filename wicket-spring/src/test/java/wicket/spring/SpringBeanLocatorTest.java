@@ -39,7 +39,7 @@ public class SpringBeanLocatorTest extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		ctx=new ApplicationContextMock();
+		ctx = new ApplicationContextMock();
 		ctxLocator = new SpringContextLocatorMock(ctx);
 	}
 
@@ -62,9 +62,9 @@ public class SpringBeanLocatorTest extends TestCase
 	public void testLookupByClassAfterDeserialization()
 	{
 		new MockWebApplication("/");
-		
+
 		Bean bean = new Bean();
-		
+
 		ctx.putBean("bean", bean);
 
 		SpringBeanLocator locator = (SpringBeanLocator) Objects
@@ -96,7 +96,7 @@ public class SpringBeanLocatorTest extends TestCase
 	public void testLookupByClassTooManyFound()
 	{
 		Bean bean = new Bean();
-		ctx.putBean("bean", bean);
+		ctx.putBean("bean1", bean);
 		ctx.putBean("bean2", bean);
 
 		SpringBeanLocator locator = new SpringBeanLocator(Bean.class, ctxLocator);
@@ -109,6 +109,23 @@ public class SpringBeanLocatorTest extends TestCase
 		{
 			// noop
 		}
+
+	}
+
+	/**
+	 * tests defaulting of lookup to bean name. when more then one bean of the
+	 * requested class if found and the id is not explicitly specified, we
+	 * default to a bean that has the same type name as the id it is registered
+	 * with.
+	 */
+	public void testLookupDefaultToName()
+	{
+		Bean bean = new Bean();
+		ctx.putBean("bean", bean);
+		ctx.putBean("bean2", new Bean());
+
+		SpringBeanLocator locator = new SpringBeanLocator(Bean.class, ctxLocator);
+		assertTrue(bean == (Bean) locator.locateProxyTarget());
 
 	}
 
@@ -131,7 +148,7 @@ public class SpringBeanLocatorTest extends TestCase
 	public void testLookupByNameAfterDeserialization()
 	{
 		new MockWebApplication("/");
-		
+
 		Bean bean = new Bean();
 		ctx.putBean("bean", bean);
 

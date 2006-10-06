@@ -132,19 +132,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			return lookupSpringBean(context, getBeanType());
 		}
 	}
-
-	/**
-	 * @return bean name this locator is configured with
-	 * @deprecated use {@link #getBeanId()} instead
-	 * 
-	 * TODO Post 2.0: Remove
-	 */
-	@Deprecated
-	public final String getBeanName()
-	{
-		return beanId;
-	}
-
+	
 	/**
 	 * @return bean id this locator is configured with
 	 */

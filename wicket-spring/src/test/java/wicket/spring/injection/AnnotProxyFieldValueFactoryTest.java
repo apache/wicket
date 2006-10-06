@@ -25,8 +25,10 @@ import junit.framework.TestCase;
 import org.springframework.context.ApplicationContext;
 
 import wicket.extensions.proxy.ILazyInitProxy;
+import wicket.spring.Bean2;
 import wicket.spring.ISpringContextLocator;
 import wicket.spring.SpringBeanLocator;
+import wicket.spring.test.ApplicationContextMock;
 
 /**
  * Tests for BeanAnnotLocatorFactory
@@ -42,7 +44,11 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 
 		public ApplicationContext getSpringContext()
 		{
-			return null;
+			ApplicationContextMock mock = new ApplicationContextMock();
+			mock.putBean(new Bean());
+			mock.putBean("somebean", new Bean2());
+
+			return mock;
 		}
 	};
 
@@ -76,7 +82,7 @@ public class AnnotProxyFieldValueFactoryTest extends TestCase
 		proxy = factory.getFieldValue(field, obj);
 		locator = (SpringBeanLocator) ((ILazyInitProxy) proxy).getObjectLocator();
 		assertTrue(locator.getBeanId().equals("somebean"));
-		assertTrue(locator.getBeanType().equals(Bean.class));
+		assertTrue(locator.getBeanType().equals(Bean2.class));
 		assertTrue(locator.getSpringContextLocator() == mockCtxLocator);
 		assertTrue(factory.getFieldValue(field, obj) instanceof ILazyInitProxy);
 	}

@@ -30,7 +30,6 @@ import org.springframework.core.io.Resource;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-// TODO finish implementing all needed methods
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
 	private Map<String, Object> beans = new HashMap<String, Object>();
@@ -167,7 +166,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	}
 
 	/**
-	 * @param type 
+	 * @param type
 	 * @return bean definition names
 	 * @see org.springframework.beans.factory.ListableBeanFactory#getBeanDefinitionNames(java.lang.Class)
 	 */
@@ -241,7 +240,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 */
 	public BeanFactory getParentBeanFactory()
 	{
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
@@ -303,6 +302,14 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.beans.factory.HierarchicalBeanFactory#containsLocalBean(java.lang.String)
 	 */
 	public boolean containsLocalBean(String arg0)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.springframework.core.io.ResourceLoader#getClassLoader()
+	 */
+	public ClassLoader getClassLoader()
 	{
 		throw new UnsupportedOperationException();
 	}
