@@ -67,7 +67,9 @@ public abstract class ArrayIteratorAdapter implements Iterator
 	 */
 	public Object next()
 	{
-		return model(array[pos++]);
+		IModel model = model(array[pos], pos);
+		pos++;
+		return model;
 	}
 
 	/**
@@ -85,9 +87,11 @@ public abstract class ArrayIteratorAdapter implements Iterator
 	 * 
 	 * @param object
 	 *            object to be wrapped
+	 * @param index
+	 *            array index of the object
 	 * @return IModel wrapper for the object
 	 */
-	abstract protected IModel model(Object object);
+	abstract protected IModel model(Object object, int index);
 
 
 }
