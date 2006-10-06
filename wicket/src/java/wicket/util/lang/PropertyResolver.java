@@ -136,7 +136,7 @@ public final class PropertyResolver
 		setter.setValue(value, converter == null ? new PropertyResolverConverter(Session.get(),
 				Session.get().getLocale()) : converter);
 	}
-
+	
 	private static ObjectAndGetSetter getObjectAndGetSetter(final String expression,
 			final Object object, boolean tryToCreateNull)
 	{
@@ -233,13 +233,8 @@ public final class PropertyResolver
 			else
 			{
 				method = findGetter(clz, exp);
-				if (method == null)
-				{
-					// find field.
-					field = findField(clz, exp);
-				}
 			}
-			if (method == null && field == null)
+			if (method == null)
 			{
 				if (List.class.isAssignableFrom(clz))
 				{
@@ -291,46 +286,55 @@ public final class PropertyResolver
 				}
 				else
 				{
-					method = findMethod(clz, exp);
-					if (method == null)
+					field = findField(clz, exp);
+					if(field == null)
 					{
-						int index = exp.indexOf('.');
-						if (index != -1)
+						
+						method = findMethod(clz, exp);
+						if (method == null)
 						{
-							String propertyName = exp.substring(0, index);
-							String propertyIndex = exp.substring(index + 1);
-							try
+							int index = exp.indexOf('.');
+							if (index != -1)
 							{
-
-								int parsedIndex = Integer.parseInt(propertyIndex);
-								// if so then it could be a
-								// getPropertyIndex(int)
-								// and setPropertyIndex(int, object)
-								String name = Character.toUpperCase(propertyName.charAt(0))
-										+ propertyName.substring(1);
-								method = clz.getMethod("get" + name, new Class[] { int.class });
-								getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
-
+								String propertyName = exp.substring(0, index);
+								String propertyIndex = exp.substring(index + 1);
+								try
+								{
+	
+									int parsedIndex = Integer.parseInt(propertyIndex);
+									// if so then it could be a
+									// getPropertyIndex(int)
+									// and setPropertyIndex(int, object)
+									String name = Character.toUpperCase(propertyName.charAt(0))
+											+ propertyName.substring(1);
+									method = clz.getMethod("get" + name, new Class[] { int.class });
+									getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
+	
+								}
+								catch (Exception e)
+								{
+									throw new WicketRuntimeException(
+											"no get method defined for class: " + clz + " expression: "
+													+ propertyName);
+								}
 							}
-							catch (Exception e)
+							else
 							{
-								throw new WicketRuntimeException(
-										"no get method defined for class: " + clz + " expression: "
-												+ propertyName);
+								// We do not look for a public FIELD because that is
+								// not good
+								// programming with beans patterns
+								throw new WicketRuntimeException("No get method defined for class: "
+										+ clz + " expression: " + exp);
 							}
 						}
 						else
 						{
-							// We do not look for a public FIELD because that is
-							// not good
-							// programming with beans patterns
-							throw new WicketRuntimeException("No get method defined for class: "
-									+ clz + " expression: " + exp);
+							getAndSetter = new MethodGetAndSet(method);
 						}
 					}
 					else
 					{
-						getAndSetter = new MethodGetAndSet(method);
+						getAndSetter = new FieldGetAndSetter(field);
 					}
 				}
 			}
@@ -353,7 +357,7 @@ public final class PropertyResolver
 	 * @param expression
 	 * @return introspected field
 	 */
-	private static Field findField(Class<? extends Object> clz, String expression)
+	private static Field findField(Class clz, String expression)
 	{
 		Field field = null;
 		try
@@ -362,6 +366,20 @@ public final class PropertyResolver
 		}
 		catch (Exception e)
 		{
+			Class tmp = clz;
+			while(tmp != null && tmp != Object.class)
+			{
+				Field[] fields = tmp.getDeclaredFields();
+				for (int i = 0; i < fields.length; i++)
+				{
+					if(fields[i].getName().equals(expression))
+					{
+						fields[i].setAccessible(true);
+						return fields[i];
+					}
+				}
+				tmp = tmp.getSuperclass();
+			}
 			log.debug("Cannot find field " + clz + "." + expression, e);
 		}
 		return field;

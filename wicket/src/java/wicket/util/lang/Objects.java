@@ -25,10 +25,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +44,7 @@ import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
+import wicket.util.collections.MiniMap;
 import wicket.util.io.ByteCountingOutputStream;
 
 /**
@@ -423,6 +430,8 @@ public final class Objects
 		}
 		else
 		{
+			
+
 			try
 			{
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
@@ -441,6 +450,176 @@ public final class Objects
 				throw new WicketRuntimeException("Internal error cloning object", e);
 			}
 		}
+	}
+	
+	/**
+	 * @param object
+	 * @return The hashmap with the field->value objects
+	 */
+	public static MiniMap<Field, Object> mapObject(final Object object)
+	{
+		return mapObject(object, new ArrayList<Object>());
+	}
+	
+	private static MiniMap<Field, Object> mapObject(final Object object, List<Object> addedObjects)
+	{
+		addedObjects.add(object);
+		try
+		{
+			List<Field> fields = getFields(object.getClass());
+			MiniMap<Field, Object> values = new MiniMap<Field, Object>(fields.size());
+			for (Field field : fields)
+			{
+				field.setAccessible(true);
+				Object value = field.get(object);
+				Object analyzed = analyzeObject(value,addedObjects);
+				if(recursive == analyzed) continue;
+				if(!Modifier.isFinal(field.getModifiers()) || 
+						analyzed instanceof ArrayInstanceHolder || 
+						analyzed instanceof ObjectInstanceHashmapHolder)
+				{
+					values.put(field,analyzed);
+				}
+			}
+			return values;
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Internal error cloning model: " + object, e);
+		}
+	}
+
+	private final static String recursive = "_recu_rsive_";
+	private static Object analyzeObject(Object value, List<Object> addedObjects)
+	{
+		if(addedObjects.contains(value))
+		{
+			return recursive;
+		}
+		if(value == null || value instanceof String || value instanceof Number || 
+				value instanceof Boolean || value instanceof Class)
+		{
+			return value;
+		}
+		else if( value != null && value.getClass().isArray())
+		{
+			if( !value.getClass().getComponentType().isPrimitive() )
+			{
+				int length = Array.getLength(value);
+				Object[] arrayValues = new Object[length];
+				while(length-- != 0)
+				{
+					Object arrayValue = Array.get(value, length);
+					arrayValues[length] = analyzeObject(arrayValue,addedObjects);
+				}
+				ArrayInstanceHolder holder = new ArrayInstanceHolder();
+				holder.array = value;
+				holder.values = arrayValues;
+				return holder;
+			}
+			else
+			{
+				// just clone the primitive arrays
+				return cloneObject(value);
+			}
+		}
+		// all other values go through map again
+		ObjectInstanceHashmapHolder holder = new ObjectInstanceHashmapHolder();
+		holder.instance = value;
+		holder.clonemap = mapObject(value,addedObjects);
+		return holder;
+	}
+	
+	private static class ObjectInstanceHashmapHolder implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+		
+		private Object instance;
+		private MiniMap<Field, Object> clonemap;
+		
+	}
+
+	private static class ArrayInstanceHolder implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+		
+		private Object array;
+		private Object[] values;
+		
+	}
+	
+	private static List<Field> getFields(Class clz)
+	{
+		ArrayList<Field> fieldList = new ArrayList<Field>();
+		Field[] fields = clz.getDeclaredFields();
+		for (Field field : fields)
+		{
+			if(!Modifier.isStatic(field.getModifiers())
+					&& !Modifier.isTransient(field.getModifiers()))
+			{
+				fieldList.add(field);
+			}
+		}
+		Class superClz = clz.getSuperclass();
+		if(superClz != Object.class)
+		{
+			fieldList.addAll(getFields(superClz));
+		}
+		return fieldList;
+	}
+	
+	/**
+	 * @param object
+	 * @param clonemap
+	 */
+	public static void restoreObject(Object object, MiniMap<Field, Object> clonemap)
+	{
+		for (Map.Entry<Field, Object> entry : clonemap.entrySet())
+		{
+			Field field = entry.getKey();
+			Object value = entry.getValue();
+			value = checkAndConvertValue(value);
+			try
+			{
+				if(!Modifier.isFinal(field.getModifiers()))
+				{					
+					field.set(object, value);
+				}
+			}
+			catch (Exception e)
+			{
+				throw new WicketRuntimeException("Internal error cloning/restoring from map the object: " + object, e);
+			}
+		}
+	}
+	
+	
+
+	private static void restoreArray(Object array, Object[] values)
+	{
+		for (int i = 0; i < values.length; i++)
+		{
+			Object value = values[i];
+			value = checkAndConvertValue(value);
+			Array.set(array, i, value);
+		}
+	}
+
+	private static Object checkAndConvertValue(Object value)
+	{
+		if(value instanceof ObjectInstanceHashmapHolder)
+		{
+			ObjectInstanceHashmapHolder holder = (ObjectInstanceHashmapHolder)value;
+			restoreObject(holder.instance, holder.clonemap);
+			value  = holder.instance;
+		}
+		else if(value instanceof ArrayInstanceHolder)
+		{
+			ArrayInstanceHolder holder = (ArrayInstanceHolder)value;
+			restoreArray(holder.array, holder.values);
+			value = holder.array;
+		}
+		return value;
 	}
 
 	/**
@@ -1115,4 +1294,5 @@ public final class Objects
 	private Objects()
 	{
 	}
+
 }
