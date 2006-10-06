@@ -19,6 +19,7 @@
 package wicket.extensions.markup.html.repeater.data.sort;
 
 import wicket.MarkupContainer;
+import wicket.markup.IAlternateParentProvider;
 import wicket.markup.html.border.Border;
 
 /**
@@ -34,10 +35,10 @@ import wicket.markup.html.border.Border;
  * @author Igor Vaynberg ( ivaynberg )
  * 
  */
-public class OrderByBorder extends Border
+public class OrderByBorder extends Border implements IAlternateParentProvider
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
 	 * @param parent
 	 *            The parent of this component The parent of this component.
@@ -58,6 +59,7 @@ public class OrderByBorder extends Border
 			ISortStateLocator stateLocator, OrderByLink.ICssProvider cssProvider)
 	{
 		super(parent, id);
+		
 		OrderByLink link = new OrderByLink(this, "orderByLink", property, stateLocator,
 				OrderByLink.VoidCssProvider.getInstance())
 		{
@@ -70,10 +72,11 @@ public class OrderByBorder extends Border
 				OrderByBorder.this.onSortChanged();
 			}
 		};
-
+		newBorderBodyContainer(link);
+		
 		add(new OrderByLink.CssModifier(link, cssProvider));
 	}
-
+	
 	/**
 	 * This method is a hook for subclasses to perform an action after sort has
 	 * changed
