@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
@@ -62,6 +65,10 @@ import wicket.util.convert.ConversionException;
 public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
+	
+	/** Log. */
+	private static final Log log = LogFactory.getLog(CheckGroup.class);
+
 
 	/**
 	 * Constructor that will create a default model collection
@@ -172,7 +179,16 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 			collection.addAll(getConvertedInput());
 			modelChanged();
 			// call model.setObject()
-			getModel().setObject(collection);
+			try
+			{
+				getModel().setObject(collection);
+			} 
+			catch(Exception e)
+			{
+				// ignore this exception because it could be that there 
+				// is not setter for this collection.
+				log.info("no setter for the property attached to " + this);
+			}
 		}
 	}
 

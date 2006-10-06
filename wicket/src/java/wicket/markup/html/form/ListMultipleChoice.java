@@ -23,6 +23,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
@@ -43,6 +46,9 @@ import wicket.util.string.Strings;
 public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 {
 	private static final long serialVersionUID = 1L;
+
+	/** Log. */
+	private static final Log log = LogFactory.getLog(ListMultipleChoice.class);
 
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;
@@ -297,6 +303,17 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 			selectedValues.clear();
 			selectedValues.addAll(getConvertedInput());
 			modelChanged();
+			// call model.setObject()
+			try
+			{
+				getModel().setObject(selectedValues);
+			} 
+			catch(Exception e)
+			{
+				// ignore this exception because it could be that there 
+				// is not setter for this collection.
+				log.info("no setter for the property attached to " + this);
+			}
 		}
 		else
 		{
