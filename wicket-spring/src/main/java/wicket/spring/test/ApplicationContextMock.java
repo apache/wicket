@@ -12,6 +12,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.MessageSourceResolvable;
@@ -29,7 +30,6 @@ import org.springframework.core.io.Resource;
  * @author Igor Vaynberg (ivaynberg)
  * 
  */
-// TODO finish implementing all needed methods
 public class ApplicationContextMock implements ApplicationContext, Serializable
 {
 	private Map beans = new HashMap();
@@ -236,7 +236,7 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 */
 	public BeanFactory getParentBeanFactory()
 	{
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/**
@@ -281,6 +281,31 @@ public class ApplicationContextMock implements ApplicationContext, Serializable
 	 * @see org.springframework.core.io.ResourceLoader#getResource(java.lang.String)
 	 */
 	public Resource getResource(String location)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
+	 */
+	public AutowireCapableBeanFactory getAutowireCapableBeanFactory()
+			throws IllegalStateException
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.springframework.beans.factory.HierarchicalBeanFactory#containsLocalBean(java.lang.String)
+	 */
+	public boolean containsLocalBean(String arg0)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.springframework.core.io.ResourceLoader#getClassLoader()
+	 */
+	public ClassLoader getClassLoader()
 	{
 		throw new UnsupportedOperationException();
 	}
