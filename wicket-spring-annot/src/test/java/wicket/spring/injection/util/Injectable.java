@@ -35,13 +35,13 @@ public class Injectable
 	private Bean beanByClass;
 
 	@SpringBean(name = "somebean")
-	private Bean beanByName;
+	private Bean2 beanByName;
 
 	public Bean getBeanByClass() {
 		return beanByClass;
 	}
 
-	public Bean getBeanByName() {
+	public Bean2 getBeanByName() {
 		return beanByName;
 	}
 
