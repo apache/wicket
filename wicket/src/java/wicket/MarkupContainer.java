@@ -135,12 +135,14 @@ public abstract class MarkupContainer<T> extends Component<T>
 	}
 
 	/**
-	 * Get the child markup fragment with the 'id'
+	 * Get the child markup fragment with the 'id'.
+	 * <p>
+	 * Note that component paths don't work. 
 	 * 
-	 * @param id
-	 * @return MarkupFragment
+	 * @param id The child component id
+	 * @return MarkupFragment The childs markup
 	 */
-	protected MarkupFragment getMarkupFragment(final String id)
+	public MarkupFragment getMarkupFragment(final String id)
 	{
 		return getMarkupFragment().getChildFragment(id, true, true);
 	}
@@ -185,9 +187,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 			child.markupIndex = replaced.markupIndex;
 
 		}
+		
 		return this;
 	}
-
+	
 	/**
 	 * This method allows a component to be added by an auto-resolver such as
 	 * AutoComponentResolver or AutoLinkResolver. While the component is being

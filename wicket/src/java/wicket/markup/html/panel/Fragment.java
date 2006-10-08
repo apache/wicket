@@ -235,7 +235,7 @@ public class Fragment<T> extends WebMarkupContainer<T>
 	 * 
 	 * @see wicket.MarkupContainer#getMarkupFragment(java.lang.String)
 	 */
-	protected MarkupFragment getMarkupFragment(final String id)
+	public MarkupFragment getMarkupFragment(final String id)
 	{
 		if (this.fragment == null)
 		{

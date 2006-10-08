@@ -24,6 +24,7 @@ import wicket.WicketTestCase;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.TextField;
 import wicket.protocol.http.MockHttpServletRequest;
+import wicket.util.diff.DiffUtil;
 
 /**
  * Test the component: PageView
@@ -77,7 +78,7 @@ public class BoxBorderTest extends WicketTestCase
 		application.getLastRenderedPage().get("border");
 		Form form = (Form)application.getLastRenderedPage().get("border:myForm");
 
-		TextField input = (TextField)application.getLastRenderedPage().get("border:myForm:<auto>-body:name");
+		TextField input = (TextField)application.getLastRenderedPage().get("border:myForm:borderBody:name");
 		assertEquals("", input.getModelObjectAsString());
 
 		application.setupRequestAndResponse();
@@ -88,7 +89,7 @@ public class BoxBorderTest extends WicketTestCase
 
 		application.processRequestCycle();
 
-		input = (TextField)application.getLastRenderedPage().get("border:myForm:<auto>-body:name");
+		input = (TextField)application.getLastRenderedPage().get("border:myForm:borderBody:name");
 		assertEquals("jdo", input.getModelObjectAsString());
 	}
 
@@ -157,5 +158,10 @@ public class BoxBorderTest extends WicketTestCase
 	public void test7() throws Exception
 	{
 		executeTest(BoxBorderTestPage_7.class, "BoxBorderTestPage_ExpectedResult_7.html");
+		
+		application.clickLink("link");
+
+		String document = application.getServletResponse().getDocument();
+		assertTrue(DiffUtil.validatePage(document, this.getClass(), "BoxBorderTestPage_ExpectedResult_7-1.html"));
 	}
 }

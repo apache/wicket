@@ -19,12 +19,9 @@
 package wicket.markup.html.internal;
 
 import wicket.MarkupContainer;
-import wicket.Page;
 import wicket.Response;
-import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
-import wicket.markup.html.border.Border;
 import wicket.response.StringResponse;
 
 
@@ -65,20 +62,18 @@ import wicket.response.StringResponse;
  */
 public class HtmlHeaderContainer extends HeaderContainer
 {
+	private static final long serialVersionUID = 1L;
+	
 	/**
 	 * Construct.
+	 * 
 	 * @param parent
 	 * @param id
 	 */
-	public HtmlHeaderContainer(MarkupContainer parent, String id)
+	public HtmlHeaderContainer(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * First render the body of the component. And if it is the header component
@@ -89,7 +84,7 @@ public class HtmlHeaderContainer extends HeaderContainer
 	 *      wicket.markup.ComponentTag)
 	 */
 	@Override
-	protected final void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
+	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		// We are able to automatically add <head> to the page if it is
 		// missing. But we only want to add it, if we have content to be
@@ -109,27 +104,7 @@ public class HtmlHeaderContainer extends HeaderContainer
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
 
-			// If the parent component is a Page (or a bordered Page), we must
-			// now include the header sections of all components in the
-			// component hierarchie.
-			MarkupContainer parent = getParent();
-
-			// If bordered page ...
-			while ((parent instanceof Border))
-			{
-				parent = parent.getParent();
-			}
-
-			// must be a Page
-			if (parent instanceof Page)
-			{
-				renderHeaderSections((Page)parent, this);
-			}
-			else
-			{
-				throw new WicketRuntimeException(
-				"Programming error: 'parent' should be a Page or a Border.");
-			}
+			renderHeaderSections(getPage(), this);
 
 			// Automatically add <head> if necessary
 			CharSequence output = response.getBuffer();
@@ -166,12 +141,12 @@ public class HtmlHeaderContainer extends HeaderContainer
 				webResponse.write("<head>");
 				webResponse.write(output);
 				webResponse.write("</head>");
-			}						
+			}
 		}
 		finally
 		{
 			// Restore the original response
 			this.getRequestCycle().setResponse(webResponse);
 		}
-	}	
+	}
 }

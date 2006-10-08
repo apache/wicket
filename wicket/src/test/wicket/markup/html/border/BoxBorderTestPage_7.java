@@ -20,6 +20,7 @@ package wicket.markup.html.border;
 
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.TextField;
+import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
 import wicket.util.value.ValueMap;
 
@@ -41,9 +42,21 @@ public class BoxBorderTestPage_7 extends WebPage
 	{
 		Border formBorder = new FormBorder(this, "border");
 
-		TextField textfield = new TextField<String>(formBorder, "name", new PropertyModel<String>(properties, "name"));
+		TextField textfield = new TextField<String>(formBorder, "name", new PropertyModel<String>(
+				properties, "name"));
 
 		// Test setVisible on formBorders
 		textfield.setVisible(false);
+
+		new Link(this, "link")
+		{
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onClick()
+			{
+				String p = "";
+			}
+		};
 	}
 }

@@ -97,7 +97,7 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	 * @param id
 	 * @return MarkupFragment
 	 */
-	protected MarkupFragment getMarkupFragment(final String id)
+	public MarkupFragment getMarkupFragment(final String id)
 	{
 		return getAssociatedMarkup(true).getChildFragment(id, true);
 	}

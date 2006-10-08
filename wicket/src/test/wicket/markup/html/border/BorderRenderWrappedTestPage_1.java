@@ -37,7 +37,7 @@ public class BorderRenderWrappedTestPage_1 extends WebPage
 	public BorderRenderWrappedTestPage_1()
 	{
 		BoxBorder border = new BoxBorder(this, "box");
-		MarkupContainer body = border.newBorderBodyContainer(border);
+		MarkupContainer body = border.setBorderBodyContainer(border);
 		body.setVisible(false);
 
 		new TextField(border, "text");

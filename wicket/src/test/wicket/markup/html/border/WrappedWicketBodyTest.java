@@ -181,7 +181,7 @@ public class WrappedWicketBodyTest extends WicketTestCase
 		{
 			super(parent, id);
 			MarkupContainer bodyParent = new WebMarkupContainer(this, "body-parent");
-			newBorderBodyContainer(bodyParent);
+			setBorderBodyContainer(bodyParent);
 
 			new Label(this, "borderLabel", "[[TEST]]");
 			new Label(bodyParent, "borderLabel2", "[[TEST-2]]");

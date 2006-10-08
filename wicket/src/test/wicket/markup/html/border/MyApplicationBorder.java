@@ -39,6 +39,7 @@ public class MyApplicationBorder extends Border
 	{
 		super(parent, id);
 
-		new BoxBorder(this, "boxBorder");
+		Border border = new BoxBorder(this, "boxBorder");
+		setBorderBodyContainer(border);
 	}
 }
