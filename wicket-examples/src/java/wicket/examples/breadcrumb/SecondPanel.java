@@ -62,7 +62,7 @@ public class SecondPanel extends BreadCrumbPanel
 				private static final long serialVersionUID = 1L;
 
 				@Override
-				protected void onSubmit() {
+				public void onSubmit() {
 					
 					
 				}
@@ -72,7 +72,7 @@ public class SecondPanel extends BreadCrumbPanel
 			new Button(this, "nextButton")
 			{
 				@Override
-				protected void onSubmit()
+				public void onSubmit()
 				{
 					activate(new IBreadCrumbPanelFactory()
 					{

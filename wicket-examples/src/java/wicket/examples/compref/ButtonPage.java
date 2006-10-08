@@ -49,7 +49,7 @@ public class ButtonPage extends WicketExamplePage
 		new Button(form, "button1")
 		{
 			@Override
-			protected void onSubmit()
+			public void onSubmit()
 			{
 				info("button1.onSubmit executed");
 			}
@@ -58,7 +58,7 @@ public class ButtonPage extends WicketExamplePage
 		Button button2 = new Button(form, "button2")
 		{
 			@Override
-			protected void onSubmit()
+			public void onSubmit()
 			{
 				info("button2.onSubmit executed");
 			}
