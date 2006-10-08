@@ -72,7 +72,7 @@ public class OrderByBorder extends Border implements IAlternateParentProvider
 				OrderByBorder.this.onSortChanged();
 			}
 		};
-		newBorderBodyContainer(link);
+		setBorderBodyContainer(link);
 		
 		add(new OrderByLink.CssModifier(link, cssProvider));
 	}
