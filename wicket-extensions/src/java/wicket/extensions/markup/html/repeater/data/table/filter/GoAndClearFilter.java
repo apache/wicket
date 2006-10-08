@@ -84,7 +84,7 @@ public class GoAndClearFilter extends GoFilter
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit()
+			public void onSubmit()
 			{
 				onClearSubmit(this);
 			}
