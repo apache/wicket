@@ -43,7 +43,7 @@ public class LibraryApplicationBorder extends Border implements IAlternateParent
 		super(parent, id);
 		
 		Border boxBorder = new BoxBorder(this, "boxBorder");
-		newBorderBodyContainer(boxBorder);
+		setBorderBodyContainer(boxBorder);
 	}
 
 	/**
