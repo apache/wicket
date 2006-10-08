@@ -197,7 +197,7 @@ public class FormInput extends WicketExamplePage
 			{
 
 				@Override
-				protected void onSubmit()
+				public void onSubmit()
 				{
 
 
