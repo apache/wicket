@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Localizer;
 import wicket.MarkupContainer;
@@ -37,7 +36,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IAssignmentAware;
 import wicket.model.IModel;
-import wicket.model.Model;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
@@ -120,10 +118,14 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 		 * 
 		 * @param formComponent
 		 *            The form component
+		 * @return component
 		 */
 		public Object formComponent(IFormProcessingListener formComponent);
 	}
 
+	/**
+	 * Visitor for traversing form components 
+	 */
 	public static abstract class AbstractVisitor implements IVisitor
 	{
 		/**
@@ -161,44 +163,6 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 		}
 	}
 
-	/**
-	 * Attribute modifier model that returns 'disabled' if a form component is
-	 * disabled or null otherwise (resulting in no attribute being appended).
-	 */
-	private final class DisabledAttributeModel extends Model<String>
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * @see wicket.model.IModel#getObject()
-		 */
-		@Override
-		public String getObject()
-		{
-			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled()
-					? null
-					: "disabled");
-		}
-	}
-
-	/**
-	 * Attribute modifier that adds 'disabled="disabled"' to the component tag's
-	 * attribute if a form component is disabled.
-	 */
-	private final class DisabledAttributeModifier extends AttributeModifier
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param model
-		 */
-		public DisabledAttributeModifier(DisabledAttributeModel model)
-		{
-			super("disabled", true, model);
-		}
-	}
 
 	/**
 	 * Type that the raw input string will be converted to
@@ -248,7 +212,6 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	public FormComponent(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
-		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		// the form decides whether form components are versioned or not
 		// see Form.setVersioned
 		setVersioned(false);
@@ -260,7 +223,6 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	public FormComponent(MarkupContainer parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
-		add(new DisabledAttributeModifier(new DisabledAttributeModel()));
 		// the form decides whether form components are versioned or not
 		// see Form.setVersioned
 		setVersioned(false);
@@ -876,6 +838,12 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		tag.put("name", getInputName());
+		
+		if (!isEnabled() || !isEnableAllowed())
+		{
+			tag.put("disabled", "disabled");
+		}
+		
 		super.onComponentTag(tag);
 	}
 
