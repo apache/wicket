@@ -42,7 +42,7 @@ public abstract class AjaxSubmitButton extends Button
 	private static final long serialVersionUID = 1L;
 
 	private Form form;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -85,6 +85,16 @@ public abstract class AjaxSubmitButton extends Button
 			{
 				return AjaxSubmitButton.this.getAjaxCallDecorator();
 			}
+			
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				// write the onclick handler only if component is enabled
+				if (isEnableAllowed() && isEnabled())
+				{
+					super.onComponentTag(tag);
+				}				
+			}
 
 		});
 
@@ -117,9 +127,9 @@ public abstract class AjaxSubmitButton extends Button
 							+ "'");
 		}
 
-//		super.onComponentTag(tag);
+		// super.onComponentTag(tag);
 	}
-	
+
 	/**
 	 * 
 	 * @see wicket.markup.html.form.FormComponent#getForm()
@@ -137,7 +147,7 @@ public abstract class AjaxSubmitButton extends Button
 	 * @see wicket.markup.html.form.Button#onSubmit()
 	 */
 	@Override
-	protected final void onSubmit()
+	public final void onSubmit()
 	{
 	}
 

@@ -20,7 +20,6 @@ package wicket.markup.html.form;
 
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.link.ILinkListener;
 import wicket.model.IModel;
 
 /**
@@ -75,7 +74,7 @@ import wicket.model.IModel;
  * @author Igor Vaynberg (ivaynberg)
  * @author Eelco Hillenius
  */
-public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
+public abstract class SubmitLink<T> extends AbstractSubmitLink<T> 
 {
 	private static final long serialVersionUID = 1L;
 
@@ -178,25 +177,7 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
-		// If we're disabled
-		if (!isEnabled())
-		{
-			// if the tag is an anchor proper
-			if (tag.getName().equalsIgnoreCase("a"))
-			{
-				// Change anchor link to span tag
-				tag.setName("span");
-
-				// Remove any href from the old link
-				tag.remove("href");
-			}
-			else
-			{
-				// Remove any onclick design time code
-				tag.remove("onclick");
-			}
-		}
-		else
+		if (isLinkEnabled())
 		{
 			if (tag.getName().equalsIgnoreCase("a"))
 			{
@@ -204,5 +185,52 @@ public abstract class SubmitLink<T> extends Button<T> implements ILinkListener
 			}
 			tag.put("onclick", getTriggerJavaScript());
 		}
+		else
+		{
+			disableLink(tag);
+		}
 	}
+	
+	/**
+	 * Controls whether or not clicking on this link will invoke form's
+	 * javascript onsubmit handler. True by default.
+	 * 
+	 * @return true if form's javascript onsubmit handler should be invoked,
+	 *         false otherwise
+	 */
+	protected boolean shouldInvokeJavascriptFormOnsubmit()
+	{
+		return true;
+	}
+	
+	/**
+	 * The javascript which trigges this link.
+	 * 
+	 * TODO: This is a copy & paste from Button
+	 * 
+	 * @return The javascript
+	 */
+	protected final String getTriggerJavaScript()
+	{
+		if (getForm() != null) {
+			StringBuffer sb = new StringBuffer(100);
+			sb.append("var e=document.getElementById('");
+			sb.append(getForm().getHiddenFieldId(Form.HIDDEN_FIELD_FAKE_SUBMIT));
+			sb.append("'); e.name=\'");
+			sb.append(getInputName());
+			sb.append("'; e.value='x';");			
+			sb.append("var f=document.getElementById('");
+			sb.append(getForm().getMarkupId());
+			sb.append("');");
+			if (shouldInvokeJavascriptFormOnsubmit())
+			{
+				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
+			}
+			sb.append("f.submit();e.value='';e.name='';return false;");
+			return sb.toString();
+		} else {
+			return null;
+		}
+	}
+	
 }

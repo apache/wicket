@@ -24,6 +24,7 @@ import wicket.ajax.ClientEvent;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
+import wicket.markup.html.form.IFormSubmittingComponent;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -74,9 +75,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		AppendingStringBuffer call = new AppendingStringBuffer("wicketSubmitFormById('").append(
 				formId).append("', '").append(url).append("', ");
 
-		if (getComponent() instanceof Button)
+		if (getComponent() instanceof IFormSubmittingComponent)
 		{
-			call.append("'").append(((FormComponent)getComponent()).getInputName()).append("' ");
+			call.append("'").append(((IFormSubmittingComponent)getComponent()).getInputName()).append("' ");
 		}
 		else
 		{

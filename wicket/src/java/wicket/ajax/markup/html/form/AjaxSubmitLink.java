@@ -24,7 +24,7 @@ import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.form.Button;
+import wicket.markup.html.form.AbstractSubmitLink;
 import wicket.markup.html.form.Form;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -37,7 +37,7 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AjaxSubmitLink extends Button
+public abstract class AjaxSubmitLink extends AbstractSubmitLink
 {
 	private static final long serialVersionUID = 1L;
 
@@ -82,6 +82,16 @@ public abstract class AjaxSubmitLink extends Button
 			{
 				return AjaxSubmitLink.this.getAjaxCallDecorator();
 			}
+			
+			@Override
+			protected void onComponentTag(ComponentTag tag)
+			{
+				// write the onclick handler only if link is enabled
+				if (isLinkEnabled())
+				{					
+					super.onComponentTag(tag);
+				}
+			}
 		});
 
 	}
@@ -103,8 +113,18 @@ public abstract class AjaxSubmitLink extends Button
 	protected void onComponentTag(ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		checkComponentTag(tag, "a");
-		tag.put("href", "#");
+		
+		if (isLinkEnabled())
+		{
+			if (tag.getName().equalsIgnoreCase("a"))
+			{
+				tag.put("href", "#");
+			}
+		}
+		else
+		{
+			disableLink(tag);
+		}				
 	}
 
 	/**
@@ -114,7 +134,7 @@ public abstract class AjaxSubmitLink extends Button
 	 * @see wicket.markup.html.form.Button#onSubmit()
 	 */
 	@Override
-	protected final void onSubmit()
+	public final void onSubmit()
 	{
 	}
 	

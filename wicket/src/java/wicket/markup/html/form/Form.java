@@ -153,7 +153,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		{
 			if (component instanceof FormComponent)
 			{
-				FormComponent formComponent = (FormComponent) component;
+				FormComponent formComponent = (FormComponent)component;
 				if (formComponent.isVisibleInHierarchy() && formComponent.isValid()
 						&& formComponent.isEnabled() && formComponent.isEnableAllowed())
 				{
@@ -328,7 +328,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			else
 			{
 				// First, see if the processing was triggered by a Wicket button
-				final Button submittingButton = findSubmittingButton();
+				final IFormSubmittingComponent submittingButton = findSubmittingButton();
 
 				// When processing was triggered by a Wicket button and that
 				// button indicates it wants to be called immediately
@@ -590,18 +590,18 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * method is called next.
 	 * </p>
 	 * 
-	 * @param submittingButton
-	 *            the button that triggered this form processing, or null if the
+	 * @param submittingComponent
+	 *            the component that triggered this form processing, or null if the
 	 *            processing was triggered by something else (like a non-Wicket
 	 *            submit button or a javascript execution)
 	 */
-	protected void delegateSubmit(Button submittingButton)
+	protected void delegateSubmit(IFormSubmittingComponent submittingComponent)
 	{
 		// when the given button is not null, it means that it was the
 		// submitting button
-		if (submittingButton != null)
+		if (submittingComponent != null)
 		{
-			submittingButton.onSubmit();
+			submittingComponent.onSubmit();
 		}
 
 		// Model was successfully updated with valid data
@@ -614,32 +614,34 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * @return The button which submitted this form or null if the processing
 	 *         was not trigger by a registered button component
 	 */
-	public final Button findSubmittingButton()
+	public final IFormSubmittingComponent findSubmittingButton()
 	{
-		Button button = (Button)getPage().visitChildren(Button.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Get button
-				final Button button = (Button)component;
-
-				// Check for button-name or button-name.x request string
-				if (button.getForm() == Form.this
-						&& (getRequest().getParameter(button.getInputName()) != null
-						|| getRequest().getParameter(button.getInputName() + ".x") != null))
+		IFormSubmittingComponent submit = (IFormSubmittingComponent)getPage().visitChildren(
+				IFormSubmittingComponent.class, new IVisitor()
 				{
-					if (!button.isVisible())
+					public Object component(final Component component)
 					{
-						throw new WicketRuntimeException("Submit Button " + button.getInputName()
-								+ " (path=" + button.getPageRelativePath() + ") is not visible");
+						// Get button
+						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
+
+						// Check for button-name or button-name.x request string
+						if (submit.getForm() == Form.this
+								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
+										.getParameter(submit.getInputName() + ".x") != null))
+						{
+							if (!component.isVisible())
+							{
+								throw new WicketRuntimeException("Submit Button "
+										+ submit.getInputName() + " (path="
+										+ component.getPageRelativePath() + ") is not visible");
+							}
+							return submit;
+						}
+						return CONTINUE_TRAVERSAL;
 					}
-					return button;
-				}
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-		
-		return button;
+				});
+
+		return submit;
 	}
 
 	/**

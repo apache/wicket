@@ -103,7 +103,7 @@ public class ChoicePage<T> extends WebPage<T>
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit()
+			public void onSubmit()
 			{
 				anotherButtonPressed = true;
 			}

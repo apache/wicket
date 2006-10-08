@@ -59,7 +59,7 @@ import wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public abstract class Button<T> extends FormComponent<T>
+public abstract class Button<T> extends FormComponent<T> implements IFormSubmittingComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -147,12 +147,7 @@ public abstract class Button<T> extends FormComponent<T>
 	}
 
 	/**
-	 * Gets the defaultFormProcessing property. When false (default is true),
-	 * all validation and formupdating is bypassed and the onSubmit method of
-	 * that button is called directly, and the onSubmit method of the parent
-	 * form is not called. A common use for this is to create a cancel button.
-	 * 
-	 * @return defaultFormProcessing
+	 * @see wicket.markup.html.form.IFormSubmittingComponent#getDefaultFormProcessing()
 	 */
 	public final boolean getDefaultFormProcessing()
 	{
@@ -285,7 +280,9 @@ public abstract class Button<T> extends FormComponent<T>
 	}
 	
 	
-	
+	/**
+	 * @see wicket.markup.html.form.FormComponent#getForm()
+	 */
 	@Override
 	public Form getForm()
 	{
@@ -303,7 +300,7 @@ public abstract class Button<T> extends FormComponent<T>
 	 * Override this method to provide special submit handling in a multi-button
 	 * form. It is called whenever the user clicks this particular button.
 	 */
-	protected abstract void onSubmit(); 
+	public abstract void onSubmit(); 
 
 	/**
 	 * The javascript which trigges this link
@@ -318,7 +315,7 @@ public abstract class Button<T> extends FormComponent<T>
 			sb.append(getForm().getHiddenFieldId(Form.HIDDEN_FIELD_FAKE_SUBMIT));
 			sb.append("'); e.name=\'");
 			sb.append(getInputName());
-			sb.append("'; e.value='x';");
+			sb.append("'; e.value='x';");			
 			sb.append("var f=document.getElementById('");
 			sb.append(getForm().getMarkupId());
 			sb.append("');");

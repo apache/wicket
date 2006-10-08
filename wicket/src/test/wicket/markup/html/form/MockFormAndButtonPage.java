@@ -41,7 +41,7 @@ public class MockFormAndButtonPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit()
+			public void onSubmit()
 			{
 			}
 		};
@@ -51,7 +51,7 @@ public class MockFormAndButtonPage extends WebPage
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSubmit()
+			public void onSubmit()
 			{
 			}
 		};
