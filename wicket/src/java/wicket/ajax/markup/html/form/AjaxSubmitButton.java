@@ -116,8 +116,6 @@ public abstract class AjaxSubmitButton extends Button
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
-		checkComponentTag(tag, "input");
-
 		final String type = tag.getAttributes().getString("type");
 		if (!"button".equals(type) && !"image".equals(type) && !"submit".equals(type))
 		{
