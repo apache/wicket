@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
-import wicket.threadtest.App1Test1;
 import wicket.threadtest.tester.CommandRunner.CommandRunnerObserver;
 
 /**
@@ -22,7 +21,7 @@ import wicket.threadtest.tester.CommandRunner.CommandRunnerObserver;
  */
 public final class Tester implements CommandRunnerObserver {
 
-	private static final Log log = LogFactory.getLog(App1Test1.class);
+	private static final Log log = LogFactory.getLog(Tester.class);
 
 	private static HttpClientParams params;
 
