@@ -118,13 +118,10 @@
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src/java</sourceDirectory>
-		<testSourceDirectory>src/test</testSourceDirectory>
-
 		<resources>
 			<resource>
 				<filtering>false</filtering>
-				<directory>src/java</directory>
+				<directory>src/main/java</directory>
 				<includes>
 					<include>**</include>
 				</includes>
@@ -134,7 +131,7 @@
 		<testResources>
 			<testResource>
 				<filtering>false</filtering>
-				<directory>src/test</directory>
+				<directory>src/test/java</directory>
 				<includes>
 					<include>**</include>
 				</includes>
