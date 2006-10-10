@@ -1,6 +1,7 @@
 /*
- * $Id: DatabaseLocator.java 5394 2006-04-16 06:36:52 -0700 (Sun, 16 Apr 2006) jdonnerstag $ $Revision:
- * 3056 $ $Date: 2006-04-16 06:36:52 -0700 (Sun, 16 Apr 2006) $
+ * $Id: HelloWorld.java 5394 2006-04-16 15:36:52 +0200 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision: 5394 $ $Date: 2006-04-16 15:36:52 +0200 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -15,19 +16,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.threadtest.apps.app1;
+package wicket.threadtest.apps.app2;
 
-/**
- * service locator class for contacts database
- * 
- * @author igor
- * 
- */
-public class DatabaseLocator {
-	/**
-	 * @return contacts database
-	 */
-	public static ContactsDatabase getDatabase() {
-		return TestApp1.get().getContactsDB();
+import wicket.markup.html.WebPage;
+
+public class Home extends WebPage {
+
+	public Home() {
+
 	}
 }
