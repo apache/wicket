@@ -11,16 +11,20 @@ import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
+import wicket.threadtest.App1Test;
+
 /**
  * @author eelcohillenius
  */
-public final class ThreadedTester {
+public final class Tester {
 
 	private static final Log log = LogFactory.getLog(App1Test.class);
 
 	private final List<Command> commands;
 
 	private final int numberOfThreads;
+
+	private final int port;
 
 	/**
 	 * Construct.
@@ -31,8 +35,8 @@ public final class ThreadedTester {
 	 *            Number of threads to run the commands. Each thread runs all
 	 *            commands
 	 */
-	public ThreadedTester(Command command, int numberOfThreads) {
-		this(Arrays.asList(new Command[] { command }), numberOfThreads);
+	public Tester(Command command, int port, int numberOfThreads) {
+		this(Arrays.asList(new Command[] { command }), port, numberOfThreads);
 	}
 
 	/**
@@ -44,8 +48,9 @@ public final class ThreadedTester {
 	 *            Number of threads to run the commands. Each thread runs all
 	 *            commands
 	 */
-	public ThreadedTester(List<Command> commands, int numberOfThreads) {
+	public Tester(List<Command> commands, int port, int numberOfThreads) {
 		this.commands = commands;
+		this.port = port;
 		this.numberOfThreads = numberOfThreads;
 	}
 
@@ -56,7 +61,7 @@ public final class ThreadedTester {
 	 */
 	public void run() throws Exception {
 
-		Server server = new Server(8090);
+		Server server = new Server(port);
 		WebAppContext ctx = new WebAppContext("./src/webapp", "/");
 		server.addHandler(ctx);
 		server.start();
