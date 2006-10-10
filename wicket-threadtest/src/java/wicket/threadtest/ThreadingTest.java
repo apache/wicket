@@ -3,6 +3,8 @@ package wicket.threadtest;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
@@ -10,6 +12,8 @@ import org.mortbay.jetty.webapp.WebAppContext;
  * @author eelcohillenius
  */
 public class ThreadingTest {
+
+	private static final Log log = LogFactory.getLog(ThreadingTest.class);
 
 	private static class PageRunner implements Runnable {
 
@@ -25,17 +29,18 @@ public class ThreadingTest {
 		 * @see java.lang.Runnable#run()
 		 */
 		public void run() {
+
 			try {
-				for (int i = 0; i < 2; i++) {
+
+				for (int i = 0; i < 10; i++) {
+
 					doGet("http://localhost:8090/app?wicket:bookmarkablePage=one:wicket.threadtest.Home");
 					doGet("http://localhost:8090/app?wicket:bookmarkablePage=two:wicket.threadtest.Home");
 					doGet("http://localhost:8090/app?wicket:interface=two:" + i + ":link::ILinkListener");
 					doGet("http://localhost:8090/app?wicket:interface=one:" + i + ":link::ILinkListener");
-					doGet("http://localhost:8090/app?wicket:bookmarkablePage=three:wicket.threadtest.Home");
-					doGet("http://localhost:8090/app?wicket:bookmarkablePage=four:wicket.threadtest.Home");
-					doGet("http://localhost:8090/app?wicket:interface=three:" + i + ":link::ILinkListener");
-					doGet("http://localhost:8090/app?wicket:interface=four:" + i + ":link::ILinkListener");
+					doGet("http://localhost:8090/app?wicket:interface=two:" + i + ":link::ILinkListener");
 				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
@@ -48,7 +53,7 @@ public class ThreadingTest {
 			try {
 				int code = client.executeMethod(method);
 				if (code != 200) {
-					System.err.println("ERROR! code: " + code);
+					log.error("ERROR! code: " + code);
 					byte[] body = method.getResponseBody();
 					throw new Exception(new String(body));
 				}
@@ -71,7 +76,7 @@ public class ThreadingTest {
 
 		long start = System.currentTimeMillis();
 		ThreadGroup g = new ThreadGroup("runners");
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 20; i++) {
 			Thread t = new Thread(g, new PageRunner());
 			t.start();
 		}
@@ -81,7 +86,7 @@ public class ThreadingTest {
 		}
 
 		long end = System.currentTimeMillis();
-		System.out.print("\n\nfinished in " + (end - start) + " miliseconds\n");
+		log.info("\n******** finished in " + (end - start) + " miliseconds\n");
 
 		server.stop();
 	}
