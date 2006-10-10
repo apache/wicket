@@ -16,7 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.threadtest.apps;
+package wicket.threadtest.apps.app1;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
