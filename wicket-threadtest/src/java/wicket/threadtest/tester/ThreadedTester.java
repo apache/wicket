@@ -16,7 +16,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
  */
 public final class ThreadedTester {
 
-	private static final Log log = LogFactory.getLog(ThreadingTest.class);
+	private static final Log log = LogFactory.getLog(App1Test.class);
 
 	private final List<Command> commands;
 
@@ -57,7 +57,7 @@ public final class ThreadedTester {
 	public void run() throws Exception {
 
 		Server server = new Server(8090);
-		WebAppContext ctx = new WebAppContext("./src/webapp", "/app");
+		WebAppContext ctx = new WebAppContext("./src/webapp", "/");
 		server.addHandler(ctx);
 		server.start();
 

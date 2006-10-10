@@ -28,14 +28,14 @@
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.threadtest.apps.ThreadTestApplication</param-value>
+		  <param-value>wicket.threadtest.apps.app1.ThreadTestApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>ThreadTestApplication</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/app1/*</url-pattern>
 	</servlet-mapping>
 
 	<session-config>
