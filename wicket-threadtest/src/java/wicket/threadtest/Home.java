@@ -27,7 +27,6 @@ import java.util.Locale;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.Session;
 import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
@@ -270,7 +269,7 @@ public class Home extends WebPage {
 
 			@Override
 			public void onClick() {
-				System.out.println("click received for session " + Session.get());
+				//System.out.println("click received for session " + Session.get());
 			}
 		});
 
