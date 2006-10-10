@@ -45,7 +45,6 @@ import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
-import wicket.request.target.component.PageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
