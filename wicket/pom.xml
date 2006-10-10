@@ -30,8 +30,8 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket</developerConnection>
+		<connection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/trunk/wicket</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/trunk/wicket</developerConnection>
 		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket</url>
 	</scm>
 
@@ -401,13 +401,10 @@
 			</extension>
 		</extensions>
 
-		<sourceDirectory>src/java</sourceDirectory>
-		<testSourceDirectory>src/test</testSourceDirectory>
-
 		<resources>
 			<resource>
 				<filtering>false</filtering>
-				<directory>src/java</directory>
+				<directory>src/main/java</directory>
 				<includes>
 					<include>**</include>
 				</includes>
@@ -418,7 +415,7 @@
 			</resource>
 			<resource>
 				<filtering>true</filtering>
-				<directory>src/java</directory>
+				<directory>src/main/java</directory>
 				<includes>
 					<include>wicket.properties</include>
 				</includes>
@@ -428,7 +425,7 @@
 		<testResources>
 			<testResource>
 				<filtering>false</filtering>
-				<directory>src/test</directory>
+				<directory>src/test/java</directory>
 				<includes>
 					<include>**</include>
 				</includes>
