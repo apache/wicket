@@ -1,10 +1,13 @@
-package wicket.threadtest.tester;
+package wicket.threadtest;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import wicket.threadtest.tester.SimpleGetCommand;
+import wicket.threadtest.tester.Tester;
 
 /**
  * @author eelcohillenius
@@ -26,7 +29,7 @@ public class App1Test {
 				"http://localhost:8090/app1?wicket:interface=one:${iteration}:link::ILinkListener",
 				"http://localhost:8090/app1?wicket:interface=two:${iteration}:link::ILinkListener" });
 
-		ThreadedTester tester = new ThreadedTester(new SimpleGetCommand(gets, 10), 10);
+		Tester tester = new Tester(new SimpleGetCommand(gets, 10), 8090, 10);
 		tester.run();
 	}
 }
