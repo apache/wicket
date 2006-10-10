@@ -24,18 +24,33 @@
 	</context-param-->
 
 	<servlet>
-		<servlet-name>ThreadTestApplication</servlet-name>
+		<servlet-name>TestApp1</servlet-name>
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.threadtest.apps.app1.ThreadTestApplication</param-value>
+		  <param-value>wicket.threadtest.apps.app1.TestApp1</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>TestApp2</servlet-name>
+		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.threadtest.apps.app2.TestApp2</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>ThreadTestApplication</servlet-name>
+		<servlet-name>TestApp1</servlet-name>
 		<url-pattern>/app1/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>TestApp2</servlet-name>
+		<url-pattern>/app2/*</url-pattern>
 	</servlet-mapping>
 
 	<session-config>

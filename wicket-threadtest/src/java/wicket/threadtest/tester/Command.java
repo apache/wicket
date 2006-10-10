@@ -13,12 +13,10 @@ public interface Command {
 	/**
 	 * Execute one iteration.
 	 * 
+	 * @param runner
+	 *            command runner that executes this command
+	 * 
 	 * @throws Exception
 	 */
-	void execute() throws Exception;
-
-	/**
-	 * Clean up; called by the runner.
-	 */
-	void release();
+	void execute(CommandRunner runner) throws Exception;
 }
