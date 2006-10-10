@@ -15,30 +15,19 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.threadtest.apps.app1;
+package wicket.threadtest.apps.app2;
 
 import wicket.Application;
 import wicket.markup.html.image.resource.DefaultButtonImageResource;
 import wicket.protocol.http.WebApplication;
 
-public class ThreadTestApplication extends WebApplication {
+public class TestApp2 extends WebApplication {
 
-	public static ThreadTestApplication get() {
-		return (ThreadTestApplication) Application.get();
+	public static TestApp2 get() {
+		return (TestApp2) Application.get();
 	}
 
-	private ContactsDatabase contactsDB = new ContactsDatabase(50);
-
-	public ThreadTestApplication() {
-	}
-
-	/**
-	 * Gets contactsDB.
-	 * 
-	 * @return contactsDB
-	 */
-	public ContactsDatabase getContactsDB() {
-		return contactsDB;
+	public TestApp2() {
 	}
 
 	@Override

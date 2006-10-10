@@ -2,6 +2,7 @@ package wicket.threadtest.tester;
 
 import java.util.List;
 
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -12,17 +13,40 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CommandRunner implements Runnable {
 
+	public static interface CommandRunnerObserver {
+
+		void onDone(CommandRunner runner);
+
+		void onError(CommandRunner runner, Exception e);
+	}
+
 	private static final Log log = LogFactory.getLog(CommandRunner.class);
 
+	private HttpClient client;
+
 	private final List<Command> commands;
+
+	private final CommandRunnerObserver observer;
 
 	/**
 	 * Construct.
 	 * 
 	 * @param commands
+	 * @param client
 	 */
-	public CommandRunner(List<Command> commands) {
+	public CommandRunner(List<Command> commands, HttpClient client, CommandRunnerObserver observer) {
 		this.commands = commands;
+		this.client = client;
+		this.observer = observer;
+	}
+
+	/**
+	 * Gets the HTTP client.
+	 * 
+	 * @return the HTTP client
+	 */
+	public HttpClient getClient() {
+		return this.client;
 	}
 
 	/**
@@ -32,13 +56,13 @@ public class CommandRunner implements Runnable {
 
 		for (Command command : commands) {
 			try {
-				command.execute();
+				command.execute(this);
 			} catch (Exception e) {
 				log.fatal("execution of command " + command + ", thread " + Thread.currentThread() + " failed", e);
+				observer.onError(this, e);
 				return;
-			} finally {
-				command.release();
 			}
 		}
+		observer.onDone(this);
 	}
 }
