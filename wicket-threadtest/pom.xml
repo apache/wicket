@@ -58,8 +58,6 @@
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src/java</sourceDirectory>
-
 		<resources>
 			<resource>
 				<filtering>false</filtering>
