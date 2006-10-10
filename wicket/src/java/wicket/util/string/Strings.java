@@ -459,7 +459,7 @@ public final class Strings
 	 */
 	public static boolean isEmpty(final CharSequence string)
 	{
-		return string == null || string.length() == 0 || string.toString().trim().equals("");
+		return string == null || string.length() == 0 || string.toString().trim().length() == 0;
 	}
 
 	/**
