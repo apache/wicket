@@ -158,7 +158,17 @@ public abstract class Request
 
 		// decode the request parameters into a strongly typed parameters
 		// object that is to be used by the target resolving
-		requestParameters = encoder.decode(this);
+		try
+		{
+			requestParameters = encoder.decode(this);
+		} 
+		catch(RuntimeException re)
+		{
+			// do set the parameters as it was parsed.
+			// else the error page will also error again (infinite loop)
+			requestParameters = new RequestParameters();
+			throw re;
+		}
 		if (requestParameters == null)
 		{
 			throw new WicketRuntimeException("request parameters must be not-null (provided by "
