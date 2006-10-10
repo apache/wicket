@@ -18,10 +18,10 @@
       The value might be either "development" (reloading when templates change)
       or "deployment". If no configuration is found, "deployment" is the default.
 -->
-	<!-- context-param>
+	<context-param>
 	  <param-name>configuration</param-name>
-	  <param-value>development</param-value>
-	</context-param-->
+	  <param-value>deployment</param-value>
+	</context-param>
 
 	<servlet>
 		<servlet-name>TestApp1</servlet-name>
