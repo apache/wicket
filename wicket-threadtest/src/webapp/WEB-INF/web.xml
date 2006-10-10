@@ -28,7 +28,7 @@
 		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
 		<init-param>
 		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.threadtest.ThreadTestApplication</param-value>
+		  <param-value>wicket.threadtest.apps.ThreadTestApplication</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
