@@ -33,8 +33,7 @@
 package wicket.examples.debug;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 
 import wicket.Application;
@@ -50,7 +49,7 @@ import wicket.model.Model;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.RequestLogger.RequestData;
+import wicket.protocol.http.RequestLogger.SessionData;
 import wicket.util.lang.Bytes;
 
 /**
@@ -139,26 +138,14 @@ public class LiveSessionsPage extends WebPage
 			}
 		});
 
-		IModel<List<RequestData>> sessionModel = new Model<List<RequestData>>()
+		IModel<List<SessionData>> sessionModel = new Model<List<SessionData>>()
 		{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public List<RequestData> getObject()
+			public List<SessionData> getObject()
 			{
-				List<RequestData> returnLst =  new ArrayList<RequestData>();
-				HashSet<String> ids = new HashSet<String>();
-				List<RequestData> data = getRequestLogger().getRequests();
-				for (RequestData rd : data)
-				{
-					String sessionId = rd.getSessionId();
-					if(sessionId != null && !ids.contains(sessionId))
-					{
-						ids.add(sessionId);
-						returnLst.add(rd);
-					}
-				}
-				return returnLst;
+				return Arrays.asList(getRequestLogger().getLiveSessions());
 			}
 		};
 		new Link(this, "requests")
@@ -174,16 +161,16 @@ public class LiveSessionsPage extends WebPage
 				setResponsePage(new RequestsPage(null));
 			}
 		};
-		PageableListView<RequestData> listView = new PageableListView<RequestData>(this, "sessions", sessionModel, 50)
+		PageableListView<SessionData> listView = new PageableListView<SessionData>(this, "sessions", sessionModel, 50)
 		{
 			private static final long serialVersionUID = 1L;
 
 			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
 			
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(ListItem<SessionData> item)
 			{
-				final RequestData sd = (RequestData)item.getModelObject();
+				final SessionData sd = item.getModelObject();
 				Link link = new Link(item, "id")
 				{
 					private static final long serialVersionUID = 1L;
@@ -198,7 +185,11 @@ public class LiveSessionsPage extends WebPage
 					}
 				};
 				new Label(link, "id", new Model<String>(sd.getSessionId()));
-				new Label(item, "lastRequestTime",new Model<String>(sdf.format(sd.getStartDate())));
+				new Label(item, "sessionInfo",new Model<Object>(sd.getSessionInfo()));
+				new Label(item, "startDate",new Model<String>(sdf.format(sd.getStartDate())));
+				new Label(item, "lastRequestTime",new Model<String>(sdf.format(sd.getLastActive())));
+				new Label(item, "numberOfRequests",new Model<Long>(sd.getNumberOfRequests()));
+				new Label(item, "totalTimeTaken",new Model<Long>(sd.getTotalTimeTaken()));
 				new Label(item, "sessionSize", new Model<Bytes>(Bytes.bytes(sd.getSessionSize())));
 			}
 		};

@@ -32,12 +32,9 @@
  */
 package wicket.examples.debug;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import wicket.Application;
 import wicket.markup.html.WebMarkupContainer;
@@ -53,8 +50,7 @@ import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.RequestLogger.RequestData;
-import wicket.util.convert.IConverter;
-import wicket.util.convert.converters.DateConverter;
+import wicket.protocol.http.RequestLogger.SessionData;
 import wicket.util.lang.Bytes;
 
 /**
@@ -63,26 +59,37 @@ import wicket.util.lang.Bytes;
 public class RequestsPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
+	private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
 
 	/**
 	 * Construct.
 	 * 
-	 * @param requestData
+	 * @param sessionData
 	 */
-	public RequestsPage(final RequestData requestData)
+	public RequestsPage(final SessionData sessionData)
 	{
 		new Image(this, "bug");
 
-		if(requestData == null)
+		if(sessionData == null)
 		{
 			new Label(this,"id").setVisible(false);
+			new Label(this,"sessionInfo").setVisible(false);		
+			new Label(this,"startDate").setVisible(false);
+			new Label(this,"lastRequestTime").setVisible(false);		
+			new Label(this,"numberOfRequests").setVisible(false);
+			new Label(this,"totalTimeTaken").setVisible(false);
 			new Label(this,"size").setVisible(false);		
 			new WebMarkupContainer(this,"sessionid");
 		}
 		else
 		{
-			new Label(this,"id", requestData.getSessionId());
-			new Label(this,"size",  new Model<Bytes>(Bytes.bytes(requestData.getSessionSize())));		
+			new Label(this,"id", new Model<String>(sessionData.getSessionId()));
+			new Label(this,"sessionInfo",new Model<Object>(sessionData.getSessionInfo()));
+			new Label(this,"startDate",new Model<String>(sdf.format(sessionData.getStartDate())));
+			new Label(this,"lastRequestTime",new Model<String>(sdf.format(sessionData.getLastActive())));
+			new Label(this,"numberOfRequests",new Model<Long>(sessionData.getNumberOfRequests()));
+			new Label(this,"totalTimeTaken",new Model<Long>(sessionData.getTotalTimeTaken()));
+			new Label(this,"size",  new Model<Bytes>(Bytes.bytes(sessionData.getSessionSize())));		
 			new WebMarkupContainer(this,"sessionid").setVisible(false);
 		}
 		IModel<List<RequestData>> requestsModel = new Model<List<RequestData>>()
@@ -93,12 +100,12 @@ public class RequestsPage extends WebPage
 			public List<RequestData> getObject()
 			{
 				List<RequestData> requests = getRequestLogger().getRequests();
-				if(requestData != null)
+				if(sessionData != null)
 				{
 					List<RequestData>  returnValues = new ArrayList<RequestData> (); 
 					for (RequestData data : requests)
 					{
-						if(requestData.getSessionId().equals(data.getSessionId()))
+						if(sessionData.getSessionId().equals(data.getSessionId()))
 						{
 							returnValues.add(data);
 						}
@@ -112,39 +119,12 @@ public class RequestsPage extends WebPage
 		{
 			private static final long serialVersionUID = 1L;
 
-			private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM hh:mm:ss.SSS");
-
 			@Override
 			protected void populateItem(ListItem item)
 			{
 				RequestData rd = (RequestData)item.getModelObject();
-				new Label(item, "id", new Model<String>(rd.getSessionId())).setVisible(requestData == null);
-				new Label(item, "startDate", new Model<Date>(rd.getStartDate()))
-				{
-					private static final long serialVersionUID = 1L;
-
-					/**
-					 * @see wicket.Component#getConverter(Class)
-					 */
-					@Override
-					public IConverter getConverter(Class type)
-					{
-
-						return new DateConverter()
-						{
-							private static final long serialVersionUID = 1L;
-
-							/**
-							 * @see wicket.util.convert.converters.DateConverter#getDateFormat(java.util.Locale)
-							 */
-							@Override
-							public DateFormat getDateFormat(Locale locale)
-							{
-								return sdf;
-							}
-						};
-					}
-				};
+				new Label(item, "id", new Model<String>(rd.getSessionId())).setVisible(sessionData == null);
+				new Label(item, "startDate", new Model<String>(sdf.format(rd.getStartDate())));
 				new Label(item, "timeTaken", new Model<Long>(rd.getTimeTaken()));
 				new Label(item, "eventTarget", new Model<String>(rd.getEventTargert()));
 				new Label(item, "responseTarget", new Model<String>(rd.getResponseTarget()));
