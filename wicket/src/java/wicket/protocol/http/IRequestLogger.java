@@ -23,6 +23,7 @@ import java.util.List;
 import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.protocol.http.RequestLogger.RequestData;
+import wicket.protocol.http.RequestLogger.SessionData;
 import wicket.session.ISessionStore;
 
 
@@ -46,9 +47,18 @@ public interface IRequestLogger
 	public abstract int getPeakSessions();
 
 	/**
-	 * @return Collection of live Sessions
+	 * This method returns a List of the current requests that are in mem.
+	 * This is a readonly list.
+	 * 
+	 * @return Collection of the current requests
 	 */
 	public abstract List<RequestData> getRequests();
+	
+	
+	/**
+	 * @return Collection of live Sessions Data
+	 */
+	public SessionData[] getLiveSessions();
 
 	/**
 	 * called when the session is created and has an id. 
