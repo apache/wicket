@@ -19,6 +19,7 @@
 package wicket.examples.ajax.builtin;
 
 import wicket.examples.WicketExamplePage;
+import wicket.markup.html.link.BookmarkablePageLink;
 
 /**
  * Base page for ajax example
@@ -26,4 +27,11 @@ import wicket.examples.WicketExamplePage;
  */
 public class BasePage<T> extends WicketExamplePage<T>
 {
+	/**
+	 * Constructor
+	 */
+	public BasePage()
+	{
+		new BookmarkablePageLink(this, "back", Index.class).setAutoEnable(true);
+	}
 }
