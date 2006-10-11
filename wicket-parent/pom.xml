@@ -30,9 +30,9 @@
 	</issueManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/wicket-1.x/${project.artifactId}</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/wicket-1.x/${project.artifactId}</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/wicket-1.x/${project.artifactId}</url>
+		<connection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.x/${project.artifactId}</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.x/${project.artifactId}</developerConnection>
+		<url>http://svn.apache.org/viewvc/incubator/wicket/branches/wicket-1.x/${project.artifactId}</url>
 	</scm>
 
 	<mailingLists>
