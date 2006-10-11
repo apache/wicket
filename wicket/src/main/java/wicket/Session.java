@@ -410,7 +410,7 @@ public abstract class Session implements Serializable
 				{
 					try
 					{
-						wait(20000); // wait 20 seconds max.
+						pageMapsUsedInRequest.wait(20000); // wait 20 seconds max.
 					}
 					catch (InterruptedException ex)
 					{
