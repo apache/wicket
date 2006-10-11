@@ -17,7 +17,7 @@ Contents
 License
 -------
 
-Wicket is distrubited under the terms of the Apache Software Foundation license,
+Wicket is distributed under the terms of the Apache Software Foundation license,
 version 2.0. The text is included in the file LICENSE.txt in the root of the 
 project.
 
