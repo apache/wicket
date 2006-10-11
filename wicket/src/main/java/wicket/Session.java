@@ -389,7 +389,7 @@ public abstract class Session implements Serializable
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final synchronized Page getPage(final String pageMapName, final String path,
+	public final Page getPage(final String pageMapName, final String path,
 			final int versionNumber)
 	{
 		if (log.isDebugEnabled())
@@ -401,37 +401,40 @@ public abstract class Session implements Serializable
 		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (pageMap != null)
 		{
-			long startTime = System.currentTimeMillis();
-			// Get page entry for id and version
-			Thread t = (Thread)pageMapsUsedInRequest.get(pageMap);
-			while (t != null && t != Thread.currentThread())
+			synchronized (pageMapsUsedInRequest)
 			{
-				try
+				long startTime = System.currentTimeMillis();
+				// Get page entry for id and version
+				Thread t = (Thread)pageMapsUsedInRequest.get(pageMap);
+				while (t != null && t != Thread.currentThread())
 				{
-					wait(20000); // wait 20 seconds max.
+					try
+					{
+						wait(20000); // wait 20 seconds max.
+					}
+					catch (InterruptedException ex)
+					{
+						throw new WicketRuntimeException(ex);
+					}
+					t = (Thread)pageMapsUsedInRequest.get(pageMap);
+					if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
+					{
+						// if it is still not the right thread.. 
+						// This must be a wicket bug or some other (dead)lock in the code.
+						throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
+								" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
+					}
 				}
-				catch (InterruptedException ex)
+				pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
+				final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+				Page page = pageMap.get(Integer.parseInt(id), versionNumber);
+				if (page == null)
 				{
-					throw new WicketRuntimeException(ex);
+					pageMapsUsedInRequest.remove(pageMap);
+					pageMapsUsedInRequest.notifyAll();
 				}
-				t = (Thread)pageMapsUsedInRequest.get(pageMap);
-				if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
-				{
-					// if it is still not the right thread.. 
-					// This must be a wicket bug or some other (dead)lock in the code.
-					throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
-							" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
-				}
+				return page;
 			}
-			pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
-			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
-			if (page == null)
-			{
-				pageMapsUsedInRequest.remove(pageMap);
-				notifyAll();
-			}
-			return page;
 		}
 		return null;
 	}
@@ -1039,20 +1042,24 @@ public abstract class Session implements Serializable
 	 * INTERNAL API. The request cycle when detached will call this.
 	 * 
 	 */
-	final synchronized void requestDetached()
+	final void requestDetached()
 	{
-		Thread t = Thread.currentThread();
-		Iterator it = pageMapsUsedInRequest.entrySet().iterator();
-		while(it.hasNext())
+		synchronized(pageMapsUsedInRequest)
 		{
-			Entry entry = (Entry)it.next();
-			if(entry.getValue() == t)
+			Thread t = Thread.currentThread();
+			Iterator it = pageMapsUsedInRequest.entrySet().iterator();
+			while(it.hasNext())
 			{
-				it.remove();
+				Entry entry = (Entry)it.next();
+				if(entry.getValue() == t)
+				{
+					it.remove();
+				}
 			}
+			pageMapsUsedInRequest.notifyAll();
 		}
-		notifyAll();
 	}
+		
 
 	/**
 	 * @param map
