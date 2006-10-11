@@ -213,24 +213,35 @@ public abstract class SubmitLink<T> extends AbstractSubmitLink<T>
 	protected final String getTriggerJavaScript()
 	{
 		if (getForm() != null) {
+			// find the root form - the one we are really going to submit
+			Form root = getForm().getRootForm();
 			StringBuffer sb = new StringBuffer(100);
 			sb.append("var e=document.getElementById('");
-			sb.append(getForm().getHiddenFieldId(Form.HIDDEN_FIELD_FAKE_SUBMIT));
+			sb.append(root.getHiddenFieldId(Form.HIDDEN_FIELD_FAKE_SUBMIT));
 			sb.append("'); e.name=\'");
 			sb.append(getInputName());
 			sb.append("'; e.value='x';");			
 			sb.append("var f=document.getElementById('");
-			sb.append(getForm().getMarkupId());
+			sb.append(root.getMarkupId());
 			sb.append("');");
 			if (shouldInvokeJavascriptFormOnsubmit())
 			{
-				sb.append("if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }");
+				if (getForm() != root)
+				{
+					sb.append("var ff=document.getElementById('");
+					sb.append(getForm().getMarkupId());
+					sb.append("');");
+				}
+				else
+				{
+					sb.append("var ff=f;");
+				}
+				sb.append("if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }");
 			}
 			sb.append("f.submit();e.value='';e.name='';return false;");
 			return sb.toString();
 		} else {
 			return null;
 		}
-	}
-	
+	}	
 }

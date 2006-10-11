@@ -79,7 +79,7 @@ public class ButtonTest extends WicketTestCase
 
 		application.assertContains("<input name=\"button\" type=\"submit\" wicket:id=\"button\"/>");
 		String doc = application.getServletResponse().getDocument();
-		boolean contains = doc.contains("<input onclick=\"var e=document.getElementById('form:hf:fs'); e.name='button2'; e.value='x';var f=document.getElementById('form');if (f.onsubmit != undefined) { if (f.onsubmit()==false) return false; }f.submit();e.value='';e.name='';return false;\" type=\"submit\" name=\"button2\" wicket:id=\"button2\"/>");
+		boolean contains = doc.contains("<input onclick=\"var e=document.getElementById('form:hf:fs'); e.name='button2'; e.value='x';var f=document.getElementById('form');var ff=f;if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }f.submit();e.value='';e.name='';return false;\" type=\"submit\" name=\"button2\" wicket:id=\"button2\"/>");		
 		assertTrue(contains);
 	}
 }

@@ -163,7 +163,7 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 	 */
 	public String getInputName()
 	{
-		// TODO: This is a copy & paste from the Button class. 
+		// TODO: This is a copy & paste from the FormComponent class. 
 		String id = getId();
 		final PrependingStringBuffer inputName = new PrependingStringBuffer(id.length());
 		Component c = this;
@@ -171,7 +171,7 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 		{
 			inputName.prepend(id);
 			c = c.getParent();
-			if (c == null || c instanceof Form || c instanceof Page)
+			if (c == null || (c instanceof Form && ((Form)c).isRootForm()) || c instanceof Page)
 			{
 				break;
 			}

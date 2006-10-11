@@ -21,9 +21,7 @@ package wicket.ajax.form;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
-import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IFormSubmittingComponent;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -68,6 +66,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected CharSequence getEventHandler()
 	{
+		// get the form we are really going to submit 
+		final Form form = this.form.getRootForm();
+		
 		final String formId = form.getMarkupId();
 		final CharSequence url = getCallbackUrl();
 
@@ -90,6 +91,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected void onEvent(AjaxRequestTarget target)
 	{
+		// get the form we are really going to submit 
+		final Form form = this.form.getRootForm();
+		
 		form.onFormSubmitted();
 		if (!form.hasError())
 		{

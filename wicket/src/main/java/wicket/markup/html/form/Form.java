@@ -116,6 +116,18 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * To get form components to persist their values for users via cookies, simply
  * call setPersistent(true) on the form component.
  * </p>
+ * <p>
+ * Forms can be nested. You can put a form in another form. Since HTML doesn't 
+ * allow nested &lt;form&gt; tags, the inner forms will be rendered using
+ * the &lt;div&gt; tag. You have to submit the inner forms using explicit 
+ * components (like Button or SubmitLink), you can't rely on implicit submit
+ * behavior (by using just &lt;input type="submit"&gt; that is not attached
+ * to a component). 
+ * </p>
+ * <p>
+ * When a nested form is submitted, the user entered values in outer (parent)
+ * forms are preserved and only the fields in the submitted form are validated.
+ * </b> 
  * 
  * @param <T>
  *            Type of model object this component holds
@@ -255,13 +267,25 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * 'default' button in a form is ill defined in the standards, and of course
 	 * IE has it's own way of doing things.
 	 * </p>
+	 * <p>
+	 * 	There can be only one default button per form hierarchy. So if you want
+	 *  to get the default button on a nested form, it will actually delegate the 
+	 *  call to root form.
+	 * </b>
 	 * 
 	 * @return The button to set as the default button, or null when you want to
 	 *         'unset' any previously set default button
 	 */
 	public final Button getDefaultButton()
 	{
-		return defaultButton;
+		if (isRootForm())
+		{
+			return defaultButton;
+		}			
+		else
+		{
+			return getRootForm().getDefaultButton(); 
+		}	
 	}
 
 	/**
@@ -339,8 +363,16 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				}
 				else
 				{
+					// this is the root form
+					Form formToProcess = this;
+					
+					// find out whether it was a nested form that was submitted
+					if (submittingButton != null)
+					{
+						formToProcess = submittingButton.getForm();
+					}
 					// process the form for this request
-					if (process())
+					if (formToProcess.process())
 					{
 						// let clients handle further processing
 						delegateSubmit(submittingButton);
@@ -361,6 +393,18 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		return getFlag(FLAG_SUBMITTED);
 	}
 
+	/**
+	 * @see wicket.Component#internalOnAttach()
+	 */
+	@Override
+	protected void internalOnAttach()
+	{
+		super.internalOnAttach();
+		setOutputMarkupId(true);
+		
+		// TODO: MatejK - Handle multi part 
+	}
+	
 	/**
 	 * @see wicket.Component#internalOnDetach()
 	 */
@@ -420,6 +464,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * 'default' button in a form is ill defined in the standards, and of course
 	 * IE has it's own way of doing things.
 	 * </p>
+	 * <p>
+	 * 	There can be only one default button per form hierarchy. So if you set
+	 *  default button on a nested form, it will actually delegate the call
+	 *  to root form.
+	 * </b>
 	 * 
 	 * @param button
 	 *            The button to set as the default button, or null when you want
@@ -427,7 +476,14 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	public final void setDefaultButton(Button button)
 	{
-		this.defaultButton = button;
+		if (isRootForm())
+		{
+			this.defaultButton = button;
+		}
+		else
+		{
+			getRootForm().setDefaultButton(button);
+		}
 	}
 
 	/**
@@ -591,9 +647,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * </p>
 	 * 
 	 * @param submittingComponent
-	 *            the component that triggered this form processing, or null if the
-	 *            processing was triggered by something else (like a non-Wicket
-	 *            submit button or a javascript execution)
+	 *            the component that triggered this form processing, or null if
+	 *            the processing was triggered by something else (like a
+	 *            non-Wicket submit button or a javascript execution)
 	 */
 	protected void delegateSubmit(IFormSubmittingComponent submittingComponent)
 	{
@@ -602,10 +658,15 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		if (submittingComponent != null)
 		{
 			submittingComponent.onSubmit();
+			
+			// call onSubmit on the processed form
+			submittingComponent.getForm().onSubmit();
 		}
-
-		// Model was successfully updated with valid data
-		onSubmit();
+		else
+		{
+			// No submitting button found
+			onSubmit();
+		}
 	}
 
 	/**
@@ -625,7 +686,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
 
 						// Check for button-name or button-name.x request string
-						if (submit.getForm() == Form.this
+						if (submit.getForm().getRootForm() == Form.this
 								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
 										.getParameter(submit.getInputName() + ".x") != null))
 						{
@@ -758,21 +819,24 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	@Override
 	protected void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
-		String fs = getHiddenFieldId(HIDDEN_FIELD_FAKE_SUBMIT);
-		getResponse().write(
-				new AppendingStringBuffer(
-						"\n<div style=\"display:none\"><input type=\"hidden\" name=\"").append(fs)
-						.append("\" id=\"").append(fs).append("\"/>"));
-		String ws = getHiddenFieldId(HIDDEN_FIELD_WICKET_STATE);
-		getResponse().write(
-				new AppendingStringBuffer("\n<input type=\"hidden\" name=\"wicketState\" id=\"")
-						.append(ws).append("\"/></div>"));
-
-		// if a default button was set, handle the rendering of that
-		if (defaultButton != null && defaultButton.isVisibleInHierarchy()
-				&& defaultButton.isEnabled())
+		if (isRootForm())
 		{
-			appendDefaultButtonField(markupStream, openTag);
+			String fs = getHiddenFieldId(HIDDEN_FIELD_FAKE_SUBMIT);
+			getResponse().write(
+					new AppendingStringBuffer(
+							"\n<div style=\"display:none\"><input type=\"hidden\" name=\"").append(fs)
+							.append("\" id=\"").append(fs).append("\"/>"));
+			String ws = getHiddenFieldId(HIDDEN_FIELD_WICKET_STATE);
+			getResponse().write(
+					new AppendingStringBuffer("\n<input type=\"hidden\" name=\"wicketState\" id=\"")
+							.append(ws).append("\"/></div>"));
+	
+			// if a default button was set, handle the rendering of that
+			if (defaultButton != null && defaultButton.isVisibleInHierarchy()
+					&& defaultButton.isEnabled())
+			{
+				appendDefaultButtonField(markupStream, openTag);
+			}
 		}
 
 		// do the rest of the processing
@@ -785,30 +849,43 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	@Override
 	protected void onComponentTag(final ComponentTag tag)
 	{
-		checkComponentTag(tag, "form");
-		setOutputMarkupId(true);
 		super.onComponentTag(tag);
-
-		// If the javascriptid is already generated then use that on even it was
-		// before the first render. Bbecause there could be a component which
-		// already uses it to submit the forum. This should be fixed when we
-		// pre parse the markup so that we know the id is at front.
-		tag.put("method", "post");
-		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
-
-		if (multiPart)
+		if (isRootForm())
 		{
-			tag.put("enctype", "multipart/form-data");
+			checkComponentTag(tag, "form");
+
+			// If the javascriptid is already generated then use that on even it
+			// was
+			// before the first render. Bbecause there could be a component
+			// which
+			// already uses it to submit the forum. This should be fixed when we
+			// pre parse the markup so that we know the id is at front.
+			tag.put("method", "post");
+			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
+					"&amp;"));
+
+			if (multiPart)
+			{
+				tag.put("enctype", "multipart/form-data");
+			}
+			else
+			{
+				// sanity check
+				String enctype = (String)tag.getAttributes().get("enctype");
+				if ("multipart/form-data".equalsIgnoreCase(enctype))
+				{
+					// though not set explicitly in Java, this is a multipart
+					// form
+					setMultiPart(true);
+				}
+			}
 		}
 		else
 		{
-			// sanity check
-			String enctype = (String)tag.getAttributes().get("enctype");
-			if ("multipart/form-data".equalsIgnoreCase(enctype))
-			{
-				// though not set explicitly in Java, this is a multipart form
-				setMultiPart(true);
-			}
+			tag.setName("div");
+			tag.remove("method");
+			tag.remove("action");
+			tag.remove("enctype");
 		}
 	}
 
@@ -1492,4 +1569,33 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		error(new MapVariableInterpolator(error, args).toString());
 	}
 
+	/**
+	 * Returns whether the form is a root form, which means that there's no
+	 * other form in it's parent hierarchy.
+	 * 
+	 * @return true if form is a root form, false otherwise
+	 */
+	public boolean isRootForm()
+	{
+		return findParent(Form.class) == null;
+	}
+
+	/**
+	 * Returns the root form or this, if this is the root form.
+	 * 
+	 * @return root form or this form
+	 */
+	public Form<?> getRootForm()
+	{
+		Form<?> form;
+		Form<?> parent = this;
+		do
+		{
+			form = parent;
+			parent = (Form<?>)form.findParent(Form.class);
+		}
+		while (parent != null);
+
+		return form;
+	}
 }
