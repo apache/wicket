@@ -104,20 +104,11 @@ public class SignInPanel extends Panel
 		{
 			if (signIn(getUsername(), getPassword()))
 			{
-				// If login has been called because the user was not yet
-				// logged in, than continue to the original destination,
-				// otherwise to the Home page
-				if (!continueToOriginalDestination())
-				{
-					setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
-							getApplication().getHomePage(), (PageParameters)null));
-				}
+			    onSignInSucceeded();
 			}
 			else
 			{
-				// Try the component based localizer first. If not found try the
-				// application localizer. Else use the default
-				error(getLocalizer().getString("signInFailed", this, "Sign in failed"));
+			    onSignInFailed();
 			}
 		}
 	}
@@ -228,4 +219,24 @@ public class SignInPanel extends Panel
 	{
 		return AuthenticatedWebSession.get().signIn(username, password);
 	}
+
+	protected void onSignInFailed()
+	{
+		// Try the component based localizer first. If not found try the
+		// application localizer. Else use the default
+		error(getLocalizer().getString("signInFailed", this, "Sign in failed"));
+	}
+
+	protected void onSignInSucceeded()
+	{
+		// If login has been called because the user was not yet
+		// logged in, than continue to the original destination,
+		// otherwise to the Home page
+		if (!continueToOriginalDestination())
+		{
+			setResponsePage(getApplication().getSessionSettings().getPageFactory().newPage(
+					getApplication().getHomePage(), (PageParameters)null));
+		}
+	}
+
 }
