@@ -86,7 +86,7 @@ var WicketAjaxDebug = {
 					"		</div>"+					
 					"	</div>" +
 					"</div>"+
-					"<div style='position:absolute; left:10px; top:95%; z-index:100;'>"+
+					"<div id='wicket-debug-link' style='position:absolute; left:10px; top:95%; z-index:100;'>"+
 					"    <a href='javascript:WicketAjaxDebug.showDebugWindow()'>WICKET AJAX DEBUG</a>"+
 					"</div>";
 												
