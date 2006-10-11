@@ -180,12 +180,4 @@ public abstract class AbstractSubmitLink<T> extends AbstractLink<T>
 		}
 		return inputName.toString();
 	}
-
-	/**
-	 * @see wicket.markup.html.form.IFormSubmittingComponent#onSubmit()
-	 * TODO: Should this be abstract?
-	 */
-	public void onSubmit()
-	{
-	}
 }

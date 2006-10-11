@@ -133,7 +133,6 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * 
 	 * @see wicket.markup.html.form.Button#onSubmit()
 	 */
-	@Override
 	public final void onSubmit()
 	{
 	}
