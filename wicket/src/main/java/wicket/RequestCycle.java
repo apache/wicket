@@ -842,9 +842,16 @@ public abstract class RequestCycle
 		}
 
 		// remove any rendered feedback messages from the session
-		session.cleanupFeedbackMessages();
-
-
+		try
+		{
+			session.cleanupFeedbackMessages();
+		}
+		catch (RuntimeException re)
+		{
+			log.error("there was an error cleaning up feedback messages for session " + session
+					+ ".", re);
+		}
+		
 		if (updateSession)
 		{
 			// At the end of our response, we need to set any session
@@ -862,8 +869,14 @@ public abstract class RequestCycle
 		// clear the used pagemap for this thread, 
 		// maybe we can move this a few lines above to have a but more
 		// concurrency (session.update)
-		session.requestDetached();
-		
+		try
+		{
+			session.requestDetached();
+		}
+		catch (RuntimeException re)
+		{
+			log.error("there was an error detaching request from session " + session + ".", re);
+		}
 
 		if (getResponse() instanceof BufferedWebResponse)
 		{
