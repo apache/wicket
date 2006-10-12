@@ -45,6 +45,17 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	 * Construct.
 	 * 
 	 * @param parent
+	 * @param id
+	 */
+	public AjaxSubmitLink(MarkupContainer parent, String id)
+	{
+		this(parent, id, null);
+	}
+	
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
 	 *            The parent of this component
 	 * 
 	 * @param id
@@ -54,7 +65,7 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 	{
 		super(parent, id, form);
 
-		add(new AjaxFormSubmitBehavior(form, ClientEvent.CLICK)
+		add(new AjaxFormSubmitBehavior(getForm(), ClientEvent.CLICK)
 		{
 
 			private static final long serialVersionUID = 1L;
@@ -62,13 +73,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmit(target, form);
+				AjaxSubmitLink.this.onSubmit(target, getForm());
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onError(target, form);
+				AjaxSubmitLink.this.onError(target, getForm());
 			}
 
 			@Override
