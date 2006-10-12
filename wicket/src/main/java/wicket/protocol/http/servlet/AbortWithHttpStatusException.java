@@ -15,10 +15,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket;
+package wicket.protocol.http.servlet;
 
 import javax.servlet.http.HttpServletResponse;
 
+import wicket.AbortException;
+import wicket.RequestCycle;
+import wicket.Response;
 import wicket.protocol.http.WebResponse;
 import wicket.request.target.basic.EmptyRequestTarget;
 
@@ -32,7 +35,6 @@ import wicket.request.target.basic.EmptyRequestTarget;
  * @author Igor Vaynberg (ivaynberg)
  * @author Gili Tzabari
  * @see HttpServletResponse
- * @deprecated moves to package wicket.protocol.http.servlet in 2.0
  */
 public class AbortWithHttpStatusException extends AbortException
 {
@@ -79,7 +81,6 @@ public class AbortWithHttpStatusException extends AbortException
 	}
 
 	/**
-	 * 
 	 * @return the response status code
 	 */
 	public final int getStatus()
