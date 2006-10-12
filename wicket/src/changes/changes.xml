@@ -20,6 +20,8 @@
 		<action type="fix" dev="Eelco Hillenius">FileUploadField's fileUpload member is now transient, and nulled at the end of a request; fileUpload depends on non-serializable classes and should be used for the upload request only anyway.</action>
 		<action type="fix" dev="Frank Bille Jensen" issue="1543832">InputStreams returned from FileUpload is now closed at the end of the request</action>
 		<action type="fix" dev="Frank Bille Jensen">Fixed a bug in WicketTester.clickLink. When clicking an AjaxSubmitLink which submitted a form with a CheckGroup inside it, the test would fail. This was because I had only checked for RadioGroup when copying the data from the form to the request.</action>
+		<action type="add" dev="Eelco Hillenius">Bookmarkable page links set the target attribute to the proper page map when a page map is set and when the tag has a target attribute</action>
+		<action type="fix" dev="Igor Vaynberg">Do not set window.name automatically to the page map as this gives problems with frames</action>
 		<action type="fix" dev="Igor Vaynberg">Buttons are now versioned by default</action>
 		<action type="fix" dev="Igor Vaynberg">It is now possible to override default TypeValidator error key via ConversionException.setResourceKey()</action>
 		<action type="fix" dev="Igor Vaynberg">Fixed bug where head contributions done through header contributors added to the page only worked on first page render</action>
