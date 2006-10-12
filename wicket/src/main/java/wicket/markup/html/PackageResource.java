@@ -20,12 +20,17 @@ package wicket.markup.html;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.RequestCycle;
 import wicket.SharedResources;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.servlet.AbortWithWebErrorCodeException;
 import wicket.util.lang.Packages;
 import wicket.util.resource.IResourceStream;
 
@@ -333,8 +338,17 @@ public class PackageResource extends WebResource
 		// Check that resource was found
 		if (resourceStream == null)
 		{
-			throw new WicketRuntimeException("Unable to find package resource [path = "
-					+ absolutePath + ", style = " + style + ", locale = " + locale + "]");
+			String msg = "Unable to find package resource [path = " + absolutePath + ", style = "
+					+ style + ", locale = " + locale + "]";
+			log.warn(msg);
+			if (RequestCycle.get() instanceof WebRequestCycle)
+			{
+				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_NOT_FOUND, msg);
+			}
+			else
+			{
+				throw new WicketRuntimeException(msg);
+			}
 		}
 		this.locale = resourceStream.getLocale();
 		return resourceStream;
