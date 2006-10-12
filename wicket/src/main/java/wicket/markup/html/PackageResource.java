@@ -67,7 +67,6 @@ import wicket.util.string.Strings;
  */
 public class PackageResource extends WebResource
 {
-
 	/**
 	 * Exception thrown when the creation of a package resource is not allowed.
 	 */
@@ -356,11 +355,7 @@ public class PackageResource extends WebResource
 							throw e;
 
 						String filename = jarZipPart.substring(0, index + 4); // 4 =
-						// len
-						// of
-						// ".jar"
-						// or
-						// ".zip"
+						// len of ".jar" or ".zip"
 						log.debug("trying the filename: " + filename + " to load as a zip/jar.");
 						JarFile jarFile = new JarFile(filename, false);
 						scanJarFile(scope, pattern, recurse, resources, packageRef, jarFile);
@@ -372,9 +367,6 @@ public class PackageResource extends WebResource
 						throw new IllegalStateException("unable to read resources from directory "
 								+ basedir);
 					}
-					// should not be necessary anymore
-					// addResources(scope, pattern, resources, new
-					// StringBuffer(""), basedir, recurse);
 				}
 			}
 		}
@@ -555,8 +547,8 @@ public class PackageResource extends WebResource
 		// Check that resource was found
 		if (resourceStream == null)
 		{
-			String msg = "Unable to find package resource [path = " + absolutePath
-					+ ", style = " + style + ", locale = " + locale + "]";
+			String msg = "Unable to find package resource [path = " + absolutePath + ", style = "
+					+ style + ", locale = " + locale + "]";
 			log.warn(msg);
 			if (RequestCycle.get() instanceof WebRequestCycle)
 			{
