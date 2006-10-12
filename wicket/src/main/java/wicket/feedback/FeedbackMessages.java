@@ -96,15 +96,15 @@ public final class FeedbackMessages implements Serializable
 	 */
 	public final void clearRendered()
 	{
-		Iterator<FeedbackMessage> msgs = iterator();
-		while (msgs.hasNext())
+		for(int i = messages.size() - 1; i >= 0; i--)
 		{
-			final FeedbackMessage msg = msgs.next();
+			final FeedbackMessage msg = (FeedbackMessage)messages.get(i);
 			if (msg.isRendered())
 			{
-				msgs.remove();
+				messages.remove(i);
 			}
 		}
+		trimToSize();
 	}
 
 	/**

@@ -1056,19 +1056,12 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final void cleanupFeedbackMessages()
 	{
-		if (feedbackMessages.size() > 0)
+		int size = feedbackMessages.size();
+		feedbackMessages.clearRendered();
+		// mark the session as dirty when the feedback messages have been altered.
+		if(size != feedbackMessages.size())
 		{
-			Iterator msgs = feedbackMessages.iterator();
-			while (msgs.hasNext())
-			{
-				final FeedbackMessage msg = (FeedbackMessage)msgs.next();
-				if (msg.isRendered())
-				{
-					msgs.remove();
-					dirty();
-				}
-			}
-			feedbackMessages.trimToSize();
+			dirty();
 		}
 	}
 
