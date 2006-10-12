@@ -113,17 +113,17 @@ public abstract class Application
 	/** Configuration constant for the 2 types */
 	public static final String CONFIGURATION = "configuration";
 
-	/** Configuration type constant for deployment */
-	public static final String DEPLOYMENT = "deployment";
-
-	/** Configuration type constant for development */
-	public static final String DEVELOPMENT = "development";
-
 	/**
 	 * Configuration type constant for getting the context path out of the
 	 * web.xml
 	 */
 	public static final String CONTEXTPATH = "contextpath";
+
+	/** Configuration type constant for deployment */
+	public static final String DEPLOYMENT = "deployment";
+
+	/** Configuration type constant for development */
+	public static final String DEVELOPMENT = "development";
 
 	/**
 	 * Applications keyed on the {@link #getApplicationKey()} so that they can
@@ -138,33 +138,6 @@ public abstract class Application
 
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Application.class);
-
-	/** list of {@link IComponentInstantiationListener}s. */
-	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
-
-	/** Markup cache for this application */
-	private final MarkupCache markupCache;
-
-	/** Application level meta data. */
-	private MetaDataEntry[] metaData;
-
-	/** Name of application subclass. */
-	private final String name;
-
-	/** Settings for this application. */
-	private Settings settings;
-
-	/** can the settings object be set/used. */
-	private boolean settingsAccessible;
-
-	/** Shared resources for this application */
-	private final SharedResources sharedResources;
-
-	/** The session facade. */
-	private ISessionStore sessionStore;
-
-	/** Request logger instance. */
-	private IRequestLogger requestLogger;
 
 	/**
 	 * Get Application for current thread.
@@ -215,6 +188,36 @@ public abstract class Application
 	{
 		current.set(null);
 	}
+
+	/** list of {@link IComponentInstantiationListener}s. */
+	private IComponentInstantiationListener[] componentInstantiationListeners = new IComponentInstantiationListener[0];
+
+	/** Record what the configuration is, so that we can query for it later. */
+	private String configurationType;
+
+	/** Markup cache for this application */
+	private final MarkupCache markupCache;
+
+	/** Application level meta data. */
+	private MetaDataEntry[] metaData;
+
+	/** Name of application subclass. */
+	private final String name;
+
+	/** Request logger instance. */
+	private IRequestLogger requestLogger;
+
+	/** The session facade. */
+	private ISessionStore sessionStore;
+
+	/** Settings for this application. */
+	private Settings settings;
+
+	/** can the settings object be set/used. */
+	private boolean settingsAccessible;
+
+	/** Shared resources for this application */
+	private final SharedResources sharedResources;
 
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
@@ -316,6 +319,8 @@ public abstract class Application
 	 */
 	public final void configure(final String configurationType, final IResourceFinder resourceFinder)
 	{
+		this.configurationType = configurationType;
+
 		if (resourceFinder != null)
 		{
 			getResourceSettings().setResourceFinder(resourceFinder);
@@ -369,6 +374,24 @@ public abstract class Application
 	}
 
 	/**
+	 * @return Application's ajax related settings
+	 * @see IAjaxSettings
+	 * @since 1.2
+	 */
+	public final IAjaxSettings getAjaxSettings()
+	{
+		return getSettings();
+	}
+
+	/**
+	 * Gets the unique key of this application within a given context (like a
+	 * web application). NOT INTENDED FOR FRAMEWORK CLIENTS.
+	 * 
+	 * @return The unique key of this application
+	 */
+	public abstract String getApplicationKey();
+
+	/**
 	 * @return Application's application-wide settings
 	 * @see IApplicationSettings
 	 * @since 1.2
@@ -376,6 +399,18 @@ public abstract class Application
 	public final IApplicationSettings getApplicationSettings()
 	{
 		return getSettings();
+	}
+
+	/**
+	 * Gets the configuration mode that is currently set, either
+	 * {@link #DEVELOPMENT} or {@link #DEPLOYMENT}.
+	 * 
+	 * @return configuration
+	 * @since 1.2.3
+	 */
+	public String getConfigurationType()
+	{
+		return configurationType;
 	}
 
 	/**
@@ -480,13 +515,13 @@ public abstract class Application
 	}
 
 	/**
-	 * @return Application's ajax related settings
-	 * @see IAjaxSettings
-	 * @since 1.2
+	 * Gets the {@link RequestLogger}.
+	 * 
+	 * @return The RequestLogger
 	 */
-	public final IAjaxSettings getAjaxSettings()
+	public final IRequestLogger getRequestLogger()
 	{
-		return getSettings();
+		return requestLogger;
 	}
 
 	/**
@@ -520,35 +555,13 @@ public abstract class Application
 	}
 
 	/**
-	 * This method is still here for backwards compatibility with 1.1 source
-	 * code. The getXXXSettings() methods are now preferred. This method will be
-	 * removed post 1.2 version.
+	 * Gets the facade object for working getting/ storing session instances.
 	 * 
-	 * @return Application settings
-	 * 
-	 * @see Application#getApplicationSettings()
-	 * @see Application#getDebugSettings()
-	 * @see Application#getExceptionSettings()
-	 * @see Application#getMarkupSettings()
-	 * @see Application#getPageSettings()
-	 * @see Application#getRequestCycleSettings()
-	 * @see Application#getResourceSettings()
-	 * @see Application#getSecuritySettings()
-	 * @see Application#getSessionSettings()
+	 * @return The session facade
 	 */
-	private Settings getSettings()
+	public final ISessionStore getSessionStore()
 	{
-		if (!settingsAccessible)
-		{
-			throw new WicketRuntimeException(
-					"Use Application.init() method for configuring your application object");
-		}
-
-		if (settings == null)
-		{
-			settings = new Settings(this);
-		}
-		return settings;
+		return sessionStore;
 	}
 
 	/**
@@ -559,60 +572,6 @@ public abstract class Application
 	public final SharedResources getSharedResources()
 	{
 		return sharedResources;
-	}
-
-	/**
-	 * Removes a component instantiation listener. This method should typicaly
-	 * only be called during application startup; it is not thread safe.
-	 * 
-	 * @param listener
-	 *            the listener to remove
-	 */
-	public final void removeComponentInstantiationListener(
-			final IComponentInstantiationListener listener)
-	{
-		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
-		final int len = listeners.length;
-
-		if (listener != null && len > 0)
-		{
-			int pos = 0;
-
-			for (pos = 0; pos < len; pos++)
-			{
-				if (listener == listeners[pos])
-				{
-					break;
-				}
-			}
-
-			if (pos < len)
-			{
-				listeners[pos] = listeners[len - 1];
-				final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[len - 1];
-				System.arraycopy(listeners, 0, newListeners, 0, newListeners.length);
-
-				componentInstantiationListeners = newListeners;
-			}
-		}
-	}
-
-	/**
-	 * Sets the metadata for this application using the given key. If the
-	 * metadata object is not of the correct type for the metadata key, an
-	 * IllegalArgumentException will be thrown. For information on creating
-	 * MetaDataKeys, see {@link MetaDataKey}.
-	 * 
-	 * @param key
-	 *            The singleton key for the metadata
-	 * @param object
-	 *            The metadata object
-	 * @throws IllegalArgumentException
-	 * @see MetaDataKey
-	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
-	{
-		metaData = key.set(metaData, object);
 	}
 
 	/**
@@ -655,30 +614,91 @@ public abstract class Application
 	}
 
 	/**
-	 * Gets the unique key of this application within a given context (like a
-	 * web application). NOT INTENDED FOR FRAMEWORK CLIENTS.
+	 * Removes a component instantiation listener. This method should typicaly
+	 * only be called during application startup; it is not thread safe.
 	 * 
-	 * @return The unique key of this application
+	 * @param listener
+	 *            the listener to remove
 	 */
-	public abstract String getApplicationKey();
-
-	/**
-	 * Gets the facade object for working getting/ storing session instances.
-	 * 
-	 * @return The session facade
-	 */
-	public final ISessionStore getSessionStore()
+	public final void removeComponentInstantiationListener(
+			final IComponentInstantiationListener listener)
 	{
-		return sessionStore;
+		final IComponentInstantiationListener[] listeners = componentInstantiationListeners;
+		final int len = listeners.length;
+
+		if (listener != null && len > 0)
+		{
+			int pos = 0;
+
+			for (pos = 0; pos < len; pos++)
+			{
+				if (listener == listeners[pos])
+				{
+					break;
+				}
+			}
+
+			if (pos < len)
+			{
+				listeners[pos] = listeners[len - 1];
+				final IComponentInstantiationListener[] newListeners = new IComponentInstantiationListener[len - 1];
+				System.arraycopy(listeners, 0, newListeners, 0, newListeners.length);
+
+				componentInstantiationListeners = newListeners;
+			}
+		}
 	}
 
 	/**
-	 * Creates a new session facade. Is called once per application, and is
-	 * typically not something clients reimplement.
-	 * 
-	 * @return The session facade
+	 * @param sessionId
+	 *            The session id that was destroyed
 	 */
-	protected abstract ISessionStore newSessionStore();
+	public void sessionDestroyed(String sessionId)
+	{
+		IRequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			logger.sessionDestroyed(sessionId);
+		}
+	}
+
+	/**
+	 * Sets the metadata for this application using the given key. If the
+	 * metadata object is not of the correct type for the metadata key, an
+	 * IllegalArgumentException will be thrown. For information on creating
+	 * MetaDataKeys, see {@link MetaDataKey}.
+	 * 
+	 * @param key
+	 *            The singleton key for the metadata
+	 * @param object
+	 *            The metadata object
+	 * @throws IllegalArgumentException
+	 * @see MetaDataKey
+	 */
+	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	{
+		metaData = key.set(metaData, object);
+	}
+
+	/**
+	 * Sets the {@link RequestLogger}.
+	 * 
+	 * @param logger
+	 *            The request logger
+	 */
+	public final void setRequestLogger(IRequestLogger logger)
+	{
+		requestLogger = logger;
+	}
+
+	/**
+	 * Called when wicket servlet is destroyed. Overrides do not have to call
+	 * super.
+	 */
+	protected void destroy()
+	{
+
+	}
 
 	/**
 	 * Gets the factory for creating session instances.
@@ -694,6 +714,16 @@ public abstract class Application
 	protected void init()
 	{
 	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 */
+	protected void internalDestroy()
+	{
+		destroy();
+		applicationKeyToApplication.remove(getApplicationKey());
+	}
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT OVERRIDE OR
@@ -729,36 +759,12 @@ public abstract class Application
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * Creates a new session facade. Is called once per application, and is
+	 * typically not something clients reimplement.
+	 * 
+	 * @return The session facade
 	 */
-	protected void internalDestroy()
-	{
-		destroy();
-		applicationKeyToApplication.remove(getApplicationKey());
-	}
-
-	/**
-	 * Called when wicket servlet is destroyed. Overrides do not have to call
-	 * super.
-	 */
-	protected void destroy()
-	{
-
-	}
-
-
-	/**
-	 * @param sessionId
-	 *            The session id that was destroyed
-	 */
-	public void sessionDestroyed(String sessionId)
-	{
-		IRequestLogger logger = getRequestLogger();
-		if (logger != null)
-		{
-			logger.sessionDestroyed(sessionId);
-		}
-	}
+	protected abstract ISessionStore newSessionStore();
 
 	/**
 	 * Notifies the registered component instantiation listeners of the
@@ -774,6 +780,38 @@ public abstract class Application
 		{
 			componentInstantiationListeners[i].onInstantiation(component);
 		}
+	}
+
+	/**
+	 * This method is still here for backwards compatibility with 1.1 source
+	 * code. The getXXXSettings() methods are now preferred. This method will be
+	 * removed post 1.2 version.
+	 * 
+	 * @return Application settings
+	 * 
+	 * @see Application#getApplicationSettings()
+	 * @see Application#getDebugSettings()
+	 * @see Application#getExceptionSettings()
+	 * @see Application#getMarkupSettings()
+	 * @see Application#getPageSettings()
+	 * @see Application#getRequestCycleSettings()
+	 * @see Application#getResourceSettings()
+	 * @see Application#getSecuritySettings()
+	 * @see Application#getSessionSettings()
+	 */
+	private Settings getSettings()
+	{
+		if (!settingsAccessible)
+		{
+			throw new WicketRuntimeException(
+					"Use Application.init() method for configuring your application object");
+		}
+
+		if (settings == null)
+		{
+			settings = new Settings(this);
+		}
+		return settings;
 	}
 
 	/**
@@ -814,26 +852,5 @@ public abstract class Application
 	{
 		initialize(properties.getProperty("initializer"));
 		initialize(properties.getProperty(getName() + "-initializer"));
-	}
-
-	/**
-	 * Gets the {@link RequestLogger}.
-	 * 
-	 * @return The RequestLogger
-	 */
-	public final IRequestLogger getRequestLogger()
-	{
-		return requestLogger;
-	}
-
-	/**
-	 * Sets the {@link RequestLogger}.
-	 * 
-	 * @param logger
-	 *            The request logger
-	 */
-	public final void setRequestLogger(IRequestLogger logger)
-	{
-		requestLogger = logger;
 	}
 }
