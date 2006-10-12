@@ -1009,20 +1009,7 @@ public abstract class Session implements Serializable
 	 */
 	final void cleanupFeedbackMessages()
 	{
-		if (feedbackMessages.size() > 0)
-		{
-			Iterator msgs = feedbackMessages.iterator();
-			while (msgs.hasNext())
-			{
-				final FeedbackMessage msg = (FeedbackMessage)msgs.next();
-				if (msg.isRendered())
-				{
-					msgs.remove();
-					dirty();
-				}
-			}
-			feedbackMessages.trimToSize();
-		}
+		feedbackMessages.clearRendered();
 	}
 
 	/**
