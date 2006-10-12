@@ -26,6 +26,7 @@ import wicket.ajax.ClientEvent;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.calldecorator.CancelEventIfNoAjaxDecorator;
 import wicket.ajax.markup.html.IAjaxLink;
+import wicket.markup.ComponentTag;
 import wicket.markup.html.navigation.paging.IPageable;
 
 /**
@@ -112,6 +113,15 @@ public class AjaxPagingNavigationBehavior extends AjaxEventBehavior
 			}
 		}
 
+	}
+	
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		if (getComponent().isEnabled() && getComponent().isEnableAllowed()) 
+		{
+			super.onComponentTag(tag);
+		}
 	}
 
 	/**
