@@ -1009,7 +1009,14 @@ public abstract class Session implements Serializable
 	 */
 	final void cleanupFeedbackMessages()
 	{
+		int size = feedbackMessages.size();
 		feedbackMessages.clearRendered();
+
+		// the session is dirty when the list of feedback messages was changed
+		if(size != feedbackMessages.size())
+		{
+			dirty();
+		}
 	}
 
 	/**
