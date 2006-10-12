@@ -426,6 +426,7 @@ public abstract class Application
 	 * {@link #DEVELOPMENT} or {@link #DEPLOYMENT}.
 	 * 
 	 * @return configuration
+	 * @since 1.2.3
 	 */
 	public String getConfigurationType()
 	{
