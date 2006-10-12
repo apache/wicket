@@ -56,9 +56,9 @@
 		</mailingList>
 		<mailingList>
 			<name>Wicket CVS commit List</name>
-			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</subscribe>
-			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</unsubscribe>
-			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-autocvs</archive>
+			<subscribe>mailto:wicket-commits-subscribe@incubator.apache.org</subscribe>
+			<unsubscribe>mailto:wicket-commits-unsubscribe@incubator.apache.org</unsubscribe>
+			<archive>http://mail-archives.apache.org/mod_mbox/incubator-wicket-commits/</archive>
 		</mailingList>
 		<mailingList>
 			<name>Wicket automated builds List</name>
