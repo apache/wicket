@@ -1,28 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="var" path="M2_REPO/jetty/jetty-util/6.0.1/jetty-util-6.0.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/nekohtml/nekohtml/0.9.1/nekohtml-0.9.1.jar" sourcepath="M2_REPO/nekohtml/nekohtml/0.9.1/nekohtml-0.9.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/rhino/js/1.5R4.1/js-1.5R4.1.jar" sourcepath="M2_REPO/rhino/js/1.5R4.1/js-1.5R4.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1.jar" sourcepath="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/jetty/jetty/6.0.1/jetty-6.0.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar" sourcepath="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/httpunit/httpunit/1.6.1/httpunit-1.6.1.jar" sourcepath="M2_REPO/httpunit/httpunit/1.6.1/httpunit-1.6.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.2/commons-codec-1.2.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file://Users/eelcohillenius/.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1.jar" sourcepath="M2_REPO/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.2.1/xmlParserAPIs-2.2.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
-	<classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/nekohtml/nekohtml/0.9.1/nekohtml-0.9.1.jar" sourcepath="M2_REPO/nekohtml/nekohtml/0.9.1/nekohtml-0.9.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/rhino/js/1.5R4.1/js-1.5R4.1.jar" sourcepath="M2_REPO/rhino/js/1.5R4.1/js-1.5R4.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty/6.0.1/jetty-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty/6.0.1/jetty-6.0.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty-util/6.0.1/jetty-util-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty-util/6.0.1/jetty-util-6.0.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1.jar" sourcepath="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar" sourcepath="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/httpunit/httpunit/1.6.1/httpunit-1.6.1.jar" sourcepath="M2_REPO/httpunit/httpunit/1.6.1/httpunit-1.6.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.2/commons-codec-1.2.jar">
+    <attributes>
+      <attribute value="jar:file://Users/eelcohillenius/.m2/repository/commons-codec/commons-codec/1.2/commons-codec-1.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/wicket/wicket/1.2-SNAPSHOT/wicket-1.2-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket/1.2-SNAPSHOT/wicket-1.2-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/servlet-api-2.5/6.0.1/servlet-api-2.5-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/servlet-api-2.5/6.0.1/servlet-api-2.5-6.0.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/wicket/wicket-extensions/1.2-SNAPSHOT/wicket-extensions-1.2-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket-extensions/1.2-SNAPSHOT/wicket-extensions-1.2-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.2.1/xmlParserAPIs-2.2.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1.jar" sourcepath="M2_REPO/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1-sources.jar"/>
 </classpath>
