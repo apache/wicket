@@ -101,12 +101,14 @@ public final class Tester implements CommandRunnerObserver {
 		return port;
 	}
 
-	public void onDone(CommandRunner runner) {
+	public synchronized void onDone(CommandRunner runner) {
 		activeThreads--;
+		notifyAll();
 	}
 
-	public void onError(CommandRunner runner, Exception e) {
+	public synchronized void onError(CommandRunner runner, Exception e) {
 		activeThreads--;
+		notifyAll();
 	}
 
 	/**
@@ -154,7 +156,9 @@ public final class Tester implements CommandRunnerObserver {
 			}
 
 			while (activeThreads > 0) {
-				Thread.sleep(2000);
+				synchronized (this) {
+					wait();
+				}
 			}
 
 			long end = System.currentTimeMillis();
