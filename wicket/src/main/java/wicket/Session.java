@@ -443,7 +443,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final synchronized Page getPage(final String pageMapName, final String path,
+	public final Page getPage(final String pageMapName, final String path,
 			final int versionNumber)
 	{
 		if (log.isDebugEnabled())
@@ -455,43 +455,46 @@ public abstract class Session implements Serializable, IConverterLocator
 		PageMap pageMap = pageMapForName(pageMapName, Objects.equal(PageMap.DEFAULT_NAME,pageMapName));
 		if (pageMap != null)
 		{
-			long startTime = System.currentTimeMillis();
-			
-			if (pageMapsUsedInRequest == null)
+			synchronized(pageMapsUsedInRequest)
 			{
-				pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
-			}
-			
-			// Get page entry for id and version
-			Thread t = pageMapsUsedInRequest.get(pageMap);
-			while (t != null && t != Thread.currentThread())
-			{
-				try
+				long startTime = System.currentTimeMillis();
+				
+				if (pageMapsUsedInRequest == null)
 				{
-					wait(20000); // wait 20 seconds max.
+					pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
 				}
-				catch (InterruptedException ex)
+				
+				// Get page entry for id and version
+				Thread t = pageMapsUsedInRequest.get(pageMap);
+				while (t != null && t != Thread.currentThread())
 				{
-					throw new WicketRuntimeException(ex);
+					try
+					{
+						pageMapsUsedInRequest.wait(20000); // wait 20 seconds max.
+					}
+					catch (InterruptedException ex)
+					{
+						throw new WicketRuntimeException(ex);
+					}
+					t = pageMapsUsedInRequest.get(pageMap);
+					if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
+					{
+						// if it is still not the right thread.. 
+						// This must be a wicket bug or some other (dead)lock in the code.
+						throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
+								" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
+					}
 				}
-				t = pageMapsUsedInRequest.get(pageMap);
-				if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
+				pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
+				final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
+				Page page = pageMap.get(Integer.parseInt(id), versionNumber);
+				if (page == null)
 				{
-					// if it is still not the right thread.. 
-					// This must be a wicket bug or some other (dead)lock in the code.
-					throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
-							" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
+					pageMapsUsedInRequest.remove(pageMap);
+					pageMapsUsedInRequest.notifyAll();
 				}
+				return page;
 			}
-			pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
-			final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
-			Page page = pageMap.get(Integer.parseInt(id), versionNumber);
-			if (page == null)
-			{
-				pageMapsUsedInRequest.remove(pageMap);
-				notifyAll();
-			}
-			return page;
 		}
 		return null;
 	}
@@ -1082,21 +1085,24 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * INTERNAL API. The request cycle when detached will call this.
 	 * 
 	 */
-	final synchronized void requestDetached()
+	final void requestDetached()
 	{
 		if(pageMapsUsedInRequest != null)
 		{
-			Thread t = Thread.currentThread();
-			Iterator<Map.Entry<PageMap,Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
-			while(it.hasNext())
+			synchronized(pageMapsUsedInRequest)
 			{
-				Entry<PageMap, Thread> entry = it.next();
-				if(entry.getValue() == t)
+				Thread t = Thread.currentThread();
+				Iterator<Map.Entry<PageMap,Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
+				while(it.hasNext())
 				{
-					it.remove();
+					Entry<PageMap, Thread> entry = it.next();
+					if(entry.getValue() == t)
+					{
+						it.remove();
+					}
 				}
+				pageMapsUsedInRequest.notifyAll();
 			}
-			notifyAll();
 		}
 	}
 	
