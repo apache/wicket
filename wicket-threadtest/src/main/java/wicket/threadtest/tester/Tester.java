@@ -154,7 +154,7 @@ public final class Tester implements CommandRunnerObserver {
 			}
 
 			while (activeThreads > 0) {
-				Thread.yield();
+				Thread.sleep(2000);
 			}
 
 			long end = System.currentTimeMillis();
