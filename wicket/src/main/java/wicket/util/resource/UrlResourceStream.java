@@ -67,7 +67,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	private long lastModified;
 
 	/**
-	 * Private constructor to force use of static factory methods.
+	 * Construct.
 	 * 
 	 * @param url
 	 *            URL of resource
