@@ -42,6 +42,7 @@ import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.model.ResourceModel;
 import wicket.model.StringResourceModel;
+import wicket.validation.IValidationError;
 import wicket.validation.ValidationError;
 import wicket.validation.validator.EmailAddressPatternValidator;
 
@@ -197,7 +198,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 						{
 							if ("".equals(rolesSetNameField.getInput()))
 							{
-								rolesSetNameField.error(new ValidationError()
+								rolesSetNameField.error((IValidationError)new ValidationError()
 										.addMessageKey("error.noSetNameForRoles"));
 							}
 						}
