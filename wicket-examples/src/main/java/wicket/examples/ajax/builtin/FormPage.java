@@ -89,7 +89,6 @@ public class FormPage extends BasePage {
 				target.addComponent(feedback);
 			}
 
-			@Override
 			protected void onError(AjaxRequestTarget target, Form form) {
 				// repaint the feedback panel so errors are shown
 				target.addComponent(feedback);
