@@ -16,10 +16,8 @@ package wicket.jmx;
 
 import wicket.markup.html.WebPage;
 
-
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Page settings.
  * 
  * @author eelcohillenius
  */
@@ -58,18 +56,6 @@ public interface PageSettingsMBean
 	boolean getVersionPagesByDefault();
 
 	/**
-	 * @param maxPageVersions
-	 *            The maxPageVersion to set.
-	 */
-	void setMaxPageVersions(int maxPageVersions);
-
-	/**
-	 * @param pagesVersionedByDefault
-	 *            The pagesVersionedByDefault to set.
-	 */
-	void setVersionPagesByDefault(boolean pagesVersionedByDefault);
-
-	/**
 	 * Sets whether Wicket should try to support opening multiple windows for
 	 * the same session transparently. If this is true - the default setting -,
 	 * Wicket tries to detect whether a new window was opened by a user (e.g. in
@@ -91,4 +77,16 @@ public interface PageSettingsMBean
 	 *            transparently
 	 */
 	void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport);
+
+	/**
+	 * @param maxPageVersions
+	 *            The maxPageVersion to set.
+	 */
+	void setMaxPageVersions(int maxPageVersions);
+
+	/**
+	 * @param pagesVersionedByDefault
+	 *            The pagesVersionedByDefault to set.
+	 */
+	void setVersionPagesByDefault(boolean pagesVersionedByDefault);
 }

@@ -17,10 +17,8 @@ package wicket.jmx;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.WebRequestCycle;
 
-
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Request cycle settings.
  * 
  * @author eelcohillenius
  */
