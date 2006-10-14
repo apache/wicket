@@ -1,6 +1,6 @@
 <projectDescription>
   <name>wicket-examples</name>
-  <comment>Examples displaying a component reference and several componens in action.</comment>
+  <comment>Examples displaying a component reference and several components in action.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
