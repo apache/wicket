@@ -211,7 +211,7 @@ public class PortletSessionStore implements ISessionStore
 		// Do some extra profiling/ debugging. This can be a great help
 		// just for testing whether your webbapp will behave when using
 		// session replication
-		if (log.isDebugEnabled())
+		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
 		{
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try
