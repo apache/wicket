@@ -8,16 +8,10 @@
 		<artifactId>wicket-parent</artifactId>
 		<version>1.2-SNAPSHOT</version>
 	</parent>
-
 	<artifactId>wicket-jmx</artifactId>
 	<packaging>jar</packaging>
-
 	<name>Wicket JMX</name>
-	<description>
-		Wicket Java Management Extensions for Wicket 1.x (will be part of the main distro from Wicket 2.0 on)
-	</description>
-	<url>http://wicketframework.org/wicket-jmx</url>
-	<inceptionYear>2006</inceptionYear>
+	<description>Wicket Java Management Extensions for Wicket 1.x (will be part of the main distro from Wicket 2.0 on)</description>
 
 	<dependencies>
 		<dependency>
@@ -47,6 +41,19 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptors>
+						<descriptor>${basedir}/src/assembly/bin.xml</descriptor>
+					</descriptors>
+					<finalName>${artifactId}-${version}</finalName>
+					<outputDirectory>target/distributions</outputDirectory>
+					<workDirectory>target/assembly/work</workDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -81,29 +88,26 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<descriptor>src/assembly/bin.xml</descriptor>
-					</descriptors>
-					<finalName>${artifactId}-${version}</finalName>
-					<outputDirectory>target/distributions</outputDirectory>
-					<workDirectory>target/assembly/work</workDirectory>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<configuration>
 					<templateDirectory>src/site/template/</templateDirectory>
 					<template>wicket-site.vm</template>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>surefire-report-maven-plugin</artifactId>
+			</plugin-->
 		</plugins>
 	</build>
 	<distributionManagement>
