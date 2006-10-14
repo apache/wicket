@@ -66,28 +66,37 @@ public class ValidatorPropertiesTest extends TestCase
 		page.getText11().validateRequired();
 		page.getText12().setInput("");
 		page.getText12().validateRequired();
-		
-		String msg=page.getText1().getFeedbackMessage().getMessage();
 
-		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage());
-		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage());
-		assertEquals("ok: text3333 is missing", page.getText3().getFeedbackMessage().getMessage());
-		assertEquals("ok: Text4Label is missing", page.getText4().getFeedbackMessage().getMessage());
-		assertEquals("ok: text is missing", page.getText5().getFeedbackMessage().getMessage());
+		String msg = page.getText1().getFeedbackMessage().getMessage().toString();
+
+		assertEquals("text1label is required", page.getText1().getFeedbackMessage().getMessage()
+				.toString());
+		assertEquals("text2 is required", page.getText2().getFeedbackMessage().getMessage()
+				.toString());
+		assertEquals("ok: text3333 is missing", page.getText3().getFeedbackMessage().getMessage()
+				.toString());
+		assertEquals("ok: Text4Label is missing", page.getText4().getFeedbackMessage().getMessage()
+				.toString());
+		assertEquals("ok: text is missing", page.getText5().getFeedbackMessage().getMessage()
+				.toString());
 		assertEquals("Default message: text6 required", page.getText6().getFeedbackMessage()
-				.getMessage());
+				.getMessage().toString());
 		assertEquals("input for text7-Label is missing", page.getText7().getFeedbackMessage()
-				.getMessage());
+				.getMessage().toString());
 		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage()
-				.getMessage());
-		assertEquals("found it in panel", page.getText9().getFeedbackMessage().getMessage());
-		assertEquals("found it in form", page.getText10().getFeedbackMessage().getMessage());
-		assertEquals("found it in page", page.getText11().getFeedbackMessage().getMessage());
-		assertEquals("found it in page", page.getText12().getFeedbackMessage().getMessage());
+				.getMessage().toString());
+		assertEquals("found it in panel", page.getText9().getFeedbackMessage().getMessage()
+				.toString());
+		assertEquals("found it in form", page.getText10().getFeedbackMessage().getMessage()
+				.toString());
+		assertEquals("found it in page", page.getText11().getFeedbackMessage().getMessage()
+				.toString());
+		assertEquals("found it in page", page.getText12().getFeedbackMessage().getMessage()
+				.toString());
 
 		// Test caching
 		assertEquals("Default message: text8-Label required", page.getText8().getFeedbackMessage()
-				.getMessage());
+				.getMessage().toString());
 	}
 
 	/**

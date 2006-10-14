@@ -18,6 +18,7 @@
  */
 package wicket.util.tester;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -803,7 +804,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertNoErrorMessage()
 	{
-		List<String> messages = getMessages(FeedbackMessage.ERROR);
+		List<Serializable> messages = getMessages(FeedbackMessage.ERROR);
 		Assert.assertTrue("expect no error message, but contains\n"
 				+ WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
@@ -813,7 +814,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertNoInfoMessage()
 	{
-		List<String> messages = getMessages(FeedbackMessage.INFO);
+		List<Serializable> messages = getMessages(FeedbackMessage.INFO);
 		Assert.assertTrue("expect no info message, but contains\n"
 				+ WicketTesterHelper.asLined(messages), messages.isEmpty());
 	}
@@ -826,8 +827,13 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertErrorMessages(String[] expectedErrorMessages)
 	{
-		List<String> actualMessages = getMessages(FeedbackMessage.ERROR);
-		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), actualMessages);
+		List<Serializable> actualMessages = getMessages(FeedbackMessage.ERROR);
+		List<String> msgs = new ArrayList<String>();
+		for (Serializable msg : actualMessages)
+		{
+			msgs.add(msg.toString());
+		}
+		WicketTesterHelper.assertEquals(Arrays.asList(expectedErrorMessages), msgs);
 	}
 
 	/**
@@ -838,7 +844,7 @@ public class WicketTester extends MockWebApplication
 	 */
 	public void assertInfoMessages(String[] expectedInfoMessages)
 	{
-		List<String> actualMessages = getMessages(FeedbackMessage.INFO);
+		List<Serializable> actualMessages = getMessages(FeedbackMessage.INFO);
 		WicketTesterHelper.assertEquals(Arrays.asList(expectedInfoMessages), actualMessages);
 	}
 
@@ -848,10 +854,10 @@ public class WicketTester extends MockWebApplication
 	 * @param level
 	 *            level of feedback message, ex.
 	 *            <code>FeedbackMessage.DEBUG or FeedbackMessage.INFO.. etc</code>
-	 * @return List list of messages (in String)
+	 * @return List list of messages (in Serializable)
 	 * @see FeedbackMessage
 	 */
-	public List<String> getMessages(final int level)
+	public List<Serializable> getMessages(final int level)
 	{
 		FeedbackMessages feedbackMessages = getLastRenderedPage().getFeedbackMessages();
 		List allMessages = feedbackMessages.messages(new IFeedbackMessageFilter()
@@ -863,7 +869,7 @@ public class WicketTester extends MockWebApplication
 				return message.getLevel() == level;
 			}
 		});
-		List<String> actualMessages = new ArrayList<String>();
+		List<Serializable> actualMessages = new ArrayList<Serializable>();
 		for (Iterator iter = allMessages.iterator(); iter.hasNext();)
 		{
 			actualMessages.add(((FeedbackMessage)iter.next()).getMessage());
@@ -991,24 +997,24 @@ public class WicketTester extends MockWebApplication
 	 * component by using:
 	 * 
 	 * <pre>
-	 *      ...
-	 *      component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
-	 *          public void onEvent(AjaxRequestTarget) {
-	 *              // Do something.
-	 *          }
-	 *      });
-	 *      ...
+	 *              ...
+	 *              component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *                  public void onEvent(AjaxRequestTarget) {
+	 *                      // Do something.
+	 *                  }
+	 *              });
+	 *              ...
 	 * </pre>
 	 * 
 	 * You can then test that the code inside onEvent actually does what it's
 	 * supposed to, using the WicketTester:
 	 * 
 	 * <pre>
-	 *      ...
-	 *      tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
-	 *                
-	 *      // Test that the code inside onEvent is correct.
-	 *      ...
+	 *              ...
+	 *              tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *                        
+	 *              // Test that the code inside onEvent is correct.
+	 *              ...
 	 * </pre>
 	 * 
 	 * PLEASE NOTE! This method doesn't actually insert the component in the

@@ -65,6 +65,6 @@ public class FormTesterTest extends WicketTestCase
 		assertNull(page.getEmail());
 		assertTrue(page.getFeedbackMessages().hasMessageFor(page.get("form:email")));
 		assertEquals("wrong email address pattern for email", page.getFeedbackMessages()
-				.messageForComponent(page.get("form:email")).getMessage());
+				.messageForComponent(page.get("form:email")).getMessage().toString());
 	}
 }

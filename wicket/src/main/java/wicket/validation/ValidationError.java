@@ -18,6 +18,7 @@
  */
 package wicket.validation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,8 +41,10 @@ import java.util.Map;
  * 
  * @author ivaynberg
  */
-public final class ValidationError implements IValidationError
+public class ValidationError implements IValidationError, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	// XXX 2.0: optimization - keys can be null by default until a key is added
 	/** List of message keys to try against the {@link IMessageSource} */
 	private List<String> keys = new ArrayList<String>(1);
@@ -110,7 +113,7 @@ public final class ValidationError implements IValidationError
 	 * 
 	 * @return map of variables for this error
 	 */
-	public Map<String, Object> getVars()
+	public final Map<String, Object> getVars()
 	{
 		if (vars == null)
 		{
@@ -126,7 +129,7 @@ public final class ValidationError implements IValidationError
 	 *            variable map
 	 * @return this for chaining
 	 */
-	public ValidationError setVars(Map<String, Object> vars)
+	public final ValidationError setVars(Map<String, Object> vars)
 	{
 		if (vars == null)
 		{
@@ -140,7 +143,7 @@ public final class ValidationError implements IValidationError
 	 * @see wicket.validation.IValidationError#getErrorMessage(wicket.validation.IMessageSource)
 	 */
 	@SuppressWarnings("unchecked")
-	public String getErrorMessage(IMessageSource messageSource)
+	public final String getErrorMessage(IMessageSource messageSource)
 	{
 		String errorMessage = null;
 
@@ -176,7 +179,7 @@ public final class ValidationError implements IValidationError
 	 * 
 	 * @return message
 	 */
-	public String getMessage()
+	public final String getMessage()
 	{
 		return message;
 	}
@@ -190,7 +193,7 @@ public final class ValidationError implements IValidationError
 	 * 
 	 * @return this for chaining
 	 */
-	public ValidationError setMessage(String message)
+	public final ValidationError setMessage(String message)
 	{
 		if (message == null)
 		{
@@ -200,6 +203,9 @@ public final class ValidationError implements IValidationError
 		return this;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

@@ -66,7 +66,7 @@ public class FeedbackMessage implements Serializable
 	private final int level;
 
 	/** The actual message. */
-	private final String message;
+	private final Serializable message;
 
 	/** The reporting component. */
 	private final Component reporter;
@@ -84,7 +84,7 @@ public class FeedbackMessage implements Serializable
 	 * @param level
 	 *            The level of the message
 	 */
-	public FeedbackMessage(final Component reporter, final String message, final int level)
+	public FeedbackMessage(final Component reporter, final Serializable message, final int level)
 	{
 		this.reporter = reporter;
 		this.message = message;
@@ -138,7 +138,7 @@ public class FeedbackMessage implements Serializable
 	 * 
 	 * @return the message.
 	 */
-	public final String getMessage()
+	public final Serializable getMessage()
 	{
 		return message;
 	}

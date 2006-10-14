@@ -166,9 +166,10 @@ public abstract class Session implements Serializable, IConverterLocator
 	private String style;
 
 	/** feedback messages */
-	private FeedbackMessages feedbackMessages = new FeedbackMessages(new CopyOnWriteArrayList<FeedbackMessage>());
+	private FeedbackMessages feedbackMessages = new FeedbackMessages(
+			new CopyOnWriteArrayList<FeedbackMessage>());
 
-	private transient Map<PageMap,Thread> pageMapsUsedInRequest;
+	private transient Map<PageMap, Thread> pageMapsUsedInRequest;
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -443,8 +444,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final Page getPage(final String pageMapName, final String path,
-			final int versionNumber)
+	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -452,37 +452,42 @@ public abstract class Session implements Serializable, IConverterLocator
 		}
 
 		// Get page map by name, creating the default page map automatically
-		PageMap pageMap = pageMapForName(pageMapName, Objects.equal(PageMap.DEFAULT_NAME,pageMapName));
+		PageMap pageMap = pageMapForName(pageMapName, Objects.equal(PageMap.DEFAULT_NAME,
+				pageMapName));
 		if (pageMap != null)
 		{
-			synchronized(pageMapsUsedInRequest)
+			synchronized (pageMapsUsedInRequest)
 			{
 				long startTime = System.currentTimeMillis();
-				
+
 				if (pageMapsUsedInRequest == null)
 				{
 					pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
 				}
-				
+
 				// Get page entry for id and version
 				Thread t = pageMapsUsedInRequest.get(pageMap);
 				while (t != null && t != Thread.currentThread())
 				{
 					try
 					{
-						pageMapsUsedInRequest.wait(20000); // wait 20 seconds max.
+						pageMapsUsedInRequest.wait(20000); // wait 20 seconds
+															// max.
 					}
 					catch (InterruptedException ex)
 					{
 						throw new WicketRuntimeException(ex);
 					}
 					t = pageMapsUsedInRequest.get(pageMap);
-					if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
+					if (t != null && t != Thread.currentThread()
+							&& (startTime + 20000) < System.currentTimeMillis())
 					{
-						// if it is still not the right thread.. 
-						// This must be a wicket bug or some other (dead)lock in the code.
-						throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
-								" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
+						// if it is still not the right thread..
+						// This must be a wicket bug or some other (dead)lock in
+						// the code.
+						throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName
+								+ " is still locked by: " + t
+								+ ", giving up trying to get the page for path: " + path);
 					}
 				}
 				pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
@@ -790,14 +795,13 @@ public abstract class Session implements Serializable, IConverterLocator
 		}
 	}
 
-
 	/**
 	 * Registers an informational feedback message for this session
 	 * 
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void info(final String message)
+	public final void info(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.INFO);
 	}
@@ -808,7 +812,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void warn(final String message)
+	public final void warn(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.WARNING);
 	}
@@ -819,7 +823,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void error(final String message)
+	public final void error(final Serializable message)
 	{
 		addFeedbackMessage(message, FeedbackMessage.ERROR);
 	}
@@ -863,7 +867,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @param level
 	 * 
 	 */
-	private void addFeedbackMessage(String message, int level)
+	private void addFeedbackMessage(Serializable message, int level)
 	{
 		getFeedbackMessages().add(null, message, level);
 		dirty();
@@ -1061,8 +1065,9 @@ public abstract class Session implements Serializable, IConverterLocator
 	{
 		int size = feedbackMessages.size();
 		feedbackMessages.clearRendered();
-		// mark the session as dirty when the feedback messages have been altered.
-		if(size != feedbackMessages.size())
+		// mark the session as dirty when the feedback messages have been
+		// altered.
+		if (size != feedbackMessages.size())
 		{
 			dirty();
 		}
@@ -1087,16 +1092,17 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final void requestDetached()
 	{
-		if(pageMapsUsedInRequest != null)
+		if (pageMapsUsedInRequest != null)
 		{
-			synchronized(pageMapsUsedInRequest)
+			synchronized (pageMapsUsedInRequest)
 			{
 				Thread t = Thread.currentThread();
-				Iterator<Map.Entry<PageMap,Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
-				while(it.hasNext())
+				Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet()
+						.iterator();
+				while (it.hasNext())
 				{
 					Entry<PageMap, Thread> entry = it.next();
-					if(entry.getValue() == t)
+					if (entry.getValue() == t)
 					{
 						it.remove();
 					}
@@ -1105,7 +1111,7 @@ public abstract class Session implements Serializable, IConverterLocator
 			}
 		}
 	}
-	
+
 	/**
 	 * @param map
 	 *            The page map to add to dirty objects list

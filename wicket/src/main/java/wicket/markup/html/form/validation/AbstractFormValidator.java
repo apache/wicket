@@ -25,6 +25,7 @@ import java.util.Map;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
+import wicket.validation.IValidationError;
 import wicket.validation.ValidationError;
 
 /**
@@ -140,7 +141,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 		}
 
 		error.setVars(vars);
-		fc.error(error);
+		fc.error((IValidationError)error);
 	}
 
 	/**

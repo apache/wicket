@@ -97,7 +97,9 @@ import wicket.version.undo.Change;
  * @author Johan Compagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class FormComponent<T> extends WebMarkupContainer<T> implements IFormProcessingListener
+public abstract class FormComponent<T> extends WebMarkupContainer<T>
+		implements
+			IFormProcessingListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -124,7 +126,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	}
 
 	/**
-	 * Visitor for traversing form components 
+	 * Visitor for traversing form components
 	 */
 	public static abstract class AbstractVisitor implements IVisitor
 	{
@@ -133,8 +135,9 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 		 */
 		public Object formComponent(IFormProcessingListener component)
 		{
-			if (component instanceof FormComponent) {
-				onFormComponent((FormComponent) component);
+			if (component instanceof FormComponent)
+			{
+				onFormComponent((FormComponent)component);
 			}
 			return Component.IVisitor.CONTINUE_TRAVERSAL;
 		}
@@ -608,7 +611,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	{
 		if (!checkRequired())
 		{
-			error(new ValidationError().addMessageKey("RequiredValidator"));
+			error((IValidationError)new ValidationError().addMessageKey("RequiredValidator"));
 		}
 	}
 
@@ -649,7 +652,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 					error.setVar("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
-				error(error);
+				error((IValidationError)error);
 
 			}
 		}
@@ -680,7 +683,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 					error.setVar("format", ((SimpleDateFormat)format).toLocalizedPattern());
 				}
 
-				error(error);
+				error((IValidationError)error);
 			}
 		}
 	}
@@ -838,12 +841,12 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		tag.put("name", getInputName());
-		
+
 		if (!isEnabled() || !isEnableAllowed())
 		{
 			tag.put("disabled", "disabled");
 		}
-		
+
 		super.onComponentTag(tag);
 	}
 
@@ -1064,7 +1067,12 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	}
 
 	/**
-	 * Reports a validation error against this form component
+	 * Reports a validation error against this form component.
+	 * 
+	 * The actual error is reported by creating a
+	 * {@link ValidationErrorFeedback} object that holds both the validation
+	 * error and the generated error message - so a custom feedback panel can
+	 * have access to both.
 	 * 
 	 * @param error
 	 *            validation error
@@ -1081,13 +1089,12 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 		if (message == null)
 		{
 			// XXX maybe make message source remember tried resource keys so a
-			// more specific error message can be created
-			error("Could not locate error message for error: " + error.toString());
+			// more detailederror message can be created - like show which keys
+			// were tried
+			message = "Could not locate error message for error: " + error.toString();
 		}
-		else
-		{
-			error(message);
-		}
+
+		error(new ValidationErrorFeedback(error, message));
 
 	}
 
@@ -1273,6 +1280,6 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T> implements 
 	 */
 	public boolean processChildren()
 	{
-	    return true;
+		return true;
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * $Id: FeedbackPanel.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
- * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
+ * joco01 $ $Revision: 461067 $ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
  * 2006) $
  * 
  * ==============================================================================
@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import wicket.AttributeModifier;
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.feedback.FeedbackMessage;
 import wicket.feedback.FeedbackMessagesModel;
@@ -49,9 +50,6 @@ import wicket.model.Model;
 public class FeedbackPanel extends Panel implements IFeedback
 {
 	private static final long serialVersionUID = 1L;
-
-	/** whether model messages should be HTML escaped. Default is true. */
-	private boolean escapeMessages = true;
 
 	/** Message view */
 	private final MessageListView messageListView;
@@ -98,12 +96,32 @@ public class FeedbackPanel extends Panel implements IFeedback
 				}
 			};
 
-			final Label label = new Label(listItem, "message", message.getMessage());
-			label.setEscapeModelStrings(getEscapeMessages());
+			final Component label = newMessageDisplayComponent(listItem, "message", message);
 			final AttributeModifier levelModifier = new AttributeModifier("class", replacementModel);
 			label.add(levelModifier);
 			listItem.add(levelModifier);
 		}
+	}
+
+	/**
+	 * Generates a component that is used to display the message inside the
+	 * feedback panel. This component must handle being attached to
+	 * <code>span</code> tags.
+	 * 
+	 * By default a {@link Label} is used.
+	 * 
+	 * @param parent
+	 *            component parent
+	 * @param id
+	 *            parent id
+	 * @param message
+	 *            feedback message
+	 * @return component used to display the message
+	 */
+	protected Component newMessageDisplayComponent(MarkupContainer parent, String id,
+			FeedbackMessage message)
+	{
+		return new Label(parent, id, message.getMessage().toString());
 	}
 
 	/**
@@ -141,16 +159,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 
 
 	/**
-	 * Gets whether model messages should be HTML escaped. Default is true.
-	 * 
-	 * @return whether model messages should be HTML escaped
-	 */
-	public final boolean getEscapeMessages()
-	{
-		return escapeMessages;
-	}
-
-	/**
 	 * @return Model for feedback messages on which you can install filters and
 	 *         other properties
 	 */
@@ -182,17 +190,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	public boolean isVersioned()
 	{
 		return false;
-	}
-
-	/**
-	 * Sets whether model messages should be HTML escaped. Default is true.
-	 * 
-	 * @param escapeMessages
-	 *            whether model messages should be HTML escaped
-	 */
-	public final void setEscapeMessages(boolean escapeMessages)
-	{
-		this.escapeMessages = escapeMessages;
 	}
 
 	/**

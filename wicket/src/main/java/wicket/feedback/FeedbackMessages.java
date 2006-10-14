@@ -59,20 +59,21 @@ public final class FeedbackMessages implements Serializable
 	}
 
 	/**
-	 * Call this constructor if you want to replace the internal
-	 * store with another implemention then the default (ArrayList). 
-	 * This could be a {@link CopyOnWriteArrayList} if this feedbackmessages 
-	 * instance is used by multiply threads.
+	 * Call this constructor if you want to replace the internal store with
+	 * another implemention then the default (ArrayList). This could be a
+	 * {@link CopyOnWriteArrayList} if this feedbackmessages instance is used by
+	 * multiply threads.
 	 * 
-	 * @param messagesList 
+	 * @param messagesList
 	 * 
 	 */
 	public FeedbackMessages(List<FeedbackMessage> messagesList)
 	{
-		if(messagesList == null) throw new IllegalArgumentException("messages list can't be null");
+		if (messagesList == null)
+			throw new IllegalArgumentException("messages list can't be null");
 		messages = messagesList;
 	}
-	
+
 	/**
 	 * Clears any existing messages
 	 */
@@ -115,7 +116,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void debug(Component reporter, String message)
+	public final void debug(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.DEBUG));
 	}
@@ -128,7 +129,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void error(Component reporter, String message)
+	public final void error(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.ERROR));
 	}
@@ -141,7 +142,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void fatal(Component reporter, String message)
+	public final void fatal(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.FATAL));
 	}
@@ -207,7 +208,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            The actual message
 	 */
-	public final void info(Component reporter, String message)
+	public final void info(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.INFO));
 	}
@@ -286,7 +287,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 *            the actual message
 	 */
-	public final void warn(Component reporter, String message)
+	public final void warn(Component reporter, Serializable message)
 	{
 		add(new FeedbackMessage(reporter, message, FeedbackMessage.WARNING));
 	}
@@ -298,7 +299,7 @@ public final class FeedbackMessages implements Serializable
 	 * @param message
 	 * @param level
 	 */
-	public final void add(Component reporter, String message, int level)
+	public final void add(Component reporter, Serializable message, int level)
 	{
 		add(new FeedbackMessage(reporter, message, level));
 	}

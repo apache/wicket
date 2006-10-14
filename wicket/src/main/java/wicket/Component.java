@@ -810,7 +810,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void debug(final String message)
+	public final void debug(final Serializable message)
 	{
 		getPage().getFeedbackMessages().debug(this, message);
 	}
@@ -839,7 +839,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void error(final String message)
+	public final void error(final Serializable message)
 	{
 		getPage().getFeedbackMessages().error(this, message);
 	}
@@ -850,7 +850,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void fatal(final String message)
+	public final void fatal(final Serializable message)
 	{
 		getPage().getFeedbackMessages().fatal(this, message);
 	}
@@ -1374,7 +1374,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void info(final String message)
+	public final void info(final Serializable message)
 	{
 		getPage().getFeedbackMessages().info(this, message);
 	}
@@ -2456,7 +2456,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @param message
 	 *            The feedback message
 	 */
-	public final void warn(final String message)
+	public final void warn(final Serializable message)
 	{
 		getPage().getFeedbackMessages().warn(this, message);
 	}
