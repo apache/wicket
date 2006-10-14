@@ -168,7 +168,7 @@ public abstract class Session implements Serializable
 	/** feedback messages */
 	private FeedbackMessages feedbackMessages = new FeedbackMessages(new CopyOnWriteArrayList());
 
-	private transient Map pageMapsUsedInRequest;
+	private transient Map pageMapsUsedInRequest = new HashMap(3);
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -644,10 +644,6 @@ public abstract class Session implements Serializable
 	 */
 	public final void setApplication(final Application application)
 	{
-		if (pageMapsUsedInRequest == null)
-		{
-			pageMapsUsedInRequest = new HashMap(2);
-		}
 	}
 
 	/**
