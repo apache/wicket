@@ -17,8 +17,7 @@ package wicket.jmx;
 import wicket.settings.IApplicationSettings;
 
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Application settings.
  * 
  * @author eelcohillenius
  */
@@ -44,7 +43,7 @@ public interface ApplicationSettingsMBean
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *          appserver.com/context mapped to webserver/ (context path should be '/')
+	 *           appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * @return The context path

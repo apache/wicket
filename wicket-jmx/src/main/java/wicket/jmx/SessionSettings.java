@@ -14,7 +14,6 @@
  */
 package wicket.jmx;
 
-
 /**
  * Exposes Application related functionality for JMX.
  * 
@@ -56,6 +55,14 @@ public class SessionSettings implements SessionSettingsMBean
 	public String getPageMapEvictionStrategy()
 	{
 		return Stringz.className(application.getSessionSettings().getPageMapEvictionStrategy());
+	}
+
+	/**
+	 * @see wicket.jmx.SessionSettingsMBean#getSessionStore()
+	 */
+	public String getSessionStore()
+	{
+		return Stringz.className(application.getSessionStore());
 	}
 
 	/**

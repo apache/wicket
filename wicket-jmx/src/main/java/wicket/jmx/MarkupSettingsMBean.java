@@ -16,10 +16,8 @@ package wicket.jmx;
 
 import wicket.settings.IMarkupSettings;
 
-
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Markup settings.
  * 
  * @author eelcohillenius
  */
