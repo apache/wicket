@@ -44,6 +44,8 @@ public class AjaxTabbedPanel extends TabbedPanel
 	{
 		super(id, tabs);
 		setOutputMarkupId(true);
+		 
+		setVersioned(false);
 	}
 
 	protected WebMarkupContainer newLink(String linkId, final int index)
