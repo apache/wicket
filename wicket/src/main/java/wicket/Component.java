@@ -548,8 +548,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/**
 	 * I really dislike it, but for now we need it. Reason: due to transparent
-	 * containers and IComponentResolver there is NO guaranteed 1:1 mapping between
-	 * component and markup
+	 * containers and IComponentResolver there is NO guaranteed 1:1 mapping
+	 * between component and markup
 	 */
 	int markupIndex = -1;
 
@@ -577,7 +577,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/** The markup fragment associated with the component */
 	private transient MarkupFragment markupFragment;
-	
+
 	/**
 	 * Constructor. All components have names. A component's id cannot be null.
 	 * This is the minimal constructor of component. It does not register a
@@ -613,7 +613,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	public Component(final MarkupContainer<?> parent, final String id, final IModel<T> model)
 	{
 		setId(id);
-		
+
 		this.parent = getRealParent(parent, id);
 
 		getApplication().notifyComponentInstantiationListeners(this);
@@ -654,8 +654,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * Get the real parent for the component taking IAlternateParent into account if
-	 * necessary.
+	 * Get the real parent for the component taking IAlternateParent into
+	 * account if necessary.
 	 * 
 	 * @param parent
 	 *            The parent of this component The parent of this component.
@@ -695,10 +695,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				}
 			}
 		}
-		
+
 		return parent;
 	}
-	
+
 	/**
 	 * Gets the markup fragment associated with the component. Except for Pages
 	 * it is assumed that the first markup element of the fragment is a tag.
@@ -722,8 +722,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		MarkupFragment markupFragment = parent.getMarkupFragment(getId());
 		if (markupFragment == null)
 		{
-			throw new MarkupNotFoundException("Unable to find markup for Component: "
-					+ getId());
+			throw new MarkupNotFoundException("Unable to find markup for Component: " + getId());
 		}
 
 		// Attached behaviors provided by the ComponentTag which
@@ -731,7 +730,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		if ((markupFragment.size() > 0) && (markupFragment.get(0) instanceof ComponentTag))
 		{
 			final ComponentTag tag = markupFragment.getTag(0);
-			
+
 			// add any behaviors attached to the component tag
 			if (tag.hasBehaviors())
 			{
@@ -742,7 +741,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				}
 			}
 		}
-		
+
 		return markupFragment;
 	}
 
@@ -1026,7 +1025,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				if (fragment.get(0) instanceof ComponentTag)
 				{
-					this.markupAttributes = new MarkupAttributeValueMap(fragment.getTag(0).getAttributes());
+					this.markupAttributes = new MarkupAttributeValueMap(fragment.getTag(0)
+							.getAttributes());
 				}
 			}
 		}
@@ -1743,11 +1743,12 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 		else
 		{
-			// Get the markup associated with the component. 
+			// Get the markup associated with the component.
 			MarkupContainer parent = getParent();
 			if (parent == null)
 			{
-				throw new WicketRuntimeException("Expected the Component to have a parent container: " + getId());
+				throw new WicketRuntimeException(
+						"Expected the Component to have a parent container: " + getId());
 			}
 			MarkupStream markupStream = new MarkupStream(getMarkupFragment());
 			parent.setMarkupStream(markupStream);
@@ -1775,6 +1776,26 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				if (this instanceof IFeedback)
 				{
 					((IFeedback)this).updateFeedback();
+				}
+
+				// check authorization
+				// first the component itself
+				setRenderAllowed(isActionAuthorized(RENDER));
+				// check children if this is a container
+				if (this instanceof MarkupContainer)
+				{
+					MarkupContainer container = (MarkupContainer)this;
+					container.visitChildren(new IVisitor()
+					{
+						public Object component(final Component component)
+						{
+							// Find out if this component can be rendered
+							final boolean renderAllowed = component.isActionAuthorized(RENDER);
+							// Authorize rendering
+							component.setRenderAllowed(renderAllowed);
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
 				}
 
 				// Render the component and all its children
@@ -1805,7 +1826,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		this.markupIndex = markupStream.getCurrentIndex();
 
-		// Get mutable copy of next tag and apply the changes recorded in markupAttributes
+		// Get mutable copy of next tag and apply the changes recorded in
+		// markupAttributes
 		final ComponentTag openTag = markupStream.getTag();
 		final ComponentTag tag = openTag.mutable();
 		if (this.markupAttributes != null)
@@ -1863,9 +1885,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					if (getRenderBodyOnly() == false)
 					{
 						// Close the manually opened panel tag.
-						if(tag.getNameChanged())
+						if (tag.getNameChanged())
 						{
-                            getResponse().write(tag.syntheticCloseTagString());
+							getResponse().write(tag.syntheticCloseTagString());
 						}
 						else
 						{
@@ -2799,8 +2821,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		// Clear the component's markup cache and allow changes to locale,
 		// style etc to take effect. Note that the MarkupCache maintain
-		// a copy of the markup resource as well and reloads the 
-		// associated markup only if necessary. Hence, removing the 
+		// a copy of the markup resource as well and reloads the
+		// associated markup only if necessary. Hence, removing the
 		// local cache is no negative impact on perfermance.
 		this.markupFragment = null;
 	}
