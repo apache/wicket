@@ -47,7 +47,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().setRenderStrategy(RenderStrategy.REDIRECT_TO_RENDER);
 
 		// Install a simple page authorization strategy, that checks all pages

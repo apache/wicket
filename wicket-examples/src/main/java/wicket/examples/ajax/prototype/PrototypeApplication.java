@@ -42,7 +42,7 @@ public class PrototypeApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 	}
 

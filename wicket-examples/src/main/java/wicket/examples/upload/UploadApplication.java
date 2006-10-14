@@ -1,7 +1,7 @@
 /*
  * $Id: UploadApplication.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
- * 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16
+ * Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -45,7 +45,7 @@ public class UploadApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
 	}
 
 

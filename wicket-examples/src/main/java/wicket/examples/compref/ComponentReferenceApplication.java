@@ -69,6 +69,6 @@ public class ComponentReferenceApplication extends WicketExampleApplication
 	@Override
 	protected void init()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
 	}
 }
