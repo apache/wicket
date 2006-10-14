@@ -213,6 +213,13 @@
 			</dependency>
 			<dependency>
 				<groupId>wicket</groupId>
+				<artifactId>wicket-jmx</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
 				<version>${project.version}</version>
 				<type>jar</type>
@@ -325,7 +332,8 @@
 			<activation> 
 				<jdk>1.5</jdk> 
 			</activation> 
-			<modules> 
+			<modules>
+				<module>../wicket-jmx</module>
 				<module>../wicket-spring-annot</module>
 				<module>../wicket-spring-annot-examples</module>
 				<module>../wicket-auth-roles</module> 
