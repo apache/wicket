@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: Palette.java 462286 2006-09-17 02:18:53 -0700 (Sun, 17 Sep 2006)
+ * ehillenius $ $Revision$ $Date: 2006-09-17 02:18:53 -0700 (Sun, 17
+ * Sep 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -50,9 +51,9 @@ import wicket.util.string.AppendingStringBuffer;
  * Example:
  * 
  * <pre>
- *        Form form=new Form(...);
- *        Palette palette=new Palette(...);
- *        palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *            Form form=new Form(...);
+ *            Palette palette=new Palette(...);
+ *            palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
  * </pre>
  * 
  * @param <T>
@@ -118,6 +119,29 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	/** reference to default add buttom image */
 	private static final ResourceReference addImage = new ResourceReference(Palette.class,
 			"add.gif");
+
+	/**
+	 * @param parent
+	 *            The parent of this component The parent of this component.
+	 * @param id
+	 *            component id
+	 * @param choicesModel
+	 *            model representing collection of all available choices
+	 * @param choiceRenderer
+	 *            render used to render choices
+	 * @param rows
+	 *            number of choices to be visible on the screen with out
+	 *            scrolling
+	 * @param allowOrder
+	 *            allow user to move selections up and down
+	 */
+	public Palette(MarkupContainer parent, final String id, IModel<E> choicesModel,
+			IChoiceRenderer choiceRenderer, int rows, boolean allowOrder)
+	{
+		// TODO swap boolean allowOrder for an enum
+		this(parent, id, null, choicesModel, choiceRenderer, rows, allowOrder);
+	}
+
 
 	/**
 	 * @param parent
