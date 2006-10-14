@@ -41,15 +41,13 @@ import wicket.util.time.Duration;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public class FormPage extends BasePage
-{
+public class FormPage extends BasePage {
 	private Bean bean = new Bean();
 
 	/**
 	 * Constructor
 	 */
-	public FormPage()
-	{
+	public FormPage() {
 		// create feedback panel to show errors
 		final FeedbackPanel feedback = new FeedbackPanel("feedback");
 		feedback.setOutputMarkupId(true);
@@ -81,21 +79,26 @@ public class FormPage extends BasePage
 		// attach an ajax validation behavior to all form component's onkeydown
 		// event and throttle it down to once per second
 
-		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeyup", Duration.ONE_SECOND);
+		AjaxFormValidatingBehavior.addToAllFormComponents(form, "onkeyup",
+				Duration.ONE_SECOND);
 
 		// add a button that can be used to submit the form via ajax
-		form.add(new AjaxSubmitButton("ajax-submit-button", form)
-		{
-			protected void onSubmit(AjaxRequestTarget target, Form form)
-			{
+		form.add(new AjaxSubmitButton("ajax-submit-button", form) {
+			protected void onSubmit(AjaxRequestTarget target, Form form) {
+				// repaint the feedback panel so that it is hidden
+				target.addComponent(feedback);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form form) {
+				// repaint the feedback panel so errors are shown
 				target.addComponent(feedback);
 			}
 		});
 	}
 
 	/** simple java bean. */
-	public static class Bean implements Serializable
-	{
+	public static class Bean implements Serializable {
 		private String name, email;
 
 		/**
@@ -103,8 +106,7 @@ public class FormPage extends BasePage
 		 * 
 		 * @return email
 		 */
-		public String getEmail()
-		{
+		public String getEmail() {
 			return email;
 		}
 
@@ -114,8 +116,7 @@ public class FormPage extends BasePage
 		 * @param email
 		 *            email
 		 */
-		public void setEmail(String email)
-		{
+		public void setEmail(String email) {
 			this.email = email;
 		}
 
@@ -124,8 +125,7 @@ public class FormPage extends BasePage
 		 * 
 		 * @return name
 		 */
-		public String getName()
-		{
+		public String getName() {
 			return name;
 		}
 
@@ -135,8 +135,7 @@ public class FormPage extends BasePage
 		 * @param name
 		 *            name
 		 */
-		public void setName(String name)
-		{
+		public void setName(String name) {
 			this.name = name;
 		}
 	}
