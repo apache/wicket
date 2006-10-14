@@ -26,8 +26,8 @@ import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.authorization.AuthorizationException;
 import wicket.markup.html.pages.ExceptionErrorPage;
-import wicket.settings.IExceptionSettings;
-import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import wicket.settings.IApplicationSettings;
+import wicket.settings.IApplicationSettings.UnexpectedExceptionDisplay;
 
 /**
  * Default implementation of
@@ -59,7 +59,7 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
-		final IExceptionSettings settings = application.getExceptionSettings();
+		final IApplicationSettings settings = application.getApplicationSettings();
 		final Page responsePage = requestCycle.getResponsePage();
 
 		Page override = onRuntimeException(responsePage, e);
@@ -74,9 +74,12 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 		}
 		else if (e instanceof AuthorizationException)
 		{
-			// are authorization exceptions always thrown before the real render?
-			// else we need to make a page (see below) or set it hard to a redirect.
-			Class<? extends Page> accessDeniedPageClass = application.getApplicationSettings().getAccessDeniedPage();
+			// are authorization exceptions always thrown before the real
+			// render?
+			// else we need to make a page (see below) or set it hard to a
+			// redirect.
+			Class<? extends Page> accessDeniedPageClass = application.getApplicationSettings()
+					.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
 		}
@@ -86,9 +89,10 @@ public class DefaultExceptionResponseStrategy implements IExceptionResponseStrat
 			// and preserve the url so when the refresh button is pressed we
 			// rerun the code that caused the error
 			requestCycle.setRedirect(false);
-			
+
 			// figure out which error page to show
-			Class<? extends Page>  internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();			
+			Class<? extends Page> internalErrorPageClass = application.getApplicationSettings()
+					.getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass

@@ -37,14 +37,13 @@ import wicket.WicketRuntimeException;
 import wicket.authorization.AuthorizationException;
 import wicket.protocol.http.portlet.pages.ExceptionErrorPortletPage;
 import wicket.request.compound.IExceptionResponseStrategy;
-import wicket.settings.IExceptionSettings;
-import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import wicket.settings.IApplicationSettings;
+import wicket.settings.IApplicationSettings.UnexpectedExceptionDisplay;
 
 /**
  * @author Janne Hietam&auml;ki
  * 
  */
-
 // TODO: remove duplicate code from here and DefaultExceptionResponseStrategy
 public class PortletExceptionResponseStrategy implements IExceptionResponseStrategy
 {
@@ -65,7 +64,7 @@ public class PortletExceptionResponseStrategy implements IExceptionResponseStrat
 		// If application doesn't want debug info showing up for users
 		final Session session = requestCycle.getSession();
 		final Application application = session.getApplication();
-		final IExceptionSettings settings = application.getExceptionSettings();
+		final IApplicationSettings settings = application.getApplicationSettings();
 		final Page responsePage = requestCycle.getResponsePage();
 
 		Page override = onRuntimeException(responsePage, e);
@@ -80,9 +79,12 @@ public class PortletExceptionResponseStrategy implements IExceptionResponseStrat
 		}
 		else if (e instanceof AuthorizationException)
 		{
-			// are authorization exceptions always thrown before the real render?
-			// else we need to make a page (see below) or set it hard to a redirect.
-			Class<? extends Page> accessDeniedPageClass = application.getApplicationSettings().getAccessDeniedPage();
+			// are authorization exceptions always thrown before the real
+			// render?
+			// else we need to make a page (see below) or set it hard to a
+			// redirect.
+			Class<? extends Page> accessDeniedPageClass = application.getApplicationSettings()
+					.getAccessDeniedPage();
 
 			throw new RestartResponseAtInterceptPageException(accessDeniedPageClass);
 		}
@@ -92,9 +94,10 @@ public class PortletExceptionResponseStrategy implements IExceptionResponseStrat
 			// and preserve the url so when the refresh button is pressed we
 			// rerun the code that caused the error
 			requestCycle.setRedirect(false);
-			
+
 			// figure out which error page to show
-			Class<? extends Page>  internalErrorPageClass = application.getApplicationSettings().getInternalErrorPage();			
+			Class<? extends Page> internalErrorPageClass = application.getApplicationSettings()
+					.getInternalErrorPage();
 			Class responseClass = responsePage != null ? responsePage.getClass() : null;
 
 			if (responseClass != internalErrorPageClass
@@ -115,6 +118,7 @@ public class PortletExceptionResponseStrategy implements IExceptionResponseStrat
 			}
 		}
 	}
+
 	/**
 	 * This method is called when a runtime exception is thrown, just before the
 	 * actual handling of the runtime exception. This implemention passes the

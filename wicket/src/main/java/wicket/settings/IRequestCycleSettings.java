@@ -6,7 +6,7 @@ import wicket.IResponseFilter;
 import wicket.RequestCycle;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.WebRequestCycle;
-import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import wicket.settings.IApplicationSettings.UnexpectedExceptionDisplay;
 
 /**
  * Inteface for request related settings

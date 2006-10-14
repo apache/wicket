@@ -86,14 +86,12 @@ public final class Settings
 		implements
 			IApplicationSettings,
 			IDebugSettings,
-			IExceptionSettings,
 			IMarkupSettings,
 			IPageSettings,
 			IRequestCycleSettings,
 			IResourceSettings,
 			ISecuritySettings,
 			ISessionSettings,
-			IAjaxSettings,
 			IFrameworkSettings
 {
 	private final static Log log = LogFactory.getLog(Settings.class);

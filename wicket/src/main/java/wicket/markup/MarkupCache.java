@@ -82,6 +82,14 @@ public class MarkupCache
 	}
 
 	/**
+	 * @return the number of elements currently in the cache.
+	 */
+	public int size()
+	{
+		return markupCache.size();
+	}
+
+	/**
 	 * Add a listener which is triggered after the resource has been (re-)loaded
 	 * 
 	 * @param resourceStream
@@ -317,7 +325,8 @@ public class MarkupCache
 	{
 		try
 		{
-			final MarkupFragment markup = newMarkupLoader().loadMarkup(container, markupResourceStream);
+			final MarkupFragment markup = newMarkupLoader().loadMarkup(container,
+					markupResourceStream);
 
 			// add the markup to the cache
 			if (markupResourceStream.getCacheKey() != null)
@@ -405,10 +414,10 @@ public class MarkupCache
 	{
 		AbstractMarkupLoader loaderChain = new InheritedMarkupMarkupLoader(application);
 		loaderChain.setParent(new DefaultMarkupLoader(application));
-		
+
 		return loaderChain;
 	}
-	
+
 	/**
 	 * In case you need a more sophisticate cache implementation.
 	 * <p>

@@ -43,10 +43,8 @@ import wicket.markup.resolver.WicketMessageResolver;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
 import wicket.session.ISessionStore;
-import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
 import wicket.settings.IDebugSettings;
-import wicket.settings.IExceptionSettings;
 import wicket.settings.IFrameworkSettings;
 import wicket.settings.IMarkupSettings;
 import wicket.settings.IPageSettings;
@@ -55,7 +53,7 @@ import wicket.settings.IResourceSettings;
 import wicket.settings.ISecuritySettings;
 import wicket.settings.ISessionSettings;
 import wicket.settings.Settings;
-import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
+import wicket.settings.IApplicationSettings.UnexpectedExceptionDisplay;
 import wicket.util.file.IResourceFinder;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
@@ -334,9 +332,9 @@ public abstract class Application
 			getDebugSettings().setComponentUseCheck(true);
 			getDebugSettings().setSerializeSessionAttributes(true);
 			getMarkupSettings().setStripWicketTags(false);
-			getExceptionSettings().setUnexpectedExceptionDisplay(
+			getApplicationSettings().setUnexpectedExceptionDisplay(
 					UnexpectedExceptionDisplay.SHOW_EXCEPTION_PAGE);
-			getAjaxSettings().setAjaxDebugModeEnabled(true);
+			getDebugSettings().setAjaxDebugModeEnabled(true);
 		}
 		else if (DEPLOYMENT.equalsIgnoreCase(configurationType))
 		{
@@ -344,9 +342,9 @@ public abstract class Application
 			getDebugSettings().setComponentUseCheck(false);
 			getDebugSettings().setSerializeSessionAttributes(false);
 			getMarkupSettings().setStripWicketTags(true);
-			getExceptionSettings().setUnexpectedExceptionDisplay(
+			getApplicationSettings().setUnexpectedExceptionDisplay(
 					UnexpectedExceptionDisplay.SHOW_INTERNAL_ERROR_PAGE);
-			getAjaxSettings().setAjaxDebugModeEnabled(false);
+			getDebugSettings().setAjaxDebugModeEnabled(false);
 		}
 		else
 		{
@@ -371,16 +369,6 @@ public abstract class Application
 		{
 			getResourceSettings().addResourceFolder(resourceFolder);
 		}
-	}
-
-	/**
-	 * @return Application's ajax related settings
-	 * @see IAjaxSettings
-	 * @since 1.2
-	 */
-	public final IAjaxSettings getAjaxSettings()
-	{
-		return getSettings();
 	}
 
 	/**
@@ -419,16 +407,6 @@ public abstract class Application
 	 * @since 1.2
 	 */
 	public final IDebugSettings getDebugSettings()
-	{
-		return getSettings();
-	}
-
-	/**
-	 * @return Application's exception handling settings
-	 * @see IExceptionSettings
-	 * @since 1.2
-	 */
-	public final IExceptionSettings getExceptionSettings()
 	{
 		return getSettings();
 	}

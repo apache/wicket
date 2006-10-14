@@ -29,6 +29,34 @@ import wicket.util.convert.IConverterLocatorFactory;
 public interface IApplicationSettings
 {
 	/**
+	 * Enumerated type for different ways of displaying unexpected exceptions.
+	 */
+	public static enum UnexpectedExceptionDisplay {
+		/**
+		 * Indicates that an exception page appropriate to development should be
+		 * shown when an unexpected exception is thrown.
+		 */
+		SHOW_EXCEPTION_PAGE,
+		/**
+		 * Indicates a generic internal error page should be shown when an
+		 * unexpected exception is thrown.
+		 */
+		SHOW_INTERNAL_ERROR_PAGE,
+		/**
+		 * Indicates that no exception page should be shown when an unexpected
+		 * exception is thrown.
+		 */
+		SHOW_NO_EXCEPTION_PAGE
+	}
+
+	/**
+	 * Sets the CoverterLocatorFactory
+	 * 
+	 * @param factory
+	 */
+	public void setConverterSupplierFactory(IConverterLocatorFactory factory);
+
+	/**
 	 * Gets the access denied page class.
 	 * 
 	 * @return Returns the accessDeniedPage.
@@ -44,18 +72,11 @@ public interface IApplicationSettings
 	IClassResolver getClassResolver();
 
 	/**
-	 * Gets the converter supplier factory.
-	 * 
-	 * @return the converter factory
-	 */
-	IConverterLocatorFactory getConverterSupplierFactory();
-
-	/**
 	 * Gets context path to use for absolute path generation. For example an
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *        appserver.com/context mapped to webserver/ (context path should be '/')
+	 *         appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * @return The context path
@@ -64,6 +85,13 @@ public interface IApplicationSettings
 	 *      can be.
 	 */
 	String getContextPath();
+
+	/**
+	 * Gets the converter supplier factory.
+	 * 
+	 * @return the converter factory
+	 */
+	IConverterLocatorFactory getConverterSupplierFactory();
 
 	/**
 	 * @return Returns the defaultLocale.
@@ -86,6 +114,12 @@ public interface IApplicationSettings
 	 */
 	Class<? extends Page> getPageExpiredErrorPage();
 
+
+	/**
+	 * @return Returns the unexpectedExceptionDisplay.
+	 */
+	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
+
 	/**
 	 * Sets the access denied page class. The class must be bookmarkable and
 	 * must extend Page.
@@ -103,20 +137,12 @@ public interface IApplicationSettings
 	 */
 	void setClassResolver(final IClassResolver defaultClassResolver);
 
-
-	/**
-	 * Sets the CoverterLocatorFactory
-	 * 
-	 * @param factory
-	 */
-	public void setConverterSupplierFactory(IConverterLocatorFactory factory);
-
 	/**
 	 * Sets context path to use for absolute path generation. For example an
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *        appserver.com/context mapped to webserver/ (context path should be '/')
+	 *         appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * This method can be called in the init phase of the application with the
@@ -154,5 +180,29 @@ public interface IApplicationSettings
 	 *            The pageExpiredErrorPage to set.
 	 */
 	void setPageExpiredErrorPage(final Class<? extends Page> pageExpiredErrorPage);
+
+	/**
+	 * The exception display type determines how the framework displays
+	 * exceptions to you as a developer or user.
+	 * <p>
+	 * The default value for exception display type is SHOW_EXCEPTION_PAGE. When
+	 * this value is set and an unhandled runtime exception is thrown by a page,
+	 * a redirect to a helpful exception display page will occur.
+	 * <p>
+	 * This is a developer feature, however, and you may want to instead show an
+	 * internal error page without developer details that allows a user to start
+	 * over at the application's home page. This can be accomplished by setting
+	 * the exception display type to SHOW_INTERNAL_ERROR_PAGE.
+	 * <p>
+	 * Finally, if you are having trouble with the exception display pages
+	 * themselves, you can disable exception displaying entirely with the value
+	 * SHOW_NO_EXCEPTION_PAGE. This will cause the framework to re-throw any
+	 * unhandled runtime exceptions after wrapping them in a ServletException
+	 * wrapper.
+	 * 
+	 * @param unexpectedExceptionDisplay
+	 *            The unexpectedExceptionDisplay to set.
+	 */
+	void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay);
 
 }

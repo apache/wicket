@@ -35,11 +35,17 @@ public class FormTest extends TestCase
 		};
 	}
 
+	/**
+	 * 
+	 */
 	public void testShouldContinueTraversalIfListenerAllowsChildProcessing()
 	{
 		assertTraversalStatus(Component.IVisitor.CONTINUE_TRAVERSAL, true);
 	}
 
+	/**
+	 * 
+	 */
 	public void testShouldContinueTraversalButDontGoDeeperIfListenerDisallowsChildProcessing()
 	{
 		assertTraversalStatus(Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER, false);
