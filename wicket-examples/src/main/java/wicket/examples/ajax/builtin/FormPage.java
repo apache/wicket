@@ -84,9 +84,16 @@ public class FormPage extends BasePage
 		// add a button that can be used to submit the form via ajax
 		new AjaxSubmitButton(form, "ajax-submit-button", form)
 		{
-			@Override
 			protected void onSubmit(AjaxRequestTarget target, Form form)
 			{
+				// repaint the feedback panel so that it is hidden
+				target.addComponent(feedback);
+			}
+
+			@Override
+			protected void onError(AjaxRequestTarget target, Form form)
+			{
+				// repaint the feedback panel so errors are shown
 				target.addComponent(feedback);
 			}
 		};
