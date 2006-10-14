@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 1.1 $ $Date$
+ * $Id: JettyDecorator.java 461192 2006-06-28 08:37:16 +0200 (Wed, 28 Jun 2006)
+ * ehillenius $ $Revision$ $Date: 2006-06-28 08:37:16 +0200 (Wed, 28 Jun
+ * 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -32,7 +33,10 @@ import junit.framework.Test;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.webapp.WebAppContext;
 
 /**
  * JUnit decorator for starting and stopping a local instance Jetty for usage
@@ -55,21 +59,21 @@ import org.mortbay.jetty.Server;
  * Usage:
  * 
  * <pre>
- *    
- *     ...
- *       public static Test suite() 
- *       {
- *    	    TestSuite suite = new TestSuite();
- *    	    suite.addTest(new JettyDecoratorWithArgsTest(&quot;testPing&quot;));
- *    	    JettyDecorator deco = new JettyDecorator(suite);
- *    	    deco.setPort(8098);
- *    	    deco.setWebappContextRoot(&quot;src/webapp&quot;);
- *    	    deco.setContextPath(&quot;/test&quot;);
- *    	    deco.setUseJettyPlus(false);
- *    	    return deco;
- *       }
- *     ...
- *     
+ *           
+ *            ...
+ *              public static Test suite() 
+ *              {
+ *           	    TestSuite suite = new TestSuite();
+ *           	    suite.addTest(new JettyDecoratorWithArgsTest(&quot;testPing&quot;));
+ *           	    JettyDecorator deco = new JettyDecorator(suite);
+ *           	    deco.setPort(8098);
+ *           	    deco.setWebappContextRoot(&quot;src/webapp&quot;);
+ *           	    deco.setContextPath(&quot;/test&quot;);
+ *           	    deco.setUseJettyPlus(false);
+ *           	    return deco;
+ *              }
+ *            ...
+ *            
  * </pre>
  * 
  * Jetty will be started before the tests are actually run, and will be stopped
@@ -80,11 +84,11 @@ import org.mortbay.jetty.Server;
  */
 public class JettyDecorator extends AbstractJettyDecorator
 {
-	/** instance of jetty server. */
-	private static Server jettyServer = null;
-
 	/** logger. */
 	private static final Log log = LogFactory.getLog(JettyDecorator.class);
+
+	/** instance of jetty server. */
+	private Server server = null;
 
 	/**
 	 * construct with test.
@@ -105,18 +109,19 @@ public class JettyDecorator extends AbstractJettyDecorator
 	 */
 	public void setUp() throws Exception
 	{
-		// start Jetty
-		if (getJettyConfig() != null)
-		{
-			// start Jetty with config document
-			jettyServer = JettyHelper.startJetty(getJettyConfig(), isUseJettyPlus());
-		}
-		else
-		{
-			// start Jetty with arguments (port etc.)
-			jettyServer = JettyHelper.startJetty(getPort(), getWebappContextRoot(),
-					getContextPath(), isUseJettyPlus());
-		}
+		server = new Server();
+		SelectChannelConnector connector = new SelectChannelConnector();
+		connector.setPort(getPort());
+		server.setConnectors(new Connector[] { connector });
+
+		WebAppContext web = new WebAppContext();
+		web.setContextPath(getContextPath());
+		web.setWar(getWebappContextRoot());
+		server.addHandler(web);
+
+		log.info("Starting Jetty");
+		server.start();
+		log.info("Jetty started");
 	}
 
 	/**
@@ -129,23 +134,12 @@ public class JettyDecorator extends AbstractJettyDecorator
 		log.info("Stopping Jetty");
 		try
 		{
-			jettyServer.stop();
+			server.stop();
 			log.info("Jetty stopped");
 		}
-		catch (InterruptedException e)
+		catch (Exception e)
 		{
 			log.error(e.getMessage(), e);
 		}
-	}
-
-	/**
-	 * Get jettyServer; unit tests might actually get the current instance of
-	 * the server to work with though this is generally bad practice.
-	 * 
-	 * @return Server Returns the jettyServer.
-	 */
-	public static Server getJettyServer()
-	{
-		return jettyServer;
 	}
 }
