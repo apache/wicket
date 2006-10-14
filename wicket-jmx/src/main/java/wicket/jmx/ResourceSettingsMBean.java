@@ -19,10 +19,8 @@ import wicket.settings.IResourceSettings;
 import wicket.util.file.IResourceFinder;
 import wicket.util.time.Duration;
 
-
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Resource settings.
  * 
  * @author eelcohillenius
  */

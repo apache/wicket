@@ -16,10 +16,8 @@ package wicket.jmx;
 
 import wicket.authorization.IUnauthorizedComponentInstantiationListener;
 
-
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Security settings.
  * 
  * @author eelcohillenius
  */
