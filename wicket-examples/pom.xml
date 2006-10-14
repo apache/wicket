@@ -122,13 +122,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>jetty</groupId>
-			<artifactId>org.mortbay.jetty</artifactId>
-			<version>4.2.24</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>tomcat</groupId>
 			<artifactId>jasper-runtime</artifactId>
 			<version>4.1.30</version>
@@ -148,6 +141,21 @@
 			<version>1.0.b2</version>
 			<type>jar</type>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>6.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+			<version>6.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty-management</artifactId>
+			<version>6.0.1</version>
 		</dependency>
 	</dependencies>
 

@@ -1,7 +1,7 @@
 /*
  * $Id: StartExamples.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
- * 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16
+ * Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,14 +18,22 @@
  */
 package wicket.examples;
 
-import java.net.URL;
+import java.lang.management.ManagementFactory;
+
+import javax.management.MBeanServer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.webapp.WebAppContext;
+import org.mortbay.management.MBeanContainer;
 
 /**
- * Seperate startup class for people that want to run the examples directly.
+ * Seperate startup class for people that want to run the examples directly. Use
+ * parameter -Dcom.sun.management.jmxremote to startup JMX (and e.g. connect
+ * with jconsole).
  */
 public class StartExamples
 {
@@ -35,45 +43,44 @@ public class StartExamples
 	private static final Log log = LogFactory.getLog(StartExamples.class);
 
 	/**
-	 * Construct.
-	 */
-	StartExamples()
-	{
-		super();
-	}
-
-	/**
 	 * Main function, starts the jetty server.
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args)
 	{
-		Server jettyServer = null;
+		Server server = new Server();
+		SelectChannelConnector connector = new SelectChannelConnector();
+		connector.setPort(8080);
+		server.setConnectors(new Connector[] { connector });
+
+		WebAppContext web = new WebAppContext();
+		web.setContextPath("/wicket-examples");
+		web.setWar("src/webapp");
+		server.addHandler(web);
+
+		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+		MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
+		server.getContainer().addEventListener(mBeanContainer);
+		mBeanContainer.start();
+
 		try
 		{
-			URL jettyConfig = new URL("file:src/etc/jetty-config.xml");
-			if (jettyConfig == null)
-			{
-				log.fatal("Unable to locate jetty-test-config.xml on the classpath");
-			}
-			jettyServer = new Server(jettyConfig);
-			jettyServer.start();
+			server.start();
+			server.join();
 		}
 		catch (Exception e)
 		{
-			log.fatal("Could not start the Jetty server: " + e);
-			if (jettyServer != null)
-			{
-				try
-				{
-					jettyServer.stop();
-				}
-				catch (InterruptedException e1)
-				{
-					log.fatal("Unable to stop the jetty server: " + e1);
-				}
-			}
+			e.printStackTrace();
+			System.exit(100);
 		}
+	}
+
+	/**
+	 * Construct.
+	 */
+	StartExamples()
+	{
+		super();
 	}
 }
