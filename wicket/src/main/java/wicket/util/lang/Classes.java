@@ -34,67 +34,6 @@ import wicket.util.string.Strings;
 public final class Classes
 {
 	/**
-	 * Instantiation not allowed
-	 */
-	private Classes()
-	{
-	}
-	
-	/**
-	 * @param className
-	 *            Class to resolve
-	 * @return Resolved class
-	 */
-	public static Class resolveClass(final String className)
-	{
-		if (Application.isAttached())
-		{
-			return Application.get().getApplicationSettings().getClassResolver().resolveClass(
-					className);
-		}
-		try
-		{
-			return Class.forName(className);
-		}
-		catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Gets the name of a given class without the prefixed package path
-	 * 
-	 * @param c
-	 *            The class
-	 * @return The class name
-	 */
-	public static String simpleName(final Class c)
-	{
-		return Strings.lastPathComponent(c.getName(), '.');
-	}
-
-	/**
-	 * Takes a Class and a relative path to a class and returns any class at
-	 * that relative path. For example, if the given Class was java.lang.System
-	 * and the relative path was "../util/List", then the java.util.List class
-	 * would be returned.
-	 * 
-	 * @param scope
-	 *            The package to start at
-	 * @param path
-	 *            The relative path to the class
-	 * @return The class
-	 * @throws ClassNotFoundException
-	 */
-	public static Class relativeClass(final Class scope, final String path)
-			throws ClassNotFoundException
-	{
-		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
-	}
-
-	/**
 	 * Invoke the setter method for 'name' on object and provide the 'value'
 	 * 
 	 * @param object
@@ -172,5 +111,78 @@ public final class Classes
 					"Unable to initialize Component. Failure while invoking method " + methodName
 							+ ". Cause: " + ex);
 		}
+	}
+
+	/**
+	 * Gets the name of the given class or null if the class is null.
+	 * 
+	 * @param c
+	 *            The class
+	 * @return The class name
+	 */
+	public static String name(final Class c)
+	{
+		return (c != null) ? c.getName() : null;
+	}
+
+	/**
+	 * Takes a Class and a relative path to a class and returns any class at
+	 * that relative path. For example, if the given Class was java.lang.System
+	 * and the relative path was "../util/List", then the java.util.List class
+	 * would be returned.
+	 * 
+	 * @param scope
+	 *            The package to start at
+	 * @param path
+	 *            The relative path to the class
+	 * @return The class
+	 * @throws ClassNotFoundException
+	 */
+	public static Class relativeClass(final Class scope, final String path)
+			throws ClassNotFoundException
+	{
+		return Class.forName(Packages.absolutePath(scope, path).replace('/', '.'));
+	}
+
+	/**
+	 * @param className
+	 *            Class to resolve
+	 * @return Resolved class
+	 */
+	public static Class resolveClass(final String className)
+	{
+		if (Application.isAttached())
+		{
+			return Application.get().getApplicationSettings().getClassResolver().resolveClass(
+					className);
+		}
+		try
+		{
+			return Class.forName(className);
+		}
+		catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Gets the name of a given class without the prefixed package path
+	 * 
+	 * @param c
+	 *            The class
+	 * @return The class name
+	 */
+	public static String simpleName(final Class c)
+	{
+		return Strings.lastPathComponent(c.getName(), '.');
+	}
+
+	/**
+	 * Instantiation not allowed
+	 */
+	private Classes()
+	{
 	}
 }

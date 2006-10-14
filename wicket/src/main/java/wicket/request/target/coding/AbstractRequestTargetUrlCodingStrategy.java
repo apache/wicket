@@ -41,7 +41,8 @@ import wicket.util.value.ValueMap;
  */
 public abstract class AbstractRequestTargetUrlCodingStrategy
 		implements
-			IRequestTargetUrlCodingStrategy
+			IRequestTargetUrlCodingStrategy,
+			IMountableRequestTargetUrlCodingStrategy
 {
 	/** log. */
 	private static final Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
@@ -150,11 +151,9 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 	}
 
 	/**
-	 * Gets path.
-	 * 
-	 * @return path
+	 * @see wicket.request.target.coding.IMountableRequestTargetUrlCodingStrategy#getMountPath()
 	 */
-	protected final String getMountPath()
+	public final String getMountPath()
 	{
 		return mountPath;
 	}

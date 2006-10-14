@@ -397,6 +397,7 @@ public abstract class Application
 	 * @return Application's ajax related settings
 	 * @see IAjaxSettings
 	 * @since 1.2
+	 * @deprecated use {@link #getDebugSettings()} instead
 	 */
 	public final IAjaxSettings getAjaxSettings()
 	{
