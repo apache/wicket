@@ -1628,6 +1628,26 @@ public abstract class Component implements Serializable
 					((IFeedback)this).updateFeedback();
 				}
 
+				// check authorization
+				// first the component itself
+				setRenderAllowed(isActionAuthorized(RENDER));
+				// check children if this is a container
+				if (this instanceof MarkupContainer)
+				{
+					MarkupContainer container = (MarkupContainer)this;
+					container.visitChildren(new IVisitor()
+					{
+						public Object component(final Component component)
+						{
+							// Find out if this component can be rendered
+							final boolean renderAllowed = component.isActionAuthorized(RENDER);
+							// Authorize rendering
+							component.setRenderAllowed(renderAllowed);
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
+				}
+
 				// Render the component and all its children
 				internalAttach();
 				onBeforeRender();
