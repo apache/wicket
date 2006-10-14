@@ -15,6 +15,8 @@
     <release version="1.3" date="tbd" description="Wicket 1.3">
 	</release>
 	<release version="1.2.3" description="Wicket 1.2.3">
+		<action type="fix" dev="Eelco Hillenius" due-to="Benjamin Podszun">There was no check on render authorization action done for seperate component renders, resulting in that authorization check not being executed with ajax requests.</action>
+		<action type="fix" dev="Eelco Hillenius">Page was not checked for render authorization action.</action>
 	    <action type="add" dev="Eelco Hillenius">The application's configuration type is now kept in a member which can be read using Application#getConfigurationType.</action>
 	    <action type="fix" dev="Eelco Hillenius">Package resources that are not found now log a warning and then throw an abort error instead of a regular exception and send a 404 to the browser if in a web request.</action>
 		<action type="add" dev="Eelco Hillenius">Added AbortWithWebError abort exception.</action>
