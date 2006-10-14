@@ -390,6 +390,10 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// or negative as a temporary boolean in the components, and when a
 		// authorization exception is thrown it will block the rendering of this
 		// page
+
+		// first the page itself
+		setRenderAllowed(isActionAuthorized(RENDER));
+		// children of the page
 		visitChildren(new IVisitor()
 		{
 			public Object component(final Component component)
