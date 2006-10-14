@@ -398,7 +398,7 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	 */
 	protected void onError(AjaxRequestTarget target)
 	{
-		String errorMessage = editor.getFeedbackMessage().getMessage();
+		String errorMessage = editor.getFeedbackMessage().getMessage().toString();
 		if (errorMessage != null)
 		{
 			target.appendJavascript("window.status='" + JavascriptUtils.escapeQuotes(errorMessage)
@@ -460,11 +460,11 @@ public class AjaxEditableLabel<T> extends Panel<T>
 	}
 
 	/**
-	 * Override this to display a different value when the model object
-	 * is null. Default is <code>...</code>
+	 * Override this to display a different value when the model object is null.
+	 * Default is <code>...</code>
 	 * 
-	 * @return The string which should be displayed when the model object
-	 * is null.
+	 * @return The string which should be displayed when the model object is
+	 *         null.
 	 */
 	protected String defaultNullLabel()
 	{
