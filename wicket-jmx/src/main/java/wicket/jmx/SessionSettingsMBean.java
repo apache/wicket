@@ -16,8 +16,7 @@ package wicket.jmx;
 
 
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Session settings.
  * 
  * @author eelcohillenius
  */
@@ -43,6 +42,13 @@ public interface SessionSettingsMBean
 	 * @return the strategy for evicting pages from the page map
 	 */
 	String getPageMapEvictionStrategy();
+
+	/**
+	 * Gets the session store implementation.
+	 * 
+	 * @return the session store implementation
+	 */
+	String getSessionStore();
 
 	/**
 	 * Sets maximum number of page maps allowed in this session

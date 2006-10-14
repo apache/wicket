@@ -17,8 +17,7 @@ package wicket.jmx;
 import wicket.settings.IDebugSettings;
 
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Debug settings.
  * 
  * @author eelcohillenius
  */

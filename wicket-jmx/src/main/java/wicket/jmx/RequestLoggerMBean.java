@@ -19,7 +19,7 @@ import java.io.IOException;
 import wicket.protocol.http.WebApplication;
 
 /**
- * MBean interface for exposing session related information and functionality.
+ * Interface for exposing the request logger.
  * 
  * @author eelcohillenius
  */

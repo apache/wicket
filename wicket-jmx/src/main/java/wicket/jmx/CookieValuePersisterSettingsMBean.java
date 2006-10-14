@@ -14,10 +14,8 @@
  */
 package wicket.jmx;
 
-
 /**
- * MBean interface for exposing application related information and
- * functionality.
+ * Cookie persister settings.
  * 
  * @author eelcohillenius
  */
