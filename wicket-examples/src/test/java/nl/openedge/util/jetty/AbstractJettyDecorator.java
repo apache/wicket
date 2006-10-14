@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: AbstractJettyDecorator.java 459490 2006-02-23 23:25:06 +0100 (Thu, 23
+ * Feb 2006) jdonnerstag $ $Revision$ $Date: 2006-02-23 23:25:06 +0100
+ * (Thu, 23 Feb 2006) $
  * 
  * ====================================================================
  * Copyright (c) 2003, Open Edge B.V. All rights reserved. Redistribution and
@@ -38,26 +39,14 @@ import junit.framework.Test;
  */
 public abstract class AbstractJettyDecorator extends TestSetup
 {
-	/** default http listen port. */
-	private static final int DEFAULT_PORT = 8080;
-
-	/**
-	 * Whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will be
-	 * instantiated, if false, org.mortbay.jetty.Server will be instantiated.
-	 */
-	private boolean useJettyPlus = false;
-
-	/** URL of jetty configuration document. */
-	private String jettyConfig;
-
-	/** root folder of web application. */
-	private String webappContextRoot = "/.";
+	/** context path (webapp name). */
+	private String contextPath = "/wicket-examples";
 
 	/** port for http requests. */
-	private int port = DEFAULT_PORT;
+	private int port = 8098;
 
-	/** context path (webapp name). */
-	private String contextPath = "/";
+	/** root folder of web application. */
+	private String webappContextRoot = "src/webapp";
 
 	/**
 	 * Construct with test to decorate.
@@ -71,51 +60,13 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	}
 
 	/**
-	 * Get jettyConfig; URL of jetty configuration document.
+	 * Get context path (webapp name).
 	 * 
-	 * @return String Returns the URL of jetty configuration document.
+	 * @return String Returns the context path (webapp name).
 	 */
-	public String getJettyConfig()
+	public String getContextPath()
 	{
-		return jettyConfig;
-	}
-
-	/**
-	 * Set jettyConfig; URL of jetty configuration document.
-	 * 
-	 * @param newJettyConfig
-	 *            URL of jetty configuration document.
-	 * @param classCallee
-	 *            calling class for getting config resource
-	 */
-	public void setJettyConfig(String newJettyConfig, Class classCallee)
-	{
-		jettyConfig = newJettyConfig;
-	}
-
-	/**
-	 * Get whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-	 * be instantiated, if false, org.mortbay.jetty.plus.Server will be
-	 * instantiated.
-	 * 
-	 * @return boolean whether to use JettyPlus.
-	 */
-	public boolean isUseJettyPlus()
-	{
-		return useJettyPlus;
-	}
-
-	/**
-	 * Set whether to use JettyPlus; if true, org.mortbay.jetty.plus.Server will
-	 * be instantiated, if false, org.mortbay.jetty.plus.Server will be
-	 * instantiated.
-	 * 
-	 * @param useJettyPlus
-	 *            whether to use JettyPlus.
-	 */
-	public void setUseJettyPlus(boolean useJettyPlus)
-	{
-		this.useJettyPlus = useJettyPlus;
+		return contextPath;
 	}
 
 	/**
@@ -126,6 +77,27 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	public int getPort()
 	{
 		return port;
+	}
+
+	/**
+	 * Get root folder of web application.
+	 * 
+	 * @return String Returns the webappContextRoot.
+	 */
+	public String getWebappContextRoot()
+	{
+		return webappContextRoot;
+	}
+
+	/**
+	 * Set context path (webapp name).
+	 * 
+	 * @param contextPath
+	 *            context path (webapp name).
+	 */
+	public void setContextPath(String contextPath)
+	{
+		this.contextPath = contextPath;
 	}
 
 	/**
@@ -140,16 +112,6 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	}
 
 	/**
-	 * Get root folder of web application.
-	 * 
-	 * @return String Returns the webappContextRoot.
-	 */
-	public String getWebappContextRoot()
-	{
-		return webappContextRoot;
-	}
-
-	/**
 	 * Set root folder of web application.
 	 * 
 	 * @param webappContextRoot
@@ -158,26 +120,5 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	public void setWebappContextRoot(String webappContextRoot)
 	{
 		this.webappContextRoot = webappContextRoot;
-	}
-
-	/**
-	 * Get context path (webapp name).
-	 * 
-	 * @return String Returns the context path (webapp name).
-	 */
-	public String getContextPath()
-	{
-		return contextPath;
-	}
-
-	/**
-	 * Set context path (webapp name).
-	 * 
-	 * @param contextPath
-	 *            context path (webapp name).
-	 */
-	public void setContextPath(String contextPath)
-	{
-		this.contextPath = contextPath;
 	}
 }
