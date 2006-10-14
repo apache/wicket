@@ -95,6 +95,16 @@ public class SharedResourceRequestTargetUrlCodingStrategy
 			return target.getRequestParameters().getResourceKey().equals(resourceKey);
 		}
 		else
+		{
 			return false;
+		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "SharedResourceEncoder[key=" + resourceKey + "]";
 	}
 }

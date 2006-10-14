@@ -44,6 +44,7 @@ import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.request.IRequestCodingStrategy;
+import wicket.request.IRequestTargetMountsInfo;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -60,7 +61,7 @@ import wicket.util.string.Strings;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public class WebRequestCodingStrategy implements IRequestCodingStrategy
+public class WebRequestCodingStrategy implements IRequestCodingStrategy, IRequestTargetMountsInfo
 {
 	/** Name of interface target query parameter */
 	public static final String NAME_SPACE = "wicket:";
@@ -198,8 +199,10 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
-			// special check if the prefix ends on '/' because a mount always starts with '/' 
-			if(prefix.charAt(prefix.length()-1) == '/') prefix = prefix.subSequence(0, prefix.length()-1);
+			// special check if the prefix ends on '/' because a mount always
+			// starts with '/'
+			if (prefix.charAt(prefix.length() - 1) == '/')
+				prefix = prefix.subSequence(0, prefix.length() - 1);
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
 					+ path.length());
 			buffer.append(prefix);
@@ -231,8 +234,18 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 		{
 			return url;
 		}
-		// Just return null intead of throwing an exception. So that it can be handled better
+		// Just return null intead of throwing an exception. So that it can be
+		// handled better
 		return null;
+	}
+
+	/**
+	 * @see wicket.request.IRequestTargetMountsInfo#listMounts()
+	 */
+	public IRequestTargetUrlCodingStrategy[] listMounts()
+	{
+		return (IRequestTargetUrlCodingStrategy[])mountsOnPath.values().toArray(
+				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
 	}
 
 	/**
@@ -629,11 +642,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 			}
 			buffer.append(sharedResourceKey);
 			Map map = requestTarget.getRequestParameters().getParameters();
-			if(map != null && map.size() > 0)
+			if (map != null && map.size() > 0)
 			{
 				buffer.append('?');
 				Iterator it = map.entrySet().iterator();
-				while(it.hasNext())
+				while (it.hasNext())
 				{
 					Map.Entry entry = (Entry)it.next();
 					buffer.append(entry.getKey());
@@ -641,7 +654,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					buffer.append(entry.getValue());
 					buffer.append('&');
 				}
-				buffer.setLength(buffer.length()-1);
+				buffer.setLength(buffer.length() - 1);
 			}
 			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}
@@ -809,11 +822,13 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy
 					buffer.append(path);
 				}
 			}
-			// special check, if everything is empty then we need to define '/' as urlPrefix 
+			// special check, if everything is empty then we need to define '/'
+			// as urlPrefix
 			// else all urls get relative this is bad for mounts.
-			// Except for mounts who have to do a special check else mounts get: //mount
+			// Except for mounts who have to do a special check else mounts get:
+			// //mount
 			// see encode(RequestCycle,IRequestTarget) when a mount is found.
-			if(buffer.length() ==0)
+			if (buffer.length() == 0)
 			{
 				urlPrefix = "/";
 			}
