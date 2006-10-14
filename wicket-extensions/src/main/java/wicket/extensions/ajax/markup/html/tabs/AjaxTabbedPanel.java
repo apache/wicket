@@ -43,6 +43,7 @@ public class AjaxTabbedPanel extends TabbedPanel
 	{
 		super(parent, id, tabs);
 		setOutputMarkupId(true);
+		setVersioned(false);
 	}
 
 	@Override
