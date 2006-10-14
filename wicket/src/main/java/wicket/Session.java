@@ -169,7 +169,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	private FeedbackMessages feedbackMessages = new FeedbackMessages(
 			new CopyOnWriteArrayList<FeedbackMessage>());
 
-	private transient Map<PageMap, Thread> pageMapsUsedInRequest;
+	private transient Map<PageMap, Thread> pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -460,19 +460,15 @@ public abstract class Session implements Serializable, IConverterLocator
 			{
 				long startTime = System.currentTimeMillis();
 
-				if (pageMapsUsedInRequest == null)
-				{
-					pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
-				}
-
 				// Get page entry for id and version
 				Thread t = pageMapsUsedInRequest.get(pageMap);
 				while (t != null && t != Thread.currentThread())
 				{
 					try
 					{
+						// TODO make longer and configurable
 						pageMapsUsedInRequest.wait(20000); // wait 20 seconds
-															// max.
+						// max.
 					}
 					catch (InterruptedException ex)
 					{
@@ -1092,23 +1088,19 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final void requestDetached()
 	{
-		if (pageMapsUsedInRequest != null)
+		synchronized (pageMapsUsedInRequest)
 		{
-			synchronized (pageMapsUsedInRequest)
+			Thread t = Thread.currentThread();
+			Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
+			while (it.hasNext())
 			{
-				Thread t = Thread.currentThread();
-				Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet()
-						.iterator();
-				while (it.hasNext())
+				Entry<PageMap, Thread> entry = it.next();
+				if (entry.getValue() == t)
 				{
-					Entry<PageMap, Thread> entry = it.next();
-					if (entry.getValue() == t)
-					{
-						it.remove();
-					}
+					it.remove();
 				}
-				pageMapsUsedInRequest.notifyAll();
 			}
+			pageMapsUsedInRequest.notifyAll();
 		}
 	}
 
