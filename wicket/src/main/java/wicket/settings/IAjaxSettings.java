@@ -24,18 +24,20 @@ package wicket.settings;
  * from the browser
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @deprecated use IDebugSettings instead
  */
 public interface IAjaxSettings
 {
+	/**
+	 * @return true if ajax debug mode is enabled, false otherwise
+	 */
+	boolean isAjaxDebugModeEnabled();
+
 	/**
 	 * Enables or disables ajax debug mode.
 	 * 
 	 * @param enable
 	 */
 	void setAjaxDebugModeEnabled(boolean enable);
-
-	/**
-	 * @return true if ajax debug mode is enabled, false otherwise
-	 */
-	boolean isAjaxDebugModeEnabled();
 }

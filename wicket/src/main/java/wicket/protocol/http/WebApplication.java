@@ -71,11 +71,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *    public void init()
- *    {
- *        String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *        URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *        ...
+ *           public void init()
+ *           {
+ *               String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *               URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *               ...
  * </pre>
  * 
  * @see WicketServlet
@@ -98,6 +98,12 @@ import wicket.util.watch.ModificationWatcher;
 public abstract class WebApplication extends Application implements ISessionFactory
 {
 	/**
+	 * The cached application key. Will be set in
+	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
+	 */
+	private String applicationKey;
+
+	/**
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
 	 */
@@ -105,6 +111,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
+
+	/** Request logger instance. */
+	private RequestLogger requestLogger;
 
 	/**
 	 * the prefix for storing variables in the actual session (typically
@@ -118,21 +127,53 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
 
-	/** Request logger instance. */
-	private RequestLogger requestLogger;
-
-	/**
-	 * The cached application key. Will be set in
-	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
-	 */
-	private String applicationKey;
-
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
 	 * application instead of overriding the constructor.</strong>
 	 */
 	public WebApplication()
 	{
+	}
+
+	/**
+	 * @see wicket.Application#getApplicationKey()
+	 */
+	public final String getApplicationKey()
+	{
+		if (applicationKey == null)
+		{
+			throw new IllegalStateException("the application key does not seem to"
+					+ " be set properly or this method is called before WicketServlet is"
+					+ " set, which leads to the wrong behavior");
+		}
+		return applicationKey;
+	}
+
+	/**
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
+	 * 
+	 * @return the default request cycle processor
+	 */
+	public final IRequestCycleProcessor getRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = newRequestCycleProcessor();
+		}
+		return requestCycleProcessor;
+	}
+
+	/**
+	 * Gets the {@link RequestLogger}.
+	 * 
+	 * @return The RequestLogger
+	 */
+	public final RequestLogger getRequestLogger()
+	{
+		return requestLogger;
 	}
 
 	/**
@@ -174,26 +215,30 @@ public abstract class WebApplication extends Application implements ISessionFact
 		return wicketServlet;
 	}
 
-	/*
-	 * Set the application key value
-	 */
-	protected final void setApplicationKey(String applicationKey)
-	{
-		this.applicationKey=applicationKey;
-	}
-	
 	/**
-	 * @see wicket.Application#getApplicationKey()
+	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
 	 */
-	public final String getApplicationKey()
+	public void logEventTarget(IRequestTarget target)
 	{
-		if (applicationKey == null)
+		super.logEventTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if (rl != null)
 		{
-			throw new IllegalStateException("the application key does not seem to"
-					+ " be set properly or this method is called before WicketServlet is"
-					+ " set, which leads to the wrong behavior");
+			rl.logEventTarget(target);
 		}
-		return applicationKey;
+	}
+
+	/**
+	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
+	 */
+	public void logResponseTarget(IRequestTarget target)
+	{
+		super.logResponseTarget(target);
+		RequestLogger rl = getRequestLogger();
+		if (rl != null)
+		{
+			rl.logResponseTarget(target);
+		}
 	}
 
 	/**
@@ -283,6 +328,43 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * Create new Wicket Session object. Note, this method is not called if you
+	 * registered your own ISessionFactory with the Application.
+	 * 
+	 * @see wicket.ISessionFactory#newSession()
+	 */
+	public Session newSession()
+	{
+		return new WebSession(WebApplication.this);
+	}
+
+	/**
+	 * @param sessionId
+	 *            The session id that was destroyed
+	 */
+	public void sessionDestroyed(String sessionId)
+	{
+		bufferedResponses.remove(sessionId);
+
+		RequestLogger logger = getRequestLogger();
+		if (logger != null)
+		{
+			logger.sessionDestroyed(sessionId);
+		}
+	}
+
+	/**
+	 * Sets the {@link RequestLogger}.
+	 * 
+	 * @param logger
+	 *            The request logger
+	 */
+	public final void setRequestLogger(RequestLogger logger)
+	{
+		requestLogger = logger;
+	}
+
+	/**
 	 * @param sessionFactory
 	 *            The session factory to use
 	 */
@@ -326,53 +408,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @see wicket.Application#logEventTarget(wicket.IRequestTarget)
-	 */
-	public void logEventTarget(IRequestTarget target)
-	{
-		super.logEventTarget(target);
-		RequestLogger rl = getRequestLogger();
-		if (rl != null)
-		{
-			rl.logEventTarget(target);
-		}
-	}
-
-	/**
-	 * @see wicket.Application#logResponseTarget(wicket.IRequestTarget)
-	 */
-	public void logResponseTarget(IRequestTarget target)
-	{
-		super.logResponseTarget(target);
-		RequestLogger rl = getRequestLogger();
-		if (rl != null)
-		{
-			rl.logResponseTarget(target);
-		}
-	}
-
-	/**
-	 * Gets the {@link RequestLogger}.
-	 * 
-	 * @return The RequestLogger
-	 */
-	public final RequestLogger getRequestLogger()
-	{
-		return requestLogger;
-	}
-
-	/**
-	 * Sets the {@link RequestLogger}.
-	 * 
-	 * @param logger
-	 *            The request logger
-	 */
-	public final void setRequestLogger(RequestLogger logger)
-	{
-		requestLogger = logger;
-	}
-
-	/**
 	 * Create a request cycle factory which is used by default by WebSession.
 	 * You may provide your own default factory by subclassing WebApplication
 	 * and overriding this method or your may subclass WebSession to create a
@@ -399,53 +434,13 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
-	 * 
-	 * @return the default request cycle processor
-	 */
-	protected final IRequestCycleProcessor getRequestCycleProcessor()
-	{
-		if (requestCycleProcessor == null)
-		{
-			requestCycleProcessor = newRequestCycleProcessor();
-		}
-		return requestCycleProcessor;
-	}
-
-	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
-	 * 
-	 * @return IRequestCycleProcessor
-	 */
-	// TODO Doesn't this method belong in Application, not WebApplication?
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new DefaultWebRequestCycleProcessor();
-	}
-
-	/**
 	 * @see wicket.Application#getSessionFactory()
 	 */
 	protected ISessionFactory getSessionFactory()
 	{
 		return this.sessionFactory;
 	}
-	
-	/**
-	 * Create new Wicket Session object. Note, this method is not called
-	 * if you registered your own ISessionFactory with the Application.
-	 * 
-	 * @see wicket.ISessionFactory#newSession()
-	 */
-	public Session newSession()
-	{
-		return new WebSession(WebApplication.this);
-	}
-	
+
 	/**
 	 * Initialize; if you need the wicket servlet for initialization, e.g.
 	 * because you want to read an initParameter from web.xml or you want to
@@ -465,7 +460,8 @@ public abstract class WebApplication extends Application implements ISessionFact
 	protected void internalDestroy()
 	{
 		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher();
-		if(resourceWatcher != null) resourceWatcher.destroy();
+		if (resourceWatcher != null)
+			resourceWatcher.destroy();
 		super.internalDestroy();
 		bufferedResponses.clear();
 		// destroy the resource watcher
@@ -544,6 +540,26 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * May be replaced by subclasses which whishes to uses there own
+	 * implementation of IRequestCycleProcessor
+	 * 
+	 * @return IRequestCycleProcessor
+	 */
+	// TODO Doesn't this method belong in Application, not WebApplication?
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new DefaultWebRequestCycleProcessor();
+	}
+
+	/**
+	 * @see wicket.Application#newSessionStore()
+	 */
+	protected ISessionStore newSessionStore()
+	{
+		return new HttpSessionStore();
+	}
+
+	/**
 	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and
 	 * obfuscated URL which has been encoded by an appropriate WebResponse.
 	 * 
@@ -569,12 +585,12 @@ public abstract class WebApplication extends Application implements ISessionFact
 				servletResponse) : new WebResponse(servletResponse));
 	}
 
-	/**
-	 * @see wicket.Application#newSessionStore()
+	/*
+	 * Set the application key value
 	 */
-	protected ISessionStore newSessionStore()
+	protected final void setApplicationKey(String applicationKey)
 	{
-		return new HttpSessionStore();
+		this.applicationKey = applicationKey;
 	}
 
 	/**
@@ -618,7 +634,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 			session = getSessionFactory().newSession();
 			// Set the client Locale for this session
 			session.setLocale(request.getLocale());
-			
+
 			if (sessionStore.getSessionId(request) != null)
 			{
 				// Bind the session to the session store
@@ -672,21 +688,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 			return buffered;
 		}
 		return null;
-	}
-
-	/**
-	 * @param sessionId
-	 *            The session id that was destroyed
-	 */
-	public void sessionDestroyed(String sessionId)
-	{
-		bufferedResponses.remove(sessionId);
-
-		RequestLogger logger = getRequestLogger();
-		if (logger != null)
-		{
-			logger.sessionDestroyed(sessionId);
-		}
 	}
 
 	/**
