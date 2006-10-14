@@ -132,4 +132,12 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		}
 		return false;
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "PackageEncoder[package=" + packageName + "]";
+	}
 }

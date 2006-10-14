@@ -15,30 +15,15 @@ import wicket.util.lang.EnumeratedType;
  * mark characters (e.g. "??missingKey??")
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @deprecated will be removed in 2.0. See methods for details
  */
 public interface IExceptionSettings
 {
 	/**
-	 * Indicates that an exception page appropriate to development should be
-	 * shown when an unexpected exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_EXCEPTION_PAGE");
-
-	/**
-	 * Indicates a generic internal error page should be shown when an
-	 * unexpected exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_INTERNAL_ERROR_PAGE");
-	/**
-	 * Indicates that no exception page should be shown when an unexpected
-	 * exception is thrown.
-	 */
-	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
-				"SHOW_NO_EXCEPTION_PAGE");
-	/**
 	 * Enumerated type for different ways of displaying unexpected exceptions.
+	 * 
+	 * @deprecated will be moved to {@link IApplicationSettings} in 2.0
 	 */
 	public static final class UnexpectedExceptionDisplay extends EnumeratedType
 	{
@@ -51,13 +36,37 @@ public interface IExceptionSettings
 	}
 
 	/**
+	 * Indicates that an exception page appropriate to development should be
+	 * shown when an unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_EXCEPTION_PAGE");
+	/**
+	 * Indicates a generic internal error page should be shown when an
+	 * unexpected exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_INTERNAL_ERROR_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_INTERNAL_ERROR_PAGE");
+
+	/**
+	 * Indicates that no exception page should be shown when an unexpected
+	 * exception is thrown.
+	 */
+	public static final UnexpectedExceptionDisplay SHOW_NO_EXCEPTION_PAGE = new UnexpectedExceptionDisplay(
+			"SHOW_NO_EXCEPTION_PAGE");
+
+	/**
 	 * @return Whether to throw an exception when a missing resource is
 	 *         requested
+	 * @deprecated use
+	 *             {@link IResourceSettings#getThrowExceptionOnMissingResource()}
+	 *             instead
 	 */
 	boolean getThrowExceptionOnMissingResource();
 
 	/**
 	 * @return Returns the unexpectedExceptionDisplay.
+	 * @deprecated will be moved to {@link IApplicationSettings} in 2.0
 	 */
 	UnexpectedExceptionDisplay getUnexpectedExceptionDisplay();
 
@@ -65,6 +74,9 @@ public interface IExceptionSettings
 	 * @param throwExceptionOnMissingResource
 	 *            Whether to throw an exception when a missing resource is
 	 *            requested
+	 * @deprecated use
+	 *             {@link IResourceSettings#setThrowExceptionOnMissingResource(boolean)}
+	 *             instead
 	 */
 	void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource);
 
@@ -89,6 +101,8 @@ public interface IExceptionSettings
 	 * 
 	 * @param unexpectedExceptionDisplay
 	 *            The unexpectedExceptionDisplay to set.
+	 * 
+	 * @deprecated will be moved to {@link IApplicationSettings} in 2.0
 	 */
 	void setUnexpectedExceptionDisplay(UnexpectedExceptionDisplay unexpectedExceptionDisplay);
 }

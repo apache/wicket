@@ -75,7 +75,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
 		String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
-		if(requestParameters.getPageMapName() == null)
+		if (requestParameters.getPageMapName() == null)
 		{
 			requestParameters.setPageMapName(pageMapName);
 		}
@@ -138,5 +138,13 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "BookmarkablePageEncoder[page=" + bookmarkablePageClass + "]";
 	}
 }

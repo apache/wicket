@@ -193,7 +193,7 @@ public class MarkupCache
 							markupResource = new MarkupResourceStream(resourceStream,
 									new ContainerInfo(container), containerClass);
 						}
-						
+
 						// load the markup and watch for changes
 						markup = loadMarkupAndWatchForChanges(container, key, markupResource);
 					}
@@ -231,12 +231,13 @@ public class MarkupCache
 		afterLoadListeners.notifyListeners(markupResourceStream);
 		afterLoadListeners.remove(markupResourceStream);
 	}
-	
+
 	/**
 	 * Remove the markup from the cache and trigger all associated listeners
 	 * 
 	 * @since 1.2.3
-	 * @param markupResourceStream The resource stream
+	 * @param markupResourceStream
+	 *            The resource stream
 	 */
 	public void removeMarkup(final MarkupResourceStream markupResourceStream)
 	{
@@ -247,11 +248,11 @@ public class MarkupCache
 			Map.Entry entry = (Map.Entry)iter.next();
 			if (entry.getValue() == markupResourceStream)
 			{
-				key = (CharSequence) entry.getKey();
+				key = (CharSequence)entry.getKey();
 				break;
 			}
 		}
-		
+
 		if (key != null)
 		{
 			removeMarkup(key, markupResourceStream);
@@ -408,6 +409,14 @@ public class MarkupCache
 	}
 
 	/**
+	 * @return the number of elements currently in the cache.
+	 */
+	public int size()
+	{
+		return markupCache.size();
+	}
+
+	/**
 	 * The markup has just been loaded and now we check if markup inheritance
 	 * applies, which is if <wicket:extend> is found in the markup. If yes, than
 	 * load the base markups and merge the markup elements to create an updated
@@ -497,7 +506,7 @@ public class MarkupCache
 	{
 		for (int i = 0; i < markup.size(); i++)
 		{
-			MarkupElement elem = (MarkupElement) markup.get(i);
+			MarkupElement elem = (MarkupElement)markup.get(i);
 			if (elem instanceof WicketTag)
 			{
 				WicketTag wtag = (WicketTag)elem;
