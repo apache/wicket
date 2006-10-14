@@ -1,6 +1,7 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id: Palette.java 462288 2006-09-17 02:50:03 -0700 (Sun, 17 Sep 2006)
+ * ehillenius $ $Revision$ $Date: 2006-09-17 02:50:03 -0700 (Sun, 17
+ * Sep 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,6 +33,7 @@ import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.IChoiceRenderer;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.panel.Panel;
+import wicket.model.AbstractModel;
 import wicket.model.IModel;
 import wicket.model.Model;
 
@@ -48,9 +50,9 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *    Form form=new Form(...);
- *    Palette palette=new Palette(...);
- *    palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *       Form form=new Form(...);
+ *       Palette palette=new Palette(...);
+ *       palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -112,6 +114,25 @@ public class Palette extends Panel
 	/** reference to default add buttom image */
 	private static final ResourceReference addImage = new ResourceReference(Palette.class,
 			"add.gif");
+
+	/**
+	 * @param id
+	 *            component id
+	 * @param choicesModel
+	 *            model representing collection of all available choices
+	 * @param choiceRenderer
+	 *            render used to render choices
+	 * @param rows
+	 *            number of choices to be visible on the screen with out
+	 *            scrolling
+	 * @param allowOrder
+	 *            allow user to move selections up and down
+	 */
+	public Palette(String id, IModel choicesModel, IChoiceRenderer choiceRenderer, int rows,
+			boolean allowOrder)
+	{
+		this(id, null, choicesModel, choiceRenderer, rows, allowOrder);
+	}
 
 	/**
 	 * @param id
@@ -518,4 +539,31 @@ public class Palette extends Panel
 			}
 		}
 	}
+
+	/**
+	 * Model that allows other components to benefit of the compound model that
+	 * AjaxEditableLabel inherits.
+	 */
+	private final class PassThroughModel extends AbstractModel
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @see wicket.model.IModel#getObject(wicket.Component)
+		 */
+		public Object getObject(Component component)
+		{
+			return getModel().getObject(Palette.this);
+		}
+
+		/**
+		 * @see wicket.model.IModel#setObject(wicket.Component,
+		 *      java.lang.Object)
+		 */
+		public void setObject(Component component, Object object)
+		{
+			getModel().setObject(Palette.this, object);
+		}
+	}
+
 }
