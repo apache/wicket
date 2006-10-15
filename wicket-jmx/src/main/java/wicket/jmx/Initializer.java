@@ -60,7 +60,7 @@ public class Initializer implements IInitializer
 				tempDomain = name + "-" + i++;
 				appBeanName = new ObjectName(tempDomain + ":type=Application");
 			}
-			name = tempDomain;
+			domain = tempDomain;
 
 			Application appBean = new Application(application);
 			mbs.registerMBean(appBean, appBeanName);
