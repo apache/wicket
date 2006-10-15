@@ -273,17 +273,17 @@ public class WicketFilter implements Filter
 	{
 		if (rootPath == null)
 		{
-			String contextPath = webApplication.getApplicationSettings().getContextPath();
-			if (contextPath == null)
+			String path = webApplication.getApplicationSettings().getContextPath();
+			if (path == null)
 			{
-				contextPath = request.getContextPath();
-				if (contextPath == null)
+				path = request.getContextPath();
+				if (path == null)
 				{
-					contextPath = "";
+					path = "";
 				}
 			}
 
-			if (SERVLET_PATH_HOLDER.equals(filterPath))
+			if (filterPath == null)
 			{
 				filterPath = request.getServletPath();
 				if (filterPath.startsWith("/"))
@@ -291,13 +291,13 @@ public class WicketFilter implements Filter
 					filterPath = filterPath.substring(1);
 				}
 			}
-			if (!contextPath.endsWith("/"))
+			if (!path.endsWith("/"))
 			{
-				rootPath = contextPath + "/" + filterPath;
+				rootPath = path + "/" + filterPath;
 			}
 			else
 			{
-				rootPath = contextPath + filterPath;
+				rootPath = path + filterPath;
 			}
 		}
 		return rootPath;
@@ -325,10 +325,6 @@ public class WicketFilter implements Filter
 		filterConfig.getServletContext().setAttribute(contextKey, this.webApplication);
 
 		filterPath = filterConfig.getInitParameter(FILTER_PATH_PARAM);
-		if (filterPath == null)
-		{
-			filterPath = "";
-		}
 
 		try
 		{
