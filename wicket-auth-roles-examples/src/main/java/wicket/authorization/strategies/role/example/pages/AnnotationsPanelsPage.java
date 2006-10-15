@@ -18,6 +18,9 @@
  */
 package wicket.authorization.strategies.role.example.pages;
 
+import java.util.Arrays;
+import java.util.List;
+
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.authorization.Action;
@@ -25,6 +28,9 @@ import wicket.authorization.strategies.role.Roles;
 import wicket.authorization.strategies.role.annotations.AuthorizeAction;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 
 /**
@@ -34,6 +40,19 @@ import wicket.markup.html.panel.Panel;
  */
 public class AnnotationsPanelsPage extends WebPage
 {
+	@AuthorizeAction(action = Action.RENDER, roles = Roles.ADMIN)
+	private static class AdminLabel extends Label
+	{
+		/**
+		 * @param id
+		 * @param nbr
+		 */
+		public AdminLabel(String id, String nbr)
+		{
+			super(id, "label for admins " + nbr);
+		}
+	}
+
 	/**
 	 * A panel that is only visible for users with role ADMIN.
 	 */
@@ -69,23 +88,6 @@ public class AnnotationsPanelsPage extends WebPage
 	}
 
 	/**
-	 * A panel that is only visible for users with role ADMIN or USER.
-	 */
-	@AuthorizeAction(action = Action.RENDER, roles = { Roles.ADMIN, Roles.USER })
-	private static final class Test extends Panel
-	{
-		/**
-		 * Construct.
-		 * 
-		 * @param id
-		 */
-		public Test(String id)
-		{
-			super(id);
-		}
-	}
-
-	/**
 	 * A panel that is visible for all users.
 	 */
 	private static final class ForAllUsers extends Panel
@@ -101,9 +103,52 @@ public class AnnotationsPanelsPage extends WebPage
 		}
 	}
 
-	private boolean showDummy = true;
+	/**
+	 * A panel that is only visible for users with role ADMIN or USER.
+	 */
+	@AuthorizeAction(action = Action.RENDER, roles = { Roles.ADMIN, Roles.USER })
+	private static final class Test extends Panel
+	{
+		/**
+		 * Construct.
+		 * 
+		 * @param id
+		 */
+		public Test(String id)
+		{
+			super(id);
+			List l = Arrays.asList("1", "2", "3", "4", "5");
+			ListView listView = new ListView("list", l)
+			{
+				@Override
+				protected void populateItem(ListItem item)
+				{
+					String i = item.getModelObjectAsString();
+					item.add(new UserLabel("userLabel", i));
+					item.add(new AdminLabel("adminLabel", i));
+				}
+			};
+			add(listView);
+			listView.setReuseItems(true);
+		}
+	}
+
+	@AuthorizeAction(action = Action.RENDER, roles = Roles.USER)
+	private static class UserLabel extends Label
+	{
+		/**
+		 * @param id
+		 * @param nbr
+		 */
+		public UserLabel(String id, String nbr)
+		{
+			super(id, "label for users " + nbr);
+		}
+	}
 
 	private WebMarkupContainer outer;
+
+	private boolean showDummy = true;
 
 	/**
 	 * Construct.
