@@ -168,7 +168,7 @@ public abstract class Session implements Serializable
 	/** feedback messages */
 	private FeedbackMessages feedbackMessages = new FeedbackMessages(new CopyOnWriteArrayList());
 
-	private transient Map pageMapsUsedInRequest = new HashMap(3);
+	private transient Map pageMapsUsedInRequest;
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -401,6 +401,13 @@ public abstract class Session implements Serializable
 		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (pageMap != null)
 		{
+			synchronized (usedPageMaps) // get a lock so be sure that only one is made
+			{
+				if(pageMapsUsedInRequest == null)
+				{
+					pageMapsUsedInRequest = new HashMap(3);
+				}
+			}
 			synchronized (pageMapsUsedInRequest)
 			{
 				long startTime = System.currentTimeMillis();
@@ -1034,19 +1041,22 @@ public abstract class Session implements Serializable
 	 */
 	final void requestDetached()
 	{
-		synchronized(pageMapsUsedInRequest)
+		if(pageMapsUsedInRequest != null)
 		{
-			Thread t = Thread.currentThread();
-			Iterator it = pageMapsUsedInRequest.entrySet().iterator();
-			while(it.hasNext())
+			synchronized(pageMapsUsedInRequest)
 			{
-				Entry entry = (Entry)it.next();
-				if(entry.getValue() == t)
+				Thread t = Thread.currentThread();
+				Iterator it = pageMapsUsedInRequest.entrySet().iterator();
+				while(it.hasNext())
 				{
-					it.remove();
+					Entry entry = (Entry)it.next();
+					if(entry.getValue() == t)
+					{
+						it.remove();
+					}
 				}
+				pageMapsUsedInRequest.notifyAll();
 			}
-			pageMapsUsedInRequest.notifyAll();
 		}
 	}
 		
