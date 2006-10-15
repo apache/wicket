@@ -34,6 +34,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.portlet.PortletRequestCodingStrategy;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
@@ -44,6 +45,7 @@ import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
+
 /**
  * Request parameters factory implementation helper class
  * 
@@ -84,8 +86,9 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 	{
 		final RequestParameters parameters = new RequestParameters();
 		String pathInfo = getRequestPath(request);
-		if (pathInfo!=null&&!pathInfo.startsWith("/")) {
-			pathInfo="/"+pathInfo;
+		if (pathInfo != null && !pathInfo.startsWith("/"))
+		{
+			pathInfo = "/" + pathInfo;
 		}
 		parameters.setPath(pathInfo);
 		parameters.setPageMapName(request.getParameter(PAGEMAP));
@@ -108,7 +111,6 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 		parameters.setParameters(map);
 		return parameters;
 	}
-
 
 
 	/**
@@ -237,26 +239,16 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 		String pathInfo = request.getPath();
 		if (pathInfo != null)
 		{
-			if (pathInfo.startsWith("/")) {
-				pathInfo=pathInfo.substring(1);
+			if (pathInfo.startsWith("/"))
+			{
+				pathInfo = pathInfo.substring(1);
 			}
 			if (pathInfo.startsWith("resources/"))
 			{
 				int ix = "resources/".length();
 				if (pathInfo.length() > ix)
 				{
-					StringBuilder path = new StringBuilder(pathInfo.substring(ix));
-					int ixSemiColon = path.indexOf(";");
-					// strip off any jsession id
-					if (ixSemiColon != -1)
-					{
-						int ixEnd = path.indexOf("?");
-						if (ixEnd == -1)
-						{
-							ixEnd = path.length();
-						}
-						path.delete(ixSemiColon, ixEnd);
-					}
+					String path = pathInfo.substring(ix);
 					parameters.setResourceKey(path.toString());
 				}
 			}
@@ -441,8 +433,9 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 				buffer.append("/resources/");
 			}
 			buffer.append(sharedResourceKey);
-			Map<String,? extends Object> map = requestTarget.getRequestParameters().getParameters();
-			if(map != null && map.size() > 0)
+			Map<String, ? extends Object> map = requestTarget.getRequestParameters()
+					.getParameters();
+			if (map != null && map.size() > 0)
 			{
 				buffer.append('?');
 				for (String key : map.keySet())
@@ -452,7 +445,7 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 					buffer.append(map.get(key));
 					buffer.append('&');
 				}
-				buffer.setLength(buffer.length()-1);
+				buffer.setLength(buffer.length() - 1);
 			}
 			return requestCycle.getOriginalResponse().encodeURL(buffer);
 		}

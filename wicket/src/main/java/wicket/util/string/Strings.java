@@ -801,6 +801,31 @@ public final class Strings
 	}
 
 	/**
+	 * Strip any jsessionid and possibly other redundant info that might be in
+	 * our way.
+	 * 
+	 * @param url
+	 *            The url to strip
+	 * @return The stripped url
+	 */
+	public static String stripJSessionId(CharSequence url)
+	{
+		StringBuilder path = new StringBuilder(url);
+		int ixSemiColon = path.indexOf(";");
+		// strip off any jsession id
+		if (ixSemiColon != -1)
+		{
+			int ixEnd = path.indexOf("?");
+			if (ixEnd == -1)
+			{
+				ixEnd = path.length();
+			}
+			path.delete(ixSemiColon, ixEnd);
+		}
+		return path.toString();
+	}
+
+	/**
 	 * Converts unicodes to encoded &#92;uxxxx.
 	 * 
 	 * @param unicodeString
