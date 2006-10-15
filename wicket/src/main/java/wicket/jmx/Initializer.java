@@ -43,8 +43,6 @@ public class Initializer implements IInitializer
 	 */
 	public void init(wicket.Application application)
 	{
-		System.err.println("initialize core");
-
 		try
 		{
 			String name = application.getName();
