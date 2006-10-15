@@ -2,8 +2,8 @@
 <project name="Wicket">
 	<bannerLeft>
 		<name>Wicket</name>
-		<src>http://wicket.sourceforge.net/images/logo.png</src>
-		<href>http://wicket.sourceforge.net/</href>
+		<src>http://wicketframework.org/images/logo.png</src>
+		<href>http://wicketframework.org/</href>
 	</bannerLeft>
 	<body>
 	<links>
@@ -60,14 +60,15 @@
 	<menu name="Project Info">
 		<item name="Mailing Lists" href="/mail-lists.html" />
 		<item name="SourceForge" href="/SourceForge.html" />
-		<item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783" />
+		<item name="Apache Incubator" href="http://incubator.apache.org/projects/wicket.html" />
+		<item name="Issue Tracker" href="http://issues.apache.org/jira/browse/WICKET" />
 		<item name="License" href="/license.html" />
 	</menu>
 	<menu name="Development">
 		<item name="Developers" href="/team-list.html" />
 		<item name="SVN Access" href="/source-repository.html" />
 		<item name="Build Reports" href="/project-reports.html" collapse="true">
-			<item name="Unit Tests" href="/junit-report.html" />
+			<item name="Unit Tests" href="/surefire-report.html" />
 			<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
 		</item>
 	</menu>
