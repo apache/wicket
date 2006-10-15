@@ -169,7 +169,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	private FeedbackMessages feedbackMessages = new FeedbackMessages(
 			new CopyOnWriteArrayList<FeedbackMessage>());
 
-	private transient Map<PageMap, Thread> pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
+	private transient Map<PageMap, Thread> pageMapsUsedInRequest;
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -456,6 +456,14 @@ public abstract class Session implements Serializable, IConverterLocator
 				pageMapName));
 		if (pageMap != null)
 		{
+			synchronized (usedPageMaps) // get a lock so be sure that only one is made 
+			{
+				if(pageMapsUsedInRequest == null)
+				{
+					// TODO!! this is not synchronized.. it should be (on session?)
+					pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
+				}
+			}
 			synchronized (pageMapsUsedInRequest)
 			{
 				long startTime = System.currentTimeMillis();
@@ -1088,19 +1096,22 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final void requestDetached()
 	{
-		synchronized (pageMapsUsedInRequest)
+		if(pageMapsUsedInRequest != null)
 		{
-			Thread t = Thread.currentThread();
-			Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
-			while (it.hasNext())
+			synchronized (pageMapsUsedInRequest)
 			{
-				Entry<PageMap, Thread> entry = it.next();
-				if (entry.getValue() == t)
+				Thread t = Thread.currentThread();
+				Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
+				while (it.hasNext())
 				{
-					it.remove();
+					Entry<PageMap, Thread> entry = it.next();
+					if (entry.getValue() == t)
+					{
+						it.remove();
+					}
 				}
+				pageMapsUsedInRequest.notifyAll();
 			}
-			pageMapsUsedInRequest.notifyAll();
 		}
 	}
 
