@@ -43,6 +43,8 @@ public class Initializer implements IInitializer
 	 */
 	public void init(wicket.Application application)
 	{
+		System.err.println("initialize core");
+
 		try
 		{
 			String name = application.getName();
@@ -57,7 +59,7 @@ public class Initializer implements IInitializer
 			int i = 0;
 			while (mbs.isRegistered(appBeanName))
 			{
-				tempDomain = name + "-" + i;
+				tempDomain = name + "-" + i++;
 				appBeanName = new ObjectName(tempDomain + ":type=Application");
 			}
 			name = tempDomain;
