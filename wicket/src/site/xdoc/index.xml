@@ -59,9 +59,69 @@
 			</p>
 		</section>
 		<section name="Latest News">
+			<subsection name="October 15th, 2006 - Development infrastructure moved to Apache">
+				<p>
+					The next step in <a href="http://incubator.apache.org/projects/wicket">Wicket's incubation process</a> 
+					is complete: we moved our issue tracker away from SourceForge.net's offering to the
+					<a href="http://issues.apache.org/jira/browse/WICKET">JIRA provided by Apache</a>.
+				</p>
+				<p>
+					We are in the process of converting the old issues and importing them into our own
+					JIRA project: http://issues.apache.org/jira/browse/WICKET. As a consequence of this 
+					transition, we have closed down the sf.net trackers and ask you
+					to file new bug reports, patches and requests for information using the Wicket JIRA.
+				</p>
+				<p>
+					We also moved our code repository from sourceforge to Apache. The new repository can be
+					found at: <a href="https://svn.apache.org/repos/asf/incubator/wicket">https://svn.apache.org/repos/asf/incubator/wicket</a>.
+				</p>
+				<p>
+					And finally we have moved our development and commit mailinglists from SourceForge to
+					Apache hosted lists. To join the lists, please send a message to the following addresses and
+					follow the instructions provided in the reply:
+				</p>
+				<ul>
+					<li>Subscribe to development: <a href="mailto:wicket-dev-subscribe at incubator.apache.org">wicket-dev-subscribe at incubator.apache.org</a></li>
+					<li>Subscribe to commits: <a href="mailto:wicket-commits-subscribe at incubator.apache.org">wicket-commits-subscribe at incubator.apache.org</a></li>
+				</ul>
+			</subsection>
+			<subsection name="October 12th, 2006 - Wicket enters Apache Incubator">
+				<p>
+					The Wicket team is proud to announce that we are starting the process of 
+					joining the <a href="http://www.apache.org">Apache Software Foundation</a>.
+				</p>
+				<p>
+					When projects first move to Apache, they are housed at the
+					<a href="http://incubator.apache.org">Apache Incubator</a>. The Incubator 
+					helps incoming projects migrate to the vibrant Apache community. One of the 
+					primary goals of the incubator is to ensure that the joining community is 
+					open, diverse and effective meritocracy.
+				</p><p>
+					During <a href="http://incubator.apache.org/projects/wicket">Wicket's incubation</a> we will 
+					resolve any issues regarding license (in)compatibilities that might be present in our code. 
+					For more information on the incubation process, please read the <a href="http://incubator.apache.org">documents
+					found on the incubator website</a>.
+				</p><p>
+					To facilitate our transition we have moved parts of our development to the Apache Incubator 
+					infrastructure:
+				</p>
+					<ul>
+					<li>the subversion repository is now hosted at <a href="https://svn.apache.org/repos/asf/incubator/wicket">https://svn.apache.org/repos/asf/incubator/wicket</a></li>
+					<li>the development mailing list is now provided by wicket-dev at incubator.apache.org</li>
+					<li>the commit mailing list is now provided by wicket-commits at incubator.apache.org</li>
+					<li>our bug tracking system is now hosted at <a href="http://issues.apache.org/jira/browse/WICKET">http://issues.apache.org/jira/browse/WICKET</a></li>
+					</ul>
+				<p>
+					Please join our incubating community at Apache by subscribing to the Wicket 
+					development list. Send a message to <i>wicket-dev-subscribe at incubator.apache.org</i> 
+					and follow the instructions.
+				</p>
+			</subsection>
 			<subsection name="October 4th, 2006 - Wicket Support">
+				<p>
 				<a href="http://www.wicket-support.com">Wicket Support</a> - a company that provides 
 				Wicket consultation, training and commercial support launched.
+			</p>
 			</subsection>
 			<subsection name="August 27th, 2006 - Wicket 1.2.2 available">
 				<p>
@@ -112,192 +172,6 @@
 				The Wicket roadmap is as follows (no dates available). Our main development effort will focus on Wicket 2, which will be Java 5 based. For providing support to those projects already in production or that are bound to Java 1.4, we will continue development of Wicket 1.x, which will consist mainly of backported functionality from Wicket 2 and bug fixes. The next minor release for these projects will be Wicket 1.3.
 				</p>
 				<p>Have fun!</p>
-			</subsection>
-			<subsection
-				name="Juli 24th, 2006 - Wicket 1.2.1 available">
-				<p>
-					The	<a href="http://wicketframework.org">Wicket</a>
-					project has released the maintenance release Wicket 1.2.1. Wicket is a Java component based 
-					web application framework licensed under the open source Apache 2 license. Wicket allows 
-					Java developers to create highly dynamic web applications using plain Java and HTML.
-				</p>
-				<p>
-					This maintenance release fixes several bugs, and introduces some new features, amongst others the long awaited
-					Portlet (JSR-168) support. Due to time constraints, the portlet examples have not been released yet. You can
-					find them in SVN until the time has been found to build a proper release for it. The portlet support is still
-					young and there may be some incompatibilities to be found between various portlet containers.
-				</p>
-				<p>
-					Here is an (incomplete) list of bug fixes:
-				</p>
-				<ul>
-					<li>For improved reliability, instead of utilizing cookies and falling back on a quirky JavasScript, we now use window.name to detect whether we are in sync with the proper page map.</li>
-					<li>AjaxFormSubmitBehavior no longer incorrectly calls onSubmit() if an error occured during form processing (this aligns it with Button.onSubmit() semantic), instead a new onError() method will be called to allow for error related ajax target processing</li>
-					<li>Added IDebugSettings.serializeSessionAttributes instead of relying on logger set to debug mode for the session store</li>
-					<li>Several bug fixes to the Palette component</li>
-					<li>Property model will now correctly work when chained with a compound model</li>
-					<li>Fix for firefox not parsing xml-responses after the pages document.domain has been changed to the base-domain.</li>
-					<action type="fix" dev="Eelco Hillenius">Implemented a workaround for an inconsistency between different servlet containers and a bug in the servlet spec which does not seem to state what should happen with empty valued request parameters. This caused Wicket to have some problems (like a failing required test) with Jetty 6.</action>
-					<li>Implemented anchors on Links. You can either provide a component that is to be used for getting the anchor, or provide an anchor in the href attribute of &lt;a tags.</li>
-					<li>Portlet (JSR-168) support</li>
-					<li>Ajax Checkbox now uses onclick instead of onchange which works correctly</li>
-					<li>Replace GPL licensed diff util with a Apache licensed one</li>
-					<li>Redirect URLs sometimes were not being encoded for redirects, preventing 'cookie-less' operation (most notably when used with redirectTo). Fixed by always encoding redirects low-down; encoding multiple times has no effect.</li>
-					<li>Package resources do not have to be pre-registered anymore. When a shared resource is not found, Wicket tries to find a corresponding package resource, and if it finds one, registers it lazily. This fixes quite a few uncomfortable situations, and makes writing custom components easier. Package resources may be blocked by utilizing IPackageResourceGuard (IResourceSettings). By default everything except files with the extension 'html', 'class', 'java', and 'properties' are served. Fixes amongst others bug 1490949. All methods that took Pattern are now deprecated and will be removed in 2.0.
-					</li>
-					<li>Fixed setting the shared resource path so that it strips any jsession id (or whatever there may be between [path];[whatever][?(optional)] which was a problem when a browser doesn't support cookies</li>
-					<li>Added rating component to extensions</li>
-					<li>Added Component.replaceWith(Component) to provide better readability and better context for errors that arise from replace actions</li>
-				</ul>
-				<p>
-					The complete list is available here. This release should be a drop in release to the 1.2 version. However
-					we encourage you to properly test your application before pushing Wicket 1.2.1 into production.
-				</p>
-				<p>
-					The Wicket team wishes to thank everyone that has worked with us to find and solve those nasty bugs. We hope that
-					you will enjoy this release as much as we do. We thank our users for their continued support.
-				</p>
-			</subsection>
-			<subsection
-				name="May 24th, 2006 - Wicket 1.2 available">
-				<p>
-					The	<a href="http://wicketframework.org">Wicket</a>
-					project has released Wicket 1.2. Wicket is a Java component based web application 
-					framework licensed under the open source Apache 2 license. Wicket allows Java developers to
-					create highly dynamic web applications using plain Java and HTML.
-				</p>
-				<p>
-					This is the third major release of the Wicket web framework and marks a major milestone after 7 months
-					of hard labor by the core team of developers and the users of the framework.
-					This release has been anticipated for several months and sports many major
-					new features and improvements over previous releases. Major features of Wicket 1.2 include:
-				</p>
-				<ul>
-					<li>
-						Native, cross-platform AJAX support: use AJAX
-						without having to write a single line of
-						JavaScript. Wicket's AJAX cross-platform
-						capabilities
-						<a
-							href="http://www.musingsfrommars.org/2006/03/ajax-dhtml-library-scorecard.html">
-							have been rated 'A'
-						</a>
-					</li>
-					<li>
-						Render multiple components in one AJAX call,
-						where each component can occupy any part of the
-						page
-					</li>
-					<li>
-						Improved markup inheritance: panels, pages,
-						header contributions
-					</li>
-					<li>
-						Improved and simplified internationalization
-						(i18n) support, using &lt;wicket:message&gt;,
-						better resource bundle lookup strategy
-					</li>
-					<li>
-						Out of the box default resource bundles for many
-						languages, including
-						English, German, Spanish, Portugese, French, 
-						Hungarian, Dutch, Finnish, Danish, Swedish, Japanese, 
-						Chinese, Italian, Bulgarian and Farzi (Iranian).
-					</li>
-					<li>
-						Multiple form component validation, validate two
-						or more fields that are related
-					</li>
-					<li>
-						Improved form handling: clear form validation
-						workflow that allows you to much easier defined
-						required and type conversion attributes of a
-						form component
-					</li>
-					<li>Nice URL support through URL mounting</li>
-					<li>Markup fragments (inline panels)</li>
-					<li>
-						Improved performance by replacing OGNL with our
-						own object graph language parser
-					</li>
-					<li>
-						Response filter support, added ServerTime and
-						ServerClientTime filters
-					</li>
-					<li>
-						Reloading of resource bundles in development
-						mode
-					</li>
-					<li>
-						Improved unit test support for your Wicket
-						components and pages through the WicketTester,
-						create unittests that run outside the container.
-					</li>
-					<li>
-						Out-of-the-box AJAX components: paging
-						navigator, link with fallback, auto-updater,
-						AJAX form, AJAX submit buttons, etc.
-					</li>
-					<li>
-						Improved authorization and authentication
-						support, giving you the power to specify
-						authorization at the component level. An example
-						project featuring a role based, annotation
-						framework is now part of the standard
-						distribution.
-					</li>
-					<li>
-						Spring support for injecting your business logic
-						into your web pages in a non-intrusive manner,
-						while still being able to use the convenient
-						Wicket idiom for creating pages (using the Java
-						<tt>new</tt>
-						operator).
-					</li>
-					<li>
-						Improved settings system: settings are now
-						partitioned into logical groupings to make them
-						easier to find
-					</li>
-					<li>Numerous bug fixes and minor improvements</li>
-				</ul>
-				<p>
-					Wicket runs on any application server supporting the servlet 
-					API version 2.3 and higher, and will work on Java 1.4 SDK's 
-					or newer.
-				</p>
-				<p>
-					We have tried to keep API changes to a minimum, but
-					had to change and remove some methods and classes.
-					Wicket 1.2 will not be a drop-in replacement, though
-					most of your application's pages and components
-					should not be affected. There is a migration guide
-					available on our wiki:
-				</p>
-				<p>
-					<a
-						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
-						Migrating to Wicket 1.2
-					</a>
-				</p>
-				<p>
-					The Wicket 1.2 release is a highly anticipated 
-					major landmark in the history of Wicket. The core
-					development team wishes to extend their gratitude to
-					all users who helped build and test this release. Enjoy
-					and have fun!
-				</p>
-			</subsection>
-			<subsection
-				name="May 14th, 2006 - New examples available">
-				<p>
-					We have created two new examples giving a quick introduction
-					to new Wicket 1.2 features. Here are the links to the articles:
-				</p>
-				<ul>
-					<li><a href="ExampleAjaxCounter.html">Ajax Counter example</a></li>
-					<li><a href="ExampleUsingFragments.html">Using fragments example</a></li>
-				</ul>
 			</subsection>
 			<p>
 				See
