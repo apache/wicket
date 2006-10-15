@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AbortException;
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.SharedResources;
@@ -341,13 +342,14 @@ public class PackageResource extends WebResource
 			String msg = "Unable to find package resource [path = " + absolutePath + ", style = "
 					+ style + ", locale = " + locale + "]";
 			log.warn(msg);
-			if (RequestCycle.get() instanceof WebRequestCycle)
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle instanceof WebRequestCycle)
 			{
 				throw new AbortWithWebErrorCodeException(HttpServletResponse.SC_NOT_FOUND, msg);
 			}
 			else
 			{
-				throw new WicketRuntimeException(msg);
+				throw new AbortException();
 			}
 		}
 		this.locale = resourceStream.getLocale();
