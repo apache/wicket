@@ -28,6 +28,7 @@ import wicket.IRequestTarget;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebApplication;
+import wicket.request.IRequestTargetMountsInfo;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
@@ -44,29 +45,9 @@ import wicket.util.string.Strings;
  * @author Jonathan Locke
  */
 public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
+		implements
+			IRequestTargetMountsInfo
 {
-	/** cached url prefix. */
-	private CharSequence urlPrefix;
-
-	/**
-	 * map of path mounts for mount encoders on paths.
-	 * <p>
-	 * mountsOnPath is sorted by longest paths first to improve resolution of
-	 * possible path conflicts. <br />
-	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
-	 * Page1 uses a parameters encoder that only encodes parameter values <br />
-	 * now suppose we want to access Page1 with a single paramter param="test".
-	 * we have a url collision since both pages can be access with /page/test
-	 * <br />
-	 * the sorting by longest path first guarantees that the iterator will
-	 * return the mount /page/test before it returns mount /page therefore
-	 * giving deterministic behavior to path resolution by always trying to
-	 * match the longest possible path first.
-	 * </p>
-	 */
-	private final SortedMap<String, IRequestTargetUrlCodingStrategy> mountsOnPath = new TreeMap<String, IRequestTargetUrlCodingStrategy>(
-			lengthComparator);
-
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator<String> lengthComparator = new Comparator<String>()
 	{
@@ -93,84 +74,32 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	};
 
 	/**
+	 * map of path mounts for mount encoders on paths.
+	 * <p>
+	 * mountsOnPath is sorted by longest paths first to improve resolution of
+	 * possible path conflicts. <br />
+	 * For example: <br/> we mount Page1 on /page and Page2 on /page/test <br />
+	 * Page1 uses a parameters encoder that only encodes parameter values <br />
+	 * now suppose we want to access Page1 with a single paramter param="test".
+	 * we have a url collision since both pages can be access with /page/test
+	 * <br />
+	 * the sorting by longest path first guarantees that the iterator will
+	 * return the mount /page/test before it returns mount /page therefore
+	 * giving deterministic behavior to path resolution by always trying to
+	 * match the longest possible path first.
+	 * </p>
+	 */
+	private final SortedMap<String, IRequestTargetUrlCodingStrategy> mountsOnPath = new TreeMap<String, IRequestTargetUrlCodingStrategy>(
+			lengthComparator);
+
+	/** cached url prefix. */
+	private CharSequence urlPrefix;
+
+	/**
 	 * Construct.
 	 */
 	public WebRequestCodingStrategy()
 	{
-	}
-
-	/**
-	 * @see wicket.request.IRequestTargetMounter#mount(
-	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
-	 */
-	public final void mount(IRequestTargetUrlCodingStrategy encoder)
-	{
-		if (encoder == null)
-		{
-			throw new IllegalArgumentException("Argument encoder must be not-null");
-		}
-
-		String path = encoder.getMountPath();
-		if (Strings.isEmpty(path))
-		{
-			throw new IllegalArgumentException("Argument path must be not be empty");
-		}
-		if (path.equals("/"))
-		{
-			throw new IllegalArgumentException(
-					"The mount path '/' is reserved for the application home page");
-		}
-
-		// sanity check
-		if (!path.startsWith("/"))
-		{
-			path = "/" + path;
-		}
-
-		if (mountsOnPath.containsKey(path))
-		{
-			throw new WicketRuntimeException(path + " is already mounted for "
-					+ mountsOnPath.get(path));
-		}
-		mountsOnPath.put(path, encoder);
-	}
-
-	/**
-	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
-	 */
-	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
-	{
-		if (path == null)
-		{
-			return mountsOnPath.get(null);
-		}
-		else if (!path.equals("/")) // ignore root paths.. is this the right path?
-		{
-			for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
-			{
-				final Map.Entry entry = (Entry)it.next();
-				final String key = (String)entry.getKey();
-				if (path.startsWith(key))
-				{
-					return (IRequestTargetUrlCodingStrategy)entry.getValue();
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @see wicket.request.IRequestCodingStrategy#pathForTarget(wicket.IRequestTarget)
-	 */
-	public final CharSequence pathForTarget(IRequestTarget requestTarget)
-	{
-		// first check whether the target was mounted
-		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
-		if (encoder != null)
-		{
-			return encoder.encode(requestTarget);
-		}
-		return null;
 	}
 
 	/**
@@ -238,6 +167,65 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	}
 
 	/**
+	 * @see wicket.request.IRequestTargetMountsInfo#listMounts()
+	 */
+	public IRequestTargetUrlCodingStrategy[] listMounts()
+	{
+		return (IRequestTargetUrlCodingStrategy[])mountsOnPath.values().toArray(
+				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
+	}
+
+	/**
+	 * @see wicket.request.IRequestTargetMounter#mount(
+	 *      wicket.request.target.coding.IRequestTargetUrlCodingStrategy)
+	 */
+	public final void mount(IRequestTargetUrlCodingStrategy encoder)
+	{
+		if (encoder == null)
+		{
+			throw new IllegalArgumentException("Argument encoder must be not-null");
+		}
+
+		String path = encoder.getMountPath();
+		if (Strings.isEmpty(path))
+		{
+			throw new IllegalArgumentException("Argument path must be not be empty");
+		}
+		if (path.equals("/"))
+		{
+			throw new IllegalArgumentException(
+					"The mount path '/' is reserved for the application home page");
+		}
+
+		// sanity check
+		if (!path.startsWith("/"))
+		{
+			path = "/" + path;
+		}
+
+		if (mountsOnPath.containsKey(path))
+		{
+			throw new WicketRuntimeException(path + " is already mounted for "
+					+ mountsOnPath.get(path));
+		}
+		mountsOnPath.put(path, encoder);
+	}
+
+	/**
+	 * @see wicket.request.IRequestCodingStrategy#pathForTarget(wicket.IRequestTarget)
+	 */
+	public final CharSequence pathForTarget(IRequestTarget requestTarget)
+	{
+		// first check whether the target was mounted
+		IRequestTargetUrlCodingStrategy encoder = getMountEncoder(requestTarget);
+		if (encoder != null)
+		{
+			return encoder.encode(requestTarget);
+		}
+		return null;
+	}
+
+	/**
 	 * @see wicket.request.IRequestCodingStrategy#unmount(java.lang.String)
 	 */
 	public final void unmount(String path)
@@ -257,21 +245,28 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	}
 
 	/**
-	 * Gets prefix.
-	 * 
-	 * @param requestCycle
-	 *            the request cycle
-	 * 
-	 * @return prefix
+	 * @see wicket.request.IRequestTargetMounter#urlCodingStrategyForPath(java.lang.String)
 	 */
-	@Override
-	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
+	public final IRequestTargetUrlCodingStrategy urlCodingStrategyForPath(String path)
 	{
-		if (urlPrefix == null)
+		if (path == null)
 		{
-			urlPrefix = WebApplication.get().getRootPath();
+			return mountsOnPath.get(null);
 		}
-		return urlPrefix;
+		else if (!path.equals("/")) // ignore root paths.. is this the right
+		// path?
+		{
+			for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
+			{
+				final Map.Entry entry = (Entry)it.next();
+				final String key = (String)entry.getKey();
+				if (path.startsWith(key))
+				{
+					return (IRequestTargetUrlCodingStrategy)entry.getValue();
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -294,5 +289,23 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		}
 
 		return null;
+	}
+
+	/**
+	 * Gets prefix.
+	 * 
+	 * @param requestCycle
+	 *            the request cycle
+	 * 
+	 * @return prefix
+	 */
+	@Override
+	protected final CharSequence urlPrefix(final RequestCycle requestCycle)
+	{
+		if (urlPrefix == null)
+		{
+			urlPrefix = WebApplication.get().getRootPath();
+		}
+		return urlPrefix;
 	}
 }
