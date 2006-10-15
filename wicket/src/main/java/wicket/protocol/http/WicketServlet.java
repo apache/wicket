@@ -96,17 +96,28 @@ import org.apache.commons.logging.LogFactory;
  * @author Timur Mehrvarz
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @deprecated Use Wicket filter instead
  */
 public class WicketServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	@SuppressWarnings("unused")
 	private static final Log log = LogFactory.getLog(WicketServlet.class);
 
 	/** The WicketFilter where all the handling is done in */
 	protected WicketFilter wicketFilter;
+
+	/**
+	 * Construct.
+	 */
+	public WicketServlet() {
+		// log warning
+		log.info("********************************************");
+		log.info("DEPRECATED! Please use WicketFilter instead.");
+		log.info("********************************************");
+	}
 
 	/**
 	 * Handles servlet page requests.
