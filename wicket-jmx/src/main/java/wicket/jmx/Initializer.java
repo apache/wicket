@@ -58,7 +58,7 @@ public class Initializer implements IInitializer
 			while (mbs.isRegistered(appBeanName))
 			{
 				tempDomain = name + "-" + i;
-				appBeanName = new ObjectName(domain + ":type=Application");
+				appBeanName = new ObjectName(tempDomain + ":type=Application");
 			}
 			name = tempDomain;
 
