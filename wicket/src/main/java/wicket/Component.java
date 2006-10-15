@@ -1628,8 +1628,12 @@ public abstract class Component implements Serializable
 					((IFeedback)this).updateFeedback();
 				}
 
+				// attach
+				internalAttach();
+
 				// check authorization
 				// first the component itself
+				// (after attach as otherwise list views etc wont work)
 				setRenderAllowed(isActionAuthorized(RENDER));
 				// check children if this is a container
 				if (this instanceof MarkupContainer)
@@ -1649,9 +1653,7 @@ public abstract class Component implements Serializable
 				}
 
 				// Render the component and all its children
-				internalAttach();
 				onBeforeRender();
-
 				render(markupStream);
 			}
 			finally
