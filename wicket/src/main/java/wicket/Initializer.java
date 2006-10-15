@@ -46,5 +46,8 @@ public class Initializer implements IInitializer
 		IOnChangeListener.INTERFACE.register();
 		IRedirectListener.INTERFACE.register();
 		IResourceListener.INTERFACE.register();
+
+		// register JMX beans
+		new wicket.jmx.Initializer().init(application);
 	}
 }
