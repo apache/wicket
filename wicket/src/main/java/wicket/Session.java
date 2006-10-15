@@ -859,7 +859,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		{
 			// Let the factory create a new converter
 			converterSupplier = getApplication().getApplicationSettings()
-					.getConverterSupplierFactory().newConverterSupplier();
+					.getConverterLocatorFactory().newConverterLocator();
 		}
 		return converterSupplier.getConverter(type);
 	}

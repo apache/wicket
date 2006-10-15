@@ -84,7 +84,7 @@ public final class Classes
 		try
 		{
 			final IConverter converter = Application.get().getApplicationSettings()
-					.getConverterSupplierFactory().newConverterSupplier().getConverter(paramClass);
+					.getConverterLocatorFactory().newConverterLocator().getConverter(paramClass);
 			final Object param = converter.convertToObject(value, locale);
 			if (param == null)
 			{

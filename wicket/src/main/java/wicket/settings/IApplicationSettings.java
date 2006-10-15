@@ -87,11 +87,11 @@ public interface IApplicationSettings
 	String getContextPath();
 
 	/**
-	 * Gets the converter supplier factory.
+	 * Gets the converter locator factory.
 	 * 
-	 * @return the converter factory
+	 * @return the converter locator factory
 	 */
-	IConverterLocatorFactory getConverterSupplierFactory();
+	IConverterLocatorFactory getConverterLocatorFactory();
 
 	/**
 	 * @return Returns the defaultLocale.

@@ -476,9 +476,9 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#getConverterSupplierFactory()
+	 * @see wicket.settings.IApplicationSettings#getConverterLocatorFactory()
 	 */
-	public IConverterLocatorFactory getConverterSupplierFactory()
+	public IConverterLocatorFactory getConverterLocatorFactory()
 	{
 		if (converterFactory == null)
 		{

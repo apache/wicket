@@ -33,5 +33,5 @@ public interface IConverterLocatorFactory
 	 * 
 	 * @return A new {@link IConverterLocator} instance
 	 */
-	IConverterLocator newConverterSupplier();
+	IConverterLocator newConverterLocator();
 }

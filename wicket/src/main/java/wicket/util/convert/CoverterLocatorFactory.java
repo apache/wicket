@@ -30,9 +30,9 @@ import wicket.IConverterLocator;
 public final class CoverterLocatorFactory implements IConverterLocatorFactory
 {
 	/**
-	 * @see wicket.util.convert.IConverterLocatorFactory#newConverterSupplier()
+	 * @see wicket.util.convert.IConverterLocatorFactory#newConverterLocator()
 	 */
-	public IConverterLocator newConverterSupplier()
+	public IConverterLocator newConverterLocator()
 	{
 		return new ConverterLocator();
 	}
