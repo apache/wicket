@@ -44,9 +44,9 @@ public class ServletWebRequest extends WebRequest
 {
 	/** Servlet request information. */
 	private final HttpServletRequest httpServletRequest;
-	
+
 	/** Log */
-	private static final Log log = LogFactory.getLog(ServletWebRequest.class); 
+	private static final Log log = LogFactory.getLog(ServletWebRequest.class);
 
 	/**
 	 * Protected constructor.
@@ -146,7 +146,7 @@ public class ServletWebRequest extends WebRequest
 	@Override
 	public String getPath()
 	{
-		String url = httpServletRequest.getRequestURI();
+		String url = Strings.stripJSessionId(httpServletRequest.getRequestURI());
 		String rootPath = ((WebApplication)Application.get()).getRootPath();
 		if (url.startsWith(rootPath))
 		{
@@ -219,6 +219,10 @@ public class ServletWebRequest extends WebRequest
 			// Remove leading '/'
 			url = url.substring(1);
 		}
+
+		// strip any jsession id
+		url = Strings.stripJSessionId(url);
+
 		return url;
 	}
 
@@ -260,7 +264,7 @@ public class ServletWebRequest extends WebRequest
 	public boolean isAjax()
 	{
 		boolean ajax = false;
-		
+
 		String ajaxHeader = httpServletRequest.getHeader("Wicket-Ajax");
 		if (Strings.isEmpty(ajaxHeader) == false)
 		{
@@ -271,10 +275,10 @@ public class ServletWebRequest extends WebRequest
 			catch (StringValueConversionException e)
 			{
 				// We are not interested in this exception but we log it anyway
-				log.debug("Couldn't convert the Wicket-Ajax header: "+ajaxHeader);
+				log.debug("Couldn't convert the Wicket-Ajax header: " + ajaxHeader);
 			}
 		}
-		
+
 		return ajax;
 	}
 }
