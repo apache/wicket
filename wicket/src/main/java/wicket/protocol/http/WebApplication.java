@@ -72,11 +72,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *             public void init()
- *             {
- *                 String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                 URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                 ...
+ *              public void init()
+ *              {
+ *                  String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                  URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                  ...
  * </pre>
  * 
  * @see WicketServlet
@@ -110,6 +110,12 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * The cached application key. Will be set in
+	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
+	 */
+	private String applicationKey;
+
+	/**
 	 * Map of buffered responses that are in progress per session. Buffered
 	 * responses are temporarily stored
 	 */
@@ -131,17 +137,69 @@ public abstract class WebApplication extends Application implements ISessionFact
 	private WicketFilter wicketFilter;
 
 	/**
-	 * The cached application key. Will be set in
-	 * {@link #setWicketServlet(WicketServlet)} based on the servlet context.
-	 */
-	private String applicationKey;
-
-	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
 	 * application instead of overriding the constructor.</strong>
 	 */
 	public WebApplication()
 	{
+	}
+
+	/**
+	 * @see wicket.Application#getApplicationKey()
+	 */
+	@Override
+	public final String getApplicationKey()
+	{
+		if (applicationKey == null)
+		{
+			throw new IllegalStateException("the application key does not seem to"
+					+ " be set properly or this method is called before WicketServlet is"
+					+ " set, which leads to the wrong behavior");
+		}
+		return applicationKey;
+	}
+
+	/**
+	 * Gets the default request cycle processor (with lazy initialization). This
+	 * is the {@link IRequestCycleProcessor} that will be used by
+	 * {@link RequestCycle}s when custom implementations of the request cycle
+	 * do not provide their own customized versions.
+	 * 
+	 * @return the default request cycle processor
+	 */
+	public final IRequestCycleProcessor getRequestCycleProcessor()
+	{
+		if (requestCycleProcessor == null)
+		{
+			requestCycleProcessor = newRequestCycleProcessor();
+		}
+		return requestCycleProcessor;
+	}
+
+	/**
+	 * Returns the full rootpath of this application. This is the
+	 * ApplicationSettings.contextpath and the WicketFilter.rootpath concatted.
+	 * 
+	 * @return String the full rootpath.
+	 */
+	public String getRootPath()
+	{
+		return wicketFilter.getRootPath(WebRequestCycle.get().getWebRequest()
+				.getHttpServletRequest());
+	}
+
+	/**
+	 * @return The Wicket servlet for this application
+	 */
+	public final ServletContext getServletContext()
+	{
+		if (wicketFilter == null)
+		{
+			throw new IllegalStateException("servletContext is not set yet. Any code in your"
+					+ " Application object that uses the wicketServlet instance should be put"
+					+ " in the init() method instead of your constructor");
+		}
+		return wicketFilter.getFilterConfig().getServletContext();
 	}
 
 	/**
@@ -170,32 +228,23 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @return The Wicket servlet for this application
+	 * Mounts an encoder at the given path.
+	 * 
+	 * @param path
+	 *            the path to mount the encoder on
+	 * @param encoder
+	 *            the encoder that will be used for this mount
 	 */
-	public final ServletContext getServletContext()
+	public final void mount(IRequestTargetUrlCodingStrategy encoder)
 	{
-		if (wicketFilter == null)
-		{
-			throw new IllegalStateException("servletContext is not set yet. Any code in your"
-					+ " Application object that uses the wicketServlet instance should be put"
-					+ " in the init() method instead of your constructor");
-		}
-		return wicketFilter.getFilterConfig().getServletContext();
-	}
+		checkMountPath(encoder.getMountPath());
 
-	/**
-	 * @see wicket.Application#getApplicationKey()
-	 */
-	@Override
-	public final String getApplicationKey()
-	{
-		if (applicationKey == null)
+		if (encoder == null)
 		{
-			throw new IllegalStateException("the application key does not seem to"
-					+ " be set properly or this method is called before WicketServlet is"
-					+ " set, which leads to the wrong behavior");
+			throw new IllegalArgumentException("Encoder must be not null");
 		}
-		return applicationKey;
+
+		getRequestCycleProcessor().getRequestCodingStrategy().mount(encoder);
 	}
 
 	/**
@@ -261,35 +310,35 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Mounts an encoder at the given path.
+	 * Create new Wicket Session object. Note, this method is not called if you
+	 * registered your own ISessionFactory with the Application.
 	 * 
-	 * @param path
-	 *            the path to mount the encoder on
-	 * @param encoder
-	 *            the encoder that will be used for this mount
+	 * @return new session
+	 * 
+	 * @see wicket.ISessionFactory#newSession()
 	 */
-	public final void mount(IRequestTargetUrlCodingStrategy encoder)
+	public Session newSession()
 	{
-		checkMountPath(encoder.getMountPath());
-
-		if (encoder == null)
-		{
-			throw new IllegalArgumentException("Encoder must be not null");
-		}
-
-		getRequestCycleProcessor().getRequestCodingStrategy().mount(encoder);
+		return new WebSession(WebApplication.this);
 	}
 
 	/**
-	 * Unmounts whatever encoder is mounted at a given path.
-	 * 
-	 * @param path
-	 *            the path of the encoder to unmount
+	 * @see wicket.ISessionFactory#newSession(wicket.Request)
 	 */
-	public final void unmount(String path)
+	public Session newSession(Request request)
 	{
-		checkMountPath(path);
-		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
+		return newSession();
+	}
+
+	/**
+	 * @param sessionId
+	 *            The session id that was destroyed
+	 */
+	@Override
+	public void sessionDestroyed(String sessionId)
+	{
+		super.sessionDestroyed(sessionId);
+		bufferedResponses.remove(sessionId);
 	}
 
 	/**
@@ -321,6 +370,18 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
 		}
+	}
+
+	/**
+	 * Unmounts whatever encoder is mounted at a given path.
+	 * 
+	 * @param path
+	 *            the path of the encoder to unmount
+	 */
+	public final void unmount(String path)
+	{
+		checkMountPath(path);
+		getRequestCycleProcessor().getRequestCodingStrategy().unmount(path);
 	}
 
 	/**
@@ -361,62 +422,12 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Gets the default request cycle processor (with lazy initialization). This
-	 * is the {@link IRequestCycleProcessor} that will be used by
-	 * {@link RequestCycle}s when custom implementations of the request cycle
-	 * do not provide their own customized versions.
-	 * 
-	 * @return the default request cycle processor
-	 */
-	protected final IRequestCycleProcessor getRequestCycleProcessor()
-	{
-		if (requestCycleProcessor == null)
-		{
-			requestCycleProcessor = newRequestCycleProcessor();
-		}
-		return requestCycleProcessor;
-	}
-
-	/**
-	 * May be replaced by subclasses which whishes to uses there own
-	 * implementation of IRequestCycleProcessor
-	 * 
-	 * @return IRequestCycleProcessor
-	 */
-	// TODO Doesn't this method belong in Application, not WebApplication?
-	protected IRequestCycleProcessor newRequestCycleProcessor()
-	{
-		return new DefaultWebRequestCycleProcessor();
-	}
-
-	/**
 	 * @see wicket.Application#getSessionFactory()
 	 */
 	@Override
 	protected ISessionFactory getSessionFactory()
 	{
 		return this.sessionFactory;
-	}
-
-	/**
-	 * Create new Wicket Session object. Note, this method is not called if you
-	 * registered your own ISessionFactory with the Application.
-	 * 
-	 * @return new session
-	 * 
-	 * @see wicket.ISessionFactory#newSession()
-	 */
-	public Session newSession()
-	{
-		return new WebSession(WebApplication.this);
-	}
-
-	/**
-	 * @see wicket.ISessionFactory#newSession(wicket.Request)
-	 */
-	public Session newSession(Request request)
-	{
-		return newSession();
 	}
 
 	/**
@@ -527,6 +538,27 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * May be replaced by subclasses which whishes to uses there own
+	 * implementation of IRequestCycleProcessor
+	 * 
+	 * @return IRequestCycleProcessor
+	 */
+	// TODO Doesn't this method belong in Application, not WebApplication?
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		return new DefaultWebRequestCycleProcessor();
+	}
+
+	/**
+	 * @see wicket.Application#newSessionStore()
+	 */
+	@Override
+	protected ISessionStore newSessionStore()
+	{
+		return new SecondLevelCacheSessionStore(new FilePageStore());
+	}
+
+	/**
 	 * Create a new WebRequest. Subclasses of WebRequest could e.g. decode and
 	 * obfuscated URL which has been encoded by an appropriate WebResponse.
 	 * 
@@ -552,13 +584,12 @@ public abstract class WebApplication extends Application implements ISessionFact
 				servletResponse) : new WebResponse(servletResponse));
 	}
 
-	/**
-	 * @see wicket.Application#newSessionStore()
+	/*
+	 * Set the application key value
 	 */
-	@Override
-	protected ISessionStore newSessionStore()
+	protected final void setApplicationKey(String applicationKey)
 	{
-		return new SecondLevelCacheSessionStore(new FilePageStore());
+		this.applicationKey = applicationKey;
 	}
 
 	/**
@@ -655,25 +686,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		}
 		return null;
 	}
-	
-	/*
-	 * Set the application key value
-	 */
-	protected final void setApplicationKey(String applicationKey)
-	{
-		this.applicationKey=applicationKey;
-	}
-
-	/**
-	 * @param sessionId
-	 *            The session id that was destroyed
-	 */
-	@Override
-	public void sessionDestroyed(String sessionId)
-	{
-		super.sessionDestroyed(sessionId);
-		bufferedResponses.remove(sessionId);
-	}
 
 	/**
 	 * Checks mount path is valid.
@@ -695,17 +707,5 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			throw new IllegalArgumentException("Mount path cannot start with '/resources'");
 		}
-	}
-
-	/**
-	 * Returns the full rootpath of this application. This is the
-	 * ApplicationSettings.contextpath and the WicketFilter.rootpath concatted.
-	 * 
-	 * @return String the full rootpath.
-	 */
-	public String getRootPath()
-	{
-		return wicketFilter.getRootPath(WebRequestCycle.get().getWebRequest()
-				.getHttpServletRequest());
 	}
 }
