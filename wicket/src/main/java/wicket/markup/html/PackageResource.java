@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AbortException;
 import wicket.Application;
 import wicket.RequestCycle;
 import wicket.SharedResources;
@@ -556,7 +557,7 @@ public class PackageResource extends WebResource
 			}
 			else
 			{
-				throw new WicketRuntimeException(msg);
+				throw new AbortException();
 			}
 		}
 		this.locale = resourceStream.getLocale();
