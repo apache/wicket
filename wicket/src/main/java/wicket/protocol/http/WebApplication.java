@@ -26,6 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
@@ -72,11 +75,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *               public void init()
- *               {
- *                   String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                   URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                   ...
+ *                 public void init()
+ *                 {
+ *                     String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                     URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                     ...
  * </pre>
  * 
  * @see WicketServlet
@@ -98,6 +101,8 @@ import wicket.util.watch.ModificationWatcher;
  */
 public abstract class WebApplication extends Application implements ISessionFactory
 {
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WebApplication.class);
 
 	/**
 	 * Get WebApplication for current thread.
@@ -538,15 +543,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @see wicket.Application#logStarted()
-	 */
-	@Override
-	protected void logStarted()
-	{
-		super.logStarted();
-	}
-
-	/**
 	 * May be replaced by subclasses which whishes to uses there own
 	 * implementation of IRequestCycleProcessor
 	 * 
@@ -666,6 +662,22 @@ public abstract class WebApplication extends Application implements ISessionFact
 		webSession.initForRequest();
 
 		return webSession;
+	}
+
+	/**
+	 * Log that this application is started.
+	 */
+	final void logStarted()
+	{
+		String version = getFrameworkSettings().getVersion();
+		StringBuffer b = new StringBuffer();
+		b.append("[").append(getName()).append("] Started Wicket ");
+		if (!"n/a".equals(version))
+		{
+			b.append("version ").append(version).append(" ");
+		}
+		b.append("in ").append(getConfigurationType()).append(" mode");
+		log.info(b.toString());
 	}
 
 	/**
