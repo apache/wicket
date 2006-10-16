@@ -23,14 +23,6 @@ public interface IPageSettings
 	void addComponentResolver(IComponentResolver resolver);
 
 	/**
-	 * Get the (modifiable) list of IComponentResolvers.
-	 * 
-	 * @see AutoComponentResolver for an example
-	 * @return List of ComponentResolvers
-	 */
-	List<IComponentResolver> getComponentResolvers();
-
-	/**
 	 * Gets whether Wicket should try to support opening multiple windows for
 	 * the same session transparently. If this is true - the default setting -,
 	 * Wicket tries to detect whether a new window was opened by a user (e.g. in
@@ -53,6 +45,14 @@ public interface IPageSettings
 	boolean getAutomaticMultiWindowSupport();
 
 	/**
+	 * Get the (modifiable) list of IComponentResolvers.
+	 * 
+	 * @see AutoComponentResolver for an example
+	 * @return List of ComponentResolvers
+	 */
+	List<IComponentResolver> getComponentResolvers();
+
+	/**
 	 * @return Returns the maxPageVersions.
 	 */
 	int getMaxPageVersions();
@@ -61,18 +61,6 @@ public interface IPageSettings
 	 * @return Returns the pagesVersionedByDefault.
 	 */
 	boolean getVersionPagesByDefault();
-
-	/**
-	 * @param maxPageVersions
-	 *            The maxPageVersion to set.
-	 */
-	void setMaxPageVersions(int maxPageVersions);
-
-	/**
-	 * @param pagesVersionedByDefault
-	 *            The pagesVersionedByDefault to set.
-	 */
-	void setVersionPagesByDefault(boolean pagesVersionedByDefault);
 
 	/**
 	 * Sets whether Wicket should try to support opening multiple windows for
@@ -96,4 +84,16 @@ public interface IPageSettings
 	 *            transparently
 	 */
 	void setAutomaticMultiWindowSupport(boolean automaticMultiWindowSupport);
+
+	/**
+	 * @param maxPageVersions
+	 *            The maxPageVersion to set.
+	 */
+	void setMaxPageVersions(int maxPageVersions);
+
+	/**
+	 * @param pagesVersionedByDefault
+	 *            The pagesVersionedByDefault to set.
+	 */
+	void setVersionPagesByDefault(boolean pagesVersionedByDefault);
 }
