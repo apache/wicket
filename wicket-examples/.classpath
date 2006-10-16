@@ -35,6 +35,5 @@
 	<classpathentry kind="var" path="M2_REPO/javax/portlet/portlet-api/1.0/portlet-api-1.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/wicket-jmx"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
