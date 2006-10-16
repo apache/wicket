@@ -225,9 +225,6 @@ public final class Settings
 	/** List of {@link IResponseFilter}s. */
 	private List responseFilters;
 
-	/** Flag for serialize session attributes feature */
-	private boolean serializeSessionAttributes = false;
-
 	/**
 	 * In order to do proper form parameter decoding it is important that the
 	 * response and the following request have the same encoding. see
@@ -235,6 +232,9 @@ public final class Settings
 	 * additional information.
 	 */
 	private String responseRequestEncoding = "UTF-8";
+
+	/** Flag for serialize session attributes feature */
+	private boolean serializeSessionAttributes = false;
 
 	/** Chain of string resource loaders to use */
 	private List stringResourceLoaders = new ArrayList(4);
@@ -691,6 +691,15 @@ public final class Settings
 	}
 
 	/**
+	 * 
+	 * @see wicket.settings.IDebugSettings#getSerializeSessionAttributes()
+	 */
+	public boolean getSerializeSessionAttributes()
+	{
+		return serializeSessionAttributes;
+	}
+
+	/**
 	 * @see wicket.settings.IResourceSettings#getStringResourceLoaders()
 	 */
 	public List getStringResourceLoaders()
@@ -754,6 +763,7 @@ public final class Settings
 		return useDefaultOnMissingResource;
 	}
 
+
 	/**
 	 * @see wicket.settings.IFrameworkSettings#getVersion()
 	 */
@@ -767,7 +777,6 @@ public final class Settings
 		}
 		return Strings.isEmpty(implVersion) ? "n/a" : implVersion;
 	}
-
 
 	/**
 	 * @see wicket.settings.IPageSettings#getVersionPagesByDefault()
@@ -1100,6 +1109,15 @@ public final class Settings
 	}
 
 	/**
+	 * 
+	 * @see wicket.settings.IDebugSettings#setSerializeSessionAttributes(boolean)
+	 */
+	public void setSerializeSessionAttributes(boolean serialize)
+	{
+		this.serializeSessionAttributes = serialize;
+	}
+
+	/**
 	 * @see wicket.settings.IMarkupSettings#setStripComments(boolean)
 	 */
 	public void setStripComments(boolean stripComments)
@@ -1184,23 +1202,5 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
-	}
-
-	/**
-	 * 
-	 * @see wicket.settings.IDebugSettings#getSerializeSessionAttributes()
-	 */
-	public boolean getSerializeSessionAttributes()
-	{
-		return serializeSessionAttributes;
-	}
-
-	/**
-	 * 
-	 * @see wicket.settings.IDebugSettings#setSerializeSessionAttributes(boolean)
-	 */
-	public void setSerializeSessionAttributes(boolean serialize)
-	{
-		this.serializeSessionAttributes = serialize;
 	}
 }
