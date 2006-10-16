@@ -54,8 +54,14 @@ import wicket.util.io.ByteCountingOutputStream;
  */
 public final class Objects
 {
-	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(Objects.class);
+	private static class ArrayInstanceHolder implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private Object array;
+		private Object[] values;
+
+	}
 
 	private static class ClassRecordingObjectInputStream extends ObjectInputStream
 	{
@@ -63,24 +69,26 @@ public final class Objects
 
 		/**
 		 * Construct.
+		 * 
 		 * @param in
-		 * @param classes 
+		 * @param classes
 		 * @throws IOException
 		 */
-		public ClassRecordingObjectInputStream(InputStream in, HashMap<String, Class> classes) throws IOException
+		public ClassRecordingObjectInputStream(InputStream in, HashMap<String, Class> classes)
+				throws IOException
 		{
 			super(in);
 			this.usedClasses = classes;
 			enableResolveObject(true);
 		}
-		
+
 		@Override
 		protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
 				ClassNotFoundException
 		{
 			String className = desc.getName();
 			Class clzz = usedClasses.get(className);
-			if(clzz != null)
+			if (clzz != null)
 			{
 				return clzz;
 			}
@@ -111,13 +119,15 @@ public final class Objects
 			return candidate;
 		}
 	}
-	
+
 	private static class ClassRecordingObjectOutputStream extends ObjectOutputStream
 	{
 
 		private HashMap<String, Class> usedClasses;
+
 		/**
 		 * Construct.
+		 * 
 		 * @param out
 		 * @throws IOException
 		 */
@@ -125,16 +135,9 @@ public final class Objects
 		{
 			super(out);
 			usedClasses = new HashMap<String, Class>();
-			enableReplaceObject(true);			
+			enableReplaceObject(true);
 		}
-		
-		@Override
-		protected void writeClassDescriptor(ObjectStreamClass desc) throws IOException
-		{
-			usedClasses.put(desc.getName(), desc.forClass());
-			super.writeClassDescriptor(desc);
-		}
-		
+
 		/**
 		 * @return The used classes that are recorded.
 		 */
@@ -142,16 +145,32 @@ public final class Objects
 		{
 			return usedClasses;
 		}
+
+		@Override
+		protected void writeClassDescriptor(ObjectStreamClass desc) throws IOException
+		{
+			usedClasses.put(desc.getName(), desc.forClass());
+			super.writeClassDescriptor(desc);
+		}
 	}
-	
+
+	private static class ObjectInstanceHashmapHolder implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		private MiniMap<Field, Object> clonemap;
+		private Object instance;
+
+	}
+
 	private static final class ReplaceObjectInputStream extends ClassRecordingObjectInputStream
 	{
 		private HashMap<String, Component> replacedComponents;
 
-		private ReplaceObjectInputStream(InputStream in, HashMap<String, Class> classLoaders,HashMap<String, Component> replacedComponents)
-				throws IOException
+		private ReplaceObjectInputStream(InputStream in, HashMap<String, Class> classLoaders,
+				HashMap<String, Component> replacedComponents) throws IOException
 		{
-			super(in,classLoaders);
+			super(in, classLoaders);
 			this.replacedComponents = replacedComponents;
 		}
 
@@ -176,7 +195,15 @@ public final class Objects
 		private ReplaceObjectOutputStream(OutputStream out) throws IOException
 		{
 			super(out);
-			this.replacedComponents = new HashMap<String, Component> ();
+			this.replacedComponents = new HashMap<String, Component>();
+		}
+
+		/**
+		 * @return The replaced components as String->Component
+		 */
+		public HashMap<String, Component> getReplacedComponents()
+		{
+			return replacedComponents;
 		}
 
 		@Override
@@ -192,15 +219,16 @@ public final class Objects
 			return super.replaceObject(obj);
 		}
 
-		/**
-		 * @return The replaced components as String->Component
-		 */
-		public HashMap<String, Component> getReplacedComponents()
-		{
-			return replacedComponents;
-		}
-
 	}
+
+	/** defaults for primitives. */
+	static HashMap<Class, Comparable> primitiveDefaults = new HashMap<Class, Comparable>();
+
+	/** Type tag meaning java.math.BigDecimal. */
+	private static final int BIGDEC = 9;
+
+	/** Type tag meaning java.math.BigInteger. */
+	private static final int BIGINT = 6;
 
 	/** Type tag meaning boolean. */
 	private static final int BOOL = 0;
@@ -211,29 +239,20 @@ public final class Objects
 	/** Type tag meaning char. */
 	private static final int CHAR = 2;
 
-	/** Type tag meaning short. */
-	private static final int SHORT = 3;
-
-	/** Type tag meaning int. */
-	private static final int INT = 4;
-
-	/** Type tag meaning long. */
-	private static final int LONG = 5;
-
-	/** Type tag meaning java.math.BigInteger. */
-	private static final int BIGINT = 6;
+	/** Type tag meaning double. */
+	private static final int DOUBLE = 8;
 
 	/** Type tag meaning float. */
 	private static final int FLOAT = 7;
 
-	/** Type tag meaning double. */
-	private static final int DOUBLE = 8;
+	/** Type tag meaning int. */
+	private static final int INT = 4;
 
-	/** Type tag meaning java.math.BigDecimal. */
-	private static final int BIGDEC = 9;
+	/** Log for reporting. */
+	private static final Log log = LogFactory.getLog(Objects.class);
 
-	/** Type tag meaning something other than a number. */
-	private static final int NONNUMERIC = 10;
+	/** Type tag meaning long. */
+	private static final int LONG = 5;
 
 	/**
 	 * The smallest type tag that represents reals as opposed to integers. You
@@ -245,8 +264,13 @@ public final class Objects
 	 */
 	private static final int MIN_REAL_TYPE = FLOAT;
 
-	/** defaults for primitives. */
-	static HashMap<Class, Comparable> primitiveDefaults = new HashMap<Class, Comparable>();
+	/** Type tag meaning something other than a number. */
+	private static final int NONNUMERIC = 10;
+
+	private final static String recursive = "_recu_rsive_";
+
+	/** Type tag meaning short. */
+	private static final int SHORT = 3;
 
 	static
 	{
@@ -430,7 +454,7 @@ public final class Objects
 		}
 		else
 		{
-			
+
 
 			try
 			{
@@ -438,7 +462,7 @@ public final class Objects
 				ReplaceObjectOutputStream oos = new ReplaceObjectOutputStream(out);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()),oos.getUsedClasses(),oos.getReplacedComponents() );
+						.toByteArray()), oos.getUsedClasses(), oos.getReplacedComponents());
 				return (T)ois.readObject();
 			}
 			catch (ClassNotFoundException e)
@@ -450,176 +474,6 @@ public final class Objects
 				throw new WicketRuntimeException("Internal error cloning object", e);
 			}
 		}
-	}
-	
-	/**
-	 * @param object
-	 * @return The hashmap with the field->value objects
-	 */
-	public static MiniMap<Field, Object> mapObject(final Object object)
-	{
-		return mapObject(object, new ArrayList<Object>());
-	}
-	
-	private static MiniMap<Field, Object> mapObject(final Object object, List<Object> addedObjects)
-	{
-		addedObjects.add(object);
-		try
-		{
-			List<Field> fields = getFields(object.getClass());
-			MiniMap<Field, Object> values = new MiniMap<Field, Object>(fields.size());
-			for (Field field : fields)
-			{
-				field.setAccessible(true);
-				Object value = field.get(object);
-				Object analyzed = analyzeObject(value,addedObjects);
-				if(recursive == analyzed) continue;
-				if(!Modifier.isFinal(field.getModifiers()) || 
-						analyzed instanceof ArrayInstanceHolder || 
-						analyzed instanceof ObjectInstanceHashmapHolder)
-				{
-					values.put(field,analyzed);
-				}
-			}
-			return values;
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Internal error cloning model: " + object, e);
-		}
-	}
-
-	private final static String recursive = "_recu_rsive_";
-	private static Object analyzeObject(Object value, List<Object> addedObjects)
-	{
-		if(addedObjects.contains(value))
-		{
-			return recursive;
-		}
-		if(value == null || value instanceof String || value instanceof Number || 
-				value instanceof Boolean || value instanceof Class)
-		{
-			return value;
-		}
-		else if( value != null && value.getClass().isArray())
-		{
-			if( !value.getClass().getComponentType().isPrimitive() )
-			{
-				int length = Array.getLength(value);
-				Object[] arrayValues = new Object[length];
-				while(length-- != 0)
-				{
-					Object arrayValue = Array.get(value, length);
-					arrayValues[length] = analyzeObject(arrayValue,addedObjects);
-				}
-				ArrayInstanceHolder holder = new ArrayInstanceHolder();
-				holder.array = value;
-				holder.values = arrayValues;
-				return holder;
-			}
-			else
-			{
-				// just clone the primitive arrays
-				return cloneObject(value);
-			}
-		}
-		// all other values go through map again
-		ObjectInstanceHashmapHolder holder = new ObjectInstanceHashmapHolder();
-		holder.instance = value;
-		holder.clonemap = mapObject(value,addedObjects);
-		return holder;
-	}
-	
-	private static class ObjectInstanceHashmapHolder implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-		
-		private Object instance;
-		private MiniMap<Field, Object> clonemap;
-		
-	}
-
-	private static class ArrayInstanceHolder implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-		
-		private Object array;
-		private Object[] values;
-		
-	}
-	
-	private static List<Field> getFields(Class clz)
-	{
-		ArrayList<Field> fieldList = new ArrayList<Field>();
-		Field[] fields = clz.getDeclaredFields();
-		for (Field field : fields)
-		{
-			if(!Modifier.isStatic(field.getModifiers())
-					&& !Modifier.isTransient(field.getModifiers()))
-			{
-				fieldList.add(field);
-			}
-		}
-		Class superClz = clz.getSuperclass();
-		if(superClz != Object.class)
-		{
-			fieldList.addAll(getFields(superClz));
-		}
-		return fieldList;
-	}
-	
-	/**
-	 * @param object
-	 * @param clonemap
-	 */
-	public static void restoreObject(Object object, MiniMap<Field, Object> clonemap)
-	{
-		for (Map.Entry<Field, Object> entry : clonemap.entrySet())
-		{
-			Field field = entry.getKey();
-			Object value = entry.getValue();
-			value = checkAndConvertValue(value);
-			try
-			{
-				if(!Modifier.isFinal(field.getModifiers()))
-				{					
-					field.set(object, value);
-				}
-			}
-			catch (Exception e)
-			{
-				throw new WicketRuntimeException("Internal error cloning/restoring from map the object: " + object, e);
-			}
-		}
-	}
-	
-	
-
-	private static void restoreArray(Object array, Object[] values)
-	{
-		for (int i = 0; i < values.length; i++)
-		{
-			Object value = values[i];
-			value = checkAndConvertValue(value);
-			Array.set(array, i, value);
-		}
-	}
-
-	private static Object checkAndConvertValue(Object value)
-	{
-		if(value instanceof ObjectInstanceHashmapHolder)
-		{
-			ObjectInstanceHashmapHolder holder = (ObjectInstanceHashmapHolder)value;
-			restoreObject(holder.instance, holder.clonemap);
-			value  = holder.instance;
-		}
-		else if(value instanceof ArrayInstanceHolder)
-		{
-			ArrayInstanceHolder holder = (ArrayInstanceHolder)value;
-			restoreArray(holder.array, holder.values);
-			value = holder.array;
-		}
-		return value;
 	}
 
 	/**
@@ -646,8 +500,8 @@ public final class Objects
 				final ByteArrayOutputStream out = new ByteArrayOutputStream(256);
 				ClassRecordingObjectOutputStream oos = new ClassRecordingObjectOutputStream(out);
 				oos.writeObject(object);
-				ClassRecordingObjectInputStream ois = new ClassRecordingObjectInputStream(new ByteArrayInputStream(out.toByteArray()),
-						oos.getUsedClasses());
+				ClassRecordingObjectInputStream ois = new ClassRecordingObjectInputStream(
+						new ByteArrayInputStream(out.toByteArray()), oos.getUsedClasses());
 				return (T)ois.readObject();
 			}
 			catch (ClassNotFoundException e)
@@ -887,6 +741,7 @@ public final class Objects
 		return false;
 	}
 
+
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of an operation, which can be either numeric or not, on the two
@@ -1028,21 +883,6 @@ public final class Objects
 	}
 
 	/**
-	 * returns hashcode of the object by calling obj.hashcode(). safe to use
-	 * when obj is null.
-	 * 
-	 * @param obj
-	 * @return hashcode of the object or 0 if obj is null
-	 */
-	public static int hashCode(final Object... obj) {
-		int result = 37;
-		for (Object o : obj) {
-			result = 37 * result + (o != null ? o.hashCode() : 0);
-		}
-		return result;
-	}
-
-	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of an operation, which can be either numeric or not, on the two
 	 * given objects.
@@ -1058,6 +898,23 @@ public final class Objects
 	public static int getNumericType(Object v1, Object v2, boolean canBeNonNumeric)
 	{
 		return getNumericType(getNumericType(v1), getNumericType(v2), canBeNonNumeric);
+	}
+
+	/**
+	 * returns hashcode of the object by calling obj.hashcode(). safe to use
+	 * when obj is null.
+	 * 
+	 * @param obj
+	 * @return hashcode of the object or 0 if obj is null
+	 */
+	public static int hashCode(final Object... obj)
+	{
+		int result = 37;
+		for (Object o : obj)
+		{
+			result = 37 * result + (o != null ? o.hashCode() : 0);
+		}
+		return result;
 	}
 
 	/**
@@ -1139,6 +996,15 @@ public final class Objects
 			return ((Character)value).charValue();
 		}
 		return Long.parseLong(stringValue(value, true));
+	}
+
+	/**
+	 * @param object
+	 * @return The hashmap with the field->value objects
+	 */
+	public static MiniMap<Field, Object> mapObject(final Object object)
+	{
+		return mapObject(object, new ArrayList<Object>());
 	}
 
 	/**
@@ -1224,6 +1090,32 @@ public final class Objects
 	}
 
 	/**
+	 * @param object
+	 * @param clonemap
+	 */
+	public static void restoreObject(Object object, MiniMap<Field, Object> clonemap)
+	{
+		for (Map.Entry<Field, Object> entry : clonemap.entrySet())
+		{
+			Field field = entry.getKey();
+			Object value = entry.getValue();
+			value = checkAndConvertValue(value);
+			try
+			{
+				if (!Modifier.isFinal(field.getModifiers()))
+				{
+					field.set(object, value);
+				}
+			}
+			catch (Exception e)
+			{
+				throw new WicketRuntimeException(
+						"Internal error cloning/restoring from map the object: " + object, e);
+			}
+		}
+	}
+
+	/**
 	 * Computes the size of an object by serializing it to a byte array.
 	 * 
 	 * @param object
@@ -1286,6 +1178,122 @@ public final class Objects
 			}
 		}
 		return result;
+	}
+
+	private static Object analyzeObject(Object value, List<Object> addedObjects)
+	{
+		if (addedObjects.contains(value))
+		{
+			return recursive;
+		}
+		if (value == null || value instanceof String || value instanceof Number
+				|| value instanceof Boolean || value instanceof Class)
+		{
+			return value;
+		}
+		else if (value != null && value.getClass().isArray())
+		{
+			if (!value.getClass().getComponentType().isPrimitive())
+			{
+				int length = Array.getLength(value);
+				Object[] arrayValues = new Object[length];
+				while (length-- != 0)
+				{
+					Object arrayValue = Array.get(value, length);
+					arrayValues[length] = analyzeObject(arrayValue, addedObjects);
+				}
+				ArrayInstanceHolder holder = new ArrayInstanceHolder();
+				holder.array = value;
+				holder.values = arrayValues;
+				return holder;
+			}
+			else
+			{
+				// just clone the primitive arrays
+				return cloneObject(value);
+			}
+		}
+		// all other values go through map again
+		ObjectInstanceHashmapHolder holder = new ObjectInstanceHashmapHolder();
+		holder.instance = value;
+		holder.clonemap = mapObject(value, addedObjects);
+		return holder;
+	}
+
+	private static Object checkAndConvertValue(Object value)
+	{
+		if (value instanceof ObjectInstanceHashmapHolder)
+		{
+			ObjectInstanceHashmapHolder holder = (ObjectInstanceHashmapHolder)value;
+			restoreObject(holder.instance, holder.clonemap);
+			value = holder.instance;
+		}
+		else if (value instanceof ArrayInstanceHolder)
+		{
+			ArrayInstanceHolder holder = (ArrayInstanceHolder)value;
+			restoreArray(holder.array, holder.values);
+			value = holder.array;
+		}
+		return value;
+	}
+
+	private static List<Field> getFields(Class clz)
+	{
+		ArrayList<Field> fieldList = new ArrayList<Field>();
+		Field[] fields = clz.getDeclaredFields();
+		for (Field field : fields)
+		{
+			if (!Modifier.isStatic(field.getModifiers())
+					&& !Modifier.isTransient(field.getModifiers()))
+			{
+				fieldList.add(field);
+			}
+		}
+		Class superClz = clz.getSuperclass();
+		if (superClz != Object.class)
+		{
+			fieldList.addAll(getFields(superClz));
+		}
+		return fieldList;
+	}
+
+	private static MiniMap<Field, Object> mapObject(final Object object, List<Object> addedObjects)
+	{
+		addedObjects.add(object);
+		try
+		{
+			List<Field> fields = getFields(object.getClass());
+			MiniMap<Field, Object> values = new MiniMap<Field, Object>(fields.size());
+			for (Field field : fields)
+			{
+				field.setAccessible(true);
+				Object value = field.get(object);
+				Object analyzed = analyzeObject(value, addedObjects);
+				if (recursive == analyzed)
+					continue;
+				if (!Modifier.isFinal(field.getModifiers())
+						|| analyzed instanceof ArrayInstanceHolder
+						|| analyzed instanceof ObjectInstanceHashmapHolder)
+				{
+					values.put(field, analyzed);
+				}
+			}
+			return values;
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Internal error cloning model: " + object, e);
+		}
+	}
+
+	private static void restoreArray(Object array, Object[] values)
+	{
+		for (int i = 0; i < values.length; i++)
+		{
+			Object value = values[i];
+			value = checkAndConvertValue(value);
+			Array.set(array, i, value);
+		}
 	}
 
 	/**
