@@ -22,8 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -55,7 +58,7 @@ import wicket.settings.ISessionSettings;
 import wicket.settings.Settings;
 import wicket.util.file.IResourceFinder;
 import wicket.util.lang.Classes;
-import wicket.util.string.Strings;
+import wicket.util.lang.Objects;
 import wicket.util.time.Duration;
 
 /**
@@ -217,6 +220,9 @@ public abstract class Application
 	/** Record what the configuration is, so that we can query for it later. */
 	private String configurationType;
 
+	/** list of initializers. */
+	private List initializers = new ArrayList();
+
 	/** Markup cache for this application */
 	private final MarkupCache markupCache;
 
@@ -349,7 +355,6 @@ public abstract class Application
 		// should counter act each other for all properties.
 		if (DEVELOPMENT.equalsIgnoreCase(configurationType))
 		{
-			log.info("You are in DEVELOPMENT mode");
 			getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
 			getDebugSettings().setComponentUseCheck(true);
 			getDebugSettings().setSerializeSessionAttributes(true);
@@ -626,10 +631,10 @@ public abstract class Application
 	 */
 	public final void initializeComponents()
 	{
-		// Load any wicket components we can find
+		// Load any wicket properties files we can find
 		try
 		{
-			// Load components used by all applications
+			// Load properties files used by all libraries
 			final Enumeration resources = getClass().getClassLoader().getResources(
 					"wicket.properties");
 			while (resources.hasMoreElements())
@@ -641,7 +646,7 @@ public abstract class Application
 					final Properties properties = new Properties();
 					in = url.openStream();
 					properties.load(in);
-					initializeComponents(properties);
+					load(properties);
 				}
 				finally
 				{
@@ -656,6 +661,9 @@ public abstract class Application
 		{
 			throw new WicketRuntimeException("Unable to load initializers file", e);
 		}
+
+		// now call any initializers we read
+		callInitializers();
 	}
 
 	/**
@@ -736,7 +744,7 @@ public abstract class Application
 	 */
 	protected void destroy()
 	{
-
+		callDestroyers();
 	}
 
 	/**
@@ -793,6 +801,22 @@ public abstract class Application
 	}
 
 	/**
+	 * Log that this application is started.
+	 */
+	protected void logStarted()
+	{
+		String version = getFrameworkSettings().getVersion();
+		StringBuffer b = new StringBuffer();
+		b.append("[").append(getName()).append("] Started Wicket ");
+		if (!"n/a".equals(version))
+		{
+			b.append("version ").append(version).append(" ");
+		}
+		b.append("in ").append(getConfigurationType()).append(" mode");
+		log.info(b.toString());
+	}
+
+	/**
 	 * Creates a new session facade. Is called once per application, and is
 	 * typically not something clients reimplement.
 	 * 
@@ -817,32 +841,47 @@ public abstract class Application
 	}
 
 	/**
-	 * Instantiate initializer with the given class name.
+	 * Construct and add initializer from the provided class name.
 	 * 
 	 * @param className
-	 *            The name of the initializer class
 	 */
-	private final void initialize(final String className)
+	private final void addInitializer(String className)
 	{
-		if (!Strings.isEmpty(className))
+		IInitializer initializer = (IInitializer)Objects.newInstance(className);
+		if (initializer != null)
 		{
-			try
+			initializers.add(initializer);
+		}
+	}
+
+	/**
+	 * @param properties
+	 *            Properties map with names of any library destroyers in it
+	 */
+	private final void callDestroyers()
+	{
+		for (Iterator i = initializers.iterator(); i.hasNext();)
+		{
+			IInitializer initializer = (IInitializer)i.next();
+			if (initializer instanceof IDestroyer)
 			{
-				Class c = getApplicationSettings().getClassResolver().resolveClass(className);
-				((IInitializer)c.newInstance()).init(this);
+				log.info("[" + getName() + "] destroy: " + initializer);
+				((IDestroyer)initializer).destroy(this);
 			}
-			catch (ClassCastException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
-			catch (InstantiationException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new WicketRuntimeException("Unable to initialize " + className, e);
-			}
+		}
+	}
+
+	/**
+	 * @param properties
+	 *            Properties map with names of any library destroyers in it
+	 */
+	private final void callInitializers()
+	{
+		for (Iterator i = initializers.iterator(); i.hasNext();)
+		{
+			IInitializer initializer = (IInitializer)i.next();
+			log.info("[" + getName() + "] init: " + initializer);
+			initializer.init(this);
 		}
 	}
 
@@ -850,9 +889,9 @@ public abstract class Application
 	 * @param properties
 	 *            Properties map with names of any library initializers in it
 	 */
-	private final void initializeComponents(final Properties properties)
+	private final void load(final Properties properties)
 	{
-		initialize(properties.getProperty("initializer"));
-		initialize(properties.getProperty(getName() + "-initializer"));
+		addInitializer(properties.getProperty("initializer"));
+		addInitializer(properties.getProperty(getName() + "-initializer"));
 	}
 }

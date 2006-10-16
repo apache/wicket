@@ -71,11 +71,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *           public void init()
- *           {
- *               String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *               URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *               ...
+ *             public void init()
+ *             {
+ *                 String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                 URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                 ...
  * </pre>
  * 
  * @see WicketServlet
@@ -537,6 +537,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			configure(Application.DEVELOPMENT, wicketServlet.getInitParameter("sourceFolder"));
 		}
+	}
+
+	/**
+	 * @see wicket.Application#logStarted()
+	 */
+	protected void logStarted()
+	{
+		super.logStarted();
 	}
 
 	/**
