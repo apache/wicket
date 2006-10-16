@@ -29,8 +29,18 @@ import wicket.markup.html.link.ILinkListener;
  * 
  * @author Jonathan Locke
  */
-public class Initializer implements IInitializer
+public class Initializer implements IInitializer, IDestroyer
 {
+	wicket.jmx.Initializer jmxInitializer = new wicket.jmx.Initializer();
+
+	/**
+	 * @see wicket.IDestroyer#destroy(wicket.Application)
+	 */
+	public void destroy(Application application)
+	{
+		jmxInitializer.destroy(application);
+	}
+
 	/**
 	 * @see wicket.IInitializer#init(wicket.Application)
 	 */
@@ -48,6 +58,14 @@ public class Initializer implements IInitializer
 		IResourceListener.INTERFACE.register();
 
 		// register JMX beans
-		new wicket.jmx.Initializer().init(application);
+		jmxInitializer.init(application);
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Wicket core library initializer";
 	}
 }

@@ -52,9 +52,6 @@ import wicket.util.time.Time;
  */
 public class WicketFilter implements Filter
 {
-	/** Log. */
-	private static final Log log = LogFactory.getLog(WicketFilter.class);
-
 	/**
 	 * The name of the context parameter that specifies application factory
 	 * class
@@ -67,15 +64,18 @@ public class WicketFilter implements Filter
 	 */
 	public static final String FILTER_PATH_PARAM = "filterPath";
 
-	/** The URL path prefix expected for (so called) resources (not html pages). */
-	private static final String RESOURCES_PATH_PREFIX = "/resources/";
-
 	/**
 	 * The servlet path holder when the WicketSerlvet is used. So that the
 	 * filter path will be computed with the first request. Note: This variable
 	 * is by purpose package protected. See WicketServlet
 	 */
 	static final String SERVLET_PATH_HOLDER = "<servlet>";
+
+	/** Log. */
+	private static final Log log = LogFactory.getLog(WicketFilter.class);
+
+	/** The URL path prefix expected for (so called) resources (not html pages). */
+	private static final String RESOURCES_PATH_PREFIX = "/resources/";
 
 	/** See javax.servlet.FilterConfig */
 	private FilterConfig filterConfig;
@@ -343,9 +343,8 @@ public class WicketFilter implements Filter
 			// component.
 			this.webApplication.initializeComponents();
 
-			// Finished
-			log.info("Wicket application " + this.webApplication.getName() + " started [factory="
-					+ factory.getClass().getName() + "]");
+			// Give the application the option to log that it is started
+			this.webApplication.logStarted();
 		}
 		finally
 		{

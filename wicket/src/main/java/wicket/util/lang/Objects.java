@@ -46,6 +46,7 @@ import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
 import wicket.util.collections.MiniMap;
 import wicket.util.io.ByteCountingOutputStream;
+import wicket.util.string.Strings;
 
 /**
  * Object utilities.
@@ -741,7 +742,6 @@ public final class Objects
 		return false;
 	}
 
-
 	/**
 	 * Returns the constant from the NumericTypes interface that best expresses
 	 * the type of an operation, which can be either numeric or not, on the two
@@ -809,6 +809,7 @@ public final class Objects
 			return Math.max(t1, t2);
 		}
 	}
+
 
 	/**
 	 * Returns a constant from the NumericTypes interface that represents the
@@ -1005,6 +1006,40 @@ public final class Objects
 	public static MiniMap<Field, Object> mapObject(final Object object)
 	{
 		return mapObject(object, new ArrayList<Object>());
+	}
+
+	/**
+	 * Creates a new instance using the current application's class resolver.
+	 * Returns null if className is null.
+	 * 
+	 * @param className
+	 *            The full class name
+	 * @return The new object instance
+	 */
+	public static Object newInstance(final String className)
+	{
+		if (!Strings.isEmpty(className))
+		{
+			try
+			{
+				Class c = Application.get().getApplicationSettings().getClassResolver()
+						.resolveClass(className);
+				return c.newInstance();
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Unable to create " + className, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException("Unable to create " + className, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("Unable to create " + className, e);
+			}
+		}
+		return null;
 	}
 
 	/**
