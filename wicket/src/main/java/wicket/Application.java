@@ -653,7 +653,7 @@ public abstract class Application
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	public final synchronized void setMetaData(final MetaDataKey key, final Serializable object)
 	{
 		metaData = key.set(metaData, object);
 	}
