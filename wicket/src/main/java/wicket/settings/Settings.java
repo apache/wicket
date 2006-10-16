@@ -254,6 +254,12 @@ public final class Settings
 	/** Flags used to determine how to behave if resources are not found */
 	private boolean throwExceptionOnMissingResource = true;
 
+	/**
+	 * The time that a request will by default be waiting for the previous
+	 * request to be handled before giving up. Defaults to one minute.
+	 */
+	private Duration timeout = Duration.ONE_MINUTE;
+
 	/** Authorizer for component instantiations */
 	private IUnauthorizedComponentInstantiationListener unauthorizedComponentInstantiationListener = new IUnauthorizedComponentInstantiationListener()
 	{
@@ -740,6 +746,14 @@ public final class Settings
 	}
 
 	/**
+	 * @see wicket.settings.IRequestCycleSettings#getTimeout()
+	 */
+	public Duration getTimeout()
+	{
+		return timeout;
+	}
+
+	/**
 	 * @see wicket.settings.ISecuritySettings#getUnauthorizedComponentInstantiationListener()
 	 */
 	public IUnauthorizedComponentInstantiationListener getUnauthorizedComponentInstantiationListener()
@@ -755,6 +769,7 @@ public final class Settings
 		return unexpectedExceptionDisplay;
 	}
 
+
 	/**
 	 * @see wicket.settings.IResourceSettings#getUseDefaultOnMissingResource()
 	 */
@@ -762,7 +777,6 @@ public final class Settings
 	{
 		return useDefaultOnMissingResource;
 	}
-
 
 	/**
 	 * @see wicket.settings.IFrameworkSettings#getVersion()
@@ -1147,6 +1161,18 @@ public final class Settings
 	public void setThrowExceptionOnMissingResource(final boolean throwExceptionOnMissingResource)
 	{
 		this.throwExceptionOnMissingResource = throwExceptionOnMissingResource;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestCycleSettings#setTimeout(wicket.util.time.Duration)
+	 */
+	public void setTimeout(Duration timeout)
+	{
+		if (timeout == null)
+		{
+			throw new IllegalArgumentException("timeout cannot be null");
+		}
+		this.timeout = timeout;
 	}
 
 	/**
