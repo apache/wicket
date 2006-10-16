@@ -47,32 +47,19 @@ import wicket.util.io.ByteCountingOutputStream;
  */
 public final class Objects
 {
-	
-	/** log. */
-	private static final Log log = LogFactory.getLog(Objects.class);
 
 	private static final class ReplaceObjectInputStream extends ObjectInputStream
 	{
-		private HashMap replacedComponents;
 		private final ClassLoader classloader;
+		private HashMap replacedComponents;
 
-		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents, ClassLoader classloader)
-				throws IOException
+		private ReplaceObjectInputStream(InputStream in, HashMap replacedComponents,
+				ClassLoader classloader) throws IOException
 		{
 			super(in);
 			this.replacedComponents = replacedComponents;
 			this.classloader = classloader;
 			enableResolveObject(true);
-		}
-
-		protected Object resolveObject(Object obj) throws IOException
-		{
-			Object replaced = replacedComponents.get(obj);
-			if (replaced != null)
-			{
-				return replaced;
-			}
-			return super.resolveObject(obj);
 		}
 
 		// This overide is required to resolve classess inside in different
@@ -90,8 +77,9 @@ public final class Objects
 			catch (ClassNotFoundException ex1)
 			{
 				// ignore this exception.
-				log.debug("Class not found by using objects own classloader, trying the IClassResolver");
-			} 
+				log
+						.debug("Class not found by using objects own classloader, trying the IClassResolver");
+			}
 
 			Application application = Application.get();
 			IApplicationSettings applicationSettings = application.getApplicationSettings();
@@ -114,6 +102,16 @@ public final class Objects
 				}
 			}
 			return candidate;
+		}
+
+		protected Object resolveObject(Object obj) throws IOException
+		{
+			Object replaced = replacedComponents.get(obj);
+			if (replaced != null)
+			{
+				return replaced;
+			}
+			return super.resolveObject(obj);
 		}
 	}
 
@@ -141,6 +139,15 @@ public final class Objects
 		}
 	}
 
+	/** defaults for primitives. */
+	static HashMap primitiveDefaults = new HashMap();
+
+	/** Type tag meaning java.math.BigDecimal. */
+	private static final int BIGDEC = 9;
+
+	/** Type tag meaning java.math.BigInteger. */
+	private static final int BIGINT = 6;
+
 	/** Type tag meaning boolean. */
 	private static final int BOOL = 0;
 
@@ -150,29 +157,20 @@ public final class Objects
 	/** Type tag meaning char. */
 	private static final int CHAR = 2;
 
-	/** Type tag meaning short. */
-	private static final int SHORT = 3;
-
-	/** Type tag meaning int. */
-	private static final int INT = 4;
-
-	/** Type tag meaning long. */
-	private static final int LONG = 5;
-
-	/** Type tag meaning java.math.BigInteger. */
-	private static final int BIGINT = 6;
+	/** Type tag meaning double. */
+	private static final int DOUBLE = 8;
 
 	/** Type tag meaning float. */
 	private static final int FLOAT = 7;
 
-	/** Type tag meaning double. */
-	private static final int DOUBLE = 8;
+	/** Type tag meaning int. */
+	private static final int INT = 4;
 
-	/** Type tag meaning java.math.BigDecimal. */
-	private static final int BIGDEC = 9;
+	/** log. */
+	private static final Log log = LogFactory.getLog(Objects.class);
 
-	/** Type tag meaning something other than a number. */
-	private static final int NONNUMERIC = 10;
+	/** Type tag meaning long. */
+	private static final int LONG = 5;
 
 	/**
 	 * The smallest type tag that represents reals as opposed to integers. You
@@ -184,8 +182,11 @@ public final class Objects
 	 */
 	private static final int MIN_REAL_TYPE = FLOAT;
 
-	/** defaults for primitives. */
-	static HashMap primitiveDefaults = new HashMap();
+	/** Type tag meaning something other than a number. */
+	private static final int NONNUMERIC = 10;
+
+	/** Type tag meaning short. */
+	private static final int SHORT = 3;
 
 	static
 	{
@@ -368,7 +369,7 @@ public final class Objects
 				ObjectOutputStream oos = new ReplaceObjectOutputStream(out, replacedObjects);
 				oos.writeObject(object);
 				ObjectInputStream ois = new ReplaceObjectInputStream(new ByteArrayInputStream(out
-						.toByteArray()), replacedObjects,object.getClass().getClassLoader());
+						.toByteArray()), replacedObjects, object.getClass().getClassLoader());
 				return ois.readObject();
 			}
 			catch (ClassNotFoundException e)
@@ -415,18 +416,20 @@ public final class Objects
 							ClassNotFoundException
 					{
 						String className = desc.getName();
-						
+
 						try
 						{
-							return Class.forName(className, true, object.getClass().getClassLoader());
+							return Class.forName(className, true, object.getClass()
+									.getClassLoader());
 						}
 						catch (ClassNotFoundException ex1)
 						{
 							// ignore this exception.
-							log.debug("Class not found by using objects own classloader, trying the IClassResolver");
-						} 
-						
-						
+							log
+									.debug("Class not found by using objects own classloader, trying the IClassResolver");
+						}
+
+
 						Application application = Application.get();
 						IApplicationSettings applicationSettings = application
 								.getApplicationSettings();
