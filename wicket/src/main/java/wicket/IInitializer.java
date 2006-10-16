@@ -33,6 +33,17 @@ import wicket.markup.html.PackageResource;
  * You don't have to pre-register {@link PackageResource package resources}, as
  * they can be initialized lazily.
  * </p>
+ * <p>
+ * Initializers can be configured by having a wicket.properties file in the
+ * class path root, with property 'initializer=${initializer class name}'. You
+ * can have one such properties per jar file, but the initializer that property
+ * denotes can delegate to other initializers of that library.
+ * </p>
+ * <p>
+ * If an initializer also implement {@link IDestroyer}, the instance will be
+ * kept for destroying, so that it may clean up whatever it did when
+ * initializing.
+ * </p>
  * 
  * @author Jonathan Locke
  */

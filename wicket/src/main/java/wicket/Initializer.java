@@ -46,4 +46,12 @@ public class Initializer implements IInitializer
 		IRedirectListener.INTERFACE.register();
 		IResourceListener.INTERFACE.register();
 	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Wicket core library initializer";
+	}
 }

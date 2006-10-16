@@ -48,15 +48,15 @@ import wicket.util.time.Time;
  * one application server to another, but should look something like this:
  * 
  * <pre>
- *                   &lt;servlet&gt;
- *                       &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
- *                       &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
- *                       &lt;init-param&gt;
- *                           &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
- *                           &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
- *                       &lt;/init-param&gt;
- *                       &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
- *                   &lt;/servlet&gt;
+ *                     &lt;servlet&gt;
+ *                         &lt;servlet-name&gt;MyApplication&lt;/servlet-name&gt;
+ *                         &lt;servlet-class&gt;wicket.protocol.http.WicketServlet&lt;/servlet-class&gt;
+ *                         &lt;init-param&gt;
+ *                             &lt;param-name&gt;applicationClassName&lt;/param-name&gt;
+ *                             &lt;param-value&gt;com.whoever.MyApplication&lt;/param-value&gt;
+ *                         &lt;/init-param&gt;
+ *                         &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+ *                     &lt;/servlet&gt;
  * </pre>
  * 
  * Note that the applicationClassName parameter you specify must be the fully
@@ -68,10 +68,10 @@ import wicket.util.time.Time;
  * looks like:
  * 
  * <pre>
- *                   &lt;init-param&gt;
- *                     &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
- *                       &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
- *                   &lt;/init-param&gt;
+ *                     &lt;init-param&gt;
+ *                       &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
+ *                         &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
+ *                     &lt;/init-param&gt;
  * </pre>
  * 
  * and it has to satisfy interface
@@ -88,11 +88,11 @@ import wicket.util.time.Time;
  * init() method of {@link javax.servlet.GenericServlet}. For example:
  * 
  * <pre>
- *                   public void init() throws ServletException
- *                   {
- *                       ServletConfig config = getServletConfig();
- *                       String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
- *                       ...
+ *                     public void init() throws ServletException
+ *                     {
+ *                         ServletConfig config = getServletConfig();
+ *                         String webXMLParameter = config.getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                         ...
  * </pre>
  * 
  * </p>
@@ -165,7 +165,7 @@ public class WicketServlet extends HttpServlet
 				throw new WicketRuntimeException(ex.getMessage());
 			}
 		}
-		
+
 		// Create a new webrequest
 		final WebRequest request = webApplication.newWebRequest(servletRequest);
 
@@ -192,7 +192,7 @@ public class WicketServlet extends HttpServlet
 
 		// First, set the webapplication for this thread
 		Application.set(webApplication);
-		
+
 		// Get session for request
 		final WebSession session = webApplication.getSession(request);
 
@@ -206,8 +206,10 @@ public class WicketServlet extends HttpServlet
 		try
 		{
 			// Create a new request cycle
-			// FIXME post 1.2 Instead of doing this, we should get a request cycle factory
-			// from the application settings and use that. That way we are a step
+			// FIXME post 1.2 Instead of doing this, we should get a request
+			// cycle factory
+			// from the application settings and use that. That way we are a
+			// step
 			// closer to a session-less operation of Wicket.
 			RequestCycle cycle = session.newRequestCycle(request, response);
 
@@ -265,7 +267,7 @@ public class WicketServlet extends HttpServlet
 	 */
 	public void init()
 	{
-		if (this.webApplication == null) 
+		if (this.webApplication == null)
 		{
 			IWebApplicationFactory factory = getApplicationFactory();
 
@@ -292,15 +294,18 @@ public class WicketServlet extends HttpServlet
 			// Call internal init method of web application for default
 			// initialisation
 			this.webApplication.internalInit();
-			
+
 			// Call init method of web application
 			this.webApplication.init();
-			
+
 			// We initialize components here rather than in the constructor or
 			// in the internal init, because in the init method class aliases
 			// can be added, that would be used in installing resources in the
 			// component.
 			this.webApplication.initializeComponents();
+
+			// Give the application the option to log that it is started
+			this.webApplication.logStarted();
 		}
 		finally
 		{
