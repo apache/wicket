@@ -48,6 +48,14 @@ public class UploadProgressBar extends Panel
 			// register the upload status resource
 			Application.get().getSharedResources().add(RESOURCE_NAME, new UploadStatusResource());
 		}
+
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString()
+		{
+			return "Ajax UploadProgressBar initializer";
+		}
 	}
 
 	private static final ResourceReference JS_PROGRESSBAR = new ResourceReference(
