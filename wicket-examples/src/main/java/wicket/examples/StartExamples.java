@@ -18,17 +18,12 @@
  */
 package wicket.examples;
 
-import java.lang.management.ManagementFactory;
-
-import javax.management.MBeanServer;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
-import org.mortbay.management.MBeanContainer;
 
 /**
  * Seperate startup class for people that want to run the examples directly. Use
@@ -59,10 +54,10 @@ public class StartExamples
 		web.setWar("src/webapp");
 		server.addHandler(web);
 
-		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-		MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
-		server.getContainer().addEventListener(mBeanContainer);
-		mBeanContainer.start();
+//		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+//		MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
+//		server.getContainer().addEventListener(mBeanContainer);
+//		mBeanContainer.start();
 
 		try
 		{
