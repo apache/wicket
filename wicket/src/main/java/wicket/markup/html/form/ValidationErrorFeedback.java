@@ -21,7 +21,6 @@ package wicket.markup.html.form;
 import java.io.Serializable;
 
 import wicket.Component;
-import wicket.validation.IMessageSource;
 import wicket.validation.IValidationError;
 
 /**
