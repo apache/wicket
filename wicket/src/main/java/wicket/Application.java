@@ -801,22 +801,6 @@ public abstract class Application
 	}
 
 	/**
-	 * Log that this application is started.
-	 */
-	protected void logStarted()
-	{
-		String version = getFrameworkSettings().getVersion();
-		StringBuffer b = new StringBuffer();
-		b.append("[").append(getName()).append("] Started Wicket ");
-		if (!"n/a".equals(version))
-		{
-			b.append("version ").append(version).append(" ");
-		}
-		b.append("in ").append(getConfigurationType()).append(" mode");
-		log.info(b.toString());
-	}
-
-	/**
 	 * Creates a new session facade. Is called once per application, and is
 	 * typically not something clients reimplement.
 	 * 
