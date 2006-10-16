@@ -36,4 +36,12 @@ public class Initializer implements IInitializer
 	{
 		new UploadProgressBar.ComponentInitializer().init(application);
 	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Wicket extensions initializer";
+	}
 }
