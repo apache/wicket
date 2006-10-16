@@ -15,8 +15,11 @@
 package wicket.jmx;
 
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
@@ -26,6 +29,7 @@ import javax.management.ObjectName;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IDestroyer;
 import wicket.IInitializer;
 import wicket.WicketRuntimeException;
 
@@ -34,9 +38,37 @@ import wicket.WicketRuntimeException;
  * 
  * @author eelcohillenius
  */
-public class Initializer implements IInitializer
+public class Initializer implements IInitializer, IDestroyer
 {
 	private static Log log = LogFactory.getLog(Initializer.class);
+
+	/**
+	 * List of registered names
+	 */
+	private List<ObjectName> registered = new ArrayList<ObjectName>();
+
+	/**
+	 * @see wicket.IDestroyer#destroy(wicket.Application)
+	 */
+	public void destroy(wicket.Application application)
+	{
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+		for (ObjectName objectName : registered)
+		{
+			try
+			{
+				mbs.unregisterMBean(objectName);
+			}
+			catch (InstanceNotFoundException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+			catch (MBeanRegistrationException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+		}
+	}
 
 	/**
 	 * @see wicket.IInitializer#init(wicket.Application)
@@ -63,30 +95,30 @@ public class Initializer implements IInitializer
 			domain = tempDomain;
 
 			Application appBean = new Application(application);
-			mbs.registerMBean(appBean, appBeanName);
+			register(mbs, appBean, appBeanName);
 
-			mbs.registerMBean(new ApplicationSettings(application), new ObjectName(domain
+			register(mbs, new ApplicationSettings(application), new ObjectName(domain
 					+ ":type=Application,name=ApplicationSettings"));
-			mbs.registerMBean(new DebugSettings(application), new ObjectName(domain
+			register(mbs, new DebugSettings(application), new ObjectName(domain
 					+ ":type=Application,name=DebugSettings"));
-			mbs.registerMBean(new MarkupSettings(application), new ObjectName(domain
+			register(mbs, new MarkupSettings(application), new ObjectName(domain
 					+ ":type=Application,name=MarkupSettings"));
-			mbs.registerMBean(new ResourceSettings(application), new ObjectName(domain
+			register(mbs, new ResourceSettings(application), new ObjectName(domain
 					+ ":type=Application,name=ResourceSettings"));
-			mbs.registerMBean(new PageSettings(application), new ObjectName(domain
+			register(mbs, new PageSettings(application), new ObjectName(domain
 					+ ":type=Application,name=PageSettings"));
-			mbs.registerMBean(new RequestCycleSettings(application), new ObjectName(domain
+			register(mbs, new RequestCycleSettings(application), new ObjectName(domain
 					+ ":type=Application,name=RequestCycleSettings"));
-			mbs.registerMBean(new SecuritySettings(application), new ObjectName(domain
+			register(mbs, new SecuritySettings(application), new ObjectName(domain
 					+ ":type=Application,name=SecuritySettings"));
-			mbs.registerMBean(new SessionSettings(application), new ObjectName(domain
+			register(mbs, new SessionSettings(application), new ObjectName(domain
 					+ ":type=Application,name=SessionSettings"));
-			mbs.registerMBean(new CookieValuePersisterSettings(application), new ObjectName(domain
+			register(mbs, new CookieValuePersisterSettings(application), new ObjectName(domain
 					+ ":type=Application,name=CookieValuePersisterSettings"));
 
 			RequestLogger sessionsBean = new RequestLogger(application);
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");
-			mbs.registerMBean(sessionsBean, sessionsBeanName);
+			register(mbs, sessionsBean, sessionsBeanName);
 		}
 		catch (MalformedObjectNameException e)
 		{
@@ -104,5 +136,34 @@ public class Initializer implements IInitializer
 		{
 			throw new WicketRuntimeException(e);
 		}
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Wicket JMX initializer";
+	}
+
+	/**
+	 * Register MBean.
+	 * 
+	 * @param mbs
+	 *            server
+	 * @param o
+	 *            MBean
+	 * @param objectName
+	 *            Object name
+	 * @throws NotCompliantMBeanException
+	 * @throws MBeanRegistrationException
+	 * @throws InstanceAlreadyExistsException
+	 */
+	private void register(MBeanServer mbs, Object o, ObjectName objectName)
+			throws InstanceAlreadyExistsException, MBeanRegistrationException,
+			NotCompliantMBeanException
+	{
+		mbs.registerMBean(o, objectName);
+		registered.add(objectName);
 	}
 }
