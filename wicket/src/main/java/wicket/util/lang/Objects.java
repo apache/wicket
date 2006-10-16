@@ -39,6 +39,7 @@ import wicket.WicketRuntimeException;
 import wicket.application.IClassResolver;
 import wicket.settings.IApplicationSettings;
 import wicket.util.io.ByteCountingOutputStream;
+import wicket.util.string.Strings;
 
 /**
  * Object utilities.
@@ -930,6 +931,40 @@ public final class Objects
 			return ((Character)value).charValue();
 		}
 		return Long.parseLong(stringValue(value, true));
+	}
+
+	/**
+	 * Creates a new instance using the current application's class resolver.
+	 * Returns null if className is null.
+	 * 
+	 * @param className
+	 *            The full class name
+	 * @return The new object instance
+	 */
+	public static Object newInstance(final String className)
+	{
+		if (!Strings.isEmpty(className))
+		{
+			try
+			{
+				Class c = Application.get().getApplicationSettings().getClassResolver()
+						.resolveClass(className);
+				return c.newInstance();
+			}
+			catch (ClassCastException e)
+			{
+				throw new WicketRuntimeException("Unable to create " + className, e);
+			}
+			catch (InstantiationException e)
+			{
+				throw new WicketRuntimeException("Unable to create " + className, e);
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("Unable to create " + className, e);
+			}
+		}
+		return null;
 	}
 
 	/**
