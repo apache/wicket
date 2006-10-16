@@ -31,14 +31,12 @@
 			<groupId>wicket</groupId>
 			<artifactId>wicket-extensions</artifactId>
 		</dependency>
-		<dependency>
+		<!-- Turn this dependency on if you want to test JMX -->
+		<!-- dependency>
 			<groupId>wicket</groupId>
 			<artifactId>wicket-jmx</artifactId>
-			<!-- 
-				I don't know how this friggin auto version is supposed to work
-			 -->
 			<version>1.2-SNAPSHOT</version>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
