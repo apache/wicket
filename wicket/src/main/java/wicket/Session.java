@@ -41,6 +41,7 @@ import wicket.session.ISessionStore;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
+import wicket.util.time.Duration;
 
 /**
  * Holds information about a user session, including some fixed number of most
@@ -456,11 +457,13 @@ public abstract class Session implements Serializable, IConverterLocator
 				pageMapName));
 		if (pageMap != null)
 		{
-			synchronized (usedPageMaps) // get a lock so be sure that only one is made 
+			synchronized (usedPageMaps) // get a lock so be sure that only one
+										// is made
 			{
-				if(pageMapsUsedInRequest == null)
+				if (pageMapsUsedInRequest == null)
 				{
-					// TODO!! this is not synchronized.. it should be (on session?)
+					// TODO!! this is not synchronized.. it should be (on
+					// session?)
 					pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
 				}
 			}
@@ -468,15 +471,18 @@ public abstract class Session implements Serializable, IConverterLocator
 			{
 				long startTime = System.currentTimeMillis();
 
+				// TODO For now only use the setting. Might be extended with
+				// something overridable on request/ page/ request target level
+				// later
+				Duration timeout = Application.get().getRequestCycleSettings().getTimeout();
+
 				// Get page entry for id and version
 				Thread t = pageMapsUsedInRequest.get(pageMap);
 				while (t != null && t != Thread.currentThread())
 				{
 					try
 					{
-						// TODO make longer and configurable
-						pageMapsUsedInRequest.wait(20000); // wait 20 seconds
-						// max.
+						pageMapsUsedInRequest.wait(timeout.getMilliseconds());
 					}
 					catch (InterruptedException ex)
 					{
@@ -484,13 +490,13 @@ public abstract class Session implements Serializable, IConverterLocator
 					}
 					t = pageMapsUsedInRequest.get(pageMap);
 					if (t != null && t != Thread.currentThread()
-							&& (startTime + 20000) < System.currentTimeMillis())
+							&& (startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
 					{
 						// if it is still not the right thread..
-						// This must be a wicket bug or some other (dead)lock in
-						// the code.
-						throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName
-								+ " is still locked by: " + t
+						// This either points to long running code (a report
+						// page?) or a deadlock or such
+						throw new WicketRuntimeException("After " + timeout + " the Pagemap "
+								+ pageMapName + " is still locked by: " + t
 								+ ", giving up trying to get the page for path: " + path);
 					}
 				}
@@ -1096,12 +1102,13 @@ public abstract class Session implements Serializable, IConverterLocator
 	 */
 	final void requestDetached()
 	{
-		if(pageMapsUsedInRequest != null)
+		if (pageMapsUsedInRequest != null)
 		{
 			synchronized (pageMapsUsedInRequest)
 			{
 				Thread t = Thread.currentThread();
-				Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet().iterator();
+				Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet()
+						.iterator();
 				while (it.hasNext())
 				{
 					Entry<PageMap, Thread> entry = it.next();

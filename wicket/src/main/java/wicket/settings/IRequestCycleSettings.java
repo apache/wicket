@@ -7,6 +7,7 @@ import wicket.RequestCycle;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.settings.IApplicationSettings.UnexpectedExceptionDisplay;
+import wicket.util.time.Duration;
 
 /**
  * Inteface for request related settings
@@ -187,6 +188,14 @@ public interface IRequestCycleSettings
 	String getResponseRequestEncoding();
 
 	/**
+	 * Gets the time that a request will by default be waiting for the previous
+	 * request to be handled before giving up.
+	 * 
+	 * @return The time out
+	 */
+	Duration getTimeout();
+
+	/**
 	 * @see wicket.settings.IExceptionSettings#getUnexpectedExceptionDisplay()
 	 * 
 	 * @return UnexpectedExceptionDisplay
@@ -272,6 +281,14 @@ public interface IRequestCycleSettings
 	 *            The request and response encoding to be used.
 	 */
 	void setResponseRequestEncoding(final String responseRequestEncoding);
+
+	/**
+	 * Sets the time that a request will by default be waiting for the previous
+	 * request to be handled before giving up.
+	 * 
+	 * @param timeout
+	 */
+	void setTimeout(Duration timeout);
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#setUnexpectedExceptionDisplay(wicket.settings.Settings.UnexpectedExceptionDisplay)
