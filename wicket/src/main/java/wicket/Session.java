@@ -41,6 +41,7 @@ import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
+import wicket.util.time.Duration;
 
 /**
  * Holds information about a user session, including some fixed number of most
@@ -389,8 +390,7 @@ public abstract class Session implements Serializable
 	 * @return The page based on the first path component (the page id), or null
 	 *         if the requested version of the page cannot be found.
 	 */
-	public final Page getPage(final String pageMapName, final String path,
-			final int versionNumber)
+	public final Page getPage(final String pageMapName, final String path, final int versionNumber)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -401,9 +401,10 @@ public abstract class Session implements Serializable
 		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (pageMap != null)
 		{
-			synchronized (usedPageMaps) // get a lock so be sure that only one is made
+			synchronized (usedPageMaps) // get a lock so be sure that only one
+			// is made
 			{
-				if(pageMapsUsedInRequest == null)
+				if (pageMapsUsedInRequest == null)
 				{
 					pageMapsUsedInRequest = new HashMap(3);
 				}
@@ -411,25 +412,34 @@ public abstract class Session implements Serializable
 			synchronized (pageMapsUsedInRequest)
 			{
 				long startTime = System.currentTimeMillis();
+
+				// TODO For now only use the setting. Might be extended with
+				// something overridable on request/ page/ request target level
+				// later
+				Duration timeout = Application.get().getRequestCycleSettings().getTimeout();
+
 				// Get page entry for id and version
 				Thread t = (Thread)pageMapsUsedInRequest.get(pageMap);
 				while (t != null && t != Thread.currentThread())
 				{
 					try
 					{
-						pageMapsUsedInRequest.wait(20000); // wait 20 seconds max.
+						pageMapsUsedInRequest.wait(timeout.getMilliseconds());
 					}
 					catch (InterruptedException ex)
 					{
 						throw new WicketRuntimeException(ex);
 					}
 					t = (Thread)pageMapsUsedInRequest.get(pageMap);
-					if (t != null && t != Thread.currentThread() && (startTime + 20000) < System.currentTimeMillis())
+					if (t != null && t != Thread.currentThread()
+							&& (startTime + timeout.getMilliseconds()) < System.currentTimeMillis())
 					{
-						// if it is still not the right thread.. 
-						// This must be a wicket bug or some other (dead)lock in the code.
-						throw new WicketRuntimeException("After 20s the Pagemap " + pageMapName + 
-								" is still locked by: " + t + ", giving up trying to get the page for path: " + path);
+						// if it is still not the right thread..
+						// This either points to long running code (a report
+						// page?) or a deadlock or such
+						throw new WicketRuntimeException("After " + timeout + " the Pagemap "
+								+ pageMapName + " is still locked by: " + t
+								+ ", giving up trying to get the page for path: " + path);
 					}
 				}
 				pageMapsUsedInRequest.put(pageMap, Thread.currentThread());
@@ -1016,7 +1026,7 @@ public abstract class Session implements Serializable
 		feedbackMessages.clearRendered();
 
 		// the session is dirty when the list of feedback messages was changed
-		if(size != feedbackMessages.size())
+		if (size != feedbackMessages.size())
 		{
 			dirty();
 		}
@@ -1041,16 +1051,16 @@ public abstract class Session implements Serializable
 	 */
 	final void requestDetached()
 	{
-		if(pageMapsUsedInRequest != null)
+		if (pageMapsUsedInRequest != null)
 		{
-			synchronized(pageMapsUsedInRequest)
+			synchronized (pageMapsUsedInRequest)
 			{
 				Thread t = Thread.currentThread();
 				Iterator it = pageMapsUsedInRequest.entrySet().iterator();
-				while(it.hasNext())
+				while (it.hasNext())
 				{
 					Entry entry = (Entry)it.next();
-					if(entry.getValue() == t)
+					if (entry.getValue() == t)
 					{
 						it.remove();
 					}
@@ -1059,7 +1069,7 @@ public abstract class Session implements Serializable
 			}
 		}
 	}
-		
+
 
 	/**
 	 * @param map

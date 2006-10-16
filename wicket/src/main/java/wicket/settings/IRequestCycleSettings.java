@@ -8,6 +8,7 @@ import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.settings.IExceptionSettings.UnexpectedExceptionDisplay;
 import wicket.util.lang.EnumeratedType;
+import wicket.util.time.Duration;
 
 /**
  * Inteface for request related settings
@@ -51,8 +52,8 @@ import wicket.util.lang.EnumeratedType;
  * </ul>
  * </li>
  * </ul>
- * Note that this parameter sets the default behavior, but that you can
- * manually set whether any redirecting is done by calling method
+ * Note that this parameter sets the default behavior, but that you can manually
+ * set whether any redirecting is done by calling method
  * RequestCycle.setRedirect. Setting the redirect flag when the application is
  * configured to use ONE_PASS_RENDER, will result in a redirect of type
  * REDIRECT_TO_RENDER. When the application is configured to use
@@ -73,7 +74,7 @@ public interface IRequestCycleSettings
 	public static class RenderStrategy extends EnumeratedType
 	{
 		private static final long serialVersionUID = 1L;
-	
+
 		RenderStrategy(final String name)
 		{
 			super(name);
@@ -93,7 +94,8 @@ public interface IRequestCycleSettings
 	 * when you want to do sophisticated (non-sticky session) clustering.
 	 * </p>
 	 */
-	public static final IRequestCycleSettings.RenderStrategy ONE_PASS_RENDER = new IRequestCycleSettings.RenderStrategy("ONE_PASS_RENDER");
+	public static final IRequestCycleSettings.RenderStrategy ONE_PASS_RENDER = new IRequestCycleSettings.RenderStrategy(
+			"ONE_PASS_RENDER");
 
 	/**
 	 * All logical parts of a request (the action and render part) are handled
@@ -102,7 +104,8 @@ public interface IRequestCycleSettings
 	 * redirect command is issued to the browser specifically to render this
 	 * request.
 	 */
-	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_BUFFER = new IRequestCycleSettings.RenderStrategy("REDIRECT_BUFFER");
+	public static final IRequestCycleSettings.RenderStrategy REDIRECT_TO_BUFFER = new IRequestCycleSettings.RenderStrategy(
+			"REDIRECT_BUFFER");
 
 	/**
 	 * The render part of a request (opposed to the 'action part' which is
@@ -183,6 +186,14 @@ public interface IRequestCycleSettings
 	 * @return The request and response encoding
 	 */
 	String getResponseRequestEncoding();
+
+	/**
+	 * Gets the time that a request will by default be waiting for the previous
+	 * request to be handled before giving up.
+	 * 
+	 * @return The time out
+	 */
+	Duration getTimeout();
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#getUnexpectedExceptionDisplay()
@@ -270,6 +281,14 @@ public interface IRequestCycleSettings
 	 *            The request and response encoding to be used.
 	 */
 	void setResponseRequestEncoding(final String responseRequestEncoding);
+
+	/**
+	 * Sets the time that a request will by default be waiting for the previous
+	 * request to be handled before giving up.
+	 * 
+	 * @param timeout
+	 */
+	void setTimeout(Duration timeout);
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#setUnexpectedExceptionDisplay(wicket.settings.Settings.UnexpectedExceptionDisplay)
