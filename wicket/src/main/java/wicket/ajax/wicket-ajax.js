@@ -586,7 +586,12 @@ Wicket.Ajax.Request.prototype = {
 		if (t.readyState == 4) {
 			if (t.status == 200) {				
 				var responseAsText = t.responseText;
-				var redirectUrl = t.getResponseHeader('Ajax-Location');
+				
+				var redirectUrl;
+				try {
+					redirectUrl = t.getResponseHeader('Ajax-Location');
+				} catch (ignore) { // might happen in older mozilla
+				}
 				
 				if (typeof(redirectUrl) != "undefined" && redirectUrl != null && redirectUrl != "") {
 					t.onreadystatechange = Wicket.emptyFunction;
