@@ -31,8 +31,11 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @author almaw
  */
 public class ResourceTestPage extends WebPage {
+	
+	public static final int IMAGES_PER_PAGE = 20;
+	
 	public ResourceTestPage() {
-		List list = Arrays.asList(new Object[500]);
+		List list = Arrays.asList(new Object[IMAGES_PER_PAGE]);
 		add(new ListView("listView", list) {
 		
 			@Override
