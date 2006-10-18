@@ -571,7 +571,10 @@ public abstract class DefaultAbstractTree extends AbstractTree
 	private void init()
 	{
 		ResourceReference css = getCSS();
-		add(HeaderContributor.forCss(css.getScope(), css.getName()));
+		if (css != null) 
+		{
+			add(HeaderContributor.forCss(css.getScope(), css.getName()));
+		}
 	}
 
 	/**
