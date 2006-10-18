@@ -92,14 +92,14 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		final String path = requestParameters.getPath();
 		if (requestParameters.getComponentPath() != null)
 		{
+			// marks whether or not we will be processing this request
+			boolean processRequest = true;
 			synchronized (requestCycle.getSession())
 			{
 				// we need to check if this request has been flagged as
 				// process-only-if-path-is-active and if so make sure this
 				// condition is met
 
-				// marks whether or not we will be processing this request
-				boolean processRequest = true;
 
 				if (requestParameters.isOnlyProcessIfPathActive())
 				{
@@ -147,14 +147,14 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 
 				}
 
-				if (processRequest)
-				{
-					return resolveRenderedPage(requestCycle, requestParameters);
-				}
-				else
-				{
-					return EmptyRequestTarget.getInstance();
-				}
+			}
+			if (processRequest)
+			{
+				return resolveRenderedPage(requestCycle, requestParameters);
+			}
+			else
+			{
+				return EmptyRequestTarget.getInstance();
 			}
 		}
 		// see whether this request points to a bookmarkable page
