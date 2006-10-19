@@ -20,6 +20,7 @@ package wicket.markup;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Stack;
 import java.util.regex.Pattern;
 
 import wicket.Page;
@@ -283,10 +284,13 @@ public class MarkupParser
 	 */
 	private MarkupFragment parseMarkup()
 	{
+		final Stack<MarkupFragment> fragmentStack = new Stack<MarkupFragment>();
+		MarkupFragment fragment = this.rootFragment;
+		
 		try
 		{
 			// allways remember the latest index (size)
-			int size = rootFragment.size();
+			int size = fragment.size();
 
 			// Loop through tags
 			for (ComponentTag tag; null != (tag = (ComponentTag)this.markupFilterChain.nextTag());)
@@ -320,29 +324,40 @@ public class MarkupParser
 
 						// Make sure you add it at the correct location.
 						// IMarkupFilters might have added elements as well.
-						rootFragment.addMarkupElement(size, new RawMarkup(rawMarkup));
+						fragment.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
 					if (add)
 					{
 						// Add to list unless preview component tag remover
-						// flagged
-						// as removed
+						// flagged as removed
 						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
 						{
-							rootFragment.addMarkupElement(tag);
+							if (tag.isOpen() || tag.isOpenClose())
+							{
+								fragmentStack.push(fragment);
+								MarkupFragment newFragment = new MarkupFragment(this.markup);
+								fragment.addMarkupElement(newFragment);
+								fragment = newFragment;
+							}
+							
+							fragment.addMarkupElement(tag);
+							if (tag.isClose() || tag.isOpenClose() || tag.hasNoCloseTag())
+							{
+								fragment = fragmentStack.pop();
+							}
 						}
 					}
 					else if (tag.isModified())
 					{
-						rootFragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+						fragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
 
 					this.xmlParser.setPositionMarker();
 				}
 
 				// allways remember the latest index (size)
-				size = rootFragment.size();
+				size = fragment.size();
 			}
 		}
 		catch (final ParseException ex)
@@ -351,14 +366,23 @@ public class MarkupParser
 			final CharSequence text = this.xmlParser.getInputFromPositionMarker(-1);
 			if (text.length() > 0)
 			{
-				rootFragment.addMarkupElement(new RawMarkup(text));
+				fragment.addMarkupElement(new RawMarkup(text));
 			}
 
 			this.markup.setEncoding(this.xmlParser.getEncoding());
 			this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
-			final MarkupStream markupStream = new MarkupStream(rootFragment);
-			markupStream.setCurrentIndex(rootFragment.size() - 1);
+			// Create a MarkupStream and position it at the error location
+			MarkupElement element = fragment.get(fragment.size() - 1);
+			MarkupStream markupStream = new MarkupStream(this.rootFragment);
+			while (markupStream.hasMore())
+			{
+				if (markupStream.next() == element)
+				{
+					break;
+				}
+			}
+			
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
 
@@ -378,13 +402,22 @@ public class MarkupParser
 				rawMarkup = compressWhitespace(rawMarkup);
 			}
 
-			rootFragment.addMarkupElement(new RawMarkup(rawMarkup));
+			fragment.addMarkupElement(new RawMarkup(rawMarkup));
 		}
 
-		// Convert the list of MarkupElements into a tree like structure with
-		// one MarkupFragment per Wicket Component.
-		MarkupFragment fragment = rootFragment.translateFlatIntoTreeStructure();
-
+		// Do we have unclosed tags in the markup? Re-balance the markup tree 
+		if (fragmentStack.size() > 0)
+		{
+			fragment.handleUnclosedTags();
+			fragment = this.rootFragment;
+		}
+		
+		// remove "empty" root fragment
+		if ((fragment.size() == 1) && (fragment.get(0) instanceof MarkupFragment))
+		{
+			fragment = (MarkupFragment)fragment.get(0);
+		}
+		
 		// Make all tags immutable and the list of elements unmodifable
 		fragment.makeImmutable();
 

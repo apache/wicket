@@ -2,9 +2,9 @@ package wicket.session;
 
 import wicket.AbstractRestartResponseException;
 import wicket.IPageFactory;
-import wicket.Page;
 import wicket.PageParameters;
 import wicket.WicketTestCase;
+import wicket.markup.html.WebPage;
 
 /**
  * Default page facotry tests
@@ -16,7 +16,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage1 extends Page
+	public static class AbortAndRespondPage1 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -27,12 +27,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new AbstractRestartResponseException()
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
 	}
@@ -40,7 +35,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage2 extends Page
+	public static class AbortAndRespondPage2 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -53,21 +48,15 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new AbstractRestartResponseException()
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
-
 	}
 
 	/**
 	 * @author ivaynberg
 	 */
-	public static class AbortAndRespondPage3 extends Page
+	public static class AbortAndRespondPage3 extends WebPage
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -78,12 +67,7 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new AbstractRestartResponseException()
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
 
@@ -96,15 +80,9 @@ public class DefaultPageFactoryTest extends WicketTestCase
 		{
 			throw new AbstractRestartResponseException()
 			{
-
-				/**
-				 * 
-				 */
 				private static final long serialVersionUID = 1L;
-
 			};
 		}
-
 	}
 
 	final private IPageFactory pageFactory = new DefaultPageFactory();

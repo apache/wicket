@@ -34,15 +34,15 @@ import wicket.response.NullResponse;
 import wicket.util.lang.Classes;
 
 /**
- * A WebMarkupContainer, such as Panel or Border, with an associated markup 
- * file. 
+ * A WebMarkupContainer, such as Panel or Border, with an associated markup
+ * file.
  * 
  * @param <T>
  *            Type of model object this component holds
  * 
  * @author Juergen Donnerstag
  */
-public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContainer<T> 
+public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContainer<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -51,7 +51,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 
 	/** <wicket:head> is only allowed before <body>, </head>, <wicket:panel> etc. */
 	private boolean noMoreWicketHeadTagsAllowed = false;
-	
+
 	/**
 	 * @see Component#Component(MarkupContainer,String)
 	 */
@@ -116,13 +116,15 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
-		final MarkupStream markupStream = new MarkupStream(getAssociatedMarkup(false));
+		final MarkupFragment markupFragment = getAssociatedMarkup(false);
 
 		// No associated markup => no header section
-		if (markupStream == null)
+		if (markupFragment == null)
 		{
 			return;
 		}
+
+		final MarkupStream markupStream = new MarkupStream(markupFragment);
 
 		// Position pointer at current (first) header
 		this.noMoreWicketHeadTagsAllowed = false;
@@ -212,8 +214,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 						// Attach an AttributeModifier to the body container
 						// which appends the new value to the onLoad
 						// attribute
-						getWebPage().getBodyContainer().addOnLoadModifier(
-								onLoad, this);
+						getWebPage().getBodyContainer().addOnLoadModifier(onLoad, this);
 					}
 
 					// There can only be one body tag
@@ -256,18 +257,17 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 		final ComponentTag tag = markupStream.getTag(false);
 		if ((tag != null) && tag.isWicketHeadTag())
 		{
-			// found <wicket:head>. Create a unique id for the 
+			// found <wicket:head>. Create a unique id for the
 			// HtmlHeaderContainer to be created
 			final String headerId = Component.AUTO_COMPONENT_PREFIX
-					+ Classes.simpleName(markupClass) + getVariation()
-					+ "Header" + index;
+					+ Classes.simpleName(markupClass) + getVariation() + "Header" + index;
 
 			// Create the header container and associate the markup with
 			// it
 			String scope = tag.getAttributes().getString(
 					markupStream.getWicketNamespace() + ":scope");
-			final HeaderPartContainer headerContainer = newHeaderPartContainer(
-					parent, headerId, scope);
+			final HeaderPartContainer headerContainer = newHeaderPartContainer(parent, headerId,
+					scope);
 			headerContainer.setMyMarkupStream(markupStream);
 			headerContainer.setRenderBodyOnly(true);
 
@@ -304,7 +304,8 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 					if (this.noMoreWicketHeadTagsAllowed == true)
 					{
 						throw new MarkupException(
-								"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag");
+								"<wicket:head> tags are only allowed before <body>, </head>, <wicket:panel> etc. tag. Component: "
+										+ this.toString());
 					}
 					return associatedMarkupStream.getCurrentIndex();
 				}

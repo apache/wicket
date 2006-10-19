@@ -27,22 +27,23 @@ import wicket.util.string.Strings;
 /**
  * A stream of {@link wicket.markup.MarkupElement}s, subclases of which are
  * {@link wicket.markup.ComponentTag} and {@link wicket.markup.RawMarkup}. A
- * markup stream has a current index in the list of markup elements. The next
- * markup element can be retrieved and the index advanced by calling next(). If
- * the index hits the end, hasMore() will return false.
+ * markupFragments stream has a current index in the list of markupFragments
+ * elements. The next markupFragments element can be retrieved and the index
+ * advanced by calling next(). If the index hits the end, hasMore() will return
+ * false.
  * <p>
- * The current markup element can be accessed with get() and as a ComponentTag
- * with getTag().
+ * The current markupFragments element can be accessed with get() and as a
+ * ComponentTag with getTag().
  * <p>
  * The stream can be seeked to a particular location with setCurrentIndex().
  * <p>
  * Convenience methods also exist to skip component tags (and any potentially
- * nested markup) or raw markup.
+ * nested markupFragments) or raw markupFragments.
  * <p>
- * Several boolean methods of the form at*() return true if the markup stream is
- * positioned at a tag with a given set of characteristics.
+ * Several boolean methods of the form at*() return true if the markupFragments
+ * stream is positioned at a tag with a given set of characteristics.
  * <p>
- * The resource from which the markup was loaded can be retrieved with
+ * The resource from which the markupFragments was loaded can be retrieved with
  * getResource().
  * 
  * @author Jonathan Locke
@@ -53,13 +54,14 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	/** Element at currentIndex */
 	private MarkupElement current;
 
-	/** Current index in markup stream */
+	/** Current index in markupFragments stream */
 	private int currentIndex = 0;
 
-	/** The markup element list */
-	private final MarkupFragment markup;
+	/** The markupFragments element list */
+	private final MarkupFragment markupFragments;
 
-	private final List<MarkupElement> markupElements;
+	/** The markupFragments flattened into a list */
+	private final List<MarkupElement> markup;
 
 	/**
 	 * Construct.
@@ -70,20 +72,21 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	{
 		if (fragment == null)
 		{
-			throw new MarkupException("You can not create a MarkupStream without a markup fragment");
+			throw new IllegalArgumentException(
+					"You can not create a MarkupStream without a markupFragments fragment. Parameter 'fragment' == null");
 		}
-		this.markup = fragment;
-		this.markup.makeImmutable();
-		this.markupElements = fragment.getAllElementsFlat();
+		this.markupFragments = fragment;
+		this.markupFragments.makeImmutable();
+		this.markup = fragment.getAllElementsFlat();
 
-		if (this.markupElements.size() > 0)
+		if (this.markup.size() > 0)
 		{
 			current = get(currentIndex);
 		}
 	}
 
 	/**
-	 * @return True if current markup element is a close tag
+	 * @return True if current markupFragments element is a close tag
 	 */
 	public boolean atCloseTag()
 	{
@@ -91,7 +94,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return True if current markup element is an openclose tag
+	 * @return True if current markupFragments element is an openclose tag
 	 */
 	public boolean atOpenCloseTag()
 	{
@@ -101,8 +104,8 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	/**
 	 * @param componentId
 	 *            Required component name attribute
-	 * @return True if the current markup element is an openclose tag with the
-	 *         given component name
+	 * @return True if the current markupFragments element is an openclose tag
+	 *         with the given component name
 	 */
 	public boolean atOpenCloseTag(final String componentId)
 	{
@@ -110,7 +113,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return True if current markup element is an open tag
+	 * @return True if current markupFragments element is an open tag
 	 */
 	public boolean atOpenTag()
 	{
@@ -120,8 +123,8 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	/**
 	 * @param id
 	 *            Required component id attribute
-	 * @return True if the current markup element is an open tag with the given
-	 *         component name
+	 * @return True if the current markupFragments element is an open tag with
+	 *         the given component name
 	 */
 	public boolean atOpenTag(final String id)
 	{
@@ -129,7 +132,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return True if current markup element is a tag
+	 * @return True if current markupFragments element is a tag
 	 */
 	public boolean atTag()
 	{
@@ -137,7 +140,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return The current markup element
+	 * @return The current markupFragments element
 	 */
 	public MarkupElement get()
 	{
@@ -145,7 +148,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return The current markup element as a markup tag
+	 * @return The current markupFragments element as a markupFragments tag
 	 */
 	public ComponentTag getTag()
 	{
@@ -156,7 +159,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 * @param throwException
 	 *            If true throw an exception if the element is not a
 	 *            ComponentTag
-	 * @return The current markup element as a markup tag
+	 * @return The current markupFragments element as a markupFragments tag
 	 */
 	public ComponentTag getTag(final boolean throwException)
 	{
@@ -174,7 +177,7 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return Current index in markup stream
+	 * @return Current index in markupFragments stream
 	 */
 	public int getCurrentIndex()
 	{
@@ -182,19 +185,20 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return The resource where this markup stream came from
+	 * @return The resource where this markupFragments stream came from
 	 */
 	public IResourceStream getResource()
 	{
-		return this.markup.getMarkup().getResource();
+		return this.markupFragments.getMarkup().getResource();
 	}
 
 	/**
-	 * @return True if this markup stream has more MarkupElement elements
+	 * @return True if this markupFragments stream has more MarkupElement
+	 *         elements
 	 */
 	public boolean hasMore()
 	{
-		return currentIndex < markupElements.size();
+		return currentIndex < markup.size();
 	}
 
 	/**
@@ -217,12 +221,12 @@ public final class MarkupStream implements Iterable<MarkupElement>
 
 	/**
 	 * 
-	 * @return The next markup element in the stream
+	 * @return The next markupFragments element in the stream
 	 */
 	public MarkupElement next()
 	{
 		// @TODO I think it is a bug. You'll never be able to get(0).
-		if (++currentIndex < markupElements.size())
+		if (++currentIndex < markup.size())
 		{
 			return current = get(currentIndex);
 		}
@@ -272,12 +276,12 @@ public final class MarkupStream implements Iterable<MarkupElement>
 		else
 		{
 			// We were something other than <tag> or <tag/>
-			throwMarkupException("Skip component called on bad markup element " + startTag);
+			throwMarkupException("Skip component called on bad markupFragments element " + startTag);
 		}
 	}
 
 	/**
-	 * Skips any raw markup at the current position
+	 * Skips any raw markupFragments at the current position
 	 */
 	public void skipRawMarkup()
 	{
@@ -288,8 +292,8 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * Skips any markup at the current position until the wicket tag name is
-	 * found.
+	 * Skips any markupFragments at the current position until the wicket tag
+	 * name is found.
 	 * 
 	 * @param wicketTagName
 	 *            wicket tag name to seek
@@ -314,26 +318,26 @@ public final class MarkupStream implements Iterable<MarkupElement>
 
 	/**
 	 * @param index
-	 *            The index of a markup element
+	 *            The index of a markupFragments element
 	 * @return The MarkupElement element
 	 */
 	private MarkupElement get(final int index)
 	{
-		return markupElements.get(index);
+		return markup.get(index);
 	}
 
 	/**
-	 * Renders markup until a closing tag for openTag is reached.
+	 * Renders markupFragments until a closing tag for openTag is reached.
 	 * 
 	 * @param openTag
 	 *            The open tag
 	 */
 	public void skipToMatchingCloseTag(final ComponentTag openTag)
 	{
-		// Loop through the markup in this container
+		// Loop through the markupFragments in this container
 		while (hasMore())
 		{
-			// If the current markup tag closes the openTag
+			// If the current markupFragments tag closes the openTag
 			if (get().closes(openTag))
 			{
 				// Done!
@@ -347,25 +351,26 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * Return the XML declaration string, in case if found in the markup.
+	 * Return the XML declaration string, in case if found in the
+	 * markupFragments.
 	 * 
 	 * @return Null, if not found.
 	 */
 	public String getXmlDeclaration()
 	{
-		return this.markup.getMarkup().getXmlDeclaration();
+		return this.markupFragments.getMarkup().getXmlDeclaration();
 	}
 
 	/**
-	 * Gets the markup encoding. A markup encoding may be specified in a markup
-	 * file with an XML encoding specifier of the form &lt;?xml ...
-	 * encoding="..." ?&gt;.
+	 * Gets the markupFragments encoding. A markupFragments encoding may be
+	 * specified in a markupFragments file with an XML encoding specifier of the
+	 * form &lt;?xml ... encoding="..." ?&gt;.
 	 * 
 	 * @return The encoding, or null if not found
 	 */
 	public final String getEncoding()
 	{
-		return this.markup.getMarkup().getEncoding();
+		return this.markupFragments.getMarkup().getEncoding();
 	}
 
 	/**
@@ -376,26 +381,27 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public final Class getContainerClass()
 	{
-		return this.markup.getMarkup().getResource().getMarkupClass();
+		return this.markupFragments.getMarkup().getResource().getMarkupClass();
 	}
 
 	/**
-	 * Get the wicket namespace valid for this specific markup
+	 * Get the wicket namespace valid for this specific markupFragments
 	 * 
 	 * @return wicket namespace
 	 */
 	public final String getWicketNamespace()
 	{
-		return this.markup.getMarkup().getWicketNamespace();
+		return this.markupFragments.getMarkup().getWicketNamespace();
 	}
 
 	/**
-	 * True, if associate markup is the same. It will change e.g. if the markup
-	 * file has been re-loaded or the locale has been changed.
+	 * True, if associate markupFragments is the same. It will change e.g. if
+	 * the markupFragments file has been re-loaded or the locale has been
+	 * changed.
 	 * 
 	 * @param markupStream
-	 *            The markup stream to compare with.
-	 * @return true, if markup has not changed
+	 *            The markupFragments stream to compare with.
+	 * @return true, if markupFragments has not changed
 	 */
 	public final boolean equalMarkup(final MarkupStream markupStream)
 	{
@@ -403,17 +409,17 @@ public final class MarkupStream implements Iterable<MarkupElement>
 		{
 			return false;
 		}
-		return (this.markup == markupStream.markup);
+		return (this.markupFragments == markupStream.markupFragments);
 	}
 
 	/**
-	 * Get the immutable markup associated with the stream
+	 * Get the immutable markupFragments associated with the stream
 	 * 
-	 * @return markup
+	 * @return markupFragments
 	 */
-	public final IMarkup getMarkup()
+	public final IMarkup getMarkupFragments()
 	{
-		return this.markup.getMarkup();
+		return this.markupFragments.getMarkup();
 	}
 
 	/**
@@ -421,11 +427,11 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	 */
 	public Iterator<MarkupElement> iterator()
 	{
-		return this.markupElements.iterator();
+		return this.markup.iterator();
 	}
 
 	/**
-	 * Throws a new markup exception
+	 * Throws a new markupFragments exception
 	 * 
 	 * @param message
 	 *            The exception message
@@ -437,21 +443,21 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return An HTML string highlighting the current position in the markup
-	 *         stream
+	 * @return An HTML string highlighting the current position in the
+	 *         markupFragments stream
 	 */
 	public String toHtmlDebugString()
 	{
 		final StringBuffer buffer = new StringBuffer();
 
-		for (int i = 0; i < markupElements.size(); i++)
+		for (int i = 0; i < markup.size(); i++)
 		{
 			if (i == currentIndex)
 			{
 				buffer.append("<font color = \"red\">");
 			}
 
-			final MarkupElement element = markupElements.get(i);
+			final MarkupElement element = markup.get(i);
 
 			buffer.append(Strings.escapeMarkup(element.toString(), true));
 
@@ -465,12 +471,13 @@ public final class MarkupStream implements Iterable<MarkupElement>
 	}
 
 	/**
-	 * @return String representation of markup stream
+	 * @return String representation of markupFragments stream
 	 */
 	@Override
 	public String toString()
 	{
-		return "[markup = " + String.valueOf(markup.getMarkup()) + ", index = " + currentIndex
-				+ ", current = " + ((current == null) ? "null" : current.toUserDebugString()) + "]";
+		return "[markupFragments = " + String.valueOf(markupFragments.getMarkup()) + ", index = "
+				+ currentIndex + ", current = "
+				+ ((current == null) ? "null" : current.toUserDebugString()) + "]";
 	}
 }

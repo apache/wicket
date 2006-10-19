@@ -83,6 +83,7 @@ public class ComponentTag extends MarkupElement
 	 * and the information about the tags origin is lost. In some cases like
 	 * wicket:head and wicket:link this information however is required.
 	 */
+	// TODO remove when no longer needed
 	private Class markupClass;
 
 	/**

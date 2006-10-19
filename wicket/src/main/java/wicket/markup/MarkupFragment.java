@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,8 +32,10 @@ import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
- * A list of markup elements associated with a Markup. Might be all elements of
- * a markup resource, might be just the elements associated with a specific tag.
+ * Wicket organizes the Markup in a tree structure similar to DOM. Compared to
+ * DOM not all XML tags are used to build the tree but rather wicket tags only.
+ * Wicket tags are all XML/HTML tags with either wicket:id or &lt;wicket:xxx
+ * ...&gt;. The wicket:id is used to indentify the tag inside the DOM.
  * 
  * @see wicket.markup.Markup
  * @see wicket.markup.MarkupElement
@@ -52,7 +53,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	public static final MarkupFragment NO_MARKUP_FRAGMENT = new MarkupFragment(IMarkup.NO_MARKUP);
 
 	/** The list of markup elements */
-	private/* final */List<MarkupElement> markupElements;
+	private/* final */List<MarkupElement> markupElements = new ArrayList<MarkupElement>();
 
 	/** The associate markup */
 	private final IMarkup markup;
@@ -81,7 +82,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	public MarkupFragment(final IMarkup markup, final ComponentTag openTag)
 	{
 		this.markup = markup;
-		this.markupElements = new ArrayList<MarkupElement>();
 
 		if (openTag != null)
 		{
@@ -110,9 +110,14 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 * @param index
 	 * @return ComponentTag
 	 */
-	public final ComponentTag getTag(final int index)
+	public final ComponentTag getTag()
 	{
-		return (ComponentTag)markupElements.get(index);
+		final MarkupElement elem = get(0);
+		if (elem instanceof ComponentTag)
+		{
+			return (ComponentTag)elem;
+		}
+		return null;
 	}
 
 	/**
@@ -122,10 +127,10 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 */
 	public final String getId()
 	{
-		MarkupElement elem = get(0);
-		if (elem instanceof ComponentTag)
+		final ComponentTag tag = getTag();
+		if (tag != null)
 		{
-			return ((ComponentTag)elem).getId();
+			return tag.getId();
 		}
 
 		return null;
@@ -199,7 +204,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 					 * eg <wicket:extend> generates an auto component that is
 					 * not in the markup path expressions
 					 */
-					if (tagId.startsWith(Component.AUTO_COMPONENT_PREFIX))
+					if ((tagId != null) && tagId.startsWith(Component.AUTO_COMPONENT_PREFIX))
 					{
 						MarkupFragment frag = fragment.getChildFragment(id, false);
 						if (frag != null)
@@ -226,8 +231,8 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 
 		if (throwException == true)
 		{
-			throw new MarkupException("Markup with path '" + id + "' not found in fragment: "
-					+ this.getId());
+			throw new MarkupException(getMarkup().getResource(), "Markup with path '" + id
+					+ "' not found in fragment: " + getId());
 		}
 
 		return null;
@@ -245,10 +250,9 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 */
 	public final MarkupFragment getWicketFragment(final String name, final boolean throwException)
 	{
-		MarkupElement element = get(0);
-		if (element instanceof ComponentTag)
+		ComponentTag tag = getTag();
+		if (tag != null)
 		{
-			ComponentTag tag = getTag(0);
 			if (tag.isWicketTag(name))
 			{
 				return this;
@@ -270,7 +274,8 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 
 		if (throwException == true)
 		{
-			throw new MarkupException("Wicket tag with name 'wicket:" + name + "' not found");
+			throw new MarkupException(new MarkupStream(this), "Wicket tag with name 'wicket:"
+					+ name + "' not found.");
 		}
 		return null;
 	}
@@ -294,7 +299,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 */
 	public int size()
 	{
-		return markupElements.size();
+		return this.markupElements.size();
 	}
 
 	/**
@@ -308,16 +313,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
-	 * Remove the element from the list
-	 * 
-	 * @param elem
-	 */
-	public final void removeMarkupElement(final MarkupElement elem)
-	{
-		this.markupElements.remove(elem);
-	}
-
-	/**
 	 * Add a MarkupElement
 	 * 
 	 * @param pos
@@ -326,6 +321,17 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	public final void addMarkupElement(final int pos, final MarkupElement markupElement)
 	{
 		this.markupElements.add(pos, markupElement);
+	}
+
+	/**
+	 * Remove the element from the list
+	 * 
+	 * @param index
+	 * @return the element removed
+	 */
+	public final MarkupElement removeMarkupElement(final int index)
+	{
+		return this.markupElements.remove(index);
 	}
 
 	/**
@@ -347,6 +353,29 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		}
 
 		this.markupElements = Collections.unmodifiableList(this.markupElements);
+	}
+
+	/**
+	 * Create a copy of the whole fragment tree including all sub-fragments
+	 * 
+	 * @return MarkupFragment
+	 */
+	public final MarkupFragment makeCopy()
+	{
+		final MarkupFragment fragment = new MarkupFragment(this.markup);
+		for (MarkupElement element : this)
+		{
+			if (element instanceof MarkupFragment)
+			{
+				fragment.addMarkupElement(((MarkupFragment)element).makeCopy());
+			}
+			else
+			{
+				fragment.addMarkupElement(element);
+			}
+		}
+
+		return fragment;
 	}
 
 	/**
@@ -376,92 +405,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 						"remomve() not supported by MarkupFragment Iterator");
 			}
 		};
-	}
-
-	/**
-	 * MarkupParser until now creates a flat list of RawMarkup and ComponentTag
-	 * elements. However, what we want is a tree like structure with one
-	 * fragment per Component.
-	 * 
-	 * @return MarkupFragment A converted copy of the fragment
-	 */
-	public final MarkupFragment translateFlatIntoTreeStructure()
-	{
-		MarkupFragment rootFragment = new MarkupFragment(this.getMarkup());
-
-		// Remember the path associated with a ComponentTag to properly walk up
-		// and down the hierarchy of wicket markup tags
-		Stack<String> stack = new Stack<String>();
-		String basePath = null;
-
-		Stack<MarkupFragment> fragmentStack = new Stack<MarkupFragment>();
-		MarkupFragment current = rootFragment;
-
-		// For all markup element in the external markup file
-		for (MarkupElement elem : this.markupElements)
-		{
-			// If RawMarkup simply add the element to the current fragment
-			if (elem instanceof RawMarkup)
-			{
-				current.addMarkupElement(elem);
-			}
-			else
-			// if (elem instanceof ComponentTag)
-			{
-				// Construct the markup path for the tag
-				final ComponentTag tag = (ComponentTag)elem;
-				final String path = (basePath == null ? tag.getId() : basePath
-						+ Component.PATH_SEPARATOR + tag.getId());
-
-				// Depending on tag type (open, close, open-close) ...
-				if (tag.isOpen())
-				{
-					// Open tags with no close tags (HTML) are treated like
-					// open-close.
-					if (tag.hasNoCloseTag())
-					{
-						current.addMarkupElement(new MarkupFragment(this.getMarkup(), tag));
-					}
-					else
-					{
-						// If open tag and auto component (BODY, HEAD, etc.)
-						// than the markup path gets not updated as the markup
-						// for BODY e.g. does not have a wicket:id.
-
-						stack.push(basePath);
-						fragmentStack.push(current);
-
-						MarkupFragment newFragment = new MarkupFragment(this.getMarkup(), tag);
-						current.addMarkupElement(newFragment);
-						current = newFragment;
-
-						if (!tag.getId().startsWith(Component.AUTO_COMPONENT_PREFIX))
-						{
-							basePath = path;
-						}
-					}
-				}
-				else if (tag.isOpenClose())
-				{
-					MarkupFragment newFragment = new MarkupFragment(this.getMarkup(), tag);
-					current.addMarkupElement(newFragment);
-				}
-				else
-				// if (tag.isClose()
-				{
-					current.addMarkupElement(tag);
-					current = fragmentStack.pop();
-					basePath = stack.pop();
-				}
-			}
-		}
-
-		if ((rootFragment.size() == 1) && (rootFragment.get(0) instanceof MarkupFragment))
-		{
-			rootFragment = (MarkupFragment)rootFragment.get(0);
-		}
-
-		return rootFragment;
 	}
 
 	/**
@@ -496,6 +439,33 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
+	 * Re-balance the markup tree which became out-of-balance due to unclosed
+	 * HTML tags.
+	 */
+	public final void handleUnclosedTags()
+	{
+		for (int i = 0; i < size(); i++)
+		{
+			MarkupElement element = get(i);
+			if (element instanceof MarkupFragment)
+			{
+				MarkupFragment frag = (MarkupFragment)element;
+				if (frag.getTag().hasNoCloseTag())
+				{
+					while (frag.size() > 1)
+					{
+						addMarkupElement(i + 1, frag.removeMarkupElement(frag.size() - 1));
+					}
+				}
+				else
+				{
+					frag.handleUnclosedTags();
+				}
+			}
+		}
+	}
+
+	/**
 	 * Traverses all child components of the given class in this container,
 	 * calling the visitor's visit method at each one.
 	 * 
@@ -515,15 +485,17 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		}
 
 		// Iterate through children of this container
-		for (MarkupElement element : this)
+		final Iterator iter = iterator();
+		while (iter.hasNext())
 		{
+			MarkupElement element = (MarkupElement)iter.next();
 			Object value = null;
 
 			// Is the child of the correct class (or was no class specified)?
 			if ((clazz == null) || clazz.isInstance(element))
 			{
 				// Call visitor
-				value = visitor.visit(element);
+				value = visitor.visit(element, this);
 
 				// If visitor returns a non-null value, it halts the traversal
 				if ((value != IVisitor.CONTINUE_TRAVERSAL)
@@ -592,12 +564,14 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 		 * 
 		 * @param element
 		 *            The markup element
+		 * @param parent
+		 *            The parent markup fragment
 		 * @return CONTINUE_TRAVERSAL (null) if the traversal should continue,
 		 *         or a non-null return value for the traversal method if it
 		 *         should stop. If no return value is useful, the generic
 		 *         non-null value STOP_TRAVERSAL can be used.
 		 */
-		public Object visit(MarkupElement element);
+		public Object visit(MarkupElement element, MarkupFragment parent);
 	}
 
 	/**
@@ -630,6 +604,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	@Override
 	public String toUserDebugString()
 	{
-		return toString();
+		return get(0).toUserDebugString() + "; Resource: " + getMarkup().toString();
 	}
 }

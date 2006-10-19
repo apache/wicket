@@ -515,7 +515,7 @@ public final class MarkupParserTest extends WicketTestCase
 		// Note: <img> is one of these none-balanced HTML tags
 		MarkupFragment markup = parse("<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
 		
-		ComponentTag t = markup.getTag(0);
+		ComponentTag t = markup.getTag();
 		assertEquals(t.getId(), "span");
 		assertNotNull(markup.getChildFragment("span", false));
 

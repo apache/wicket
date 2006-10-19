@@ -44,7 +44,7 @@ import wicket.MarkupContainer;
  * provided getMyBorder() return the border component which has been added to
  * the page previously.
  * 
- * @author Juergen
+ * @author Juergen Donnerstag
  */
 public interface IAlternateParentProvider
 {

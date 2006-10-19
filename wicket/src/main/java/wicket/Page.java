@@ -1129,7 +1129,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Set page's associated markup stream
-		final MarkupStream associatedMarkupStream = new MarkupStream(getAssociatedMarkup(true));
+		final MarkupStream associatedMarkupStream = new MarkupStream(getMarkupFragment());
 		setMarkupStream(associatedMarkupStream);
 
 		// Configure response object with locale and content type

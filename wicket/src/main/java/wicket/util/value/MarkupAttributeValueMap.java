@@ -31,27 +31,26 @@ import wicket.util.time.Duration;
 import wicket.util.time.Time;
 
 /**
- * A ValueMap which keeps track of all changes (add and modify) made to the Map.
- * But the changes are tracked, only the most recent value is kept for later
- * retrieval. Deleting of an entry is not supported. Sets a new underlying base
- * map and applies all the changes recorded so far.
+ * A ValueMap which keeps remembers the original value in addition to the new
+ * value in case of changes (add and modify). Deleting entries is not supported.
  * <p>
  * To allow modifications to a Components markup tag in a components constructor
  * (as opposed to using SimpleAttributeModifier or subclassing
- * onComponentTag()), the markup attributes map is made available as well.
- * However for reasons explained later on, the markup attribute map is
- * unmodifiable while Wicket components are created and only modifiable during
- * the render process.
+ * onComponentTag()), the markup attributes are made available to the user.
+ * However, as Markup is cached per Component class and not per instance, the
+ * markup attributes are unmodifiable while Wicket components are created and
+ * only modifiable during the render process (Component.onComponentTag()).
  * <p>
- * To allow for changes to the markup attribute map a modifiably copy of the map
- * is created and all changes (add and modify; remove is not supported) to this
- * map are tracked in order to be applied before Component.onComponentTag() is
- * called.
+ * To allow for changes not only during the render process a modifiably copy of
+ * the attributes is maintained by each Component instance and used during the
+ * render process.
  * <p>
- * Due to changes to the locale or style, markup files might be reloaded, which
- * is why not the underlying map is the master, it simply exists for convinient
- * access to all markup attributes, but the changes are applied to the "real"
- * markup attribute map as described above.
+ * Due to changes to the Component's locale or style, it might be necessary to
+ * reload the markup file. Hence, we can not simply make a copy of the
+ * attributes, but rather maintain the user's modifications. When a markup file
+ * gets reloaded only the underlying base map is replaced with "new" attributes
+ * from the markup and the user's changes remain unchanged and now supersede the
+ * new attributes.
  * 
  * @author Juergen Donnerstag
  */
@@ -120,8 +119,7 @@ public final class MarkupAttributeValueMap implements IValueMap, Serializable
 	 */
 	public void clear()
 	{
-		throw new WicketRuntimeException("clear() is not supported by "
-				+ MarkupAttributeValueMap.class.getName());
+		throw new WicketRuntimeException("clear() is not supported");
 	}
 
 	/**
@@ -372,8 +370,7 @@ public final class MarkupAttributeValueMap implements IValueMap, Serializable
 	 */
 	public Object remove(Object key)
 	{
-		throw new WicketRuntimeException("remove(key) is not supported by "
-				+ MarkupAttributeValueMap.class.getName());
+		throw new WicketRuntimeException("remove(key) is not supported by");
 	}
 
 	/**

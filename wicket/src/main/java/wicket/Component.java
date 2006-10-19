@@ -650,7 +650,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			throw new WicketRuntimeException(
 					"component without a parent is not allowed, default constructor can only be called by a page");
 		}
+		
 		getApplication().notifyComponentInstantiationListeners(this);
+		
+		this.markupFragment = getMarkupFragment();
 	}
 
 	/**
@@ -727,12 +730,12 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 		// Attached behaviors provided by the ComponentTag which
 		// one of the markup handlers might have added.
-		if ((markupFragment.size() > 0) && (markupFragment.get(0) instanceof ComponentTag))
+		if (markupFragment.size() > 0)
 		{
-			final ComponentTag tag = markupFragment.getTag(0);
+			final ComponentTag tag = markupFragment.getTag();
 
 			// add any behaviors attached to the component tag
-			if (tag.hasBehaviors())
+			if ((tag != null) && tag.hasBehaviors())
 			{
 				Iterator<IBehavior> behaviors = tag.getBehaviors();
 				while (behaviors.hasNext())
@@ -1025,7 +1028,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				if (fragment.get(0) instanceof ComponentTag)
 				{
-					this.markupAttributes = new MarkupAttributeValueMap(fragment.getTag(0)
+					this.markupAttributes = new MarkupAttributeValueMap(fragment.getTag()
 							.getAttributes());
 				}
 			}

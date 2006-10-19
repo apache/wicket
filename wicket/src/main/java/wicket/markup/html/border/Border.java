@@ -155,7 +155,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 
 					// If wicket:body, than create a new body container with
 					// 'parent'
-					if (fragment.getTag(0).isWicketBodyTag())
+					if (fragment.getTag().isWicketBodyTag())
 					{
 						setBorderBodyContainer(parent);
 						break;
@@ -372,7 +372,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 			borderMarkupStream.next();
 
 			// Render wicket:body and its children
-			renderComponentTagBody(borderMarkupStream, borderFragment.getTag(0));
+			renderComponentTagBody(borderMarkupStream, borderFragment.getTag());
 
 			// If the open tag was Open-Body-Close than remove the body. The
 			// body raw markup might be used as none-computed preview text.
