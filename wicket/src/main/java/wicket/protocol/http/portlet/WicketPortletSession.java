@@ -17,7 +17,6 @@ package wicket.protocol.http.portlet;
 import wicket.Application;
 import wicket.IRequestCycleFactory;
 import wicket.protocol.http.WebSession;
-import wicket.session.ISessionStore;
 
 /**
  * A session subclass for the PortletSession
@@ -52,21 +51,9 @@ public class WicketPortletSession extends WebSession
 		if (requestCycleFactory == null)
 		{
 			this.requestCycleFactory = ((PortletApplication)Application.get())
-			.getDefaultRequestCycleFactory();
+					.getDefaultRequestCycleFactory();
 		}
 
 		return this.requestCycleFactory;
-	}
-
-
-	/**
-	 * Gets the session store.
-	 * 
-	 * @return the session store
-	 */
-	@Override
-	protected final ISessionStore getSessionStore()
-	{
-		return getApplication().getSessionStore(); 
 	}
 }

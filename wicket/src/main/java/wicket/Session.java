@@ -940,7 +940,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * 
 	 * @return the session store
 	 */
-	protected ISessionStore getSessionStore()
+	protected final ISessionStore getSessionStore()
 	{
 		if (sessionStore == null)
 		{
