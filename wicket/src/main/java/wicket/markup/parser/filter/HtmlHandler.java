@@ -51,13 +51,13 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	static
 	{
 		// Tags which are allowed not be closed in HTML
-		doesNotRequireCloseTag.put("p", Boolean.TRUE);
-		doesNotRequireCloseTag.put("br", Boolean.TRUE);
-		doesNotRequireCloseTag.put("img", Boolean.TRUE);
-		doesNotRequireCloseTag.put("input", Boolean.TRUE);
-		doesNotRequireCloseTag.put("hr", Boolean.TRUE);
-		doesNotRequireCloseTag.put("link", Boolean.TRUE);
-		doesNotRequireCloseTag.put("meta", Boolean.TRUE);
+		registerHtmlTag("p");
+		registerHtmlTag("br");
+		registerHtmlTag("img");
+		registerHtmlTag("input");
+		registerHtmlTag("hr");
+		registerHtmlTag("link");
+		registerHtmlTag("meta");
 	}
 
 	/**
@@ -66,6 +66,18 @@ public final class HtmlHandler extends AbstractMarkupFilter
 	 */
 	public HtmlHandler()
 	{
+	}
+
+	/**
+	 * Register additional HTML tags which presumable don't need a close tag.
+	 * However, instead of doing that, we recommend anyone to use proper XHTML
+	 * instead which is XML compliant.
+	 * 
+	 * @param tagName
+	 */
+	public static final void registerHtmlTag(final String tagName)
+	{
+		doesNotRequireCloseTag.put(tagName, Boolean.TRUE);
 	}
 
 	/**
@@ -95,8 +107,8 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				}
 				else
 				{
-					throw new ParseException("Tag " + top + " at " + top.getPos()
-							+ " did not have a close tag", top.getPos());
+					throw new ParseException("Tag " + top + " does not have a close tag.", top
+							.getPos());
 				}
 			}
 
@@ -125,7 +137,6 @@ public final class HtmlHandler extends AbstractMarkupFilter
 				// If the name of the current close tag does not match the
 				// tag on the stack then we may have a mismatched close tag
 				boolean mismatch = !top.hasEqualTagName(tag);
-
 				if (mismatch)
 				{
 					top.setHasNoCloseTag(true);
