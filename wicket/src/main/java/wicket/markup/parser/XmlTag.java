@@ -114,7 +114,7 @@ public class XmlTag extends MarkupElement
 	{
 		if (attributes == null)
 		{
-			if (copyOf == this)
+			if ((copyOf == this) || (copyOf == null) || (copyOf.attributes == null)) 
 			{
 				attributes = new ValueMap();
 			}
