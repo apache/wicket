@@ -36,7 +36,6 @@ import wicket.Session;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupFragment;
-import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
@@ -123,7 +122,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 */
 	protected WebPage()
 	{
-		commonInit();
 	}
 
 	/**
@@ -132,7 +130,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	protected WebPage(final IModel<T> model)
 	{
 		super(model);
-		commonInit();
 	}
 
 	/**
@@ -141,7 +138,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	protected WebPage(final PageMap pageMap)
 	{
 		super(pageMap);
-		commonInit();
 	}
 
 	/**
@@ -150,7 +146,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	protected WebPage(final PageMap pageMap, final IModel<T> model)
 	{
 		super(pageMap, model);
-		commonInit();
 	}
 
 	/**
@@ -267,18 +262,11 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	/**
 	 * Common code executed by constructors.
 	 */
-	private void commonInit()
+	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
 		// Add a Body container if the associated markup contains a <body> tag
 		// get markup stream gracefully
-		MarkupFragment fragment = getAssociatedMarkup(false);
-		if (fragment == null)
-		{
-			throw new MarkupNotFoundException(
-					"Each Page must have associated markup. Unable to find the markup file for Page: "
-							+ this.toString());
-		}
-		MarkupStream markupStream = new MarkupStream(fragment);
+		MarkupStream markupStream = new MarkupStream(markup);
 		
 		// The <body> container. It can be accessed, replaced
 		// and attribute modifiers can be attached. <body> tags without

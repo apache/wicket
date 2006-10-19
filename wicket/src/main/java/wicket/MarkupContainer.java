@@ -107,6 +107,9 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 */
 	private transient MarkupStream markupStream;
 
+	/** The markup fragments from the associated file */
+	private transient MarkupFragment associatedMarkup;
+	
 	/**
 	 * Package scope constructor, only used by pages.
 	 * 
@@ -805,30 +808,50 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 */
 	public final MarkupFragment getAssociatedMarkup(final boolean throwException)
 	{
-		try
+		if (this.associatedMarkup == null)
 		{
-			return getApplication().getMarkupCache().getMarkup(this, throwException);
+			try
+			{
+				this.associatedMarkup = getApplication().getMarkupCache().getMarkup(this, throwException);
+			}
+			catch (MarkupException ex)
+			{
+				// re-throw it. The exception contains already all the information
+				// required.
+				throw ex;
+			}
+			catch (WicketRuntimeException ex)
+			{
+				// throw exception since there is no associated markup
+				throw new MarkupNotFoundException(
+						exceptionMessage("Markup of type '"
+								+ getMarkupType()
+								+ "' for component '"
+								+ getClass().getName()
+								+ "' not found."
+								+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
+						ex);
+			}
+			
+			onAssociatedMarkupLoaded(this.associatedMarkup);
 		}
-		catch (MarkupException ex)
-		{
-			// re-throw it. The exception contains already all the information
-			// required.
-			throw ex;
-		}
-		catch (WicketRuntimeException ex)
-		{
-			// throw exception since there is no associated markup
-			throw new MarkupNotFoundException(
-					exceptionMessage("Markup of type '"
-							+ getMarkupType()
-							+ "' for component '"
-							+ getClass().getName()
-							+ "' not found."
-							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
-					ex);
-		}
+		
+		return this.associatedMarkup;
 	}
 
+	/**
+	 * Components which whish to analyze the markup and automatically add Components
+	 * to the MarkupConainer may sublcass this method.
+	 * <p>
+	 * As the associated markup gets cached with the MarkupContainer, this method
+	 * is guaranteed to be called just once.
+	 * 
+	 * @param markup The associated markup just loaded.
+	 */
+	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
+	{
+	}
+	
 	/**
 	 * Get the markup stream set on this container.
 	 * 
