@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -40,7 +40,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *           &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *             &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -191,7 +191,7 @@ public class DataTable extends Panel implements IPageable
 		}
 
 		toolbar.setRenderBodyOnly(true);
-		
+
 		// create a container item for the toolbar (required by repeating view)
 		WebMarkupContainer item = new WebMarkupContainer(container.newChildId());
 		item.setRenderBodyOnly(true);
@@ -214,7 +214,17 @@ public class DataTable extends Panel implements IPageable
 	public final void setCurrentPage(int page)
 	{
 		datagrid.setCurrentPage(page);
+		onPageChanged();
 	}
+
+	/**
+	 * Event listener for page-changed event
+	 */
+	protected void onPageChanged()
+	{
+		// noop
+	}
+
 
 	/**
 	 * @see wicket.markup.html.navigation.paging.IPageable#getPageCount()
@@ -243,7 +253,7 @@ public class DataTable extends Panel implements IPageable
 	{
 		datagrid.setRowsPerPage(items);
 	}
-	
+
 	/**
 	 * @return number of rows per page
 	 */
