@@ -1,7 +1,7 @@
 /*
- * $Id$
- * $Revision$
- * $Date$
+ * $Id: DataTable.java 462123 2006-09-09 05:47:19 -0700 (Sat, 09 Sep 2006)
+ * frankbille $ $Revision$ $Date: 2006-09-09 05:47:19 -0700 (Sat, 09
+ * Sep 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -44,7 +44,7 @@ import wicket.model.IModel;
  * Example
  * 
  * <pre>
- *                        &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
+ *                         &lt;table wicket:id=&quot;datatable&quot;&gt;&lt;/table&gt;
  * </pre>
  * 
  * And the related Java code: ( the first column will be sortable because its
@@ -253,6 +253,15 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	public final void setCurrentPage(int page)
 	{
 		datagrid.setCurrentPage(page);
+		onPageChanged();
+	}
+
+	/**
+	 * Event listener for page-changed event
+	 */
+	protected void onPageChanged()
+	{
+		// noop
 	}
 
 	/**
@@ -281,7 +290,7 @@ public class DataTable<T> extends Panel<T> implements IPageable
 	{
 		datagrid.setRowsPerPage(items);
 	}
-	
+
 	/**
 	 * @return number of rows per page
 	 */
