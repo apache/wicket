@@ -228,7 +228,7 @@
 				</p>
 				<p>
 					<a
-						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
+						href="http://cwiki.apache.org/WICKET/migrate-12.html">
 						Migrating to Wicket 1.2
 					</a>
 				</p>
@@ -362,7 +362,7 @@
 				</p>
 				<p>
 					<a
-						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
+						href="http://cwiki.apache.org/WICKET/migrate-12.html">
 						Migrating to Wicket 1.2
 					</a>
 				</p>
@@ -485,7 +485,7 @@
 				</p>
 				<p>
 					<a
-						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
+						href="http://cwiki.apache.org/WICKET/migrate-12.html">
 						Migrating to Wicket 1.2
 					</a>
 				</p>
@@ -605,7 +605,7 @@
 				</p>
 				<p>
 					<a
-						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
+						href="http://cwiki.apache.org/WICKET/migrate-12.html">
 						Migrating to Wicket 1.2
 					</a>
 				</p>
@@ -730,7 +730,7 @@
 				</p>
 				<p style="text-align:center">
 					<a
-						href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">
+						href="http://cwiki.apache.org/WICKET/migrate-12.html">
 						Migrating to Wicket 1.2
 					</a>
 				</p>
@@ -822,7 +822,7 @@
 					components should not be affected. There is a migration guide available on our wiki:
 				</p>
 				<p style="text-align:center">
-					<a href="http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2">Migrating to Wicket 1.2</a>
+					<a href="http://cwiki.apache.org/WICKET/migrate-12.html">Migrating to Wicket 1.2</a>
 				</p>
 				<p>
 					This is the first beta release, so not considered production ready. Please help us iron
@@ -1265,10 +1265,10 @@
 				<p>Jonathan Locke has written two articles on using Wicket:</p>
 				<ul>
 					<li>
-						<a href="/wiki/doku.php?id=models">Working with Wicket Models</a>
+						<a href="http://cwiki.apache.org/WICKET/working-with-wicket-models.html">Working with Wicket Models</a>
 					</li>
 					<li>
-						<a href="/wiki/doku.php?id=lifecycle">
+						<a href="http://cwiki.apache.org/WICKET/lifecycle-of-a-wicket-application.html">
 							The Lifecycle of a Wicket Application
 						</a>
 					</li>
