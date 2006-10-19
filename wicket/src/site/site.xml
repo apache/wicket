@@ -43,7 +43,7 @@
 		<item name="Vision" href="/Vision.html" />
 		<item name="FAQ" href="/faqs.html" />
 		<item name="Javadoc" href="/apidocs/index.html" target="_blank" class="newwindow" />
-		<item name="Wiki" href="/wiki" />
+		<item name="Wiki" href="http://cwiki.apache.org/WICKET/" />
 		<item name="Dependencies" href="/dependencies.html" />
 	</menu>
 	<menu name="Releases">
