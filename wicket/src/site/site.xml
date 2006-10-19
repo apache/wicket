@@ -52,7 +52,7 @@
 		<item name="Wicket 1.0" href="http://wicketframework.org/wicket-1.0/index.html" />
 	</menu>
 	<menu name="Companies">
-		<item name="Commercial Services" href="http://www.wicket-wiki.org.uk/wiki/index.php/Services" />
+		<item name="Commercial Services" href="http://cwiki.apache.org/WICKET/companies-that-provide-services.html" />
 	</menu>
 	<menu name="Related projects">
 		<item name="Wicket Extensions" href="http://wicketframework.org/wicket-extensions/index.html" />
