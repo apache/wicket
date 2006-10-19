@@ -31,37 +31,38 @@ import wicket.markup.parser.filter.EnclosureHandler;
 import wicket.markup.resolver.EnclosureResolver;
 
 /**
- * An Enclosure are automatically created by Wicket. Do not create it yourself. An Enclosure
- * container is created if &lt;wicket:enclosure&gt; is found in the markup. It is meant to solve
- * the following situation. Instead of
- * <pre>
- *   &lt;table wicket:id="label-container" class="notify"&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id="label"&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt; 
+ * An Enclosure are automatically created by Wicket. Do not create it yourself.
+ * An Enclosure container is created if &lt;wicket:enclosure&gt; is found in the
+ * markup. It is meant to solve the following situation. Instead of
  * 
- *   WebMarkupContainer container=new WebMarkupContainer("label-container") 
- *   {
- *      public boolean isVisible() 
- *      {
- *          return hasNotification();
- *      }
- *   };
- *   add(container);
-*    container.add(new Label("label", notificationModel)); 
+ * <pre>
+ *    &lt;table wicket:id=&quot;label-container&quot; class=&quot;notify&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id=&quot;label&quot;&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt; 
+ *  
+ *    WebMarkupContainer container=new WebMarkupContainer(&quot;label-container&quot;) 
+ *    {
+ *       public boolean isVisible() 
+ *       {
+ *           return hasNotification();
+ *       }
+ *    };
+ *    add(container);
+ *     container.add(new Label(&quot;label&quot;, notificationModel)); 
  * </pre>
  * 
  * with Enclosure you are able to do the following:
  * 
  * <pre>
- *   &lt;wicket:enclosure&gt; 
- *     &lt;table class="notify"&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id="label"&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
- *   &lt;/wicket:enclosure&gt;
- *
- *   add(new Label("label", notificationModel)) 
- *   {
- *      public boolean isVisible() 
- *      {
- *          return hasNotification();
- *      }
- *   }
+ *    &lt;wicket:enclosure&gt; 
+ *      &lt;table class=&quot;notify&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;span wicket:id=&quot;label&quot;&gt;[[notification]]&lt;/span&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+ *    &lt;/wicket:enclosure&gt;
+ * 
+ *    add(new Label(&quot;label&quot;, notificationModel)) 
+ *    {
+ *       public boolean isVisible() 
+ *       {
+ *           return hasNotification();
+ *       }
+ *    }
  * </pre>
  * 
  * @see EnclosureResolver
@@ -114,43 +115,48 @@ public class Enclosure extends WebMarkupContainer
 		{
 			parent = parent.getParent();
 		}
-		
+
 		if (parent == null)
 		{
-			throw new WicketRuntimeException("Unable to find parent component which is not a transparent resolver");
+			throw new WicketRuntimeException(
+					"Unable to find parent component which is not a transparent resolver");
 		}
-		
+
 		if (childId == null)
 		{
-			throw new MarkupException("You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
+			throw new MarkupException(
+					"You most likely forgot to register the EnclosureHandler with the MarkupParserFactory");
 		}
-		
+
 		final Component child = parent.get(childId.toString());
 		if (child == null)
 		{
-			throw new MarkupException("Didn't find child component of <wicket:enclosure> with id='" + childId + "'");
+			throw new MarkupException("Didn't find child component of <wicket:enclosure> with id='"
+					+ childId + "'. Component: " + this.toString());
 		}
-		
+
 		return child;
 	}
-	
+
 	/**
 	 * 
-	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream, wicket.markup.ComponentTag)
+	 * @see wicket.MarkupContainer#onComponentTagBody(wicket.markup.MarkupStream,
+	 *      wicket.markup.ComponentTag)
 	 */
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag)
 	{
 		if (this.childComponent == this)
 		{
-			throw new WicketRuntimeException("Programming error: childComponent == enclose component; endless loop");
+			throw new WicketRuntimeException(
+					"Programming error: childComponent == enclose component; endless loop");
 		}
 		else if (this.childComponent != null)
 		{
 			// Delegate to child component
 			setVisible(this.childComponent.isVisible());
 		}
-		
+
 		if (isVisible() == true)
 		{
 			super.onComponentTagBody(markupStream, openTag);
@@ -160,24 +166,4 @@ public class Enclosure extends WebMarkupContainer
 			markupStream.skipUntil(openTag.getName());
 		}
 	}
-	
-	/**
-	 * @see wicket.Component#isVisible()
-	 */
-//	@Override
-//	public boolean isVisible()
-//	{
-//		if (this.childComponent == null)
-//		{
-//			// no effect in case the child component could not be found
-//			return super.isVisible();
-//		}
-//		else if (this.childComponent == this)
-//		{
-//			throw new WicketRuntimeException("Programming error: childComponent == enclose component; endless loop");
-//		}
-//
-//		// Delegate to child component
-//		return this.childComponent.isVisible();
-//	}
 }
