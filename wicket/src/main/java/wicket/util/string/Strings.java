@@ -412,24 +412,29 @@ public final class Strings
 		else
 		{
 			// two or more elements
-
 			StringBuilder buff = new StringBuilder(128);
-			buff.append(fragments[0]);
+			if (fragments[0] != null)
+			{
+				buff.append(fragments[0]);
+			}
 			for (int i = 1; i < fragments.length; i++)
 			{
-				boolean lhsClosed = fragments[i - 1].endsWith(separator);
-				boolean rhsClosed = fragments[i].startsWith(separator);
-				if (lhsClosed && rhsClosed)
+				if ((fragments[i - 1] != null)  || (fragments[i] != null))
 				{
-					buff.append(fragments[i].substring(1));
-				}
-				else if (!lhsClosed && !rhsClosed)
-				{
-					buff.append(separator).append(fragments[i]);
-				}
-				else
-				{
-					buff.append(fragments[i]);
+					boolean lhsClosed = fragments[i - 1].endsWith(separator);
+					boolean rhsClosed = fragments[i].startsWith(separator);
+					if (lhsClosed && rhsClosed)
+					{
+						buff.append(fragments[i].substring(1));
+					}
+					else if (!lhsClosed && !rhsClosed)
+					{
+						buff.append(separator).append(fragments[i]);
+					}
+					else
+					{
+						buff.append(fragments[i]);
+					}
 				}
 			}
 			return buff.toString();
