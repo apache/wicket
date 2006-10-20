@@ -15,6 +15,7 @@
     <release version="1.3" date="tbd" description="Wicket 1.3">
 	</release>
 	<release version="1.2.3" description="Wicket 1.2.3">
+		<action type="add" dev="Eelco Hillenius">Added method protected void onDisabled(final ComponentTag tag) to FormComponent, which is called during rendering when the component is disabled. By default, an disabled="disabled" attribute is added, but clients may override this method.</action>
 		<action type="add" dev="Eelco Hillenius">Made synchronization timeout configurable on an application level. Later, we might add more fine grained control.</action>
 		<action type="add" dev="Eelco Hillenius">Implemented optional interface for initializers: IDestroyer that may be implemented by initializers to clear up stuff when the application is shut down. Wicket's JMX code uses this to clean up the JMX beans it registered on application shutdown.</action>
 		<action type="add" dev="Eelco Hillenius">Wicket now has JMX support. For 1.2 as a separate project (wicket-jmx), for 2.0 as part of the core distribution.</action>
