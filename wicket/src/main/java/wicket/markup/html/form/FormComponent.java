@@ -851,6 +851,20 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	}
 
 	/**
+	 * Called by {@link #onComponentTag(ComponentTag)} when the component is
+	 * disabled. By default, this method will add a disabled="disabled"
+	 * attribute to the tag. Components may override this method to tweak the
+	 * tag as they think is fit.
+	 * 
+	 * @param tag
+	 *            the tag that is being rendered
+	 */
+	protected void onDisabled(final ComponentTag tag)
+	{
+		onDisabled(tag);
+	}
+
+	/**
 	 * Handle invalidation
 	 */
 	protected void onInvalid()
