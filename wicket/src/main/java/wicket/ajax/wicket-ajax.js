@@ -117,9 +117,9 @@ Wicket.FunctionsExecuter.prototype = {
 			}.bind(this);
 			this.current++;
 						
-			if (this.depth > 50 || Wicket.Browser.isKHTML()) {
+			if (this.depth > 50 || Wicket.Browser.isKHTML() || Wicket.Browser.isSafari()) {
 				// to prevent khtml bug that crashes entire browser
-				// or to prevent stack overflow
+				// or to prevent stack overflow (safari has small call stack)
 				this.depth = 0;
 				window.setTimeout(run, 1);
 			} else {
