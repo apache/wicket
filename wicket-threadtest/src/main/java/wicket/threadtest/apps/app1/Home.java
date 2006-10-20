@@ -1,0 +1,382 @@
+/*
+ * $Id: HelloWorld.java 5394 2006-04-16 15:36:52 +0200 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision: 5394 $ $Date: 2006-04-16 15:36:52 +0200 (Sun, 16 Apr
+ * 2006) $
+ * 
+ * ==================================================================== Licensed
+ * under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the
+ * License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+package wicket.threadtest.apps.app1;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import wicket.AttributeModifier;
+import wicket.MarkupContainer;
+import wicket.Session;
+import wicket.extensions.markup.html.datepicker.DatePicker;
+import wicket.extensions.markup.html.repeater.data.DataView;
+import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.html.WebPage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Check;
+import wicket.markup.html.form.CheckBox;
+import wicket.markup.html.form.CheckGroup;
+import wicket.markup.html.form.ChoiceRenderer;
+import wicket.markup.html.form.DropDownChoice;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.ImageButton;
+import wicket.markup.html.form.ListMultipleChoice;
+import wicket.markup.html.form.Radio;
+import wicket.markup.html.form.RadioChoice;
+import wicket.markup.html.form.RadioGroup;
+import wicket.markup.html.form.RequiredTextField;
+import wicket.markup.html.form.TextField;
+import wicket.markup.html.image.Image;
+import wicket.markup.html.link.Link;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
+import wicket.markup.html.panel.FeedbackPanel;
+import wicket.markup.html.panel.Panel;
+import wicket.model.AbstractReadOnlyModel;
+import wicket.model.CompoundPropertyModel;
+import wicket.model.IModel;
+import wicket.model.Model;
+import wicket.model.PropertyModel;
+import wicket.protocol.http.WebRequest;
+import wicket.util.convert.ConversionException;
+import wicket.util.convert.IConverter;
+import wicket.util.convert.MaskConverter;
+import wicket.util.convert.SimpleConverterAdapter;
+import wicket.validation.validator.NumberValidator;
+
+public class Home extends WebPage {
+
+	private class ActionPanel extends Panel<Contact> {
+		/**
+		 * @param parent
+		 *            the parent
+		 * @param id
+		 *            component id
+		 * @param model
+		 *            model for contact
+		 */
+		public ActionPanel(MarkupContainer parent, String id, IModel<Contact> model) {
+			super(parent, id, model);
+			new Link(this, "select") {
+				public void onClick() {
+					Home.this.selected = ActionPanel.this.getModelObject();
+				}
+			};
+		}
+	}
+
+	/**
+	 * Form for collecting input.
+	 */
+	private class InputForm extends Form<FormInputModel> {
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
+		 * @param name
+		 *            Component name
+		 */
+		public InputForm(MarkupContainer parent, String name) {
+			super(parent, name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
+
+			// Dropdown for selecting locale
+			new LocaleDropDownChoice(this, "localeSelect");
+
+			// Link to return to default locale
+			new Link(this, "defaultLocaleLink") {
+				@Override
+				public void onClick() {
+					WebRequest request = (WebRequest) getRequest();
+					setLocale(request.getLocale());
+				}
+			};
+
+			RequiredTextField stringTextField = new RequiredTextField<String>(this, "stringProperty");
+			stringTextField.setLabel(new Model<String>("String"));
+			RequiredTextField integerTextField = new RequiredTextField<Integer>(this, "integerProperty", Integer.class);
+			integerTextField.add(NumberValidator.POSITIVE);
+			new RequiredTextField<Double>(this, "doubleProperty", Double.class);
+			// we have a component attached to the label here, as we want to
+			// synchronize the
+			// id's of the label, textfield and datepicker. Note that you can
+			// perfectly
+			// do without labels
+			WebMarkupContainer dateLabel = new WebMarkupContainer(this, "dateLabel");
+			TextField datePropertyTextField = new TextField<Date>(this, "dateProperty", Date.class);
+			new DatePicker(this, "datePicker", dateLabel, datePropertyTextField);
+			new RequiredTextField<Integer>(this, "integerInRangeProperty", Integer.class).add(NumberValidator.range(0,
+					100));
+			new CheckBox(this, "booleanProperty");
+			RadioChoice<String> rc = new RadioChoice<String>(this, "numberRadioChoice", NUMBERS).setSuffix("");
+			rc.setLabel(new Model<String>("number"));
+			rc.setRequired(true);
+
+			RadioGroup group = new RadioGroup(this, "numbersGroup");
+			new ListView<String>(group, "numbers", NUMBERS) {
+				@Override
+				protected void populateItem(ListItem<String> item) {
+					new Radio<String>(item, "radio", item.getModel());
+					new Label(item, "number", item.getModelObject());
+				};
+			};
+
+			CheckGroup checks = new CheckGroup(this, "numbersCheckGroup");
+			new ListView<String>(checks, "numbers", NUMBERS) {
+				@Override
+				protected void populateItem(ListItem<String> item) {
+					new Check<String>(item, "check", item.getModel());
+					new Label(item, "number", item.getModelObject());
+				};
+			};
+
+			new ListMultipleChoice<String>(this, "siteSelection", SITES);
+
+			// TextField using a custom converter.
+			new TextField<URL>(this, "urlProperty", URL.class) {
+				/**
+				 * @see wicket.Component#getConverter(java.lang.Class)
+				 */
+				@Override
+				public IConverter getConverter(Class type) {
+					return new SimpleConverterAdapter() {
+						@Override
+						public Object toObject(String value) {
+							try {
+								return new URL(value.toString());
+							} catch (MalformedURLException e) {
+								throw new ConversionException("'" + value + "' is not a valid URL");
+							}
+						}
+
+						@Override
+						public String toString(Object value) {
+							return value != null ? value.toString() : null;
+						}
+					};
+				}
+			};
+
+			// TextField using a mask converter
+			new TextField<UsPhoneNumber>(this, "phoneNumberUS", UsPhoneNumber.class) {
+				/**
+				 * @see wicket.Component#getConverter(java.lang.Class)
+				 */
+				@Override
+				public IConverter getConverter(Class type) {
+					// US telephone number mask
+					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
+				}
+			};
+
+			// and this is to show we can nest ListViews in Forms too
+			new LinesListView(this, "lines");
+
+			new ImageButton(this, "saveButton") {
+
+				@Override
+				public void onSubmit() {
+
+				}
+
+			};
+
+			Link link = new Link(this, "resetButtonLink") {
+				@Override
+				public void onClick() {
+					// just call modelChanged so that any invalid input is
+					// cleared.
+					InputForm.this.modelChanged();
+				}
+			};
+			new Image(link, "resetButtonImage");
+		}
+
+		/**
+		 * @see wicket.markup.html.form.Form#onSubmit()
+		 */
+		@Override
+		public void onSubmit() {
+			// Form validation successful. Display message showing edited model.
+			info("Saved model " + getModelObject());
+		}
+	}
+
+	/** list view to be nested in the form. */
+	private static final class LinesListView extends ListView {
+
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
+		 * @param id
+		 */
+		public LinesListView(MarkupContainer parent, String id) {
+			super(parent, id);
+			// always do this in forms!
+			setReuseItems(true);
+		}
+
+		@Override
+		protected void populateItem(ListItem item) {
+			// add a text field that works on each list item model (returns
+			// objects of
+			// type FormInputModel.Line) using property text.
+			new TextField<String>(item, "lineEdit", new PropertyModel<String>(item.getModel(), "text"));
+		}
+	}
+
+	/**
+	 * Choice for a locale.
+	 */
+	private final class LocaleChoiceRenderer extends ChoiceRenderer<Locale> {
+		/**
+		 * Constructor.
+		 */
+		public LocaleChoiceRenderer() {
+		}
+
+		/**
+		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
+		 */
+		@Override
+		public String getDisplayValue(Locale locale) {
+			String display = locale.getDisplayName(getLocale());
+			return display;
+		}
+	}
+
+	/**
+	 * Dropdown with Locales.
+	 */
+	private final class LocaleDropDownChoice extends DropDownChoice<Locale> {
+		/**
+		 * Construct.
+		 * 
+		 * @param parent
+		 * @param id
+		 *            component id
+		 */
+		public LocaleDropDownChoice(MarkupContainer parent, String id) {
+			super(parent, id, LOCALES, new LocaleChoiceRenderer());
+
+			// set the model that gets the current locale, and that is used for
+			// updating the current locale to property 'locale' of FormInput
+			setModel(new PropertyModel<Locale>(Home.this, "locale"));
+		}
+
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
+		 */
+		@Override
+		public void onSelectionChanged(Object newSelection) {
+			// note that we don't have to do anything here, as our property
+			// model allready calls FormInput.setLocale when the model is
+			// updated
+			// setLocale((Locale)newSelection); // so we don't need to do this
+		}
+
+		/**
+		 * @see wicket.markup.html.form.DropDownChoice#wantOnSelectionChangedNotifications()
+		 */
+		@Override
+		protected boolean wantOnSelectionChangedNotifications() {
+			// we want roundtrips when a the user selects another item
+			return true;
+		}
+	}
+
+	/** available numbers for the radio selection. */
+	static final List<String> NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
+
+	/** Relevant locales wrapped in a list. */
+	private static final List<Locale> LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH, new Locale("nl"),
+			Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE, new Locale("pt", "BR"), new Locale("fa", "IR"),
+			new Locale("da", "DK") });
+
+	/** available sites for the multiple select. */
+	private static final List<String> SITES = Arrays
+			.asList(new String[] { "The Server Side", "Java Lobby", "Java.Net" });
+
+	private Contact selected;
+
+	public Home() {
+
+		new Link(this, "link") {
+
+			@Override
+			public void onClick() {
+				System.out.println("click received for session " + Session.get());
+			}
+		};
+
+		new Label(this, "selectedLabel", new PropertyModel(this, "selectedContactLabel"));
+
+		new DataView(this, "simple", new ContactDataProvider()) {
+			@Override
+			protected void populateItem(final Item item) {
+				Contact contact = (Contact) item.getModelObject();
+				new ActionPanel(item, "actions", item.getModel());
+				new Label(item, "contactid", String.valueOf(contact.getId()));
+				new Label(item, "firstname", contact.getFirstName());
+				new Label(item, "lastname", contact.getLastName());
+				new Label(item, "homephone", contact.getHomePhone());
+				new Label(item, "cellphone", contact.getCellPhone());
+
+				item.add(new AttributeModifier("class", true, new AbstractReadOnlyModel<String>() {
+					@Override
+					public String getObject() {
+						return (item.getIndex() % 2 == 1) ? "even" : "odd";
+					}
+				}));
+			}
+		};
+
+		final FeedbackPanel feedback = new FeedbackPanel(this, "feedback");
+		new InputForm(this, "inputForm");
+	}
+
+	/**
+	 * @return string representation of selceted contact property
+	 */
+	public String getSelectedContactLabel() {
+		if (selected == null) {
+			return "No Contact Selected";
+		} else {
+			return selected.getFirstName() + " " + selected.getLastName();
+		}
+	}
+
+	/**
+	 * Sets locale for the user's session (getLocale() is inherited from
+	 * Component)
+	 * 
+	 * @param locale
+	 *            The new locale
+	 */
+	public void setLocale(Locale locale) {
+		if (locale != null) {
+			getSession().setLocale(locale);
+		}
+	}
+}

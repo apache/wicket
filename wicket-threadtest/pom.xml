@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>wicket</groupId>
+		<artifactId>wicket-parent</artifactId>
+		<version>2.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>wicket-threadtest</artifactId>
+	<packaging>war</packaging>
+	<name>Wicket Thread Test</name>
+	<description>Test project</description>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>mortbay-repo</id>
+            <name>mortbay-repo</name>
+            <url>http://www.mortbay.org/maven2/snapshot</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>wicket</groupId>
+			<artifactId>wicket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>wicket</groupId>
+			<artifactId>wicket-extensions</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty</artifactId>
+			<version>6.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>jetty-util</artifactId>
+			<version>6.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>httpunit</groupId>
+			<artifactId>httpunit</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+
+</project>
