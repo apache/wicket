@@ -39,6 +39,7 @@ import wicket.protocol.http.WicketServlet;
  * 
  * @author Janne Hietam&auml;ki
  */
+@SuppressWarnings("deprecation")
 public class WicketPortletServlet extends WicketServlet
 {
 	private static final Log log = LogFactory.getLog(WicketPortletServlet.class);
