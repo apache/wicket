@@ -34,9 +34,13 @@ import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.JavascriptUtils;
 
 /**
- * TODO docme
+ * TODO implement or remove
  * 
- * @author Eelco Hillenius
+ * WARNING: THIS CURRENTLY IS EXPERIMENTAL, AND THERE IS A FAIR CHANCE WE
+ * WILL NOT ACTUALLY FINISH THIS IMPLEMENTATION. DO NOT DEPEND ON THIS, THOUGH
+ * YOU MIGHT LOOK AT IT FOR INSPIRATION.
+ * BE SURE TO <a href="http://www.nabble.com/Nice-Url-tf2473105.html#a6931630">CHECK OUT THIS DISCUSSION</a>
+ * AS WELL.
  */
 public class ClientPageSavingSessionStore extends HttpSessionStore
 {
