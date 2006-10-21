@@ -58,6 +58,8 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	/** The associate markup */
 	private final IMarkup markup;
 
+	private boolean mutable;
+
 	/**
 	 * Constructor.
 	 * 
@@ -351,8 +353,11 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				((MarkupFragment)elem).makeImmutable();
 			}
 		}
-
-		this.markupElements = Collections.unmodifiableList(this.markupElements);
+		if(mutable)
+		{
+			this.markupElements = Collections.unmodifiableList(this.markupElements);
+			mutable = false;
+		}
 	}
 
 	/**
