@@ -39,10 +39,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.ajax.prototype.PrototypeApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>prototype</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -51,10 +47,6 @@
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>wicket.examples.ajax.builtin.AjaxApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>ajax</param-value>
 		</init-param>
 	</filter>
 
@@ -65,10 +57,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.helloworld.HelloWorldApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>helloworld</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -77,10 +65,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.echo.EchoApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>echo</param-value>
 		</init-param>
 	</filter>
 
@@ -91,10 +75,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.unicodeconverter.UnicodeConverterApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>unicodeconverter</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -103,10 +83,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.hellobrowser.HelloBrowserApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>hellobrowser</param-value>
 		</init-param>
 	</filter>
 
@@ -117,10 +93,6 @@
             <param-name>applicationClassName</param-name>
             <param-value>wicket.examples.stockquote.StockQuoteApplication</param-value>
         </init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>stock</param-value>
-		</init-param>
     </filter>
     
 	<filter>
@@ -129,10 +101,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.hangman.HangmanApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>hangman</param-value>
 		</init-param>
 	</filter>
 
@@ -143,10 +111,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.forminput.FormInputApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>forminput</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -155,10 +119,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.nested.NestedApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>nested</param-value>
 		</init-param>
 	</filter>
 
@@ -169,10 +129,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.guestbook.GuestBookApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>guestbook</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -181,10 +137,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.images.ImagesApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>images</param-value>
 		</init-param>
 	</filter>
 
@@ -195,10 +147,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.library.LibraryApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>library</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -207,10 +155,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.linkomatic.LinkomaticApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>linkomatic</param-value>
 		</init-param>
 	</filter>
 
@@ -221,10 +165,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.navomatic.NavomaticApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>navomatic</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -233,10 +173,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.pub.PubApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>pub</param-value>
 		</init-param>
 	</filter>
 
@@ -247,10 +183,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.signin.SignInApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>signin</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -259,10 +191,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.signin2.SignIn2Application</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>signin2</param-value>
 		</init-param>
 	</filter>
 
@@ -273,10 +201,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.upload.UploadApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>upload</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -285,10 +209,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.displaytag.DisplaytagApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>displaytag</param-value>
 		</init-param>
 	</filter>
 
@@ -299,10 +219,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.encodings.EncodingsApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>encodings</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -311,14 +227,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.template.TemplateApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>configuration</param-name>
-		  <param-value>development</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>template</param-value>
 		</init-param>
 	</filter>
 
@@ -329,10 +237,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.compref.ComponentReferenceApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>compref</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -341,10 +245,6 @@
 		<init-param>
 			<param-name>applicationClassName</param-name>
 			<param-value>wicket.examples.repeater.RepeaterApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>repeater</param-value>
 		</init-param>
 	</filter>
 
@@ -355,10 +255,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.niceurl.NiceUrlApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>niceurl</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -367,10 +263,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.frames.FramesApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>frames</param-value>
 		</init-param>
 	</filter>
 	
@@ -381,10 +273,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.customresourceloading.CustomResourceLoadingApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>customresourceloading</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -393,10 +281,6 @@
 		<init-param>
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.wizard.WizardApplication</param-value>
-		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>wizard</param-value>
 		</init-param>
 	</filter>
 
@@ -407,10 +291,6 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.captcha.CaptchaApplication</param-value>
 		</init-param>
-		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>captcha</param-value>
-		</init-param>
 	</filter>
 
 	<filter>
@@ -420,9 +300,23 @@
 		  <param-name>applicationClassName</param-name>
 		  <param-value>wicket.examples.threadDump.ThreadDumpApplication</param-value>
 		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>BreadCrumbApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
 		<init-param>
-		  <param-name>filterPath</param-name>
-		  <param-value>ThreadDump</param-value>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
+		</init-param>
+	</filter>
+
+	<filter>
+		<filter-name>StatelessApplication</filter-name>
+		<filter-class>wicket.protocol.http.WicketFilter</filter-class>
+		<init-param>
+		  <param-name>applicationClassName</param-name>
+		  <param-value>wicket.examples.stateless.StatelessApplication</param-value>
 		</init-param>
 	</filter>
 
@@ -576,36 +470,15 @@
 		<url-pattern>/ThreadDump/*</url-pattern>
 	</filter-mapping>
 
-	<servlet>
-		<servlet-name>BreadCrumbApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.breadcrumb.BreadCrumbApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>	
-
-	<servlet>
-		<servlet-name>StatelessApplication</servlet-name>
-		<servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
-		<init-param>
-		  <param-name>applicationClassName</param-name>
-		  <param-value>wicket.examples.stateless.StatelessApplication</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-
-	<servlet-mapping>
-		<servlet-name>BreadCrumbApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>BreadCrumbApplication</filter-name>
 		<url-pattern>/breadcrumb/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
-	<servlet-mapping>
-		<servlet-name>StatelessApplication</servlet-name>
+	<filter-mapping>
+		<filter-name>StatelessApplication</filter-name>
 		<url-pattern>/stateless/*</url-pattern>
-	</servlet-mapping>
+	</filter-mapping>
 
 	<session-config>
 		<session-timeout>5</session-timeout>
