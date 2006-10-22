@@ -19,6 +19,7 @@
 package wicket.ajax;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
@@ -210,9 +211,9 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.IBehaviorListener#onRequest()
+	 * @see wicket.behavior.IBehaviorListener#onRequest(Component)
 	 */
-	public final void onRequest()
+	public final void onRequest(Component component)
 	{
 		boolean isPageVersioned = true;
 		Page page = getComponent().getPage();
