@@ -434,9 +434,9 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 			{
 				// this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
-				response.write("window.name=\"");
+				response.write("if (window.name=='') { window.name=\"");
 				response.write(name);
-				response.write("\";");
+				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
 			}
 			else
