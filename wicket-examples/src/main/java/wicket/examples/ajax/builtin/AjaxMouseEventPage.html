@@ -1,0 +1,40 @@
+<wicket:head>
+<style type="text/css">
+.box {
+	border: 1px solid black;
+	background: yellow;
+	width: 200px;
+	height: 200px;
+	text-align: center;
+	padding: 5px;
+}
+</style>
+</wicket:head>
+<wicket:extend>
+
+<p>
+	Demonstrates the use of wicket.extensions.ajax.AjaxMouseEventBehavior which has support for getting the event
+	properties for mouse based AJAX events on the server. This is values such as X and Y position and which button
+	has been pressed.
+</p>
+
+<table cellspacing="10" cellpadding="0" border="0">
+	<tr>
+		<th colspan="3">Examples</th>
+		<th width="200">Debug output</th>
+	</tr>
+	<tr>
+		<td><div wicket:id="click" class="box">Click on this box to execute an <b>onClick</b> javascript event.</div></td>
+		<td><div wicket:id="mousedown" class="box">Press any mouse button on this box to execute an <b>onMouseDown</b> javascript event.</div></td>
+		<td><div wicket:id="mouseup" class="box">Press and <b>release</b> any mouse button on this box to execute an <b>onMouseUp</b> javascript event.</div></td>
+		<td valign="top"><span wicket:id="output"></span></td>
+	</tr>
+	<tr>
+		<td><div wicket:id="mouseover" class="box">Move the cursor over this box to execute an <b>onMouseOver</b> javascript event.</div></td>
+		<td><div wicket:id="mouseout" class="box">Move the cursor over and <b>then out</b> this box to execute an <b>onMouseOut</b> javascript event.</div></td>
+		<td><div wicket:id="mousemove" class="box">Move the cursor over this box to execute an <b>onMouseMove</b> javascript event.<br/><br/>(PLEASE NOTE!) This will generate <i>many</i> AJAX requests.</div></td>
+		<td></td>
+	</tr>
+</table>
+
+</wicket:extend>
