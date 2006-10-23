@@ -51,9 +51,6 @@ public interface IBehaviorListener extends IRequestListener
 
 	/**
 	 * Called when a request to a behavior is received.
-	 * 
-	 * @param component
-	 *            The component through which the request is passed
 	 */
-	void onRequest(Component component);
+	void onRequest();
 }

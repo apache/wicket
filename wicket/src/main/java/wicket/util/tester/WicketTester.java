@@ -719,7 +719,7 @@ public class WicketTester extends MockWebApplication
 			});
 
 			// Ok, finally we "click" the link
-			ajaxFormSubmitBehavior.onRequest(link);
+			ajaxFormSubmitBehavior.onRequest();
 
 			// process the request target
 			requestCycle.getRequestTarget().respond(requestCycle);
@@ -1064,7 +1064,7 @@ public class WicketTester extends MockWebApplication
 		setupRequestAndResponse();
 		RequestCycle requestCycle = createRequestCycle();
 
-		ajaxEventBehavior.onRequest(component);
+		ajaxEventBehavior.onRequest();
 
 		// process the request target
 		requestCycle.getRequestTarget().respond(requestCycle);

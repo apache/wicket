@@ -18,7 +18,6 @@
  */
 package wicket.behavior;
 
-import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
@@ -57,7 +56,7 @@ public class AjaxHandlerBodyOnLoadPage extends WebPage
 				}
 			}
 
-			public void onRequest(Component component)
+			public void onRequest()
 			{
 			}
 		});
