@@ -844,7 +844,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 
 		if (!isEnabled() || !isEnableAllowed())
 		{
-			tag.put("disabled", "disabled");
+			onDisabled(tag);
 		}
 
 		super.onComponentTag(tag);
@@ -861,7 +861,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 */
 	protected void onDisabled(final ComponentTag tag)
 	{
-		onDisabled(tag);
+		tag.put("disabled", "disabled");
 	}
 
 	/**
