@@ -563,7 +563,25 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 
 			// Add <page-map-name>:<bookmarkable-page-class>
-			url.append(pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+			String pageClassName = pageClass.getName();
+			/*
+			 * Encode the url so it is correct even for class names containing
+			 * non ASCII characters, like ä, æ, ø, å etc.
+			 * 
+			 * The reason for this is that when redirecting to these
+			 * bookmarkable pages, we need to have the url encoded correctly
+			 * because we can't rely on the browser to interpret the unencoded
+			 * url correctly.
+			 */
+			try
+			{
+				pageClassName = URLEncoder.encode(pageClassName, "UTF-8");
+			}
+			catch (UnsupportedEncodingException e)
+			{
+				throw new RuntimeException(e);
+			}
+			url.append(pageMapName + Component.PATH_SEPARATOR + pageClassName);
 		}
 
 		// Get page parameters
