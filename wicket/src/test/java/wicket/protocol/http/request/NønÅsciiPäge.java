@@ -25,7 +25,7 @@ import wicket.markup.html.WebPage;
  * 
  * @author frankbille
  */
-public class NÃ¸nÃ…sciiPÃ¤ge extends WebPage
+public class NønÅsciiPäge extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 }
