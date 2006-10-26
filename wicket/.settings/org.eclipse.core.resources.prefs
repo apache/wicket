@@ -1,6 +1,9 @@
-#Mon May 08 22:42:58 PDT 2006
+#Thu Oct 26 09:44:31 CEST 2006
 eclipse.preferences.version=1
 encoding//.deprecations/DEPRECATE_wicket.markup.html.form.FormComponent.inputAsStringArray().xml=utf-8
 encoding//.deprecations/DEPRECATE_wicket.markup.html.list.ListView.setOptimizeItemRemoval(boolean).xml=utf-8
 encoding//.deprecations/DEPRECATE_wicket.markup.html.tree.Tree$TreePathsListView.getOptimizeItemRemoval().xml=utf-8
 encoding//src/java/wicket/Application_bg.properties=UTF-8
+encoding//src/test/java/wicket/protocol/http/request/N\u00F8n\u00C5sciiP\u00E4ge.html=ISO-8859-1
+encoding//src/test/java/wicket/protocol/http/request/N\u00F8n\u00C5sciiP\u00E4ge.java=ISO-8859-1
+encoding//src/test/java/wicket/protocol/http/request/WebRequestCodingStrategyTest.java=ISO-8859-1
