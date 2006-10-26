@@ -17,10 +17,11 @@
  */
 package wicket.markup.html.header.testing4;
 
+import wicket.AttributeModifier;
 import wicket.MarkupContainer;
-import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.panel.Panel;
+import wicket.model.Model;
 
 /**
  * Test panel.
@@ -40,6 +41,7 @@ public class Panel1 extends Panel
 	public Panel1(MarkupContainer parent, final String id)
 	{
 		super(parent, id);
-		new WebMarkupContainer(this, "testid").add(new SimpleAttributeModifier("src", "test1.js"));
+		new WebMarkupContainer(this, "testid").add(new AttributeModifier("src", true,
+				new Model<String>("test1.js")));
 	}
 }

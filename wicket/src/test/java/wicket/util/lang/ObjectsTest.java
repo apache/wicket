@@ -3,9 +3,9 @@ package wicket.util.lang;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
+import wicket.AttributeModifier;
 import wicket.MockPageWithOneComponent;
 import wicket.WicketTestCase;
-import wicket.behavior.SimpleAttributeModifier;
 import wicket.markup.html.basic.SimplePage;
 import wicket.markup.html.form.TextField;
 import wicket.model.CompoundPropertyModel;
@@ -95,8 +95,8 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testComponentClone()
 	{
-		PropertyModel pm = new PropertyModel(new TextField<String>(new MockPageWithOneComponent(), "component",
-				new Model<String>("test")), "modelObject");
+		PropertyModel pm = new PropertyModel(new TextField<String>(new MockPageWithOneComponent(),
+				"component", new Model<String>("test")), "modelObject");
 		PropertyModel pm2 = Objects.cloneModel(pm);
 		assertTrue(pm.getObject() == pm2.getObject());
 	}
@@ -119,17 +119,17 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testCloneModelByMapping()
 	{
-		PropertyModel<Integer> model = new PropertyModel<Integer>(new CloneObject(),"nr");
+		PropertyModel<Integer> model = new PropertyModel<Integer>(new CloneObject(), "nr");
 		model.setObject(1);
 		assertEquals(1, (int)model.getObject());
 		MiniMap<Field, Object> clonemap = Objects.mapObject(model);
 		model.setObject(10);
 		assertEquals(10, (int)model.getObject());
-		
-		Objects.restoreObject(model,clonemap);
-		
+
+		Objects.restoreObject(model, clonemap);
+
 		assertEquals(1, (int)model.getObject());
-		
+
 	}
 
 	/**
@@ -137,35 +137,36 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testCloneModelByMappingWithFinal()
 	{
-		PropertyModel<Integer> model = new PropertyModel<Integer>(new CloneObject(),"test.nr");
+		PropertyModel<Integer> model = new PropertyModel<Integer>(new CloneObject(), "test.nr");
 		model.setObject(1);
 		assertEquals(1, (int)model.getObject());
 		MiniMap<Field, Object> clonemap = Objects.mapObject(model);
 		model.setObject(10);
 		assertEquals(10, (int)model.getObject());
-		
-		Objects.restoreObject(model,clonemap);
-		
+
+		Objects.restoreObject(model, clonemap);
+
 		assertEquals(1, (int)model.getObject());
-		
+
 	}
-	
+
 	/**
 	 * 
 	 */
 	public void testCloneModelByMappingWithCompound()
 	{
-		PropertyModel<Integer> model = new PropertyModel<Integer>(new CompoundPropertyModel<CloneObject>(new CloneObject()),"nr");
+		PropertyModel<Integer> model = new PropertyModel<Integer>(
+				new CompoundPropertyModel<CloneObject>(new CloneObject()), "nr");
 		model.setObject(1);
 		assertEquals(1, (int)model.getObject());
 		MiniMap<Field, Object> clonemap = Objects.mapObject(model);
 		model.setObject(10);
 		assertEquals(10, (int)model.getObject());
-		
-		Objects.restoreObject(model,clonemap);
-		
+
+		Objects.restoreObject(model, clonemap);
+
 		assertEquals(1, (int)model.getObject());
-		
+
 	}
 
 	/**
@@ -173,19 +174,20 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testCloneModelByMappingWithCompoundAndReplace()
 	{
-		CompoundPropertyModel<CloneObject> compound = new CompoundPropertyModel<CloneObject>(new CloneObject());
-		PropertyModel<Integer> model = new PropertyModel<Integer>(compound,"nr");
+		CompoundPropertyModel<CloneObject> compound = new CompoundPropertyModel<CloneObject>(
+				new CloneObject());
+		PropertyModel<Integer> model = new PropertyModel<Integer>(compound, "nr");
 		model.setObject(1);
 		assertEquals(1, (int)model.getObject());
 		MiniMap<Field, Object> clonemap = Objects.mapObject(model);
 		compound.setObject(new CloneObject());
 		model.setObject(10);
 		assertEquals(10, (int)model.getObject());
-		
-		Objects.restoreObject(model,clonemap);
-		
+
+		Objects.restoreObject(model, clonemap);
+
 		assertEquals(1, (int)model.getObject());
-		
+
 	}
 
 	/**
@@ -193,21 +195,22 @@ public class ObjectsTest extends WicketTestCase
 	 */
 	public void testCloneModelByMappingWithSharedModel()
 	{
-		CompoundPropertyModel<CloneObject> sharedModel = new CompoundPropertyModel<CloneObject>(new CloneObject());
-		PropertyModel<Integer> model = new PropertyModel<Integer>(sharedModel,"nr");
-		PropertyModel<Integer> model2 = new PropertyModel<Integer>(sharedModel,"nr");
+		CompoundPropertyModel<CloneObject> sharedModel = new CompoundPropertyModel<CloneObject>(
+				new CloneObject());
+		PropertyModel<Integer> model = new PropertyModel<Integer>(sharedModel, "nr");
+		PropertyModel<Integer> model2 = new PropertyModel<Integer>(sharedModel, "nr");
 		model.setObject(1);
 		assertEquals(1, (int)model2.getObject());
 		MiniMap<Field, Object> clonemap = Objects.mapObject(model);
 		model.setObject(10);
 		assertEquals(10, (int)model2.getObject());
-		
-		Objects.restoreObject(model,clonemap);
-		
+
+		Objects.restoreObject(model, clonemap);
+
 		assertEquals(1, (int)model2.getObject());
-		
+
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -215,30 +218,30 @@ public class ObjectsTest extends WicketTestCase
 	{
 		SimplePage page = new SimplePage();
 		MiniMap<Field, Object> clonemap = Objects.mapObject(page);
-		
+
 		assertEquals(true, page.get("myLabel").isVisible());
 		page.get("myLabel").setVisible(false);
 		assertEquals(false, page.get("myLabel").isVisible());
-		Objects.restoreObject(page,clonemap);
+		Objects.restoreObject(page, clonemap);
 		assertEquals(true, page.get("myLabel").isVisible());
-		
+
 		page.remove("myLabel");
-		
+
 		assertNull(page.get("myLabel"));
-		
-		Objects.restoreObject(page,clonemap);
-		
+
+		Objects.restoreObject(page, clonemap);
+
 		assertNotNull(page.get("myLabel"));
-		
-		page.get("myLabel").add(new SimpleAttributeModifier("test","test"));
-		
+
+		page.get("myLabel").add(new AttributeModifier("test", true, new Model<String>("test")));
+
 		assertEquals(1, page.get("myLabel").getBehaviors().size());
-		
-		Objects.restoreObject(page,clonemap);
-		
+
+		Objects.restoreObject(page, clonemap);
+
 		assertEquals(0, page.get("myLabel").getBehaviors().size());
-	}	
-		
+	}
+
 	/**
 	 * Used for testing the clone function.
 	 */
@@ -250,7 +253,7 @@ public class ObjectsTest extends WicketTestCase
 		 * int for testing equality.
 		 */
 		private int nr;
-		
+
 		private final CloneObject2 test = new CloneObject2();
 
 		/**
@@ -259,15 +262,15 @@ public class ObjectsTest extends WicketTestCase
 		@Override
 		public boolean equals(Object o)
 		{
-			if(o instanceof CloneObject)
+			if (o instanceof CloneObject)
 			{
 				CloneObject other = (CloneObject)o;
 				return other.nr == nr;
-			} 
+			}
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Used for testing the clone function.
 	 */
@@ -279,20 +282,20 @@ public class ObjectsTest extends WicketTestCase
 		 * int for testing equality.
 		 */
 		private int nr;
-		
+
 		/**
 		 * @see Object#equals(java.lang.Object)
 		 */
 		@Override
 		public boolean equals(Object o)
 		{
-			if(o instanceof CloneObject2)
+			if (o instanceof CloneObject2)
 			{
 				CloneObject2 other = (CloneObject2)o;
 				return other.nr == nr;
 			}
 			return false;
 		}
-	}	
-	
+	}
+
 }
