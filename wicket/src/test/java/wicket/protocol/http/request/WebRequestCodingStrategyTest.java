@@ -67,7 +67,7 @@ public class WebRequestCodingStrategyTest extends WicketTestCase
 		};
 
 		CharSequence url = codingStrategy.encode(requestCycle, new BookmarkablePageRequestTarget(
-				NÃ¸nÃ…sciiPÃ¤ge.class));
+				NønÅsciiPäge.class));
 
 		assertTrue(executed);
 
