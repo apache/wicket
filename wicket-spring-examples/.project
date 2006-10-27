@@ -1,6 +1,6 @@
 <projectDescription>
   <name>wicket-spring-examples</name>
-  <comment/>
+  <comment>Wicket is a Java open source, component based web application framework.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
