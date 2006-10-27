@@ -10,17 +10,9 @@
 	</parent>
 
 	<artifactId>wicket-threadtest</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>Wicket Thread Test</name>
 	<description>Test project</description>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>mortbay-repo</id>
-            <name>mortbay-repo</name>
-            <url>http://www.mortbay.org/maven2/snapshot</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 	<dependencies>
 		<dependency>
@@ -67,6 +59,16 @@
 				</includes>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>
