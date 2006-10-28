@@ -82,6 +82,7 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 			final SortableDataProvider dataProvider, int rowsPerPage)
 	{
 		super(parent, id, columns, dataProvider, rowsPerPage);
+		setVersioned(false);
 
 		/*
 		 * TODO General: ivaynberg: this is rediculous, would be better to have
