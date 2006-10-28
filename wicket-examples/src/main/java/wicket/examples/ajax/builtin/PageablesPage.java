@@ -33,6 +33,7 @@ public class PageablesPage extends BasePage
 	{
 		WebMarkupContainer datacontainer = new WebMarkupContainer(this, "data");
 		datacontainer.setOutputMarkupId(true);
+		datacontainer.setVersioned(false);
 
 		PageableListView<String> listview = new PageableListView<String>(datacontainer, "rows", Arrays
 				.asList(names), 10)
@@ -44,6 +45,6 @@ public class PageablesPage extends BasePage
 			}
 		};
 
-		new AjaxPagingNavigator(datacontainer, "navigator", listview);
+		new AjaxPagingNavigator(datacontainer, "navigator", listview);				
 	}
 }
