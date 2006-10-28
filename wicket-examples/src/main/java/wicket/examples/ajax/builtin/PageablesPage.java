@@ -45,5 +45,6 @@ public class PageablesPage extends BasePage
 
 		datacontainer.add(listview);
 		datacontainer.add(new AjaxPagingNavigator("navigator", listview));
+		datacontainer.setVersioned(false);
 	}
 }
