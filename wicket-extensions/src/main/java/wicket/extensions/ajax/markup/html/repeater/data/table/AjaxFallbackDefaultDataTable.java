@@ -85,6 +85,7 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 	{
 		super(id, columns, dataProvider, rowsPerPage);
 		setOutputMarkupId(true);
+		setVersioned(false);
 		addTopToolbar(new AjaxNavigationToolbar(this));
 		addTopToolbar(new AjaxFallbackHeadersToolbar(this, dataProvider));
 		addBottomToolbar(new NoRecordsToolbar(this));
