@@ -55,7 +55,7 @@
 			<archive>http://www.nabble.com/Wicket---Dev-f13977.html</archive>
 		</mailingList>
 		<mailingList>
-			<name>Wicket CVS commit List</name>
+			<name>Wicket commit List</name>
 			<subscribe>mailto:wicket-commits-subscribe@incubator.apache.org</subscribe>
 			<unsubscribe>mailto:wicket-commits-unsubscribe@incubator.apache.org</unsubscribe>
 			<archive>http://mail-archives.apache.org/mod_mbox/incubator-wicket-commits/</archive>
@@ -374,10 +374,14 @@
 			<id>wicket-site</id>
 			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/</url>
 		</site>
+		<repository>
+			<id>wicket-repo</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
+		</repository>
 		<snapshotRepository>
-        	<id>maven.sateh.com</id>
-            <url>scpexe://maven.sateh.com/sateh/services/lighttpd/maven.sateh.com/www/wicket</url>
-            <uniqueVersion>false</uniqueVersion>
+			<id>maven.sateh.com</id>
+			<url>scpexe://maven.sateh.com/sateh/services/lighttpd/maven.sateh.com/www/wicket</url>
+			<uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
 	</distributionManagement>
 </project>
