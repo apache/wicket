@@ -19,6 +19,8 @@
 package wicket;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +31,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.ajax.AjaxRequestTarget;
+import wicket.annot.OnAttach;
+import wicket.annot.OnDetach;
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
@@ -52,6 +56,8 @@ import wicket.model.IWrapModel;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
+import wicket.util.lang.reflect.ClassOrder;
+import wicket.util.lang.reflect.ReflectionUtils;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.value.IValueMap;
@@ -472,6 +478,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/** Reserved subclass-definable flag bit */
 	protected static final int FLAG_RESERVED8 = 0x80000;
 
+	/** empty object[] array used for invoking listener methods */
+	private static final Object[] LISTENER_ARGS = new Object[] {};
+
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -650,9 +660,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			throw new WicketRuntimeException(
 					"component without a parent is not allowed, default constructor can only be called by a page");
 		}
-		
+
 		getApplication().notifyComponentInstantiationListeners(this);
-		
+
 		this.markupFragment = getMarkupFragment();
 	}
 
@@ -1783,7 +1793,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 				// attach
 				internalAttach();
-				
+
 				// check authorization
 				// first the component itself
 				// (after attach as otherwise list views etc wont work)
@@ -1804,7 +1814,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 						}
 					});
 				}
-				
+
 				// Render the component and all its children
 				onBeforeRender();
 				render(markupStream);
@@ -2708,7 +2718,47 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		onAttach();
 		internalOnAttach();
+
+		List<Method> listeners = ReflectionUtils.invocationChainForAnnotation(getClass(),
+				OnAttach.class, ClassOrder.SUPER_TO_SUB);
+		for (Method method : listeners)
+		{
+			invokeAnnotatedListenerMethod(method, OnAttach.class);
+		}
 	}
+
+	/**
+	 * Invokes a listener method
+	 * 
+	 * @param method
+	 *            listener method
+	 * @param annot
+	 *            annotation responsible for invocation
+	 */
+	private void invokeAnnotatedListenerMethod(Method method, Class<? extends Annotation> annot)
+	{
+		if (!method.getReturnType().equals(void.class) || method.getParameterTypes().length != 0)
+		{
+			throw new IllegalStateException("Method [[" + method.getName()
+					+ "]] cannot be annotated with [[" + OnAttach.class.getSimpleName()
+					+ "]] because it doesnt match signature [[void method()]]");
+		}
+		try
+		{
+			if (!method.isAccessible())
+			{
+				method.setAccessible(true);
+			}
+			method.invoke(this, LISTENER_ARGS);
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Error while invoking listener method [["
+					+ method.getName() + "]] for [[" + annot.getClass().getSimpleName()
+					+ "]] event", e);
+		}
+	}
+
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
@@ -2720,6 +2770,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		internalOnDetach();
 		onDetach();
+
+		List<Method> listeners = ReflectionUtils.invocationChainForAnnotation(getClass(),
+				OnDetach.class, ClassOrder.SUB_TO_SUPER);
+		for (Method method : listeners)
+		{
+			invokeAnnotatedListenerMethod(method, OnAttach.class);
+		}
+
 	}
 
 	/**
