@@ -246,7 +246,7 @@ public class SubmitLink extends Button implements ILinkListener
 		{
 			// if we didn't find a parent form, fall back on normal link
 			// behavior
-			return "location.href='" + urlFor(ILinkListener.INTERFACE).toString() + "';";
+			return "window.location.href='" + urlFor(ILinkListener.INTERFACE).toString() + "';";
 		}
 	}
 }
