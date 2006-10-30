@@ -20,6 +20,7 @@ package wicket.request.target.component;
 
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.annot.AnnotationUtils;
 
 /**
  * Default implementation of {@link IPageRequestTarget}. Target that denotes a
@@ -83,6 +84,7 @@ public class PageRequestTarget implements IPageRequestTarget
 	public void detach(RequestCycle requestCycle)
 	{
 		page.internalDetach();
+		AnnotationUtils.invokeOnDetachListeners(page);
 	}
 
 	/**

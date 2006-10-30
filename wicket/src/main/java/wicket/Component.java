@@ -19,8 +19,6 @@
 package wicket;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -31,7 +29,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.ajax.AjaxRequestTarget;
+import wicket.annot.AnnotationUtils;
+import wicket.annot.OnAfterRender;
 import wicket.annot.OnAttach;
+import wicket.annot.OnBeforeRender;
 import wicket.annot.OnDetach;
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
@@ -56,8 +57,6 @@ import wicket.model.IWrapModel;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
-import wicket.util.lang.reflect.ClassOrder;
-import wicket.util.lang.reflect.ReflectionUtils;
 import wicket.util.string.PrependingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.value.IValueMap;
@@ -795,6 +794,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		if (getId().startsWith(AUTO_COMPONENT_PREFIX))
 		{
 			internalAttach();
+			AnnotationUtils.invokeOnAttachListeners(this);
 			render();
 		}
 		else
@@ -1690,6 +1690,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				// Call implementation to render component
 				onBeforeRender();
+				AnnotationUtils.invokeOnBeforeRenderListeners(this);
 				try
 				{
 					onRender(markupStream);
@@ -1697,6 +1698,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				finally
 				{
 					onAfterRender();
+					AnnotationUtils.invokeOnAfterRenderListeners(this);
 				}
 
 				// Component has been rendered
@@ -1781,6 +1783,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 						{
 							((IFeedback)component).updateFeedback();
 							component.internalAttach();
+							AnnotationUtils.invokeOnAttachListeners(component);
 							return IVisitor.CONTINUE_TRAVERSAL;
 						}
 					});
@@ -1817,11 +1820,13 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 				// Render the component and all its children
 				onBeforeRender();
+				AnnotationUtils.invokeOnBeforeRenderListeners(this);
 				render(markupStream);
 			}
 			finally
 			{
 				onAfterRender();
+				AnnotationUtils.invokeOnAfterRenderListeners(this);
 			}
 		}
 	}
@@ -2713,71 +2718,29 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * OVERRIDE.
 	 * 
 	 * Called when a request begins.
+	 * 
+	 * @deprecated - use {@link OnAttach} instead
 	 */
+	@Deprecated
 	protected void internalAttach()
 	{
 		onAttach();
 		internalOnAttach();
-
-		List<Method> listeners = ReflectionUtils.invocationChainForAnnotation(getClass(),
-				OnAttach.class, ClassOrder.SUPER_TO_SUB);
-		for (Method method : listeners)
-		{
-			invokeAnnotatedListenerMethod(method, OnAttach.class);
-		}
 	}
-
-	/**
-	 * Invokes a listener method
-	 * 
-	 * @param method
-	 *            listener method
-	 * @param annot
-	 *            annotation responsible for invocation
-	 */
-	private void invokeAnnotatedListenerMethod(Method method, Class<? extends Annotation> annot)
-	{
-		if (!method.getReturnType().equals(void.class) || method.getParameterTypes().length != 0)
-		{
-			throw new IllegalStateException("Method [[" + method.getName()
-					+ "]] cannot be annotated with [[" + OnAttach.class.getSimpleName()
-					+ "]] because it doesnt match signature [[void method()]]");
-		}
-		try
-		{
-			if (!method.isAccessible())
-			{
-				method.setAccessible(true);
-			}
-			method.invoke(this, LISTENER_ARGS);
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException("Error while invoking listener method [["
-					+ method.getName() + "]] for [[" + annot.getClass().getSimpleName()
-					+ "]] event", e);
-		}
-	}
-
 
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
 	 * 
 	 * Called when a request ends.
+	 * 
+	 * @deprecated - use {@link OnDetach} instead
 	 */
+	@Deprecated
 	protected void internalDetach()
 	{
 		internalOnDetach();
 		onDetach();
-
-		List<Method> listeners = ReflectionUtils.invocationChainForAnnotation(getClass(),
-				OnDetach.class, ClassOrder.SUB_TO_SUPER);
-		for (Method method : listeners)
-		{
-			invokeAnnotatedListenerMethod(method, OnAttach.class);
-		}
-
 	}
 
 	/**
@@ -2785,7 +2748,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * OVERRIDE.
 	 * 
 	 * Called when a request begins.
+	 * 
+	 * @deprecated - use {@link OnAttach} instead
 	 */
+	@Deprecated
 	protected void internalOnAttach()
 	{
 	}
@@ -2795,7 +2761,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * OVERRIDE.
 	 * 
 	 * Called when a request ends.
+	 * 
+	 * @deprecated - use {@link OnDetach} instead
 	 */
+	@Deprecated
 	protected void internalOnDetach()
 	{
 	}
@@ -2879,7 +2848,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/**
 	 * Called just after a component is rendered.
+	 * 
+	 * @deprecated use {@link OnAfterRender} instead
 	 */
+	@Deprecated
 	protected void onAfterRender()
 	{
 		// Clear the component's markup cache and allow changes to locale,
@@ -2895,14 +2867,20 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * this will be tightened in Wicket 1.3 when we will add the guarantee that
 	 * onAttach() be called before any framework use of a Component (in the
 	 * implementation of request targets).
+	 * 
+	 * @deprecated - use {@link OnAttach} instead
 	 */
+	@Deprecated
 	protected void onAttach()
 	{
 	}
 
 	/**
 	 * Called just before a component is rendered.
+	 * 
+	 * @deprecated use {@link OnBeforeRender} instead
 	 */
+	@Deprecated
 	protected void onBeforeRender()
 	{
 	}
@@ -2938,7 +2916,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * of this will be tightened in Wicket 1.3 when we will add the guarantee
 	 * that onDetach() be called after all framework use of a Component (in the
 	 * implementation of request targets).
+	 * 
+	 * @deprecated - use {@link OnDetach} instead
 	 */
+	@Deprecated
 	protected void onDetach()
 	{
 	}

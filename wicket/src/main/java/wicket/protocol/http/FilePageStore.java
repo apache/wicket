@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Page;
+import wicket.annot.AnnotationUtils;
 import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import wicket.util.lang.Objects;
 
@@ -47,8 +48,8 @@ public class FilePageStore implements IPageStore
 	 */
 	public FilePageStore()
 	{
-		workDir = (File)((WebApplication)Application.get()).getServletContext()
-				.getAttribute("javax.servlet.context.tempdir");
+		workDir = (File)((WebApplication)Application.get()).getServletContext().getAttribute(
+				"javax.servlet.context.tempdir");
 	}
 
 	/**
@@ -150,6 +151,7 @@ public class FilePageStore implements IPageStore
 		// TODO check can this be called everytime at this place? Putting should
 		// be called after the rendering so it should be ok.
 		page.internalDetach();
+		AnnotationUtils.invokeOnDetachListeners(page);
 		byte[] bytes = Objects.objectToByteArray(page);
 		FileOutputStream fos = null;
 		try

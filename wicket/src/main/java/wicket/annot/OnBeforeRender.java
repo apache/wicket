@@ -24,25 +24,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Methods annotated with this annotation are invoked when the object is
- * detached by the framework. Methods must have signature <code>void ()</code>.
- * 
- * Objects are always detached at the end of the request. This is the last
- * action the framework performs on the object.
+ * Methods annotated with this annotation are invoked before the component's
+ * rendering begins. Methods must have signature <code>void ()</code>.
  * 
  * Supported object types:
  * <ul>
  * <li> Component </li>
- * <li> Session </li>
- * <li> RequestCycle </li>
  * </ul>
- * 
- * FIXME so far only Component is supported
  * 
  * @author ivaynberg
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface OnDetach {
+public @interface OnBeforeRender {
 
 }

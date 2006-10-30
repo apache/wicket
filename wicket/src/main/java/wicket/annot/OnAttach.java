@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Methods annotated with this annotation are invoked when the object is
- * attached by the framework.
+ * attached by the framework. Methods must have signature <code>void ()</code>.
  * 
  * Objects are always attached once per request before any method on the object
  * is invoked by the framework during that request.

@@ -23,6 +23,7 @@ import wicket.Page;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
+import wicket.annot.AnnotationUtils;
 
 /**
  * An implemenation of IRequestTarget that is used for the IResourceListener
@@ -81,6 +82,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	public void detach(RequestCycle requestCycle)
 	{
 		page.internalDetach();
+		AnnotationUtils.invokeOnDetachListeners(page);
 	}
 
 	/**

@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.annot.AnnotationUtils;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
@@ -1221,6 +1222,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			{
 				((IFeedback)component).updateFeedback();
 				component.internalAttach();
+				AnnotationUtils.invokeOnAttachListeners(component);
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
@@ -1239,7 +1241,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		// or negative as a temporary boolean in the components, and when a
 		// authorization exception is thrown it will block the rendering of this
 		// page
-		
+
 		// first the page itself
 		setRenderAllowed(isActionAuthorized(RENDER));
 		// children of the page
@@ -1373,7 +1375,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	{
 		return getAssociatedMarkup(true);
 	}
-	
+
 	/**
 	 * Get the string representation of this container.
 	 * 

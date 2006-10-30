@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.annot.AnnotationUtils;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -109,7 +110,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 	/** The markup fragments from the associated file */
 	private transient MarkupFragment associatedMarkup;
-	
+
 	/**
 	 * Package scope constructor, only used by pages.
 	 * 
@@ -140,9 +141,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 	/**
 	 * Get the child markup fragment with the 'id'.
 	 * <p>
-	 * Note that component paths don't work. 
+	 * Note that component paths don't work.
 	 * 
-	 * @param id The child component id
+	 * @param id
+	 *            The child component id
 	 * @return MarkupFragment The childs markup
 	 */
 	public MarkupFragment getMarkupFragment(final String id)
@@ -190,10 +192,10 @@ public abstract class MarkupContainer<T> extends Component<T>
 			child.markupIndex = replaced.markupIndex;
 
 		}
-		
+
 		return this;
 	}
-	
+
 	/**
 	 * This method allows a component to be added by an auto-resolver such as
 	 * AutoComponentResolver or AutoLinkResolver. While the component is being
@@ -361,6 +363,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 		try
 		{
 			super.internalAttach();
+			AnnotationUtils.invokeOnAttachListeners(this);
 
 			// Loop through child components
 			final int size = children_size();
@@ -402,6 +405,7 @@ public abstract class MarkupContainer<T> extends Component<T>
 	{
 		// Handle end request for the container itself
 		super.internalDetach();
+		AnnotationUtils.invokeOnDetachListeners(this);
 
 		// Loop through child components
 		final Iterator iter = iterator();
@@ -565,8 +569,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 		final MarkupStream associatedMarkupStream;
 		try
 		{
-			associatedMarkupStream = new MarkupStream(getAssociatedMarkup(true)
-					.getWicketFragment(openTagName, true));
+			associatedMarkupStream = new MarkupStream(getAssociatedMarkup(true).getWicketFragment(
+					openTagName, true));
 		}
 		catch (WicketRuntimeException ex)
 		{
@@ -812,11 +816,13 @@ public abstract class MarkupContainer<T> extends Component<T>
 		{
 			try
 			{
-				this.associatedMarkup = getApplication().getMarkupCache().getMarkup(this, throwException);
+				this.associatedMarkup = getApplication().getMarkupCache().getMarkup(this,
+						throwException);
 			}
 			catch (MarkupException ex)
 			{
-				// re-throw it. The exception contains already all the information
+				// re-throw it. The exception contains already all the
+				// information
 				// required.
 				throw ex;
 			}
@@ -832,26 +838,27 @@ public abstract class MarkupContainer<T> extends Component<T>
 								+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
 						ex);
 			}
-			
+
 			onAssociatedMarkupLoaded(this.associatedMarkup);
 		}
-		
+
 		return this.associatedMarkup;
 	}
 
 	/**
-	 * Components which whish to analyze the markup and automatically add Components
-	 * to the MarkupConainer may sublcass this method.
+	 * Components which whish to analyze the markup and automatically add
+	 * Components to the MarkupConainer may sublcass this method.
 	 * <p>
-	 * As the associated markup gets cached with the MarkupContainer, this method
-	 * is guaranteed to be called just once.
+	 * As the associated markup gets cached with the MarkupContainer, this
+	 * method is guaranteed to be called just once.
 	 * 
-	 * @param markup The associated markup just loaded.
+	 * @param markup
+	 *            The associated markup just loaded.
 	 */
 	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
 	}
-	
+
 	/**
 	 * Get the markup stream set on this container.
 	 * 
