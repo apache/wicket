@@ -193,7 +193,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onchange", "location.href='" + url + "&" + getInputName()
+				tag.put("onchange", "window.location.href='" + url + "&" + getInputName()
 						+ "=' + this.options[this.selectedIndex].value;");
 			}
 		}

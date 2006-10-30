@@ -138,7 +138,7 @@ public class Check<T> extends WebMarkupContainer<T>
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "location.href='" + url + "&" + group.getInputName()
+				tag.put("onclick", "window.location.href='" + url + "&" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}

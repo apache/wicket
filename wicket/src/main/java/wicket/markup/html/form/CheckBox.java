@@ -174,7 +174,7 @@ public class CheckBox extends FormComponent<Boolean> implements IOnChangeListene
 			{
 				// NOTE: do not encode the url as that would give invalid
 				// JavaScript
-				tag.put("onclick", "location.href='" + url + "&" + getInputName()
+				tag.put("onclick", "window.location.href='" + url + "&" + getInputName()
 						+ "=' + this.checked;");
 			}
 

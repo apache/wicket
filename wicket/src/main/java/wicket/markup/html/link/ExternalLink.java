@@ -193,7 +193,7 @@ public class ExternalLink extends WebMarkupContainer
 					else
 					{
 						// or generate an onclick JS handler directly
-						tag.put("onclick", "location.href='" + url + "';");
+						tag.put("onclick", "window.location.href='" + url + "';");
 					}
 				}
 			}

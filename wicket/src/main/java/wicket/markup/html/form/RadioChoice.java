@@ -477,7 +477,7 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					{
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
-						buffer.append(" onclick=\"location.href='").append(url).append("&" + getInputName())
+						buffer.append(" onclick=\"window.location.href='").append(url).append("&" + getInputName())
 								.append("=").append(id).append("';\"");
 					}
 				}
