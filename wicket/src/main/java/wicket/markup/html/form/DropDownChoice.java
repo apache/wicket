@@ -180,7 +180,7 @@ public class DropDownChoice extends AbstractSingleSelectChoice implements IOnCha
 			}
 			else
 			{
-				tag.put("onchange", "location.href='" + url + "&" + getInputName()
+				tag.put("onchange", "window.location.href='" + url + "&" + getInputName()
 						+ "=' + this.options[this.selectedIndex].value;");
 			}
 		}
