@@ -63,7 +63,7 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#getImplementationId()
 	 */
-	protected final String getImplementationId()
+	protected String getImplementationId()
 	{
 		return "wicket-default";
 	}
