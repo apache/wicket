@@ -3,8 +3,11 @@
  * Licensed under the Apache License, Version 2.0
  * @author Janne Hietam&auml;ki
  */
-  
-Wicket.Ajax.AutoComplete=function(elementId,callbackUrl){
+
+if (typeof(Wicket) == "undefined")
+	Wicket = { };
+	  
+Wicket.AutoComplete=function(elementId,callbackUrl){
     var KEY_BACKSPACE=8;
     var KEY_TAB=9;
     var KEY_ENTER=13;
