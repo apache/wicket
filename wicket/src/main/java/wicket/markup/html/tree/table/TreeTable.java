@@ -109,8 +109,8 @@ public class TreeTable extends DefaultAbstractTree
 	}
 
 	/** Reference to the css file. */
-	private static final ResourceReference CSS = new ResourceReference(
-			DefaultAbstractTree.class, "res/tree-table.css");
+	private static final ResourceReference CSS = new ResourceReference(DefaultAbstractTree.class,
+			"res/tree-table.css");
 
 	private static final long serialVersionUID = 1L;
 
@@ -394,5 +394,13 @@ public class TreeTable extends DefaultAbstractTree
 		}
 
 		this.columns = columns;
+
+		// Attach the javascript that resizes the header according to the body
+		// This is necessary to support fixed position header. The header does not
+		// scroll together with body. The body contains vertical scrollbar. The 
+		// header width must be same as body content width, so that the columns
+		// are properly aligned.
+		new Label(this, "attachJavascript", "Wicket.TreeTable.attachUpdate(\"" + getMarkupId()
+				+ "\");").setEscapeModelStrings(false);
 	}
 }

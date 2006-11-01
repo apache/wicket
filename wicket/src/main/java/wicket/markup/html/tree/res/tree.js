@@ -32,3 +32,74 @@ Wicket.Tree.createElement = function(elementId, afterId) {
 		p.insertBefore(newNode, p.childNodes[i+1]);
 	}
 }
+
+Wicket.TreeTable = { };
+
+/* Javascript that resizes the tree table header so that it matches size of the content.
+   This is needed when the scrollbar next to content is show, so that the columns are 
+   properly aligned */
+Wicket.TreeTable.update = function(elementId) {
+	
+	var element = document.getElementById(elementId);
+	
+	if (element != null && typeof(element) != "undefined") { 
+		
+		try {
+		
+			/// find the div containing the inner header div
+			var headerParent = element.getElementsByTagName("div")[1];
+			
+			// find the inner header div
+			var header = headerParent.getElementsByTagName("div")[0];
+			
+			// body div should be next div after header parent
+			var body = headerParent.nextSibling;
+				
+			// interate until div is found
+			while (body.tagName != "DIV") {			
+				body = body.nextSibling;
+			}
+	
+			// get the right padding from header - we need to substract it from new width
+			var padding;
+			if (document.defaultView && document.defaultView.getComputedStyle) {
+				padding = document.defaultView.getComputedStyle(headerParent, '').getPropertyValue("padding-right");
+			} else if (headerParent.currentStyle) {
+				padding = headerParent.currentStyle.paddingRight;
+			} else {
+				padding = 6;
+			}
+			
+			padding = parseInt(padding, 10);
+									
+			// set the new width			
+			var w = (body.getElementsByTagName("div")[0].clientWidth - padding) + "px";
+			
+			if (w == "0px") { // this can happen if the first row is hidden (e.g. rootless mode)
+				// try to get the width from second row 	 
+				w = (body.getElementsByTagName("div")[1].clientWidth - padding) + "px";
+			}
+				
+			if (w != "0px") {
+				header.style.width = w;
+			}
+		} catch (ignore) {			
+		}
+	}
+}
+
+Wicket.TreeTable.attached = new Object();
+
+Wicket.TreeTable.attachUpdate = function(treeTableId) {
+	// get the object that contains ids of elements on which the update method was already attached
+	var attached = Wicket.TreeTable.attached;
+	
+	// force updating the element
+	Wicket.TreeTable.update(treeTableId);
+	
+	// if the update has not been attached to this tree table yet...
+	if (typeof(attached[treeTableId]) == "undefined") {				
+		// ... attach it
+		attached[treeTableId] = window.setInterval(function() { Wicket.TreeTable.update(treeTableId); }, 100);
+	} 
+}

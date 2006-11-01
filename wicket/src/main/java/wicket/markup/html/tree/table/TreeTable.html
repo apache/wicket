@@ -1,17 +1,19 @@
 <wicket:panel>
 
-<div class="wicket-tree-table">
+<div class="wicket-tree-table">	
 	<div class="header">
-
-		<span wicket:id="sideColumns">
-		</span>
-		
-		<div class="a_">
-			<span wicket:id="middleColumns">
+		<div>
+			<span wicket:id="sideColumns">
 			</span>
-		</div>
-
+			
+			<div class="a_">
+				<span wicket:id="middleColumns">
+				</span>
+			</div>			
+		</div>	
 	</div>
+
+<div class="wicket-tree-table-body">
 
 <div wicket:id="i">
 <span wicket:id="sideColumns">
@@ -24,9 +26,15 @@
 
 </div>
 
+</div>
+
 <wicket:fragment wicket:id="fragment">
 	<span wicket:id="indent"></span><a wicket:id="link" style=""><span wicket:id="image"/></a>			
 	<a wicket:id="nodeLink" class="node-link"><span class="icon" wicket:id="icon"></span><span wicket:id="label"></span></a>	
 </wicket:fragment>
+
+<script wicket:id="attachJavascript">
+	/* Will be replaced on runtime; Wicket.TreeTable.attachUpdate("treeTable"); */
+</script>
 
 </wicket:panel>
