@@ -31,7 +31,7 @@ import wicket.Component;
  */
 public class ResourceModel extends AbstractReadOnlyModel<String>
 		implements
-			IAssignmentAware<String>
+			IAssignmentAwareModel<String>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -77,7 +77,7 @@ public class ResourceModel extends AbstractReadOnlyModel<String>
 
 
 	/**
-	 * @see wicket.model.IAssignmentAware#wrapOnAssignment(wicket.Component)
+	 * @see wicket.model.IAssignmentAwareModel#wrapOnAssignment(wicket.Component)
 	 */
 	@SuppressWarnings("unchecked")
 	public IWrapModel<String> wrapOnAssignment(final Component component)

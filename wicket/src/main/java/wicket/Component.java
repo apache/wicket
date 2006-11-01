@@ -49,7 +49,7 @@ import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.internal.HeaderContainer;
-import wicket.model.IAssignmentAware;
+import wicket.model.IAssignmentAwareModel;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
@@ -636,9 +636,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			this.parent.add(this);
 		}
 
-		if (model instanceof IAssignmentAware)
+		if (model instanceof IAssignmentAwareModel)
 		{
-			this.model = ((IAssignmentAware)model).wrapOnAssignment(this);
+			this.model = ((IAssignmentAwareModel)model).wrapOnAssignment(this);
 		}
 		else
 		{
@@ -2155,9 +2155,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				addStateChange(new ComponentModelChange(prevModel));
 			}
 
-			if (model instanceof IAssignmentAware)
+			if (model instanceof IAssignmentAwareModel)
 			{
-				this.model = ((IAssignmentAware<T>)model).wrapOnAssignment(this);
+				this.model = ((IAssignmentAwareModel<T>)model).wrapOnAssignment(this);
 			}
 			else
 			{

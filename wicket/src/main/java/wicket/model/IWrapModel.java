@@ -21,7 +21,7 @@ package wicket.model;
 /**
  * A marker interface that represents a model that serves as a wrapper for
  * another. Typically these models are produced by the following methods:
- * {@link IAssignmentAware#wrapOnAssignment(wicket.Component)} and
+ * {@link IAssignmentAwareModel#wrapOnAssignment(wicket.Component)} and
  * {@link IInheritanceAware#wrapOnInheritance(wicket.Component)}
  * 
  * <b>Nested Models </b>- IModels can be nested and the innermost model is also

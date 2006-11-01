@@ -51,7 +51,7 @@ import wicket.Component;
  * @author jcompagner
  * @author Igor Vaynberg (ivaynberg)
  */
-public interface IAssignmentAware<T> extends IModel<T>
+public interface IAssignmentAwareModel<T> extends IModel<T>
 {
 	/**
 	 * @param <C>
