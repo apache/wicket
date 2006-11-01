@@ -114,8 +114,7 @@ public class CompoundPropertyModel<T> implements IInheritableModel<T>
 	private class AttachedCompoundPropertyModel extends AbstractPropertyModel
 			implements
 				IWrapModel,
-				IInheritableModel,
-				IAssignmentAwareModel
+				IInheritableModel
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -149,15 +148,7 @@ public class CompoundPropertyModel<T> implements IInheritableModel<T>
 		{
 			return CompoundPropertyModel.this;
 		}
-
-		/**
-		 * @see wicket.model.IAssignmentAwareModel#wrapOnAssignment(wicket.Component)
-		 */
-		public IWrapModel wrapOnAssignment(Component component)
-		{
-			return new AttachedCompoundPropertyModel(component);
-		}
-
+		
 		/**
 		 * @see wicket.model.IInheritableModel#wrapOnInheritance(wicket.Component)
 		 */
