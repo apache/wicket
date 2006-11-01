@@ -34,7 +34,7 @@ import wicket.Resource;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.image.resource.RenderedDynamicImageResource;
-import wicket.model.IAssignmentAware;
+import wicket.model.IAssignmentAwareModel;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
 import wicket.model.IWrapModel;
@@ -363,9 +363,9 @@ public class RenderedLabel extends Image
 
 				// return the shared inherited
 				model = ((IInheritableModel)model).wrapOnInheritance(this);
-				if (model != null && (model instanceof IAssignmentAware))
+				if (model != null && (model instanceof IAssignmentAwareModel))
 				{
-					model = ((IAssignmentAware)model).wrapOnAssignment(this);
+					model = ((IAssignmentAwareModel)model).wrapOnAssignment(this);
 				}
 
 				return model;
