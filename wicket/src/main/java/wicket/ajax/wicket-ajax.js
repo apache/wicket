@@ -817,7 +817,26 @@ Wicket.Head.Contributor.prototype = {
 		for (var i = 0; i < rootNode.childNodes.length; i++) {
 			var node = rootNode.childNodes[i];			
 			if (node.tagName != null) {
-				var name = node.tagName.toLowerCase();		
+				var name = node.tagName.toLowerCase();
+				
+				if (name == "wicket:link") {
+					// it is a reference surrounded by wicket:link
+					// try to find content node
+					
+					for (var j = 0; j < node.childNodes.length; ++j) {
+						var childNode = node.childNodes[j];
+						// try to find a regular node inside wicket:link
+						
+						if (childNode.nodeType == 1) {
+							node = childNode;
+							name = node.tagName.toLowerCase();
+							break;
+						}
+					
+					}
+					
+				}
+						
 			    if (name == "link") {
 					this.processLink(steps, node);
 				} else if (name == "script") {
@@ -829,7 +848,7 @@ Wicket.Head.Contributor.prototype = {
 		}	
 	},
 	
-	processLink: function(steps, node) {
+	processLink: function(steps, node) {		
 		steps.push(function(notify) {
 			if (Wicket.Head.containsElement(node, "href")) {
 				notify();
