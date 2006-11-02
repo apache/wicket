@@ -831,10 +831,8 @@ Wicket.Head.Contributor.prototype = {
 							node = childNode;
 							name = node.tagName.toLowerCase();
 							break;
-						}
-					
-					}
-					
+						}					
+					}					
 				}
 						
 			    if (name == "link") {
