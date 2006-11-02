@@ -75,9 +75,10 @@ Wicket.TreeTable.update = function(elementId) {
 			// set the new width			
 			var w = (body.getElementsByTagName("div")[0].clientWidth - padding) + "px";
 			
-			if (w == "0px") { // this can happen if the first row is hidden (e.g. rootless mode)
+			if (w == (-padding)+"px") { // this can happen if the first row is hidden (e.g. rootless mode)
 				// try to get the width from second row 	 
 				w = (body.getElementsByTagName("div")[1].clientWidth - padding) + "px";
+				
 			}
 				
 			if (w != "0px") {
