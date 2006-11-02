@@ -1770,10 +1770,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * Notifies the behaviors that the component has been rendered. This is
 	 * decoupled from {@link #rendered()} because we don't want to call
-	 * <code>getPage().componentRendered(this)</code> every time. This method
-	 * is necessary for {@link AjaxRequestTarget} to be able to cleanup
-	 * component's behaviors after header contribution has been done (which is
-	 * separated from component render).
+	 * <code>getPage().componentRendered(this)</code> every time. 
 	 */
 	public final void renderedBehaviors()
 	{
@@ -1786,6 +1783,28 @@ public abstract class Component implements Serializable
 			}
 		}
 	}
+
+	/**
+	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
+	 * 
+	 * Traverses all behaviors and calls detachModel() on them.
+	 * This is needed to cleanup behavior after render. This method
+	 * is necessary for {@link AjaxRequestTarget} to be able to cleanup
+	 * component's behaviors after header contribution has been done (which is
+	 * separated from component render).
+	 */
+	public final void detachBehaviors() 
+	{
+		if (behaviors != null)
+		{
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			{
+				IBehavior behavior = (IBehavior)i.next();
+				behavior.detachModel(this);
+			}
+		}		
+	}
+
 
 	/**
 	 * Print to the web response what ever the component wants to contribute to
