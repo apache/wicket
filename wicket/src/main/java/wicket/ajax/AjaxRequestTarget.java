@@ -521,7 +521,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingHeaderResponse.reset();
 
 		component.renderHead(header);
-		component.renderedBehaviors();
+		component.detachBehaviors();
 		if (component instanceof MarkupContainer)
 		{
 			((MarkupContainer)component).visitChildren(new Component.IVisitor()
@@ -531,7 +531,7 @@ public class AjaxRequestTarget implements IRequestTarget
 					if (component.isVisible())
 					{
 						component.renderHead(header);
-						component.renderedBehaviors();
+						component.detachBehaviors();
 						return CONTINUE_TRAVERSAL;
 					}
 					else
