@@ -509,8 +509,7 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		encodingHeaderResponse.reset();
 
-		component.renderHead(header);
-		component.renderedBehaviors();
+		component.renderHead(header);		
 		
 		if (component instanceof MarkupContainer)
 		{
@@ -520,8 +519,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				{
 					if (component.isVisible())
 					{
-						component.renderHead(header);
-						component.renderedBehaviors();
+						component.renderHead(header);						
 						
 						return CONTINUE_TRAVERSAL;
 					}

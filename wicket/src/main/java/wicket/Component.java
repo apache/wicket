@@ -28,7 +28,6 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.ajax.AjaxRequestTarget;
 import wicket.annot.AnnotationUtils;
 import wicket.annot.OnAfterRender;
 import wicket.annot.OnAttach;
@@ -840,7 +839,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		{
 			for (IBehavior behavior : behaviors)
 			{
-				behavior.detachModel(this);
+				behavior.detach(this);
 			}
 		}
 	}
@@ -1940,23 +1939,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
-
+		
 		// notify the behaviors that component has been rendered
-		renderedBehaviors();
-	}
-
-	/**
-	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
-	 * 
-	 * Notifies the behaviors that the component has been rendered. This is
-	 * decoupled from {@link #rendered()} because we don't want to call
-	 * <code>getPage().componentRendered(this)</code> every time. This method
-	 * is necessary for {@link AjaxRequestTarget} to be able to cleanup
-	 * component's behaviors after header contribution has been done (which is
-	 * separated from component render).
-	 */
-	public final void renderedBehaviors()
-	{
 		if (behaviors != null)
 		{
 			for (IBehavior behavior : behaviors)
@@ -1964,7 +1948,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				behavior.rendered(this);
 			}
 		}
-	}
+	}	
 
 	/**
 	 * Print to the web response what ever the component wants to contribute to

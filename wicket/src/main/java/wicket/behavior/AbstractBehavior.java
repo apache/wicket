@@ -48,9 +48,9 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#detachModel(Component)
+	 * @see wicket.behavior.IBehavior#detach(Component)
 	 */
-	public void detachModel(Component component)
+	public void detach(Component component)
 	{
 	}
 

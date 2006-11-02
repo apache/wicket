@@ -186,7 +186,7 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 	 *            the model that initiates the detachement
 	 */
 	@Override
-	public final void detachModel(Component component)
+	public final void detach(Component component)
 	{
 		if (replaceModel != null)
 		{

@@ -151,10 +151,10 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	}
 
 	/**
-	 * @see wicket.behavior.AbstractBehavior#detachModel(wicket.Component)
+	 * @see wicket.behavior.AbstractBehavior#detach(wicket.Component)
 	 */
 	@Override
-	public void detachModel(Component component)
+	public void detach(Component component)
 	{
 		contributor.contribution.detach();
 	}

@@ -70,7 +70,7 @@ public interface IBehavior extends Serializable
 	 * @param component
 	 *            the component that initiates the detachement of this behavior
 	 */
-	void detachModel(Component component);
+	void detach(Component component);
 
 	/**
 	 * Called any time a component that has this behavior registered is
