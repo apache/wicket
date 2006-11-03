@@ -670,7 +670,7 @@ Wicket.Ajax.Call.prototype = {
 	submitFormById: function(formId, submitButton) {
 		var form = document.getElementById(formId);
 		if (form == null || typeof (form) == "undefined")
-			Wicket.Log.Error("Trying to submit form with id '"+formId+"' that is not in document.");
+			Wicket.Log.error("Trying to submit form with id '"+formId+"' that is not in document.");
 		return this.submitForm(form, submitButton);
 	},
 	
