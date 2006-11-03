@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import wicket.util.lang.Objects;
+
 
 /**
  * Reflection utilities
@@ -146,7 +148,7 @@ public class ReflectionUtils
 
 				final Package apack = a.getDeclaringClass().getPackage();
 				final Package bpack = b.getDeclaringClass().getPackage();
-				if (apack == bpack || apack.equals(bpack))
+				if (Objects.equal(apack, bpack))
 				{
 					// are in the same package
 					if (!Modifier.isPrivate(amods) && !Modifier.isPrivate(bmods))
