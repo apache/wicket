@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import wicket.util.lang.Objects;
+import wicket.util.lang.Packages;
 
 
 /**
@@ -146,8 +147,8 @@ public class ReflectionUtils
 					}
 				}
 
-				final Package apack = a.getDeclaringClass().getPackage();
-				final Package bpack = b.getDeclaringClass().getPackage();
+				final String apack = Packages.extractPackageName(a.getDeclaringClass());
+				final String bpack = Packages.extractPackageName(b.getDeclaringClass());
 				if (Objects.equal(apack, bpack))
 				{
 					// are in the same package
