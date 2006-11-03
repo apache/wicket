@@ -19,6 +19,7 @@
 package wicket.util.lang.reflect;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 
@@ -49,16 +50,12 @@ public class ClassHieararchyIterator implements Iterator<Class>
 		Class cursor = clazz;
 		while (cursor != null)
 		{
-			switch (scanOrder)
-			{
-				case SUB_TO_SUPER :
-					hierarchy.add(cursor);
-					break;
-				case SUPER_TO_SUB :
-					hierarchy.add(0, cursor);
-					break;
-			}
+			hierarchy.add(cursor);
 			cursor = cursor.getSuperclass();
+		}
+		if (scanOrder == ClassOrder.SUPER_TO_SUB)
+		{
+			Collections.reverse(hierarchy);
 		}
 	}
 
