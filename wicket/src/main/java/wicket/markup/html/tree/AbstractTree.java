@@ -760,6 +760,8 @@ public abstract class AbstractTree extends Panel<TreeModel>
 						public void visitItem(TreeItem item)
 						{
 							removeItem(item);
+							// unselect the node
+							getTreeState().selectNode(item.getModelObject(), false);
 						}
 					});
 
@@ -1317,9 +1319,6 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		// remove the id
 		// note that this doesn't update item's parent's children list
 		item.remove();
-
-		// unselect the node
-		getTreeState().selectNode(item.getModelObject(), false);
 	}
 
 	/**
