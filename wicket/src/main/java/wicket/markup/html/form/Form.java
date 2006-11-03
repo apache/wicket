@@ -979,19 +979,14 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	protected final void updateFormComponentModels()
 	{
-		visitFormComponents(new FormComponent.AbstractVisitor()
+		visitFormComponents(new ValidationVisitor() 
 		{
 			@Override
-			public void onFormComponent(final FormComponent formComponent)
+			public void validate(FormComponent formComponent)
 			{
-				// Only update the component when it is visible and valid
-				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled()
-						&& formComponent.isValid() && formComponent.isEnableAllowed())
-				{
-					// Potentially update the model
-					formComponent.updateModel();
-				}
-			}
+				// Potentially update the model
+				formComponent.updateModel();
+			}		
 		});
 	}
 
