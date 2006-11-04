@@ -347,10 +347,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		// render any associated headers of the component
 		respondHeaderContribution(response, component);
 
-		Response encodingResponse = new StringResponse();
+		Response componentResponse = new StringResponse();
 		try
 		{
-			RequestCycle.get().setResponse(encodingResponse);
+			RequestCycle.get().setResponse(componentResponse);
 			
 			component.renderComponent();
 		}
@@ -366,14 +366,16 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write("<component id=\"");
 		response.write(markupId);
 		response.write("\" ");
-		if (needsEncoding(encodingResponse.toString()))
+		String data = componentResponse.toString();
+		if (needsEncoding(componentResponse.toString()))
 		{
 			response.write(" encoding=\"");
 			response.write(getEncodingName());
 			response.write("\" ");
+			data = encode(data);
 		}
 		response.write("><![CDATA[");
-		response.write(encodingResponse.toString());
+		response.write(data);
 		response.write("]]></component>");
 	}
 
@@ -397,21 +399,24 @@ public class AjaxRequestTarget implements IRequestTarget
 			RequestCycle.get().setResponse(response);
 		}
 
-		if (encodingResponse.toString().length() != 0)
+		String data = encodingResponse.toString();
+		
+		if (data.length() != 0)
 		{
-			response.write("<header-contribution");
-
+			response.write("<header-contribution");			
+			
 			if (needsEncoding(encodingResponse.toString()))
 			{
 				response.write(" encoding=\"");
 				response.write(getEncodingName());
 				response.write("\" ");
+				data = encode(data);
 			}
 
 			// we need to write response as CDATA and parse it on client,
 			// because konqueror crashes when there is a <script> element
 			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
-			response.write(encodingResponse.toString());
+			response.write(data);
 			response.write("</head>]]>");
 			response.write("</header-contribution>");
 		}
