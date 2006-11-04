@@ -314,4 +314,25 @@ public class WicketTesterTest extends TestCase
 
 		assertTrue(page.isExecuted());
 	}
+
+
+	/**
+	 * 
+	 */
+	public void testRedirectWithPageParameters()
+	{
+		WicketTester tester = new WicketTester();
+
+		tester.startPage(MockPageParameterPage.class);
+
+		tester.assertLabel("label", "");
+
+		// Click the bookmarkable link
+		tester.clickLink("link");
+
+		// It should still be the MockPageParameterPage, but the
+		// label should now have "1" in it because that's what comes
+		// from the page parameter.
+		tester.assertLabel("label", "1");
+	}
 }
