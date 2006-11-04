@@ -40,6 +40,8 @@ public class NavomaticBorder extends Border
 	{
 		super(parent, id);
 		new BoxBorder(this, "navigationBorder");
-		new BoxBorder(this, "bodyBorder");
+		Border bodyBorder = new BoxBorder(this, "bodyBorder");
+		
+		setBorderBodyContainer(bodyBorder);
 	}
 }
