@@ -3,8 +3,8 @@
 
 	<property name="final.name" value="wicket" />
 
-	<property name="src.main.dir" value="src/java" />
-	<property name="src.test.dir" value="src/test" />
+	<property name="src.main.dir" value="src/main/java" />
+	<property name="src.test.dir" value="src/test/java" />
 	
 	<property name="lib.dir" value="lib" />
 
