@@ -23,9 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
-import wicket.markup.ComponentTag;
-import wicket.markup.MarkupNotFoundException;
-import wicket.markup.MarkupStream;
+import wicket.markup.MarkupFragment;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.internal.PortletHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
@@ -65,7 +63,6 @@ public class PortletPage<T> extends Page<T>
 	protected PortletPage()
 	{
 		super();
-		commonInit();
 	}
 
 	/**
@@ -82,7 +79,6 @@ public class PortletPage<T> extends Page<T>
 	protected PortletPage(final PageMap pageMap)
 	{
 		super(pageMap);
-		commonInit();
 	}
 
 	/**
@@ -91,7 +87,6 @@ public class PortletPage<T> extends Page<T>
 	protected PortletPage(final PageMap pageMap, final IModel<T> model)
 	{
 		super(pageMap, model);
-		commonInit();
 	}
 
 	/**
@@ -193,45 +188,28 @@ public class PortletPage<T> extends Page<T>
 	{
 	}
 
-	/*
+	/**
 	 * Called when the window state is changed.
 	 * 
-	 * @param portletMode
+	 * @param windowState
 	 */
 	protected void onSetWindowState(WindowState windowState)
 	{
 	}
-	
+
 	/**
-	 * Common code executed by constructors.
+	 * @see wicket.MarkupContainer#onAssociatedMarkupLoaded(wicket.markup.MarkupFragment)
 	 */
-	private void commonInit()
+	@Override
+	protected void onAssociatedMarkupLoaded(MarkupFragment markup)
 	{
-		MarkupStream markupStream = new MarkupStream(getAssociatedMarkup(false));
-		if (markupStream == null)
+		if (get(HtmlHeaderSectionHandler.HEADER_ID) == null)
 		{
-			throw new MarkupNotFoundException(
-					"Each Page must have associated markup. Unable to find the markup file for Page: "
-							+ this.toString());
+			// HtmlHeaderSectionHandler guarantees that a <head> tag exists
+			new PortletHeaderContainer(this, HtmlHeaderSectionHandler.HEADER_ID);
 		}
 		
-		// The <head> container. It can be accessed, replaced
-		// and attribute modifiers can be attached.
-		markupStream.setCurrentIndex(0);
-		while (markupStream.hasMoreComponentTags())
-		{
-			final ComponentTag tag = markupStream.getTag();
-			if (tag.isOpen() && tag.isHeadTag())
-			{
-				// Add a default container if the tag has the default
-				// name. If the tag has a wicket:id, than the user
-				// must create the component.
-				if (HtmlHeaderSectionHandler.HEADER_ID.equals(tag.getId()))
-				{
-					new PortletHeaderContainer(this, tag.getId());
-				}
-				break;
-			}
-		}
+		// default
+		super.onAssociatedMarkupLoaded(markup);
 	}	
 }

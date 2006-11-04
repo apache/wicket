@@ -18,8 +18,11 @@
  */
 package wicket.settings;
 
+import java.util.List;
+
 import wicket.markup.IMarkupParserFactory;
 import wicket.markup.MarkupParserFactory;
+import wicket.markup.parser.onLoadListener.IMarkupLoadListener;
 
 /**
  * Interface for markup related settings.
@@ -177,4 +180,21 @@ public interface IMarkupSettings
 	 *            if true, xml declaration will be stripped from output
 	 */
 	void setStripXmlDeclarationFromOutput(final boolean strip);
+
+	/**
+	 * Register a markup load listener to the application.
+	 * <p>
+	 * This is for cross functional listeners. For component specific listeners
+	 * you may subclass MarkupContainer.ononAssociatedMarkupLoaded().
+	 * 
+	 * @param listener
+	 */
+	void addMarkupLoadListener(IMarkupLoadListener listener);
+
+	/**
+	 * Get the list of registered markup load listeners.
+	 * 
+	 * @return List<IMarkupLoadListener>
+	 */
+	List<IMarkupLoadListener> getMarkupLoadListeners();
 }

@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import wicket.Application;
 import wicket.MarkupContainer;
+import wicket.markup.MarkupElement;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -59,6 +60,42 @@ public class DefaultMarkupLoader implements IMarkupLoader
 		MarkupFragment markup = application.getMarkupSettings().getMarkupParserFactory()
 				.newMarkupParser(markupResourceStream).readAndParse();
 
+		checkHeaders(markup);
+
 		return markup;
+	}
+
+	/**
+	 * On Pages with wicket:head and automatically added head tag, move the
+	 * wicket:head tags inside the head tag.
+	 * 
+	 * @param markup
+	 */
+	private void checkHeaders(final MarkupFragment markup)
+	{
+		final MarkupFragment header = MarkupFragmentUtils.getHeadTag(markup);
+		if (header != null)
+		{
+			markup.visitChildren(MarkupFragment.class, new MarkupFragment.IVisitor()
+			{
+				public Object visit(final MarkupElement element, final MarkupFragment parent)
+				{
+					if (element == header)
+					{
+						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					}
+
+					if (((MarkupFragment)element).getTag().isWicketHeadTag())
+					{
+						if (parent.removeMarkupElement(element) == true)
+						{
+							header.addMarkupElement(header.size() - 1, element);
+						}
+					}
+
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+		}
 	}
 }

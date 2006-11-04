@@ -75,6 +75,9 @@ public class MarkupParser
 	/** The root markup fragment of the markup being parsed */
 	private final MarkupFragment rootFragment;
 
+	/** The current markup fragment in process */
+	private MarkupFragment currentFragment;
+
 	/** True if comments are to be removed */
 	private boolean stripComments;
 
@@ -165,11 +168,9 @@ public class MarkupParser
 	}
 
 	/**
-	 * Like internal filters, user provided filters might need access to the
-	 * markup as well.
+	 * Gets the Markup of the resource
 	 * 
 	 * @return The markup resource stream
-	 * @deprecated Since 2.0 please use getMarkupFragment().getMarkup() instead
 	 */
 	public final IMarkup getMarkup()
 	{
@@ -178,13 +179,14 @@ public class MarkupParser
 
 	/**
 	 * Like internal filters, user provided filters might need access to the
-	 * markup as well.
+	 * markup as well. But be careful, out of the fragment tree it is always the
+	 * one currently in process.
 	 * 
 	 * @return The markup resource stream
 	 */
-	public final MarkupFragment getMarkupFragment()
+	public final MarkupFragment getCurrentMarkupFragment()
 	{
-		return this.rootFragment;
+		return this.currentFragment;
 	}
 
 	/**
@@ -196,28 +198,27 @@ public class MarkupParser
 		// Chain together all the different markup filters and configure them
 		this.markupFilterChain = xmlParser;
 
-		registerMarkupFilter(new WicketTagIdentifier(markup));
+		registerMarkupFilter(new WicketTagIdentifier(this.markup));
 		registerMarkupFilter(new TagTypeHandler());
 		registerMarkupFilter(new HtmlHandler());
 		registerMarkupFilter(new WicketRemoveTagHandler());
 		registerMarkupFilter(new WicketLinkTagHandler());
-		registerMarkupFilter(new WicketNamespaceHandler(markup));
+		registerMarkupFilter(new WicketNamespaceHandler(this.markup));
 
 		// Provided the wicket component requesting the markup is known ...
-		final MarkupResourceStream resource = markup.getResource();
+		final MarkupResourceStream resource = this.markup.getResource();
 		if (resource != null)
 		{
 			final ContainerInfo containerInfo = resource.getContainerInfo();
 			if (containerInfo != null)
 			{
 				registerMarkupFilter(new WicketMessageTagHandler());
-
 				registerMarkupFilter(new BodyOnLoadHandler());
 
 				// Pages require additional handlers
 				if (Page.class.isAssignableFrom(containerInfo.getContainerClass()))
 				{
-					registerMarkupFilter(new HtmlHeaderSectionHandler(this.rootFragment));
+					registerMarkupFilter(new HtmlHeaderSectionHandler(this));
 				}
 
 				registerMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
@@ -285,12 +286,12 @@ public class MarkupParser
 	private MarkupFragment parseMarkup()
 	{
 		final Stack<MarkupFragment> fragmentStack = new Stack<MarkupFragment>();
-		MarkupFragment fragment = this.rootFragment;
-		
+		this.currentFragment = this.rootFragment;
+
 		try
 		{
 			// allways remember the latest index (size)
-			int size = fragment.size();
+			int size = currentFragment.size();
 
 			// Loop through tags
 			for (ComponentTag tag; null != (tag = (ComponentTag)this.markupFilterChain.nextTag());)
@@ -324,7 +325,7 @@ public class MarkupParser
 
 						// Make sure you add it at the correct location.
 						// IMarkupFilters might have added elements as well.
-						fragment.addMarkupElement(size, new RawMarkup(rawMarkup));
+						currentFragment.addMarkupElement(size, new RawMarkup(rawMarkup));
 					}
 
 					if (add)
@@ -335,29 +336,29 @@ public class MarkupParser
 						{
 							if (tag.isOpen() || tag.isOpenClose())
 							{
-								fragmentStack.push(fragment);
+								fragmentStack.push(currentFragment);
 								MarkupFragment newFragment = new MarkupFragment(this.markup);
-								fragment.addMarkupElement(newFragment);
-								fragment = newFragment;
+								currentFragment.addMarkupElement(newFragment);
+								currentFragment = newFragment;
 							}
-							
-							fragment.addMarkupElement(tag);
+
+							currentFragment.addMarkupElement(tag);
 							if (tag.isClose() || tag.isOpenClose() || tag.hasNoCloseTag())
 							{
-								fragment = fragmentStack.pop();
+								currentFragment = fragmentStack.pop();
 							}
 						}
 					}
 					else if (tag.isModified())
 					{
-						fragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+						currentFragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
 					}
 
 					this.xmlParser.setPositionMarker();
 				}
 
 				// allways remember the latest index (size)
-				size = fragment.size();
+				size = currentFragment.size();
 			}
 		}
 		catch (final ParseException ex)
@@ -366,14 +367,14 @@ public class MarkupParser
 			final CharSequence text = this.xmlParser.getInputFromPositionMarker(-1);
 			if (text.length() > 0)
 			{
-				fragment.addMarkupElement(new RawMarkup(text));
+				currentFragment.addMarkupElement(new RawMarkup(text));
 			}
 
 			this.markup.setEncoding(this.xmlParser.getEncoding());
 			this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
 			// Create a MarkupStream and position it at the error location
-			MarkupElement element = fragment.get(fragment.size() - 1);
+			MarkupElement element = currentFragment.get(currentFragment.size() - 1);
 			MarkupStream markupStream = new MarkupStream(this.rootFragment);
 			while (markupStream.hasMore())
 			{
@@ -382,7 +383,7 @@ public class MarkupParser
 					break;
 				}
 			}
-			
+
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
 
@@ -402,26 +403,23 @@ public class MarkupParser
 				rawMarkup = compressWhitespace(rawMarkup);
 			}
 
-			fragment.addMarkupElement(new RawMarkup(rawMarkup));
+			currentFragment.addMarkupElement(new RawMarkup(rawMarkup));
 		}
 
-		// Do we have unclosed tags in the markup? Re-balance the markup tree 
+		// Do we have unclosed tags in the markup? Re-balance the markup tree
 		if (fragmentStack.size() > 0)
 		{
-			fragment.handleUnclosedTags();
-			fragment = this.rootFragment;
+			currentFragment.handleUnclosedTags();
+			currentFragment = this.rootFragment;
 		}
-		
-		// remove "empty" root fragment
-		if ((fragment.size() == 1) && (fragment.get(0) instanceof MarkupFragment))
-		{
-			fragment = (MarkupFragment)fragment.get(0);
-		}
-		
-		// Make all tags immutable and the list of elements unmodifable
-		fragment.makeImmutable();
 
-		return fragment;
+		// remove "empty" root fragment
+		if ((currentFragment.size() == 1) && (currentFragment.get(0) instanceof MarkupFragment))
+		{
+			currentFragment = (MarkupFragment)currentFragment.get(0);
+		}
+		
+		return currentFragment;
 	}
 
 	/**

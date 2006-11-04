@@ -18,20 +18,20 @@
  */
 package wicket.markup.html.internal;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
+import wicket.annot.OnBeforeRender;
+import wicket.annot.OnDetach;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
  * HeaderContainer is a base class for {@link HtmlHeaderContainer} and
- * {$link PortletHeaderContainer}
+ * {@link PortletHeaderContainer}
  * 
  * @author Juergen Donnerstag
  * @author Janne Hietam&auml;ki
@@ -47,12 +47,14 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	 * markup which contains the wicket:head. It can be modified by means of the
 	 * scope attribute.
 	 */
-	private Map<String, List<String>> renderedComponentsPerScope;
+	private transient Map<String, Map<Class, MarkupContainer>> componentsPerScope;
 
 	/**
-	 * Header response that is responsible for filtering duplicate contributions.
+	 * Header response that is responsible for filtering duplicate
+	 * contributions.
 	 */
-	private transient IHeaderResponse headerResponse = null;	
+	private transient IHeaderResponse headerResponse = null;
+
 	/**
 	 * Construct
 	 * 
@@ -68,46 +70,23 @@ public abstract class HeaderContainer extends WebMarkupContainer
 		// including the page does have a <head> or <wicket:head> tag.
 		setRenderBodyOnly(true);
 	}
-
+	
 	/**
 	 * Ask all child components of the Page if they have something to contribute
 	 * to the &lt;head&gt; section of the HTML output. Every component
-	 * interested must implement IHeaderContributor.
+	 * interested must subclass Component.renderHead().
 	 * <p>
 	 * Note: HtmlHeaderContainer will be removed from the component hierachie at
 	 * the end of the request (@see #onEndRequest()) and thus can not transport
 	 * status from one request to the next. This is true for all components
-	 * added to the header.
+	 * added to the header as well.
 	 * 
 	 * @param page
 	 *            The page object
-	 * @param container
-	 *            The header component container
 	 */
-	protected final void renderHeaderSections(final Page page, final HeaderContainer container)
+	protected final void renderHeaderSections(final Page page)
 	{
-		// Make sure all Components interested in contributing to the header
-		// and there attached behaviors are asked.
-		page.visitChildren(new IVisitor()
-		{
-			/**
-			 * @see wicket.Component.IVisitor#component(wicket.Component)
-			 */
-			public Object component(Component component)
-			{
-				if (component.isVisible())
-				{
-					component.renderHead(container);
-					return IVisitor.CONTINUE_TRAVERSAL;
-				}
-				else
-				{
-					return IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-				}
-			}
-		});
-
-		page.renderHead(container);
+		page.renderHead(new HeaderResponse(getResponse()));
 	}
 
 	/**
@@ -122,58 +101,58 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	/**
 	 * Check if the header component is ok to render within the scope given.
 	 * 
-	 * @param scope
-	 *            The scope of the header component
-	 * @param id
-	 *            The component's id
-	 * @return true, if the component ok to render
+	 * @param header
+	 *            The header part container to check
+	 * @return true, if the component is eligable to create and render
 	 */
-	public final boolean okToRenderComponent(final String scope, final String id)
+	public boolean okToRender(final WicketHeadContainer header)
 	{
-		if (this.renderedComponentsPerScope == null)
+		if (this.componentsPerScope == null)
 		{
-			this.renderedComponentsPerScope = new HashMap<String, List<String>>();
+			this.componentsPerScope = new HashMap<String, Map<Class, MarkupContainer>>();
 		}
 
-		// if (scope == null)
-		// {
-		// scope = header.getMarkupStream().getContainerClass().getName();
-		// }
-
-		List<String> componentScope = this.renderedComponentsPerScope.get(scope);
+		String scope = header.getScope();
+		Map<Class, MarkupContainer> componentScope = this.componentsPerScope.get(scope);
 		if (componentScope == null)
 		{
-			componentScope = new ArrayList<String>();
-			this.renderedComponentsPerScope.put(scope, componentScope);
+			componentScope = new HashMap<Class, MarkupContainer>();
+			this.componentsPerScope.put(scope, componentScope);
 		}
 
-		if (componentScope.contains(id))
+		Class markupClass = header.getMarkupFragment().getMarkup().getResource().getMarkupClass();
+		Component creator = componentScope.get(markupClass);
+		if (creator != null)
 		{
+			if (creator == header.getParent())
+			{
+				return true;
+			}
 			return false;
 		}
-		componentScope.add(id);
+
+		componentScope.put(markupClass, header.getParent());
 		return true;
 	}
 
-	@Override
-	protected void onDetach()
+	/**
+	 * 
+	 * @see wicket.Component#onBeforeRender()
+	 */
+	@OnBeforeRender
+	protected void onBeforeRender()
 	{
-		super.onDetach();
-
-		this.renderedComponentsPerScope = null;
-		this.headerResponse = null;
+		// not needed anymore, which is why it can be transient
+		this.componentsPerScope = null;
 	}
 
 	/**
-	 * Returns the header response. 
-	 * 
-	 * @return header response
+	 * @see wicket.Component#onDetach()
 	 */
-	public IHeaderResponse getHeaderResponse() {
-		if (this.headerResponse == null)
-		{
-			headerResponse = new HeaderResponse(getResponse());
-		}
-		return headerResponse;
+	@OnDetach
+	protected void onDetach()
+	{
+		this.componentsPerScope = null;
+		this.headerResponse = null;
 	}
 }

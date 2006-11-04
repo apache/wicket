@@ -47,7 +47,7 @@ import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.IHeaderContributor;
-import wicket.markup.html.internal.HeaderContainer;
+import wicket.markup.html.IHeaderResponse;
 import wicket.model.IAssignmentAwareModel;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
@@ -711,8 +711,14 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * Gets the markup fragment associated with the component. Except for Pages
-	 * it is assumed that the first markup element of the fragment is a tag.
+	 * Gets the markup fragment associated with the component. Except for Pages,
+	 * Panels and Borders, it is assumed that the first markup element of the 
+	 * fragment is a tag.
+	 * <p>
+	 * If the markup fragment has been determined previously, the transient cache
+	 * of the Component is returned. Else, the parent container will be asked to 
+	 * provide the markup for its child and the object returned will be cached
+	 * for later re-use.
 	 * 
 	 * @return markup fragment.
 	 */
@@ -730,17 +736,17 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 					+ getId());
 		}
 
-		MarkupFragment markupFragment = parent.getMarkupFragment(getId());
-		if (markupFragment == null)
+		this.markupFragment = parent.getMarkupFragment(getId());
+		if (this.markupFragment == null)
 		{
 			throw new MarkupNotFoundException("Unable to find markup for Component: " + getId());
 		}
 
 		// Attached behaviors provided by the ComponentTag which
 		// one of the markup handlers might have added.
-		if (markupFragment.size() > 0)
+		if (this.markupFragment.size() > 0)
 		{
-			final ComponentTag tag = markupFragment.getTag();
+			final ComponentTag tag = this.markupFragment.getTag();
 
 			// add any behaviors attached to the component tag
 			if ((tag != null) && tag.hasBehaviors())
@@ -1955,30 +1961,22 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * the head section. Make sure that all attached behaviors are asked as
 	 * well.
 	 * 
-	 * @param container
-	 *            The HtmlHeaderContainer
+	 * @param response
+	 *            The response object to write the output to
 	 */
-	public void renderHead(final HeaderContainer container)
+	public void renderHead(final IHeaderResponse response)
 	{
-		if (isHeadRendered() == false)
+		if ((isVisible() == true) && (isHeadRendered() == false))
 		{
-			// first try whether the component can contribute something?
-			if (this instanceof IHeaderContributor)
-			{
-				((IHeaderContributor)this).renderHead(container.getHeaderResponse());
-			}
-
 			// Ask all behaviors if they have something to contribute to the
 			// header or body onLoad tag.
 			if (this.behaviors != null)
 			{
-				final Iterator<IBehavior> iter = this.behaviors.iterator();
-				while (iter.hasNext())
+				for (IBehavior behavior : this.behaviors)
 				{
-					IBehavior behavior = iter.next();
 					if (behavior instanceof IHeaderContributor)
 					{
-						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
+						((IHeaderContributor)behavior).renderHead(response);
 					}
 				}
 			}

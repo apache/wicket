@@ -331,6 +331,7 @@ public class MarkupCache
 			// add the markup to the cache
 			if (markupResourceStream.getCacheKey() != null)
 			{
+				markup.makeImmutable();
 				markupCache.put(markupResourceStream.getCacheKey(), markup);
 			}
 

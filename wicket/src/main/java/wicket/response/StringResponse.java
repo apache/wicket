@@ -37,10 +37,20 @@ public class StringResponse extends Response
 
 	/**
 	 * Constructor
+	 * 
+	 * @param initialSize The initial size of the string buffer
+	 */
+	public StringResponse(final int initialSize)
+	{
+		this.out = new AppendingStringBuffer(initialSize);
+	}
+
+	/**
+	 * Constructor
 	 */
 	public StringResponse()
 	{
-		this.out = new AppendingStringBuffer(128);
+		this(500);
 	}
 
 	/**

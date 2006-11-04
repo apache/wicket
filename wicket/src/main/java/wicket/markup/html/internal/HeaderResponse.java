@@ -34,7 +34,7 @@ import wicket.util.string.JavascriptUtils;
  * 
  * @author Matej Knopp
  */
-class HeaderResponse implements IHeaderResponse
+public class HeaderResponse implements IHeaderResponse
 {
 	private static final long serialVersionUID = 1L;
 

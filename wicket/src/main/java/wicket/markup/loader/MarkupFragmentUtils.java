@@ -119,9 +119,10 @@ public class MarkupFragmentUtils
 	}
 
 	/**
+	 * Gets the &lt;head&gt; fragment
 	 * 
 	 * @param fragment
-	 * @return True, if &lt;head&gt; was found
+	 * @return Null, if not found
 	 */
 	public static final MarkupFragment getHeadTag(final MarkupFragment fragment)
 	{
@@ -147,6 +148,8 @@ public class MarkupFragmentUtils
 	}
 
 	/**
+	 * Gets the parent fragment of &lt;head&gt; and the position of the
+	 * &lt;head&gt; tag
 	 * 
 	 * @param fragment
 	 * @return Null, if no &lt;head&gt; was found
@@ -260,6 +263,7 @@ public class MarkupFragmentUtils
 	}
 
 	/**
+	 * Gets the &lt;wicket:head&gt; markup
 	 * 
 	 * @param fragment
 	 * @return Null, if no wicket:head found

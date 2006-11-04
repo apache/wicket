@@ -22,7 +22,6 @@ import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.Model;
 
 
@@ -45,19 +44,6 @@ public class HeaderSectionMyLabel extends WebMarkupContainerWithAssociatedMarkup
 	public HeaderSectionMyLabel(MarkupContainer parent, final String id, final String label)
 	{
 		super(parent, id, new Model<String>(label));
-	}
-
-	/**
-	 * This label renders its markup the normal way, and is still able to take
-	 * and render the header tag from an associated markup file.
-	 * 
-	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HeaderContainer)
-	 */
-	@Override
-	public void renderHead(HeaderContainer container)
-	{
-		this.renderHeadFromAssociatedMarkupFile(container);
-		super.renderHead(container);
 	}
 
 	/**

@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.ComponentTag;
@@ -433,6 +434,24 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 			{
 				ComponentTag tag = (ComponentTag)element;
 				tag.setMarkupClass(parent.getMarkup().getResource().getMarkupClass());
+				return CONTINUE_TRAVERSAL;
+			}
+		});
+		
+		// Make sure that wicket:head tags don't have doublicate ids.
+		mergedMarkup.visitChildren(MarkupFragment.class, new MarkupFragment.IVisitor()
+		{
+			private int index = 0;
+			
+			public Object visit(final MarkupElement element, final MarkupFragment parent)
+			{
+				MarkupFragment fragment = (MarkupFragment) element;
+				ComponentTag tag = fragment.getTag();
+				if ((tag != null) && tag.isWicketHeadTag())
+				{
+					String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
+					tag.setId(id);
+				}
 				return CONTINUE_TRAVERSAL;
 			}
 		});

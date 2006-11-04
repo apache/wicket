@@ -18,13 +18,10 @@
  */
 package wicket.ajax;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,15 +29,13 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
-import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
-import wicket.markup.html.internal.HeaderContainer;
-import wicket.markup.html.internal.HtmlHeaderContainer;
-import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.markup.html.IHeaderResponse;
+import wicket.markup.html.internal.HeaderResponse;
 import wicket.protocol.http.WebResponse;
-import wicket.util.string.AppendingStringBuffer;
+import wicket.response.StringResponse;
 import wicket.util.string.Strings;
 
 /**
@@ -56,8 +51,8 @@ import wicket.util.string.Strings;
  * an id attribute in the generated markup that is equal to the value retrieved
  * from Component#getMarkupId(). This can be accomplished by either setting the
  * id attribute in the html template, or using an attribute modifier that will
- * add the attribute with value Component#getMarkupId() to the tag ( such as
- * MarkupIdSetter )
+ * add the attribute with value Component#getMarkupId() to the tag (such as
+ * MarkupIdSetter)
  * <p>
  * Any javascript that needs to be evaluater on the client side can be added
  * using AjaxRequestTarget#addJavascript(String). For example, this feature can
@@ -70,129 +65,23 @@ import wicket.util.string.Strings;
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
-	/**
-	 * Response that uses an encoder to encode its contents
-	 * 
-	 * @author Igor Vaynberg (ivaynberg)
-	 */
-	private final class EncodingResponse extends WebResponse
-	{
-		private final AppendingStringBuffer buffer = new AppendingStringBuffer(256);
+	private static final Log Log = LogFactory.getLog(AjaxRequestTarget.class);
 
-		private boolean escaped = false;
-
-		private final Response originalResponse;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param originalResponse
-		 */
-		public EncodingResponse(Response originalResponse)
-		{
-			this.originalResponse = originalResponse;
-		}
-
-		/**
-		 * @see wicket.Response#encodeURL(CharSequence)
-		 */
-		@Override
-		public CharSequence encodeURL(CharSequence url)
-		{
-			return originalResponse.encodeURL(url);
-		}
-
-		/**
-		 * @return contents of the response
-		 */
-		public CharSequence getContents()
-		{
-			return buffer;
-		}
-
-		/**
-		 * NOTE: this method is not supported
-		 * 
-		 * @see wicket.Response#getOutputStream()
-		 */
-		@Override
-		public OutputStream getOutputStream()
-		{
-			throw new UnsupportedOperationException("Cannot get output stream on StringResponse");
-		}
-
-		/**
-		 * @return true if any escaping has been performed, false otherwise
-		 */
-		public boolean isContentsEncoded()
-		{
-			return escaped;
-		}
-
-		/**
-		 * Resets the response to a clean state so it can be reused to save on
-		 * garbage.
-		 */
-		@Override
-		public void reset()
-		{
-			buffer.clear();
-			escaped = false;
-
-		}
-
-		/**
-		 * @see wicket.Response#write(CharSequence)
-		 */
-		@Override
-		public void write(CharSequence cs)
-		{
-			String string = cs.toString();
-			if (needsEncoding(string))
-			{
-				string = encode(string);
-				escaped = true;
-				buffer.append(string);
-			}
-			else
-			{
-				buffer.append(cs);
-			}
-		}
-
-	}
-
-	private static final Log LOG = LogFactory.getLog(AjaxRequestTarget.class);
-
+	/** */
 	private final List<String> appendJavascripts = new ArrayList<String>();
 
-	/**
-	 * create a response for component body and javascript that will escape
-	 * output to make it safe to use inside a CDATA block
-	 */
-	private final EncodingResponse encodingBodyResponse;
-
-	/**
-	 * Response for header contributon that will escape output to make it safe
-	 * to use inside a CDATA block
-	 */
-	private final EncodingResponse encodingHeaderResponse;
+	/** */
+	private final List<String> prependJavascripts = new ArrayList<String>();
 
 	/** the component instances that will be rendered */
 	private final Map<String, Component> markupIdToComponent = new HashMap<String, Component>();
-
-	private final List<String> prependJavascripts = new ArrayList<String>();
 
 	/**
 	 * Constructor
 	 */
 	public AjaxRequestTarget()
 	{
-		Response response = RequestCycle.get().getResponse();
-		encodingBodyResponse = new EncodingResponse(response);
-		encodingHeaderResponse = new EncodingResponse(response);
 	}
-
 
 	/**
 	 * Adds a component to the list of components to be rendered
@@ -255,7 +144,6 @@ public class AjaxRequestTarget implements IRequestTarget
 	{
 	}
 
-
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -271,7 +159,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 		return false;
 	}
-
 
 	/**
 	 * @see wicket.IRequestTarget#getLock(RequestCycle)
@@ -315,6 +202,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void respond(final RequestCycle requestCycle)
 	{
+		final WebResponse response = (WebResponse)requestCycle.getResponse();
 		try
 		{
 			final Application app = Application.get();
@@ -323,7 +211,6 @@ public class AjaxRequestTarget implements IRequestTarget
 			final String encoding = app.getRequestCycleSettings().getResponseRequestEncoding();
 
 			// Set content type based on markup type for page
-			WebResponse response = (WebResponse)requestCycle.getResponse();
 			response.setCharacterEncoding(encoding);
 			response.setContentType("text/xml; charset=" + encoding);
 
@@ -344,13 +231,12 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondInvocation(response, js);
 			}
 
-			Iterator<Entry<String, Component>> it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
+			for (Map.Entry<String, Component> entry : markupIdToComponent.entrySet())
 			{
-				final Map.Entry<String, Component> entry = it.next();
 				final Component component = entry.getValue();
 				final String markupId = entry.getKey();
-				
+
+				// render the component
 				respondComponent(response, markupId, component);
 			}
 
@@ -366,9 +252,11 @@ public class AjaxRequestTarget implements IRequestTarget
 			// log the error but output nothing in the response, parse failure
 			// of response will cause any javascript failureHandler to be
 			// invoked
-			LOG.error("Error while responding to an AJAX request: " + toString(), ex);
-			System.out.println(ex.getMessage());
-			ex.printStackTrace();
+			Log.error("Error while responding to an AJAX request: " + toString(), ex);
+		}
+		finally
+		{
+			requestCycle.setResponse(response);
 		}
 	}
 
@@ -442,13 +330,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		component.setOutputMarkupId(true);
-
-		// substitute our encoding response for the real one so we can capture
-		// component's markup in a manner safe for transport inside CDATA block
-		final Response originalResponse = response;
-		encodingBodyResponse.reset();
-		RequestCycle.get().setResponse(encodingBodyResponse);
-
+	
 		// Initialize temporary variables
 		final Page page = component.getPage();
 		if (page == null)
@@ -461,36 +343,39 @@ public class AjaxRequestTarget implements IRequestTarget
 		page.setVersioned(false);
 
 		page.startComponentRender(component);
-		component.renderComponent();
 		
+		// render any associated headers of the component
 		respondHeaderContribution(response, component);
-		
+
+		Response encodingResponse = new StringResponse();
+		try
+		{
+			RequestCycle.get().setResponse(encodingResponse);
+			
+			component.renderComponent();
+		}
+		finally
+		{
+			// Restore original response
+			RequestCycle.get().setResponse(response);
+		}
+
 		page.endComponentRender(component);
-
 		page.setVersioned(versioned);
-
-		// Restore original response
-		RequestCycle.get().setResponse(originalResponse);
 
 		response.write("<component id=\"");
 		response.write(markupId);
 		response.write("\" ");
-		if (encodingBodyResponse.isContentsEncoded())
+		if (needsEncoding(encodingResponse.toString()))
 		{
 			response.write(" encoding=\"");
 			response.write(getEncodingName());
 			response.write("\" ");
 		}
 		response.write("><![CDATA[");
-		response.write(encodingBodyResponse.getContents());
+		response.write(encodingResponse.toString());
 		response.write("]]></component>");
-
-		encodingBodyResponse.reset();
-
-
 	}
-
-	private HeaderContainer header = null;
 
 	/**
 	 * 
@@ -499,45 +384,24 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondHeaderContribution(final Response response, final Component component)
 	{
-		if (header == null)
-		{
-			header = new HtmlHeaderContainer(component.getPage(),
-					HtmlHeaderSectionHandler.HEADER_ID);
-		}
-
-		Response oldResponse = RequestCycle.get().setResponse(encodingHeaderResponse);
-
-		encodingHeaderResponse.reset();
-
-		component.renderHead(header);		
+		Response encodingResponse = new StringResponse();
 		
-		if (component instanceof MarkupContainer)
+		try
 		{
-			((MarkupContainer)component).visitChildren(new Component.IVisitor()
-			{
-				public Object component(Component component)
-				{
-					if (component.isVisible())
-					{
-						component.renderHead(header);						
-						
-						return CONTINUE_TRAVERSAL;
-					}
-					else
-					{
-						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-					}
-				}
-			});
+			final IHeaderResponse headerResponse = new HeaderResponse(encodingResponse);
+			RequestCycle.get().setResponse(headerResponse.getResponse());
+			component.renderHead(headerResponse);
+		}
+		finally
+		{
+			RequestCycle.get().setResponse(response);
 		}
 
-		RequestCycle.get().setResponse(oldResponse);
-
-		if (encodingHeaderResponse.getContents().length() != 0)
+		if (encodingResponse.toString().length() != 0)
 		{
 			response.write("<header-contribution");
 
-			if (encodingHeaderResponse.isContentsEncoded())
+			if (needsEncoding(encodingResponse.toString()))
 			{
 				response.write(" encoding=\"");
 				response.write(getEncodingName());
@@ -545,14 +409,10 @@ public class AjaxRequestTarget implements IRequestTarget
 			}
 
 			// we need to write response as CDATA and parse it on client,
-			// because
-			// konqueror crashes when there is a <script> element
+			// because konqueror crashes when there is a <script> element
 			response.write("><![CDATA[<head xmlns:wicket=\"http://wicket.sourceforge.net\">");
-
-			response.write(encodingHeaderResponse.getContents());
-
+			response.write(encodingResponse.toString());
 			response.write("</head>]]>");
-
 			response.write("</header-contribution>");
 		}
 	}
@@ -586,7 +446,5 @@ public class AjaxRequestTarget implements IRequestTarget
 		response.write(javascript);
 		response.write("]]>");
 		response.write("</evaluate>");
-
-		encodingBodyResponse.reset();
 	}
 }

@@ -322,6 +322,12 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	 */
 	public final void addMarkupElement(final int pos, final MarkupElement markupElement)
 	{
+//		if ((markupElement instanceof ComponentTag) && (pos > 0) && (pos < size()))
+//		{
+//			throw new WicketRuntimeException(
+//					"ComponentTag's within a MarkupFragment can only be at the first or last position: "
+//							+ markupElement.toUserDebugString());
+//		}
 		this.markupElements.add(pos, markupElement);
 	}
 
@@ -334,6 +340,17 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	public final MarkupElement removeMarkupElement(final int index)
 	{
 		return this.markupElements.remove(index);
+	}
+
+	/**
+	 * Remove the element from the list
+	 * 
+	 * @param element
+	 * @return true, if removed
+	 */
+	public final boolean removeMarkupElement(final MarkupElement element)
+	{
+		return this.markupElements.remove(element);
 	}
 
 	/**

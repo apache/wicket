@@ -35,9 +35,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.application.IComponentInstantiationListener;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
+import wicket.markup.parser.onLoadListener.WicketHeaderLoader;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.FragmentResolver;
-import wicket.markup.resolver.HtmlHeaderResolver;
 import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
@@ -719,14 +719,16 @@ public abstract class Application
 	{
 		settingsAccessible = true;
 		IPageSettings pageSettings = getPageSettings();
+		
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new ParentResolver());
-		pageSettings.addComponentResolver(new AutoComponentResolver());
 		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
-		pageSettings.addComponentResolver(new HtmlHeaderResolver());
 		pageSettings.addComponentResolver(new WicketLinkResolver());
 		pageSettings.addComponentResolver(new WicketMessageResolver());
 		pageSettings.addComponentResolver(new FragmentResolver());
+		pageSettings.addComponentResolver(new AutoComponentResolver());
+
+		getMarkupSettings().addMarkupLoadListener(new WicketHeaderLoader());
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",

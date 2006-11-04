@@ -47,6 +47,7 @@ import wicket.markup.html.IPackageResourceGuard;
 import wicket.markup.html.PackageResourceGuard;
 import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.pages.BrowserInfoPage;
+import wicket.markup.parser.onLoadListener.IMarkupLoadListener;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.protocol.http.WebRequest;
@@ -294,6 +295,9 @@ public final class Settings
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
 
+	/** List of registered markup load listeners */
+	private final List<IMarkupLoadListener> markupLoadListeners = new ArrayList<IMarkupLoadListener>();
+	
 	/**
 	 * Create the application settings, carrying out any necessary
 	 * initialisations.
@@ -1274,5 +1278,21 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
+	}
+
+	/**
+	 * @see wicket.settings.IMarkupSettings#addMarkupLoadListener(wicket.markup.parser.onLoadListener.IMarkupLoadListener)
+	 */
+	public void addMarkupLoadListener(final IMarkupLoadListener listener)
+	{
+		this.markupLoadListeners.add(listener);
+	}
+
+	/**
+	 * @see wicket.settings.IMarkupSettings#getMarkupLoadListeners()
+	 */
+	public List<IMarkupLoadListener> getMarkupLoadListeners()
+	{
+		return this.markupLoadListeners;
 	}
 }

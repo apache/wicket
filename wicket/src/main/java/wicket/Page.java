@@ -365,7 +365,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 				throw new MarkupException(
 						"The component "
 								+ component
-								+ " has the same wicket:id as another component already added at the same level");
+								+ " has the same wicket:id as another component already rendered at the same level");
 			}
 			if (log.isDebugEnabled())
 			{

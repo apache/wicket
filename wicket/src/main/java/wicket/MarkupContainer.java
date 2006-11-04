@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.annot.AnnotationUtils;
+import wicket.annot.OnAfterRender;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -36,6 +37,8 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupNotFoundException;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.IHeaderResponse;
+import wicket.markup.parser.onLoadListener.IMarkupLoadListener;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.IInheritableModel;
 import wicket.model.IModel;
@@ -91,7 +94,7 @@ import wicket.version.undo.Change;
  * @see MarkupStream
  * @author Jonathan Locke
  */
-public abstract class MarkupContainer<T> extends Component<T>
+public abstract class MarkupContainer<T> extends Component<T> implements Iterable<Component>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -408,12 +411,8 @@ public abstract class MarkupContainer<T> extends Component<T>
 		AnnotationUtils.invokeOnDetachListeners(this);
 
 		// Loop through child components
-		final Iterator iter = iterator();
-		while (iter.hasNext())
+		for (Component child : this)
 		{
-			// Get next child
-			final Component child = (Component)iter.next();
-
 			// Call end request on the child
 			child.internalDetach();
 		}
@@ -844,6 +843,18 @@ public abstract class MarkupContainer<T> extends Component<T>
 
 		return this.associatedMarkup;
 	}
+	
+	/**
+	 * Make sure changes to the locale and style are handled properly
+	 * 
+	 * @see wicket.Component#onAfterRender()
+	 */
+	@OnAfterRender
+	protected void onAfterRender()
+	{
+		this.associatedMarkup = null;
+		super.onAfterRender();
+	}
 
 	/**
 	 * Components which whish to analyze the markup and automatically add
@@ -857,6 +868,11 @@ public abstract class MarkupContainer<T> extends Component<T>
 	 */
 	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
+		// Call all register load listeners
+		for (IMarkupLoadListener listener : getApplication().getMarkupSettings().getMarkupLoadListeners())
+		{
+			listener.onAssociatedMarkupLoaded(this, markup);
+		}
 	}
 
 	/**
@@ -1384,5 +1400,22 @@ public abstract class MarkupContainer<T> extends Component<T>
 	public boolean isTransparentResolver()
 	{
 		return false;
+	}
+
+	/**
+	 * @see wicket.Component#renderHead(wicket.markup.html.IHeaderResponse)
+	 */
+	@Override
+	public void renderHead(final IHeaderResponse response)
+	{
+		if (isVisible())
+		{
+			super.renderHead(response);
+
+			for (Component child : this)
+			{
+				child.renderHead(response);
+			}
+		}
 	}
 }

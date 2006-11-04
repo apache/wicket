@@ -24,25 +24,22 @@ import wicket.markup.html.link.Link;
 import wicket.model.PropertyModel;
 
 /**
- * 
  * Example mock portlet page.
  * 
  * @author Janne Hietam&auml;ki (jannehietamaki)
  */
 public class MockPortletPage extends PortletPage
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	private int linkClickCount = 0;
 
 	/**
 	 * Construct.
 	 * 
 	 */
-	public MockPortletPage() {
+	public MockPortletPage()
+	{
 		// Action link counts link clicks
 		final Link actionLink = new Link(this, "actionLink")
 		{
@@ -55,23 +52,23 @@ public class MockPortletPage extends PortletPage
 			}
 		};
 		new Label(actionLink, "linkClickCount", new PropertyModel(this, "linkClickCount"));
-		add(HeaderContributor.forCss(MockPortletPage.class,"style.css"));
+		add(HeaderContributor.forCss(MockPortletPage.class, "style.css"));
 	}
 
 	/**
 	 * @return Returns the linkClickCount.
 	 */
-	public int getLinkClickCount() {
+	public int getLinkClickCount()
+	{
 		return linkClickCount;
 	}
 
 	/**
-	 * @param linkClickCount The linkClickCount to set.
+	 * @param linkClickCount
+	 *            The linkClickCount to set.
 	 */
-	public void setLinkClickCount(final int linkClickCount) {
+	public void setLinkClickCount(final int linkClickCount)
+	{
 		this.linkClickCount = linkClickCount;
 	}
-
-	private int linkClickCount = 0;
-
 }

@@ -84,7 +84,7 @@ public class PortletHeaderContainer extends HeaderContainer
 		// must be a Page
 		if (parent instanceof Page)
 		{
-			renderHeaderSections((Page)parent, this);
+			renderHeaderSections((Page)parent);
 		}
 		else
 		{

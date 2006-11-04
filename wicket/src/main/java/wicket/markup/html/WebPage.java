@@ -37,11 +37,13 @@ import wicket.behavior.AbstractBehavior;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.protocol.http.WebRequest;
@@ -85,6 +87,12 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 
 	/** log. */
 	private static final Log log = LogFactory.getLog(WebPage.class);
+
+	static
+	{
+		// register "wicket:head"
+		WicketTagIdentifier.registerWellKnownTagName("head");
+	}
 
 	/** meta data key for missing body tags logging. */
 	private static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
@@ -172,11 +180,22 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 * 
 	 * @return The body container
 	 */
-	public BodyContainer getBodyContainer()
+	public final BodyContainer getBodyContainer()
 	{
 		return bodyContainer;
 	}
 
+	/**
+	 * Gets the container for the &lt;head&gt; tag, which will also render
+	 * the &lt;wicket:head&gt; tags.
+	 * 
+	 * @return The header container
+	 */
+	public final HeaderContainer getHeaderContainer()
+	{
+		return (HeaderContainer)get(HtmlHeaderSectionHandler.HEADER_ID);
+	}
+	
 	/**
 	 * Gets the markup type for a WebPage, which is "html" by default. Support
 	 * for pages in another markup language, such as VXML, would require the
@@ -264,48 +283,40 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 */
 	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
-		// Add a Body container if the associated markup contains a <body> tag
-		// get markup stream gracefully
-		MarkupStream markupStream = new MarkupStream(markup);
-		
-		// The <body> container. It can be accessed, replaced
-		// and attribute modifiers can be attached. <body> tags without
-		// wicket:id get automatically a wicket:id assigned.
-		while (markupStream.hasMoreComponentTags())
+		if (get(HtmlHeaderSectionHandler.HEADER_ID) == null)
 		{
-			final ComponentTag tag = markupStream.getTag();
-			if (tag.isOpen() && tag.isBodyTag())
+			// Add a Body container if the associated markup contains a <body> tag
+			// get markup stream gracefully
+			MarkupStream markupStream = new MarkupStream(markup);
+			
+			// The <body> container. It can be accessed, replaced
+			// and attribute modifiers can be attached. <body> tags without
+			// wicket:id get automatically a wicket:id assigned.
+			while (markupStream.hasMoreComponentTags())
 			{
-				// Add a default container if the tag has the default
-				// name. If the tag has a wicket:id, than the user
-				// must create the component.
-				if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
+				final ComponentTag tag = markupStream.getTag();
+				if (tag.isOpen() && tag.isBodyTag())
 				{
-					new HtmlBodyContainer(this, tag.getId());
+					// Add a default container if the tag has the default
+					// name. If the tag has a wicket:id, than the user
+					// must create the component.
+					if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
+					{
+						new HtmlBodyContainer(this, tag.getId());
+					}
+					// remember the id of the tag
+					bodyContainer = new BodyContainer(this, tag.getId());
+					break;
 				}
-				// remember the id of the tag
-				bodyContainer = new BodyContainer(this, tag.getId());
-				break;
 			}
 		}
-
+		
 		// The <head> container. It can be accessed, replaced
 		// and attribute modifiers can be attached.
-		markupStream.setCurrentIndex(0);
-		while (markupStream.hasMoreComponentTags())
+		// HtmlHeaderSectionHandler guarantees the <head> tag does exist.
+		if (get(HtmlHeaderSectionHandler.HEADER_ID) == null)
 		{
-			final ComponentTag tag = markupStream.getTag();
-			if (tag.isOpen() && tag.isHeadTag())
-			{
-				// Add a default container if the tag has the default
-				// name. If the tag has a wicket:id, than the user
-				// must create the component.
-				if (HtmlHeaderSectionHandler.HEADER_ID.equals(tag.getId()))
-				{
-					new HtmlHeaderContainer(this, tag.getId());
-				}
-				break;
-			}
+			new HtmlHeaderContainer(this, HtmlHeaderSectionHandler.HEADER_ID);
 		}
 
 		// if automatic multi window support is on, add a page checker instance
@@ -313,6 +324,9 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		{
 			add(new PageMapChecker());
 		}
+		
+		// Do all the default staff
+		super.onAssociatedMarkupLoaded(markup);
 	}
 
 	/**

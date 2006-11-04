@@ -27,7 +27,7 @@ import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import wicket.markup.html.internal.HeaderContainer;
+import wicket.markup.html.internal.WicketHeadContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.resolver.IComponentResolver;
@@ -184,7 +184,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	{
 		// If, and only if, a body container exists, than redirect new
 		// components to become children of the body.
-		return (this.body != null ? this.body : this);
+		return ((this.body == null) || WicketHeadContainer.class.isInstance(childClass) ? this : this.body);
 	}
 
 	/**
@@ -219,8 +219,16 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 	public MarkupFragment getMarkupFragment(final String id)
 	{
 		// Find the tag in the associated markup
-		return getAssociatedMarkup(true).getWicketFragment(BORDER, true)
+		MarkupFragment fragment = getAssociatedMarkup(true).getWicketFragment(BORDER, true)
 				.getChildFragment(id, false);
+		
+		if (fragment != null)
+		{
+			return fragment;
+		}
+		
+		// wicket:head must be search for outside wicket:border
+		return getAssociatedMarkup(true).getChildFragment(id, true);
 	}
 
 	/**
@@ -269,20 +277,6 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 
 		// Unable to resolve the request
 		return false;
-	}
-
-	/**
-	 * 
-	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HeaderContainer)
-	 */
-	@Override
-	public void renderHead(final HeaderContainer container)
-	{
-		if (isHeadRendered() == false)
-		{
-			this.renderHeadFromAssociatedMarkupFile(container);
-		}
-		super.renderHead(container);
 	}
 
 	/**

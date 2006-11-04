@@ -23,7 +23,6 @@ import wicket.markup.html.WebPage;
 /**
  * Mock page for testing.
  * 
- * @author Chris Turner
  */
 public class HeaderSectionPage_19 extends WebPage
 {

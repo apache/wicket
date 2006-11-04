@@ -22,7 +22,6 @@ import wicket.markup.ComponentTag;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup;
-import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.model.IModel;
@@ -97,8 +96,19 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 	 * @param id
 	 * @return MarkupFragment
 	 */
+	@Override
 	public MarkupFragment getMarkupFragment(final String id)
 	{
+		// Find the tag in the associated markup
+		MarkupFragment fragment = getAssociatedMarkup(true).getWicketFragment(PANEL, true)
+				.getChildFragment(id, false);
+		
+		if (fragment != null)
+		{
+			return fragment;
+		}
+		
+		// wicket:head must be searched for outside wicket:panel
 		return getAssociatedMarkup(true).getChildFragment(id, true);
 	}
 
@@ -137,20 +147,5 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 			// Skip any raw markup in the body
 			markupStream.skipRawMarkup();
 		}
-	}
-
-	/**
-	 * Check the associated markup file for a wicket header tag
-	 * 
-	 * @see wicket.Component#renderHead(wicket.markup.html.internal.HeaderContainer)
-	 */
-	@Override
-	public void renderHead(HeaderContainer container)
-	{
-		if (isHeadRendered() == false)
-		{
-			this.renderHeadFromAssociatedMarkupFile(container);
-		}
-		super.renderHead(container);
 	}
 }

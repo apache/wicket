@@ -104,7 +104,7 @@ public class HtmlHeaderContainer extends HeaderContainer
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
 
-			renderHeaderSections(getPage(), this);
+			renderHeaderSections(getPage());
 
 			// Automatically add <head> if necessary
 			CharSequence output = response.getBuffer();

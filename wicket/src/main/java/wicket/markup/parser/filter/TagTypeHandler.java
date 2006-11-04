@@ -46,7 +46,7 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 	static
 	{
 		// Tags which require open-body-close
-		requireOpenBodyCloseTag.put("select", Boolean.TRUE);
+		registerOpenBodyCloseTag("select");
 	}
 
 	/**
@@ -54,6 +54,17 @@ public final class TagTypeHandler extends AbstractMarkupFilter
 	 */
 	public TagTypeHandler()
 	{
+	}
+
+	/**
+	 * Register the tags which will be converted from open-close to
+	 * open-blody-close if necessary.
+	 * 
+	 * @param name
+	 */
+	public static final void registerOpenBodyCloseTag(final String name)
+	{
+		requireOpenBodyCloseTag.put(name, Boolean.TRUE);
 	}
 
 	/**

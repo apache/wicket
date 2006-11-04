@@ -19,8 +19,8 @@
 package wicket.markup.parser.filter;
 
 import wicket.MarkupContainer;
+import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.basic.Label;
-import wicket.markup.html.internal.HeaderContainer;
 import wicket.model.Model;
 
 
@@ -49,8 +49,8 @@ public class HeaderSectionMyLabel2 extends Label
 	 * @param container
 	 */
 	@Override
-	public void renderHead(HeaderContainer container)
+	public void renderHead(IHeaderResponse response)
 	{
-		this.getResponse().write("text added by contributor");
+		response.getResponse().write("text added by contributor");
 	}
 }

@@ -27,6 +27,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.MockPageWithLinkAndComponent;
 import wicket.Page;
+import wicket.WicketRuntimeException;
 import wicket.WicketTestCase;
 import wicket.ajax.markup.html.AjaxLink;
 import wicket.markup.html.WebComponent;
@@ -115,7 +116,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 				}
 				catch (Exception e)
 				{
-					e.printStackTrace();
+					throw new WicketRuntimeException(e);
 				}
 			}
 		};
@@ -133,18 +134,18 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		application.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
 		String document = application.getServletResponse().getDocument();
-
+		assertTrue("Error while execution ajax request", Pattern.compile("</ajax-response>").matcher(document).find());
+		
 		Pattern pat = Pattern.compile(".*<header-contribution>(.*?)</header-contribution>.*",
 				Pattern.DOTALL);
 		Matcher mat = pat.matcher(document);
 
 		String headerContribution = null;
-
 		if (mat.matches())
 		{
 			headerContribution = mat.group(1);
 		}
-
+		
 		// If the filename is empty we use it to say that the headerContribution
 		// should be empty.
 		// This means that it doesn't exist at all
@@ -155,6 +156,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		}
 		else
 		{
+			assertNotNull("Probably an exception happened", headerContribution);
 			assertTrue(DiffUtil.validatePage(headerContribution, this.getClass(), expectedFile));
 		}
 	}
