@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
+import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
@@ -53,6 +54,7 @@ import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.RadioGroup;
+import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
@@ -728,6 +730,31 @@ public class WicketTester extends MockWebApplication
 		else if (linkComponent instanceof Link)
 		{
 			Link link = (Link)linkComponent;
+
+			/*
+			 * If the link is a bookmarkable link, then we need to transfer the
+			 * parameters to the next request.
+			 */
+			if (link instanceof BookmarkablePageLink)
+			{
+				BookmarkablePageLink bookmarkablePageLink = (BookmarkablePageLink)link;
+				try
+				{
+					Field parametersField = BookmarkablePageLink.class
+							.getDeclaredField("parameters");
+					parametersField.setAccessible(true);
+					PageParameters parameters = (PageParameters)parametersField
+							.get(bookmarkablePageLink);
+					setParametersForNextRequest(parameters);
+				}
+				catch (Exception e)
+				{
+					Assert.fail("Internal error in WicketTester. "
+							+ "Please report this in Wickets Issue Tracker.");
+				}
+
+			}
+
 			newRequestToComponent(link);
 		}
 		else
@@ -997,24 +1024,24 @@ public class WicketTester extends MockWebApplication
 	 * component by using:
 	 * 
 	 * <pre>
-	 *              ...
-	 *              component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
-	 *                  public void onEvent(AjaxRequestTarget) {
-	 *                      // Do something.
-	 *                  }
-	 *              });
-	 *              ...
+	 *                ...
+	 *                component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *                    public void onEvent(AjaxRequestTarget) {
+	 *                        // Do something.
+	 *                    }
+	 *                });
+	 *                ...
 	 * </pre>
 	 * 
 	 * You can then test that the code inside onEvent actually does what it's
 	 * supposed to, using the WicketTester:
 	 * 
 	 * <pre>
-	 *              ...
-	 *              tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
-	 *                        
-	 *              // Test that the code inside onEvent is correct.
-	 *              ...
+	 *                ...
+	 *                tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *                          
+	 *                // Test that the code inside onEvent is correct.
+	 *                ...
 	 * </pre>
 	 * 
 	 * PLEASE NOTE! This method doesn't actually insert the component in the
