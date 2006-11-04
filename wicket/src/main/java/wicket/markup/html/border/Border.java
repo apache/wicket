@@ -263,7 +263,7 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 			if (this.body == null)
 			{
 				throw new MarkupException(markupStream,
-						"Border body container not initialized. Did you forget to call newBorderBodyContainer() ??");
+						"Border body container not initialized. Did you forget to call setBorderBodyContainer() ??");
 			}
 
 			// If current tag equals the body open tag, than ...
