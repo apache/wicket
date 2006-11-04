@@ -26,7 +26,8 @@ import wicket.markup.html.form.FormComponent;
  * <p>
  * Instead of subclassing IValidator, you should use one of the existing
  * validators, which cover a huge number of cases, or if none satisfies your
- * need, subclass CustomValidator.
+ * need, subclass one of the Type validators like {@link StringValidator},
+ * {@link NumberValidator} or {@link DateValidator}
  * <p>
  * Interface to code that validates Form components. When the validate() method
  * of the interface is called by the framework, the IValidator implementation is
@@ -37,11 +38,11 @@ import wicket.markup.html.form.FormComponent;
 public interface IValidator extends Serializable
 {
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT IMPLEMENT IT.
 	 * <p>
 	 * Instead of subclassing IValidator, you should use one of the existing
 	 * validators, which cover a huge number of cases, or if none satisfies your
-	 * need, subclass CustomValidator.
+	 * need, subclass one of the Type validators like {@link StringValidator},
+	 * {@link NumberValidator} or {@link DateValidator}
 	 * <p>
 	 * Validates the given input. The input corresponds to the input from the
 	 * request for a component.
