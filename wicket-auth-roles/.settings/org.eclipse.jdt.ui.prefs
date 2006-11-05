@@ -1,4 +1,4 @@
-#Sat Feb 18 17:33:13 CET 2006
+#Sun Nov 05 20:06:29 CET 2006
 comment_clear_blank_lines=false
 comment_format_comments=true
 comment_format_header=true
@@ -10,6 +10,7 @@ comment_line_length=80
 comment_new_line_for_parameter=true
 comment_separate_root_tags=true
 eclipse.preferences.version=1
+formatter_profile=_Wicket
 formatter_settings_version=10
 internal.default.compliance=default
 org.eclipse.jdt.ui.exception.name=e
