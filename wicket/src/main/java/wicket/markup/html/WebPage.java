@@ -34,9 +34,7 @@ import wicket.ResourceReference;
 import wicket.Response;
 import wicket.Session;
 import wicket.behavior.AbstractBehavior;
-import wicket.markup.ComponentTag;
 import wicket.markup.MarkupFragment;
-import wicket.markup.MarkupStream;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.HtmlBodyContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
@@ -283,41 +281,13 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 */
 	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
-		if (get(HtmlHeaderSectionHandler.HEADER_ID) == null)
-		{
-			// Add a Body container if the associated markup contains a <body> tag
-			// get markup stream gracefully
-			MarkupStream markupStream = new MarkupStream(markup);
-			
-			// The <body> container. It can be accessed, replaced
-			// and attribute modifiers can be attached. <body> tags without
-			// wicket:id get automatically a wicket:id assigned.
-			while (markupStream.hasMoreComponentTags())
-			{
-				final ComponentTag tag = markupStream.getTag();
-				if (tag.isOpen() && tag.isBodyTag())
-				{
-					// Add a default container if the tag has the default
-					// name. If the tag has a wicket:id, than the user
-					// must create the component.
-					if (BodyOnLoadHandler.BODY_ID.equals(tag.getId()))
-					{
-						new HtmlBodyContainer(this, tag.getId());
-					}
-					// remember the id of the tag
-					bodyContainer = new BodyContainer(this, tag.getId());
-					break;
-				}
-			}
-		}
+		new HtmlBodyContainer(this, BodyOnLoadHandler.BODY_ID);
+		this.bodyContainer = new BodyContainer(this, BodyOnLoadHandler.BODY_ID);
 		
 		// The <head> container. It can be accessed, replaced
 		// and attribute modifiers can be attached.
 		// HtmlHeaderSectionHandler guarantees the <head> tag does exist.
-		if (get(HtmlHeaderSectionHandler.HEADER_ID) == null)
-		{
-			new HtmlHeaderContainer(this, HtmlHeaderSectionHandler.HEADER_ID);
-		}
+		new HtmlHeaderContainer(this, HtmlHeaderSectionHandler.HEADER_ID);
 
 		// if automatic multi window support is on, add a page checker instance
 		if (getApplication().getPageSettings().getAutomaticMultiWindowSupport())

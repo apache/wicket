@@ -728,6 +728,7 @@ public abstract class Application
 		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new AutoComponentResolver());
 
+		// Install default markup load listener
 		getMarkupSettings().addMarkupLoadListener(new WicketHeaderMarkupLoadListener());
 
 		// Install button image resource factory

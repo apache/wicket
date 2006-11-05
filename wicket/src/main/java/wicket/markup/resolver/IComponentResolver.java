@@ -29,6 +29,23 @@ import wicket.markup.MarkupStream;
  * ApplicationSettings maintains a list of IComponentResolvers.
  * IComponentResolvers are responsible for mapping component names to Wicket
  * components.
+ * <p>
+ * IMarkupLoadListener and IComponentResolver seem to be similar at first, but
+ * IMarkupLoadListener is signifcantly less powerful. Comparison:
+ * <ul>
+ * <li>IMarkupLoadListener are executed after the associated markup has been
+ * loaded</li>
+ * <li>IComponentResolver are executed during the render phase if a component
+ * can not be found by simply asking the parent container</li>
+ * <li>IMarkupLoadListener can only add new (auto-)components to the container
+ * associated with the markup file</li>
+ * <li>IComponentResolver will add new (auto-)components to the container
+ * associated with markup fragment currently being rendered</li>
+ * <li>All (auto-)components are removed after the render phase. Hence,
+ * components created via IComponentResolver have a shorter lifecycle</li>
+ * <li>Because components created via IComponentResolver during the render
+ * phase, there is no need to sync them in a clustered environment</li>
+ * </ul>
  * 
  * @author Juergen Donnerstag
  */

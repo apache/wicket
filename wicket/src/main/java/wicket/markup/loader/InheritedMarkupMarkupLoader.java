@@ -37,7 +37,6 @@ import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
-import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -263,7 +262,7 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 									break;
 								}
 							}
-							
+
 							throw new MarkupException(markupStream,
 									"No wicket components are allowed in the preview area in between the wicket:child tag");
 						}
@@ -439,24 +438,20 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-		
+
 		// Make sure that wicket:head tags don't have doublicate ids.
 		mergedMarkup.visitChildren(MarkupFragment.class, new MarkupFragment.IVisitor()
 		{
 			private int index = 0;
-			
+
 			public Object visit(final MarkupElement element, final MarkupFragment parent)
 			{
-				MarkupFragment fragment = (MarkupFragment) element;
+				MarkupFragment fragment = (MarkupFragment)element;
 				ComponentTag tag = fragment.getTag();
-				if ((tag != null) && tag.isWicketTag() && WicketTagIdentifier.isReqisteredForUniqueId(tag))
+				if ((tag != null) && tag.isWicketTag()
+						&& WicketTagIdentifier.isRegisteredToHaveUniqueId(tag))
 				{
 					String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
-					tag.setId(id);
-				}
-				else if ((tag != null) && tag.getId().startsWith(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID))
-				{
-					String id = WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID + index++;
 					tag.setId(id);
 				}
 				return CONTINUE_TRAVERSAL;

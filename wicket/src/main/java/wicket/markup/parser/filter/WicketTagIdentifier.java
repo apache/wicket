@@ -51,16 +51,16 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 	static
 	{
-		// register wicket:head
+		// register wicket:head, wicket:extend, etc.
 		registerTagWhichRequiresUniqueId("head");
 	}
-	
+
 	/** The current markup needed to get the markups namespace */
 	private final IMarkup markup;
 
 	/** auto increment to create unique ids */
 	private int index;
-	
+
 	/**
 	 * Construct.
 	 * 
@@ -71,7 +71,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	{
 		this.markup = markup;
 	}
-	
+
 	/**
 	 * Get the next tag from the next MarkupFilter in the chain and search for
 	 * Wicket specific tags.
@@ -113,7 +113,7 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 			}
 			tag.setId(id);
 
-			if (wellKnownTagNames.contains(xmlTag.getName()) == false)
+			if (isRegisteredToHaveUniqueId(tag) == false)
 			{
 				throw new ParseException("Unkown tag name with Wicket namespace: '"
 						+ xmlTag.getName()
@@ -160,5 +160,16 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	public final static void registerTagWhichRequiresUniqueId(final String tag)
 	{
 		requiresUniqueId.add(tag);
+	}
+
+	/**
+	 * 
+	 * @param tag
+	 *            The tag (name) to check
+	 * @return True, if tag is is required to be unique
+	 */
+	public final static boolean isRegisteredToHaveUniqueId(final ComponentTag tag)
+	{
+		return wellKnownTagNames.contains(tag.getName());
 	}
 }

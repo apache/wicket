@@ -203,11 +203,8 @@ public class PortletPage<T> extends Page<T>
 	@Override
 	protected void onAssociatedMarkupLoaded(MarkupFragment markup)
 	{
-		if (get(HtmlHeaderSectionHandler.HEADER_ID) == null)
-		{
-			// HtmlHeaderSectionHandler guarantees that a <head> tag exists
-			new PortletHeaderContainer(this, HtmlHeaderSectionHandler.HEADER_ID);
-		}
+		// HtmlHeaderSectionHandler guarantees that a <head> tag exists
+		new PortletHeaderContainer(this, HtmlHeaderSectionHandler.HEADER_ID);
 		
 		// default
 		super.onAssociatedMarkupLoaded(markup);

@@ -23,6 +23,7 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupFragment;
 
 /**
+ * A little helper for markup load listeners
  * 
  * @author Juergen Donnerstag
  */
