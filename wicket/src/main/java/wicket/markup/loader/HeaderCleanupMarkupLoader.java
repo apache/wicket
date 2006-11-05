@@ -22,17 +22,19 @@ import java.io.IOException;
 
 import wicket.Application;
 import wicket.MarkupContainer;
+import wicket.markup.MarkupElement;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * Load the markup via the MarkupParser, not more, not less. Caching is provided
- * separately as well as Inherited-Markup merging.
+ * On Pages with <wicket:head> and automatically added head tag, it
+ * can happen that <wicket:head> tags are not inside the <head> tag.
+ * Change it by moving <wicket:head> into the <head> tag
  * 
  * @author Juergen Donnerstag
  */
-public class DefaultMarkupLoader implements IMarkupLoader
+public class HeaderCleanupMarkupLoader extends AbstractMarkupLoader
 {
 	/** The Wicket application */
 	private final Application application;
@@ -42,7 +44,7 @@ public class DefaultMarkupLoader implements IMarkupLoader
 	 * 
 	 * @param application
 	 */
-	public DefaultMarkupLoader(final Application application)
+	public HeaderCleanupMarkupLoader(final Application application)
 	{
 		this.application = application;
 	}
@@ -55,9 +57,37 @@ public class DefaultMarkupLoader implements IMarkupLoader
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException
 	{
-		// read and parse the markup
-		MarkupFragment markup = application.getMarkupSettings().getMarkupParserFactory()
-				.newMarkupParser(markupResourceStream).readAndParse();
+		// Invoke the parent markup loader to read and parse the markup
+		final MarkupFragment markup = super.loadMarkup(container, markupResourceStream);
+
+		// On Pages with <wicket:head> and automatically added head tag, it
+		// can happen that <wicket:head> tags are not inside the <head> tag.
+		// Change it by moviing <wicket:head> into the <head> tag
+
+		final MarkupFragment header = MarkupFragmentUtils.getHeadTag(markup);
+		if (header != null)
+		{
+			markup.visitChildren(MarkupFragment.class, new MarkupFragment.IVisitor()
+			{
+				public Object visit(final MarkupElement element, final MarkupFragment parent)
+				{
+					if (element == header)
+					{
+						return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
+					}
+
+					if (((MarkupFragment)element).getTag().isWicketHeadTag())
+					{
+						if (parent.removeMarkupElement(element) == true)
+						{
+							header.addMarkupElement(header.size() - 1, element);
+						}
+					}
+
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+		}
 
 		return markup;
 	}

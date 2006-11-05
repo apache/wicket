@@ -28,8 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
-import wicket.markup.loader.AbstractMarkupLoader;
 import wicket.markup.loader.DefaultMarkupLoader;
+import wicket.markup.loader.HeaderCleanupMarkupLoader;
 import wicket.markup.loader.IMarkupLoader;
 import wicket.markup.loader.InheritedMarkupMarkupLoader;
 import wicket.util.listener.IChangeListener;
@@ -413,10 +413,11 @@ public class MarkupCache
 	 */
 	protected IMarkupLoader newMarkupLoader()
 	{
-		AbstractMarkupLoader loaderChain = new InheritedMarkupMarkupLoader(application);
-		loaderChain.setParent(new DefaultMarkupLoader(application));
-
-		return loaderChain;
+		return new InheritedMarkupMarkupLoader(application)
+			.setParent(
+					new HeaderCleanupMarkupLoader(application)
+						.setParent(
+								new DefaultMarkupLoader(application)));
 	}
 
 	/**

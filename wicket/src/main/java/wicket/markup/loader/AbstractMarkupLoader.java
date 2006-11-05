@@ -26,7 +26,7 @@ import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * Default implementation of a IMarkupLoader. We expect most real
+ * Abstract implementation of a IMarkupLoader. We expect most real
  * implementations of IMarkupLoader to provide there own loadMarkup()
  * implementation and call the default implementation provided in this class if
  * chaining the loaders is required.
@@ -45,12 +45,15 @@ public abstract class AbstractMarkupLoader implements IMarkupLoader
 	}
 
 	/**
+	 * Sets the parent markup loader which allows to chains them.
 	 * 
 	 * @param parent
+	 * @return parent
 	 */
-	public void setParent(final IMarkupLoader parent)
+	public IMarkupLoader setParent(final IMarkupLoader parent)
 	{
 		this.parentLoader = parent;
+		return this;
 	}
 
 	/**
