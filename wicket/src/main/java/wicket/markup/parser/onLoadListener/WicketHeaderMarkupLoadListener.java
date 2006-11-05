@@ -39,7 +39,7 @@ import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
  * 
  * @author Juergen Donnerstag
  */
-public class WicketHeaderLoader implements IMarkupLoadListener
+public class WicketHeaderMarkupLoadListener implements IMarkupLoadListener
 {
 	/**
 	 * @see wicket.markup.parser.onLoadListener.IMarkupLoadListener#onAssociatedMarkupLoaded(wicket.MarkupContainer,

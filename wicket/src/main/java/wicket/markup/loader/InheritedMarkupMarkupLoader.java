@@ -37,6 +37,7 @@ import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.markup.parser.filter.WicketMessageTagHandler;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.Strings;
@@ -450,6 +451,16 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 				if ((tag != null) && tag.isWicketHeadTag())
 				{
 					String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
+					tag.setId(id);
+				}
+				else if ((tag != null) && tag.isMessageTag())
+				{
+					String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
+					tag.setId(id);
+				}
+				else if ((tag != null) && tag.getId().startsWith(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID))
+				{
+					String id = WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID + index++;
 					tag.setId(id);
 				}
 				return CONTINUE_TRAVERSAL;

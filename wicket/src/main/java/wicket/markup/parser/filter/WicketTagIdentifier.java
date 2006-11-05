@@ -51,8 +51,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 	static
 	{
-		// register wicket:head
+		// register wicket:head, wicket:message
 		registerTagWhichRequiresUniqueId("head");
+		registerTagWhichRequiresUniqueId("message");
 	}
 	
 	/** The current markup needed to get the markups namespace */

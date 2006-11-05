@@ -1,6 +1,6 @@
 /*
  * $Id: WicketTagComponentResolver.java,v 1.4 2005/01/18 08:04:29 jonathanlocke
- * Exp $ $Revision$ $Date$
+ * Exp $ $Revision$ $Date: 2006-09-25 09:36:44 +0200 (Mo, 25 Sep 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package wicket.markup.resolver;
+package wicket.markup.parser.onLoadListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +24,7 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
-import wicket.markup.MarkupStream;
+import wicket.markup.MarkupFragment;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.parser.XmlTag;
@@ -40,9 +40,11 @@ import wicket.markup.parser.filter.WicketTagIdentifier;
  * 
  * @author Juergen Donnerstag
  */
-public class WicketMessageResolver implements IComponentResolver
+public class WicketMessageLoadListener extends AbstractMarkupLoadListener
 {
-	private static final Log log = LogFactory.getLog(WicketMessageResolver.class);
+	private static final Log log = LogFactory.getLog(WicketMessageLoadListener.class);
+
+	private static final long serialVersionUID = 1L;
 
 	static
 	{
@@ -50,27 +52,15 @@ public class WicketMessageResolver implements IComponentResolver
 		WicketTagIdentifier.registerWellKnownTagName("message");
 	}
 
-
-	private static final long serialVersionUID = 1L;
-
 	/**
-	 * Try to resolve the tag, then create a component, add it to the container
-	 * and render it.
 	 * 
-	 * @see wicket.markup.resolver.IComponentResolver#resolve(MarkupContainer,
-	 *      MarkupStream, ComponentTag)
-	 * 
-	 * @param container
-	 *            The container parsing its markup
-	 * @param markupStream
-	 *            The current markupStream
-	 * @param tag
-	 *            The current component tag while parsing the markup
-	 * @return true, if componentId was handle by the resolver. False, otherwise
+	 * @see wicket.markup.parser.onLoadListener.AbstractMarkupLoadListener#visit(wicket.MarkupContainer,
+	 *      wicket.markup.MarkupFragment)
 	 */
-	public boolean resolve(final MarkupContainer container, final MarkupStream markupStream,
-			final ComponentTag tag)
+	@Override
+	protected Object visit(final MarkupContainer container, final MarkupFragment fragment)
 	{
+		final ComponentTag tag = fragment.getTag();
 		if (tag.isMessageTag())
 		{
 			// this is a <wicket:message> tag
@@ -84,33 +74,25 @@ public class WicketMessageResolver implements IComponentResolver
 			final String value = container.getApplication().getResourceSettings().getLocalizer()
 					.getString(messageKey, container, "");
 
-			final String id = newAutoId(container);
 			Component component = null;
 			if ((value != null) && (value.trim().length() > 0))
 			{
-				component = new MyLabel(container, id, value);
+				component = new MyLabel(container, tag.getId(), value);
 			}
 			else
 			{
 				log.info("No value found for message key: " + messageKey);
-				component = new WebMarkupContainer(container, id);
+				component = new WebMarkupContainer(container, tag.getId());
 			}
 
 			component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
 					.getStripWicketTags());
-
-			component.autoAdded();
-
-			// Yes, we handled the tag
-			return true;
 		}
-
-		if (tag.getId().equals(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID))
+		else if (tag.getId().startsWith(WicketMessageTagHandler.WICKET_MESSAGE_CONTAINER_ID))
 		{
 			// this is a raw tag with wicket:message attribute, we need to
 			// create a transparent auto container to stand in.
-			final String id = newAutoId(container);
-			MarkupContainer messageContainer = new WebMarkupContainer(container, id)
+			MarkupContainer messageContainer = new WebMarkupContainer(container, tag.getId())
 			{
 				private static final long serialVersionUID = 1L;
 
@@ -120,27 +102,12 @@ public class WicketMessageResolver implements IComponentResolver
 					return true;
 				}
 			};
-			
+
+			// Attach an attribute modifier to localize the attribute
 			messageContainer.add(WicketMessageTagHandler.ATTRIBUTE_LOCALIZER);
-			messageContainer.autoAdded();
-			
-			// yes, we handled the tag
-			return true;
 		}
 
-		// We were not able to handle the tag
-		return false;
-	}
-
-	/**
-	 * Creates a page-wide unique component auto-id
-	 * 
-	 * @param container
-	 * @return page-wide unique component auto-id
-	 */
-	private String newAutoId(final MarkupContainer container)
-	{
-		return Component.AUTO_COMPONENT_PREFIX + "message-" + container.getPage().getAutoIndex();
+		return MarkupFragment.IVisitor.CONTINUE_TRAVERSAL;
 	}
 
 	/**

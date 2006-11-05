@@ -51,6 +51,9 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	/** singleton instance of {@link AttributeLocalizer} */
 	public static final IBehavior ATTRIBUTE_LOCALIZER = new AttributeLocalizer();
 
+	/** Per markup file, a unique index */
+	private int index;
+	
 	/**
 	 * Construct.
 	 */
@@ -84,7 +87,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 				// if this is a raw tag we need to set the id to something so
 				// that wicket will not merge this as raw markup and instead
 				// pass it on to a resolver
-				tag.setId(WICKET_MESSAGE_CONTAINER_ID);
+				tag.setId(WICKET_MESSAGE_CONTAINER_ID + index++);
 				
 				// There is no point attaching the attributelocalizer to this
 				// tag because it will be represented by an auto component and
