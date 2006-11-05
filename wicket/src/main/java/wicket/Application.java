@@ -36,12 +36,12 @@ import wicket.application.IComponentInstantiationListener;
 import wicket.markup.MarkupCache;
 import wicket.markup.html.image.resource.DefaultButtonImageResourceFactory;
 import wicket.markup.parser.onLoadListener.WicketHeaderMarkupLoadListener;
-import wicket.markup.parser.onLoadListener.WicketMessageLoadListener;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.FragmentResolver;
 import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
+import wicket.markup.resolver.WicketMessageResolver;
 import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
 import wicket.session.ISessionStore;
@@ -724,11 +724,11 @@ public abstract class Application
 		pageSettings.addComponentResolver(new ParentResolver());
 		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
 		pageSettings.addComponentResolver(new WicketLinkResolver());
+		pageSettings.addComponentResolver(new WicketMessageResolver());
 		pageSettings.addComponentResolver(new FragmentResolver());
 		pageSettings.addComponentResolver(new AutoComponentResolver());
 
 		getMarkupSettings().addMarkupLoadListener(new WicketHeaderMarkupLoadListener());
-		getMarkupSettings().addMarkupLoadListener(new WicketMessageLoadListener());
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
