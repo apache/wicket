@@ -27,25 +27,20 @@ import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.BodyContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.internal.HeaderContainer;
 import wicket.markup.html.internal.WicketHeadContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 
 /**
- * Add a markup load listener which adds the wicket:head containers to Page,
- * Panel, Border etc.
+ * A markup load listener which adds the wicket:head containers to Page, Panel,
+ * Border etc.
  * 
  * @author Juergen Donnerstag
  */
 public class WicketHeaderLoader implements IMarkupLoadListener
 {
-	/** body tag attribute */
-	private static final String ONUNLOAD = "onunload";
-
-	/** body tag attribute */
-	private static final String ONLOAD = "onload";
-
 	/**
 	 * @see wicket.markup.parser.onLoadListener.IMarkupLoadListener#onAssociatedMarkupLoaded(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupFragment)
@@ -53,7 +48,7 @@ public class WicketHeaderLoader implements IMarkupLoadListener
 	public void onAssociatedMarkupLoaded(final MarkupContainer container,
 			final MarkupFragment fragment)
 	{
-		// Remove any wicket header container
+		// Remove any existing wicket header container <wicket:head>
 		container.visitChildren(WicketHeadContainer.class, new IVisitor()
 		{
 			public Object component(final Component<?> component)
@@ -62,21 +57,14 @@ public class WicketHeaderLoader implements IMarkupLoadListener
 				return CONTINUE_TRAVERSAL;
 			}
 		});
-		
-		// Get the container for the headers from the page
-		final Page page = container.getPage();
-		final HeaderContainer headerContainer;
-		if (container instanceof WebPage)
-		{
-			headerContainer = ((WebPage)page).getHeaderContainer();
-		}
-		else
-		{
-			headerContainer = (HeaderContainer)page.get(HtmlHeaderSectionHandler.HEADER_ID);
-		}
 
-		// Search for wicket:head in the associated markup and copy the body
-		// onload and onunload attributes
+		// Get the header container <head> from the page
+		final Page page = container.getPage();
+		final HeaderContainer headerContainer = (HeaderContainer)page
+				.get(HtmlHeaderSectionHandler.HEADER_ID);
+
+		// Search for wicket:head in the associated markup, create container for
+		// these tags and copy the body onload and onunload attributes
 		fragment.visitChildren(MarkupFragment.class, new MarkupFragment.IVisitor()
 		{
 			private boolean foundBody = false;
@@ -89,55 +77,39 @@ public class WicketHeaderLoader implements IMarkupLoadListener
 			{
 				final MarkupFragment frag = (MarkupFragment)element;
 				final ComponentTag tag = frag.getTag();
+
+				// if <wicket:head>, than
 				if (tag.isWicketHeadTag())
 				{
 					if (foundBody == true)
 					{
-						// Create a MarkupStream and position it at the error
-						// location
-						MarkupStream markupStream = new MarkupStream(fragment);
-						while (markupStream.hasMore())
-						{
-							if (markupStream.next() == tag)
-							{
-								break;
-							}
-						}
-						throw new MarkupException(
+						throwMarkupException(fragment, tag,
 								"<wicket:head> must be before the <body>, <wicket:panel> ... tag");
 					}
 
+					// Create a new wicket header container
 					WicketHeadContainer header = newWicketHeaderContainer(container, frag);
-					// TODO check again why setVisible() doesn't work here
+
+					// Determine if the wicket:head markup should be printed or
+					// not.
 					header.setEnable(headerContainer.okToRender(header));
 
 					return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 				}
 				else if (tag.isBodyTag())
 				{
+					// Found <body>. "Copy" the attributes to the page's body
+					// tag, if the container loading the markup is not a Page
 					foundBody = true;
-					if (page instanceof WebPage)
+					if ((page instanceof WebPage) && !(container instanceof Page))
 					{
-						WebPage webPage = (WebPage)page;
-						final CharSequence onLoad = tag.getString(ONLOAD);
-						if (onLoad != null)
-						{
-							// Attach an AttributeModifier to the body container
-							// which appends the new value to the onLoad
-							// attribute
-							webPage.getBodyContainer().addOnLoadModifier(onLoad, container);
-						}
-
-						final CharSequence onUnLoad = tag.getString(ONUNLOAD);
-						if (onUnLoad != null)
-						{
-							// Same for unload
-							webPage.getBodyContainer().addOnUnLoadModifier(onUnLoad, container);
-						}
+						addBodyModifier(BodyContainer.ONLOAD, container, tag);
+						addBodyModifier(BodyContainer.ONUNLOAD, container, tag);
 					}
 				}
 				else if (tag.isMajorWicketComponentTag())
 				{
+					// Allow for improved error messages
 					foundBody = true;
 				}
 
@@ -160,5 +132,55 @@ public class WicketHeaderLoader implements IMarkupLoadListener
 			final MarkupFragment fragment)
 	{
 		return new WicketHeadContainer(parent, fragment.getTag().getId(), fragment);
+	}
+
+	/**
+	 * Throw a MarkupException
+	 * 
+	 * @param parent
+	 *            The associated markup file
+	 * @param tag
+	 *            The element causing the error
+	 * @param message
+	 *            The error message
+	 */
+	private void throwMarkupException(final MarkupFragment parent, final MarkupElement tag,
+			final String message)
+	{
+		// Create a MarkupStream and position it at the error location
+		MarkupStream markupStream = new MarkupStream(parent);
+		while (markupStream.hasMore())
+		{
+			if (markupStream.next() == tag)
+			{
+				break;
+			}
+		}
+		throw new MarkupException(markupStream,
+				"<wicket:head> must be before the <body>, <wicket:panel> ... tag");
+	}
+
+	/**
+	 * Attach an AttributeModifier to the body container which appends the new
+	 * value to the onLoad attribute
+	 * 
+	 * @param attribute
+	 *            The body tags attribute name
+	 * @param container
+	 *            The container loading the associate markup
+	 * @param tag
+	 *            The tag to "copy" the attributes from
+	 */
+	private void addBodyModifier(final String attribute, final MarkupContainer container,
+			final ComponentTag tag)
+	{
+		final CharSequence value = tag.getString(attribute);
+		if (value != null)
+		{
+			// Attach an AttributeModifier to the body container
+			// which appends the new value to the onLoad attribute
+			((WebPage)container.getPage()).getBodyContainer().addModifier(attribute, value,
+					container);
+		}
 	}
 }

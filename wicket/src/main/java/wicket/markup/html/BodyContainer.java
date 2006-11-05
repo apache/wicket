@@ -42,6 +42,20 @@ import wicket.model.Model;
  */
 public final class BodyContainer implements Serializable
 {
+	/** body tag "onunload" attribute */
+	public static final String ONUNLOAD = "onunload";
+
+	/** body tag "onload" attribute */
+	public static final String ONLOAD = "onload";
+
+	private static final long serialVersionUID = 1L;
+
+	/** The container id */
+	private final String id;
+
+	/** The webpage where the body container is in */
+	private final WebPage page;
+
 	/**
 	 * Helper class
 	 */
@@ -61,6 +75,11 @@ public final class BodyContainer implements Serializable
 			super(attribute, true, replaceModel);
 		}
 
+		/**
+		 * 
+		 * @see wicket.AttributeModifier#newValue(java.lang.String,
+		 *      java.lang.String)
+		 */
 		@Override
 		protected String newValue(final String currentValue, final String replacementValue)
 		{
@@ -71,14 +90,6 @@ public final class BodyContainer implements Serializable
 			return (currentValue == null ? replacementValue : currentValue + replacementValue);
 		}
 	}
-
-	private static final long serialVersionUID = 1L;
-
-	/** The container id */
-	private final String id;
-
-	/** The webpage where the body container is in */
-	private final WebPage page;
 
 	/**
 	 * Construct.
@@ -92,6 +103,69 @@ public final class BodyContainer implements Serializable
 	{
 		this.page = page;
 		this.id = id;
+	}
+
+	/**
+	 * Add a new AttributeModifier to the body container which appends the
+	 * 'value' to the 'attribute' of the body tag. Remember the component
+	 * which requested to add the modified to the body container. This for
+	 * example is required in cases where on a dynamic page the Component (e.g.
+	 * a Panel) gets removed and/or replaced and the body attribute modifier
+	 * must be removed/replaced as well.
+	 * 
+	 * @param attribute
+	 *            The name of the attribute
+	 * @param model
+	 *            The model which holds the value to be appended to 'onLoad'
+	 * @param behaviorOwner
+	 *            The component which 'owns' the attribute modifier. Null is a
+	 *            allowed value.
+	 * @return this
+	 * 
+	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
+	 *       of the component would be the better solution
+	 */
+	public final BodyContainer addModifier(final String attribute,
+			final IModel<? extends CharSequence> model, final Component behaviorOwner)
+	{
+		final Component bodyContainer = page.get(id);
+		if (behaviorOwner == null)
+		{
+			bodyContainer.add(new AppendingAttributeModifier(attribute, model));
+		}
+		else
+		{
+
+			bodyContainer.add(new BodyTagAttributeModifier(attribute, true, model, behaviorOwner));
+		}
+		return this;
+	}
+
+	/**
+	 * Add a new AttributeModifier to the body container which appends the
+	 * 'value' to the onLoad attribute of the body tag. Remember the component
+	 * which requested to add the modified to the body container. This for
+	 * example is required in cases where on a dynamic page the Component (e.g.
+	 * a Panel) gets removed and/or replaced and the body attribute modifier
+	 * must be removed/replaced as well.
+	 * 
+	 * @param attribute
+	 *            The name of the attribute
+	 * @param value
+	 *            The value to append to 'onLoad'
+	 * @param behaviorOwner
+	 *            The component which 'owns' the attribute modifier. Null is a
+	 *            allowed value.
+	 * @return this
+	 * 
+	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
+	 *       of the component would be the better solution
+	 */
+	public final BodyContainer addModifier(final String attribute, final CharSequence value,
+			final Component behaviorOwner)
+	{
+		final IModel<CharSequence> model = new Model<CharSequence>(value);
+		return addModifier(attribute, model, behaviorOwner);
 	}
 
 	/**
@@ -115,17 +189,7 @@ public final class BodyContainer implements Serializable
 	public final BodyContainer addOnLoadModifier(final IModel<? extends CharSequence> model,
 			final Component behaviorOwner)
 	{
-		final Component bodyContainer = page.get(id);
-		if (behaviorOwner == null)
-		{
-			bodyContainer.add(new AppendingAttributeModifier("onload", model));
-		}
-		else
-		{
-
-			bodyContainer.add(new BodyTagAttributeModifier("onload", true, model, behaviorOwner));
-		}
-		return this;
+		return addModifier(ONLOAD, model, behaviorOwner);
 	}
 
 	/**
@@ -146,10 +210,10 @@ public final class BodyContainer implements Serializable
 	 * @TODO Post 1.2: A listener hook on IBheavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
-	public final BodyContainer addOnLoadModifier(final CharSequence value, final Component behaviorOwner)
+	public final BodyContainer addOnLoadModifier(final CharSequence value,
+			final Component behaviorOwner)
 	{
-		final IModel<CharSequence> model = new Model<CharSequence>(value);
-		return addOnLoadModifier(model, behaviorOwner);
+		return addModifier(ONLOAD, value, behaviorOwner);
 	}
 
 	/**
@@ -173,16 +237,7 @@ public final class BodyContainer implements Serializable
 	public final BodyContainer addOnUnLoadModifier(final IModel<? extends CharSequence> model,
 			final Component behaviorOwner)
 	{
-		final Component bodyContainer = page.get(id);
-		if (behaviorOwner == null)
-		{
-			bodyContainer.add(new AppendingAttributeModifier("onunload", model));
-		}
-		else
-		{
-			bodyContainer.add(new BodyTagAttributeModifier("onunload", true, model, behaviorOwner));
-		}
-		return this;
+		return addModifier(ONUNLOAD, model, behaviorOwner);
 	}
 
 	/**
@@ -203,10 +258,10 @@ public final class BodyContainer implements Serializable
 	 * @TODO Post 1.2: A listener hook on IBehavior which gets called on removal
 	 *       of the component would be the better solution
 	 */
-	public final BodyContainer addOnUnLoadModifier(final CharSequence value, final Component behaviorOwner)
+	public final BodyContainer addOnUnLoadModifier(final CharSequence value,
+			final Component behaviorOwner)
 	{
-		final IModel<CharSequence> model = new Model<CharSequence>(value);
-		return addOnUnLoadModifier(model, behaviorOwner);
+		return addModifier(ONUNLOAD, value, behaviorOwner);
 	}
 
 	/**

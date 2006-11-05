@@ -38,6 +38,7 @@ public final class WicketHeadContainer extends WebMarkupContainer
 	/** The scope attribute of the wicket:head tag */
 	private String scope;
 
+	/** True if wicket:head and its child components are to be rendered */
 	private boolean enable = true;
 
 	/**
@@ -55,14 +56,16 @@ public final class WicketHeadContainer extends WebMarkupContainer
 
 		// It is an auto component; make sure the markup loads properly
 		getMarkupFragment();
-		
+
 		setRenderBodyOnly(true);
 	}
 
 	/**
 	 * Enable/disable the header part and its childs. It is very similar to
-	 * setVisible() but as childs are added to the parent (Panel, Border) and
-	 * not the HeaderContainer, does setVisible() not work.
+	 * setVisible() but as child components are added to the parent (Panel,
+	 * Border) and not the WicketHeadContainer, setVisible() does not work.
+	 * Remember that WicketHeadContainer is transparent and usually it will not
+	 * have any child components.
 	 * 
 	 * @param enable
 	 */
@@ -89,7 +92,8 @@ public final class WicketHeadContainer extends WebMarkupContainer
 		if (this.scope == null)
 		{
 			String namespace = getMarkupFragment().getMarkup().getWicketNamespace();
-			this.scope = getMarkupFragment().getTag().getAttributes().getString(namespace + ":scope");
+			this.scope = getMarkupFragment().getTag().getAttributes().getString(
+					namespace + ":scope");
 		}
 
 		return this.scope;
@@ -110,18 +114,28 @@ public final class WicketHeadContainer extends WebMarkupContainer
 	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
+		// Remember the current Response and make sure it'll be restored no
+		// matter what happens during render
 		Response response = getRequestCycle().getResponse();
 		try
 		{
+			// If not visible (== not enabled) than render wicket:head and all
+			// its child components but write the response into a Null response.
+			// Nothing will be forwarded to the client.
 			if (this.enable == false)
 			{
 				getRequestCycle().setResponse(NullResponse.getInstance());
 			}
+			
+			// Render <wicket:head> with the markup fragment assigned
 			super.onRender(new MarkupStream(getMarkupFragment()));
 		}
 		finally
 		{
+			// make sure the markup stream is updated
 			markupStream.skipComponent();
+			
+			// restore the orginial respone object
 			getRequestCycle().setResponse(response);
 		}
 	}
