@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 import junit.framework.TestCase;
 import wicket.util.diff.Diff;
 import wicket.util.diff.Revision;
-import wicket.util.string.Strings;
 
 /**
  * A silly try to create a testcase for running through all files in the project
