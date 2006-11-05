@@ -38,6 +38,7 @@ import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.markup.parser.filter.WicketMessageTagHandler;
+import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.Strings;
@@ -448,12 +449,7 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 			{
 				MarkupFragment fragment = (MarkupFragment) element;
 				ComponentTag tag = fragment.getTag();
-				if ((tag != null) && tag.isWicketHeadTag())
-				{
-					String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
-					tag.setId(id);
-				}
-				else if ((tag != null) && tag.isMessageTag())
+				if ((tag != null) && tag.isWicketTag() && WicketTagIdentifier.isReqisteredForUniqueId(tag))
 				{
 					String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
 					tag.setId(id);
