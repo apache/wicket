@@ -49,11 +49,11 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	/** wicket tag which require unique ids */
 	private static List<String> requiresUniqueId = new ArrayList<String>();
 
-	static
-	{
-		// register wicket:head, wicket:extend, etc.
-		registerTagWhichRequiresUniqueId("head");
-	}
+//	static
+//	{
+//		// register wicket:head, wicket:extend, etc.
+//		registerTagWhichRequiresUniqueId("head");
+//	}
 
 	/** The current markup needed to get the markups namespace */
 	private final IMarkup markup;

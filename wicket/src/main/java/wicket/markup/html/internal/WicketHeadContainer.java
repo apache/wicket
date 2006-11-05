@@ -42,22 +42,39 @@ public final class WicketHeadContainer extends WebMarkupContainer
 	private boolean enable = true;
 
 	/**
+	 * The (auto-)component is created during the render phase and removed at
+	 * the end of the render phase
+	 */
+	private transient MarkupFragment fragment;
+
+	/**
 	 * @param parent
 	 *            The owner parent of this component
 	 * @param id
 	 *            The component id
 	 * @param fragment
-	 *            The markup fragment associated with the wicket:head
+	 *            The associated markup
 	 */
 	public WicketHeadContainer(final MarkupContainer parent, final String id,
 			final MarkupFragment fragment)
 	{
 		super(parent, id);
 
-		// It is an auto component; make sure the markup loads properly
-		getMarkupFragment();
-
 		setRenderBodyOnly(true);
+		
+		this.fragment = fragment;
+		String namespace = this.fragment.getMarkup().getWicketNamespace();
+		this.scope = this.fragment.getTag().getAttributes().getString(namespace + ":scope");
+	}
+
+	/**
+	 * 
+	 * @see wicket.Component#getMarkupFragment()
+	 */
+	@Override
+	public MarkupFragment getMarkupFragment()
+	{
+		return this.fragment;
 	}
 
 	/**
@@ -89,13 +106,6 @@ public final class WicketHeadContainer extends WebMarkupContainer
 	 */
 	public final String getScope()
 	{
-		if (this.scope == null)
-		{
-			String namespace = getMarkupFragment().getMarkup().getWicketNamespace();
-			this.scope = getMarkupFragment().getTag().getAttributes().getString(
-					namespace + ":scope");
-		}
-
 		return this.scope;
 	}
 
@@ -126,7 +136,7 @@ public final class WicketHeadContainer extends WebMarkupContainer
 			{
 				getRequestCycle().setResponse(NullResponse.getInstance());
 			}
-			
+
 			// Render <wicket:head> with the markup fragment assigned
 			super.onRender(new MarkupStream(getMarkupFragment()));
 		}
@@ -134,7 +144,7 @@ public final class WicketHeadContainer extends WebMarkupContainer
 		{
 			// make sure the markup stream is updated
 			markupStream.skipComponent();
-			
+
 			// restore the orginial respone object
 			getRequestCycle().setResponse(response);
 		}

@@ -184,8 +184,8 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	}
 
 	/**
-	 * Gets the container for the &lt;head&gt; tag, which will also render
-	 * the &lt;wicket:head&gt; tags.
+	 * Gets the container for the &lt;head&gt; tag, which will also render the
+	 * &lt;wicket:head&gt; tags.
 	 * 
 	 * @return The header container
 	 */
@@ -193,7 +193,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	{
 		return (HeaderContainer)get(HtmlHeaderSectionHandler.HEADER_ID);
 	}
-	
+
 	/**
 	 * Gets the markup type for a WebPage, which is "html" by default. Support
 	 * for pages in another markup language, such as VXML, would require the
@@ -281,9 +281,13 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 */
 	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
+		// Create a body container, assuming that all HTML pages require a
+		// <body> tag
 		new HtmlBodyContainer(this, BodyOnLoadHandler.BODY_ID);
-		this.bodyContainer = new BodyContainer(this, BodyOnLoadHandler.BODY_ID);
 		
+		// Add this little helper to the page
+		this.bodyContainer = new BodyContainer(this, BodyOnLoadHandler.BODY_ID);
+
 		// The <head> container. It can be accessed, replaced
 		// and attribute modifiers can be attached.
 		// HtmlHeaderSectionHandler guarantees the <head> tag does exist.
@@ -294,7 +298,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		{
 			add(new PageMapChecker());
 		}
-		
+
 		// Do all the default staff
 		super.onAssociatedMarkupLoaded(markup);
 	}
@@ -367,7 +371,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
 			Response response = headResponse.getResponse();
-			
+
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 

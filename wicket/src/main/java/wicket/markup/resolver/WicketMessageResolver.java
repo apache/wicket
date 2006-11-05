@@ -50,7 +50,6 @@ public class WicketMessageResolver implements IComponentResolver
 		WicketTagIdentifier.registerWellKnownTagName("message");
 	}
 
-
 	private static final long serialVersionUID = 1L;
 
 	/**
