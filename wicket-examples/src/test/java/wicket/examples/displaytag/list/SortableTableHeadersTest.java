@@ -55,10 +55,9 @@ public class SortableTableHeadersTest extends WicketTestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		WicketTester application = new WicketTester(null);
-		application.getRequestCycleSettings().setRenderStrategy(
+		WicketTester application = new WicketTester(SortableTableHeadersPage.class);
+		application.getApplication().getRequestCycleSettings().setRenderStrategy(
 				RenderStrategy.REDIRECT_TO_BUFFER);
-		application.setHomePage(SortableTableHeadersPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();
@@ -102,7 +101,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 		// Check that redirect was set as expected and invoke it
 		// Check that wicket:border tag gets removed
 		assertTrue("Response should be a redirect", application.getServletResponse().isRedirect());
-		application.getMarkupSettings().setStripWicketTags(true);
+		application.getApplication().getMarkupSettings().setStripWicketTags(true);
 		redirect = application.getServletResponse().getRedirectLocation();
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToRedirectString(redirect);

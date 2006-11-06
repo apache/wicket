@@ -74,11 +74,10 @@ public class CookieTest extends TestCase
 	{
 		super.setUp();
 
-		application = new WicketTester(null);
-		application.setHomePage(MockPage.class);
+		application = new WicketTester(MockPage.class);
 		application.setupRequestAndResponse();
 		
-		final ISecuritySettings settings = application.getSecuritySettings();
+		final ISecuritySettings settings = application.getApplication().getSecuritySettings();
 		settings.setCryptFactory(new NoCryptFactory());
 
 		this.page = new MockPage(null);
@@ -94,7 +93,7 @@ public class CookieTest extends TestCase
 		this.panel.setPersistent(true);
 		this.form = (Form)panel.get("signInForm");
 
-		final ICrypt crypt = application.getSecuritySettings().getCryptFactory().newCrypt();
+		final ICrypt crypt = application.getApplication().getSecuritySettings().getCryptFactory().newCrypt();
 		final String encryptedPassword = crypt.encryptUrlSafe("test");
 		assertNotNull(encryptedPassword);
 		this.cookieUsername = new Cookie("panel:signInForm:username", "juergen");
