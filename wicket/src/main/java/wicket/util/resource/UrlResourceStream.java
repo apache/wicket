@@ -41,6 +41,8 @@ import wicket.util.time.Time;
  * @author Jonathan Locke
  */
 public class UrlResourceStream extends AbstractResourceStream
+		implements
+			IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -169,8 +171,8 @@ public class UrlResourceStream extends AbstractResourceStream
 			{
 				// TODO Post 1.2: General: For non webapplication another method
 				// should be implemented (getMimeType on application?)
-				contentType = ((WebApplication)application).getServletContext()
-						.getMimeType(url.getFile());
+				contentType = ((WebApplication)application).getServletContext().getMimeType(
+						url.getFile());
 				if (contentType == null)
 				{
 					contentType = URLConnection.getFileNameMap().getContentTypeFor(url.getFile());
@@ -288,5 +290,13 @@ public class UrlResourceStream extends AbstractResourceStream
 	public long length()
 	{
 		return contentLength;
+	}
+
+	/**
+	 * @see wicket.util.resource.IFixedLocationResourceStream#locationAsString()
+	 */
+	public String locationAsString()
+	{
+		return url.toExternalForm();
 	}
 }

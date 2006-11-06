@@ -35,6 +35,8 @@ import wicket.util.time.Time;
  * @author Jonathan Locke
  */
 public class FileResourceStream extends AbstractResourceStream
+		implements
+			IFixedLocationResourceStream
 {
 	private static final long serialVersionUID = 1L;
 
@@ -146,5 +148,17 @@ public class FileResourceStream extends AbstractResourceStream
 			return file.length();
 		}
 		return 0;
+	}
+
+	/**
+	 * @see wicket.util.resource.IFixedLocationResourceStream#locationAsString()
+	 */
+	public String locationAsString()
+	{
+		if (file != null)
+		{
+			return file.getAbsolutePath();
+		}
+		return null;
 	}
 }

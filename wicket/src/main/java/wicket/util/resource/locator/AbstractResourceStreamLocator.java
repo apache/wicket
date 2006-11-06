@@ -76,53 +76,76 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 	 * @return The Resource, or null if not found.
 	 */
 	public IResourceStream locate(final Class clazz, String path, final String style,
-			final Locale locale, String extension)
+			final Locale locale, final String extension)
 	{
+		String[] extensions;
 		if (extension == null)
 		{
-			extension = "." + Strings.lastPathComponent(path, '.');
+			extensions = new String[] { "." + Strings.lastPathComponent(path, '.') };
 			path = Strings.beforeLastPathComponent(path, '.');
 		}
 		else
 		{
-			if (!extension.startsWith("."))
+			extensions = Strings.split(extension, ',');
+			for (int i = extensions.length - 1; i >= 0; i--)
 			{
-				extension = "." + extension;
+				if (!extensions[i].startsWith("."))
+				{
+					extensions[i] = "." + extensions[i];
+				}
 			}
 		}
 
 		// 1. Try style, locale and extension
 		if (style != null && locale != null)
 		{
-			final IResourceStream resource = locate(clazz, path + '_' + style, locale, extension);
-			if (resource != null)
+			for (String ext : extensions)
 			{
-				return resource;
+				final IResourceStream resource = locate(clazz, path + '_' + style, locale, ext);
+				if (resource != null)
+				{
+					return resource;
+				}
 			}
 		}
 
 		// 2. Try locale and extension
 		if (locale != null)
 		{
-			final IResourceStream resource = locate(clazz, path, locale, extension);
-			if (resource != null)
+			for (String ext : extensions)
 			{
-				return resource;
+				final IResourceStream resource = locate(clazz, path, locale, ext);
+				if (resource != null)
+				{
+					return resource;
+				}
 			}
 		}
 
 		// 3. Try style and extension
 		if (style != null)
 		{
-			final IResourceStream resource = locate(clazz, path + '_' + style + extension);
+			for (String ext : extensions)
+			{
+				final IResourceStream resource = locate(clazz, path + '_' + style + ext);
+				if (resource != null)
+				{
+					return resource;
+				}
+			}
+		}
+
+		for (String ext : extensions)
+		{
+			// 4. Try just extension
+			final IResourceStream resource = locate(clazz, path + ext);
 			if (resource != null)
 			{
 				return resource;
 			}
 		}
 
-		// 4. Try just extension
-		return locate(clazz, path + extension);
+		return null;
 	}
 
 	/**

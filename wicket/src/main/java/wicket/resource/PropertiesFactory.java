@@ -35,9 +35,11 @@ import wicket.Application;
 import wicket.Component;
 import wicket.settings.IResourceSettings;
 import wicket.util.listener.IChangeListener;
+import wicket.util.resource.IFixedLocationResourceStream;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.AppendingStringBuffer;
+import wicket.util.string.Strings;
 import wicket.util.value.ValueMap;
 import wicket.util.watch.ModificationWatcher;
 
@@ -100,7 +102,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
 			final IResourceStream resource = resourceSettings.getResourceStreamLocator().locate(
-					clazz, clazz.getName().replace('.', '/'), style, locale, "properties");
+					clazz, clazz.getName().replace('.', '/'), style, locale, "properties,xml");
 
 			if (resource != null)
 			{
@@ -223,7 +225,30 @@ public class PropertiesFactory implements IPropertiesFactory
 			{
 				try
 				{
-					properties.load(new BufferedInputStream(resourceStream.getInputStream()));
+					BufferedInputStream in = new BufferedInputStream(resourceStream
+							.getInputStream());
+					boolean loadAsXml = false;
+					if (resourceStream instanceof IFixedLocationResourceStream)
+					{
+						String location = ((IFixedLocationResourceStream)resourceStream)
+								.locationAsString();
+						if (location != null)
+						{
+							String ext = Strings.lastPathComponent(location, '.').toLowerCase();
+							if ("xml".equals(ext))
+							{
+								loadAsXml = true;
+							}
+						}
+					}
+					if (loadAsXml)
+					{
+						properties.loadFromXML(in);
+					}
+					else
+					{
+						properties.load(in);
+					}
 					strings = new ValueMap();
 					Enumeration<?> enumeration = properties.propertyNames();
 					while (enumeration.hasMoreElements())
@@ -283,9 +308,8 @@ public class PropertiesFactory implements IPropertiesFactory
 			{
 				public void onChange()
 				{
-					log
-							.info("A properties files has changed. Remove all entries from the cache. Resource: "
-									+ resourceStream);
+					log.info("A properties files has changed. Remove all entries "
+							+ "from the cache. Resource: " + resourceStream);
 
 					// Clear the whole cache as associated localized files may
 					// be affected and may need reloading as well. We make it
