@@ -1,6 +1,7 @@
 /* The main calendar widget.  DIV containing a table. */
 
 .calendar {
+  z-index: 999;
   position: relative;
   display: none;
   border: 1px solid;
