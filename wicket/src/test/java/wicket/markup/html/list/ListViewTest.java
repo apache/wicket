@@ -24,7 +24,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import wicket.MockPageWithOneComponent;
 import wicket.model.Model;
-import wicket.protocol.http.MockWebApplication;
+import wicket.util.tester.WicketTester;
 
 /**
  * Test for ListView
@@ -33,17 +33,17 @@ import wicket.protocol.http.MockWebApplication;
  */
 public class ListViewTest extends TestCase
 {
-	/** Use a mock application to handle Link-clicked event */
-	private static MockWebApplication application;
+	/** Use a mock tester to handle Link-clicked event */
+	private static WicketTester tester;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 
-		if (application == null)
+		if (tester == null)
 		{
-			application = new MockWebApplication(null);
+			tester = new WicketTester();
 		}
 	}
 

@@ -89,7 +89,7 @@ public class AuthorizationTest extends TestCase
 	public void testCreateDisallowedComponent() throws Exception
 	{
 		WicketTester app = new WicketTester();
-		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
+		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			@Override
 			public boolean isInstantiationAuthorized(Class c)
@@ -117,7 +117,7 @@ public class AuthorizationTest extends TestCase
 	public void testRenderAllowedComponent() throws Exception
 	{
 		WicketTester app = new WicketTester();
-		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
 
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
@@ -132,7 +132,7 @@ public class AuthorizationTest extends TestCase
 	public void testRenderDisallowedComponent() throws Exception
 	{
 		WicketTester app = new WicketTester();
-		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
+		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
 			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,
@@ -161,7 +161,7 @@ public class AuthorizationTest extends TestCase
 	public void testEnabledAllowedComponent() throws Exception
 	{
 		WicketTester app = new WicketTester();
-		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
+		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy());
 
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
@@ -183,7 +183,7 @@ public class AuthorizationTest extends TestCase
 	public void testEnabledDisallowedComponent() throws Exception
 	{
 		WicketTester app = new WicketTester();
-		app.getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
+		app.getApplication().getSecuritySettings().setAuthorizationStrategy(new DummyAuthorizationStrategy()
 		{
 			/**
 			 * @see wicket.authorization.IAuthorizationStrategy#isActionAuthorized(wicket.Component,

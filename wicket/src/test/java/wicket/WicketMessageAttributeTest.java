@@ -38,12 +38,11 @@ import wicket.util.value.ValueMap;
  */
 public class WicketMessageAttributeTest extends WicketTestCase
 {
-
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application.getResourceSettings().setPropertiesFactory(PropertiesFactory.INSTANCE);
+		tester.getApplication().getResourceSettings().setPropertiesFactory(PropertiesFactory.INSTANCE);
 	}
 
 	/**
@@ -67,10 +66,10 @@ public class WicketMessageAttributeTest extends WicketTestCase
 		new Label(page, "label", "i am label");
 
 
-		application.startPage(page);
-		TagTester tester = application.getTagByWicketId("label");
-		assertTrue("title-value".equals(tester.getAttribute("title")));
-		assertTrue("style-value".equals(tester.getAttribute("style")));
+		tester.startPage(page);
+		TagTester tagTester = tester.getTagByWicketId("label");
+		assertTrue("title-value".equals(tagTester.getAttribute("title")));
+		assertTrue("style-value".equals(tagTester.getAttribute("style")));
 	}
 
 	/**
@@ -93,9 +92,9 @@ public class WicketMessageAttributeTest extends WicketTestCase
 		};
 		new Label(page, "label", "i am label");
 
-		application.startPage(page);
-		TagTester tester = application.getTagByWicketId("label");
-		assertTrue("100%".equals(tester.getAttribute("width")));
+		tester.startPage(page);
+		TagTester tagTester = tester.getTagByWicketId("label");
+		assertTrue("100%".equals(tagTester.getAttribute("width")));
 	}
 
 	/**
@@ -116,8 +115,8 @@ public class WicketMessageAttributeTest extends WicketTestCase
 			}
 
 		};
-		application.startPage(page);
-		String response = application.getServletResponse().getDocument();
+		tester.startPage(page);
+		String response = tester.getServletResponse().getDocument();
 		assertTrue(response.contains("title=\"title-value\""));
 		assertTrue(response.contains("style=\"style-value\""));
 	}
@@ -142,8 +141,8 @@ public class WicketMessageAttributeTest extends WicketTestCase
 		};
 		new Label(page, "label", "[[SUCCESS]]");
 
-		application.startPage(page);
-		String response = application.getServletResponse().getDocument();
+		tester.startPage(page);
+		String response = tester.getServletResponse().getDocument();
 		assertTrue(response.contains("title=\"title-value\""));
 		assertTrue(response.contains("style=\"style-value\""));
 		assertTrue(response.contains("[[SUCCESS]]"));

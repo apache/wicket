@@ -20,16 +20,17 @@ package wicket.markup;
 
 import junit.framework.TestCase;
 import wicket.Page;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 /**
+ * 
  */
 public class WicketNamespaceTest extends TestCase
 {
 	// private static final Log log = LogFactory.getLog(WicketNamespaceTest.class);
 
-	private MockWebApplication application;
+	private WicketTester tester;
 
 	/**
 	 * Create the test.
@@ -99,15 +100,14 @@ public class WicketNamespaceTest extends TestCase
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
 
-		application = new MockWebApplication(null);
-		application.setHomePage(pageClass);
+		tester = new WicketTester(pageClass);
 
 		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
 }

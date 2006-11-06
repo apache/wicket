@@ -45,7 +45,7 @@ public class AjaxSubmitButtonTest extends WicketTestCase
 	 */
 	public void testRender()
 	{
-		application.startPage(new ITestPageSource() {
+		tester.startPage(new ITestPageSource() {
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -66,10 +66,10 @@ public class AjaxSubmitButtonTest extends WicketTestCase
 			}
 		});
 		
-		application.assertComponent("form:ajaxSubmitButton", AjaxSubmitButton.class);
+		tester.assertComponent("form:ajaxSubmitButton", AjaxSubmitButton.class);
 		
 		// Get the tag which has wicket:id "ajaxSubmitButton"
-		TagTester ajaxSubmitButton = application.getTagByWicketId("ajaxSubmitButton");
+		TagTester ajaxSubmitButton = tester.getTagByWicketId("ajaxSubmitButton");
 		
 		// The tag should be an "input"
 		assertEquals("input", ajaxSubmitButton.getName());

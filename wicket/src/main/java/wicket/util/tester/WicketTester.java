@@ -61,6 +61,8 @@ import wicket.markup.html.link.PageLink;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
+import wicket.protocol.http.WebApplication;
+import wicket.resource.DummyApplication;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 import wicket.util.tester.WicketTesterHelper.ComponentData;
@@ -184,32 +186,64 @@ public class WicketTester extends MockWebApplication
 	private static final Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
-	 * create WicketTester with null path
-	 * 
-	 * @see #WicketTester(String)
+	 * Create WicketTester and automatically create a WebApplication, but the
+	 * tester will have no home page.
 	 */
 	public WicketTester()
 	{
-		this(null);
+		this(new DummyApplication(), null);
 	}
 
 	/**
-	 * create a WicketTester to help unit testing.
+	 * Create WicketTester and automatically create a WebApplication.
 	 * 
+	 * @param homePage
+	 */
+	public WicketTester(final Class<? extends Page> homePage)
+	{
+		this(new WebApplication()
+		{
+			/**
+			 * @see wicket.Application#getHomePage()
+			 */
+			@Override
+			public Class<? extends Page> getHomePage()
+			{
+				return homePage;
+			}
+		}, null);
+	}
+
+	/**
+	 * Create WicketTester
+	 * 
+	 * @param application
+	 *            The wicket tester object
+	 */
+	public WicketTester(final WebApplication application)
+	{
+		this(application, null);
+	}
+
+	/**
+	 * Create WicketTester to help unit testing
+	 * 
+	 * @param application
+	 *            The wicket tester object
 	 * @param path
-	 *            The absolute path on disk to the web application contents
-	 *            (e.g. war root) - may be null
+	 *            The absolute path on disk to the web tester contents (e.g. war
+	 *            root) - may be null
 	 * 
 	 * @see wicket.protocol.http.MockWebApplication#MockWebApplication(String)
 	 */
-	public WicketTester(final String path)
+	public WicketTester(final WebApplication application, final String path)
 	{
-		super(path);
+		super(application, path);
 	}
 
 	/**
-	 * Render a page defined in <code>TestPageSource</code>. This usually
-	 * used when a page does not have default consturctor. For example, a
+	 * Render a page defined in <code>TestPageSource</code>. This is usually
+	 * used when a page does not have default constructor. For example, a
 	 * <code>ViewBook</code> page requires a <code>Book</code> instance:
 	 * 
 	 * <pre>
@@ -227,11 +261,9 @@ public class WicketTester extends MockWebApplication
 	 *            a page factory that creating test page instance
 	 * @return Page rendered page
 	 */
-	public final Page startPage(ITestPageSource testPageSource)
+	public final Page startPage(final ITestPageSource testPageSource)
 	{
-		setHomePage(DummyHomePage.class);
-		setupRequestAndResponse();
-		processRequestCycle();
+		startPage(DummyHomePage.class);
 		DummyHomePage page = (DummyHomePage)getLastRenderedPage();
 		page.setTestPageSource(testPageSource);
 
@@ -247,7 +279,6 @@ public class WicketTester extends MockWebApplication
 	{
 		setupRequestAndResponse();
 		getServletRequest().setRequestToComponent(component);
-		// getServletRequest().getSession().getPageMap(null);
 		processRequestCycle();
 	}
 
@@ -259,17 +290,16 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Page startPage(final Page page)
 	{
-		setHomePage(DummyHomePage.class);
 		processRequestCycle(page);
 
 		Page last = getLastRenderedPage();
-
-		createRequestCycle();
-		getWicketSession().touch(page);
-		if (page != last)
-		{
-			getWicketSession().touch(last);
-		}
+		//
+		// createRequestCycle();
+		// getWicketSession().touch(page);
+		// if (page != last)
+		// {
+		// getWicketSession().touch(last);
+		// }
 		return last;
 	}
 
@@ -282,9 +312,8 @@ public class WicketTester extends MockWebApplication
 	 */
 	public final Page startPage(Class<? extends Page> pageClass)
 	{
-		setHomePage(pageClass);
 		setupRequestAndResponse();
-		processRequestCycle();
+		processRequestCycle(pageClass);
 		return getLastRenderedPage();
 	}
 
@@ -586,8 +615,8 @@ public class WicketTester extends MockWebApplication
 	 * and {@link AjaxSubmitLink}.
 	 * <p>
 	 * On AjaxLinks and AjaxFallbackLinks the onClick method is invoked with a
-	 * valid AjaxRequestTarget. In that way you can test the flow of your
-	 * application when using AJAX.
+	 * valid AjaxRequestTarget. In that way you can test the flow of your tester
+	 * when using AJAX.
 	 * <p>
 	 * When clicking an AjaxSubmitLink the form, which the AjaxSubmitLink is
 	 * attached to is first submitted, and then the onSubmit method on
@@ -1024,24 +1053,24 @@ public class WicketTester extends MockWebApplication
 	 * component by using:
 	 * 
 	 * <pre>
-	 *                ...
-	 *                component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
-	 *                    public void onEvent(AjaxRequestTarget) {
-	 *                        // Do something.
-	 *                    }
-	 *                });
-	 *                ...
+	 *                   ...
+	 *                   component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *                       public void onEvent(AjaxRequestTarget) {
+	 *                           // Do something.
+	 *                       }
+	 *                   });
+	 *                   ...
 	 * </pre>
 	 * 
 	 * You can then test that the code inside onEvent actually does what it's
 	 * supposed to, using the WicketTester:
 	 * 
 	 * <pre>
-	 *                ...
-	 *                tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
-	 *                          
-	 *                // Test that the code inside onEvent is correct.
-	 *                ...
+	 *                   ...
+	 *                   tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *                             
+	 *                   // Test that the code inside onEvent is correct.
+	 *                   ...
 	 * </pre>
 	 * 
 	 * PLEASE NOTE! This method doesn't actually insert the component in the

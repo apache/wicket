@@ -22,7 +22,7 @@ import wicket.WicketTestCase;
 import wicket.markup.MarkupException;
 
 /**
- * Simple application that demonstrates the mock http application code (and
+ * Simple tester that demonstrates the mock http tester code (and
  * checks that it is working)
  * 
  * @author Chris Turner

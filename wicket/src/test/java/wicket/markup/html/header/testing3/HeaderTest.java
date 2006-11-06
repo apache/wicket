@@ -43,7 +43,7 @@ public class HeaderTest extends WicketTestCase
 	public void test_1() throws Exception
 	{
 		executeTest(TestPage.class, "TestPage_ExpectedResult-1.html");
-		TestPage page = (TestPage)application.getLastRenderedPage();
+		TestPage page = (TestPage)tester.getLastRenderedPage();
 
 		executedListener(TestPage.class, page.get("link"), "TestPage_ExpectedResult-2.html");
 	}

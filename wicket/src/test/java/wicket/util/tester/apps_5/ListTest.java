@@ -19,6 +19,7 @@
 package wicket.util.tester.apps_5;
 
 import junit.framework.TestCase;
+import wicket.util.tester.WicketTester;
 
 /**
  * @author janne
@@ -27,6 +28,7 @@ public class ListTest extends TestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public ListTest(String name)
@@ -39,7 +41,7 @@ public class ListTest extends TestCase
 	 */
 	public void test1() throws Exception
 	{
-		AppTester tester = new AppTester();		
+		WicketTester tester = new WicketTester(new MyApplication());
 		tester.startPage(new ListPage());
 	}
 }

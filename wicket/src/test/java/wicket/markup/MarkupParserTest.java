@@ -73,7 +73,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		MarkupResourceStream stream = new MarkupResourceStream(new StringResourceStream(markup),
 				null, null);
-		final MarkupParser parser = new MarkupParserFactory(this.application)
+		final MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
 				.newMarkupParser(stream);
 		parser.setWicketNamespace(namespace);
 		return parser.readAndParse();
@@ -87,11 +87,12 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @throws IOException
 	 * @throws ResourceStreamNotFoundException
 	 */
-	private MarkupFragment parse(final String markup) throws IOException, ResourceStreamNotFoundException
+	private MarkupFragment parse(final String markup) throws IOException,
+			ResourceStreamNotFoundException
 	{
 		MarkupResourceStream stream = new MarkupResourceStream(new StringResourceStream(markup),
 				null, null);
-		final MarkupParser parser = new MarkupParserFactory(this.application)
+		final MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
 				.newMarkupParser(stream);
 		return parser.readAndParse();
 	}
@@ -127,7 +128,7 @@ public final class MarkupParserTest extends WicketTestCase
 	private MarkupFragment parse(final MarkupResourceStream resource) throws IOException,
 			ResourceStreamNotFoundException
 	{
-		final MarkupParser parser = new MarkupParserFactory(this.application)
+		final MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
 				.newMarkupParser(resource);
 		return parser.readAndParse();
 	}
@@ -374,7 +375,8 @@ public final class MarkupParserTest extends WicketTestCase
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, this.getClass(), "9", null, "html");
-		MarkupParser parser = new MarkupParserFactory(this.application).newMarkupParser(resource);
+		MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
+				.newMarkupParser(resource);
 		parser.setStripComments(true);
 		parser.readAndParse();
 		log.info("tok(0)=" + tokens.get(0));
@@ -514,7 +516,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		// Note: <img> is one of these none-balanced HTML tags
 		MarkupFragment markup = parse("<span wicket:id=\"span\"><img wicket:id=\"img\"><span wicket:id=\"span2\"></span></span>");
-		
+
 		ComponentTag t = markup.getTag();
 		assertEquals(t.getId(), "span");
 		assertNotNull(markup.getChildFragment("span", false));

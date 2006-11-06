@@ -20,8 +20,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -55,8 +55,7 @@ public class PagedTableNavigatorWithLabelProviderTest extends TestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		application.setHomePage(PagedTableNavigatorWithLabelProviderPage.class);
+		WicketTester application = new WicketTester(PagedTableNavigatorWithLabelProviderPage.class);
 		application.setupRequestAndResponse();
 		application.processRequestCycle();
 		PagedTableNavigatorWithLabelProviderPage page = (PagedTableNavigatorWithLabelProviderPage)application

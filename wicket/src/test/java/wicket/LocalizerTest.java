@@ -24,7 +24,6 @@ import java.util.MissingResourceException;
 import junit.framework.Assert;
 import wicket.markup.html.basic.Label;
 import wicket.model.Model;
-import wicket.resource.DummyApplication;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.settings.IResourceSettings;
 import wicket.util.value.ValueMap;
@@ -58,9 +57,9 @@ public class LocalizerTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new DummyApplication();
-		settings = application.getResourceSettings();
-		localizer = application.getResourceSettings().getLocalizer();
+		super.setUp();
+		settings = tester.getApplication().getResourceSettings();
+		localizer = tester.getApplication().getResourceSettings().getLocalizer();
 	}
 
 	/**
@@ -189,5 +188,4 @@ public class LocalizerTest extends WicketTestCase
 
 		}
 	}
-
 }

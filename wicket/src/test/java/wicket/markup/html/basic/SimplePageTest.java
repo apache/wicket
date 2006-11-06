@@ -28,7 +28,7 @@ import wicket.markup.html.panel.Panel;
 import wicket.util.value.IValueMap;
 
 /**
- * Simple application that demonstrates the mock http application code (and
+ * Simple tester that demonstrates the mock http tester code (and
  * checks that it is working)
  * 
  * @author Chris Turner
@@ -61,44 +61,44 @@ public class SimplePageTest extends WicketTestCase
 	{
 		executeTest(SimplePage.class, "SimplePageExpectedResult.html");
 
-		Label label = (Label)application.getLastRenderedPage().get("myLabel");
+		Label label = (Label)tester.getLastRenderedPage().get("myLabel");
 		assertNotNull(label);
-		application.processRequestCycle(label);
-		String document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(label);
+		String document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertEquals("<span wicket:id=\"myLabel\">Test Label</span>", document);
 
-		Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
+		Panel panel = (Panel)tester.getLastRenderedPage().get("myPanel");
 		assertNotNull(panel);
-		application.processRequestCycle(panel);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(panel);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertEquals(
 				"<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>",
 				document);
 
-		label = (Label)application.getLastRenderedPage().get("myPanel:label");
+		label = (Label)tester.getLastRenderedPage().get("myPanel:label");
 		assertNotNull(label);
-		application.processRequestCycle(label);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(label);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("<span wicket:id=\"label\">mein Label</span>", document);
 
-		Border border = (Border)application.getLastRenderedPage().get("myBorder");
+		Border border = (Border)tester.getLastRenderedPage().get("myBorder");
 		assertNotNull(border);
-		application.processRequestCycle(border);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(border);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
 				"<wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border>",
 				document);
 
-		border = (Border)application.getLastRenderedPage().get("myBorder2");
+		border = (Border)tester.getLastRenderedPage().get("myBorder2");
 		assertNotNull(border);
-		application.processRequestCycle(border);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(border);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
@@ -107,29 +107,29 @@ public class SimplePageTest extends WicketTestCase
 
 		// do the same test twice. Igor reported a problem with that, so we have
 		// to test it.
-		border = (Border)application.getLastRenderedPage().get("myBorder2");
+		border = (Border)tester.getLastRenderedPage().get("myBorder2");
 		assertNotNull(border);
-		application.processRequestCycle(border);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(border);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
 				"<span testAttr=\"myValue\" wicket:id=\"myBorder2\"><wicket:border>before body - <wicket:body>border</wicket:body> - after body</wicket:border></span>",
 				document);
 
-		WebMarkupContainer container = (WebMarkupContainer)application.getLastRenderedPage().get(
+		WebMarkupContainer container = (WebMarkupContainer)tester.getLastRenderedPage().get(
 				"test");
 		assertNotNull(container);
-		application.processRequestCycle(container);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(container);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("body<span wicket:id=\"myLabel2\">Test Label2</span>", document);
 
-		label = (Label)application.getLastRenderedPage().get("test:myLabel2");
+		label = (Label)tester.getLastRenderedPage().get("test:myLabel2");
 		assertNotNull(label);
-		application.processRequestCycle(label);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(label);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("<span wicket:id=\"myLabel2\">Test Label2</span>", document);
@@ -145,15 +145,15 @@ public class SimplePageTest extends WicketTestCase
 
 		Label label = (Label)page.get("myLabel");
 		assertNotNull(label);
-		application.processRequestCycle(label);
-		String document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(label);
+		String document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertEquals("<span wicket:id=\"myLabel\">Test Label</span>", document);
 
 		Panel panel = (Panel)page.get("myPanel");
 		assertNotNull(panel);
-		application.processRequestCycle(panel);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(panel);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertEquals(
 				"<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>",
@@ -161,16 +161,16 @@ public class SimplePageTest extends WicketTestCase
 
 		label = (Label)page.get("myPanel:label");
 		assertNotNull(label);
-		application.processRequestCycle(label);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(label);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("<span wicket:id=\"label\">mein Label</span>", document);
 
 		Border border = (Border)page.get("myBorder");
 		assertNotNull(border);
-		application.processRequestCycle(border);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(border);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
@@ -179,8 +179,8 @@ public class SimplePageTest extends WicketTestCase
 
 		border = (Border)page.get("myBorder2");
 		assertNotNull(border);
-		application.processRequestCycle(border);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(border);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
@@ -191,8 +191,8 @@ public class SimplePageTest extends WicketTestCase
 		// to test it.
 		border = (Border)page.get("myBorder2");
 		assertNotNull(border);
-		application.processRequestCycle(border);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(border);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals(
@@ -201,16 +201,16 @@ public class SimplePageTest extends WicketTestCase
 
 		WebMarkupContainer container = (WebMarkupContainer)page.get("test");
 		assertNotNull(container);
-		application.processRequestCycle(container);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(container);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("body<span wicket:id=\"myLabel2\">Test Label2</span>", document);
 
 		label = (Label)page.get("test:myLabel2");
 		assertNotNull(label);
-		application.processRequestCycle(label);
-		document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(label);
+		document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertFalse("".equals(document));
 		assertEquals("<span wicket:id=\"myLabel2\">Test Label2</span>", document);
@@ -380,11 +380,11 @@ public class SimplePageTest extends WicketTestCase
 	{
 		executeTest(SimplePage_10.class, "SimplePageExpectedResult_10.html");
 
-		Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
+		Panel panel = (Panel)tester.getLastRenderedPage().get("myPanel");
 		assertNotNull(panel);
 		panel.setVisible(true);
-		application.processRequestCycle(panel);
-		String document = application.getServletResponse().getDocument();
+		tester.processRequestCycle(panel);
+		String document = tester.getServletResponse().getDocument();
 		assertNotNull(document);
 		assertEquals(
 				"<wicket:panel>Inside the panel<span wicket:id=\"label\">mein Label</span></wicket:panel>",

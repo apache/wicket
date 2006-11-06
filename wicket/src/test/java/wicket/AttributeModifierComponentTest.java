@@ -24,17 +24,17 @@ import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
+import wicket.util.tester.WicketTester;
 
 /**
- * This set of tests builds a sample application for testing the dynamic
- * modicication of attributes in both component tags and also in raw markup. The
- * tests contained here represent testing on one specific area of functionality
- * of the Component class. It is expected that separate test cases will be added
- * to test other facets of Components.
+ * This set of tests builds a sample tester for testing the dynamic modicication
+ * of attributes in both component tags and also in raw markup. The tests
+ * contained here represent testing on one specific area of functionality of the
+ * Component class. It is expected that separate test cases will be added to
+ * test other facets of Components.
  * 
  * @author Chris Turner
  */
@@ -42,7 +42,7 @@ public class AttributeModifierComponentTest extends TestCase
 {
 	private static final Log log = LogFactory.getLog(AttributeModifierComponentTest.class);
 
-	private MockWebApplication application;
+	private WicketTester tester;
 
 	/**
 	 * Create a test case instance.
@@ -59,14 +59,7 @@ public class AttributeModifierComponentTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null)
-		{
-			@Override
-			public Class<? extends Page> getHomePage()
-			{
-				return AttributeModifierComponentPage.class;
-			}
-		};
+		tester = new WicketTester(AttributeModifierComponentPage.class);
 	}
 
 	/**
@@ -75,11 +68,11 @@ public class AttributeModifierComponentTest extends TestCase
 	public void testComponentTagAttributeModification() throws Exception
 	{
 		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		log.info(document);
 		Assert.assertTrue(validateDocument(document));
 	}

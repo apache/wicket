@@ -126,7 +126,7 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue(group3.getModelObject() == list);
 
 		// set up necessary objects to emulate a form submission
-		application.createRequestCycle();
+		tester.createRequestCycle();
 
 		new Check<String>(container, "check1", new Model<String>(check1));
 		new Check(group, "prop2");
@@ -141,19 +141,19 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue("running with nothing selected - model must be empty", modelObject.getProp1()
 				.size() == 0);
 
-		application.getServletRequest().setParameter(group.getInputName(), "container:check1");
+		tester.getServletRequest().setParameter(group.getInputName(), "container:check1");
 		form.onFormSubmitted();
 		assertTrue("running with choice1 selected - model must only contain value of check1",
 				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
 
-		application.getServletRequest().setParameter(group.getInputName(), "prop2");
+		tester.getServletRequest().setParameter(group.getInputName(), "prop2");
 		form.onFormSubmitted();
 		assertTrue("running with choice2 selected - model must only contain value of check2",
 				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check2));
 
 		// throw in some nulls into the request param to make sure they are
 		// ignored
-		application.getServletRequest().getParameterMap().put(group.getInputName(),
+		tester.getServletRequest().getParameterMap().put(group.getInputName(),
 				new String[] { null, "container:check1", null, "prop2" });
 		form.onFormSubmitted();
 		assertTrue(
@@ -161,7 +161,7 @@ public class CheckGroupTest extends WicketTestCase
 				modelObject.getProp1().size() == 2 && modelObject.getProp1().contains(check2)
 						&& modelObject.getProp1().contains(check1));
 
-		application.getServletRequest().getParameterMap().put(group.getInputName(),
+		tester.getServletRequest().getParameterMap().put(group.getInputName(),
 				new String[] { "some weird path to test error" });
 		try
 		{

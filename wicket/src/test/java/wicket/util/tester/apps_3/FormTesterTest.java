@@ -57,7 +57,7 @@ public class FormTesterTest extends WicketTestCase
 		books = new Book[] { new Book("1", "book1"), new Book("2", "book2"),
 				new Book("3", "book3"), new Book("4", "book4") };
 
-		choicePage = (ChoicePage)application.startPage(new ITestPageSource()
+		choicePage = (ChoicePage)tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -66,7 +66,7 @@ public class FormTesterTest extends WicketTestCase
 				return new ChoicePage<Book>(Arrays.asList(books));
 			}
 		});
-		formTester = application.newFormTester("choiceForm");
+		formTester = tester.newFormTester("choiceForm");
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class FormTesterTest extends WicketTestCase
 		formTester.submit();
 		assertFalse(choicePage.anotherButtonPressed);
 
-		formTester = application.newFormTester("choiceForm");
+		formTester = tester.newFormTester("choiceForm");
 		formTester.submit("anotherButton");
 		assertTrue(choicePage.anotherButtonPressed);
 	}

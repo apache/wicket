@@ -29,14 +29,14 @@ import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.persistence.CookieValuePersisterTestPage.TestForm;
 import wicket.protocol.http.MockHttpServletRequest;
 import wicket.protocol.http.MockHttpServletResponse;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;
+import wicket.util.tester.WicketTester;
 
 /**
  * How to test CookieValuePersister. Problem: CookieValuePersister relies on
- * RequestCycle.get().getApplication() to access application settings.
+ * RequestCycle.get().getApplication() to access tester settings.
  * RequestCycle.get() however is valid only during the render process. It get's
  * automatically attached and detached. Thus RequestCycle.get() will be NULL
  * before and after render. Thus CookieValuePersister can not be tested outside
@@ -57,16 +57,15 @@ import wicket.protocol.http.WebResponse;
  */
 public class CookieValuePersisterTest extends TestCase
 {
-	private MockWebApplication application;
+	private WicketTester tester;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null);
-		application.setHomePage(CookieValuePersisterTestPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester = new WicketTester(CookieValuePersisterTestPage.class);
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 	}
 
 	/**
@@ -78,7 +77,7 @@ public class CookieValuePersisterTest extends TestCase
 	{
 		// How does the test work: Make sure you have a page, form and form
 		// component properly set up (getRelativePath() etc.). See setUp().
-		final Page page = application.getLastRenderedPage();
+		final Page page = tester.getLastRenderedPage();
 
 		// Get the form and form component created
 		final TestForm form = (TestForm)page.get("form");
@@ -88,7 +87,7 @@ public class CookieValuePersisterTest extends TestCase
 		// The RequestCycle's constructor will attach the new cycle to
 		// the threadLocal retrieved by RequestCycle.get().
 		// Attached to this cycle must be a valid request and response
-		final WebRequestCycle cycle = application.createRequestCycle();
+		final WebRequestCycle cycle = tester.createRequestCycle();
 
 		// Just after init, the requests and responses cookie lists must be
 		// empty

@@ -36,8 +36,8 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testFormTester()
 	{
-		application.startPage(MockFormPage.class);
-		MockFormPage page = (MockFormPage)application.getLastRenderedPage();
+		tester.startPage(MockFormPage.class);
+		MockFormPage page = (MockFormPage)tester.getLastRenderedPage();
 		MockDomainObject domainObject = page.getDomainObject();
 		
 		assertNotNull(domainObject);
@@ -45,7 +45,7 @@ public class FormTesterTest extends WicketTestCase
 		assertNull(domainObject.getTextarea());
 		assertFalse(domainObject.isCheckbox());
 		
-		FormTester formTester = application.newFormTester("form");
+		FormTester formTester = tester.newFormTester("form");
 		formTester.setValue("text", "Mock text value");
 		formTester.setValue("textarea", "Mock textarea value");
 		formTester.setValue("checkbox", "true");
@@ -64,18 +64,18 @@ public class FormTesterTest extends WicketTestCase
 	 */
 	public void testAddFile()
 	{
-		application.startPage(MockFormFileUploadPage.class);
-		MockFormFileUploadPage page = (MockFormFileUploadPage)application.getLastRenderedPage();
+		tester.startPage(MockFormFileUploadPage.class);
+		MockFormFileUploadPage page = (MockFormFileUploadPage)tester.getLastRenderedPage();
 		MockDomainObjectFileUpload domainObject = page.getDomainObject();
 		
-		application.createRequestCycle();
+		tester.createRequestCycle();
 		
 		assertNull(page.getFileUpload());
 		assertNotNull(domainObject);
 		assertNull(domainObject.getText());
 		
 		
-		FormTester formTester = application.newFormTester("form");
+		FormTester formTester = tester.newFormTester("form");
 		formTester.setFile("file", new File("pom.xml"), "text/xml");
 		formTester.setValue("text", "Mock value");
 		formTester.submit();

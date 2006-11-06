@@ -34,7 +34,7 @@ public class ValidatorPropertiesTest extends TestCase
 	 */
 	public void test1()
 	{
-		WicketTester tester = new MyTesterApplication();
+		WicketTester tester = new WicketTester(new MyTesterApplication());
 		tester.setupRequestAndResponse();
 		tester.createRequestCycle();
 
@@ -104,12 +104,13 @@ public class ValidatorPropertiesTest extends TestCase
 	 */
 	public void test2()
 	{
-		WicketTester tester = new MyTesterApplication();
-		tester.getResourceSettings().setThrowExceptionOnMissingResource(false);
+		WicketTester tester = new WicketTester(new MyTesterApplication());
+		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(false);
 		tester.setupRequestAndResponse();
 		tester.createRequestCycle();
 
-		String str = tester.getResourceSettings().getLocalizer().getString("XXX", null);
+		String str = tester.getApplication().getResourceSettings().getLocalizer().getString("XXX",
+				null);
 		assertEquals("[Warning: String resource for 'XXX' not found]", str);
 	}
 
@@ -118,15 +119,15 @@ public class ValidatorPropertiesTest extends TestCase
 	 */
 	public void test3()
 	{
-		WicketTester tester = new MyTesterApplication();
-		tester.getResourceSettings().setThrowExceptionOnMissingResource(true);
+		WicketTester tester = new WicketTester(new MyTesterApplication());
+		tester.getApplication().getResourceSettings().setThrowExceptionOnMissingResource(true);
 		tester.setupRequestAndResponse();
 		tester.createRequestCycle();
 
 		boolean hit = false;
 		try
 		{
-			tester.getResourceSettings().getLocalizer().getString("XXX", null);
+			tester.getApplication().getResourceSettings().getLocalizer().getString("XXX", null);
 		}
 		catch (MissingResourceException ex)
 		{

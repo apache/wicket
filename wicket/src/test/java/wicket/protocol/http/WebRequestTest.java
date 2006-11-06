@@ -19,6 +19,7 @@
 package wicket.protocol.http;
 
 import wicket.protocol.http.servlet.ServletWebRequest;
+import wicket.util.tester.WicketTester;
 import junit.framework.TestCase;
 
 /**
@@ -65,7 +66,7 @@ public class WebRequestTest extends TestCase
 
 	private void assertWithHeader(String header, String value, boolean isAjax)
 	{
-		MockHttpServletRequest mockRequest = new MockWebApplication(null).getServletRequest();
+		MockHttpServletRequest mockRequest = new WicketTester().getServletRequest();
 		mockRequest.addHeader(header, value);
 
 		WebRequest webRequest = new ServletWebRequest(mockRequest);

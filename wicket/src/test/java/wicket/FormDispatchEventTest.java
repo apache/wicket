@@ -95,8 +95,8 @@ public class FormDispatchEventTest extends WicketTestCase
 		};
 
 
-		application.setupRequestAndResponse();
-		RequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		RequestCycle cycle = tester.createRequestCycle();
 
 		page.urlFor(IRedirectListener.INTERFACE);
 		cycle.getSession().touch(page);
@@ -105,7 +105,7 @@ public class FormDispatchEventTest extends WicketTestCase
 		form.onFormSubmitted();
 		assertTrue("form should should set value ", submit);
 
-		application.getServletRequest().setParameter(
+		tester.getServletRequest().setParameter(
 				form.getHiddenField(Form.HIDDEN_FIELD_FAKE_SUBMIT),
 				dropDown.urlFor(IOnChangeListener.INTERFACE).toString());
 

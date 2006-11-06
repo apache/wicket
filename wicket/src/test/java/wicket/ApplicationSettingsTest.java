@@ -28,6 +28,7 @@ import wicket.resource.loader.ClassStringResourceLoader;
 import wicket.resource.loader.ComponentStringResourceLoader;
 import wicket.resource.loader.IStringResourceLoader;
 import wicket.settings.Settings;
+import wicket.util.tester.WicketTester;
 
 /**
  * Test cases for the <code>ApplicationSettings</code> class.
@@ -106,7 +107,7 @@ public class ApplicationSettingsTest extends TestCase
 		Assert.assertEquals("There should be 2 default loaders", 2, loaders.size());
 		Assert.assertTrue("First loader one should be the component one",
 				loaders.get(0) instanceof ComponentStringResourceLoader);
-		Assert.assertTrue("Second loader should be the application one",
+		Assert.assertTrue("Second loader should be the tester one",
 				loaders.get(1) instanceof ClassStringResourceLoader);
 	}
 
@@ -116,6 +117,7 @@ public class ApplicationSettingsTest extends TestCase
 	public void testOverrideStringResourceLoaderSetup()
 	{
 		Application dummy = new DummyApplication();
+		dummy.init();
 		Settings settings = new Settings(dummy);
 		settings.addStringResourceLoader(new BundleStringResourceLoader(
 				"wicket.resource.DummyResources"));
@@ -133,8 +135,8 @@ public class ApplicationSettingsTest extends TestCase
 	 */
 	public void testLocalizer()
 	{
-		Application dummy = new DummyApplication();
-		Assert.assertNotNull("Localizer should be available", dummy.getResourceSettings()
-				.getLocalizer());
+		WicketTester tester = new WicketTester();
+		Assert.assertNotNull("Localizer should be available", tester.getApplication()
+				.getResourceSettings().getLocalizer());
 	}
 }

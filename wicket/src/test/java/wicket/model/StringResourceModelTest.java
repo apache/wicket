@@ -26,9 +26,9 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import wicket.markup.html.WebPage;
 import wicket.protocol.http.MockPage;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.resource.loader.BundleStringResourceLoader;
+import wicket.util.tester.WicketTester;
 
 /**
  * Test cases for the <code>StringResourceModel</code> class.
@@ -37,8 +37,7 @@ import wicket.resource.loader.BundleStringResourceLoader;
  */
 public class StringResourceModelTest extends TestCase
 {
-
-	private MockWebApplication application;
+	private WicketTester tester;
 
 	private WebPage page;
 
@@ -61,8 +60,8 @@ public class StringResourceModelTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null);
-		application.getResourceSettings().addStringResourceLoader(
+		tester = new WicketTester();
+		tester.getApplication().getResourceSettings().addStringResourceLoader(
 				new BundleStringResourceLoader("wicket.model.StringResourceModelTest"));
 		page = new MockPage();
 		ws = new WeatherStation();
@@ -70,7 +69,6 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
 	 * 
 	 */
 	public void testGetSimpleResource()
@@ -82,7 +80,6 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
 	 * 
 	 */
 	public void testNullResourceKey()
@@ -100,7 +97,6 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 * 
 	 */
 	public void testGetSimpleResourceWithKeySubstitution()
 	{
@@ -115,7 +111,6 @@ public class StringResourceModelTest extends TestCase
 
 	/**
 	 * 
-	 * 
 	 */
 	public void testGetPropertySubstitutedResource()
 	{
@@ -128,7 +123,6 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
 	 * 
 	 */
 	public void testSubstitutionParametersResource()
@@ -153,7 +147,6 @@ public class StringResourceModelTest extends TestCase
 	}
 
 	/**
-	 * 
 	 * 
 	 */
 	public void testUninitialisedLocalizer()
@@ -197,8 +190,8 @@ public class StringResourceModelTest extends TestCase
 	public void testDetachAttachNormalModel() throws Exception
 	{
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsModel);
-		application.setupRequestAndResponse();
-		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(), application.getWicketResponse());
+		tester.setupRequestAndResponse();
+		new WebRequestCycle(tester.getWicketSession(), tester.getWicketRequest(), tester.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
@@ -236,8 +229,8 @@ public class StringResourceModelTest extends TestCase
 
 		};
 		StringResourceModel model = new StringResourceModel("simple.text", page, wsDetachModel);
-		application.setupRequestAndResponse();
-		new WebRequestCycle(application.getWicketSession(), application.getWicketRequest(), application.getWicketResponse());
+		tester.setupRequestAndResponse();
+		new WebRequestCycle(tester.getWicketSession(), tester.getWicketRequest(), tester.getWicketResponse());
 		model.attach();
 		Assert.assertNotNull(model.getLocalizer());
 		model.detach();
@@ -252,7 +245,6 @@ public class StringResourceModelTest extends TestCase
 	public class WeatherStation implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
-
 
 		private String currentStatus = "sunny";
 
@@ -298,5 +290,4 @@ public class StringResourceModelTest extends TestCase
 			return "\u00B0C";
 		}
 	}
-
 }

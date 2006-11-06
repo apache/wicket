@@ -46,7 +46,7 @@ public class AjaxSubmitLinkTest extends WicketTestCase
 	 */
 	public void testRender()
 	{
-		application.startPage(new ITestPageSource() {
+		tester.startPage(new ITestPageSource() {
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -67,9 +67,9 @@ public class AjaxSubmitLinkTest extends WicketTestCase
 			}
 		});
 		
-		application.assertComponent(FormWithLinkPage.SUBMIT_ID, AjaxSubmitLink.class);
+		tester.assertComponent(FormWithLinkPage.SUBMIT_ID, AjaxSubmitLink.class);
 		
-		TagTester ajaxSubmitLink = application.getTagByWicketId(FormWithLinkPage.SUBMIT_ID);
+		TagTester ajaxSubmitLink = tester.getTagByWicketId(FormWithLinkPage.SUBMIT_ID);
 		
 		assertEquals("a", ajaxSubmitLink.getName());
 		

@@ -75,21 +75,21 @@ public class BoxBorderTest extends WicketTestCase
 	{
 		executeTest(BoxBorderTestPage_3.class, "BoxBorderTestPage_ExpectedResult_3.html");
 
-		application.getLastRenderedPage().get("border");
-		Form form = (Form)application.getLastRenderedPage().get("border:myForm");
+		tester.getLastRenderedPage().get("border");
+		Form form = (Form)tester.getLastRenderedPage().get("border:myForm");
 
-		TextField input = (TextField)application.getLastRenderedPage().get("border:myForm:borderBody:name");
+		TextField input = (TextField)tester.getLastRenderedPage().get("border:myForm:borderBody:name");
 		assertEquals("", input.getModelObjectAsString());
 
-		application.setupRequestAndResponse();
+		tester.setupRequestAndResponse();
 
-		MockHttpServletRequest mockRequest = application.getServletRequest();
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
 		mockRequest.setRequestToComponent(form);
 		mockRequest.setParameter(input.getInputName(), "jdo");
 
-		application.processRequestCycle();
+		tester.processRequestCycle();
 
-		input = (TextField)application.getLastRenderedPage().get("border:myForm:borderBody:name");
+		input = (TextField)tester.getLastRenderedPage().get("border:myForm:borderBody:name");
 		assertEquals("jdo", input.getModelObjectAsString());
 	}
 
@@ -102,13 +102,11 @@ public class BoxBorderTest extends WicketTestCase
 		Class<? extends Page> pageClass = BorderTestHierarchyPage_4.class;
 
 		System.out.println("=== " + pageClass.getName() + " ===");
-		application.setHomePage(pageClass);
-		application.setupRequestAndResponse();
-
+		
 		WicketRuntimeException wicketRuntimeException = null;
 		try
 		{
-			application.processRequestCycle();
+			tester.startPage(pageClass);
 		}
 		catch (WicketRuntimeException e)
 		{
@@ -159,9 +157,9 @@ public class BoxBorderTest extends WicketTestCase
 	{
 		executeTest(BoxBorderTestPage_7.class, "BoxBorderTestPage_ExpectedResult_7.html");
 		
-		application.clickLink("link");
+		tester.clickLink("link");
 
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "BoxBorderTestPage_ExpectedResult_7-1.html"));
 	}
 }

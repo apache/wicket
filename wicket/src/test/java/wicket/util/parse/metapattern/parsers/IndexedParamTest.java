@@ -23,6 +23,7 @@ import wicket.protocol.http.MockHttpServletRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.request.target.coding.IndexedParamUrlCodingStrategy;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 /**
  * Test [ 1470093 ] <wicket:link> does not accept numeric param names
@@ -47,21 +48,21 @@ public class IndexedParamTest extends WicketTestCase
 	 */
 	public void testPage() throws Exception
 	{
-		application.setHomePage(Page1.class);
-		application.mount(new IndexedParamUrlCodingStrategy("/page2", Page2.class));
+		tester = new WicketTester(Page1.class);
+		tester.getApplication().mount(new IndexedParamUrlCodingStrategy("/page2", Page2.class));
 
 		executeTest(Page1.class, "IndexedParamTest_ExpectedResult-1.html");
 
 		// Click the autolink
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
-		((MockHttpServletRequest)application.getWicketRequest().getHttpServletRequest()).setURL("/WicketTester/WicketTester/page2/abc");
-		application.processRequestCycle(cycle);
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
+		((MockHttpServletRequest)tester.getWicketRequest().getHttpServletRequest()).setURL("/WicketTester$1/WicketTester$1/page2/abc");
+		tester.processRequestCycle(cycle);
 		
-		assertEquals(Page2.class, application.getLastRenderedPage().getClass());
+		assertEquals(Page2.class, tester.getLastRenderedPage().getClass());
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "IndexedParamTest_ExpectedResult-2.html"));
 	}
 }

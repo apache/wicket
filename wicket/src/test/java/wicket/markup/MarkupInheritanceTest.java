@@ -68,31 +68,27 @@ public class MarkupInheritanceTest extends WicketTestCase
 	{
 		System.out.println("=== " + MarkupInheritanceExtension_4.class.getName() + " ===");
 
-		application.setHomePage(MarkupInheritanceExtension_4.class);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.startPage(MarkupInheritanceExtension_4.class);
 
 		// Validate the document
-		assertEquals(MarkupInheritanceExtension_4.class, application.getLastRenderedPage()
+		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage()
 				.getClass());
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(),
 				"MarkupInheritanceExpectedResult_4.html"));
 
-		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)application
+		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)tester
 				.getLastRenderedPage();
 
 		Link link = (Link)page.get("link");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
 
-		assertEquals(MarkupInheritanceExtension_4.class, application.getLastRenderedPage()
+		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage()
 				.getClass());
 
-		document = application.getServletResponse().getDocument();
+		document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(),
 				"MarkupInheritanceExpectedResult_4-1.html"));
 	}
@@ -126,7 +122,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_8() throws Exception
 	{
-		application.getMarkupSettings().setStripWicketTags(true);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(MarkupInheritanceExtension_8.class, "MarkupInheritanceExpectedResult_8.html");
 	}
 

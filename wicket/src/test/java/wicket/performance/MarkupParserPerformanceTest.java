@@ -38,6 +38,8 @@ import wicket.markup.loader.DefaultMarkupLoader;
 import wicket.markup.parser.filter.EnclosureHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.resolver.EnclosureResolver;
+import wicket.protocol.http.WebApplication;
+import wicket.resource.DummyApplication;
 import wicket.util.file.Folder;
 import wicket.util.io.Streams;
 import wicket.util.resource.StringResourceStream;
@@ -67,8 +69,7 @@ public class MarkupParserPerformanceTest
 	/** List of all MarkupResourceStream; in the very same order as 'files' */
 	private List<MarkupResourceStream> resources;
 
-	/** Wicket application object */
-	private WicketTester application = new WicketTester(null)
+	private WebApplication application = new DummyApplication() 
 	{
 		@Override
 		protected void init()
@@ -77,6 +78,9 @@ public class MarkupParserPerformanceTest
 			getPageSettings().addComponentResolver(new EnclosureResolver());
 		}
 	};
+
+	/** Wicket tester object */
+	private WicketTester tester = new WicketTester(this.application);
 
 	/** Time to execute a single test */
 	private double duration[];

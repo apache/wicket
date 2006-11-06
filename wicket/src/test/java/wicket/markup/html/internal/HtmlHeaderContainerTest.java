@@ -19,6 +19,7 @@
 package wicket.markup.html.internal;
 
 import wicket.WicketTestCase;
+import wicket.util.tester.WicketTester;
 
 /**
  * Test for the {@link wicket.markup.html.internal.HeaderContainer}.
@@ -43,13 +44,13 @@ public class HtmlHeaderContainerTest extends WicketTestCase
 	 */
 	public void testCleanUpOfAutoAddedComponents()
 	{
-		application.setHomePage(ComponentResolvingPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester = new WicketTester(ComponentResolvingPage.class);
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
 		// onEndRequest() of auto added component was not called in
 		// MarkupContainer#internalEndRequest() using an iterator
-		ComponentResolvingPage page = (ComponentResolvingPage)application.getLastRenderedPage();
+		ComponentResolvingPage page = (ComponentResolvingPage)tester.getLastRenderedPage();
 		assertTrue("onEndRequest() should be called",
 				page.onEndRequestWasCalledOnAutoAddedComponent);
 	}

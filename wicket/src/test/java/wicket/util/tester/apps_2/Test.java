@@ -44,7 +44,7 @@ public class Test extends TestCase
 			}
 		};
 
-		tester.getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
+		tester.getApplication().getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
 
 		tester.startPage(RedirectPage.class);
 		tester.assertRenderedPage(LoginPage.class);

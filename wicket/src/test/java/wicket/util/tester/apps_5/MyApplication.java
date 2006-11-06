@@ -19,19 +19,18 @@
 package wicket.util.tester.apps_5;
 
 import wicket.Page;
-import wicket.util.tester.WicketTester;
+import wicket.protocol.http.WebApplication;
 
 /**
  * 
  */
-public class AppTester extends WicketTester
+public class MyApplication extends WebApplication
 {
 	/**
 	 * Construct.
 	 */
-	public AppTester()
+	public MyApplication()
 	{
-		super("/admin");
 	}
 
 	@Override

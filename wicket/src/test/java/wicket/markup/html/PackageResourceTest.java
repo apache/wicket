@@ -20,7 +20,7 @@ package wicket.markup.html;
 import junit.framework.TestCase;
 import wicket.Application;
 import wicket.SharedResources;
-import wicket.protocol.http.MockWebApplication;
+import wicket.util.tester.WicketTester;
 
 /**
  * Tests for package resources.
@@ -29,8 +29,8 @@ import wicket.protocol.http.MockWebApplication;
  */
 public class PackageResourceTest extends TestCase
 {
-	/** mock application object */
-	public MockWebApplication application;
+	/** mock tester object */
+	public WicketTester tester;
 
 	/**
 	 * Construct.
@@ -51,6 +51,15 @@ public class PackageResourceTest extends TestCase
 	}
 
 	/**
+	 * @see junit.framework.TestCase#setUp()
+	 */
+	@Override
+	protected void setUp() throws Exception
+	{
+		tester = new WicketTester();
+	}
+
+	/**
 	 * Tests binding a single absolute package resource.
 	 * 
 	 * @throws Exception
@@ -58,7 +67,7 @@ public class PackageResourceTest extends TestCase
 	public void testBindAbsolutePackageResource() throws Exception
 	{
 		final SharedResources sharedResources = Application.get().getSharedResources();
-		PackageResource.bind(application, PackageResourceTest.class, "packaged1.txt");
+		PackageResource.bind(tester.getApplication(), PackageResourceTest.class, "packaged1.txt");
 		assertNotNull("resource packaged1.txt should be available as a packaged resource",
 				sharedResources.get(PackageResourceTest.class, "packaged1.txt", null, null, true));
 		assertNull("resource packaged2.txt should NOT be available as a packaged resource",
@@ -84,14 +93,5 @@ public class PackageResourceTest extends TestCase
 		assertTrue(guard.accept(PackageResourceTest.class, ".Bar"));
 		assertTrue(guard.accept(PackageResourceTest.class, ".java"));
 		assertFalse(guard.accept(PackageResourceTest.class, "Bar.java"));
-	}
-
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() throws Exception
-	{
-		application = new MockWebApplication(null);
 	}
 }

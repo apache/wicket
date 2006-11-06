@@ -121,7 +121,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			}
 		};
 
-		application.startPage(new ITestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -131,9 +131,9 @@ public class AjaxRequestTargetTest extends WicketTestCase
 			}
 		});
 
-		application.clickLink(MockPageWithLinkAndComponent.LINK_ID);
+		tester.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue("Error while execution ajax request", Pattern.compile("</ajax-response>").matcher(document).find());
 		
 		Pattern pat = Pattern.compile(".*<header-contribution>(.*?)</header-contribution>.*",

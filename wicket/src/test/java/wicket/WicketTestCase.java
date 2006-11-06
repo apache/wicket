@@ -35,14 +35,13 @@ import wicket.util.tester.WicketTester;
 public abstract class WicketTestCase extends TestCase
 {
 	/** */
-	public WicketTester application;
+	public WicketTester tester;
 
 	/**
 	 * Constructor
 	 */
 	public WicketTestCase()
 	{
-
 	}
 
 	/**
@@ -59,7 +58,7 @@ public abstract class WicketTestCase extends TestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester(null);
+		tester = new WicketTester();
 	}
 
 	/**
@@ -74,10 +73,7 @@ public abstract class WicketTestCase extends TestCase
 			throws Exception
 	{
 		System.out.println("=== " + pageClass.getName() + " ===");
-
 		String document = accessPage(pageClass).getDocument();
-
-		// Validate the document
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
 	}
 
@@ -91,14 +87,9 @@ public abstract class WicketTestCase extends TestCase
 	protected MockHttpServletResponse accessPage(final Class<? extends Page> pageClass)
 			throws Exception
 	{
-		application.setHomePage(pageClass);
-
-		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-
-		assertEquals(pageClass, application.getLastRenderedPage().getClass());
-		return application.getServletResponse();
+		tester.startPage(pageClass);
+		assertEquals(pageClass, tester.getLastRenderedPage().getClass());
+		return tester.getServletResponse();
 	}
 
 	/**
@@ -116,12 +107,12 @@ public abstract class WicketTestCase extends TestCase
 		System.out.println("=== " + pageClass.getName() + " : " + component.getPageRelativePath()
 				+ " ===");
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
-		application.getServletRequest().setRequestToComponent(component);
-		application.processRequestCycle(cycle);
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.getServletRequest().setRequestToComponent(component);
+		tester.processRequestCycle(cycle);
 
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
 	}
 
@@ -139,13 +130,13 @@ public abstract class WicketTestCase extends TestCase
 
 		System.out.println("=== " + pageClass.getName() + " : " + behavior.toString() + " ===");
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
-		application.getServletRequest().setRequestToRedirectString(
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
+		tester.getServletRequest().setRequestToRedirectString(
 				behavior.getCallbackUrl(false).toString());
-		application.processRequestCycle(cycle);
+		tester.processRequestCycle(cycle);
 
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
 	}
 }

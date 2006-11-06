@@ -41,7 +41,7 @@ import wicket.markup.html.link.Link;
 import wicket.util.diff.DiffUtil;
 
 /**
- * Simple application that demonstrates the mock portlet application code (and
+ * Simple tester that demonstrates the mock portlet tester code (and
  * checks that it is working)
  * 
  * @author Janne Hietam&auml;ki (jannehietamaki)

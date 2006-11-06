@@ -41,16 +41,16 @@ public class SharedResourceUrlTest extends WicketTestCase
 	 */
 	public void testResourceReferenceUrl() throws Exception
 	{
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		
 		ResourceReference rr = new ResourceReference("test");
 		CharSequence url = cycle.urlFor(rr);
-		assertEquals("/WicketTester/WicketTester/resources/wicket.Application/test", url);
+		assertEquals("/DummyApplication/DummyApplication/resources/wicket.Application/test", url);
 
 		rr = new ResourceReference(SharedResourceUrlTest.class,"test");
 		url = cycle.urlFor(rr);
-		assertEquals("/WicketTester/WicketTester/resources/wicket.SharedResourceUrlTest/test", url);
+		assertEquals("/DummyApplication/DummyApplication/resources/wicket.SharedResourceUrlTest/test", url);
 }
 	
 	/**
@@ -58,16 +58,16 @@ public class SharedResourceUrlTest extends WicketTestCase
 	 */
 	public void testResourceReferenceWithParamsUrl() throws Exception
 	{
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		
 		ResourceReference rr = new ResourceReference("test");
 		CharSequence url = cycle.urlFor(rr,new ValueMap("param=value",""));
-		assertEquals("/WicketTester/WicketTester/resources/wicket.Application/test?param=value", url);
+		assertEquals("/DummyApplication/DummyApplication/resources/wicket.Application/test?param=value", url);
 
 		rr = new ResourceReference(SharedResourceUrlTest.class,"test");
 		url = cycle.urlFor(rr,new ValueMap("param=value",""));
-		assertEquals("/WicketTester/WicketTester/resources/wicket.SharedResourceUrlTest/test?param=value", url);
+		assertEquals("/DummyApplication/DummyApplication/resources/wicket.SharedResourceUrlTest/test?param=value", url);
 	}	
 
 }

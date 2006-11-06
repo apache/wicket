@@ -17,8 +17,8 @@
 package wicket.markup.html.basic;
 
 import junit.framework.TestCase;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 /**
  * @author jcompagner
@@ -40,18 +40,16 @@ public class HomePageRedirectTest extends TestCase
 	 */
 	public void testRenderHomePagePageRedirect() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-
-		application.setHomePage(HomePagePageRedirect.class);
+		WicketTester tester = new WicketTester(HomePagePageRedirect.class);
 
 		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
-		assertEquals(RedirectPage.class, application.getLastRenderedPage().getClass());
+		assertEquals(RedirectPage.class, tester.getLastRenderedPage().getClass());
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html"));
 
 	}
@@ -61,20 +59,16 @@ public class HomePageRedirectTest extends TestCase
 	 */
 	public void testRenderHomePageClassRedirect() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-
-		application.setHomePage(HomePageClassRedirect.class);
+		WicketTester tester = new WicketTester(HomePageClassRedirect.class);
 
 		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
-		assertEquals(RedirectPage.class, application.getLastRenderedPage().getClass());
+		assertEquals(RedirectPage.class, tester.getLastRenderedPage().getClass());
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "RedirectPage.html"));
-
 	}
-
 }

@@ -22,10 +22,12 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.Application;
 import wicket.Component;
 import wicket.MockPageWithOneComponent;
 import wicket.Page;
 import wicket.resource.loader.IStringResourceLoader;
+import wicket.util.tester.WicketTester;
 
 /**
  * Abstract base class providing common test functionality to ensure that all
@@ -35,12 +37,11 @@ import wicket.resource.loader.IStringResourceLoader;
  */
 public abstract class StringResourceLoaderTestBase extends TestCase
 {
-
 	// The loader to test
 	protected IStringResourceLoader loader;
 
-	// The dummy application
-	protected DummyApplication application;
+	// The dummy tester
+	protected Application application;
 
 	// The dummy component
 	protected Component component;
@@ -67,7 +68,8 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		this.application = new DummyApplication();
+		
+		this.application = new WicketTester().getApplication();
 		Page page = new MockPageWithOneComponent();
 		this.component = new DummyComponent(page, "component", this.application);
 		this.loader = createLoader();
@@ -131,5 +133,3 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	public abstract void testLoaderUnknownResources();
 
 }
-
-// 

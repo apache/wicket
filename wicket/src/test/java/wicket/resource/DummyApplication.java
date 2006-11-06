@@ -18,20 +18,30 @@
  */
 package wicket.resource;
 
-import wicket.util.tester.WicketTester;
+import wicket.Page;
+import wicket.protocol.http.WebApplication;
 
 /**
- * Dummy application used for resource loader testing.
+ * Dummy tester used for resource loader testing.
  * 
  * @author Chris Turner
  */
-public class DummyApplication extends WicketTester
+public class DummyApplication extends WebApplication
 {
 	/**
-	 * Create the dummy application.
+	 * Create the dummy tester.
 	 */
 	public DummyApplication()
 	{
-		super(null);
+	}
+
+	/**
+	 * 
+	 * @see wicket.Application#getHomePage()
+	 */
+	@Override
+	public Class<? extends Page> getHomePage()
+	{
+		return DummyPage.class;
 	}
 }

@@ -44,7 +44,7 @@ import wicket.util.file.WebApplicationPath;
 
 /**
  * This class provides a mock implementation of a Wicket portlet based
- * application that can be used for testing. It emulates all of the
+ * tester that can be used for testing. It emulates all of the
  * functionality of an Portlet in a controlled, single-threaded environment. It
  * is supported with mock objects for PortletSession, PortletRequest,
  * PortletResponse and PortletContext.
@@ -135,7 +135,7 @@ public class MockPortletApplication extends PortletApplication
 
 		getDebugSettings().setSerializeSessionAttributes(false);
 
-		// Call init method of web application
+		// Call init method of web tester
 		this.init();
 
 		// We initialize components here rather than in the constructor or
@@ -187,7 +187,7 @@ public class MockPortletApplication extends PortletApplication
 	}
 
 	/**
-	 * Sets the home page for this mock application
+	 * Sets the home page for this mock tester
 	 * 
 	 * @param clazz
 	 */

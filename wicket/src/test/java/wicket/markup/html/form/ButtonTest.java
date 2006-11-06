@@ -43,7 +43,7 @@ public class ButtonTest extends WicketTestCase
 	 */
 	public void testRender()
 	{
-		application.startPage(new ITestPageSource()
+		tester.startPage(new ITestPageSource()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -66,7 +66,7 @@ public class ButtonTest extends WicketTestCase
 			
 		});
 	
-		application.assertComponent(MockPageWithOneComponent.COMPONENT_ID, Button.class);
+		tester.assertComponent(MockPageWithOneComponent.COMPONENT_ID, Button.class);
 	}
 	
 	/**
@@ -75,10 +75,10 @@ public class ButtonTest extends WicketTestCase
 	 */
 	public void testRender_2()
 	{
-		application.startPage(MockFormAndButtonPage.class);
+		tester.startPage(MockFormAndButtonPage.class);
 
-		application.assertContains("<input name=\"button\" type=\"submit\" wicket:id=\"button\"/>");
-		String doc = application.getServletResponse().getDocument();
+		tester.assertContains("<input name=\"button\" type=\"submit\" wicket:id=\"button\"/>");
+		String doc = tester.getServletResponse().getDocument();
 		boolean contains = doc.contains("<input onclick=\"var e=document.getElementById('form:hf:fs'); e.name='button2'; e.value='x';var f=document.getElementById('form');var ff=f;if (ff.onsubmit != undefined) { if (ff.onsubmit()==false) return false; }f.submit();e.value='';e.name='';return false;\" type=\"submit\" name=\"button2\" wicket:id=\"button2\"/>");		
 		assertTrue(contains);
 	}

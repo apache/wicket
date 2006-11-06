@@ -24,7 +24,7 @@ import wicket.markup.html.PackageResource;
 import wicket.util.resource.IResourceStream;
 
 /**
- * Simple application that demonstrates the mock http application code (and
+ * Simple tester that demonstrates the mock http tester code (and
  * checks that it is working)
  * 
  * @author Chris Turner
@@ -144,7 +144,7 @@ public class HeaderSectionTest extends WicketTestCase
 	public void testRenderHomePage_12() throws Exception
 	{
 		executeTest(HeaderSectionPage_12.class, "HeaderSectionPageExpectedResult_12.html");
-		PackageResource res = (PackageResource)application.getSharedResources().get(
+		PackageResource res = (PackageResource)tester.getApplication().getSharedResources().get(
 				"wicket.markup.parser.filter.sub.HeaderSectionBorder/cborder.css");
 		assertNotNull(res);
 		String absPath = res.getAbsolutePath();

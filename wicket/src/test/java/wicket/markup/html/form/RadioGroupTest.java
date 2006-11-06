@@ -102,7 +102,7 @@ public class RadioGroupTest extends WicketTestCase
 
 		// set up necessary objects to emulate a form submission
 
-		application.createRequestCycle();
+		tester.createRequestCycle();
 		MockPage page = new MockPage();
 
 		// create component hierarchy
@@ -138,8 +138,8 @@ public class RadioGroupTest extends WicketTestCase
 		assertTrue("group2: running with nothing selected - model must be set to null", model
 				.getObject(null) == null);
 
-		application.getServletRequest().setParameter(group.getInputName(), choice1.getPath().substring(group.getPath().length() + 1));
-		application.getServletRequest().setParameter(group2.getInputName(), choice3.getPath().substring(group2.getPath().length() + 1));
+		tester.getServletRequest().setParameter(group.getInputName(), choice1.getPath().substring(group.getPath().length() + 1));
+		tester.getServletRequest().setParameter(group2.getInputName(), choice3.getPath().substring(group2.getPath().length() + 1));
 		form.onFormSubmitted();
 		assertEquals("group: running with choice1 selected - model must be set to value of radio1",
 				modelObject.getProp1(), choice1.getModelObject());
@@ -147,12 +147,12 @@ public class RadioGroupTest extends WicketTestCase
 				"group2: running with choice3 selected - model must be set to value of radio1",
 				model.getObject(null), choice3.getModelObject());
 
-		application.getServletRequest().setParameter(group.getInputName(), choice2.getPath().substring(group.getPath().length() + 1));
+		tester.getServletRequest().setParameter(group.getInputName(), choice2.getPath().substring(group.getPath().length() + 1));
 		form.onFormSubmitted();
 		assertEquals("group: running with choice2 selected - model must be set to value of radio2",
 				modelObject.getProp1(), choice2.getModelObject());
 
-		application.getServletRequest().setParameter(group2.getInputName(), choice1.getPath().substring(group.getPath().length() + 1));
+		tester.getServletRequest().setParameter(group2.getInputName(), choice1.getPath().substring(group.getPath().length() + 1));
 		try
 		{
 			form.onFormSubmitted();

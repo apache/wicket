@@ -22,6 +22,7 @@ import java.util.Locale;
 import wicket.WicketTestCase;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.resource.loader.WicketBundleStringResourceLoader;
+import wicket.util.tester.WicketTester;
 
 /**
  * 
@@ -42,7 +43,7 @@ public class PropertiesTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new MyApplication();
+		tester = new WicketTester(new MyApplication());
 	}
 
 	/**
@@ -53,11 +54,11 @@ public class PropertiesTest extends WicketTestCase
 	{
 		// Add the string resource loader with the special Bundle like
 		// behavior
-		application.getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(application));
+		tester.getApplication().getResourceSettings().addStringResourceLoader(
+				new WicketBundleStringResourceLoader(tester.getApplication()));
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		TestPage page = new TestPage();
 		cycle.getSession().setLocale(Locale.GERMANY);
 		cycle.getSession().setStyle("mystyle");
@@ -76,11 +77,11 @@ public class PropertiesTest extends WicketTestCase
 	{
 		// Add the string resource loader with the special Bundle like
 		// behavior
-		application.getResourceSettings().addStringResourceLoader(
-				new WicketBundleStringResourceLoader(application));
+		tester.getApplication().getResourceSettings().addStringResourceLoader(
+				new WicketBundleStringResourceLoader(tester.getApplication()));
 
-		application.setupRequestAndResponse();
-		WebRequestCycle cycle = application.createRequestCycle();
+		tester.setupRequestAndResponse();
+		WebRequestCycle cycle = tester.createRequestCycle();
 		cycle.getSession().setLocale(Locale.GERMANY);
 		TestPage page = new TestPage()
 		{

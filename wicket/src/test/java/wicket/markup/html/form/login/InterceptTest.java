@@ -11,25 +11,28 @@ package wicket.markup.html.form.login;
 import junit.framework.TestCase;
 import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.Page;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
 import wicket.authorization.IAuthorizationStrategy;
-import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebSession;
 import wicket.util.string.Strings;
+import wicket.util.tester.WicketTester;
 
 
 /**
- * @author marrink
  * 
+ * @author marrink
  */
 public class InterceptTest extends TestCase
 {
-	private MyMockWebApplication application;
+	private WicketTester tester;
 
+	private MyWebApplication application;
+	
 	/**
 	 * Constructor for InterceptTest.
 	 * 
@@ -47,18 +50,10 @@ public class InterceptTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MyMockWebApplication("src/test/"
+		
+		application = new MyWebApplication();
+		tester = new WicketTester(application, "src/test/"
 				+ getClass().getPackage().getName().replace('.', '/'));
-		application.setHomePage(MockHomePage.class);
-	}
-
-	/**
-	 * @see TestCase#tearDown()
-	 */
-	@Override
-	protected void tearDown() throws Exception
-	{
-		super.tearDown();
 	}
 
 	/**
@@ -66,26 +61,26 @@ public class InterceptTest extends TestCase
 	 */
 	public void testClickLink()
 	{
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
+		MockLoginPage loginPage = (MockLoginPage)tester.getLastRenderedPage();
 		assertEquals(application.getLoginPage(), loginPage.getClass());
 
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(loginPage.getForm());
-		application.getServletRequest().setParameter(loginPage.getTextField().getInputName(),
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(loginPage.getForm());
+		tester.getServletRequest().setParameter(loginPage.getTextField().getInputName(),
 				"admin");
-		application.processRequestCycle();
+		tester.processRequestCycle();
 
 		// continueToInterceptPage seems to return the same call, causing it to
 		// login twice as a result the lastrendered page is null
-		assertEquals(application.getHomePage(), application.getLastRenderedPage().getClass());
+		assertEquals(application.getHomePage(), tester.getLastRenderedPage().getClass());
 
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(
-				application.getLastRenderedPage().get("link"));
-		application.processRequestCycle();
-		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(
+				tester.getLastRenderedPage().get("link"));
+		tester.processRequestCycle();
+		assertEquals(PageA.class, tester.getLastRenderedPage().getClass());
 	}
 
 	/**
@@ -94,42 +89,56 @@ public class InterceptTest extends TestCase
 	public void testClickLink2()
 	{
 		// same as above but uses different technique to login
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
+		MockLoginPage loginPage = (MockLoginPage)tester.getLastRenderedPage();
 		assertEquals(application.getLoginPage(), loginPage.getClass());
 
 		// bypass form completely to login but continue to intercept page
-		application.setupRequestAndResponse();
-		WebRequestCycle requestCycle = application.createRequestCycle();
-		assertTrue(((MockLoginPage)application.getLastRenderedPage()).login("admin"));
-		application.processRequestCycle(requestCycle);
-		assertEquals(application.getHomePage(), application.getLastRenderedPage().getClass());
+		tester.setupRequestAndResponse();
+		WebRequestCycle requestCycle = tester.createRequestCycle();
+		assertTrue(((MockLoginPage)tester.getLastRenderedPage()).login("admin"));
+		tester.processRequestCycle(requestCycle);
+		assertEquals(application.getHomePage(), tester.getLastRenderedPage().getClass());
 
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(
-				application.getLastRenderedPage().get("link"));
-		application.processRequestCycle();
-		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(
+				tester.getLastRenderedPage().get("link"));
+		tester.processRequestCycle();
+		assertEquals(PageA.class, tester.getLastRenderedPage().getClass());
 	}
 
 	/**
 	 * 
-	 * @author
 	 */
-	private static class MyMockWebApplication extends MockWebApplication implements ISessionFactory
+	private static class MyWebApplication extends WebApplication implements ISessionFactory
 	{
 		private static final long serialVersionUID = 1L;
 
 		/**
 		 * @param path
 		 */
-		public MyMockWebApplication(String path)
+		public MyWebApplication()
 		{
-			super(path);
-			getSecuritySettings().setAuthorizationStrategy(new MyAuthorizationStrategy());
 		}
 
+		/**
+		 * @see wicket.Application#getHomePage()
+		 */
+		@Override
+		public Class<? extends Page> getHomePage()
+		{
+			return MockHomePage.class;
+		}
+
+		@Override
+		protected void init()
+		{
+			super.init();
+			
+			getSecuritySettings().setAuthorizationStrategy(new MyAuthorizationStrategy());
+		}
+		
 		/**
 		 * 
 		 * @return Class

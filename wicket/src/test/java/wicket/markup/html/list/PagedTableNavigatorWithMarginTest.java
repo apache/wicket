@@ -22,8 +22,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 import wicket.markup.html.link.Link;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 
 /**
@@ -57,13 +57,12 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 	 */
 	public void testPagedTable() throws Exception
 	{
-		MockWebApplication application = new MockWebApplication(null);
-		application.setHomePage(PagedTableNavigatorWithMarginPage.class);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
-		PagedTableNavigatorWithMarginPage page = (PagedTableNavigatorWithMarginPage)application
+		WicketTester tester = new WicketTester(PagedTableNavigatorWithMarginPage.class);
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
+		PagedTableNavigatorWithMarginPage page = (PagedTableNavigatorWithMarginPage)tester
 				.getLastRenderedPage();
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_1.html"));
 
 		Link link = (Link)page.get("navigator:first");
@@ -79,10 +78,10 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 		assertTrue(link.isEnabled());
 
 		link = (Link)page.get("navigator:next");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
+		document = tester.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_2.html"));
 
 		link = (Link)page.get("navigator:first");
@@ -98,10 +97,10 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 		assertTrue(link.isEnabled());
 
 		link = (Link)page.get("navigator:prev");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
+		document = tester.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_3.html"));
 
 		link = (Link)page.get("navigator:first");
@@ -117,10 +116,10 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 		assertTrue(link.isEnabled());
 
 		link = (Link)page.get("navigator:last");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
+		document = tester.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_4.html"));
 
 		link = (Link)page.get("navigator:first");
@@ -136,10 +135,10 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 		assertFalse(link.isEnabled());
 
 		link = (Link)page.get("navigator:first");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
+		document = tester.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_5.html"));
 
 		link = (Link)page.get("navigator:first");
@@ -155,10 +154,10 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 		assertTrue(link.isEnabled());
 
 		link = (Link)page.get("navigator:navigation:3:pageLink");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
+		document = tester.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_6.html"));
 
 		link = (Link)page.get("navigator:first");
@@ -174,10 +173,10 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 		assertTrue(link.isEnabled());
 
 		link = (Link)page.get("navigator:prev");
-		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
-		document = application.getServletResponse().getDocument();
+		tester.setupRequestAndResponse();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
+		document = tester.getServletResponse().getDocument();
 		assertTrue(validatePage(document, "PagedTableNavigatorWithMarginExpectedResult_7.html"));
 
 		link = (Link)page.get("navigator:first");

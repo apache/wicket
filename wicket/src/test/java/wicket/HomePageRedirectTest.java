@@ -42,13 +42,11 @@ public class HomePageRedirectTest extends TestCase
 	 */
 	public void testPage() throws Exception
 	{
-		WicketTester app = new WicketTester();
+		WicketTester tester = new WicketTester(Page1.class);
+		tester.getApplication().mountBookmarkablePage("/page1", Page1.class);
 
-		app.setHomePage(Page1.class);
-		app.mountBookmarkablePage("/page1", Page1.class);
-
-		app.setupRequestAndResponse();
-		app.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 	}
 
 	/**

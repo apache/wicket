@@ -23,7 +23,7 @@ import java.util.Locale;
 import wicket.WicketTestCase;
 
 /**
- * Simple application that demonstrates the mock http application code (and
+ * Simple tester that demonstrates the mock http tester code (and
  * checks that it is working)
  * 
  * @author Chris Turner
@@ -48,7 +48,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-		application.getMarkupSettings().setStripWicketTags(true);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(ComponentCreateTag_1.class, "ComponentCreateTagExpectedResult_1.html");
 	}
 
@@ -59,7 +59,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_2() throws Exception
 	{
-		application.getMarkupSettings().setStripWicketTags(true);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(ComponentCreateTag_2.class, "ComponentCreateTagExpectedResult_2.html");
 	}
 
@@ -70,7 +70,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_3() throws Exception
 	{
-		application.getMarkupSettings().setStripWicketTags(true);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(ComponentCreateTag_3.class, "ComponentCreateTagExpectedResult_3.html");
 	}
 
@@ -81,7 +81,7 @@ public class ComponentCreateTagTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_4() throws Exception
 	{
-		application.getMarkupSettings().setStripWicketTags(true);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
 		executeTest(ComponentCreateTag_4.class, "ComponentCreateTagExpectedResult_4.html");
 	}
 
@@ -92,8 +92,8 @@ public class ComponentCreateTagTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_6() throws Exception
 	{
-		application.getMarkupSettings().setStripWicketTags(true);
-		application.getWicketSession().setLocale(Locale.ENGLISH);
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+		tester.getWicketSession().setLocale(Locale.ENGLISH);
 		executeTest(ComponentCreateTag_6.class, "ComponentCreateTagExpectedResult_6.html");
 	}
 }

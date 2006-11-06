@@ -19,23 +19,24 @@
 package wicket.protocol.http;
 
 import java.util.Iterator;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import wicket.markup.html.link.Link;
-import wicket.util.diff.DiffUtil;
 import wicket.Session;
 import wicket.feedback.FeedbackMessage;
+import wicket.markup.html.link.Link;
+import wicket.util.diff.DiffUtil;
+import wicket.util.tester.WicketTester;
 
 /**
- * Simple application that demonstrates the mock http application code (and
+ * Simple tester that demonstrates the mock http tester code (and
  * checks that it is working)
  * 
  * @author Chris Turner
  */
 public class MockWebApplicationTest extends TestCase
 {
-
-	private MockWebApplication application;
+	private WicketTester tester;
 
 	/**
 	 * Create the test.
@@ -52,8 +53,7 @@ public class MockWebApplicationTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null);
-		application.setHomePage(MockPage.class);
+		tester = new WicketTester(MockPage.class);
 	}
 
 	/**
@@ -62,15 +62,15 @@ public class MockWebApplicationTest extends TestCase
 	public void testRenderHomePage() throws Exception
 	{
 		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult.html"));
 
 		// Inspect the page & model
-		MockPage p = (MockPage)application.getLastRenderedPage();
+		MockPage p = (MockPage)tester.getLastRenderedPage();
 		Assert.assertEquals("Link should have been clicked 0 times", 0, p.getLinkClickCount());
 	}
 
@@ -79,8 +79,8 @@ public class MockWebApplicationTest extends TestCase
 	 */
 	public void testSessionFeedbackMessagesCleanUp() 
 	{
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 		Session session = Session.get();
 		session.info("Message");
 		session.info("Not rendered");
@@ -104,28 +104,28 @@ public class MockWebApplicationTest extends TestCase
 		testRenderHomePage();
 
 		// Now request that we click the link
-		application.setupRequestAndResponse();
-		MockPage p = (MockPage)application.getLastRenderedPage();
+		tester.setupRequestAndResponse();
+		MockPage p = (MockPage)tester.getLastRenderedPage();
 		Link link = (Link)p.get("actionLink");
-		application.getServletRequest().setRequestToComponent(link);
-		application.processRequestCycle();
+		tester.getServletRequest().setRequestToComponent(link);
+		tester.processRequestCycle();
 
 		// Check that redirect was set as expected and invoke it
 		/*
 		 * Assert.assertTrue("Response should be a redirect",
-		 * application.getServletResponse().isRedirect()); String redirect =
-		 * application.getServletResponse().getRedirectLocation();
-		 * application.setupRequestAndResponse();
-		 * application.getServletRequest().setRequestToRedirectString(redirect);
-		 * application.processRequestCycle();
+		 * tester.getServletResponse().isRedirect()); String redirect =
+		 * tester.getServletResponse().getRedirectLocation();
+		 * tester.setupRequestAndResponse();
+		 * tester.getServletRequest().setRequestToRedirectString(redirect);
+		 * tester.processRequestCycle();
 		 */
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		assertTrue(DiffUtil
 				.validatePage(document, this.getClass(), "MockPage_expectedResult2.html"));
 
 		// Inspect the page & model
-		p = (MockPage)application.getLastRenderedPage();
+		p = (MockPage)tester.getLastRenderedPage();
 		Assert.assertEquals("Link should have been clicked 1 time", 1, p.getLinkClickCount());
 	}
 }

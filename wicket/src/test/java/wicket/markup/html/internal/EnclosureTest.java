@@ -24,6 +24,8 @@ import wicket.markup.MarkupParserFactory;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.parser.filter.EnclosureHandler;
 import wicket.markup.resolver.EnclosureResolver;
+import wicket.protocol.http.WebApplication;
+import wicket.resource.DummyApplication;
 import wicket.util.tester.WicketTester;
 
 /**
@@ -49,7 +51,7 @@ public class EnclosureTest extends WicketTestCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		application = new WicketTester(null)
+		WebApplication app = new DummyApplication()
 		{
 			@Override
 			protected void init() 
@@ -59,7 +61,8 @@ public class EnclosureTest extends WicketTestCase
 			}
 		};
 
-		this.application.getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory()
+		tester = new WicketTester(app);
+		this.tester.getApplication().getMarkupSettings().setMarkupParserFactory(new MarkupParserFactory()
 		{
 			@Override
 			public MarkupParser newMarkupParser(MarkupResourceStream resource)

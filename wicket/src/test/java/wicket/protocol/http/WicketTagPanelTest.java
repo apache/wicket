@@ -26,10 +26,11 @@ import org.apache.commons.logging.LogFactory;
 import wicket.protocol.http.documentvalidation.HtmlDocumentValidator;
 import wicket.protocol.http.documentvalidation.Tag;
 import wicket.protocol.http.documentvalidation.TextContent;
+import wicket.util.tester.WicketTester;
 
 /**
- * Simple application that demonstrates the mock http application code (and
- * checks that it is working)
+ * Simple tester that demonstrates the mock http tester code (and checks that it
+ * is working)
  * 
  * @author Chris Turner
  */
@@ -37,7 +38,7 @@ public class WicketTagPanelTest extends TestCase
 {
 	private static final Log log = LogFactory.getLog(WicketTagPanelTest.class);
 
-	private MockWebApplication application;
+	private WicketTester tester;
 
 	/**
 	 * Create the test.
@@ -54,8 +55,7 @@ public class WicketTagPanelTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		application = new MockWebApplication(null);
-		application.setHomePage(WicketPanelPage.class);
+		tester = new WicketTester(WicketPanelPage.class);
 	}
 
 	/**
@@ -64,11 +64,11 @@ public class WicketTagPanelTest extends TestCase
 	public void testRenderHomePage() throws Exception
 	{
 		// Do the processing
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		log.info(document);
 		assertTrue(validatePage1(document));
 	}
@@ -104,12 +104,12 @@ public class WicketTagPanelTest extends TestCase
 	public void testRenderHomePageWicketTagRemoved() throws Exception
 	{
 		// Remove wicket tags from output
-		application.getMarkupSettings().setStripWicketTags(true);
-		application.setupRequestAndResponse();
-		application.processRequestCycle();
+		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+		tester.setupRequestAndResponse();
+		tester.processRequestCycle();
 
 		// Validate the document
-		String document = application.getServletResponse().getDocument();
+		String document = tester.getServletResponse().getDocument();
 		log.info(document);
 		assertTrue(validatePage2(document));
 	}

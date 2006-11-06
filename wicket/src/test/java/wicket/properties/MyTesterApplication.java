@@ -18,13 +18,15 @@
  */
 package wicket.properties;
 
-import wicket.util.tester.WicketTester;
+import wicket.Page;
+import wicket.protocol.http.WebApplication;
+import wicket.resource.DummyPage;
 
 /**
  * 
  * @author Juergen Donnerstag
  */
-public class MyTesterApplication extends WicketTester
+public class MyTesterApplication extends WebApplication
 {
 	private static final long serialVersionUID = 1L;
 
@@ -33,5 +35,11 @@ public class MyTesterApplication extends WicketTester
 	 */
 	public MyTesterApplication()
 	{
+	}
+
+	@Override
+	public Class<? extends Page> getHomePage()
+	{
+		return DummyPage.class;
 	}
 }

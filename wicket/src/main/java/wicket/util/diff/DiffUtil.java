@@ -122,11 +122,6 @@ public final class DiffUtil
 				throw new RuntimeException(e);
 			}
 
-			//Diff diff = new Diff(test1, test2);
-			//Diff.change script = diff.diff_2(false);
-			//DiffPrint.Base p = new DiffPrint.UnifiedPrint(test1, test2);
-			//p.setOutput(new PrintWriter(System.err));
-			//p.print_script(script);
 			System.out.println(r.toString());
 		}
 
@@ -153,7 +148,7 @@ public final class DiffUtil
 
 		final URL url = clazz.getClassLoader().getResource(filename);
 		filename = url.getFile();
-		filename = filename.replaceAll("/target/test-classes/", "/src/test/");
+		filename = filename.replaceAll("/target/test-classes/", "/src/test/java/");
 		PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 		out.print(document);
 		out.close();
