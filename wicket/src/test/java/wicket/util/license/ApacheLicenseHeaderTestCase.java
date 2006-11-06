@@ -24,7 +24,6 @@ import java.io.LineNumberReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
@@ -58,7 +57,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		{
 			this(suffixes, null);
 		}
-		
+
 		private SuffixAndIgnoreFileFilter(String[] suffixes, String[] ignoreFiles)
 		{
 			this.suffixes = suffixes;
@@ -72,12 +71,13 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			if (pathname.isFile())
 			{
 				boolean ignore = false;
-				
+
 				if (ignoreFiles != null)
 				{
 					String relativePathname = pathname.getAbsolutePath();
-					relativePathname = relativePathname.replace(baseDirectory.getAbsolutePath()+System.getProperty("file.separator"), "");
-					
+					relativePathname = relativePathname.replace(baseDirectory.getAbsolutePath()
+							+ System.getProperty("file.separator"), "");
+
 					for (String ignoreFile : ignoreFiles)
 					{
 						if (relativePathname.equals(ignoreFile))
@@ -87,7 +87,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 						}
 					}
 				}
-				
+
 				if (ignore == false)
 				{
 					for (String suffix : suffixes)
@@ -141,9 +141,16 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	private String cssLicenseHeader;
 	private String velocityLicenseHeader;
 	private String javaScriptLicenseHeader;
-	private Pattern xmlHeader = Pattern.compile(
-			"^(\\<\\?xml version=\"1.0\" encoding=\"[^\"]+\"[ ]*\\?\\>" + LINE_ENDING + ").*",
-			Pattern.DOTALL);
+	private String x = "^(\\<\\?xml[^"+LINE_ENDING+"]+).*";
+	private Pattern xmlHeader = Pattern.compile(x, Pattern.DOTALL);
+
+	protected String[] javaIgnore;
+	protected String[] htmlIgnore;
+	protected String[] propertiesIgnore;
+	protected String[] xmlIgnore;
+	protected String[] cssIgnore;
+	protected String[] velocityIgnore;
+	protected String[] javaScriptIgnore;
 
 	/**
 	 * Construct.
@@ -168,7 +175,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		final List<File> badFiles = new ArrayList<File>();
 
-		visitFiles("java", new FileVisitor()
+		visitFiles("java", javaIgnore, new FileVisitor()
 		{
 			public void visitFile(File file)
 			{
@@ -189,7 +196,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		final List<File> badFiles = new ArrayList<File>();
 
-		visitFiles("html", new FileVisitor()
+		visitFiles("html", htmlIgnore, new FileVisitor()
 		{
 			public void visitFile(File file)
 			{
@@ -210,7 +217,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		final List<File> badFiles = new ArrayList<File>();
 
-		visitFiles("properties", new FileVisitor()
+		visitFiles("properties", propertiesIgnore, new FileVisitor()
 		{
 			public void visitFile(File file)
 			{
@@ -231,11 +238,32 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		final List<File> badFiles = new ArrayList<File>();
 
-		visitFiles(new String[] { "xml", "fml" }, new FileVisitor()
+		visitFiles(new String[] { "xml", "fml" }, xmlIgnore, new FileVisitor()
 		{
 			public void visitFile(File file)
 			{
 				if (checkXmlHeader(file) == false)
+				{
+					badFiles.add(file);
+				}
+			}
+		});
+
+		failIncorrectLicenceHeaders(badFiles);
+	}
+
+	/**
+	 * Test all css files.
+	 */
+	public void testCssFiles()
+	{
+		final List<File> badFiles = new ArrayList<File>();
+
+		visitFiles("css", cssIgnore, new FileVisitor()
+		{
+			public void visitFile(File file)
+			{
+				if (checkCssHeader(file) == false)
 				{
 					badFiles.add(file);
 				}
@@ -252,7 +280,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		final List<File> badFiles = new ArrayList<File>();
 
-		visitFiles("vm", new FileVisitor()
+		visitFiles("vm", velocityIgnore, new FileVisitor()
 		{
 			public void visitFile(File file)
 			{
@@ -273,7 +301,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	{
 		final List<File> badFiles = new ArrayList<File>();
 
-		visitFiles("js", new FileVisitor()
+		visitFiles("js", javaScriptIgnore, new FileVisitor()
 		{
 			public void visitFile(File file)
 			{
@@ -363,10 +391,9 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		{
 			String header = extractLicenseHeader(file, 0, 17);
 
-			Matcher mat = xmlHeader.matcher(header);
-			if (mat.matches())
+			if (header.startsWith("<?xml")) 
 			{
-				header = header.replace(mat.group(1), "");
+				header = header.substring(header.indexOf(LINE_ENDING)+1);
 			}
 			else
 			{
@@ -375,11 +402,21 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				header = "";
 				for (int i = 0; i < 16; i++)
 				{
-					header += headers[i] + LINE_ENDING;
+					if (header.length() > 0)
+					{
+						header += LINE_ENDING;
+					}
+					header += headers[i];
 				}
 			}
 
 			revision = Diff.diff(xmlLicenseHeader.split(LINE_ENDING), header.split(LINE_ENDING));
+
+			if (revision.size() != 0)
+			{
+				System.out.println(file);
+				System.out.println(revision);
+			}
 		}
 		catch (Exception e)
 		{
@@ -427,16 +464,34 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		return revision.size() == 0;
 	}
 
+	private boolean checkCssHeader(File file)
+	{
+		Revision revision = null;
+
+		try
+		{
+			String header = extractLicenseHeader(file, 0, 16);
+
+			revision = Diff.diff(cssLicenseHeader.split(LINE_ENDING), header.split(LINE_ENDING));
+		}
+		catch (Exception e)
+		{
+			fail(e.getMessage());
+		}
+
+		return revision.size() == 0;
+	}
+
 	private void visitFiles(String suffix, FileVisitor fileVisitor)
 	{
 		visitFiles(new String[] { suffix }, null, fileVisitor);
 	}
-	
+
 	private void visitFiles(String suffix, String[] ignoreFiles, FileVisitor fileVisitor)
 	{
 		visitFiles(new String[] { suffix }, ignoreFiles, fileVisitor);
 	}
-	
+
 	private void visitFiles(String[] suffixes, FileVisitor fileVisitor)
 	{
 		visitFiles(suffixes, null, fileVisitor);
@@ -447,7 +502,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		visitDirectory(suffixes, ignoreFiles, baseDirectory, fileVisitor);
 	}
 
-	private void visitDirectory(String[] suffixes, String[] ignoreFiles, File directory, FileVisitor fileVisitor)
+	private void visitDirectory(String[] suffixes, String[] ignoreFiles, File directory,
+			FileVisitor fileVisitor)
 	{
 		File[] files = directory.listFiles(new SuffixAndIgnoreFileFilter(suffixes, ignoreFiles));
 

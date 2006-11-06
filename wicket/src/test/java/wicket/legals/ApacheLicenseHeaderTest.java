@@ -27,5 +27,25 @@ import wicket.util.license.ApacheLicenseHeaderTestCase;
  */
 public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 {
-
+	/**
+	 * Define the files which should not be checked by the license header test.
+	 */
+	public ApacheLicenseHeaderTest()
+	{
+		cssIgnore = new String[] {
+			"src/test/java/wicket/protocol/http/portlet/style.css",
+			"src/test/java/wicket/ajax/mockStyleSheet3.css",
+			"src/test/java/wicket/markup/parser/filter/style.css",
+			"src/test/java/wicket/markup/parser/filter/test.css",
+			"src/test/java/wicket/markup/parser/filter/sub/cborder.css",
+			"src/test/java/wicket/markup/html/link/test3_de_DE.css",
+			"src/test/java/wicket/markup/html/link/test.css",
+			"src/test/java/wicket/markup/html/link/test2_myStyle.css"
+		};
+		
+		xmlIgnore = new String[] {
+			"EclipseCodeFormat.xml",
+			"src/test/java/wicket/performance/results.xml",
+		};
+	}
 }

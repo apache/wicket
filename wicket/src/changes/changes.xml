@@ -1,5 +1,20 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
 
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
 <document>
   <properties>
     <title>Wicket changes</title>
@@ -12,7 +27,7 @@
   <body>
 	<release version="2.0-beta1" date="tbd" description="Wicket 2.0 beta 1">
 		<action type="fix" dev="Igor Vaynberg">Application.get() and Session.get() will now return null if threadlocal is not set as opposed to throwing an NPE</action>
-		
+	</release>		
     <release version="1.2-rc4" date="tbd" description="Wicket 1.2 release candidate 4">
       <action type="add" dev="Juergen Donnerstag" issue="1357511">Markup inheritance extended to support &lt;wicket:child&gt; ... &lt;/wicket:child&gt; as well</action>
       <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Dzenan Ridjanovic">Added Bosnian/Herzegovinan translation of Application.properties</action>
@@ -156,7 +171,7 @@
       <action type="fix" dev="Igor Vaynberg" issue="1357755">Fixed bug in button that caused the value attirbute to disappear after form submit</action>
     </release>
     <release version="1.1" date="2005-10-30" description="Wicket 1.1 final">
-      <action type="fix" dev="Juergen Donnerstag" issue="1339686" due-to="Janne Hietamäki">fixed: Invalid Panel markup throws weird exception</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1339686" due-to="Janne Hietam�ki">fixed: Invalid Panel markup throws weird exception</action>
       <action type="delete" dev="Jonathan Locke">Removed experimental code: page sets.</action>
       <action type="update" dev="Eelco Hillenius" due-to="Simon Berriman">added ValueMap.isMutable()</action>
       <action type="add" dev="Eelco Hillenius">introduced methods WebPage.beforeCallComponent and WebPage.afterCallComponent to enable you to put functionality 'around' any component handler call, like setting up dependencies, enfore authorization, do logging, etc.</action>
@@ -306,7 +321,7 @@
       <action type="fix" dev="Eelco Hillenius">Component.setShouldEscapeModelStrings renamed to setEscapeModelStrings</action>
       <action type="update" dev="Eelco Hillenius">Buttons now have an 'immediate' property. If true, this button behaves much like a normal link; no validation nor updating of the nested form components is done automatically in that case. This property is false by default.</action>
       <action type="fix" dev="Eelco Hillenius">Only validate components that are visible</action>
-      <action type="fix" dev="Juergen Donnerstag" due-to="Janne Hietamäki" issue="1216017">setStripWicketTags now takes Wicket namespaces (setWicketNamespace) into account.</action>
+      <action type="fix" dev="Juergen Donnerstag" due-to="Janne Hietam�ki" issue="1216017">setStripWicketTags now takes Wicket namespaces (setWicketNamespace) into account.</action>
       <action type="add" dev="Juergen Donnerstag">Added support for JavaScript and CSS. Please see the Wiki for more details.</action>
       <action type="add" dev="Eelco Hillenius">Added component wicket.markup.html.include.Include for including content from non-Wicket resources.</action>
     </release>
