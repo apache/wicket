@@ -411,12 +411,6 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			}
 
 			revision = Diff.diff(xmlLicenseHeader.split(LINE_ENDING), header.split(LINE_ENDING));
-
-			if (revision.size() != 0)
-			{
-				System.out.println(file);
-				System.out.println(revision);
-			}
 		}
 		catch (Exception e)
 		{
