@@ -21,15 +21,14 @@ package wicket.extensions.proxy;
 import java.lang.reflect.Proxy;
 
 import junit.framework.TestCase;
-import wicket.Application;
 import wicket.extensions.proxy.LazyInitProxyFactory.ProxyReplacement;
 import wicket.extensions.proxy.util.ConcreteObject;
 import wicket.extensions.proxy.util.IInterface;
 import wicket.extensions.proxy.util.IObjectMethodTester;
 import wicket.extensions.proxy.util.InterfaceObject;
 import wicket.extensions.proxy.util.ObjectMethodTester;
-import wicket.protocol.http.MockWebApplication;
 import wicket.util.lang.Objects;
+import wicket.util.tester.WicketTester;
 
 /**
  * Tests lazy init proxy factory
@@ -74,10 +73,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 	 */
 	public void testInterfaceProxy()
 	{
-		MockWebApplication application=new MockWebApplication("/");
-		
-		
-		Application.set(application);
+		WicketTester application = new WicketTester();
 		
 		// test proxy creation for an interface class
 		IInterface proxy = (IInterface) LazyInitProxyFactory.createProxy(
