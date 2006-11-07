@@ -63,12 +63,12 @@ public class IndexedParamUrlCodingTest extends WicketTestCase
 		String url1 = cycle.urlFor(
 				new BookmarkablePageRequestTarget(BookmarkableHomePageLinksPage.class, parameters))
 				.toString();
-		assertEquals(url1, "/DummyApplication/DummyApplication/test1/Integer0/Integer1");
+		assertEquals(url1, "/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test1/Integer0/Integer1");
 		String url2 = cycle.urlFor(
 				new BookmarkablePageRequestTarget("mypagemap", BookmarkableHomePageLinksPage.class,
 						parameters)).toString();
 		assertEquals(url2,
-				"/DummyApplication/DummyApplication/test2/Integer0/Integer1/wicket:pageMapName/mypagemap");
+				"/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/test2/Integer0/Integer1/wicket:pageMapName/mypagemap");
 
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setURL(url1);

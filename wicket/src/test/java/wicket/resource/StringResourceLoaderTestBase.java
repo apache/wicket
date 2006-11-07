@@ -69,7 +69,7 @@ public abstract class StringResourceLoaderTestBase extends TestCase
 	{
 		super.setUp();
 		
-		this.application = new WicketTester().getApplication();
+		this.application = new WicketTester(new DummyApplication()).getApplication();
 		Page page = new MockPageWithOneComponent();
 		this.component = new DummyComponent(page, "component", this.application);
 		this.loader = createLoader();

@@ -62,7 +62,6 @@ import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
 import wicket.protocol.http.WebApplication;
-import wicket.resource.DummyApplication;
 import wicket.util.lang.Classes;
 import wicket.util.string.Strings;
 import wicket.util.tester.WicketTesterHelper.ComponentData;
@@ -186,12 +185,24 @@ public class WicketTester extends MockWebApplication
 	private static final Log log = LogFactory.getLog(WicketTester.class);
 
 	/**
+	 * @author frankbille
+	 */
+	public static class DummyWebApplication extends WebApplication
+	{
+		@Override
+		public Class<? extends Page> getHomePage()
+		{
+			return DummyHomePage.class;
+		}
+	}
+	
+	/**
 	 * Create WicketTester and automatically create a WebApplication, but the
 	 * tester will have no home page.
 	 */
 	public WicketTester()
 	{
-		this(new DummyApplication(), null);
+		this(new DummyWebApplication(), null);
 	}
 
 	/**
