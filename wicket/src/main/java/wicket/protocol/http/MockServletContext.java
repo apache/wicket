@@ -43,6 +43,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.WicketRuntimeException;
 import wicket.util.value.ValueMap;
 
 /**
@@ -110,6 +111,19 @@ public class MockServletContext implements ServletContext
 		mimeTypes.put("gif", "image/gif");
 		mimeTypes.put("jpg", "image/jpeg");
 		mimeTypes.put("png", "image/png");
+
+		// Set ServletContext temp dir
+		try
+		{
+			File tmpDir = File.createTempFile("wicket", null);
+			tmpDir.delete();
+			tmpDir.mkdir();
+			setAttribute("javax.servlet.context.tempdir", tmpDir);
+		}
+		catch (IOException e)
+		{
+			throw new WicketRuntimeException(e);
+		}
 	}
 
 	/**
