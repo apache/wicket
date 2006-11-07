@@ -39,7 +39,6 @@ import wicket.util.tester.apps_1.SuccessPage;
 import wicket.util.tester.apps_1.ViewBook;
 
 
-
 /**
  * 
  * @author Juergen Donnerstag
@@ -47,7 +46,7 @@ import wicket.util.tester.apps_1.ViewBook;
 public class WicketTesterTest extends TestCase
 {
 	private boolean eventExecuted;
-		
+
 	@Override
 	protected void setUp() throws Exception
 	{
@@ -171,7 +170,7 @@ public class WicketTesterTest extends TestCase
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -179,7 +178,7 @@ public class WicketTesterTest extends TestCase
 	{
 		// Start the tester
 		WicketTester tester = new WicketTester();
-		
+
 		final Page page = new MockPageWithLink();
 		AjaxLink ajaxLink = new AjaxLink(page, MockPageWithLink.LINK_ID)
 		{
@@ -189,7 +188,8 @@ public class WicketTesterTest extends TestCase
 			public void onClick(AjaxRequestTarget target)
 			{
 				// Replace the link with a normal Link
-				Link link = new Link(page, MockPageWithLink.LINK_ID) {
+				Link link = new Link(page, MockPageWithLink.LINK_ID)
+				{
 					private static final long serialVersionUID = 1L;
 
 					@Override
@@ -199,13 +199,14 @@ public class WicketTesterTest extends TestCase
 					}
 				};
 				link.setOutputMarkupId(true);
-				
+
 				target.addComponent(link);
 			}
 		};
 		ajaxLink.setOutputMarkupId(true);
-		
-		tester.startPage(new ITestPageSource() {
+
+		tester.startPage(new ITestPageSource()
+		{
 			private static final long serialVersionUID = 1L;
 
 			public Page getTestPage()
@@ -213,17 +214,17 @@ public class WicketTesterTest extends TestCase
 				return page;
 			}
 		});
-		
-		
+
+
 		// Click the link
 		tester.clickLink(MockPageWithLink.LINK_ID);
 
 		// The link must be a Link :)
 		tester.assertComponent(MockPageWithLink.LINK_ID, Link.class);
-		
+
 		// Get the new link component
 		Component component = tester.getComponentFromLastRenderedPage(MockPageWithLink.LINK_ID);
-		
+
 		// This must not fail
 		tester.assertComponentOnAjaxResponse(component);
 	}
@@ -267,7 +268,7 @@ public class WicketTesterTest extends TestCase
 
 		assertTrue(eventExecuted);
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -286,5 +287,18 @@ public class WicketTesterTest extends TestCase
 		// label should now have "1" in it because that's what comes
 		// from the page parameter.
 		tester.assertLabel("label", "1");
+	}
+
+	/**
+	 * Test that clickLink on a ResourceLink with a ResourceReference on it
+	 * works.
+	 */
+	public void testClickResourceLink()
+	{
+		WicketTester tester = new WicketTester();
+		
+		tester.startPage(MockResourceLinkPage.class);
+		
+		tester.clickLink("link");
 	}
 }

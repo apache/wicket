@@ -37,6 +37,7 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
+import wicket.Resource;
 import wicket.WicketRuntimeException;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
@@ -58,6 +59,7 @@ import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.IPageLink;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.link.PageLink;
+import wicket.markup.html.link.ResourceLink;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.Panel;
 import wicket.protocol.http.MockWebApplication;
@@ -766,6 +768,34 @@ public class WicketTester extends MockWebApplication
 			// process the request target
 			requestCycle.getRequestTarget().respond(requestCycle);
 		}
+		// ResourceLink
+		else if (linkComponent instanceof ResourceLink)
+		{
+			// Let's see if we should invoke the onclick or not
+			Resource resource = null;
+			
+			try 
+			{
+				Field resourceField = ResourceLink.class.getDeclaredField("resource");
+				resourceField.setAccessible(true);
+				resource = (Resource)resourceField.get(linkComponent);
+			}
+			catch(Exception e)
+			{
+				Assert.fail(e.getMessage());
+			}
+			
+			// If the link holds the resource itself we should
+			if (resource != null)
+			{
+				newRequestToComponent(linkComponent);
+			}
+			// Else we should not (Should we do anything else?)
+			else
+			{
+				// Do nothing
+			}
+		}
 		// if the link is a normal link
 		else if (linkComponent instanceof Link)
 		{
@@ -794,7 +824,7 @@ public class WicketTester extends MockWebApplication
 				}
 
 			}
-
+			
 			newRequestToComponent(link);
 		}
 		else
