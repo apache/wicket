@@ -321,7 +321,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		{
 			StringBuffer failString = new StringBuffer();
 
-			failString.append("The following files didn't have a correct license header:\n");
+			failString.append("The following files("+files.size()+") didn't have a correct license header:\n");
 
 			for (File file : files)
 			{
