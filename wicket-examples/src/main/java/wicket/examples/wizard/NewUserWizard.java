@@ -70,8 +70,10 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			super(true);
 			IModel userModel = new Model<User>(user);
 			setTitleModel(new ResourceModel("confirmation.title"));
-			setSummaryModel(new StringResourceModel("confirmation.summary", null, userModel));
-			setContentModel(new StringResourceModel("confirmation.content", null, userModel));
+			setSummaryModel(new StringResourceModel("confirmation.summary", NewUserWizard.this,
+					userModel));
+			setContentModel(new StringResourceModel("confirmation.content", NewUserWizard.this,
+					userModel));
 		}
 	}
 
@@ -86,8 +88,8 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		public UserDetailsStep()
 		{
 			super(new ResourceModel("userdetails.title"), null);
-			setSummaryModel(new StringResourceModel("userdetails.summary", null, new Model<User>(
-					user)));
+			setSummaryModel(new StringResourceModel("userdetails.summary", NewUserWizard.this,
+					new Model<User>(user)));
 		}
 
 		/** The view for this step. */
@@ -213,7 +215,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		public UserRolesStep()
 		{
 			super(new ResourceModel("userroles.title"), null);
-			setSummaryModel(new StringResourceModel("userroles.summary", null,
+			setSummaryModel(new StringResourceModel("userroles.summary", NewUserWizard.this,
 					new Model<User>(user)));
 		}
 
