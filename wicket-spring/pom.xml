@@ -13,7 +13,7 @@
 
 	<organization>
 		<name>Wicket developers</name>
-		<url>http://wicket.sourceforge.net</url>
+		<url>http://www.wicketframework.org</url>
 	</organization>
 
 	<licenses>
@@ -25,14 +25,15 @@
 	</licenses>
 
 	<issueManagement>
-		<url>http://sourceforge.net/tracker/?group_id=119783</url>
+		<url>http://issues.apache.org/jira/browse/WICKET</url>
 	</issueManagement>
 
-	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-spring</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-spring</url>
-	</scm>
+
+        <scm>
+                <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/wicket/trunk/wicket-spring</connection>
+                <developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/trunk/wicket-spring</developerConnection>
+                <url>http://svn.apache.org/viewvc/incubator/wicket/trunk/wicket-spring</url>
+        </scm>
 
 	<mailingLists>
 		<mailingList>
