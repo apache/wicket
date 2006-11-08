@@ -177,6 +177,8 @@ public abstract class SubmitLink<T> extends AbstractSubmitLink<T>
 	@Override
 	protected void onComponentTag(ComponentTag tag)
 	{
+		super.onComponentTag(tag);
+
 		if (isLinkEnabled())
 		{
 			if (tag.getName().equalsIgnoreCase("a"))
