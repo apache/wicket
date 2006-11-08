@@ -27,7 +27,7 @@ import wicket.util.lang.reflect.ClassOrder;
 import wicket.util.lang.reflect.ReflectionUtils;
 
 /**
- * Annotation related utilities
+ * Annotation related utilities.
  * 
  * @author ivaynberg
  */
@@ -145,7 +145,7 @@ public class AnnotationUtils
 	}
 
 	/**
-	 * Convinience wrapper around {@link ClassOrder} that makes it easier to
+	 * Convenience wrapper around {@link ClassOrder} that makes it easier to
 	 * figure out which class order should be used
 	 * 
 	 * @author ivaynberg
