@@ -29,11 +29,11 @@
 		<url>http://sourceforge.net/tracker/?group_id=119783</url>
 	</issueManagement>
 
-	<scm>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-extensions</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/trunk/wicket-extensions</developerConnection>
-		<url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-extensions</url>
-	</scm>
+        <scm>
+                <connection>scm:svn:http://svn.apache.org/repos/asf/incubator/wicket/trunk/wicket-extensions</connection>
+                <developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/trunk/wicket-extensions</developerConnection>
+                <url>http://svn.sourceforge.net/viewcvs.py/wicket/trunk/wicket-extensions</url>
+        </scm>
 
 	<mailingLists>
 		<mailingList>
