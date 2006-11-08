@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.Localizer;
 import wicket.Page;
@@ -87,44 +86,6 @@ public abstract class FormComponent extends WebMarkupContainer
 		 *            The form component
 		 */
 		public void formComponent(FormComponent formComponent);
-	}
-
-	/**
-	 * Attribute modifier model that returns 'disabled' if a form component is
-	 * disabled or null otherwise (resulting in no attribute being appended).
-	 */
-	private final class DisabledAttributeModel extends Model
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * @see wicket.model.IModel#getObject(wicket.Component)
-		 */
-		public Object getObject(Component component)
-		{
-			return (FormComponent.this.isActionAuthorized(ENABLE) && FormComponent.this.isEnabled())
-					? null
-					: "disabled";
-		}
-	}
-
-	/**
-	 * Attribute modifier that adds 'disabled="disabled"' to the component tag's
-	 * attribute if a form component is disabled.
-	 */
-	private static final class DisabledAttributeModifier extends AttributeModifier
-	{
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param model
-		 */
-		public DisabledAttributeModifier(DisabledAttributeModel model)
-		{
-			super("disabled", true, model);
-		}
 	}
 
 	/**
