@@ -33,6 +33,25 @@ import wicket.model.Model;
  */
 public class StaticContentStep extends WizardStep
 {
+	/**
+	 * The content.
+	 */
+	private final class Content extends Panel
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * @param parent
+		 * @param id
+		 */
+		public Content(MarkupContainer parent, String id)
+		{
+			super(parent, id);
+			new Label(this, "content", content).setEscapeModelStrings(!allowHtml);
+		}
+
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -163,6 +182,15 @@ public class StaticContentStep extends WizardStep
 	}
 
 	/**
+	 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
+	 *      java.lang.String, wicket.extensions.wizard.IWizard)
+	 */
+	public Component getView(MarkupContainer parent, String id, IWizard wizard)
+	{
+		return new Content(parent, id);
+	}
+
+	/**
 	 * Sets the content model.
 	 * 
 	 * @param content
@@ -171,30 +199,5 @@ public class StaticContentStep extends WizardStep
 	public final void setContentModel(IModel<String> content)
 	{
 		this.content = content;
-	}
-
-	/**
-	 * The content.
-	 */
-	private final class Content extends Panel
-	{
-		/**
-		 * @param parent
-		 * @param id
-		 */
-		public Content(MarkupContainer parent, String id)
-		{
-			super(parent, id);
-			new Label(parent, "content", content).setEscapeModelStrings(!allowHtml);
-		}
-
-		private static final long serialVersionUID = 1L;
-		
-	}
-
-	public Component getView(MarkupContainer parent, String id, IWizard wizard)
-	{
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
