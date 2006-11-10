@@ -20,7 +20,10 @@ package wicket.examples.stateless;
 
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.StatelessForm;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.model.Model;
 
 /**
  * Another page of the stateless example.
@@ -29,6 +32,8 @@ import wicket.markup.html.link.BookmarkablePageLink;
  */
 public class StatelessPage extends WebPage
 {
+	private TextField<String> tf;
+
 	/**
 	 * Constructor
 	 */
@@ -37,5 +42,17 @@ public class StatelessPage extends WebPage
 		setStatelessHint(true);
 		new Label(this, "message", new SessionModel());
 		new BookmarkablePageLink(this, "indexLink", Index.class);
+		
+		StatelessForm<Object> statelessForm = new StatelessForm<Object>(this,"statelessform"){
+			/**
+			 * @see wicket.markup.html.form.Form#onSubmit()
+			 */
+			protected void onSubmit()
+			{
+				info("Onsubmit of stateless page pressed, textfield updated: " + tf.getModelObject());
+				tf.setModelObject(tf.getModelObject()+ "_" +tf.getModelObject());
+			}
+		};
+		tf = new TextField<String>(statelessForm,"textfield", new Model<String>());
 	}
 }

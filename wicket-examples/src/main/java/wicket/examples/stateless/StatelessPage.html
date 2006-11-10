@@ -8,9 +8,14 @@
 		<span wicket:id="message" id="message">Message goes here</span>
 		<br />
 		<a wicket:id="indexLink" href="#">go to index</a>
+		
+		<form wicket:id="statelessform">
+		<input type="text" wicket:id="textfield">
+		<input type="submit"> 
+		</form>
 
 		<p>
-			This page is stateless as it doesn't have any callbacks (like links).
+			This page is stateless as it doesn't have any callbacks (like statefull links or forms).
 			If a page doesn't have any, there is no use keeping it around in the
 			session. Furthermore, as long as you don't have any stateful pages,
 			the actual session creation will be deferred. A Wicket session object

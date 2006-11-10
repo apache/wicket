@@ -21,6 +21,7 @@ package wicket.examples.stateless;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
+import wicket.markup.html.link.StatelessLink;
 
 /**
  * Index page of the stateless example.
@@ -36,7 +37,18 @@ public class Index extends WebPage
 	{
 		setStatelessHint(true);
 		new Label(this, "message", new SessionModel());
+		// First a normal bookmarkable link (which is stateless by default)
 		new BookmarkablePageLink(this, "linkToStatelessPage", StatelessPage.class);
-		new BookmarkablePageLink(this, "linkToStatefulPage", StatefulPage.class);
+		// The second with a stateless link, so the onclick will be called but on a stateless page.
+		new StatelessLink(this,"linkToStatefulPage")
+		{
+			/**
+			 * @see wicket.markup.html.link.Link#onClick()
+			 */
+			public void onClick()
+			{
+				setResponsePage(StatefulPage.class);
+			}
+		};
 	}
 }
