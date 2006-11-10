@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRedirectListener;
@@ -34,7 +35,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.PageMap.Access;
+import wicket.AccessStackPageMap.Access;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
 import wicket.markup.html.INewBrowserWindowListener;
@@ -43,6 +44,7 @@ import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.basic.EmptyRequestTarget;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ExpiredPageClassRequestTarget;
 import wicket.request.target.component.PageRequestTarget;
@@ -88,9 +90,14 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			return mounted;
 		}
 
-		// See whether this request points to a rendered page
 		final String path = requestParameters.getPath();
-		if (requestParameters.getComponentPath() != null)
+		// see whether this request points to a bookmarkable page
+		if (requestParameters.getBookmarkablePageClass() != null)
+		{
+			return resolveBookmarkablePage(requestCycle, requestParameters);
+		}
+		// See whether this request points to a rendered page
+		else if (requestParameters.getComponentPath() != null)
 		{
 			// marks whether or not we will be processing this request
 			boolean processRequest = true;
@@ -115,11 +122,12 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 						// request
 						processRequest = false;
 					}
-					else
+					else if(pageMap instanceof AccessStackPageMap)
 					{
-						if (pageMap.getAccessStack().size() > 0)
+						AccessStackPageMap accessStackPageMap = (AccessStackPageMap)pageMap;
+						if (accessStackPageMap.getAccessStack().size() > 0)
 						{
-							final Access access = (Access)pageMap.getAccessStack().peek();
+							final Access access = (Access)accessStackPageMap.getAccessStack().peek();
 
 							final int pageId = Integer
 									.parseInt(Strings.firstPathComponent(requestParameters
@@ -144,6 +152,10 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 							}
 						}
 					}
+					else 
+					{
+						// TODO also this should work.. also forward port to 2.0!!!
+					}
 
 				}
 
@@ -156,11 +168,6 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 			{
 				return EmptyRequestTarget.getInstance();
 			}
-		}
-		// see whether this request points to a bookmarkable page
-		else if (requestParameters.getBookmarkablePageClass() != null)
-		{
-			return resolveBookmarkablePage(requestCycle, requestParameters);
 		}
 		// see whether this request points to a shared resource
 		else if (requestParameters.getResourceKey() != null)
@@ -324,7 +331,6 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 	{
 		String bookmarkablePageClass = requestParameters.getBookmarkablePageClass();
 		Session session = requestCycle.getSession();
-		Application application = session.getApplication();
 		Class pageClass;
 		try
 		{
@@ -339,8 +345,30 @@ public class DefaultRequestTargetResolverStrategy implements IRequestTargetResol
 		try
 		{
 			PageParameters params = new PageParameters(requestParameters.getParameters());
-			return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(), pageClass,
-					params);
+			if (requestParameters.getComponentPath() != null
+					&& requestParameters.getInterfaceName() != null)
+			{
+				final String componentPath = requestParameters.getComponentPath();
+				final Page page = session.getPage(requestParameters.getPageMapName(), componentPath,
+						requestParameters.getVersionNumber());
+				
+				if(page != null && page.getClass() == pageClass)
+				{
+					return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+							requestParameters.getInterfaceName(), requestParameters);
+				}
+				else
+				{
+					return new BookmarkableListenerInterfaceRequestTarget(requestParameters
+							.getPageMapName(), pageClass, params, requestParameters.getComponentPath(),
+							requestParameters.getInterfaceName());
+				}
+			}
+			else
+			{
+				return new BookmarkablePageRequestTarget(requestParameters.getPageMapName(),
+						pageClass, params);
+			}
 		}
 		catch (RuntimeException e)
 		{
