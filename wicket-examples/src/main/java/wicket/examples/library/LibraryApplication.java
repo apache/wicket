@@ -18,6 +18,7 @@
 package wicket.examples.library;
 
 import wicket.ISessionFactory;
+import wicket.Request;
 import wicket.Session;
 import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.strategies.page.SimplePageAuthorizationStrategy;
@@ -68,7 +69,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession()
+			public Session newSession(Request request)
 			{
 				return new LibrarySession(LibraryApplication.this);
 			}

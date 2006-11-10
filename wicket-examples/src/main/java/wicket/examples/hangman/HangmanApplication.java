@@ -18,6 +18,7 @@
 package wicket.examples.hangman;
 
 import wicket.ISessionFactory;
+import wicket.Request;
 import wicket.Session;
 import wicket.examples.WicketExampleApplication;
 
@@ -43,7 +44,7 @@ public class HangmanApplication extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession()
+			public Session newSession(Request request)
 			{
 				return new HangmanSession(HangmanApplication.this);
 			}
