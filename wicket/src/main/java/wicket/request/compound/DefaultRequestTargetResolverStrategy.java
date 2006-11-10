@@ -84,6 +84,8 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 		// See whether this request points to a rendered page
 		else if (requestParameters.getComponentPath() != null)
 		{
+			// TODO in 1.2/1.3 this looks completely different!!  
+			// checks for: requestParameters.isOnlyProcessIfPathActive()
 			target = resolveRenderedPage(requestCycle, requestParameters);
 		}
 		// see whether this request points to a shared resource
