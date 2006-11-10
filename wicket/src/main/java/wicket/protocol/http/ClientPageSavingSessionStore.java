@@ -98,7 +98,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	@Override
 	public void onEndRequest(Request request)
 	{
-		pages.set(null);
+		pages.remove();
 	}
 
 	/**
