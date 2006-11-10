@@ -51,6 +51,7 @@ import wicket.settings.IFrameworkSettings;
 import wicket.settings.IMarkupSettings;
 import wicket.settings.IPageSettings;
 import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequestLoggerSettings;
 import wicket.settings.IResourceSettings;
 import wicket.settings.ISecuritySettings;
 import wicket.settings.ISessionSettings;
@@ -503,7 +504,26 @@ public abstract class Application
 	 */
 	public final IRequestLogger getRequestLogger()
 	{
+		if(getRequestLoggerSettings().isRequestLoggerEnabled())
+		{
+			if(requestLogger == null) requestLogger = newRequestLogger();
+		}
+		else
+		{
+			requestLogger = null;
+		}
 		return requestLogger;
+	}
+	
+	/**
+	 * creates a new request logger when requests logging is enabled.
+	 * 
+	 * @return  The new request logger
+	 * 
+	 */
+	protected IRequestLogger newRequestLogger()
+	{
+		return new RequestLogger();
 	}
 
 	/**
@@ -516,6 +536,16 @@ public abstract class Application
 		return getSettings();
 	}
 
+	/**
+	 * @return Application's resources related settings
+	 * @see IResourceSettings
+	 * @since 1.3
+	 */
+	public final IRequestLoggerSettings getRequestLoggerSettings()
+	{
+		return getSettings();
+	}
+	
 	/**
 	 * @return Application's security related settings
 	 * @see ISecuritySettings
@@ -665,16 +695,6 @@ public abstract class Application
 		metaData = key.set(metaData, object);
 	}
 
-	/**
-	 * Sets the {@link RequestLogger}.
-	 * 
-	 * @param logger
-	 *            The request logger
-	 */
-	public final void setRequestLogger(IRequestLogger logger)
-	{
-		requestLogger = logger;
-	}
 
 	/**
 	 * Called when wicket servlet is destroyed. Overrides do not have to call

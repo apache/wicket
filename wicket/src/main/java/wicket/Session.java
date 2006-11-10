@@ -238,46 +238,6 @@ public abstract class Session implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * Force binding this session to the application's
-	 * {@link ISessionStore session store}. A Wicket application can operate in
-	 * a session-less mode as long as stateless pages are used. Session objects
-	 * will be then created for each request, but they will only live for that
-	 * request. You can recognize temporary sessions by calling
-	 * {@link #isTemporary()} which basically checks whether the session's id is
-	 * null. Hence, temporary sessions have no session id.
-	 * <p>
-	 * By calling this method, the session will be bound (made not-temporary) if
-	 * it was not bound yet. It is useful for cases where you want to be
-	 * absolutely sure this session object will be available in next requests.
-	 * </p>
-	 */
-	public final void bind()
-	{
-		ISessionStore store = getSessionStore();
-		Request request = RequestCycle.get().getRequest();
-		if (store.getSessionId(request, false) == null)
-		{
-			// explicitly create a session
-			this.id = store.getSessionId(request, true);
-			// bind it
-			store.bind(request, this);
-		}
-	}
-
-	/**
-	 * Whether this session is temporary. A Wicket application can operate in a
-	 * session-less mode as long as stateless pages are used. If this session
-	 * object is temporary, it will not be available on a next request.
-	 * 
-	 * @return Whether this session is temporary (which is the same as it's id
-	 *         being null)
-	 */
-	public final boolean isTemporary()
-	{
-		return getId() == null;
-	}
-
-	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * <p>
 	 * Sets session for calling thread.
@@ -317,6 +277,45 @@ public abstract class Session implements Serializable, IConverterLocator
 		setLocale(application.getApplicationSettings().getDefaultLocale());
 	}
 
+	/**
+	 * Force binding this session to the application's
+	 * {@link ISessionStore session store}. A Wicket application can operate in
+	 * a session-less mode as long as stateless pages are used. Session objects
+	 * will be then created for each request, but they will only live for that
+	 * request. You can recognize temporary sessions by calling
+	 * {@link #isTemporary()} which basically checks whether the session's id is
+	 * null. Hence, temporary sessions have no session id.
+	 * <p>
+	 * By calling this method, the session will be bound (made not-temporary) if
+	 * it was not bound yet. It is useful for cases where you want to be
+	 * absolutely sure this session object will be available in next requests.
+	 * </p>
+	 */
+	public final void bind()
+	{
+		ISessionStore store = getSessionStore();
+		Request request = RequestCycle.get().getRequest();
+		if (store.getSessionId(request, false) == null)
+		{
+			// explicitly create a session
+			this.id = store.getSessionId(request, true);
+			// bind it
+			store.bind(request, this);
+		}
+	}
+
+	/**
+	 * Whether this session is temporary. A Wicket application can operate in a
+	 * session-less mode as long as stateless pages are used. If this session
+	 * object is temporary, it will not be available on a next request.
+	 * 
+	 * @return Whether this session is temporary (which is the same as it's id
+	 *         being null)
+	 */
+	public final boolean isTemporary()
+	{
+		return getId() == null;
+	}
 	/**
 	 * Removes all pages from the session. Although this method should rarely be
 	 * needed, it is available (possibly for security reasons).

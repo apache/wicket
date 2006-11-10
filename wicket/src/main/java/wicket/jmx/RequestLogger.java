@@ -85,7 +85,9 @@ public class RequestLogger implements RequestLoggerMBean
 	 */
 	public void restart() throws IOException
 	{
-		application.setRequestLogger(new wicket.protocol.http.RequestLogger());
+		application.getRequestLoggerSettings().setRequestLoggerEnabled(false);
+		application.getRequestLogger();
+		application.getRequestLoggerSettings().setRequestLoggerEnabled(true);
 	}
 
 	/**
@@ -93,7 +95,7 @@ public class RequestLogger implements RequestLoggerMBean
 	 */
 	public void stop() throws IOException
 	{
-		application.setRequestLogger(null);
+		application.getRequestLoggerSettings().setRequestLoggerEnabled(false);
 	}
 
 	/**
