@@ -2689,10 +2689,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * OVERRIDE.
 	 * 
 	 * Called when a request begins.
-	 * 
-	 * @deprecated - use {@link OnAttach} instead
 	 */
-	@Deprecated
 	protected void internalAttach()
 	{
 		onAttach();
@@ -2704,10 +2701,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * OVERRIDE.
 	 * 
 	 * Called when a request ends.
-	 * 
-	 * @deprecated - use {@link OnDetach} instead
 	 */
-	@Deprecated
 	protected void internalDetach()
 	{
 		internalOnDetach();
@@ -2720,9 +2714,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * 
 	 * Called when a request begins.
 	 * 
-	 * @deprecated - use {@link OnAttach} instead
 	 */
-	@Deprecated
 	protected void internalOnAttach()
 	{
 	}
@@ -2733,9 +2725,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * 
 	 * Called when a request ends.
 	 * 
-	 * @deprecated - use {@link OnDetach} instead
 	 */
-	@Deprecated
 	protected void internalOnDetach()
 	{
 	}
