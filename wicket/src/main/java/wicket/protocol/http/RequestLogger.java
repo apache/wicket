@@ -38,12 +38,15 @@ package wicket.protocol.http;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import wicket.util.concurrent.ConcurrentHashMap;
 
+import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
@@ -52,8 +55,6 @@ import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
 import wicket.request.target.resource.ISharedResourceRequestTarget;
-import wicket.session.ISessionStore;
-import wicket.util.concurrent.ConcurrentHashMap;
 import wicket.util.lang.Classes;
 import wicket.util.string.AppendingStringBuffer;
 
@@ -75,27 +76,65 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @since 1.2
  */
-public class RequestLogger
+public class RequestLogger implements IRequestLogger
 {
 	// TODO post 1.2 for this class: saving to a log file, only holding a small part in mem.
+
 	
-	
+	/**
+	 * This interface can be implemented in a custom session object.
+	 * to give an object that has more information for the current session 
+	 * (state of session).
+	 * 
+	 * @author jcompagner
+	 */
+	public interface ISessionLogInfo
+	{
+
+		/**
+		 * @return The custom object stored in the request loggers current request.
+		 */
+		Object getSessionInfo();
+
+	}
+
+
 	private int totalCreatedSessions;
 	
 	private int peakSessions;
 	
+	private List requests;
+
 	private Map liveSessions;
+
+	private ThreadLocal currentRequest = new ThreadLocal();
 	
 	/**
 	 * Construct.
 	 */
 	public RequestLogger()
 	{
+		requests = Collections.synchronizedList(new LinkedList()
+		{
+			private static final long serialVersionUID = 1L;
+
+			/**
+			 * @see java.util.LinkedList#add(java.lang.Object)
+			 */
+			public void add(int index,Object o)
+			{
+				super.add(index,o);
+				if(size() > Application.get().getRequestLoggerSettings().getRequestsWindowSize())
+				{
+					removeLast();
+				}
+			}
+		});
 		liveSessions = new ConcurrentHashMap();
 	}
 
 	/**
-	 * @return The total created sessions counter
+	 * @see wicket.protocol.http.IRequestLogger#getTotalCreatedSessions()
 	 */
 	public int getTotalCreatedSessions()
 	{
@@ -103,7 +142,7 @@ public class RequestLogger
 	}
 	
 	/**
-	 * @return The peak sessions counter
+	 * @see wicket.protocol.http.IRequestLogger#getPeakSessions()
 	 */
 	public int getPeakSessions()
 	{
@@ -111,18 +150,22 @@ public class RequestLogger
 	}
 	
 	/**
-	 * @return Collection of live Sessions
+	 * @see wicket.protocol.http.IRequestLogger#getRequests()
 	 */
-	public Collection getLiveSessions()
+	public List getRequests()
 	{
-		return liveSessions.values();
+		return Collections.unmodifiableList(requests);
+	}
+	
+	public SessionData[] getLiveSessions()
+	{
+		SessionData[] sessions = (SessionData[])liveSessions.values().toArray(new SessionData[liveSessions.size()]);
+		Arrays.sort(sessions);
+		return sessions;
 	}
 
 	/**
-	 * Method used to cleanup a livesession when the session was
-	 * invalidated by the webcontainer
-	 * 
-	 * @param sessionId
+	 * @see wicket.protocol.http.IRequestLogger#sessionDestroyed(java.lang.String)
 	 */
 	public void sessionDestroyed(String sessionId)
 	{
@@ -130,399 +173,338 @@ public class RequestLogger
 	}
 
 	/**
-	 * This method is called when the request is over this will
-	 * set the total time a request takes and cleans up the current 
-	 * request data.
-	 * 
-	 * @param timeTaken
+	 * @see wicket.protocol.http.IRequestLogger#sessionDestroyed(java.lang.String)
+	 */
+	public void sessionCreated(String sessionId)
+	{
+		liveSessions.put(sessionId, new SessionData(sessionId));
+		if(liveSessions.size() > peakSessions) peakSessions = liveSessions.size();
+		totalCreatedSessions++;
+	}
+	
+	RequestData getCurrentRequest()
+	{
+		RequestData rd = (RequestData)currentRequest.get();
+		if(rd == null)
+		{
+			rd = new RequestData();
+			currentRequest.set(rd);
+		}
+		return rd;
+	}
+
+	/**
+	 * @see wicket.protocol.http.IRequestLogger#requestTime(long)
 	 */
 	public void requestTime(long timeTaken)
 	{
-		SessionData sd = getSessionData();
-		sd.endRequest(timeTaken);
+		RequestData rd = (RequestData)currentRequest.get();
+		if(rd != null)
+		{
+			Session session = Session.get();
+			String sessionId = session.getId();
+			rd.setSessionId(sessionId);
+			
+			Object sessionInfo = getSessionInfo(session);
+			rd.setSessionInfo(sessionInfo);
+			
+			long sizeInBytes = -1;
+			if(Application.get().getRequestLoggerSettings().getRecordSessionSize())
+			{
+				sizeInBytes = session.getSizeInBytes();
+			}
+			rd.setSessionSize(sizeInBytes);
+			rd.setTimeTaken(timeTaken);
+			requests.add(0, rd);
+			currentRequest.set(null);
+			if(sessionId != null)
+			{
+				SessionData sd = (SessionData)liveSessions.get(sessionId);
+				if(sd == null)
+				{
+					// passivated session or logger only started after it.
+					sessionCreated(sessionId);
+					sd = (SessionData)liveSessions.get(sessionId);
+				}
+				if(sd != null)
+				{
+					sd.setSessionInfo(sessionInfo);
+					sd.setSessionSize(sizeInBytes);
+					sd.addTimeTaken(timeTaken);
+				}
+			}
+		}
 	}
 	
+	private Object getSessionInfo(Session session)
+	{
+		if (session instanceof ISessionLogInfo)
+		{
+			return ((ISessionLogInfo)session).getSessionInfo();
+		}
+		return "";
+	}
+
 	/**
-	 * Called to monitor removals of objects out of the {@link ISessionStore}
-	 * 
-	 * @param value
+	 * @see wicket.protocol.http.IRequestLogger#objectRemoved(java.lang.Object)
 	 */
 	public void objectRemoved(Object value)
 	{
-		SessionData sd = getSessionData();
+		RequestData rd = getCurrentRequest();
 		if(value instanceof Page)
 		{
-			sd.pageRemoved((Page)value);
+			Page page = (Page)value;
+			rd.addEntry("Page removed, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if(value instanceof PageMap)
 		{
-			sd.pageMapRemoved((PageMap)value);
+			PageMap map = (PageMap)value;
+			rd.addEntry("PageMap removed, name: " + (map.getName()==null?"DEFAULT":map.getName()));
 		}
 		else if(value instanceof WebSession)
 		{
-			sd.webSessionRemoved((WebSession)value);
+			rd.addEntry("Session removed");
 		}
 		else
 		{
-			// unknown object/custom object?
+			rd.addEntry("Custom object removed: " + value);
 		}
 	}
 
 	/**
-	 * Called to monitor updates of objects in the {@link ISessionStore}
-	 * 
-	 * @param value
+	 * @see wicket.protocol.http.IRequestLogger#objectUpdated(java.lang.Object)
 	 */
 	public void objectUpdated(Object value)
 	{
-		SessionData sd = getSessionData();
+		RequestData rd = getCurrentRequest();
 		if(value instanceof Page)
 		{
-			sd.pageUpdated((Page)value);
+			Page page = (Page)value;
+			rd.addEntry("Page updated, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if(value instanceof PageMap)
 		{
-			sd.pageMapUpdated((PageMap)value);
+			PageMap map = (PageMap)value;
+			rd.addEntry("PageMap updated, name: " + (map.getName()==null?"DEFAULT":map.getName()));
 		}
-		else if(value instanceof WebSession)
+		else if(value instanceof Session)
 		{
-			sd.webSessionUpdated((WebSession)value);
+			rd.addEntry("Session updated");
 		}
 		else
 		{
-			// unknown object/custom object?
+			rd.addEntry("Custom object updated: " + value);
 		}
-		
 	}
 
 	/**
-	 * Called to monitor additions of objects in the {@link ISessionStore}
-	 * 
-	 * @param value
+	 * @see wicket.protocol.http.IRequestLogger#objectCreated(java.lang.Object)
 	 */
 	public void objectCreated(Object value)
 	{
-		SessionData sd = null;
+		RequestData rd = getCurrentRequest();
 		
-		//ignore the creation of sessions itself. 
-		// Because not much is set then (Session.get()/ RequestCycle.get())
-		if( !(value instanceof Session) )
+		if( value instanceof Session )
 		{
-			sd = getSessionData();
+			rd.addEntry("Session created"); 
 		}
-		if(value instanceof Page)
+		else if(value instanceof Page)
 		{
-			sd.pageCreated((Page)value);
+			Page page = (Page)value;
+			rd.addEntry("Page created, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if(value instanceof PageMap)
 		{
-			sd.pageMapCreated((PageMap)value);
+			PageMap map = (PageMap)value;
+			rd.addEntry("PageMap created, name: " + (map.getName()==null?"DEFAULT":map.getName()));
 		}
 		else
 		{
-			// unknown object/custom object?
+			rd.addEntry("Custom object created: " + value);
 		}
 		
 	}
-
+	
 	/**
-	 * Sets the target that was the response target for the current request
-	 * 
-	 * @param target
+	 * @see wicket.protocol.http.IRequestLogger#logResponseTarget(wicket.IRequestTarget)
 	 */
 	public void logResponseTarget(IRequestTarget target)
 	{
-		getSessionData().logResponseTarget(target);
+		getCurrentRequest().addResponseTarget(getRequestTargetString(target));
 	}
 
 	/**
-	 * Sets the target that was the event target for the current request
-	 * 
-	 * @param target
+	 * @see wicket.protocol.http.IRequestLogger#logEventTarget(wicket.IRequestTarget)
 	 */
 	public void logEventTarget(IRequestTarget target)
 	{
-		getSessionData().logEventTarget(target);
+		getCurrentRequest().addEventTarget(getRequestTargetString(target));
 	}
 	
-	private SessionData getSessionData()
-	{
-		Session session = Session.get();
-		// TODO when delayed sessions, do make sure this doesn't cause a http session creation.
-		SessionData sessionData = (SessionData)liveSessions.get(session.getId());
-		if(sessionData == null)
-		{
-			sessionData = createSessionData(session);
-		}
-		return sessionData;
-	}
-
+	
 	/**
-	 * @param session
-	 * @return The SessionData object
+	 * @param target
+	 * @return The request target nice display string
 	 */
-	private SessionData createSessionData(Session session)
+	private String getRequestTargetString(IRequestTarget target)
 	{
-		SessionData sessionData = new SessionData(session);
-		liveSessions.put(session.getId(), sessionData);
-		totalCreatedSessions++;
-		if(peakSessions < liveSessions.size())
+		AppendingStringBuffer sb = new AppendingStringBuffer(128);
+		if(target instanceof IListenerInterfaceRequestTarget)
 		{
-			peakSessions = liveSessions.size();
+			IListenerInterfaceRequestTarget listener = (IListenerInterfaceRequestTarget)target;
+			sb.append("Interface call [target:");
+			sb.append(Classes.simpleName(listener.getTarget().getClass()));
+			sb.append("(");
+			sb.append(listener.getTarget().getId());
+			sb.append("), page: ");
+			sb.append(Classes.simpleName(listener.getPage().getClass()));
+			sb.append("(");
+			sb.append(listener.getPage().getId());
+			sb.append("), interface: ");
+			sb.append(listener.getRequestListenerInterface().getName());
+			sb.append(".");
+			sb.append(listener.getRequestListenerInterface().getMethod().getName());
+			sb.append("]");
 		}
-		return sessionData;
+		else if(target instanceof IPageRequestTarget)
+		{
+			IPageRequestTarget pageRequestTarget = (IPageRequestTarget)target;
+			sb.append("PageRequest call [page: ");
+			sb.append(Classes.simpleName(pageRequestTarget.getPage().getClass()));
+			sb.append("(");
+			sb.append(pageRequestTarget.getPage().getId());
+			sb.append(")]");
+		}
+		else if(target instanceof IBookmarkablePageRequestTarget)
+		{
+			IBookmarkablePageRequestTarget pageRequestTarget = (IBookmarkablePageRequestTarget)target;
+			sb.append("BookmarkablePage call [page: ");
+			sb.append(Classes.simpleName(pageRequestTarget.getPageClass()));
+			sb.append("]");
+		}
+		else if(target instanceof ISharedResourceRequestTarget)
+		{
+			ISharedResourceRequestTarget sharedResourceTarget = (ISharedResourceRequestTarget)target;
+			sb.append("Shared Resource call [resourcekey: ");
+			sb.append(sharedResourceTarget.getResourceKey());
+			sb.append("]");
+		}
+		else
+		{
+			sb.append(target.toString());
+		}
+		return sb.toString();
 	}
-
+	
 	/**
-	 * This class hols the information one sessions has
+	 * This class hold the information one request of a session has.
 	 * 
 	 * @author jcompagner
 	 */
-	public static class SessionData implements Serializable
+	public static class SessionData implements Serializable, Comparable
 	{
 		private static final long serialVersionUID = 1L;
+		
+		private String sessionId;
+		private long startDate;
+		private long lastActive;
+		private long numberOfRequests;
+		private long totalTimeTaken;
+		private long sessionSize;
+		private Object sessionInfo;
 
-		private final Session session;
-		
-		private LinkedList requests;
-		
-		private RequestData currentRequest;
-
-		private double totalRequestsTime; 
-		
-		private long lastRequestTime = System.currentTimeMillis();
-		
 		/**
 		 * Construct.
-		 * @param session
+		 * @param sessionId
 		 */
-		public SessionData(Session session)
+		public SessionData(String sessionId)
 		{
-			this.session = session;
-			this.requests = new LinkedList();
+			this.sessionId = sessionId;
+			this.startDate = System.currentTimeMillis(); 
+			this.numberOfRequests = 1;
+		}
+		
+		/**
+		 * @return The last active date.
+		 */
+		public Date getLastActive()
+		{
+			return new Date(lastActive);
+		}
+		
+		/**
+		 * @return The start date of this session
+		 */
+		public Date getStartDate()
+		{
+			return new Date(startDate);
+		}
+		
+		/**
+		 * @return The number of request for this session
+		 */
+		public long getNumberOfRequests()
+		{
+			return numberOfRequests;
+		}
+		
+		/**
+		 * @return Returns the session size.
+		 */
+		public long getSessionSize()
+		{
+			return sessionSize;
+		}
+		
+		/**
+		 * @return Returns the total time this session has spent.
+		 */
+		public long getTotalTimeTaken()
+		{
+			return totalTimeTaken;
+		}
+		
+		/**
+		 * @return The session info object given by the {@link ISessionLogInfo#getSessionInfo()} session method.
+		 */
+		public Object getSessionInfo()
+		{
+			return sessionInfo;
 		}
 		
 		/**
 		 * @return The session id
 		 */
-		public String getId()
+		public String getSessionId()
 		{
-			return session.getId();
+			return sessionId;
 		}
 		
-		/**
-		 * @return The session
-		 */
-		public Session getSession()
+		void addTimeTaken(long time)
 		{
-			return session;
+			this.lastActive = System.currentTimeMillis();
+			this.numberOfRequests++;
+			this.totalTimeTaken += time;
 		}
 		
-		/**
-		 * Gets lastRequestTime.
-		 * @return lastRequestTime
-		 */
-		public long getLastRequestTime()
+		void setSessionInfo(Object sessionInfo)
 		{
-			return lastRequestTime;
-		}
-
-		
-		/**
-		 * @return The request list of this session
-		 */
-		public List getRequests()
-		{
-			return requests;
+			this.sessionInfo = sessionInfo; 
 		}
 		
-		/**
-		 * @return The total session size
-		 */
-		public long getSessionSize()
+		void setSessionSize(long size)
 		{
-			return session.getSizeInBytes();
+			this.sessionSize = size;
 		}
 
-		/**
-		 * @return The total time in seconds all request did take
-		 */
-		public Double getRequestsTime()
+		public int compareTo(Object sd)
 		{
-			return new Double(totalRequestsTime/1000);
-		}
-		
-		/**
-		 * @param target
-		 */
-		public void logEventTarget(IRequestTarget target)
-		{
-			getCurrentRequest().addEventTarget(getRequestTargetString(target));
-		}
-		
-		/**
-		 * @param target
-		 */
-		public void logResponseTarget(IRequestTarget target)
-		{
-			getCurrentRequest().addResponseTarget(getRequestTargetString(target));
-		}
-		
-		/**
-		 * @param target
-		 * @return The request target nice display string
-		 */
-		private String getRequestTargetString(IRequestTarget target)
-		{
-			AppendingStringBuffer sb = new AppendingStringBuffer(128);
-			if(target instanceof IListenerInterfaceRequestTarget)
-			{
-				IListenerInterfaceRequestTarget listener = (IListenerInterfaceRequestTarget)target;
-				sb.append("Interface call [target:");
-				sb.append(Classes.simpleName(listener.getTarget().getClass()));
-				sb.append("(");
-				sb.append(listener.getTarget().getId());
-				sb.append("), page: ");
-				sb.append(Classes.simpleName(listener.getPage().getClass()));
-				sb.append("(");
-				sb.append(listener.getPage().getId());
-				sb.append("), interface: ");
-				sb.append(listener.getRequestListenerInterface().getName());
-				sb.append(".");
-				sb.append(listener.getRequestListenerInterface().getMethod().getName());
-				sb.append("]");
-			}
-			else if(target instanceof IPageRequestTarget)
-			{
-				IPageRequestTarget pageRequestTarget = (IPageRequestTarget)target;
-				sb.append("PageRequest call [page: ");
-				sb.append(Classes.simpleName(pageRequestTarget.getPage().getClass()));
-				sb.append("(");
-				sb.append(pageRequestTarget.getPage().getId());
-				sb.append(")]");
-			}
-			else if(target instanceof IBookmarkablePageRequestTarget)
-			{
-				IBookmarkablePageRequestTarget pageRequestTarget = (IBookmarkablePageRequestTarget)target;
-				sb.append("BookmarkablePage call [page: ");
-				sb.append(Classes.simpleName(pageRequestTarget.getPageClass()));
-				sb.append("]");
-			}
-			else if(target instanceof ISharedResourceRequestTarget)
-			{
-				ISharedResourceRequestTarget sharedResourceTarget = (ISharedResourceRequestTarget)target;
-				sb.append("Shared Resource call [resourcekey: ");
-				sb.append(sharedResourceTarget.getResourceKey());
-				sb.append("]");
-			}
-			else
-			{
-				sb.append(target.toString());
-			}
-			return sb.toString();
-		}
-		
-		/**
-		 * @param page
-		 */
-		public void pageCreated(Page page)
-		{
-			getCurrentRequest().addEntry("Page created, id: " + page.getId() + ", class:" + page.getClass());
-		}
-
-		/**
-		 * @param map
-		 */
-		public void pageMapCreated(PageMap map)
-		{
-			getCurrentRequest().addEntry("PageMap created, name: " + (map.getName()==null?"DEFAULT":map.getName()));
-		}
-
-		/**
-		 * @param session
-		 */
-		public void webSessionCreated(WebSession session)
-		{
-			getCurrentRequest().addEntry("WebSession created");
-		}
-
-		/**
-		 * @param session
-		 */
-		public void webSessionUpdated(WebSession session)
-		{
-			getCurrentRequest().addEntry("WebSession updated");
-		}
-
-		/**
-		 * @param map
-		 */
-		public void pageMapUpdated(PageMap map)
-		{
-			getCurrentRequest().addEntry("PageMap updated, name: " + (map.getName()==null?"DEFAULT":map.getName()));
-		}
-
-		/**
-		 * @param page
-		 */
-		public void pageUpdated(Page page)
-		{
-			getCurrentRequest().addEntry("Page updated, id: " + page.getId() + ", class:" + page.getClass());
-		}
-
-		/**
-		 * @param session
-		 */
-		public void webSessionRemoved(WebSession session)
-		{
-			getCurrentRequest().addEntry("WebSession removed");
-		}
-
-		/**
-		 * @param map
-		 */
-		public void pageMapRemoved(PageMap map)
-		{
-			getCurrentRequest().addEntry("PageMap removed, name: " + (map.getName()==null?"DEFAULT":map.getName()));
-		}
-
-		/**
-		 * @param page
-		 */
-		public void pageRemoved(Page page)
-		{
-			getCurrentRequest().addEntry("Page removed, id: " + page.getId() + ", class:" + page.getClass());
-		}
-		
-		/**
-		 * @param timeTaken
-		 */
-		public void endRequest(long timeTaken)
-		{
-			RequestData rd = getCurrentRequest();
-			rd.setTimeTaken(timeTaken);
-			totalRequestsTime += timeTaken;
-			currentRequest = null;
-			
-			lastRequestTime = new Date().getTime() - timeTaken;
-		}
-		
-		private RequestData getCurrentRequest()
-		{
-			if(currentRequest == null)
-			{
-				currentRequest = new RequestData();
-				requests.addFirst(currentRequest);
-				if(requests.size() > 1000)
-				{
-					requests.removeLast();
-				}
-			}
-			return currentRequest;
+			return (int)(((SessionData)sd).lastActive - lastActive);
 		}
 
 	}
 	
+
 	/**
 	 * This class hold the information one request of a session has.
 	 * 
@@ -532,11 +514,17 @@ public class RequestLogger
 	{
 		private static final long serialVersionUID = 1L;
 
-		private Date startDate;
+		private long startDate;
 		private long timeTaken;
 		private List entries = new ArrayList(5);
 		private String eventTarget;
 		private String responseTarget;
+
+		private String sessionId;
+
+		private long totalSessionSize;
+
+		private Object sessionInfo;
 		
 		/**
 		 * @return The time taken for this request
@@ -547,11 +535,44 @@ public class RequestLogger
 		}
 
 		/**
+		 * @return The session object info, created by {@link ISessionLogInfo#getSessionInfo()}
+		 */
+		public Object getSessionInfo()
+		{
+			return sessionInfo;
+		}
+		
+		/**
+		 * Set the session info object of the session for this request.
+		 * @param sessionInfo
+		 */
+		public void setSessionInfo(Object sessionInfo)
+		{
+			this.sessionInfo = sessionInfo;
+		}
+
+		/**
+		 * @param sizeInBytes
+		 */
+		public void setSessionSize(long sizeInBytes)
+		{
+			totalSessionSize = sizeInBytes;
+		}
+
+		/**
+		 * @param id
+		 */
+		public void setSessionId(String id)
+		{
+			sessionId = id;
+		}
+
+		/**
 		 * @return The time taken for this request
 		 */
 		public Date getStartDate()
 		{
-			return startDate;
+			return new Date(startDate);
 		}
 
 		/**
@@ -592,7 +613,7 @@ public class RequestLogger
 		public void setTimeTaken(long timeTaken)
 		{
 			this.timeTaken = timeTaken;
-			this.startDate = new Date(System.currentTimeMillis()-timeTaken);
+			this.startDate = System.currentTimeMillis()-timeTaken;
 		}
 
 		/**
@@ -619,6 +640,22 @@ public class RequestLogger
 				}
 			}
 			return sb.toString();
+		}
+
+		/**
+		 * @return The session id for this request
+		 */
+		public String getSessionId()
+		{
+			return sessionId;
+		}
+
+		/**
+		 * @return The total session size.
+		 */
+		public Long getSessionSize()
+		{
+			return new Long(totalSessionSize);
 		}
 		
 	}

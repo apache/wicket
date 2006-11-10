@@ -21,6 +21,7 @@ package wicket.protocol.http;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -118,9 +119,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/** the default request cycle processor implementation. */
 	private IRequestCycleProcessor requestCycleProcessor;
 
-	/** Request logger instance. */
-	private RequestLogger requestLogger;
-
 	/**
 	 * the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
@@ -173,15 +171,19 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * Gets the {@link RequestLogger}.
-	 * 
-	 * @return The RequestLogger
+	 * @return The Wicket servlet context for this application
 	 */
-	public final RequestLogger getRequestLogger()
+	public final ServletContext getServletContext()
 	{
-		return requestLogger;
+		if (wicketServlet == null)
+		{
+			throw new IllegalStateException("servletContext is not set yet. Any code in your"
+					+ " Application object that uses the wicketServlet instance should be put"
+					+ " in the init() method instead of your constructor");
+		}
+		return wicketServlet.getServletContext();
 	}
-
+	
 	/**
 	 * Gets the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
@@ -227,7 +229,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	public void logEventTarget(IRequestTarget target)
 	{
 		super.logEventTarget(target);
-		RequestLogger rl = getRequestLogger();
+		IRequestLogger rl = getRequestLogger();
 		if (rl != null)
 		{
 			rl.logEventTarget(target);
@@ -240,7 +242,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	public void logResponseTarget(IRequestTarget target)
 	{
 		super.logResponseTarget(target);
-		RequestLogger rl = getRequestLogger();
+		IRequestLogger rl = getRequestLogger();
 		if (rl != null)
 		{
 			rl.logResponseTarget(target);
@@ -337,13 +339,21 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * Create new Wicket Session object. Note, this method is not called if you
 	 * registered your own ISessionFactory with the Application.
 	 * 
-	 * @see wicket.ISessionFactory#newSession()
+	 * @return The created session 
 	 */
 	public Session newSession()
 	{
 		return new WebSession(WebApplication.this);
 	}
 
+	/**
+	 * @see wicket.ISessionFactory#newSession(wicket.Request)
+	 */
+	public Session newSession(Request request)
+	{
+		return newSession();
+	}
+	
 	/**
 	 * @param sessionId
 	 *            The session id that was destroyed
@@ -352,22 +362,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		bufferedResponses.remove(sessionId);
 
-		RequestLogger logger = getRequestLogger();
+		IRequestLogger logger = getRequestLogger();
 		if (logger != null)
 		{
 			logger.sessionDestroyed(sessionId);
 		}
-	}
-
-	/**
-	 * Sets the {@link RequestLogger}.
-	 * 
-	 * @param logger
-	 *            The request logger
-	 */
-	public final void setRequestLogger(RequestLogger logger)
-	{
-		requestLogger = logger;
 	}
 
 	/**
@@ -562,7 +561,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	protected ISessionStore newSessionStore()
 	{
-		return new HttpSessionStore();
+		return new SecondLevelCacheSessionStore(new FilePageStore());
 	}
 
 	/**
@@ -637,11 +636,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 		if (session == null)
 		{
 			// Create session using session factory
-			session = getSessionFactory().newSession();
+			session = getSessionFactory().newSession(request);
 			// Set the client Locale for this session
 			session.setLocale(request.getLocale());
 
-			if (sessionStore.getSessionId(request) != null)
+			if (sessionStore.getSessionId(request, false) != null)
 			{
 				// Bind the session to the session store
 				sessionStore.bind(request, session);
@@ -658,9 +657,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 			throw new WicketRuntimeException("Session created by a WebApplication session factory "
 					+ "must be a subclass of WebSession");
 		}
-
-		// Set application on session
-		session.setApplication(this);
 
 		// Set session attribute name and attach/reattach http servlet session
 		webSession.initForRequest();

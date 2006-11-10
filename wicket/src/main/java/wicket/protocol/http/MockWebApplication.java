@@ -209,19 +209,6 @@ public class MockWebApplication extends WebApplication
 	}
 
 	/**
-	 * Get the context object so that we can apply configurations to it. This
-	 * method always returns an instance of <code>MockServletContext</code>,
-	 * so it is fine to cast the result to this class in order to get access to
-	 * the set methods.
-	 * 
-	 * @return The servlet context
-	 */
-	public ServletContext getServletContext()
-	{
-		return context;
-	}
-
-	/**
 	 * Get the request object so that we can apply configurations to it.
 	 * 
 	 * @return The request object
