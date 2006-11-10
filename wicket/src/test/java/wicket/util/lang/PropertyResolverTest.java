@@ -308,4 +308,27 @@ public class PropertyResolverTest extends TestCase
 		}
 	}
 	
+	/**
+	 * @throws Exception
+	 */
+	public void testPrivateField() throws Exception
+	{
+		Address address = new Address();
+		PropertyResolver.setValue("privateAddress", person, address , CONVERTER);
+		Address address2 = (Address)PropertyResolver.getValue("privateAddress", person);
+		assertEquals(address, address2);
+	}	
+	
+	/**
+	 * @throws Exception
+	 */
+	public void testPrivateFieldOfSuperClass() throws Exception
+	{
+		Person2 person2 = new Person2();
+		Address address = new Address();
+		PropertyResolver.setValue("privateAddress", person2, address , CONVERTER);
+		Address address2 = (Address)PropertyResolver.getValue("privateAddress", person2);
+		assertEquals(address, address2);
+	}		
+	
 }
