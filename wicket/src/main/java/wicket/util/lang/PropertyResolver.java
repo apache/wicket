@@ -231,13 +231,8 @@ public final class PropertyResolver
 			else
 			{
 				method = findGetter(clz, exp);
-				if (method == null)
-				{
-					// find field.
-					field = findField(clz, exp);
-				}
 			}
-			if (method == null && field == null)
+			if (method == null)
 			{
 				if (List.class.isAssignableFrom(clz))
 				{
@@ -288,52 +283,56 @@ public final class PropertyResolver
 				}
 				else
 				{
-					method = findMethod(clz, exp);
-					if (method == null)
+					field = findField(clz, exp);
+					if(field == null)
 					{
-						int index = exp.indexOf('.');
-						if (index != -1)
+						method = findMethod(clz, exp);
+						if (method == null)
 						{
-							String propertyName = exp.substring(0, index);
-							String propertyIndex = exp.substring(index + 1);
-							try
+							int index = exp.indexOf('.');
+							if (index != -1)
 							{
-
-								int parsedIndex = Integer.parseInt(propertyIndex);
-								// if so then it could be a
-								// getPropertyIndex(int)
-								// and setPropertyIndex(int, object)
-								String name = Character.toUpperCase(propertyName.charAt(0))
-										+ propertyName.substring(1);
-								method = clz.getMethod("get" + name, new Class[] { int.class });
-								getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
-
+								String propertyName = exp.substring(0, index);
+								String propertyIndex = exp.substring(index + 1);
+								try
+								{
+	
+									int parsedIndex = Integer.parseInt(propertyIndex);
+									// if so then it could be a
+									// getPropertyIndex(int)
+									// and setPropertyIndex(int, object)
+									String name = Character.toUpperCase(propertyName.charAt(0))
+											+ propertyName.substring(1);
+									method = clz.getMethod("get" + name, new Class[] { int.class });
+									getAndSetter = new ArrayPropertyGetSet(method, parsedIndex);
+	
+								}
+								catch (Exception e)
+								{
+									throw new WicketRuntimeException(
+											"no get method defined for class: " + clz + " expression: "
+													+ propertyName);
+								}
 							}
-							catch (Exception e)
+							else
 							{
-								throw new WicketRuntimeException(
-										"no get method defined for class: " + clz + " expression: "
-												+ propertyName);
+								// We do not look for a public FIELD because that is
+								// not good
+								// programming with beans patterns
+								throw new WicketRuntimeException("No get method defined for class: "
+										+ clz + " expression: " + exp);
 							}
 						}
 						else
 						{
-							// We do not look for a public FIELD because that is
-							// not good
-							// programming with beans patterns
-							throw new WicketRuntimeException("No get method defined for class: "
-									+ clz + " expression: " + exp);
+							getAndSetter = new MethodGetAndSet(method);
 						}
 					}
 					else
 					{
-						getAndSetter = new MethodGetAndSet(method);
+						getAndSetter = new FieldGetAndSetter(field);
 					}
 				}
-			}
-			else if (field != null)
-			{
-				getAndSetter = new FieldGetAndSetter(field);
 			}
 			else
 			{
@@ -359,6 +358,20 @@ public final class PropertyResolver
 		}
 		catch (Exception e)
 		{
+			Class tmp = clz;
+			while(tmp != null && tmp != Object.class)
+			{
+				Field[] fields = tmp.getDeclaredFields();
+				for (int i = 0; i < fields.length; i++)
+				{
+					if(fields[i].getName().equals(expression))
+					{
+						fields[i].setAccessible(true);
+						return fields[i];
+					}
+				}
+				tmp = tmp.getSuperclass();
+			}
 			log.debug("Cannot find field " + clz + "." + expression, e);
 		}
 		return field;
