@@ -37,11 +37,7 @@
 package wicket.examples.debug;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.Arrays;
 
 import wicket.Application;
 import wicket.Component;
@@ -53,6 +49,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.PageableListView;
 import wicket.markup.html.navigation.paging.PagingNavigator;
 import wicket.model.Model;
+import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.RequestLogger.SessionData;
@@ -81,7 +78,7 @@ public class LiveSessionsPage extends WebPage
 			public void onClick() 
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
-				RequestLogger requestLogger = webApplication.getRequestLogger();
+				IRequestLogger requestLogger = webApplication.getRequestLogger();
 				if(requestLogger == null)
 				{
 					webApplication.setRequestLogger(new RequestLogger());
@@ -99,7 +96,7 @@ public class LiveSessionsPage extends WebPage
 			public Object getObject(Component component) 
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
-				RequestLogger requestLogger = webApplication.getRequestLogger();
+				IRequestLogger requestLogger = webApplication.getRequestLogger();
 				if(requestLogger == null)
 				{
 					return "Enable request recording";
@@ -127,7 +124,7 @@ public class LiveSessionsPage extends WebPage
 		
 			public Object getObject(Component component)
 			{
-				return new Integer(getRequestLogger().getLiveSessions().size());
+				return new Integer(getRequestLogger().getPeakSessions());
 			}
 		}));
 		add(new Label("liveSessions",new Model()
@@ -146,15 +143,7 @@ public class LiveSessionsPage extends WebPage
 			
 			public Object getObject(Component component)
 			{
-				List lst = new ArrayList(getRequestLogger().getLiveSessions());
-				Collections.sort(lst,new Comparator()
-				{
-					public int compare(Object o1, Object o2)
-					{
-						return (int)(((SessionData)o2).getLastRequestTime() - ((SessionData)o1).getLastRequestTime());
-					}
-				});
-				return lst;
+				return Arrays.asList(getRequestLogger().getLiveSessions());
 			}
 		};
 		PageableListView listView = new PageableListView("sessions",sessionModel,50)
@@ -177,11 +166,11 @@ public class LiveSessionsPage extends WebPage
 						setResponsePage(new RequestsPage(sd));
 					}
 				};
-				link.add( new Label("id",new Model(sd.getId())));
+				link.add( new Label("id",new Model(sd.getSessionId())));
 				item.add( link);
-				item.add( new Label("lastRequestTime",new Model(sdf.format(new Date(sd.getLastRequestTime())))) );
-				item.add( new Label("requestCount",new Model(new Integer(sd.getRequests().size()))) );
-				item.add( new Label("requestsTime",new Model(sd.getRequestsTime())) );
+				item.add( new Label("lastRequestTime",new Model(sdf.format(sd.getLastActive()))) );
+				item.add( new Label("requestCount",new Model(new Long(sd.getNumberOfRequests()))) );
+				item.add( new Label("requestsTime",new Model(new Long(sd.getTotalTimeTaken()))) );
 				item.add( new Label("sessionSize",new Model(Bytes.bytes(sd.getSessionSize()))) );
 			}
 		};
@@ -191,10 +180,10 @@ public class LiveSessionsPage extends WebPage
 		add(navigator);
 	}
 	
-	RequestLogger getRequestLogger()
+	IRequestLogger getRequestLogger()
 	{
 		WebApplication webApplication = (WebApplication)Application.get();
-		final RequestLogger requestLogger;
+		final IRequestLogger requestLogger;
 		if(webApplication.getRequestLogger() == null)
 		{
 			// make default one.

@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import wicket.AccessStackPageMap;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
-import wicket.PageMap.Access;
+import wicket.AccessStackPageMap.Access;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.Link;
@@ -63,7 +64,16 @@ public final class PageMapView extends Panel
 		add(new Label("size", "" + Bytes.bytes(pageMap.getSizeInBytes())));
 
 		// Get entry accesses 
-		final ArrayListStack accessStack = pageMap.getAccessStack();
+		// Get entry accesses
+		final ArrayListStack accessStack;
+		if (pageMap instanceof AccessStackPageMap)
+		{
+			accessStack = ((AccessStackPageMap)pageMap).getAccessStack();
+		}
+		else
+		{
+			accessStack = new ArrayListStack();
+		}
 		final List reversedAccessStack = new ArrayList();
 		reversedAccessStack.addAll(accessStack);
 		Collections.reverse(reversedAccessStack);
