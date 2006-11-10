@@ -24,10 +24,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
+import wicket.protocol.http.IRequestLogger;
 import wicket.request.ClientInfo;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestCycleProcessor;
 import wicket.request.RequestParameters;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.ComponentRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -653,10 +655,26 @@ public abstract class RequestCycle
 	{
 		// Get Page holding component and mark it as stateful.
 		final Page page = component.getPage();
-		page.setStateless(false);
+		final IRequestTarget target;
+		if (listener != IRedirectListener.INTERFACE && component.isStateless()
+				&& page.isBookmarkable())
+		{
+			target = new BookmarkableListenerInterfaceRequestTarget(page.getPageMap().getName(),
+					page.getClass(), new PageParameters(), component, listener);
+		}
+		else
+		{
+			if (listener == IRedirectListener.INTERFACE)
+			{
+				page.setPageStateless(Boolean.FALSE);
+			}
 
-		// Get the listener interface name
-		final IRequestTarget target = new ListenerInterfaceRequestTarget(page, component, listener);
+			// trigger creation of the actual session in case it was deferred
+			session.getSessionStore().getSessionId(request, true);
+
+			// Get the listener interface name
+			target = new ListenerInterfaceRequestTarget(page, component, listener);
+		}
 		final IRequestCodingStrategy requestCodingStrategy = getProcessor()
 				.getRequestCodingStrategy();
 		return requestCodingStrategy.encode(this, target);
@@ -860,11 +878,11 @@ public abstract class RequestCycle
 			}
 		}
 
-//		IRequestLogger requestLogger = getApplication().getRequestLogger();
-//		if (requestLogger != null)
-//		{
-//			requestLogger.requestTime((System.currentTimeMillis() - startTime));
-//		}
+		IRequestLogger requestLogger = getApplication().getRequestLogger();
+		if (requestLogger != null)
+		{
+			requestLogger.requestTime((System.currentTimeMillis() - startTime));
+		}
 		
 		try
 		{

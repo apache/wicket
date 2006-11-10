@@ -153,6 +153,9 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** True if component changes are being tracked. */
 	private static final short FLAG_TRACK_CHANGES = FLAG_RESERVED4;
 
+	/** True if the page should try to be stateless */
+	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(Page.class);
 
@@ -178,7 +181,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * Boolean if the page is stateless, so it doesn't have to be in the page
 	 * map, will be set in urlFor
 	 */
-	private transient boolean stateless = true;
+	private transient Boolean stateless = null;
 
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
@@ -357,7 +360,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		renderedComponents = null;
 
 		// Reset it to stateless so that it can be tested again
-		this.stateless = true;
+		this.stateless = null;
 
 		// Set form component values from cookies
 		setFormComponentValuesFromCookies();
@@ -415,8 +418,13 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Check rendering if it happened fully
 		checkRendering(this);
 
-		// Add/touch the response page in the session (its pagemap).
-		getSession().touch(this);
+		if (!isPageStateless())
+		{
+			// trigger creation of the actual session in case it was deferred
+			Session.get().getSessionStore().getSessionId(RequestCycle.get().getRequest(), true);
+			// Add/touch the response page in the session (its pagemap).
+			getSession().touch(this);
+		}
 	}
 
 	/**
@@ -545,6 +553,18 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
+	 * Returns whether the page should try to be stateless. To be stateless,
+	 * getStatelessHint() of every component on page (and it's behavior) must
+	 * return true and the page must be bookmarkable.
+	 * 
+	 * @see wicket.Component#getStatelessHint()
+	 */
+	public final boolean getStatelessHint()
+	{
+		return getFlag(FLAG_STATELESS_HINT);
+	}
+	
+	/**
 	 * Override this method to implement a custom way of producing a version of
 	 * a Page when it cannot be found in the Session.
 	 * 
@@ -641,6 +661,37 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		});
 		return buffer.toString();
 	}
+	
+	/**
+	 * Bookmarkable page can be instantiated using a bookmarkable URL.
+	 * 
+	 * @return Returns true if the page is bookmarkable.
+	 */
+	public boolean isBookmarkable()
+	{
+		try
+		{
+			if (getClass().getConstructor(new Class[] { PageParameters.class }) != null)
+			{
+				return true;
+			}
+
+		}
+		catch (Exception ignore)
+		{
+			try
+			{
+				if (getClass().getConstructor(new Class[] {}) != null)
+				{
+					return true;
+				}
+			}
+			catch (Exception ignore2)
+			{
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Override this method and return true if your page is used to display
@@ -655,6 +706,71 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		return false;
 	}
 
+	/**
+	 * Set page stateless
+	 * 
+	 * @param stateless
+	 */
+	void setPageStateless(Boolean stateless)
+	{
+		this.stateless = stateless;
+	}
+
+	/**
+	 * Gets whether the page is stateless. Components on stateless page must not
+	 * render any statefull urls, and components on statefull page must not
+	 * render any stateless urls. Statefull urls are urls, which refer to a
+	 * certain (current) page instance.
+	 * 
+	 * @return Whether to page is stateless
+	 */
+	public final boolean isPageStateless()
+	{
+		if (isBookmarkable() == false)
+		{
+			stateless = Boolean.FALSE;
+			if (getStatelessHint())
+			{
+				log.warn("Page '" + this + "' is not stateless because it is not bookmarkable, "
+						+ "but the stateless hint is set to true!");
+			}
+		}
+
+		if (stateless == null)
+		{
+			final Object[] returnArray = new Object[1];
+			Object returnValue = visitChildren(Component.class, new IVisitor()
+			{
+				public Object component(Component component)
+				{
+					if (!component.isStateless())
+					{
+						returnArray[0] = component;
+						return Boolean.FALSE;
+					}
+
+					return CONTINUE_TRAVERSAL;
+				}
+			});
+			if (returnValue == null)
+			{
+				stateless = Boolean.TRUE;
+			}
+			else if (returnValue instanceof Boolean)
+			{
+				stateless = (Boolean)returnValue;
+			}
+
+			if (!stateless.booleanValue() && getStatelessHint())
+			{
+				log.warn("Page '" + this + "' is not stateless because of '" + returnArray[0]
+						+ "' but the stateless hint is set to true!");
+			}
+		}
+
+		return stateless.booleanValue();
+	}
+	
 	/**
 	 * Redirect to this page.
 	 * 
@@ -961,20 +1077,6 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Return true from this method if you want to keep a page out of
-	 *         the session.
-	 */
-	final boolean isStateless()
-	{
-		return stateless;
-	}
-
-	final void setStateless(boolean stateless)
-	{
-		this.stateless = stateless;
-	}
-
-	/**
 	 * Sets values for form components based on cookie values in the request.
 	 * 
 	 */
@@ -1006,6 +1108,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		this.pageMapName = pageMap.getName();
 	}
 	
+	/**
+	 * Sets whether the page should try to be stateless. To be stateless,
+	 * getStatelessHint() of every component on page (and it's behavior) must
+	 * return true and the page must be bookmarkable.
+	 * 
+	 * @param value
+	 *            whether the page should try to be stateless
+	 */
+	public final void setStatelessHint(boolean value)
+	{
+		if (value && !isBookmarkable())
+		{
+			throw new WicketRuntimeException(
+					"Can't set stateless hint to true on a page when the page is not bookmarkable, page: "
+							+ this);
+		}
+		setFlag(FLAG_STATELESS_HINT, value);
+	}	
 	
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
