@@ -47,6 +47,7 @@ import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestTargetMountsInfo;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
@@ -554,7 +555,8 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 
 		boolean firstParameter = true;
-		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName))
+		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName)
+				|| requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
 		{
 			firstParameter = false;
 			url.append('?');
@@ -564,6 +566,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 			// Add <page-map-name>:<bookmarkable-page-class>
 			String pageClassName = pageClass.getName();
+
 			/*
 			 * Encode the url so it is correct even for class names containing
 			 * non ASCII characters, like ä, æ, ø, å etc.
@@ -584,13 +587,36 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			url.append(pageMapName + Component.PATH_SEPARATOR + pageClassName);
 		}
 
+		// Is it a bookmarkable interface listener?
+		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
+		{
+			BookmarkableListenerInterfaceRequestTarget listenerTarget = (BookmarkableListenerInterfaceRequestTarget)requestTarget;
+			if (firstParameter == true)
+			{
+				url.append("?");
+			}
+			else
+			{
+				url.append("&");
+			}
+			firstParameter = false;
+			url.append(INTERFACE_PARAMETER_NAME);
+			url.append("=");
+			url.append(Component.PATH_SEPARATOR);
+			url.append(listenerTarget.getComponentPath());
+			url.append(Component.PATH_SEPARATOR);
+			url.append(Component.PATH_SEPARATOR);
+			url.append(listenerTarget.getInterfaceName());
+		}
+
 		// Get page parameters
 		final PageParameters parameters = requestTarget.getPageParameters();
 		if (parameters != null)
 		{
-			for (final Iterator iterator = parameters.keySet().iterator(); iterator.hasNext();)
+			Iterator it = parameters.keySet().iterator();
+			while(it.hasNext())
 			{
-				final String key = (String)iterator.next();
+				final String key = (String)it.next();
 				final String value = parameters.getString(key);
 				if (value != null)
 				{
