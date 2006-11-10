@@ -26,8 +26,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import wicket.AccessStackPageMap;
 import wicket.Application;
+import wicket.Page;
+import wicket.PageMap;
 import wicket.Request;
+import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.util.lang.Bytes;
 
@@ -50,6 +54,10 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		// session replication
 		if (Application.get().getDebugSettings().getSerializeSessionAttributes())
 		{
+			if (value instanceof Page)
+			{
+				((Page)value).internalDetach();
+			}
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try
 			{
@@ -70,7 +78,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		HttpSession httpSession = getHttpSession(webRequest);
 		if (httpSession != null)
 		{
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
 			if (logger != null)
 			{
@@ -89,7 +97,8 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request, java.lang.String)
+	 * @see wicket.session.ISessionStore#getAttribute(wicket.Request,
+	 *      java.lang.String)
 	 */
 	public Object getAttribute(Request request, String name)
 	{
@@ -112,7 +121,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		if (httpSession != null)
 		{
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			if (logger != null)
 			{
 				Object value = httpSession.getAttribute(attributeName);
@@ -161,5 +170,14 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	private String getSessionAttributePrefix(final WebRequest request)
 	{
 		return application.getSessionAttributePrefix(request);
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
+	 *      wicket.Session)
+	 */
+	public PageMap createPageMap(String name, Session session)
+	{
+		return new AccessStackPageMap(name, session);
 	}
 }

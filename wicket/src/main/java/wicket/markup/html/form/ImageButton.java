@@ -113,4 +113,12 @@ public class ImageButton extends Button implements IResourceListener
 		super.onComponentTag(tag);
 		localizedImageResource.setSrcAttribute(tag);
 	}
+	
+	/**
+	 * @see wicket.markup.html.form.Button#getStatelessHint()
+	 */
+	protected boolean getStatelessHint()
+	{
+		return localizedImageResource.isStateless();
+	}
 }

@@ -120,6 +120,11 @@ public class BookmarkablePageLink extends Link
 		return page.getClass() == pageClass;
 	}
 
+	protected boolean getStatelessHint()
+	{
+		return true;
+	}
+	
 	/**
 	 * THIS METHOD IS NOT USED! Bookmarkable links do not have a click handler.
 	 * It is here to satisfy the interface only, as bookmarkable links will be
@@ -140,9 +145,9 @@ public class BookmarkablePageLink extends Link
 	 */
 	public final BookmarkablePageLink setPageMap(final PageMap pageMap)
 	{
-		this.pageMapName = pageMap.getName();
 		if (pageMap != null)
 		{
+			this.pageMapName = pageMap.getName();
 			add(new AttributeModifier("target", false, new Model(pageMapName)));
 		}
 		return this;

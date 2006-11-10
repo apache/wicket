@@ -112,4 +112,12 @@ public abstract class AbstractBehavior implements IBehavior
 	public void cleanup()
 	{
 	}
+	
+	/**
+	 * @see wicket.behavior.IBehavior#getStatelessHint()
+	 */
+	public boolean getStatelessHint()
+	{
+		return true;
+	}
 }

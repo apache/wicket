@@ -209,5 +209,17 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	{
 		return false;
 	}
+	
+	/**
+	 * @see wicket.MarkupContainer#getStatelessHint()
+	 */
+	protected boolean getStatelessHint()
+	{
+		if (wantOnSelectionChangedNotifications())
+		{
+			return false;
+		}
+		return super.getStatelessHint();
+	}
 
 }

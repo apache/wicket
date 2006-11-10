@@ -311,4 +311,12 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	protected void onRenderHeadInitContribution(final Response response)
 	{
 	}
+	
+	/**
+	 * @see wicket.behavior.AbstractBehavior#getStatelessHint()
+	 */
+	public boolean getStatelessHint()
+	{
+		return false;
+	}
 }

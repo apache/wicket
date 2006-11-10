@@ -211,6 +211,15 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 	{
 		setResourceReference(resourceReference, null);
 	}
+	
+	/**
+	 * @return If it is stateless (if resource is null)
+	 */
+	public final boolean isStateless()
+	{
+		return this.resource == null;
+	}
+	
 	/**
 	 * @param resourceReference
 	 *            The resource to set.

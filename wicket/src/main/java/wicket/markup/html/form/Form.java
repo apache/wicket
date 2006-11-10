@@ -213,6 +213,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		super(id, model);
 	}
 
+	protected boolean getStatelessHint()
+	{
+		return false;
+	}
+	
 	/**
 	 * Gets the default button. If set (not null), a hidden submit button will
 	 * be rendered right after the form tag, so that when users press enter in a
@@ -314,6 +319,11 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 					}
 				}
 			}
+		}
+		// If multi part did fail check if an error is registered and call onError
+		else if(hasError())
+		{
+			onError();
 		}
 	}
 

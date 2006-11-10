@@ -137,12 +137,25 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	}
 
 	/**
-	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request)
+	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request, boolean)
 	 */
-	public final String getSessionId(Request request)
+	public final String getSessionId(Request request, boolean create)
 	{
+		String id = null;
 		WebRequest webRequest = toWebRequest(request);
-		return getHttpSession(webRequest).getId();
+		HttpSession httpSession = webRequest.getHttpServletRequest().getSession(false);
+		if(httpSession != null)
+		{
+			id = httpSession.getId();
+		}
+		else if(create)
+		{
+			httpSession = webRequest.getHttpServletRequest().getSession(true);
+			id = httpSession.getId();
+			IRequestLogger logger = Application.get().getRequestLogger();
+			if(logger != null) logger.sessionCreated(id);
+		}
+		return id;
 	}
 
 	/**
@@ -179,8 +192,13 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	public Session lookup(Request request)
 	{
-		WebRequest webRequest = toWebRequest(request);
-		return (Session)getAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME);
+		String sessionId = getSessionId(request, false);
+		if (sessionId != null)
+		{
+			WebRequest webRequest = toWebRequest(request);
+			return (Session)getAttribute(webRequest, Session.SESSION_ATTRIBUTE_NAME);
+		}
+		return null;
 	}
 
 	/**
@@ -220,9 +238,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 */
 	protected final HttpSession getHttpSession(WebRequest request)
 	{
-		// FIXME post 1.2 allow for session-less operation
-		HttpSession httpSession = request.getHttpServletRequest().getSession(true);
-		return httpSession;
+		return request.getHttpServletRequest().getSession(false);
 	}
 
 	/**
@@ -249,6 +265,24 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 	 *            The session id of the session that was invalidated.
 	 */
 	protected void onUnbind(String sessionId)
+	{
+	}
+
+	/**
+	 * Noop implementation. Clients can override this method.
+	 * 
+	 * @see wicket.session.ISessionStore#onBeginRequest(wicket.Request)
+	 */
+	public void onBeginRequest(Request request)
+	{
+	}
+
+	/**
+	 * Noop implementation. Clients can override this method.
+	 * 
+	 * @see wicket.session.ISessionStore#onEndRequest(wicket.Request)
+	 */
+	public void onEndRequest(Request request)
 	{
 	}
 }
