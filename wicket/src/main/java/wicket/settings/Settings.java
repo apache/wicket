@@ -46,6 +46,7 @@ import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
+import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.ClassStringResourceLoader;
@@ -91,7 +92,8 @@ public final class Settings
 			ISecuritySettings,
 			ISessionSettings,
 			IAjaxSettings,
-			IFrameworkSettings
+			IFrameworkSettings,
+			IRequestLoggerSettings
 {
 	/** Class of access denied page. */
 	private Class accessDeniedPage;
@@ -285,6 +287,12 @@ public final class Settings
 
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
+
+	private boolean recordSessionSize;
+
+	private int requestsWindowSize;
+
+	private boolean requestLoggerEnabled;
 
 	/**
 	 * Create the application settings, carrying out any necessary
@@ -1228,5 +1236,53 @@ public final class Settings
 			throw new IllegalArgumentException("argument " + pageClass
 					+ " must be a subclass of Page");
 		}
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#getRecordSessionSize()
+	 */
+	public boolean getRecordSessionSize()
+	{
+		return recordSessionSize;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#getRequestsWindowSize()
+	 */
+	public int getRequestsWindowSize()
+	{
+		return requestsWindowSize;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#isRequestLoggerEnabled()
+	 */
+	public boolean isRequestLoggerEnabled()
+	{
+		return requestLoggerEnabled; 
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#setRecordSessionSize(boolean)
+	 */
+	public void setRecordSessionSize(boolean record)
+	{
+		recordSessionSize = record;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#setRequestLoggerEnabled(boolean)
+	 */
+	public void setRequestLoggerEnabled(boolean enable)
+	{
+		requestLoggerEnabled = enable;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#setRequestsWindowSize(int)
+	 */
+	public void setRequestsWindowSize(int size)
+	{
+		requestsWindowSize = size;
 	}
 }
