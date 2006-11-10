@@ -337,6 +337,18 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
+	 * @see wicket.MarkupContainer#getStatelessHint()
+	 */
+	protected boolean getStatelessHint()
+	{
+		if (wantOnSelectionChangedNotifications())
+		{
+			return false;
+		}
+		return super.getStatelessHint();
+	}
+	
+	/**
 	 * @return Prefix to use before choice
 	 */
 	public final String getPrefix()

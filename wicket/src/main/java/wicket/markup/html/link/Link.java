@@ -224,6 +224,11 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		}
 		return super.isEnabled();
 	}
+	
+	protected boolean getStatelessHint()
+	{
+		return false;
+	}
 
 	/**
 	 * Called when a link is clicked.
