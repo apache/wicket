@@ -288,9 +288,9 @@ public final class Settings
 	/** Determines if pages should be managed by a version manager by default */
 	private boolean versionPagesByDefault = true;
 
-	private boolean recordSessionSize;
+	private boolean recordSessionSize = true;
 
-	private int requestsWindowSize;
+	private int requestsWindowSize = 2000;
 
 	private boolean requestLoggerEnabled;
 
