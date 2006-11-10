@@ -139,10 +139,7 @@ public class WicketServlet extends HttpServlet
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		long time = System.currentTimeMillis();
-
-
-		// If the request does not provide information about the encoding of its
+		//	 If the request does not provide information about the encoding of its
 		// body (which includes POST parameters), than assume the default
 		// encoding as defined by the wicket application. Bear in mind that the
 		// encoding of the request usually is equal to the previous response.
@@ -176,7 +173,7 @@ public class WicketServlet extends HttpServlet
 			{
 				// Try to see if there is a redirect stored
 				ISessionStore sessionStore = webApplication.getSessionStore();
-				String sessionId = sessionStore.getSessionId(request);
+				String sessionId = sessionStore.getSessionId(request,false);
 				BufferedHttpServletResponse bufferedResponse = webApplication.popBufferedResponse(
 						sessionId, queryString);
 
@@ -228,13 +225,6 @@ public class WicketServlet extends HttpServlet
 			// Close response
 			response.close();
 
-			RequestLogger requestLogger = webApplication.getRequestLogger();
-
-			if (requestLogger != null)
-			{
-				requestLogger.requestTime((System.currentTimeMillis() - time));
-			}
-
 			// Clean up thread local session
 			Session.unset();
 
@@ -273,7 +263,6 @@ public class WicketServlet extends HttpServlet
 
 			// Construct WebApplication subclass
 			this.webApplication = factory.createApplication(this);
-
 			// Finished
 			log.info("WicketServlet loaded application " + this.webApplication.getName() + " via "
 					+ factory.getClass().getName() + " factory");

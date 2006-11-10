@@ -43,6 +43,8 @@ import wicket.markup.resolver.MarkupInheritanceResolver;
 import wicket.markup.resolver.ParentResolver;
 import wicket.markup.resolver.WicketLinkResolver;
 import wicket.markup.resolver.WicketMessageResolver;
+import wicket.protocol.http.IRequestLogger;
+import wicket.protocol.http.RequestLogger;
 import wicket.session.ISessionStore;
 import wicket.settings.IAjaxSettings;
 import wicket.settings.IApplicationSettings;
@@ -52,6 +54,7 @@ import wicket.settings.IFrameworkSettings;
 import wicket.settings.IMarkupSettings;
 import wicket.settings.IPageSettings;
 import wicket.settings.IRequestCycleSettings;
+import wicket.settings.IRequestLoggerSettings;
 import wicket.settings.IResourceSettings;
 import wicket.settings.ISecuritySettings;
 import wicket.settings.ISessionSettings;
@@ -235,6 +238,9 @@ public abstract class Application
 	/** The session facade. */
 	private ISessionStore sessionStore;
 
+	/** Request logger instance. */
+	private IRequestLogger requestLogger;
+	
 	/** Settings for this application. */
 	private Settings settings;
 
@@ -280,7 +286,36 @@ public abstract class Application
 			}
 		});
 	}
-
+	
+	/**
+	 * Gets the {@link RequestLogger}.
+	 * 
+	 * @return The RequestLogger
+	 */
+	public final IRequestLogger getRequestLogger()
+	{
+		if(getRequestLoggerSettings().isRequestLoggerEnabled())
+		{
+			if(requestLogger == null) requestLogger = newRequestLogger();
+		}
+		else
+		{
+			requestLogger = null;
+		}
+		return requestLogger;
+	}	
+	
+	/**
+	 * creates a new request logger when requests logging is enabled.
+	 * 
+	 * @return  The new request logger
+	 * 
+	 */
+	protected IRequestLogger newRequestLogger()
+	{
+		return new RequestLogger();
+	}
+	
 	/**
 	 * Adds a component instantiation listener. This method should typicaly only
 	 * be called during application startup; it is not thread safe.
@@ -550,6 +585,15 @@ public abstract class Application
 		return getSettings();
 	}
 
+	/**
+	 * @return Application's resources related settings
+	 * @see IResourceSettings
+	 * @since 1.3
+	 */
+	public final IRequestLoggerSettings getRequestLoggerSettings()
+	{
+		return getSettings();
+	}
 	/**
 	 * @return Application's security related settings
 	 * @see ISecuritySettings
