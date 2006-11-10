@@ -279,7 +279,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	 *            the request cycle
 	 * @return the page
 	 */
-	private final Page getPage(RequestCycle requestCycle)
+	protected final Page getPage(RequestCycle requestCycle)
 	{
 		if (page == null && pageClass != null && !requestCycle.getRedirect())
 		{
