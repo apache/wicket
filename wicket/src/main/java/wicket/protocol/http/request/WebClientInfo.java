@@ -67,6 +67,8 @@ public class WebClientInfo extends ClientInfo
 		{
 			throw new WicketRuntimeException("unable to read header 'User-Agent'");
 		}
+		properties.setProperty(ClientProperties.REMOTE_ADDRESS,httpServletRequest.getRemoteAddr());
+
 		init();
 	}
 
@@ -88,6 +90,9 @@ public class WebClientInfo extends ClientInfo
 		}
 
 		this.userAgent = userAgent;
+		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
+		.getHttpServletRequest();
+		properties.setProperty(ClientProperties.REMOTE_ADDRESS,httpServletRequest.getRemoteAddr());
 
 		init();
 	}

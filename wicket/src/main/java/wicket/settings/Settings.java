@@ -93,7 +93,8 @@ public final class Settings
 			IResourceSettings,
 			ISecuritySettings,
 			ISessionSettings,
-			IFrameworkSettings
+			IFrameworkSettings,
+			IRequestLoggerSettings
 {
 	private final static Log log = LogFactory.getLog(Settings.class);
 
@@ -297,6 +298,12 @@ public final class Settings
 
 	/** List of registered markup load listeners */
 	private final List<IMarkupLoadListener> markupLoadListeners = new ArrayList<IMarkupLoadListener>();
+	
+	private boolean recordSessionSize = true;
+
+	private int requestsWindowSize = 2000;
+
+	private boolean requestLoggerEnabled;
 	
 	/**
 	 * Create the application settings, carrying out any necessary
@@ -1294,5 +1301,54 @@ public final class Settings
 	public List<IMarkupLoadListener> getMarkupLoadListeners()
 	{
 		return this.markupLoadListeners;
+	}
+	
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#getRecordSessionSize()
+	 */
+	public boolean getRecordSessionSize()
+	{
+		return recordSessionSize;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#getRequestsWindowSize()
+	 */
+	public int getRequestsWindowSize()
+	{
+		return requestsWindowSize;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#isRequestLoggerEnabled()
+	 */
+	public boolean isRequestLoggerEnabled()
+	{
+		return requestLoggerEnabled; 
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#setRecordSessionSize(boolean)
+	 */
+	public void setRecordSessionSize(boolean record)
+	{
+		recordSessionSize = record;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#setRequestLoggerEnabled(boolean)
+	 */
+	public void setRequestLoggerEnabled(boolean enable)
+	{
+		requestLoggerEnabled = enable;
+	}
+
+	/**
+	 * @see wicket.settings.IRequestLoggerSettings#setRequestsWindowSize(int)
+	 */
+	public void setRequestsWindowSize(int size)
+	{
+		requestsWindowSize = size;
 	}
 }

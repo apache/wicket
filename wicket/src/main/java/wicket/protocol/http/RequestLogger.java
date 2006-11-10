@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
@@ -123,7 +124,22 @@ public class RequestLogger implements IRequestLogger
 	 */
 	public RequestLogger()
 	{
-		requests = Collections.synchronizedList(new LinkedList<RequestData>());
+		requests = Collections.synchronizedList(new LinkedList<RequestData>()
+		{
+			private static final long serialVersionUID = 1L;
+
+			/**
+			 * @see java.util.LinkedList#add(java.lang.Object)
+			 */
+			public void add(int index,RequestData o)
+			{
+				super.add(index,o);
+				if(size() > Application.get().getRequestLoggerSettings().getRequestsWindowSize())
+				{
+					removeLast();
+				}
+			}
+		});
 		liveSessions = new ConcurrentHashMap<String, SessionData>();
 	}
 
@@ -202,8 +218,11 @@ public class RequestLogger implements IRequestLogger
 			Object sessionInfo = getSessionInfo(session);
 			rd.setSessionInfo(sessionInfo);
 			
-			// todo should we really do this, this is a bit expensive.
-			long sizeInBytes = session.getSizeInBytes();
+			long sizeInBytes = -1;
+			if(Application.get().getRequestLoggerSettings().getRecordSessionSize())
+			{
+				sizeInBytes = session.getSizeInBytes();
+			}
 			rd.setSessionSize(sizeInBytes);
 			rd.setTimeTaken(timeTaken);
 			requests.add(0, rd);

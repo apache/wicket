@@ -340,6 +340,12 @@ public class ClientProperties implements Serializable
 	 * The client's time offset from UTC in minutes.
 	 */
 	public static final String UTC_OFFSET = "utcOffset";
+	
+	/**
+	 * The client's remote/ip address
+	 */
+	public static final String REMOTE_ADDRESS = "remoteAddress";
+	
 
 	private static final long serialVersionUID = 1L;
 

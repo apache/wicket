@@ -194,7 +194,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @return The Wicket servlet for this application
+	 * @return The Wicket servlet context for this application
 	 */
 	public final ServletContext getServletContext()
 	{
