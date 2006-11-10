@@ -78,15 +78,8 @@ public class LiveSessionsPage extends WebPage
 			public void onClick() 
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
-				IRequestLogger requestLogger = webApplication.getRequestLogger();
-				if(requestLogger == null)
-				{
-					webApplication.setRequestLogger(new RequestLogger());
-				}
-				else
-				{
-					webApplication.setRequestLogger(null);
-				}
+				boolean enabled = webApplication.getRequestLoggerSettings().isRequestLoggerEnabled();
+				webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(!enabled);
 			}
 		};
 		link.add( new Label("toggletext", new Model()
