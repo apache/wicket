@@ -9,6 +9,7 @@ package wicket.markup.html.form.login;
 import junit.framework.TestCase;
 import wicket.Component;
 import wicket.ISessionFactory;
+import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
@@ -134,9 +135,9 @@ public class InterceptTest extends TestCase
 
 		/**
 		 * 
-		 * @see wicket.ISessionFactory#newSession()
+		 * @see wicket.ISessionFactory#newSession(Request)
 		 */
-		public Session newSession()
+		public Session newSession(Request request)
 		{
 			return new MySession(this);
 		}

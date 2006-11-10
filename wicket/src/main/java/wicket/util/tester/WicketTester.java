@@ -261,6 +261,7 @@ public class WicketTester extends MockWebApplication
 
 		Page last = getLastRenderedPage();
 
+		createRequestCycle();
 		getWicketSession().touch(page);
 		if (page != last)
 		{
