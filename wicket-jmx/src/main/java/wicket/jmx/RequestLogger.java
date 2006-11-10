@@ -96,7 +96,9 @@ public class RequestLogger implements RequestLoggerMBean
 	{
 		if (webApplication != null)
 		{
-			webApplication.setRequestLogger(new wicket.protocol.http.RequestLogger());
+			webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(false);
+			webApplication.getRequestLogger();
+			webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(true);
 		}
 	}
 
@@ -107,7 +109,7 @@ public class RequestLogger implements RequestLoggerMBean
 	{
 		if (webApplication != null)
 		{
-			webApplication.setRequestLogger(null);
+			webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(false);
 		}
 	}
 
