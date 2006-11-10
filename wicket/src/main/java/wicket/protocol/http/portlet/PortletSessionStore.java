@@ -26,11 +26,13 @@ import javax.portlet.PortletSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AccessStackPageMap;
 import wicket.Application;
+import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.RequestLogger;
+import wicket.protocol.http.IRequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.session.ISessionStore;
 import wicket.util.lang.Bytes;
@@ -40,13 +42,10 @@ import wicket.util.lang.Bytes;
  * Abstract implementation of {@link ISessionStore} that works with portlets
  * 
  * @author Janne Hietam&auml;ki
- * @author jcompagner
- * @author Eelco Hillenius
  */
 public class PortletSessionStore implements ISessionStore
 {
-	//private final static int SCOPE=PortletSession.PORTLET_SCOPE;
-	private final static int SCOPE=PortletSession.APPLICATION_SCOPE;
+	private final static int SCOPE = PortletSession.APPLICATION_SCOPE;
 
 	/** log. */
 	protected static Log log = LogFactory.getLog(PortletSessionStore.class);
@@ -89,6 +88,10 @@ public class PortletSessionStore implements ISessionStore
 	}
 
 	/**
+	 * Gets the session id.
+	 * 
+	 * @param request
+	 * @return The session id
 	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request)
 	 */
 	public final String getSessionId(Request request)
@@ -189,7 +192,8 @@ public class PortletSessionStore implements ISessionStore
 
 	/**
 	 * Template method that is called when the session is being detached from
-	 * the store, which typically happens when the portlet session was invalidated.
+	 * the store, which typically happens when the portlet session was
+	 * invalidated.
 	 * 
 	 * @param sessionId
 	 *            The session id of the session that was invalidated.
@@ -221,7 +225,7 @@ public class PortletSessionStore implements ISessionStore
 			{
 				throw new WicketRuntimeException(
 						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
-						+ valueTypeName, e);
+								+ valueTypeName, e);
 			}
 		}
 
@@ -229,11 +233,11 @@ public class PortletSessionStore implements ISessionStore
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)
 		{
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
 			if (logger != null)
 			{
-				if (httpSession.getAttribute(attributeName,SCOPE) == null)
+				if (httpSession.getAttribute(attributeName, SCOPE) == null)
 				{
 					logger.objectCreated(value);
 				}
@@ -255,9 +259,8 @@ public class PortletSessionStore implements ISessionStore
 		WicketPortletRequest webRequest = toPortletRequest(request);
 		PortletSession httpSession = getPortletSession(webRequest);
 		if (httpSession != null)
-		{		
-			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name,
-					SCOPE);
+		{
+			return httpSession.getAttribute(getSessionAttributePrefix(webRequest) + name, SCOPE);
 		}
 		return null;
 	}
@@ -272,16 +275,16 @@ public class PortletSessionStore implements ISessionStore
 		if (httpSession != null)
 		{
 			String attributeName = getSessionAttributePrefix(webRequest) + name;
-			RequestLogger logger = application.getRequestLogger();
+			IRequestLogger logger = application.getRequestLogger();
 			if (logger != null)
 			{
-				Object value = httpSession.getAttribute(attributeName,SCOPE);
+				Object value = httpSession.getAttribute(attributeName, SCOPE);
 				if (value != null)
 				{
 					logger.objectRemoved(value);
 				}
 			}
-			httpSession.removeAttribute(attributeName,SCOPE);
+			httpSession.removeAttribute(attributeName, SCOPE);
 		}
 	}
 
@@ -322,4 +325,32 @@ public class PortletSessionStore implements ISessionStore
 	{
 		return application.getSessionAttributePrefix(request);
 	}
+
+	/**
+	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
+	 *      wicket.Session)
+	 */
+	public PageMap createPageMap(String name, Session session)
+	{
+		return new AccessStackPageMap(name, session);
+	}
+
+	/**
+	 * @see wicket.session.ISessionStore#getSessionId(wicket.Request, boolean)
+	 */
+	public final String getSessionId(Request request, boolean create)
+	{
+		WicketPortletRequest webRequest = toPortletRequest(request);
+		PortletSession httpSession = webRequest.getPortletRequest().getPortletSession(create);
+		return (httpSession != null) ? httpSession.getId() : null;
+	}
+
+	public void onBeginRequest(Request request)
+	{
+	}
+
+	public void onEndRequest(Request request)
+	{
+	}
+
 }

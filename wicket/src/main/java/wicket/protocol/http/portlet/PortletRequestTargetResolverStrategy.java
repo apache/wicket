@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRedirectListener;
@@ -30,7 +31,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.PageMap.Access;
+import wicket.AccessStackPageMap.Access;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
@@ -76,6 +77,8 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 
 		if (requestParameters.getComponentPath() != null)
 		{
+			// marks whether or not we will be processing this request
+			boolean processRequest = true;
 			synchronized (requestCycle.getSession())
 			{
 				// we need to check if this request has been flagged as
@@ -83,8 +86,6 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 				// condition
 				// is met
 
-				// marks whether or not we will be processing this request
-				boolean processRequest = true;
 
 				if (requestParameters.isOnlyProcessIfPathActive())
 				{
@@ -100,11 +101,12 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 						// request
 						processRequest = false;
 					}
-					else
+					else if(pageMap instanceof AccessStackPageMap)
 					{
-						if (pageMap.getAccessStack().size() > 0)
+						AccessStackPageMap accessStackPm = (AccessStackPageMap)pageMap; 
+						if (accessStackPm.getAccessStack().size() > 0)
 						{
-							final Access access = (Access)pageMap.getAccessStack().peek();
+							final Access access = (Access)accessStackPm.getAccessStack().peek();
 
 							final int pageId = Integer
 							.parseInt(Strings.firstPathComponent(requestParameters
@@ -129,15 +131,19 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 							}
 						}
 					}
+					else 
+					{
+						// TODO also this should work.. also forward port to 2.0!!!
+					}
 				}
-				if (processRequest)
-				{
-					return resolveRenderedPage(requestCycle, requestParameters);
-				}
-				else
-				{
-					return EmptyRequestTarget.getInstance();
-				}
+			}
+			if (processRequest)
+			{
+				return resolveRenderedPage(requestCycle, requestParameters);
+			}
+			else
+			{
+				return EmptyRequestTarget.getInstance();
 			}
 		}
 		// see whether this request points to a shared resource

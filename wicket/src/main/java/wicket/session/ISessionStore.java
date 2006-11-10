@@ -20,6 +20,9 @@ package wicket.session;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
 
@@ -83,13 +86,19 @@ public interface ISessionStore
 	void setAttribute(Request request, String name, Object value);
 
 	/**
-	 * Get the session id for the provided request.
+	 * Get the session id for the provided request. It create is false and the
+	 * creation of the actual session is deferred, this method should return
+	 * null to reflect it doesn't have one.
 	 * 
 	 * @param request
 	 *            The request
-	 * @return The session id for the provided request
+	 * @param create
+	 *            Whether to create an actual session (typically an instance of
+	 *            {@link HttpSession}) when not already done so
+	 * @return The session id for the provided request, possibly null if create
+	 *         is false and the creation of the actual session was deferred
 	 */
-	String getSessionId(Request request);
+	String getSessionId(Request request, boolean create);
 
 	/**
 	 * Retrieves the session for the provided request from this facade.
@@ -123,4 +132,29 @@ public interface ISessionStore
 	 *            The SessionId that must be unbinded.
 	 */
 	void unbind(String sessionId);
+
+	/**
+	 * Called at the start of a request. It can be used for example to rebuild
+	 * server state from the client request.
+	 * 
+	 * @param request
+	 *            The request object
+	 */
+	void onBeginRequest(Request request);
+
+	/**
+	 * Called at the end of a request. It can be used for instance to release
+	 * temporary server state when using client state saving.
+	 * 
+	 * @param request
+	 *            The request
+	 */
+	void onEndRequest(Request request);
+
+	/**
+	 * @param name
+	 * @param session
+	 * @return The pagemap instances for the session
+	 */
+	PageMap createPageMap(String name, Session session);
 }
