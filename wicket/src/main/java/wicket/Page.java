@@ -182,9 +182,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/** Name of PageMap that this page is stored in */
 	private String pageMapName;
 
-	/** Set of components that rendered if component use checking is enabled */
-	private transient Set<Component> renderedComponents;
-
 	/**
 	 * Boolean if the page is stateless, so it doesn't have to be in the page
 	 * map, will be set in urlFor.
@@ -353,24 +350,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	final void componentRendered(final Component component)
 	{
-		// Inform the page that this component rendered
 		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
-			if (renderedComponents == null)
-			{
-				renderedComponents = new HashSet<Component>();
-			}
-			if (renderedComponents.add(component) == false)
-			{
-				throw new MarkupException(
-						"The component "
-								+ component
-								+ " has the same wicket:id as another component already rendered at the same level");
-			}
-			if (log.isDebugEnabled())
-			{
-				log.debug("Rendered " + component);
-			}
+			RequestCycle.get().getDebugHelper().onBeginComponentRender(component);
 		}
 	}
 
@@ -475,13 +457,9 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	public final void endComponentRender(Component component)
 	{
-		if (component instanceof MarkupContainer)
+		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
-			checkRendering((MarkupContainer)component);
-		}
-		else
-		{
-			renderedComponents = null;
+			RequestCycle.get().getDebugHelper().onEndComponentRender(component);
 		}
 	}
 
@@ -742,83 +720,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 			throw new WicketRuntimeException(
 					"Cannot modify component hierarchy during render phase");
 		}
-	}
-
-	/**
-	 * Throw an exception if not all components rendered.
-	 * 
-	 * @param renderedContainer
-	 *            The page itself if it was a full page render or the container
-	 *            that was rendered standalone
-	 */
-	private final void checkRendering(final MarkupContainer<?> renderedContainer)
-	{
-		// If the application wants component uses checked and
-		// the response is not a redirect
-		final IDebugSettings debugSettings = Application.get().getDebugSettings();
-		if (debugSettings.getComponentUseCheck() && !getResponse().isRedirect())
-		{
-			final Count unrenderedComponents = new Count();
-			final List<Component> unrenderedAutoComponents = new ArrayList<Component>();
-			final StringBuffer buffer = new StringBuffer();
-			renderedContainer.visitChildren(new IVisitor()
-			{
-				public Object component(final Component component)
-				{
-					// If component never rendered
-					if (renderedComponents == null || !renderedComponents.contains(component))
-					{
-						// If auto component ...
-						if (component.isAuto())
-						{
-							// Add to list of unrendered auto components to
-							// delete below
-							unrenderedAutoComponents.add(component);
-						}
-						else if (component.isVisibleInHierarchy())
-						{
-							// Increase number of unrendered components
-							unrenderedComponents.increment();
-
-							// Add to explanatory string to buffer
-							buffer.append(Integer.toString(unrenderedComponents.getCount()) + ". "
-									+ component + "\n");
-						}
-						else
-						{
-							// if the component is not visible in hierarchy we
-							// should not visit its children since they are also
-							// not visible
-							return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
-						}
-					}
-					return CONTINUE_TRAVERSAL;
-				}
-			});
-
-			// Remove any unrendered auto components since versioning couldn't
-			// do it. We can't remove the component in the above visitChildren
-			// callback because we're traversing the list at that time.
-			for (int i = 0; i < unrenderedAutoComponents.size(); i++)
-			{
-				unrenderedAutoComponents.get(i).remove();
-			}
-
-			// Throw exception if any errors were found
-			if (unrenderedComponents.getCount() > 0)
-			{
-				// Get rid of set
-				renderedComponents = null;
-
-				// Throw exception
-				throw new WicketRuntimeException(
-						"The component(s) below failed to render. A common problem is that you have added a component in code but forgot to reference it in the markup (thus the component will never be rendered).\n\n"
-								+ buffer.toString());
-			}
-		}
-
-		// Get rid of set
-		renderedComponents = null;
 	}
 
 	/**
@@ -1205,7 +1106,10 @@ public abstract class Page<T> extends MarkupContainer<T>
 		}
 
 		// Make sure it is really empty
-		renderedComponents = null;
+		if (Application.get().getDebugSettings().getComponentUseCheck())
+		{
+			RequestCycle.get().getDebugHelper().resetRenderedComponentsSet();
+		}
 
 		// Reset it to stateless so that it can be tested again
 		this.stateless = null;
@@ -1264,7 +1168,10 @@ public abstract class Page<T> extends MarkupContainer<T>
 		render(null);
 
 		// Check rendering if it happened fully
-		checkRendering(this);
+		if (Application.get().getDebugSettings().getComponentUseCheck())
+		{
+			RequestCycle.get().getDebugHelper().onEndComponentRender(this);
+		}
 
 		if (!isPageStateless())
 		{
@@ -1351,7 +1258,10 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 */
 	public final void startComponentRender(Component component)
 	{
-		renderedComponents = null;
+		if (Application.get().getDebugSettings().getComponentUseCheck())
+		{
+			RequestCycle.get().getDebugHelper().resetRenderedComponentsSet();
+		}
 	}
 
 	/**

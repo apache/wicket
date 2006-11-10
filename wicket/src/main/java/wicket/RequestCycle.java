@@ -240,13 +240,17 @@ public abstract class RequestCycle
 	private boolean redirect;
 
 	/** holds the stack of set {@link IRequestTarget}, the last set op top. */
-	private transient ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(3);
+	private transient ArrayListStack<IRequestTarget> requestTargets = new ArrayListStack<IRequestTarget>(
+			3);
 
 	/** the time that this request cycle object was created. */
 	private final long startTime = System.currentTimeMillis();
 
 	/** True if the session should be updated (for clusterf purposes). */
 	private boolean updateSession;
+
+	/** debug data */
+	private DebugHelper debugHelper;
 
 	/**
 	 * Constructor.
@@ -279,6 +283,20 @@ public abstract class RequestCycle
 	public Application getApplication()
 	{
 		return application;
+	}
+
+	/**
+	 * Returns debug helper for this request
+	 * 
+	 * @return debug helper for this request
+	 */
+	public final DebugHelper getDebugHelper()
+	{
+		if (debugHelper == null)
+		{
+			debugHelper = new DebugHelper();
+		}
+		return debugHelper;
 	}
 
 	/**
@@ -851,7 +869,7 @@ public abstract class RequestCycle
 			log.error("there was an error cleaning up feedback messages for session " + session
 					+ ".", re);
 		}
-		
+
 		if (updateSession)
 		{
 			// At the end of our response, we need to set any session
@@ -859,14 +877,14 @@ public abstract class RequestCycle
 			try
 			{
 				session.update();
-			} 
-			catch(RuntimeException re)
+			}
+			catch (RuntimeException re)
 			{
 				log.error("there was an error updating the session " + session + ".", re);
 			}
 		}
 
-		// clear the used pagemap for this thread, 
+		// clear the used pagemap for this thread,
 		// maybe we can move this a few lines above to have a but more
 		// concurrency (session.update)
 		try
@@ -884,7 +902,7 @@ public abstract class RequestCycle
 			{
 				((BufferedWebResponse)getResponse()).filter();
 			}
-			catch(RuntimeException re)
+			catch (RuntimeException re)
 			{
 				log.error("there was an error filtering the response.", re);
 			}
