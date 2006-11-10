@@ -29,7 +29,6 @@ import wicket.RequestCycle;
 import wicket.Response;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
-import wicket.annot.AnnotationUtils;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.protocol.http.request.WebClientInfo;
 import wicket.request.IRequestCycleProcessor;
@@ -226,7 +225,6 @@ public class WebRequestCycle extends RequestCycle
 			// Redirect page can touch its models already (via for example the
 			// constructors)
 			page.internalDetach();
-			AnnotationUtils.invokeOnDetachListeners(page);
 		}
 
 		if (redirectUrl == null)
@@ -293,6 +291,6 @@ public class WebRequestCycle extends RequestCycle
 			return super.getRedirect();
 		}
 	}
-	
-	
+
+
 }

@@ -24,8 +24,6 @@ import java.util.Map;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.annot.OnBeforeRender;
-import wicket.annot.OnDetach;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
 
@@ -70,7 +68,7 @@ public abstract class HeaderContainer extends WebMarkupContainer
 		// including the page does have a <head> or <wicket:head> tag.
 		setRenderBodyOnly(true);
 	}
-	
+
 	/**
 	 * Ask all child components of the Page if they have something to contribute
 	 * to the &lt;head&gt; section of the HTML output. Every component
@@ -139,9 +137,10 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	 * 
 	 * @see wicket.Component#onBeforeRender()
 	 */
-	@OnBeforeRender
+	@Override
 	protected void onBeforeRender()
 	{
+		super.onBeforeRender();
 		// not needed anymore, which is why it can be transient
 		this.componentsPerScope = null;
 	}
@@ -149,10 +148,11 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	/**
 	 * @see wicket.Component#onDetach()
 	 */
-	@OnDetach
+	@Override
 	protected void onDetach()
 	{
 		this.componentsPerScope = null;
 		this.headerResponse = null;
+		super.onDetach();
 	}
 }

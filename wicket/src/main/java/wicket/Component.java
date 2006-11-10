@@ -28,11 +28,6 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.annot.AnnotationUtils;
-import wicket.annot.OnAfterRender;
-import wicket.annot.OnAttach;
-import wicket.annot.OnBeforeRender;
-import wicket.annot.OnDetach;
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
 import wicket.authorization.IAuthorizationStrategy;
@@ -712,13 +707,13 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/**
 	 * Gets the markup fragment associated with the component. Except for Pages,
-	 * Panels and Borders, it is assumed that the first markup element of the 
+	 * Panels and Borders, it is assumed that the first markup element of the
 	 * fragment is a tag.
 	 * <p>
-	 * If the markup fragment has been determined previously, the transient cache
-	 * of the Component is returned. Else, the parent container will be asked to 
-	 * provide the markup for its child and the object returned will be cached
-	 * for later re-use.
+	 * If the markup fragment has been determined previously, the transient
+	 * cache of the Component is returned. Else, the parent container will be
+	 * asked to provide the markup for its child and the object returned will be
+	 * cached for later re-use.
 	 * 
 	 * @return markup fragment.
 	 */
@@ -799,7 +794,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		if (getId().startsWith(AUTO_COMPONENT_PREFIX))
 		{
 			internalAttach();
-			AnnotationUtils.invokeOnAttachListeners(this);
 			render();
 		}
 		else
@@ -1695,7 +1689,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				// Call implementation to render component
 				onBeforeRender();
-				AnnotationUtils.invokeOnBeforeRenderListeners(this);
 				try
 				{
 					onRender(markupStream);
@@ -1703,7 +1696,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				finally
 				{
 					onAfterRender();
-					AnnotationUtils.invokeOnAfterRenderListeners(this);
 				}
 
 				// Component has been rendered
@@ -1788,7 +1780,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 						{
 							((IFeedback)component).updateFeedback();
 							component.internalAttach();
-							AnnotationUtils.invokeOnAttachListeners(component);
 							return IVisitor.CONTINUE_TRAVERSAL;
 						}
 					});
@@ -1825,13 +1816,11 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 				// Render the component and all its children
 				onBeforeRender();
-				AnnotationUtils.invokeOnBeforeRenderListeners(this);
 				render(markupStream);
 			}
 			finally
 			{
 				onAfterRender();
-				AnnotationUtils.invokeOnAfterRenderListeners(this);
 			}
 		}
 	}
@@ -1945,7 +1934,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		// Tell the page that the component rendered
 		getPage().componentRendered(this);
-		
+
 		// notify the behaviors that component has been rendered
 		if (behaviors != null)
 		{
@@ -1954,7 +1943,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				behavior.rendered(this);
 			}
 		}
-	}	
+	}
 
 	/**
 	 * Print to the web response what ever the component wants to contribute to
@@ -2830,10 +2819,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/**
 	 * Called just after a component is rendered.
-	 * 
-	 * @deprecated use {@link OnAfterRender} instead
 	 */
-	@Deprecated
 	protected void onAfterRender()
 	{
 		// Clear the component's markup cache and allow changes to locale,
@@ -2849,22 +2835,17 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * this will be tightened in Wicket 1.3 when we will add the guarantee that
 	 * onAttach() be called before any framework use of a Component (in the
 	 * implementation of request targets).
-	 * 
-	 * @deprecated - use {@link OnAttach} instead
 	 */
-	@Deprecated
 	protected void onAttach()
 	{
 	}
 
 	/**
 	 * Called just before a component is rendered.
-	 * 
-	 * @deprecated use {@link OnBeforeRender} instead
 	 */
-	@Deprecated
 	protected void onBeforeRender()
 	{
+
 	}
 
 	/**
@@ -2898,10 +2879,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * of this will be tightened in Wicket 1.3 when we will add the guarantee
 	 * that onDetach() be called after all framework use of a Component (in the
 	 * implementation of request targets).
-	 * 
-	 * @deprecated - use {@link OnDetach} instead
 	 */
-	@Deprecated
 	protected void onDetach()
 	{
 	}

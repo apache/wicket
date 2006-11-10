@@ -21,7 +21,6 @@ import wicket.IPageFactory;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
-import wicket.annot.AnnotationUtils;
 import wicket.request.IRequestCycleProcessor;
 
 /**
@@ -121,7 +120,6 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 		if (page != null)
 		{
 			page.internalDetach();
-			AnnotationUtils.invokeOnDetachListeners(page);
 		}
 	}
 

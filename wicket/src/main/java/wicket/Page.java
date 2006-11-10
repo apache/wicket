@@ -17,19 +17,12 @@
  */
 package wicket;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.annot.AnnotationUtils;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.feedback.FeedbackMessages;
 import wicket.feedback.IFeedback;
-import wicket.markup.MarkupException;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebPage;
@@ -37,12 +30,10 @@ import wicket.markup.html.form.Form;
 import wicket.model.IModel;
 import wicket.request.RequestParameters;
 import wicket.session.pagemap.IPageMapEntry;
-import wicket.settings.IDebugSettings;
 import wicket.settings.IPageSettings;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 import wicket.util.string.StringValue;
-import wicket.util.value.Count;
 import wicket.version.IPageVersionManager;
 import wicket.version.undo.Change;
 import wicket.version.undo.UndoPageVersionManager;
@@ -1126,7 +1117,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 			{
 				((IFeedback)component).updateFeedback();
 				component.internalAttach();
-				AnnotationUtils.invokeOnAttachListeners(component);
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});

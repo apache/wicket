@@ -33,7 +33,6 @@ import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.annot.AnnotationUtils;
 import wicket.util.lang.Bytes;
 
 /**
@@ -58,7 +57,6 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 			if (value instanceof Page)
 			{
 				((Page)value).internalDetach();
-				AnnotationUtils.invokeOnDetachListeners((Page)value);
 			}
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try

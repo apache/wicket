@@ -28,8 +28,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import wicket.annot.AnnotationUtils;
-import wicket.annot.OnAfterRender;
 import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -366,7 +364,6 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		try
 		{
 			super.internalAttach();
-			AnnotationUtils.invokeOnAttachListeners(this);
 
 			// Loop through child components
 			final int size = children_size();
@@ -408,7 +405,6 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	{
 		// Handle end request for the container itself
 		super.internalDetach();
-		AnnotationUtils.invokeOnDetachListeners(this);
 
 		// Loop through child components
 		for (Component child : this)
@@ -843,13 +839,12 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 
 		return this.associatedMarkup;
 	}
-	
+
 	/**
 	 * Make sure changes to the locale and style are handled properly
 	 * 
 	 * @see wicket.Component#onAfterRender()
 	 */
-	@OnAfterRender
 	protected void onAfterRender()
 	{
 		this.associatedMarkup = null;
@@ -869,7 +864,8 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	protected void onAssociatedMarkupLoaded(final MarkupFragment markup)
 	{
 		// Call all register load listeners
-		for (IMarkupLoadListener listener : getApplication().getMarkupSettings().getMarkupLoadListeners())
+		for (IMarkupLoadListener listener : getApplication().getMarkupSettings()
+				.getMarkupLoadListeners())
 		{
 			listener.onAssociatedMarkupLoaded(this, markup);
 		}
