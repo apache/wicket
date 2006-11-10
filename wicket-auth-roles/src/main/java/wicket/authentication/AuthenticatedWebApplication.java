@@ -20,6 +20,7 @@ package wicket.authentication;
 import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.Page;
+import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.WicketRuntimeException;
@@ -108,7 +109,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		{
 			private static final long serialVersionUID = 1L;
 
-			public Session newSession()
+			public Session newSession(Request request)
 			{
 				try
 				{
