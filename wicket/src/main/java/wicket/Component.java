@@ -2649,6 +2649,45 @@ public abstract class Component implements Serializable
 	{
 		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
+	
+	/**
+	 * Returns whether the component can be stateless. Being able to be
+	 * stateless doesn't necessary mean, that the component should be stateless.
+	 * Whether the component should be stateless depends on
+	 * 
+	 * @return whether the component can be stateless
+	 */
+	protected boolean getStatelessHint()
+	{
+		return true;
+	}
+
+	/**
+	 * Returns if the component is stateless or not. It checks the stateless
+	 * hint if that is false it returns directly false. If that is still true it
+	 * checks all its behaviours if they can be stateless.
+	 * 
+	 * @return whether the component is stateless.
+	 */
+	public final boolean isStateless()
+	{
+		if (!getStatelessHint())
+		{
+			return false;
+		}
+
+		final Iterator behaviors = getBehaviors().iterator();
+
+		while (behaviors.hasNext())
+		{
+			IBehavior behavior = (IBehavior)behaviors.next();
+			if (!behavior.getStatelessHint())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * Called just after a component is rendered.

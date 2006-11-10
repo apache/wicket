@@ -25,10 +25,16 @@ package wicket;
  */
 public interface ISessionFactory
 {
+
 	/**
 	 * Creates a new session
 	 * 
+	 * @param request
+	 *            The request that will create this session.
+	 * 
 	 * @return The session
+	 * 
+	 * @since 1.3
 	 */
-	Session newSession();
+	Session newSession(Request request);
 }

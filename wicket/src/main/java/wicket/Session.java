@@ -265,6 +265,46 @@ public abstract class Session implements Serializable
 	}
 
 	/**
+	 * Force binding this session to the application's
+	 * {@link ISessionStore session store}. A Wicket application can operate in
+	 * a session-less mode as long as stateless pages are used. Session objects
+	 * will be then created for each request, but they will only live for that
+	 * request. You can recognize temporary sessions by calling
+	 * {@link #isTemporary()} which basically checks whether the session's id is
+	 * null. Hence, temporary sessions have no session id.
+	 * <p>
+	 * By calling this method, the session will be bound (made not-temporary) if
+	 * it was not bound yet. It is useful for cases where you want to be
+	 * absolutely sure this session object will be available in next requests.
+	 * </p>
+	 */
+	public final void bind()
+	{
+		ISessionStore store = getSessionStore();
+		Request request = RequestCycle.get().getRequest();
+		if (store.getSessionId(request, false) == null)
+		{
+			// explicitly create a session
+			this.id = store.getSessionId(request, true);
+			// bind it
+			store.bind(request, this);
+		}
+	}
+
+	/**
+	 * Whether this session is temporary. A Wicket application can operate in a
+	 * session-less mode as long as stateless pages are used. If this session
+	 * object is temporary, it will not be available on a next request.
+	 * 
+	 * @return Whether this session is temporary (which is the same as it's id
+	 *         being null)
+	 */
+	public final boolean isTemporary()
+	{
+		return getId() == null;
+	}
+	
+	/**
 	 * Removes all pages from the session. Although this method should rarely be
 	 * needed, it is available (possibly for security reasons).
 	 */
@@ -334,15 +374,17 @@ public abstract class Session implements Serializable
 	}
 
 	/**
-	 * Gets the unique id for this session from the underlying SessionStore
+	 * Gets the unique id for this session from the underlying SessionStore. May
+	 * be null if a concrete session is not yet created.
 	 * 
-	 * @return The unique id for this session
+	 * @return The unique id for this session or null if it is a temporary
+	 *         session
 	 */
 	public final String getId()
 	{
 		if (id == null)
 		{
-			id = getSessionStore().getSessionId(RequestCycle.get().getRequest());
+			id = getSessionStore().getSessionId(RequestCycle.get().getRequest(), false);
 
 			// we have one?
 			if (id != null)
@@ -617,7 +659,7 @@ public abstract class Session implements Serializable
 		}
 
 		// Create new page map
-		final PageMap pageMap = new PageMap(name, this);
+		final PageMap pageMap = getSessionStore().createPageMap(name, this);
 		setAttribute(attributeForPageMapName(name), pageMap);
 		dirty();
 		return pageMap;
@@ -914,6 +956,8 @@ public abstract class Session implements Serializable
 		if (cycle != null)
 		{
 			getSessionStore().removeAttribute(cycle.getRequest(), name);
+			System.err.println("removing " + name +  ", the current list " + getSessionStore().getAttributeNames(cycle.getRequest()));
+			
 		}
 	}
 
@@ -942,9 +986,13 @@ public abstract class Session implements Serializable
 			Object current = store.getAttribute(request, name);
 			if (current == null)
 			{
-				// this is a new instance. wherever it came from, bind the
-				// session now
-				store.bind(request, (Session)value);
+				String id = store.getSessionId(request, false);
+				if (id != null)
+				{
+					// this is a new instance. wherever it came from, bind the
+					// session now
+					store.bind(request, (Session)value);
+				}
 			}
 		}
 
