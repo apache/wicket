@@ -24,17 +24,6 @@
 				</tr>
 				<tr>
 					<td>
-						<a href="apidocs/wicket/extensions/markup/html/datepicker/DatePicker.html">DatePicker</a>
-					</td>
-					<td>
-						Javascript component for picking dates.
-					</td>
-					<td>
-						<a href="http://www.wicket-library.com/wicket-examples/forminput">demo</a>
-					</td>
-				</tr>
-				<tr>
-					<td>
 						<a href="apidocs/wicket/extensions/ajax/markup/html/package-summary.html">Various Ajax components</a>
 					</td>
 					<td>Editable labels, Ajax indicators</td>
