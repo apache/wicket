@@ -10,6 +10,7 @@
                 <include>README*</include>
                 <include>LICENSE*</include>
                 <include>NOTICE*</include>
+				<include>*.dtd</include>
                 <include>pom.xml</include>
             </includes>
         </fileSet>
