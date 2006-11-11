@@ -283,7 +283,7 @@ public class WicketFilter implements Filter
 				}
 			}
 
-			if (filterPath == null)
+			if (SERVLET_PATH_HOLDER.equals(filterPath))
 			{
 				filterPath = request.getServletPath();
 				if (filterPath.startsWith("/"))
@@ -291,6 +291,7 @@ public class WicketFilter implements Filter
 					filterPath = filterPath.substring(1);
 				}
 			}
+			else if(filterPath == null) filterPath = "";
 			if (!path.endsWith("/"))
 			{
 				rootPath = path + "/" + filterPath;

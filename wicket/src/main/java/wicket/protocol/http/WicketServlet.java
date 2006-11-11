@@ -32,6 +32,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * 
+ * Please use {@link WicketFilter} if possible instead of this servlet.
+ * 
  * Servlet class for all wicket applications. The specific application class to
  * instantiate should be specified to the application server via an init-params
  * argument named "applicationClassName" in the servlet declaration, which is
@@ -97,7 +100,6 @@ import org.apache.commons.logging.LogFactory;
  * @author Juergen Donnerstag
  * @author Igor Vaynberg (ivaynberg)
  * 
- * @deprecated Use Wicket filter instead
  */
 public class WicketServlet extends HttpServlet
 {
