@@ -205,12 +205,12 @@ public abstract class PortletApplication extends Application implements ISession
 	}
 
 
-	/*
+	/**
 	 * Create new WicketPortletSession object
 	 * 
-	 * @see wicket.ISessionFactory#newSession()
+	 * @see wicket.ISessionFactory#newSession(Request)
 	 */
-	public Session newSession()
+	public Session newSession(Request request)
 	{
 		return new WicketPortletSession(this);
 	}
