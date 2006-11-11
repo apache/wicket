@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.ISessionFactory;
+import wicket.Request;
 import wicket.Session;
 import wicket.protocol.http.WebApplication;
 
@@ -39,7 +40,7 @@ public class QuickStartApplication extends WebApplication
     {
         return new ISessionFactory()
         {        	
-			public Session newSession()
+			public Session newSession(Request request)
             {
                 return new QuickStartSession(QuickStartApplication.this);
             }
