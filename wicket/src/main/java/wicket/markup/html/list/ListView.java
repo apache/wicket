@@ -38,10 +38,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *                   &lt;tbody&gt;
- *                     &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                         &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                     ...    
+ * &lt;tbody&gt;
+ *   &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *   &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ * ...    
  * </pre>
  * 
  * <p>
@@ -106,7 +106,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public ListView(MarkupContainer parent, final String id)
+	public ListView(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -114,7 +114,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public ListView(MarkupContainer parent, final String id, final IModel<List<T>> model)
+	public ListView(final MarkupContainer parent, final String id, final IModel<List<T>> model)
 	{
 		super(parent, id, model);
 
@@ -138,7 +138,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 *            List to cast to Serializable
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public ListView(MarkupContainer parent, final String id, final List<T> list)
+	public ListView(final MarkupContainer parent, final String id, final List<T> list)
 	{
 		this(parent, id, new Model<List<T>>(list));
 	}
@@ -598,9 +598,6 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	@Override
 	protected void onRender(final MarkupStream markupStream)
 	{
-		// Save position in markup stream
-		final int markupStart = markupStream.getCurrentIndex();
-
 		// Get number of items to be displayed
 		final int size = getViewSize();
 		if (size > 0)
@@ -614,17 +611,12 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 				// Get list item for index
 				ListItem item = (ListItem)get(Integer.toString(index));
 
-				// Rewind to start of markup for kids
-				markupStream.setCurrentIndex(markupStart);
-
 				// Render
 				renderItem(item);
 			}
 		}
-		else
-		{
-			markupStream.skipComponent();
-		}
+		
+		markupStream.skipComponent();
 	}
 
 	/**
@@ -657,6 +649,6 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	protected void renderItem(final ListItem item)
 	{
-		item.render(getMarkupStream());
+		item.render(new MarkupStream(getMarkupFragment()));
 	}
 }
