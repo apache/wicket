@@ -157,9 +157,6 @@ public abstract class Loop extends AbstractRepeater<Integer>
 	@Override
 	protected final void onRender(final MarkupStream markupStream)
 	{
-		// Save position in markup stream
-		final int markupStart = markupStream.getCurrentIndex();
-
 		// Get number of iterations
 		final int iterations = getIterations();
 		if (iterations > 0)
@@ -177,17 +174,11 @@ public abstract class Loop extends AbstractRepeater<Integer>
 							"Loop item is null.  Probably the number of loop iterations were changed between onBeginRequest and render time.");
 				}
 
-				// Rewind to start of markup for kids
-				markupStream.setCurrentIndex(markupStart);
-
 				// Render iteration
 				renderItem(item);
 			}
 		}
-		else
-		{
-			markupStream.skipComponent();
-		}
+		markupStream.skipComponent();
 	}
 
 	/**
