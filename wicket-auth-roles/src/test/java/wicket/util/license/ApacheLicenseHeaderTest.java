@@ -33,9 +33,20 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 	 */
 	public ApacheLicenseHeaderTest()
 	{
+//		addHeaders = true;
+		
 		propertiesIgnore = new String[] {
 			"src/test/java/commons-logging.properties",
 			"src/test/java/log4j.properties"
+		};
+		
+		htmlIgnore = new String[] {
+			"src/test/java/wicket/authorization/strategies/role/annotations/AdminPage.html",
+			"src/test/java/wicket/authorization/strategies/role/annotations/NormalPage.html"
+		};
+		
+		xmlIgnore = new String[] {
+			"src/assembly/bin.xml"	
 		};
 	}
 }
