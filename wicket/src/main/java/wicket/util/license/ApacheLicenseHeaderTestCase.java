@@ -19,7 +19,9 @@ package wicket.util.license;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -163,7 +165,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			new VelocityLicenseHeaderHandler(velocityIgnore)
 		};
 		
-		final List<File> badFiles = new ArrayList<File>();
+		final Map<ILicenseHeaderHandler, List<File>> badFiles = new HashMap<ILicenseHeaderHandler, List<File>>();
 		
 		for (final ILicenseHeaderHandler licenseHeaderHandler : licenseHeaderHandlers)
 		{
@@ -176,7 +178,15 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 						if (addHeaders == false 
 								|| licenseHeaderHandler.addLicenseHeader(file) == false)
 						{
-							badFiles.add(file);
+							List<File> files = badFiles.get(licenseHeaderHandler);
+							
+							if (files == null) 
+							{
+								files = new ArrayList<File>();
+								badFiles.put(licenseHeaderHandler, files);
+							}
+							
+							files.add(file);
 						}
 					}
 				}
@@ -186,18 +196,24 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		failIncorrectLicenceHeaders(badFiles);
 	}
 
-	private void failIncorrectLicenceHeaders(List<File> files)
+	private void failIncorrectLicenceHeaders(Map<ILicenseHeaderHandler, List<File>> files)
 	{
 		if (files.size() > 0)
 		{
 			StringBuffer failString = new StringBuffer();
 
-			failString.append("The following files(" + files.size()
-					+ ") didn't have a correct license header:\n");
-
-			for (File file : files)
+			for (ILicenseHeaderHandler licenseHeaderHandler : files.keySet())
 			{
-				failString.append(file.getAbsolutePath()).append(LINE_ENDING);
+				failString.append("\n");
+				failString.append(licenseHeaderHandler.getClass().getName());
+				failString.append(" failed. The following files(");
+				failString.append(files.get(licenseHeaderHandler).size());
+				failString.append(") didn't have correct license header:\n");
+				
+				for (File file : files.get(licenseHeaderHandler))
+				{
+					failString.append(file.getAbsolutePath()).append(LINE_ENDING);
+				}
 			}
 
 			fail(failString.toString());
