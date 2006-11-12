@@ -17,7 +17,7 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.MarkupContainer;
-import wicket.behavior.SimpleAttributeModifier;
+import wicket.extensions.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.model.IModel;

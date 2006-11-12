@@ -22,7 +22,7 @@ import wicket.ResourceReference;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.markup.html.AjaxFallbackLink;
 import wicket.behavior.HeaderContributor;
-import wicket.behavior.SimpleAttributeModifier;
+import wicket.extensions.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.Loop;

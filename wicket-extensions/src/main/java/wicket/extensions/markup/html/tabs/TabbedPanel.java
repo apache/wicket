@@ -21,7 +21,7 @@ import java.util.List;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.behavior.AttributeAppender;
-import wicket.behavior.SimpleAttributeModifier;
+import wicket.extensions.behavior.SimpleAttributeModifier;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;

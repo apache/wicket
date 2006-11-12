@@ -22,7 +22,7 @@ import wicket.model.IModel;
 
 /**
  * Iterator over an array. Implementation must provide
- * {@link ArrayIteratorAdapter#model(Object) } method to wrap each item in a
+ * {@link ArrayIteratorAdapter#model(Object, int) } method to wrap each item in a
  * model before it is returned through {@link ArrayIteratorAdapter#next() }
  * method.
  * 
