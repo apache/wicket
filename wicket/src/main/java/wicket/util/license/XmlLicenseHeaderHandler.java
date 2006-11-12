@@ -114,6 +114,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 			newContent.append(content);
 			
 			new wicket.util.file.File(file).write(newContent.toString());
+			added = true;
 		}
 		catch (Exception e)
 		{
