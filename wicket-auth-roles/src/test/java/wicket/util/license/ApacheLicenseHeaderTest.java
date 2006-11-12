@@ -28,5 +28,14 @@ import wicket.util.license.ApacheLicenseHeaderTestCase;
  */
 public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 {
-
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenseHeaderTest()
+	{
+		propertiesIgnore = new String[] {
+			"src/test/java/commons-logging.properties",
+			"src/test/java/log4j.properties"
+		};
+	}
 }
