@@ -120,7 +120,7 @@ public final class AllTests extends TestSuite
 		suite.addTestSuite(LibraryTest.class);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
-		deco.setWebappContextRoot("src/webapp");
+		deco.setWebappContextRoot("src/main/webapp");
 		deco.setContextPath("/wicket-examples");
 		return deco;
 	}

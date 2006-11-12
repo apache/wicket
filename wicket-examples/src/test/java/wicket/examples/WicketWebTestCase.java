@@ -53,7 +53,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 		suite.addTestSuite(clazz);
 		JettyDecorator deco = new JettyDecorator(suite);
 		deco.setPort(8098);
-		deco.setWebappContextRoot("src/webapp");
+		deco.setWebappContextRoot("src/main/webapp");
 		deco.setContextPath("/wicket-examples");
 
 		return deco;

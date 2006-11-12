@@ -46,7 +46,7 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	private int port = 8098;
 
 	/** root folder of web application. */
-	private String webappContextRoot = "src/webapp";
+	private String webappContextRoot = "src/main/webapp";
 
 	/**
 	 * Construct with test to decorate.
