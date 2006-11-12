@@ -1,20 +1,18 @@
 /*
- * $Id: StringsTest.java 5844 2006-05-24 20:53:56 +0000 (Wed, 24 May 2006)
- * joco01 $ $Revision$ $Date: 2006-05-24 20:53:56 +0000 (Wed, 24 May
- * 2006) $
- * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package wicket.util.string;
 
@@ -173,7 +171,7 @@ public final class StringsTest extends TestCase
 		assertNull(Strings.escapeMarkup(null, true, true));
 		assertEquals("", Strings.escapeMarkup("", true, true).toString());
 
-		// The escaped unicode is Çüéâäàåçêë"
+		// The escaped unicode is ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
 		assertEquals("&#199;&#252;&#233;&#226;&#228;&#224;&#229;&#231;&#234;&#235;", Strings
 				.escapeMarkup("\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",
 						false, true).toString());
@@ -193,7 +191,7 @@ public final class StringsTest extends TestCase
 	{
 		assertNull(Strings.replaceHtmlEscapeNumber(null));
 		assertEquals("", Strings.replaceHtmlEscapeNumber(""));
-		assertEquals("abcdefghijklmë", Strings.replaceHtmlEscapeNumber("abcdefghijklmë"));
+		assertEquals("abcdefghijklmï¿½", Strings.replaceHtmlEscapeNumber("abcdefghijklmï¿½"));
 		assertEquals("a &#", Strings.replaceHtmlEscapeNumber("a &#"));
 		assertEquals(
 				"\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb",

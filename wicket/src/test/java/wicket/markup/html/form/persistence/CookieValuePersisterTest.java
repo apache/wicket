@@ -1,20 +1,18 @@
 /*
- * $Id: CookieValuePersisterTest.java 5384 2006-04-15 11:40:39 +0000 (Sat, 15
- * Apr 2006) joco01 $ $Revision$ $Date: 2006-04-15 11:40:39 +0000 (Sat,
- * 15 Apr 2006) $
- * 
- * ==================================================================== Licensed
- * under the Apache License, Version 2.0 (the "License"); you may not use this
- * file except in compliance with the License. You may obtain a copy of the
- * License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package wicket.markup.html.form.persistence;
 
@@ -128,7 +126,7 @@ public class CookieValuePersisterTest extends TestCase
 		// Try to load it. Because there is no Cookie matching the textfield's
 		// name it remains unchanged
 		persister.load(textField);
-		assertEquals("test äöüßéèê", textField.getModelObjectAsString());
+		assertEquals("test ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", textField.getModelObjectAsString());
 
 		// Simulate loading a textfield. Initialize textfield with a new
 		// (default) value, copy the cookie from respone to request (simulating
@@ -136,7 +134,7 @@ public class CookieValuePersisterTest extends TestCase
 		// textfields value should change.
 		// save means: add it to the respone
 		// load means: take it from request
-		assertEquals("test äöüßéèê", textField.getModelObjectAsString());
+		assertEquals("test ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", textField.getModelObjectAsString());
 		textField.setModelObject("new text");
 		assertEquals("new text", textField.getModelObjectAsString());
 		copyCookieFromResponseToRequest(cycle);
@@ -144,7 +142,7 @@ public class CookieValuePersisterTest extends TestCase
 		assertEquals(1, getResponseCookies(cycle).size());
 
 		persister.load(textField);
-		assertEquals("test äöüßéèê", textField.getModelObjectAsString());
+		assertEquals("test ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", textField.getModelObjectAsString());
 		assertEquals(1, getRequestCookies(cycle).length);
 		assertEquals(1, getResponseCookies(cycle).size());
 
