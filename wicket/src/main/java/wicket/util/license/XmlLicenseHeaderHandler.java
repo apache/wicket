@@ -17,13 +17,18 @@
 package wicket.util.license;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 import wicket.util.diff.Diff;
 import wicket.util.diff.Revision;
+import wicket.util.string.Strings;
 
 class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 {
+	private Pattern xmlHeader = Pattern.compile("^(\\<\\?xml[^"+LINE_ENDING+"]+?)"+LINE_ENDING+"(.*)$", Pattern.DOTALL | Pattern.MULTILINE);
+	
 	/**
 	 * Construct.
 	 * 
@@ -82,4 +87,41 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "xml", "fml" };
 	}
 
+	@Override
+	public boolean addLicenseHeader(File file)
+	{
+		boolean added = false;
+		
+		try
+		{
+			String content = new wicket.util.file.File(file).readString();
+			String xml = "";
+			StringBuffer newContent = new StringBuffer();
+			
+			Matcher mat = xmlHeader.matcher(content);
+			if (mat.matches())
+			{
+				xml = mat.group(1);
+				content = mat.group(2);
+			}
+			
+			if (Strings.isEmpty(xml) == false)
+			{
+				newContent.append(xml).append(LINE_ENDING);
+			}
+			
+			newContent.append(getLicenseHeader()).append(LINE_ENDING);
+			newContent.append(content);
+			
+			new wicket.util.file.File(file).write(newContent.toString());
+		}
+		catch (Exception e)
+		{
+			Assert.fail(e.getMessage());
+		}
+		
+		return added;
+	}
+
+	
 }

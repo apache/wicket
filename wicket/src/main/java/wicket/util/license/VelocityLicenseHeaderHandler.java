@@ -63,4 +63,12 @@ class VelocityLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "vm" };
 	}
 
+	@Override
+	public boolean addLicenseHeader(File file)
+	{
+		prependLicenseHeader(file);
+		
+		return true;
+	}
+
 }

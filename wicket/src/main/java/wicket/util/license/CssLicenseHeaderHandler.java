@@ -64,4 +64,12 @@ class CssLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "css" };
 	}
 
+	@Override
+	public boolean addLicenseHeader(File file)
+	{
+		prependLicenseHeader(file);
+		
+		return true;
+	}
+
 }
