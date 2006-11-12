@@ -27,5 +27,11 @@ import wicket.util.license.ApacheLicenseHeaderTestCase;
  */
 public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 {
-
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenseHeaderTest()
+	{
+//		addHeaders = true;
+	}
 }
