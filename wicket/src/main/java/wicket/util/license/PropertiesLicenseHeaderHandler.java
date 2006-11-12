@@ -63,4 +63,12 @@ class PropertiesLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[] { "properties" };
 	}
 
+	@Override
+	public boolean addLicenseHeader(File file)
+	{
+		prependLicenseHeader(file);
+		
+		return true;
+	}
+
 }

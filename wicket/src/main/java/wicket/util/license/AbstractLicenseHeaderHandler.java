@@ -32,16 +32,28 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 	protected static final String LINE_ENDING = System.getProperty("line.separator");
 	private String licenseHeader;
 	private String[] ignoreFiles;
-	
+
 	/**
 	 * Construct.
+	 * 
 	 * @param ignoreFiles
 	 */
 	public AbstractLicenseHeaderHandler(String[] ignoreFiles)
 	{
 		this.ignoreFiles = ignoreFiles;
 	}
-	
+
+	public String[] getIgnoreFiles()
+	{
+		return ignoreFiles;
+	}
+
+	public boolean addLicenseHeader(File file)
+	{
+		System.out.println("Not supported yet.");
+		return false;
+	}
+
 	protected abstract String getLicenseHeaderFilename();
 
 	protected String getLicenseHeader()
@@ -57,13 +69,12 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 			catch (Exception e)
 			{
 				Assert.fail(e.getMessage());
-			
+
 			}
 		}
 
 		return licenseHeader;
 	}
-
 
 	protected String extractLicenseHeader(File file, int start, int length)
 	{
@@ -102,15 +113,24 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		return header.trim();
 	}
 
-	public String[] getIgnoreFiles()
+	/**
+	 * Add the license header to the start of the file without caring about
+	 * existing license headers.
+	 * 
+	 * @param file
+	 *            The file to add the license header to.
+	 */
+	protected void prependLicenseHeader(File file)
 	{
-		return ignoreFiles;
+		try
+		{
+			String content = new wicket.util.file.File(file).readString();
+			content = getLicenseHeader() + LINE_ENDING + content;
+			new wicket.util.file.File(file).write(content);
+		}
+		catch (Exception e)
+		{
+			Assert.fail(e.getMessage());
+		}
 	}
-
-	public boolean addLicenseHeader(File file)
-	{
-		System.out.println("Not supported yet.");
-		return false;
-	}
-
 }
