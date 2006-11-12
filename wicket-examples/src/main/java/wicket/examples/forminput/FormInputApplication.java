@@ -1,7 +1,7 @@
 /*
  * $Id: FormInputApplication.java 5394 2006-04-16 06:36:52 -0700 (Sun, 16 Apr
- * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-16 06:36:52 -0700 (Sun,
- * 16 Apr 2006) $
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-16 06:36:52 -0700
+ * (Sun, 16 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,13 +18,8 @@
  */
 package wicket.examples.forminput;
 
-import java.awt.Font;
-import java.util.Locale;
-
 import wicket.Page;
-import wicket.SharedResources;
 import wicket.examples.WicketExampleApplication;
-import wicket.markup.html.image.resource.DefaultButtonImageResource;
 
 /**
  * Application class for form input example.
@@ -47,24 +42,5 @@ public class FormInputApplication extends WicketExampleApplication
 	public Class< ? extends Page> getHomePage()
 	{
 		return FormInput.class;
-	}
-
-	/**
-	 * @see wicket.protocol.http.WebApplication#init()
-	 */
-	@Override
-	protected void init()
-	{
-		getResourceSettings().setThrowExceptionOnMissingResource(false);
-
-		// Chinese buttons
-		Font font = new Font("SimSun", Font.BOLD, 16);
-		DefaultButtonImageResource imgSave = new DefaultButtonImageResource("\u4FDD\u5B58");
-		imgSave.setFont(font);
-		DefaultButtonImageResource imgReset = new DefaultButtonImageResource("\u91CD\u7F6E");
-		imgReset.setFont(font);
-		SharedResources sharedResources = getSharedResources();
-		sharedResources.add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
-		sharedResources.add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
 	}
 }
