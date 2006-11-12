@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.TypeValidator">'${input}' ist keine gültige URL</entry>
+	<entry key="inputForm.phoneNumberUS.TypeValidator">'${input}' nicht ist eine gültige US Telefonnummerุ</entry>
+	<entry key="use.locale">เลือกใช้ภาษาหลัก:</entry>
+	<entry key="default">ค่ามาตรฐาน</entry>
+	<entry key="input">ข้อมูลนำเข้า</entry>
+	<entry key="string">ข้อมูลชนิดข้อความ</entry>
+	<entry key="integer">จำนวนเต็ม</entry>
+	<entry key="double">Double</entry>
+	<entry key="date">วันที</entry>
+	<entry key="boolean">Boolean</entry>
+	<entry key="value.between.0.and.100">ค่าระหว่าง 0 และ 100</entry>
+	<entry key="valid.url">URL (ต้องเป็น URL ที่ใช้งานได)</entry>
+	<entry key="us.phone.number.mask">หมายเลขโทรศัพท์ (รูปแบบ: '(###) ###-####')</entry>
+	<entry key="select.a.number">เลือกตัวเลขหนึ่งตัว</entry>
+	<entry key="select.one.or.more.numbers">เลือกตัวเลขหนึ่งตัวหรือมากกว่า</entry>
+	<entry key="your.favorite.sites">เวปไซด์ที่ชอบ</entry>
+	<entry key="save">บันทึก</entry>
+	<entry key="reset">ล้างข้อมูลเพื่อเริ่มใหม</entry>
+</properties>

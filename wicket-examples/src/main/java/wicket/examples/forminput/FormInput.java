@@ -1,7 +1,7 @@
 /*
  * $Id: FormInput.java 6427 2006-07-08 09:17:31 +0000 (Sat, 08 Jul 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-07-08 09:17:31 +0000 (Sat, 08 Jul
- * 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-07-08 09:17:31 +0000 (Sat, 08
+ * Jul 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -30,20 +30,19 @@ import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.datepicker.DatePicker;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Check;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.ImageButton;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.Radio;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
-import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -51,6 +50,7 @@ import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
+import wicket.model.ResourceModel;
 import wicket.protocol.http.WebRequest;
 import wicket.util.convert.ConversionException;
 import wicket.util.convert.IConverter;
@@ -193,29 +193,26 @@ public class FormInput extends WicketExamplePage
 			// and this is to show we can nest ListViews in Forms too
 			new LinesListView(this, "lines");
 
-			new ImageButton(this, "saveButton")
+			new Button<String>(this, "saveButton", new ResourceModel("save"))
 			{
-
 				@Override
 				public void onSubmit()
 				{
-
-
+					// need to do nothing for this example here
 				}
-
 			};
 
-			Link link = new Link(this, "resetButtonLink")
+			new Button<String>(this, "resetButton", new ResourceModel("reset"))
 			{
 				@Override
-				public void onClick()
+				public void onSubmit()
 				{
-					// just call modelChanged so that any invalid input is
-					// cleared.
+					// trigger reload
 					InputForm.this.modelChanged();
 				}
-			};
-			new Image(link, "resetButtonImage");
+			}.setDefaultFormProcessing(false);
+			// set default form processing so that only this button's
+			// submit method will be called
 		}
 
 		/**
@@ -330,7 +327,8 @@ public class FormInput extends WicketExamplePage
 	/** Relevant locales wrapped in a list. */
 	private static final List<Locale> LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
 			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK") });
+			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
+			new Locale("th") });
 
 	/** available sites for the multiple select. */
 	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",

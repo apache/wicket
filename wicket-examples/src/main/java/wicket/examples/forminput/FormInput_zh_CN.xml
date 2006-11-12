@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.TypeValidator">'${input}' is not a valid URL</entry>
+	<entry key="inputForm.phoneNumberUS.TypeValidator">'${input}' is not a valid US phone numberุ</entry>
+	<entry key="use.locale">使用地点:</entry>
+	<entry key="default">缺省</entry>
+	<entry key="input">输入;</entry>
+	<entry key="string">字符串;</entry>
+	<entry key="integer">整数;</entry>
+	<entry key="double">数字;</entry>
+	<entry key="date">日期;</entry>
+	<entry key="boolean">布尔值;</entry>
+	<entry key="value.between.0.and.100">在 0 和 100 之间的整数</entry>
+	<entry key="valid.url">URL (必须是合法的URL)</entry>
+	<entry key="us.phone.number.mask">美国电话号码 (格式: '(###) ###-####')</entry>
+	<entry key="select.a.number">选择一个数字</entry>
+	<entry key="select.one.or.more.numbers">选择一个或多个数字</entry>
+	<entry key="your.favorite.sites">您喜爱的网站</entry>
+	<entry key="save">保存</entry>
+	<entry key="reset">重置</entry>
+</properties>

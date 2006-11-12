@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.TypeValidator">'${input}' er ikke en gyldig URL adresse</entry>
+	<entry key="inputForm.phoneNumberUS.TypeValidator">'${input}' er ikke et gyldigt US telefonnummer</entry>
+	<entry key="use.locale">Brug locale:</entry>
+	<entry key="default">default</entry>
+	<entry key="input">Indtastningsform</entry>
+	<entry key="string">Tekststreng</entry>
+	<entry key="integer">Heltal</entry>
+	<entry key="double">Kommatal</entry>
+	<entry key="date">Dato</entry>
+	<entry key="boolean">Boolean</entry>
+	<entry key="value.between.0.and.100">Værdi mellem 0 og 100</entry>
+	<entry key="valid.url">URL adresse (skal være en gyldig URL)</entry>
+	<entry key="us.phone.number.mask">US telefonnummer (format: '(###) ###-####')</entry>
+	<entry key="select.a.number">Vælg et nummer</entry>
+	<entry key="select.one.or.more.numbers">Vælg et eller flere numre</entry>
+	<entry key="your.favorite.sites">Dine favorit sider</entry>
+	<entry key="save">Gem</entry>
+	<entry key="reset">Nulstil</entry>
+</properties>

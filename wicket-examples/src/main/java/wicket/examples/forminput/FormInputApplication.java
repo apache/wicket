@@ -66,33 +66,5 @@ public class FormInputApplication extends WicketExampleApplication
 		SharedResources sharedResources = getSharedResources();
 		sharedResources.add("save", Locale.SIMPLIFIED_CHINESE, imgSave);
 		sharedResources.add("reset", Locale.SIMPLIFIED_CHINESE, imgReset);
-		
-		// Japanese buttons
-		Font fontJa = new Font("Serif", Font.BOLD, 16);
-		DefaultButtonImageResource imgSaveJa = new DefaultButtonImageResource("\u4fdd\u5b58");
-		imgSaveJa.setFont(fontJa);
-		DefaultButtonImageResource imgResetJa = new DefaultButtonImageResource(
-				"\u30ea\u30bb\u30c3\u30c8");
-		imgResetJa.setFont(fontJa);
-		sharedResources.add("save", Locale.JAPANESE, imgSaveJa);
-		sharedResources.add("reset", Locale.JAPANESE, imgResetJa);
-
-		// Persian buttons
-		Font fontFa = new Font("Serif", Font.BOLD, 16);
-		Locale farsi = new Locale("fa", "IR");
-		DefaultButtonImageResource imgSaveFa = new DefaultButtonImageResource(
-				"\u0630\u062e\u064a\u0631\u0647");
-		imgSaveFa.setFont(fontFa);
-		DefaultButtonImageResource imgResetFa = new DefaultButtonImageResource(
-				"\u0628\u0627\u0632\u0646\u0634\u0627\u0646\u064a");
-		imgResetFa.setFont(fontFa);
-		getSharedResources().add("save", farsi, imgSaveFa);
-		getSharedResources().add("reset", farsi, imgResetFa);
-		
-		// Danish buttons
-		DefaultButtonImageResource imgSaveDa = new DefaultButtonImageResource("Gem");
-		DefaultButtonImageResource imgResetDa = new DefaultButtonImageResource("Nulstil");
-		getSharedResources().add("save", new Locale("da", "DK"), imgSaveDa);
-		getSharedResources().add("reset", new Locale("da", "DK"), imgResetDa);
 	}
 }

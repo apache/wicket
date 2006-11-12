@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="inputForm.urlProperty.TypeValidator">'${input}' ist keine gültige URL</entry>
+	<entry key="inputForm.phoneNumberUS.TypeValidator">'${input}' nicht ist eine gültige US Telefonnummerุ</entry>
+	<entry key="use.locale">Locale:</entry>
+	<entry key="default">standard</entry>
+	<entry key="input">input</entry>
+	<entry key="string">String</entry>
+	<entry key="integer">Integer</entry>
+	<entry key="double">Double</entry>
+	<entry key="date">Datum</entry>
+	<entry key="boolean">Boolean</entry>
+	<entry key="value.between.0.and.100">Werte zwischen 0 und 100</entry>
+	<entry key="valid.url">URL (muss eine gultige URL sein)</entry>
+	<entry key="us.phone.number.mask">Amerikanisher telefohnnummer (mask: '(###) ###-####')</entry>
+	<entry key="select.a.number">Bitte eine Zahl auswwhlen</entry>
+	<entry key="select.one.or.more.numbers">Bitte eins oder mehr auswählen</entry>
+	<entry key="your.favorite.sites">Deine bevorzugten Seiten</entry>
+	<entry key="save">Sichern</entry>
+	<entry key="reset">Zurücksetzen</entry>
+</properties>
