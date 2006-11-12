@@ -36,7 +36,7 @@ import wicket.util.diff.Revision;
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-abstract class ApacheLicenseHeaderTestCase extends TestCase
+public abstract class ApacheLicenseHeaderTestCase extends TestCase
 {
 	private static final String LINE_ENDING = System.getProperty("line.separator");
 
@@ -532,10 +532,8 @@ abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 		try
 		{
-			URL url = ApacheLicenseHeaderTestCase.class.getResource(".");
-			File legalsDir = new File(url.toURI());
-			String legalsDirString = legalsDir.getAbsolutePath();
-			contents = new wicket.util.file.File(legalsDirString, filename).readString();
+			URL url = ApacheLicenseHeaderTestCase.class.getResource(filename);
+			contents = new wicket.util.file.File(url.toURI()).readString();
 		}
 		catch (Exception e)
 		{
