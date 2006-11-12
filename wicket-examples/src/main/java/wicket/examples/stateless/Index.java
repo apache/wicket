@@ -47,7 +47,7 @@ public class Index extends WebPage
 			 */
 			public void onClick()
 			{
-				setResponsePage(StatefulPage.class);
+				getRequestCycle().setResponsePage(StatefulPage.class);
 			}
 		};
 	}

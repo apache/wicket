@@ -31,12 +31,12 @@ import wicket.util.diff.Diff;
 import wicket.util.diff.Revision;
 
 /**
- * A silly try to create a testcase for running through all files in the project
- * and check if they have the correct license headers. Lets see if it holds.
+ * Testcase used in the different wicket projects for testing for the correct
+ * ASL license headers. Doesn't really make sense outside wicket.
  * 
  * @author Frank Bille Jensen (frankbille)
  */
-public abstract class ApacheLicenseHeaderTestCase extends TestCase
+abstract class ApacheLicenseHeaderTestCase extends TestCase
 {
 	private static final String LINE_ENDING = System.getProperty("line.separator");
 
@@ -141,7 +141,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	private String cssLicenseHeader;
 	private String velocityLicenseHeader;
 	private String javaScriptLicenseHeader;
-	private String x = "^(\\<\\?xml[^"+LINE_ENDING+"]+).*";
+	private String x = "^(\\<\\?xml[^" + LINE_ENDING + "]+).*";
 	private Pattern xmlHeader = Pattern.compile(x, Pattern.DOTALL);
 
 	protected String[] javaIgnore;
@@ -321,7 +321,8 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		{
 			StringBuffer failString = new StringBuffer();
 
-			failString.append("The following files("+files.size()+") didn't have a correct license header:\n");
+			failString.append("The following files(" + files.size()
+					+ ") didn't have a correct license header:\n");
 
 			for (File file : files)
 			{
@@ -391,9 +392,9 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		{
 			String header = extractLicenseHeader(file, 0, 17);
 
-			if (header.startsWith("<?xml")) 
+			if (header.startsWith("<?xml"))
 			{
-				header = header.substring(header.indexOf(LINE_ENDING)+1);
+				header = header.substring(header.indexOf(LINE_ENDING) + 1);
 			}
 			else
 			{
