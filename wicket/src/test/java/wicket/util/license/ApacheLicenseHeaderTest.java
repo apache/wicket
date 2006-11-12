@@ -32,6 +32,8 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 	 */
 	public ApacheLicenseHeaderTest()
 	{
+//		addHeaders = true;
+		
 		cssIgnore = new String[] { "src/test/java/wicket/protocol/http/portlet/style.css",
 				"src/test/java/wicket/ajax/mockStyleSheet3.css",
 				"src/test/java/wicket/markup/parser/filter/style.css",

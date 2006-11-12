@@ -18,17 +18,10 @@ package wicket.util.license;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
-import wicket.util.diff.Diff;
-import wicket.util.diff.Revision;
 
 /**
  * Testcase used in the different wicket projects for testing for the correct
@@ -40,7 +33,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 {
 	private static final String LINE_ENDING = System.getProperty("line.separator");
 
-	private interface FileVisitor
+	static interface FileVisitor
 	{
 		/**
 		 * @param file
@@ -134,15 +127,9 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 		}
 	}
 
+	private ILicenseHeaderHandler[] licenseHeaderHandlers;
+	
 	private File baseDirectory = new File("").getAbsoluteFile();
-	private String javaLicenseHeader;
-	private String xmlLicenseHeader;
-	private String propertiesLicenseHeader;
-	private String cssLicenseHeader;
-	private String velocityLicenseHeader;
-	private String javaScriptLicenseHeader;
-	private String x = "^(\\<\\?xml[^" + LINE_ENDING + "]+).*";
-	private Pattern xmlHeader = Pattern.compile(x, Pattern.DOTALL);
 
 	protected String[] javaIgnore;
 	protected String[] htmlIgnore;
@@ -151,6 +138,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	protected String[] cssIgnore;
 	protected String[] velocityIgnore;
 	protected String[] javaScriptIgnore;
+	protected boolean addHeaders = false;
 
 	/**
 	 * Construct.
@@ -158,160 +146,43 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 	public ApacheLicenseHeaderTestCase()
 	{
 		super("Test of the legal aspects of the Wicket source code is correct.");
-
-		// Load licenses
-		javaLicenseHeader = loadFile("javaLicense.txt");
-		xmlLicenseHeader = loadFile("xmlLicense.txt");
-		propertiesLicenseHeader = loadFile("propertiesLicense.txt");
-		cssLicenseHeader = loadFile("cssLicense.txt");
-		velocityLicenseHeader = loadFile("velocityLicense.txt");
-		javaScriptLicenseHeader = loadFile("javaScriptLicense.txt");
 	}
-
+	
 	/**
-	 * Test all java files.
+	 * Test all the files in the project which has an associated {@link ILicenseHeaderHandler}.
 	 */
-	public void testJavaFiles()
+	public void testLicenseHeaders()
 	{
+		licenseHeaderHandlers = new ILicenseHeaderHandler[] {
+			new JavaLicenseHeaderHandler(javaIgnore),
+			new JavaScriptLicenseHeaderHandler(javaScriptIgnore),
+			new XmlLicenseHeaderHandler(xmlIgnore),
+			new PropertiesLicenseHeaderHandler(propertiesIgnore),
+			new CssLicenseHeaderHandler(cssIgnore),
+			new HtmlLicenseHeaderHandler(htmlIgnore),
+			new VelocityLicenseHeaderHandler(velocityIgnore)
+		};
+		
 		final List<File> badFiles = new ArrayList<File>();
-
-		visitFiles("java", javaIgnore, new FileVisitor()
+		
+		for (final ILicenseHeaderHandler licenseHeaderHandler : licenseHeaderHandlers)
 		{
-			public void visitFile(File file)
+			visitFiles(licenseHeaderHandler.getSuffixes(), licenseHeaderHandler.getIgnoreFiles(), new FileVisitor()
 			{
-				if (checkJavaHeader(file) == false)
+				public void visitFile(File file)
 				{
-					badFiles.add(file);
+					if (licenseHeaderHandler.checkLicenseHeader(file) == false)
+					{
+						if (addHeaders == false 
+								|| licenseHeaderHandler.addLicenseHeader(file) == false)
+						{
+							badFiles.add(file);
+						}
+					}
 				}
-			}
-		});
-
-		failIncorrectLicenceHeaders(badFiles);
-	}
-
-	/**
-	 * Test all html files.
-	 */
-	public void testHtmlFiles()
-	{
-		final List<File> badFiles = new ArrayList<File>();
-
-		visitFiles("html", htmlIgnore, new FileVisitor()
-		{
-			public void visitFile(File file)
-			{
-				if (checkXmlHeader(file) == false)
-				{
-					badFiles.add(file);
-				}
-			}
-		});
-
-		failIncorrectLicenceHeaders(badFiles);
-	}
-
-	/**
-	 * Test all properties files.
-	 */
-	public void testPropertiesFiles()
-	{
-		final List<File> badFiles = new ArrayList<File>();
-
-		visitFiles("properties", propertiesIgnore, new FileVisitor()
-		{
-			public void visitFile(File file)
-			{
-				if (checkPropertiesHeader(file) == false)
-				{
-					badFiles.add(file);
-				}
-			}
-		});
-
-		failIncorrectLicenceHeaders(badFiles);
-	}
-
-	/**
-	 * Test all xml files.
-	 */
-	public void testXmlFiles()
-	{
-		final List<File> badFiles = new ArrayList<File>();
-
-		visitFiles(new String[] { "xml", "fml" }, xmlIgnore, new FileVisitor()
-		{
-			public void visitFile(File file)
-			{
-				if (checkXmlHeader(file) == false)
-				{
-					badFiles.add(file);
-				}
-			}
-		});
-
-		failIncorrectLicenceHeaders(badFiles);
-	}
-
-	/**
-	 * Test all css files.
-	 */
-	public void testCssFiles()
-	{
-		final List<File> badFiles = new ArrayList<File>();
-
-		visitFiles("css", cssIgnore, new FileVisitor()
-		{
-			public void visitFile(File file)
-			{
-				if (checkCssHeader(file) == false)
-				{
-					badFiles.add(file);
-				}
-			}
-		});
-
-		failIncorrectLicenceHeaders(badFiles);
-	}
-
-	/**
-	 * Test all velocity files.
-	 */
-	public void testVelocityFiles()
-	{
-		final List<File> badFiles = new ArrayList<File>();
-
-		visitFiles("vm", velocityIgnore, new FileVisitor()
-		{
-			public void visitFile(File file)
-			{
-				if (checkVelocityHeader(file) == false)
-				{
-					badFiles.add(file);
-				}
-			}
-		});
-
-		failIncorrectLicenceHeaders(badFiles);
-	}
-
-	/**
-	 * Test all javascript files.
-	 */
-	public void testJavaScriptFiles()
-	{
-		final List<File> badFiles = new ArrayList<File>();
-
-		visitFiles("js", javaScriptIgnore, new FileVisitor()
-		{
-			public void visitFile(File file)
-			{
-				if (checkJavaScriptHeader(file) == false)
-				{
-					badFiles.add(file);
-				}
-			}
-		});
-
+			});
+		}
+		
 		failIncorrectLicenceHeaders(badFiles);
 	}
 
@@ -332,166 +203,6 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			fail(failString.toString());
 		}
 	}
-
-	private String extractLicenseHeader(File file, int start, int length)
-	{
-		String header = "";
-		FileReader fileReader = null;
-
-		try
-		{
-			fileReader = new FileReader(file);
-			LineNumberReader lineNumberReader = new LineNumberReader(fileReader);
-
-			for (int i = start; i < length; i++)
-			{
-				header += lineNumberReader.readLine() + LINE_ENDING;
-			}
-		}
-		catch (Exception e)
-		{
-			fail(e.getMessage());
-		}
-		finally
-		{
-			if (fileReader != null)
-			{
-				try
-				{
-					fileReader.close();
-				}
-				catch (IOException e)
-				{
-					fail(e.getMessage());
-				}
-			}
-		}
-
-		return header.trim();
-	}
-
-	private boolean checkJavaHeader(File file)
-	{
-		String header = extractLicenseHeader(file, 0, 16);
-
-		return javaLicenseHeader.equals(header);
-	}
-
-	private boolean checkJavaScriptHeader(File file)
-	{
-		String header = extractLicenseHeader(file, 0, 16);
-
-		return javaScriptLicenseHeader.equals(header);
-	}
-
-	private boolean checkXmlHeader(File file)
-	{
-		Revision revision = null;
-
-		try
-		{
-			String header = extractLicenseHeader(file, 0, 17);
-
-			if (header.startsWith("<?xml"))
-			{
-				header = header.substring(header.indexOf(LINE_ENDING) + 1);
-			}
-			else
-			{
-				// Then only take the first 16 lines
-				String[] headers = header.split(LINE_ENDING);
-				header = "";
-				for (int i = 0; i < 16; i++)
-				{
-					if (header.length() > 0)
-					{
-						header += LINE_ENDING;
-					}
-					header += headers[i];
-				}
-			}
-
-			revision = Diff.diff(xmlLicenseHeader.split(LINE_ENDING), header.split(LINE_ENDING));
-		}
-		catch (Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		return revision.size() == 0;
-	}
-
-	private boolean checkPropertiesHeader(File file)
-	{
-		Revision revision = null;
-
-		try
-		{
-			String header = extractLicenseHeader(file, 0, 14);
-
-			revision = Diff.diff(propertiesLicenseHeader.split(LINE_ENDING), header
-					.split(LINE_ENDING));
-		}
-		catch (Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		return revision.size() == 0;
-	}
-
-	private boolean checkVelocityHeader(File file)
-	{
-		Revision revision = null;
-
-		try
-		{
-			String header = extractLicenseHeader(file, 0, 16);
-
-			revision = Diff.diff(velocityLicenseHeader.split(LINE_ENDING), header
-					.split(LINE_ENDING));
-		}
-		catch (Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		return revision.size() == 0;
-	}
-
-	private boolean checkCssHeader(File file)
-	{
-		Revision revision = null;
-
-		try
-		{
-			String header = extractLicenseHeader(file, 0, 16);
-
-			revision = Diff.diff(cssLicenseHeader.split(LINE_ENDING), header.split(LINE_ENDING));
-		}
-		catch (Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		return revision.size() == 0;
-	}
-
-	private void visitFiles(String suffix, FileVisitor fileVisitor)
-	{
-		visitFiles(new String[] { suffix }, null, fileVisitor);
-	}
-
-	private void visitFiles(String suffix, String[] ignoreFiles, FileVisitor fileVisitor)
-	{
-		visitFiles(new String[] { suffix }, ignoreFiles, fileVisitor);
-	}
-
-	private void visitFiles(String[] suffixes, FileVisitor fileVisitor)
-	{
-		visitFiles(suffixes, null, fileVisitor);
-	}
-
 	private void visitFiles(String[] suffixes, String[] ignoreFiles, FileVisitor fileVisitor)
 	{
 		visitDirectory(suffixes, ignoreFiles, baseDirectory, fileVisitor);
@@ -520,26 +231,5 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				visitDirectory(suffixes, ignoreFiles, childDirectory, fileVisitor);
 			}
 		}
-	}
-
-	/**
-	 * @param filename
-	 * @return The contents of the file
-	 */
-	private String loadFile(String filename)
-	{
-		String contents = null;
-
-		try
-		{
-			URL url = ApacheLicenseHeaderTestCase.class.getResource(filename);
-			contents = new wicket.util.file.File(url.toURI()).readString();
-		}
-		catch (Exception e)
-		{
-			fail(e.getMessage());
-		}
-
-		return contents.trim();
 	}
 }
