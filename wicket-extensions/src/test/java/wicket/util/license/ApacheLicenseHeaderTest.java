@@ -33,5 +33,21 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 	public ApacheLicenseHeaderTest()
 	{
 //		addHeaders = true;
+		
+		javaScriptIgnore = new String[] {
+			"src/main/java/wicket/extensions/markup/html/datepicker"
+		};
+		
+		xmlIgnore = new String[] {
+			"src/assembly/bin.xml"
+		};
+		
+		cssIgnore = new String[] {
+			"src/main/java/wicket/extensions/markup/html/datepicker"
+		};
+		
+//		htmlIgnore = new String[] {
+//			""	
+//		};
 	}
 }
