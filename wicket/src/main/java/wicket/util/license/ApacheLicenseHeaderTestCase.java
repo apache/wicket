@@ -65,25 +65,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 			if (pathname.isFile())
 			{
-				boolean ignore = false;
-
-				if (ignoreFiles != null)
-				{
-					String relativePathname = pathname.getAbsolutePath();
-					relativePathname = relativePathname.replace(baseDirectory.getAbsolutePath()
-							+ System.getProperty("file.separator"), "");
-
-					for (String ignoreFile : ignoreFiles)
-					{
-						if (relativePathname.equals(ignoreFile))
-						{
-							ignore = true;
-							break;
-						}
-					}
-				}
-
-				if (ignore == false)
+				if (ignoreFile(pathname) == false)
 				{
 					for (String suffix : suffixes)
 					{
@@ -97,6 +79,45 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 			}
 
 			return accept;
+		}
+		
+		private boolean ignoreFile(File pathname)
+		{
+			boolean ignore = false;
+			
+			if (ignoreFiles != null)
+			{
+				String relativePathname = pathname.getAbsolutePath();
+				relativePathname = relativePathname.replace(baseDirectory.getAbsolutePath()
+						+ System.getProperty("file.separator"), "");
+
+				for (String ignorePath : ignoreFiles)
+				{
+					File ignoreFile = new File(baseDirectory, ignorePath);
+					
+					// Directory ignore
+					if (ignoreFile.isDirectory())
+					{
+						if (pathname.getAbsolutePath().startsWith(ignoreFile.getAbsolutePath()))
+						{
+							ignore = true;
+							break;
+						}
+					}
+					
+					// Absolute file
+					if (ignoreFile.isFile())
+					{
+						if (relativePathname.equals(ignorePath))
+						{
+							ignore = true;
+							break;
+						}
+					}
+				}
+			}
+			
+			return ignore;
 		}
 	}
 
