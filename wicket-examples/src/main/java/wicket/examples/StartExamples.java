@@ -51,7 +51,7 @@ public class StartExamples
 
 		WebAppContext web = new WebAppContext();
 		web.setContextPath("/wicket-examples");
-		web.setWar("src/webapp");
+		web.setWar("src/main/webapp");
 		server.addHandler(web);
 
 //		MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
