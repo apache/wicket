@@ -41,41 +41,30 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 				"src/test/java/wicket/markup/parser/filter/sub/cborder.css",
 				"src/test/java/wicket/markup/html/link/test3_de_DE.css",
 				"src/test/java/wicket/markup/html/link/test.css",
-				"src/test/java/wicket/markup/html/link/test2_myStyle.css" };
+				"src/test/java/wicket/markup/html/link/test2_myStyle.css"
+		};
 
 		xmlIgnore = new String[] { "EclipseCodeFormat.xml",
-				"src/test/java/wicket/performance/results.xml" };
+				"src/test/java/wicket/performance/results.xml",
+				"src/assembly/bin.xml"
+		};
 
-		propertiesIgnore = new String[] { "src/test/java/wicket/MyMockPage.properties",
-				"src/test/java/wicket/resource/DummyResources.properties",
-				"src/test/java/wicket/resource/DummyPage.properties",
-				"src/test/java/wicket/resource/DummySubClassPage.properties",
-				"src/test/java/wicket/resource/DummyComponent_zz.properties",
-				"src/test/java/wicket/resource/DummyApplication_zz.properties",
-				"src/test/java/wicket/resource/DummyResources_zz.properties",
-				"src/test/java/wicket/resource/DummyComponent.properties",
-				"src/test/java/wicket/resource/DummyComponent_alt.properties",
-				"src/test/java/wicket/resource/DummyApplication_alt.properties",
-				"src/test/java/wicket/resource/DummyApplication.properties",
-				"src/test/java/wicket/util/tester/apps_1/MyMockApplication_de.properties",
-				"src/test/java/wicket/util/tester/apps_1/MyMockApplication_nl.properties",
-				"src/test/java/wicket/util/tester/apps_1/CreateBook.properties",
-				"src/test/java/wicket/util/tester/apps_1/MyMockApplication.properties",
-				"src/test/java/wicket/util/tester/apps_4/EmailPage.properties",
-				"src/test/java/wicket/markup/html/basic/SimplePage_7.properties",
-				"src/test/java/wicket/model/StringResourceModelTest.properties",
-				"src/test/java/wicket/properties/MyApplication.properties",
-				"src/test/java/wicket/properties/MyApplication_de.properties",
-				"src/test/java/wicket/properties/MyApplication_mystyle_de.properties",
-				"src/test/java/wicket/properties/MyApplication_mystyle.properties",
-				"src/test/java/wicket/properties/TestPage.properties",
-				"src/test/java/wicket/properties/MyTesterApplication.properties",
-				"src/test/java/wicket/properties/TestContainer.properties",
-				"src/test/java/wicket/properties/TestForm.properties" };
+		propertiesIgnore = new String[] { 
+				"src/test/java/wicket" 
+		};
 
 		javaScriptIgnore = new String[] { "src/test/java/wicket/markup/parser/filter/test.js",
 				"src/test/java/wicket/markup/html/packaged3.js",
 				"src/test/java/wicket/markup/html/packaged4.js",
-				"src/site/xdoc/onestat.js"};
+				"src/site/xdoc/onestat.js",
+				/*
+				 * See NOTICE.txt
+				 */
+				"src/main/java/wicket/ajax/wicket-ajax-debug-drag.js"
+		};
+		
+		htmlIgnore = new String[] {
+				"src/test/java/wicket"
+		};
 	}
 }
