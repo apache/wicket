@@ -1,12 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-  <classpathentry kind="src" path="src/main/java"/>
-  <classpathentry kind="output" path="target/classes"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jetty/org.mortbay.jetty/4.2.24/org.mortbay.jetty-4.2.24.jar"/>
-  <classpathentry kind="var" path="M2_REPO/tomcat/jasper-runtime/4.1.30/jasper-runtime-4.1.30.jar"/>
-  <classpathentry kind="var" path="M2_REPO/tomcat/jasper-compiler/4.1.30/jasper-compiler-4.1.30.jar"/>
-  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar"/>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT-sources.jar"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jetty/org.mortbay.jetty/4.2.24/org.mortbay.jetty-4.2.24.jar"/>
+	<classpathentry kind="var" path="M2_REPO/tomcat/jasper-runtime/4.1.30/jasper-runtime-4.1.30.jar"/>
+	<classpathentry kind="var" path="M2_REPO/tomcat/jasper-compiler/4.1.30/jasper-compiler-4.1.30.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
