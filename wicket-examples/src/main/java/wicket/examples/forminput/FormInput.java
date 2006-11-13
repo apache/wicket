@@ -21,14 +21,11 @@ package wicket.examples.forminput;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
-import wicket.extensions.markup.html.datepicker.DatePicker;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Check;
@@ -103,14 +100,6 @@ public class FormInput extends WicketExamplePage
 					"integerProperty", Integer.class);
 			integerTextField.add(NumberValidator.POSITIVE);
 			new RequiredTextField<Double>(this, "doubleProperty", Double.class);
-			// we have a component attached to the label here, as we want to
-			// synchronize the
-			// id's of the label, textfield and datepicker. Note that you can
-			// perfectly
-			// do without labels
-			WebMarkupContainer dateLabel = new WebMarkupContainer(this, "dateLabel");
-			TextField datePropertyTextField = new TextField<Date>(this, "dateProperty", Date.class);
-			new DatePicker(this, "datePicker", dateLabel, datePropertyTextField);
 			new RequiredTextField<Integer>(this, "integerInRangeProperty", Integer.class)
 					.add(NumberValidator.range(0, 100));
 			new CheckBox(this, "booleanProperty");
