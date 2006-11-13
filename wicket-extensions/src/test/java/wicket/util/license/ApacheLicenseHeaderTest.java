@@ -34,8 +34,12 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 //		addHeaders = true;
 		
+		/*
+		 * Consider these
+		 */
 		javaScriptIgnore = new String[] {
-			"src/main/java/wicket/extensions/markup/html/datepicker"
+			"src/main/java/wicket/extensions/markup/html/datepicker",
+			"src/main/java/wicket/extensions/explorerpngfix"
 		};
 		
 		xmlIgnore = new String[] {
@@ -46,8 +50,8 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 			"src/main/java/wicket/extensions/markup/html/datepicker"
 		};
 		
-//		htmlIgnore = new String[] {
-//			""	
-//		};
+		htmlIgnore = new String[] {
+			"src/test/java/wicket/extensions/markup/html/tree"			
+		};
 	}
 }
