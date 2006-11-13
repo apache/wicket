@@ -48,4 +48,12 @@ class JavaScriptLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		return new String[]{"js"};
 	}
 
+	@Override
+	public boolean addLicenseHeader(File file)
+	{
+		prependLicenseHeader(file);
+		
+		return true;
+	}
+
 }

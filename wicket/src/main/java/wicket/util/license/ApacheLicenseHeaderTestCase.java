@@ -237,6 +237,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				}
 			}
 
+			System.out.println(failString);
 			fail(failString.toString());
 		}
 	}
