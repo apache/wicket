@@ -57,7 +57,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * not need to use this meta data key directly, but instead use one of the
 	 * bind methods of this class.
 	 */
-	public static final MetaDataKey ACTION_PERMISSIONS = new MetaDataKey(ActionPermissions.class)
+	public static final MetaDataKey<ActionPermissions> ACTION_PERMISSIONS = new MetaDataKey<ActionPermissions>(ActionPermissions.class)
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -67,7 +67,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * do not need to use this meta data key directly, but instead use one of
 	 * the bind methods of this class.
 	 */
-	public static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
+	public static final MetaDataKey<InstantiationPermissions> INSTANTIATION_PERMISSIONS = new MetaDataKey<InstantiationPermissions>(
 			InstantiationPermissions.class)
 	{
 		private static final long serialVersionUID = 1L;
@@ -112,11 +112,10 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @param roles
 	 *            The comma separated roles to authorize
 	 */
-	public static final void authorize(final Component component, final Action action,
+	public static final void authorize(final Component<?> component, final Action action,
 			final String roles)
 	{
-		ActionPermissions permissions = (ActionPermissions)component
-				.getMetaData(ACTION_PERMISSIONS);
+		ActionPermissions permissions = component.getMetaData(ACTION_PERMISSIONS);
 		if (permissions == null)
 		{
 			permissions = new ActionPermissions();
@@ -135,8 +134,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	public static final void authorizeAll(final Class< ? extends Component> componentClass)
 	{
 		Application application = Application.get();
-		InstantiationPermissions authorizedRoles = (InstantiationPermissions)application
-				.getMetaData(INSTANTIATION_PERMISSIONS);
+		InstantiationPermissions authorizedRoles = application.getMetaData(INSTANTIATION_PERMISSIONS);
 		if (authorizedRoles != null)
 		{
 			authorizedRoles.authorizeAll(componentClass);
@@ -152,10 +150,9 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @param action
 	 *            The action to authorize
 	 */
-	public static final void authorizeAll(final Component component, final Action action)
+	public static final void authorizeAll(final Component<?> component, final Action action)
 	{
-		ActionPermissions permissions = (ActionPermissions)component
-				.getMetaData(ACTION_PERMISSIONS);
+		ActionPermissions permissions = component.getMetaData(ACTION_PERMISSIONS);
 		if (permissions != null)
 		{
 			permissions.authorizeAll(action);
@@ -180,8 +177,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	public static final void unauthorize(final Class< ? extends Component> componentClass,
 			final String roles)
 	{
-		final InstantiationPermissions permissions = (InstantiationPermissions)Application.get()
-				.getMetaData(INSTANTIATION_PERMISSIONS);
+		final InstantiationPermissions permissions = Application.get().getMetaData(INSTANTIATION_PERMISSIONS);
 		if (permissions != null)
 		{
 			permissions.unauthorize(componentClass, new Roles(roles));
@@ -205,11 +201,10 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            The comma separated list of roles that are no longer allowed
 	 *            to perform the given action
 	 */
-	public static final void unauthorize(final Component component, final Action action,
+	public static final void unauthorize(final Component<?> component, final Action action,
 			final String roles)
 	{
-		final ActionPermissions permissions = (ActionPermissions)component
-				.getMetaData(ACTION_PERMISSIONS);
+		final ActionPermissions permissions = component.getMetaData(ACTION_PERMISSIONS);
 		if (permissions != null)
 		{
 			permissions.unauthorize(action, new Roles(roles));
