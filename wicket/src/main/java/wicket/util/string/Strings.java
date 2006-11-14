@@ -1188,14 +1188,14 @@ public final class Strings
 		else
 		{
 			// two or more elements
-			StringBuilder buff = new StringBuilder(128);
+			StringBuffer buff = new StringBuffer(128);
 			if (fragments[0] != null)
 			{
 				buff.append(fragments[0]);
 			}
 			for (int i = 1; i < fragments.length; i++)
 			{
-				if ((fragments[i - 1] != null)  || (fragments[i] != null))
+				if ((fragments[i - 1] != null) || (fragments[i] != null))
 				{
 					boolean lhsClosed = fragments[i - 1].endsWith(separator);
 					boolean rhsClosed = fragments[i].startsWith(separator);
@@ -1216,14 +1216,14 @@ public final class Strings
 			return buff.toString();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Private constructor prevents construction.
 	 */
 	private Strings()
 	{
 	}
-	
-	
+
+
 }
