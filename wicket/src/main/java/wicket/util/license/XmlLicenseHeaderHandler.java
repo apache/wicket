@@ -62,7 +62,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 				// Then only take the first 16 lines
 				String[] headers = header.split(LINE_ENDING);
 				header = "";
-				for (int i = 0; i < 16; i++)
+				for (int i = 0; i < 16 && i < headers.length; i++)
 				{
 					if (header.length() > 0)
 					{
@@ -76,6 +76,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 		}
 		catch (Exception e)
 		{
+			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
 
