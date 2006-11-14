@@ -21,11 +21,13 @@ package wicket;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
@@ -122,8 +124,35 @@ import wicket.util.time.Duration;
  */
 public abstract class Session implements Serializable
 {
+	
 	private static final long serialVersionUID = 1L;
 
+	/** meta data key for missing body tags logging. */
+	public static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
+			PageMapAccessMetaData.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+
+	/**
+	 * meta data for recording map map access.
+	 */
+	public static final class PageMapAccessMetaData implements Serializable
+	{
+		private static final long serialVersionUID = 1L;
+
+		Set pageMapNames = new HashSet(2);
+		
+		/**
+		 * @param pagemap the pagemap to add as used.
+		 * @return the boolean if it was added (didn't already contain the pagemap)
+		 */
+		public boolean add(PageMap pagemap)
+		{
+			return pageMapNames.add(pagemap.getName());
+		}
+	}
+	
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
@@ -688,6 +717,8 @@ public abstract class Session implements Serializable
 	 */
 	public final void removePageMap(final PageMap pageMap)
 	{
+		PageMapAccessMetaData pagemapMetaData = (PageMapAccessMetaData)getMetaData(PAGEMAP_ACCESS_MDK);
+		if(pagemapMetaData != null) pagemapMetaData.pageMapNames.remove(pageMap.getName());
 		usedPageMaps.remove(pageMap);
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 		dirty();

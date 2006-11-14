@@ -17,16 +17,11 @@
  */
 package wicket.markup.html;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
 import wicket.IRequestTarget;
-import wicket.MetaDataKey;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -80,23 +75,6 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 	/** log. */
 	private static final Log log = LogFactory.getLog(WebPage.class);
-
-	/** meta data key for missing body tags logging. */
-	private static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
-			PageMapAccessMetaData.class)
-	{
-		private static final long serialVersionUID = 1L;
-	};
-
-	/**
-	 * meta data for recording map map access.
-	 */
-	private static final class PageMapAccessMetaData implements Serializable
-	{
-		private static final long serialVersionUID = 1L;
-
-		Set pageMapNames = new HashSet(1);
-	}
 
 	/** The resource references used for new window/tab support */
 	private static ResourceReference cookiesResource = new ResourceReference(WebPage.class,
@@ -375,37 +353,15 @@ public class WebPage extends Page implements INewBrowserWindowListener
 
 			Session session = getSession();
 
-			PageMapAccessMetaData meta = (PageMapAccessMetaData)session
-					.getMetaData(PAGEMAP_ACCESS_MDK);
+			Session.PageMapAccessMetaData meta = (Session.PageMapAccessMetaData)session
+					.getMetaData(Session.PAGEMAP_ACCESS_MDK);
 			if (meta == null)
 			{
-				meta = new PageMapAccessMetaData();
-				session.setMetaData(PAGEMAP_ACCESS_MDK, meta);
+				meta = new Session.PageMapAccessMetaData();
+				session.setMetaData(Session.PAGEMAP_ACCESS_MDK, meta);
 			}
-			boolean firstAccess = false;
-			if (!meta.pageMapNames.contains(name))
-			{
-				firstAccess = true;
-				meta.pageMapNames.add(name);
-			}
+			boolean firstAccess = meta.add(getPageMap());
 
-			// Here is our trickery to detect whether the current request was
-			// made in a new window/ tab, in which case it should go in a
-			// different page map so that we don't intermangle the history of
-			// those windows
-			CharSequence url = null;
-			if (target instanceof IBookmarkablePageRequestTarget)
-			{
-				IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
-				BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
-						getSession().createAutoPageMapName(), current.getPageClass(), current
-								.getPageParameters());
-				url = cycle.urlFor(redirect);
-			}
-			else
-			{
-				url = urlFor(INewBrowserWindowListener.INTERFACE);
-			}
 			if (firstAccess)
 			{
 				// this is the first access to the pagemap, set window.name
@@ -417,6 +373,23 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			}
 			else
 			{
+				// Here is our trickery to detect whether the current request was
+				// made in a new window/ tab, in which case it should go in a
+				// different page map so that we don't intermangle the history of
+				// those windows
+				CharSequence url = null;
+				if (target instanceof IBookmarkablePageRequestTarget)
+				{
+					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
+					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
+							getSession().createAutoPageMapName(), current.getPageClass(), current
+							.getPageParameters());
+					url = cycle.urlFor(redirect);
+				}
+				else
+				{
+					url = urlFor(INewBrowserWindowListener.INTERFACE);
+				}
 				JavascriptUtils.writeOpenTag(response);
 				response.write("if (window.name=='') { window.location=\"");
 				response.write(url);
