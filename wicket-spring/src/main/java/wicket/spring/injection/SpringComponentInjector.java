@@ -62,7 +62,7 @@ public class SpringComponentInjector extends ComponentInjector
 	 * Metadata key used to store application context holder in application's
 	 * metadata
 	 */
-	private static MetaDataKey CONTEXT_KEY = new MetaDataKey(
+	private static MetaDataKey<ApplicationContextHolder> CONTEXT_KEY = new MetaDataKey<ApplicationContextHolder>(
 			ApplicationContextHolder.class)
 	{
 
@@ -202,8 +202,7 @@ public class SpringComponentInjector extends ComponentInjector
 		{
 			if (context == null)
 			{
-				context = ((ApplicationContextHolder) Application.get().getMetaData(
-						CONTEXT_KEY)).getContext();
+				context = Application.get().getMetaData(CONTEXT_KEY).getContext();
 			}
 			return context;
 		}
