@@ -419,10 +419,7 @@ public class FormTester
 					Assert.fail("RadioGroup " + formComponent.getPath() + " does not has index:"
 							+ index);
 				}
-                String path=foundRadio.getPath();
-                path=path.substring(formComponent.getPath().length()+1, path.length());
-                
-				assignValueToFormComponent(formComponent, path);
+				assignValueToFormComponent(formComponent, foundRadio.getValue());
 			}
 			else if (formComponent instanceof CheckGroup)
 			{
@@ -433,11 +430,9 @@ public class FormTester
 					Assert.fail("CheckGroup " + formComponent.getPath() + " does not have index:"
 							+ index);
 				}
-				
-				String path=foundCheck.getPath();
-				path=path.substring(formComponent.getPath().length()+1, path.length());
-				
-				assignValueToFormComponent(formComponent, path);
+
+
+				assignValueToFormComponent(formComponent, String.valueOf(foundCheck.getValue()));
 			}
 			else
 			{
