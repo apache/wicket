@@ -17,12 +17,14 @@
 package wicket.markup.html.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
@@ -63,7 +65,7 @@ import wicket.util.convert.ConversionException;
 public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnChangeListener
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Log. */
 	private static final Log log = LogFactory.getLog(CheckGroup.class);
 
@@ -116,7 +118,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Collection<T> convertValue(String[] paths) throws ConversionException
+	protected Collection<T> convertValue(String[] values) throws ConversionException
 	{
 		List<T> collection = new ArrayList<T>();
 
@@ -125,28 +127,42 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 		 * collection has already been cleared
 		 */
 
-		if (paths != null && paths.length > 0)
+		if (values != null && values.length > 0)
 		{
-			for (String element : paths)
+			for (final String value : values)
 			{
-				String path = element;
-
-				if (path != null)
+				if (value != null)
 				{
 
 					// retrieve the selected checkbox component
-					Check<T> checkbox = (Check<T>)get(path);
+					Check<T> checkbox = (Check)visitChildren(new Component.IVisitor()
+					{
+
+						public Object component(Component component)
+						{
+							if (component instanceof Check)
+							{
+								final Check check = (Check)component;
+								if (String.valueOf(check.getValue()).equals(value))
+								{
+									return check;
+								}
+							}
+							return CONTINUE_TRAVERSAL;
+						}
+
+					});
 
 					if (checkbox == null)
 					{
 						throw new WicketRuntimeException(
 								"submitted http post value ["
-										+ paths.toString()
+										+ Arrays.toString(values)
 										+ "] for CheckGroup component ["
 										+ getPath()
-										+ "] contains an illegal relative path "
-										+ "element ["
-										+ path
+										+ "] contains an illegal value "
+										+ "["
+										+ value
 										+ "] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 					}
 
@@ -180,10 +196,10 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 			try
 			{
 				getModel().setObject(collection);
-			} 
-			catch(Exception e)
+			}
+			catch (Exception e)
 			{
-				// ignore this exception because it could be that there 
+				// ignore this exception because it could be that there
 				// is not setter for this collection.
 				log.info("no setter for the property attached to " + this);
 			}

@@ -47,6 +47,24 @@ public class Check<T> extends WebMarkupContainer<T>
 
 	private static final String ATTR_DISABLED = "disabled";
 
+	private short uuid = -1;
+
+	/**
+	 * Form submission value used for this radio component. This string will
+	 * appear as the value of the <code>value</code> html attribute for the
+	 * <code>input</code> tag.
+	 * 
+	 * @return form submission value
+	 */
+	public final String getValue()
+	{
+		if (uuid < 0)
+		{
+			uuid = getPage().getAutoIndex();
+		}
+		return "check" + uuid;
+	}
+
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
@@ -82,20 +100,21 @@ public class Check<T> extends WebMarkupContainer<T>
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
 		CheckGroup<?> group = findParent(CheckGroup.class);
-		String path = getPath();
+
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
 					"Check component ["
-							+ path
+							+ getPath()
 							+ "] cannot find its parent CheckGroup. All Check components must be a child of or below in the hierarchy of a CheckGroup component.");
 		}
 
-		String relativePath = path.substring(group.getPath().length() + 1);
-		
+
+		final String value = getValue();
+
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", relativePath);
+		tag.put("value", value);
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
@@ -112,10 +131,13 @@ public class Check<T> extends WebMarkupContainer<T>
 
 		if (group.hasRawInput())
 		{
-			String rawInput = group.getRawInput();
-			if (rawInput != null && rawInput.indexOf(relativePath) != -1)
+			String[] inputs = group.getInputAsArray();
+			for (String input : inputs)
 			{
-				tag.put("checked", "checked");
+				if (value.equals(input))
+				{
+					tag.put("checked", "checked");
+				}
 			}
 		}
 		else if (collection.contains(getModelObject()))

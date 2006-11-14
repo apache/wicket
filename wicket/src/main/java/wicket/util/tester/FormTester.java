@@ -130,10 +130,7 @@ public class FormTester
 				}
 				else
 				{
-					String path = foundRadio.getPath();
-					path = path.substring(formComponent.getPath().length() + 1, path.length());
-
-					assignValueToFormComponent(formComponent, path);
+					assignValueToFormComponent(formComponent, foundRadio.getValue());
 				}
 			}
 			else if (formComponent instanceof CheckGroup)
@@ -146,10 +143,7 @@ public class FormTester
 							+ index);
 				}
 
-				String path = foundCheck.getPath();
-				path = path.substring(formComponent.getPath().length() + 1, path.length());
-
-				assignValueToFormComponent(formComponent, path);
+				assignValueToFormComponent(formComponent, foundCheck.getValue());
 			}
 			else
 			{

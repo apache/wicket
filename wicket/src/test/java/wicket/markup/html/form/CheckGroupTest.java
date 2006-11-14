@@ -125,8 +125,8 @@ public class CheckGroupTest extends WicketTestCase
 		// set up necessary objects to emulate a form submission
 		tester.createRequestCycle();
 
-		new Check<String>(container, "check1", new Model<String>(check1));
-		new Check(group, "prop2");
+		Check choice1 = new Check<String>(container, "check1", new Model<String>(check1));
+		Check choice2 = new Check(group, "prop2");
 
 		modelObject.setProp2(check2);
 
@@ -138,12 +138,12 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue("running with nothing selected - model must be empty", modelObject.getProp1()
 				.size() == 0);
 
-		tester.getServletRequest().setParameter(group.getInputName(), "container:check1");
+		tester.getServletRequest().setParameter(group.getInputName(), choice1.getValue());
 		form.onFormSubmitted();
 		assertTrue("running with choice1 selected - model must only contain value of check1",
 				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
 
-		tester.getServletRequest().setParameter(group.getInputName(), "prop2");
+		tester.getServletRequest().setParameter(group.getInputName(), choice2.getValue());
 		form.onFormSubmitted();
 		assertTrue("running with choice2 selected - model must only contain value of check2",
 				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check2));
@@ -151,7 +151,7 @@ public class CheckGroupTest extends WicketTestCase
 		// throw in some nulls into the request param to make sure they are
 		// ignored
 		tester.getServletRequest().getParameterMap().put(group.getInputName(),
-				new String[] { null, "container:check1", null, "prop2" });
+				new String[] { null, choice1.getValue(), null, choice2.getValue() });
 		form.onFormSubmitted();
 		assertTrue(
 				"running with choice1 and choice2 selected - model must only contain values of check1 and check2",
@@ -195,12 +195,12 @@ public class CheckGroupTest extends WicketTestCase
 				fail("failed with wrong exception");
 			}
 		}
-	}	
+	}
 
 	/**
 	 * @throws Exception
 	 */
-	public void testDisabledCheckGroup()  throws Exception
+	public void testDisabledCheckGroup() throws Exception
 	{
 		executeTest(CheckGroupDisabledTestPage.class, "CheckGroupDisabledTestPage_expected.html");
 	}

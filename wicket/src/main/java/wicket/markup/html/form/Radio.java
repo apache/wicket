@@ -47,6 +47,28 @@ public class Radio<T> extends WebMarkupContainer<T>
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * page-scoped uuid of this check. this property must not be accessed
+	 * directly, instead {@link #getValue()} must be used
+	 */
+	private short uuid = -1;
+
+	/**
+	 * Form submission value used for this radio component. This string will
+	 * appear as the value of the <code>value</code> html attribute for the
+	 * <code>input</code> tag.
+	 * 
+	 * @return form submission value
+	 */
+	public final String getValue()
+	{
+		if (uuid < 0)
+		{
+			uuid = getPage().getAutoIndex();
+		}
+		return "radio" + uuid;
+	}
+
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
@@ -83,28 +105,27 @@ public class Radio<T> extends WebMarkupContainer<T>
 		checkComponentTagAttribute(tag, "type", "radio");
 
 		final RadioGroup group = findParent(RadioGroup.class);
-		final String path = getPath();
+
+		final String value = getValue();
 
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
 					"Radio component ["
-							+ path
+							+ getPath()
 							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
-		final String relativePath = path.substring(group.getPath().length() + 1);
-		
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", relativePath);
+		tag.put("value", value);
 
 		// compare the model objects of the group and self, if the same add the
 		// checked attribute, first check if there was a raw input on the group.
 		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if (rawInput != null && rawInput.equals(relativePath))
+			if (rawInput != null && rawInput.equals(value))
 			{
 				tag.put("checked", "checked");
 			}
