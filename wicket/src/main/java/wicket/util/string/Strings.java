@@ -390,7 +390,7 @@ public final class Strings
 	}
 
 	/**
-	 * Joins path fragments using the specified separator into a single path
+	 * Joins string fragments using the specified separator
 	 * 
 	 * @param separator
 	 * @param fragments
