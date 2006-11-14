@@ -211,6 +211,10 @@ import wicket.version.undo.Change;
  * <li><b>AJAX support</b>- Components can be re-rendered after the whole Page
  * has been rendered at least once by calling doRender().
  * 
+ * 
+ * TODO johan: document component borders
+ * 
+ * 
  * @param <T>
  *            Type of model object this component holds
  * 
@@ -478,7 +482,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		private static final long serialVersionUID = 1L;
 	};
-	
+
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -1081,7 +1085,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
-	 public final <X extends Serializable> X getMetaData(final MetaDataKey<X> key)
+	public final <X extends Serializable> X getMetaData(final MetaDataKey<X> key)
 	{
 		return key.get(metaData);
 	}
@@ -1695,10 +1699,12 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				onBeforeRender();
 				try
 				{
-					IComponentBorder border = getBorder();
-					if(border != null) border.renderBefore(this);
+					IComponentBorder border = getComponentBorder();
+					if (border != null)
+						border.renderBefore(this);
 					onRender(markupStream);
-					if(border != null) border.renderAfter(this);
+					if (border != null)
+						border.renderAfter(this);
 				}
 				finally
 				{
@@ -1743,22 +1749,51 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * @return
+	 * @return component border assigned to this component, or null if none
 	 */
-	public IComponentBorder getBorder()
+	public IComponentBorder getComponentBorder()
 	{
 		return getMetaData(BORDER_KEY);
 	}
-	
+
 	/**
+	 * Assigns a component border to this component. If called with
+	 * <code>null</code> any previous border will be cleared.
+	 * 
 	 * @param border
-	 * @return
+	 *            componnet border to assign, or <code>null</code> to clear
+	 *            any previous
+	 * @return component for chaining
 	 */
-	public Component setBorder(IComponentBorder border)
+	public Component setComponentBorder(IComponentBorder border)
 	{
+		if (!Objects.equal(getComponentBorder(), border))
+		{
+			addStateChange(new ComponentBorderChange());
+		}
 		setMetaData(BORDER_KEY, border);
 		return this;
 	}
+
+	/**
+	 * Undo change for component border property
+	 * 
+	 * @author ivaynberg
+	 */
+	private class ComponentBorderChange extends Change
+	{
+		private static final long serialVersionUID = 1L;
+
+		private final IComponentBorder old = getComponentBorder();
+
+		@Override
+		public void undo()
+		{
+			setComponentBorder(old);
+		}
+
+	}
+
 
 	/**
 	 * Page.renderPage() is used to render a whole page. With AJAX however it
