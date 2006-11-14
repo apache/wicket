@@ -48,7 +48,7 @@ public class MarkupResourceStream implements IResourceStream
 	 * The actual component class the markup is directly associated with. It
 	 * might be super class of the component class
 	 */
-	private final Class<? extends MarkupContainer> markupClass;
+	private final Class markupClass;
 
 	/** The key used to cache the markup resource stream */
 	private CharSequence cacheKey;
@@ -64,7 +64,7 @@ public class MarkupResourceStream implements IResourceStream
 	 *            the markup cache
 	 */
 	public MarkupResourceStream(final IResourceStream resourceStream,
-			final ContainerInfo containerInfo, final Class<? extends MarkupContainer> markupClass)
+			final ContainerInfo containerInfo, final Class markupClass)
 	{
 		this.resourceStream = resourceStream;
 		this.containerInfo = containerInfo;

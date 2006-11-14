@@ -92,7 +92,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	}
 
 	/** meta data key for missing body tags logging. */
-	private static final MetaDataKey PAGEMAP_ACCESS_MDK = new MetaDataKey(
+	private static final MetaDataKey<PageMapAccessMetaData> PAGEMAP_ACCESS_MDK = new MetaDataKey<PageMapAccessMetaData>(
 			PageMapAccessMetaData.class)
 	{
 		private static final long serialVersionUID = 1L;
@@ -386,8 +386,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 
 			Session session = getSession();
 
-			PageMapAccessMetaData meta = (PageMapAccessMetaData)session
-					.getMetaData(PAGEMAP_ACCESS_MDK);
+			PageMapAccessMetaData meta = session.getMetaData(PAGEMAP_ACCESS_MDK);
 			if (meta == null)
 			{
 				meta = new PageMapAccessMetaData();

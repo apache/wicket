@@ -30,12 +30,12 @@ import java.io.Serializable;
  * 
  * @author Jonathan Locke
  */
-public abstract class MetaDataKey implements Serializable
+public abstract class MetaDataKey<T extends Serializable> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
 	/** Type of data associated with this key */
-	private Class<?> type;
+	private Class<T> type;
 
 	/**
 	 * Constructor.
@@ -43,7 +43,7 @@ public abstract class MetaDataKey implements Serializable
 	 * @param type
 	 *            The type of value stored under this key
 	 */
-	public MetaDataKey(final Class type)
+	public MetaDataKey(final Class<T> type)
 	{
 		this.type = type;
 	}
@@ -62,7 +62,8 @@ public abstract class MetaDataKey implements Serializable
 	 *            Array of metadata to search
 	 * @return The entry value
 	 */
-	Serializable get(MetaDataEntry[] metaData)
+	@SuppressWarnings("unchecked")
+	T get(MetaDataEntry[] metaData)
 	{
 		if (metaData != null)
 		{
@@ -70,7 +71,7 @@ public abstract class MetaDataKey implements Serializable
 			{
 				if (equals(m.key))
 				{
-					return m.object;
+					return (T)m.object;
 				}
 			}
 		}
@@ -84,7 +85,7 @@ public abstract class MetaDataKey implements Serializable
 	 *            The object to set
 	 * @return Any new metadata array (if it was reallocated)
 	 */
-	MetaDataEntry[] set(MetaDataEntry[] metaData, final Serializable object)
+	MetaDataEntry[] set(MetaDataEntry[] metaData, final T object)
 	{
 		checkType(object);
 		boolean set = false;

@@ -97,8 +97,8 @@ public abstract class Border<T> extends WebMarkupContainerWithAssociatedMarkup<T
 			IComponentResolver,
 			IAlternateParentProvider
 {
-	private static final String BODY = "body";
-	private static final String BORDER = "border";
+	static final String BODY = "body";
+	static final String BORDER = "border";
 
 	static
 	{

@@ -54,6 +54,16 @@ public class ContainerInfo
 		this.componentPath = container.getPageRelativePath();
 	}
 
+	public ContainerInfo(Class clz, Locale locale, String style, String variation, String markupType, String componentPath)
+	{
+		this.containerClass = clz;
+		this.locale = locale;
+		this.style = style;
+		this.variation = variation;
+		this.fileExtension = markupType;
+		this.componentPath = componentPath;
+	}
+	
 	/**
 	 * Gets componentPath.
 	 * 

@@ -423,7 +423,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey key)
+	public final <T extends Serializable> T getMetaData(final MetaDataKey<T> key)
 	{
 		return key.get(metaData);
 	}

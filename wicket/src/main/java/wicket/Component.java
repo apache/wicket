@@ -472,7 +472,13 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/** empty object[] array used for invoking listener methods */
 	private static final Object[] LISTENER_ARGS = new Object[] {};
 
-
+	/** meta data key for missing body tags logging. */
+	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>(
+			IComponentBorder.class)
+	{
+		private static final long serialVersionUID = 1L;
+	};
+	
 	/** Basic model IModelComparator implementation for normal object models */
 	private static final IModelComparator defaultModelComparator = new IModelComparator()
 	{
@@ -1075,7 +1081,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
-	public final Serializable getMetaData(final MetaDataKey key)
+	 public final <X extends Serializable> X getMetaData(final MetaDataKey<X> key)
 	{
 		return key.get(metaData);
 	}
@@ -1689,7 +1695,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				onBeforeRender();
 				try
 				{
+					IComponentBorder border = getBorder();
+					if(border != null) border.renderBefore(this);
 					onRender(markupStream);
+					if(border != null) border.renderAfter(this);
 				}
 				finally
 				{
@@ -1731,6 +1740,24 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		{
 			markupStream.skipComponent();
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	public IComponentBorder getBorder()
+	{
+		return getMetaData(BORDER_KEY);
+	}
+	
+	/**
+	 * @param border
+	 * @return
+	 */
+	public Component setBorder(IComponentBorder border)
+	{
+		setMetaData(BORDER_KEY, border);
+		return this;
 	}
 
 	/**
