@@ -45,6 +45,11 @@ public class Check extends WebMarkupContainer
 
 	private static final String ATTR_DISABLED = "disabled";
 
+	/**
+	 * page-scoped uuid of this check. this property must not be accessed
+	 * directly, instead {@link #getValue()} must be used
+	 */
+	private short uuid = -1;
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
@@ -64,6 +69,23 @@ public class Check extends WebMarkupContainer
 
 
 	/**
+	 * Form submission value used for this radio component. This string will
+	 * appear as the value of the <code>value</code> html attribute for the
+	 * <code>input</code> tag.
+	 * 
+	 * @return form submission value
+	 */
+	public final String getValue()
+	{
+		if (uuid < 0)
+		{
+			uuid = getPage().getAutoIndex();
+		}
+		return "check" + uuid;
+	}
+
+
+	/**
 	 * @see Component#onComponentTag(ComponentTag)
 	 * @param tag
 	 *            the abstraction representing html tag of this component
@@ -78,20 +100,17 @@ public class Check extends WebMarkupContainer
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
 		CheckGroup group = (CheckGroup)findParent(CheckGroup.class);
-		String path = getPath();
 		if (group == null)
 		{
-			throw new WicketRuntimeException(
-					"Check component ["
-							+ path
-							+ "] cannot find its parent CheckGroup. All Check components must be a child of or below in the hierarchy of a CheckGroup component.");
+			throw new WicketRuntimeException("Check component [" + getPath()
+					+ "] cannot find its parent CheckGroup");
 		}
 
-		String relativePath = path.substring(group.getPath().length() + 1);
-			
+		final String uuid = getValue();
+
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", relativePath);
+		tag.put("value", uuid);
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
@@ -108,10 +127,14 @@ public class Check extends WebMarkupContainer
 
 		if (group.hasRawInput())
 		{
-			String rawInput = group.getRawInput();
-			if (rawInput != null && rawInput.indexOf(relativePath) != -1)
+			final String[] input = group.getInputAsArray();
+
+			for (int i = 0; i < input.length; i++)
 			{
-				tag.put("checked", "checked");
+				if (uuid.equals(input[i]))
+				{
+					tag.put("checked", "checked");
+				}
 			}
 		}
 		else if (collection.contains(getModelObject()))
@@ -145,6 +168,5 @@ public class Check extends WebMarkupContainer
 
 
 	}
-
 
 }
