@@ -29,6 +29,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.convert.ConversionException;
+import wicket.util.string.Strings;
 
 /**
  * Component used to connect instances of Check components into a group.
@@ -140,7 +141,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 					{
 						throw new WicketRuntimeException(
 								"submitted http post value ["
-										+ Arrays.toString(values)
+										+ Strings.join(",", values)
 										+ "] for CheckGroup component ["
 										+ getPath()
 										+ "] contains an illegal relative path "

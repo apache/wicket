@@ -1167,9 +1167,63 @@ public final class Strings
 	}
 
 	/**
+	 * Joins string fragments using the specified separator
+	 * 
+	 * @param separator
+	 * @param fragments
+	 * @return combined fragments
+	 */
+	public static String join(String separator, String[] fragments)
+	{
+		if (fragments.length < 1)
+		{
+			// no elements
+			return "";
+		}
+		else if (fragments.length < 2)
+		{
+			// single element
+			return fragments[0];
+		}
+		else
+		{
+			// two or more elements
+			StringBuilder buff = new StringBuilder(128);
+			if (fragments[0] != null)
+			{
+				buff.append(fragments[0]);
+			}
+			for (int i = 1; i < fragments.length; i++)
+			{
+				if ((fragments[i - 1] != null)  || (fragments[i] != null))
+				{
+					boolean lhsClosed = fragments[i - 1].endsWith(separator);
+					boolean rhsClosed = fragments[i].startsWith(separator);
+					if (lhsClosed && rhsClosed)
+					{
+						buff.append(fragments[i].substring(1));
+					}
+					else if (!lhsClosed && !rhsClosed)
+					{
+						buff.append(separator).append(fragments[i]);
+					}
+					else
+					{
+						buff.append(fragments[i]);
+					}
+				}
+			}
+			return buff.toString();
+		}
+	}
+	
+	
+	/**
 	 * Private constructor prevents construction.
 	 */
 	private Strings()
 	{
 	}
+	
+	
 }
