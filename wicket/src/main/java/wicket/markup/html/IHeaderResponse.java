@@ -46,6 +46,9 @@ public interface IHeaderResponse extends Serializable
 	 * Renders javascript code to the response, if the javascript has not
 	 * already been rendered.
 	 * 
+	 * the necessary surrounding <code>script</code> tags will be added to the
+	 * output.
+	 * 
 	 * @param javascript
 	 *            javacript content to be rendered.
 	 * 

@@ -25,7 +25,6 @@ import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.ResourceReference;
-import wicket.Response;
 import wicket.Session;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.MarkupFragment;
@@ -261,7 +260,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		// Create a body container, assuming that all HTML pages require a
 		// <body> tag
 		new HtmlBodyContainer(this, BodyOnLoadHandler.BODY_ID);
-		
+
 		// Add this little helper to the page
 		this.bodyContainer = new BodyContainer(this, BodyOnLoadHandler.BODY_ID);
 
@@ -347,8 +346,6 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		 */
 		public final void renderHead(final IHeaderResponse headResponse)
 		{
-			Response response = headResponse.getResponse();
-
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 
@@ -374,18 +371,21 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 
 			if (firstAccess)
 			{
+				StringBuilder javascript = new StringBuilder();
 				// this is the first access to the pagemap, set window.name
-				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='') { window.name=\"");
-				response.write(name);
-				response.write("\"; }");
-				JavascriptUtils.writeCloseTag(response);
+				javascript.append("if (window.name=='') { window.name=\"");
+				javascript.append(name);
+				javascript.append("\"; }");
+
+				headResponse.renderJavascript(javascript.toString(), getClass().getName());
 			}
 			else
 			{
-				// Here is our trickery to detect whether the current request was
+				// Here is our trickery to detect whether the current request
+				// was
 				// made in a new window/ tab, in which case it should go in a
-				// different page map so that we don't intermangle the history of
+				// different page map so that we don't intermangle the history
+				// of
 				// those windows
 				CharSequence url = null;
 				if (target instanceof IBookmarkablePageRequestTarget)
@@ -393,18 +393,20 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 					IBookmarkablePageRequestTarget current = (IBookmarkablePageRequestTarget)target;
 					BookmarkablePageRequestTarget redirect = new BookmarkablePageRequestTarget(
 							getSession().createAutoPageMapName(), current.getPageClass(), current
-							.getPageParameters());
+									.getPageParameters());
 					url = cycle.urlFor(redirect);
 				}
 				else
 				{
 					url = urlFor(INewBrowserWindowListener.INTERFACE);
 				}
-				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='') { window.location=\"");
-				response.write(url);
-				response.write("\"; }");
-				JavascriptUtils.writeCloseTag(response);
+
+				StringBuilder javascript = new StringBuilder();
+				javascript.append("if (window.name=='') { window.location=\"");
+				javascript.append(url);
+				javascript.append("\"; }");
+
+				headResponse.renderJavascript(javascript, getClass().getName());
 			}
 		}
 	}
