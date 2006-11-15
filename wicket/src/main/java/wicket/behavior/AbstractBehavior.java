@@ -65,7 +65,14 @@ public abstract class AbstractBehavior implements IBehavior
 	 */
 	public final void rendered(final Component component)
 	{
-		onRendered(component);
+		try
+		{
+			onRendered(component);
+		}
+		finally
+		{
+			cleanup();
+		}
 	}
 
 	/**
@@ -82,10 +89,16 @@ public abstract class AbstractBehavior implements IBehavior
 	 * @see wicket.behavior.IBehavior#exception(wicket.Component,
 	 *      java.lang.RuntimeException)
 	 */
-	public void exception(Component component, RuntimeException exception)
+	public final void exception(Component component, RuntimeException exception)
 	{
-		onException(component, exception);
-		cleanup();
+		try
+		{
+			onException(component, exception);
+		}
+		finally
+		{
+			cleanup();
+		}
 	}
 
 	/**
@@ -112,7 +125,7 @@ public abstract class AbstractBehavior implements IBehavior
 	public void cleanup()
 	{
 	}
-	
+
 	/**
 	 * @see wicket.behavior.IBehavior#getStatelessHint()
 	 */
