@@ -155,20 +155,24 @@ public class CheckGroupTest extends WicketTestCase
 		assertTrue("running with nothing selected - model must be empty", modelObject.getProp1()
 				.size() == 0);
 
-		application.getServletRequest().setParameter(group.getInputName(), "container:check1");
+		application.getServletRequest().setParameter(group.getInputName(),
+				String.valueOf(choice1.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice1 selected - model must only contain value of check1",
 				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check1));
 
-		application.getServletRequest().setParameter(group.getInputName(), "prop2");
+		application.getServletRequest().setParameter(group.getInputName(),
+				String.valueOf(choice2.getValue()));
 		form.onFormSubmitted();
 		assertTrue("running with choice2 selected - model must only contain value of check2",
 				modelObject.getProp1().size() == 1 && modelObject.getProp1().contains(check2));
 
 		// throw in some nulls into the request param to make sure they are
 		// ignored
-		application.getServletRequest().getParameterMap().put(group.getInputName(),
-				new String[] { null, "container:check1", null, "prop2" });
+		application.getServletRequest().getParameterMap().put(
+				group.getInputName(),
+				new String[] { null, String.valueOf(choice1.getValue()), null,
+						String.valueOf(choice2.getValue()) });
 		form.onFormSubmitted();
 		assertTrue(
 				"running with choice1 and choice2 selected - model must only contain values of check1 and check2",
@@ -176,7 +180,7 @@ public class CheckGroupTest extends WicketTestCase
 						&& modelObject.getProp1().contains(check1));
 
 		application.getServletRequest().getParameterMap().put(group.getInputName(),
-				new String[] { "some weird path to test error" });
+				new String[] { "some weird choice uuid to test error" });
 		try
 		{
 			form.onFormSubmitted();
@@ -216,11 +220,11 @@ public class CheckGroupTest extends WicketTestCase
 
 		}
 	}
-	
+
 	/**
 	 * @throws Exception
 	 */
-	public void testDisabledCheckGroup()  throws Exception
+	public void testDisabledCheckGroup() throws Exception
 	{
 		executeTest(CheckGroupDisabledTestPage.class, "CheckGroupDisabledTestPage_expected.html");
 	}

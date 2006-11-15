@@ -25,7 +25,8 @@ import wicket.model.IModel;
 import wicket.util.lang.Objects;
 
 /**
- * Component representing a single radio choice in a wicket.markup.html.form.RadioGroup.
+ * Component representing a single radio choice in a
+ * wicket.markup.html.form.RadioGroup.
  * 
  * Must be attached to an &lt;input type=&quot;radio&quot; ... &gt; markup.
  * 
@@ -45,6 +46,12 @@ public class Radio extends WebMarkupContainer
 
 
 	/**
+	 * page-scoped uuid of this check. this property must not be accessed
+	 * directly, instead {@link #getValue()} must be used
+	 */
+	private short uuid = -1;
+
+	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(String)
 	 */
 	public Radio(String id)
@@ -62,6 +69,23 @@ public class Radio extends WebMarkupContainer
 
 
 	/**
+	 * Form submission value used for this radio component. This string will
+	 * appear as the value of the <code>value</code> html attribute for the
+	 * <code>input</code> tag.
+	 * 
+	 * @return form submission value
+	 */
+	public final String getValue()
+	{
+		if (uuid < 0)
+		{
+			uuid = getPage().getAutoIndex();
+		}
+		return "radio" + uuid;
+	}
+
+
+	/**
 	 * @see Component#onComponentTag(ComponentTag)
 	 * @param tag
 	 *            the abstraction representing html tag of this component
@@ -75,28 +99,28 @@ public class Radio extends WebMarkupContainer
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "radio");
 
+		final String value = getValue();
+
 		RadioGroup group = (RadioGroup)findParent(RadioGroup.class);
-		String path = getPath();
 		if (group == null)
 		{
 			throw new WicketRuntimeException(
 					"Radio component ["
-							+ path
+							+ getPath()
 							+ "] cannot find its parent RadioGroup. All Radio components must be a child of or below in the hierarchy of a RadioGroup component.");
 		}
 
-		String relativePath = path.substring(group.getPath().length() + 1);
-		
+
 		// assign name and value
 		tag.put("name", group.getInputName());
-		tag.put("value", relativePath);
+		tag.put("value", value);
 
 		// compare the model objects of the group and self, if the same add the
 		// checked attribute, first check if there was a raw input on the group.
-		if(group.hasRawInput())
+		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
-			if(rawInput != null && rawInput.equals(relativePath))
+			if (rawInput != null && rawInput.equals(value))
 			{
 				tag.put("checked", "checked");
 			}
@@ -114,18 +138,20 @@ public class Radio extends WebMarkupContainer
 			Form form = (Form)group.findParent(Form.class);
 			if (form != null)
 			{
-				tag.put("onclick", form.getJsForInterfaceUrl(url) );
+				tag.put("onclick", form.getJsForInterfaceUrl(url));
 			}
 			else
 			{
-				// NOTE: do not encode the url as that would give invalid JavaScript
+				// NOTE: do not encode the url as that would give invalid
+				// JavaScript
 				tag.put("onclick", "window.location.href='" + url + "&" + group.getInputName()
 						+ "=' + this.value;");
 			}
 		}
-		
-		
-		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled()) {
+
+
+		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
+		{
 			tag.put(ATTR_DISABLED, ATTR_DISABLED);
 		}
 	}
