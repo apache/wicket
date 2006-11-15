@@ -38,10 +38,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *               &lt;tbody&gt;
- *                 &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                     &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                 ...    
+ *                  &lt;tbody&gt;
+ *                    &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                        &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                    ...    
  * </pre>
  * 
  * <p>
@@ -62,7 +62,19 @@ import wicket.version.undo.Change;
  * </pre>
  * 
  * <p>
- * WARNING: though you can nest ListViews within Forms, you HAVE to set the
+ * <strong>NOTE:</strong>
+ * 
+ * When you want to change the default generated markup it is important to
+ * realise that the ListView instance itself does not correspond to any markup,
+ * however, the generated ListItems do.<br/>
+ * 
+ * This means that methods like {@link #setRenderBodyOnly(boolean)} and
+ * {@link #add(wicket.behavior.IBehavior)} should be invoked on the
+ * {@link ListItem} that is given in {@link #populateItem(ListItem)} method.
+ * </p>
+ * 
+ * <p>
+ * <strong>WARNING:</strong> though you can nest ListViews within Forms, you HAVE to set the
  * optimizeItemRemoval property to true in order to have validation work
  * properly. By default, optimizeItemRemoval is false, which has the effect that
  * ListView replaces all child components by new instances. The idea behind this
