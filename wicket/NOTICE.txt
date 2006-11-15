@@ -7,3 +7,7 @@
    The library for dragging the AJAX debug dialog has the
    following notice:
    "distributed under commons creative license 2.0"
+   
+   Contains Diff library from Mavens JRCS, released under
+   The Apache Software License, Version 1.1.
+   (c) 1999-2003

@@ -34,6 +34,26 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 //		addHeaders = true;
 		
+		javaIgnore = new String[] {
+				"src/main/java/wicket/util/diff/AddDelta.java",
+				"src/main/java/wicket/util/diff/ChangeDelta.java",
+				"src/main/java/wicket/util/diff/Chunk.java",
+				"src/main/java/wicket/util/diff/DeleteDelta.java",
+				"src/main/java/wicket/util/diff/Delta.java",
+				"src/main/java/wicket/util/diff/Diff.java",
+				"src/main/java/wicket/util/diff/DiffAlgorithm.java",
+				"src/main/java/wicket/util/diff/DifferentiationFailedException.java",
+				"src/main/java/wicket/util/diff/DiffException.java",
+				"src/main/java/wicket/util/diff/PatchFailedException.java",
+				"src/main/java/wicket/util/diff/Revision.java",
+				"src/main/java/wicket/util/diff/RevisionVisitor.java",
+				"src/main/java/wicket/util/diff/ToString.java",
+				"src/main/java/wicket/util/diff/myers/DiffNode.java",
+				"src/main/java/wicket/util/diff/myers/MyersDiff.java",
+				"src/main/java/wicket/util/diff/myers/PathNode.java",
+				"src/main/java/wicket/util/diff/myers/Snake.java",
+		};
+		
 		cssIgnore = new String[] { "src/test/java/wicket/protocol/http/portlet/style.css",
 				"src/test/java/wicket/ajax/mockStyleSheet3.css",
 				"src/test/java/wicket/markup/parser/filter/style.css",
@@ -64,7 +84,9 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 		};
 		
 		htmlIgnore = new String[] {
-				"src/test/java/wicket"
+				"src/test/java/wicket",
+				"src/main/java/wicket/util/diff/package.html",
+				"src/main/java/wicket/util/diff/myers/package.html"
 		};
 	}
 }
