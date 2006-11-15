@@ -19,9 +19,11 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -99,7 +101,7 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 	/**
 	 * @see wicket.markup.html.form.FormComponent#convertValue(String[])
 	 */
-	protected Object convertValue(String[] paths) throws ConversionException
+	protected Object convertValue(String[] values) throws ConversionException
 	{
 		List collection = new ArrayList();
 
@@ -108,27 +110,42 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 		 * collection has already been cleared
 		 */
 
-		if (paths != null && paths.length > 0)
+		if (values != null && values.length > 0)
 		{
-			for (int i = 0; i < paths.length; i++)
+			for (int i = 0; i < values.length; i++)
 			{
-				String path = paths[i];
+				final String value = values[i];
 
-				if (path != null)
+				if (value != null)
 				{
-					// retrieve the selected checkbox component
-					Check checkbox = (Check)get(path);
+					Check checkbox = (Check)visitChildren(new Component.IVisitor()
+					{
+
+						public Object component(Component component)
+						{
+							if (component instanceof Check)
+							{
+								final Check check = (Check)component;
+								if (String.valueOf(check.getValue()).equals(value))
+								{
+									return check;
+								}
+							}
+							return CONTINUE_TRAVERSAL;
+						}
+
+					});
 
 					if (checkbox == null)
 					{
 						throw new WicketRuntimeException(
 								"submitted http post value ["
-										+ paths.toString()
+										+ Arrays.toString(values)
 										+ "] for CheckGroup component ["
 										+ getPath()
 										+ "] contains an illegal relative path "
 										+ "element ["
-										+ path
+										+ value
 										+ "] which does not point to a Check component. Due to this the CheckGroup component cannot resolve the selected Check component pointed to by the illegal value. A possible reason is that componment hierarchy changed between rendering and form submission.");
 					}
 
