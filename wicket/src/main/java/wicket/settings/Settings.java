@@ -46,7 +46,6 @@ import wicket.markup.html.form.persistence.CookieValuePersisterSettings;
 import wicket.markup.html.pages.BrowserInfoPage;
 import wicket.markup.resolver.AutoComponentResolver;
 import wicket.markup.resolver.IComponentResolver;
-import wicket.protocol.http.RequestLogger;
 import wicket.protocol.http.WebRequest;
 import wicket.resource.PropertiesFactory;
 import wicket.resource.loader.ClassStringResourceLoader;
