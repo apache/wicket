@@ -17,6 +17,7 @@
  */
 package wicket.markup.html.form;
 
+import wicket.Component;
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
@@ -31,13 +32,13 @@ import wicket.util.convert.ConversionException;
  * ie
  * 
  * <pre>
- *  &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
- *    ...
- *    &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
- *    ...
- *    &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
- *    ...
- *  &lt;/span&gt;
+ *      &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
+ *        ...
+ *        &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
+ *        ...
+ *        &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
+ *        ...
+ *      &lt;/span&gt;
  * </pre>
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
@@ -78,16 +79,29 @@ public class RadioGroup extends FormComponent implements IOnChangeListener
 	{
 		if (input != null && input.length > 0)
 		{
-			String path = input[0];
+			final String value = input[0];
+			Radio choice = (Radio)visitChildren(new Component.IVisitor()
+			{
 
-			// retrieve the selected single radio choice component
-			Radio choice = (Radio)get(path);
+				public Object component(Component component)
+				{
+					if (component instanceof Radio)
+					{
+						final Radio radio = (Radio)component;
+						if (radio.getValue().equals(value))
+						{
+							return radio;
+						}
+					}
+					return CONTINUE_TRAVERSAL;
+				}
 
+			});
 			if (choice == null)
 			{
 				throw new WicketRuntimeException(
 						"submitted http post value ["
-								+ path
+								+ value
 								+ "] for RadioGroup component ["
 								+ getPath()
 								+ "] is illegal because it does not contain relative path to a Radio componnet. "
