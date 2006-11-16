@@ -16,10 +16,10 @@
  */
 package wicket.protocol.http.request;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
@@ -47,31 +47,6 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 		implements
 			IRequestTargetMountsInfo
 {
-	/** Comparator implementation that sorts longest strings first */
-	private static final Comparator<String> lengthComparator = new Comparator<String>()
-	{
-		public int compare(String o1, String o2)
-		{
-			// longer first
-			if (o1 == o2)
-			{
-				return 0;
-			}
-			else if (o1 == null)
-			{
-				return 1;
-			}
-			else if (o2 == null)
-			{
-				return -1;
-			}
-			else
-			{
-				return 0 - o1.compareTo(o2);
-			}
-		}
-	};
-
 	/**
 	 * map of path mounts for mount encoders on paths.
 	 * <p>
@@ -88,8 +63,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	 * match the longest possible path first.
 	 * </p>
 	 */
-	private final SortedMap<String, IRequestTargetUrlCodingStrategy> mountsOnPath = new TreeMap<String, IRequestTargetUrlCodingStrategy>(
-			lengthComparator);
+	private final MountsMap mountsOnPath;
 
 	/** cached url prefix. */
 	private CharSequence urlPrefix;
@@ -147,6 +121,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	public WebRequestCodingStrategy(Settings settings)
 	{
 		this.settings = settings;
+		mountsOnPath = new MountsMap(settings.areMountsCaseSensitive());
 	}
 
 	/**
@@ -218,7 +193,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	 */
 	public IRequestTargetUrlCodingStrategy[] listMounts()
 	{
-		return (IRequestTargetUrlCodingStrategy[])mountsOnPath.values().toArray(
+		return (IRequestTargetUrlCodingStrategy[])mountsOnPath.strategies().toArray(
 				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
 	}
 
@@ -250,12 +225,12 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 			path = "/" + path;
 		}
 
-		if (mountsOnPath.containsKey(path))
+		if (mountsOnPath.strategyForMount(path) != null)
 		{
 			throw new WicketRuntimeException(path + " is already mounted for "
-					+ mountsOnPath.get(path));
+					+ mountsOnPath.strategyForMount(path));
 		}
-		mountsOnPath.put(path, encoder);
+		mountsOnPath.mount(path, encoder);
 	}
 
 	/**
@@ -288,7 +263,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 			path = "/" + path;
 		}
 
-		mountsOnPath.remove(path);
+		mountsOnPath.unmount(path);
 	}
 
 	/**
@@ -298,39 +273,15 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	{
 		if (path == null)
 		{
-			return mountsOnPath.get(null);
+			return mountsOnPath.strategyForMount(null);
 		}
 		else if (!path.equals("/")) // ignore root paths.. is this the right
 		// path?
 		{
-			for (final Iterator it = mountsOnPath.entrySet().iterator(); it.hasNext();)
+			IRequestTargetUrlCodingStrategy strat = mountsOnPath.strategyForPath(path);
+			if (strat != null)
 			{
-				final Map.Entry entry = (Entry)it.next();
-				final String key = (String)entry.getKey();
-				boolean match = false;
-				if (!settings.areMountsCaseSensitive())
-				{
-					if (path.length() >= key.length())
-					{
-						String mount = path.substring(0, key.length());
-						if (mount.equalsIgnoreCase(key))
-						{
-							match = true;
-						}
-					}
-				}
-				else
-				{
-					if (path.startsWith(key))
-					{
-						match = true;
-					}
-				}
-
-				if (match)
-				{
-					return (IRequestTargetUrlCodingStrategy)entry.getValue();
-				}
+				return strat;
 			}
 		}
 		return null;
@@ -347,7 +298,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	{
 		// TODO Post 1.2: Performance: Optimize algorithm if possible and/ or
 		// cache lookup results
-		for (IRequestTargetUrlCodingStrategy encoder : mountsOnPath.values())
+		for (IRequestTargetUrlCodingStrategy encoder : mountsOnPath.strategies())
 		{
 			if (encoder.matches(requestTarget))
 			{
@@ -374,5 +325,162 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 			urlPrefix = WebApplication.get().getRootPath();
 		}
 		return urlPrefix;
+	}
+
+	/**
+	 * Map used to store mount paths and their corresponding url coding
+	 * strategies.
+	 * 
+	 * @author ivaynberg
+	 */
+	private static class MountsMap
+	{
+		private static final long serialVersionUID = 1L;
+
+		/** case sensitive flag */
+		private final boolean caseSensitiveMounts;
+
+		/** backing map */
+		private final TreeMap<String, IRequestTargetUrlCodingStrategy> map;
+
+		/**
+		 * Constructor
+		 * 
+		 * @param caseSensitiveMounts
+		 *            whether or not keys of this map are case-sensitive
+		 */
+		public MountsMap(boolean caseSensitiveMounts)
+		{
+			map = new TreeMap<String, IRequestTargetUrlCodingStrategy>(LENGTH_COMPARATOR);
+			this.caseSensitiveMounts = caseSensitiveMounts;
+		}
+
+		/**
+		 * Checks if the specified path matches any mount, and if so returns the
+		 * coding strategy for that mount. Returns null if the path doesnt match
+		 * any mounts.
+		 * 
+		 * NOTE: path here is not the mount - it is the full url path
+		 * 
+		 * @param path
+		 *            non-null url path
+		 * @return coding strategy or null
+		 */
+		public IRequestTargetUrlCodingStrategy strategyForPath(String path)
+		{
+			if (path == null)
+			{
+				throw new IllegalArgumentException("Argument [[path]] cannot be null");
+			}
+			if (caseSensitiveMounts == false)
+			{
+				path = path.toLowerCase();
+			}
+			for (final Iterator it = map.entrySet().iterator(); it.hasNext();)
+			{
+				final Map.Entry entry = (Entry)it.next();
+				final String key = (String)entry.getKey();
+				if (path.startsWith(key))
+				{
+					return (IRequestTargetUrlCodingStrategy)entry.getValue();
+				}
+			}
+			return null;
+		}
+
+
+		/**
+		 * @return number of mounts in the map
+		 */
+		public int size()
+		{
+			return map.size();
+		}
+
+		/**
+		 * @return collection of coding strategies associated with every mount
+		 */
+		public Collection<IRequestTargetUrlCodingStrategy> strategies()
+		{
+			return map.values();
+		}
+
+
+		/**
+		 * Removes mount from the map
+		 * 
+		 * @param mount
+		 */
+		public void unmount(String mount)
+		{
+			if (caseSensitiveMounts == false && mount != null)
+			{
+				mount = mount.toLowerCase();
+			}
+
+			map.remove(mount);
+		}
+
+
+		/**
+		 * Gets the coding strategy for the specified mount path
+		 * 
+		 * @param mount
+		 *            mount paht
+		 * @return associated coding strategy or null if none
+		 */
+		public IRequestTargetUrlCodingStrategy strategyForMount(String mount)
+		{
+			if (caseSensitiveMounts == false && mount != null)
+			{
+				mount = mount.toLowerCase();
+			}
+
+			return (IRequestTargetUrlCodingStrategy)map.get(mount);
+		}
+
+		/**
+		 * Associates a mount with a coding strategy
+		 * 
+		 * @param mount
+		 * @param encoder
+		 * @return previous coding strategy associated with the mount, or null
+		 *         if none
+		 */
+		public IRequestTargetUrlCodingStrategy mount(String mount,
+				IRequestTargetUrlCodingStrategy encoder)
+		{
+			if (caseSensitiveMounts == false && mount != null)
+			{
+				mount = mount.toLowerCase();
+			}
+			return (IRequestTargetUrlCodingStrategy)map.put(mount, encoder);
+		}
+
+
+		/** Comparator implementation that sorts longest strings first */
+		private static final Comparator<String> LENGTH_COMPARATOR = new Comparator<String>()
+		{
+			public int compare(String o1, String o2)
+			{
+				if (o1 == o2)
+				{
+					return 0;
+				}
+				else if (o1 == null)
+				{
+					return 1;
+				}
+				else if (o2 == null)
+				{
+					return -1;
+				}
+				else
+				{
+					return o2.compareTo(o1);
+				}
+			}
+		};
+
 	}
 }
