@@ -94,11 +94,59 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	/** cached url prefix. */
 	private CharSequence urlPrefix;
 
+	/** settings for the coding strategy */
+	private final Settings settings;
+
+	/**
+	 * Various settings used to configure this strategy
+	 * 
+	 * @author ivaynberg
+	 */
+	public static class Settings
+	{
+		/** whether or not mount paths are case sensitive */
+		private boolean mountsCaseSensitive = true;
+
+		/**
+		 * Sets mountsCaseSensitive.
+		 * 
+		 * @param mountsCaseSensitive
+		 *            mountsCaseSensitive
+		 */
+		public void setMountsCaseSensitive(boolean mountsCaseSensitive)
+		{
+			this.mountsCaseSensitive = mountsCaseSensitive;
+		}
+
+		/**
+		 * Gets caseSensitive.
+		 * 
+		 * @return caseSensitive
+		 */
+		public boolean areMountsCaseSensitive()
+		{
+			return mountsCaseSensitive;
+		}
+	}
+
+
 	/**
 	 * Construct.
 	 */
 	public WebRequestCodingStrategy()
 	{
+		this(new Settings());
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param settings
+	 *            settings to use for the coding strategy
+	 */
+	public WebRequestCodingStrategy(Settings settings)
+	{
+		this.settings = settings;
 	}
 
 	/**
@@ -259,7 +307,27 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 			{
 				final Map.Entry entry = (Entry)it.next();
 				final String key = (String)entry.getKey();
-				if (path.startsWith(key))
+				boolean match = false;
+				if (!settings.areMountsCaseSensitive())
+				{
+					if (path.length() >= key.length())
+					{
+						String mount = path.substring(0, key.length());
+						if (mount.equalsIgnoreCase(key))
+						{
+							match = true;
+						}
+					}
+				}
+				else
+				{
+					if (path.startsWith(key))
+					{
+						match = true;
+					}
+				}
+
+				if (match)
 				{
 					return (IRequestTargetUrlCodingStrategy)entry.getValue();
 				}
