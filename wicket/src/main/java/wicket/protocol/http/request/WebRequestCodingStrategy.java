@@ -1063,9 +1063,9 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 				}
 				else
 				{
-					String lhs = (String)o1;
-					String rhs = (String)o2;
-					return 0 - lhs.compareTo(rhs);
+					final String lhs = (String)o1;
+					final String rhs = (String)o2;
+					return rhs.compareTo(lhs);
 				}
 			}
 		};
