@@ -1,7 +1,7 @@
 /*
  * $Id: NiceUrlApplication.java 5398 2006-04-17 00:26:51 -0700 (Mon, 17 Apr
- * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 00:26:51 -0700 (Mon,
- * 17 Apr 2006) $
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 00:26:51 -0700
+ * (Mon, 17 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -20,6 +20,9 @@ package wicket.examples.niceurl;
 
 import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import wicket.util.lang.PackageName;
 
@@ -75,5 +78,19 @@ public class NiceUrlApplication extends WicketExampleApplication
 	private void mountBookmarkablePageWithUrlCoding(String path, Class pageClass)
 	{
 		mount(path, new QueryStringUrlCodingStrategy(path, pageClass));
+	}
+
+	/**
+	 * Sets up a request coding strategy that uses case-insensitive mounts
+	 * 
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
+	 */
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
+		stratSettings.setMountsCaseSensitive(false);
+
+		WebRequestCodingStrategy strat = new WebRequestCodingStrategy(stratSettings);
+		return new CompoundRequestCycleProcessor(strat);
 	}
 }
