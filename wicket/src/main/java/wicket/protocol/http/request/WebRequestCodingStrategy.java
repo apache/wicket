@@ -88,6 +88,50 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	public static final String IGNORE_IF_NOT_ACTIVE_PARAMETER_NAME = NAME_SPACE
 			+ "ignoreIfNotActive";
 
+	/**
+	 * Various settings used to configure this strategy
+	 * 
+	 * @author ivaynberg
+	 */
+	public static class Settings
+	{
+		/** whether or not mount paths are case sensitive */
+		private boolean mountsCaseSensitive = true;
+
+		/**
+		 * Construct.
+		 */
+		public Settings()
+		{
+		}
+
+		/**
+		 * Sets mountsCaseSensitive.
+		 * 
+		 * @param mountsCaseSensitive
+		 *            mountsCaseSensitive
+		 */
+		public void setMountsCaseSensitive(boolean mountsCaseSensitive)
+		{
+			this.mountsCaseSensitive = mountsCaseSensitive;
+		}
+
+		/**
+		 * Gets caseSensitive.
+		 * 
+		 * @return caseSensitive
+		 */
+		public boolean areMountsCaseSensitive()
+		{
+			return mountsCaseSensitive;
+		}
+	}
+
+
+	/** settings for the coding strategy */
+	private final Settings settings;
+
+
 	/** Comparator implementation that sorts longest strings first */
 	private static final Comparator lengthComparator = new Comparator()
 	{
@@ -145,7 +189,23 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	 */
 	public WebRequestCodingStrategy()
 	{
+		this(new Settings());
 	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param settings
+	 */
+	public WebRequestCodingStrategy(Settings settings)
+	{
+		if (settings == null)
+		{
+			throw new IllegalArgumentException("Argument [[settings]] cannot be null");
+		}
+		this.settings = settings;
+	}
+
 
 	/**
 	 * @see wicket.request.IRequestCodingStrategy#decode(wicket.Request)
@@ -265,7 +325,26 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			{
 				final Map.Entry entry = (Entry)it.next();
 				final String key = (String)entry.getKey();
-				if (path.startsWith(key))
+				boolean match = false;
+				if (!settings.areMountsCaseSensitive())
+				{
+					if (path.length() >= key.length())
+					{
+						String mount = path.substring(0, key.length());
+						if (mount.equalsIgnoreCase(key))
+						{
+							match = true;
+						}
+					}
+				}
+				else
+				{
+					if (path.startsWith(key))
+					{
+						match = true;
+					}
+				}
+				if (match)
 				{
 					return (IRequestTargetUrlCodingStrategy)entry.getValue();
 				}
@@ -614,7 +693,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		if (parameters != null)
 		{
 			Iterator it = parameters.keySet().iterator();
-			while(it.hasNext())
+			while (it.hasNext())
 			{
 				final String key = (String)it.next();
 				final String value = parameters.getString(key);
