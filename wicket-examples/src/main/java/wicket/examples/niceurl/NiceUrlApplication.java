@@ -1,7 +1,7 @@
 /*
  * $Id: NiceUrlApplication.java 5398 2006-04-17 07:26:51 +0000 (Mon, 17 Apr
- * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 07:26:51 +0000 (Mon,
- * 17 Apr 2006) $
+ * 2006) jdonnerstag $ $Revision$ $Date: 2006-04-17 07:26:51 +0000
+ * (Mon, 17 Apr 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -21,6 +21,9 @@ package wicket.examples.niceurl;
 import wicket.Page;
 import wicket.examples.WicketExampleApplication;
 import wicket.examples.niceurl.mounted.Page3;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.request.IRequestCycleProcessor;
+import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.target.coding.QueryStringUrlCodingStrategy;
 import wicket.util.lang.PackageName;
 
@@ -62,7 +65,7 @@ public class NiceUrlApplication extends WicketExampleApplication
 		mountBookmarkablePage("/the/homepage/path", Home.class);
 		mountBookmarkablePage("/a/nice/path/to/the/first/page", Page1.class);
 		mountBookmarkablePage("/path/to/page2", Page2.class);
-		
+
 		mount(new QueryStringUrlCodingStrategy("/path/to/page2qpencoded/", Page2QP.class));
 
 		// mount a whole package at once (all bookmarkable pages,
@@ -73,5 +76,20 @@ public class NiceUrlApplication extends WicketExampleApplication
 		// that any refactoring (like a package rename) will automatically
 		// be applied here.
 		mount("/my/mounted/package", PackageName.forClass(Page3.class));
+	}
+
+	/**
+	 * Sets up a request coding strategy that uses case-insensitive mounts
+	 * 
+	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
+	 */
+	@Override
+	protected IRequestCycleProcessor newRequestCycleProcessor()
+	{
+		WebRequestCodingStrategy.Settings stratSettings = new WebRequestCodingStrategy.Settings();
+		stratSettings.setMountsCaseSensitive(false);
+
+		WebRequestCodingStrategy strat = new WebRequestCodingStrategy(stratSettings);
+		return new CompoundRequestCycleProcessor(strat);
 	}
 }
