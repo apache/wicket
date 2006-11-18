@@ -156,16 +156,9 @@ public class WebRequestCodingStrategyTest extends TestCase
 		WebRequestCodingStrategy strategy = new WebRequestCodingStrategy();
 		strategy.mount(codingStrategy);
 
-		// Get the mountsOnPath field
-		Field mountsOnPathField = WebRequestCodingStrategy.class.getDeclaredField("mountsOnPath");
-		mountsOnPathField.setAccessible(true);
-		SortedMap<String, IRequestTargetUrlCodingStrategy> mountsOnPath = (SortedMap<String, IRequestTargetUrlCodingStrategy>)mountsOnPathField
-				.get(strategy);
-
-		IRequestTargetUrlCodingStrategy foundStrategy = mountsOnPath.get("/mockpath");
-
-		assertNotNull(foundStrategy);
-		assertEquals(codingStrategy, foundStrategy);
+		IRequestTargetUrlCodingStrategy found = strategy
+				.urlCodingStrategyForPath("/mockpath/foo/bar");
+		assertTrue(found == codingStrategy);
 	}
 
 	/**
