@@ -903,38 +903,21 @@ public abstract class Component implements Serializable
 	 * locate this component in the generated markup for post-wicket processing
 	 * such as javascript or an xslt transform.
 	 * <p>
-	 * Note: The component must have been added (directly or indirectly) to a
-	 * container with an associated markup file (Page, Panel or Border). This
-	 * TODO post 1.2 this restriction will be implicitly met after implementing
-	 * 2.0's constructor change
+	 * Note: This method should only be called after the component or its parent
+	 * have been added to the page. This will be relaxed in 2.0 where the page
+	 * is available on construction.
 	 * 
-	 * @return markup id of this component, which is the result of the call to
-	 *         {@link #getPageRelativePath()} where the ':' character (the
-	 *         internal path seperator of Wicket) are replaced by the '_'
-	 *         character.
+	 * @return markup id of the component
 	 */
 	public String getMarkupId()
 	{
-		/*
-		 * TODO Post 1.2: Restore the code below after the constructor refactor,
-		 * right now its causing too much pain for components inside listviews
-		 * and borders.
-		 * 
-		 * CODE:
-		 * 
-		 * String id = getMarkupAttributes().getString("id"); if (id == null) {
-		 * id = getPageRelativePath(); } return id;
-		 * 
-		 * JAVADOC:
-		 * 
-		 * If the id attribute is present in the markup attributes of this
-		 * component it will be used, otherwise the page-relative path of this
-		 * component will be used. <p>
-		 * 
-		 * 
-		 */
-
-		return getPageRelativePath().replace(':', '_');
+		String markupId = (String)getMetaData(MARKUP_ID_KEY);
+		if (markupId == null)
+		{
+			markupId = getId() + getPage().getAutoIndex();
+			setMetaData(MARKUP_ID_KEY, markupId);
+		}
+		return markupId;
 	}
 
 	/**
@@ -3146,4 +3129,14 @@ public abstract class Component implements Serializable
 	{
 		setFlag(FLAG_HEAD_RENDERED, false);
 	}
+
+	/**
+	 * Metadata key used to store/retrieve markup id
+	 */
+	private static MetaDataKey MARKUP_ID_KEY = new MetaDataKey(String.class)
+	{
+
+		private static final long serialVersionUID = 1L;
+
+	};
 }
