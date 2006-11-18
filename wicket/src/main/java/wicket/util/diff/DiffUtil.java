@@ -153,7 +153,7 @@ public final class DiffUtil
 
 		final URL url = clazz.getClassLoader().getResource(filename);
 		filename = url.getFile();
-		filename = filename.replaceAll("/target/test-classes/", "/src/test/");
+		filename = filename.replaceAll("/target/test-classes/", "/src/test/java/");
 		PrintWriter out = new PrintWriter(new FileOutputStream(filename));
 		out.print(document);
 		out.close();
