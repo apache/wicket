@@ -62,7 +62,7 @@ public class ComponentResolvingPage extends WebPage implements IComponentResolve
 					onEndRequestWasCalledOnAutoAddedComponent = true;
 				}
 			};
-			label.autoAdded();
+			label.render(markupStream);
 			return true;
 		}
 		return false;

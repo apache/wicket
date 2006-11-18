@@ -58,7 +58,7 @@ public class MarkupInheritanceResolver implements IComponentResolver
 		if (tag.isExtendTag() || tag.isChildTag())
 		{
 			new TransparentWebMarkupContainer(container, Component.AUTO_COMPONENT_PREFIX
-					+ tag.getId()).autoAdded();
+					+ tag.getId()).render(markupStream);
 			return true;
 		}
 

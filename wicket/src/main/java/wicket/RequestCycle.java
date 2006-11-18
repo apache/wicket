@@ -486,10 +486,10 @@ public abstract class RequestCycle
 	{
 		checkReuse();
 
-		if (component.isAuto())
-		{
-			throw new WicketRuntimeException("Auto-added components can not be re-rendered");
-		}
+//		if (component.isAuto())
+//		{
+//			throw new WicketRuntimeException("Auto-added components can not be re-rendered");
+//		}
 
 		request(new ComponentRequestTarget(component));
 	}

@@ -390,6 +390,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 	/**
 	 * This prefix should be used when making auto add components.
+	 * Use isAuto() to check if auto component. Don't check the id.
 	 */
 	public static final String AUTO_COMPONENT_PREFIX = "<auto>-";
 
@@ -628,15 +629,15 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		this.parent = getRealParent(parent, id);
 
 		getApplication().notifyComponentInstantiationListeners(this);
-		if (id.startsWith(AUTO_COMPONENT_PREFIX))
+		if (id.startsWith(AUTO_COMPONENT_PREFIX) == false)
 		{
-			this.parent.autoAdd(this);
+			this.markupFragment = getMarkupFragment();
 		}
 		else
 		{
-			this.markupFragment = getMarkupFragment();
-			this.parent.add(this);
+			setAuto(true);
 		}
+		this.parent.add(this);
 
 		if (model instanceof IAssignmentAwareModel)
 		{
@@ -797,19 +798,19 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * container (having the prefix Component.AUTO_COMPONENT_PREFIX) it will
 	 * render the component.
 	 */
-	public final void autoAdded()
-	{
-		if (getId().startsWith(AUTO_COMPONENT_PREFIX))
-		{
-			internalAttach();
-			render();
-		}
-		else
-		{
-			throw new WicketRuntimeException(
-					"Can't call auto added on a component that is not auto added.");
-		}
-	}
+//	public final void autoAdded()
+//	{
+//		if (isAuto() == true)
+//		{
+//			internalAttach();
+//			render();
+//		}
+//		else
+//		{
+//			throw new WicketRuntimeException(
+//					"Can't call auto added on a component that is not auto added.");
+//		}
+//	}
 
 	/**
 	 * Redirects to any intercept page previously specified by a call to
@@ -1082,6 +1083,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * 
 	 * @param key
 	 *            The key for the data
+	 * @param <X>
 	 * @return The metadata or null of no metadata was found for the given key
 	 * @see MetaDataKey
 	 */
@@ -1603,14 +1605,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		if (getFlag(FLAG_REMOVED_FROM_PARENT) == true)
 		{
-			if (id.startsWith(AUTO_COMPONENT_PREFIX))
-			{
-				parent.autoAdd(this);
-			}
-			else
-			{
-				parent.add(this);
-			}
+			parent.add(this);
 		}
 		resetHeadRendered();
 		return this;
@@ -1691,6 +1686,12 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			if (log.isDebugEnabled())
 			{
 				log.debug("Begin render " + this);
+			}
+			
+			// Auto-components didn't yet call attach()
+			if (isAuto() == true)
+			{
+				internalAttach();
 			}
 
 			try

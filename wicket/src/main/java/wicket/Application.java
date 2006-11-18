@@ -455,6 +455,7 @@ public abstract class Application
 	/**
 	 * Gets metadata for this application using the given key.
 	 * 
+	 * @param <T> 
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata

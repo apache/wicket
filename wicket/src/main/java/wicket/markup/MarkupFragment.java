@@ -90,6 +90,36 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
+	 * This is a very special constructor and must only be used with care. It
+	 * create a <b>flat</b> MarkupFragment of current tag.
+	 * 
+	 * @param stream
+	 */
+	public MarkupFragment(final MarkupStream stream)
+	{
+		this.markup = stream.getMarkupFragments();
+		this.mutable = false;
+
+		int index = stream.getCurrentIndex();
+		ComponentTag openTag = stream.getTag();
+		while (stream.hasMore())
+		{
+			MarkupElement elem = stream.next();
+			this.markupElements.add(elem);
+			if (elem instanceof ComponentTag)
+			{
+				ComponentTag closeTag = (ComponentTag)elem;
+				if (closeTag.closes(openTag))
+				{
+					break;
+				}
+			}
+		}
+
+		stream.setCurrentIndex(index);
+	}
+
+	/**
 	 * For Wicket it would be sufficient for this method to be package
 	 * protected. However to allow wicket-bench easy access to the information
 	 * ...
@@ -368,7 +398,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				((MarkupFragment)elem).makeImmutable();
 			}
 		}
-		if(mutable)
+		if (mutable)
 		{
 			this.markupElements = Collections.unmodifiableList(this.markupElements);
 			mutable = false;

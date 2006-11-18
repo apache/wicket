@@ -95,7 +95,7 @@ public final class AutoComponentResolver implements IComponentResolver
 					try
 					{
 						// 2. Add it to the hierarchy and render it
-						component.autoAdded();
+						component.render(markupStream);
 					}
 					finally
 					{

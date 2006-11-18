@@ -47,7 +47,6 @@ import wicket.protocol.http.request.urlcompressing.WebURLCompressingTargetResolv
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.util.lang.Objects;
-import wicket.util.string.JavascriptUtils;
 
 /**
  * Base class for HTML pages. This subclass of Page simply returns HTML when

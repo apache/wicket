@@ -212,11 +212,11 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @param component
 	 *            The component to add
 	 */
-	final void autoAdd(final Component component)
-	{
-		component.setAuto(true);
-		add(component);
-	}
+//	final void autoAdd(final Component component)
+//	{
+//		component.setAuto(true);
+//		add(component);
+//	}
 
 	/**
 	 * @param component

@@ -97,7 +97,7 @@ public class WicketMessageResolver implements IComponentResolver
 			component.setRenderBodyOnly(container.getApplication().getMarkupSettings()
 					.getStripWicketTags());
 
-			component.autoAdded();
+			component.render(markupStream);
 
 			// Yes, we handled the tag
 			return true;
@@ -120,7 +120,7 @@ public class WicketMessageResolver implements IComponentResolver
 			};
 			
 			messageContainer.add(WicketMessageTagHandler.ATTRIBUTE_LOCALIZER);
-			messageContainer.autoAdded();
+			messageContainer.render(markupStream);
 			
 			// yes, we handled the tag
 			return true;

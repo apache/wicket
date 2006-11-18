@@ -29,6 +29,8 @@ import java.io.Serializable;
  * MetaDataKey(Role.class) { }
  * 
  * @author Jonathan Locke
+ * 
+ * @param <T>
  */
 public abstract class MetaDataKey<T extends Serializable> implements Serializable
 {

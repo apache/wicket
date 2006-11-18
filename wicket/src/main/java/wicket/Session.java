@@ -448,6 +448,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * 
 	 * @param key
 	 *            The key for the data
+	 * @param <T>
 	 * @return The metadata
 	 * @see MetaDataKey
 	 */
