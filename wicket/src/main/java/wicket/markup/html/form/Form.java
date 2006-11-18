@@ -731,7 +731,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final String getHiddenFieldId()
 	{
-		return getJavascriptId() + ":hf:0";
+		return getJavascriptId() + "_hf_0";
 	}
 
 	/**
