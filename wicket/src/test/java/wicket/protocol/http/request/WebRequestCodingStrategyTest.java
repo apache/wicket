@@ -16,9 +16,6 @@
  */
 package wicket.protocol.http.request;
 
-import java.lang.reflect.Field;
-import java.util.SortedMap;
-
 import junit.framework.TestCase;
 import wicket.WicketRuntimeException;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
