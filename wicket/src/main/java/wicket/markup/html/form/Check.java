@@ -132,11 +132,14 @@ public class Check<T> extends WebMarkupContainer<T>
 		if (group.hasRawInput())
 		{
 			String[] inputs = group.getInputAsArray();
-			for (String input : inputs)
+			if (inputs != null)
 			{
-				if (value.equals(input))
+				for (String input : inputs)
 				{
-					tag.put("checked", "checked");
+					if (value.equals(input))
+					{
+						tag.put("checked", "checked");
+					}
 				}
 			}
 		}
