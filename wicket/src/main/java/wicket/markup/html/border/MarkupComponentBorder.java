@@ -16,26 +16,21 @@
  */
 package wicket.markup.html.border;
 
-import java.io.IOException;
 import java.util.List;
 
 import wicket.Application;
 import wicket.Component;
 import wicket.IComponentBorder;
-import wicket.Localizer;
-import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.ContainerInfo;
-import wicket.markup.Markup;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.resource.IResourceStream;
-import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.locator.IResourceStreamLocator;
 
 /**

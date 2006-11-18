@@ -54,6 +54,16 @@ public class ContainerInfo
 		this.componentPath = container.getPageRelativePath();
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param clz
+	 * @param locale
+	 * @param style
+	 * @param variation
+	 * @param markupType
+	 * @param componentPath
+	 */
 	public ContainerInfo(Class clz, Locale locale, String style, String variation, String markupType, String componentPath)
 	{
 		this.containerClass = clz;

@@ -43,20 +43,20 @@ import wicket.settings.IRequestCycleSettings.RenderStrategy;
 import wicket.util.file.WebApplicationPath;
 
 /**
- * This class provides a mock implementation of a Wicket HTTP based tester
- * that can be used for testing. It emulates all of the functionality of an
+ * This class provides a mock implementation of a Wicket HTTP based tester that
+ * can be used for testing. It emulates all of the functionality of an
  * HttpServlet in a controlled, single-threaded environment. It is supported
  * with mock objects for WebSession, HttpServletRequest, HttpServletResponse and
  * ServletContext.
  * <p>
- * In its most basic usage you can just create a new MockWebApplication. This
- * should be sufficient to allow you to construct components and pages and so on
- * for testing. To use certain features such as localization you must also call
- * setupRequestAndResponse().
+ * In its most basic usage you can just create a new MockWebApplication and
+ * provide your Wicket Application object. This should be sufficient to allow
+ * you to construct components and pages and so on for testing. To use certain
+ * features such as localization you must also call setupRequestAndResponse().
  * <p>
- * The tester takes an optional path attribute that defines a directory on
- * the disk which will correspond to the root of the WAR bundle. This can then
- * be used for locating non-tester resources.
+ * The tester takes an optional path attribute that defines a directory on the
+ * disk which will correspond to the root of the WAR bundle. This can then be
+ * used for locating non-tester resources.
  * <p>
  * To actually test the processing of a particular page or component you can
  * also call processRequestCycle() to do all the normal work of a Wicket
@@ -74,8 +74,8 @@ import wicket.util.file.WebApplicationPath;
  * IMPORTANT NOTES
  * <ul>
  * <li>This harness is SINGLE THREADED - there is only one global session. For
- * multi-threaded testing you must do integration testing with a full
- * tester server.
+ * multi-threaded testing you must do integration testing with a full tester
+ * server.
  * </ul>
  * 
  * @author Chris Turner
@@ -100,7 +100,7 @@ public class MockWebApplication
 
 	/** Mock http servlet session. */
 	private MockHttpSession servletSession;
-	
+
 	/** Request. */
 	private WebRequest wicketRequest;
 
@@ -125,14 +125,14 @@ public class MockWebApplication
 	 * @param application
 	 *            The wicket application object
 	 * @param path
-	 *            The absolute path on disk to the web tester contents
-	 *            (e.g. war root) - may be null
+	 *            The absolute path on disk to the web tester contents (e.g. war
+	 *            root) - may be null
 	 * @see wicket.protocol.http.MockServletContext
 	 */
 	public MockWebApplication(final WebApplication application, final String path)
 	{
 		this.application = application;
-		
+
 		final MockServletContext context = new MockServletContext(this.application, null);
 		WicketFilter filter = new WicketFilter()
 		{
@@ -148,7 +148,7 @@ public class MockWebApplication
 				};
 			}
 		};
-		
+
 		try
 		{
 			filter.init(new FilterConfig()
@@ -183,7 +183,7 @@ public class MockWebApplication
 		{
 			throw new RuntimeException(e);
 		}
-		
+
 		Application.set(this.application);
 
 		this.servletSession = new MockHttpSession(context);
@@ -191,7 +191,7 @@ public class MockWebApplication
 		this.servletResponse = new MockHttpServletResponse();
 		this.wicketRequest = this.application.newWebRequest(servletRequest);
 		this.wicketSession = this.application.getSession(wicketRequest);
-		
+
 		// -----------------------------------
 		// Copied from WicketFilter
 
@@ -215,7 +215,8 @@ public class MockWebApplication
 		// set the default context path
 		this.application.getApplicationSettings().setContextPath(context.getServletContextName());
 
-		this.application.getRequestCycleSettings().setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
+		this.application.getRequestCycleSettings()
+				.setRenderStrategy(RenderStrategy.ONE_PASS_RENDER);
 		this.application.getResourceSettings().setResourceFinder(new WebApplicationPath(context));
 		this.application.getPageSettings().setAutomaticMultiWindowSupport(false);
 		this.application.getResourceSettings().setResourcePollFrequency(null);
@@ -234,7 +235,7 @@ public class MockWebApplication
 	{
 		return this.application;
 	}
-	
+
 	/**
 	 * Get the page that was just rendered by the last request cycle processing.
 	 * 

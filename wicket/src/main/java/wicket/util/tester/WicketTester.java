@@ -68,8 +68,7 @@ import wicket.util.tester.WicketTesterHelper.ComponentData;
 
 /**
  * A helper to ease unit testing of Wicket applications without the need for a
- * servlet container. To start a test, we can use either startPage() or
- * startPanel():
+ * servlet container. To start a test, either use startPage() or startPanel():
  * 
  * <pre>
  * // production page  
@@ -161,15 +160,14 @@ import wicket.util.tester.WicketTesterHelper.ComponentData;
  * 
  * 	// assert feedback messages in INFO Level 
  * 	tester.assertInfoMessages(new String[] { &quot;Wicket Rocks ;-)&quot; });
- * 
  * }
  * </pre>
  * 
  * Instead of <code>tester.startPage(pageClass)</code>, we define a
  * {@link wicket.util.tester.ITestPageSource} to provide testing page instance
  * for WicketTester. This is necessary because <code>YourPage</code> uses a
- * custom constructor, which is very common for transfering model data, can not
- * be instansiated by reflection. Finally, we use
+ * custom constructor, which is very common for transfering model data, but can
+ * not be instansiated by reflection. Finally, we use
  * <code>assertInfoMessages</code> to assert there is a feedback message
  * "Wicket Rocks ;-)" in INFO level.
  * 
@@ -1092,24 +1090,24 @@ public class WicketTester extends MockWebApplication
 	 * component by using:
 	 * 
 	 * <pre>
-	 *                   ...
-	 *                   component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
-	 *                       public void onEvent(AjaxRequestTarget) {
-	 *                           // Do something.
-	 *                       }
-	 *                   });
-	 *                   ...
+	 * ...
+	 * component.add(new AjaxEventBehavior(ClientEvent.DBLCLICK) {
+	 *    public void onEvent(AjaxRequestTarget) {
+	 *       // Do something.
+	 *    }
+	 * });
+	 * ...
 	 * </pre>
 	 * 
 	 * You can then test that the code inside onEvent actually does what it's
 	 * supposed to, using the WicketTester:
 	 * 
 	 * <pre>
-	 *                   ...
-	 *                   tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
-	 *                             
-	 *                   // Test that the code inside onEvent is correct.
-	 *                   ...
+	 * ...
+	 * tester.executeAjaxEvent(component, ClientEvent.DBLCLICK);
+	 *                              
+	 * // Test that the code inside onEvent is correct.
+	 * ...
 	 * </pre>
 	 * 
 	 * PLEASE NOTE! This method doesn't actually insert the component in the
