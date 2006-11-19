@@ -1,11 +1,10 @@
 /*
- * $Id: MetaDataRoleAuthorizationStrategy.java,v 1.2 2006/02/09 17:14:01 eelco12
- * Exp $ $Revision$ $Date$
- * 
- * ==============================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -68,7 +67,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * do not need to use this meta data key directly, but instead use one of
 	 * the bind methods of this class.
 	 */
-	private static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
+	public static final MetaDataKey INSTANTIATION_PERMISSIONS = new MetaDataKey(
 			InstantiationPermissions.class)
 	{
 		private static final long serialVersionUID = 1L;
