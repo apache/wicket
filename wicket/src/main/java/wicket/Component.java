@@ -603,11 +603,18 @@ public abstract class Component implements Serializable
 	/**
 	 * Adds an behavior modifier to the component.
 	 * 
+	 * <p>
+	 * Note: this method is override to enable users to do things like discussed
+	 * in <a
+	 * href="http://www.nabble.com/Why-add%28IBehavior%29-is-final--tf2598263.html#a7248198">this
+	 * thread</a>.
+	 * </p>
+	 * 
 	 * @param behavior
 	 *            The behavior modifier to be added
 	 * @return this (to allow method call chaining)
 	 */
-	public final Component add(final IBehavior behavior)
+	public Component add(final IBehavior behavior)
 	{
 		if (behavior == null)
 		{
@@ -1753,7 +1760,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * Notifies the behaviors that the component has been rendered. This is
 	 * decoupled from {@link #rendered()} because we don't want to call
-	 * <code>getPage().componentRendered(this)</code> every time. 
+	 * <code>getPage().componentRendered(this)</code> every time.
 	 */
 	public final void renderedBehaviors()
 	{
@@ -1770,13 +1777,13 @@ public abstract class Component implements Serializable
 	/**
 	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
 	 * 
-	 * Traverses all behaviors and calls detachModel() on them.
-	 * This is needed to cleanup behavior after render. This method
-	 * is necessary for {@link AjaxRequestTarget} to be able to cleanup
-	 * component's behaviors after header contribution has been done (which is
-	 * separated from component render).
+	 * Traverses all behaviors and calls detachModel() on them. This is needed
+	 * to cleanup behavior after render. This method is necessary for
+	 * {@link AjaxRequestTarget} to be able to cleanup component's behaviors
+	 * after header contribution has been done (which is separated from
+	 * component render).
 	 */
-	public final void detachBehaviors() 
+	public final void detachBehaviors()
 	{
 		if (behaviors != null)
 		{
@@ -1785,7 +1792,7 @@ public abstract class Component implements Serializable
 				IBehavior behavior = (IBehavior)i.next();
 				behavior.detachModel(this);
 			}
-		}		
+		}
 	}
 
 
@@ -2632,7 +2639,7 @@ public abstract class Component implements Serializable
 	{
 		return this.getFlag(FLAG_IGNORE_ATTRIBUTE_MODIFIER);
 	}
-	
+
 	/**
 	 * Returns whether the component can be stateless. Being able to be
 	 * stateless doesn't necessary mean, that the component should be stateless.
