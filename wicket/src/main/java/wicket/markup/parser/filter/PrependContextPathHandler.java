@@ -28,19 +28,8 @@ import wicket.markup.parser.AbstractMarkupFilter;
 
 /**
  * This is a markup inline filter which by default is added to the list of
- * markup filters. It can be added by means of subclassing
- * Application.newMarkupParser() like
- * 
- * <pre>
- *        public class MyApplication extends Application
- *        {
- *            ...
- *            public IMarkupFilter[] getAdditionalMarkupHandler()
- *            {
- *                return new IMarkupFilter[] { new new PrependContextPathHandler() };
- *            }
- * </pre>
- * 
+ * markup filters. 
+ * <p>
  * The purpose of the filter is to prepend the web apps context path to all href
  * and src attributes found in the markup which contain a relative URL like
  * "myDir/myPage.gif". It is applied to all non wicket component tags
