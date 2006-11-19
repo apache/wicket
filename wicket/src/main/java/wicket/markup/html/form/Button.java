@@ -53,7 +53,7 @@ import wicket.version.undo.Change;
  * @author Jonathan Locke
  * @author Eelco Hillenius
  */
-public class Button extends FormComponent
+public class Button extends FormComponent implements IFormSubmittingComponent
 {
 	private static final long serialVersionUID = 1L;
 
@@ -219,7 +219,7 @@ public class Button extends FormComponent
 	 * Override this method to provide special submit handling in a multi-button
 	 * form. It is called whenever the user clicks this particular button.
 	 */
-	protected void onSubmit()
+	public void onSubmit()
 	{
 	}
 }

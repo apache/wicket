@@ -18,8 +18,6 @@ package wicket;
 
 import java.util.ArrayList;
 
-import wicket.IRedirectListener;
-import wicket.RequestCycle;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.IOnChangeListener;
