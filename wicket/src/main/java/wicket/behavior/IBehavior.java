@@ -46,6 +46,14 @@ import wicket.markup.ComponentTag;
 public interface IBehavior extends Serializable
 {
 	/**
+	 * Called when a component is about to render.
+	 * 
+	 * @param component
+	 *            the component that has this behavior coupled
+	 */
+	void beforeRender(Component component);
+
+	/**
 	 * Bind this handler to the given component. This method is called by the
 	 * host component immediately after this behavior is added to it. This
 	 * method is useful if you need to do initialization based on the component

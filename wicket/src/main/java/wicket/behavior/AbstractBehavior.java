@@ -39,6 +39,13 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
+	 * @see wicket.behavior.IBehavior#beforeRender(wicket.Component)
+	 */
+	public void beforeRender(Component component)
+	{
+	}
+
+	/**
 	 * @see wicket.behavior.IBehavior#bind(wicket.Component)
 	 */
 	public void bind(final Component component)

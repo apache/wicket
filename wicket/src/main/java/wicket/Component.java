@@ -1704,6 +1704,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				// Call implementation to render component
 				onBeforeRender();
+				notifyBehaviorsComponentBeforeRender();
 				try
 				{
 					IComponentBorder border = getComponentBorder();
@@ -1883,6 +1884,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 				// Render the component and all its children
 				onBeforeRender();
+				notifyBehaviorsComponentBeforeRender();
 				render(markupStream);
 			}
 			finally
@@ -2013,7 +2015,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	private void notifyBehaviorsComponentRendered()
 	{
-		// notify the behaviors that component has been rendered
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -2022,6 +2023,25 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				if (isBehaviorAccepted(behavior))
 				{
 					behavior.rendered(this);
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@link IBehavior#beforeRender(Component)} Notify all behaviors that are
+	 * assigned to this component that the component is about to be rendered.
+	 */
+	private void notifyBehaviorsComponentBeforeRender()
+	{
+		if (behaviors != null)
+		{
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			{
+				IBehavior behavior = (IBehavior)i.next();
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.beforeRender(this);
 				}
 			}
 		}
