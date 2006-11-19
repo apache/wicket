@@ -97,6 +97,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private MarkupFragment findMarkup()
 	{
 		// Get locator to search for the resource
