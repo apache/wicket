@@ -22,7 +22,6 @@ import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.ajax.form.AjaxFormSubmitBehavior;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebComponent;
 import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Form;
 import wicket.util.string.AppendingStringBuffer;
@@ -36,7 +35,7 @@ import wicket.util.string.AppendingStringBuffer;
  * 
  * @author Igor Vaynberg (ivaynberg)
  */
-public abstract class AjaxSubmitButton extends WebComponent
+public abstract class AjaxSubmitButton extends Button
 {
 	private static final long serialVersionUID = 1L;
 

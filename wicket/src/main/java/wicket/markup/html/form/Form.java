@@ -217,7 +217,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Gets the default button. If set (not null), a hidden submit button will
 	 * be rendered right after the form tag, so that when users press enter in a
@@ -300,7 +300,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			else
 			{
 				// First, see if the processing was triggered by a Wicket button
-				final Button submittingButton = findSubmittingButton();
+				final IFormSubmittingComponent submittingButton = findSubmittingButton();
 
 				// When processing was triggered by a Wicket button and that
 				// button indicates it wants to be called immediately
@@ -320,8 +320,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				}
 			}
 		}
-		// If multi part did fail check if an error is registered and call onError
-		else if(hasError())
+		// If multi part did fail check if an error is registered and call
+		// onError
+		else if (hasError())
 		{
 			onError();
 		}
@@ -569,7 +570,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 *            processing was triggered by something else (like a non-Wicket
 	 *            submit button or a javascript execution)
 	 */
-	protected void delegateSubmit(Button submittingButton)
+	protected void delegateSubmit(IFormSubmittingComponent submittingButton)
 	{
 		// when the given button is not null, it means that it was the
 		// submitting button
@@ -588,55 +589,34 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * @return The button which submitted this form or null if the processing
 	 *         was not trigger by a registered button component
 	 */
-	public final Button findSubmittingButton()
+	public final IFormSubmittingComponent findSubmittingButton()
 	{
-		Button button = (Button)visitChildren(Button.class, new IVisitor()
-		{
-			public Object component(final Component component)
-			{
-				// Get button
-				final Button button = (Button)component;
-
-				// Check for button-name or button-name.x request string
-				if (getRequest().getParameter(button.getInputName()) != null
-						|| getRequest().getParameter(button.getInputName() + ".x") != null)
+		IFormSubmittingComponent submit = (IFormSubmittingComponent)getPage().visitChildren(
+				IFormSubmittingComponent.class, new IVisitor()
 				{
-					if (!button.isVisible())
+					public Object component(final Component component)
 					{
-						throw new WicketRuntimeException("Submit Button " + button.getInputName()
-								+ " (path=" + button.getPageRelativePath() + ") is not visible");
-					}
-					return button;
-				}
-				return CONTINUE_TRAVERSAL;
-			}
-		});
+						// Get button
+						final IFormSubmittingComponent submit = (IFormSubmittingComponent)component;
 
-		if (button == null)
-		{
-			button = (Button)getPage().visitChildren(SubmitLink.class, new IVisitor()
-			{
-				public Object component(final Component component)
-				{
-					// Get button
-					final SubmitLink button = (SubmitLink)component;
-
-					// Check for button-name or button-name.x request string
-					if (button.getForm() == Form.this
-							&& (getRequest().getParameter(button.getInputName()) != null || getRequest()
-									.getParameter(button.getInputName() + ".x") != null))
-					{
-						if (!button.isVisible())
+						// Check for button-name or button-name.x request string
+						if (submit.getForm() == Form.this
+								&& (getRequest().getParameter(submit.getInputName()) != null || getRequest()
+										.getParameter(submit.getInputName() + ".x") != null))
 						{
-							throw new WicketRuntimeException("Submit Button is not visible");
+							if (!component.isVisible())
+							{
+								throw new WicketRuntimeException("Submit Button "
+										+ submit.getInputName() + " (path="
+										+ component.getPageRelativePath() + ") is not visible");
+							}
+							return submit;
 						}
-						return button;
+						return CONTINUE_TRAVERSAL;
 					}
-					return CONTINUE_TRAVERSAL;
-				}
-			});
-		}
-		return button;
+				});
+
+		return submit;
 	}
 
 	/**
