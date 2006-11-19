@@ -389,8 +389,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * This prefix should be used when making auto add components.
-	 * Use isAuto() to check if auto component. Don't check the id.
+	 * This prefix should be used when making auto add components. Use isAuto()
+	 * to check if auto component. Don't check the id.
 	 */
 	public static final String AUTO_COMPONENT_PREFIX = "<auto>-";
 
@@ -769,11 +769,18 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/**
 	 * Adds an behavior modifier to the component.
 	 * 
+	 * <p>
+	 * Note: this method is override to enable users to do things like discussed
+	 * in <a
+	 * href="http://www.nabble.com/Why-add%28IBehavior%29-is-final--tf2598263.html#a7248198">this
+	 * thread</a>.
+	 * </p>
+	 * 
 	 * @param behavior
 	 *            The behavior modifier to be added
 	 * @return this (to allow method call chaining)
 	 */
-	public final Component add(final IBehavior behavior)
+	public Component add(final IBehavior behavior)
 	{
 		if (behavior == null)
 		{
@@ -798,20 +805,19 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * container (having the prefix Component.AUTO_COMPONENT_PREFIX) it will
 	 * render the component.
 	 */
-//	public final void autoAdded()
-//	{
-//		if (isAuto() == true)
-//		{
-//			internalAttach();
-//			render();
-//		}
-//		else
-//		{
-//			throw new WicketRuntimeException(
-//					"Can't call auto added on a component that is not auto added.");
-//		}
-//	}
-
+	// public final void autoAdded()
+	// {
+	// if (isAuto() == true)
+	// {
+	// internalAttach();
+	// render();
+	// }
+	// else
+	// {
+	// throw new WicketRuntimeException(
+	// "Can't call auto added on a component that is not auto added.");
+	// }
+	// }
 	/**
 	 * Redirects to any intercept page previously specified by a call to
 	 * redirectToInterceptPage.
@@ -1687,7 +1693,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				log.debug("Begin render " + this);
 			}
-			
+
 			// Auto-components didn't yet call attach()
 			if (isAuto() == true)
 			{
