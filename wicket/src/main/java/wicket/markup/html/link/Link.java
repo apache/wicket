@@ -20,6 +20,7 @@ package wicket.markup.html.link;
 import wicket.Application;
 import wicket.Component;
 import wicket.Page;
+import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -39,25 +40,25 @@ import wicket.version.undo.Change;
  * You can use a link like:
  * 
  * <pre>
- *                      add(new Link(&quot;myLink&quot;)
- *                      {
- *                          public void onClick(RequestCycle cycle)
- *                          {
- *                              // do something here...  
- *                          }
- *                      );
+ *                        add(new Link(&quot;myLink&quot;)
+ *                        {
+ *                            public void onClick(RequestCycle cycle)
+ *                            {
+ *                                // do something here...  
+ *                            }
+ *                        );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *                      &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *                        &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *                      &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *                        &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -65,13 +66,13 @@ import wicket.version.undo.Change;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *                      add(new Link(&quot;link&quot;, listItem.getModel()) 
- *                      {
- *                          public void onClick() 
- *                          {
- *                              MyObject obj = (MyObject)getModelObject();
- *                              setResponsePage(new MyPage(obj.getId(), ... ));
- *                          }
+ *                        add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *                        {
+ *                            public void onClick() 
+ *                            {
+ *                                MyObject obj = (MyObject)getModelObject();
+ *                                setResponsePage(new MyPage(obj.getId(), ... ));
+ *                            }
  * </pre>
  * 
  * @author Jonathan Locke
@@ -224,7 +225,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		}
 		return super.isEnabled();
 	}
-	
+
 	protected boolean getStatelessHint()
 	{
 		return false;
@@ -556,6 +557,15 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 		if (onClickJavaScript != null)
 		{
 			tag.put("onclick", onClickJavaScript);
+		}
+
+		if (popupSettings != null)
+		{
+			PageMap popupPageMap = popupSettings.getPageMap(this);
+			if (popupPageMap != null)
+			{
+				tag.put("target", popupPageMap.getName());
+			}
 		}
 	}
 
