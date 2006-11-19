@@ -116,7 +116,7 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 	{
 		return new BoundCompoundPropertyModel<T>(super.getListItemModel(model, index));
 	}
-
+	
 	/**
 	 * Automatically add Labels if the user didn't provide any component himself
 	 * 
@@ -129,13 +129,7 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 			final ComponentTag tag)
 	{
 		String id = tag.getId();
-//		if ((id != null) && !id.startsWith(Component.AUTO_COMPONENT_PREFIX))
-//		{
-//			id = Component.AUTO_COMPONENT_PREFIX + id;
-//			tag.setId(id);
-//		}
-
-		newLabel(container, id).autoAdded();
+		newLabel(container, id).render(markupStream);
 		return true;
 	}
 

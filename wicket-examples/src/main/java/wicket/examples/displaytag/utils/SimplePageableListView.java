@@ -141,7 +141,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 			componentId = Component.AUTO_COMPONENT_PREFIX + componentId;
 			tag.setId(componentId);
 		}
-		newLabel(container, componentId).autoAdded();
+		newLabel(container, componentId).render(markupStream);
 		return true;
 	}
 

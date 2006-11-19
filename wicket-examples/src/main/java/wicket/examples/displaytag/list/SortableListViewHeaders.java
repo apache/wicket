@@ -133,7 +133,7 @@ public class SortableListViewHeaders<T> extends WebMarkupContainer<T> implements
 						return SortableListViewHeaders.this.getObjectToCompare(this, object);
 					}
 				};
-				slvh.autoAdded();
+				slvh.render(markupStream);
 				return true;
 			}
 		}
