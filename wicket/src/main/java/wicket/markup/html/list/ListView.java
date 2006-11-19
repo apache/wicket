@@ -662,6 +662,6 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	 */
 	protected void renderItem(final ListItem item)
 	{
-		item.render(new MarkupStream(getMarkupFragment()));
+		item.render();
 	}
 }

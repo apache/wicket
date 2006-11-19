@@ -1690,7 +1690,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			}
 
 			// Auto-components didn't yet call attach()
-			if (isAuto() == true)
+			if (getFlag(FLAG_AUTO) == true)
 			{
 				internalAttach();
 			}
@@ -1702,12 +1702,16 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				notifyBehaviorsComponentBeforeRender();
 				try
 				{
-					IComponentBorder border = getComponentBorder();
+					final IComponentBorder border = getComponentBorder();
 					if (border != null)
+					{
 						border.renderBefore(this);
+					}
 					onRender(markupStream);
 					if (border != null)
+					{
 						border.renderAfter(this);
+					}
 				}
 				finally
 				{
@@ -1754,7 +1758,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/**
 	 * @return component border assigned to this component, or null if none
 	 */
-	public IComponentBorder getComponentBorder()
+	public final IComponentBorder getComponentBorder()
 	{
 		return getMetaData(BORDER_KEY);
 	}
@@ -1768,7 +1772,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 *            any previous
 	 * @return component for chaining
 	 */
-	public Component setComponentBorder(IComponentBorder border)
+	public final Component setComponentBorder(final IComponentBorder border)
 	{
 		if (!Objects.equal(getComponentBorder(), border))
 		{
@@ -1796,7 +1800,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 		}
 
 	}
-
 
 	/**
 	 * Page.renderPage() is used to render a whole page. With AJAX however it

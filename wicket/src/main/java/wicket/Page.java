@@ -1154,7 +1154,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		});
 
 		// Handle request by rendering page
-		render(null);
+		render();
 
 		// Check rendering if it happened fully
 		if (Application.get().getDebugSettings().getComponentUseCheck())
