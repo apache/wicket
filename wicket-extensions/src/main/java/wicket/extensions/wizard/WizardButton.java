@@ -83,7 +83,7 @@ public abstract class WizardButton extends Button
 	/**
 	 * @see wicket.markup.html.form.Button#onSubmit()
 	 */
-	protected final void onSubmit()
+	public final void onSubmit()
 	{
 		onClick();
 	}
