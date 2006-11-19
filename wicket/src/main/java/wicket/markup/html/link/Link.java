@@ -19,6 +19,7 @@ package wicket.markup.html.link;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
+import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -444,6 +445,15 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 		else
 		{
 			disableLink(tag);
+		}
+		
+		if (popupSettings != null)
+		{
+			PageMap popupPageMap = popupSettings.getPageMap(this);
+			if (popupPageMap != null)
+			{
+				tag.put("target", popupPageMap.getName());
+			}
 		}
 	}
 }
