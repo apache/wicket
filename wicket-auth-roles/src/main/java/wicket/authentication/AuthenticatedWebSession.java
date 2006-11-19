@@ -88,4 +88,12 @@ public abstract class AuthenticatedWebSession extends WebSession
 	{
 		return signedIn = authenticate(username, password);
 	}
+
+	/**
+	 * Sign the user out.
+	 */
+	public void signOut()
+	{
+		signedIn = false;
+	}
 }
