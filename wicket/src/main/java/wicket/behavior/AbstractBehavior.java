@@ -46,42 +46,19 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
+	 * This method is called either by {@link #onRendered(Component)} or
+	 * {@link #onException(Component, RuntimeException)} AFTER they called their
+	 * respective template methods. Override this template method to do any
+	 * necessary cleanup.
+	 */
+	public void cleanup()
+	{
+	}
+
+	/**
 	 * @see wicket.behavior.IBehavior#detach(Component)
 	 */
 	public void detach(Component component)
-	{
-	}
-
-	/**
-	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
-	 *      wicket.markup.ComponentTag)
-	 */
-	public void onComponentTag(final Component component, final ComponentTag tag)
-	{
-	}
-
-	/**
-	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
-	 */
-	public final void rendered(final Component component)
-	{
-		try
-		{
-			onRendered(component);
-		}
-		finally
-		{
-			cleanup();
-		}
-	}
-
-	/**
-	 * Called when a component that has this behavior coupled was rendered.
-	 * 
-	 * @param component
-	 *            the component that has this behavior coupled
-	 */
-	public void onRendered(Component component)
 	{
 	}
 
@@ -102,6 +79,22 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
+	 * @see wicket.behavior.IBehavior#getStatelessHint()
+	 */
+	public boolean getStatelessHint()
+	{
+		return true;
+	}
+
+	/**
+	 * @see wicket.behavior.IBehavior#onComponentTag(wicket.Component,
+	 *      wicket.markup.ComponentTag)
+	 */
+	public void onComponentTag(final Component component, final ComponentTag tag)
+	{
+	}
+
+	/**
 	 * In case an unexpected exception happened anywhere between
 	 * onComponentTag() and rendered(), onException() will be called for any
 	 * behavior.
@@ -117,20 +110,27 @@ public abstract class AbstractBehavior implements IBehavior
 	}
 
 	/**
-	 * This method is called either by {@link #onRendered(Component)} or
-	 * {@link #onException(Component, RuntimeException)} AFTER they called their
-	 * respective template methods. Override this template method to do any
-	 * necessary cleanup.
+	 * Called when a component that has this behavior coupled was rendered.
+	 * 
+	 * @param component
+	 *            the component that has this behavior coupled
 	 */
-	public void cleanup()
+	public void onRendered(Component component)
 	{
 	}
 
 	/**
-	 * @see wicket.behavior.IBehavior#getStatelessHint()
+	 * @see wicket.behavior.IBehavior#rendered(wicket.Component)
 	 */
-	public boolean getStatelessHint()
+	public final void rendered(final Component component)
 	{
-		return true;
+		try
+		{
+			onRendered(component);
+		}
+		finally
+		{
+			cleanup();
+		}
 	}
 }
