@@ -1837,7 +1837,7 @@ public abstract class Component implements Serializable
 					IBehavior behavior = (IBehavior)iter.next();
 					if (behavior instanceof IHeaderContributor)
 					{
-						((IHeaderContributor)behavior).renderHead(container.getResponse());
+						((IHeaderContributor)behavior).renderHead(container.getHeaderResponse());
 					}
 				}
 			}

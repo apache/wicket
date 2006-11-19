@@ -17,8 +17,8 @@
 package wicket.behavior;
 
 import wicket.Component;
-import wicket.Response;
 import wicket.markup.html.IHeaderContributor;
+import wicket.markup.html.IHeaderResponse;
 import wicket.model.IModel;
 import wicket.model.Model;
 import wicket.util.lang.Objects;
@@ -85,12 +85,12 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
-		public void renderHead(Response response)
+		public void renderHead(IHeaderResponse response)
 		{
 			Object object = contribution.getObject(null);
 			if (object != null)
 			{
-				response.println(object.toString());
+				response.getResponse().println(object.toString());
 			}
 		}
 

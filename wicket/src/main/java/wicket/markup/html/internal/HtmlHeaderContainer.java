@@ -27,6 +27,7 @@ import wicket.Response;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
+import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.border.Border;
@@ -78,6 +79,10 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 	 * scope attribute.
 	 */
 	private Map renderedComponentsPerScope;
+	/**
+	 * Header response that is responsible for filtering duplicate contributions.
+	 */
+	private IHeaderResponse headerResponse = null;	
 
 	/**
 	 * Construct
@@ -120,7 +125,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		{
 			final StringResponse response = new StringResponse();
 			this.getRequestCycle().setResponse(response);
-
+			
 			// In any case, first render the header section directly associated
 			// with the markup
 			super.onComponentTagBody(markupStream, openTag);
@@ -144,7 +149,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 			else
 			{
 				throw new WicketRuntimeException(
-						"Programming error: 'parent' should be a Page or a Border implementing IHeaderRenderer");
+						"Programming error: 'parent' should be a Page or a Border.");
 			}
 
 			// Automatically add <head> if necessary
@@ -182,7 +187,7 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 				webResponse.write("<head>");
 				webResponse.write(output);
 				webResponse.write("</head>");
-			}
+			}						
 		}
 		finally
 		{
@@ -281,5 +286,20 @@ public class HtmlHeaderContainer extends WebMarkupContainer
 		super.onDetach();
 
 		this.renderedComponentsPerScope = null;
+		this.headerResponse = null;
 	}
+	
+	/**
+	 * Returns the header response. 
+	 * 
+	 * @return header response
+	 */
+	public IHeaderResponse getHeaderResponse() {
+		if (this.headerResponse == null)
+		{
+			headerResponse = new HeaderResponse(getResponse());
+		}
+		return headerResponse;
+	}
+	
 }
