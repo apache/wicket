@@ -72,25 +72,6 @@ public interface IBehavior extends Serializable
 	void detach(Component component);
 
 	/**
-	 * Called any time a component that has this behavior registered is
-	 * rendering the component tag.
-	 * 
-	 * @param component
-	 *            the component that renders this tag currently
-	 * @param tag
-	 *            the tag that is rendered
-	 */
-	void onComponentTag(Component component, ComponentTag tag);
-
-	/**
-	 * Called when a component that has this behavior coupled was rendered.
-	 * 
-	 * @param component
-	 *            the component that has this behavior coupled
-	 */
-	void rendered(Component component);
-
-	/**
 	 * In case an unexpected exception happened anywhere between
 	 * onComponentTag() and rendered(), onException() will be called for any
 	 * behavior. Typically, if you clean up resources in
@@ -105,7 +86,6 @@ public interface IBehavior extends Serializable
 	 */
 	void exception(Component component, RuntimeException exception);
 
-
 	/**
 	 * This method returns false if the behaviour generates a callback url (for
 	 * example ajax behaviours)
@@ -113,4 +93,24 @@ public interface IBehavior extends Serializable
 	 * @return boolean true or false.
 	 */
 	boolean getStatelessHint();
+
+	/**
+	 * Called any time a component that has this behavior registered is
+	 * rendering the component tag.
+	 * 
+	 * @param component
+	 *            the component that renders this tag currently
+	 * @param tag
+	 *            the tag that is rendered
+	 */
+	void onComponentTag(Component component, ComponentTag tag);
+
+
+	/**
+	 * Called when a component that has this behavior coupled was rendered.
+	 * 
+	 * @param component
+	 *            the component that has this behavior coupled
+	 */
+	void rendered(Component component);
 }
