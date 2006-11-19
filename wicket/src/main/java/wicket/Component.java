@@ -1889,6 +1889,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				onAfterRender();
 			}
+			
+			// Component has been rendered
+			notifyBehaviorsComponentRendered();
 		}
 	}
 
@@ -1999,16 +2002,26 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public final void rendered()
 	{
+		notifyBehaviorsComponentRendered();
+		// Tell the page that the component rendered
+		getPage().componentRendered(this);
+	}
+	
+	/**
+	 * {@link IBehavior#rendered(Component)} Notify all behaviors that are
+	 * assigned to this component that the component has rendered.
+	 */
+	private void notifyBehaviorsComponentRendered()
+	{
 		// notify the behaviors that component has been rendered
 		if (behaviors != null)
 		{
-			for (IBehavior behavior : behaviors)
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
+				IBehavior behavior = (IBehavior)i.next();
 				behavior.rendered(this);
 			}
 		}
-		// Tell the page that the component rendered
-		getPage().componentRendered(this);
 	}
 
 	/**
