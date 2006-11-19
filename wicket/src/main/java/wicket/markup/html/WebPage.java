@@ -335,8 +335,9 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		/**
 		 * @see wicket.markup.html.IHeaderContributor#renderHead(wicket.Response)
 		 */
-		public final void renderHead(final Response response)
+		public final void renderHead(final IHeaderResponse headResponse)
 		{
+			Response response = headResponse.getResponse();
 			final WebRequestCycle cycle = (WebRequestCycle)getRequestCycle();
 			final IRequestTarget target = cycle.getRequestTarget();
 

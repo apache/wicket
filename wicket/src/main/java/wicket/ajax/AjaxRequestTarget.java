@@ -496,6 +496,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingBodyResponse.reset();
 	}
 
+	
+	private HtmlHeaderContainer header = null;
+	
 	/**
 	 * 
 	 * @param response
@@ -503,8 +506,11 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondHeaderContribution(final Response response, final Component component)
 	{
-		final HtmlHeaderContainer header = new HtmlHeaderContainer(
-				HtmlHeaderSectionHandler.HEADER_ID);
+		if (header == null) {
+			header = new HtmlHeaderContainer(
+					HtmlHeaderSectionHandler.HEADER_ID);	
+		}
+		
 		if (component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID) != null)
 		{
 			component.getPage().replace(header);

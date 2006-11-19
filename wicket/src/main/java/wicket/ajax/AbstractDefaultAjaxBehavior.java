@@ -22,6 +22,7 @@ import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Response;
 import wicket.behavior.AbstractAjaxBehavior;
+import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.settings.IAjaxSettings;
 import wicket.util.string.AppendingStringBuffer;
@@ -58,15 +59,6 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 			AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js");
 
 	/**
-	 * 
-	 * @see wicket.behavior.AbstractAjaxBehavior#getImplementationId()
-	 */
-	protected String getImplementationId()
-	{
-		return "wicket-default";
-	}
-
-	/**
 	 * Subclasses should call super.onBind()
 	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onBind()
@@ -77,20 +69,21 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	}
 
 	/**
-	 * 
-	 * @see wicket.behavior.AbstractAjaxBehavior#onRenderHeadInitContribution(wicket.Response)
+	 * @see wicket.behavior.AbstractAjaxBehavior#renderHead(wicket.markup.html.IHeaderResponse)
 	 */
-	protected void onRenderHeadInitContribution(final Response response)
+	public void renderHead(IHeaderResponse response)
 	{
+		super.renderHead(response);
+		
 		final IAjaxSettings settings = Application.get().getAjaxSettings();
 
-		writeJsReference(response, JAVASCRIPT);
-
+		response.renderJavascriptReference(JAVASCRIPT);
+		
 		if (settings.isAjaxDebugModeEnabled())
 		{
-			JavascriptUtils.writeJavascript(response, "wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
-			writeJsReference(response, JAVASCRIPT_DEBUG_DRAG);
-			writeJsReference(response, JAVASCRIPT_DEBUG);
+			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");			
+			response.renderJavascriptReference(JAVASCRIPT_DEBUG_DRAG);			
+			response.renderJavascriptReference( JAVASCRIPT_DEBUG);
 		}
 	}
 
