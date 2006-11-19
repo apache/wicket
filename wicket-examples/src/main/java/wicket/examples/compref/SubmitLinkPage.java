@@ -43,7 +43,7 @@ public class SubmitLinkPage extends WicketExamplePage
 
 		SubmitLink internal = new SubmitLink("internal")
 		{
-			protected void onSubmit()
+			public void onSubmit()
 			{
 				info("internal onsubmit");
 			};
@@ -52,7 +52,7 @@ public class SubmitLinkPage extends WicketExamplePage
 
 		SubmitLink external = new SubmitLink("external", form)
 		{
-			protected void onSubmit()
+			public void onSubmit()
 			{
 				info("external onsubmit");
 			};

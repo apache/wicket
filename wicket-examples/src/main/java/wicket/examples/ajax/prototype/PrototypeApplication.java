@@ -19,7 +19,6 @@ package wicket.examples.ajax.prototype;
 
 import wicket.examples.WicketExampleApplication;
 import wicket.markup.html.AjaxServerAndClientTimeFilter;
-import wicket.markup.html.ServerAndClientTimeFilter;
 
 /**
  * Application object for the Prototype.js ajax demo page.
@@ -40,7 +39,7 @@ public class PrototypeApplication extends WicketExampleApplication
 	 */
 	protected void init()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
 		getRequestCycleSettings().addResponseFilter(new AjaxServerAndClientTimeFilter());
 	}
 
