@@ -1777,6 +1777,25 @@ public abstract class Component implements Serializable
 	}
 
 	/**
+	 * {@link IBehavior#beforeRender(Component)} Notify all behaviors that are
+	 * assigned to this component that the component is about to be rendered.
+	 */
+	private void notifyBehaviorsComponentBeforeRender()
+	{
+		if (behaviors != null)
+		{
+			for (Iterator i = behaviors.iterator(); i.hasNext();)
+			{
+				IBehavior behavior = (IBehavior)i.next();
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.beforeRender(this);
+				}
+			}
+		}
+	}
+
+	/**
 	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
 	 * 
 	 * Traverses all behaviors and calls detachModel() on them. This is needed
