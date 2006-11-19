@@ -1748,22 +1748,7 @@ public abstract class Component implements Serializable
 	 */
 	public final void rendered()
 	{
-		// Tell the page that the component rendered
-		getPage().componentRendered(this);
-
 		// notify the behaviors that component has been rendered
-		renderedBehaviors();
-	}
-
-	/**
-	 * THIS IS WICKET INTERNAL ONLY. DO NOT USE IT.
-	 * 
-	 * Notifies the behaviors that the component has been rendered. This is
-	 * decoupled from {@link #rendered()} because we don't want to call
-	 * <code>getPage().componentRendered(this)</code> every time.
-	 */
-	public final void renderedBehaviors()
-	{
 		if (behaviors != null)
 		{
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
@@ -1772,6 +1757,8 @@ public abstract class Component implements Serializable
 				behavior.rendered(this);
 			}
 		}
+		// Tell the page that the component rendered
+		getPage().componentRendered(this);
 	}
 
 	/**
