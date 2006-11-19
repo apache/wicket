@@ -368,7 +368,7 @@ public final class ImageMap extends WebMarkupContainer
 			imageMap.append(shapeLink.toString());
 
 			// Tell framework that this link was actually rendered
-			shapeLink.link.rendered();
+			getPage().componentRendered(shapeLink.link);
 		}
 
 		imageMap.append("\n</map>");
