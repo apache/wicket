@@ -1659,14 +1659,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public final void render()
 	{
-		// Allow currently invisible components to be re-rendered as well
-		MarkupStream markupStream = null;
-		if (getParent() != null)
-		{
-			markupStream = findMarkupStream();
-		}
-
-		render(markupStream);
+		// All components except auto-component, should by now
+		// be able to use markup fragments instead of markup streams.
+		render(new MarkupStream(getMarkupFragment()));
 	}
 
 	/**
