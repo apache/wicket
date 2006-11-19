@@ -55,6 +55,11 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		return false;
 	}
 
+	public String getLicenseType(File file)
+	{
+		return null;
+	}
+
 	protected abstract String getLicenseHeaderFilename();
 
 	protected String getLicenseHeader()

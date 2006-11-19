@@ -42,4 +42,11 @@ interface ILicenseHeaderHandler
 	 */
 	boolean checkLicenseHeader(File file);
 
+	/**
+	 * Get the license type of the file. F.ex. ASL2, ASL1.1, GPL, LGPL etc.
+	 * 
+	 * @param file THe file to get the license type from.
+	 * @return The license type of the file. Null if no license header in the file.
+	 */
+	String getLicenseType(File file);
 }

@@ -27,5 +27,54 @@ package wicket.util.license;
  */
 public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-	
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenceHeaderTest()
+	{
+//		addHeaders = true;
+		
+//		htmlIgnore = new String[] { 
+//				"" 
+//		};
+		
+//		cssIgnore = new String[] { 
+//				"" 
+//		};
+		
+//		xmlIgnore = new String[] { 
+//				"" 
+//		};
+		
+		javaIgnore = new String[] {
+				/*
+				 * ASL1.1. Taken from Maven JRCS. See NOTICE.txt
+				 */
+				"src/main/java/wicket/util/diff/AddDelta.java",
+				"src/main/java/wicket/util/diff/ChangeDelta.java",
+				"src/main/java/wicket/util/diff/Chunk.java",
+				"src/main/java/wicket/util/diff/DeleteDelta.java",
+				"src/main/java/wicket/util/diff/Delta.java",
+				"src/main/java/wicket/util/diff/Diff.java",
+				"src/main/java/wicket/util/diff/DiffAlgorithm.java",
+				"src/main/java/wicket/util/diff/DifferentiationFailedException.java",
+				"src/main/java/wicket/util/diff/DiffException.java",
+				"src/main/java/wicket/util/diff/PatchFailedException.java",
+				"src/main/java/wicket/util/diff/Revision.java",
+				"src/main/java/wicket/util/diff/RevisionVisitor.java",
+				"src/main/java/wicket/util/diff/ToString.java",
+				"src/main/java/wicket/util/diff/myers/DiffNode.java",
+				"src/main/java/wicket/util/diff/myers/MyersDiff.java",
+				"src/main/java/wicket/util/diff/myers/PathNode.java",
+				"src/main/java/wicket/util/diff/myers/Snake.java"
+		};
+		
+//		javaScriptIgnore = new String[] { 
+//				"" 
+//		};
+		
+//		propertiesIgnore = new String[] { 
+//				"" 
+//		};
+	}
 }

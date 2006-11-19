@@ -249,7 +249,21 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				for (Iterator iterator = fileList.iterator(); iterator.hasNext();)
 				{
 					File file = (File)iterator.next();
-					failString.append(file.getAbsolutePath()).append(LINE_ENDING);
+					String filename = file.getAbsolutePath();
+					
+					// Find the license type
+					String licenseType = licenseHeaderHandler.getLicenseType(file);
+					
+					if (licenseType == null)
+					{
+						failString.append("NONE");
+					}
+					else
+					{
+						failString.append(licenseType);
+					}
+					
+					failString.append(" ").append(filename).append(LINE_ENDING);
 				}
 			}
 
