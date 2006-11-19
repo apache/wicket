@@ -300,6 +300,7 @@ public abstract class ListView extends WebMarkupContainer
 
 					// Swap list items and invalidate listView
 					Collections.swap(getList(), index, index + 1);
+					ListView.this.removeAll();
 				}
 			}
 		};
@@ -356,6 +357,7 @@ public abstract class ListView extends WebMarkupContainer
 
 					// Swap items and invalidate listView
 					Collections.swap(getList(), index, index - 1);
+					ListView.this.removeAll();
 				}
 			}
 		};
@@ -401,6 +403,7 @@ public abstract class ListView extends WebMarkupContainer
 				getList().remove(item.getModelObject());
 
 				ListView.this.modelChanged();
+				ListView.this.removeAll();
 			}
 		};
 	}
