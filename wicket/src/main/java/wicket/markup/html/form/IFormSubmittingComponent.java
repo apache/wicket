@@ -35,8 +35,14 @@ public interface IFormSubmittingComponent
 	 * 
 	 * @return defaultFormProcessing
 	 */
-	public boolean getDefaultFormProcessing();
+	boolean getDefaultFormProcessing();
 
+	/**
+	 * Returns the form this component submits.
+	 * 
+	 * @return form submitted by this component
+	 */
+	Form getForm();
 
 	/**
 	 * Returns the name that is unique to this component, at least within the
@@ -44,18 +50,11 @@ public interface IFormSubmittingComponent
 	 * 
 	 * @return component name
 	 */
-	public String getInputName();
-	
-	/**
-	 * Returns the form this component submits.
-	 * 
-	 * @return form submitted by this component
-	 */
-	public Form getForm();
-	
+	String getInputName();
+
 	/**
 	 * Override this method to provide special submit handling in a multi-button
 	 * form. It is called whenever the user clicks this particular button.
 	 */
-	public void onSubmit();
+	void onSubmit();
 }
