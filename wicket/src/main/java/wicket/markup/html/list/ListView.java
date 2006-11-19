@@ -291,6 +291,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 
 					// Swap list items and invalidate listView
 					Collections.swap(getList(), index, index + 1);
+					ListView.this.removeAll();
 				}
 			}
 		};
@@ -351,6 +352,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 
 					// Swap items and invalidate listView
 					Collections.swap(getList(), index, index - 1);
+					ListView.this.removeAll();
 				}
 			}
 		};
@@ -400,6 +402,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 				getList().remove(item.getModelObject());
 
 				ListView.this.modelChanged();
+				ListView.this.removeAll();
 			}
 		};
 	}
