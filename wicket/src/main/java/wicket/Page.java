@@ -338,7 +338,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param component
 	 *            The component that was rendered
 	 */
-	final void componentRendered(final Component component)
+	public final void componentRendered(final Component component)
 	{
 		if (Application.get().getDebugSettings().getComponentUseCheck())
 		{
