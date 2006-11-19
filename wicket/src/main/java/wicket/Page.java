@@ -1042,7 +1042,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param component
 	 *            The component that was rendered
 	 */
-	final void componentRendered(final Component component)
+	public final void componentRendered(final Component component)
 	{
 		// Inform the page that this component rendered
 		if (Application.get().getDebugSettings().getComponentUseCheck())
