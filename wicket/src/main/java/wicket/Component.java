@@ -1999,9 +1999,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	public final void rendered()
 	{
-		// Tell the page that the component rendered
-		getPage().componentRendered(this);
-
 		// notify the behaviors that component has been rendered
 		if (behaviors != null)
 		{
@@ -2010,6 +2007,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 				behavior.rendered(this);
 			}
 		}
+		// Tell the page that the component rendered
+		getPage().componentRendered(this);
 	}
 
 	/**
