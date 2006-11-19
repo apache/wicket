@@ -139,17 +139,19 @@ public abstract class Session implements Serializable, IConverterLocator
 		private static final long serialVersionUID = 1L;
 
 		Set<String> pageMapNames = new HashSet<String>(2);
-		
+
 		/**
-		 * @param pagemap the pagemap to add as used.
-		 * @return the boolean if it was added (didn't already contain the pagemap)
+		 * @param pagemap
+		 *            the pagemap to add as used.
+		 * @return the boolean if it was added (didn't already contain the
+		 *         pagemap)
 		 */
 		public boolean add(PageMap pagemap)
 		{
 			return pageMapNames.add(pagemap.getName());
-		}		
+		}
 	}
-	
+
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
@@ -342,6 +344,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	{
 		return getId() == null;
 	}
+
 	/**
 	 * Removes all pages from the session. Although this method should rarely be
 	 * needed, it is available (possibly for security reasons).
@@ -484,7 +487,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		if (pageMap != null)
 		{
 			synchronized (usedPageMaps) // get a lock so be sure that only one
-										// is made
+			// is made
 			{
 				if (pageMapsUsedInRequest == null)
 				{
@@ -730,7 +733,8 @@ public abstract class Session implements Serializable, IConverterLocator
 	public final void removePageMap(final PageMap pageMap)
 	{
 		PageMapAccessMetaData pagemapMetaData = getMetaData(PAGEMAP_ACCESS_MDK);
-		if(pagemapMetaData != null) pagemapMetaData.pageMapNames.remove(pageMap.getName());
+		if (pagemapMetaData != null)
+			pagemapMetaData.pageMapNames.remove(pageMap.getName());
 		usedPageMaps.remove(pageMap);
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 		dirty();
@@ -773,6 +777,9 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * IllegalArgumentException will be thrown. For information on creating
 	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
+	 * @param <M>
+	 *            Meta data type
+	 * 
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -780,7 +787,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	public final <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		metaData = key.set(metaData, object);
 		dirty();

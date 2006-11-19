@@ -2181,6 +2181,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * IllegalArgumentException will be thrown. For information on creating
 	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
+	 * @param <M>
+	 *            Meta data type
+	 * 
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -2188,7 +2191,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final void setMetaData(final MetaDataKey key, final Serializable object)
+	public final <M extends Serializable> void setMetaData(final MetaDataKey<M> key, final M object)
 	{
 		metaData = key.set(metaData, object);
 	}

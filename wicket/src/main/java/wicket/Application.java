@@ -455,7 +455,7 @@ public abstract class Application
 	/**
 	 * Gets metadata for this application using the given key.
 	 * 
-	 * @param <T> 
+	 * @param <T>
 	 * @param key
 	 *            The key for the data
 	 * @return The metadata
@@ -503,9 +503,10 @@ public abstract class Application
 	 */
 	public final IRequestLogger getRequestLogger()
 	{
-		if(getRequestLoggerSettings().isRequestLoggerEnabled())
+		if (getRequestLoggerSettings().isRequestLoggerEnabled())
 		{
-			if(requestLogger == null) requestLogger = newRequestLogger();
+			if (requestLogger == null)
+				requestLogger = newRequestLogger();
 		}
 		else
 		{
@@ -513,11 +514,11 @@ public abstract class Application
 		}
 		return requestLogger;
 	}
-	
+
 	/**
 	 * creates a new request logger when requests logging is enabled.
 	 * 
-	 * @return  The new request logger
+	 * @return The new request logger
 	 * 
 	 */
 	protected IRequestLogger newRequestLogger()
@@ -544,7 +545,7 @@ public abstract class Application
 	{
 		return getSettings();
 	}
-	
+
 	/**
 	 * @return Application's security related settings
 	 * @see ISecuritySettings
@@ -682,6 +683,9 @@ public abstract class Application
 	 * IllegalArgumentException will be thrown. For information on creating
 	 * MetaDataKeys, see {@link MetaDataKey}.
 	 * 
+	 * @param <M>
+	 *            Meta data type
+	 * 
 	 * @param key
 	 *            The singleton key for the metadata
 	 * @param object
@@ -689,7 +693,8 @@ public abstract class Application
 	 * @throws IllegalArgumentException
 	 * @see MetaDataKey
 	 */
-	public final synchronized void setMetaData(final MetaDataKey key, final Serializable object)
+	public final synchronized <M extends Serializable> void setMetaData(final MetaDataKey<M> key,
+			final M object)
 	{
 		metaData = key.set(metaData, object);
 	}
@@ -738,7 +743,7 @@ public abstract class Application
 	{
 		settingsAccessible = true;
 		IPageSettings pageSettings = getPageSettings();
-		
+
 		// Install default component resolvers
 		pageSettings.addComponentResolver(new ParentResolver());
 		pageSettings.addComponentResolver(new MarkupInheritanceResolver());
@@ -749,7 +754,8 @@ public abstract class Application
 		pageSettings.addComponentResolver(new AutoComponentResolver());
 
 		// Install default markup load listener
-//		getMarkupSettings().addMarkupLoadListener(new WicketHeaderMarkupLoadListener());
+		// getMarkupSettings().addMarkupLoadListener(new
+		// WicketHeaderMarkupLoadListener());
 
 		// Install button image resource factory
 		getResourceSettings().addResourceFactory("buttonFactory",
