@@ -40,7 +40,7 @@ public class NestedApplication extends WicketExampleApplication
 	{
 		super.init();
 		// disable debugging mode, because it slows down the tree
-		getAjaxSettings().setAjaxDebugModeEnabled(false);
+		getDebugSettings().setAjaxDebugModeEnabled(false);
 	}
 
 	/**

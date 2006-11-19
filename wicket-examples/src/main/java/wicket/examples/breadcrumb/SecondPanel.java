@@ -55,7 +55,7 @@ public class SecondPanel extends BreadCrumbPanel
 
 			add(new Button("nextButton")
 			{
-				protected void onSubmit()
+				public void onSubmit()
 				{
 					activate(new IBreadCrumbPanelFactory()
 					{

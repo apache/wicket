@@ -52,7 +52,7 @@ public class FormInputApplication extends WicketExampleApplication
 	 */
 	protected void init()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
 
 		// Chinese buttons
 		Font font = new Font("SimSun", Font.BOLD, 16);

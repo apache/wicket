@@ -42,7 +42,7 @@ public class UploadApplication extends WicketExampleApplication
 	 */
 	protected void init()
 	{
-		getExceptionSettings().setThrowExceptionOnMissingResource(false);
+		getResourceSettings().setThrowExceptionOnMissingResource(false);
 	}
 
 

@@ -321,6 +321,7 @@ public class FormInput extends WicketExamplePage
 			// objects of
 			// type FormInputModel.Line) using property text.
 			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
+			item.add(removeLink("remove", item));
 		}
 	}
 }
