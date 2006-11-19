@@ -149,7 +149,7 @@ public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContaine
 					// Determine if the wicket:head markup should be printed or
 					// not.
 					header.setEnable(headerContainer.okToRender(header));
-					header.render(new MarkupStream(frag));
+					header.render();
 
 					return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 				}
