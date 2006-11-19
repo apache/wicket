@@ -1029,7 +1029,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	/**
 	 * Triggers input required attribute validation on all form components
 	 */
-	private void validateRequired()
+	protected final void validateRequired()
 	{
 		visitFormComponents(new ValidationVisitor()
 		{
@@ -1044,7 +1044,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	/**
 	 * Triggers type conversion on form components
 	 */
-	private void validateConversion()
+	protected final void validateConversion()
 	{
 		visitFormComponents(new ValidationVisitor()
 		{
@@ -1059,7 +1059,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	/**
 	 * Triggers all IValidator validators added to the form components
 	 */
-	private void validateValidators()
+	protected final void validateValidators()
 	{
 		visitFormComponents(new ValidationVisitor()
 		{
@@ -1074,7 +1074,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	/**
 	 * Triggers any added {@link IFormValidator}s.
 	 */
-	private void validateFormValidators()
+	protected final void validateFormValidators()
 	{
 		final int multiCount = formValidators_size();
 		for (int i = 0; i < multiCount; i++)
