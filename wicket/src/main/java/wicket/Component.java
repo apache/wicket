@@ -1768,7 +1768,10 @@ public abstract class Component implements Serializable
 			for (Iterator i = behaviors.iterator(); i.hasNext();)
 			{
 				IBehavior behavior = (IBehavior)i.next();
-				behavior.rendered(this);
+				if (isBehaviorAccepted(behavior))
+				{
+					behavior.rendered(this);
+				}
 			}
 		}
 	}
