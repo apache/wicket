@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,6 +39,28 @@ import wicket.model.Model;
 public final class Home extends WicketExamplePage
 {
 	/**
+	 * A dynamic image resource using {@link Home#drawCircle(Graphics2D)} to
+	 * draw a random circle on the canvas.
+	 * 
+	 */
+	private final class CircleDynamicImageResource extends RenderedDynamicImageResource
+	{
+		private CircleDynamicImageResource(int width, int height)
+		{
+			super(width, height);
+		}
+
+		protected boolean render(Graphics2D graphics)
+		{
+			drawCircle(graphics);
+			return true;
+		}
+	}
+
+	private static final ResourceReference RESOURCE_REF = new ResourceReference(Home.class,
+			"Image2.gif");
+
+	/**
 	 * Constructor
 	 */
 	public Home()
@@ -51,14 +73,7 @@ public final class Home extends WicketExamplePage
 
 		// Dynamically created image. Will re-render whenever resource is asked
 		// for.
-		add(new Image("image3", new RenderedDynamicImageResource(100, 100)
-		{
-			protected boolean render(Graphics2D graphics)
-			{
-				drawCircle(graphics);
-				return true;
-			}
-		}));
+		add(new Image("image3", new CircleDynamicImageResource(100, 100)));
 
 		// Simple model
 		add(new Image("image4", new Model("Image2.gif")));
@@ -71,17 +86,13 @@ public final class Home extends WicketExamplePage
 
 		// Add cancel button image
 		add(new Image("cancelButton", new ResourceReference("cancelButton")));
-	}
 
-	final ResourceReference getOkButtonImage()
-	{
-		return new ResourceReference("okButton")
-		{
-			protected Resource newResource()
-			{
-				return new DefaultButtonImageResource("Ok");
-			}
-		};
+		// image loaded as resource ref via model.
+		add(new Image("imageModelResourceReference", new Model(RESOURCE_REF)));
+
+		// image loaded as resource via model.
+		add(new Image("imageModelResource", new Model(new CircleDynamicImageResource(100, 100))));
+
 	}
 
 	/**
@@ -120,5 +131,16 @@ public final class Home extends WicketExamplePage
 		// Draw circle with thick stroke width
 		graphics.setStroke(new BasicStroke(5));
 		graphics.drawOval(x, y, dx, dy);
+	}
+
+	final ResourceReference getOkButtonImage()
+	{
+		return new ResourceReference("okButton")
+		{
+			protected Resource newResource()
+			{
+				return new DefaultButtonImageResource("Ok");
+			}
+		};
 	}
 }
