@@ -89,7 +89,12 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);
-		target.appendJavascript(getJsTimeoutCall(updateInterval));
+
+		// this might look strange, but it is necessary for IE not to leak :(
+		String js = "setTimeout(\"" + getCallbackScript(false, true) + "\", "
+				+ updateInterval.getMilliseconds() + ");";
+		
+		target.appendJavascript(js);
 	}
 
 	/**
