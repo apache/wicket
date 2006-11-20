@@ -32,21 +32,30 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 //		addHeaders = true;
 		
-//		htmlIgnore = new String[] { 
-//				"" 
-//		};
+		htmlIgnore = new String[] {
+				/*
+				 * .html in test is very test specific and a license header 
+				 * would confuse and make it unclear what the test is about. 
+				 */
+				"src/test/java",
+				/*
+				 * See NOTICE.txt
+				 */
+				"src/main/java/wicket/util/diff",				
+		};
 		
 		cssIgnore = new String[] {
 				/*
-				 * .css in test is very test specific and a license header would confuse
-				 * and make it unclear what the test is about. 
+				 * .css in test is very test specific and a license header 
+				 * would confuse and make it unclear what the test is about. 
 				 */
 				"src/test/java" 
 		};
 		
-//		xmlIgnore = new String[] { 
-//				"" 
-//		};
+		xmlIgnore = new String[] { 
+				"EclipseCodeFormat.xml",
+				"src/assembly/bin.xml"
+		};
 		
 		javaIgnore = new String[] {
 				/*
@@ -81,12 +90,27 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				"src/main/java/wicket/util/concurrent/CopyOnWriteArrayList.java"
 		};
 		
-//		javaScriptIgnore = new String[] { 
-//				"" 
-//		};
+		javaScriptIgnore = new String[] { 
+				"src/site/xdoc/onestat.js",
+				/*
+				 * .js in test is very test specific and a license 
+				 * header would confuse and make it unclear what the test 
+				 * is about. 
+				 */
+				"src/test/java",
+				/*
+				 * See NOTICE.txt
+				 */
+				"src/main/java/wicket/ajax/wicket-ajax-debug-drag.js"
+		};
 		
-//		propertiesIgnore = new String[] { 
-//				"" 
-//		};
+		propertiesIgnore = new String[] {
+				/*
+				 * .properties in test is very test specific and a license 
+				 * header would confuse and make it unclear what the test 
+				 * is about. 
+				 */
+				"src/test/java", 
+		};
 	}
 }
