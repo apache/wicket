@@ -49,21 +49,279 @@ import wicket.util.string.Strings;
 public class FormTester
 {
 	/**
+	 * A selector template for selecting seletable form component via index of
+	 * option, support RadioGroup, CheckGroup, and AbstractChoice family.
+	 * 
+	 */
+	protected abstract class ChoiceSelector
+	{
+		/**
+		 * ???
+		 */
+		private final class SearchOptionByIndexVisitor implements IVisitor
+		{
+			int count = 0;
+
+			private final int index;
+
+			private SearchOptionByIndexVisitor(int index)
+			{
+				super();
+				this.index = index;
+			}
+
+			/**
+			 * @see wicket.Component.IVisitor#component(wicket.Component)
+			 */
+			public Object component(Component component)
+			{
+				if (count == index)
+				{
+					return component;
+				}
+				else
+				{
+					count++;
+					return CONTINUE_TRAVERSAL;
+				}
+			}
+		}
+
+		private final FormComponent formComponent;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param formComponent
+		 */
+		protected ChoiceSelector(FormComponent formComponent)
+		{
+			this.formComponent = formComponent;
+		}
+
+		/**
+		 * implement whether toggle or cumulate selection
+		 * 
+		 * @param formComponent
+		 * @param value
+		 */
+		protected abstract void assignValueToFormComponent(FormComponent formComponent, String value);
+
+		/**
+		 * 
+		 * @param index
+		 */
+		protected final void doSelect(final int index)
+		{
+			if (formComponent instanceof RadioGroup)
+			{
+				Radio foundRadio = (Radio)formComponent.visitChildren(Radio.class,
+						new SearchOptionByIndexVisitor(index));
+				if (foundRadio == null)
+				{
+					Assert.fail("RadioGroup " + formComponent.getPath() + " does not has index:"
+							+ index);
+				}
+				assignValueToFormComponent(formComponent, foundRadio.getValue());
+			}
+			else if (formComponent instanceof CheckGroup)
+			{
+				Check foundCheck = (Check)formComponent.visitChildren(Check.class,
+						new SearchOptionByIndexVisitor(index));
+				if (foundCheck == null)
+				{
+					Assert.fail("CheckGroup " + formComponent.getPath() + " does not have index:"
+							+ index);
+				}
+
+
+				assignValueToFormComponent(formComponent, String.valueOf(foundCheck.getValue()));
+			}
+			else
+			{
+				String idValue = selectAbstractChoice(formComponent, index);
+				if (idValue == null)
+				{
+					Assert.fail(formComponent.getPath() + " is not selectable component.");
+				}
+				else
+				{
+					assignValueToFormComponent(formComponent, idValue);
+				}
+			}
+		}
+
+		/**
+		 * 
+		 * @param formComponent
+		 * @param index
+		 * @return xxx
+		 */
+		private String selectAbstractChoice(FormComponent formComponent, final int index)
+		{
+			try
+			{
+				Method getChoicesMethod = formComponent.getClass().getMethod("getChoices",
+						(Class[])null);
+				getChoicesMethod.setAccessible(true);
+				List choices = (List)getChoicesMethod.invoke(formComponent, (Object[])null);
+
+				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
+						"getChoiceRenderer", (Class[])null);
+				getChoiceRendererMethod.setAccessible(true);
+				IChoiceRenderer choiceRenderer = (IChoiceRenderer)getChoiceRendererMethod.invoke(
+						formComponent, (Object[])null);
+
+				return choiceRenderer.getIdValue(choices.get(index), index);
+			}
+			catch (SecurityException e)
+			{
+				throw new WicketRuntimeException("unexpect select failure", e);
+			}
+			catch (NoSuchMethodException e)
+			{
+				// component without getChoices() or getChoiceRenderer() is not
+				// selectable
+				return null;
+			}
+			catch (IllegalAccessException e)
+			{
+				throw new WicketRuntimeException("unexpect select failure", e);
+			}
+			catch (InvocationTargetException e)
+			{
+				throw new WicketRuntimeException("unexpect select failure", e);
+			}
+		}
+	}
+
+	/**
+	 * A Factory to create appropriate ChoiceSelector based on type of
+	 * formComponent
+	 */
+	private class ChoiceSelectorFactory
+	{
+		/**
+		 * 
+		 */
+		private final class MultipleChoiceSelector extends ChoiceSelector
+		{
+			/**
+			 * Construct.
+			 * 
+			 * @param formComponent
+			 */
+			protected MultipleChoiceSelector(FormComponent formComponent)
+			{
+				super(formComponent);
+				if (!allowMultipleChoice(formComponent))
+				{
+					Assert.fail("Component:'" + formComponent.getPath()
+							+ "' Not support multiple selection.");
+				}
+			}
+
+			/**
+			 * 
+			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
+			 *      java.lang.String)
+			 */
+			protected void assignValueToFormComponent(FormComponent formComponent, String value)
+			{
+				// multiple selectable should retain selected option
+				addFormComponentValue(formComponent, value);
+			}
+		}
+
+		/**
+		 * 
+		 */
+		private final class SingleChoiceSelector extends ChoiceSelector
+		{
+			/**
+			 * Construct.
+			 * 
+			 * @param formComponent
+			 */
+			protected SingleChoiceSelector(FormComponent formComponent)
+			{
+				super(formComponent);
+			}
+
+			/**
+			 * 
+			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
+			 *      java.lang.String)
+			 */
+			protected void assignValueToFormComponent(FormComponent formComponent, String value)
+			{
+				// single selectable should overwrite already selected option
+				setFormComponentValue(formComponent, value);
+			}
+		}
+
+		/**
+		 * 
+		 * @param formComponent
+		 * @return ChoiceSelector
+		 */
+		protected ChoiceSelector create(FormComponent formComponent)
+		{
+			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice
+					|| formComponent instanceof RadioChoice)
+			{
+				return new SingleChoiceSelector(formComponent);
+			}
+			else if (allowMultipleChoice(formComponent))
+			{
+				return new MultipleChoiceSelector(formComponent);
+			}
+			else
+			{
+				Assert.fail("Selecting on the component:'" + formComponent.getPath()
+						+ "' is not supported.");
+				return null;
+			}
+		}
+
+		/**
+		 * 
+		 * @param formComponent
+		 * @return ChoiceSelector
+		 */
+		protected ChoiceSelector createForMultiple(FormComponent formComponent)
+		{
+			return new MultipleChoiceSelector(formComponent);
+		}
+
+		/**
+		 * 
+		 * @param formComponent
+		 * @return boolean
+		 */
+		private boolean allowMultipleChoice(FormComponent formComponent)
+		{
+			return formComponent instanceof CheckGroup
+					|| formComponent instanceof ListMultipleChoice;
+		}
+	}
+
+	private ChoiceSelectorFactory choiceSelectorFactory = new ChoiceSelectorFactory();
+
+	/**
 	 * An instance of FormTester can only be used once. Create a new instance of
 	 * each test
 	 */
 	private boolean closed = false;
 
-	/** form component to be test */
-	private Form workingForm;
+	/** path to form component */
+	private final String path;
 
 	/** wicketTester that create FormTester */
 	private final WicketTester wicketTester;
 
-	/** path to form component */
-	private final String path;
-
-	private ChoiceSelectorFactory choiceSelectorFactory = new ChoiceSelectorFactory();
+	/** form component to be test */
+	private Form workingForm;
 
 	/**
 	 * @see WicketTester#newFormTester(String)
@@ -117,70 +375,26 @@ public class FormTester
 	}
 
 	/**
-	 * simulate filling a field of a Form.
-	 * 
-	 * @param formComponentId
-	 *            relative path (from form) to formComponent
-	 * @param value
-	 *            field value of form.
+	 * @return work form
 	 */
-	public void setValue(final String formComponentId, final String value)
+	public Form getForm()
 	{
-		checkClosed();
-
-		FormComponent formComponent = (FormComponent)workingForm.get(formComponentId);
-		setFormComponentValue(formComponent, value);
+		return workingForm;
 	}
 
 	/**
-	 * submit the form. note that submit() can be executed only once.
-	 */
-	public void submit()
-	{
-		checkClosed();
-		try
-		{
-			wicketTester.getServletRequest().setRequestToComponent(workingForm);
-			wicketTester.processRequestCycle();
-		}
-		finally
-		{
-			closed = true;
-		}
-	}
-
-	/**
-	 * FormTester must only be used once. Create a new instance of FormTester
-	 * for each test.
-	 */
-	private void checkClosed()
-	{
-		if (closed)
-		{
-			throw new IllegalStateException("'" + path
-					+ "' already sumbitted. Note that FormTester "
-					+ "is allowed to submit only once");
-		}
-	}
-
-	/**
-	 * A convenient method to submit form with alternative button.
+	 * Gets value for text component with provided id.
 	 * 
-	 * Note that if the button associates with a model, it's better to use
-	 * setValue() instead:
-	 * 
-	 * <pre>
-	 * formTester.setValue(&quot;to:my:button&quot;, &quot;value on the button&quot;);
-	 * formTester.submit();
-	 * </pre>
-	 * 
-	 * @param buttonComponentId
-	 *            relative path (from form) to the button
+	 * @param id
+	 *            Component's id
+	 * @return value text component
 	 */
-	public void submit(String buttonComponentId)
+	public String getTextComponentValue(String id)
 	{
-		setValue(buttonComponentId, "marked");
-		submit();
+		Component c = getForm().get(id);
+		if (c instanceof AbstractTextComponent)
+			return ((AbstractTextComponent)c).getValue();
+		return null;
 	}
 
 	/**
@@ -228,15 +442,56 @@ public class FormTester
 	}
 
 	/**
-	 * set formComponent's value into request parameter, this method overwrites
-	 * exist parameters.
+	 * simulate filling a field of a Form.
 	 * 
-	 * @param formComponent
+	 * @param formComponentId
+	 *            relative path (from form) to formComponent
 	 * @param value
+	 *            field value of form.
 	 */
-	private void setFormComponentValue(FormComponent formComponent, String value)
+	public void setValue(final String formComponentId, final String value)
 	{
-		wicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
+		checkClosed();
+
+		FormComponent formComponent = (FormComponent)workingForm.get(formComponentId);
+		setFormComponentValue(formComponent, value);
+	}
+
+	/**
+	 * submit the form. note that submit() can be executed only once.
+	 */
+	public void submit()
+	{
+		checkClosed();
+		try
+		{
+			wicketTester.getServletRequest().setRequestToComponent(workingForm);
+			wicketTester.processRequestCycle();
+		}
+		finally
+		{
+			closed = true;
+		}
+	}
+
+	/**
+	 * A convenient method to submit form with alternative button.
+	 * 
+	 * Note that if the button associates with a model, it's better to use
+	 * setValue() instead:
+	 * 
+	 * <pre>
+	 * formTester.setValue(&quot;to:my:button&quot;, &quot;value on the button&quot;);
+	 * formTester.submit();
+	 * </pre>
+	 * 
+	 * @param buttonComponentId
+	 *            relative path (from form) to the button
+	 */
+	public void submit(String buttonComponentId)
+	{
+		setValue(buttonComponentId, "marked");
+		submit();
 	}
 
 	/**
@@ -266,6 +521,20 @@ public class FormTester
 	}
 
 	/**
+	 * FormTester must only be used once. Create a new instance of FormTester
+	 * for each test.
+	 */
+	private void checkClosed()
+	{
+		if (closed)
+		{
+			throw new IllegalStateException("'" + path
+					+ "' already sumbitted. Note that FormTester "
+					+ "is allowed to submit only once");
+		}
+	}
+
+	/**
 	 * 
 	 * @param formComponent
 	 * @return Boolean
@@ -278,270 +547,14 @@ public class FormTester
 	}
 
 	/**
-	 * A Factory to create appropriate ChoiceSelector based on type of
-	 * formComponent
-	 */
-	private class ChoiceSelectorFactory
-	{
-		/**
-		 * 
-		 */
-		private final class SingleChoiceSelector extends ChoiceSelector
-		{
-			/**
-			 * Construct.
-			 * 
-			 * @param formComponent
-			 */
-			protected SingleChoiceSelector(FormComponent formComponent)
-			{
-				super(formComponent);
-			}
-
-			/**
-			 * 
-			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
-			 *      java.lang.String)
-			 */
-			protected void assignValueToFormComponent(FormComponent formComponent, String value)
-			{
-				// single selectable should overwrite already selected option
-				setFormComponentValue(formComponent, value);
-			}
-		}
-
-		/**
-		 * 
-		 */
-		private final class MultipleChoiceSelector extends ChoiceSelector
-		{
-			/**
-			 * Construct.
-			 * 
-			 * @param formComponent
-			 */
-			protected MultipleChoiceSelector(FormComponent formComponent)
-			{
-				super(formComponent);
-				if (!allowMultipleChoice(formComponent))
-				{
-					Assert.fail("Component:'" + formComponent.getPath()
-							+ "' Not support multiple selection.");
-				}
-			}
-
-			/**
-			 * 
-			 * @see wicket.util.tester.FormTester.ChoiceSelector#assignValueToFormComponent(wicket.markup.html.form.FormComponent,
-			 *      java.lang.String)
-			 */
-			protected void assignValueToFormComponent(FormComponent formComponent, String value)
-			{
-				// multiple selectable should retain selected option
-				addFormComponentValue(formComponent, value);
-			}
-		}
-
-		/**
-		 * 
-		 * @param formComponent
-		 * @return ChoiceSelector
-		 */
-		protected ChoiceSelector create(FormComponent formComponent)
-		{
-			if (formComponent instanceof RadioGroup || formComponent instanceof DropDownChoice
-					|| formComponent instanceof RadioChoice)
-			{
-				return new SingleChoiceSelector(formComponent);
-			}
-			else if (allowMultipleChoice(formComponent))
-			{
-				return new MultipleChoiceSelector(formComponent);
-			}
-			else
-			{
-				Assert.fail("Selecting on the component:'" + formComponent.getPath()
-						+ "' is not supported.");
-				return null;
-			}
-		}
-
-		/**
-		 * 
-		 * @param formComponent
-		 * @return boolean
-		 */
-		private boolean allowMultipleChoice(FormComponent formComponent)
-		{
-			return formComponent instanceof CheckGroup
-					|| formComponent instanceof ListMultipleChoice;
-		}
-
-		/**
-		 * 
-		 * @param formComponent
-		 * @return ChoiceSelector
-		 */
-		protected ChoiceSelector createForMultiple(FormComponent formComponent)
-		{
-			return new MultipleChoiceSelector(formComponent);
-		}
-	}
-
-	/**
-	 * A selector template for selecting seletable form component via index of
-	 * option, support RadioGroup, CheckGroup, and AbstractChoice family.
+	 * set formComponent's value into request parameter, this method overwrites
+	 * exist parameters.
 	 * 
+	 * @param formComponent
+	 * @param value
 	 */
-	protected abstract class ChoiceSelector
+	private void setFormComponentValue(FormComponent formComponent, String value)
 	{
-		private final FormComponent formComponent;
-
-		/**
-		 * Construct.
-		 * 
-		 * @param formComponent
-		 */
-		protected ChoiceSelector(FormComponent formComponent)
-		{
-			this.formComponent = formComponent;
-		}
-
-		/**
-		 * 
-		 * @param index
-		 */
-		protected final void doSelect(final int index)
-		{
-			if (formComponent instanceof RadioGroup)
-			{
-				Radio foundRadio = (Radio)formComponent.visitChildren(Radio.class,
-						new SearchOptionByIndexVisitor(index));
-				if (foundRadio == null)
-				{
-					Assert.fail("RadioGroup " + formComponent.getPath() + " does not has index:"
-							+ index);
-				}
-				assignValueToFormComponent(formComponent, foundRadio.getValue());
-			}
-			else if (formComponent instanceof CheckGroup)
-			{
-				Check foundCheck = (Check)formComponent.visitChildren(Check.class,
-						new SearchOptionByIndexVisitor(index));
-				if (foundCheck == null)
-				{
-					Assert.fail("CheckGroup " + formComponent.getPath() + " does not have index:"
-							+ index);
-				}
-
-
-				assignValueToFormComponent(formComponent, String.valueOf(foundCheck.getValue()));
-			}
-			else
-			{
-				String idValue = selectAbstractChoice(formComponent, index);
-				if (idValue == null)
-				{
-					Assert.fail(formComponent.getPath() + " is not selectable component.");
-				}
-				else
-				{
-					assignValueToFormComponent(formComponent, idValue);
-				}
-			}
-		}
-
-		/**
-		 * implement whether toggle or cumulate selection
-		 * 
-		 * @param formComponent
-		 * @param value
-		 */
-		protected abstract void assignValueToFormComponent(FormComponent formComponent, String value);
-
-		/**
-		 * 
-		 * @param formComponent
-		 * @param index
-		 * @return xxx
-		 */
-		private String selectAbstractChoice(FormComponent formComponent, final int index)
-		{
-			try
-			{
-				Method getChoicesMethod = formComponent.getClass().getMethod("getChoices",
-						(Class[])null);
-				getChoicesMethod.setAccessible(true);
-				List choices = (List)getChoicesMethod.invoke(formComponent, (Object[])null);
-
-				Method getChoiceRendererMethod = formComponent.getClass().getMethod(
-						"getChoiceRenderer", (Class[])null);
-				getChoiceRendererMethod.setAccessible(true);
-				IChoiceRenderer choiceRenderer = (IChoiceRenderer)getChoiceRendererMethod.invoke(
-						formComponent, (Object[])null);
-
-				return choiceRenderer.getIdValue(choices.get(index), index);
-			}
-			catch (SecurityException e)
-			{
-				throw new WicketRuntimeException("unexpect select failure", e);
-			}
-			catch (NoSuchMethodException e)
-			{
-				// component without getChoices() or getChoiceRenderer() is not
-				// selectable
-				return null;
-			}
-			catch (IllegalAccessException e)
-			{
-				throw new WicketRuntimeException("unexpect select failure", e);
-			}
-			catch (InvocationTargetException e)
-			{
-				throw new WicketRuntimeException("unexpect select failure", e);
-			}
-		}
-
-		/**
-		 * ???
-		 */
-		private final class SearchOptionByIndexVisitor implements IVisitor
-		{
-			private final int index;
-
-			int count = 0;
-
-			private SearchOptionByIndexVisitor(int index)
-			{
-				super();
-				this.index = index;
-			}
-
-			/**
-			 * @see wicket.Component.IVisitor#component(wicket.Component)
-			 */
-			public Object component(Component component)
-			{
-				if (count == index)
-				{
-					return component;
-				}
-				else
-				{
-					count++;
-					return CONTINUE_TRAVERSAL;
-				}
-			}
-		}
-	}
-
-	public Form getForm() {
-		return workingForm;
-	}
-	public String getTextComponentValue(String id) {
-		Component c = getForm().get(id);
-		if (c instanceof AbstractTextComponent)
-			return ((AbstractTextComponent)c).getValue();
-		return null;
+		wicketTester.getServletRequest().setParameter(formComponent.getInputName(), value);
 	}
 }
