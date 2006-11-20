@@ -167,7 +167,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 */
 	private void validateTimerScript(String document, String updateScript)
 	{
-		String quotedRegex = Pattern.quote(updateScript);
+		String quotedRegex = quote(updateScript);
 		Pattern pat = Pattern.compile(quotedRegex, Pattern.DOTALL);
 		Matcher mat = pat.matcher(document);
 
@@ -180,6 +180,26 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 		assertEquals("There should be 1 and only 1 script in the markup for this behavior,"
 				+ "but " + count + " were found", 1, count);
 	}
+
+	// quick fix for JDK 5 method
+    private static final String quote(String s) {
+        int slashEIndex = s.indexOf("\\E");
+        if (slashEIndex == -1)
+            return "\\Q" + s + "\\E";
+
+        StringBuffer sb = new StringBuffer(s.length() * 2);
+        sb.append("\\Q");
+        slashEIndex = 0;
+        int current = 0;
+        while ((slashEIndex = s.indexOf("\\E", current)) != -1) {
+            sb.append(s.substring(current, slashEIndex));
+            current = slashEIndex + 2;
+            sb.append("\\E\\\\E\\Q");
+        }
+        sb.append(s.substring(current, s.length()));
+        sb.append("\\E");
+        return sb.toString();
+    }
 
 	static class MyAjaxSelfUpdatingTimerBehavior extends AjaxSelfUpdatingTimerBehavior
 	{
@@ -207,6 +227,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			updateScript = getJsTimeoutCall(duration);
 		}
 
+		/**
+		 * @return Update script
+		 */
 		public String getUpdateScript()
 		{
 			return updateScript;
