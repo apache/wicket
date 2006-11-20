@@ -101,10 +101,14 @@ public class FormTester
 				// blank String if required
 				if (formComponent instanceof AbstractTextComponent)
 				{
-					if (fillBlankString && Strings.isEmpty(formComponent.getValue()))
+					if (Strings.isEmpty(formComponent.getValue()))
 					{
-						setFormComponentValue(formComponent, "");
-						return;
+						if (fillBlankString)
+							setFormComponentValue(formComponent, "");
+					}
+					else
+					{
+						setFormComponentValue(formComponent, formComponent.getValue());
 					}
 				}
 			}
@@ -529,5 +533,15 @@ public class FormTester
 				}
 			}
 		}
+	}
+
+	public Form getForm() {
+		return workingForm;
+	}
+	public String getTextComponentValue(String id) {
+		Component c = getForm().get(id);
+		if (c instanceof AbstractTextComponent)
+			return ((AbstractTextComponent)c).getValue();
+		return null;
 	}
 }
