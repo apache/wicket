@@ -16,8 +16,10 @@
  */
 package wicket.ajax;
 
+import wicket.RequestCycle;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebPage;
+import wicket.util.string.JavascriptUtils;
 import wicket.util.time.Duration;
 
 /**
@@ -64,13 +66,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	public void renderHead(IHeaderResponse response)
 	{
 		super.renderHead(response);
-		
-		if (this.attachedBodyOnLoadModifier == false)
-		{
-			this.attachedBodyOnLoadModifier = true;
-			((WebPage)getComponent().getPage()).getBodyContainer().addOnLoadModifier(
-					getJsTimeoutCall(updateInterval), getComponent());
-		}		
 	}
 	
 	/**
@@ -92,7 +87,6 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	protected final void respond(final AjaxRequestTarget target)
 	{
 		onTimer(target);
-		target.appendJavascript(getJsTimeoutCall(updateInterval));
 	}
 
 	/**
@@ -102,4 +96,14 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 *            The request target
 	 */
 	protected abstract void onTimer(final AjaxRequestTarget target);
+	
+	/**
+	 * Inject the timer script into the markup after the component is rendered 
+	 * @see wicket.behavior.AbstractAjaxBehavior#onComponentRendered()
+	 */
+	@Override
+	protected void onComponentRendered()
+	{
+		JavascriptUtils.writeJavascript(RequestCycle.get().getResponse(), getJsTimeoutCall(updateInterval));
+	}
 }
