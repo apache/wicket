@@ -45,8 +45,31 @@ import wicket.model.Model;
 public final class Home extends WicketExamplePage
 {
 	/**
+	 * A dynamic image resource using {@link Home#drawCircle(Graphics2D)} to
+	 * draw a random circle on the canvas.
+	 * 
+	 */
+	private final class CircleDynamicImageResource extends RenderedDynamicImageResource
+	{
+		private CircleDynamicImageResource(int width, int height)
+		{
+			super(width, height);
+		}
+
+		protected boolean render(Graphics2D graphics)
+		{
+			drawCircle(graphics);
+			return true;
+		}
+	}
+
+	private static final ResourceReference RESOURCE_REF = new ResourceReference(Home.class,
+			"Image2.gif");
+
+	/**
 	 * Constructor
 	 */
+	@SuppressWarnings("unchecked")
 	public Home()
 	{
 		// Image as package resource
@@ -75,6 +98,12 @@ public final class Home extends WicketExamplePage
 
 		// Add cancel button image
 		new NonCachingImage(this, "cancelButton", new ResourceReference("cancelButton"));
+
+		// image loaded as resource ref via model.
+		new Image(this, "imageModelResourceReference", new Model(RESOURCE_REF));
+
+		// image loaded as resource via model.
+		new Image(this, "imageModelResource", new Model(new CircleDynamicImageResource(100, 100)));
 
 		// rendered label example
 		Form form = new Form(this, "renderedLabelForm");
