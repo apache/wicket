@@ -65,8 +65,9 @@ import wicket.util.value.ValueMap;
  * {@link wicket.markup.html.image.resource.DefaultButtonImageResourceFactory}.
  * <p>
  * Finally, if there is no SRC attribute and no VALUE attribute, the Image
- * component's model is converted to a String and that value is used as a path
- * to load the image.
+ * component's model is inspected. If the model contains a resource or resource
+ * reference, this image is used, otherwise the model is converted to a 
+ * String and that value is used as a path to load the image.
  * 
  * @author Jonathan Locke
  */
@@ -271,6 +272,14 @@ public final class LocalizedImageResource implements Serializable, IResourceList
 			// exists.
 			// something like
 			// SharedResource.getResourceReferenceForLocale(resourceReference);
+		}
+		
+		// check if the model contains a resource, if so, load the resource from the model.
+		Object modelObject = component.getModelObject();
+		if ( modelObject instanceof ResourceReference ) {
+			resourceReference = (ResourceReference) modelObject;
+		} else if ( modelObject instanceof Resource ) {
+			resource = (Resource) modelObject;
 		}
 
 		// Need to load image resource for this component?
