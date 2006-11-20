@@ -20,13 +20,11 @@ import wicket.Application;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
-import wicket.Response;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.settings.IAjaxSettings;
 import wicket.util.string.AppendingStringBuffer;
-import wicket.util.string.JavascriptUtils;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 
