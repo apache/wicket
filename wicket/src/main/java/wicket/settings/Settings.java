@@ -287,7 +287,7 @@ public final class Settings
 
 	private boolean recordSessionSize = true;
 
-	private int requestsWindowSize = 2000;
+	private int requestsWindowSize = 0;
 
 	private boolean requestLoggerEnabled;
 
