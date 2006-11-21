@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Application;
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -61,7 +64,8 @@ import wicket.util.string.AppendingStringBuffer;
  */
 public class RequestLogger implements IRequestLogger
 {
-	// TODO post 1.2 for this class: saving to a log file, only holding a small part in mem.
+	/** log. */
+	protected static Log log = LogFactory.getLog(RequestLogger.class);
 
 	
 	/**
@@ -221,11 +225,71 @@ public class RequestLogger implements IRequestLogger
 					sd.setSessionInfo(sessionInfo);
 					sd.setSessionSize(sizeInBytes);
 					sd.addTimeTaken(timeTaken);
+					log(rd,sd);
 				}
+				else
+				{
+					log(rd,null);
+				}
+			}
+			else
+			{
+				log(rd,null);
 			}
 		}
 	}
 
+	/**
+	 * @param rd
+	 * @param sd
+	 */
+	private void log(RequestData rd, SessionData sd)
+	{
+		 if(log.isInfoEnabled())
+		 {
+			 AppendingStringBuffer asb = new AppendingStringBuffer(150);
+			 asb.append("time=");
+			 asb.append(rd.getTimeTaken());
+			 asb.append(",event=");
+			 asb.append(rd.getEventTarget());
+			 asb.append(",response=");
+			 asb.append(rd.getResponseTarget());
+			 if(rd.getSessionInfo() != null)
+			 {
+				 asb.append(",sessioninfo=");
+				 asb.append(rd.getSessionInfo());
+			 }
+			 else
+			 {
+				 asb.append(",sessionid=");
+				 asb.append(rd.getSessionId());
+			 }
+			 asb.append(",sessionsize=");
+			 asb.append(rd.getSessionSize());
+			 if(sd != null)
+			 {
+				 asb.append(",sessionstart=");
+				 asb.append(sd.getStartDate());
+				 asb.append(",requests=");
+				 asb.append(sd.getNumberOfRequests());
+				 asb.append(",totaltime=");
+				 asb.append(sd.getTotalTimeTaken());
+			 }
+			 Runtime runtime = Runtime.getRuntime();
+			 long max = runtime.maxMemory()/1000000;
+			 long total = runtime.totalMemory()/1000000;
+			 long used = total - runtime.freeMemory()/1000000;
+			 asb.append(",maxmem=");
+			 asb.append(max);
+			 asb.append("M,total=");
+			 asb.append(total);
+			 asb.append("M,used=");
+			 asb.append(used);
+			 asb.append("M");
+			 log.info(asb.toString());
+		 }
+	}
+	
 	private Object getSessionInfo(Session session)
 	{
 		if (session instanceof ISessionLogInfo)
@@ -342,15 +406,15 @@ public class RequestLogger implements IRequestLogger
 	private String getRequestTargetString(IRequestTarget target)
 	{
 		AppendingStringBuffer sb = new AppendingStringBuffer(128);
-		if (target instanceof IListenerInterfaceRequestTarget)
+		if(target instanceof IListenerInterfaceRequestTarget)
 		{
 			IListenerInterfaceRequestTarget listener = (IListenerInterfaceRequestTarget)target;
-			sb.append("Interface call [target:");
+			sb.append("Interface[target:");
 			sb.append(Classes.simpleName(listener.getTarget().getClass()));
 			sb.append("(");
-			sb.append(listener.getTarget().getId());
+			sb.append(listener.getTarget().getPageRelativePath());
 			sb.append("), page: ");
-			sb.append(Classes.simpleName(listener.getPage().getClass()));
+			sb.append(listener.getPage().getClass().getName());
 			sb.append("(");
 			sb.append(listener.getPage().getId());
 			sb.append("), interface: ");
@@ -359,26 +423,26 @@ public class RequestLogger implements IRequestLogger
 			sb.append(listener.getRequestListenerInterface().getMethod().getName());
 			sb.append("]");
 		}
-		else if (target instanceof IPageRequestTarget)
+		else if(target instanceof IPageRequestTarget)
 		{
 			IPageRequestTarget pageRequestTarget = (IPageRequestTarget)target;
-			sb.append("PageRequest call [page: ");
-			sb.append(Classes.simpleName(pageRequestTarget.getPage().getClass()));
+			sb.append("PageRequest[");
+			sb.append(pageRequestTarget.getPage().getClass().getName());
 			sb.append("(");
 			sb.append(pageRequestTarget.getPage().getId());
 			sb.append(")]");
 		}
-		else if (target instanceof IBookmarkablePageRequestTarget)
+		else if(target instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget pageRequestTarget = (IBookmarkablePageRequestTarget)target;
-			sb.append("BookmarkablePage call [page: ");
-			sb.append(Classes.simpleName(pageRequestTarget.getPageClass()));
+			sb.append("BookmarkablePage[");
+			sb.append(pageRequestTarget.getPageClass().getName());
 			sb.append("]");
 		}
-		else if (target instanceof ISharedResourceRequestTarget)
+		else if(target instanceof ISharedResourceRequestTarget)
 		{
 			ISharedResourceRequestTarget sharedResourceTarget = (ISharedResourceRequestTarget)target;
-			sb.append("Shared Resource call [resourcekey: ");
+			sb.append("SharedResource[");
 			sb.append(sharedResourceTarget.getResourceKey());
 			sb.append("]");
 		}
@@ -388,6 +452,7 @@ public class RequestLogger implements IRequestLogger
 		}
 		return sb.toString();
 	}
+	
 	/**
 	 * This class hold the information one request of a session has.
 	 * 
@@ -569,7 +634,7 @@ public class RequestLogger implements IRequestLogger
 		/**
 		 * @return The event target string
 		 */
-		public String getEventTargert()
+		public String getEventTarget()
 		{
 			return eventTarget;
 		}
@@ -650,5 +715,10 @@ public class RequestLogger implements IRequestLogger
 			return totalSessionSize;
 		}
 
+		public String toString()
+		{
+			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo + ",sessionid=" + sessionId+ ",sessionsize=" + totalSessionSize+
+			     ",request=" + eventTarget + ",response=" + responseTarget + ",alteredobjects=" +getAlteredObjects() + "]";
+		}
 	}
 }
