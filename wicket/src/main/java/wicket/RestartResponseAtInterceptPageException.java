@@ -82,7 +82,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		 * before any page is instantiated in user's session. if this happens we
 		 * switch to the pagemap of the interceptPage
 		 */
-		final PageMap pageMap;
+		final IPageMap pageMap;
 		if (requestPage != null)
 		{
 			pageMap = requestPage.getPageMap();
@@ -111,7 +111,7 @@ public class RestartResponseAtInterceptPageException extends AbstractRestartResp
 		 * before any page is instantiated in user's session. if this happens we
 		 * switch to the pagemap of the request.
 		 */
-		final PageMap pageMap;
+		final IPageMap pageMap;
 		if (requestPage != null)
 		{
 			pageMap = requestPage.getPageMap();

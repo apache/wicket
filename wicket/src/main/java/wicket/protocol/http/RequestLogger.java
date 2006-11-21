@@ -31,9 +31,9 @@ import org.apache.commons.logging.LogFactory;
 import wicket.util.concurrent.ConcurrentHashMap;
 
 import wicket.Application;
+import wicket.IPageMap;
 import wicket.IRequestTarget;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.Session;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
@@ -317,9 +317,9 @@ public class RequestLogger implements IRequestLogger
 			Page page = (Page)value;
 			rd.addEntry("Page removed, id: " + page.getId() + ", class:" + page.getClass());
 		}
-		else if(value instanceof PageMap)
+		else if(value instanceof IPageMap)
 		{
-			PageMap map = (PageMap)value;
+			IPageMap map = (IPageMap)value;
 			rd.addEntry("PageMap removed, name: " + (map.getName()==null?"DEFAULT":map.getName()));
 		}
 		else if(value instanceof WebSession)
@@ -343,9 +343,9 @@ public class RequestLogger implements IRequestLogger
 			Page page = (Page)value;
 			rd.addEntry("Page updated, id: " + page.getId() + ", class:" + page.getClass());
 		}
-		else if(value instanceof PageMap)
+		else if(value instanceof IPageMap)
 		{
-			PageMap map = (PageMap)value;
+			IPageMap map = (IPageMap)value;
 			rd.addEntry("PageMap updated, name: " + (map.getName()==null?"DEFAULT":map.getName()));
 		}
 		else if(value instanceof Session)
@@ -374,9 +374,9 @@ public class RequestLogger implements IRequestLogger
 			Page page = (Page)value;
 			rd.addEntry("Page created, id: " + page.getId() + ", class:" + page.getClass());
 		}
-		else if(value instanceof PageMap)
+		else if(value instanceof IPageMap)
 		{
-			PageMap map = (PageMap)value;
+			IPageMap map = (IPageMap)value;
 			rd.addEntry("PageMap created, name: " + (map.getName()==null?"DEFAULT":map.getName()));
 		}
 		else

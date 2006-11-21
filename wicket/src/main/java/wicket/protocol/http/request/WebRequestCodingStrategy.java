@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
@@ -565,7 +566,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 			if (currentTarget instanceof IPageRequestTarget)
 			{
 				Page currentPage = ((IPageRequestTarget)currentTarget).getPage();
-				final PageMap pageMap = currentPage.getPageMap();
+				final IPageMap pageMap = currentPage.getPageMap();
 				if (pageMap.isDefault())
 				{
 					pageMapName = "";
@@ -761,7 +762,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		final Page page = component.getPage();
 
 		// Add pagemap
-		final PageMap pageMap = page.getPageMap();
+		final IPageMap pageMap = page.getPageMap();
 		if (!pageMap.isDefault())
 		{
 			url.append(pageMap.getName());

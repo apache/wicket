@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import wicket.PageMap;
+import wicket.IPageMap;
 import wicket.Request;
 import wicket.Session;
 
@@ -154,5 +154,5 @@ public interface ISessionStore
 	 * @param session
 	 * @return The pagemap instances for the session
 	 */
-	PageMap createPageMap(String name, Session session);
+	IPageMap createPageMap(String name, Session session);
 }

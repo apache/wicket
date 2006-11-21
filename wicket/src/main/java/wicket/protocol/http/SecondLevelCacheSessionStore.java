@@ -18,14 +18,15 @@ package wicket.protocol.http;
 
 import java.lang.ref.SoftReference;
 import java.util.Map;
-import wicket.util.concurrent.ConcurrentHashMap;
 
 import wicket.Application;
+import wicket.IPageMap;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
 import wicket.session.pagemap.IPageMapEntry;
+import wicket.util.concurrent.ConcurrentHashMap;
 
 /**
  * FIXME document me!
@@ -51,7 +52,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			super(name, session);
 		}
 
-		protected void removeEntry(IPageMapEntry entry)
+		public void removeEntry(IPageMapEntry entry)
 		{
 			String sessionId = getSession().getId();
 			if (sessionId != null)
@@ -60,7 +61,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 		}
 
-		protected void put(Page page)
+		public void put(Page page)
 		{
 			if (!page.isPageStateless())
 			{
@@ -74,7 +75,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			}
 		}
 
-		protected Page get(int id, int versionNumber)
+		public Page get(int id, int versionNumber)
 		{
 			if (lastPage != null && lastPage.getNumericId() == id)
 			{
@@ -238,7 +239,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String,
 	 *      wicket.Session)
 	 */
-	public PageMap createPageMap(String name, Session session)
+	public IPageMap createPageMap(String name, Session session)
 	{
 		return new SecondLevelCachePageMap(name, session);
 	}

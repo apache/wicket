@@ -18,8 +18,8 @@ package wicket.markup.html.link;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -560,7 +560,7 @@ public abstract class Link extends WebMarkupContainer implements ILinkListener
 
 		if (popupSettings != null)
 		{
-			PageMap popupPageMap = popupSettings.getPageMap(this);
+			IPageMap popupPageMap = popupSettings.getPageMap(this);
 			if (popupPageMap != null)
 			{
 				tag.put("target", popupPageMap.getName());

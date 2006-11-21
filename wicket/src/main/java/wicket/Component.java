@@ -2305,7 +2305,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final PageMap pageMap, final Class pageClass,
+	public final CharSequence urlFor(final IPageMap pageMap, final Class pageClass,
 			final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);

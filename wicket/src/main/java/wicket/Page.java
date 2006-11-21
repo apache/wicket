@@ -168,7 +168,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	private short numericId;
 
 	/** The PageMap within the session that this page is stored in */
-	private transient PageMap pageMap;
+	private transient IPageMap pageMap;
 
 	/** Name of PageMap that this page is stored in */
 	private String pageMapName;
@@ -219,7 +219,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param pageMap
 	 *            The page map to put this page in
 	 */
-	protected Page(final PageMap pageMap)
+	protected Page(final IPageMap pageMap)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -236,7 +236,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            See Component
 	 * @see Component#Component(String, IModel)
 	 */
-	protected Page(final PageMap pageMap, final IModel model)
+	protected Page(final IPageMap pageMap, final IModel model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -284,24 +284,25 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public void internalDetach()
 	{
-		if(attached )
+		if (attached)
 		{
 			super.internalDetach();
 			attached = false;
 		}
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#internalAttach()
 	 */
 	public void internalAttach()
 	{
-		if(!attached)
+		if (!attached)
 		{
 			super.internalAttach();
 			attached = true;
 		}
 	}
+
 	/**
 	 * Detaches any attached models referenced by this page.
 	 */
@@ -373,16 +374,17 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		});
 
-		if (this instanceof IFeedback) {
+		if (this instanceof IFeedback)
+		{
 			((IFeedback)this).updateFeedback();
 		}
-		
+
 		// Now, do the initialization for the other components
 		internalAttach();
 
 		// Call reset head rendered on the page
 		resetHeadRendered();
-		
+
 		// Visit all this page's children to reset markup streams and check
 		// rendering authorization, as appropriate. We set any result; positive
 		// or negative as a temporary boolean in the components, and when a
@@ -397,7 +399,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			public Object component(final Component component)
 			{
 				component.resetHeadRendered();
-				
+
 				// Find out if this component can be rendered
 				final boolean renderAllowed = component.isActionAuthorized(RENDER);
 
@@ -478,7 +480,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return Returns feedback messages from all components in this page (including the page itself).
+	 * @return Returns feedback messages from all components in this page
+	 *         (including the page itself).
 	 */
 	public final FeedbackMessages getFeedbackMessages()
 	{
@@ -516,7 +519,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/**
 	 * @return Returns the PageMap that this Page is stored in.
 	 */
-	public final PageMap getPageMap()
+	public final IPageMap getPageMap()
 	{
 		// If the transient needs to be restored
 		if (pageMap == null)
@@ -558,7 +561,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	{
 		return getFlag(FLAG_STATELESS_HINT);
 	}
-	
+
 	/**
 	 * Override this method to implement a custom way of producing a version of
 	 * a Page when it cannot be found in the Session.
@@ -656,7 +659,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		});
 		return buffer.toString();
 	}
-	
+
 	/**
 	 * Bookmarkable page can be instantiated using a bookmarkable URL.
 	 * 
@@ -765,7 +768,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 
 		return stateless.booleanValue();
 	}
-	
+
 	/**
 	 * Redirect to this page.
 	 * 
@@ -1008,7 +1011,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component,null))
+		if (mayTrackChangesFor(component, null))
 		{
 			versionManager.componentModelChanging(component);
 		}
@@ -1065,7 +1068,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		checkHierarchyChange(component);
 
 		dirty();
-		if (mayTrackChangesFor(component,null))
+		if (mayTrackChangesFor(component, null))
 		{
 			versionManager.componentStateChanging(change);
 		}
@@ -1094,7 +1097,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 *            Sets this page into the page map with the given name. If the
 	 *            page map does not yet exist, it is automatically created.
 	 */
-	final void setPageMap(final PageMap pageMap)
+	final void setPageMap(final IPageMap pageMap)
 	{
 		// Save transient reference to pagemap
 		this.pageMap = pageMap;
@@ -1102,7 +1105,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 		// Save name for restoring transient
 		this.pageMapName = pageMap.getName();
 	}
-	
+
 	/**
 	 * Sets whether the page should try to be stateless. To be stateless,
 	 * getStatelessHint() of every component on page (and it's behavior) must
@@ -1120,22 +1123,24 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 							+ this);
 		}
 		setFlag(FLAG_STATELESS_HINT, value);
-	}	
-	
+	}
+
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
 	 * OVERRIDE.
+	 * 
 	 * @param map
 	 */
-	protected final void moveToPageMap(PageMap map)
+	protected final void moveToPageMap(IPageMap map)
 	{
-		// TODO post 1.2 shouldn't we remove this page from the pagemap/session if it would be in there?
-		// This should be done if the page was not cloned first, but shouldn't be done if it was cloned..
+		// TODO post 1.2 shouldn't we remove this page from the pagemap/session
+		// if it would be in there?
+		// This should be done if the page was not cloned first, but shouldn't
+		// be done if it was cloned..
 		setPageMap(map);
 		numericId = (short)map.nextId();
 	}
 
-	
 
 	/**
 	 * Checks whether the hierarchy may be changed at all, and throws an
@@ -1267,7 +1272,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			RequestParameters parameters = getRequest().getRequestParameters();
 			pageMapName = parameters.getPageMapName();
 		}
-		final PageMap pageMap = PageMap.forName(pageMapName);
+		final IPageMap pageMap = PageMap.forName(pageMapName);
 		init(pageMap);
 	}
 
@@ -1277,7 +1282,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * @param pageMap
 	 *            The page map to put this page in.
 	 */
-	private final void init(final PageMap pageMap)
+	private final void init(final IPageMap pageMap)
 	{
 		// Set the page map
 		if (pageMap != null)
@@ -1304,16 +1309,15 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 * 
 	 * @param component
 	 *            The component which is affected
-	 * @param parent 
+	 * @param parent
 	 * @return True if the change is okay to report
 	 */
 	private final boolean mayTrackChangesFor(final Component component, MarkupContainer parent)
 	{
 		// Auto components do not participate in versioning since they are
 		// added during the rendering phase (which is normally illegal).
-		if (component.isAuto() || 
-				(parent == null && !component.isVersioned()) || 
-				(parent != null && !parent.isVersioned()) )
+		if (component.isAuto() || (parent == null && !component.isVersioned())
+				|| (parent != null && !parent.isVersioned()))
 		{
 			return false;
 		}

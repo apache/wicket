@@ -17,6 +17,7 @@
 package wicket.markup.html.link;
 
 import wicket.AttributeModifier;
+import wicket.IPageMap;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
@@ -95,7 +96,7 @@ public class BookmarkablePageLink extends Link
 	/**
 	 * @return Page map for this link
 	 */
-	public final PageMap getPageMap()
+	public final IPageMap getPageMap()
 	{
 		if (pageMapName != null)
 		{
@@ -142,7 +143,7 @@ public class BookmarkablePageLink extends Link
 	 *            The pagemap for this link's destination
 	 * @return This
 	 */
-	public final BookmarkablePageLink setPageMap(final PageMap pageMap)
+	public final BookmarkablePageLink setPageMap(final IPageMap pageMap)
 	{
 		if (pageMap != null)
 		{

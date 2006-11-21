@@ -26,8 +26,8 @@ import javax.servlet.http.HttpSession;
 
 import wicket.AccessStackPageMap;
 import wicket.Application;
+import wicket.IPageMap;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
@@ -174,7 +174,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
 	 *      wicket.Session)
 	 */
-	public PageMap createPageMap(String name, Session session)
+	public IPageMap createPageMap(String name, Session session)
 	{
 		return new AccessStackPageMap(name, session);
 	}
