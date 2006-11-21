@@ -42,10 +42,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *      &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *     	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
- *     	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
- *      &lt;/span&gt;
+ *        &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *       	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
+ *       	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
+ *        &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -413,6 +413,19 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 	}
 
 	/**
+	 * @see wicket.markup.html.form.FormComponent#onComponentTag(wicket.markup.ComponentTag)
+	 */
+	@Override
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+
+		// since this component should not be attached to input tag the name
+		// attribute is not needed and is invalid.
+		tag.remove("name");
+	}
+
+	/**
 	 * @see wicket.Component#onComponentTagBody(MarkupStream, ComponentTag)
 	 */
 	@Override
@@ -456,8 +469,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
 						" type=\"radio\"").append(
 						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"").append(id)
-						.append("\" id=\"").append(idAttr).append("\"");
+						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
+						.append(id).append("\" id=\"").append(idAttr).append("\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?
@@ -475,8 +488,8 @@ public class RadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOn
 					{
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
-						buffer.append(" onclick=\"window.location.href='").append(url).append("&" + getInputName())
-								.append("=").append(id).append("';\"");
+						buffer.append(" onclick=\"window.location.href='").append(url).append(
+								"&" + getInputName()).append("=").append(id).append("';\"");
 					}
 				}
 
