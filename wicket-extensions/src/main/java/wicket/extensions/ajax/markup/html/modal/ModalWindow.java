@@ -20,8 +20,8 @@ import java.io.Serializable;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Session;
@@ -770,7 +770,7 @@ public class ModalWindow extends Panel
 			{
 				// get the pagemap
 				Session session = Session.get();
-				PageMap pageMap = session.pageMapForName(getPageMapName(), false);
+				IPageMap pageMap = session.pageMapForName(getPageMapName(), false);
 
 				// if there is any remove it
 				if (pageMap != null)
