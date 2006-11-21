@@ -46,7 +46,7 @@ import wicket.util.collections.ArrayListStack;
  * 
  * @author Jonathan Locke
  */
-public final class AccessStackPageMap extends PageMap implements Serializable
+public class AccessStackPageMap extends PageMap implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
