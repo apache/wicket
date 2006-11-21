@@ -366,7 +366,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 			{
 				// this is the first access to the pagemap, set window.name
 				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='') { window.name=\"");
+				response.write("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
 				response.write(name);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
@@ -391,7 +391,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 					url = urlFor(INewBrowserWindowListener.INTERFACE);
 				}
 				JavascriptUtils.writeOpenTag(response);
-				response.write("if (window.name=='') { window.location=\"");
+				response.write("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" + name+ "')) { window.location=\"");
 				response.write(url);
 				response.write("\"; }");
 				JavascriptUtils.writeCloseTag(response);
