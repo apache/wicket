@@ -185,6 +185,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	/** Version manager for this page */
 	private IPageVersionManager versionManager;
 
+	private transient boolean attached = false;
+
 	/**
 	 * Constructor.
 	 */
@@ -278,32 +280,26 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	}
 
 	/**
-	 * @return fixed true;
-	 * 
-	 * @deprecated this method is to be removed in future version in favor of
-	 *             instances of
-	 *             {@link wicket.authorization.IAuthorizationStrategy} such as
-	 *             {@link wicket.authorization.strategies.page.AbstractPageAuthorizationStrategy}.
-	 *             It isn't called anymore and made final so that people see
-	 *             what must be changed.
-	 */
-	public final boolean checkAccess()
-	{
-		return true;
-	}
-
-	/**
 	 * @see wicket.MarkupContainer#internalDetach()
 	 */
 	public void internalDetach()
 	{
-		try
+		if(attached )
 		{
 			super.internalDetach();
-		} 
-		catch (RuntimeException re)
+			attached = false;
+		}
+	}
+	
+	/**
+	 * @see wicket.MarkupContainer#internalAttach()
+	 */
+	public void internalAttach()
+	{
+		if(!attached)
 		{
-			throw re;
+			super.internalAttach();
+			attached = true;
 		}
 	}
 	/**
