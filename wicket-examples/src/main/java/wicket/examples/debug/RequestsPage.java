@@ -129,7 +129,7 @@ public class RequestsPage extends WebPage
 				item.add(new Label("id", new Model(rd.getSessionId())).setVisible(sessionData == null));
 				item.add(new Label("startDate", new Model(sdf.format(rd.getStartDate()))));
 				item.add(new Label("timeTaken", new Model(rd.getTimeTaken())));
-				item.add(new Label("eventTarget", new Model(rd.getEventTargert())));
+				item.add(new Label("eventTarget", new Model(rd.getEventTarget())));
 				item.add(new Label("responseTarget", new Model(rd.getResponseTarget())));
 				item.add(new Label("alteredObjects", new Model(rd.getAlteredObjects())))
 						.setEscapeModelStrings(false);
