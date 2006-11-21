@@ -76,6 +76,7 @@ public class LiveSessionsPage extends WebPage
 			public void onClick()
 			{
 				WebApplication webApplication = (WebApplication)Application.get();
+				webApplication.getRequestLoggerSettings().setRequestsWindowSize(500);
 				boolean enabled = webApplication.getRequestLoggerSettings().isRequestLoggerEnabled();
 				webApplication.getRequestLoggerSettings().setRequestLoggerEnabled(!enabled);
 			}

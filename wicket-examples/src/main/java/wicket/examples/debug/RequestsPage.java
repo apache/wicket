@@ -126,7 +126,7 @@ public class RequestsPage extends WebPage
 				new Label(item, "id", new Model<String>(rd.getSessionId())).setVisible(sessionData == null);
 				new Label(item, "startDate", new Model<String>(sdf.format(rd.getStartDate())));
 				new Label(item, "timeTaken", new Model<Long>(rd.getTimeTaken()));
-				new Label(item, "eventTarget", new Model<String>(rd.getEventTargert()));
+				new Label(item, "eventTarget", new Model<String>(rd.getEventTarget()));
 				new Label(item, "responseTarget", new Model<String>(rd.getResponseTarget()));
 				new Label(item, "alteredObjects", new Model<String>(rd.getAlteredObjects()))
 						.setEscapeModelStrings(false);
