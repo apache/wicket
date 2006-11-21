@@ -41,10 +41,10 @@ import wicket.version.undo.Change;
  * HTML:
  * 
  * <pre>
- *   &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
- *  	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
- *  	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
- *   &lt;/span&gt;
+ *    &lt;span valign=&quot;top&quot; wicket:id=&quot;site&quot;&gt;
+ *   	&lt;input type=&quot;radio&quot;&gt;site 1&lt;/input&gt;
+ *   	&lt;input type=&quot;radio&quot;&gt;site 2&lt;/input&gt;
+ *    &lt;/span&gt;
  * </pre>
  * 
  * </p>
@@ -292,6 +292,17 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 	}
 
 	/**
+	 * @see wicket.markup.html.form.FormComponent#onComponentTag(wicket.markup.ComponentTag)
+	 */
+	protected void onComponentTag(ComponentTag tag)
+	{
+		super.onComponentTag(tag);
+		// since this component cannot be attached to input tag the name
+		// variable is illegal
+		tag.remove("name");
+	}
+
+	/**
 	 * @see wicket.markup.html.form.IOnChangeListener#onSelectionChanged()
 	 */
 	public void onSelectionChanged()
@@ -345,7 +356,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 		}
 		return super.getStatelessHint();
 	}
-	
+
 	/**
 	 * @return Prefix to use before choice
 	 */
@@ -421,8 +432,7 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 
 			// Get label for choice
 			final String label = (String)getConverter().convert(
-					getChoiceRenderer().getDisplayValue(choice), String.class
-			);
+					getChoiceRenderer().getDisplayValue(choice), String.class);
 
 			// If there is a display value for the choice, then we know that the
 			// choice is automatic in some way. If label is /null/ then we know
@@ -440,8 +450,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 				buffer.append("<input name=\"").append(getInputName()).append("\"").append(
 						" type=\"radio\"").append(
 						(isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))
-						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"").append(id)
-						.append("\" id=\"").append(idAttr).append("\"");
+						.append((isEnabled() ? "" : " disabled=\"disabled\"")).append(" value=\"")
+						.append(id).append("\" id=\"").append(idAttr).append("\"");
 
 				// Should a roundtrip be made (have onSelectionChanged called)
 				// when the option is clicked?
@@ -459,8 +469,8 @@ public class RadioChoice extends AbstractSingleSelectChoice implements IOnChange
 					{
 						// NOTE: do not encode the url as that would give
 						// invalid JavaScript
-						buffer.append(" onclick=\"window.location.href='").append(url).append("&" + getInputName())
-								.append("=").append(id).append("';\"");
+						buffer.append(" onclick=\"window.location.href='").append(url).append(
+								"&" + getInputName()).append("=").append(id).append("';\"");
 					}
 				}
 
