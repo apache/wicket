@@ -181,6 +181,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/** Version manager for this page */
 	private IPageVersionManager<T> versionManager;
 
+	private transient boolean attached = false;
+	
 	/**
 	 * Constructor.
 	 */
@@ -762,13 +764,23 @@ public abstract class Page<T> extends MarkupContainer<T>
 	@Override
 	public void internalDetach()
 	{
-		try
+		if(attached )
 		{
 			super.internalDetach();
+			attached = false;
 		}
-		catch (RuntimeException re)
+	}
+	
+	/**
+	 * @see wicket.MarkupContainer#internalAttach()
+	 */
+	@Override
+	public void internalAttach()
+	{
+		if(!attached)
 		{
-			throw re;
+			super.internalAttach();
+			attached = true;
 		}
 	}
 
