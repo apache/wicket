@@ -20,7 +20,7 @@ package wicket.examples.debug;
 import java.util.List;
 
 import wicket.Component;
-import wicket.PageMap;
+import wicket.IPageMap;
 import wicket.Session;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
@@ -87,7 +87,7 @@ public final class SessionView extends Panel
 			 */
 			protected void populateItem(final ListItem listItem)
 			{
-				PageMap p = (PageMap)listItem.getModelObject();
+				IPageMap p = (IPageMap)listItem.getModelObject();
 				listItem.add(new PageMapView("pagemap", p));
 			}
 		});

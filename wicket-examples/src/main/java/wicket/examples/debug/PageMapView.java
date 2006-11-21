@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 
 import wicket.AccessStackPageMap;
+import wicket.IPageMap;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.AccessStackPageMap.Access;
 import wicket.markup.html.basic.Label;
@@ -55,7 +55,7 @@ public final class PageMapView extends Panel
 	 * @param pageMap
 	 *            Page map to show
 	 */
-	public PageMapView(final String id, final PageMap pageMap)
+	public PageMapView(final String id, final IPageMap pageMap)
 	{
 		super(id);
 
