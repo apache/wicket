@@ -94,14 +94,10 @@ public class RequestLogger implements IRequestLogger
 
 	private Map<String,SessionData> liveSessions;
 
-	private ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>()
-	{
-		@Override
-		protected RequestData initialValue()
-		{
-			return new RequestData();
-		}
-	};
+	private ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>();
+
+	private int active;
+
 
 	/**
 	 * Construct.
@@ -183,6 +179,10 @@ public class RequestLogger implements IRequestLogger
 		{
 			rd = new RequestData();
 			currentRequest.set(rd);
+			synchronized (this)
+			{
+				active++;
+			}
 		}
 		return rd;
 	}
@@ -254,7 +254,7 @@ public class RequestLogger implements IRequestLogger
 			 asb.append(rd.getEventTarget());
 			 asb.append(",response=");
 			 asb.append(rd.getResponseTarget());
-			 if(rd.getSessionInfo() != null)
+			 if(rd.getSessionInfo() != null && !rd.getSessionInfo().equals(""))
 			 {
 				 asb.append(",sessioninfo=");
 				 asb.append(rd.getSessionInfo());
@@ -275,6 +275,8 @@ public class RequestLogger implements IRequestLogger
 				 asb.append(",totaltime=");
 				 asb.append(sd.getTotalTimeTaken());
 			 }
+			 asb.append(",activerequests=");
+			 asb.append(rd.getActiveRequest());			 
 			 Runtime runtime = Runtime.getRuntime();
 			 long max = runtime.maxMemory()/1000000;
 			 long total = runtime.totalMemory()/1000000;
@@ -582,12 +584,30 @@ public class RequestLogger implements IRequestLogger
 
 		private Object sessionInfo;
 		
+		private int activeRequest;
+		
 		/**
 		 * @return The time taken for this request
 		 */
 		public Long getTimeTaken()
 		{
 			return new Long(timeTaken);
+		}
+
+		/**
+		 * @param activeRequest The number of active request when this request happend 
+		 */ 
+		public void setActiveRequest(int activeRequest)
+		{
+			this.activeRequest = activeRequest;
+		}
+
+		/**
+		 * @return The number of active request when this request happend
+		 */
+		public int getActiveRequest()
+		{
+			return activeRequest;
 		}
 
 		/**
@@ -691,7 +711,7 @@ public class RequestLogger implements IRequestLogger
 			{
 				String element = entries.get(i);
 				sb.append(element);
-				if (entries.size() != i - 1)
+				if (entries.size() != i + 1)
 				{
 					sb.append("<br/>");
 				}
@@ -718,7 +738,7 @@ public class RequestLogger implements IRequestLogger
 		public String toString()
 		{
 			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo + ",sessionid=" + sessionId+ ",sessionsize=" + totalSessionSize+
-			     ",request=" + eventTarget + ",response=" + responseTarget + ",alteredobjects=" +getAlteredObjects() + "]";
+		     ",request=" + eventTarget + ",response=" + responseTarget + ",alteredobjects=" +getAlteredObjects() + ",activerequest="+ activeRequest+ "]";
 		}
 	}
 }
