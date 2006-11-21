@@ -22,9 +22,11 @@ import javax.portlet.WindowState;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IPageMap;
 import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
+import wicket.markup.html.WebPage;
 import wicket.model.IModel;
 
 /**
@@ -67,15 +69,15 @@ public class PortletPage extends Page
 	/**
 	 * @see Page#Page(PageMap)
 	 */
-	protected PortletPage(final PageMap pageMap)
+	protected PortletPage(final IPageMap pageMap)
 	{
 		super(pageMap);
 	}
 
 	/**
-	 * @see Page#Page(PageMap, IModel)
+	 * @see Page#Page(IPageMap, IModel)
 	 */
-	protected PortletPage(final PageMap pageMap, final IModel model)
+	protected PortletPage(final IPageMap pageMap, final IModel model)
 	{
 		super(pageMap, model);
 	}
