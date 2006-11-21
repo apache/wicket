@@ -372,7 +372,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 			{
 				StringBuilder javascript = new StringBuilder();
 				// this is the first access to the pagemap, set window.name
-				javascript.append("if (window.name=='') { window.name=\"");
+				javascript.append("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
 				javascript.append(name);
 				javascript.append("\"; }");
 
@@ -401,7 +401,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 				}
 
 				StringBuilder javascript = new StringBuilder();
-				javascript.append("if (window.name=='') { window.location=\"");
+				javascript.append("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" + name+ "')) { window.location=\"");
 				javascript.append(url);
 				javascript.append("\"; }");
 
