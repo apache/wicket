@@ -16,6 +16,8 @@
  */
 package wicket;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +41,7 @@ import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
@@ -122,7 +125,7 @@ import wicket.util.time.Duration;
  */
 public abstract class Session implements Serializable
 {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/** meta data key for missing body tags logging. */
@@ -140,17 +143,19 @@ public abstract class Session implements Serializable
 		private static final long serialVersionUID = 1L;
 
 		Set pageMapNames = new HashSet(2);
-		
+
 		/**
-		 * @param pagemap the pagemap to add as used.
-		 * @return the boolean if it was added (didn't already contain the pagemap)
+		 * @param pagemap
+		 *            the pagemap to add as used.
+		 * @return the boolean if it was added (didn't already contain the
+		 *         pagemap)
 		 */
-		public boolean add(PageMap pagemap)
+		public boolean add(IPageMap pagemap)
 		{
 			return pageMapNames.add(pagemap.getName());
 		}
 	}
-	
+
 	/** Name of session attribute under which this session is stored */
 	public static final String SESSION_ATTRIBUTE_NAME = "session";
 
@@ -221,7 +226,7 @@ public abstract class Session implements Serializable
 		 * @param pageMap
 		 *            The page map
 		 */
-		public void pageMap(final PageMap pageMap);
+		public void pageMap(final IPageMap pageMap);
 	}
 
 	/**
@@ -330,7 +335,7 @@ public abstract class Session implements Serializable
 	{
 		return getId() == null;
 	}
-	
+
 	/**
 	 * Removes all pages from the session. Although this method should rarely be
 	 * needed, it is available (possibly for security reasons).
@@ -339,7 +344,7 @@ public abstract class Session implements Serializable
 	{
 		visitPageMaps(new IPageMapVisitor()
 		{
-			public void pageMap(PageMap pageMap)
+			public void pageMap(IPageMap pageMap)
 			{
 				pageMap.clear();
 			}
@@ -395,7 +400,7 @@ public abstract class Session implements Serializable
 	/**
 	 * @return The default page map
 	 */
-	public final PageMap getDefaultPageMap()
+	public final IPageMap getDefaultPageMap()
 	{
 		return pageMapForName(PageMap.DEFAULT_NAME, true);
 	}
@@ -467,7 +472,7 @@ public abstract class Session implements Serializable
 		}
 
 		// Get page map by name, creating the default page map automatically
-		PageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
+		IPageMap pageMap = pageMapForName(pageMapName, pageMapName == PageMap.DEFAULT_NAME);
 		if (pageMap != null)
 		{
 			synchronized (usedPageMaps) // get a lock so be sure that only one
@@ -558,9 +563,9 @@ public abstract class Session implements Serializable
 	 *            does not exist
 	 * @return PageMap for name
 	 */
-	public final PageMap pageMapForName(String pageMapName, final boolean autoCreate)
+	public final IPageMap pageMapForName(String pageMapName, final boolean autoCreate)
 	{
-		PageMap pageMap = (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+		IPageMap pageMap = (IPageMap)getAttribute(attributeForPageMapName(pageMapName));
 		if (pageMap == null && autoCreate)
 		{
 			pageMap = newPageMap(pageMapName);
@@ -573,7 +578,7 @@ public abstract class Session implements Serializable
 	 * 
 	 * @return Created PageMap
 	 */
-	public synchronized final PageMap createAutoPageMap()
+	public synchronized final IPageMap createAutoPageMap()
 	{
 		return newPageMap(createAutoPageMapName());
 	}
@@ -590,7 +595,7 @@ public abstract class Session implements Serializable
 	public synchronized final String createAutoPageMapName()
 	{
 		String name = "wicket-" + autoCreatePageMapCounter;
-		PageMap pm = pageMapForName(name, false);
+		IPageMap pm = pageMapForName(name, false);
 		while (pm != null)
 		{
 			autoCreatePageMapCounter++;
@@ -625,7 +630,7 @@ public abstract class Session implements Serializable
 		long size = Objects.sizeof(this);
 		for (final Iterator iterator = getPageMaps().iterator(); iterator.hasNext();)
 		{
-			final PageMap pageMap = (PageMap)iterator.next();
+			final IPageMap pageMap = (IPageMap)iterator.next();
 			size += pageMap.getSizeInBytes();
 		}
 		return size;
@@ -649,7 +654,7 @@ public abstract class Session implements Serializable
 		// Set session on each page map
 		visitPageMaps(new IPageMapVisitor()
 		{
-			public void pageMap(PageMap pageMap)
+			public void pageMap(IPageMap pageMap)
 			{
 				if (log.isDebugEnabled())
 				{
@@ -675,18 +680,18 @@ public abstract class Session implements Serializable
 	 *            The name for the new page map
 	 * @return The newly created page map
 	 */
-	public final PageMap newPageMap(final String name)
+	public final IPageMap newPageMap(final String name)
 	{
 		// Check that session doesn't have too many page maps already
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
 		if (usedPageMaps.size() >= maxPageMaps)
 		{
-			PageMap pm = (PageMap)usedPageMaps.getFirst();
+			IPageMap pm = (IPageMap)usedPageMaps.getFirst();
 			pm.remove();
 		}
 
 		// Create new page map
-		final PageMap pageMap = getSessionStore().createPageMap(name, this);
+		final IPageMap pageMap = getSessionStore().createPageMap(name, this);
 		setAttribute(attributeForPageMapName(name), pageMap);
 		dirty();
 		return pageMap;
@@ -713,10 +718,11 @@ public abstract class Session implements Serializable
 	 * @param pageMap
 	 *            Page map to remove
 	 */
-	public final void removePageMap(final PageMap pageMap)
+	public final void removePageMap(final IPageMap pageMap)
 	{
 		PageMapAccessMetaData pagemapMetaData = (PageMapAccessMetaData)getMetaData(PAGEMAP_ACCESS_MDK);
-		if(pagemapMetaData != null) pagemapMetaData.pageMapNames.remove(pageMap.getName());
+		if (pagemapMetaData != null)
+			pagemapMetaData.pageMapNames.remove(pageMap.getName());
 		usedPageMaps.remove(pageMap);
 		removeAttribute(attributeForPageMapName(pageMap.getName()));
 		dirty();
@@ -826,7 +832,7 @@ public abstract class Session implements Serializable
 			final String attribute = (String)iterator.next();
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
-				visitor.pageMap((PageMap)getAttribute(attribute));
+				visitor.pageMap((IPageMap)getAttribute(attribute));
 			}
 		}
 	}
@@ -985,8 +991,9 @@ public abstract class Session implements Serializable
 		if (cycle != null)
 		{
 			getSessionStore().removeAttribute(cycle.getRequest(), name);
-			System.err.println("removing " + name +  ", the current list " + getSessionStore().getAttributeNames(cycle.getRequest()));
-			
+			System.err.println("removing " + name + ", the current list "
+					+ getSessionStore().getAttributeNames(cycle.getRequest()));
+
 		}
 	}
 
@@ -1024,7 +1031,21 @@ public abstract class Session implements Serializable
 				}
 			}
 		}
-
+		String valueTypeName = (value != null ? value.getClass().getName() : "null");
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			new ObjectOutputStream(out).writeObject(value);
+			log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
+					+ Bytes.bytes(out.size()));
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException(
+					"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
+							+ valueTypeName, e);
+		}
+		
 		// Set the actual attribute
 		store.setAttribute(request, name, value);
 	}
@@ -1082,9 +1103,9 @@ public abstract class Session implements Serializable
 					}
 					object = page.getPageMapEntry();
 				}
-				else if (object instanceof PageMap)
+				else if (object instanceof IPageMap)
 				{
-					attribute = attributeForPageMapName(((PageMap)object).getName());
+					attribute = attributeForPageMapName(((IPageMap)object).getName());
 				}
 
 				setAttribute(attribute, object);
@@ -1152,7 +1173,7 @@ public abstract class Session implements Serializable
 	 * @param map
 	 *            The page map to add to dirty objects list
 	 */
-	void dirtyPageMap(final PageMap map)
+	void dirtyPageMap(final IPageMap map)
 	{
 		if (!map.isDefault())
 		{

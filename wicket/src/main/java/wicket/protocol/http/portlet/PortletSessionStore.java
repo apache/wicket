@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.AccessStackPageMap;
 import wicket.Application;
-import wicket.PageMap;
+import wicket.IPageMap;
 import wicket.Request;
 import wicket.Session;
 import wicket.WicketRuntimeException;
@@ -331,7 +331,7 @@ public class PortletSessionStore implements ISessionStore
 	 * @see wicket.session.ISessionStore#createPageMap(java.lang.String,
 	 *      wicket.Session)
 	 */
-	public PageMap createPageMap(String name, Session session)
+	public IPageMap createPageMap(String name, Session session)
 	{
 		return new AccessStackPageMap(name, session);
 	}

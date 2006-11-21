@@ -24,10 +24,10 @@ import org.apache.commons.logging.LogFactory;
 import wicket.AccessStackPageMap;
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
@@ -95,7 +95,7 @@ public class PortletRequestTargetResolverStrategy implements IRequestTargetResol
 					// process-only-if-path-is-active
 
 					Session session = Session.get();
-					PageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(),
+					IPageMap pageMap = session.pageMapForName(requestParameters.getPageMapName(),
 							false);
 					if (pageMap == null)
 					{

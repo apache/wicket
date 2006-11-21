@@ -27,7 +27,7 @@ import wicket.util.lang.Objects;
 /**
  * @author jcompagner
  */
-public abstract class PageMap implements Serializable
+public abstract class PageMap implements Serializable, IPageMap
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +56,7 @@ public abstract class PageMap implements Serializable
 	 *            The name of the page map to get
 	 * @return The PageMap with the given name from the current session
 	 */
-	public static PageMap forName(final String pageMapName)
+	public static IPageMap forName(final String pageMapName)
 	{
 		Session session = Session.get();
 		return (session != null) ? session.pageMapForName(pageMapName, true) : null;
@@ -97,11 +97,7 @@ public abstract class PageMap implements Serializable
 
 
 	/**
-	 * Retrieves entry with given id.
-	 * 
-	 * @param id
-	 *            The page identifier
-	 * @return Any entry having the given id
+	 * @see wicket.IPageMap#getEntry(int)
 	 */
 	public final IPageMapEntry getEntry(final int id)
 	{
@@ -109,7 +105,7 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * @return Returns the name.
+	 * @see wicket.IPageMap#getName()
 	 */
 	public final String getName()
 	{
@@ -117,7 +113,7 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * @return The session that this PageMap is in.
+	 * @see wicket.IPageMap#getSession()
 	 */
 	public final Session getSession()
 	{
@@ -125,7 +121,7 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * @return True if this is the default page map
+	 * @see wicket.IPageMap#isDefault()
 	 */
 	public final boolean isDefault()
 	{
@@ -133,9 +129,9 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * @return The next id for this pagemap
+	 * @see wicket.IPageMap#nextId()
 	 */
-	final int nextId()
+	public final int nextId()
 	{
 		dirty();
 		return this.pageId++;
@@ -147,10 +143,7 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * @param id
-	 *            The page id to create an attribute for
-	 * @return The session attribute for the given page (for replication of
-	 *         state)
+	 * @see wicket.IPageMap#attributeForId(int)
 	 */
 	public final String attributeForId(final int id)
 	{
@@ -172,7 +165,7 @@ public abstract class PageMap implements Serializable
 	 * @return True if an original destination was redirected to
 	 * @see PageMap#redirectToInterceptPage(Page)
 	 */
-	final boolean continueToOriginalDestination()
+	public final boolean continueToOriginalDestination()
 	{
 		// Get request cycle
 		final RequestCycle cycle = RequestCycle.get();
@@ -221,7 +214,7 @@ public abstract class PageMap implements Serializable
 	 * @param page
 	 *            The page to temporarily redirect to
 	 */
-	final void redirectToInterceptPage(final Page page)
+	public final void redirectToInterceptPage(final Page page)
 	{
 		Session.get().bind();
 		// Get the request cycle
@@ -249,7 +242,7 @@ public abstract class PageMap implements Serializable
 	 * @param pageClazz
 	 *            The page clazz to temporarily redirect to
 	 */
-	final void redirectToInterceptPage(final Class pageClazz)
+	public final void redirectToInterceptPage(final Class pageClazz)
 	{
 		Session.get().bind();
 		// Get the request cycle
@@ -268,7 +261,7 @@ public abstract class PageMap implements Serializable
 	}	
 
 	/**
-	 * Removes all pages from this map
+	 * @see wicket.IPageMap#clear()
 	 */
 	public void clear()
 	{
@@ -283,10 +276,9 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * @param session
-	 *            Session to set
+	 * @see wicket.IPageMap#setSession(wicket.Session)
 	 */
-	final void setSession(final Session session)
+	public final void setSession(final Session session)
 	{
 		this.session = session;
 	}
@@ -295,7 +287,7 @@ public abstract class PageMap implements Serializable
 	 * @param visitor
 	 *            The visitor to call at each Page in this PageMap.
 	 */
-	final void visitEntries(final IVisitor visitor)
+	protected final void visitEntries(final IVisitor visitor)
 	{
 		final List attributes = session.getAttributeNames();
 		for (final Iterator iterator = attributes.iterator(); iterator.hasNext();)
@@ -309,7 +301,7 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * Removes this PageMap from the Session.
+	 * @see wicket.IPageMap#remove()
 	 */
 	public final void remove()
 	{
@@ -321,10 +313,7 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * Removes the page from the pagemap
-	 * 
-	 * @param page
-	 *            page to be removed from the pagemap
+	 * @see wicket.IPageMap#remove(wicket.Page)
 	 */
 	public final void remove(final Page page)
 	{
@@ -333,32 +322,23 @@ public abstract class PageMap implements Serializable
 	}
 
 	/**
-	 * @param entry
-	 *            The entry to remove
+	 * @see wicket.IPageMap#removeEntry(wicket.session.pagemap.IPageMapEntry)
 	 */
-	protected abstract void removeEntry(final IPageMapEntry entry);
+	public abstract void removeEntry(final IPageMapEntry entry);
 
 	/**
-	 * @param page
-	 *            The page to put into this map
+	 * @see wicket.IPageMap#put(wicket.Page)
 	 */
-	protected abstract void put(final Page page);
+	public abstract void put(final Page page);
 
 
 	/**
-	 * Retrieves page with given id.
-	 * 
-	 * @param id
-	 *            The page identifier
-	 * @param versionNumber
-	 *            The version to get
-	 * @return Any page having the given id
+	 * @see wicket.IPageMap#get(int, int)
 	 */
-	protected abstract Page get(final int id, int versionNumber);
+	public abstract Page get(final int id, int versionNumber);
 
 	/**
-	 * @return Size of this page map in bytes, including a sum of the sizes of
-	 *         all the pages it contains.
+	 * @see wicket.IPageMap#getSizeInBytes()
 	 */
 	public final long getSizeInBytes()
 	{

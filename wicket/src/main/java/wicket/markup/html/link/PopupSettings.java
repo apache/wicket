@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.Page;
 import wicket.PageMap;
 
@@ -138,7 +139,7 @@ public class PopupSettings implements Serializable
 	 *            get page expired exceptions when getting back to the main
 	 *            window again.
 	 */
-	public PopupSettings(PageMap pagemap)
+	public PopupSettings(IPageMap pagemap)
 	{
 		this.pageMapName = pagemap.getName();
 		this.windowName = pageMapName;
@@ -157,7 +158,7 @@ public class PopupSettings implements Serializable
 	 * @param displayFlags
 	 *            Display flags
 	 */
-	public PopupSettings(PageMap pagemap, final int displayFlags)
+	public PopupSettings(IPageMap pagemap, final int displayFlags)
 	{
 		this.displayFlags = displayFlags;
 		this.pageMapName = pagemap.getName();
@@ -327,7 +328,7 @@ public class PopupSettings implements Serializable
 	 * @deprecated will be removed in Wicket 2.0; use
 	 *             {@link #getPageMap(Component)} instead
 	 */
-	public PageMap getPageMap()
+	public IPageMap getPageMap()
 	{
 		if (pageMapName != null)
 		{
@@ -348,7 +349,7 @@ public class PopupSettings implements Serializable
 	 *            Calling component
 	 * @return The pagemap where the popup page must be created in
 	 */
-	public PageMap getPageMap(Component callee)
+	public IPageMap getPageMap(Component callee)
 	{
 		if (pageMapName != null)
 		{

@@ -228,7 +228,7 @@ public class AccessStackPageMap extends PageMap implements Serializable
 	 *            The version to get
 	 * @return Any page having the given id
 	 */
-	protected final Page get(final int id, int versionNumber)
+	public final Page get(final int id, int versionNumber)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)getSession().getAttribute(attributeForId(id));
 		if (entry != null)
@@ -285,7 +285,7 @@ public class AccessStackPageMap extends PageMap implements Serializable
 	 * @param page
 	 *            The page to put into this map
 	 */
-	protected final void put(final Page page)
+	public final void put(final Page page)
 	{
 		// Page only goes into session if it is stateless
 		if (!page.isPageStateless())

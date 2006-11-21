@@ -18,7 +18,7 @@ package wicket.session.pagemap;
 
 import java.io.Serializable;
 
-import wicket.PageMap;
+import wicket.IPageMap;
 
 /**
  * Given a page map, evicts zero or more entries from the map according to some
@@ -32,5 +32,5 @@ public interface IPageMapEvictionStrategy extends Serializable
 	 * @param pageMap
 	 *            The page map to evict from
 	 */
-	void evict(PageMap pageMap);
+	void evict(IPageMap pageMap);
 }

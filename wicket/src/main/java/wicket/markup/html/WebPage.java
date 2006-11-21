@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageMap;
@@ -109,7 +110,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(PageMap)
 	 */
-	protected WebPage(final PageMap pageMap)
+	protected WebPage(final IPageMap pageMap)
 	{
 		super(pageMap);
 		commonInit();
@@ -118,7 +119,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 	/**
 	 * @see Page#Page(PageMap, IModel)
 	 */
-	protected WebPage(final PageMap pageMap, final IModel model)
+	protected WebPage(final IPageMap pageMap, final IModel model)
 	{
 		super(pageMap, model);
 		commonInit();
@@ -314,7 +315,7 @@ public class WebPage extends Page implements INewBrowserWindowListener
 		{
 			log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
 		}
-		final PageMap map = getSession().createAutoPageMap();
+		final IPageMap map = getSession().createAutoPageMap();
 		clonedPage.moveToPageMap(map);
 		setResponsePage(clonedPage);
 	}

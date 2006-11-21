@@ -28,10 +28,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.IPageMap;
 import wicket.IRequestCycleFactory;
 import wicket.IRequestTarget;
 import wicket.ISessionFactory;
-import wicket.PageMap;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -311,7 +311,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final PageMap pageMap,
+	public final void mountBookmarkablePage(final String path, final IPageMap pageMap,
 			final Class bookmarkablePageClass)
 	{
 		checkMountPath(path);
