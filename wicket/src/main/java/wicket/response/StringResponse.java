@@ -36,7 +36,8 @@ public class StringResponse extends Response
 	/**
 	 * Constructor
 	 * 
-	 * @param initialSize The initial size of the string buffer
+	 * @param initialSize
+	 *            The initial size of the string buffer
 	 */
 	public StringResponse(final int initialSize)
 	{
@@ -59,7 +60,7 @@ public class StringResponse extends Response
 	{
 		out.clear();
 	}
-	
+
 	/**
 	 * @see wicket.Response#write(CharSequence)
 	 */
