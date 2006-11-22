@@ -93,6 +93,7 @@ public class SharedResources
 
 	/** Map of Class to alias String */
 	private final Map classAliasMap = new HashMap();
+	private final Map aliasClassMap = new HashMap();
 
 	/** Map of shared resources states */
 	private final Map resourceMap = new HashMap();
@@ -264,6 +265,19 @@ public class SharedResources
 	public final void putClassAlias(Class clz, String alias)
 	{
 		classAliasMap.put(clz, alias);
+		aliasClassMap.put(alias, clz);
+	}
+	
+	/**
+	 * Gets the class for a given resource alias.
+	 * 
+	 * @param alias
+	 * @return The class this is an alias for.
+	 * @see #putClassAlias(Class, String)
+	 */
+	public final Class getAliasClass(String alias)
+	{
+		return (Class)aliasClassMap.get(alias);
 	}
 
 	/**
