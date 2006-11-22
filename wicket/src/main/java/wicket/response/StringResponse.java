@@ -30,6 +30,7 @@ import wicket.util.string.AppendingStringBuffer;
  */
 public class StringResponse extends Response
 {
+
 	/** StringWriter to write to */
 	protected final AppendingStringBuffer out;
 
