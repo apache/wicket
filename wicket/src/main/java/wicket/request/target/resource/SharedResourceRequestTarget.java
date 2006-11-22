@@ -147,7 +147,14 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 				Class scope = null;
 				try
 				{
-					scope = resolver.resolveClass(className);
+					// First try to match mounted resources.
+					scope = Application.get().getSharedResources().getAliasClass(className);
+					
+					// If that fails, resolve it as a fully qualified class name.
+					if (scope == null)
+					{
+						scope = resolver.resolveClass(className);
+					}
 					String path = resourceKey.substring(ix + 1);
 
 					PackageResource packageResource = PackageResource.get(scope, path);
