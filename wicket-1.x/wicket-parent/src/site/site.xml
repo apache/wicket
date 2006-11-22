@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Wicket">
+	<bannerLeft>
+		<name>Wicket</name>
+		<src>http://wicket.sourceforge.net/images/logo.png</src>
+		<href>http://wicket.sourceforge.net/</href>
+	</bannerLeft>
+	<body>
+	<links>
+		<item name="1.2" href="/wicket-1.2/index.html"/>
+	</links>
+
+	<menu name="Wicket Parent">
+		<item name="Home" href="/index.html" />
+	</menu>
+	<menu name="Project Info">
+		<item name="Mailing Lists" href="/mail-lists.html" />
+		<item name="SourceForge" href="/SourceForge.html" />
+		<item name="Issue Tracker" href="http://sourceforge.net/tracker/?group_id=119783" />
+		<item name="License" href="/license.html" />
+	</menu>
+	<menu name="Development">
+		<item name="Developers" href="/team-list.html" />
+		<item name="SVN Access" href="/source-repository.html" />
+	</menu>
+  </body>
+</project>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+      PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+      "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>Wicket QuickStart</display-name>
+
+ <!--  
+      There are three means to configure Wickets configuration mode and they are
+      tested in the order given. 
+      1) A system property: -Dwicket.configuration
+      2) servlet specific <init-param>
+      3) context specific <context-param>
+      The value might be either "development" (reloading when templates change)
+      or "deployment". If no configuration is found, "deployment" is the default.
+-->
+	<context-param>
+	  <param-name>configuration</param-name>
+	  <param-value>development</param-value>
+	</context-param>
+ 
+    <servlet>
+        <servlet-name>quickstart</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.quickstart.QuickStartApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>quickstart</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>

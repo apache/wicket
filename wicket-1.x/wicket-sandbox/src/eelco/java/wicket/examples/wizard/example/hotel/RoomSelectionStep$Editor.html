@@ -1,0 +1,42 @@
+<wicket:panel>
+
+  <table>
+   <thead>
+    <tr>
+     <th colspan="2">Room Selection</th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr>
+      <td>
+	     <span>
+	       wants wake up call
+	     </span>
+	  </td>
+	  <td>
+	     <input type="checkbox" wicket:id="wantsWakeUpCall" />
+	  </td>
+    </tr>
+    <tr wicket:id="wakeUpCallContainer">
+      <td colspan="2">
+	     <span>
+	       &nbsp;&nbsp;at&nbsp;
+	       <input type="text" wicket:id="wakeUpCallHours" size="10" />&nbsp;:
+	       <input type="text" wicket:id="wakeUpCallMinutes" size="10" />&nbsp;
+	     </span>
+	  </td>
+    </tr>
+    <tr>
+      <td>
+	     <span>
+	       wants breakfast
+	     </span>
+	  </td>
+	  <td>
+	     <input type="checkbox" wicket:id="wantsBreakFast" />
+	  </td>
+    </tr>
+   </tbody>
+  </table>
+
+</wicket:panel>

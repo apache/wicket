@@ -1,0 +1,56 @@
+
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+	<title>Wicket Examples - displaytag</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+  <wicket:link>
+    <link rel="stylesheet" type="text/css" href="jd_style.css"/>
+  </wicket:link>
+	<link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+	
+<body>
+
+	<span wicket:id="mainNavigation"/>
+  
+	<p>The layout and the examples have been taken from 
+	<a href="http://www.displaytag.org/index.jsp">displaytag open-source project</a>.
+    A very nice and popular tag-library to ease the use of HTML tables. 
+	Because Wicket is still very new, we were looking for real life problems
+	and how they could be solved with Wicket - or what kind of improvements
+	are required for Wicket - we implemented displaytag's examples with Wicket.
+	Just take a look at any of the other examples to see how that 
+	could be done with Wicket.</p><p>
+	Not all displaytag example pages have been implemented with Wicket, 
+	like the config and misc examples because they touch displaytag specifics 
+	like how to configure displaytag or how to handle null values.</p>
+		
+    <h2>Displaytag like Examples</h2>
+    <wicket:link autolink=true>
+      <ul>
+        <li><a href="ExampleNoColumns.html">Simplest case, no columns</a></li>
+        <li><a href="BasicColumns.html">Basic, columns</a></li>
+        <li><a href="ExampleStyles.html">Basic, columns - different styles</a></li>
+        <li><a href="ExampleImpObjects.html">Implicit objects created by table</a></li>
+        <li><a href="ExampleSubsets.html">Basic, showing subsets of data from the List</a></li>
+        <li><a href="ExampleAutolink.html">Standard, smart linking of column data</a></li>
+        <li><a href="ExampleDecorator.html">Standard, using decorators to transform/process data</a></li>
+        <li><a href="ExampleDecoratorLink.html">Standard, creating dynamic links</a></li>
+        <li><a href="ExamplePaging.html">Auto-paging of long lists</a></li>
+        <li><a href="ExampleSorting.html">Auto-sorting by columns</a></li>
+        <li><a href="ExampleGrouping.html">Column grouping</a></li>
+        <li><a href="ExampleSubtotals.html">Show (sub-)totals</a></li>
+        <li><a href="ExamplePse.html">paging + sorting + grouping + exporting working together</a></li>
+        <li><a href="ExampleTwoTables.html">2 or more table working in the same page with independent sorting - paging</a></li>
+        <li><a href="ExampleNestedTables.html">Nested tables</a></li>		
+      </ul>
+      <p/>
+      <h2>And now some new examples not seen with displaytag</h2>
+      <ul>
+      <li><a href="ExampleCheckbox.html">Tables with checkboxes and input fields</a></li>		
+      </ul>
+    </wicket:link>
+</body>
+</html>

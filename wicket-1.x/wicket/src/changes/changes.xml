@@ -1,0 +1,426 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>Wicket changes</title>
+    <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
+    <author email="jonathanlocke at users.sourceforge.net">Jonathan Locke</author>
+    <author email="eelco12 at users.sourceforge.net">Eelco Hillenius</author>
+    <author email="joco01 at users.sourceforge.net">Johan Compagner</author>
+    <author email="ivaynberg at users.sourceforge.net">Igor Vaynberg</author>
+    <author email="jannehietamaki at users.sourceforge.net">Janne Hietamäki</author>
+    <author email="billen at users.sourceforge.net">Frank Bille Jensen</author>
+  </properties>
+  <body>
+    <release version="1.3" date="tbd" description="Wicket 1.3">
+	</release>
+	<release version="1.2.4" description="Wicket 1.2.4">
+		<action type="fix" dev="Frank Bille Jensen" issue="WICKET-35">WicketTester can now test BookmarkablePageLinks with PageParameters.</action>
+	</release>
+	<release version="1.2.3" description="Wicket 1.2.3">
+		<action type="fix" dev="Frank Bille Jensen" issue="WICKET-16">Make sure that bookmarkable urls for classes containing non-ascii characters is encoded properly.</action>
+		<action type="add" dev="Eelco Hillenius">Added method protected void onDisabled(final ComponentTag tag) to FormComponent, which is called during rendering when the component is disabled. By default, an disabled="disabled" attribute is added, but clients may override this method.</action>
+		<action type="add" dev="Eelco Hillenius">Made synchronization timeout configurable on an application level. Later, we might add more fine grained control.</action>
+		<action type="add" dev="Eelco Hillenius">Implemented optional interface for initializers: IDestroyer that may be implemented by initializers to clear up stuff when the application is shut down. Wicket's JMX code uses this to clean up the JMX beans it registered on application shutdown.</action>
+		<action type="add" dev="Eelco Hillenius">Wicket now has JMX support. For 1.2 as a separate project (wicket-jmx), for 2.0 as part of the core distribution.</action>
+		<action type="fix" dev="Eelco Hillenius" due-to="Benjamin Podszun">There was no check on render authorization action done for seperate component renders, resulting in that authorization check not being executed with ajax requests.</action>
+		<action type="fix" dev="Eelco Hillenius">Page was not checked for render authorization action.</action>
+	    <action type="add" dev="Eelco Hillenius">The application's configuration type is now kept in a member which can be read using Application#getConfigurationType.</action>
+	    <action type="fix" dev="Eelco Hillenius">Package resources that are not found now log a warning and then throw an abort error instead of a regular exception and send a 404 to the browser if in a web request.</action>
+		<action type="add" dev="Eelco Hillenius">Added AbortWithWebError abort exception.</action>
+		<action type="fix" dev="Johan Compagner" due-to="Eelco Hillenius">Fixed deadlock possiblity on high load situations where resource managing filters (such as Spring's/ Hibernate's OpenSessionInViewFilter) run out of those resources before they are released. A test for this issue can be found in wicket-threadtest, wicket.threadtest.App2Test1. This bug is dangerous; everyone using Wicket 1.2.x is encouraged to update to this Wicket version asap.</action>
+		<action type="fix" dev="Eelco Hillenius">ResourceReference and PackageResourceReference evolved in doing almost the same thing with ResourceReference falling back to package resources. The two classes were used mixed for the same purposes, so it obviously was confusing. PackageResourceReference is now deprecated (and removed in 2.0) and ResourceReference uses package resources as the explicit default now.</action>
+		<action type="fix" dev="Eelco Hillenius">FileUploadField's fileUpload member is now transient, and nulled at the end of a request; fileUpload depends on non-serializable classes and should be used for the upload request only anyway.</action>
+		<action type="fix" dev="Frank Bille Jensen" issue="1543832">InputStreams returned from FileUpload is now closed at the end of the request</action>
+		<action type="fix" dev="Frank Bille Jensen">Fixed a bug in WicketTester.clickLink. When clicking an AjaxSubmitLink which submitted a form with a CheckGroup inside it, the test would fail. This was because I had only checked for RadioGroup when copying the data from the form to the request.</action>
+		<action type="add" dev="Eelco Hillenius">Bookmarkable page links set the target attribute to the proper page map when a page map is set and when the tag has a target attribute</action>
+		<action type="fix" dev="Igor Vaynberg">Do not set window.name automatically to the page map as this gives problems with frames</action>
+		<action type="fix" dev="Igor Vaynberg">Buttons are now versioned by default</action>
+		<action type="fix" dev="Igor Vaynberg">It is now possible to override default TypeValidator error key via ConversionException.setResourceKey()</action>
+		<action type="fix" dev="Igor Vaynberg">Fixed bug where head contributions done through header contributors added to the page only worked on first page render</action>
+		<action type="fix" dev="Igor Vaynberg" due-to="Erik Brakkee">SubmitLink now properly supports back button</action>
+		<action type="fix" dev="Igor Vaynberg" due-to="Ingram Chen">Fixed AjaxPreprocessingCallDecorator</action>
+		<action type="fix" dev="Igor Vaynberg" due-to="Adam Smyczek">AjaxFormValidatingBehavior now property updates feedback panels when form error occurs</action>
+		<action type="fix" dev="Matej Knopp" due-to="Tomer Mevorach">AjaxRequestTarget now doesn't switch component use check off, as it is no longer needed.</action>
+	</release>
+    <release version="1.2.2" date="2006-08-27" description="Wicket 1.2.2">
+	   <action type="add" dev="Igor Vaynberg">Added Application.exists() and Session.exists() to check for existence of threadlocals</action>
+       <action type="add" dev="Matej Knopp">Backported 2.0 CompressedPackageResource and CompressedPackageResourceReference</action>
+       <action type="add" dev="Matej Knopp">Backported 2.0 javascript console (much faster)</action>
+       <action type="add" dev="Matej Knopp">New wicket-ajax javascript with support for channels</action>
+       <action type="fix" dev="Eelco Hillenius" issue="1511890" due-to="Ralf Ebert">default validator rethrows any exception as ConversionException</action>
+       <action type="add" dev="Eelco Hillenius" issue="1485704" due-to="Jean-Baptiste Quenot">Opened up MarkupParser so that it can be used by other components</action>
+       <action type="fix" dev="Eelco Hillenius" issue="1543247" due-to="Jean-Baptiste Quenot">Close input stream in AbstractResourceStream.asString()</action>
+       <action type="fix" dev="Frank Bille Jensen" issue="1541914" due-to="Alastair Maw">CryptedUrlWebRequestCodingStrategy is spammy</action>
+       <action type="fix" dev="Frank Bille Jensen,Matej Knopp">Support for showing expired page from an AJAX request, through identification. This replaces the fix for issue 1528244 in a more generic way.</action>
+	   <action type="fix" dev="Igor Vaynberg,Johan Compagner">Error page no longer alters the url so the refresh button will rerun the code that caused the error</action>
+	   <action type="fix" dev="Johan Compagner" issue="1538783">RestartResponseAtInterceptPage(Class) will now generate bookmarkable urls</action>
+	   <action type="fix" dev="Igor Vaynberg">Implemented ajax support for palette</action>
+	   <action type="add" dev="Juergen Donnerstag">Support for conditional comments such as &lt;!--[if IE]&gt;..&lt;![endif]--&gt;</action>
+	   <action type="update" dev="Igor Vaynberg">AjaxLink can now be attached to anything that supports onclick</action>
+	   <action type="fix" dev="Igor Vaynberg">Link.getBefore/AfterDisabledLink() now behave properly when overridden</action>
+       <action type="add" dev="Janne Hietamäki">Dynamic resource support for portlets</action>
+       <action type="fix" dev="Eelco Hillenius" due-to="Paolo Di Tommaso" issue="1528244">Navigate to another page from ajax request (in other words break out of the ajax request). Like: public void onClick(AjaxRequestTarget target){ setResponsePage(LinksPage.class); }</action>
+	   <action type="fix" dev="Janne Hietamäki" due-to="Justin Lee" issue="1527900">Render number of rows properly on ListChoice</action>
+       <action type="add" dev="Janne Hietamäki" due-to="Frank Bille Jensen" issue="1520838">Backported AJAX header contribution code from 2.0.</action>
+	</release>
+    <release version="1.2.1" date="2006-07-24" description="Wicket 1.2.1">
+      <action type="fix" dev="Igor Vaynberg">AjaxEditableLabel will not properly work when a compound model is used</action>
+      <action type="add" dev="Janne Hietamäki">WindowState and PortletMode support for portlets</action>
+      <action type="fix" due-to="Antonio Petrelli (Scopes)">For improved reliability, instead of utilizing cookies and falling back on a quirky JavasScript, we now use window.name to detect whether we are in sync with the proper page map.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Jose Luis Casas Serradilla" issue="1501275">Form appendDefaultButtonField produced a double quote too many</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Yoav Hakman" issue="1518170">DatePicker hebrew</action>
+      <action type="fix" dev="Martijn Dashorst" due-to="Ivo Lodewijks">Fixed SubmitLink constructor taking a model, but didn't pass the model to super.</action>
+	  <action type="fix" dev="Igor Vaynberg">AjaxFormSubmitBehavior no longer incorrectly calls onSubmit() if an error occured during form processing (this aligns it with Button.onSubmit() semantic), instead a new onError() method will be called to allow for error related ajax target processing</action>
+	  <action type="fix" dev="Igor Vaynberg" due-to="Michael Hosier">Fixed RadioChoice bug that prevented onchange notifications sent if it was used outside a form</action>
+	  <action type="update" dev="Igor Vaynberg">Added IDebugSettings.serializeSessionAttributes instead of relying on logger set to debug mode for the session store</action>
+	  <action type="fix" dev="Igor Vaynberg">Palette is now propertly disabled</action>
+	  <action type="fix" dev="Igor Vaynberg" due-to="Rüdiger Schulz">Property model will now correctly work when chained with a compound model</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Marco Geier">Fix for firefox not parsing xml-responses after the pages document.domain has been changed to the base-domain.</action>
+      <action type="fix" dev="Eelco Hillenius">Implemented a workaround for an inconsistency between different servlet containers and a bug in the servlet spec which does not seem to state what should happen with empty valued request parameters. This caused Wicket to have some problems (like a failing required test) with Jetty 6.</action>
+      <action type="fix" dev="Eelco Hillenius">Submit links now fall back to a normal link behavior if they are not nested in a form or are given a form to cooperate with.</action>
+      <action type="add" dev="Eelco Hillenius" due-to="Ali Zaid,Andrew Berman,Thijs Vonk" issue="1491239">Implemented anchors on Links. You can either provide a component that is to be used for getting the anchor, or provide an anchor in the href attribute of &lt;a tags.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Sven Meiers">let links play nice with &lt;link and &lt;area tags too, and aligned Link and ExternalLink so they work in the same way on tags.</action>
+	  <action type="fix" dev="Igor Vaynberg" due-to="Rüdiger Schulz">Property model will now correctly work when chained with a compound model</action>
+	  <action type="fix" dev="Igor Vaynberg" due-to="Rüdiger Schulz">Fixed bug in extensions Select component where it did not remember input if a validation error occured</action>
+      <action type="add" dev="Janne Hietamäki" issue="1511607" due-to="Frank Bille Jensen">WicketTester: assert that a component has been added to AjaxRequestTarget</action>
+	  <action type="fix" dev="Igor Vaynberg" issue="1511595" due-to="Joseph Toth">Fixed ResourceLink.onClick is not being called</action>
+	  <action type="add" dev="Janne Hietamäki">Portlet (JSR-168) support</action>
+      <action type="fix" dev="Igor Vaynberg" due-to="Andrew Berman">Fixed bug in ContainerFeedbackMessageFilter that threw NPE if there is a session feedback message</action>
+	  <action type="fix" dev="Igor Vaynberg" issue="1509831" due-to="tdrencak">Fixed bug in pallette where ids were not generated properly if an index based choice renderer was used</action>
+	  <action type="fix" dev="Igor Vaynberg" issue="1507518">Fixed Form and TodoList examples to work in explorer</action>
+	  <action type="fix" dev="Igor Vaynberg" issue="1506146" due-to="Jan Bares">Fixed problem with UploadProgressBar when status wouldnt be updated because explorer cached ajax calls</action>
+	  <action type="update" dev="Igor Vaynberg" issue="1502103" due-to="Sven Meier">Shortened html generated by CheckGroup/Check components</action>
+      <action type="fix" dev="Martijn Dashorst">Fixed AjaxPagingNavigator to update user specified 'owner' components. This implementation allows users to override the default implementation of searching for a suitable parent.</action>
+	  <action type="fix" dev="Igor Vaynberg">Fixed problem where setThrottleDelay() broke the ajax behavior</action>
+	  <action type="fix" dev="Igor Vaynberg">Ajax Checkbox now uses onclick instead of onchange which works correctly</action>
+      <action type="fix" dev="Eelco Hillenius">StringResourceModel: build in feature that takes the passed in Component of onGetObject in case the component that was passed in in the constructor was null. All tests fail, can't think of any side effects (as Wicket will keep on searching the hierarchy anyway and using null on Localizer is not particularly helpful) and StringResourceModel works more like ResourceModel now.</action>
+      <action type="fix" dev="Eelco Hillenius">made localizer be easier on providing a null component (now implemented in all methods instead of just one)</action>
+	  <action type="fix" dev="Janne Hietamäki">Replace GPL licensed diff util with a Apache licensed one</action>
+      <action type="fix" dev="Eelco Hillenius">Redirect URLs sometimes were not being encoded for redirects, preventing 'cookie-less' operation (most notably when used with redirectTo). Fixed by always encoding redirects low-down; encoding multiple times has no effect.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1490949">Package resources do not have to be pre-registered anymore. When a shared resource is not found, Wicket tries to find a corresponding package resource, and if it finds one, registers it lazily. This fixes quite a few uncomfortable situations, and makes writing custom components easier. Package resources may be blocked by utilizing IPackageResourceGuard (IResourceSettings). By default everything except files with the extension 'html', 'class', 'java', and 'properties' are served. Fixes amongst others bug 1490949. All methods that took Pattern are now deprecated and will be removed in 2.0.
+      </action>
+      <action type="fix" dev="Eelco Hillenius">Fixed setting the shared resource path so that it strips any jsession id (or whatever there may be between [path];[whatever][?(optional)] which was a problem when a browser doesn't support cookies</action>
+      <action type="fix" dev="Igor Vaynberg">Fixed palette bug that removed items when add button was double clicked</action>
+      <action type="fix" dev="Igor Vaynberg">Fixed SubmitLink.onSubmit() was not being called</action>
+      <action type="fix" dev="Igor Vaynberg">Fixed errors when ajax requests came in to a page that is no longer active</action>
+      <action type="fix" dev="Martijn Dashorst">Fix for AjaxEventBehavior where disabled components still got ajax behavior attached, especially when links are disabled, they shouldn't recieve an onclick event handler.</action>
+      <action type="add" dev="Martijn Dashorst">Added rating component to extensions</action>
+      <action type="add" dev="Igor Vaynberg">Added Component.replaceWith(Component) to provide better readability and better context for errors that arise from replace actions</action>
+    </release>
+    <release version="1.2" date="2006-05-24" description="Wicket 1.2">
+    </release>
+    <release version="1.2-rc4" date="tbd" description="Wicket 1.2 release candidate 4">
+      <action type="add" dev="Juergen Donnerstag" issue="1357511">Markup inheritance extended to support &lt;wicket:child&gt; ... &lt;/wicket:child&gt; as well</action>
+      <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Dzenan Ridjanovic">Added Bosnian/Herzegovinan translation of Application.properties</action>
+      <action type="add" dev="Eelco Hillenius">Forms can now have a default sumbit button. If they have Wicket makes a best effort to make the action of that button the default action when pressing enter in a text field. The wizard's next button uses this functionality.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Stefan Kanev">Fixed detaching of LoadableDetachableModel was potentially done more than once in a request cycle, which would be a problem when people would override detach, which was unfortunately possible as we didn't make that method final. I made that method final now, and fixed the detaching to only be executed once.</action>
+      <action type="fix" dev="Johan Compagner" issue="1476778" due-to="AndreasG">PackageResourceReference(Application,String) throws NPE.</action>
+    </release>
+    <release version="1.2-rc3" date="2006-05-01" description="Wicket 1.2 release candidate 3">
+      <action type="fix" dev="Martijn Dashorst" issue="1479917">HelloBrowser example test failed due to wrong parsing of timezone string.</action>
+      <action type="fix" dev="Johan Compagner" issue="1478684" due-to="Igor!">Deadlock fixed when trying to render a page that was expired the second time.</action>
+      <action type="fix" dev="Johan Compagner" issue="1473355" due-to="Nathan Hamblen">BufferedWebResponse constructor should be public.</action>
+      <action type="fix" dev="Johan Compagner" issue="1479245" due-to="Jan Bares">SubmitLink with form object. FormComponent.getForm() is not final anymore because of this and SubmitLink now only overrides that method</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1474092" due-to="David-S">body tag onLoads contributed by Panel are now removed when the the Panel gets removed.</action>
+      <action type="fix" dev="Johan Compagner" issue="1476770" due-to="AndreasG">bugfix for 1476770 so that convertValue now gets a String[] instead of String, so that components who need the value don't bypass the param.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1477246">Made Tree better extensible. Added two more examples of customized tree to wicket examples, and display them in a table for better utilization of space.</action>
+      <action type="update" dev="Johan Compagner">Made Form.clearInput() public final instead of protected, so that it is more visible and easier to call in a onSelectionChange or something like that.</action>
+      <action type="fix" dev="Igor Vaynberg" issue="1474813">Ajax ClassCast exception at AjaxFormSubmitBehavior</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1473763">Message from EmailAddressPatternValidator not displayed correctly. ResourceKey is fixed.</action>
+      <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Stefan Kanev">Added Bulgarian translation of our Application.properties</action>
+      <action type="fix" dev="Johan Compagner" due-to="Blake Day" issue="1472477">NPE at wicket.PageMap.removeEntry</action>
+      <action type="fix" dev="Gwyn Evans">Changed Settings.java to pick up the version string from the Wicket jar's MANIFEST.MF via the Package API.</action>
+  	</release>
+    <release version="1.2-rc2" date="2006-04-20" description="Wicket 1.2 release candidate 2">
+      <action type="fix" dev="Johan Compagner" due-to="Martijn Dashorst">Improved error message handling when exceptions occur during validation.</action>
+      <action type="fix" dev="Martijn Dashorst">Fixed encryption issue of password, maintaining backwards compatibility, and implementing correct URL encryption using URL safe base64 encryption.</action>
+      <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Zenrique Steckelberg">Added Brazilian translation of our Application.properties</action>
+      <action type="fix" dev="Johan Compagner" issue="1472451">fixed FormcomponentFeedbackBorder, which didn't display when it should</action>
+	  <action type="add" dev="Eelco Hillenius">override setModel and added setList. The override on setModel does an additional remove of the children so that - even if optimizeItemRemoval == true - the listview will be rendered with the actual contents. setList is a convenience method and is consitent with the List constructor.</action>
+      <action type="fix" dev="Eelco Hillenius">fixed window checker for case where app is configured for server root and has no web app name.</action>
+  	</release>
+    <release version="1.2-rc1" date="2006-04-17" description="Wicket 1.2 release candidate 1">
+      <action type="add" dev="Martijn Dashorst" issue="1471603" due-to="Joni Suominen">Added Finnish translation of our Application.properties</action>
+      <action type="add" dev="Martijn Dashorst" issue="1424558">Added example for markup inheritance</action>
+      <action type="add" dev="Johan Compagner">wicket.Application.properties and wicket.Application_nl.properties added they will be loaded now as the last resort if nothing is found for the given key. All Validatior keys of wicket are in it. Als the null and nullValid keys of the SingleSelectChoice are in there. Because of that we needed a differentiation between the keys if null is valid or not. null (Choose One) is still the same but the emtpy one is now nullValid. We need now as many properties file for the different locales as possible.</action>
+      <action type="update" dev="Johan Compagner">getSessionStore() of Session is copied to Application, there will now be only one ISessionStore instance per application.</action>
+      <action type="add" dev="Igor Vaynberg">Added missing wantOnSelectionChangedNotifications to CheckGroup</action>
+      <action type="fix" dev="Johan Compagner" issue="1461977" due-to="Karthik Guru">PropertyResolver seems to update the model with blank value:  Now if you do this: new TextField("id", int.class); then the textfield will be required by default! And if you set it to false again it will throw an exception at that point.</action>
+      <action type="fix" dev="Johan Compagner" issue="1464649" due-to="Joseph Toth">Incorrect bookmark mounts when servlet mapping is /*</action>
+      <action type="fix" dev="Johan Compagner" issue="1464710" due-to="gcdha">Entry of disabled TextField gets lost with server round trip</action>
+      <action type="fix" dev="Johan Compagner" issue="1461287" due-to="Martijn Dashorst">PageMap has buggy behavior, 2 fixes: Pagemap access are synced on specific places. One page can never be handled by 2 threads at the same time for the complete request. This is also importand for people with there own impl of LeastRecentlyAccessedEvictionStrategy. The access to the Pagemap should be synced around the session. See LeastRecentlyAccessedEvictionStrategy.evict(final PageMap pageMap)</action>
+      <action type="update" dev="Igor Vaynberg" issue="1463930" due-to="R.J. Lorimer">AbstractRequestTargetCodingStrategy.decodeParameters() now also has access to query string params to make subclassing easier</action>
+      <action type="add" dev="Johan Compagner" issue="1460191" due-to="Gili Tzabari">Easier resource URLs encoding, mounting of shared resources</action>
+      <action type="update" dev="Johan Compagner">Changed some (mostly internal) api, so that we use CharSequence instead of Strings for better streaming/string concatting. One catch now: If comparing charsequences to a toString(), because StringBuffer.equals(String) will fail for the same chars..</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Simon Edwards">Fixed bug in SimpleConverterAdapter</action>
+      <action type="fix" dev="Eelco Hillenius">Fixed various mis-uses of converters</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1462587" due-to="Arto Arffman">PackageResource.get() fails when blanks in path</action>
+      <action type="add" dev="Eelco Hillenius" issue="1462340" due-to="Karthik Guru">Made Converter non-final</action>
+	  <action type="fix" dev="Eelco Hillenius">Removed check on double-registering static resources. IF that check is useful at all, it should only be done if we are sure resources properly implement their equals contract, which is not the case currently.</action>
+  	  <action type="add" dev="Eelco Hillenius">Introduced TextTemplate and TextTemplateHeaderContributor to make dynamic javascript contributions a bit less messy</action>	 
+	  <action type="add" dev="Eelco Hillenius">Added StringHeaderContributor to enable dynamic, arbitrairy header contributions with behaviors</action>
+	  <action type="add" dev="Eelco Hillenius">PackageResources can now be registered recursively (including subpackages) with regular expressions</action>	  
+      <action type="fix" dev="Johan Compagner" issue="1459110" due-to="Matej Knopp">WebRequestCodingStrategy duplicates wicket:* parameters</action>
+      <action type="add" dev="Igor Vaynberg">Added time based throttling to ajax events. There is a AjaxCallThrottlingDecorator that can be used on any ajax behavior, as well as a shortcut AjaxEventBehavior.setThrottleDelay() method.</action>
+      <action type="update" dev="Igor Vaynberg">made PasswordTextField required by default</action>
+      <action type="add" dev="Igor Vaynberg">Added flash-message functionality. Call Session.info/error/etc instead of Component.info/error.</action>
+      <action type="update" dev="Juergen Donnerstag">Multiple &lt;wicket:head&gt; per markup file are now allowed</action>
+      <action type="update" dev="Juergen Donnerstag">&lt;wicket:head&gt; now supports a wicket:scope attribute to allow for more flexibility</action>
+      <action type="fix" dev="Juergen Donnerstag">Autolink behavior can now easily be extended</action>
+      <action type="fix" dev="Igor Vaynberg" issue="1372481">Fixed FileUpload getFile() return not existent files</action>
+      <action type="fix" dev="Jonathan Locke" issue="1455224">Added sign in page class to SimplePageAuthorizationStrategy to take care of page authentication in the event of failed authorization.  Updated Library example accordingly.</action> 
+      <action type="fix" dev="Igor Vaynberg" issue="1455515" due-to="Andrew Berman">NullPointerException in AbstractValidator</action>
+      <action type="fix" dev="Johan Compagner" issue="1455292" due-to="Sven Meier">Check forgets 'checked' on form error</action>
+      <action type="fix" dev="Jonathan Locke" issue="1438486">New methods onAttach(), onDetach(), onBeginRender() and onEndRender() have been introduced.  onAttach() and onDetach() are called in internalOnBegin/EndRequest() so they should have the same semantics as the code that is currently doing attach/detach stuff in those places.  In Wicket 1.3, we can tighten that up further.  In order to guarantee that calls to onBeginRender() and onEndRender() occur in all cases, i renamed Component.doRender() -> Component.renderComponent() and Page.doRender() -> renderPage so that i could make each one final.  The renderComponent() method preserves the earlier doRender semantics exactly by checking for instanceof Page and calling Page.renderPage() in that case as if it were overridden.  The result is that we can deprecate Component.onBegin/EndRequest() now and provide alternatives for both former usages that will be easy to tighten up or modify in Wicket 1.3 or in the future.  I also changed all internal uses of doRender() and onBegin/EndRequest() to the appropriate method.</action>
+      <action type="add" dev="Igor Vaynberg">Added "flash" message support. See FlashMessagesPanel and Component.flash(String)</action> 
+      <action type="fix" dev="Johan Compagner" issue="1451614" due-to="Gili Tzabari">StringIndexOutOfBoundsException at Form$FormDispatchRequest</action>
+      <action type="fix" dev="Johan Compagner" issue="1449120" due-to="Gili Tzabari">Ensure the homepage has a stable URL</action>
+      <action type="update" dev="Igor Vaynberg">Introduced new AbortWithHttpStatusException exception.</action>
+      <action type="update" dev="Igor Vaynberg">Improved ajax partial rerender support. Rerender support is no longer limited just to the body of the component.</action>
+      <action type="add" dev="Martijn Dashorst" issue="1447146">Add wicket release version querying to core</action>
+	  <action type="add" dev="Eelco Hillenius">Introduced two adapter classes to simplify providing custom converters and adjusted the FormInputExample to use that instead of the more complicated UrlConverter.</action>
+      <action type="add" dev="Eelco Hillenius">MarkupContainers may now override template loading per instance instead of only per application. This is useful in situations where the loading differs from the rest of the components - e.g. it has to be loaded from a database - without imposing additional need to configure the application for it (and thus in the process breaking it's encapsulation). Also added custom resource loading example to wicket-examples which shows three different ways.</action>
+      <action type="update" dev="Eelco Hillenius">Improved packaged resources. They can now be registered by using regular expressions instead of one at a time (not recursively at this time). Furthermore, single registrations are now fail early in that they throw an exception when they could not be found - which is now checked at construction time. And lastely, implemented a method to check without failing whether a package resource exists.</action>
+	  <action type="add" dev="Eelco Hillenius">Added HeaderContributor behavior that allows for an easy alternative for doing header contributions, specifically for components that do not have their own markup.</action>	
+	  <action type="add" dev="Eelco Hillenius">Made PopupSettings more generally useful by adding a default constructor, tweaked the internals a bit and implemented popup support for external links.</action>
+	  <action type="add" dev="Eelco Hillenius">Changed the internals of autolinks so that img and script tags are supported now too, and that it more easy to extend behavior in general, and some minor internal tweaks.</action>
+      <action type="fix" dev="Johan Compagner" issue="1452553" due-to="Andrew Berman">PageParameters/ValueMap getLong and getInt defaults</action>
+      <action type="fix" dev="Johan Compagner" issue="1448945" due-to="Gili Tzabari">niceurl decoder does not remove +</action>
+      <action type="add" dev="Johan Compagner">Refactored the Validators a bit, Depricated Length/IntegerValidators added String/Number/DateValdiator all havind method like min/max or range, See the docs what kind of message key they have like: 'NumberValidator.range'</action>
+      <action type="update" dev="Johan Compagner">DynamicByteArrayResource made thread safe. instead of getData() now getResourceState() must be implemented by subclasses</action>
+	  <action type="fix" dev="Johan Compagner" issue="1446617" due-to="Yuuki">CAPITAL body tag</action>
+	  <action type="fix" dev="Johan Compagner" issue="1442528" due-to="Maurice Marrink">userinput of radiobuttons and checkboxes forgotten</action>
+      <action type="fix" dev="Johan Compagner" issue="1441999" due-to="Gili Tzabari">Trying to hit missing resources should return HTTP 404</action>
+      <action type="fix" dev="Johan Compagner" issue="1441469" due-to="Gili Tzabari">SharesResources.get() does not check for aliasing</action>
+      <action type="add" dev="Igor Vaynberg">Added AutoAssistTextField to extensions based on http://capxous.com/autoassist/</action>
+      <action type="add" dev="Igor Vaynberg">Added ability to easily decorate default ajax callbacks. See IAjaxCallDecorator and friends.</action>
+      <action type="add" dev="Igor Vaynberg">Added ability to easily create ajax busy indicators. See IAjaxIndicatorAware and wicket-examples/ajax/links.</action>
+      <action type="add" dev="Martijn Dashorst" issue="1427691">Added source browsing capability in examples project</action>
+      <action type="add" dev="Igor Vaynberg">IFormValidator for checking form or multiple form components</action>
+      <action type="update" dev="Igor Vaynberg">More flexible validator resource key search order that allows for multiple user defined keys to be searched for error messages</action>
+      <action type="update" dev="Igor Vaynberg">Refactored form processing to include separate required check and type conversion phases</action>
+      <action type="add" dev="Martijn Dashorst">Added Ajaxified paging navigator</action>
+      <action type="add" dev="Juergen Donnerstag">Added markup fragments (inline panels)</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1435245" due-to="Alistair Maw">Response uses sun.* class GetPropertyAction</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1435251" due-to="Alistair Maw">wicket.util.crypt.AbstractCrypt uses proprietary Sun classes. Fixed by implementing our own Base64 encoder (copied from commons-codec and adjusted to our needs).</action>
+      <action type="fix" dev="Johan Compagner" issue="1434863" due-to="Nick Heudecker">Clicking on bookmarkable links exhausts page map, Fixed this by changing the PopupSettings class, you have to specify the pagemap now as a constructor param.</action>
+      <action type="add" dev="Igor Vaynberg">Added wicket ajax support implementation</action>
+      <action type="add" dev="Johan Compagner" issue="1433735" due-to="Alastair Maw">Proxying breaks because ContextPath is included in links: contextpath now configurable through ApplicationSettings.setContextPath(), also through a servlet init param: contextpath</action>
+      <action type="add" dev="Johan Compagner" issue="1418043" due-to="Arto Arffman">DropDownList: flag to indicate localization of options, By default options are not localized anymore you have to override localizeDisplayValues() method for this.</action>
+      <action type="fix" dev="Johan Compagner">Cookies where not deleted when cleared.</action>
+      <action type="delete" dev="Johan Compagner">Removed the Page.checkAccess() method, see the new Authorizaton interfaces for a replacement</action>
+      <action type="add" dev="Johan Compagner">All wicket exception/status pages are sending the HTTP status codes that represents that page (FORBIDDEN for accessed denied, INTERNAL_ERROR for exception pages)</action>
+      <action type="add" dev="Martijn Dashorst">Added the AttributeAppender to make additions to markup attributes easier.</action>
+      <action type="add" dev="Martijn Dashorst">Added the ability to reset the user input on all form components.</action>
+      <action type="add" dev="Juergen Donnerstag">Added component level output transformer (container and behavior)</action>
+      <action type="fix" dev="Janne Hietamaki">Add Pragma: no-cache and Cache: no-store headers on WebPage by default to prevent problems with proxies</action>
+      <action type="add" dev="Igor Vaynberg">added RedirectToPageException and RedirectToInterceptPageException that allows an immediate redirects</action>
+      <action type="fix" dev="Juergen Donnerstag" due-to="Jim McLaughlin">Containers within wicket:head regions didn't behave properly</action>
+      <action type="fix" dev="Johan Compagner" due-to="Bryn Cook">RadioChoice didn't register the IOnChangeListener to the RequestCycle</action>
+      <action type="update" dev="Johan Compagner">REDIREC_TO_BUFFER strategy changes, Now when responding the Response object is for WebPages always a WebResponse, Headers and Cookies will be now set</action>
+      <action type="add" dev="Igor Vaynberg">Wicket settings system has been refactored. ApplicationSettings is now hidden behind Application.getXXXSettings interfaces that should be used to access the various settings. See http://www.wicket-wiki.org.uk/wiki/index.php/Migrate-1.2 for details.</action> 
+      <action type="update" dev="Jonathan Locke">Reworked page state to include IPageSource envisioned earlier as well as IPageMapEvictionStrategy for more flexible management of page state.  A variety of other small changes were made.</action>
+      <action type="add" dev="Juergen Donnerstag" due-to="Christian Essl">Provide a component resolver (see ScopedComponentResolver) which walks up the component tree until a Page or Panel and tries to find a component with a matching wicket id, effectivly providing something like scoping for wicket id resolution.</action>
+      <action type="update" dev="Eelco Hillenius">moved WebApplication.onRuntimeException(Page page, RuntimeException e) to RequestCycle, which is a much more logical place for it, and has a more natural grouping with onBeginRequest and onEndRequest</action>
+      <action type="fix" dev="Igor Vaynberg" issue="1375598">ListView now creates Change objects instead of cloning the whole list on up/down/remove links</action>
+      <action type="fix" dev="Igor Vaynberg" issue="1375590">FormComponentFeedback* components are now xhtml compliant</action>
+      <action type="add" dev="Eelco Hillenius,Igor Vanberg">Introduced mounting/ nice urls. Provided convenience methods for mounting bookmarkable pages and packages</action>
+      <action type="update" dev="Eelco Hillenius">Session.get/setAttribute are now final to support attaching attribute observers. Use doGet/SetAttribute instead.</action>
+      <action type="update" dev="Eelco Hillenius">Internals of RequestCycle are refactored. The processing is more formalized now, as defined in interface IRequestCycleProcessor. This interface is used by RequestCycle to delegate processing. The target of a request, like Page or e.g. shared resource, is abstracted in IRequestTarget, of which the current is set in RequestCycle.</action>
+      <action type="update" dev="Eelco Hillenius">AttributeModifier is now backed by IBehaviour. Behaviours are classes that can coorperate with Components. You attach them to components (Component.add) and they decide how to cooperate. Besides AttributeModifiers, AjaxHandlers extend IBehaviour. Let your behaviours implement IBehaviourListener to be able to recieve callbacks such as AjaxHandler does.</action>
+      <action type="update" dev="Eelco Hillenius">Made AjaxHandler easier to use; e.g. re-rendering a single component should be possible and easy now.</action>
+      <action type="update" dev="Eelco Hillenius">* Introduced wicket.protocol.http.servlet.WicketSessionFilter to intercepts the current session and set it in a thread local, so that non-wicket applications can reuse the session by just calling Session.get().</action>
+      <action type="update" dev="Igor Vaynberg">Added check and better exception when servlet's init param is missing</action>
+      <action type="add" dev="Juergen Donnerstag" issue="1351511">WicketTester now allows testing of already instantiated pages.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1365114">WicketTester and MockWebApplication now support BookmarkablePageLink</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1373547">Race condition with Session and RequestCycle</action>
+      <action type="add" dev="Juergen Donnerstag">Properties files, like markup files already, are now automatically reloaded if modified.</action>
+      <action type="add" dev="Johan Compagner" due-to="Christian Essl">added SubmitLink component, This is a &lt;a href&gt; that acts as a button, can be placed inside or outside the form to trigger the submit.</action>
+      <action type="fix" dev="Johan Compagner" due-to="Laurent PETIT">Form component values are always escaped when the components wants to escape there values (also illegal values)</action>
+      <action type="add" dev="Johan Compagner" due-to="Laurent PETIT">The Form will hold the values now in its own state until everything is (successfully) validated to the model(s)</action>
+      <action type="add" dev="Johan Compagner">IOnChangeListeners, like DropDownChoice, now use the form submit to call the interface method</action>
+      <action type="fix" dev="Johan Compagner" due-to="Maurice Marrink">localized null fixes and localized display value fixes, getID() shouldn't be appended. (that does the localizer)</action>
+      <action type="add" dev="Johan Compagner">response filter support, 2 filters added: ServerTime and ServerClientTime, Can for example also be used for Xml Transformations</action>
+      <action type="fix" dev="Johan Compagner" due-to="Anders Peterson">Fixed setModelObject() when the component has a root model.</action>
+      <action type="add" dev="Johan Compagner">Replaced OGNL with our own implementation. Most simple property and method calls (with no parameters) are supported. see wicket.util.object.Objects</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1357506" due-to="Phil Kulak">Fixed component handling for HTML tags which do not require close tags</action>
+      <action type="add" dev="Juergen Donnerstag" due-to="Wickit Community">Support for wicket:message</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1352468" due-to="Tobias Kalbitz">XML tags names must not be converted to lower case in TagNameParser</action>
+      <action type="add" dev="Juergen Donnerstag">Allow to re-render single components.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1346317" due-to="Jason Essington">unclosed quote in wicket:id causes JVM crash</action>
+      <action type="fix" dev="Juergen Donnerstag">Fixed NPE issue with autolinks</action>
+      <action type="fix" dev="Igor Vaynberg" issue="1357755">Fixed bug in button that caused the value attirbute to disappear after form submit</action>
+    </release>
+    <release version="1.1" date="2005-10-30" description="Wicket 1.1 final">
+      <action type="fix" dev="Juergen Donnerstag" issue="1339686" due-to="Janne Hietamäki">fixed: Invalid Panel markup throws weird exception</action>
+      <action type="delete" dev="Jonathan Locke">Removed experimental code: page sets.</action>
+      <action type="update" dev="Eelco Hillenius" due-to="Simon Berriman">added ValueMap.isMutable()</action>
+      <action type="add" dev="Eelco Hillenius">introduced methods WebPage.beforeCallComponent and WebPage.afterCallComponent to enable you to put functionality 'around' any component handler call, like setting up dependencies, enfore authorization, do logging, etc.</action>
+      <action type="add" dev="Igor Vaynberg" issue="1329439">added RadioGroup and Radio form components</action>
+      <action type="update" dev="Eelco Hillenius" issue="1312969" due-to="Phil Kulak">css can be overriden for tree</action>
+      <action type="fix" dev="Johan Compagner" issue="1315986"  due-to="Igor Vaynberg">fixes a bug in Link</action>
+	  <action type="fix" dev="Johan Compagner" issue="1325155"  due-to="Ralf Ebert">RequiredValidator for RadioChoice</action>
+	  <action type="fix" dev="Johan Compagner" issue="1327434"  due-to="Ralf Ebert">Default converter throws exception for empty values</action>
+      <action type="add" dev="Juergen Donnerstag" issue="1249907" due-to=" Igor Vaynberg">added ${label} to variables available for form component validator messages and implemented validator default messages accessible by the validators simple class name.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1318438">onload event handler does no longer string append on each render</action>
+      <action type="add" dev="Juergen Donnerstag">Allow for user specifc Localizer, e.g one using Spring MessageSources.</action>
+      <action type="fix" dev="Johan Compagner">Bookmarkable Pages parameter encoding using URLEncoder.encode(value,charset)<br/>For tomcat you have to use useBodyEncodingForURI="true" in the Connector configuration in the server.xml</action>
+      <action type="add" dev="Juergen Donnerstag" issue="1318196">Improved wicket:head mis-placement detection.</action>
+      <action type="add" dev="Juergen Donnerstag" issue="1318175">wicket:head tags is no longer required in the inherited base panel. It is automatically inserted if required.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1317715" due-to="Zoltan Luspai">wicket1.1 CVS HEAD depends on jdk1.5.</action>
+      <action type="add" dev="Juergen Donnerstag" issue="1315708" due-to="Ari Suutari">Add locale/style support for autolinks</action>
+      <action type="add" dev="Juergen Donnerstag" issue="1287539" due-to="Ingrem Chen">Enhanced MockWebApplication For Testing Controller Logic</action>
+    </release>
+    <release version="1.1-rc2" date="2005-10-04" description="Second release candidate for 1.1">
+      <action type="fix" dev="Martijn Dashorst" issue="1290799" due-to="Jan Bares">Wicket-extensions distribution doesn't contain javadoc.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1312787" due-to="Ari Suutari">Image components inside a border component are resolved by the parent of the border, thus keeping pre-viewability and componentization.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1289768" due-to="Jan Bares">Borders now treat autolinked resources within wicket:head tags correctly</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1287640" due-to="Jan Bares">skip content of script tag. Treat it as raw markup</action>
+      <action type="fix" dev="Johan Compagner" issue="1275726">Wrong impl. on getParameters() of WebRequestWithCryptedUrl</action>
+      <action type="fix" dev="Johan Compagner" issue="1288373">Added serialversionuid to all the serialized wicket classes</action>
+      <action type="update" dev="Eelco Hillenius" issue="1284625" due-to="Gwyn Evans">Add WebPage(PageParameters) constructor (helps with your IDE's code completion features)</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1297446" due-to="Sven Meier">Link altered child visibility based on wicket id; hidden 'feature' is removed now.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1297449" due-to="Sven Meier">Improved hangman letter images to use just one image reference.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1287878" due-to="Leo West">doc fix for Button.setDefaultFormProcessing</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1266998" due-to="Johan Compagner">Call invalidate after each setXXX invocation on DefaultButtonImageResource to force re-rendering</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1267147" due-to="Jan Bares">Made WicketExampleHeader.html (X)HTML compliant</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1251658" due-to="Zhenbang Wei, Niclas Hedhman">Link.autoEnable is now false by default, and when setEnabled is called, autoEnable will be set to false too as calling setEnabled is a consious action that has no effect when autoEnable is true</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1240768" due-to="Gili Tzabari">Link.autoEnable is now false by default, and when setEnabled is called, autoEnable will be set to false too as calling setEnabled is a consious action that has no effect when autoEnable is true. Autolinks are autoEnabled by default, and so are the paging navigator links. CHECK YOUR CODE WHETHER THIS HAS CONSEQUENCES FOR YOU!</action>
+      <action type="add" dev="Eelco Hillenius">added class wicket.markup.html.image.resource.BlobImageResource to make working with images from databases easier.</action>
+      <action type="update" dev="Eelco Hillenius">made Link.isEnabled non final so that users can more easily customize on/off behaviour.</action>
+      <action type="fix" dev="Johan Compagner" issue="1290352" due-to="Phil Kulak"> Models not detached when checkAccess() returns false.</action>
+      <action type="fix" dev="Johan Compagner" issue="1290843" due-to="Ralf Ebert">DatePicker fails when used multiple times in the same page</action>
+      <action type="fix" dev="Johan Compagner" issue="1298789">Buttons with empty value are not found as submit button</action>
+      <action type="fix" dev="Johan Compagner" issue="1298795">Persisted form values not loaded for bookmarkable/redirect pages</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1298082">Moved Dojo and Scriptaculous dependencies out of core into contrib packages</action>
+      <action type="fix" dev="Martijn Dashorst" due-to="Igor Vaynberg" issue="1288863">Renamed pageableListViewNavigation field and getter in PagingNavigator</action>
+      <action type="fix" dev="Martijn Dashorst" due-to="Igor Vaynberg" issue="1294381">Patch for error in javadoc in ApplicationPages</action>
+      <action type="fix" dev="Eelco Hillenius">form now checks on enctype attribute. If the attribute is multipart, the multipart property of the form object will be set to that.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1292416">AJAX component doesn't get correct request parameter path</action>
+      <action type="add" dev="Eelco Hillenius">Made FileResourceStream non-final to support using custom content type schemas etc</action>
+    </release>
+    <release version="1.1-rc1" date="2005-09-11" description="First release candidate for 1.1">
+      <action type="add" dev="Johan Compagner" issue="1286190,1221732">Resource.setHeaders(WebResponse response) so that users can add any header they want (cacheable/content disposition) when the resource is served</action>
+      <action type="fix" dev="Johan Compagner" issue="1286620">AttributeModifer can't be shared between components</action>
+      <action type="fix" dev="Johan Compagner" issue="1286607">Infinite loop when adding attributemodifier twice</action>
+      <action type="update" dev="Martijn Dashorst" due-to="Gili Tzabari" issue="1255188">Moved resource reference classes from extensions into core</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Johan Compagner" issue="1263833">StaticFileResource wasn't used and seemed to be a relic that was refactored to PackageResource. StaticFileResource is removed from Wicket.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Cameron Braid" issue="1286616">Attributes should preserve case. Before this fix, attributes were converted to lower case. Not anymore now.</action>
+      <action type="fix" dev="Johan Compagner" due-to="Kenneth Foo Chuan Khit" issue="1284498">Internal Error when using back buttons and Links in ListView</action>
+      <action type="add" dev="Johan Compagner">Buttons can have a model now, for the buttons value attribute</action>
+      <action type="fix" dev="Johan Compagner" due-to="Gwyn Evans" issue="1284029">Odd behaviour when Wicket is the "root" (/*) servlet</action>
+      <action type="remove" dev="Martijn Dashorst" issue="1283301">Integrated classes from concurrent.jar into wicket.util, removing the need for concurrent.jar</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Matej Knop" issue="1284508">null values in PageParameters are now ignored totally when generating urls, instead of resulting in 'x=null'.</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Arto Arffman">fix: now allow multiple ajax handler implementations to contribute to the page's header</action>
+      <action type="fix" dev="Johan Compagner">Redirect url generating issues. The url was generated before Component.onInternalBeginRequest() and that method can generate another version.</action>
+      <action type="add" dev="Johan Compagner">added protected method Session.attach() that is called right before a session is used for a request</action>
+      <action type="add" dev="Johan Compagner">Added FormComponent.getInputName() that by default generates a name from the Form (not included) to the component for better/smaller input names</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1255061" due-to="Gili Tzabari">Clearer message when trying to render abstract Page.</action>
+      <action type="fix" dev="Juergen Donnerstag">&lt;wicket:head&gt; behaviour slighty changed to be more intuitiv.</action>
+      <action type="fix" dev="Juergen Donnerstag">addToHeader() is nor longer required. Just use add() to add components which are inside a head section</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1276640" due-to="Simon Berriman">xmlns:wicket="http:/..." is now removed from markup as well if setStripWicketTag(true)</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1243152" due-to="Eelco Hillenius">&lt;select .../&gt; is now allowed and will automatically be converted into a open-body-close tag</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1275726" due-to="Ingram Chen">Fixed wrong implementation off getParameters() in WebRequestWithCryptedUrl</action>
+      <action type="fix" dev="Gwyn Evans" issue="1280468" due-to="Simon Berriman">Unescaped &lt;b&gt; tag in XmlTag Javadoc</action>
+    </release>
+    <release version="1.1-b4" date="2005-08-30" description="Wicket 1.1 Beta 4">
+      <action type="add" dev="Johan Compagner" issue="1276126" due-to="Gwyn Evans">CheckBoxMultipleChoice code submission</action>
+      <action type="fix" dev="Johan Compagner" issue="1275263" due-to="Martijn Dashorst">Strings.toMultilineMarkup doesn't generate valid xhtml</action>
+      <action type="add" dev="Johan Compagner">ICompoundModel for compound models as an interface instead of a hard check for CompoundPropertyModel</action>
+      <action type="add" dev="Johan Compagner">IComponentValueComparator for comparing current model data and new value</action>
+      <action type="fix" dev="Eelco Hillenius">Renamed Ajax stuff: IEventRequestListener -&gt; IAjaxListener, IEventRequestHandler -&gt; IAjaxHandler, AbstractEventRequestHandler -&gt; AbstractAjaxHandler, DojoEventRequestHandler -&gt; DojoAjaxHandler, ValidationEventRequestHandler -&gt; ValidationAjaxHandler. Also renamed onEventRequest -&gt; onRequest and rendered -&gt; onComponentRendered.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1267247" due-to="Oliver Schoenherr">ListView removeLink notified only ListItem over model changes. It now notifies the ListView instead.</action>
+      <action type="update" dev="Eelco Hillenius">AJAX: removed Rico ajax support. Added script.aculo.us support. Fixed javascript registrations using the Wicket initializer.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1267370" due-to="Stephen Bate">Incorrect 1.1-b3 examples documentation</action>
+      <action type="update" dev="Eelco Hillenius">Factored out the commons-fileupload dependency. As for portlets we would need the development version of that lib, but the last release was in december 2004, I have no trust in how this library will be maintained. Also, the development version introduces a new dependency, commons-io, for just one concrete class. I lifted out the classes we use, put it in Wicket specific packages and cleaned up the deprecations.</action>
+      <action type="update" dev="Eelco Hillenius" due-to="Ate Douma">Implemented the basic changes that are needed support other kind of webapplications, such as portlets. The main change in this is that WebRequest is now abstract, and that in a servlet environment ServletWebRequest is the concrete implementation. The changes are mostly internals; the only break (actually for clients that depended on internals anyway) is that instead of doing: javax.servlet.http.HttpServletRequest httpRequest = ((WebRequest) cycle.getRequest()).getHttpServletRequest(); to get the servlet http request, you should now do: javax.servlet.http.HttpServletRequest httpRequest = ((ServletWebRequest)cycle.getRequest()).getHttpServletRequest(); NOTE: As a consequence of this and other changes, it is now possible to have requests that do not live in a session, or that the session is created after the request. This should never get you in trouble actually, except when you do: Session.get().getApplication() in a constructor of a wicket.Request subclass. Replace this with Application.get() (which was a better idea anyway).</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1266090" due-to="Ralf Ebert">Exception when replacing non-existent components</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1259548" due-to="Seth Ladd">More explicit exceptions with WicketServlet</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1267120">fixed bug where response encoding was null</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1274320">wicket:link tag now gets removed as well if setStripWicketTag(true)</action>
+      <action type="fix" dev="Juergen Donnerstag">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
+      <action type="add" dev="Johan Compagner" issue="1271523" due-to="Ralf Ebert">ByteArrayResource and DynamicByteArrayResource classes</action>
+      <action type="update" dev="Johan Compagner" issue="1271510" due-to="Ralf Ebert">ResourceLink and Resources</action>
+      <action type="update" dev="Johan Compagner" issue="1260087" due-to="Gili Tzabari">Document lifecycle of resources (idle/cache Timers on resources)</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Jan Bares">You can now provide a label component to synchronize ids with the datepicker component</action>
+      <action type="update" dev="Eelco Hillenius">improvements: newValue is now called if the replacement value is null, allowing to supply new values just by subclassing. ReplaceModel can now be null.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1272174">fixed problem with markup inheritance in combination with head and wicket:head tags. Components inside these tags were not properly processed.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1272174">Child and Extend tags are no longer appearing in HTML when strip=true.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1273827">Default date parsing is now in non-lenient mode, which means that it will fail fast.</action>
+      <action type="fix" dev="Juergen Donnerstag">DefaultResourceStreamLocator now implements List like methods to allow for more flexibility, similar to chaining</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1267233">Invisible components are not rendered any more</action>
+      <action type="fix" dev="Juergen Donnerstag" due-to="Gili Tzabari">Fixed autolink support for none-html files</action>
+      <action type="fix" dev="Johan Compagner" issue="1250570" due-to="Gili Tzabari">Invalid image URLs should produce HTTP 404</action>
+      <action type="fix" dev="Johan Compagner" issue="1251385" due-to="Gili Tzabari">Consistent homepage URL with NO_REDIRECT</action>
+      <action type="fix" dev="Johan Compagner" issue="1265068" due-to="Gili Tzabari">Links to resources won't append the current locale of the user anymore to there url. The locale binding is done on request and now with the proper fallback. First the full locale is used. Then only the language and then no locale. If you set a different locale to a resource then the current locale then the locale is still appended to the url. So that one is forced to be used when the lookup occurs.</action>
+      <action type="update" dev="Johan Compagner" issue="1256084">Paging refactor, now the paging code is extraced from PageableListView and it is moved to there own package, wicket.markup.html.navigation.paging. It has 2 interfaces now: IPageable and IPagingLabelProvider. IPageable should be used by components that are pageable. They have to return the total pagecount and be able to set and get the current page what that they are displaying. The IPagingLabelProvider can be used to override the default link text of a page link. Default it is just the page number. But with a labelprovider you can set this for example to [1-10],[11-20],[21-24]. The PagingNavigator or the PagingNavigation both have constructors for a IPagingLabelProvider.</action>
+      <action type="fix" dev="Johan Compagner" issue="1254857" due-to="Jan Bares">UrlResourceStream.length() of changed resources</action>
+      <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
+      <action type="fix" dev="Johan Compagner" issue="1251853">Lot's of serialization fixes, also refactored Static-&gt;PackageResoures</action>
+      <action type="fix" dev="Johan Compagner" issue="1251710" due-to="Jan Bares">Conent type of static resources is content/unknown</action>
+    </release>
+    <release version="1.1-b3" date="2005-08-22" description="1.1 Beta 3">
+      <action type="fix" dev="Johan Compagner, Eelco Hillenius" issue="1263801">Refactored PackageResource to not depend on package anymore. Package provides the wrong classloader (if any) for loading the resource. It now uses the scope class, which is consistent with the rest of our resource story.</action>
+      <action type="add" dev="Martijn Dashorst" issue="1260304" due-to="Dariusz Wojtas">Added debug toString() methods to all models in wicket.model</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1253113" due-to="Cameron Braid">AbstractDetachableModel doesn't propogate attach/detach</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1247719" due-to="Gili Tzabari">Javadoc missing for AbstractChoice</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1253999">ListMultipleChoice doesn't support maxRows</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1259701" due-to="Francis Amanfo">PageParameters doesn't escape markup in values</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1263096" due-to="Simon Berriman">Can't have two FeedbackPanels - fixed in conjunction with 1219458</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1219458" due-to="Gili Tzabari">FeedbackPanel produces illegal HTML - The initial state of the FeedbackPanel produces empty ul open and close tag since there is no initial message to display. This is illegal HTML according to the HTML validator (XHTML strict mode).</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1261052 " due-to="Jan Bares">Fixed WicketServlet.doGet URI bug</action>
+      <action type="update" dev="Juergen Donnerstag">Extended markup inheritance to support panels and borders as well</action>
+      <action type="add" dev="Jonathan Locke">Added MarkupContainer.iterator(Comparator comparator)</action>
+      <action type="fix" dev="Eelco Hillenius">fix for classloading problems that caused problems loading markup/ resources for components that were loaded by another classloader than the current one.</action>
+      <action type="fix" dev="Gwyn Evans" issue="1249961" due-to="Cameron Braid">Fix HTML generated from AbstractChoice - Added missing space after 'option selected="selected"'</action>
+      <action type="update" dev="Eelco Hillenius" issue="1254379" due-to="Phil Kulak">Added getBoolean() to ValueMap</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1253113" due-to="Cameron Braid">AbstractDetachableModel didn't propogate attach/detach</action>
+      <action type="update" dev="Eelco Hillenius" issue="1253111" due-to="Cameron Braid">Made LoadableDetachableModel.getNestedModel() non final</action>
+      <action type="update" dev="Jonathan Locke">Changed implementation of component map in MarkupContainer to an array model like the validators changed. This made a significant reduction in the size of pages, especially big pages. For example, nested shrank from 69,958 bytes to 55,231 bytes which is a savings of 14,727 bytes that was due to HashMap overhead. Very large containers may run slower, but most containers are likely to be faster as should be recursion/iteration. The main downside is that this code is very ugly and involves the same kinds of tests and casts that we did to make the validators implementation more space efficient.</action>
+      <action type="update" dev="Jonathan Locke">refactored feedback completely. the new code is smaller, more powerful and more elegant. but it will break clients. most clients who are using simple features of the old feedback code will only have to (a) change their package imports from wicket to wicket.feedback (because the feedback stuff is several more class files that are polluting the root package and likely to grow due to the new filtering mechanism) and (b) delete any IFeedback argument to Form. clients who are looking for more powerful ways to filter their messages will now have completely unlimited capacity to do so through the new IFeedbackMessageFilter interface and the default filter implementations ComponentFeedbackMessageFilter, ContainedByFeedbackMessageFilter and ErrorLevelFeedbackMessageFilter. the whole model for feedback messages has changed from one of component-orientation, which was a mistake, to one of message orientation. to give feedback, a feedback component implements the new IFeedback interface which contains just updateFeedback(). in this method, which is called before the page is rendered, the component can use the FeedbackMessages.messages() method in combination with a filter implementing IFeedbackMessageFilter to retrieve a list of appropriate messages. all feedback messages on the page are pushed through this filter. messages for which IFeedbackMessageFilter.accept() returns true are added to the list. for example, the new FormComponentFeedbackBorder uses the ContainedByFeedbackMessageFilter in its call to FeedbackMessages.messages(). The filter being used by the form component feedback border can be changed by overriding the getFeedbackMessagesFilter() method. This combination allows FormComponentFeedbackBorder to show its error indicator by default when a component that it contains has an error, but allows the user to override this behavior. another example is provided in FormComponentFeedbackIndicator, which is a panel showing a red star (and overridable with you own markup!) that shows or hides itself depending on the result of the filter returned by the overridable getFeedbackMessageFilter() method. if the filter accepts at least one message, the indicator will show itself. if no message matches the filter, the indicator will hide itself. note that feedback message filters do not necessarily have to have anything to do with components. you can install, for example, an ErrorLevelFeedbackMessageFilter which filters out messages below a certain threshold. or you can make a custom filter that uses any attribute of FeedbackMessage to filter on. the new FeedbackPanel also provides a getFeedbackMessageFilter() override.</action>
+      <action type="update" dev="Jonathan Locke">Maximized efficiency of validators list by doing a little neat object casting in the private implementation. This also simplified things conceptually.</action>
+      <action type="update" dev="Jonathan Locke">Made FormComponent more space efficient by using boolean flag bit in Component superclass to keep track of persistent boolean.</action>
+      <action type="update" dev="Jonathan Locke">Changed RequestCycle.internalOnRuntimeException() implementation so that it checks the new Page return value from onRuntimeException. if onRuntimeException returns a Page, it will be redirected to. if not, wicket will use the default page. this provides a nice low-level way of doing something totally different to handle runtime exceptions. if you just want to change the basic look of your InternalErrorPage, you can still just subclass that. but if you want to do sophisticated things with runtime exceptions, you want to override RequestCycle's onRuntimeException method.</action>
+      <action type="update" dev="Jonathan Locke">Refactored intializer code. Now wicket.properties is checked for each jar or root folder on the classpath. If it contains either initializer=[class] or [app-name]-initializer=[class], that class is instantiated and the IInitializer.init(Application) method is called on the resulting object. So, both libraries and applications can easily initialize their resources now. For example, the core wicket.properties file contains just this: "initializer=wicket.Initializer", which invokes the wicket.Initializer class with the application being loaded. The wicket.Initializer.init() method will contain a sequence of initializations. For example, "new TreeComponentInitializer().init(application)". This is a much better and safer and more Java way of initializing components for a library like core. Updated the images example to show how this is done.</action>
+      <action type="update" dev="Jonathan Locke">Changed structure of process() back to its original no-parameter form and introduced a nice, logical return value in onFormSubmitted to determined whether to call delegateSubmit().</action>
+      <action type="update" issue="1255293" dev="Juergen Donnerstag" due-to="Gili Tzabari">HtmlHeaderContainer to supports markup inheritance.</action>
+      <action type="add" dev="Jonathan Locke">Changed StaticResourceReference and StaticResource to PackageResourceReference and PackageResource, then added an Application parameter to each to make that explicit. Added IComponentInitializer method that is called in Application constructor for each class listed in META-INF/wicket-component-initializers.txt. This will allow component developers to initialize resources when the app starts up. For applications, you can also create a META-INF/[ApplicationName]-wicket-component-initializers.txt if you want to preload resources or otherwise initialize for pages. Made changes to ImagesApplication to demo this, including an example that preloads the cancel button via META-INF/ImagesApplication-wicket-component-initializers.txt</action>
+      <action type="add" dev="Martijn Dashorst">Added min, max and length parameters to the error message interpolation of LengthValidator</action>
+      <action type="update" issue="1255297" dev="Jonathan Locke">Added automatic multiPart support to Form. You can still call Form.setMultiPart() if you want to, but it is no longer necessary.</action>
+      <action type="add" dev="Jonathan Locke">Added WebSession.getId() and WebRequestCycle.getWebSession()</action>
+      <action type="add" dev="Eelco Hillenius" issue="1250030" due-to="Igor Vaynberg">added AbstractReadOnlyModel</action>
+      <action type="update" dev="Eelco Hillenius" issue="1249929" due-to="Igor Vaynberg">allow protected access to AttributeModifier's replacement model</action>
+    </release>
+    <release version="1.1-b2" date="2005-08-01" description="1.1 Beta 2">
+      <action type="update" dev="Martijn Dashorst" issue="1231300">Upgraded dependencies to latests versions: log4j (1.2.8 -&gt; 1.2.11), concurrent (1.3.3 -&gt; 1.3.4).</action>
+      <action type="fix" dev="Martijn Dashorst" due-to="Brad Pardee" issue="1248759">Removed dependency on dom4j</action>
+      <action type="update" dev="Eelco Hillenius" due-to="Cameron Braid">Folded UploadForm and Form into one (Form). Instead of using UploadForm, you can now just use Form and call setMultipart(true).</action>
+      <action type="update" dev="Martijn Dashorst" issue="1246322">Made FormComponent.updateModel() public for AJAX support.</action>
+    </release>
+    <release version="1.1-b1" date="2005-07-24" description="1.1.0 Beta 1">
+      <action type="update" dev="Juergen Donnerstag, Eelco Hillenius" issue="1223348">removed wicketNamspace property from ApplicationSettings, instead clients should use the xmlns attribute in the markup file (&lt;html xmlns:namespace&gt;)</action>
+      <action type="fix" dev="Eelco Hillenius">Component.setShouldEscapeModelStrings renamed to setEscapeModelStrings</action>
+      <action type="update" dev="Eelco Hillenius">Buttons now have an 'immediate' property. If true, this button behaves much like a normal link; no validation nor updating of the nested form components is done automatically in that case. This property is false by default.</action>
+      <action type="fix" dev="Eelco Hillenius">Only validate components that are visible</action>
+      <action type="fix" dev="Juergen Donnerstag" due-to="Janne Hietamäki" issue="1216017">setStripWicketTags now takes Wicket namespaces (setWicketNamespace) into account.</action>
+      <action type="add" dev="Juergen Donnerstag">Added support for JavaScript and CSS. Please see the Wiki for more details.</action>
+      <action type="add" dev="Eelco Hillenius">Added component wicket.markup.html.include.Include for including content from non-Wicket resources.</action>
+    </release>
+    <release version="1.0.1" date="2005-07-17" description="1.0.1">
+      <action type="update" dev="Eelco Hillenius" due-to="Phil Kulak">FeedbackPanel: made some methods that were not meant for overriding final, and added methods that make extending feedbackpanel easier</action>
+      <action type="fix" dev="Eelco Hillenius" due-to="Adam Howard">fixed bug in AbstractPropertyModel which gave problems using custom converters (overriding getConverter for a component) with compound property models</action>
+      <action type="update" dev="Chris Turner" due-to="Jonathan Carlson">ComponentStringResourceLoader: resources are now inherited from parent classes when components have been subclassed</action>
+    </release>
+    <release version="1.0" date="2005-06-21" description="1.0.0 final">
+      <action type="update" dev="Eelco Hillenius">StaticResourceReference now binds itself immediately so clients don't have to know about the binding internals.</action>
+      <action type="fix" dev="Juergen Donnerstag" issue="1209753">Pageable list view navigator did not handle the "last" link properly in situations where additional elements have been added to the underlying list.</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1213229">Image didn't like webapps with urlpattern set to /*. It does now.</action>
+      <action type="fix" dev="Martijn Dashorst" issue="1275631">Fixed negative numbers in PageParameters.</action>
+      <action type="update" dev="Eelco Hillenius">added PageableListView.setRowsPerPage</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1211663" due-to="Martijn Dashorst">Fixed converters once and for all. Null check results so that e.g., empty strings for numbers (e.g.) now return null instead of throwing a NPE</action>
+      <action type="fix" dev="Eelco Hillenius" issue="1209027">The UploadForm now considers the encoding</action>
+      <action type="add" dev="Juergen Donnerstag">By means of Component.setRenderBodyOnly(boolean) it is now easily possible to print the tag's body only. This is e.g. necessary with &lt;span&gt; tags and Panels where in cases you want to be strictly HTML compliant the &lt;span&gt; tag itself must be removed. The (tag's) body will always be printed.</action>
+    </release>
+  </body>
+</document>

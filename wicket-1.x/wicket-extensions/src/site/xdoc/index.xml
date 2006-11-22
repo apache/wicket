@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Wicket-extensions</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java"/>
+    <body>
+        <section name="Welcome to Wicket-extensions">
+			<p>
+				This is an extensions project for the <a href="http://wicketframework.org">Wicket</a> framework.
+			</p>
+			<p>
+				The latest released version of this library contains amongst others the following components:
+			</p>
+			<table>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/markup/html/repeater/package-summary.html">Repeater components</a>
+					</td>
+					<td>Components for working with data coming from a database, DataTabel, DataGrid, DataView, etc.</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/repeater">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/ajax/markup/html/package-summary.html">Various Ajax components</a>
+					</td>
+					<td>Editable labels, Ajax indicators</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/ajax">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/ajax/markup/html/autocomplete/package-summary.html">Auto complete</a>
+					</td>
+					<td>Wicket's version of Google suggest</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/ajax?wicket:bookmarkablePage=:wicket.examples.ajax.builtin.AutoCompletePage">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/ajax/markup/html/form/upload/package-summary.html">File Upload Progress bar</a>
+					</td>
+					<td>Show how long the upload is going to take using ajax</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/upload">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/ajax/markup/html/modal/package-summary.html">Modal Window</a>
+					</td>
+					<td>Popup, modal window that can either take another page or a panel as contents.</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/ajax?wicket:bookmarkablePage=:wicket.examples.ajax.builtin.modal.ModalWindowPage">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/ajax/markup/html/tabs/AjaxTabbedPanel.html">Ajax tabbed panel</a>
+					</td>
+					<td>Ajax version of the TabbedPanel component</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/ajax?wicket:bookmarkablePage=:wicket.examples.ajax.builtin.TabbedPanelPage">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/rating/RatingPanel.html">Rating panel</a>
+					</td>
+					<td>Component to rate stuff, **** (4 out of 5)</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/ajax?wicket:bookmarkablePage=:wicket.examples.ajax.builtin.RatingsPage">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/markup/html/tabs/package-summary.html">Tabbed panel</a>
+					</td>
+					<td>Panels with tabs on top.</td>
+					<td>demo</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/wizard/package-summary.html">Wizard</a>
+					</td>
+					<td>Presto! A ready to cook wizard component</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/wizard">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/markup/html/tree/package-summary.html">Tree &amp; TreeTable</a>
+					</td>
+					<td>Ajax and non-ajax, javascript Tree component, including a TreeTable. No oaks were harmed in the production</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/ajax?wicket:bookmarkablePage=:wicket.examples.ajax.builtin.tree.SimpleTreePage">demo</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/markup/html/captcha/package-summary.html">Captcha</a>
+					</td>
+					<td>Always wanted to know that a human is at the keyboard? Captcha! the ultimate turing test</td>
+					<td>demo</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="apidocs/wicket/extensions/breadcrumb/package-summary.html">Breadcrumbs</a>
+					</td>
+					<td>What worked for Hansel and Gretel works also on Web 1.0: breadcrums so you'll never get lost</td>
+					<td>
+						<a href="http://www.wicket-library.com/wicket-examples/breadcrumb">demo</a>
+					</td>
+				</tr>
+			</table>
+			<ul>
+				<li>Read <a href="apidocs/index.html">the javadocs</a> for more information.</li>
+			</ul>
+        </section>
+    </body>
+</document>

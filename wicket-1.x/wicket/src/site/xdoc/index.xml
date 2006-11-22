@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+
+<document>
+	<properties>
+		<title>Home</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+	<body>
+		<section name="Welcome to Wicket">
+			<p>
+				Wicket is a Java web application framework that takes
+				simplicity, separation of concerns and ease of
+				development to a whole new level. Wicket pages can be
+				mocked up, previewed and later revised using standard
+				WYSIWYG HTML design tools. Dynamic content processing
+				and form handling is all handled in Java code using a
+				first-class component model backed by POJO data beans
+				that can easily be persisted using your favourite
+				technology.
+			</p>
+			<ul>
+				<li>
+					Check the
+					<a href="Features.html">feature list</a>
+				</li>
+				<li>
+					Read
+					<a href="Buzz.html">some Wicket buzz</a>
+					or some
+					<a href="/Blogs.html">Wicket blogs</a>
+				</li>
+				<li>
+					Find out
+					<a href="Introduction.html">
+						why you should use Wicket
+					</a>
+				</li>
+				<li>
+					Check out
+					<a href="Examples.html">some examples</a>
+					and see them in
+					<a
+						href="http://www.wicket-library.com/wicket-examples">
+						live action
+					</a>
+				</li>
+				<li>
+					Download
+					<a
+						href="http://sourceforge.net/projects/wicket/files">
+						Wicket
+					</a>
+				</li>
+			</ul>
+			<p>
+				Wicket is released under the
+				<a href="license.html">Apache License, Version 2.0</a>
+				.
+			</p>
+		</section>
+		<section name="Latest News">
+			<subsection name="October 15th, 2006 - Development infrastructure moved to Apache">
+				<p>
+					The next step in <a href="http://incubator.apache.org/projects/wicket">Wicket's incubation process</a> 
+					is complete: we moved our issue tracker away from SourceForge.net's offering to the
+					<a href="http://issues.apache.org/jira/browse/WICKET">JIRA provided by Apache</a>.
+				</p>
+				<p>
+					We are in the process of converting the old issues and importing them into our own
+					JIRA project: http://issues.apache.org/jira/browse/WICKET. As a consequence of this 
+					transition, we have closed down the sf.net trackers and ask you
+					to file new bug reports, patches and requests for information using the Wicket JIRA.
+				</p>
+				<p>
+					We also moved our code repository from sourceforge to Apache. The new repository can be
+					found at: <a href="https://svn.apache.org/repos/asf/incubator/wicket">https://svn.apache.org/repos/asf/incubator/wicket</a>.
+				</p>
+				<p>
+					And finally we have moved our development and commit mailinglists from SourceForge to
+					Apache hosted lists. To join the lists, please send a message to the following addresses and
+					follow the instructions provided in the reply:
+				</p>
+				<ul>
+					<li>Subscribe to development: <a href="mailto:wicket-dev-subscribe at incubator.apache.org">wicket-dev-subscribe at incubator.apache.org</a></li>
+					<li>Subscribe to commits: <a href="mailto:wicket-commits-subscribe at incubator.apache.org">wicket-commits-subscribe at incubator.apache.org</a></li>
+				</ul>
+			</subsection>
+			<subsection name="October 12th, 2006 - Wicket enters Apache Incubator">
+				<p>
+					The Wicket team is proud to announce that we are starting the process of 
+					joining the <a href="http://www.apache.org">Apache Software Foundation</a>.
+				</p>
+				<p>
+					When projects first move to Apache, they are housed at the
+					<a href="http://incubator.apache.org">Apache Incubator</a>. The Incubator 
+					helps incoming projects migrate to the vibrant Apache community. One of the 
+					primary goals of the incubator is to ensure that the joining community is 
+					open, diverse and effective meritocracy.
+				</p><p>
+					During <a href="http://incubator.apache.org/projects/wicket">Wicket's incubation</a> we will 
+					resolve any issues regarding license (in)compatibilities that might be present in our code. 
+					For more information on the incubation process, please read the <a href="http://incubator.apache.org">documents
+					found on the incubator website</a>.
+				</p><p>
+					To facilitate our transition we have moved parts of our development to the Apache Incubator 
+					infrastructure:
+				</p>
+					<ul>
+					<li>the subversion repository is now hosted at <a href="https://svn.apache.org/repos/asf/incubator/wicket">https://svn.apache.org/repos/asf/incubator/wicket</a></li>
+					<li>the development mailing list is now provided by wicket-dev at incubator.apache.org</li>
+					<li>the commit mailing list is now provided by wicket-commits at incubator.apache.org</li>
+					<li>our bug tracking system is now hosted at <a href="http://issues.apache.org/jira/browse/WICKET">http://issues.apache.org/jira/browse/WICKET</a></li>
+					</ul>
+				<p>
+					Please join our incubating community at Apache by subscribing to the Wicket 
+					development list. Send a message to <i>wicket-dev-subscribe at incubator.apache.org</i> 
+					and follow the instructions.
+				</p>
+			</subsection>
+			<subsection name="October 4th, 2006 - Wicket Support">
+				<p>
+				<a href="http://www.wicket-support.com">Wicket Support</a> - a company that provides 
+				Wicket consultation, training and commercial support launched.
+			</p>
+			</subsection>
+			<subsection name="August 27th, 2006 - Wicket 1.2.2 available">
+				<p>
+				The Wicket team is proud to announce the availability of Wicket 1.2.2, the second maintenance release for Wicket 1.2.
+				</p>
+				<p>
+				This release contains several bug fixes, and some major improvements by receiving backported components from our 2.0 branch, most notably: modal window support and a fully ajaxified Tree and TreeTable. These components can be found in the Wicket Extensions package.
+				</p>
+				<p>
+				Wicket 1.2.2 is a drop-in replacement for Wicket 1.2 and Wicket 1.2.1, however we urge you to test before you put things into production, especially if you are using prototype.js and Wicket ajax. We have put a lot of effort into testing the compatibility between Wicket ajax and prototype, but you may never be sure.
+				</p>
+				<p>
+					Here's a list of things that have changed to Wicket and Wicket Extensions. First Wicket:
+				<ul>
+				<li>Added Application.exists() and Session.exists() to check for existence of threadlocals
+				</li><li>Backported 2.0 CompressedPackageResource and CompressedPackageResourceReference
+				</li><li>Backported 2.0 javascript console (much faster)
+				</li><li>New wicket-ajax javascript with support for channels
+				</li><li>default validator rethrows any exception as ConversionException
+				</li><li>Opened up MarkupParser so that it can be used by other components
+				</li><li>Close input stream in AbstractResourceStream.asString()
+				</li><li>CryptedUrlWebRequestCodingStrategy is spammy
+				</li><li>Support for showing expired page from an AJAX request, through identification. This replaces the fix for issue 1528244 in a more generic way.
+				</li><li>Error page no longer alters the url so the refresh button will rerun the code that caused the error
+				</li><li>RestartResponseAtInterceptPage(Class) will now generate bookmarkable urls
+				</li><li>Implemented ajax support for palette
+				</li><li>Support for conditional comments such as &lt;!--[if IE]&gt;..&lt;![endif]--&gt;
+				</li><li>AjaxLink can now be attached to anything that supports onclick
+				</li><li>Link.getBefore/AfterDisabledLink() now behave properly when overridden
+				</li><li>Dynamic resource support for portlets
+				</li><li>Navigate to another page from ajax request (in other words break out of the ajax request). Like: public void onClick(AjaxRequestTarget target){ setResponsePage(LinksPage.class); }
+				</li><li>Render number of rows properly on ListChoice</li>
+				</ul>
+				And then Wicket Extensions:
+				<ul>
+				<li>Backported AJAX header contribution code from 2.0.
+				</li><li>Backported 2.0 Modal Window
+				</li><li>Backported 2.0 Ajax enabled Tree and TreeTable
+				</li><li>Fixed markup-id issue of datepicker so it works with ajax
+				</li><li>Backported 2.0 wicket-ajax.js compatible version of the autocomplete</li>
+				</ul>
+			</p>
+				<p>
+				The Wicket 1.2.2 release can be downloaded from the sourceforge.net servers at a location near you. Follow the next link to go to the downloads page:
+				</p>
+				<p><a href="http://sourceforge.net/project/showfiles.php?group_id=119783">http://sourceforge.net/project/showfiles.php?group_id=119783</a></p>
+				<p>
+				The Wicket roadmap is as follows (no dates available). Our main development effort will focus on Wicket 2, which will be Java 5 based. For providing support to those projects already in production or that are bound to Java 1.4, we will continue development of Wicket 1.x, which will consist mainly of backported functionality from Wicket 2 and bug fixes. The next minor release for these projects will be Wicket 1.3.
+				</p>
+				<p>Have fun!</p>
+			</subsection>
+			<p>
+				See
+				<a href="News.html">the news archive</a>
+				for more (older) news.
+			</p>
+		</section>
+		<section name="Special Thanks">
+			<p>
+				The Wicket development team would like to thank the
+				following partners for supporting Open Source in general
+				and Wicket in particular.
+			</p>
+			<a href="http://www.topicus.nl" target="_blank"
+				class="logoLink">
+				<img alt="Topicus B.V." src="images/topicus.gif" />
+			</a>
+			<a href="http://www.servoy.com" target="_blank" class="logoLink">
+				<img alt="Servoy" src="images/servoy-logo-plain.png" />
+			</a>
+			<a href="http://www.yourkit.com" target="_blank"
+				class="logoLink">
+				<img alt="YourKit" src="images/yip_logo.gif" />
+			</a>
+			<a href="http://www.cenqua.com" target="_blank"
+				class="logoLink">
+				<img alt="Clover"
+					src="http://www.cenqua.com/clover/doc/skin/images/clover_logo.gif" />
+			</a>
+			<p>
+				<!--ONESTAT SCRIPTCODE START-->
+				<!--
+					// Het wijzigen van deze code is niet toegestaan en zal uw account definitief blokkeren!
+					// Account ID : 239584
+					// Website URL: http://wicket.sourceforge.net
+					// Copyright (C) 2002-2005 OneStat.com All Rights Reserved
+				-->
+				<div id="OneStatTag">
+					<table border='0' cellpadding='0' cellspacing='0'>
+						<tr>
+							<td align='center'>
+								<script type="text/javascript"
+									src="onestat.js">
+								</script>
+								<noscript>
+									<a href="http://www.onestat.com">
+										<img border="0"
+											src="http://stat.onestat.com/stat.aspx?tagver=2&amp;sid=239584&amp;js=No&amp;"
+											ALT="online web site analyser" />
+									</a>
+									<br />
+									<a href="http://www.onestat.com">
+										online web site analyser
+									</a>
+								</noscript>
+							</td>
+						</tr>
+						<tr>
+							<td align='center'>
+								<div
+									style="DISPLAY: none; FONT-WEIGHT: bold; FONT-SIZE: 7pt; COLOR: black; FONT-FAMILY: 'Verdana'; HEIGHT: 15px">
+									<a href="http://www.onestat.com"
+										style="text-decoration:none; COLOR: black;" target="_blank">
+										webtraffic analysis
+									</a>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<!--ONESTAT SCRIPTCODE END-->
+			</p>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>IntelliJ IDEA Kick Start Guide</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java, intellij, idea" />
+	<body>
+		<section name="IntelliJ IDEA QuickStart Guide">
+			<p>
+				This quickstart is a small guide to get you up and running to start using Wicket
+				within minutes. This project is meant to be a starting point for your first project.
+				If you are looking for examples, please look at the example projects.
+			</p>
+			<p>
+				This document and project assume you have no special plugins or application servers
+				installed on your machine. In the
+				<a href="#Next_Steps">final section</a>
+				of this document some hints are given to speed up your development even further.
+			</p>
+			<subsection name="Summary">
+				<p>
+					For the more seasoned developers here's a short list of steps to quickstart your
+					Wicket development. All these steps are explained in more detail below.
+				</p>
+				<ul>
+					<li>download the quickstart project (follow the link in the navigation menu)</li>
+					<li>unzip in your projects directory</li>
+					<li>rename the directory to the name of your project</li>
+					<li>start IDEA and load the project file</li>
+					<li>rename the project and the module</li>
+					<li>edit the module settings to select the Java SDK you wish to use</li>
+					<li>create a new Application configuration using Start as the main class</li>
+					<li>run the Application</li>
+					<li>
+						open browser to
+						<a href="http://localhost:8081/quickstart">
+							<code>http://localhost:8081/quickstart</code>
+						</a>
+					</li>
+				</ul>
+				<p>
+					At the
+					<a href="#Next_Steps">end of this document</a>
+					we suggest some next steps to take.
+				</p>
+			</subsection>
+		</section>
+		<section name="Setting Up">
+			<subsection name="Prerequisites">
+				<p>We assume you have the following already installed:</p>
+				<ul>
+					<li>Java SDK 1.4 (or newer)</li>
+					<li>IntelliJ IDEA 4.5 (or newer)</li>
+				</ul>
+				<p>
+					It is assumed, but not obligatory, that you have installed IntelliJ IDEA in the
+					following (Windows) directory:
+				</p>
+				<ul>
+					<li>
+						<code>C:\IntelliJ-IDEA</code>
+					</li>
+				</ul>
+				<p>and that your project resides in the default location:</p>
+				<ul>
+					<li>
+						<code>%USERPROFILE%\IdeaProjects</code>
+					</li>
+				</ul>
+				<p>
+					Like stated before, it is not obligatory to use these settings, but if your
+					installation does not match this one, please substitute your setup for these
+					assumptions.
+				</p>
+			</subsection>
+			<subsection name="The QuickStart Project">
+				<p>
+					Next you need to download the quickstart distribution project from our
+					sourceforge site.
+				</p>
+				<ul>
+					<li>
+						Download the
+						<a
+							href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850">
+							wicket-quickstart distribution
+						</a>
+					</li>
+				</ul>
+				<p>
+					Unzip the distribution into your IntelliJ IDEA project directory (which is typically located
+					under
+					<code>%USERPROFILE%\IdeaProjects</code>
+					).
+				</p>
+				<p>
+					Rename the directory that was just created to your required project name. In the
+					following the directory name is renamed to 'foobar'.
+				</p>
+				<img src="images/idea-rename.png" />
+			</subsection>
+		</section>
+		<section name="Running IntelliJ IDEA">
+			<subsection name="Configuring IntelliJ IDEA">
+				<p>
+					Now it is time to start IntelliJ IDEA, if you haven't done so already. In order to
+					get IDEA working with the project you need to open the project file supplied
+					with the Quickstart distribution.
+				</p>
+				<ul>
+					<li>Select 'File -> Open Project' from the menu bar in IDEA.</li>
+					<li>
+						Navigate to the project directory, select the 
+						<code>wicket-kickstart.ipr</code> and click open.
+						<img src="images/idea-openproject.png" />
+					</li>
+					<li>
+						On the project tab, right click on 'wicket-kickstart' and select
+						'Refactor -> Rename' from the popup menu. Change the name to match
+						that of your project (e.g. foobar) and click ok.
+						<img src="images/idea-rename2.png" />
+					</li>
+					<li>
+						On the project tab, right click on the new project name (e.g. foobar)
+						and select 'Module Settings' from the popup menu. Select the
+						'Libraries (Classpath)' tab and then select the 'Target JDK' from
+						those that you have added to IDEA (or add a JDK if necessary).
+						Select ok to close the module settings dialog.
+						<img src="images/idea-jdk.png" />
+					</li>
+				</ul>
+			</subsection>
+			<subsection name="Running the Application">
+				<p>
+					The application has an internal webserver (
+					<a href="http://jetty.mortbay.org">Jetty</a>
+					) which can be used to quickly develop webapplications. All you need to do is to
+					run the application and point your browser to the webserver running from within
+					IntelliJ IDEA.
+				</p>
+				<ul>
+					<li>
+						From the IDEA toolbar select the run dropdown and then the
+						'Edit Configurations' option.
+					</li>
+					<li>
+						Select the 'Application' tag and create a new application
+						configuration, using the Start as the
+						main class.
+						<img src="images/idea-application.png" />
+					</li>
+					<li>
+						Close the dialog and run the Quickstart application configuration
+						from the IDEA toolbar.
+					</li>
+					<li>Start your browser</li>
+					<li>
+						Point the browser to the local Jetty server:
+						<a href="http://localhost:8081/quickstart">
+							http://localhost:8081/quickstart
+						</a>
+						.
+					</li>
+				</ul>
+			</subsection>
+		</section>
+		<section name="Next Steps">
+			<p>This section gives some pointers on where to go now.</p>
+			<ul>
+				<li>
+					take a look at the
+					<a href="/Examples.html">examples</a>
+				</li>
+				<li>
+					find more information in the
+					<a href="/manual.html">manual</a>
+				</li>
+				<li>
+					find more information on the
+					<a href="/wiki">wiki</a>
+				</li>
+			</ul>
+			<subsection name="Jetty Configuration">
+				<p>The Jetty configuration file is located in the project directory:</p>
+				<blockquote>src/main/resources/jetty-config.xml</blockquote>
+				<p>
+					Jetty is started on port 8081 in order to avoid conflicts with other installed
+					application servers (for instance Tomcat). This way it is easier to test with
+					different application servers. This can be configured in the configuration file.
+				</p>
+				<p>
+					See the
+					<a href="http://jetty.mortbay.org/jetty/tut/XmlConfiguration.html">
+						Jetty documentation
+					</a>
+					for information on how to configure Jetty.
+				</p>
+				<p>
+					Jetty is started in the
+					<code>main</code>
+					-method of the
+					<code>wicket.quickstart.Start</code>
+					class.
+				</p>
+			</subsection>
+			<subsection name="Customizing the Application">
+				<p>
+					The main page definitions can be found in the
+					<code>src/main/java/Index.html</code>
+					HTML file and the
+					<code>src/main/java/wicket.quickstart.Index.java</code>
+					class.
+				</p>
+			</subsection>
+			<subsection name="Other Application Servers">
+				<p>
+					Even though this project is aimed at Jetty, it is not prohibited to develop
+					using other application servers. If you have another setup, please leave a
+					note on how you set up your environment on the <a href="/wiki">wiki</a>.
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

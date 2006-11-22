@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Wicket QuickTour: Using Fragments!</title>
+	</properties>
+
+	<meta
+		name="keyword"
+		content="wicket, example, web, j2ee, java" />
+
+<body>
+<section name="Using Fragments">
+	<p>
+		This example shows you how to use fragments (Wicket 1.2 feature) to lessen the burden 
+		on extra markup files. Fragments are 'inline panels' and are a quick way of using
+		panel type components in pages without having to create a Panel markup file and
+		class.
+	</p>
+	<p>
+        In all the Wicket examples, you have to put all files in the same package directory. 
+        This means putting the markup files and the java files next to one another. It is 
+        possible to alter this behavior, but that is beyond the scope of this example. The
+        only exception is the oblibatory <code>web.xml</code> file which should reside
+        in the <code>WEB-INF/</code> directory of your web application root folder.
+	</p>
+	<p>
+	 	In this example we assume you already have read and understood the other examples
+	 	which give you information on the structure and nature of Wicket applications.
+	 	Specifically read and understand the <a href="ExampleHelloWorld.html">Hello, World 
+	 	example</a>.
+	</p>
+<subsection name="Creating a Fragment">
+	<p>
+		First things first, let's create a page that we can add our fragments to.
+		We will add a <tt>Loop</tt> that will repeat markup and choose a different 
+		<tt>Fragment</tt> for each item in the loop.
+	</p>
+	<h3>Listing 1 the page markup file</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+<ul>
+<li wicket:id="list"><span wicket:id="panel"></span></li>
+</ul>
+<wicket:fragment wicket:id="fragment1">panel 1</wicket:fragment>
+<wicket:fragment wicket:id="fragment2">panel 2</wicket:fragment>
+</body>
+</html>]]></source>
+	<p>
+		As you can see in this markup file, we already took care of adding the
+		fragment markup to the page in the &lt;wicket:fragment&gt; tags. Each
+		fragment can contain its own markup and components. Those components
+		need to be added to the <tt>Fragment</tt> instance in the Java file, just as you
+		would do with a panel and web markup container.
+	</p>
+	<h3>Listing 2 the page java file</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.markup.html.list.Loop;
+import wicket.markup.html.panel.Fragment;
+
+public class Index extends QuickStartPage {
+    public Index() {
+        Loop loop = new Loop("list", 5) {
+            protected void populateItem(LoopItem item) {
+                String fragmentId = "fragment" + (item.getIteration() % 2 + 1);
+                item.add(new Fragment("panel", fragmentId));
+            }
+        };
+        add(loop);
+    }
+}
+]]></source>
+	<p>
+		The <tt>Loop</tt> will render 5 items, and the <tt>populateItem</tt> method
+		will be called for each item. In each item we construct a fragment identifier
+		that corresponds to the identifier in the &lt;wicket:fragment&gt;. The
+		<tt>Fragment</tt> constructor takes the identifier of the markup it needs to
+		attach to, and the fragment identifier telling it where to find the specific
+		markup in the file.
+	</p>
+</subsection>
+<subsection name="Adding components to fragments">
+	<p>
+		In the previous example we just showed different markup for each fragment,
+		but you can add components to the fragments as well. Let's add a label to
+		fragment 1.
+	</p>
+	<h3>Listing 3 adding a label to a fragment</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+<ul>
+<li wicket:id="list"><span wicket:id="panel"></span></li>
+</ul>
+<wicket:fragment wicket:id="fragment1">panel 1 <span wicket:id="label"></span></wicket:fragment>
+<wicket:fragment wicket:id="fragment2">panel 2</wicket:fragment>
+</body>
+</html>]]></source>
+	<p>
+		In order to add the component to the first fragment we'll introduce a subclass for 
+		fragment one to encapsulate the component.
+	</p>
+	<h3>Listing 4 introducing a fragment subclass</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.list.Loop;
+import wicket.markup.html.panel.Fragment;
+
+public class Index extends QuickStartPage {
+    public class Fragment1 extends Fragment {
+        public Fragment1(String id, String markupId) {
+            super(id, markupId);
+            add(new Label("label", "Hello, World!"));
+        }
+    }
+
+    public Index() {
+        Loop loop = new Loop("list", 5) {
+            protected void populateItem(LoopItem item) {
+                int index = (item.getIteration() % 2 + 1);
+                String fragmentId = "fragment" + index;
+                if (index == 1) {
+                    item.add(new Fragment1("panel", fragmentId));
+                } else {
+                    item.add(new Fragment("panel", fragmentId));
+                }
+            }
+        };
+        add(loop);
+    }
+}
+]]></source>
+	<p>
+		The class <tt>Fragment1</tt> adds the label to itself. In the loop's
+		<tt>populateItem</tt> we alternate the fragments type between <tt>Fragment</tt>
+		and <tt>Fragment1</tt>. This means that in the final page on one line you'll see
+		<em>"panel 1 Hello, World!"</em> and on the other line just <em>"panel 2"</em>.
+	</p>
+</subsection>
+<subsection name="Summary">
+	<p>
+		Fragments make a quick way to add encapsulated components without having to resort
+		to setting the visibility flag on a markup container. For fragments we introduced
+		a new Wicket tag: <tt>&lt;wicket:fragment&gt;</tt>.
+	</p>
+</subsection>
+</section>
+</body>
+</document>

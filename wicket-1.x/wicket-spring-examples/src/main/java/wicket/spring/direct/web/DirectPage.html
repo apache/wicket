@@ -1,0 +1,43 @@
+<wicket:extend>
+<b>Direct Approach</b><br/>
+This approach uses static lookups to retrieve needed spring beans.<br/><br/>
+<table cellspacing="0" cellpadding="2">
+<tr>
+	<td style="width:50%; vertical-align:top;">
+		<u>Pros:</u><br/>
+		<ul><li>Simple</li></ul>
+	</td>
+	<td style="width:50%; vertical-align:top;">
+		<u>Cons:</u><br/>
+		<ul>
+			<li>Objects are tightly coupled to the WebApplication subclass</li>
+		</ul>
+	</td>
+</tr>
+</table>
+Interesting classes:<br/>
+<ul>
+	<li>ExampleApplication - serves as a link between wicket and spring ApplicationContext</li>
+	<li>DirectPage - sets up the data table below</li>
+	<li>DirectDataProvider</li>
+	<li>DirectModel</li>
+</ul>
+<table wicket:id="contacts" cellspacing="0" cellpadding="2" class="grid"></table>
+<br/>
+Below is the code from DirectModel which is a detachable contact model. Notice the static lookup used to retrieve the spring bean needed to reload the Contact from the database.<br/>
+<pre>
+DirectModel.java
+public class DirectModel extends ContactDetachableModel {
+
+	public DirectModel(Contact contact) {
+		super(contact);
+	}
+
+	protected ContactDao getContactDao() {
+		return ((ExampleApplication) Application.get()).getContactDao();
+	}
+
+}
+</pre>
+
+</wicket:extend>

@@ -1,0 +1,33 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - navomatic</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <wicket:border> 
+        <p>
+        <table height = "100%">
+            <tr>
+                <td height = "100%" valign = "top">
+                    <div wicket:id = "navigationBorder">
+                      <b>Navigation Links</b>
+                      <p>
+                        <wicket:link>
+                          <a href = "Page1.html">Page1</a><br/>
+                          <a href = "Page2.html">Page2</a><br/>
+                          <a href = "Page3.html">Page3</a>
+                        </wicket:link>
+                      </p>
+                    </div>
+                </td>
+                <td valign = "top">
+                    <span wicket:id = "bodyBorder">
+                        <wicket:body/>
+                    </span>
+                </td>
+            </tr>
+        </table>
+        </p>
+    </wicket:border>
+</body>
+</html>

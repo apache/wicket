@@ -1,0 +1,244 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>wicket</groupId>
+	<artifactId>wicket-spring-cattr</artifactId>
+	<packaging>jar</packaging>
+	<version>1.2-SNAPSHOT</version>
+	<name>Wicket Spring Integration through Commons Attributes</name>
+	<description>Spring integration in your Wicket web applications using commons attributes. See the examples project for usecases.</description>
+	<organization>
+		<name>Wicket developers</name>
+		<url>http://wicket.sourceforge.net</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<issueManagement>
+		<url>http://sourceforge.net/tracker/?group_id=119783</url>
+	</issueManagement>
+
+	<scm>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-cattr</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/wicket/branches/WICKET_1_2/wicket-spring-cattr</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.py/wicket/branches/WICKET_1_2/wicket-spring-cattr</url>
+	</scm>
+
+	<mailingLists>
+		<mailingList>
+			<name>Wicket Announcements List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket User List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket Development List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-develop</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-develop</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket CVS commit List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-autocvs</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-autocvs</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket automated builds List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-builds</archive>
+		</mailingList>
+	</mailingLists>
+
+	<developers>
+		<developer>
+			<name>Karthik Gurumurthy</name>
+			<id>kurumurthy</id>
+			<email></email>
+		</developer>
+		<developer>
+			<name>Igor Vaynberg</name>
+			<id>ivaynberg</id>
+			<email>ivaynberg at users.sourceforge.net</email>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>wicket</groupId>
+			<artifactId>wicket-spring</artifactId>
+			<version>1.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-attributes</groupId>
+			<artifactId>commons-attributes-api</artifactId>
+			<version>2.1</version>
+		</dependency>
+                <dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring</artifactId>
+                        <version>1.2.6</version>
+                        <scope>provided</scope>
+                </dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<filtering>false</filtering>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<descriptor>src/assembly/bin.xml</descriptor>
+					<finalName>${artifactId}-${version}</finalName>
+					<outputDirectory>target/distributions</outputDirectory>
+					<workDirectory>target/assembly/work</workDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>256m</maxmemory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<templateDirectory>file:src/site/template/</templateDirectory>
+					<template>wicket-site.vm</template>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+					<testFailureIgnore>true</testFailureIgnore>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>surefire-report-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>dependencies</report>
+							<report>project-team</report>
+							<report>mailing-list</report>
+							<report>issue-tracking</report>
+							<report>license</report>
+							<report>scm</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changes-maven-plugin</artifactId>
+				<version>2.0-beta-1</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>surefire-report-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+	<distributionManagement>
+		<site>
+			<id>wicket-site</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/wicket-spring</url>
+		</site>
+		<repository>
+			<id>wicket-repo</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
+		</repository>
+	</distributionManagement>
+</project>

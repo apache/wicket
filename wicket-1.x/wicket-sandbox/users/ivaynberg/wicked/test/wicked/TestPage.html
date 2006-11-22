@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Test Page</title>
+</head>
+<body>
+Create User Page:<br/>
+Please fill in fields below:<br/><br/>
+
+<span wicket:id="container1">
+	<span wicket:id="label">[labelincontainer]</span>
+	<span wicket:id="panel3">[panel3 in container]</span>
+</span>
+
+
+<span wicket:id="feedback">[feedback]</span>
+<span wicket:id="testpanel">[testpanel]</span>
+Create User Form:<br/>
+
+<form wicked:id="create-user-form" method="post">
+<table cellspacing="0" cellpadding="2">
+<tr>
+	<td><label wicketd:id="firstName-label">[first name]</label>:</td>
+	<td><input type="text" wicketd:id="firstName"/></td>
+</tr>
+<tr>
+	<td><label wicketd:id="lastName-label">[last name]</label>:</td>
+	<td><input type="text" wicketd:id="lastName"/></td>
+</tr>
+<tr>
+	<td> </td>
+	<td>
+		<input type="submit" value="create user" wicketd:id="create-button"/>
+		<input type="submit" value="cancel" wicketd:id="cancel-button"/>
+	</td>
+</tr>
+</table>
+</form>
+</body>
+</html>

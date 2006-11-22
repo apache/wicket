@@ -1,0 +1,40 @@
+<html xmlns:wicket>
+<style type="text/css">
+body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';font-size: 9pt;line-height: 1.8em;}
+h1,h2,h3,h4,h5,h6,h7,h8 {color: #E9601A;font-size : -1;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+h2 {font-size : 1.2em;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+pre { border : 1px solid #ddd; margin-left : 2em; }
+.resource { color : blue; }
+.tablestyle { margin-left : 2em; border : 1px solid #bbb; }
+</style>
+<body>
+  <wicket:panel>
+  	<h2>Page</h2>
+  	<ul>
+    <p><span wicket:id="info">Page</span>:</p>
+    <table class="tablestyle">
+      <thead>
+        <tr>
+          <th align="left">#</th>
+          <th align="left">Path</th>
+          <th align="left">Size</th>
+          <th align="left">Type</th>
+          <th align="left">Model Object</th>
+        </tr>
+	  </thead>
+      <tbody>
+		<tr wicket:id="components">
+		  <td valign="top" align="left"><span wicket:id="row">99</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><span wicket:id="path">0.test.murx</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left" nowrap><span wicket:id="size">1.5K</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><span wicket:id="type">PropertyModel</span>&nbsp;&nbsp;&nbsp;</td>
+		  <td valign="top" align="left"><span wicket:id="model">1234</span>&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+      </tbody>
+	</table>
+	</ul>
+  </wicket:panel>
+</body>
+</html>

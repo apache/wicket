@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="jar" name="wicket-extensions" basedir=".">
+
+	<property name="final.name" value="wicket-extensions" />
+
+	<property name="src.main.dir" value="src/main/java" />
+	<property name="src.test.dir" value="src/test/java" />
+	
+	<property name="lib.dir" value="lib" />
+
+	<property name="build.dir" value="target" />
+	<property name="build.main.classes" value="${build.dir}/classes" />
+	<property name="build.test.classes" value="${build.dir}/test-classes" />
+	<property name="build.test.reports" value="${build.dir}/test-reports" />
+	<property name="build.javadoc.dir" value="${build.dir}/docs/api" />
+
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar"></include>
+		</fileset>
+	</path>
+
+	<target name="clean" description="o Cleans up the build artifacts">
+		<delete dir="${build.dir}" failonerror="false" />
+		<delete>
+			<fileset dir=".">
+			    <include name="*.jar"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="init" description="o Creates all directories for building">
+		<mkdir dir="${build.dir}" />
+	</target>
+
+	<target name="compile" depends="init" description="o Compiles the Java sources">
+		<mkdir dir="${build.main.classes}" />
+		<javac destdir="${build.main.classes}" 
+			target="1.4" 
+			source="1.4" 
+			debug="true"
+			deprecation="true"
+			optimize="false"
+			excludes="**/package.html"
+			srcdir="${src.main.dir}"
+			classpathref="build.classpath"
+			/>
+
+		<copy todir="${build.main.classes}">
+			<fileset dir="${src.main.dir}">
+				<include name="**/*.*" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="test-compile" depends="compile" description="o Compiles the test sources">
+		<mkdir dir="${build.test.classes}" />
+		<javac destdir="${build.test.classes}" 
+			target="1.4" 
+			source="1.4" 
+			debug="true"
+			deprecation="true"
+			optimize="false"
+			excludes="**/package.html"
+			srcdir="${src.test.dir}"
+		>
+			<classpath>
+				<path refid="build.classpath"></path>
+				<pathelement path="${build.main.classes}"></pathelement>
+			</classpath>
+
+		</javac>
+		<copy todir="${build.test.classes}">
+			<fileset dir="${src.test.dir}">
+				<include name="**/*.*" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="test" depends="test-compile" description="o Runs the unit tests">
+		<mkdir dir="${build.test.reports}" />
+
+		<junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
+			<sysproperty key="basedir" value="."></sysproperty>
+			<formatter type="xml" />
+			<formatter type="plain" usefile="false" />
+			<classpath>
+				<path refid="build.classpath"></path>
+				<pathelement path="${build.main.classes}" />
+				<pathelement path="${build.test.classes}" />
+			</classpath>
+			<batchtest todir="${build.test.reports}">
+				<fileset dir="${src.test.dir}">
+					<include name="**/*Test.java"></include>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="javadoc" depends="init" description="o Creates the javadoc documentation">
+		<mkdir dir="${build.javadoc.dir}" />
+		<tstamp>
+			<format pattern="2004-yyyy" property="year"></format>
+		</tstamp>
+		<property name="copyright" value="Copyright &amp;copy; Wicket Developers. All Rights Reserved." />
+		<property name="title" value="Wicket Extensions API" />
+		<javadoc 
+			use="true" 
+			private="true" 
+			destdir="${build.javadoc.dir}" 
+			author="true" 
+			version="true"
+			sourcepath="${src.main.dir}" 
+			packagenames="wicket.*"
+			classpathref="build.classpath"
+			/>
+	</target>
+
+	<target name="jar" depends="test" description="o Creates a JAR file for this package">
+		<jar jarfile="${final.name}.jar" 
+			excludes="**/package.html" 
+			basedir="${build.main.classes}"/>
+	</target>
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - unicodeconverter</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<form wicket:id="form">
+		<table>
+		 <tr>
+		  <td colspan="3">
+		   Paste in some unicode to test. For instance,
+		   <a href="http://babelfish.altavista.com/tr" target="new">translate something to chinese</a>
+		  </td>
+		 </tr>
+		 <tr>
+		  <td> 
+		    <textarea wicket:id="source" rows="10" cols="40">input</textarea>
+		  </td>
+		  <td align="middle">
+		    <select wicket:id="translationType"></select>
+		    <br />
+		    <input type="submit" value="translate" />
+		  </td>
+		  <td valign="top">
+			<textarea wicket:id="target" rows="10" cols="40">input</textarea>
+		  </td>
+		 </tr>
+		</table>
+	</form>
+
+</body>
+</html>

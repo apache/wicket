@@ -1,0 +1,73 @@
+<!--
+    ====================================================================
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<html>
+<head>
+<title>Paged Table Page</title>
+</head>
+<body>
+  <table>
+    <thead wicket:id="header">
+      <tr>
+        <th wicket:id="id" class="sortable"><wicket:border>
+    <a href="/MockWebApplication/MockWebApplication?wicket:interface=:0:header:id:actionLink:2:ILinkListener" wicket:id="actionLink"><wicket:body>ID</wicket:body></a>
+  </wicket:border></th>
+        <th wicket:id="name" class="order2 sortable sorted"><wicket:border>
+    <a href="/MockWebApplication/MockWebApplication?wicket:interface=:0:header:name:actionLink:2:ILinkListener" wicket:id="actionLink"><wicket:body>Name</wicket:body></a>
+  </wicket:border></th>
+        <th>Email</th> <!-- this column will not be sortable -->
+      </tr>
+	</thead>
+    <tbody>
+      <tr wicket:id="table" class="even">
+        <td><span wicket:id="id">1</span></td>
+        <td><span wicket:id="name">Name-aaa</span></td>
+        <td><span wicket:id="email">mail-1</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">6</span></td>
+        <td><span wicket:id="name">Name-aba</span></td>
+        <td><span wicket:id="email">mail-6</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">7</span></td>
+        <td><span wicket:id="name">Name-bab</span></td>
+        <td><span wicket:id="email">mail-7</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">2</span></td>
+        <td><span wicket:id="name">Name-bbb</span></td>
+        <td><span wicket:id="email">mail-2</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">3</span></td>
+        <td><span wicket:id="name">Name-ccc</span></td>
+        <td><span wicket:id="email">mail-3</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">8</span></td>
+        <td><span wicket:id="name">Name-dca</span></td>
+        <td><span wicket:id="email">mail-8</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">4</span></td>
+        <td><span wicket:id="name">Name-ddd</span></td>
+        <td><span wicket:id="email">mail-4</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">9</span></td>
+        <td><span wicket:id="name">Name-eaa</span></td>
+        <td><span wicket:id="email">mail-9</span></td>
+      </tr><tr wicket:id="table" class="even">
+        <td><span wicket:id="id">5</span></td>
+        <td><span wicket:id="name">Name-eee</span></td>
+        <td><span wicket:id="email">mail-5</span></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

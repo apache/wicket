@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>Wicket-examples</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java"/>
+    <body>
+        <section name="Welcome to Wicket-examples">
+			<p>
+				This is the examples project for the <a href="http://wicket.sourceforge.net">Wicket</a> framework.
+			</p>
+			<ul>
+				<li>Download the binary release</li>
+				<li>Or build your own (<code>maven war</code> or <code>mvn war</code>)</li>
+				<li>Install the <code>wicket-examples.war</code>-archive in your application server</li>
+				<li>Start your application server</li>
+				<li>Point your browser to the <code>/wicket-examples</code> URL on your application server and enjoy the examples</li>
+				<li>Browse through the sources</li>
+			</ul>
+			<p>
+				The currently available examples are listed below:
+			</p>
+			<ul>
+                <li>Helloworld</li>
+                <li>Navomatic</li>
+                <li>Linkomatic</li>
+                <li>GuestBook</li>
+                <li>GuestBook2</li>
+                <li>Images</li>
+                <li>Library</li>
+                <li>Pub</li>
+                <li>Signin</li>
+                <li>Signin2</li>
+                <li>Upload</li>
+                <li>Filebrowser (tree)</li>
+                <li>Displaytag</li>
+                <li>Character Encodings</li>
+                <li>Spring integration example</li>
+                <li>Groovy example</li>
+			</ul>
+        </section>
+    </body>
+</document>

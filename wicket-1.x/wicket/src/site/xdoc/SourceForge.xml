@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>SourceForge</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java"/>
+    <body>
+        <section name="SourceForge">
+			<p>Wicket is moving to the Apache Software Foundation. As a result many of our resources
+				previously found at SourceForge.net have been, or will move to the Apache servers.
+			</p>
+            <p>Wicket is hosted by <a href="http://www.sourceforge.net">SourceForge</a>, 
+				which provides a variety of free tools and services 
+				that the Wicket team uses to manage the project. The website 
+				you are reading now is the authoritative source for 
+				documentation and project information.</p>
+            <p>Useful SourceForge links:</p>
+            <ul>
+                <li><a href="http://sourceforge.net/projects/wicket"> 
+                    Project summary</a></li>
+                <li><a href="http://sourceforge.net/project/showfiles.php?group_id=119783">
+                    Downloads</a></li>
+                <li>the <a 
+                    href="mail-lists.html">Mailing lists</a></li>
+            </ul>
+			<p>Useful Apache links:</p>
+			<ul>
+				<li><a href="http://incubator.apache.org/projects/wicket">Wicket's incubation status</a></li>
+				<li><a href="http://incubator.apache.org/wicket">Wicket's incubation website</a></li>
+				<li><a href="http://issues.apache.org/jira/browse/WICKET">Issue tracker</a></li>
+				<li><a href="https://svn.apache.org/repos/asf/incubator/wicket">SVN Repository</a></li>
+			</ul>
+        </section>
+    </body>
+</document>

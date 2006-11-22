@@ -1,0 +1,34 @@
+<html>
+<head>
+<wicket:head>
+	<script language="JavaScript" type="text/javascript" wicket:id="javascript" src="palette.js"></script>
+</wicket:head>
+</head>
+<body>
+<wicket:panel>
+
+<input type="hidden" wicket:id="recorder"/>
+<table cellspacing="0" celpadding="2" class="palette">
+<tr>
+	<td class="header headerAvailable"><span wicket:id="availableHeader">[available header]</span></td>
+	<td>&nbsp;</td>
+	<td class="header headerSelected"><span wicket:id="selectedHeader">[selected header]</span></td>
+</tr>
+<tr>
+	<td class="pane choices">
+		<select wicket:id="choices" class="choicesSelect">[choices]</select>	
+	</td>
+	<td class="buttons">
+		<button type="button" wicket:id="addButton" class="button add"><img wicket:id="image" src="add.gif"/></button><br/>
+		<button type="button" wicket:id="removeButton" class="button remove"><img wicket:id="image" src="remove.gif"/></button><br/>
+		<button type="button" wicket:id="moveUpButton" class button up"><img wicket:id="image" src="up.gif"/></button><br/>
+		<button type="button" wicket:id="moveDownButton" class="button down"><img wicket:id="image" src="down.gif"/></button><br/>
+	</td>
+	<td class="pane selection">
+		<select class="selectionSelect" wicket:id="selection">[selection]</select>	
+	</td>
+</tr>
+</table>
+</wicket:panel>
+</body>
+</html>

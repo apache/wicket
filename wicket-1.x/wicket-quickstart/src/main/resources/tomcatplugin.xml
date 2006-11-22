@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<j:whitespace
+  xmlns:j="jelly:core"
+  xmlns:ant="jelly:ant"
+  xmlns:maven="jelly:maven"
+  xmlns:u="jelly:util"
+  xmlns="dummy"
+  trim="true">
+<tomcatProjectProperties>
+    <rootDir>/src/webapp</rootDir>
+    <exportSource>false</exportSource>
+    <reloadable>true</reloadable>
+    <redirectLogger>false</redirectLogger>
+    <updateXml>true</updateXml>
+    <warLocation></warLocation>
+    <extraInfo></extraInfo>
+    <webPath>/wicket-quickstart</webPath>
+    <webClassPathEntries>
+        <webClassPathEntry>/wicket-quickstart/target/classes</webClassPathEntry>
+    <j:forEach var="lib" items="${pom.artifacts}">
+    	<j:if test="${lib.dependency.getProperty('war.bundle')}">
+        <webClassPathEntry>/wicket-quickstart/lib/${lib.dependency.artifact}</webClassPathEntry>
+        <ant:echo>/wicket-quickstart/lib/${lib.dependency.artifact}</ant:echo>
+    	</j:if>
+    </j:forEach>
+    </webClassPathEntries>
+</tomcatProjectProperties>
+</j:whitespace>

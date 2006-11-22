@@ -1,0 +1,21 @@
+<html>
+<head>
+  <title>AbstractPage_myStyle.html</title>
+
+  MyPanel2_myStyle
+</head>
+<body>
+  <h1>Child markup</h1>
+  <div style="border:1px solid black;">
+    <wicket:child><wicket:extend>
+  ConcretePage2_myStyle
+  <span wicket:id="panel"><wicket:panel>
+  MyPanel2_myStyle
+  <div>
+    <a href="#" onclick="foo();">Click me!</a>
+  </div>
+</wicket:panel></span>
+</wicket:extend></wicket:child>
+  </div>
+</body>
+</html>

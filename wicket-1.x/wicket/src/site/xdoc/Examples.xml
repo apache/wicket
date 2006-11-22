@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>Quick Tour</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+
+	<body>
+		<section name="A Quick Tour of Wicket">
+			<p>
+				Nothing says more about a development technology than a few simple examples. After
+				all, how hard should it be to do something easy? The examples below should speak for
+				themselves in demonstrating how easy it is to get things done in Wicket when
+				compared to other frameworks. You will discover that Wicket's component-oriented
+				structure and its "low touch" approach to HTML is quite inviting.
+			</p>
+			<p>
+				<ul>
+					<li>
+						<a href="ExampleHelloWorld.html">Hello World!</a>
+						- Everybody's favorite example
+					</li>
+					<li>
+						<a href="ExampleNavomatic.html">Navomatic</a>
+						- Automatic navigation using Borders and Links
+					</li>
+					<li>
+						<a href="ExampleGuestBook.html">GuestBook</a>
+						- A tiny blogger demonstrating ListViews and Forms
+					</li>
+					<li>
+						<a href="ExampleStockQuote.html">StockQuote</a>
+						- A short example of building a custom component
+					</li>
+					<li>
+						<a href="ExampleMarkupInheritance.html">Markup Inheritance</a>
+						- A short example explaining markup inheritance
+					</li>
+					<li>
+						<a href="ExampleAjaxCounter.html">Ajax Counter</a>
+						- A short example explaining Wicket's Ajax features building a counter.
+					</li>
+					<li>
+						<a href="ExampleUsingFragments.html">Using Fragments</a>
+						- A short example explaining Wicket's fragments feature. Fragments are a type
+						of inline panels.
+					</li>
+				</ul>
+			</p>
+			<subsection name="Examples in Live Action">
+				<p>
+					You can see the examples in
+					<a href="http://www.wicket-library.com/wicket-examples">live action</a>
+					without having to install anything.
+				</p>
+			</subsection>
+			<subsection name="Running the Examples Yourself">
+				<p>
+					These documents show you how to install and run the 
+					<a href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">Wicket
+					Examples</a>. You can choose to
+					<ul>
+						<li>See them in <a href="http://www.wicket-library.com/wicket-examples">live action</a> without having to do anything</li>
+						<li>Install and deploy the 
+							<a href="ExamplesBinary.html">binary distribition</a>, or</li>
+						<li>Use the <a href="ExamplesSource.html">source distribution</a> in your IDE.</li>
+					</ul>
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.form.ListMultipleChoice</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	A ListChoice component lets users select a multiple values from a scrollable list.
+	</p>
+	<p>
+	 <form wicket:id="form">
+
+		<table style="border: 2px dotted #fc0; width: 400px; padding: 5px;">
+		 <tr>
+		  <td valign="top">Select your favorite sites</td>
+		  <td>
+			<select wicket:id="site">
+				<optgroup label="java sites">
+					<option wicket:id="site1" style="color:green;">The Server Side (tss)</option>
+					<option wicket:id="site2" style="color:red;">JavaLobby (jl)</option>
+				</optgroup>
+				<optgroup label="news sites">
+					<option wicket:id="site3">Slashdot.org (sd)</option>
+					<option wicket:id="site4">BetaNews.com (bn)</option>
+				</optgroup>
+			</select>
+		  </td>
+		 </tr>
+		 <tr>
+		  <td valign="top">Select some of these excellent choices</td>
+		  <td>
+		    <select wicket:id="choices" multiple size="5">
+				<!-- the only trick here is that the wicket id of the option tag is fixed to "option" -->
+		        <span wicket:id="manychoices"><option wicket:id="option"></option></span>
+		    </select>
+		  </td>
+		 </tr>
+		 <tr>
+		  <td colspan="2" align="center">
+		   <input type="submit" value="submit" />
+		  </td>
+		 </tr>
+		</table>
+
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

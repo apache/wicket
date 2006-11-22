@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Unexpected RuntimeException</title>
+<style type="text/css">
+body {margin-left : 2em;font-family: 'Lucida Sans', 'Helvetica', 'Sans-serif', 'sans';font-size: 9pt;line-height: 1.8em;}
+h1,h2,h3,h4,h5,h6,h7,h8 {color: #E9601A;}
+h1 {font-size : 1.5em;}
+h2 {font-size : 1.2em;}
+pre, table, td { font-family : 'MS Trebuchet', 'Verdana', Arial, Helvetica; font-size : 10pt; line-height:1.2em;}
+pre { border : 1px solid #ddd; margin-left : 2em; }
+.resource { color : blue; }
+.componenttree { margin-left : 2em; border : 1px solid #ddd; }
+.componenttree { padding : 10px; } 
+.componenttree th { border-bottom : 1px solid #ddd; }
+td > pre { padding : 10px; }
+</style>
+</head>
+<body>
+	<h1>Unexpected RuntimeException</h1>
+	<table ><tr><td><pre><span wicket:id="exception">message</span></pre></td></tr></table>
+	
+	<span wicket:id="markupHighlight">
+		<h2>Markup</h2>
+		<p>
+		The problem is in "<span class="resource" wicket:id =  "resource">resource problem</span>":
+		</p>
+		<table><tr><td><pre><span class="markup" wicket:id="markup">markup goes here</span></pre></td></tr></table>
+	</span>
+	
+	<p>
+	<span wicket:id = "componentTree"/>
+	</p>
+</body>
+</html>

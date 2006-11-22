@@ -1,0 +1,38 @@
+.borderedBlock {
+ background: #DEDEDE;
+ color: gray;
+ font-weight: bold;
+ border: solid #E9601A;
+ border-width: thin;
+ padding: 2px 2px 2px 6px;
+ margin: 2px;
+}
+
+#header {
+ text-align: center;
+}
+
+#left {
+ padding: 10px;
+ vertical-align: top;
+ width: 20%;
+ height: 120px;
+}
+
+#content {
+ vertical-align: top;
+ width: 80%;
+ height: 100%;
+}
+
+#footer {
+ text-align: center;
+}
+
+#ad {
+ width: 100%;
+}
+
+#changeAddButton {
+ margin-right: 10px;
+}

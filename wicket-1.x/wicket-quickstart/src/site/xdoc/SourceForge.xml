@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<document>
+    <properties>
+        <title>SourceForge</title>
+    </properties>
+    <meta name="keyword" content="wicket, web, j2ee, java, kick start"/>
+    <body>
+        <section name="SourceForge">
+            <p>The Wicket Quick Start project is hosted on the servers of <a 
+                href="http://www.sourceforge.net">SourceForge</a>. This means 
+                that we get several stuff for free in order to manage the 
+                project. This website you are reading from is the central place 
+                where you will find documentation and project information.</p>
+            <p>For more information use one of the following links:</p>
+            <ul>
+                <li>our <a 
+                    href="http://sourceforge.net/projects/wicket-stuff">SourceForge 
+                    summary page</a></li>
+                <li>the <a 
+                    href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850">downloads 
+                    page</a></li>
+                <li>the <a 
+                    href="http://sourceforge.net/mail/?group_id=119783">mailing 
+                    lists</a></li>
+                <li>the <a 
+                    href="http://sourceforge.net/tracker/?group_id=119783">trackers</a></li>
+            </ul>
+        </section>
+    </body>
+</document>

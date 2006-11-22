@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<document>
+  <properties>
+    <title>Wicket Kick Start changes</title>
+    <author email="dashorst at users.sourceforge.net">Martijn Dashorst</author>
+  </properties>
+  <body>
+  	<release version="1.1" date="2005-10-30" description="Wicket 1.1 final">
+  		<action type="add" dev="Martijn Dashorst">Added an ant build.xml file to the distribution</action>
+  		<action type="add" dev="Martijn Dashorst">Added a maven project.xml file to the distribution</action>
+  		<action type="add" dev="Martijn Dashorst">Added Sysdeo tomcat plugin configuration to the distribution</action>
+  		<action type="fix" dev="Martijn Dashorst">Fixed the build such that only one distribution type is build</action>
+  		<action type="update" dev="Martijn Dashorst">Updated the dependencies, such that all old transitive dependencies of Wicket were removed</action>
+  		<action type="update" dev="Martijn Dashorst">Moved the project from Wicket Stuff to the Wicket Core project.</action>
+  	</release>
+    <release version="1.0" date="2005-06-06" description="Wicket 1.0 final">
+      <action type="update" dev="Martijn Dashorst">Upgraded Wicket to 1.0 final</action>
+    </release>
+  </body>
+</document>
