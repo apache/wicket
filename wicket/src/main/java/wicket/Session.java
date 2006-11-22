@@ -16,8 +16,6 @@
  */
 package wicket;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +39,6 @@ import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.util.concurrent.CopyOnWriteArrayList;
 import wicket.util.convert.IConverter;
-import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
@@ -1030,20 +1027,6 @@ public abstract class Session implements Serializable
 					store.bind(request, (Session)value);
 				}
 			}
-		}
-		String valueTypeName = (value != null ? value.getClass().getName() : "null");
-		try
-		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
-			new ObjectOutputStream(out).writeObject(value);
-			log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
-					+ Bytes.bytes(out.size()));
-		}
-		catch (Exception e)
-		{
-			throw new WicketRuntimeException(
-					"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
-							+ valueTypeName, e);
 		}
 		
 		// Set the actual attribute
