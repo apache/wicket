@@ -18,7 +18,6 @@ package wicket.ajax;
 
 import wicket.RequestCycle;
 import wicket.markup.html.IHeaderResponse;
-import wicket.markup.html.WebPage;
 import wicket.util.string.JavascriptUtils;
 import wicket.util.time.Duration;
 
