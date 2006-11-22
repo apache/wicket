@@ -17,7 +17,6 @@
 package wicket;
 
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,7 +34,7 @@ import wicket.util.time.Time;
  * 
  * @author Jonathan Locke
  */
-public abstract class Response implements Serializable
+public abstract class Response
 {
     /** Default encoding of output stream */
     private String defaultEncoding;
