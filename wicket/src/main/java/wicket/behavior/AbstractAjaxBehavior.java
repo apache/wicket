@@ -18,6 +18,7 @@ package wicket.behavior;
 
 import wicket.Component;
 import wicket.RequestListenerInterface;
+import wicket.Response;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
@@ -210,5 +211,22 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 	public boolean getStatelessHint()
 	{
 		return false;
+	}
+
+
+	// TODO the next three methods will be removed with next commit. Here as
+	// final to help with refactoring
+
+	protected final String getImplementationId()
+	{
+		return "foo";
+	}
+
+	protected final void onRenderHeadContribution(final Response response)
+	{
+	}
+
+	protected final void onRenderHeadInitContribution(final Response response)
+	{
 	}
 }
