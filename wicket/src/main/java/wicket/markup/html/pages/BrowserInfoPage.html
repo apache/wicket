@@ -38,7 +38,7 @@
 			  document.postback.screenHeight.value = window.screen.height;
 			  document.postback.screenColorDepth.value = window.screen.colorDepth;
 		  }
-		  document.postback.utcOffset.value = (new Date().getTimezoneOffset() / 60);
+		  document.postback.utcOffset.value = (new Date().getTimezoneOffset() / -60);
 		  document.postback.submit();
 		}
 		</script>
