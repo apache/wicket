@@ -337,11 +337,12 @@ public class ClientProperties implements Serializable
 	public static final String SCREEN_WIDTH = "screenWidth";
 
 	/**
-	 * The client's time offset from UTC in minutes.
+	 * The client's time offset from UTC in minutes (note: if you do this
+	 * yourself, use 'new Date().getTimezoneOffset() / -60' (note the -)).
 	 */
 	public static final String UTC_OFFSET = "utcOffset";
 
-	
+
 	/**
 	 * The client's remote/ip address
 	 */
