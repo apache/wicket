@@ -17,9 +17,7 @@
 package wicket.util.convert.converters;
 
 import java.text.DateFormat;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Converts from Date to String.
@@ -30,24 +28,10 @@ public final class DateToStringConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The date format to use */
-	private Map dateFormats = new HashMap();
-
-	/**
-	 * @param locale 
-	 * 			  The locale for this dateformat
-	 * @param dateFormat
-	 *            The numberFormat to set.
-	 */
-	public final void setDateFormat(final Locale locale, final DateFormat dateFormat)
-	{
-		dateFormats.put(locale,dateFormat);
-	}
-
 	/**
 	 * @see wicket.util.convert.ITypeConverter#convert(java.lang.Object,java.util.Locale)
 	 */
-	public Object convert(final Object value,Locale locale)
+	public Object convert(final Object value, Locale locale)
 	{
 		final DateFormat dateFormat = getDateFormat(locale);
 		if (dateFormat != null)
@@ -61,23 +45,19 @@ public final class DateToStringConverter extends AbstractConverter
 	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
 	 */
 	/**
-	 * @param locale 
+	 * @param locale
 	 * @return Returns the dateFormat.
 	 */
-	public final DateFormat getDateFormat(Locale locale)
+	public DateFormat getDateFormat(Locale locale)
 	{
-		DateFormat dateFormat = (DateFormat)dateFormats.get(locale);
-		if (dateFormat == null)
-		{
-			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-			dateFormats.put(locale, dateFormat);
-		}
-		return dateFormat;
+		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
 	}
-	
+
+	/**
+	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
+	 */
 	protected Class getTargetType()
 	{
 		return String.class;
 	}
-
 }
