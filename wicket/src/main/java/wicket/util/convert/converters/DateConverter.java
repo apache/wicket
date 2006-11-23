@@ -18,9 +18,7 @@ package wicket.util.convert.converters;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Converts from Object to Date.
@@ -31,39 +29,11 @@ public class DateConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
-	/** The date format to use for the specific locales (used as the key) */
-	private final Map<Locale, DateFormat> dateFormats = new HashMap<Locale, DateFormat>();
-
 	/**
-	 * Specify whether or not date/time parsing is to be lenient. With lenient
-	 * parsing, the parser may use heuristics to interpret inputs that do not
-	 * precisely match this object's format. With strict parsing, inputs must
-	 * match the object's format.
-	 */
-	private final boolean lenient;
-
-	/**
-	 * Construct. Lenient is false.
+	 * Construct.
 	 */
 	public DateConverter()
 	{
-		super();
-		lenient = false;
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param lenient
-	 *            when true, parsing is lenient. With lenient parsing, the
-	 *            parser may use heuristics to interpret inputs that do not
-	 *            precisely match this object's format. With strict parsing,
-	 *            inputs must match the object's format.
-	 */
-	public DateConverter(boolean lenient)
-	{
-		super();
-		this.lenient = lenient;
 	}
 
 	/**
@@ -101,24 +71,7 @@ public class DateConverter extends AbstractConverter
 			locale = Locale.getDefault();
 		}
 
-		DateFormat dateFormat = dateFormats.get(locale);
-		if (dateFormat == null)
-		{
-			dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-			dateFormat.setLenient(lenient);
-			dateFormats.put(locale, dateFormat);
-		}
-		return dateFormat;
-	}
-
-	/**
-	 * @param locale
-	 * @param dateFormat
-	 *            The dateFormat to set.
-	 */
-	public void setDateFormat(final Locale locale, final DateFormat dateFormat)
-	{
-		this.dateFormats.put(locale, dateFormat);
+		return DateFormat.getDateInstance(DateFormat.SHORT, locale);
 	}
 
 	/**
