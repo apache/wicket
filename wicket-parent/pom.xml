@@ -176,6 +176,16 @@
 			<timezone>+1</timezone>
 			<roles />
 		</developer>
+		<developer>
+			<name>Al Maw</name>
+			<id>almaw</id>
+			<email>almaw@apache.org</email>
+                        <organization>ASF</organization>
+                        <roles>
+                                <role>PMC Member</role>
+                        </roles>
+			<timezone>0</timezone>
+		</developer>
 	</developers>
 
 	<contributors>
@@ -208,7 +218,6 @@
 		<contributor><name>Nathan Hamblen</name><email>-</email></contributor>
 		<contributor><name>Thomas Singer</name><email>-</email></contributor>
 		<contributor><name>Ryan Sonnek</name><email>-</email></contributor>
-		<contributor><name>Alastair Maw</name><email>-</email></contributor>
 		<contributor><name>Philip A. Chapman</name><email>-</email></contributor>
 		<contributor><name>Joni Suominen</name><email>-</email></contributor>
 		<contributor><name>Jim McLaughlin</name><email>-</email></contributor>
