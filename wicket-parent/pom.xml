@@ -180,10 +180,10 @@
 			<name>Al Maw</name>
 			<id>almaw</id>
 			<email>almaw@apache.org</email>
-                        <organization>ASF</organization>
-                        <roles>
-                                <role>PMC Member</role>
-                        </roles>
+			<organization>ASF</organization>
+			<roles>
+				<role>PMC Member</role>
+			</roles>
 			<timezone>0</timezone>
 		</developer>
 	</developers>
