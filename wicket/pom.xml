@@ -161,6 +161,16 @@
 			<email>knopp at users.sourceforge.net</email>
 			<roles />
 		</developer>		
+		<developer>
+			<name>Al Maw</name>
+			<id>almaw</id>
+			<email>almaw@apache.org</email>
+			<organization>ASF</organization>
+			<roles>
+				<role>PMC Member</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
 	</developers>
 
 	<contributors>
@@ -286,10 +296,6 @@
     </contributor>
     <contributor>
     		<name>Ryan Sonnek</name>
-    		<email>-</email>
-    </contributor>
-    <contributor>
-    		<name>Alastair Maw</name>
     		<email>-</email>
     </contributor>
     <contributor>
