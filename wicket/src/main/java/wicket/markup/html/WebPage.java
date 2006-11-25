@@ -19,10 +19,10 @@ package wicket.markup.html;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IPageMap;
 import wicket.IRequestTarget;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.ResourceReference;
 import wicket.Session;
@@ -114,17 +114,17 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	}
 
 	/**
-	 * @see Page#Page(PageMap)
+	 * @see Page#Page(IPageMap)
 	 */
-	protected WebPage(final PageMap pageMap)
+	protected WebPage(final IPageMap pageMap)
 	{
 		super(pageMap);
 	}
 
 	/**
-	 * @see Page#Page(PageMap, IModel)
+	 * @see Page#Page(IPageMap, IModel)
 	 */
-	protected WebPage(final PageMap pageMap, final IModel<T> model)
+	protected WebPage(final IPageMap pageMap, final IModel<T> model)
 	{
 		super(pageMap, model);
 	}
@@ -322,7 +322,7 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 		{
 			log.error("Page " + clonedPage + " couldn't be cloned to move to another pagemap", e);
 		}
-		final PageMap map = getSession().createAutoPageMap();
+		final IPageMap map = getSession().createAutoPageMap();
 		clonedPage.moveToPageMap(map);
 		setResponsePage(clonedPage);
 	}
@@ -372,7 +372,8 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 			{
 				StringBuilder javascript = new StringBuilder();
 				// this is the first access to the pagemap, set window.name
-				javascript.append("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
+				javascript
+						.append("if (window.name=='' || window.name.indexOf('wicket') > -1) { window.name=\"");
 				javascript.append(name);
 				javascript.append("\"; }");
 
@@ -401,7 +402,9 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 				}
 
 				StringBuilder javascript = new StringBuilder();
-				javascript.append("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='" + name+ "')) { window.location=\"");
+				javascript
+						.append("if (window.name=='' || (window.name.indexOf('wicket') > -1 && window.name!='"
+								+ name + "')) { window.location=\"");
 				javascript.append(url);
 				javascript.append("\"; }");
 

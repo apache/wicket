@@ -22,8 +22,8 @@ import javax.portlet.WindowState;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.IPageMap;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.markup.MarkupFragment;
 import wicket.markup.html.WebPage;
@@ -76,17 +76,17 @@ public class PortletPage<T> extends Page<T>
 	}
 
 	/**
-	 * @see Page#Page(PageMap)
+	 * @see Page#Page(IPageMap)
 	 */
-	protected PortletPage(final PageMap pageMap)
+	protected PortletPage(final IPageMap pageMap)
 	{
 		super(pageMap);
 	}
 
 	/**
-	 * @see Page#Page(PageMap, IModel)
+	 * @see Page#Page(IPageMap, IModel)
 	 */
-	protected PortletPage(final PageMap pageMap, final IModel<T> model)
+	protected PortletPage(final IPageMap pageMap, final IModel<T> model)
 	{
 		super(pageMap, model);
 	}
@@ -207,8 +207,8 @@ public class PortletPage<T> extends Page<T>
 	{
 		// HtmlHeaderSectionHandler guarantees that a <head> tag exists
 		new PortletHeaderContainer(this, HtmlHeaderSectionHandler.HEADER_ID);
-		
+
 		// default
 		super.onAssociatedMarkupLoaded(markup);
-	}	
+	}
 }

@@ -754,7 +754,7 @@ public abstract class RequestCycle
 	 *            Parameters to page
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final PageMap pageMap, final Class<? extends Page> pageClass,
+	public final CharSequence urlFor(final IPageMap pageMap, final Class<? extends Page> pageClass,
 			final PageParameters parameters)
 	{
 		final IRequestTarget target = new BookmarkablePageRequestTarget(pageMap == null

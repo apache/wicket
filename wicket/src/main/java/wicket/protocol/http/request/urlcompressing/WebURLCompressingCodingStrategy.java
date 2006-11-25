@@ -17,9 +17,9 @@
 package wicket.protocol.http.request.urlcompressing;
 
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.IRedirectListener;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.markup.html.WebPage;
@@ -81,7 +81,7 @@ public class WebURLCompressingCodingStrategy extends WebRequestCodingStrategy
 		final Page page = component.getPage();
 
 		// Add pagemap
-		final PageMap pageMap = page.getPageMap();
+		final IPageMap pageMap = page.getPageMap();
 		if (!pageMap.isDefault())
 		{
 			url.append(pageMap.getName());

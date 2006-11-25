@@ -16,6 +16,7 @@
  */
 package wicket.markup.html.link;
 
+import wicket.IPageMap;
 import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.PageMap;
@@ -62,7 +63,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param c
 	 *            Page class
 	 */
-	public InlineFrame(MarkupContainer parent, final String id, final PageMap pageMap,
+	public InlineFrame(MarkupContainer parent, final String id, final IPageMap pageMap,
 			final Class<? extends Page> c)
 	{
 		this(parent, id, pageMap, new IPageLink()
@@ -102,7 +103,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * @param page
 	 *            The page
 	 */
-	public InlineFrame(MarkupContainer parent, final String id, final PageMap pageMap,
+	public InlineFrame(MarkupContainer parent, final String id, final IPageMap pageMap,
 			final Page page)
 	{
 		this(parent, id, pageMap, new IPageLink()
@@ -142,7 +143,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 *            be contained in the inline frame if and when the content is
 	 *            requested
 	 */
-	public InlineFrame(MarkupContainer parent, final String id, final PageMap pageMap,
+	public InlineFrame(MarkupContainer parent, final String id, final IPageMap pageMap,
 			IPageLink pageLink)
 	{
 		super(parent, id);
@@ -198,7 +199,7 @@ public class InlineFrame extends WebMarkupContainer implements ILinkListener
 	 * 
 	 * @return pageMap
 	 */
-	public final PageMap getPageMap()
+	public final IPageMap getPageMap()
 	{
 		return PageMap.forName(this.pageMapName);
 	}

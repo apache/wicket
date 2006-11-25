@@ -28,10 +28,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.IPageMap;
 import wicket.IRequestCycleFactory;
 import wicket.ISessionFactory;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Response;
@@ -73,11 +73,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *                 public void init()
- *                 {
- *                     String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                     URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                     ...
+ *                  public void init()
+ *                  {
+ *                      String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                      URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                      ...
  * </pre>
  * 
  * @see WicketServlet
@@ -292,7 +292,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * @param bookmarkablePageClass
 	 *            the bookmarkable page class to mount
 	 */
-	public final void mountBookmarkablePage(final String path, final PageMap pageMap,
+	public final void mountBookmarkablePage(final String path, final IPageMap pageMap,
 			final Class<? extends Page> bookmarkablePageClass)
 	{
 		mount(new BookmarkablePageRequestTargetUrlCodingStrategy(path, bookmarkablePageClass,

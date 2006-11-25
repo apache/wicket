@@ -167,7 +167,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	private short numericId;
 
 	/** The PageMap within the session that this page is stored in */
-	private transient PageMap pageMap;
+	private transient IPageMap pageMap;
 
 	/** Name of PageMap that this page is stored in */
 	private String pageMapName;
@@ -216,7 +216,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param pageMap
 	 *            The page map to put this page in
 	 */
-	protected Page(final PageMap pageMap)
+	protected Page(final IPageMap pageMap)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -233,7 +233,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            See Component
 	 * @see Component#Component(MarkupContainer,String, IModel)
 	 */
-	protected Page(final PageMap pageMap, final IModel<T> model)
+	protected Page(final IPageMap pageMap, final IModel<T> model)
 	{
 		// A Page's id is not determined until setId is called when the Page is
 		// added to a PageMap in the Session.
@@ -554,7 +554,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/**
 	 * @return Returns the PageMap that this Page is stored in.
 	 */
-	public final PageMap getPageMap()
+	public final IPageMap getPageMap()
 	{
 		// If the transient needs to be restored
 		if (pageMap == null)
@@ -726,7 +726,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			RequestParameters parameters = getRequest().getRequestParameters();
 			pageMapName = parameters.getPageMapName();
 		}
-		final PageMap pageMap = PageMap.forName(pageMapName);
+		final IPageMap pageMap = PageMap.forName(pageMapName);
 		init(pageMap);
 	}
 
@@ -736,7 +736,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param pageMap
 	 *            The page map to put this page in.
 	 */
-	private final void init(final PageMap pageMap)
+	private final void init(final IPageMap pageMap)
 	{
 		// Set the page map
 		if (pageMap != null)
@@ -770,7 +770,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			attached = false;
 		}
 	}
-	
+
 	/**
 	 * @see wicket.MarkupContainer#internalAttach()
 	 */
@@ -996,7 +996,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * 
 	 * @param map
 	 */
-	protected final void moveToPageMap(PageMap map)
+	protected final void moveToPageMap(IPageMap map)
 	{
 		// TODO post 1.2 shouldn't we remove this page from the pagemap/session
 		// if it would be in there?
@@ -1221,7 +1221,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 *            Sets this page into the page map with the given name. If the
 	 *            page map does not yet exist, it is automatically created.
 	 */
-	final void setPageMap(final PageMap pageMap)
+	final void setPageMap(final IPageMap pageMap)
 	{
 		// Save transient reference to pagemap
 		this.pageMap = pageMap;

@@ -17,9 +17,9 @@
 package wicket.markup.html.link;
 
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
@@ -37,25 +37,25 @@ import wicket.version.undo.Change;
  * You can use a link like:
  * 
  * <pre>
- *                          add(new Link(&quot;myLink&quot;)
- *                          {
- *                              public void onClick(RequestCycle cycle)
- *                              {
- *                                  // do something here...  
- *                              }
- *                          );
+ *                           add(new Link(&quot;myLink&quot;)
+ *                           {
+ *                               public void onClick(RequestCycle cycle)
+ *                               {
+ *                                   // do something here...  
+ *                               }
+ *                           );
  * </pre>
  * 
  * and in your HTML file:
  * 
  * <pre>
- *                          &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
+ *                           &lt;a href=&quot;#&quot; wicket:id=&quot;myLink&quot;&gt;click here&lt;/a&gt;
  * </pre>
  * 
  * or:
  * 
  * <pre>
- *                          &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
+ *                           &lt;td wicket:id=&quot;myLink&quot;&gt;my clickable column&lt;/td&gt;
  * </pre>
  * 
  * </p>
@@ -63,13 +63,13 @@ import wicket.version.undo.Change;
  * the Page to the Page responded by the Link.
  * 
  * <pre>
- *                          add(new Link(&quot;link&quot;, listItem.getModel()) 
- *                          {
- *                              public void onClick() 
- *                              {
- *                                  MyObject obj = (MyObject)getModelObject();
- *                                  setResponsePage(new MyPage(obj.getId(), ... ));
- *                              }
+ *                           add(new Link(&quot;link&quot;, listItem.getModel()) 
+ *                           {
+ *                               public void onClick() 
+ *                               {
+ *                                   MyObject obj = (MyObject)getModelObject();
+ *                                   setResponsePage(new MyPage(obj.getId(), ... ));
+ *                               }
  * </pre>
  * 
  * @param <T>
@@ -193,7 +193,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 		}
 		return super.isEnabled();
 	}
-	
+
 	@Override
 	protected boolean getStatelessHint()
 	{
@@ -401,7 +401,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 
 		// append any anchor
 		url = appendAnchor(tag, url);
-		
+
 		if (isLinkEnabled())
 		{
 			// if the tag is an anchor proper
@@ -434,7 +434,7 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 					tag.put("onclick", "window.location.href='" + url + "';");
 				}
 			}
-			
+
 			// If the subclass specified javascript, use that
 			final CharSequence onClickJavaScript = getOnClickScript(url);
 			if (onClickJavaScript != null)
@@ -446,10 +446,10 @@ public abstract class Link<T> extends AbstractLink<T> implements ILinkListener
 		{
 			disableLink(tag);
 		}
-		
+
 		if (popupSettings != null)
 		{
-			PageMap popupPageMap = popupSettings.getPageMap(this);
+			IPageMap popupPageMap = popupSettings.getPageMap(this);
 			if (popupPageMap != null)
 			{
 				tag.put("target", popupPageMap.getName());

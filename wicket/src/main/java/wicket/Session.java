@@ -16,6 +16,8 @@
  */
 package wicket;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +41,7 @@ import wicket.feedback.FeedbackMessages;
 import wicket.request.ClientInfo;
 import wicket.session.ISessionStore;
 import wicket.util.convert.IConverter;
+import wicket.util.lang.Bytes;
 import wicket.util.lang.Objects;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
@@ -146,7 +149,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		 * @return the boolean if it was added (didn't already contain the
 		 *         pagemap)
 		 */
-		public boolean add(PageMap pagemap)
+		public boolean add(IPageMap pagemap)
 		{
 			return pageMapNames.add(pagemap.getName());
 		}
@@ -189,7 +192,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	private int autoCreatePageMapCounter = 0;
 
 	/** A linked list for last used pagemap queue */
-	private LinkedList<PageMap> usedPageMaps = new LinkedList<PageMap>();
+	private LinkedList<IPageMap> usedPageMaps = new LinkedList<IPageMap>();
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
@@ -198,7 +201,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	private FeedbackMessages feedbackMessages = new FeedbackMessages(
 			new CopyOnWriteArrayList<FeedbackMessage>());
 
-	private transient Map<PageMap, Thread> pageMapsUsedInRequest;
+	private transient Map<IPageMap, Thread> pageMapsUsedInRequest;
 
 	/** cached id because you can't access the id after session unbound */
 	private String id = null;
@@ -223,7 +226,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		 * @param pageMap
 		 *            The page map
 		 */
-		public void pageMap(final PageMap pageMap);
+		public void pageMap(final IPageMap pageMap);
 	}
 
 	/**
@@ -353,7 +356,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	{
 		visitPageMaps(new IPageMapVisitor()
 		{
-			public void pageMap(PageMap pageMap)
+			public void pageMap(IPageMap pageMap)
 			{
 				pageMap.clear();
 			}
@@ -409,7 +412,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	/**
 	 * @return The default page map
 	 */
-	public final PageMap getDefaultPageMap()
+	public final IPageMap getDefaultPageMap()
 	{
 		return pageMapForName(PageMap.DEFAULT_NAME, true);
 	}
@@ -482,7 +485,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		}
 
 		// Get page map by name, creating the default page map automatically
-		PageMap pageMap = pageMapForName(pageMapName, Objects.equal(PageMap.DEFAULT_NAME,
+		IPageMap pageMap = pageMapForName(pageMapName, Objects.equal(PageMap.DEFAULT_NAME,
 				pageMapName));
 		if (pageMap != null)
 		{
@@ -493,7 +496,7 @@ public abstract class Session implements Serializable, IConverterLocator
 				{
 					// TODO!! this is not synchronized.. it should be (on
 					// session?)
-					pageMapsUsedInRequest = new HashMap<PageMap, Thread>(3);
+					pageMapsUsedInRequest = new HashMap<IPageMap, Thread>(3);
 				}
 			}
 			synchronized (pageMapsUsedInRequest)
@@ -576,9 +579,9 @@ public abstract class Session implements Serializable, IConverterLocator
 	 *            does not exist
 	 * @return PageMap for name
 	 */
-	public final PageMap pageMapForName(String pageMapName, final boolean autoCreate)
+	public final IPageMap pageMapForName(String pageMapName, final boolean autoCreate)
 	{
-		PageMap pageMap = (PageMap)getAttribute(attributeForPageMapName(pageMapName));
+		IPageMap pageMap = (IPageMap)getAttribute(attributeForPageMapName(pageMapName));
 		if (pageMap == null && autoCreate)
 		{
 			pageMap = newPageMap(pageMapName);
@@ -591,7 +594,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * 
 	 * @return Created PageMap
 	 */
-	public synchronized final PageMap createAutoPageMap()
+	public synchronized final IPageMap createAutoPageMap()
 	{
 		return newPageMap(createAutoPageMapName());
 	}
@@ -608,7 +611,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	public synchronized final String createAutoPageMapName()
 	{
 		String name = "wicket-" + autoCreatePageMapCounter;
-		PageMap pm = pageMapForName(name, false);
+		IPageMap pm = pageMapForName(name, false);
 		while (pm != null)
 		{
 			autoCreatePageMapCounter++;
@@ -621,15 +624,15 @@ public abstract class Session implements Serializable, IConverterLocator
 	/**
 	 * @return A list of all PageMaps in this session.
 	 */
-	public final List<PageMap> getPageMaps()
+	public final List<IPageMap> getPageMaps()
 	{
-		final List<PageMap> list = new ArrayList<PageMap>();
+		final List<IPageMap> list = new ArrayList<IPageMap>();
 		for (Object element : getAttributeNames())
 		{
 			final String attribute = (String)element;
 			if (attribute.startsWith(pageMapAttributePrefix))
 			{
-				list.add((PageMap)getAttribute(attribute));
+				list.add((IPageMap)getAttribute(attribute));
 			}
 		}
 		return list;
@@ -641,7 +644,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	public final long getSizeInBytes()
 	{
 		long size = Objects.sizeof(this);
-		for (PageMap pageMap : getPageMaps())
+		for (IPageMap pageMap : getPageMaps())
 		{
 			size += pageMap.getSizeInBytes();
 		}
@@ -666,7 +669,7 @@ public abstract class Session implements Serializable, IConverterLocator
 		// Set session on each page map
 		visitPageMaps(new IPageMapVisitor()
 		{
-			public void pageMap(PageMap pageMap)
+			public void pageMap(IPageMap pageMap)
 			{
 				if (log.isDebugEnabled())
 				{
@@ -692,18 +695,18 @@ public abstract class Session implements Serializable, IConverterLocator
 	 *            The name for the new page map
 	 * @return The newly created page map
 	 */
-	public final PageMap newPageMap(final String name)
+	public final IPageMap newPageMap(final String name)
 	{
 		// Check that session doesn't have too many page maps already
 		final int maxPageMaps = getApplication().getSessionSettings().getMaxPageMaps();
 		if (usedPageMaps.size() >= maxPageMaps)
 		{
-			PageMap pm = usedPageMaps.getFirst();
+			IPageMap pm = usedPageMaps.getFirst();
 			pm.remove();
 		}
 
 		// Create new page map
-		final PageMap pageMap = getSessionStore().createPageMap(name, this);
+		final IPageMap pageMap = getSessionStore().createPageMap(name, this);
 		setAttribute(attributeForPageMapName(name), pageMap);
 		dirty();
 		return pageMap;
@@ -730,7 +733,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @param pageMap
 	 *            Page map to remove
 	 */
-	public final void removePageMap(final PageMap pageMap)
+	public final void removePageMap(final IPageMap pageMap)
 	{
 		PageMapAccessMetaData pagemapMetaData = getMetaData(PAGEMAP_ACCESS_MDK);
 		if (pagemapMetaData != null)
@@ -1033,6 +1036,20 @@ public abstract class Session implements Serializable, IConverterLocator
 				}
 			}
 		}
+		String valueTypeName = (value != null ? value.getClass().getName() : "null");
+		try
+		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			new ObjectOutputStream(out).writeObject(value);
+			log.debug("Stored attribute " + name + "{ " + valueTypeName + "} with size: "
+					+ Bytes.bytes(out.size()));
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException(
+					"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
+							+ valueTypeName, e);
+		}
 
 		// Set the actual attribute
 		store.setAttribute(request, name, value);
@@ -1091,9 +1108,9 @@ public abstract class Session implements Serializable, IConverterLocator
 					}
 					object = page.getPageMapEntry();
 				}
-				else if (object instanceof PageMap)
+				else if (object instanceof IPageMap)
 				{
-					attribute = attributeForPageMapName(((PageMap)object).getName());
+					attribute = attributeForPageMapName(((IPageMap)object).getName());
 				}
 
 				setAttribute(attribute, object);
@@ -1142,11 +1159,11 @@ public abstract class Session implements Serializable, IConverterLocator
 			synchronized (pageMapsUsedInRequest)
 			{
 				Thread t = Thread.currentThread();
-				Iterator<Map.Entry<PageMap, Thread>> it = pageMapsUsedInRequest.entrySet()
+				Iterator<Map.Entry<IPageMap, Thread>> it = pageMapsUsedInRequest.entrySet()
 						.iterator();
 				while (it.hasNext())
 				{
-					Entry<PageMap, Thread> entry = it.next();
+					Entry<IPageMap, Thread> entry = it.next();
 					if (entry.getValue() == t)
 					{
 						it.remove();
@@ -1161,7 +1178,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * @param map
 	 *            The page map to add to dirty objects list
 	 */
-	void dirtyPageMap(final PageMap map)
+	void dirtyPageMap(final IPageMap map)
 	{
 		if (!map.isDefault())
 		{

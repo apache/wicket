@@ -2499,7 +2499,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * 
 	 * @return Bookmarkable URL to page
 	 */
-	public final CharSequence urlFor(final PageMap pageMap, final Class<? extends Page> pageClass,
+	public final CharSequence urlFor(final IPageMap pageMap, final Class<? extends Page> pageClass,
 			final PageParameters parameters)
 	{
 		return getRequestCycle().urlFor(pageMap, pageClass, parameters);

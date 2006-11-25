@@ -16,8 +16,8 @@
  */
 package wicket.markup.html.link;
 
+import wicket.IPageMap;
 import wicket.MarkupContainer;
-import wicket.PageMap;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
@@ -199,7 +199,7 @@ public class ExternalLink extends WebMarkupContainer
 			
 			if (popupSettings != null)
 			{
-				PageMap popupPageMap = popupSettings.getPageMap(this);
+				IPageMap popupPageMap = popupSettings.getPageMap(this);
 				if (popupPageMap != null)
 				{
 					tag.put("target", popupPageMap.getName());

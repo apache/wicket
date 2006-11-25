@@ -35,7 +35,7 @@ import wicket.util.collections.ArrayListStack;
  * typed accessor method like this:
  * 
  * <pre>
- * public PageMap getMyPageMap()
+ * public IPageMap getMyPageMap()
  * {
  * 	return PageMap.forName(&quot;myPageMapName&quot;);
  * }
@@ -234,7 +234,7 @@ public class AccessStackPageMap extends PageMap implements Serializable
 	 * @return Any page having the given id
 	 */
 	@Override
-	protected final Page get(final int id, int versionNumber)
+	public final Page get(final int id, int versionNumber)
 	{
 		final IPageMapEntry entry = (IPageMapEntry)getSession().getAttribute(attributeForId(id));
 		if (entry != null)
@@ -292,7 +292,7 @@ public class AccessStackPageMap extends PageMap implements Serializable
 	 *            The page to put into this map
 	 */
 	@Override
-	protected final void put(final Page page)
+	public final void put(final Page page)
 	{
 		// Page only goes into session if it is stateless
 		if (!page.isPageStateless())

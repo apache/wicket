@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.IRedirectListener;
 import wicket.IRequestTarget;
 import wicket.IResourceListener;
@@ -57,8 +58,7 @@ import wicket.util.string.Strings;
  * @author Janne Hietam&auml;ki
  */
 
-//TODO: this should not really implement IRequestTargetMounter
-
+// TODO: this should not really implement IRequestTargetMounter
 public final class PortletRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 {
 
@@ -150,12 +150,12 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 			final String pageMapName = request.getParameter(PAGEMAP);
 			parameters.setPageMapName(pageMapName != null && pageMapName.length() > 0
 					? PageMap.DEFAULT_NAME
-							: pageMapName);
+					: pageMapName);
 
 			final String interfaceName = request.getParameter(INTERFACE_PARAMETER_NAME);
 			parameters.setInterfaceName(interfaceName != null && interfaceName.length() != 0
 					? interfaceName
-							: IRedirectListener.INTERFACE.getName());
+					: IRedirectListener.INTERFACE.getName());
 
 			final String versionNumberString = request.getParameter(VERSION_PARAMETER_NAME);
 			final int versionNumber = Strings.isEmpty(versionNumberString) ? 0 : Integer
@@ -270,16 +270,16 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 			return null;
 		}
 
-		if(IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
+		if (IResourceListener.class.isAssignableFrom(rli.getMethod().getDeclaringClass()))
 		{
-			return encodeServletRequest(requestCycle,requestTarget);
+			return encodeServletRequest(requestCycle, requestTarget);
 		}
 
 		// Get component and page for request target
 		final Component component = requestTarget.getTarget();
 		final Page page = component.getPage();
 		// Add pagemap
-		final PageMap pageMap = page.getPageMap();
+		final IPageMap pageMap = page.getPageMap();
 		if (!pageMap.isDefault())
 		{
 			url.setParameter(PAGEMAP, pageMap.getName());
@@ -335,7 +335,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		final Page page = component.getPage();
 
 		// Add pagemap
-		final PageMap pageMap = page.getPageMap();
+		final IPageMap pageMap = page.getPageMap();
 		if (!pageMap.isDefault())
 		{
 			url.append(pageMap.getName());
@@ -420,7 +420,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 			final RequestParameters parameters)
 	{
 		final String requestString = request
-		.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			parameters.setBookmarkablePageClass(requestString);
@@ -506,7 +506,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		final Page page = component.getPage();
 
 		// Add pagemap
-		final PageMap pageMap = page.getPageMap();
+		final IPageMap pageMap = page.getPageMap();
 		if (!pageMap.isDefault())
 		{
 			response.setRenderParameter(PAGEMAP, pageMap.getName());
@@ -519,7 +519,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		if (!rli.getRecordsPageVersion())
 		{
 			response
-			.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(Page.LATEST_VERSION));
+					.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(Page.LATEST_VERSION));
 		}
 		else if (versionNumber > 0)
 		{
@@ -551,7 +551,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		requestCycle.getSession().touch(page);
 
 		// Add pagemap
-		final PageMap pageMap = page.getPageMap();
+		final IPageMap pageMap = page.getPageMap();
 
 		if (!pageMap.isDefault())
 		{
@@ -564,7 +564,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		final int versionNumber = page.getCurrentVersionNumber();
 		response.setRenderParameter(VERSION_PARAMETER_NAME, String.valueOf(versionNumber));
 		response
-		.setRenderParameter(INTERFACE_PARAMETER_NAME, IRedirectListener.INTERFACE.getName());
+				.setRenderParameter(INTERFACE_PARAMETER_NAME, IRedirectListener.INTERFACE.getName());
 	}
 
 	/**
@@ -670,13 +670,15 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		if (urlPrefix == null)
 		{
 			final AppendingStringBuffer buffer = new AppendingStringBuffer();
-			final WicketPortletRequest request = ((PortletRenderRequestCycle)requestCycle).getPortletRequest();
+			final WicketPortletRequest request = ((PortletRenderRequestCycle)requestCycle)
+					.getPortletRequest();
 			if (request != null)
 			{
 				String contextPath = Application.get().getApplicationSettings().getContextPath();
 				if (contextPath == null)
 				{
-					contextPath = ((PortletRenderRequestCycle)RequestCycle.get()).getPortletRequest().getPortletRequest().getContextPath();
+					contextPath = ((PortletRenderRequestCycle)RequestCycle.get())
+							.getPortletRequest().getPortletRequest().getContextPath();
 					if (contextPath == null)
 					{
 						contextPath = "";

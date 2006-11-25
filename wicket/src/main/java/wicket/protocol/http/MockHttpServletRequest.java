@@ -50,10 +50,10 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.IRedirectListener;
 import wicket.IResourceListener;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.IFormSubmitListener;
@@ -1167,7 +1167,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public void setRequestToComponent(final Component component)
 	{
-		final PageMap pageMap = component.getPage().getPageMap();
+		final IPageMap pageMap = component.getPage().getPageMap();
 		final String pageMapName = pageMap.isDefault() ? "" : pageMap.getName();
 		if (component instanceof BookmarkablePageLink)
 		{

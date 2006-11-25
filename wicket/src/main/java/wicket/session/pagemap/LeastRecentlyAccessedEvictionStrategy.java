@@ -17,8 +17,8 @@
 package wicket.session.pagemap;
 
 import wicket.AccessStackPageMap;
+import wicket.IPageMap;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.Session;
 
 /**
@@ -52,7 +52,7 @@ public class LeastRecentlyAccessedEvictionStrategy implements IPageMapEvictionSt
 	/**
 	 * @see wicket.session.pagemap.IPageMapEvictionStrategy#evict(wicket.PageMap)
 	 */
-	public void evict(final PageMap pageMap)
+	public void evict(final IPageMap pageMap)
 	{
 		if (pageMap instanceof AccessStackPageMap)
 		{

@@ -29,6 +29,7 @@ import java.util.zip.GZIPOutputStream;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.IRequestTarget;
 import wicket.IResponseFilter;
 import wicket.Page;
@@ -49,11 +50,11 @@ import wicket.util.string.JavascriptUtils;
 /**
  * TODO implement or remove
  * 
- * WARNING: THIS CURRENTLY IS EXPERIMENTAL, AND THERE IS A FAIR CHANCE WE
- * WILL NOT ACTUALLY FINISH THIS IMPLEMENTATION. DO NOT DEPEND ON THIS, THOUGH
- * YOU MIGHT LOOK AT IT FOR INSPIRATION.
- * BE SURE TO <a href="http://www.nabble.com/Nice-Url-tf2473105.html#a6931630">CHECK OUT THIS DISCUSSION</a>
- * AS WELL.
+ * WARNING: THIS CURRENTLY IS EXPERIMENTAL, AND THERE IS A FAIR CHANCE WE WILL
+ * NOT ACTUALLY FINISH THIS IMPLEMENTATION. DO NOT DEPEND ON THIS, THOUGH YOU
+ * MIGHT LOOK AT IT FOR INSPIRATION. BE SURE TO <a
+ * href="http://www.nabble.com/Nice-Url-tf2473105.html#a6931630">CHECK OUT THIS
+ * DISCUSSION</a> AS WELL.
  */
 public class ClientPageSavingSessionStore extends HttpSessionStore
 {
@@ -181,7 +182,7 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 	 *      wicket.Session)
 	 */
 	@Override
-	public PageMap createPageMap(String name, Session session)
+	public IPageMap createPageMap(String name, Session session)
 	{
 		return new ClientPageSessionStorePageMap(name, session);
 	}
@@ -205,19 +206,19 @@ public class ClientPageSavingSessionStore extends HttpSessionStore
 		}
 
 		@Override
-		protected void removeEntry(IPageMapEntry entry)
+		public void removeEntry(IPageMapEntry entry)
 		{
 			// ignored for client state saving.
 		}
 
 		@Override
-		protected void put(Page page)
+		public void put(Page page)
 		{
 			// ignored for client state saving.
 		}
 
 		@Override
-		protected Page get(int id, int versionNumber)
+		public Page get(int id, int versionNumber)
 		{
 			RequestCycle rc = RequestCycle.get();
 			if (rc != null)
