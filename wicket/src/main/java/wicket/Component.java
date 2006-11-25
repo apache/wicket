@@ -1653,6 +1653,9 @@ public abstract class Component implements Serializable
 
 			// Component has been rendered
 			notifyBehaviorsComponentRendered();
+
+			// detach
+			internalDetach();
 		}
 	}
 
