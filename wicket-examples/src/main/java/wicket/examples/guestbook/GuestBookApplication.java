@@ -18,7 +18,10 @@
  */
 package wicket.examples.guestbook;
 
+import wicket.ISessionFactory;
 import wicket.Page;
+import wicket.Request;
+import wicket.Session;
 import wicket.examples.WicketExampleApplication;
 
 /**
@@ -33,7 +36,6 @@ public class GuestBookApplication extends WicketExampleApplication
 	 */
 	public GuestBookApplication()
 	{
-
 	}
 
 	/**
@@ -43,5 +45,20 @@ public class GuestBookApplication extends WicketExampleApplication
 	public Class< ? extends Page> getHomePage()
 	{
 		return GuestBook.class;
+	}
+
+	/**
+	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
+	 */
+	@Override
+	public ISessionFactory getSessionFactory()
+	{
+		return new ISessionFactory()
+		{
+			public Session newSession(Request request)
+			{
+				return new GuestBookSession(GuestBookApplication.this);
+			}
+		};
 	}
 }

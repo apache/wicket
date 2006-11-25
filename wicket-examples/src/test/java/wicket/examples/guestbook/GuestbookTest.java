@@ -62,7 +62,6 @@ public class GuestbookTest extends WicketWebTestCase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		GuestBook.clear();
 	}
 
 	/**

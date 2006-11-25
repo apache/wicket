@@ -17,11 +17,11 @@
  */
 package wicket.examples.guestbook;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import wicket.MarkupContainer;
+import wicket.Session;
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.basic.MultiLineLabel;
@@ -43,6 +43,47 @@ import wicket.model.Model;
  */
 public final class GuestBook extends WicketExamplePage
 {
+	/** The list view that shows comments */
+	private final ListView commentListView;
+
+	/**
+	 * Constructor that is invoked when page is invoked without a session.
+	 */
+	public GuestBook()
+	{
+		// Add comment form
+		new CommentForm(this, "commentForm");
+		
+		// Add commentListView of existing comments
+		commentListView = (ListView)new ListView<Comment>(this, "comments", getCommentList())
+		{
+			@Override
+			public void populateItem(final ListItem<Comment> listItem)
+			{
+				final Comment comment = listItem.getModelObject();
+				new Label(listItem, "date", new Model<Date>(comment.getDate()));
+				new MultiLineLabel(listItem, "text", comment.getText());
+			}
+		}.setVersioned(false);
+	}
+
+	/**
+	 * Clears the comments.
+	 */
+	public void clear()
+	{
+		getCommentList().clear();
+	}
+
+	/**
+	 * 
+	 * @return comment list
+	 */
+	public List<Comment> getCommentList()
+	{
+		return ((GuestBookSession)Session.get()).getCommentList();
+	}
+	
 	/**
 	 * A form that allows a user to add a comment.
 	 * 
@@ -82,46 +123,11 @@ public final class GuestBook extends WicketExamplePage
 
 			// Add the component we edited to the list of comments
 			commentListView.modelChanging();
-			commentList.add(0, newComment);
+			getCommentList().add(0, newComment);
 			commentListView.modelChanged();
 
 			// Clear out the text component
 			comment.setText("");
 		}
-	}
-
-	/** A global list of all comments from all users across all sessions */
-	private static final List<Comment> commentList = new ArrayList<Comment>();
-
-	/**
-	 * Clears the comments.
-	 */
-	public static void clear()
-	{
-		commentList.clear();
-	}
-
-	/** The list view that shows comments */
-	private final ListView commentListView;
-
-	/**
-	 * Constructor that is invoked when page is invoked without a session.
-	 */
-	public GuestBook()
-	{
-		// Add comment form
-		new CommentForm(this, "commentForm");
-
-		// Add commentListView of existing comments
-		commentListView = (ListView)new ListView<Comment>(this, "comments", commentList)
-		{
-			@Override
-			public void populateItem(final ListItem<Comment> listItem)
-			{
-				final Comment comment = listItem.getModelObject();
-				new Label(listItem, "date", new Model<Date>(comment.getDate()));
-				new MultiLineLabel(listItem, "text", comment.getText());
-			}
-		}.setVersioned(false);
 	}
 }
