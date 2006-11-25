@@ -22,7 +22,6 @@ import java.util.Map;
 import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.WebMarkupContainer;
 
 /**
@@ -44,12 +43,6 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	 * scope attribute.
 	 */
 	private transient Map<String, Map<Class, MarkupContainer>> componentsPerScope;
-
-	/**
-	 * Header response that is responsible for filtering duplicate
-	 * contributions.
-	 */
-	private transient IHeaderResponse headerResponse = null;
 
 	/**
 	 * Construct
@@ -150,7 +143,6 @@ public abstract class HeaderContainer extends WebMarkupContainer
 	protected void onDetach()
 	{
 		this.componentsPerScope = null;
-		this.headerResponse = null;
 		super.onDetach();
 	}
 }
