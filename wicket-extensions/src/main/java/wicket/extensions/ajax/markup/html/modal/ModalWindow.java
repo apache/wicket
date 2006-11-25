@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.ajax.markup.html.modal;
 
@@ -20,9 +20,9 @@ import java.io.Serializable;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IPageMap;
 import wicket.MarkupContainer;
 import wicket.Page;
-import wicket.PageMap;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.Session;
@@ -125,8 +125,8 @@ public class ModalWindow extends Panel<Object>
 	private static ResourceReference JAVASCRIPT = new CompressedResourceReference(
 			ModalWindow.class, "res/modal.js");
 
-	private static ResourceReference CSS = new CompressedResourceReference(
-			ModalWindow.class, "res/modal.css");
+	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
+			"res/modal.css");
 
 	/**
 	 * Creates a new modal window component.
@@ -141,8 +141,8 @@ public class ModalWindow extends Panel<Object>
 		super(parent, id);
 		empty = new WebMarkupContainer(this, getContentId());
 
-		this.cookieName = "modal-window-" + getClassRelativePath();		
-		
+		this.cookieName = "modal-window-" + getClassRelativePath();
+
 		add(new CloseButtonBehavior());
 		add(new WindowClosedBehavior());
 		add(HeaderContributor.forJavaScript(JAVASCRIPT));
@@ -290,26 +290,20 @@ public class ModalWindow extends Panel<Object>
 	 *            Request target associated with current ajax request.
 	 */
 	public static final void close(AjaxRequestTarget target)
-	{		
+	{
 		target.appendJavascript(getCloseJavacript());
 	}
-	
+
 	/**
 	 * @return javascript that closes current modal window
 	 */
-	private static String getCloseJavacript() 
+	private static String getCloseJavacript()
 	{
-		return
-			"var win;\n" +
-			"try {\n" +		
-			"	win = window.parent.Wicket.Window;\n" + 
-			"} catch (ignore) {\n" +
-			"}\n" +			
-			"if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n" +
-			"	window.parent.setTimeout(function() {\n" +
-			"		win.current.close();\n" +	
-			"	}, 0);\n" +
-			"}";
+		return "var win;\n" + "try {\n" + "	win = window.parent.Wicket.Window;\n"
+				+ "} catch (ignore) {\n" + "}\n"
+				+ "if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n"
+				+ "	window.parent.setTimeout(function() {\n" + "		win.current.close();\n"
+				+ "	}, 0);\n" + "}";
 	}
 
 	/**
@@ -752,7 +746,7 @@ public class ModalWindow extends Panel<Object>
 			{
 				// get the pagemap
 				Session session = Session.get();
-				PageMap pageMap = session.pageMapForName(getPageMapName(), false);
+				IPageMap pageMap = session.pageMapForName(getPageMapName(), false);
 
 				// if there is any remove it
 				if (pageMap != null)
@@ -818,8 +812,8 @@ public class ModalWindow extends Panel<Object>
 	/**
 	 * Replaces all occurences of " in string with \".
 	 * 
-	 * @param string 
-	 * 			String to be escaped.
+	 * @param string
+	 *            String to be escaped.
 	 * 
 	 * @return escaped string
 	 */
@@ -843,7 +837,8 @@ public class ModalWindow extends Panel<Object>
 
 		if (isCustomComponent() == true)
 		{
-			buffer.append("var element = document.getElementById(\"" + getContentMarkupId() + "\");\n");
+			buffer.append("var element = document.getElementById(\"" + getContentMarkupId()
+					+ "\");\n");
 		}
 
 		buffer.append("var settings = new Object();\n");
