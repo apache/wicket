@@ -1892,6 +1892,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 			// Component has been rendered
 			notifyBehaviorsComponentRendered();
+			
+			// detach
+			internalDetach();
 		}
 	}
 
