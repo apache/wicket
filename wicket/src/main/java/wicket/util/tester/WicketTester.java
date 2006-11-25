@@ -867,7 +867,7 @@ public class WicketTester extends MockWebApplication
 	 * TODO Post 1.2: General: This test is no longer valid because it depends
 	 * on an implementation detail that just changed!
 	 * 
-	 * public void assertExpirePreviousPage() { PageMap pageMap =
+	 * public void assertExpirePreviousPage() { IPageMap pageMap =
 	 * getWicketSession().getPageMap(null); Field internalMapCacheField; try {
 	 * internalMapCacheField = pageMap.getClass().getDeclaredField("pages");
 	 * internalMapCacheField.setAccessible(true); MostRecentlyUsedMap mru =

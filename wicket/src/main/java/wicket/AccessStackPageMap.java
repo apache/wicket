@@ -26,8 +26,8 @@ import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.collections.ArrayListStack;
 
 /**
- * A container for pages held in the session. PageMap is a parameter to several
- * methods in the Wicket API. You can get a PageMap by name from a Session with
+ * A container for pages held in the session. IPageMap is a parameter to several
+ * methods in the Wicket API. You can get a IPageMap by name from a Session with
  * Session.getPageMap(String pageMapName) or more conveniently with
  * PageMap.forName(String pageMapName). But you should not hold onto a reference
  * to the pagemap (just as you should not hold onto a reference to your Session
@@ -35,9 +35,9 @@ import wicket.util.collections.ArrayListStack;
  * typed accessor method like this:
  * 
  * <pre>
- * public PageMap getMyPageMap()
+ * public IPageMap getMyPageMap()
  * {
- * 	return PageMap.forName(&quot;myPageMapName&quot;);
+ * 	return IPageMap.forName(&quot;myPageMapName&quot;);
  * }
  * </pre>
  * 

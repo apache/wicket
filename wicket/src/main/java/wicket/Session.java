@@ -190,7 +190,7 @@ public abstract class Session implements Serializable
 	private int autoCreatePageMapCounter = 0;
 
 	/** A linked list for last used pagemap queue */
-	private LinkedList/* <PageMap> */usedPageMaps = new LinkedList();
+	private LinkedList/* <IPageMap> */usedPageMaps = new LinkedList();
 
 	/** Any special "skin" style to use when loading resources. */
 	private String style;
