@@ -20,7 +20,6 @@ import javax.swing.tree.TreeNode;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.markup.html.tree.table.ColumnLocation.Alignment;
 
 /**
  * Convenience class for building tree columns, i.e. columns that contain the
@@ -45,11 +44,6 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 	public AbstractTreeColumn(ColumnLocation location, String header)
 	{
 		super(location, header);
-
-		if (location.getAlignment() == Alignment.MIDDLE)
-		{
-			throw new IllegalArgumentException("Tree column may not be alligned in the middle.");
-		}
 	}
 
 	/**
