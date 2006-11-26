@@ -50,6 +50,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 	private TreeNode node;
 
 	private final List renderables = new ArrayList();
+	
+	private boolean treeHasLeftColumn;
 
 	/**
 	 * Constructor.
@@ -58,11 +60,14 @@ final class MiddleColumnsView extends WebMarkupContainer
 	 *            The component id
 	 * @param node
 	 *            The tree node
+	 * @param treeHasLeftColumn
+	 * 			  Whether there is a column aligned to left in the tree table
 	 */
-	public MiddleColumnsView(String id, TreeNode node)
+	public MiddleColumnsView(String id, TreeNode node, boolean treeHasLeftColumn)
 	{
 		super(id);
 		this.node = node;
+		this.treeHasLeftColumn = treeHasLeftColumn;
 	}
 
 	/**
@@ -181,7 +186,7 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		return result;
 	}
-
+	
 	/**
 	 * Renders all columns.
 	 * 
@@ -199,8 +204,8 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 		NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
 		nf.setMaximumFractionDigits(0);
-		nf.setMaximumFractionDigits(2);
-
+		nf.setMaximumFractionDigits(2);										
+		
 		for (int i = 0; i < columns.size(); ++i)
 		{
 			Component component = (Component)components.get(i);
@@ -209,7 +214,12 @@ final class MiddleColumnsView extends WebMarkupContainer
 
 			// write the wrapping column markup
 			response.write("<span class=\"b_\" style=\"width:" + nf.format(widths[i]) + "%\">");
-			response.write("<span class=\"c_\">");
+			
+			// determine whether we should render the left border
+			if (!treeHasLeftColumn && i == 0)
+				response.write("<span class=\"d_\">");
+			else
+				response.write("<span class=\"c_\">");
 
 			if (component != null) // is there a component for current column?
 			{

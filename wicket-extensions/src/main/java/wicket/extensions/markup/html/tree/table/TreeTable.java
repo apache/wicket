@@ -191,6 +191,14 @@ public class TreeTable extends DefaultAbstractTree
 		super(id, model);
 		init(columns);
 	}
+	
+	private boolean hasLeftColumn() {
+		for (int i = 0; i < columns.length; ++i) {
+			if (columns[i].getLocation().getAlignment().equals(Alignment.LEFT))
+				return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Adds the header to the TreeTable.
@@ -214,7 +222,7 @@ public class TreeTable extends DefaultAbstractTree
 			}
 
 		// create the view for middle columns
-		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", null);
+		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", null, hasLeftColumn());
 		add(middleColumns);
 		if (columns != null)
 			for (int i = 0; i < columns.length; i++)
@@ -324,7 +332,7 @@ public class TreeTable extends DefaultAbstractTree
 			}
 
 		// add middle columns
-		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", node);
+		MiddleColumnsView middleColumns = new MiddleColumnsView("middleColumns", node, hasLeftColumn());
 		if (columns != null)
 			for (int i = 0; i < columns.length; i++)
 			{
@@ -401,5 +409,5 @@ public class TreeTable extends DefaultAbstractTree
 		}
 
 		this.columns = columns;
-	}
+	}	
 }
