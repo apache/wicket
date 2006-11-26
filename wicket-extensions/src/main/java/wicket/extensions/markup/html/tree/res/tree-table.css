@@ -197,7 +197,7 @@ div.wicket-tree-table span.b_ span.c_ {
 
 div.wicket-tree-table span.c_,
 div.wicket-tree-table span.d_ {
-	width: 2000px;
+	width: 2000px !important;
 }
 
 div.wicket-tree-table span.b_ span.d_ {

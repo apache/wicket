@@ -45,11 +45,6 @@ public abstract class AbstractTreeColumn extends AbstractColumn
 	public AbstractTreeColumn(ColumnLocation location, String header)
 	{
 		super(location, header);
-
-		if (location.getAlignment() == Alignment.MIDDLE)
-		{
-			throw new IllegalArgumentException("Tree column may not be alligned in the middle.");
-		}
 	}
 
 	/**
