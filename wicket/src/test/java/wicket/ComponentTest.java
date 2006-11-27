@@ -16,17 +16,18 @@
  */
 package wicket;
 
-import wicket.WicketTestCase;
+import wicket.ajax.AjaxEventBehavior;
 
 /**
  * Test for ajax handler.
- *
+ * 
  * @author Juergen Donnerstag
  */
 public class ComponentTest extends WicketTestCase
 {
 	/**
 	 * Construct.
+	 * 
 	 * @param name
 	 */
 	public ComponentTest(String name)
@@ -39,6 +40,64 @@ public class ComponentTest extends WicketTestCase
 	 */
 	public void testRenderHomePage_1() throws Exception
 	{
-	    executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
+		executeTest(TestPage_1.class, "TestPageExpectedResult_1.html");
+	}
+
+	/**
+	 * Tests the number of detach calls on a Page, Component, Behavior and Model
+	 * during a normal request.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDetachPage() throws Exception
+	{
+		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
+		TestDetachPage page = (TestDetachPage)application.getLastRenderedPage();
+		assertEquals(1, page.getNrComponentDetachModelCalls());
+		assertEquals(1, page.getNrComponentDetachModelsCalls());
+		assertEquals(1, page.getNrComponentInternalDetachCalls());
+		assertEquals(1, page.getNrComponentOnDetachCalls());
+		assertEquals(1, page.getNrPageDetachModelCalls());
+		assertEquals(1, page.getNrPageDetachModelsCalls());
+		assertEquals(1, page.getNrPageInternalDetachCalls());
+		assertEquals(1, page.getNrPageOnDetachCalls());
+		assertEquals(1, page.getNrModelDetachCalls());
+		assertEquals(1, page.getNrAjaxBehaviorDetachModelCalls());
+	}
+
+	/**
+	 * Tests the number of detach calls on a Page, Component, Behavior and Model
+	 * during an Ajax request.
+	 * 
+	 * @throws Exception
+	 */
+	public void testDetachPageAjaxRequest() throws Exception
+	{
+		executeTest(TestDetachPage.class, "TestDetachPageExpectedResult.html");
+		TestDetachPage page = (TestDetachPage)application.getLastRenderedPage();
+
+		assertEquals(1, page.getNrComponentDetachModelCalls());
+		assertEquals(1, page.getNrComponentDetachModelsCalls());
+		assertEquals(1, page.getNrComponentInternalDetachCalls());
+		assertEquals(1, page.getNrComponentOnDetachCalls());
+		assertEquals(1, page.getNrPageDetachModelCalls());
+		assertEquals(1, page.getNrPageDetachModelsCalls());
+		assertEquals(1, page.getNrPageInternalDetachCalls());
+		assertEquals(1, page.getNrPageOnDetachCalls());
+		assertEquals(1, page.getNrModelDetachCalls());
+		assertEquals(1, page.getNrAjaxBehaviorDetachModelCalls());
+
+		AjaxEventBehavior behavior = page.getAjaxBehavior();
+		executedBehavior(TestDetachPage.class, behavior, "TestDetachPageAjaxResult.html");
+		assertEquals(2, page.getNrComponentDetachModelCalls());
+		assertEquals(2, page.getNrComponentDetachModelsCalls());
+		assertEquals(2, page.getNrComponentInternalDetachCalls());
+		assertEquals(2, page.getNrComponentOnDetachCalls());
+		assertEquals(2, page.getNrPageDetachModelCalls());
+		assertEquals(2, page.getNrPageDetachModelsCalls());
+		assertEquals(2, page.getNrPageInternalDetachCalls());
+		assertEquals(2, page.getNrPageOnDetachCalls());
+		assertEquals(2, page.getNrModelDetachCalls());
+		assertEquals(2, page.getNrAjaxBehaviorDetachModelCalls());
 	}
 }
