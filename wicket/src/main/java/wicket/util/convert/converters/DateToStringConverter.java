@@ -24,7 +24,7 @@ import java.util.Locale;
  * 
  * @author Eelco Hillenius
  */
-public final class DateToStringConverter extends AbstractConverter
+public class DateToStringConverter extends AbstractConverter
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,9 +41,6 @@ public final class DateToStringConverter extends AbstractConverter
 		return value.toString();
 	}
 
-	/**
-	 * @see wicket.util.convert.converters.AbstractConverter#getTargetType()
-	 */
 	/**
 	 * @param locale
 	 * @return Returns the dateFormat.
