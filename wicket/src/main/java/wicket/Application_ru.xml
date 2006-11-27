@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- have to confirm whether this is really ok -->
+	<entry key="RequiredValidator">поле '${label}' обязательно для ввода.</entry>
+	<entry key="TypeValidator">'${input}' должно быть типа ${type}.</entry>
+	<entry key="NumberValidator.range">${input} должно быть между ${minimum} и ${maximum}.</entry>
+	<entry key="NumberValidator.minimum">'${input}' должно быть больше чем ${minimum}.</entry>
+	<entry key="NumberValidator.maximum">'${input}' должно быть меньше чем ${maximum}.</entry>
+	<entry key="StringValidator.range">'${input}' должно быть длиной от ${minimum} до ${maximum} символов(а).</entry>
+	<entry key="StringValidator.minimum">'${input}' должно быть длиной не меньше ${minimum} символов(а).</entry>
+	<entry key="StringValidator.maximum">'${input}' должно быть длиной не меньше ${maximum} символов(а).</entry>
+	<entry key="StringValidator.exact">'${input}' должно быть длиной ${exact} символ(ов).</entry>
+	<entry key="DateValidator.range">дата '${input}' должна быть между ${minimum} и ${maximum}.</entry>
+	<entry key="DateValidator.minimum">дата '${input}' должна быть больше чем ${minimum}.</entry>
+	<entry key="DateValidator.maximum">дата '${input}' должна быть меньше чем ${maximum}.</entry>
+	<entry key="PatternValidator">'${input}' не соответствует шаблону '${pattern}'.</entry>
+	<entry key="EmailAddressPatternValidator">'${input}' не является корректным почтовым адресом.</entry>
+	<entry key="EqualInputValidator">'${input0}' из поля ${label0} и '${input1}' из поля ${label1} должны быть одинаковыми.</entry>
+	<entry key="EqualPasswordInputValidator">поля ${label0} и ${label1} должны быть одинаковыми.</entry>
+	<entry key="null">Выберите значение</entry>
+	<entry key="nullValid"></entry>
+</properties>
