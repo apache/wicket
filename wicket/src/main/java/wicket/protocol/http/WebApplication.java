@@ -217,7 +217,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @return The Wicket servlet for this application
 	 */
-	public final WicketServlet getWicketServleta()
+	public final WicketServlet getWicketServlet()
 	{
 		if (wicketServlet == null)
 		{
@@ -571,24 +571,24 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// If no system parameter check servlet specific <init-param>
 		if (configuration == null)
 		{
-			configuration = wicketServlet.getInitParameter(Application.CONFIGURATION);
+			configuration = getInitParameter(Application.CONFIGURATION);
 		}
 		// If no system parameter and not <init-param>, than check
 		// <context-param>
 		if (configuration == null)
 		{
-			configuration = wicketServlet.getServletContext().getInitParameter(
+			configuration = getServletContext().getInitParameter(
 					Application.CONFIGURATION);
 		}
 
 		// Development mode is default if not settings have been found
 		if (configuration != null)
 		{
-			configure(configuration, wicketServlet.getInitParameter("sourceFolder"));
+			configure(configuration, getInitParameter("sourceFolder"));
 		}
 		else
 		{
-			configure(Application.DEVELOPMENT, wicketServlet.getInitParameter("sourceFolder"));
+			configure(Application.DEVELOPMENT, getInitParameter("sourceFolder"));
 		}
 	}
 
