@@ -17,11 +17,10 @@
 package wicket.protocol.http;
 
 /**
- * A factory interface used by wicket servlet to create application objects.
+ * A factory interface used by wicket filter or servlet to create application objects.
  * Configure your webapplication to use this factory in web.xml like:
  * 
  * <pre>
- *  
  *     &lt;init-param&gt;
  *       &lt;param-name&gt;applicationFactoryClassName&lt;/param-name&gt;
  *         &lt;param-value&gt;teachscape.platform.web.wicket.SpringApplicationFactory&lt;/param-value&gt;
@@ -41,4 +40,13 @@ public interface IWebApplicationFactory
 	 * @return application object instance
 	 */
 	WebApplication createApplication(WicketServlet servlet);
+
+	/**
+	 * Create application object
+	 * 
+	 * @param filter
+	 *            the wicket filter
+	 * @return application object instance
+	 */
+	WebApplication createApplication(WicketFilter filter);
 }

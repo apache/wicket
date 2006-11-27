@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import wicket.markup.html.pages.AccessDeniedPage;
 import wicket.protocol.http.IWebApplicationFactory;
 import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WicketFilter;
 import wicket.protocol.http.WicketServlet;
 
 /**
@@ -59,6 +60,16 @@ public class WicketPortletServlet extends WicketServlet
 				};
 			}
 
+			public WebApplication createApplication(WicketFilter filter)
+			{
+				return new WebApplication(){
+
+					public Class getHomePage()
+					{
+						return AccessDeniedPage.class;
+					}					
+				};
+			}
 		};
 	}
 }

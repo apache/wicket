@@ -27,6 +27,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import wicket.protocol.http.IWebApplicationFactory;
 import wicket.protocol.http.WebApplication;
+import wicket.protocol.http.WicketFilter;
 import wicket.protocol.http.WicketServlet;
 
 /**
@@ -85,6 +86,24 @@ public class SpringWebApplicationFactory implements IWebApplicationFactory
 		.getRequiredWebApplicationContext(sc);
 
 		String beanName = servlet.getInitParameter("applicationBean");
+		return createApplication(ac, beanName);
+	}
+
+	/**
+	 * @see IWebApplicationFactory#createApplication(WicketFilter)
+	 */
+	public WebApplication createApplication(WicketFilter filter)
+	{
+		ServletContext sc = filter.getFilterConfig().getServletContext();
+		ApplicationContext ac = WebApplicationContextUtils
+		.getRequiredWebApplicationContext(sc);
+
+		String beanName = filter.getFilterConfig().getInitParameter("applicationBean");
+		return createApplication(ac, beanName);
+	}
+
+	private WebApplication createApplication(ApplicationContext ac, String beanName)
+	{
 		if(beanName!=null){
 			WebApplication application = (WebApplication)ac.getBean(beanName);
 			if(application == null)

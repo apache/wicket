@@ -73,11 +73,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *              public void init()
- *              {
- *                  String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                  URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                  ...
+ *               public void init()
+ *               {
+ *                   String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                   URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                   ...
  * </pre>
  * 
  * @see WicketServlet
@@ -129,6 +129,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/** The WicketServlet that this application is attached to */
 	private WicketServlet wicketServlet;
 
+	/** The WicketFilter that this application is attached to */
+	private WicketFilter wicketFilter;
+
 	/**
 	 * Constructor. <strong>Use {@link #init()} for any configuration of your
 	 * application instead of overriding the constructor.</strong>
@@ -173,15 +176,19 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final ServletContext getServletContext()
 	{
-		if (wicketServlet == null)
+		if (wicketServlet != null)
 		{
-			throw new IllegalStateException("servletContext is not set yet. Any code in your"
-					+ " Application object that uses the wicketServlet instance should be put"
-					+ " in the init() method instead of your constructor");
+			return wicketServlet.getServletContext();
 		}
-		return wicketServlet.getServletContext();
+		if (wicketFilter != null)
+		{
+			return wicketFilter.getFilterConfig().getServletContext();
+		}
+		throw new IllegalStateException("servletContext is not set yet. Any code in your"
+				+ " Application object that uses the wicketServlet/Filter instance should be put"
+				+ " in the init() method instead of your constructor");
 	}
-	
+
 	/**
 	 * Gets the prefix for storing variables in the actual session (typically
 	 * {@link HttpSession} for this application instance.
@@ -210,7 +217,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * @return The Wicket servlet for this application
 	 */
-	public final WicketServlet getWicketServlet()
+	public final WicketServlet getWicketServleta()
 	{
 		if (wicketServlet == null)
 		{
@@ -337,7 +344,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * Create new Wicket Session object. Note, this method is not called if you
 	 * registered your own ISessionFactory with the Application.
 	 * 
-	 * @return The created session 
+	 * @return The created session
 	 */
 	public Session newSession()
 	{
@@ -351,7 +358,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	{
 		return newSession();
 	}
-	
+
 	/**
 	 * @param sessionId
 	 *            The session id that was destroyed
@@ -391,6 +398,28 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			this.wicketServlet = wicketServlet;
 			this.applicationKey = wicketServlet.getServletName();
+		}
+		else
+		{
+			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
+		}
+	}
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param wicketFilter
+	 *            The wicket filter instance for this application
+	 * @throws IllegalStateException
+	 *             If an attempt is made to call this method once the wicket
+	 *             servlet has been set for the application.
+	 */
+	public final void setWicketFilter(final WicketFilter wicketFilter)
+	{
+		if (this.wicketFilter == null)
+		{
+			this.wicketFilter = wicketFilter;
+			this.applicationKey = wicketFilter.getFilterConfig().getFilterName();
 		}
 		else
 		{
@@ -471,6 +500,28 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * Gets the init parameter from the context (servlet or filter).
+	 * 
+	 * @param key
+	 *            the key to search for
+	 * @return the value of the servlet/filter init parameter
+	 */
+	private String getInitParameter(String key)
+	{
+		if (wicketServlet != null)
+		{
+			return wicketServlet.getInitParameter(key);
+		}
+		if (wicketFilter != null)
+		{
+			return wicketFilter.getFilterConfig().getInitParameter(key);
+		}
+		throw new IllegalStateException("servletContext is not set yet. Any code in your"
+				+ " Application object that uses the wicketServlet/Filter instance should be put"
+				+ " in the init() method instead of your constructor");
+	}
+
+	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
 	 * Internal intialization. First determine the deployment mode. First check
@@ -498,10 +549,9 @@ public abstract class WebApplication extends Application implements ISessionFact
 		getPageSettings().addComponentResolver(new AutoLinkResolver());
 
 		// Set resource finder to web app path
-		getResourceSettings().setResourceFinder(
-				new WebApplicationPath(getWicketServlet().getServletContext()));
+		getResourceSettings().setResourceFinder(new WebApplicationPath(getServletContext()));
 
-		String contextPath = wicketServlet.getInitParameter(Application.CONTEXTPATH);
+		String contextPath = getInitParameter(Application.CONTEXTPATH);
 		if (contextPath != null)
 		{
 			getApplicationSettings().setContextPath(contextPath);
