@@ -317,7 +317,7 @@ public class FormInput extends WicketExamplePage
 	private static final List<Locale> LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
 			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
 			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK"),
-			new Locale("th") });
+			new Locale("th"), new Locale("ru") });
 
 	/** available sites for the multiple select. */
 	private static final List<String> SITES = Arrays.asList(new String[] { "The Server Side",
