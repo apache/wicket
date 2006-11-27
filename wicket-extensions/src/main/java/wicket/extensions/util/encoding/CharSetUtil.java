@@ -62,7 +62,7 @@ public class CharSetUtil
 		if (charSetMap == null)
 		{
 			// Get servlet context
-			final ServletContext context = application.getWicketServlet().getServletContext();
+			final ServletContext context = application.getServletContext();
 			
 			final InputStream inputStream = context.getResourceAsStream("/WEB-INF/"
 					+ CharSetMap.CHARSET_RESOURCE);

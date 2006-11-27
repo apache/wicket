@@ -88,7 +88,7 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 			try
 			{
 				// try to load the resource from the web context
-				url = getWicketServlet().getServletContext().getResource(location);
+				url = getServletContext().getResource(location);
 				if (url != null)
 				{
 					return new UrlResourceStream(url);

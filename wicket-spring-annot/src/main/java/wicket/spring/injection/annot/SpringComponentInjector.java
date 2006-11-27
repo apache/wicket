@@ -65,8 +65,7 @@ public class SpringComponentInjector extends ComponentInjector {
 		// locate application context through spring's default location
 		// mechanism and pass it on to the proper constructor
 		this(webapp, WebApplicationContextUtils
-				.getRequiredWebApplicationContext(webapp.getWicketServlet()
-						.getServletContext()));
+				.getRequiredWebApplicationContext(webapp.getServletContext()));
 	}
 
 	/**

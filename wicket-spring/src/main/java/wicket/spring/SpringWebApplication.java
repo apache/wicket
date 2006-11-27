@@ -74,7 +74,7 @@ public abstract class SpringWebApplication extends WebApplication implements
 			// this application was not created as a spring bean so we
 			// locate the app context from servlet context
 
-			ServletContext sc = getWicketServlet().getServletContext();
+			ServletContext sc = getServletContext();
 			applicationContext = WebApplicationContextUtils
 					.getRequiredWebApplicationContext(sc);
 
