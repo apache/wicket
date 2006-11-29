@@ -118,6 +118,8 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 			if (formComponent.hasErrorMessage())
 			{
 				formComponent.invalid();
+				
+				onError(target, null);
 			}
 			else
 			{
@@ -150,6 +152,9 @@ public abstract class AjaxFormComponentUpdatingBehavior extends AjaxEventBehavio
 	/**
 	 * Called to handle any error resulting from updating form component. Errors
 	 * thrown from {@link #onUpdate(AjaxRequestTarget)} will not be caught here.
+	 * 
+	 * The exception param can be null then it is an validate failure, if the 
+	 * Exception is not null then an exception did happen.
 	 * 
 	 * @param target
 	 * @param e
