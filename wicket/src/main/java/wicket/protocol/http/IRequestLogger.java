@@ -56,6 +56,11 @@ public interface IRequestLogger
 	 * @return Collection of live Sessions Data
 	 */
 	public SessionData[] getLiveSessions();
+	
+	/**
+	 * @return The current active requests 
+	 */
+	public int getCurrentActiveRequestCount();
 
 	/**
 	 * called when the session is created and has an id. 

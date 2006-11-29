@@ -54,8 +54,6 @@ import wicket.util.string.AppendingStringBuffer;
  * To view this information live see the {@link InspectorBug} that shows the {@link InspectorPage}
  * with the {@link LiveSessionsPage}
  * 
- * This class is still a bit experimental for the 1.2 release. Will improve further in 2.0
- * 
  * @author jcompagner
  * 
  * @since 1.2
@@ -77,6 +75,10 @@ public class RequestLogger implements IRequestLogger
 	{
 
 		/**
+		 * If you use the request logger log functionality then this object
+		 * should have a nice String representation. So make sure that the toString()
+		 * is implemented for the returned object.
+		 * 
 		 * @return The custom object stored in the request loggers current request.
 		 */
 		Object getSessionInfo();
@@ -134,6 +136,14 @@ public class RequestLogger implements IRequestLogger
 	public int getPeakSessions()
 	{
 		return peakSessions;
+	}
+	
+	/**
+	 * @see wicket.protocol.http.IRequestLogger#getCurrentActiveRequestCount()
+	 */
+	public int getCurrentActiveRequestCount()
+	{
+		return active;
 	}
 	
 	/**
