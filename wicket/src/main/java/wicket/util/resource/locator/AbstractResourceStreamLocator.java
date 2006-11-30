@@ -79,14 +79,17 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 		String[] extensions;
 		if (extension == null)
 		{
+			// Get the extension from the path provided
 			extensions = new String[] { "." + Strings.lastPathComponent(path, '.') };
 			path = Strings.beforeLastPathComponent(path, '.');
 		}
 		else
 		{
+			// Extension can be a comma separated list
 			extensions = Strings.split(extension, ',');
 			for (int i = extensions.length - 1; i >= 0; i--)
 			{
+				extensions[i] = extensions[i].trim();
 				if (!extensions[i].startsWith("."))
 				{
 					extensions[i] = "." + extensions[i];
@@ -133,6 +136,7 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 			}
 		}
 
+		// 4. extension only
 		for (String ext : extensions)
 		{
 			// 4. Try just extension
