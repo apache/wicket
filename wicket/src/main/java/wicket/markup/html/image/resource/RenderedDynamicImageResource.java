@@ -179,7 +179,7 @@ public abstract class RenderedDynamicImageResource extends DynamicImageResource
 	{
 		while (true)
 		{
-			final BufferedImage image = new BufferedImage(width, height, type);
+			final BufferedImage image = new BufferedImage(getWidth(), getHeight(), getType());
 			if (render((Graphics2D)image.getGraphics()))
 			{
 				return toImageData(image);
