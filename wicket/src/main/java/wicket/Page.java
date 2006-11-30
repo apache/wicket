@@ -284,11 +284,8 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 	 */
 	public void internalDetach()
 	{
-		if (attached)
-		{
-			super.internalDetach();
-			attached = false;
-		}
+		super.internalDetach();
+		attached = false;
 	}
 
 	/**

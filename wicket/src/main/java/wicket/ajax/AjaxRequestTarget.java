@@ -261,6 +261,11 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
+//		Page page = requestCycle.getRequest().getPage();
+//		if(page != null) 
+//		{
+//			page.detachModels();
+//		}
 	}
 
 	/**
@@ -525,7 +530,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingHeaderResponse.reset();
 
 		component.renderHead(header);
-		component.detachBehaviors();
+
 		if (component instanceof MarkupContainer)
 		{
 			((MarkupContainer)component).visitChildren(new Component.IVisitor()
@@ -535,7 +540,6 @@ public class AjaxRequestTarget implements IRequestTarget
 					if (component.isVisible())
 					{
 						component.renderHead(header);
-						component.detachBehaviors();
 						return CONTINUE_TRAVERSAL;
 					}
 					else
