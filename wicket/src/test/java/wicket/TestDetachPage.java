@@ -18,7 +18,6 @@ package wicket;
 
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
-import wicket.behavior.IBehavior;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
 import wicket.model.IModel;
@@ -115,21 +114,21 @@ public class TestDetachPage extends WebPage
 		};
 		label.setOutputMarkupId(true);
 		ajaxEventBehavior = new AjaxEventBehavior("onclick")
-						{
-							/** for serialization. */
-							private static final long serialVersionUID = 1L;
-				
-							public void detachModel(Component component)
-							{
-								nrAjaxBehaviorDetachModelCalls++;
-								super.detachModel(component);
-							}
-				
-							protected void onEvent(AjaxRequestTarget target)
-							{
-								target.addComponent(label);
-							}
-						};
+		{
+			/** for serialization. */
+			private static final long serialVersionUID = 1L;
+
+			public void detachModel(Component component)
+			{
+				nrAjaxBehaviorDetachModelCalls++;
+				super.detachModel(component);
+			}
+
+			protected void onEvent(AjaxRequestTarget target)
+			{
+				target.addComponent(label);
+			}
+		};
 		label.add(ajaxEventBehavior);
 		add(label);
 	}
