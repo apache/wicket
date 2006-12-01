@@ -54,34 +54,37 @@ public class ComponentCreateTagTest extends WicketTestCase
 	 * A Table with X rows and a label inside
 	 * 
 	 * @throws Exception
+	 * @TODO Feature not yet available in 2.0
 	 */
-	public void testRenderHomePage_2() throws Exception
-	{
-		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-		executeTest(ComponentCreateTag_2.class, "ComponentCreateTagExpectedResult_2.html");
-	}
+//	public void testRenderHomePage_2() throws Exception
+//	{
+//		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+//		executeTest(ComponentCreateTag_2.class, "ComponentCreateTagExpectedResult_2.html");
+//	}
 
 	/**
 	 * A Border
 	 * 
 	 * @throws Exception
+	 * @TODO Feature not yet available in 2.0
 	 */
-	public void testRenderHomePage_3() throws Exception
-	{
-		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-		executeTest(ComponentCreateTag_3.class, "ComponentCreateTagExpectedResult_3.html");
-	}
+//	public void testRenderHomePage_3() throws Exception
+//	{
+//		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+//		executeTest(ComponentCreateTag_3.class, "ComponentCreateTagExpectedResult_3.html");
+//	}
 
 	/**
 	 * A Border inside another Border (nested <wicket:components>)
 	 * 
 	 * @throws Exception
+	 * @TODO Feature not yet available in 2.0
 	 */
-	public void testRenderHomePage_4() throws Exception
-	{
-		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
-		executeTest(ComponentCreateTag_4.class, "ComponentCreateTagExpectedResult_4.html");
-	}
+//	public void testRenderHomePage_4() throws Exception
+//	{
+//		tester.getApplication().getMarkupSettings().setStripWicketTags(true);
+//		executeTest(ComponentCreateTag_4.class, "ComponentCreateTagExpectedResult_4.html");
+//	}
 
 	/**
 	 * 
