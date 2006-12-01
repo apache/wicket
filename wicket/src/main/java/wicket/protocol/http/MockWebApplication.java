@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IRequestCycleFactory;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
@@ -113,6 +114,9 @@ public class MockWebApplication
 	/** Session. */
 	private WebSession wicketSession;
 
+	/** Request cycle factory. */
+	private IRequestCycleFactory requestCycleFactory;
+
 	/** The homepage */
 	private Class<? extends Page> homePage;
 
@@ -191,6 +195,7 @@ public class MockWebApplication
 		this.servletResponse = new MockHttpServletResponse();
 		this.wicketRequest = this.application.newWebRequest(servletRequest);
 		this.wicketSession = this.application.getSession(wicketRequest);
+		this.requestCycleFactory = this.wicketSession.getRequestCycleFactory();
 
 		// -----------------------------------
 		// Copied from WicketFilter
@@ -324,7 +329,7 @@ public class MockWebApplication
 	public void processRequestCycle(final Component component)
 	{
 		setupRequestAndResponse();
-		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		WebRequestCycle cycle = createRequestCycle();
 		cycle.request(component);
 
 		if (component instanceof Page)
@@ -342,7 +347,7 @@ public class MockWebApplication
 	public void processRequestCycle(final Class<? extends Page> pageClass)
 	{
 		setupRequestAndResponse();
-		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		WebRequestCycle cycle = createRequestCycle();
 		cycle.request(new BookmarkablePageRequestTarget(pageClass));
 		postProcessRequestCycle(cycle);
 	}
@@ -391,7 +396,7 @@ public class MockWebApplication
 			wicketRequest = this.application.newWebRequest(newHttpRequest);
 			wicketSession = this.application.getSession(wicketRequest);
 
-			cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+			cycle = createRequestCycle();
 			cycle.request();
 		}
 		this.lastRenderedPage = generateLastRenderedPage(cycle);
@@ -458,7 +463,7 @@ public class MockWebApplication
 	 */
 	public WebRequestCycle createRequestCycle()
 	{
-		return new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		return (WebRequestCycle) requestCycleFactory.newRequestCycle(wicketSession, wicketRequest, wicketResponse);
 	}
 
 	/**
