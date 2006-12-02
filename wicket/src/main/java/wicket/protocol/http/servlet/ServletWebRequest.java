@@ -26,7 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.Application;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.util.lang.Bytes;
 import wicket.util.string.StringValueConversionException;
@@ -138,7 +140,13 @@ public class ServletWebRequest extends WebRequest
 	 */
 	public String getPath()
 	{
-		return httpServletRequest.getPathInfo();
+		String url = Strings.stripJSessionId(httpServletRequest.getRequestURI());
+		String rootPath = ((WebApplication)Application.get()).getRootPath();
+		if (url.startsWith(rootPath))
+		{
+			return url.substring(rootPath.length());
+		}
+		return null;
 	}
 
 	/**

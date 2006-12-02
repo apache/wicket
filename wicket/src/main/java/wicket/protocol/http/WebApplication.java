@@ -73,11 +73,11 @@ import wicket.util.watch.ModificationWatcher;
  * init() method. For example:
  * 
  * <pre>
- *               public void init()
- *               {
- *                   String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                   URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                   ...
+ *                 public void init()
+ *                 {
+ *                     String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
+ *                     URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *                     ...
  * </pre>
  * 
  * @see WicketServlet
@@ -169,6 +169,19 @@ public abstract class WebApplication extends Application implements ISessionFact
 			requestCycleProcessor = newRequestCycleProcessor();
 		}
 		return requestCycleProcessor;
+	}
+
+	/**
+	 * Returns the full rootpath of this application. This is the
+	 * ApplicationSettings.contextpath and the WicketFilter.rootpath concatted.
+	 * 
+	 * @return String the full rootpath.
+	 */
+	public String getRootPath()
+	{
+		HttpServletRequest httpServletRequest = ((WebRequestCycle)RequestCycle.get())
+				.getWebRequest().getHttpServletRequest();
+		return wicketFilter.getRootPath(httpServletRequest);
 	}
 
 	/**
@@ -557,8 +570,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// <context-param>
 		if (configuration == null)
 		{
-			configuration = getServletContext().getInitParameter(
-					Application.CONFIGURATION);
+			configuration = getServletContext().getInitParameter(Application.CONFIGURATION);
 		}
 
 		// Development mode is default if not settings have been found
