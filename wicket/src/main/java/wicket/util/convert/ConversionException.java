@@ -19,12 +19,14 @@ package wicket.util.convert;
 import java.text.Format;
 import java.util.Locale;
 
+import wicket.WicketRuntimeException;
+
 /**
  * Thrown for conversion exceptions.
  * 
  * @author Eelco Hillenius
  */
-public final class ConversionException extends RuntimeException
+public class ConversionException extends WicketRuntimeException
 {
 	private static final long serialVersionUID = 1L;
 
