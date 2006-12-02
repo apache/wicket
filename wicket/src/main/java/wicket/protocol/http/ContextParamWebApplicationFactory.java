@@ -43,7 +43,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 					"servlet init param ["
 							+ APP_CLASS_PARAM
 							+ "] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["
-							+ WicketServlet.APP_FACT_PARAM + "] is missing");
+							+ WicketFilter.APP_FACT_PARAM + "] is missing");
 		}
 
 		return createApplication(applicationClassName);
@@ -78,8 +78,12 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	{
 		try
 		{
-			final Class applicationClass = getClass().getClassLoader().loadClass(
-					applicationClassName);
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			if (loader == null)
+			{
+				loader = getClass().getClassLoader();
+			}
+			final Class applicationClass = loader.loadClass(applicationClassName);
 			if (WebApplication.class.isAssignableFrom(applicationClass))
 			{
 				// Construct WebApplication subclass
