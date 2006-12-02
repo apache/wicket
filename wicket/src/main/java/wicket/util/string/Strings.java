@@ -50,16 +50,16 @@ import wicket.WicketRuntimeException;
  */
 public final class Strings
 {
-	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+	/**
+	 * The line seperator for the current platform.
+	 */
+	public static final String LINE_SEPARATOR;
 
 	/** A table of hex digits */
 	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
 			'B', 'C', 'D', 'E', 'F' };
 
-	/**
-	 * The line seperator for the current platform.
-	 */
-	public static final String LINE_SEPARATOR;
+	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
 
 	static
 	{
@@ -390,33 +390,6 @@ public final class Strings
 	}
 
 	/**
-	 * Replace HTML numbers like &#20540 by the appropriate character.
-	 * 
-	 * @param str
-	 *            The text to be evaluated
-	 * @return The text with "numbers" replaced
-	 */
-	public static String replaceHtmlEscapeNumber(String str)
-	{
-		if (str == null)
-		{
-			return null;
-		}
-		Matcher matcher = htmlNumber.matcher(str);
-		while (matcher.find())
-		{
-			int pos = matcher.start();
-			int end = matcher.end();
-			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
-			char ch = (char)number;
-			str = str.substring(0, pos) + ch + str.substring(end);
-			matcher = htmlNumber.matcher(str);
-		}
-
-		return str;
-	}
-
-	/**
 	 * Gets the first path component of a path using a given separator. If the
 	 * separator cannot be found, the path itself is returned.
 	 * <p>
@@ -444,6 +417,106 @@ public final class Strings
 		}
 
 		return path.substring(0, index);
+	}
+
+	/**
+	 * Converts encoded &#92;uxxxx to unicode chars and changes special saved
+	 * chars to their original forms.
+	 * 
+	 * @param escapedUnicodeString
+	 *            escaped unicode string, like '\u4F60\u597D'.
+	 * 
+	 * @return The actual unicode. Can be used for instance with message bundles
+	 */
+	public static String fromEscapedUnicode(String escapedUnicodeString)
+	{
+		int off = 0;
+		char[] in = escapedUnicodeString.toCharArray();
+		int len = in.length;
+		char[] convtBuf = new char[len];
+
+		if (convtBuf.length < len)
+		{
+			int newLen = len * 2;
+			if (newLen < 0)
+			{
+				newLen = Integer.MAX_VALUE;
+			}
+			convtBuf = new char[newLen];
+		}
+		char aChar;
+		char[] out = convtBuf;
+		int outLen = 0;
+		int end = off + len;
+
+		while (off < end)
+		{
+			aChar = in[off++];
+			if (aChar == '\\')
+			{
+				aChar = in[off++];
+				if (aChar == 'u')
+				{
+					// Read the xxxx
+					int value = 0;
+					for (int i = 0; i < 4; i++)
+					{
+						aChar = in[off++];
+						switch (aChar)
+						{
+							case '0' :
+							case '1' :
+							case '2' :
+							case '3' :
+							case '4' :
+							case '5' :
+							case '6' :
+							case '7' :
+							case '8' :
+							case '9' :
+								value = (value << 4) + aChar - '0';
+								break;
+							case 'a' :
+							case 'b' :
+							case 'c' :
+							case 'd' :
+							case 'e' :
+							case 'f' :
+								value = (value << 4) + 10 + aChar - 'a';
+								break;
+							case 'A' :
+							case 'B' :
+							case 'C' :
+							case 'D' :
+							case 'E' :
+							case 'F' :
+								value = (value << 4) + 10 + aChar - 'A';
+								break;
+							default :
+								throw new IllegalArgumentException("Malformed \\uxxxx encoding.");
+						}
+					}
+					out[outLen++] = (char)value;
+				}
+				else
+				{
+					if (aChar == 't')
+						aChar = '\t';
+					else if (aChar == 'r')
+						aChar = '\r';
+					else if (aChar == 'n')
+						aChar = '\n';
+					else if (aChar == 'f')
+						aChar = '\f';
+					out[outLen++] = aChar;
+				}
+			}
+			else
+			{
+				out[outLen++] = (char)aChar;
+			}
+		}
+		return new String(out, 0, outLen);
 	}
 
 	/**
@@ -539,6 +612,57 @@ public final class Strings
 		}
 
 		return false;
+	}
+
+	/**
+	 * Joins string fragments using the specified separator
+	 * 
+	 * @param separator
+	 * @param fragments
+	 * @return combined fragments
+	 */
+	public static String join(String separator, String[] fragments)
+	{
+		if (fragments.length < 1)
+		{
+			// no elements
+			return "";
+		}
+		else if (fragments.length < 2)
+		{
+			// single element
+			return fragments[0];
+		}
+		else
+		{
+			// two or more elements
+			StringBuffer buff = new StringBuffer(128);
+			if (fragments[0] != null)
+			{
+				buff.append(fragments[0]);
+			}
+			for (int i = 1; i < fragments.length; i++)
+			{
+				if ((fragments[i - 1] != null) || (fragments[i] != null))
+				{
+					boolean lhsClosed = fragments[i - 1].endsWith(separator);
+					boolean rhsClosed = fragments[i].startsWith(separator);
+					if (lhsClosed && rhsClosed)
+					{
+						buff.append(fragments[i].substring(1));
+					}
+					else if (!lhsClosed && !rhsClosed)
+					{
+						buff.append(separator).append(fragments[i]);
+					}
+					else
+					{
+						buff.append(fragments[i]);
+					}
+				}
+			}
+			return buff.toString();
+		}
 	}
 
 	/**
@@ -646,180 +770,30 @@ public final class Strings
 	}
 
 	/**
-	 * Converts encoded &#92;uxxxx to unicode chars and changes special saved
-	 * chars to their original forms.
+	 * Replace HTML numbers like &#20540 by the appropriate character.
 	 * 
-	 * @param escapedUnicodeString
-	 *            escaped unicode string, like '\u4F60\u597D'.
-	 * 
-	 * @return The actual unicode. Can be used for instance with message bundles
+	 * @param str
+	 *            The text to be evaluated
+	 * @return The text with "numbers" replaced
 	 */
-	public static String fromEscapedUnicode(String escapedUnicodeString)
+	public static String replaceHtmlEscapeNumber(String str)
 	{
-		int off = 0;
-		char[] in = escapedUnicodeString.toCharArray();
-		int len = in.length;
-		char[] convtBuf = new char[len];
-
-		if (convtBuf.length < len)
+		if (str == null)
 		{
-			int newLen = len * 2;
-			if (newLen < 0)
-			{
-				newLen = Integer.MAX_VALUE;
-			}
-			convtBuf = new char[newLen];
+			return null;
 		}
-		char aChar;
-		char[] out = convtBuf;
-		int outLen = 0;
-		int end = off + len;
-
-		while (off < end)
+		Matcher matcher = htmlNumber.matcher(str);
+		while (matcher.find())
 		{
-			aChar = in[off++];
-			if (aChar == '\\')
-			{
-				aChar = in[off++];
-				if (aChar == 'u')
-				{
-					// Read the xxxx
-					int value = 0;
-					for (int i = 0; i < 4; i++)
-					{
-						aChar = in[off++];
-						switch (aChar)
-						{
-							case '0' :
-							case '1' :
-							case '2' :
-							case '3' :
-							case '4' :
-							case '5' :
-							case '6' :
-							case '7' :
-							case '8' :
-							case '9' :
-								value = (value << 4) + aChar - '0';
-								break;
-							case 'a' :
-							case 'b' :
-							case 'c' :
-							case 'd' :
-							case 'e' :
-							case 'f' :
-								value = (value << 4) + 10 + aChar - 'a';
-								break;
-							case 'A' :
-							case 'B' :
-							case 'C' :
-							case 'D' :
-							case 'E' :
-							case 'F' :
-								value = (value << 4) + 10 + aChar - 'A';
-								break;
-							default :
-								throw new IllegalArgumentException("Malformed \\uxxxx encoding.");
-						}
-					}
-					out[outLen++] = (char)value;
-				}
-				else
-				{
-					if (aChar == 't')
-						aChar = '\t';
-					else if (aChar == 'r')
-						aChar = '\r';
-					else if (aChar == 'n')
-						aChar = '\n';
-					else if (aChar == 'f')
-						aChar = '\f';
-					out[outLen++] = aChar;
-				}
-			}
-			else
-			{
-				out[outLen++] = (char)aChar;
-			}
+			int pos = matcher.start();
+			int end = matcher.end();
+			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
+			char ch = (char)number;
+			str = str.substring(0, pos) + ch + str.substring(end);
+			matcher = htmlNumber.matcher(str);
 		}
-		return new String(out, 0, outLen);
-	}
 
-	/**
-	 * Converts unicodes to encoded &#92;uxxxx.
-	 * 
-	 * @param unicodeString
-	 *            The unicode string
-	 * @return The escaped unicode string, like '\u4F60\u597D'.
-	 */
-	public static String toEscapedUnicode(String unicodeString)
-	{
-		int len = unicodeString.length();
-		int bufLen = len * 2;
-		StringBuffer outBuffer = new StringBuffer(bufLen);
-		for (int x = 0; x < len; x++)
-		{
-			char aChar = unicodeString.charAt(x);
-			// Handle common case first, selecting largest block that
-			// avoids the specials below
-			if ((aChar > 61) && (aChar < 127))
-			{
-				if (aChar == '\\')
-				{
-					outBuffer.append('\\');
-					outBuffer.append('\\');
-					continue;
-				}
-				outBuffer.append(aChar);
-				continue;
-			}
-			switch (aChar)
-			{
-				case ' ' :
-					if (x == 0)
-						outBuffer.append('\\');
-					outBuffer.append(' ');
-					break;
-				case '\t' :
-					outBuffer.append('\\');
-					outBuffer.append('t');
-					break;
-				case '\n' :
-					outBuffer.append('\\');
-					outBuffer.append('n');
-					break;
-				case '\r' :
-					outBuffer.append('\\');
-					outBuffer.append('r');
-					break;
-				case '\f' :
-					outBuffer.append('\\');
-					outBuffer.append('f');
-					break;
-				case '=' : // Fall through
-				case ':' : // Fall through
-				case '#' : // Fall through
-				case '!' :
-					outBuffer.append('\\');
-					outBuffer.append(aChar);
-					break;
-				default :
-					if ((aChar < 0x0020) || (aChar > 0x007e))
-					{
-						outBuffer.append('\\');
-						outBuffer.append('u');
-						outBuffer.append(toHex((aChar >> 12) & 0xF));
-						outBuffer.append(toHex((aChar >> 8) & 0xF));
-						outBuffer.append(toHex((aChar >> 4) & 0xF));
-						outBuffer.append(toHex(aChar & 0xF));
-					}
-					else
-					{
-						outBuffer.append(aChar);
-					}
-			}
-		}
-		return outBuffer.toString();
+		return str;
 	}
 
 	/**
@@ -902,6 +876,35 @@ public final class Strings
 		return s;
 	}
 
+	/**
+	 * Strip any jsessionid and possibly other redundant info that might be in
+	 * our way.
+	 * 
+	 * @param url
+	 *            The url to strip
+	 * @return The stripped url
+	 */
+	public static String stripJSessionId(CharSequence url)
+	{
+		if (url == null)
+		{
+			return null;
+		}
+		StringBuffer path = new StringBuffer(url.toString());
+		int ixSemiColon = path.indexOf(";");
+		// strip off any jsession id
+		if (ixSemiColon != -1)
+		{
+			int ixEnd = path.indexOf("?");
+			if (ixEnd == -1)
+			{
+				ixEnd = path.length();
+			}
+			path.delete(ixSemiColon, ixEnd);
+		}
+		return path.toString();
+	}
+
 
 	/**
 	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
@@ -945,6 +948,89 @@ public final class Strings
 		}
 
 		throw new StringValueConversionException("Character value was null");
+	}
+
+	/**
+	 * Converts unicodes to encoded &#92;uxxxx.
+	 * 
+	 * @param unicodeString
+	 *            The unicode string
+	 * @return The escaped unicode string, like '\u4F60\u597D'.
+	 */
+	public static String toEscapedUnicode(String unicodeString)
+	{
+		if ((unicodeString == null) || (unicodeString.length() == 0))
+		{
+			return unicodeString;
+		}
+		int len = unicodeString.length();
+		int bufLen = len * 2;
+		StringBuffer outBuffer = new StringBuffer(bufLen);
+		for (int x = 0; x < len; x++)
+		{
+			char aChar = unicodeString.charAt(x);
+			// Handle common case first, selecting largest block that
+			// avoids the specials below
+			if ((aChar > 61) && (aChar < 127))
+			{
+				if (aChar == '\\')
+				{
+					outBuffer.append('\\');
+					outBuffer.append('\\');
+					continue;
+				}
+				outBuffer.append(aChar);
+				continue;
+			}
+			switch (aChar)
+			{
+				case ' ' :
+					if (x == 0)
+					{
+						outBuffer.append('\\');
+					}
+					outBuffer.append(' ');
+					break;
+				case '\t' :
+					outBuffer.append('\\');
+					outBuffer.append('t');
+					break;
+				case '\n' :
+					outBuffer.append('\\');
+					outBuffer.append('n');
+					break;
+				case '\r' :
+					outBuffer.append('\\');
+					outBuffer.append('r');
+					break;
+				case '\f' :
+					outBuffer.append('\\');
+					outBuffer.append('f');
+					break;
+				case '=' : // Fall through
+				case ':' : // Fall through
+				case '#' : // Fall through
+				case '!' :
+					outBuffer.append('\\');
+					outBuffer.append(aChar);
+					break;
+				default :
+					if ((aChar < 0x0020) || (aChar > 0x007e))
+					{
+						outBuffer.append('\\');
+						outBuffer.append('u');
+						outBuffer.append(toHex((aChar >> 12) & 0xF));
+						outBuffer.append(toHex((aChar >> 8) & 0xF));
+						outBuffer.append(toHex((aChar >> 4) & 0xF));
+						outBuffer.append(toHex(aChar & 0xF));
+					}
+					else
+					{
+						outBuffer.append(aChar);
+					}
+			}
+		}
+		return outBuffer.toString();
 	}
 
 	/**
@@ -1082,6 +1168,23 @@ public final class Strings
 		}
 	}
 
+	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
+	{
+		if (s instanceof AppendingStringBuffer)
+		{
+			AppendingStringBuffer asb = (AppendingStringBuffer)s;
+			buffer.append(asb.getValue(), from, to - from);
+		}
+		else if (s instanceof StringBuffer)
+		{
+			buffer.append((StringBuffer)s, from, to - from);
+		}
+		else
+		{
+			buffer.append(s.subSequence(from, to));
+		}
+	}
+
 	/**
 	 * Outputs the throwable and its stacktrace to the stringbuffer. If
 	 * stopAtWicketSerlvet is true then the output will stop when the wicket
@@ -1114,35 +1217,6 @@ public final class Strings
 		}
 	}
 
-	/**
-	 * Convert a nibble to a hex character
-	 * 
-	 * @param nibble
-	 *            the nibble to convert.
-	 * @return hex character
-	 */
-	private static char toHex(int nibble)
-	{
-		return hexDigit[(nibble & 0xF)];
-	}
-
-	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
-	{
-		if (s instanceof AppendingStringBuffer)
-		{
-			AppendingStringBuffer asb = (AppendingStringBuffer)s;
-			buffer.append(asb.getValue(), from, to - from);
-		}
-		else if (s instanceof StringBuffer)
-		{
-			buffer.append((StringBuffer)s, from, to - from);
-		}
-		else
-		{
-			buffer.append(s.subSequence(from, to));
-		}
-	}
-
 	private static int search(final CharSequence s, String searchString, int pos)
 	{
 		int matchIndex = -1;
@@ -1166,54 +1240,15 @@ public final class Strings
 	}
 
 	/**
-	 * Joins string fragments using the specified separator
+	 * Convert a nibble to a hex character
 	 * 
-	 * @param separator
-	 * @param fragments
-	 * @return combined fragments
+	 * @param nibble
+	 *            the nibble to convert.
+	 * @return hex character
 	 */
-	public static String join(String separator, String[] fragments)
+	private static char toHex(int nibble)
 	{
-		if (fragments.length < 1)
-		{
-			// no elements
-			return "";
-		}
-		else if (fragments.length < 2)
-		{
-			// single element
-			return fragments[0];
-		}
-		else
-		{
-			// two or more elements
-			StringBuffer buff = new StringBuffer(128);
-			if (fragments[0] != null)
-			{
-				buff.append(fragments[0]);
-			}
-			for (int i = 1; i < fragments.length; i++)
-			{
-				if ((fragments[i - 1] != null) || (fragments[i] != null))
-				{
-					boolean lhsClosed = fragments[i - 1].endsWith(separator);
-					boolean rhsClosed = fragments[i].startsWith(separator);
-					if (lhsClosed && rhsClosed)
-					{
-						buff.append(fragments[i].substring(1));
-					}
-					else if (!lhsClosed && !rhsClosed)
-					{
-						buff.append(separator).append(fragments[i]);
-					}
-					else
-					{
-						buff.append(fragments[i]);
-					}
-				}
-			}
-			return buff.toString();
-		}
+		return hexDigit[(nibble & 0xF)];
 	}
 
 
