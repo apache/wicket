@@ -16,12 +16,14 @@
  */
 package wicket.util.string;
 
+import wicket.util.convert.ConversionException;
+
 /**
  * Thrown when a string value cannot be converted to some type.
  * 
  * @author Jonathan Locke
  */
-public final class StringValueConversionException extends Exception
+public final class StringValueConversionException extends ConversionException
 {
 	private static final long serialVersionUID = 1L;
 
