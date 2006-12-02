@@ -166,8 +166,7 @@ public class SharedResourceRequestTarget implements ISharedResourceRequestTarget
 				{
 					// besides logging, ignore exception; after this an error
 					// will be returned that the resource could not be retrieved
-					log.error("unable to lazily register shared resource " + resourceKey
-							+ ", exception=" + e.getMessage());
+					log.error("unable to lazily register shared resource " + resourceKey, e);
 				}
 			}
 		}
