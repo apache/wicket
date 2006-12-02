@@ -50,16 +50,16 @@ import wicket.WicketRuntimeException;
  */
 public final class Strings
 {
-	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
+	/**
+	 * The line seperator for the current platform.
+	 */
+	public static final String LINE_SEPARATOR;
 
 	/** A table of hex digits */
 	private static final char[] hexDigit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A',
 			'B', 'C', 'D', 'E', 'F' };
 
-	/**
-	 * The line seperator for the current platform.
-	 */
-	public static final String LINE_SEPARATOR;
+	private static final Pattern htmlNumber = Pattern.compile("\\&\\#\\d+\\;");
 
 	static
 	{
@@ -390,84 +390,6 @@ public final class Strings
 	}
 
 	/**
-	 * Joins string fragments using the specified separator
-	 * 
-	 * @param separator
-	 * @param fragments
-	 * @return combined fragments
-	 */
-	public static String join(String separator, String... fragments)
-	{
-		if (fragments.length < 1)
-		{
-			// no elements
-			return "";
-		}
-		else if (fragments.length < 2)
-		{
-			// single element
-			return fragments[0];
-		}
-		else
-		{
-			// two or more elements
-			StringBuilder buff = new StringBuilder(128);
-			if (fragments[0] != null)
-			{
-				buff.append(fragments[0]);
-			}
-			for (int i = 1; i < fragments.length; i++)
-			{
-				if ((fragments[i - 1] != null)  || (fragments[i] != null))
-				{
-					boolean lhsClosed = fragments[i - 1].endsWith(separator);
-					boolean rhsClosed = fragments[i].startsWith(separator);
-					if (lhsClosed && rhsClosed)
-					{
-						buff.append(fragments[i].substring(1));
-					}
-					else if (!lhsClosed && !rhsClosed)
-					{
-						buff.append(separator).append(fragments[i]);
-					}
-					else
-					{
-						buff.append(fragments[i]);
-					}
-				}
-			}
-			return buff.toString();
-		}
-	}
-
-	/**
-	 * Replace HTML numbers like &#20540 by the appropriate character.
-	 * 
-	 * @param str
-	 *            The text to be evaluated
-	 * @return The text with "numbers" replaced
-	 */
-	public static String replaceHtmlEscapeNumber(String str)
-	{
-		if (str == null)
-		{
-			return null;
-		}
-		Matcher matcher = htmlNumber.matcher(str);
-		while (matcher.find())
-		{
-			int pos = matcher.start();
-			int end = matcher.end();
-			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
-			char ch = (char)number;
-			str = str.substring(0, pos) + ch + str.substring(end);
-			matcher = htmlNumber.matcher(str);
-		}
-
-		return str;
-	}
-
-	/**
 	 * Gets the first path component of a path using a given separator. If the
 	 * separator cannot be found, the path itself is returned.
 	 * <p>
@@ -495,205 +417,6 @@ public final class Strings
 		}
 
 		return path.substring(0, index);
-	}
-
-	/**
-	 * Checks whether the <code>string</code> is considered empty. Empty means
-	 * that the string may contain whitespace, but no visible characters.
-	 * 
-	 * "\n\t " is considered empty, while " a" is not.
-	 * 
-	 * @param string
-	 *            The string
-	 * @return True if the string is null or ""
-	 */
-	public static boolean isEmpty(final CharSequence string)
-	{
-		return string == null || string.length() == 0 || string.toString().trim().equals("");
-	}
-
-	/**
-	 * Checks whether two strings are equals taken care of 'null' values and
-	 * treating 'null' same as trim(string).equals("")
-	 * 
-	 * @param string1
-	 * @param string2
-	 * @return true, if both strings are equal
-	 */
-	public static boolean isEqual(final String string1, final String string2)
-	{
-		if ((string1 == null) && (string2 == null))
-		{
-			return true;
-		}
-
-		if (isEmpty(string1) && isEmpty(string2))
-		{
-			return true;
-		}
-		if (string1 == null || string2 == null)
-		{
-			return false;
-		}
-
-		return string1.equals(string2);
-	}
-
-	/**
-	 * Converts the text in <code>s</code> to a corresponding boolean. On,
-	 * yes, y, true and 1 are converted to <code>true</code>. Off, no, n,
-	 * false and 0 (zero) are converted to <code>false</code>. An empty
-	 * string is converted to <code>false</code>. Conversion is
-	 * case-insensitive, and does <em>not</em> take internationalization into
-	 * account.
-	 * 
-	 * 'Ja', 'Oui', 'Igen', 'Nein', 'Nee', 'Non', 'Nem' are all illegal values.
-	 * 
-	 * @param s
-	 *            the value to convert into a boolean
-	 * @return Boolean the converted value of <code>s</code>
-	 * @throws StringValueConversionException
-	 *             when the value of <code>s</code> is not recognized.
-	 */
-	public static boolean isTrue(final String s) throws StringValueConversionException
-	{
-		if (s != null)
-		{
-			if (s.equalsIgnoreCase("true"))
-			{
-				return true;
-			}
-
-			if (s.equalsIgnoreCase("false"))
-			{
-				return false;
-			}
-
-			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y")
-					|| s.equalsIgnoreCase("1"))
-			{
-				return true;
-			}
-
-			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n")
-					|| s.equalsIgnoreCase("0"))
-			{
-				return false;
-			}
-
-			if (isEmpty(s))
-			{
-				return false;
-			}
-
-			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
-		}
-
-		return false;
-	}
-
-	/**
-	 * Gets the last path component of a path using a given separator. If the
-	 * separator cannot be found, the path itself is returned.
-	 * <p>
-	 * For example, lastPathComponent("foo.bar", '.') would return "bar" and
-	 * lastPathComponent("foo", '.') would return "foo".
-	 * 
-	 * @param path
-	 *            The path to parse
-	 * @param separator
-	 *            The path separator character
-	 * @return The last component in the path or path itself if no separator
-	 *         characters exist.
-	 */
-	public static String lastPathComponent(final String path, final char separator)
-	{
-		final int index = path.lastIndexOf(separator);
-
-		if (index == -1)
-		{
-			return path;
-		}
-
-		return path.substring(index + 1);
-	}
-
-	/**
-	 * Replace all occurrences of one string replaceWith another string.
-	 * 
-	 * @param s
-	 *            The string to process
-	 * @param searchFor
-	 *            The value to search for
-	 * @param replaceWith
-	 *            The value to searchFor replaceWith
-	 * @return The resulting string with searchFor replaced with replaceWith
-	 */
-	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor,
-			CharSequence replaceWith)
-	{
-		if (s == null)
-		{
-			return null;
-		}
-
-		// If searchFor is null or the empty string, then there is nothing to
-		// replace, so returning s is the only option here.
-		if (searchFor == null || "".equals(searchFor))
-		{
-			return s;
-		}
-
-		// If replaceWith is null, then the searchFor should be replaced with
-		// nothing, which can be seen as the empty string.
-		if (replaceWith == null)
-		{
-			replaceWith = "";
-		}
-
-		String searchString = searchFor.toString();
-		// Look for first occurrence of searchFor
-		int matchIndex = search(s, searchString, 0);
-		if (matchIndex == -1)
-		{
-			// No replace operation needs to happen
-			return s;
-		}
-		else
-		{
-			// Allocate a AppendingStringBuffer that will hold one replacement
-			// with a
-			// little extra room.
-			int size = s.length();
-			final int replaceWithLength = replaceWith.length();
-			final int searchForLength = searchFor.length();
-			if (replaceWithLength > searchForLength)
-			{
-				size += (replaceWithLength - searchForLength);
-			}
-			final AppendingStringBuffer buffer = new AppendingStringBuffer(size + 16);
-
-			int pos = 0;
-			do
-			{
-				// Append text up to the match`
-				append(buffer, s, pos, matchIndex);
-
-				// Add replaceWith text
-				buffer.append(replaceWith);
-
-				// Find next occurrence, if any
-				pos = matchIndex + searchForLength;
-				matchIndex = search(s, searchString, pos);
-			}
-			while (matchIndex != -1);
-
-			// Add tail of s
-			buffer.append(s.subSequence(pos, s.length()));
-
-			// Return processed buffer
-			return buffer;
-		}
 	}
 
 	/**
@@ -805,6 +528,363 @@ public final class Strings
 	}
 
 	/**
+	 * Checks whether the <code>string</code> is considered empty. Empty means
+	 * that the string may contain whitespace, but no visible characters.
+	 * 
+	 * "\n\t " is considered empty, while " a" is not.
+	 * 
+	 * @param string
+	 *            The string
+	 * @return True if the string is null or ""
+	 */
+	public static boolean isEmpty(final CharSequence string)
+	{
+		return string == null || string.length() == 0 || string.toString().trim().equals("");
+	}
+
+	/**
+	 * Checks whether two strings are equals taken care of 'null' values and
+	 * treating 'null' same as trim(string).equals("")
+	 * 
+	 * @param string1
+	 * @param string2
+	 * @return true, if both strings are equal
+	 */
+	public static boolean isEqual(final String string1, final String string2)
+	{
+		if ((string1 == null) && (string2 == null))
+		{
+			return true;
+		}
+
+		if (isEmpty(string1) && isEmpty(string2))
+		{
+			return true;
+		}
+		if (string1 == null || string2 == null)
+		{
+			return false;
+		}
+
+		return string1.equals(string2);
+	}
+
+	/**
+	 * Converts the text in <code>s</code> to a corresponding boolean. On,
+	 * yes, y, true and 1 are converted to <code>true</code>. Off, no, n,
+	 * false and 0 (zero) are converted to <code>false</code>. An empty
+	 * string is converted to <code>false</code>. Conversion is
+	 * case-insensitive, and does <em>not</em> take internationalization into
+	 * account.
+	 * 
+	 * 'Ja', 'Oui', 'Igen', 'Nein', 'Nee', 'Non', 'Nem' are all illegal values.
+	 * 
+	 * @param s
+	 *            the value to convert into a boolean
+	 * @return Boolean the converted value of <code>s</code>
+	 * @throws StringValueConversionException
+	 *             when the value of <code>s</code> is not recognized.
+	 */
+	public static boolean isTrue(final String s) throws StringValueConversionException
+	{
+		if (s != null)
+		{
+			if (s.equalsIgnoreCase("true"))
+			{
+				return true;
+			}
+
+			if (s.equalsIgnoreCase("false"))
+			{
+				return false;
+			}
+
+			if (s.equalsIgnoreCase("on") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("y")
+					|| s.equalsIgnoreCase("1"))
+			{
+				return true;
+			}
+
+			if (s.equalsIgnoreCase("off") || s.equalsIgnoreCase("no") || s.equalsIgnoreCase("n")
+					|| s.equalsIgnoreCase("0"))
+			{
+				return false;
+			}
+
+			if (isEmpty(s))
+			{
+				return false;
+			}
+
+			throw new StringValueConversionException("Boolean value \"" + s + "\" not recognized");
+		}
+
+		return false;
+	}
+
+	/**
+	 * Joins string fragments using the specified separator
+	 * 
+	 * @param separator
+	 * @param fragments
+	 * @return combined fragments
+	 */
+	public static String join(String separator, String... fragments)
+	{
+		if (fragments.length < 1)
+		{
+			// no elements
+			return "";
+		}
+		else if (fragments.length < 2)
+		{
+			// single element
+			return fragments[0];
+		}
+		else
+		{
+			// two or more elements
+			StringBuilder buff = new StringBuilder(128);
+			if (fragments[0] != null)
+			{
+				buff.append(fragments[0]);
+			}
+			for (int i = 1; i < fragments.length; i++)
+			{
+				if ((fragments[i - 1] != null)  || (fragments[i] != null))
+				{
+					boolean lhsClosed = fragments[i - 1].endsWith(separator);
+					boolean rhsClosed = fragments[i].startsWith(separator);
+					if (lhsClosed && rhsClosed)
+					{
+						buff.append(fragments[i].substring(1));
+					}
+					else if (!lhsClosed && !rhsClosed)
+					{
+						buff.append(separator).append(fragments[i]);
+					}
+					else
+					{
+						buff.append(fragments[i]);
+					}
+				}
+			}
+			return buff.toString();
+		}
+	}
+
+	/**
+	 * Gets the last path component of a path using a given separator. If the
+	 * separator cannot be found, the path itself is returned.
+	 * <p>
+	 * For example, lastPathComponent("foo.bar", '.') would return "bar" and
+	 * lastPathComponent("foo", '.') would return "foo".
+	 * 
+	 * @param path
+	 *            The path to parse
+	 * @param separator
+	 *            The path separator character
+	 * @return The last component in the path or path itself if no separator
+	 *         characters exist.
+	 */
+	public static String lastPathComponent(final String path, final char separator)
+	{
+		final int index = path.lastIndexOf(separator);
+
+		if (index == -1)
+		{
+			return path;
+		}
+
+		return path.substring(index + 1);
+	}
+
+	/**
+	 * Replace all occurrences of one string replaceWith another string.
+	 * 
+	 * @param s
+	 *            The string to process
+	 * @param searchFor
+	 *            The value to search for
+	 * @param replaceWith
+	 *            The value to searchFor replaceWith
+	 * @return The resulting string with searchFor replaced with replaceWith
+	 */
+	public static CharSequence replaceAll(final CharSequence s, final CharSequence searchFor,
+			CharSequence replaceWith)
+	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		// If searchFor is null or the empty string, then there is nothing to
+		// replace, so returning s is the only option here.
+		if (searchFor == null || "".equals(searchFor))
+		{
+			return s;
+		}
+
+		// If replaceWith is null, then the searchFor should be replaced with
+		// nothing, which can be seen as the empty string.
+		if (replaceWith == null)
+		{
+			replaceWith = "";
+		}
+
+		String searchString = searchFor.toString();
+		// Look for first occurrence of searchFor
+		int matchIndex = search(s, searchString, 0);
+		if (matchIndex == -1)
+		{
+			// No replace operation needs to happen
+			return s;
+		}
+		else
+		{
+			// Allocate a AppendingStringBuffer that will hold one replacement
+			// with a
+			// little extra room.
+			int size = s.length();
+			final int replaceWithLength = replaceWith.length();
+			final int searchForLength = searchFor.length();
+			if (replaceWithLength > searchForLength)
+			{
+				size += (replaceWithLength - searchForLength);
+			}
+			final AppendingStringBuffer buffer = new AppendingStringBuffer(size + 16);
+
+			int pos = 0;
+			do
+			{
+				// Append text up to the match`
+				append(buffer, s, pos, matchIndex);
+
+				// Add replaceWith text
+				buffer.append(replaceWith);
+
+				// Find next occurrence, if any
+				pos = matchIndex + searchForLength;
+				matchIndex = search(s, searchString, pos);
+			}
+			while (matchIndex != -1);
+
+			// Add tail of s
+			buffer.append(s.subSequence(pos, s.length()));
+
+			// Return processed buffer
+			return buffer;
+		}
+	}
+
+	/**
+	 * Replace HTML numbers like &#20540 by the appropriate character.
+	 * 
+	 * @param str
+	 *            The text to be evaluated
+	 * @return The text with "numbers" replaced
+	 */
+	public static String replaceHtmlEscapeNumber(String str)
+	{
+		if (str == null)
+		{
+			return null;
+		}
+		Matcher matcher = htmlNumber.matcher(str);
+		while (matcher.find())
+		{
+			int pos = matcher.start();
+			int end = matcher.end();
+			int number = Integer.parseInt(str.substring(pos + 2, end - 1));
+			char ch = (char)number;
+			str = str.substring(0, pos) + ch + str.substring(end);
+			matcher = htmlNumber.matcher(str);
+		}
+
+		return str;
+	}
+
+	/**
+	 * Simpler, faster version of String.split() for splitting on a simple
+	 * character.
+	 * 
+	 * @param s
+	 *            The string to split
+	 * @param c
+	 *            The character to split on
+	 * @return The array of strings
+	 */
+	public static String[] split(final String s, final char c)
+	{
+		if (s == null)
+		{
+			return new String[0];
+		}
+		final List<String> strings = new ArrayList<String>();
+		int pos = 0;
+		while (true)
+		{
+			int next = s.indexOf(c, pos);
+			if (next == -1)
+			{
+				strings.add(s.substring(pos));
+				break;
+			}
+			else
+			{
+				strings.add(s.substring(pos, next));
+			}
+			pos = next + 1;
+		}
+		final String[] result = new String[strings.size()];
+		strings.toArray(result);
+		return result;
+	}
+
+	/**
+	 * Strips the ending from the string <code>s</code>.
+	 * 
+	 * @param s
+	 *            The string to strip
+	 * @param ending
+	 *            The ending to strip off
+	 * @return The stripped string or the original string if the ending did not
+	 *         exist
+	 */
+	public static String stripEnding(final String s, final String ending)
+	{
+		if (s == null)
+		{
+			return null;
+		}
+
+		// Stripping a null or empty string from the end returns the
+		// original string.
+		if (ending == null || "".equals(ending))
+		{
+			return s;
+		}
+		final int endingLength = ending.length();
+		final int sLength = s.length();
+
+		// When the length of the ending string is larger
+		// than the original string, the original string is returned.
+		if (endingLength > sLength)
+		{
+			return s;
+		}
+		final int index = s.lastIndexOf(ending);
+		final int endpos = sLength - endingLength;
+
+		if (index == endpos)
+		{
+			return s.substring(0, endpos);
+		}
+
+		return s;
+	}
+
+	/**
 	 * Strip any jsessionid and possibly other redundant info that might be in
 	 * our way.
 	 * 
@@ -814,6 +894,10 @@ public final class Strings
 	 */
 	public static String stripJSessionId(CharSequence url)
 	{
+		if (url == null)
+		{
+			return null;
+		}
 		StringBuilder path = new StringBuilder(url);
 		int ixSemiColon = path.indexOf(";");
 		// strip off any jsession id
@@ -827,6 +911,51 @@ public final class Strings
 			path.delete(ixSemiColon, ixEnd);
 		}
 		return path.toString();
+	}
+
+	/**
+	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
+	 * values of s.
+	 * 
+	 * @param s
+	 *            The string to convert.
+	 * @return Boolean <code>TRUE</code> when <code>isTrue(s)</code>.
+	 * @throws StringValueConversionException
+	 *             when s is not a valid value
+	 * @see #isTrue(String)
+	 */
+	public static Boolean toBoolean(final String s) throws StringValueConversionException
+	{
+		return Boolean.valueOf(isTrue(s));
+	}
+
+
+	/**
+	 * Converts the 1 character string s to a character.
+	 * 
+	 * @param s
+	 *            The 1 character string to convert to a char.
+	 * @return Character value to convert
+	 * @throws StringValueConversionException
+	 *             when the string is longer or shorter than 1 character, or
+	 *             <code>null</code>.
+	 */
+	public static char toChar(final String s) throws StringValueConversionException
+	{
+		if (s != null)
+		{
+			if (s.length() == 1)
+			{
+				return s.charAt(0);
+			}
+			else
+			{
+				throw new StringValueConversionException("Expected single character, not \"" + s
+						+ "\"");
+			}
+		}
+
+		throw new StringValueConversionException("Character value was null");
 	}
 
 	/**
@@ -910,131 +1039,6 @@ public final class Strings
 			}
 		}
 		return outBuffer.toString();
-	}
-
-	/**
-	 * Simpler, faster version of String.split() for splitting on a simple
-	 * character.
-	 * 
-	 * @param s
-	 *            The string to split
-	 * @param c
-	 *            The character to split on
-	 * @return The array of strings
-	 */
-	public static String[] split(final String s, final char c)
-	{
-		if (s == null)
-		{
-			return new String[0];
-		}
-		final List<String> strings = new ArrayList<String>();
-		int pos = 0;
-		while (true)
-		{
-			int next = s.indexOf(c, pos);
-			if (next == -1)
-			{
-				strings.add(s.substring(pos));
-				break;
-			}
-			else
-			{
-				strings.add(s.substring(pos, next));
-			}
-			pos = next + 1;
-		}
-		final String[] result = new String[strings.size()];
-		strings.toArray(result);
-		return result;
-	}
-
-	/**
-	 * Strips the ending from the string <code>s</code>.
-	 * 
-	 * @param s
-	 *            The string to strip
-	 * @param ending
-	 *            The ending to strip off
-	 * @return The stripped string or the original string if the ending did not
-	 *         exist
-	 */
-	public static String stripEnding(final String s, final String ending)
-	{
-		if (s == null)
-		{
-			return null;
-		}
-
-		// Stripping a null or empty string from the end returns the
-		// original string.
-		if (ending == null || "".equals(ending))
-		{
-			return s;
-		}
-		final int endingLength = ending.length();
-		final int sLength = s.length();
-
-		// When the length of the ending string is larger
-		// than the original string, the original string is returned.
-		if (endingLength > sLength)
-		{
-			return s;
-		}
-		final int index = s.lastIndexOf(ending);
-		final int endpos = sLength - endingLength;
-
-		if (index == endpos)
-		{
-			return s.substring(0, endpos);
-		}
-
-		return s;
-	}
-
-
-	/**
-	 * Converts the string s to a Boolean. See <code>isTrue</code> for valid
-	 * values of s.
-	 * 
-	 * @param s
-	 *            The string to convert.
-	 * @return Boolean <code>TRUE</code> when <code>isTrue(s)</code>.
-	 * @throws StringValueConversionException
-	 *             when s is not a valid value
-	 * @see #isTrue(String)
-	 */
-	public static Boolean toBoolean(final String s) throws StringValueConversionException
-	{
-		return Boolean.valueOf(isTrue(s));
-	}
-
-	/**
-	 * Converts the 1 character string s to a character.
-	 * 
-	 * @param s
-	 *            The 1 character string to convert to a char.
-	 * @return Character value to convert
-	 * @throws StringValueConversionException
-	 *             when the string is longer or shorter than 1 character, or
-	 *             <code>null</code>.
-	 */
-	public static char toChar(final String s) throws StringValueConversionException
-	{
-		if (s != null)
-		{
-			if (s.length() == 1)
-			{
-				return s.charAt(0);
-			}
-			else
-			{
-				throw new StringValueConversionException("Expected single character, not \"" + s
-						+ "\"");
-			}
-		}
-
-		throw new StringValueConversionException("Character value was null");
 	}
 
 	/**
@@ -1172,6 +1176,23 @@ public final class Strings
 		}
 	}
 
+	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
+	{
+		if (s instanceof AppendingStringBuffer)
+		{
+			AppendingStringBuffer asb = (AppendingStringBuffer)s;
+			buffer.append(asb.getValue(), from, to - from);
+		}
+		else if (s instanceof StringBuffer)
+		{
+			buffer.append((StringBuffer)s, from, to - from);
+		}
+		else
+		{
+			buffer.append(s.subSequence(from, to));
+		}
+	}
+
 	/**
 	 * Outputs the throwable and its stacktrace to the stringbuffer. If
 	 * stopAtWicketSerlvet is true then the output will stop when the wicket
@@ -1204,35 +1225,6 @@ public final class Strings
 		}
 	}
 
-	/**
-	 * Convert a nibble to a hex character
-	 * 
-	 * @param nibble
-	 *            the nibble to convert.
-	 * @return hex character
-	 */
-	private static char toHex(int nibble)
-	{
-		return hexDigit[(nibble & 0xF)];
-	}
-
-	private static void append(AppendingStringBuffer buffer, CharSequence s, int from, int to)
-	{
-		if (s instanceof AppendingStringBuffer)
-		{
-			AppendingStringBuffer asb = (AppendingStringBuffer)s;
-			buffer.append(asb.getValue(), from, to - from);
-		}
-		else if (s instanceof StringBuffer)
-		{
-			buffer.append((StringBuffer)s, from, to - from);
-		}
-		else
-		{
-			buffer.append(s.subSequence(from, to));
-		}
-	}
-
 	private static int search(final CharSequence s, String searchString, int pos)
 	{
 		int matchIndex = -1;
@@ -1253,6 +1245,18 @@ public final class Strings
 			matchIndex = s.toString().indexOf(searchString);
 		}
 		return matchIndex;
+	}
+
+	/**
+	 * Convert a nibble to a hex character
+	 * 
+	 * @param nibble
+	 *            the nibble to convert.
+	 * @return hex character
+	 */
+	private static char toHex(int nibble)
+	{
+		return hexDigit[(nibble & 0xF)];
 	}
 
 	/**
