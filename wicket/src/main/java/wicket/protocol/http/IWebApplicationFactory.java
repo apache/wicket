@@ -17,7 +17,7 @@
 package wicket.protocol.http;
 
 /**
- * A factory interface used by wicket filter or servlet to create application objects.
+ * A factory interface used by wicket filter to create application objects.
  * Configure your webapplication to use this factory in web.xml like:
  * 
  * <pre>
@@ -32,15 +32,6 @@ package wicket.protocol.http;
  */
 public interface IWebApplicationFactory
 {
-	/**
-	 * Create application object
-	 * 
-	 * @param servlet
-	 *            the wicket servlet
-	 * @return application object instance
-	 */
-	WebApplication createApplication(WicketServlet servlet);
-
 	/**
 	 * Create application object
 	 * 

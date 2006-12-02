@@ -35,7 +35,7 @@ public final class DefaultClassResolver implements IClassResolver
 	 * stack traces like: java.lang.LinkageError: duplicate class definition:
 	 * 
 	 * <pre>
-	 *   wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 
+	 *    wicket/examples/repeater/RepeatingPage at java.lang.ClassLoader.defineClass1(Native Method) 
 	 * </pre>
 	 * 
 	 * This problem has gone since we synchronize the access.
@@ -54,7 +54,12 @@ public final class DefaultClassResolver implements IClassResolver
 			{
 				synchronized (classes)
 				{
-					clz = DefaultClassResolver.class.getClassLoader().loadClass(classname);
+					ClassLoader loader = Thread.currentThread().getContextClassLoader();
+					if (loader == null)
+					{
+						loader = DefaultClassResolver.class.getClassLoader();
+					}
+					clz = loader.loadClass(classname);
 					classes.put(classname, clz);
 				}
 			}
