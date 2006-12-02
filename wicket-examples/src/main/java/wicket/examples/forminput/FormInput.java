@@ -1,6 +1,6 @@
 /*
- * $Id$
- * $Revision$ $Date$
+ * $Id$ $Revision:
+ * 476966 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -25,13 +25,13 @@ import java.util.Locale;
 
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.form.Button;
 import wicket.markup.html.form.Check;
 import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.CheckGroup;
 import wicket.markup.html.form.ChoiceRenderer;
 import wicket.markup.html.form.DropDownChoice;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.ImageButton;
 import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.Radio;
 import wicket.markup.html.form.RadioChoice;
@@ -39,7 +39,6 @@ import wicket.markup.html.form.RadioGroup;
 import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.NumberValidator;
-import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
@@ -63,8 +62,7 @@ public class FormInput extends WicketExamplePage
 {
 	/** Relevant locales wrapped in a list. */
 	private static final List LOCALES = Arrays.asList(new Locale[] { Locale.ENGLISH,
-			new Locale("nl"), Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.JAPANESE,
-			new Locale("pt", "BR"), new Locale("fa", "IR"), new Locale("da", "DK")});
+			new Locale("nl"), Locale.GERMAN, new Locale("pt", "BR"), new Locale("da", "DK") });
 
 	/** available numbers for the radio selection. */
 	static final List NUMBERS = Arrays.asList(new String[] { "1", "2", "3" });
@@ -135,7 +133,7 @@ public class FormInput extends WicketExamplePage
 			add(integerTextField.add(NumberValidator.POSITIVE));
 			add(new RequiredTextField("doubleProperty", Double.class));
 			// we have a component attached to the label here, as we want to
-			// synchronize the id's of the label, textfield and datepicker. Note 
+			// synchronize the id's of the label, textfield and datepicker. Note
 			// that you can perfectly do without labels
 
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
@@ -212,17 +210,17 @@ public class FormInput extends WicketExamplePage
 			// and this is to show we can nest ListViews in Forms too
 			add(new LinesListView("lines"));
 
-			add(new ImageButton("saveButton"));
+			add(new Button("saveButton"));
 
-			add(new Link("resetButtonLink")
+			add(new Button("resetButton")
 			{
-				public void onClick()
+				public void onSubmit()
 				{
 					// just call modelChanged so that any invalid input is
 					// cleared.
 					InputForm.this.modelChanged();
 				}
-			}.add(new Image("resetButtonImage")));
+			});
 		}
 
 		/**
@@ -321,7 +319,6 @@ public class FormInput extends WicketExamplePage
 			// objects of
 			// type FormInputModel.Line) using property text.
 			item.add(new TextField("lineEdit", new PropertyModel(item.getModel(), "text")));
-			item.add(removeLink("remove", item));
 		}
 	}
 }
