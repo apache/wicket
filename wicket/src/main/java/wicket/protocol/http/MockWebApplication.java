@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.Component;
+import wicket.IRequestCycleFactory;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
@@ -112,6 +113,9 @@ public class MockWebApplication extends WebApplication
 	/** Session. */
 	private WebSession wicketSession;
 
+	/** Request cycle factory. */
+	private IRequestCycleFactory requestCycleFactory;
+
 	/** The homepage */
 	private Class homePage;
 
@@ -175,6 +179,7 @@ public class MockWebApplication extends WebApplication
 		servletResponse = new MockHttpServletResponse();
 		wicketRequest = newWebRequest(servletRequest);
 		wicketSession = getSession(wicketRequest);
+		requestCycleFactory = wicketSession.getRequestCycleFactory();
 
 		// set the default context path
 		getApplicationSettings().setContextPath(context.getServletContextName());
@@ -274,7 +279,7 @@ public class MockWebApplication extends WebApplication
 	public void processRequestCycle(final Component component)
 	{
 		setupRequestAndResponse();
-		WebRequestCycle cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		WebRequestCycle cycle = createRequestCycle();
 		cycle.request(component);
 
 		if (component instanceof Page)
@@ -322,7 +327,7 @@ public class MockWebApplication extends WebApplication
 			wicketRequest = newWebRequest(newHttpRequest);
 			wicketSession = getSession(wicketRequest);
 
-			cycle = new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+			cycle = createRequestCycle();
 			cycle.request();
 		}
 		generateLastRenderedPage(cycle);
@@ -377,7 +382,7 @@ public class MockWebApplication extends WebApplication
 	 */
 	public WebRequestCycle createRequestCycle()
 	{
-		return new WebRequestCycle(wicketSession, wicketRequest, wicketResponse);
+		return (WebRequestCycle) requestCycleFactory.newRequestCycle(wicketSession, wicketRequest, wicketResponse);
 	}
 
 	/**
