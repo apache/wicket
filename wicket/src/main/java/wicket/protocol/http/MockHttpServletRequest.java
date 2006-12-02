@@ -148,7 +148,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 			this.file = file;
 		}
 	}
-	
+
 	/** Logging object */
 	private static final Log log = LogFactory.getLog(MockHttpServletRequest.class);
 
@@ -173,9 +173,11 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 	private String path;
 
+	private String url;
+
 	private final HttpSession session;
 
-	private Map/*<String, UploadedFile>*/ uploadedFiles;
+	private Map/* <String, UploadedFile> */uploadedFiles;
 
 	/**
 	 * Create the request using the supplied session object.
@@ -240,7 +242,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 
 		if (uploadedFiles == null)
 		{
-			uploadedFiles = new HashMap/*<String, UploadedFile>*/();
+			uploadedFiles = new HashMap/* <String, UploadedFile> */();
 		}
 
 		UploadedFile uf = new UploadedFile(fieldName, file, contentType);
@@ -364,7 +366,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	 */
 	public Cookie[] getCookies()
 	{
-		if(cookies.size() == 0)
+		if (cookies.size() == 0)
 		{
 			return null;
 		}
@@ -463,8 +465,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 			String request = buildRequest();
 
 			// Ok lets make an input stream to return
-			final ByteArrayInputStream bais = 
-				new ByteArrayInputStream(request.getBytes("ISO-8859-1"));
+			final ByteArrayInputStream bais = new ByteArrayInputStream(request
+					.getBytes("ISO-8859-1"));
 
 			return new ServletInputStream()
 			{
@@ -612,7 +614,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			return new String[0];
 		}
-		
+
 		if (value instanceof String[])
 		{
 			return (String[])value;
@@ -773,13 +775,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Get the request url. Always return the path value.
-	 * 
-	 * @return The oath value
+	 * @see javax.servlet.http.HttpServletRequest#getRequestURI()
 	 */
 	public String getRequestURI()
 	{
-		return path;
+		if (url == null)
+		{
+			return "";
+		}
+		return url;
 	}
 
 	/**
@@ -1078,50 +1082,50 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		this.path = path;
 	}
-	
+
 	/**
-	 * Set the complete url for this request.
-	 * The url will be analized.
+	 * Set the complete url for this request. The url will be analized.
 	 * 
 	 * @param url
 	 */
 	public void setURL(String url)
 	{
-		if(url.startsWith("http://"))
+		if (url.startsWith("http://"))
 		{
 			int index = url.indexOf("/", 7);
 			url = url.substring(index);
 		}
-		if(url.startsWith(getContextPath()))
+		this.url = url;
+		if (url.startsWith(getContextPath()))
 		{
 			url = url.substring(getContextPath().length());
 		}
-		if(url.startsWith(getServletPath()))
+		if (url.startsWith(getServletPath()))
 		{
 			url = url.substring(getServletPath().length());
 		}
-		
+
 		int index = url.indexOf("?");
-		if(index == -1)
+		if (index == -1)
 		{
 			path = url;
 		}
 		else
 		{
 			path = url.substring(0, index);
-			
-			String queryString = url.substring(index+1);
-			StringTokenizer st = new StringTokenizer(queryString,"&");
-			while(st.hasMoreTokens())
+
+			String queryString = url.substring(index + 1);
+			StringTokenizer st = new StringTokenizer(queryString, "&");
+			while (st.hasMoreTokens())
 			{
 				String token = st.nextToken();
 				int tmp = token.indexOf("=");
-				if(tmp != -1)
+				if (tmp != -1)
 				{
-					setParameter(token.substring(0,tmp), token.substring(tmp+1));
+					setParameter(token.substring(0, tmp), token.substring(tmp + 1));
 				}
 			}
-			
+
 		}
 	}
 
@@ -1137,7 +1141,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setRequestToBookmarkablePage(final Page page, final Map params)
 	{
 		parameters.putAll(params);
-		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass().getName());
+		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
+				.getName());
 	}
 
 	/**
@@ -1153,7 +1158,8 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (component instanceof BookmarkablePageLink)
 		{
 			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName + ':' + clazz.getName());
+			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
+					+ ':' + clazz.getName());
 		}
 		else
 		{
@@ -1182,11 +1188,13 @@ public class MockHttpServletRequest implements HttpServletRequest
 			else
 			{
 				throw new IllegalArgumentException(
-						"The component class doesn't seem to implement any of the known *Listener Interfaces: " 
-						+ component.getClass());
+						"The component class doesn't seem to implement any of the known *Listener Interfaces: "
+								+ component.getClass());
 			}
 
-			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':' + component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':' + Classes.simpleName(clazz));
+			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':'
+					+ component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':'
+					+ Classes.simpleName(clazz));
 		}
 	}
 
@@ -1228,14 +1236,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 		{
 			Map diff = new HashMap();
 			diff.putAll(values);
-			
+
 			Iterator iter = valuesApplied.keySet().iterator();
 			while (iter.hasNext())
 			{
 				diff.remove(iter.next());
 			}
-			
-			log.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
+
+			log
+					.error("Parameter mismatch: didn't find all components referenced in parameter 'values': "
 							+ diff.keySet());
 		}
 	}
@@ -1319,14 +1328,14 @@ public class MockHttpServletRequest implements HttpServletRequest
 				{
 					String fieldName = (String)iterator.next();
 
-					UploadedFile uf = (UploadedFile) uploadedFiles.get(fieldName);
+					UploadedFile uf = (UploadedFile)uploadedFiles.get(fieldName);
 
 					issb.append(boundary).append(crlf);
 					issb.append("Content-Disposition: form-data; name=\"").append(fieldName)
 							.append("\"; filename=\"").append(uf.getFile().getName()).append("\"")
 							.append(crlf);
-					issb.append("Content-Type: ").append(uf.getContentType()).append(crlf)
-							.append(crlf);
+					issb.append("Content-Type: ").append(uf.getContentType()).append(crlf).append(
+							crlf);
 
 					// Load the file and put it into the the inputstream
 					FileInputStream fis = new FileInputStream(uf.getFile());

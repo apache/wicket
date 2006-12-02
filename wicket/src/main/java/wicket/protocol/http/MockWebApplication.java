@@ -16,10 +16,13 @@
  */
 package wicket.protocol.http;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -128,37 +131,60 @@ public class MockWebApplication extends WebApplication
 	 * @see wicket.protocol.http.MockServletContext
 	 */
 	public MockWebApplication(final String path)
-	{
-		Application.set(this);
-		
+	{	
 		context = new MockServletContext(this, path);
 
-		setWicketServlet(new WicketServlet()
+		Application.set(this);
+
+		WicketFilter filter = new WicketFilter()
 		{
-			private static final long serialVersionUID = 1L;
-
-			public ServletContext getServletContext()
+			protected IWebApplicationFactory getApplicationFactory()
 			{
-				return context;
+				return new IWebApplicationFactory()
+				{
+					public WebApplication createApplication(WicketFilter filter)
+					{
+						return MockWebApplication.this;
+					};
+				};
 			}
+		};
 
-			/**
-			 * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
-			 */
-			public String getInitParameter(String name)
+		try
+		{
+			filter.init(new FilterConfig()
 			{
-				return null;
-			}
+				public ServletContext getServletContext()
+				{
+					return context;
+				}
 
-			/**
-			 * @see javax.servlet.GenericServlet#getServletName()
-			 */
-			public String getServletName()
-			{
-				return "WicketMockServlet";
-			}
-		});
+				public Enumeration getInitParameterNames()
+				{
+					return null;
+				}
 
+				public String getInitParameter(String name)
+				{
+					if (name.equals(WicketFilter.FILTER_PATH_PARAM))
+					{
+						return MockWebApplication.this.getName();
+					}
+					return null;
+				}
+
+				public String getFilterName()
+				{
+					return "WicketMockServlet";
+				}
+			});
+		}
+		catch (ServletException e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		Application.set(this);
 		// Call internal init method of web application for default
 		// initialisation
 		this.internalInit();
@@ -431,6 +457,7 @@ public class MockWebApplication extends WebApplication
 	{
 		return homePage;
 	}
+
 
 	/**
 	 * Sets the home page for this mock application
