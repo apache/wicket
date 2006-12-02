@@ -16,6 +16,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+// START SNIPPET: application
 package wicket.examples.helloworld;
 
 import wicket.Page;
@@ -45,3 +46,4 @@ public class HelloWorldApplication extends WicketExampleApplication
 		return HelloWorld.class;
 	}
 }
+// END SNIPPET: application
