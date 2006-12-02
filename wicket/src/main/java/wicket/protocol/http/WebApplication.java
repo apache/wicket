@@ -126,9 +126,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/** Session factory for this web application */
 	private ISessionFactory sessionFactory = this;
 
-	/** The WicketServlet that this application is attached to */
-	private WicketServlet wicketServlet;
-
 	/** The WicketFilter that this application is attached to */
 	private WicketFilter wicketFilter;
 
@@ -189,10 +186,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public final ServletContext getServletContext()
 	{
-		if (wicketServlet != null)
-		{
-			return wicketServlet.getServletContext();
-		}
 		if (wicketFilter != null)
 		{
 			return wicketFilter.getFilterConfig().getServletContext();
@@ -225,20 +218,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
 		return sessionAttributePrefix;
-	}
-
-	/**
-	 * @return The Wicket servlet for this application
-	 */
-	public final WicketServlet getWicketServlet()
-	{
-		if (wicketServlet == null)
-		{
-			throw new IllegalStateException("wicketServlet is not set yet. Any code in your"
-					+ " Application object that uses the wicketServlet instance should be put"
-					+ " in the init() method instead of your constructor");
-		}
-		return wicketServlet;
 	}
 
 	/**
@@ -399,18 +378,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	/**
 	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
 	 * 
-	 * @param wicketServlet
-	 *            The wicket servlet instance for this application
-	 */
-	public final void setWicketServlet(final WicketServlet wicketServlet)
-	{
-		this.wicketServlet = wicketServlet;
-		this.applicationKey = wicketServlet.getServletName();
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
 	 * @param wicketFilter
 	 *            The wicket filter instance for this application
 	 */
@@ -501,10 +468,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	private String getInitParameter(String key)
 	{
-		if (wicketServlet != null)
-		{
-			return wicketServlet.getInitParameter(key);
-		}
 		if (wicketFilter != null)
 		{
 			return wicketFilter.getFilterConfig().getInitParameter(key);
