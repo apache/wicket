@@ -388,21 +388,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @param wicketServlet
 	 *            The wicket servlet instance for this application
-	 * @throws IllegalStateException
-	 *             If an attempt is made to call this method once the wicket
-	 *             servlet has been set for the application.
 	 */
 	public final void setWicketServlet(final WicketServlet wicketServlet)
 	{
-		if (this.wicketServlet == null)
-		{
-			this.wicketServlet = wicketServlet;
-			this.applicationKey = wicketServlet.getServletName();
-		}
-		else
-		{
-			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
-		}
+		this.wicketServlet = wicketServlet;
+		this.applicationKey = wicketServlet.getServletName();
 	}
 
 	/**
@@ -410,21 +400,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * @param wicketFilter
 	 *            The wicket filter instance for this application
-	 * @throws IllegalStateException
-	 *             If an attempt is made to call this method once the wicket
-	 *             servlet has been set for the application.
 	 */
 	public final void setWicketFilter(final WicketFilter wicketFilter)
 	{
-		if (this.wicketFilter == null)
-		{
-			this.wicketFilter = wicketFilter;
-			this.applicationKey = wicketFilter.getFilterConfig().getFilterName();
-		}
-		else
-		{
-			throw new IllegalStateException("WicketServlet cannot be changed once it is set");
-		}
+		this.wicketFilter = wicketFilter;
+		this.applicationKey = wicketFilter.getFilterConfig().getFilterName();
 	}
 
 	/**
