@@ -16,10 +16,6 @@
  */
 package wicket.protocol.http;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
-
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
@@ -33,25 +29,6 @@ import wicket.util.listener.IChangeListener;
 public class ReloadingWicketFilter extends WicketFilter
 {
 	private ReloadingClassLoader reloadingClassLoader;
-
-	static
-	{
-		// Get the locations of the classes directories
-		final Enumeration resources;
-		try
-		{
-			resources = ReloadingWicketFilter.class.getClassLoader().getResources("");
-		}
-		catch (IOException e)
-		{
-			throw new RuntimeException(e);
-		}
-		while (resources.hasMoreElements())
-		{
-			URL location = (URL)resources.nextElement();
-			ReloadingClassLoader.addLocation(location);
-		}
-	}
 
 	/**
 	 * Instantiate the reloading class loader

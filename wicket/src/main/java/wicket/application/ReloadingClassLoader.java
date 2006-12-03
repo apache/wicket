@@ -16,8 +16,10 @@
  */
 package wicket.application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -36,11 +38,9 @@ import wicket.util.watch.ModificationWatcher;
  */
 public class ReloadingClassLoader extends URLClassLoader
 {
-	private static boolean enabled = false;
-
 	private static final Log log = LogFactory.getLog(ReloadingClassLoader.class);
 
-	private static Set urls = new HashSet();
+	private static final Set urls = new HashSet();
 
 	/**
 	 * Add the location of a directory containing class files
@@ -64,11 +64,43 @@ public class ReloadingClassLoader extends URLClassLoader
 		return urls;
 	}
 
+	/**
+	 * Add all the url locations we can find for the provided class loader
+	 * 
+	 * @param loader
+	 *            class loader
+	 */
+	private static void addClassLoaderUrls(ClassLoader loader)
+	{
+		if (loader != null)
+		{
+			final Enumeration resources;
+			try
+			{
+				resources = loader.getResources("");
+			}
+			catch (IOException e)
+			{
+				throw new RuntimeException(e);
+			}
+			while (resources.hasMoreElements())
+			{
+				URL location = (URL)resources.nextElement();
+				ReloadingClassLoader.addLocation(location);
+			}
+		}
+	}
+
 	private IChangeListener listener;
 
 	private Duration pollFrequency = Duration.seconds(3);
 
 	private ModificationWatcher watcher;
+
+	static
+	{
+		addClassLoaderUrls(ReloadingClassLoader.class.getClassLoader());
+	}
 
 	/**
 	 * Create a new reloading ClassLoader from a list of URLs, and initialize
@@ -82,8 +114,35 @@ public class ReloadingClassLoader extends URLClassLoader
 	 */
 	public ReloadingClassLoader(ClassLoader parent)
 	{
-		super((URL[])urls.toArray(new URL[0]), parent);
+		super(new URL[] {}, parent);
+		// probably doubles from this class, but just in case
+		addClassLoaderUrls(parent); 
+		for (Iterator i = urls.iterator(); i.hasNext();)
+		{
+			addURL((URL)i.next());
+		}
 		this.watcher = new ModificationWatcher(pollFrequency);
+	}
+
+	/**
+	 * Gets a resource from this <code>ClassLoader</class>.  If the
+	 * resource does not exist in this one, we check the parent.
+	 * Please note that this is the exact opposite of the
+	 * <code>ClassLoader</code> spec.  We use it to work around
+	 * inconsistent class loaders from third party vendors.
+	 *
+	 * @param name of resource
+	 */
+	public final URL getResource(final String name)
+	{
+		URL resource = findResource(name);
+		ClassLoader parent = this.getParent();
+		if (resource == null && parent != null)
+		{
+			resource = parent.getResource(name);
+		}
+
+		return resource;
 	}
 
 	/**
@@ -169,6 +228,8 @@ public class ReloadingClassLoader extends URLClassLoader
 		File clzFile = null;
 		while (locationsIterator.hasNext())
 		{
+			// FIXME only works for directories, but JARs etc could be checked
+			// as well
 			URL location = (URL)locationsIterator.next();
 			String clzLocation = location.getFile() + clz.getName().replaceAll("\\.", "/")
 					+ ".class";
@@ -190,8 +251,7 @@ public class ReloadingClassLoader extends URLClassLoader
 						finally
 						{
 							// If an error occurs when the listener is notified,
-							// remove
-							// the watched object to avoid rethrowing the
+							// remove the watched object to avoid rethrowing the
 							// exception at next check
 							// FIXME check if class file has been deleted
 							watcher.remove(finalClzFile);
