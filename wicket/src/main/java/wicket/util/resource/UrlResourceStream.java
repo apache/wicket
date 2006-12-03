@@ -231,15 +231,35 @@ public class UrlResourceStream extends AbstractResourceStream
 		else
 		{
 			URLConnection urlConnection = null;
+			boolean close = false;
 			try
 			{
 				urlConnection = url.openConnection();
-
+				long lastModified = this.lastModified;
+				if (urlConnection instanceof JarURLConnection)
+				{
+					JarURLConnection jarUrlConnection = (JarURLConnection)urlConnection;
+					URL jarFileUrl = jarUrlConnection.getJarFileURL();
+					URLConnection jarFileConnection = jarFileUrl.openConnection();
+					try
+					{
+						lastModified = jarFileConnection.getLastModified();
+					}
+					finally
+					{
+						jarFileConnection.getInputStream().close();
+					}
+				}
+				else
+				{
+					close = true;
+					lastModified = urlConnection.getLastModified();
+				}
 				// update the last modified time.
-				long lastModified = urlConnection.getLastModified();
 				if (lastModified != this.lastModified)
 				{
 					this.lastModified = lastModified;
+					close = true;
 					this.contentLength = urlConnection.getContentLength();
 				}
 			}
@@ -256,7 +276,7 @@ public class UrlResourceStream extends AbstractResourceStream
 					{
 						((HttpURLConnection)urlConnection).disconnect();
 					}
-					else
+					else if (close)
 					{
 						try
 						{
