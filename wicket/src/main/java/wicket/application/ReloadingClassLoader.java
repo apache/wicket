@@ -41,6 +41,38 @@ public class ReloadingClassLoader extends URLClassLoader
 	private static final Log log = LogFactory.getLog(ReloadingClassLoader.class);
 
 	private static final Set urls = new HashSet();
+	private static final Set patterns = new HashSet();
+
+    protected boolean tryClassHere(String name) {
+        // don't include classes in the java or javax.servlet package
+        if ( name != null && (name.startsWith("java.") || name.startsWith("javax.servlet") ) ) {
+            return false;
+        }
+        // Scan includes, then excludes
+        boolean tryHere;
+
+        // If no explicit includes, try here
+        if (patterns == null || patterns.size() == 0) {
+            tryHere = true;
+        } else {
+            // See if it matches include patterns
+            tryHere = false;
+            Iterator includesIterator = patterns.iterator();
+            while (includesIterator.hasNext())
+            {
+            	String rawpattern = (String) includesIterator.next();
+            	if (rawpattern.length()<=1)
+            		continue;
+            	boolean isInclude = rawpattern.substring(0, 1).equals("+");
+            	String pattern = rawpattern.substring(1);
+                if (WildcardMatcherHelper.match(pattern, name) != null) {
+                    tryHere = isInclude;
+                }
+            }
+        }
+
+        return tryHere;
+    }
 
 	/**
 	 * Add the location of a directory containing class files
@@ -116,7 +148,9 @@ public class ReloadingClassLoader extends URLClassLoader
 	{
 		super(new URL[] {}, parent);
 		// probably doubles from this class, but just in case
-		addClassLoaderUrls(parent); 
+		addClassLoaderUrls(parent);
+		patterns.add("-wicket.*");
+		patterns.add("+wicket.examples.*");
 		for (Iterator i = urls.iterator(); i.hasNext();)
 		{
 			addURL((URL)i.next());
@@ -167,17 +201,19 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			final ClassLoader parent = getParent();
 
-			try
-			{
-				clazz = findClass(name);
-				watchForModifications(clazz);
-			}
-			catch (ClassNotFoundException cnfe)
-			{
-				if (parent == null)
+			if (tryClassHere(name)) {
+				try
 				{
-					// Propagate exception
-					throw cnfe;
+					clazz = findClass(name);
+					watchForModifications(clazz);
+				}
+				catch (ClassNotFoundException cnfe)
+				{
+					if (parent == null)
+					{
+						// Propagate exception
+						throw cnfe;
+					}
 				}
 			}
 

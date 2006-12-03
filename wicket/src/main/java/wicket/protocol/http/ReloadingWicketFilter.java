@@ -59,10 +59,6 @@ public class ReloadingWicketFilter extends WicketFilter
 				reloadingClassLoader = new ReloadingClassLoader(getClass().getClassLoader());
 				try
 				{
-					// FIXME I don't see why you want to do this. Why not
-					// just restart the whole app? that would be just as
-					// quick...
-					// Reload the application
 					init(filterConfig);
 				}
 				catch (ServletException e)
