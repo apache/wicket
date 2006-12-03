@@ -161,7 +161,7 @@ public class WicketFilter implements Filter
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
-			Thread.currentThread().setContextClassLoader(previousClassLoader);
+			Thread.currentThread().setContextClassLoader(getClassLoader());
 
 			// If the request does not provide information about the encoding of
 			// its
@@ -330,7 +330,7 @@ public class WicketFilter implements Filter
 		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
-			Thread.currentThread().setContextClassLoader(previousClassLoader);
+			Thread.currentThread().setContextClassLoader(getClassLoader());
 
 			IWebApplicationFactory factory = getApplicationFactory();
 
