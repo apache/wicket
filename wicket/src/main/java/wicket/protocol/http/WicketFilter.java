@@ -158,7 +158,7 @@ public class WicketFilter implements Filter
 	public final void doGet(final HttpServletRequest servletRequest,
 			final HttpServletResponse servletResponse) throws ServletException, IOException
 	{
-		final ClassLoader previousClassLoader = getClassLoader();
+		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
 			Thread.currentThread().setContextClassLoader(previousClassLoader);
@@ -327,7 +327,7 @@ public class WicketFilter implements Filter
 	{
 		this.filterConfig = filterConfig;
 
-		final ClassLoader previousClassLoader = getClassLoader();
+		final ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
 		try
 		{
 			Thread.currentThread().setContextClassLoader(previousClassLoader);
