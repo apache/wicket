@@ -210,8 +210,9 @@ abstract class AbstractChoice extends FormComponent
 	 * 
 	 * @param choices
 	 *            model representing the list of choices
+	 * @return this for chaining
 	 */
-	public final void setChoices(IModel choices)
+	public final AbstractChoice setChoices(IModel choices)
 	{
 		if (this.choices != null && this.choices != choices)
 		{
@@ -221,6 +222,7 @@ abstract class AbstractChoice extends FormComponent
 			}
 		}
 		this.choices = choices;
+		return this;
 	}
 
 	/**
@@ -228,8 +230,9 @@ abstract class AbstractChoice extends FormComponent
 	 * 
 	 * @param choices
 	 *            the list of choices
+	 * @return this for chaining
 	 */
-	public final void setChoices(List choices)
+	public final AbstractChoice setChoices(List choices)
 	{
 		if ((this.choices != null))
 		{
@@ -239,6 +242,7 @@ abstract class AbstractChoice extends FormComponent
 			}
 		}
 		this.choices = new Model((Serializable)choices);
+		return this;
 	}
 
 	/**
@@ -253,14 +257,16 @@ abstract class AbstractChoice extends FormComponent
 	 * Set the choice renderer to be used.
 	 * 
 	 * @param renderer
+	 * @return this for chaining
 	 */
-	public final void setChoiceRenderer(IChoiceRenderer renderer)
+	public final AbstractChoice setChoiceRenderer(IChoiceRenderer renderer)
 	{
 		if (renderer == null)
 		{
 			renderer = new ChoiceRenderer();
 		}
 		this.renderer = renderer;
+		return this;
 	}
 
 	/**
