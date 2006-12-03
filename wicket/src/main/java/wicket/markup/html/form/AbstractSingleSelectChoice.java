@@ -167,10 +167,12 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 	 * 
 	 * @param nullValid
 	 *            whether null is a valid value
+	 * @return this for chaining
 	 */
-	public void setNullValid(boolean nullValid)
+	public AbstractSingleSelectChoice<T> setNullValid(boolean nullValid)
 	{
 		this.nullValid = nullValid;
+		return this;
 	}
 
 	/**

@@ -218,8 +218,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 * 
 	 * @param choices
 	 *            model representing the list of choices
+	 * @return this for chaining
 	 */
-	public final void setChoices(IModel<List<E>> choices)
+	public final AbstractChoice<M, E> setChoices(IModel<List<E>> choices)
 	{
 		if (this.choices != null && this.choices != choices)
 		{
@@ -229,6 +230,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 			}
 		}
 		this.choices = choices;
+		return this;
 	}
 
 	/**
@@ -236,8 +238,9 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 * 
 	 * @param choices
 	 *            the list of choices
+	 * @return this for chaining
 	 */
-	public final void setChoices(List<E> choices)
+	public final AbstractChoice<M, E> setChoices(List<E> choices)
 	{
 		if ((this.choices != null))
 		{
@@ -247,6 +250,7 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 			}
 		}
 		this.choices = new Model<List<E>>(choices);
+		return this;
 	}
 
 	/**
@@ -261,14 +265,16 @@ abstract class AbstractChoice<M, E> extends FormComponent<M>
 	 * Set the choice renderer to be used.
 	 * 
 	 * @param renderer
+	 * @return this for chaining
 	 */
-	public final void setChoiceRenderer(IChoiceRenderer<E> renderer)
+	public final AbstractChoice<M, E> setChoiceRenderer(IChoiceRenderer<E> renderer)
 	{
 		if (renderer == null)
 		{
 			renderer = new ChoiceRenderer<E>();
 		}
 		this.renderer = renderer;
+		return this;
 	}
 
 	/**
