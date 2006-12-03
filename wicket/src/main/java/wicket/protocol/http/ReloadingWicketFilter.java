@@ -52,8 +52,6 @@ public class ReloadingWicketFilter extends WicketFilter
 	 */
 	public void init(final FilterConfig filterConfig) throws ServletException
 	{
-		super.init(filterConfig);
-
 		reloadingClassLoader.setListener(new IChangeListener()
 		{
 			public void onChange()
@@ -70,5 +68,7 @@ public class ReloadingWicketFilter extends WicketFilter
 				}
 			}
 		});
+
+		super.init(filterConfig);
 	}
 }
