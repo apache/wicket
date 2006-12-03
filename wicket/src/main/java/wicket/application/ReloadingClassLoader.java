@@ -18,9 +18,9 @@ package wicket.application;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,28 +36,39 @@ import wicket.util.watch.ModificationWatcher;
  */
 public class ReloadingClassLoader extends URLClassLoader
 {
-	private IChangeListener listener;
-	private Duration pollFrequency = Duration.seconds(3);
-	private static final Log log = LogFactory.getLog(ReloadingClassLoader.class);
-	private static List urls = new ArrayList();
-	private ModificationWatcher watcher;
 	private static boolean enabled = false;
 
+	private static final Log log = LogFactory.getLog(ReloadingClassLoader.class);
+
+	private static Set urls = new HashSet();
+
 	/**
-	 * Add the location of a directory containing class files 
-	 * @param url the URL for the directory
+	 * Add the location of a directory containing class files
+	 * 
+	 * @param url
+	 *            the URL for the directory
 	 */
-	public static void addLocation(URL url) {
+	public static void addLocation(URL url)
+	{
 		urls.add(url);
 	}
 
 	/**
-	 * Returns the list of all configured locations of directories containing class files
+	 * Returns the list of all configured locations of directories containing
+	 * class files
+	 * 
 	 * @return list of locations as URL
 	 */
-	public static List getLocations() {
+	public static Set getLocations()
+	{
 		return urls;
 	}
+
+	private IChangeListener listener;
+
+	private Duration pollFrequency = Duration.seconds(3);
+
+	private ModificationWatcher watcher;
 
 	/**
 	 * Create a new reloading ClassLoader from a list of URLs, and initialize
@@ -95,7 +106,6 @@ public class ReloadingClassLoader extends URLClassLoader
 
 		if (clazz == null)
 		{
-
 			final ClassLoader parent = getParent();
 
 			try
@@ -135,11 +145,24 @@ public class ReloadingClassLoader extends URLClassLoader
 	}
 
 	/**
-	 * Watch changes of a class file by locating it in the list of location URLs and adding the corresponding file to the ModificationWatcher
-	 *
-	 * @param clz the class to watch
+	 * Sets the listener that will be notified when a class changes
+	 * 
+	 * @param listener
+	 *            the listener to notify upon class change
 	 */
-	void watchForModifications(Class clz)
+	public void setListener(IChangeListener listener)
+	{
+		this.listener = listener;
+	}
+
+	/**
+	 * Watch changes of a class file by locating it in the list of location URLs
+	 * and adding the corresponding file to the ModificationWatcher
+	 * 
+	 * @param clz
+	 *            the class to watch
+	 */
+	private void watchForModifications(Class clz)
 	{
 		// Watch class in the future
 		Iterator locationsIterator = urls.iterator();
@@ -166,8 +189,10 @@ public class ReloadingClassLoader extends URLClassLoader
 						}
 						finally
 						{
-							// If an error occurs when the listener is notified, remove
-							// the watched object to avoid rethrowing the exception at next check
+							// If an error occurs when the listener is notified,
+							// remove
+							// the watched object to avoid rethrowing the
+							// exception at next check
 							// FIXME check if class file has been deleted
 							watcher.remove(finalClzFile);
 						}
@@ -184,14 +209,5 @@ public class ReloadingClassLoader extends URLClassLoader
 		{
 			log.debug("Could not locate class " + clz.getName());
 		}
-	}
-
-	/**
-	 * Sets the listener that will be notified when a class changes
-	 * @param listener the listener to notify upon class change
-	 */
-	public void setListener(IChangeListener listener)
-	{
-		this.listener = listener;
 	}
 }

@@ -16,7 +16,9 @@
  */
 package wicket.protocol.http;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -32,10 +34,23 @@ public class ReloadingWicketFilter extends WicketFilter
 {
 	private ReloadingClassLoader reloadingClassLoader;
 
-	static {
-		// Get the location of the classes directory
-		URL classesDir = ReloadingWicketFilter.class.getResource("/");
-		ReloadingClassLoader.addLocation(classesDir);
+	static
+	{
+		// Get the locations of the classes directories
+		final Enumeration resources;
+		try
+		{
+			resources = ReloadingWicketFilter.class.getClassLoader().getResources("");
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		while (resources.hasMoreElements())
+		{
+			URL location = (URL)resources.nextElement();
+			ReloadingClassLoader.addLocation(location);
+		}
 	}
 
 	/**
@@ -47,13 +62,21 @@ public class ReloadingWicketFilter extends WicketFilter
 		reloadingClassLoader = new ReloadingClassLoader(getClass().getClassLoader());
 	}
 
+	/**
+	 * @see wicket.protocol.http.WicketFilter#getClassLoader()
+	 */
 	protected ClassLoader getClassLoader()
 	{
 		return reloadingClassLoader;
 	}
 
+	/**
+	 * @see wicket.protocol.http.WicketFilter#init(javax.servlet.FilterConfig)
+	 */
 	public void init(final FilterConfig filterConfig) throws ServletException
 	{
+		super.init(filterConfig);
+
 		reloadingClassLoader.setListener(new IChangeListener()
 		{
 			public void onChange()
@@ -70,7 +93,5 @@ public class ReloadingWicketFilter extends WicketFilter
 				}
 			}
 		});
-
-		super.init(filterConfig);
 	}
 }
