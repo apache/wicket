@@ -41,8 +41,7 @@ import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.WebRequest;
-import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.WebApplication;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestTargetMountsInfo;
 import wicket.request.RequestParameters;
@@ -868,50 +867,11 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 	{
 		if (urlPrefix == null)
 		{
-			final AppendingStringBuffer buffer = new AppendingStringBuffer();
-			final WebRequest request = ((WebRequestCycle)requestCycle).getWebRequest();
-			if (request != null)
-			{
-				String contextPath = Application.get().getApplicationSettings().getContextPath();
-				if (contextPath == null)
-				{
-					contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-							.getContextPath();
-					if (contextPath == null)
-					{
-						contextPath = "";
-					}
-				}
-				if (!contextPath.equals("/"))
-				{
-					buffer.append(contextPath);
-				}
-				String path = request.getServletPath();
-				if (path != null && !path.equals(""))
-				{
-					if (!buffer.endsWith("/") && !path.startsWith("/"))
-						buffer.append("/");
-					buffer.append(path);
-				}
-			}
-			// special check, if everything is empty then we need to define '/'
-			// as urlPrefix
-			// else all urls get relative this is bad for mounts.
-			// Except for mounts who have to do a special check else mounts get:
-			// //mount
-			// see encode(RequestCycle,IRequestTarget) when a mount is found.
-			if (buffer.length() == 0)
-			{
-				urlPrefix = "/";
-			}
-			else
-			{
-				urlPrefix = buffer;
-			}
+			urlPrefix = ((WebApplication)Application.get()).getRootPath();
 		}
 		return urlPrefix;
 	}
-
+	
 	/**
 	 * Map used to store mount paths and their corresponding url coding
 	 * strategies.
