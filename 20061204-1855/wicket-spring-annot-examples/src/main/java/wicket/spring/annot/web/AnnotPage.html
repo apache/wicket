@@ -1,0 +1,53 @@
+<wicket:extend>
+<b>Annotations and Bean Proxy Approach</b><br/>
+This approach allows users to quickly and easily inject any component with bean proxies. Components simply have to annotate any fields they wish injected with @SpringBean annotation.
+Interesting classes:<br/>
+<ul>
+	<li>ComponentInjector - an implementation of IComponentInstantiationListener that performs the injection</li>
+	<li>AnnotApplication - sets up SpringComponentInjector used to inject annotated components</li>
+	<li>BasePage - extends InjectableWebPage instead of WebPage to allow subclasses to be injected automatically</li>
+	<li>AnnotPage - contains an annotated field whose value will be initialized with a proxy by the injector</li>
+</ul>
+<table wicket:id="contacts" cellspacing="0" cellpadding="2" class="grid"></table>
+<br/>
+Below is comparison of AnnotPage and ProxyPage. Notice how much cleaner the dependency lookup is in the AnnotPage (in fact the lookup itself is hidden, only an annotated field is present).
+<br/>
+<table cellspacing="0" cellpadding="2">
+<tr>
+	<td style="width:50%; vertical-align:top; border-right: 1px solid gray;">
+<pre>
+public class AnnotPage extends ContactsDisplayPage {
+
+	@SpringBean private ContactDao dao;
+
+	public AnnotPage() {
+
+	}
+
+	protected SortableDataProvider getDataProvider() {
+		return new ProxyDataProvider(dao);
+	}
+}
+</pre>
+	</td>
+	<td style="width:50%; vertical-align:top;">
+<pre>
+public class ProxyPage extends ContactsDisplayPage {
+	public ProxyPage() {
+
+	}
+
+	private ContactDao getContactDao() {
+		return ((ExampleApplication) Application.get()).getContactDaoProxy();
+	}
+
+	protected SortableDataProvider getDataProvider() {
+		return new ProxyDataProvider(getContactDao());
+	}
+}
+</pre>
+	</td>
+</tr>
+</table>
+
+</wicket:extend>

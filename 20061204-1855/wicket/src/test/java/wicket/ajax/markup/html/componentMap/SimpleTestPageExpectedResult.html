@@ -1,0 +1,21 @@
+<html>
+<head>
+  <title>ajax-test</title>
+<script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax.js"></script>
+<script type="text/javascript" id="wicket-ajax-debug-enable"><!--/*--><![CDATA[/*><!--*/
+wicketAjaxDebugEnable=true;
+/*-->]]>*/</script>
+
+<script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug-drag.js"></script>
+<script type="text/javascript" src="/WicketTester/WicketTester/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
+</head>
+<body onload="setTimeout(function() { var wcall=wicketAjaxGet('/WicketTester/WicketTester?wicket:interface=:0:testPanel:baseSpan:linja1:-1:IUnversionedBehaviorListener&wicket:behaviorId=0&wicket:ignoreIfNotActive=true', function() { }, function() { }); }, 2000);">
+  <span wicket:id="testPanel"><wicket:panel>
+    <span wicket:id="baseSpan">
+      <wicket:child><wicket:extend>
+    this counter should update every 2 seconds: <span wicket:id="linja1" id="linja10">0</span>
+  </wicket:extend></wicket:child>
+    </span>
+  </wicket:panel></span>
+</body>
+</html>

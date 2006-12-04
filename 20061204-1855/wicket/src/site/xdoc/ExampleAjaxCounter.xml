@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Wicket QuickTour: Ajax Counter!</title>
+	</properties>
+
+	<meta
+		name="keyword"
+		content="wicket, example, web, j2ee, java" />
+
+<body>
+<section name="Ajax Counter">
+	<p>
+		This example shows you how to use Wicket's Ajax behaviors and components by building
+		a simple counter that updates through Ajax link clicks.
+	</p>
+	<p>
+        In all the Wicket examples, you have to put all files in the same package directory. 
+        This means putting the markup files and the java files next to one another. It is 
+        possible to alter this behavior, but that is beyond the scope of this example. The
+        only exception is the oblibatory <code>web.xml</code> file which should reside
+        in the <code>WEB-INF/</code> directory of your web application root folder.
+	</p>
+	<p>
+	 	In this example we assume you already have read and understood the other examples
+	 	which give you information on the structure and nature of Wicket applications.
+	 	Specifically read and understand the <a href="ExampleHelloWorld.html">Hello, World 
+	 	example</a>.
+	</p>
+<subsection name="Counter page">
+	<p>
+		First we'll create a page that just counts the number of times a link has been clicked.
+		In the following markup you'll see a link and a label.
+	</p>
+	<h3>Listing 1 the page markup file</h3>
+	<source><![CDATA[<html>
+<head></head>
+<body>
+<a href="#" wicket:id="link">click me</a>
+<p>
+Counter: <span wicket:id="counter">nr of times</span>
+</body>
+</html>]]></source>
+	<p>
+		The link component will refresh the page and the label will replace the text 'nr of times' with
+		the count. Take a look at the following Java file to see how it works on the Java side:
+	</p>
+	<h3>Listing 2 the page java file</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.Component;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.link.Link;
+import wicket.model.Model;
+
+public class Index extends QuickStartPage {
+    public Index() {
+        Model model = new Model() {
+            private int counter = 0;
+
+            public Object getObject(Component arg0) {
+                return new Integer(counter++);
+            }
+        };
+        add(new Link("link") {
+            public void onClick() {
+                // do nothing.
+            }
+        });
+        add(new Label("counter", model));
+    }
+}
+]]></source>
+	<p>
+		In this class we created a <tt>Model</tt> subclass that increases its counter
+		everytime the <tt>getObject</tt> method gets called, and returns its value.
+		We set this model on the label component, so that each time the label gets 
+		rendered the counter gets increased.
+	</p>
+	<p>
+		The link doesn't do anything, just listen to the requests and update the page.
+		If you run this code in your application (download the 
+		<a href="/wicket-quickstart">Quickstart</a>
+		project and copy/paste the code in the homepage for a quick experience).
+	</p>
+	<p>
+		The page gets fully refreshed with each link click. That is not very web 2.0, so
+		let's make it more modern by adding some Ajax stuff.
+	</p>
+</subsection>
+<subsection name="Adding Ajax">
+	<p>
+		To make this a more modern UI we'll have to change a couple of things. First we
+		need to make the link an Ajax link. Wicket provides several types of Ajax links,
+		but the best one for our purposes is the <tt>AjaxFallbackLink</tt>, as it provides
+		a fallback to a normal request in case no Ajax is available.
+	</p>
+	<h3>Listing 3 the Ajaxified java file</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.Component;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxFallbackLink;
+import wicket.markup.html.basic.Label;
+import wicket.model.Model;
+
+public class Index extends QuickStartPage {
+    public Index() {
+        Model model = new Model() {
+            private int counter = 0;
+
+            public Object getObject(Component arg0) {
+                return new Integer(counter++);
+            }
+        };
+        add(new AjaxFallbackLink("link") {
+            public void onClick(AjaxRequestTarget target) {
+                // add the components that need to be updated to 
+                // the target
+            }
+        });
+        add(new Label("counter", model));
+    }
+}
+]]></source>
+	<p>
+		As you can see, the <tt>Link</tt> has been replaced with the
+		<tt>AjaxFallbackLink</tt>, and the <tt>onClick</tt> method
+		now takes a new argument: the <tt>AjaxRequestTarget</tt>. If
+		you want a component to be updated in the Ajax request, you'll
+		have to add them to the target. So let's alter the file to
+		make it possible to add the label to the request target.
+	</p>
+	<h3>Listing 4 the Ajaxified java file</h3>
+	<source><![CDATA[package wicket.quickstart;
+
+import wicket.Component;
+import wicket.ajax.AjaxRequestTarget;
+import wicket.ajax.markup.html.AjaxFallbackLink;
+import wicket.markup.html.basic.Label;
+import wicket.model.Model;
+
+public class Index extends QuickStartPage {
+    public Index() {
+        Model model = new Model() {
+            private int counter = 0;
+
+            public Object getObject(Component arg0) {
+                return new Integer(counter++);
+            }
+        };
+        final Label label = new Label("counter", model);
+        label.setOutputMarkupId(true);
+        add(new AjaxFallbackLink("link") {
+            public void onClick(AjaxRequestTarget target) {
+                target.addComponent(label);
+            }
+        });
+        add(label);
+    }
+}
+]]></source>
+	<p>
+		We've moved the instantiation of the label to the beginning of
+		the page constructor and made a local, final variable. This way
+		we can reference the label in the event handler of the link 
+		component.
+	</p>
+	<p>
+		We also had to call <tt>setOutputMarkupId(true)</tt> on the label
+		to be able to update the component when the request is returned to
+		the client browser. If we don't, Wicket will not know how to update
+		the markup in the client.
+	</p>
+	<p>
+		If you put this code into your page's class, then you'll have a
+		working Ajax updating counter.
+	</p>
+</subsection>
+<subsection name="Summary">
+	<p>
+		Working with Ajax and Wicket using the standard Wicket libraries doesn't
+		require a degree in JavaScript. Even better, you don't necessarily need
+		to update your markup file to work with Ajax. In this (simple) example we
+		were able to add Ajax behavior to the page without touching the markup
+		file.
+	</p>
+	<p>
+		The most important lesson here is that in order to update components using
+		Ajax is that you need to add those components to the <tt>AjaxRequestTarget</tt>
+		and that the components that are to be updated in that request, should have
+		<tt>setOutputMarkupId(true)</tt>.
+	</p>
+</subsection>
+</section>
+</body>
+</document>

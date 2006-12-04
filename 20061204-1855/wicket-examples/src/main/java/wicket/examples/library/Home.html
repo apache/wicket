@@ -1,0 +1,48 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+    <title>Wicket Examples - library</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+
+  <span wicket:id = "border">
+  <table width = "100%">
+	<tr>
+	  <th>Title</th>
+	  <th>Author</th>
+	  <th></th>
+	  <th></th>
+	  <th></th>
+	  <th></th>
+    </tr>
+    <tr wicket:id = "books">
+      <td>
+        <a wicket:id = "details" href="#">
+        <span wicket:id = "title">Huckleberry Finn</span>
+        </a>
+      </td>
+      <td>
+        <span wicket:id = "author">
+        Mark Twain
+        </span>
+      </td>
+      <td>
+        <a wicket:id = "moveUp" href="#">Up</a>
+      </td>
+      <td>
+        <a wicket:id = "moveDown" href="#">Down</a>
+      </td>
+      <td>
+        <a wicket:id = "remove" href="#">Remove</a>
+      </td>
+      <td>
+        <a wicket:id = "edit" href="EditBook.html">Edit</a>
+      </td>
+    </tr>
+  </table>	
+  <p>
+  <span wicket:id = "navigator"/>
+  </p>
+  </span>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Wicket QuickTour: GuestBook</title>
+	</properties>
+
+	<meta
+		name="keyword"
+		content="wicket, example, web, j2ee, java" />
+
+<body>
+<section name="GuestBook">
+	<p>
+		The GuestBook application allows users to enter comments that appear on a page
+		like a weblog.  Drawing the list of comments is very easy with the Wicket
+		<code>ListView</code> component.  This example also gives an impression of
+		what form handling is like.
+	</p>
+	<p>
+        As with all examples, you have to put all files in the same package directory. This
+        means putting the markup files and the java files next to one another. It is possible
+        to alter this behavior, but that is beyond the scope of this example.
+	</p>
+	<img src="images/image005.png" alt="Tables" />
+<subsection name="Comment.java">
+	<p>
+		The <code>Comment</code> POJO model is very straightforward (we have 
+		omitted the getter/setter code for brevity in this example):
+	</p>
+		<source><![CDATA[package wicket.examples.guestbook;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class Comment implements Serializable
+{
+	public String text;
+	public Date date = new Date();
+}]]></source>
+
+</subsection>
+<subsection name="GuestBook.java">
+    <p>
+        In the file <code>GuestBook.java</code> we have put the Java component code
+        for the guestbook page. This is the homepage for the guestbook application. 
+        The page consists of a form for entering new items to the guestbook and a 
+        list of repeating markup for showing the guestbook entries.
+    </p>
+	<p>
+		The <code>GuestBook</code> constructor adds a <code>CommentForm</code> and
+		a <code>ListView</code> of the comments.  Notice how the model is passed 
+		in as the second argument to the <code>ListView</code> constructor.
+    </p>
+    <p>
+        Then as the view renders, the <code>populateItem</code> method is called 
+        passing in a <code>ListItem</code> container for the current row in the 
+        list.
+    </p>
+    <p>
+        The implementation below obtains the <code>Comment</code> POJO from 
+        the list item and adds label components for the date and text of the 
+        <code>Comment</code>. This is all accomplished in just a few lines of code.
+	</p>
+	<source><![CDATA[package wicket.examples.guestbook;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Vector;
+
+import wicket.markup.html.WebPage;
+import wicket.markup.html.basic.Label;
+import wicket.markup.html.basic.MultiLineLabel;
+import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextArea;
+import wicket.markup.html.list.ListItem;
+import wicket.markup.html.list.ListView;
+import wicket.model.PropertyModel;
+
+public final class GuestBook extends WebPage
+{
+	/** Use a Vector, as it is synchronized. */
+	private static final List commentList = new Vector();
+	private final ListView commentListView;
+
+	public GuestBook()
+	{
+		add(new CommentForm("commentForm"));
+		add(commentListView = new ListView("comments", commentList)
+		{
+			public void populateItem(final ListItem listItem)
+			{
+				final Comment comment = (Comment)listItem.getModelObject();
+				listItem.add(new Label("date", comment.date.toString()));
+				listItem.add(new MultiLineLabel("text", comment.text));
+			}
+		});
+	}
+
+	public final class CommentForm extends Form
+	{
+		private final Comment comment = new Comment();
+
+		public CommentForm(final String componentName)
+		{
+			super(componentName);
+			add(new TextArea("text", new PropertyModel(comment, "text")));
+		}
+
+		public final void onSubmit()
+		{
+			final Comment newComment = new Comment();
+			newComment.text = comment.text;
+
+			commentList.add(0, newComment);
+			commentListView.modelChanged();
+
+			comment.text = "";
+		}
+	}
+}]]></source>
+	<p>
+    	When the <code>CommentForm</code> is submitted, the <code>onSubmit()</code> 
+        method is called. Notice that nothing gets the value of the <code>TextArea</code>
+    	that was added in the <code>CommentForm</code> constructor. This is because the
+    	comment is the model and the third parameter to the <code>TextArea</code> constructor
+    	specified the property of the model to update.  So all <code>onSubmit()</code>
+    	has to do is create a new comment from the model that was updated and add it to the
+    	comment list.  When the page redraws, the new list will be rendered.  
+	</p>
+	<p>
+    	We use a <code>Vector</code> as our shared static model used by 
+    	<code>commentListView</code> (<code>commentList</code>) to ensure that it is only 
+    	updated by one thread at a time. <em>Remember, this is a multi-user application with 
+    	a shared model!</em>
+	</p>
+	<p>
+        Finally, you may notice the call to <code>commentListView.modelChanged()</code>. 
+        This informs the list view that its model has been modified. In more advanced usage 
+        scenarios, this would allow Wicket to expire stale pages accessed with the browser's 
+        back button.
+	</p>
+</subsection>
+<subsection name="GuestBook.html">
+	<p>
+    	In the HTML below, notice the way that the <code>TextArea</code> component is being 
+    	nested inside the <code>CommentForm</code>. Wicket is able to keep everything 
+    	straight because the Java <code>Component.add()</code> calls have to result in the 
+    	same nesting structure as the HTML.
+    </p>
+    <p>
+        Finally, notice the <![CDATA[<wicket:remove>]]>  block. This is simply markup that 
+        is there for previewing purposes only. When the page renders, it is stripped out.
+	</p>
+    <source><![CDATA[
+<html>
+<body>
+  <form wicket:id = "commentForm">
+    Add your comment here:
+    <p>
+    <textarea wicket:id = "text">This is a comment</textarea>
+    <p>
+    <input type = "submit" value = "Submit"/>
+  </form>
+  <p>
+  <span wicket:id = "comments">
+    <p>
+	    <span wicket:id = "date">1/1/2004</span><br>
+	    <span wicket:id = "text">Comment text goes here.</span>
+	</p>
+  </span>
+  <wicket:remove>
+    <p>
+	    1/2/2004<br/>
+	    More comment text here.
+    </p>
+  </wicket:remove>
+</body>
+</html>				
+]]></source>
+</subsection>
+<subsection name="GuestBookApplication.java">
+    <p>
+        For completeness, we've included the <code>GuestBookApplication</code> class, and
+        as a final treat the modifications to the <code>web.xml</code> file.
+    </p>
+    <source><![CDATA[package wicket.examples.guestbook;
+
+import wicket.protocol.http.WebApplication;
+
+public class GuestBookApplication extends WebApplication
+{
+    public GuestBookApplication()
+    {
+    }
+    
+    public Class getHomePage()
+    {
+        return GuestBook.class;
+    }
+}]]></source>
+</subsection>
+<subsection name="web.xml">
+    <p>
+        Add the following two sections (servlet and servlet-mapping) to your 
+        <code>web.xml</code> file for running this application.
+    </p>
+    <source><![CDATA[    <servlet>
+        <servlet-name>GuestBookApplication</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.guestbook.GuestBookApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GuestBookApplication</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>]]></source>
+</subsection>
+</section>
+</body>
+</document>

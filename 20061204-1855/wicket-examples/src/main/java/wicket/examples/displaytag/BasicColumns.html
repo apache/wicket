@@ -1,0 +1,189 @@
+<html xmlns:wicket>
+<head>
+  <title>Wicket Examples - displaytag</title>
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="stylesheet" href="displaytag/css/displaytag.css" type="text/css" media="screen, print" />
+</head>
+<body>
+  <span wicket:id="mainNavigation" />
+  <h2><wicket:link>
+    <a href="DisplaytagIndex.html">Example</a>
+  </wicket:link> &gt; Basic, columns</h2>
+  <br />All tables on that page show the same table. The differences are in the java code only.
+  <div style="border-style:solid"><pre>
+	&lt;table&gt;
+	    &lt;thead&gt;...&lt;/thead&gt;
+	    &lt;tbody&gt;
+	        &lt;tr <div style="color: blue; display: inline">wicket:id="rows"</div> id="rows" class="even"&gt;
+	            &lt;td&gt;&lt;span <div style="color: blue; display: inline">wicket:id="id"</div>&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+	            &lt;td&gt;&lt;span <div style="color: blue; display: inline">wicket:id="name"</div>&gt;Test Name&lt;/span&gt;&lt;/td&gt;
+	            &lt;td&gt;&lt;span <div style="color: blue; display: inline">wicket:id="email"</div>&gt;Test EMail&lt;/span&gt;&lt;/td&gt;
+	            &lt;td&gt;&lt;span <div style="color: blue; display: inline">wicket:id="status"</div>&gt;Test Status&lt;/span&gt;&lt;/td&gt;
+	            &lt;td&gt;&lt;span <div style="color: blue; display: inline">wicket:id="comments"</div>&gt;Test Comments&lt;/span&gt;&lt;/td&gt;
+	        &lt;/tr&gt;
+	    &lt;/tbody&gt;
+	&lt;/table&gt;</pre>
+  </div>
+  <br />
+  It can be as simple as that, provided some assumptions are met:
+  <ul>
+    <li>You need Labels only</li>
+    <li>The markup wicket:id matches the expression to access the IModel property</li>
+  </ul>
+  <div style="border-style:solid"><pre>
+  add(new SimpleListView("rows", data));</pre>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows" id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="comments">Test Comments</span></td>
+      </tr>
+      <wicket:remove>
+        <tr class="odd">
+          <td>Test ID</td>
+          <td>Test Name</td>
+          <td>Test Email</td>
+          <td>Test Status</td>
+          <td>Test Comments</td>
+        </tr>
+      </wicket:remove>
+    </tbody>
+  </table>
+  <br />
+  Lets say the property has a different name: "description" instead of "comments":
+  <div style="border-style:solid"><pre>
+  add(new SimpleListView("rows", data)
+  {
+      public void populateItem(final ListItem listItem)
+      {
+          final ListObject value = (ListObject) listItem.getModelObject();
+
+          // You only need to manually add the components where
+          // a) the tag id is NOT equal to the wicket id
+          // b) you need something else than a Label
+          // c) you need to attach AttributeModifier
+          // d) any other fancy stuff
+          listItem.add(new Label("comments", value.getDescription()));
+      }
+  });</pre>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows2" id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="description">Test Comments</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+  Instead of using SimpleListView, the following example uses ListView and shows how easy 
+  it is to implement some of the functionality of SimpleListView:
+  <div style="border-style:solid"><pre>
+  add(new ListVieweWithAlternatingRowStyle("rows", data)
+  {
+      public void populateItem(final ListItem listItem)
+      {
+          // you see. No more model required
+          listItem.add(new Label("id"));
+          listItem.add(new Label("name"));
+          listItem.add(new Label("email"));
+          listItem.add(new Label("status"));
+          listItem.add(new Label("description"));
+      }
+
+      // This makes the trick
+      protected IModel getListItemModel(final IModel model, final int index)
+      {
+          return new CompoundPropertyModel(super.getListItemModel(model, index));
+      }
+  });</pre>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows3" id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="comments">Test Comments</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+  And this is the most basic way to do it:
+  <div style="border-style:solid"><pre>
+  add(new ListVieweWithAlternatingRowStyle("rows", data)
+  {
+      public void populateItem(final ListItem listItem)
+      {
+          final ListObject value = (ListObject) listItem.getModelObject();
+
+          listItem.add(new Label("id", Integer.toString(value.getId())));
+          listItem.add(new Label("name", value.getName()));
+          listItem.add(new Label("email", value.getEmail()));
+          listItem.add(new Label("status", value.getStatus()));
+          listItem.add(new Label("comments", value.getDescription()));
+      }
+  });</pre>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Comments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr wicket:id="rows4" id="rows" class="even">
+        <td><span wicket:id="id">Test ID</span></td>
+        <td><span wicket:id="name">Test Name</span></td>
+        <td><span wicket:id="email">Test EMail</span></td>
+        <td><span wicket:id="status">Test Status</span></td>
+        <td><span wicket:id="description">Test Comments</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <br />
+</body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.include.Include</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	You can use the Include component to include arbitrairy content from non-Wicket locations,
+	such as static HTML headers, or even do page integration from external sites.
+	<a target="_new" href="https://sourceforge.net/tracker/index.php?func=detail&aid=1243549&group_id=119783&atid=684978">
+		NOTE this open issue before you use this component
+	</a>
+	</p>
+	<p>
+	This component is not used for normal page composition tasks.
+	You should usually get by using Panels, Borders and Markup inheritance.
+	</p>
+	<p>
+
+	<span wicket:id="include">
+		Inclusion contents to be inserted here.
+	</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

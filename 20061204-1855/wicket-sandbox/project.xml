@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+  <extend>../wicket/project.xml</extend>
+  <id>wicket-sandbox</id>
+  <name>Wicket Sandbox</name>
+  <currentVersion>NONE</currentVersion>
+  <package>wicket.examples</package>
+  <inceptionYear>2005</inceptionYear>
+  <description>Just here to easily get the dependencies.</description>
+  <dependencies>
+    <dependency>
+      <groupId>wicket</groupId>
+      <artifactId>wicket</artifactId>
+      <version>SNAPSHOT</version>
+      <properties>
+        <eclipse.dependency>true</eclipse.dependency>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+        <groupId>wicket</groupId>
+        <artifactId>wicket-extensions</artifactId>
+        <version>SNAPSHOT</version>
+        <properties>
+        	<eclipse.dependency>true</eclipse.dependency>
+            <war.bundle>true</war.bundle>
+        </properties>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <url>http://www.junit.org</url>
+      <properties>
+        <wicket.group>test</wicket.group>
+        <wicket.description>Used for testing Wicket</wicket.description>
+        <war.bundle>false</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
+      <url>http://logging.apache.org/log4j</url>
+      <properties>
+        <wicket.group>optional</wicket.group>
+        <wicket.description>If you use JDK style logging, this library is optional.</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
+      <version>2.3</version>
+      <jar>servletapi-2.3.jar</jar>
+      <properties>
+        <wicket.group>compile</wicket.group>
+        <wicket.description>Compile time only, is supplied by your application server.</wicket.description>
+        <war.bundle>false</war.bundle>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+      <url>http://jakarta.apache.org/commons/logging/</url>
+      <properties>
+        <wicket.group>required</wicket.group>
+        <wicket.description>This library enables us to give you the choice of logging toolkit (JDK, Log4j, etc.)</wicket.description>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+  </dependencies>
+  <properties/>
+</project>

@@ -1,0 +1,473 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<faqs title="Frequently Asked Questions">
+	<part id="general-questions">
+		<title>General Questions</title>
+		<faq id="why-wicket">
+			<question>Why "Wicket"?</question>
+			<answer>
+				<p>
+				   The name "wicket" was at first selected simply because it was unique, memorable  
+                    and easy to say... and yet not used by a serious software project (the owner  
+                    of the "dodgy IRC bot" called "wicket" which shows up in a Google search was  
+                    kind enough to give his blessings to me via email to use the name).  It is    
+                    surprisingly hard to find <em>any</em> short word that is not already used as 
+                    the name of some software project or other!                                   
+				</p>
+				<p>
+					Although the name was selected for no particular reason, there are a couple
+					of interesting coincidences.  For one thing, web frameworks have been somewhat 
+					of a "sticky wicket".  For another, "wicket" sounds a bit like "wiki" which 
+					is Hawaiian for "quick" (you could even think of the name as "wik" "it" ;-)).  
+					And finally, the original meaning of wicket was that of a small door.  But,
+					especially a small door within a larger door.  I like this image quite a lot.  
+					It's modular ;-) and doors represent freedom (from the big J2EE door?).  A 
+					picture of a small door within another door might make a nice cover for the 
+					User's Guide when it's done.  Either that or a cute little squirrel staring 
+					back at the reader through a croquet wicket!
+				</p>
+			</answer>       
+		</faq>                  
+		<faq id="why-no-forums">
+			<question>Why no forums?</question>
+			<answer>
+				<p>
+					We feel that there are several issues with discussion forums and a lot
+					of advantages when using mailinglists as a main discussion and support platform.
+					We like having just one method of communicating with our users and co-developers.
+					When we introduce message boards, mailinglists, and whatnot kind of discussion 
+					platforms, we have to monitor all those platforms. As all core-developers work on 
+					Wicket in their free time or some spare minutes during working hours answering 
+					e-mail on the lists, we are limited in our time to monitor all those different
+					platforms and answer all questions or discuss design issues. In this case: less 
+					is more. Less communication platforms means more attention from the developers.
+				</p>
+				<p>
+					Mailinglists allow us to monitor user and development questions directly. Usually
+					you get a response within minutes from either a core developer or another user.
+					The current mailinglists have been very kind to us and our users.
+				</p>
+				<p>
+					Mail is often not blocked on corporate networks. Several corporations block
+					non-approved websites. Discussion forums are necessarily website based. We
+					don't have to go to a website and refresh the discussion groups constantly in 
+					order to see what has happened. Discussion websites are usually very bad at
+					searching and browsing for information.
+				</p>
+				<p>
+					E-mail clients have better editors, and support (when using a good e-mail program)
+					threaded views of mail messages. For instance Mozilla Thunderbird supports this.
+					If your mail client doesn't support threaded views, you can always use
+					<a href="news:gmane.comp.java.wicket.user">gmane.comp.java.wicket.user</a> or
+					<a href="news:gmane.comp.java.wicket.develop">gmane.comp.java.wicket.develop</a> in
+					a News client.
+				</p>
+				<p>
+					And finally <a href="http://article.gmane.org/gmane.comp.java.wicket.devel/4011">most
+					Wicket users</a> prefer mailinglists over discussion forums. (Check out the votes in
+					the linked thread).
+				</p>
+			</answer>
+		</faq>
+		<faq id="why-no-tiger">
+			<question>Why doesn't Wicket use Java 5?</question>
+			<answer>
+				<p>
+					We strive to make Wicket available for the largest possible number of developers. This
+					means that we have to take into account those developers that don't have the luxury of
+					running their application servers on Java 5. Many shops don't run on Java 5 yet. We would
+					be doing ourselves and our users a great disservice when we would target Java 5 as our
+					base platform.
+				</p>
+				<p>
+					As several members of our community have pointed out, there is a code converter for 
+					running Java 5 code on a Java 1.4 runtime, <a href="http://retroweaver.sf.net">RetroWeaver</a>.
+					Even though it is a remarkable product, and probably works flawlessly, we, the
+					Wicket core team, can't support using such a tool on a framework. Debugging web applications
+					is already a very complex thing to do, and when we introduce such an unknown component (or
+					to be more precise: 2 components), bug finding becomes even harder. Furthermore, some clients 
+					of our users won't or can't accept such retrofitted code.
+				</p>
+				<p>
+					Also note that RetroWeaver only takes your source code into consideration. The standard libraries, 
+					which are an integral part of a Java Runtime Environment, are not backported. For instance, Wicket
+					uses the 
+					<a href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">concurrent</a>
+					package of <a href="http://gee.cs.oswego.edu/dl">Doug Lea</a>. This package has been adopted
+					by the Java 5 runtime library. However the backport of this JDK 1.5 extension is not a 1-on-1
+					drop in library that makes our code ready for JDK 1.5. Java explicitly forbids that other than
+					the Java Runtime Library classes contribute to the <code>java.xxx</code> namespace. So supplying
+					the backport with Wicket will <em>not</em> solve our problem.
+				</p>
+				<p>
+					Please keep in mind that we <em>do</em> see the benefits of using Java 5. We like annotations, generics,
+					autoboxing, removing the need for concurrent.jar, etc. But we have to look at the world around us,
+					and that world is unfortunately not using Java 5.
+				</p>
+			</answer>
+		</faq>
+		<faq id="when-tiger">
+			<question>When will Wicket use Java 5?</question>
+			<answer>
+				<p>
+					Basically a large part of the answer is: when the majority of our customers can run their web 
+					applications on Java 5. As IBM WebSphere is one of the leading application servers, having Java 
+					5 support for WebSphere application server is one condition.
+				</p>
+				<p>
+					Furthermore, upgrading to Java 5 will break a lot of stuff, so this will be scheduled for a major 
+					release. At the moment this is scheduled for Wicket 2.
+				</p>
+				<p>
+					We would like to give other functional requirements a higher priority, like AJAX and Portlet support,
+					as those will help <em>all</em> users of Wicket. So first Wicket 1.1 and 1.2 will see the light of day,
+					after that we will see what needs to be done.
+				</p>
+			</answer>
+		</faq>
+	</part>                         
+                                        
+	<part id="design-philosopy">
+		<title>Design Philosophy</title>
+
+		<faq id="why-final">
+			<question>Why are so many classes and methods in Wicket final?</question>
+			<answer>
+				<p>
+					Classes and methods in Wicket are generally declared as final until the need for
+					extensibility is well understood. While this defensive approach may seem
+					obsessive to some, the major benefit is that classes and methods which haven't
+					been designed for extension cannot be extended until the problem(s) at hand are
+					examined by the Wicket development team. This helps to ensure that the best
+					approach is taken. Sometimes, straightforward extension is not the best
+					approach. Sometimes, features of the API have been misapplied or misunderstood.
+					It's best to catch this early.
+				</p>
+				<p>
+					While this does provoke more discussion and sometimes a bit of annoyance, the
+					discussion generally improves Wicket and will help ensure greater backwards
+					compatibility in the future. It's really a matter of how the development team
+					manages API commitments. By making fewer commitments in the API in terms of
+					extension points, we are more likely to be able to support those extension
+					points that we do allow in the future. We are also more likely to catch
+					anti-pattern use cases and provide features appropriate to the problems you are
+					trying to solve.
+				</p>
+				<p>
+					Honestly, we aren't trying to annoy anyone and we do aim to respond quickly to
+					any extension needs that arise which make sense. If you really don't agree with
+					all this, remember that Wicket is open source. You can always check out the
+					source code, remove the final keyword that offends you and rebuild the project.
+				</p>
+			</answer>
+		</faq>
+
+		<faq id="what-state-management">
+			<question>What design decisions were made regarding state management?</question>
+			<answer>
+				<p>
+					There are probably only a small percentage (perhaps 20%-30%) of all web
+					applications written that have to scale up to large clusters of machines with 
+					hundreds of concurrent users. Unfortunately, many web application frameworks
+					are built around the assumption that everyone wants to build web applications 
+					of this size. The result being that people with the skills and resources available 
+					to build such applications are happy, while the other 80% of people are forced to 
+					jump through many hoops and do loads of manual state management that is not really 
+					necessary for the size of application they are building.
+				</p>
+				<p>
+					Wicket adopts an alternative approach. What we have tried to do is build a framework 
+					where out of the box (and for perhaps 50%+) of applications the developers do not need 
+					to worry about state management at all. No need to directly access the session, no need 
+					to enlist the help of second level caches or to manually reconstruct object state for each 
+					request and so on. Application developers can be more productive and the learning 
+					curve for Wicket is far lower.
+				</p>
+				<p>
+					One of the primary objectives was to make state management a Java thing that is 
+					abstracted away from implementation details like HttpSession. In Wicket, state is 
+					stored in components that are nested in Pages which are all contained in a map in 
+					the user's session. All of this is very well defined and occurs "behind the scenes". 
+				</p>
+				<p>
+					Such a style of coding may be unfamiliar to people with experience using existing 
+					frameworks. Typically Wicket code involves good OO design, use of nested and 
+					anonymous classes and an overall awareness of components and their models as being 
+					the repositories of all state. It will take time to adapt to this and for people to 
+					set aside old functional models of programming where they accomplish everything 
+					with query parameters, session state or their equivalent.
+				</p>
+				<p>
+					That said, we also recognise the need to build large, highly scalable web applications
+					using Wicket. Therefore, Wicket has a number of interfaces where we have adopted the 
+					strategy design pattern and where people needing to build large, scalable applications 
+					can take control and implement their own alternative approaches. As Wicket develops 
+					further we will probably provide our own implementations of the most common alternative 
+					approaches.
+				</p>
+			</answer>
+		</faq>
+		
+		<faq id="how-state-management">
+			<question>Can I control how Wicket managed its session state?</question>
+			<answer>
+				<p>
+					The default Wicket behaviour is to use the HttpSession object to hold a Wicket WebSession 
+					object and object hierarchies for each of the current active pages for any session (you 
+					can control how many in the settings). When new pages are created they are added to the s
+					ession, when pages are no longer needed they are expired (removed) from the session. 
+					When an event arrives in a request for a particular page it is retrieved from the session 
+					and the event passed to the appropriate component listener. At the end of the request, any 
+					pages that have been accessed are marked as dirty and readded to the session to force cluster 
+					replication to occur. This approach provides transparent state management and enables near 
+					transparent support of the browser back button. However, we would agree that this approach 
+					does store a reasonable volume of objects in the session and causes some amount of cluster 
+					replication (but this may be fine for many applications, where the saving in development 
+					time far outweighs the cost of some extra processor or memory).
+				</p>
+				<p>
+					When such use of the session is prohibitive, Wicket offers a range of options for tuning 
+					the session usage:
+				</p>
+				<ol>
+				<li>
+					Detachable models can be used behind each component so that the model objects only hold an 
+					id value (or even nothing if you wish) and the actual business objects can be detached at 
+					the end of one request and reattached at the start of the next. You can then implement any 
+					second level approach that you wish in the attach/detach methods.
+				</li>
+				<li>
+					Developers can manually override the page dirty state if they know that the event listener 
+					that was just invoked for a page did not cause any alterations to the page or model objects. 
+					This can be particularly useful to reduce unnecessary cluster replication.
+				</li>
+				<li>
+					It is possible to override the PageState mechanism so that each page (or a base class for 
+					a group of pages) can control its own state replication. Thus instead of the entire page 
+					hierarchy of objects being added to the session, the custom PageState can hold just a minimum 
+					of state data and then reinstantiate the page again for the next request, or adopt some 
+					alternative approach - the choices are endless (and probably different for each application 
+					or group of pages within an application).
+				</li>
+				</ol>
+				<p>
+					Longer term (Wicket 1.1) we are planning to add some additional approaches such as externalizing 
+					state to the client, stateless pages and allowing listeners that are not attached to pages for 
+					handling requests that do not require existing page state.
+				</p>
+			</answer>
+		</faq>
+
+		<faq id="how-backbutton">
+			<question>How does Wicket handle stale data and the back button?</question>
+			<answer>
+				<p>
+					Because Wicket has a first class component object model where the state for 
+					every page and nested component is available in the user's session, it can trace 
+					through all that state when model information changes looking for pages 
+					containing components with models that have changed in ways that invalidate 
+					earlier renderings of those components and pages.
+				</p>
+				<p>
+					This provides automatic handling for the back button, which has to do with stale 
+					markup, and can generally be divorced from the typical problems of stale data in 
+					a multi-user environment, which should be handled with the usual (optimistic) 
+					locking techniques in the persistence layer.
+				</p>
+				<p>
+					 A good example of stale markup is this: If a table on a page is rendered when 
+					 there are 20 rows in the table's model, a subsequent deletion of a row will 
+					 invalidate the rendering of the table that is still cached in the user's browser. 
+					 When the user accesses the 20th row in the cached page by using their back 
+					 button, the link will not be backed correctly. What's more, a deletion of the 
+					 first row means that all 19 rows are off by one in terms of the model they 
+					 reference.
+				</p>
+				<p>
+					 In Wicket, stale markup caused by deleting a row in a table is automatically 
+					 handled by using the well-controlled server side state which exists in the 
+					 user's session. If you look at the Cell class you will see this implementation 
+					 (roughly) of the removeLink method (which returns a Link that will remove any 
+					 given cell from its containing table).
+				</p>
+				<source><![CDATA[
+public final Link removeLink(final String componentName)
+{
+	return new Link(componentName)
+	{
+		public void onClick()
+		{
+			// Remove listItem and invalidate ListView
+			listView.getList().remove(index);
+			listView.invalidateModel();
+		}
+	};
+}
+]]></source>
+				<p>
+					 Notice that once the remove link changes its table's model by removing the 
+					 cell's model from the table list, it calls table.invalidateModel(). This method 
+					 is implemented by Table, which inherits most of the functionality from Component. 
+					 If you look at the implementation of invalidateModel in Component, you will find 
+					 that it looks through every component on every page in the user's session. Any 
+					 page containing a component using the same model is a stale markup rendering and 
+					 is made stale with a call to setStale. When a user uses their back button to 
+					 access the stale page at a later time, they will receive an appropriate warning.
+				</p>
+			</answer>
+		</faq>
+	</part>
+
+	<part id="building-applications">
+		<title>Building your own Applications</title>
+		<faq id="how-set-session-property">
+			<question>How can I set a session property?</question>
+			<answer>
+				<p>
+				The best and safest way to set a property for a session is to create a subclass of
+				Session (for web applications, a subclass of WebSession) which has the properties
+				you desire. Then override the getSessionFactory() method of Application and provide
+				code which instantiates instances of your session subclass. For example:
+				</p>
+				<p>
+					<source><![CDATA[
+public class MySession extends WebSession
+{
+    private MyObject object;
+    protected MySession(Application application) { super(application); }
+    public MyObject getMyObject() { return object; }
+    public void setMyObject(MyObject object) { this.object = object; }
+}    
+
+public class MyApplication extends WebApplication
+{
+    public ISessionFactory getSessionFactory()
+    {
+        return new ISessionFactory()
+        {
+            public Session newSession()
+            {
+                return new MySession(MyApplication.this);
+            }
+        };
+    }
+}]]></source>
+				</p>
+				<p>
+					Then you can provide access to session properties in a typesafe manner that
+					requires only a single downcast in your whole project:
+				</p>
+				<p><source><![CDATA[
+public class MyPage extends WebPage
+{
+    ...
+	
+    public MySession getMySession()
+    {
+        return (MySession)getSession();
+    }
+}
+
+public class Home extends MyPage
+{
+    ...
+
+    public void whateverMethod()
+    {
+        getMySession().setMyObject(new MyObject());
+    }
+}]]></source>
+				</p>
+			</answer>
+		</faq>
+		<faq id="how-reload-changed-markup-files">
+			<question>How can I get Wicket to automatically reload changed markup files?</question>
+			<answer>
+				<p>
+					By default, Wicket will not reload changed markup files.  This default is a
+					conscious decision because performance can be affected by Wicket's change 
+					detection code, which has to poll the modification dates of all your markup 
+					files at a regular interval.
+				</p>
+				<p>
+					If you call the ApplicationSettings method setResourcePollFrequency(Duration),
+					you can specify how frequently Wicket should poll for file changes.  A Duration
+					value of null will turn the feature back off again.  For example:
+				</p>
+<source><![CDATA[settings.setResourcePollFrequency(Duration.ONE_SECOND)]]></source>
+				<p>
+					will cause Wicket to scan your source files for changes as often as every second.
+				</p>
+				<p>
+					Note that this does NOT affect <i>where</i> Wicket finds resources.  If you 
+					want Wicket to find markup files directly in your source tree while you are 
+					developing, you can call setSourcePath(Path) like this:
+				</p>
+<p>
+<source><![CDATA[
+    settings.setSourcePath(new Path(new Folder("c:\\MyWicketProject\\src\\java"))); 
+]]></source>
+</p>
+				<p>
+					This is a highly productive way to work if your resource poll frequency is
+					fairly quick.  After you change a markup source file, you can simply hit
+					refresh in your brower and immediately see the effect.  With your source path
+					set like this, it is not necessary to restart the application server or 
+					redeploy any files.
+				</p>
+				<p>
+					Finally, it is interesting to note that since ApplicationSettings methods 
+					return their this pointer for invocation chaining, you can put this all 
+					together into one statement:
+				</p>
+				<source><![CDATA[
+settings.setResourcePollFrequency(Duration.ONE_SECOND);
+settings.setSourcePath(new Path(new Folder("c:\\MyWicketProject\\src\\java"))); 
+]]></source>
+			</answer>
+		</faq>
+		<faq id="how-hide-markup">
+			<question>How can I hide markup and/or components?</question>
+			<answer>
+			Any component - whether a simple label, form component or a whole panel - 
+			can be hidden with a call to setVisible(false).  A WebMarkupContainer is
+			a container component that can be attached to any tag.  Since 
+			WebMarkupContainer is a component, you can call setVisible(false) on it 
+			and it will hide whatever it contains, whether it's just markup or 
+			a whole tree of nested components.  For example:
+				<source><![CDATA[
+WebMarkupContainer hideme = new WebMarkupContainer("hideme");
+hideme.setVisible(false);
+
+<html>
+<body>
+	<table>
+		<tr id = "wicket-hideme">
+			<td>this row will be hidden</td>
+		</tr>
+		<tr>
+			<td>this row will not be hidden</td>
+		</tr>
+	</table>
+</body>
+</html>
+]]></source>
+			</answer>
+		</faq>
+	</part>
+</faqs>

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Guide</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+	<body>
+		<section name="User's Guide">
+			<p>
+				Currently there is no (finished) up to date User's Guide. In this document we
+				describe places where you can find any documentation that is available.
+				<a href="/wiki/index.php/Newuserguide">Work is in progress</a>
+				to build a new, up to date user's guide.
+			</p>
+			<p>You could consult the following places for information on using Wicket:</p>
+			<ul>
+				<li>
+					<a href="QuickTour.html">The examples</a>
+					The examples are a showcase of how one might use Wicket. There are examples
+					displaying form validation, using Hibernate, Spring, etc. You can see the
+					examples in action using the
+					<a href="QuickStartBinary.html">binary distribution</a>
+					, or the
+					<a href="QuickStartSource.html">source distribution</a>
+					.
+				</li>
+				<li>
+					<a href="/wiki/index.php/Models">Working with Wicket Models</a>
+				</li>
+				<li>
+					<a href="/wiki/index.php/Lifecycle">The Lifecycle of a Wicket Application</a>
+				</li>
+				<li>
+					<a href="/wiki/index.php/Newuserguide">The new User's Guide</a>
+					Please consult the
+					<a href="/wiki/index.php/Newuserguide">Wiki</a>
+					effort for creating a new, up to date user's guide. It is still in its infancy,
+					but you will find accurate documentation there.
+				</li>
+				<li>
+					<a href="/apidocs/index.html" target="_blank" class="newwindow">The JavaDoc</a>
+					The JavaDoc's are kept up to date religiously, so probably the best information
+					can be found there.
+				</li>
+			</ul>
+		</section>
+	</body>
+</document>

@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.apache.wicket</groupId>
+	<artifactId>wicket-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.3-incubating-SNAPSHOT</version>
+
+	<name>Wicket Parent</name>
+	<description>Wicket is a Java open source, component based web application framework.</description>
+
+	<url>http://wicketframework.org/${project.artifactId}</url>
+	<inceptionYear>2004</inceptionYear>
+
+	<organization>
+		<name>Wicket developers</name>
+		<url>http://wicketframework.org</url>
+	</organization>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<issueManagement>
+	    <system>jira</system>
+		<url>http://issues.apache.org/jira/browse/WICKET</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>continuum</system>
+		<url>http://81.17.46.170:8090/continuum</url>
+	</ciManagement>
+
+	<scm>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.x</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/incubator/wicket/branches/wicket-1.x</developerConnection>
+		<url>http://svn.apache.org/viewvc/incubator/wicket/branches/wicket-1.x</url>
+	</scm>
+
+	<mailingLists>
+		<mailingList>
+			<name>Wicket Announcements List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-announce</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-announce</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket User List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-user</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-user</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket Development List</name>
+			<post>wicket-dev@incubator.apache.org</post>
+			<subscribe>wicket-dev-subscribe@incubator.apache.org</subscribe>
+			<unsubscribe>wicket-dev-unsubscribe@incubator.apache.org</unsubscribe>
+			<archive>http://www.nabble.com/Wicket---Dev-f13977.html</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket commit List</name>
+			<subscribe>wicket-commits-subscribe@incubator.apache.org</subscribe>
+			<unsubscribe>wicket-commits-unsubscribe@incubator.apache.org</unsubscribe>
+			<archive>http://mail-archives.apache.org/mod_mbox/incubator-wicket-commits/</archive>
+		</mailingList>
+		<mailingList>
+			<name>Wicket automated builds List</name>
+			<subscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</subscribe>
+			<unsubscribe>http://lists.sourceforge.net/mailman/listinfo/wicket-builds</unsubscribe>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum=wicket-builds</archive>
+		</mailingList>
+	</mailingLists>
+
+	<developers>
+		<developer>
+			<name>Jonathan Locke</name>
+			<id>jonathanlocke</id>
+			<email>jonathanlocke at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Christopher Turner</name>
+			<id>skipoles</id>
+			<email>skipoles at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Eelco Hillenius</name>
+			<id>eelco12</id>
+			<email>eelco12 at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Johan Compagner</name>
+			<id>joco01</id>
+			<email>joco01 at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Martijn Dashorst</name>
+			<id>dashorst</id>
+			<email>dashorst@apache.org</email>
+			<organization>ASF</organization>
+			<roles>
+				<role>PMC Member</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<name>Juergen Donnerstag</name>
+			<id>jdonnerstag</id>
+			<email>jdonnerstag at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Igor Vaynberg</name>
+			<id>ivaynberg</id>
+			<email>ivaynberg at users.sourceforge.net</email>
+		</developer>
+		<developer>
+			<name>Gwyn Evans</name>
+			<id>gwynevans</id>
+			<email>gwynevans at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Ate Douma</name>
+			<id>adouma</id>
+			<email>adouma at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Jan Blok</name>
+			<id>jan_blok</id>
+			<email>jan_blok at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Janne Hietamaki</name>
+			<id>jannehietamaki</id>
+			<email>jannehietamaki at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Matej Knopp</name>
+			<id>knopp</id>
+			<email>knopp at users.sourceforge.net</email>
+			<roles />
+		</developer>
+		<developer>
+			<name>Frank Bille Jensen</name>
+			<id>billen</id>
+			<email>billen at users.sourceforge.net</email>
+			<timezone>+1</timezone>
+			<roles />
+		</developer>
+		<developer>
+			<name>Al Maw</name>
+			<id>almaw</id>
+			<email>almaw@apache.org</email>
+			<organization>ASF</organization>
+			<roles>
+				<role>PMC Member</role>
+			</roles>
+			<timezone>0</timezone>
+		</developer>
+	</developers>
+
+	<contributors>
+		<contributor><name>Wouter de Jong</name><email>-</email></contributor>
+		<contributor><name>Peter Veenendaal</name><email>-</email></contributor>
+		<contributor><name>Maurice Marrink</name><email>-</email></contributor>
+		<contributor><name>Gili Tzabari</name><email>cowwoc at users.sourceforge.net</email></contributor>
+		<contributor><name>Martin Fey</name><email>-</email></contributor>
+		<contributor><name>Cameron Braid</name><email>-</email></contributor>
+		<contributor><name>Wang Lei</name><email>-</email></contributor>
+		<contributor><name>Xiaoyz</name><email>-</email></contributor>
+		<contributor><name>Andrew de Torres</name><email>-</email></contributor>
+		<contributor><name>Dan Gould</name><email>-</email></contributor>
+		<contributor><name>Francois Denommee</name><email>-</email></contributor>
+		<contributor><name>Timur Mehrvarz</name><email>-</email></contributor>
+		<contributor><name>Phil Kulak</name><email>-</email></contributor>
+		<contributor><name>Jonathan Carlson</name><email>-</email></contributor>
+		<contributor><name>Anatol Pomozov</name><email>-</email></contributor>
+		<contributor><name>Jan Mikkelsen</name><email>-</email></contributor>
+		<contributor><name>Simon Berriman</name><email>-</email></contributor>
+		<contributor><name>Ingram Chen</name><email>-</email></contributor>
+		<contributor><name>Nick Heudecker</name><email>-</email></contributor>
+		<contributor><name>Andrew Berman</name><email>-</email></contributor>
+		<contributor><name>Gert Jan Verhoog</name><email>-</email></contributor>
+		<contributor><name>Timothy Bennet</name><email>-</email></contributor>
+		<contributor><name>Niclas Hedhman</name><email>-</email></contributor>
+		<contributor><name>Ralf Ebert</name><email>-</email></contributor>
+		<contributor><name>Joshua Lim</name><email>-</email></contributor>
+		<contributor><name>Jesper Preuss</name><email>-</email></contributor>
+		<contributor><name>Nathan Hamblen</name><email>-</email></contributor>
+		<contributor><name>Thomas Singer</name><email>-</email></contributor>
+		<contributor><name>Ryan Sonnek</name><email>-</email></contributor>
+		<contributor><name>Philip A. Chapman</name><email>-</email></contributor>
+		<contributor><name>Joni Suominen</name><email>-</email></contributor>
+		<contributor><name>Jim McLaughlin</name><email>-</email></contributor>
+		<contributor><name>Jonathan Cone</name><email>-</email></contributor>
+		<contributor><name>Ramnivas Laddad</name><email>-</email></contributor>
+		<contributor><name>Lulian Costan</name><email>-</email></contributor>
+		<contributor><name>Geertjan Wielenga</name><email>-</email></contributor>
+		<contributor><name>Timo Stamm</name><email>-</email></contributor>
+		<contributor><name>Jesse Sightler</name><email>-</email></contributor>
+		<contributor><name>Per Ejeklint</name><email>-</email></contributor>
+		<contributor><name>David Leangen</name><email>-</email></contributor>
+		<contributor><name>Ingram Chen</name><email>-</email></contributor>
+		<contributor><name>Mark Derricutt</name><email>-</email></contributor>
+		<contributor><name>Ari Suutari</name><email>-</email></contributor>
+		<contributor><name>Joe Toth</name><email>-</email></contributor>
+		<contributor><name>Jan Bares</name><email>-</email></contributor>
+		<contributor><name>Scott Sauyet</name><email>-</email></contributor>
+		<contributor><name>Ali Zaid Anwar</name><email>-</email></contributor>
+	</contributors>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-extensions</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-jmx</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-spring</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-spring-annot</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-spring-cattr</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-auth-roles</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>3.8.1</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.3</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.portlet</groupId>
+				<artifactId>portlet-api</artifactId>
+				<version>1.0</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>1.0.4</version>
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.13</version>
+				<type>jar</type>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring</artifactId>
+				<version>2.0</version>                       
+				<type>jar</type>
+				<scope>compile</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.portlet</groupId>
+			<artifactId>portlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+	</dependencies>
+	<profiles> 
+		<profile> 
+			<id>jdk1.4</id> 
+			<activation> 
+				<jdk>1.4</jdk> 
+			</activation> 
+			<modules> 
+				<module>../wicket</module>
+				<module>../wicket-extensions</module>
+				<module>../wicket-examples</module>
+				<module>../wicket-spring</module>
+				<module>../wicket-spring-examples</module>
+				<module>../wicket-quickstart</module>
+				<module>../wicket-portlet-examples</module>
+			</modules> 
+		</profile> 
+		<profile> 
+			<id>jdk1.5</id> 
+			<activation> 
+				<jdk>1.5</jdk> 
+			</activation> 
+			<modules>
+				<module>../wicket-jmx</module>
+				<module>../wicket-spring-annot</module>
+				<module>../wicket-spring-annot-examples</module>
+				<module>../wicket-auth-roles</module> 
+				<module>../wicket-auth-roles-examples</module> 
+			</modules> 
+		</profile> 
+	</profiles> 
+
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-alpha-6</version>
+			</extension>
+		</extensions>
+
+		<resources>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<filtering>false</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<testResources>
+			<testResource>
+				<filtering>false</filtering>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.0.1</version>
+					<configuration>
+						<appendAssemblyId>false</appendAssemblyId>
+						<descriptors>
+							<descriptor>${basedir}/src/assembly/bin.xml</descriptor>
+						</descriptors>
+						<finalName>${artifactId}-${version}</finalName>
+						<outputDirectory>target/distributions</outputDirectory>
+						<workDirectory>target/assembly/work</workDirectory>
+					</configuration>
+				</plugin>
+				<plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-war-plugin</artifactId>
+					<configuration>
+						<warName>${pom.artifactId}</warName>
+						<!-- the next settings are done using the defaults. 
+						<webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+						<warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
+						-->
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<minmemory>128m</minmemory>
+						<maxmemory>256m</maxmemory>
+					</configuration>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<configuration>
+						<templateDirectory>${basedir}/src/site/template/</templateDirectory>
+						<template>wicket-site.vm</template>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<includes>
+							<include>**/*Test.java</include>
+						</includes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>maven-jetty-plugin</artifactId>
+					<version>6.0.1</version>
+					<configuration>
+						<scanIntervalSeconds>60</scanIntervalSeconds>
+						<webAppSourceDirectory>src/webapp</webAppSourceDirectory>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<distributionManagement>
+		<site>
+			<id>wicket-site</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/</url>
+		</site>
+		<repository>
+			<id>wicket-repo</id>
+			<url>scpexe://shell.sourceforge.net/home/groups/w/wi/wicket/htdocs/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>81.17.46.170</id>
+			<url>file:///home/wicket/maven/</url>
+			<uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+	</distributionManagement>
+</project>

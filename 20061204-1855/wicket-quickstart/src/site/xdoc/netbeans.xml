@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<title>NetBeans QuickStart Guide</title>
+	</properties>
+	<meta name="keyword" content="wicket, web, j2ee, java, netbeans" />
+	<body>
+		<section name="NetBeans QuickStart Guide">
+			<p>
+				This quickstart is a small guide to get you up and running to start using Wicket
+				within minutes. This project is meant to be a starting point for your first project.
+				If you are looking for examples, please look at the example projects.
+			</p>
+			<p>
+				This document and project assume you have no special plugins or application servers
+				installed on your machine. In the
+				<a href="#Next_Steps">final section</a>
+				of this document some hints are given to speed up your development even further.
+			</p>
+			<subsection name="Summary">
+				<p>
+					For the more seasoned developers here's a short list of steps to quickstart your
+					Wicket development. All these steps are explained in more detail below.
+				</p>
+				<ul>
+					<li>download the quickstart project (follow the link in the navigation menu)</li>
+					<li>unzip in your projects directory</li>
+					<li>rename the directory to the name of your project</li>
+					<li>start NetBeans</li>
+					<li>create new project with existing sources, point to your directory</li>
+					<li>run the Application (right-click on project, choose Run - Application)</li>
+					<li>
+						open browser to
+						<a href="http://localhost:8081/quickstart">
+							<code>http://localhost:8081/quickstart</code>
+						</a>
+					</li>
+				</ul>
+				<p>
+					At the
+					<a href="#Next_Steps">end of this document</a>
+					we suggest some next steps to take.
+				</p>
+			</subsection>
+		</section>
+		<section name="Setting Up">
+			<subsection name="Prerequisites">
+				<p>We assume you have the following already installed:</p>
+				<ul>
+					<li>Java SDK 1.4 (or newer)</li>
+					<li>NetBeans 4.1 (or newer)</li>
+				</ul>
+				<p>
+					It is assumed, but not obligatory, that you have installed NetBeans in the
+					following (Windows) directory:
+				</p>
+				<ul>
+					<li>
+						<code>C:\NetBeans</code>
+					</li>
+				</ul>
+				<p>
+					Like stated before, it is not obligatory to use these settings, but if your
+					installation does not match this one, please substitute your setup for these
+					assumptions.
+				</p>
+			</subsection>
+			<subsection name="The QuickStart Project">
+				<p>
+					Next you need to download the quickstart distribution project from our
+					sourceforge site.
+				</p>
+				<ul>
+					<li>
+						Download the
+						<a
+							href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850">
+							wicket-quickstart distribution
+						</a>
+					</li>
+				</ul>
+				<p>
+					Unzip the distribution to the directory where you normally put your NetBeans
+					projects.
+				</p>
+				<p>
+					Rename the directory that was just created to your required project name. In the
+					following the directory name is renamed to 'foobar'.
+				</p>
+			</subsection>
+		</section>
+		<section name="Running NetBeans">
+			<subsection name="Configuring NetBeans">
+				<p>Now it is time to start the NetBeans IDE, if you haven't done so already.</p>
+				<ol>
+					<li>
+						In the IDE, click Ctrl-Shift-N. (Or choose File > New Project.) The New
+						Project Wizard appears. Choose Web and then Web Application with Existing
+						Sources:
+						<img src="images/netbeans-newproject.jpg" />
+					</li>
+					<li>
+						Click Next and browse to the location where you unzipped the Wicket
+						QuickStart sources. Select the "foobar" folder (to which we renamed the
+						downloaded distribution) for the Location field. Name the project
+						"QuickStart". Click Next and Finish.
+					</li>
+				</ol>
+				<p>
+					From a traditional NetBeans IDE (or probably any other) perspective, the
+					structure of the quickstart project is novel, because the HTML file is located
+					within the source package:
+				</p>
+				<img src="images/netbeans-project.png" />
+			</subsection>
+			<subsection name="Running the Application">
+				<p>
+					The application has an internal webserver (
+					<a href="http://jetty.mortbay.org">Jetty</a>
+					) which can be used to quickly develop webapplications. All you need to do is to
+					run the application and point your browser to the webserver running from within
+					NetBeans.
+				</p>
+				<ul>
+					<li>Right-click the project and choose Run Project</li>
+					<li>Start your browser</li>
+					<li>
+						Point the browser to the local Jetty server:
+						<a href="http://localhost:8081/quickstart">
+							http://localhost:8081/quickstart
+						</a>
+						.
+					</li>
+				</ul>
+			</subsection>
+		</section>
+		<section name="Next Steps">
+			<p>This section gives some pointers on where to go now.</p>
+			<ul>
+				<li>
+					take a look at the
+					<a href="http://wicket.sourceforge.net/Examples.html">examples</a>
+				</li>
+				<li>
+					find more information in the
+					<a href="http://wicket.sourceforge.net/manual.html">manual</a>
+				</li>
+				<li>
+					find more information on the
+					<a href="http://wicket.sourceforge.net/wiki">wiki</a>
+				</li>
+			</ul>
+			<subsection name="Jetty Configuration">
+				<p>The Jetty configuration file is located in the project directory:</p>
+				<blockquote>src/main/resources/jetty-config.xml</blockquote>
+				<p>
+					Jetty is started on port 8081 in order to avoid conflicts with other installed
+					application servers (for instance Tomcat). This way it is easier to test with
+					different application servers. This can be configured in the configuration file.
+				</p>
+				<p>
+					See the
+					<a href="http://jetty.mortbay.org/jetty/tut/XmlConfiguration.html">
+						Jetty documentation
+					</a>
+					for information on how to configure Jetty.
+				</p>
+				<p>
+					Jetty is started in the
+					<code>main</code>
+					-method of the
+					<code>wicket.quickstart.Start</code>
+					class.
+				</p>
+			</subsection>
+			<subsection name="Customizing the Application">
+				<p>
+					The main page definitions can be found in the
+					<code>src/main/java/Index.html</code>
+					HTML file and the
+					<code>src/main/java/wicket.quickstart.Index.java</code>
+					class.
+				</p>
+			</subsection>
+			<subsection name="Other Application Servers">
+				<p>
+					Even though this project is aimed at Jetty, it is not prohibited to develop
+					using other application servers. If you have another setup, please leave a note
+					on how you set up your environment on the
+					<a href="http://wicket.sourceforge.net/wiki">wiki</a>
+					.
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

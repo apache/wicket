@@ -1,0 +1,14 @@
+<projectDescription>
+  <name>wicket-spring-cattr</name>
+  <comment>Spring integration in your Wicket web applications using commons attributes. See the examples project for usecases.</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+      <arguments/>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

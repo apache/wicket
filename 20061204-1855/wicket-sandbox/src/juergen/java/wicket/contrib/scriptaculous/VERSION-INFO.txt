@@ -1,0 +1,4 @@
+this package uses:
+	- prototype (http://prototype.conio.net/) 1.4.0 (final)
+	- script.aculo.us (http://script.aculo.us/)  1.5.1
+    - behavior (http://bennolan.com/behaviour/) 1.1

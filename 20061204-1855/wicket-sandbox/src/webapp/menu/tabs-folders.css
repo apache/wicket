@@ -1,0 +1,193 @@
+#menu {
+	background: #EEE;
+	color: #000;
+	font: normal 11px Verdana, Geneva, Arial, Helvetica, sans-serif;
+	margin: 20px 0 0 0;
+	padding: 0;
+	width: 100%
+}
+
+#tabContent {
+	border-color: #DDDDDD;
+	border-style: solid;
+	border-width: 1px;
+	margin: 4px;
+	padding: 4px;
+}
+
+.tabNavigation {
+	border-bottom: 1px solid #C60;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0 0 0 20px
+}
+
+\html .tabNavigation/* */ {
+	margin: 0;
+	padding: 3px 0 3px 20px
+}
+
+html>body .tabNavigation {
+	margin: 0;
+	padding: 0 0 1px 20px
+}
+
+\head+body .tabNavigation {
+	padding: 0 0 3px 20px
+}
+
+html>body ul[id] .tabNavigation {
+	padding: 0 0 0 20px
+}
+
+.tabNavigation li,  #subNavigation li {
+	display: inline;
+	list-style: none outside none
+}
+
+.tabNavigation .preloadUnselected {
+	background: transparent url(folders/unselected.gif);
+}
+
+.tabNavigation .preloadSelected {
+	background: transparent url(folders/selected.gif);
+}
+
+.tabNavigation .preloadHover {
+	background: transparent url(folders/hover.gif);
+}
+
+.tabNavigation .preloadActive {
+	background: transparent url(folders/active.gif);
+}
+
+html>body .tabNavigation li {
+	background: transparent url(folders/unselected.gif) no-repeat top left;
+	border-right: 1px solid #666;
+	display: block;
+	float: left;
+	height: 1em;
+	margin: 3px 5px 3px -15px;
+	padding: 3px 5px 5px 27px
+}
+
+head:first-child+body .tabNavigation li {
+	background: none;
+	border-right: none;
+	display: inline;
+	float: none;
+	margin: 0;
+	padding: 0
+}
+
+.tabNavigation a, .tabNavigation a:link, .tabNavigation a:visited {
+	background: transparent url(folders/unselected.gif) no-repeat top left;
+	border-right: 1px solid #666;
+	color: #FFF;
+	display: inline;
+	height: 1em;
+	margin: 0 0 0 -15px;
+	padding: 3px 5px 3px 27px;
+	text-decoration: none
+}
+
+html>body .tabNavigation a, html>body .tabNavigation a:link, html>body .tabNavigation a:visited {
+	border-right: none;
+	margin: 0;
+	padding: 0
+}
+
+head:first-child+body .tabNavigation a, head:first-child+body .tabNavigation a:link, head:first-child+body .tabNavigation a:visited {
+	border-right: 1px solid #666;
+	margin: 0 0 0 -15px;
+	padding: 3px 5px 3px 27px;
+	position: relative;
+	z-index: 50
+}
+
+.tabNavigation a:hover {
+	background: transparent url(folders/hover.gif) no-repeat top left;
+	border-right: 1px solid #333;
+	color: #FFF;
+	text-decoration: none
+}
+
+html>body .tabNavigation a:hover {
+	border-right: none;
+	text-decoration: underline
+}
+
+head:first-child+body .tabNavigation a:hover {
+	border-right: 1px solid #333;
+	padding: 4px 5px 3px 27px;
+	position: relative;
+	text-decoration: none;
+	z-index: 5000
+}
+
+.tabNavigation a:active {
+	background: transparent url(folders/active.gif) no-repeat top left;
+	color: #FFF;
+	text-decoration: none
+}
+
+html>body .tabNavigation a:active {
+	text-decoration: underline
+}
+
+head:first-child+body .tabNavigation a:active {
+	text-decoration: none
+}
+
+html>body .tabNavigation li.selectedTab {
+	background: transparent url(folders/selected.gif) no-repeat top left;
+	border-right: 1px solid #C60;
+	display: block;
+	float: left;
+	height: 1em;
+	margin: 3px 5px 5px -15px;
+	padding: 3px 5px 5px 27px
+}
+
+head:first-child+body .tabNavigation li.selectedTab {
+	background: none;
+	border-right: none;
+	display: inline;
+	float: none;
+	margin: 0;
+	padding: 0
+}
+
+.tabNavigation .selectedTab a, .tabNavigation .selectedTab a:link, .tabNavigation .selectedTab a:visited {
+	background: transparent url(folders/selected.gif) no-repeat top left;
+	border-right: 1px solid #C60;
+	color: #FFF;
+	cursor: text;
+	display: inline;
+	height: 1em;
+	margin: 0 0 0 -15px;
+	padding: 3px 5px 3px 27px
+}
+
+html>body .tabNavigation .selectedTab a, html>body .tabNavigation .selectedTab a:link, html>body .tabNavigation .selectedTab a:visited {
+	border-right: none;
+	margin: 0;
+	padding: 0
+}
+
+head:first-child+body .tabNavigation .selectedTab a, head:first-child+body .tabNavigation .selectedTab a:link, head:first-child+body .tabNavigation .selectedTab a:visited, head:first-child+body .tabNavigation .selectedTab a:hover {
+	background: transparent url(folders/selected.gif) no-repeat top left;
+	border-right: 1px solid #C60;
+	margin: 0 0 0 -15px;
+	padding: 3px 5px 3px 27px;
+	position: relative;
+	z-index: 10000
+}
+
+\html head:first-child+body .tabNavigation .selectedTab a, \html head:first-child+body .tabNavigation .selectedTab a:link, \html head:first-child+body .tabNavigation .selectedTab a:visited, \html head:first-child+body .tabNavigation .selectedTab a:hover {
+	padding: 4px 5px 5px 27px
+}
+
+.fixTabsIE {
+	visibility: hidden
+}

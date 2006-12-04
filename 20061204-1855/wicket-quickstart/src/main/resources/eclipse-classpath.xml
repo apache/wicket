@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+
+<j:whitespace
+  xmlns:j="jelly:core"
+  xmlns:ant="jelly:ant"
+  xmlns:maven="jelly:maven"
+  xmlns:u="jelly:util"
+  xmlns="dummy"
+  trim="true">
+
+<classpath>            
+  <!-- Add any generated source directories as seperate src directories -->
+  <u:available file="${maven.gen.src}">
+    <u:file var="genSrcRootDir" name="${maven.gen.src}"/>
+    <j:forEach var="genSrcDir" items="${genSrcRootDir.listFiles()}">
+      <maven:makeRelativePath var="srcDir" basedir="${basedir}" path="${genSrcDir}"/>
+      <classpathentry kind="src" path="${srcDir}"/>  
+    </j:forEach>
+  </u:available>
+
+  <j:if test="${sourcesPresent}">
+    <maven:makeRelativePath var="srcDir" basedir="${basedir}" path="${pom.build.sourceDirectory}"/>
+    <j:set var="excluding" value=""/>
+    <j:forEach var="sm" items="${pom.build.sourceModifications}">
+      <ant:available property="classPresent" classname="${sm.className}"/>
+      <j:if test="${classPresent != 'true'}">
+        <j:forEach var="exclude" items="${sm.excludes}">
+          <j:choose>
+            <j:when test="${excluding.length() == 0}">
+              <j:set var="excluding" value="${exclude}"/>
+            </j:when>
+            <j:otherwise>
+              <j:set var="excluding" value="${excluding},${exclude}"/>
+            </j:otherwise>
+          </j:choose>
+        </j:forEach>
+      </j:if>
+    </j:forEach>
+    <classpathentry kind="src" path="${srcDir}" excluding="${excluding}" />
+  </j:if>
+
+  <!-- Add the list of additional directories for the classpath from ${maven.eclipse.classpath.include}-->
+  <u:tokenize var="maven.eclipse.classpath.include.split" delim=",">${maven.eclipse.classpath.include}</u:tokenize>
+
+  <!-- add extra directories to be included in the classpath -->
+  <j:forEach var="res" items="${maven.eclipse.classpath.include.split}">
+    <maven:makeRelativePath var="srcDir" basedir="${basedir}" path="${res}" />
+    <classpathentry kind="src" path="${srcDir}"/>
+  </j:forEach>
+  <!-- set a flag so JUnit jar is included only once -->
+  <j:set var="ignoreJUnit" value="false" />
+  <j:if test="${unitTestSourcesPresent}">
+    <ant:echo>Contains JUnit tests</ant:echo>
+    <maven:makeRelativePath var="testSrcDir" basedir="${basedir}" path="${pom.build.unitTestSourceDirectory}"/>
+      
+    <!-- Eclipse supports an output directory per input directory -->
+    <j:set var="testOutputDir" value="${maven.eclipse.test.output.dir}"/>
+    <j:if test="${empty testOutputDir}">
+      <maven:pluginVar var="testOutputDir" plugin='maven-test-plugin' property='maven.test.dest'/>      
+    </j:if>
+
+    <maven:makeRelativePath var="testOutputDir" basedir="${basedir}" path="${testOutputDir}" />
+      
+    <ant:echo>Setting compile of ${testSrcDir} to ${testOutputDir}</ant:echo>
+    <classpathentry kind="src" path="${testSrcDir}" output="${testOutputDir}"/>
+
+
+    <!-- Here are the rules:
+         If the project has maven.eclipse.junit property, add that ver of junit
+         If the project has maven.eclipse.junit property and it is empty, don't add junit
+         If the project has junit dep, use that.
+         Use the test plugin version
+      -->
+    <j:set var="verX" value="${maven.eclipse.junit}X"/>
+
+    <maven:pluginVar var="testPlugin" plugin='maven-test-plugin' property='plugin' />
+    <j:set var="depVersion">${testPlugin.getDependency('junit').getVersion()}</j:set>
+  
+    <j:if test="${pom.getDependency('junit') != null}">
+      <j:set var="depVersion" value="${pom.getDependency('junit').getVersion()}"/>
+    </j:if>
+  
+    <j:if test="${verX != 'X'}">
+      <j:set var="depVersion">${maven.eclipse.junit}</j:set>
+    </j:if>
+  
+    <j:if test="${verX == 'noneX'}">
+      <j:set var="depVersion" value="none"/>  
+    </j:if>
+      
+    <j:if test="${depVersion != 'none'}">
+      <j:set var="ignoreJUnit" value="true" />
+      <classpathentry kind="var" path="lib/junit-${depVersion}.jar"/>
+    </j:if>
+  </j:if>
+
+  <maven:pluginVar var="cactusSrcDir" plugin='cactus-maven' property='cactus.src.dir' />
+  <u:available file="${cactusSrcDir}">
+    <j:set var="cactusSourcePresent" value="true"/>
+  </u:available>
+
+  <j:set var="ignoreCactus" value="false" />
+  <j:if test="${cactusSourcePresent == 'true'}">
+    <ant:echo>Contains Cactus Tests!</ant:echo>
+    <maven:makeRelativePath var="testSrcDir" basedir="${basedir}" path="${cactusSrcDir}" />
+    <classpathentry kind="src" path="${testSrcDir}"/>
+
+    <maven:pluginVar var="cactusPlugin" plugin='cactus-maven' property='plugin' />
+    <j:set var="depVersion">${cactusPlugin.getDependency('cactus').getVersion()}</j:set>
+    <classpathentry kind="var" path="lib/cactus-${depVersion}.jar"/>
+    <j:set var="ignoreCactus" value="true" />
+  </j:if>
+
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <j:forEach var="lib" items="${pom.artifacts}">
+    <j:set var="eclipseDependency"
+           value="${lib.dependency.getProperty('eclipse.dependency')}"/>
+    <j:choose>
+      <j:when test="${lib.dependency.groupId == 'junit' and ignoreJUnit}">
+        <!-- ignoring junit dependency as we've already created it -->
+      </j:when>
+      <j:when test="${lib.dependency.groupId == 'cactus' and ignoreCactus}">
+        <!-- ignoring junit dependency as we've already created it -->
+      </j:when>
+      <j:otherwise>
+        <!-- make sure it's a classpath dependency -->
+        <j:set var="isClasspath" value="${lib.dependency.isAddedToClasspath()}"/>
+        <j:if test="${isClasspath}">
+          <classpathentry kind="lib" path="lib/${lib.dependency.artifact}"/>
+        </j:if>
+      </j:otherwise>
+    </j:choose>
+  </j:forEach>
+    
+  <!-- add the unit test build directory so that any files generated via Maven are available -->  
+  
+  <j:set var="outputDir" value="${maven.eclipse.output.dir}"/>
+  <j:if test="${empty outputDir}">
+    <j:set var="outputDir" value="${maven.build.dest}"/>      
+  </j:if>
+  <maven:makeRelativePath var="outputDir" basedir="${basedir}" path="${outputDir}" />
+  <classpathentry kind="output" path="${outputDir}"/>
+  <ant:echo>Setting default output directory to ${outputDir}</ant:echo>
+</classpath>
+
+</j:whitespace>

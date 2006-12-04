@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Buzz</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+
+	<body>
+		<section name="Buzz">
+	
+			<p>
+			Wicket has appeared in the press in a variety of industry trade magazines,
+			including Network World, ComputerWorld, IT World and Information Week.
+			Presentations on Wicket have been delivered by Wicket team members at 
+			JavaOne in San Francisco and Javapolis in Europe.  The following are quotes
+			from reviewers and users of Wicket:
+			</p>
+			
+			<p>
+				"I think its an awesome way to deal with this whole web UI framework mess. I am
+				happy to see someone take a simple and clean approach to the whole problem, and come
+				up with a transparent POJO solution. I like the direction the framework is going...
+				Wicket is clean, simple and elegant."
+			</p>
+			<p class="quoteAttribution">- Comment on TheServerSide.com</p>
+			
+			<p>
+				"Last week I wrote an article about Wicket and I spent some time discovering and taming 
+				it. And I have to confess this: I love it. <i>... snip ...</i> Wicket is 
+				not a framework, it's a candy bar. And everybody loves candy bars..."
+			</p>
+			<p class="quoteAttribution">- Comment made by <a href="http://weblogs.java.net/blog/gfx">Romain Guy</a></p>
+			
+			<p>
+				The issue that impressed me in the Wicket model is that "Wicket does not mix markup 
+				with Java code and adds no special syntax to your markup files." You reference Wicket 
+				identities as HTML attributes and define component properties in Java, which allows 
+				designers and programmers to work independently (within the obvious constraint of 
+				having common goals). There is no need for special tools.
+			</p>
+			<p class="quoteAttribution">- From a Network World editorial entitled 
+			<a href="http://www.networkworld.com/newsletters/web/2005/0704web1.html">"Nothing Sticky about Wicket"</a>
+			</p>
+			
+			<p>
+				In a recent blog post I asked for feedback on what Web frameworks folks are using. Well, I got quite a surprise: Wicket was the most often recommended framework in reader emails!
+		    </p>
+			<p class="quoteAttribution">- From an About.com article entitled 
+			<a href="http://java.about.com/b/a/194765.htm">
+			And the Winner is...Wicket</a>
+			</p>
+			
+			<p>
+				"I have used Wicket since last Fall for personal projects. I have 3 kids and a wife so 
+				my free-time is very limited. Given that, I had to be very picky about which framework 
+				I chose.
+			</p>
+			<p>
+				I've been very impressed with how little hassle it has been to start creating powerful, 
+				reusable components and pages with Wicket even under rather severe time constraints.
+			</p>
+			<p class="quoteAttribution">- Comment on TheServerSide.com</p>
+			
+			<p>
+				"...after using web MVC frameworks for a couple of years, building ever more complex
+				web applications, I moved to component based frameworks. Of these, I think Wicket is
+				by far the best..."
+			</p>
+			<p class="quoteAttribution">- Comment on Manageability.org</p>
+			
+			<p>
+				"... Talk about a mind blowing experience, it literally took me ten minutes to have a 
+				sample application up and running! The Wicket API is very Swing like, which was a 
+				welcome change for me, and allowed for a very familiar development experience. There 
+				is even an extension that allows for direct use of a Swing TreeModel. There are so many 
+				things that I like about this framework ..."
+			</p>
+			<p class="quoteAttribution">- From a 
+				<a href="http://jroller.com/page/wireframe?entry=web_development_done_right">blog item</a> 
+				by the Code Poet</p>
+		</section>
+	</body>
+</document>

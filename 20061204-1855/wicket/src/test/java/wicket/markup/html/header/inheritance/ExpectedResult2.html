@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>AbstractPage.html</title>
+
+  <script type="text/javascript" id="wicket-markup-html-header-inheritance-MyPanel2-0">
+  function foo() {
+     alert("Hello, World!");
+  }
+</script>
+</head>
+<body>
+  <h1>Child markup</h1>
+  <div style="border:1px solid black;">
+    <wicket:child><wicket:extend>
+  <span wicket:id="panel"><wicket:panel>
+  <div>
+    <a href="#" onclick="foo();">Click me!</a>
+  </div>
+</wicket:panel></span>
+</wicket:extend></wicket:child>
+  </div>
+</body>
+</html>

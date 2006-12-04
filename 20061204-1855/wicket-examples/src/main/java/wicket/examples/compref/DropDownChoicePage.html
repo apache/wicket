@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Wicket Examples - component reference</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+    <span wicket:id="mainNavigation"/>
+
+	<h1>wicket.markup.html.form.DropDownChoice</h1>
+	<wicket:link><a href="Index.html">[back to the reference]</a></wicket:link>
+
+	<p>
+	A DropDownChoice component is used to let users select an option from a list of
+	available options.
+	</p>
+	<p>
+	 <form wicket:id="form">
+
+		<table style="border: 2px dotted #fc0; width: 400px; padding: 5px;">
+		 <tr>
+		  <td valign="top">Select your favorite site</td>
+		  <td>
+			<select wicket:id="site">
+				<option>site 1</option>
+				<option>site 2</option>
+			</select>
+		  </td>
+		 </tr>
+		 <tr>
+		  <td valign="top">Select an integer</td>
+		  <td>
+			<select wicket:id="integer">
+				<option>Fifty</option>
+				<option>Sixty</option>
+			</select>
+		  </td>
+		 </tr>
+		 <tr>
+		  <td colspan="2" align="center">
+		   <input type="submit" value="submit" />
+		  </td>
+		 </tr>
+		</table>
+
+	 </form>
+	 <span wicket:id="feedback">feedbackmessages will be put here</span>
+	</p>
+    <span wicket:id="explainPanel">panel contents come here</span>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Download</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, web, j2ee, java" />
+
+	<body>
+<section name="Download">
+	<p>
+		The Wicket project is divided into several CVS projects
+		which are built into separate JAR files. These JAR files
+		are available on the
+		<a href="http://sourceforge.net/projects/wicket/files">download</a> page.
+	</p>
+	<p>
+		If you are looking for Wicket components for other projects, such as Hibernate,
+		JasperReports, or Velocity, please go to <a href="http://wicket-stuff.sourceforge.net" title="Wicket Stuff">Wicket Stuff</a>.
+	</p>
+	<p>
+		<table>
+			<tr>
+				<th>Project</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td>
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=130482">
+						wicket
+					</a>
+				</td>
+				<td>The core Wicket API.</td>
+			</tr>
+			<tr>
+				<td>
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138753">
+						wicket-extensions
+					</a>
+				</td>
+				<td>
+					Official reusable components which extend
+					the core.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">
+						wicket-examples
+					</a>
+				</td>
+				<td>
+					Examples that demonstrate how to use the
+					core and wicket-extensions
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=166850">
+						wicket-quickstart
+					</a>
+				</td>
+				<td>
+					Official Wicket package for kickstarting your web application development using Wicket. Contains
+					its own embedded Jetty server so you don't even have to deploy your application to see it running.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=182494">
+						wicket-spring
+					</a>
+				</td>
+				<td>
+					Official Wicket package for integrating your Spring business layer into your Wicket pages in
+					a safe, non-intrusive and consistent way.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=182506">
+						wicket-auth
+					</a>
+				</td>
+				<td>
+					Wicket security framework, enabling per-component authorization based on roles, building on top
+					of one of the core Wicket principles: simplicity enabling powerful solutions.
+				</td>
+			</tr>
+			<tr>
+				<td>wicket-sandbox</td>
+				<td>
+					An area for the Wicket team to share
+					experimental code
+				</td>
+			</tr>
+		</table>
+	</p>
+</section>
+	</body>
+</document>

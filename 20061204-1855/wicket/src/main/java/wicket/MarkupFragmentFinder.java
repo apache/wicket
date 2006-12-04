@@ -1,0 +1,140 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package wicket;
+
+import wicket.markup.ComponentTag;
+import wicket.markup.MarkupElement;
+import wicket.markup.MarkupStream;
+import wicket.markup.html.border.Border;
+
+/**
+ * Responding to an AJAX request requires that we position the markup stream at
+ * the component associated with the AJAX request. That is straight forward in
+ * most cases except for "transparent" components and for components which
+ * implement there own IComponentResolver.
+ * 
+ * @author Juergen Donnerstag
+ */
+final class MarkupFragmentFinder
+{
+	/**
+	 * Construct
+	 */
+	public MarkupFragmentFinder()
+	{
+	}
+
+	/**
+	 * Get the markup stream and position it at the component
+	 * 
+	 * @param component
+	 * @return A MarkupStream which is positioned at the component
+	 */
+	final MarkupStream find(final Component component)
+	{
+		// Get the parent's associated markup stream.
+		MarkupContainer parentWithAssociatedMarkup = component.findParentWithAssociatedMarkup();
+		MarkupStream markupStream = null;
+
+		// Might be that we have to walk up the component hierarchy
+		while (true)
+		{
+			markupStream = parentWithAssociatedMarkup.getAssociatedMarkupStream(true);
+
+			// In case the component has already been rendered, this is a
+			// performance short cut. But actually this was necessary because
+			// transparent containers and components which implement
+			// IComponentResolver destroy the 1:1 match between component path
+			// and markup path.
+			if (component.markupIndex != -1)
+			{
+				// Might be that the markup has been reloaded and that the
+				// position has changed. Make sure the component is still
+				// available
+				try
+				{
+					markupStream.setCurrentIndex(component.markupIndex);
+					MarkupElement elem = markupStream.get();
+					if (elem instanceof ComponentTag)
+					{
+						ComponentTag tag = (ComponentTag)elem;
+						if (tag.getId().equals(component.getId()))
+						{
+							// Ok, found it
+							return markupStream;
+						}
+					}
+				}
+				catch (IndexOutOfBoundsException ex)
+				{
+					// fall through. Don't do anything
+				}
+			}
+
+			// Make sure the markup stream is positioned at the correct element
+			String relativePath = getComponentRelativePath(component, parentWithAssociatedMarkup);
+
+			// If the component is defined in the markup
+			int index = markupStream.findComponentIndex(relativePath, component.getId());
+			if (index != -1)
+			{
+				// than position the stream at the beginning of the component
+				markupStream.setCurrentIndex(index);
+				return markupStream;
+			}
+
+			// Yet another exception for Border in the code base.
+			// However if the container with the markup is a Border, than
+			// ...
+			if (parentWithAssociatedMarkup instanceof Border)
+			{
+				parentWithAssociatedMarkup = parentWithAssociatedMarkup
+						.findParentWithAssociatedMarkup();
+			}
+			else
+			{
+				throw new WicketRuntimeException(
+						"Unable to find the markup for the component. That may be due to transparent containers or components implementing IComponentResolver: "
+								+ component.toString());
+			}
+
+			// Not found, reset the stream
+			markupStream = null;
+		}
+	}
+
+	/**
+	 * Get component path relativ to the parent container with associated markup
+	 * 
+	 * @param component
+	 * @param parentWithAssociatedMarkup
+	 * @return the relativ path
+	 */
+	private String getComponentRelativePath(final Component component,
+			final MarkupContainer parentWithAssociatedMarkup)
+	{
+		final String componentPath = component.getParent().getPageRelativePath();
+		final String parentWithAssociatedMarkupPath = parentWithAssociatedMarkup
+				.getPageRelativePath();
+		String relativePath = componentPath.substring(parentWithAssociatedMarkupPath.length());
+		if (relativePath.startsWith(":"))
+		{
+			relativePath = relativePath.substring(1);
+		}
+		return relativePath;
+	}
+}

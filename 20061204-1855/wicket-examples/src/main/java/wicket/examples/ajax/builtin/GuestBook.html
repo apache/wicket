@@ -1,0 +1,34 @@
+<html xmlns:wicket="http://wicket.sourceforge.net/">
+<head>
+	<title>Wicket Examples - guestbook</title>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+	<wicket:head>
+	<script type="text/javascript" src="prototype.js"></script>
+	</wicket:head>
+</head>
+<body>
+<wicket:extend>
+  <form wicket:id = "commentForm" id = "commentForm">
+    Add your comment here:
+    <p/>
+    <textarea wicket:id = "text">This is a comment</textarea>
+    <p/>
+    <input type = "submit" value = "Submit"/>
+  </form>
+  <div wicket:id="comments">
+  <span wicket:id="comments">
+    <p>
+	    <span wicket:id = "date">1/1/2004</span><br>
+	    <span wicket:id = "text">Comment text goes here.</span>
+	</p>
+  </span>
+  </div>
+  <wicket:remove>
+    <p>
+	    1/2/2004<br/>
+	    More comment text here.
+    </p>
+  </wicket:remove>
+</wicket:extend>
+</body>
+</html>

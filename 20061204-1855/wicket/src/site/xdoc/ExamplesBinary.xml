@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Running the Examples Using the Binary Distribution</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, web, j2ee, java, examples, running" />
+
+	<body>
+		<section name="Running the Examples Using the Binary Distribution">
+			<p>
+				The process for running the distribution of the examples is quite simple. All you need is
+				a working J2EE application server like Tomcat, JBoss, Jetty, Resin, WebSphere, etc. and the 
+				war file from the examples distribution. Basically the process is outlined as follows:
+			</p>
+			<ul>
+				<li>Download the distribution</li>
+				<li>Unpack the distribution</li>
+				<li>Deploy the <code>war</code> file</li>
+				<li>Start your application server</li>
+				<li>Start your browser</li>
+			</ul>
+			<p>
+				In the following sections each step is described in more detail.
+			</p>
+			<subsection name="Download the Distribution">
+				<p>
+					In order to run the examples from the distribution (so you don't have to
+					build the examples yourself) you need to
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">
+						download the latest release
+					</a>
+					from a mirror close to you. After the download you have to unpack
+					the archive which will give you
+					<ul>
+						<li>a <code>war</code> archive,</li>
+						<li>a file containing the Apache license</li>
+						<li>the source files and</li>
+						<li>a directory containing some basic documentation.</li>
+					</ul>
+				</p>
+			</subsection>
+			<subsection name="Using an Existing Application Server">
+				<p>
+					Next you need to copy the <code>war</code>
+					archive in your deployment directory of your application server. For example:
+				</p>
+				<table>
+					<tr>
+						<th>Server</th>
+						<th>Default deployment directory relative to installation</th>
+					</tr>
+					<tr>
+						<td>JBoss</td>
+						<td>$(JBOSS_HOME)/server/default/deploy</td>
+					</tr>
+					<tr>
+						<td>Jetty</td>
+						<td>$(JETTY_HOME)/webapps</td>
+					</tr>
+					<tr>
+						<td>Tomcat</td>
+						<td>${TOMCAT_HOME)/webapps</td>
+					</tr>
+					<tr>
+						<td>Resin</td>
+						<td>${RESIN_HOME)/webapps</td>
+					</tr>
+				</table>
+				<p>
+					If your application server is not listed here, please consult your manual on how to
+					deploy web archives (<code>war</code> files).
+				</p>
+			</subsection>
+			<subsection name="Run the Examples">
+				<p>
+					If you're done copying, all you need to do is start your application server and
+					point your browser to
+					<a href="http://localhost:8080/wicket-examples">
+						http://localhost:8080/wicket-examples
+					</a>
+					(this link will not work when the listening port of your application server is
+					configured to listen to another port than port
+					<code>8080</code>
+					).
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

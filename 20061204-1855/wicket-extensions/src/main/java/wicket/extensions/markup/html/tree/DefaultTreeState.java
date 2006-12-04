@@ -1,0 +1,258 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package wicket.extensions.markup.html.tree;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.swing.tree.TreeNode;
+
+/**
+ * Default implementation of TreeState.
+ * <p>
+ * This implementation tries to be as lightweight as possible.
+ * 
+ * @author Matej Knopp
+ */
+public class DefaultTreeState implements ITreeState, Serializable
+{
+	private static final long serialVersionUID = 1L;
+
+	/** Whether multiple selections can be done. */
+	private boolean allowSelectMultiple = false;
+
+	/** Tree state listeners. */
+	private final List listeners = new ArrayList(1);
+
+	/**
+	 * set of nodes which are collapsed or expanded (depends on nodesCollapsed
+	 * veriable).
+	 */
+	private final Set nodes = new HashSet();
+
+	/** Whether the nodes set should be treated as collapsed or expanded. */
+	private boolean nodesCollapsed = true;
+
+	/** Set selected nodes. */
+	private final Set selectedNodes = new HashSet();
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#addTreeStateListener(wicket.extensions.markup.html.tree.ITreeStateListener)
+	 */
+	public void addTreeStateListener(ITreeStateListener l)
+	{
+		if (listeners.contains(l) == false)
+		{
+			listeners.add(l);
+		}
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#collapseAll()
+	 */
+	public void collapseAll()
+	{
+		if (nodes.isEmpty() && nodesCollapsed == false)
+		{
+			// all nodes are already collapsed, do nothing
+		}
+		else
+		{
+			// clear all nodes from the set and sets the nodes as expanded
+			nodes.clear();
+			nodesCollapsed = false;
+
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
+			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
+				l.allNodesCollapsed();
+			}
+		}
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#collapseNode(javax.swing.tree.TreeNode)
+	 */
+	public void collapseNode(TreeNode node)
+	{
+		if (nodesCollapsed == true)
+		{
+			nodes.add(node);
+		}
+		else
+		{
+			nodes.remove(node);
+		}
+
+		Object[] listenersCopy = listeners.toArray();
+		for(int i = 0; i < listenersCopy.length; i++) 
+		{
+			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
+			l.nodeCollapsed(node);
+		}
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#expandAll()
+	 */
+	public void expandAll()
+	{
+		if (nodes.isEmpty() && nodesCollapsed == true)
+		{
+			// all nodes are already expanded, do nothing
+		}
+		else
+		{
+			// clear node set and set nodes policy as collapsed
+			nodes.clear();
+			nodesCollapsed = true;
+
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
+			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
+				l.allNodesCollapsed();
+			}
+		}
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#expandNode(javax.swing.tree.TreeNode)
+	 */
+	public void expandNode(TreeNode node)
+	{
+		if (nodesCollapsed == false)
+		{
+			nodes.add(node);
+		}
+		else
+		{
+			nodes.remove(node);
+		}
+
+		Object[] listenersCopy = listeners.toArray();
+		for(int i = 0; i < listenersCopy.length; i++) 
+		{
+			ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
+			l.nodeExpanded(node);
+		}
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#getSelectedNodes()
+	 */
+	public Collection getSelectedNodes()
+	{
+		return Collections.unmodifiableList(new ArrayList(selectedNodes));
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#isAllowSelectMultiple()
+	 */
+	public boolean isAllowSelectMultiple()
+	{
+		return allowSelectMultiple;
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#isNodeExpanded(javax.swing.tree.TreeNode)
+	 */
+	public boolean isNodeExpanded(TreeNode node)
+	{
+		if (nodesCollapsed == false)
+		{
+			return nodes.contains(node);
+		}
+		else
+		{
+			return nodes.contains(node) == false;
+		}
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#isNodeSelected(javax.swing.tree.TreeNode)
+	 */
+	public boolean isNodeSelected(TreeNode node)
+	{
+		return selectedNodes.contains(node);
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#removeTreeStateListener(wicket.extensions.markup.html.tree.ITreeStateListener)
+	 */
+	public void removeTreeStateListener(ITreeStateListener l)
+	{
+		listeners.remove(l);
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#selectNode(javax.swing.tree.TreeNode,
+	 *      boolean)
+	 */
+	public void selectNode(TreeNode node, boolean selected)
+	{
+		if (selected == true && selectedNodes.contains(node) == false)
+		{
+			if (isAllowSelectMultiple() == false && selectedNodes.size() > 0)
+			{
+				for (Iterator i = selectedNodes.iterator(); i.hasNext();)
+				{
+					TreeNode current = (TreeNode)i.next();
+					i.remove();
+					Object[] listenersCopy = listeners.toArray();
+					for(int j = 0; j < listenersCopy.length; j++) 
+					{
+						ITreeStateListener l = (ITreeStateListener)listenersCopy[j];
+						l.nodeUnselected(current);
+					}
+				}
+			}
+			selectedNodes.add(node);
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
+			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
+				l.nodeSelected(node);
+			}
+		}
+		else if (selected == false && selectedNodes.contains(node) == true)
+		{
+			selectedNodes.remove(node);
+			Object[] listenersCopy = listeners.toArray();
+			for(int i = 0; i < listenersCopy.length; i++) 
+			{
+				ITreeStateListener l = (ITreeStateListener)listenersCopy[i];
+				l.nodeUnselected(node);
+			}
+		}
+	}
+
+	/**
+	 * @see wicket.extensions.markup.html.tree.ITreeState#setAllowSelectMultiple(boolean)
+	 */
+	public void setAllowSelectMultiple(boolean value)
+	{
+		this.allowSelectMultiple = value;
+	}
+}

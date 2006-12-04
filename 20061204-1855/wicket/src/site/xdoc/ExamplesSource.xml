@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Running the Examples from Source</title>
+	</properties>
+
+	<meta name="keyword" content="wicket, web, j2ee, java, examples, running" />
+
+	<body>
+		<section name="Running the Examples from Source">
+			<p>
+				The process for running the the examples from source is quite simple. We have
+				supplied an embedded application server 
+				(<a href="http://jetty.mortbay.org" title="Jetty Java HTTP Servlet Server">Jetty</a>) which
+				can be run directly from your IDE. Note that you are not obligated to use the embedded 
+				server; you can compile and deploy to any application server of your liking.
+			</p>
+			<p>
+				The steps for deploying and running the examples from the source distribution can be outlined
+				as follows:
+			</p>
+			<ul>
+				<li>Download the distribution</li>
+				<li>Unpack the distribution to your workspace</li>
+				<li>Create the <code>war</code> archive</li>
+				<li>Deploy and run the examples</li>
+			</ul>
+			<p>
+				The following sections will elaborate these steps further.
+			</p>
+			<subsection name="Download the Distribution">
+				<p>
+					In order to build the examples from the distribution you need to
+					<a
+						href="http://sourceforge.net/project/showfiles.php?group_id=119783&amp;package_id=138752">
+						download the latest distribution
+					</a>
+					from a mirror close to you. After the download you have to unpack
+					the archive which will give you
+					<ul>
+						<li>a directory containing all necessary libraries</li>
+						<li>a directory containing all sources, including a Jetty configuration file</li>
+						<li>a directory containing some basic documentation.</li>
+						<li>an ant build file</li>
+						<li>a maven project file</li>
+					</ul>
+				</p>
+			</subsection>
+			<subsection name="Integrate into your Workspace">
+				<p>
+					Copy this directory structure to your workspace and update your IDE to use this directory as a project.
+					For instance, you could instruct the <a href="http://www.eclipse.org">Eclipse</a> 'New Java project' wizard
+					to create a project in the directory of the Wicket examples. Let Eclipse figure out what the source 
+					directories are and which libraries are needed on the classpath.
+				</p>
+				<p>
+					For other IDE's your milage may vary. Just make sure that you do the following:
+					<ul>
+					<li>add all jar files in the <code>lib</code> directory to the classpath</li>
+					<li>add the <code>src/java</code> directory as a source directory</li>
+					<li>compile the sources using your IDE, or using the supplied ant build file</li>
+					</ul>
+				</p>
+			</subsection>
+			<subsection name="Running the Examples">
+				<p>
+					Try to find the <code>wicket.examples.Start</code> class in your IDE.
+					This class has a <code>main()</code> method which starts the embedded server. Run this
+					class.
+				</p>
+				<p>
+					In Eclipse, you can just select the <code>src/java</code> directory, and select <code>'Run as -&gt; Java application'</code>
+					in order to run the examples.
+				</p>
+				<p>
+					The only thing you *really* need to take care of is making sure no other application server is
+					using port 8080, otherwise the embedded application server is not able to start. If you are not
+					able to stop the other application server, you might consider changing the port setting in the
+					<code>src/etc/jetty-config.xml</code> file to another port number.
+				</p>
+				<p>
+					Now the only thing left to do is pointing your browser to:
+				</p>
+				<source>
+					<a href="http://localhost:8080/wicket-examples" title="The Wicket Examples running on your machine">http://localhost:8080/wicket-examples</a>
+				</source>
+			</subsection>
+		</section>
+	</body>
+</document>

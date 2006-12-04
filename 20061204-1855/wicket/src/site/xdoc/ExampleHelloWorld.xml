@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+	<properties>
+		<title>Wicket QuickTour: Hello World!</title>
+	</properties>
+
+	<meta
+		name="keyword"
+		content="wicket, example, web, j2ee, java" />
+
+<body>
+<section name="Hello World!">
+	<p>
+		HelloWorld demonstrates the basic structure of a web application in Wicket. A Label
+		component is used to display a message on the home page for the application.
+	</p>
+	<p>
+        In all the Wicket examples, you have to put all files in the same package directory. 
+        This means putting the markup files and the java files next to one another. It is 
+        possible to alter this behavior, but that is beyond the scope of this example. The
+        only exception is the oblibatory <code>web.xml</code> file which should reside
+        in the <code>WEB-INF/</code> directory of your web application root folder.
+	</p>
+	<p>
+		If you wish to start building this example, you may want to take a look at the
+		<a href="/wicket-quickstart">Wicket Quickstart</a> project, which provides a quick
+		way of getting up and running without having to figure things out yourself. The
+		Quickstart project contains the necessary build files (Ant and Maven), libraries,
+		minimal set of Java and markup files and an embedded Jetty server to run your
+		application without having to go through the whole build-deploy cycle.
+	</p>
+	<img src="images/image001.png" alt="HelloWorld" />
+<subsection name="HelloWorldApplication.java">
+	<p>
+		Each Wicket application is defined by an <code>Application</code>
+		object. This object defines what the <em>home page</em> is, and allows for 
+		some configuration.
+	</p>
+	<source><![CDATA[package wicket.examples.helloworld;
+
+import wicket.protocol.http.WebApplication;
+
+public class HelloWorldApplication extends WebApplication
+{
+    public HelloWorldApplication()
+    {
+    }
+    
+    public Class getHomePage() 
+    {
+        return HelloWorld.class;
+    }
+}]]></source>
+	<p>
+		Here you can see that we define <code>wicket.examples.helloworld.HelloWorld</code>
+		to be our home page. When the base URL of our application is requested, the 
+		markup rendered by the HelloWorld page is returned.
+	</p>
+</subsection>
+<subsection name="HelloWorld.java">
+	<source><![CDATA[package wicket.examples.helloworld;
+
+import wicket.markup.html.WebPage;
+import wicket.markup.html.basic.Label;
+
+public class HelloWorld extends WebPage
+{
+    public HelloWorld()
+    {
+        add(new Label("message", "Hello World!"));
+    }
+}]]></source>
+	<p>
+		The <code>Label</code> is constructed using two parameters:
+		<ul>
+			<li><code>"message"</code></li>
+			<li><code>"Hello World!"</code></li>
+		</ul>
+		The first parameter is the component identifier, which Wicket uses
+		to identify the <code>Label</code> component in your HTML markup.
+		The second parameter is the message which the <code>Label</code> should
+		render.
+	</p>
+</subsection>
+
+<subsection name="HelloWorld.html">
+	<p>The HTML file that defines our Hello World functionality is as follows:</p>
+	<source><![CDATA[<html>
+<body>
+    <span wicket:id="message">Message goes here</span>
+</body>
+</html>]]></source>
+	<p>
+		In this file, you see two elements that need some attention:
+		<ul>
+			<li>
+				the component declaration
+				<code>
+					<![CDATA[<span wicket:id="message">]]>
+				</code>
+			</li>
+			<li>
+				the message
+				<code>Message goes here</code>
+			</li>
+		</ul>
+		The component declaration consists of the <em>Wicket</em> identifier 
+		<code>wicket</code> and the component identifier <code>message</code>.
+		The component identifier should be the same as the name of the component you
+		defined in your <code>WebPage</code>. The message between the 
+		<code><![CDATA[<span>]]></code> tags is removed when the component renders
+		its message. The final content of the component is determined by your Java
+		code.
+	</p>
+</subsection>
+			
+<subsection name="web.xml">
+	<p>
+		In order to deploy our <em>HelloWorld</em> program, we need to make our application
+		known to the application server by means of the <tt>web.xml</tt> file.
+	</p>
+	<source><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+      PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+      "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>Wicket Examples</display-name>
+    <servlet>
+        <servlet-name>HelloWorldApplication</servlet-name>
+        <servlet-class>wicket.protocol.http.WicketServlet</servlet-class>
+        <init-param>
+          <param-name>applicationClassName</param-name>
+          <param-value>wicket.examples.helloworld.HelloWorldApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HelloWorldApplication</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>
+</web-app>]]></source>
+	<p>
+		In this definition you see the <em>Wicket</em> servlet defined, which handles all
+		requests. In order to let <em>Wicket</em> know which application is available, 
+		only the <code>applicationClassName</code> servlet parameter is needed.
+	</p>
+	<p>
+		Also, notice the url-mapping to <tt>/app/*</tt>. This ensures that the Wicket servlet
+		will only process requests made to the application itself, not to (static) resources 
+		that are outside the realm of the Wicket application, such as style sheets, JavaScript
+		files, images and so forth.
+	</p>
+</subsection>
+<subsection name="Ready to deploy">
+	<p>
+		That's it. No more configuration necessary! All you need to do now is to 
+		deploy the web application into your favourite application server. Point your browser to
+		the url: <tt>http://<i>&lt;servername&gt;</i>/<i>&lt;warfilename&gt;</i>/app</tt>,
+		substituting <i>servername</i> and <i>warfilename</i> to the appropiate values, such as
+		<tt>http://localhost:8080/helloworld/app</tt>.
+	</p>
+	<p>
+		As you can see: no superfluous XML configuration files are needed to enable
+		a <em>Wicket</em> application. Only the markup (HTML) files, the Java class
+		files and the required <code>web.xml</code> were needed to create this
+		application.
+	</p>
+</subsection>
+</section>
+</body>
+</document>
