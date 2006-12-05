@@ -119,6 +119,19 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 */
 		public CSSHeaderContributor(final String location)
 		{
+			this(location, null);
+		}
+		
+		/**
+		 * Construct.
+		 * 
+		 * @param location
+		 *            the location of the CSS file relative to the context path.
+		 * @param media
+		 *            the media type for this CSS ("print", "screen", etc.)
+		 */
+		public CSSHeaderContributor(final String location, final String media)
+		{
 			super(new AbstractReadOnlyModel<String>()
 			{
 
@@ -149,7 +162,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 							b.append("/");
 						}
 						b.append((location != null) ? location : "");
-						b.append("\"></link>");
+						if (media != null)
+						{
+							b.append("\" media=\"");
+							b.append(media);
+						}
+						b.append("\" />");
 						path = b.toString();
 					}
 					return path;
@@ -161,11 +179,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 	/**
 	 * prints a css resource reference.
 	 */
-	public static final class CSSReferenceHeaderContributor
+	private static final class CSSReferenceHeaderContributor
 			extends
 				ResourceReferenceHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
+
+		private String media;
 
 		/**
 		 * Construct.
@@ -174,20 +194,26 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 *            The scope of the reference (typically the calling class)
 		 * @param name
 		 *            The name of the reference.
+		 * @param media
+		 *            The media type for this CSS ("print", "screen", etc.)
 		 */
-		public CSSReferenceHeaderContributor(Class scope, String name)
+		public CSSReferenceHeaderContributor(Class scope, String name, String media)
 		{
 			super(scope, name);
+			this.media = media;
 		}
 
 		/**
 		 * Construct.
 		 * 
 		 * @param reference
+		 * @param media
+		 *            The media type for this CSS ("print", "screen", etc.)
 		 */
-		public CSSReferenceHeaderContributor(ResourceReference reference)
+		public CSSReferenceHeaderContributor(ResourceReference reference, String media)
 		{
 			super(reference);
+			this.media = media;
 		}
 
 		/**
@@ -199,7 +225,12 @@ public class HeaderContributor extends AbstractHeaderContributor
 			final CharSequence url = RequestCycle.get().urlFor(getResourceReference());
 			response.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 			response.write(url);
-			response.println("\"></link>");
+			if (media != null)
+			{
+				response.write("\" media=\"");
+				response.write(media);
+			}
+			response.println("\" />");
 		}
 	}
 
@@ -333,13 +364,43 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * 
 	 * @param location
 	 *            The location of the css file relative to the context path
+	 * @param media
+	 *            The media type for this CSS ("print", "screen", etc.)
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final String location, final String media)
+	{
+		return new HeaderContributor(new CSSHeaderContributor(location, media));		
+	}
+	
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in the web application
+	 * directory and that is addressed relative to the context path.
+	 * 
+	 * @param location
+	 *            The location of the css file relative to the context path
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forCss(final String location)
 	{
-		return new HeaderContributor(new CSSHeaderContributor(location));
+		return new HeaderContributor(new CSSHeaderContributor(location, null));
 	}
 
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in a package.
+	 * 
+	 * @param reference
+	 * @param media
+	 *            The media type for this CSS ("print", "screen", etc.)
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(ResourceReference reference, final String media)
+	{
+		return new HeaderContributor(new CSSReferenceHeaderContributor(reference, media));
+	}
+	
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in a package.
@@ -350,7 +411,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public static final HeaderContributor forCss(ResourceReference reference)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(reference));
+		return new HeaderContributor(new CSSReferenceHeaderContributor(reference, null));
 	}
 
 	/**
@@ -377,11 +438,30 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 *            resource lives).
 	 * @param path
 	 *            The path
+	 * @param media
+	 *            The media type for this CSS ("print", "screen", etc.)
+	 * @return the new header contributor instance
+	 */
+	public static final HeaderContributor forCss(final Class scope, final String path, final String media)
+	{
+		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path, media));
+	}
+	
+	/**
+	 * Returns a new instance of {@link HeaderContributor} with a header
+	 * contributor that references a CSS file that lives in a package.
+	 * 
+	 * @param scope
+	 *            The scope of the package resource (typically the class of the
+	 *            caller, or a class that lives in the package where the
+	 *            resource lives).
+	 * @param path
+	 *            The path
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forCss(final Class scope, final String path)
 	{
-		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path));
+		return new HeaderContributor(new CSSReferenceHeaderContributor(scope, path, null));
 	}
 
 	/**
@@ -488,7 +568,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 */
 	public final void addCssReference(final Class scope, final String path)
 	{
-		addContributor(new CSSReferenceHeaderContributor(scope, path));
+		addContributor(new CSSReferenceHeaderContributor(scope, path, null));
 	}
 
 	/**
