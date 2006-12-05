@@ -509,7 +509,7 @@
 					<version>6.0.1</version>
 					<configuration>
 						<scanIntervalSeconds>60</scanIntervalSeconds>
-						<webAppSourceDirectory>src/webapp</webAppSourceDirectory>
+						<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
 					</configuration>
 				</plugin>
 			</plugins>
