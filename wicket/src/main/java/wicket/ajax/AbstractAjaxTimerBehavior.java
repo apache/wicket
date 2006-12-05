@@ -74,7 +74,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 */
 	protected final String getJsTimeoutCall(final Duration updateInterval)
 	{
-		return "setTimeout(function() { " + getCallbackScript(false) + " }, "
+		// this might look strange, but it is necessary for IE not to leak :(
+		return "setTimeout(\" " + getCallbackScript(false) + " \", "
 				+ updateInterval.getMilliseconds() + ");";
 	}
 
