@@ -180,9 +180,10 @@ Wicket.replaceOuterHtml = function(element, text) {
 		
 		// indicates whether we should manually invoke javascripts in the replaced content
 		var forceJavascriptExecution = true;
-	   
+	   	   
 		var tn = element.tagName;
-		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD" && tn != "TH") {			
+		
+		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD" && tn != "TH" && tn != "TFOOT" && tn != "COLGROUP" && tn != "COL") {			
 			element.outerHTML = text;						
 		} else {	  		
 			// this is a hack to get around the fact that internet explorer doesn't allow the
@@ -976,7 +977,7 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 	var head = document.getElementsByTagName("head")[0];
 	var nodes = head.getElementsByTagName(element.tagName);
 	for (var i = 0; i < nodes.length; ++i) {
-		var node = nodes[i];		
+		var node = nodes[i];				
 		if (node.tagName.toLowerCase() == element.tagName.toLowerCase() &&
 			(node.getAttribute(mandatoryAttribute) == attr ||
 		     node.getAttribute(mandatoryAttribute+"_") == attr)) {
@@ -1006,8 +1007,8 @@ Wicket.Head.addJavascripts = function(element) {
 		if (content == null || content == "")
 			content = element.text;
 		Wicket.Head.addJavascript(content);		
-	}
-	if (element.tagName.toLowerCase() == "script") {
+	}	
+	if (typeof(element.tagName) != "undefined" && element.tagName.toLowerCase() == "script") {
 		add(element);
 	} else {
 		// we need to check if there are any children, becase Safari
