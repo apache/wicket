@@ -19,7 +19,6 @@ package wicket.markup.html.form;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -138,10 +137,11 @@ public class CheckGroup extends FormComponent implements IOnChangeListener
 
 					if (checkbox == null)
 					{
+						// FIXME: print values in [..., ...] format
 						throw new WicketRuntimeException(
-								"submitted http post value ["
-										+ Arrays.toString(values)
-										+ "] for CheckGroup component ["
+								"submitted http post value "
+										+ values
+										+ " for CheckGroup component ["
 										+ getPath()
 										+ "] contains an illegal relative path "
 										+ "element ["
