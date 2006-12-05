@@ -1,10 +1,26 @@
 /*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+/*
  * Wicket Ajax Support 
- * Licensed under the Apache License, Version 2.0
+ *
  * @author Igor Vaynberg
  * @author Matej Knopp 
  */
-
 var Class = {
 	create: function() {
 		return function() {
@@ -38,6 +54,10 @@ Wicket.Browser = {
 	
 	isSafari: function() {
 		return /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent);
+	},
+	
+	isOpera: function() {
+		return typeof(window.opera) != "undefined";
 	},
 
 	isIE: function() {
@@ -142,26 +162,47 @@ Wicket.FunctionsExecuter.prototype = {
    (for all browsers except gecko based) it takes the newly created scripts elements 
    and adds them to head (execute them) */
 Wicket.replaceOuterHtml = function(element, text) {	
-    if (element.outerHTML) { // internet explorer
-       var parent = element.parentNode;
+    if (element.outerHTML) { // internet explorer or opera
+		var parent = element.parentNode;
        
-       // find out the element's index and next element (if any). we need to access
-       // newly created elements to execute theirs <script elements
-       var i;
-       var next = null;
-       for (i = 0; i < parent.childNodes.length; ++i) {
-       		if (parent.childNodes[i] == element) {
-       			if (i != parent.childNodes.length - 1) {
+		// find out the element's index and next element (if any). we need to access
+		// newly created elements to execute theirs <script elements
+		var i;
+		var next = null;
+		for (i = 0; i < parent.childNodes.length; ++i) {
+			if (parent.childNodes[i] == element) {
+				if (i != parent.childNodes.length - 1) {
        				next = parent.childNodes[i+1]
        			}
        			break;       			
        		}
-       }
-       element.outerHTML=text;
+		}
+		
+		// indicates whether we should manually invoke javascripts in the replaced content
+		var forceJavascriptExecution = true;
+	   	   
+		var tn = element.tagName;
+		
+		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD" && tn != "TH" && tn != "TFOOT" && tn != "COLGROUP" && tn != "COL") {			
+			element.outerHTML = text;						
+		} else {	  		
+			// this is a hack to get around the fact that internet explorer doesn't allow the
+			// outerHtml attribute on table elements
+			// also opera has issues with such replacement				
+			var tempDiv = document.createElement("div");
+			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';			
+			element.parentNode.replaceChild(tempDiv.getElementsByTagName(tn).item(0), element);
+						
+			// this way opera already executes javascripts, so we don't want to execute javascripts later
+			if (Wicket.Browser.isOpera())
+				forceJavascriptExecution = false;				
+		}
        
-       for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {
-	       Wicket.Head.addJavascripts(parent.childNodes[j]);       
-	   }
+	    if (forceJavascriptExecution) {
+			for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {	   		
+				Wicket.Head.addJavascripts(parent.childNodes[j]);       
+			}
+		}
 
     } else {
         
@@ -936,7 +977,7 @@ Wicket.Head.containsElement = function(element, mandatoryAttribute) {
 	var head = document.getElementsByTagName("head")[0];
 	var nodes = head.getElementsByTagName(element.tagName);
 	for (var i = 0; i < nodes.length; ++i) {
-		var node = nodes[i];		
+		var node = nodes[i];				
 		if (node.tagName.toLowerCase() == element.tagName.toLowerCase() &&
 			(node.getAttribute(mandatoryAttribute) == attr ||
 		     node.getAttribute(mandatoryAttribute+"_") == attr)) {
@@ -966,8 +1007,8 @@ Wicket.Head.addJavascripts = function(element) {
 		if (content == null || content == "")
 			content = element.text;
 		Wicket.Head.addJavascript(content);		
-	}
-	if (element.tagName.toLowerCase() == "script") {
+	}	
+	if (typeof(element.tagName) != "undefined" && element.tagName.toLowerCase() == "script") {
 		add(element);
 	} else {
 		// we need to check if there are any children, becase Safari
