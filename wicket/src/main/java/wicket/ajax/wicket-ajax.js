@@ -182,11 +182,12 @@ Wicket.replaceOuterHtml = function(element, text) {
 		var forceJavascriptExecution = true;
 	   
 		var tn = element.tagName;
-		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {			
+		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD" && tn != "TH") {			
 			element.outerHTML = text;						
 		} else {	  		
 			// this is a hack to get around the fact that internet explorer doesn't allow the
-			// outerHtml attribute on table elements				
+			// outerHtml attribute on table elements
+			// also opera has issues with such replacement				
 			var tempDiv = document.createElement("div");
 			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';			
 			element.parentNode.replaceChild(tempDiv.getElementsByTagName(tn).item(0), element);
