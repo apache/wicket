@@ -21,7 +21,6 @@
  * @author Igor Vaynberg
  * @author Matej Knopp 
  */
-
 var Class = {
 	create: function() {
 		return function() {
@@ -55,6 +54,10 @@ Wicket.Browser = {
 	
 	isSafari: function() {
 		return /KHTML/.test(navigator.userAgent) && /Apple/.test(navigator.userAgent);
+	},
+	
+	isOpera: function() {
+		return typeof(window.opera) != "undefined";
 	},
 
 	isIE: function() {
@@ -159,26 +162,45 @@ Wicket.FunctionsExecuter.prototype = {
    (for all browsers except gecko based) it takes the newly created scripts elements 
    and adds them to head (execute them) */
 Wicket.replaceOuterHtml = function(element, text) {	
-    if (element.outerHTML) { // internet explorer
-       var parent = element.parentNode;
+    if (element.outerHTML) { // internet explorer or opera
+		var parent = element.parentNode;
        
-       // find out the element's index and next element (if any). we need to access
-       // newly created elements to execute theirs <script elements
-       var i;
-       var next = null;
-       for (i = 0; i < parent.childNodes.length; ++i) {
-       		if (parent.childNodes[i] == element) {
-       			if (i != parent.childNodes.length - 1) {
+		// find out the element's index and next element (if any). we need to access
+		// newly created elements to execute theirs <script elements
+		var i;
+		var next = null;
+		for (i = 0; i < parent.childNodes.length; ++i) {
+			if (parent.childNodes[i] == element) {
+				if (i != parent.childNodes.length - 1) {
        				next = parent.childNodes[i+1]
        			}
        			break;       			
        		}
-       }
-       element.outerHTML=text;
+		}
+		
+		// indicates whether we should manually invoke javascripts in the replaced content
+		var forceJavascriptExecution = true;
+	   
+		var tn = element.tagName;
+		if (tn != 'TBODY' && tn != 'TR' && tn != "TD" && tn != "THEAD") {			
+			element.outerHTML = text;						
+		} else {	  		
+			// this is a hack to get around the fact that internet explorer doesn't allow the
+			// outerHtml attribute on table elements				
+			var tempDiv = document.createElement("div");
+			tempDiv.innerHTML = '<table style="display: none">' + text + '</table>';			
+			element.parentNode.replaceChild(tempDiv.getElementsByTagName(tn).item(0), element);
+						
+			// this way opera already executes javascripts, so we don't want to execute javascripts later
+			if (Wicket.Browser.isOpera())
+				forceJavascriptExecution = false;				
+		}
        
-       for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {
-	       Wicket.Head.addJavascripts(parent.childNodes[j]);       
-	   }
+	    if (forceJavascriptExecution) {
+			for (var j = i; j < parent.childNodes.length && parent.childNodes[j] != next; ++j) {	   		
+				Wicket.Head.addJavascripts(parent.childNodes[j]);       
+			}
+		}
 
     } else {
         
