@@ -677,17 +677,9 @@ Wicket.Window.prototype = {
 	},
 	
 	/**
-	 * Shows the "loading..." string and loads the content 
+	 * Loads the content 
 	 */
-	load: function() {
-		try {
-			var doc = this.content.contentWindow.document;
-			doc.open();	
-			doc.write("loading...");
-			doc.close();
-		} catch (ignore) {
-		}
-		
+	load: function() {		
 		if (this.settings.title == null)
 			this.update = window.setInterval(this.updateTitle.bind(this), 100);
 		
