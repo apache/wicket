@@ -17,12 +17,19 @@
  */
 package wicket.request.target.resource;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import wicket.Component;
 import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.Response;
 import wicket.WicketRuntimeException;
+import wicket.protocol.http.WebResponse;
 
 /**
  * An implemenation of IRequestTarget that is used for the IResourceListener
@@ -32,6 +39,8 @@ import wicket.WicketRuntimeException;
  */
 public final class ComponentResourceRequestTarget implements IRequestTarget
 {
+	private static final Log log = LogFactory.getLog(ComponentResourceRequestTarget.class);
+
 	private final Page page;
 	private final Component component;
 	private final RequestListenerInterface listener;
@@ -65,9 +74,22 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 		}
 		catch (Exception e)
 		{
-			throw new WicketRuntimeException("method " + listener.getName() + " of "
-					+ listener.getMethod().getDeclaringClass() + " targetted at component " + component
-					+ " threw an exception", e);
+			Response response = requestCycle.getResponse();
+			if (response instanceof WebResponse)
+			{
+				((WebResponse)response).getHttpServletResponse().setStatus(
+						HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				log.error("error handling resource request for component " + component
+						+ ", on page " + page + ", listener " + listener.getName() + " - "
+						+ e.getMessage());
+				return;
+			}
+			else
+			{
+				throw new WicketRuntimeException("method " + listener.getName() + " of "
+						+ listener.getMethod().getDeclaringClass() + " targetted at component "
+						+ component + " threw an exception", e);
+			}
 		}
 		finally
 		{
