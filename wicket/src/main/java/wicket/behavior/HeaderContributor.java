@@ -195,11 +195,39 @@ public class HeaderContributor extends AbstractHeaderContributor
 		}
 		return contributor;
 	}
-
+	
+	// Appends a path to the string buffer, adding the context path on the front if it's not
+	// a fully-qualified URL.
+	private static final void appendPathWithContext(AppendingStringBuffer b, String location)
+	{
+		
+		// WICKET-59 allow external URLs.
+		if (!location.startsWith("http://") && !location.startsWith("https://"))
+		{
+			String contextPath = Application.get().getApplicationSettings()
+					.getContextPath();
+			if (contextPath == null)
+			{
+				contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
+						.getContextPath();
+				if (contextPath == null)
+				{
+					contextPath = "";
+				}
+			}
+			b.append(contextPath);
+			if (!contextPath.endsWith("/") && !location.startsWith("/"))
+			{
+				b.append("/");
+			}
+		}
+		b.append(location);
+	}
+	
 	/**
 	 * Contributes a reference to a css file relative to the context path.
 	 */
-	public static final class CSSHeaderContributor extends StringHeaderContributor
+	private static final class CSSHeaderContributor extends StringHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -207,7 +235,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 * Construct.
 		 * 
 		 * @param location
-		 *            the location of the CSS file relative to the context path.
+		 *            the location of the CSS file relative to the context path, or a fully qualified http url.
 		 */
 		public CSSHeaderContributor(final String location)
 		{
@@ -218,7 +246,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 * Construct.
 		 * 
 		 * @param location
-		 *            the location of the CSS file relative to the context path.
+		 *            the location of the CSS file relative to the context path, or a fully qualified http url.
 		 * @param media
 		 *            the media type for this CSS ("print", "screen", etc.)
 		 */
@@ -234,25 +262,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 				{
 					if (path == null)
 					{
-						String contextPath = Application.get().getApplicationSettings()
-								.getContextPath();
-						if (contextPath == null)
+						if (location == null)
 						{
-							contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-									.getContextPath();
-							if (contextPath == null)
-							{
-								contextPath = "";
-							}
+							return "";
 						}
 						AppendingStringBuffer b = new AppendingStringBuffer();
 						b.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-						b.append(contextPath);
-						if (!contextPath.endsWith("/") && !location.startsWith("/"))
-						{
-							b.append("/");
-						}
-						b.append((location != null) ? location : "");
+						appendPathWithContext(b, location);
 						if (media != null)
 						{
 							b.append("\" media=\"");
@@ -329,7 +345,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * Contributes a reference to a javascript file relative to the context
 	 * path.
 	 */
-	public static final class JavaScriptHeaderContributor extends StringHeaderContributor
+	private static final class JavaScriptHeaderContributor extends StringHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -337,7 +353,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 		 * Construct.
 		 * 
 		 * @param location
-		 *            the location of the CSS file relative to the context path.
+		 *            the location of the CSS file relative to the context path, or a fully qualified http url.
 		 */
 		public JavaScriptHeaderContributor(final String location)
 		{
@@ -351,25 +367,13 @@ public class HeaderContributor extends AbstractHeaderContributor
 				{
 					if (path == null)
 					{
-						String contextPath = Application.get().getApplicationSettings()
-								.getContextPath();
-						if (contextPath == null)
+						if (location == null)
 						{
-							contextPath = ((WebRequestCycle)RequestCycle.get()).getWebRequest()
-									.getContextPath();
-							if (contextPath == null)
-							{
-								contextPath = "";
-							}
+							return "";
 						}
 						AppendingStringBuffer b = new AppendingStringBuffer();
 						b.append("<script type=\"text/javascript\" src=\"");
-						b.append(contextPath);
-						if (!contextPath.endsWith("/") && !location.startsWith("/"))
-						{
-							b.append("/");
-						}
-						b.append((location != null) ? location : "");
+						appendPathWithContext(b, location);
 						b.append("\"></script>");
 						path = b.toString();
 					}
@@ -382,7 +386,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	/**
 	 * prints a javascript resource reference.
 	 */
-	public static final class JavaScriptReferenceHeaderContributor
+	private static final class JavaScriptReferenceHeaderContributor
 			extends
 				ResourceReferenceHeaderContributor
 	{
@@ -428,7 +432,7 @@ public class HeaderContributor extends AbstractHeaderContributor
 	 * {@link CSSReferenceHeaderContributor}, which print out javascript
 	 * statements and css ref statements respectively.
 	 */
-	public static abstract class ResourceReferenceHeaderContributor implements IHeaderContributor
+	private static abstract class ResourceReferenceHeaderContributor implements IHeaderContributor
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -566,10 +570,11 @@ public class HeaderContributor extends AbstractHeaderContributor
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path.
+	 * directory and that is addressed relative to the context path, or a fully
+	 * qualified URL (starting with http:// or https://).
 	 * 
 	 * @param location
-	 *            The location of the css file relative to the context path
+	 *            The location of the css file relative to the context path, or a fully qualified http url.
 	 * @param media
 	 *            The media type for this CSS ("print", "screen", etc.)
 	 * @return the new header contributor instance
@@ -582,10 +587,11 @@ public class HeaderContributor extends AbstractHeaderContributor
 	/**
 	 * Returns a new instance of {@link HeaderContributor} with a header
 	 * contributor that references a CSS file that lives in the web application
-	 * directory and that is addressed relative to the context path.
+	 * directory and that is addressed relative to the context path, or a fully
+	 * qualified URL (starting with http:// or https://).
 	 * 
 	 * @param location
-	 *            The location of the css file relative to the context path
+	 *            The location of the css file relative to the context path, or a fully qualified http url.
 	 * @return the new header contributor instance
 	 */
 	public static final HeaderContributor forCss(final String location)
