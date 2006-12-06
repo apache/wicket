@@ -18,7 +18,6 @@
 package wicket;
 
 import java.io.OutputStream;
-import java.net.SocketException;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -83,7 +82,7 @@ public abstract class Resource implements IResourceListener
 		// By default all resources are cacheable
 		cacheable = true;
 	}
-	
+
 	/**
 	 * @return Gets the resource to render to the requester
 	 */
@@ -247,38 +246,7 @@ public abstract class Resource implements IResourceListener
 		}
 		catch (Exception e)
 		{
-			Throwable throwable = e;
-			boolean ignoreException = false;
-			while (throwable != null)
-			{
-				if (throwable instanceof SocketException)
-				{
-					String message = throwable.getMessage();
-					ignoreException = message != null
-							&& (message.indexOf("Connection reset by peer") != -1 || message
-									.indexOf("Software caused connection abort") != -1);
-				}
-				else
-				{
-					ignoreException = throwable.getClass().getName()
-							.indexOf("ClientAbortException") >= 0;
-					if (ignoreException)
-					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Socket exception ignored for sending Resource "
-									+ "response to client (ClientAbort)", e);
-						}
-						break;
-					}
-				}
-				throwable = throwable.getCause();
-			}
-			if (!ignoreException)
-			{
-				throw new WicketRuntimeException("Unable to render resource stream "
-						+ resourceStream, e);
-			}
+			throw new WicketRuntimeException(e);
 		}
 	}
 }
