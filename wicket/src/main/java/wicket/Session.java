@@ -988,9 +988,6 @@ public abstract class Session implements Serializable
 		if (cycle != null)
 		{
 			getSessionStore().removeAttribute(cycle.getRequest(), name);
-			System.err.println("removing " + name + ", the current list "
-					+ getSessionStore().getAttributeNames(cycle.getRequest()));
-
 		}
 	}
 
