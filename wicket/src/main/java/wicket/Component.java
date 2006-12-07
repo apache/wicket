@@ -1063,26 +1063,37 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/**
 	 * Retrieves id by which this component is represented within the markup.
 	 * <p>
-	 * If the id attribute is present in the markup attributes of this component
-	 * it will be used, otherwise the page-relative path of this component will
-	 * be used.
+	 * The point of this function is to generate a unique id to make it easy to
+	 * locate this component in the generated markup for post-wicket processing
+	 * such as javascript or an xslt transform.
+	 * <p>
+	 * Note: This method should only be called after the component or its parent
+	 * have been added to the page. This will be relaxed in 2.0 where the page
+	 * is available on construction.
 	 * 
-	 * @return the Markup id
+	 * @return markup id of the component
 	 */
 	public String getMarkupId()
 	{
-		String id = getMarkupAttributes().getString(MARKUP_ID_ATTR_NAME);
-		if (id == null)
+		String markupId = getMetaData(MARKUP_ID_KEY);
+		if (markupId == null)
 		{
-			id = getPageRelativePath();
-			// first escape _ with __
-			id = id.replace("_", "__");
-			// then replace : with _
-			id = id.replace(':', '_');
-			getMarkupAttributes().put(MARKUP_ID_ATTR_NAME, id);
+			markupId = getId() + getPage().getAutoIndex();
+			setMetaData(MARKUP_ID_KEY, markupId);
 		}
-		return id;
+		return markupId;
 	}
+
+	final boolean hasMarkupIdMetaData()
+	{
+		return getMetaData(MARKUP_ID_KEY) != null;
+	}
+
+	final void setMarkupIdMetaData(String markupId)
+	{
+		setMetaData(MARKUP_ID_KEY, markupId);
+	}
+
 
 	/**
 	 * Gets metadata for this component using the given key.
@@ -3303,4 +3314,15 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		return this.markupIndex;
 	}
+
+	/**
+	 * Metadata key used to store/retrieve markup id
+	 */
+	private static MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<String>(String.class)
+	{
+
+		private static final long serialVersionUID = 1L;
+
+	};
+
 }

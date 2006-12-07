@@ -190,6 +190,10 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			// The position of the associated markup remains the same
 			child.markupIndex = replaced.markupIndex;
 
+
+			// The generated markup id remains the same
+			String replacedId = (replaced.hasMarkupIdMetaData()) ? replaced.getMarkupId() : null;
+			child.setMarkupIdMetaData(replaced.getMarkupId());
 		}
 
 		return this;
