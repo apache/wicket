@@ -925,6 +925,16 @@ public abstract class Component implements Serializable
 		return markupId;
 	}
 
+	final boolean hasMarkupIdMetaData()
+	{
+		return getMetaData(MARKUP_ID_KEY) != null;
+	}
+
+	final void setMarkupIdMetaData(String markupId)
+	{
+		setMetaData(MARKUP_ID_KEY, markupId);
+	}
+
 	/**
 	 * Gets metadata for this component using the given key.
 	 * 

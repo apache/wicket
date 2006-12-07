@@ -267,7 +267,8 @@ public abstract class MarkupContainer extends Component
 		// optimization.
 		if ((child == null) && isTransparentResolver() && (getParent() != null))
 		{
-			// Special tags like "_body", "_panel" must implement IComponentResolver
+			// Special tags like "_body", "_panel" must implement
+			// IComponentResolver
 			// if they want to be transparent.
 			if (path.startsWith("_") == false)
 			{
@@ -355,8 +356,11 @@ public abstract class MarkupContainer extends Component
 		}
 		catch (RuntimeException ex)
 		{
-			if(ex instanceof WicketRuntimeException) throw ex;
-			else throw new WicketRuntimeException("Error attaching this container for rendering: " + this,ex);
+			if (ex instanceof WicketRuntimeException)
+				throw ex;
+			else
+				throw new WicketRuntimeException("Error attaching this container for rendering: "
+						+ this, ex);
 		}
 	}
 
@@ -555,8 +559,7 @@ public abstract class MarkupContainer extends Component
 		final ComponentTag associatedMarkupOpenTag = associatedMarkupStream.getTag();
 
 		// Check for required open tag name
-		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && 
-				(associatedMarkupOpenTag instanceof WicketTag)))
+		if (!((associatedMarkupOpenTag != null) && associatedMarkupOpenTag.isOpen() && (associatedMarkupOpenTag instanceof WicketTag)))
 		{
 			associatedMarkupStream.throwMarkupException(exceptionMessage);
 		}
@@ -617,6 +620,10 @@ public abstract class MarkupContainer extends Component
 
 			// The position of the associated markup remains the same
 			child.markupIndex = replaced.markupIndex;
+
+			// The generated markup id remains the same
+			String replacedId = (replaced.hasMarkupIdMetaData()) ? replaced.getMarkupId() : null;
+			child.setMarkupIdMetaData(replaced.getMarkupId());
 		}
 
 		return this;
@@ -889,7 +896,7 @@ public abstract class MarkupContainer extends Component
 
 		return null;
 	}
-	
+
 	/**
 	 * Get the markup stream set on this container.
 	 * 
