@@ -53,7 +53,6 @@ import wicket.util.file.WebApplicationPath;
 import wicket.util.lang.PackageName;
 import wicket.util.watch.ModificationWatcher;
 
-
 /**
  * A web application is a subclass of Application which associates with an
  * instance of WicketServlet to serve pages over the HTTP protocol. This class
@@ -68,19 +67,19 @@ import wicket.util.watch.ModificationWatcher;
  * not do this in the constructor itself because the defaults will then override
  * your settings.
  * <p>
- * If you want to use servlet specific configuration, e.g. using init parameters
- * from the {@link javax.servlet.ServletConfig}object, you should override the
+ * If you want to use a filter specific configuration, e.g. using init parameters
+ * from the {@link javax.servlet.FilterConfig} object, you should override the
  * init() method. For example:
  * 
  * <pre>
- *                  public void init()
- *                  {
- *                      String webXMLParameter = getWicketServlet().getInitParameter(&quot;myWebXMLParameter&quot;);
- *                      URL schedulersConfig = getWicketServlet().getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *                      ...
+ *   public void init()
+ *   {
+ *       String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *       URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *       ...
  * </pre>
  * 
- * @see WicketServlet
+ * @see WicketFilter
  * @see wicket.settings.IApplicationSettings
  * @see wicket.settings.IDebugSettings
  * @see wicket.settings.IExceptionSettings
@@ -90,6 +89,9 @@ import wicket.util.watch.ModificationWatcher;
  * @see wicket.settings.IResourceSettings
  * @see wicket.settings.ISecuritySettings
  * @see wicket.settings.ISessionSettings
+ * @see javax.servlet.Filter
+ * @see javax.servlet.FilterConfig
+ * @see javax.servlet.ServletContext
  * 
  * @author Jonathan Locke
  * @author Chris Turner
@@ -163,6 +165,24 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
+	 * Gets an init parameter from the filter's context.
+	 * 
+	 * @param key
+	 *            the key to search for
+	 * @return the value of the filter init parameter
+	 */
+	public final String getInitParameter(String key)
+	{
+		if (wicketFilter != null)
+		{
+			return wicketFilter.getFilterConfig().getInitParameter(key);
+		}
+		throw new IllegalStateException("servletContext is not set yet. Any code in your"
+				+ " Application object that uses the wicketServlet/Filter instance should be put"
+				+ " in the init() method instead of your constructor");
+	}
+
+	/**
 	 * Gets the default request cycle processor (with lazy initialization). This
 	 * is the {@link IRequestCycleProcessor} that will be used by
 	 * {@link RequestCycle}s when custom implementations of the request cycle
@@ -192,17 +212,20 @@ public abstract class WebApplication extends Application implements ISessionFact
 	}
 
 	/**
-	 * @return The Wicket servlet context for this application
+	 * Gets the servlet context for this application. Use this to get references
+	 * to absolute paths, global web.xml parameters (<context-param>), etc.
+	 * 
+	 * @return The servlet context for this application
 	 */
 	public final ServletContext getServletContext()
 	{
-		if (wicketFilter == null)
+		if (wicketFilter != null)
 		{
-			throw new IllegalStateException("servletContext is not set yet. Any code in your"
-					+ " Application object that uses the wicketServlet instance should be put"
-					+ " in the init() method instead of your constructor");
+			return wicketFilter.getFilterConfig().getServletContext();
 		}
-		return wicketFilter.getFilterConfig().getServletContext();
+		throw new IllegalStateException("servletContext is not set yet. Any code in your"
+				+ " Application object that uses the wicket filter instance should be put"
+				+ " in the init() method instead of your constructor");
 	}
 
 	/**
@@ -228,6 +251,14 @@ public abstract class WebApplication extends Application implements ISessionFact
 		// Namespacing for session attributes is provided by
 		// adding the servlet path
 		return sessionAttributePrefix;
+	}
+
+	/**
+	 * @return The Wicket filter for this application
+	 */
+	public final WicketFilter getWicketFilter()
+	{
+		return wicketFilter;
 	}
 
 	/**
