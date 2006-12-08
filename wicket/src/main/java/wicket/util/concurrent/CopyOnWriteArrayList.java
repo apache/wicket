@@ -73,7 +73,7 @@ public class CopyOnWriteArrayList implements List, Cloneable, java.io.Serializab
 	/**
 	 * The held array. Directly access only within synchronized methods
 	 */
-	protected Object[] array_;
+	protected transient Object[] array_;
 
 	/**
 	 * Accessor to the array intended to be called from within unsynchronized
