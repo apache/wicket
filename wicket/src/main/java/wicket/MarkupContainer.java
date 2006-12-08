@@ -623,7 +623,7 @@ public abstract class MarkupContainer extends Component
 
 			// The generated markup id remains the same
 			String replacedId = (replaced.hasMarkupIdMetaData()) ? replaced.getMarkupId() : null;
-			child.setMarkupIdMetaData(replaced.getMarkupId());
+			child.setMarkupIdMetaData(replacedId);
 		}
 
 		return this;
