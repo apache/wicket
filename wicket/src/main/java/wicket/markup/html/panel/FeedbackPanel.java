@@ -46,14 +46,6 @@ import wicket.model.Model;
  */
 public class FeedbackPanel extends Panel implements IFeedback
 {
-	private static final long serialVersionUID = 1L;
-
-	/** whether model messages should be HTML escaped. Default is true. */
-	private boolean escapeMessages = true;
-
-	/** Message view */
-	private final MessageListView messageListView;
-
 	/**
 	 * List for messages.
 	 */
@@ -103,6 +95,14 @@ public class FeedbackPanel extends Panel implements IFeedback
 		}
 	}
 
+	private static final long serialVersionUID = 1L;
+
+	/** whether model messages should be HTML escaped. Default is true. */
+	private boolean escapeMessages = true;
+
+	/** Message view */
+	private final MessageListView messageListView;
+
 	/**
 	 * @see wicket.Component#Component(String)
 	 */
@@ -130,14 +130,61 @@ public class FeedbackPanel extends Panel implements IFeedback
 		this.messageListView = new MessageListView("messages");
 		messageListView.setVersioned(false);
 		messagesContainer.add(messageListView);
-		
-		if (filter!=null) {
+
+		if (filter != null)
+		{
 			setFilter(filter);
 		}
 	}
 
-	
-	
+
+	/**
+	 * Search messages that this panel will render, and see if there is any
+	 * message of level ERROR or up. This is a convenience method; same as
+	 * calling 'anyMessage(FeedbackMessage.ERROR)'.
+	 * 
+	 * @return whether there is any message for this panel of level ERROR or up
+	 */
+	public final boolean anyErrorMessage()
+	{
+		return anyMessage(FeedbackMessage.ERROR);
+	}
+
+	/**
+	 * Search messages that this panel will render, and see if there is any
+	 * message.
+	 * 
+	 * @return whether there is any message for this panel
+	 */
+	public final boolean anyMessage()
+	{
+		return anyMessage(FeedbackMessage.UNDEFINED);
+	}
+
+	/**
+	 * Search messages that this panel will render, and see if there is any
+	 * message of the given level.
+	 * 
+	 * @param level
+	 *            the level, see FeedbackMessage
+	 * @return whether there is any message for this panel of the given level
+	 */
+	public final boolean anyMessage(int level)
+	{
+		List msgs = getCurrentMessages();
+
+		for (Iterator i = msgs.iterator(); i.hasNext();)
+		{
+			FeedbackMessage msg = (FeedbackMessage)i.next();
+			if (msg.isLevel(level))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Gets whether model messages should be HTML escaped. Default is true.
 	 * 
@@ -234,53 +281,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message of level ERROR or up. This is a convenience method; same as
-	 * calling 'anyMessage(FeedbackMessage.ERROR)'.
-	 * 
-	 * @return whether there is any message for this panel of level ERROR or up
-	 */
-	public final boolean anyErrorMessage()
-	{
-		return anyMessage(FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message.
-	 * 
-	 * @return whether there is any message for this panel
-	 */
-	public final boolean anyMessage()
-	{
-		return anyMessage(FeedbackMessage.UNDEFINED);
-	}
-
-	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message of the given level.
-	 * 
-	 * @param level
-	 *            the level, see FeedbackMessage
-	 * @return whether there is any message for this panel of the given level
-	 */
-	public final boolean anyMessage(int level)
-	{
-		List msgs = getCurrentMessages();
-
-		for (Iterator i = msgs.iterator(); i.hasNext();)
-		{
-			FeedbackMessage msg = (FeedbackMessage)i.next();
-			if (msg.isLevel(level))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Gets the css class for the given message.
 	 * 
 	 * @param message
@@ -314,5 +314,5 @@ public class FeedbackPanel extends Panel implements IFeedback
 	{
 		return new FeedbackMessagesModel();
 	}
-	
+
 }
