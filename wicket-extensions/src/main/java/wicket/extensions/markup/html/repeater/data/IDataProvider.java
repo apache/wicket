@@ -16,7 +16,6 @@
  */
 package wicket.extensions.markup.html.repeater.data;
 
-import java.io.Serializable;
 import java.util.Iterator;
 
 import wicket.model.IDetachable;
@@ -24,12 +23,7 @@ import wicket.model.IModel;
 
 /**
  * Interface used to provide data to data views.
- * <p>
- * Note that if the IDataProvider implementation implements {@link IDetachable}
- * interface, the {@link IDetachable#detach()} method will be called at the end
- * of request.
  * 
- * <p>
  * Example:
  * 
  * <pre>
@@ -49,16 +43,20 @@ import wicket.model.IModel;
  *         }
  * </pre>
  * 
+ * You can use the {@link IDetachable#detach()} method for cleaning up your
+ * IDataProvider instance. So that you can do one query that returns both
+ * the size and the values if your dataset is small enough the be able to
+ * do that.
+ * 
+ * @see IDetachable
  * @see DataViewBase
  * @see DataView
  * @see GridView
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * TODO 2.0: directly extend {@link IDetachable}
- * 
  */
-public interface IDataProvider extends Serializable
+public interface IDataProvider extends IDetachable
 {
 	/**
 	 * Gets an iterator for the subset of total data

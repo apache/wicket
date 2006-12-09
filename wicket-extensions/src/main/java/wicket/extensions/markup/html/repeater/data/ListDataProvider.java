@@ -77,4 +77,11 @@ public class ListDataProvider implements IDataProvider
 		return new Model((Serializable)object);
 	}
 
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+	}
+
 }
