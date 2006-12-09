@@ -81,7 +81,7 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 						HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				log.error("error handling resource request for component " + component
 						+ ", on page " + page + ", listener " + listener.getName() + " - "
-						+ e.getMessage());
+						+ e.getMessage(), e);
 				return;
 			}
 			else
