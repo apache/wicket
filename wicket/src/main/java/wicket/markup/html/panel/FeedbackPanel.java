@@ -47,11 +47,6 @@ import wicket.model.Model;
  */
 public class FeedbackPanel extends Panel implements IFeedback
 {
-	private static final long serialVersionUID = 1L;
-
-	/** Message view */
-	private final MessageListView messageListView;
-
 	/**
 	 * List for messages.
 	 */
@@ -101,26 +96,10 @@ public class FeedbackPanel extends Panel implements IFeedback
 		}
 	}
 
-	/**
-	 * Generates a component that is used to display the message inside the
-	 * feedback panel. This component must handle being attached to
-	 * <code>span</code> tags.
-	 * 
-	 * By default a {@link Label} is used.
-	 * 
-	 * @param parent
-	 *            component parent
-	 * @param id
-	 *            parent id
-	 * @param message
-	 *            feedback message
-	 * @return component used to display the message
-	 */
-	protected Component newMessageDisplayComponent(MarkupContainer parent, String id,
-			FeedbackMessage message)
-	{
-		return new Label(parent, id, message.getMessage().toString());
-	}
+	private static final long serialVersionUID = 1L;
+
+	/** Message view */
+	private final MessageListView messageListView;
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
@@ -155,6 +134,53 @@ public class FeedbackPanel extends Panel implements IFeedback
 		}
 	}
 
+	/**
+	 * Search messages that this panel will render, and see if there is any
+	 * message of level ERROR or up. This is a convenience method; same as
+	 * calling 'anyMessage(FeedbackMessage.ERROR)'.
+	 * 
+	 * @return whether there is any message for this panel of level ERROR or up
+	 */
+	public final boolean anyErrorMessage()
+	{
+		return anyMessage(FeedbackMessage.ERROR);
+	}
+
+
+	/**
+	 * Search messages that this panel will render, and see if there is any
+	 * message.
+	 * 
+	 * @return whether there is any message for this panel
+	 */
+	public final boolean anyMessage()
+	{
+		return anyMessage(FeedbackMessage.UNDEFINED);
+	}
+
+	/**
+	 * Search messages that this panel will render, and see if there is any
+	 * message of the given level.
+	 * 
+	 * @param level
+	 *            the level, see FeedbackMessage
+	 * @return whether there is any message for this panel of the given level
+	 */
+	public final boolean anyMessage(int level)
+	{
+		List msgs = getCurrentMessages();
+
+		for (Iterator i = msgs.iterator(); i.hasNext();)
+		{
+			FeedbackMessage msg = (FeedbackMessage)i.next();
+			if (msg.isLevel(level))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	/**
 	 * @return Model for feedback messages on which you can install filters and
@@ -232,53 +258,6 @@ public class FeedbackPanel extends Panel implements IFeedback
 	}
 
 	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message of level ERROR or up. This is a convenience method; same as
-	 * calling 'anyMessage(FeedbackMessage.ERROR)'.
-	 * 
-	 * @return whether there is any message for this panel of level ERROR or up
-	 */
-	public final boolean anyErrorMessage()
-	{
-		return anyMessage(FeedbackMessage.ERROR);
-	}
-
-	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message.
-	 * 
-	 * @return whether there is any message for this panel
-	 */
-	public final boolean anyMessage()
-	{
-		return anyMessage(FeedbackMessage.UNDEFINED);
-	}
-
-	/**
-	 * Search messages that this panel will render, and see if there is any
-	 * message of the given level.
-	 * 
-	 * @param level
-	 *            the level, see FeedbackMessage
-	 * @return whether there is any message for this panel of the given level
-	 */
-	public final boolean anyMessage(int level)
-	{
-		List msgs = getCurrentMessages();
-
-		for (Iterator i = msgs.iterator(); i.hasNext();)
-		{
-			FeedbackMessage msg = (FeedbackMessage)i.next();
-			if (msg.isLevel(level))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Gets the css class for the given message.
 	 * 
 	 * @param message
@@ -311,6 +290,27 @@ public class FeedbackPanel extends Panel implements IFeedback
 	protected FeedbackMessagesModel newFeedbackMessagesModel()
 	{
 		return new FeedbackMessagesModel(getPage());
+	}
+
+	/**
+	 * Generates a component that is used to display the message inside the
+	 * feedback panel. This component must handle being attached to
+	 * <code>span</code> tags.
+	 * 
+	 * By default a {@link Label} is used.
+	 * 
+	 * @param parent
+	 *            component parent
+	 * @param id
+	 *            parent id
+	 * @param message
+	 *            feedback message
+	 * @return component used to display the message
+	 */
+	protected Component newMessageDisplayComponent(MarkupContainer parent, String id,
+			FeedbackMessage message)
+	{
+		return new Label(parent, id, message.getMessage().toString());
 	}
 
 }
