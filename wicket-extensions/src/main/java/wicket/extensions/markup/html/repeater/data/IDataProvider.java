@@ -23,31 +23,32 @@ import wicket.model.IModel;
 
 /**
  * Interface used to provide data to data views.
- * <p>
- * Note that if the IDataProvider implementation implements {@link IDetachable}
- * interface, the {@link IDetachable#detach()} method will be called at the end
- * of request.
  * 
- * <p>
  * Example:
  * 
  * <pre>
- *           class UsersProvider implements IDataProvider() {
- *             
- *             Iterator iterator(int first, int count) {
- *               ((MyApplication)Application.get()).getUserDao().iterator(first, count);
- *             }
- *             
- *             int size() {
- *               ((MyApplication)Application.get()).getUserDao().getCount();
- *             }
- *             
- *             IModel model(Object object) {
- *               return new DetachableUserModel((User)object);
- *             }
+ *         class UsersProvider implements IDataProvider<User>() {
+ *           
+ *           Iterator<User> iterator(int first, int count) {
+ *             MyApplication.get().getUserDao().iterator(first, count);
  *           }
+ *           
+ *           int size() {
+ *             MyApplication.get().getUserDao().getCount();
+ *           }
+ *           
+ *           IModel<User> model(User user) {
+ *             return new DetachableUserModel<User>(user);
+ *           }
+ *         }
  * </pre>
  * 
+ * You can use the {@link IDetachable#detach()} method for cleaning up your
+ * IDataProvider instance. So that you can do one query that returns both
+ * the size and the values if your dataset is small enough the be able to
+ * do that.
+ * 
+ * @see IDetachable
  * @see DataViewBase
  * @see DataView
  * @see GridView

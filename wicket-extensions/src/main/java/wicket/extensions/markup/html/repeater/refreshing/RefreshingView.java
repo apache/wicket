@@ -18,6 +18,7 @@ package wicket.extensions.markup.html.repeater.refreshing;
 
 import java.util.Iterator;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.util.ModelIteratorAdapter;
@@ -49,8 +50,11 @@ import wicket.version.undo.Change;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T> 
+ * 			Type of model object this component holds 
+ * 
  */
-public abstract class RefreshingView extends RepeatingView
+public abstract class RefreshingView<T> extends RepeatingView<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -60,12 +64,12 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @see IItemReuseStrategy
 	 */
-	private IItemReuseStrategy itemReuseStrategy;
+	private IItemReuseStrategy<T> itemReuseStrategy;
 
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
-	public RefreshingView(MarkupContainer parent, final String id)
+	public RefreshingView(MarkupContainer<?> parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -73,7 +77,7 @@ public abstract class RefreshingView extends RepeatingView
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public RefreshingView(MarkupContainer parent, final String id, IModel model)
+	public RefreshingView(MarkupContainer<?> parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}
@@ -90,21 +94,21 @@ public abstract class RefreshingView extends RepeatingView
 		if (isVisibleInHierarchy())
 		{
 
-			IItemFactory itemFactory = new IItemFactory()
+			IItemFactory<T> itemFactory = new IItemFactory<T>()
 			{
 
-				public Item newItem(MarkupContainer parent, int index, IModel model)
+				public Item<T> newItem(MarkupContainer<?> parent, int index, IModel<T> model)
 				{
 					String id = RefreshingView.this.newChildId();
-					Item item = RefreshingView.this.newItem(parent, id, index, model);
+					Item<T> item = RefreshingView.this.newItem(parent, id, index, model);
 					RefreshingView.this.populateItem(item);
 					return item;
 				}
 
 			};
 
-			Iterator models = getItemModels();
-			Iterator items = getItemReuseStrategy().getItems(RefreshingView.this, itemFactory, models, getItems());
+			Iterator<IModel<T>> models = getItemModels();
+			Iterator<Item<T>> items = getItemReuseStrategy().getItems(RefreshingView.this, itemFactory, models, getItems());
 			removeAll();
 			addItems(items);
 		}
@@ -116,7 +120,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @return an iterator over models for items that will be added to this view
 	 */
-	protected abstract Iterator getItemModels();
+	protected abstract Iterator<IModel<T>> getItemModels();
 
 	/**
 	 * Populate the given Item container.
@@ -139,7 +143,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param item
 	 *            The item to populate
 	 */
-	protected abstract void populateItem(final Item item);
+	protected abstract void populateItem(final Item<T> item);
 
 	/**
 	 * Factory method for Item container. Item containers are simple
@@ -157,17 +161,34 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item newItem(MarkupContainer parent, final String id, int index, final IModel model)
+	protected Item<T> newItem(MarkupContainer<?> parent, final String id, int index, final IModel<T> model)
 	{
-		return new Item(parent, id, index, model);
+		return new Item<T>(parent, id, index, model);
 	}
 
 	/**
 	 * @return iterator over item instances that exist as children of this view
 	 */
-	public Iterator getItems()
+	public Iterator<Item<T>> getItems()
 	{
-		return iterator();
+		final Iterator<Component> iterator = iterator();
+		return new Iterator<Item<T>>()
+		{
+			public boolean hasNext()
+			{
+				return iterator.hasNext();
+			}
+
+			public Item<T> next()
+			{
+				return (Item<T>)iterator.next();
+			}
+
+			public void remove()
+			{
+				iterator.remove();
+			}
+		};
 	}
 
 	/**
@@ -177,11 +198,11 @@ public abstract class RefreshingView extends RepeatingView
 	 * @param items
 	 *            item instances to be added to this view
 	 */
-	protected void addItems(Iterator items)
+	protected void addItems(Iterator<Item<T>> items)
 	{
 		while (items.hasNext())
 		{
-			((Item)items.next()).reAttach();
+			items.next().reAttach();
 		}
 	}
 
@@ -195,7 +216,7 @@ public abstract class RefreshingView extends RepeatingView
 	 * 
 	 * @see DefaultItemReuseStrategy
 	 */
-	public IItemReuseStrategy getItemReuseStrategy()
+	public IItemReuseStrategy<T> getItemReuseStrategy()
 	{
 		if (itemReuseStrategy == null)
 		{
@@ -214,7 +235,7 @@ public abstract class RefreshingView extends RepeatingView
 	 *            item reuse strategy
 	 * @return this for chaining
 	 */
-	public RefreshingView setItemReuseStrategy(IItemReuseStrategy strategy)
+	public RefreshingView<T> setItemReuseStrategy(IItemReuseStrategy<T> strategy)
 	{
 		if (strategy == null)
 		{
@@ -229,7 +250,7 @@ public abstract class RefreshingView extends RepeatingView
 				{
 					private static final long serialVersionUID = 1L;
 
-					private final IItemReuseStrategy old = itemReuseStrategy;
+					private final IItemReuseStrategy<T> old = itemReuseStrategy;
 
 					@Override
 					public void undo()

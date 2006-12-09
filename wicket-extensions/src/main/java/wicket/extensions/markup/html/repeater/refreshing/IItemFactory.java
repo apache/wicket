@@ -27,8 +27,10 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T> 
+ * 			Type of model object this component holds 
  */
-public interface IItemFactory
+public interface IItemFactory<T>
 {
 	/**
 	 * Factory method for instances of Item. Each generated item must have a
@@ -42,6 +44,6 @@ public interface IItemFactory
 	 * 
 	 * @return DataItem new DataItem
 	 */
-	Item newItem(MarkupContainer parent, int index, IModel model);
+	Item<T> newItem(MarkupContainer<?> parent, int index, IModel<T> model);
 
 }

@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import wicket.MarkupContainer;
+import wicket.model.IModel;
 
 /**
  * Interface for item reuse strategies.
@@ -30,9 +31,11 @@ import wicket.MarkupContainer;
  * </p>
  * 
  * @author Igor Vaynberg (ivaynberg)
- * 
+ *
+ * @param <T> 
+ * 			Type of model object this component holds 
  */
-public interface IItemReuseStrategy extends Serializable
+public interface IItemReuseStrategy<T> extends Serializable
 {
 
 	/**
@@ -52,6 +55,6 @@ public interface IItemReuseStrategy extends Serializable
 	 * @return iterator over items that will be added after all the old items
 	 *         are moved.
 	 */
-	Iterator getItems(MarkupContainer parent, IItemFactory factory, Iterator newModels,
-			Iterator existingItems);
+	Iterator<Item<T>> getItems(MarkupContainer<?> parent, IItemFactory<T> factory, Iterator<IModel<T>> newModels,
+			Iterator<Item<T>> existingItems);
 }

@@ -29,8 +29,10 @@ import wicket.model.IModel;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T> 
+ * 			Type of model object this component holds 
  */
-public class DefaultItemReuseStrategy implements IItemReuseStrategy
+public class DefaultItemReuseStrategy<T> implements IItemReuseStrategy<T>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -39,7 +41,7 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 	/**
 	 * @return static instance of this strategy
 	 */
-	public static IItemReuseStrategy getInstance()
+	public static <X> IItemReuseStrategy<X> getInstance()
 	{
 		return instance;
 	}
@@ -48,10 +50,10 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 	 * @see wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy#getItems(MarkupContainer, wicket.extensions.markup.html.repeater.refreshing.IItemFactory,
 	 *      java.util.Iterator, java.util.Iterator)
 	 */
-	public Iterator getItems(final MarkupContainer parent, final IItemFactory factory, final Iterator newModels,
-			final Iterator existingItems)
+	public Iterator<Item<T>> getItems(final MarkupContainer<?> parent, final IItemFactory<T> factory, final Iterator<IModel<T>> newModels,
+			final Iterator<Item<T>> existingItems)
 	{
-		return new Iterator()
+		return new Iterator<Item<T>>()
 		{
 			private int index = 0;
 
@@ -65,11 +67,11 @@ public class DefaultItemReuseStrategy implements IItemReuseStrategy
 				return newModels.hasNext();
 			}
 
-			public Object next()
+			public Item<T> next()
 			{
-				final IModel model = (IModel)newModels.next();
+				final IModel<T> model = newModels.next();
 
-				Item item = factory.newItem(parent, index, model);
+				Item<T> item = factory.newItem(parent, index, model);
 				index++;
 
 				return item;

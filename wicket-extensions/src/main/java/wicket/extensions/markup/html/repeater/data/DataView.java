@@ -61,8 +61,10 @@ import wicket.markup.html.navigation.paging.IPageable;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
+ * @param <T> 
+ * 			Type of model object this component holds 
  */
-public abstract class DataView extends DataViewBase
+public abstract class DataView<T> extends DataViewBase<T>
 {
 
 	/**
@@ -73,7 +75,7 @@ public abstract class DataView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataView(MarkupContainer parent, final String id, IDataProvider dataProvider)
+	public DataView(MarkupContainer<?> parent, final String id, IDataProvider<T> dataProvider)
 	{
 		super(parent, id, dataProvider);
 	}
@@ -88,7 +90,7 @@ public abstract class DataView extends DataViewBase
 	 * @param itemsPerPage
 	 *            items per page
 	 */
-	public DataView(MarkupContainer parent, final String id, IDataProvider dataProvider,
+	public DataView(MarkupContainer<?> parent, final String id, IDataProvider<T> dataProvider,
 			int itemsPerPage)
 	{
 		super(parent, id, dataProvider);
@@ -117,7 +119,7 @@ public abstract class DataView extends DataViewBase
 	/**
 	 * @return data provider
 	 */
-	public IDataProvider getDataProvider()
+	public IDataProvider<T> getDataProvider()
 	{
 		return internalGetDataProvider();
 	}

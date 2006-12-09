@@ -22,6 +22,7 @@ import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.pageable.AbstractPageableView;
 import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.navigation.paging.IPageable;
+import wicket.model.IModel;
 
 /**
  * Base class for data views.
@@ -36,10 +37,13 @@ import wicket.markup.html.navigation.paging.IPageable;
  * @see RefreshingView
  * 
  * @author Igor Vaynberg (ivaynberg)
+ * 
+ * @param <T> 
+ * 			Type of model object this component holds 
  */
-public abstract class DataViewBase extends AbstractPageableView
+public abstract class DataViewBase<T> extends AbstractPageableView<T>
 {
-	private IDataProvider dataProvider;
+	private IDataProvider<T> dataProvider;
 
 	/**
 	 * @param parent
@@ -49,7 +53,7 @@ public abstract class DataViewBase extends AbstractPageableView
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public DataViewBase(MarkupContainer parent, final String id, IDataProvider dataProvider)
+	public DataViewBase(MarkupContainer<?> parent, final String id, IDataProvider<T> dataProvider)
 	{
 		super(parent, id);
 		if (dataProvider == null)
@@ -62,16 +66,16 @@ public abstract class DataViewBase extends AbstractPageableView
 	/**
 	 * @return data provider associated with this view
 	 */
-	protected final IDataProvider internalGetDataProvider()
+	protected final IDataProvider<T> internalGetDataProvider()
 	{
 		return dataProvider;
 	}
 
 
 	@Override
-	protected final Iterator getItemModels(int offset, int count)
+	protected final Iterator<IModel<T>> getItemModels(int offset, int count)
 	{
-		return new ModelIterator(internalGetDataProvider(), offset, count);
+		return new ModelIterator<T>(internalGetDataProvider(), offset, count);
 	}
 
 	/**
@@ -80,11 +84,13 @@ public abstract class DataViewBase extends AbstractPageableView
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 * 
+	 * @param <T> 
+	 * 
 	 */
-	private static final class ModelIterator implements Iterator
+	private static final class ModelIterator<T> implements Iterator<IModel<T>>
 	{
-		private Iterator items;
-		private IDataProvider dataProvider;
+		private Iterator<T> items;
+		private IDataProvider<T> dataProvider;
 		private int max;
 		private int index;
 
@@ -98,7 +104,7 @@ public abstract class DataViewBase extends AbstractPageableView
 		 * @param count
 		 *            max number of items to return
 		 */
-		public ModelIterator(IDataProvider dataProvider, int offset, int count)
+		public ModelIterator(IDataProvider<T> dataProvider, int offset, int count)
 		{
 			this.items = dataProvider.iterator(offset, count);
 			this.dataProvider = dataProvider;
@@ -124,7 +130,7 @@ public abstract class DataViewBase extends AbstractPageableView
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public IModel<T> next()
 		{
 			index++;
 			return dataProvider.model(items.next());

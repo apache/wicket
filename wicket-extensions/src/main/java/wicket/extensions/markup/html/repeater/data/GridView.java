@@ -18,6 +18,7 @@ package wicket.extensions.markup.html.repeater.data;
 
 import java.util.Iterator;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.refreshing.Item;
@@ -50,8 +51,10 @@ import wicket.version.undo.Change;
  * @author Igor Vaynberg
  * @author Christian Essl
  * 
+ * @param <T> 
+ * 			Type of model object this component holds 
  */
-public abstract class GridView extends DataViewBase
+public abstract class GridView<T> extends DataViewBase<T>
 {
 
 	private int columns = 1;
@@ -66,7 +69,7 @@ public abstract class GridView extends DataViewBase
 	 * @param dataProvider
 	 *            data provider
 	 */
-	public GridView(MarkupContainer parent, final String id, IDataProvider dataProvider)
+	public GridView(MarkupContainer<?> parent, final String id, IDataProvider<T> dataProvider)
 	{
 		super(parent, id, dataProvider);
 	}
@@ -87,7 +90,7 @@ public abstract class GridView extends DataViewBase
 	 *            number of colums
 	 * @return this for chaining
 	 */
-	public GridView setColumns(int cols)
+	public GridView<T> setColumns(int cols)
 	{
 		if (cols < 1)
 		{
@@ -139,7 +142,7 @@ public abstract class GridView extends DataViewBase
 	 *            number of rows
 	 * @return this for chaining
 	 */
-	public GridView setRows(int rows)
+	public GridView<T> setRows(int rows)
 	{
 		if (rows < 1)
 		{
@@ -201,7 +204,7 @@ public abstract class GridView extends DataViewBase
 
 
 	@Override
-	protected void addItems(Iterator items)
+	protected void addItems(Iterator<Item<T>> items)
 	{
 		if (items.hasNext())
 		{
@@ -212,16 +215,16 @@ public abstract class GridView extends DataViewBase
 			do
 			{
 				// Build a row
-				Item rowItem = newRowItem(newChildId(), row);
-				new RepeatingView(rowItem, "cols");
+				Item<T> rowItem = newRowItem(newChildId(), row);
+				new RepeatingView<T>(rowItem, "cols");
 
 				// Populate the row
 				for (int index = 0; index < cols; index++)
 				{
-					final Item cellItem;
+					final Item<T> cellItem;
 					if (items.hasNext())
 					{
-						cellItem = (Item)items.next();
+						cellItem = items.next();
 					}
 					else
 					{
@@ -242,7 +245,7 @@ public abstract class GridView extends DataViewBase
 	/**
 	 * @return data provider
 	 */
-	public IDataProvider getDataProvider()
+	public IDataProvider<T> getDataProvider()
 	{
 		return internalGetDataProvider();
 	}
@@ -251,9 +254,9 @@ public abstract class GridView extends DataViewBase
 	 * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#getItems()
 	 */
 	@Override
-	public Iterator getItems()
+	public Iterator<Item<T>> getItems()
 	{
-		return new ItemsIterator(iterator());
+		return new ItemsIterator<T>(iterator());
 	}
 
 	/**
@@ -263,7 +266,7 @@ public abstract class GridView extends DataViewBase
 	 * @param item
 	 *            Item object
 	 */
-	abstract protected void populateEmptyItem(Item item);
+	abstract protected void populateEmptyItem(Item<T> item);
 
 	/**
 	 * Create a Item which represents an empty cell (there is no model for it in
@@ -273,9 +276,9 @@ public abstract class GridView extends DataViewBase
 	 * @param index
 	 * @return created item
 	 */
-	protected Item newEmptyItem(final String id, int index)
+	protected Item<T> newEmptyItem(final String id, int index)
 	{
-		return new Item(this, id, index, null);
+		return new Item<T>(this, id, index, null);
 	}
 
 	/**
@@ -285,29 +288,31 @@ public abstract class GridView extends DataViewBase
 	 * @param index
 	 * @return created Item
 	 */
-	protected Item newRowItem(final String id, int index)
+	protected Item<T> newRowItem(final String id, int index)
 	{
-		return new Item(this, id, index, null);
+		return new Item<T>(this, id, index, null);
 	}
 
 	/**
 	 * Iterator that iterats over all items in the cells
 	 * 
 	 * @author igor
-	 * 
+	 *
+	 * @param <T> 
+	 * 		Type of model object this component holds 
 	 */
-	private static class ItemsIterator implements Iterator
+	private static class ItemsIterator<T> implements Iterator<Item<T>>
 	{
-		private Iterator rows;
-		private Iterator cells;
+		private Iterator<Component> rows;
+		private Iterator<Item<T>> cells;
 
-		private Item next;
+		private Item<T> next;
 
 		/**
 		 * @param rows
 		 *            iterator over child row views
 		 */
-		public ItemsIterator(Iterator rows)
+		public ItemsIterator(Iterator<Component> rows)
 		{
 			this.rows = rows;
 			findNext();
@@ -332,9 +337,9 @@ public abstract class GridView extends DataViewBase
 		/**
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next()
+		public Item<T> next()
 		{
-			Item item = next;
+			Item<T> item = next;
 			findNext();
 			return item;
 		}
@@ -345,16 +350,16 @@ public abstract class GridView extends DataViewBase
 
 			if (cells != null && cells.hasNext())
 			{
-				next = (Item)cells.next();
+				next = cells.next();
 			}
 
 			while (rows.hasNext())
 			{
-				MarkupContainer row = (MarkupContainer)rows.next();
+				MarkupContainer<?> row = (MarkupContainer)rows.next();
 				cells = ((MarkupContainer)row.iterator().next()).iterator();
 				if (cells.hasNext())
 				{
-					next = (Item)cells.next();
+					next = cells.next();
 					break;
 				}
 			}
