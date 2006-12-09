@@ -88,13 +88,13 @@ public class ContactsDatabase
 	 * @param sortAsc
 	 * @return list of contacts
 	 */
-	public List find(int first, int count, String sortProperty, boolean sortAsc)
+	public List<Contact> find(int first, int count, String sortProperty, boolean sortAsc)
 	{
-		List sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
+		List<Contact> sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
 		return sublist;
 	}
 
-	protected List getIndex(String prop, boolean asc)
+	protected List<Contact> getIndex(String prop, boolean asc)
 	{
 		if (prop == null)
 		{

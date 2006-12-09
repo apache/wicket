@@ -44,12 +44,12 @@ public class SortingPage extends BasePage
 	public SortingPage()
 	{
 		SortableContactDataProvider dp = new SortableContactDataProvider();
-		final DataView dataView = new DataView(this, "sorting", dp)
+		final DataView<Contact> dataView = new DataView<Contact>(this, "sorting", dp)
 		{
 			@Override
-			protected void populateItem(final Item item)
+			protected void populateItem(final Item<Contact> item)
 			{
-				Contact contact = (Contact)item.getModelObject();
+				Contact contact = item.getModelObject();
 				new ActionPanel(item, "actions", item.getModel());
 				new Label(item, "contactid", String.valueOf(contact.getId()));
 				new Label(item, "firstname", contact.getFirstName());
