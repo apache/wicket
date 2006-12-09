@@ -71,4 +71,11 @@ public class ContactDataProvider implements IDataProvider
 		return new DetachableContactModel((Contact)object);
 	}
 
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+	}
+
 }
