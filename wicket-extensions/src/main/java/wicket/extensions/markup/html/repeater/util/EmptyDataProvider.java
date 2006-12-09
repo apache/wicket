@@ -65,4 +65,11 @@ public class EmptyDataProvider implements IDataProvider
 	{
 		return null;
 	}
+
+	/**
+	 * @see wicket.model.IDetachable#detach()
+	 */
+	public void detach()
+	{
+	}
 }
