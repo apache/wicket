@@ -345,9 +345,9 @@ public class FormTester
 		this.wicketTester.setupRequestAndResponse();
 
 		// fill blank String for Text Component.
-		workingForm.visitFormComponents(new FormComponent.IVisitor()
+		workingForm.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(FormComponent formComponent)
+			public void onFormComponent(FormComponent formComponent)
 			{
 				// do nothing for invisible component
 				if (!formComponent.isVisibleInHierarchy())

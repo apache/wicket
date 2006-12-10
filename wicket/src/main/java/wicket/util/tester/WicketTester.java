@@ -1118,9 +1118,9 @@ public class WicketTester extends MockWebApplication
 		String failMessage = "No form attached to the submitlink.";
 		Assert.assertNotNull(failMessage, form);
 
-		form.visitFormComponents(new FormComponent.IVisitor()
+		form.visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(FormComponent formComponent)
+			public void onFormComponent(FormComponent formComponent)
 			{
 				if (!(formComponent instanceof Button) && !(formComponent instanceof RadioGroup)
 						&& !(formComponent instanceof CheckGroup))
