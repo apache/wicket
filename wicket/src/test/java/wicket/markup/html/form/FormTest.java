@@ -16,19 +16,22 @@
  */
 package wicket.markup.html.form;
 
-import junit.framework.TestCase;
 import wicket.Component;
+import wicket.Page;
+import wicket.WicketTestCase;
 
 /**
  * @author Pekka Enberg
+ * @author Martijn Dashorst
  */
-public class FormTest extends TestCase
+public class FormTest extends WicketTestCase
 {
 	private FormComponent.IVisitor visitor;
 
 	@Override
 	protected void setUp() throws Exception
 	{
+		super.setUp();
 		visitor = new Form.ValidationVisitor()
 		{
 			@Override
@@ -63,5 +66,10 @@ public class FormTest extends TestCase
 				return processChildren;
 			}
 		}));
+	}
+	
+	public void testFormMethodGet() throws Exception 
+	{
+		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
 	}
 }

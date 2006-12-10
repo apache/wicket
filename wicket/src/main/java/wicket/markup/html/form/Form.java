@@ -151,6 +151,16 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	public static final String HIDDEN_FIELD_WICKET_STATE = "ws";
 
 	/**
+	 * Constant for specifying how a form is submitted, in this case using post.
+	 */
+	public static final String METHOD_POST = "post";
+	
+	/**
+	 * Constant for specifying how a form is submitted, in this case using get.
+	 */
+	public static final String METHOD_GET = "get";
+
+	/**
 	 * Visitor used for validation
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
@@ -249,6 +259,16 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		super(parent, id, model);
 	}
 
+	/**
+	 * Gets the method used to submit the form. Defaults to 'post'. Override this
+	 * if you have a requirement to alter this behavior.
+	 *
+	 * @return the method used to submit the form.
+	 */
+	protected String getMethod()
+	{
+		return METHOD_POST;
+	}
 
 	@Override
 	protected boolean getStatelessHint()
@@ -854,12 +874,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			checkComponentTag(tag, "form");
 
 			// If the javascriptid is already generated then use that on even it
-			// was
-			// before the first render. Bbecause there could be a component
-			// which
-			// already uses it to submit the forum. This should be fixed when we
-			// pre parse the markup so that we know the id is at front.
-			tag.put("method", "post");
+			// was before the first render. Because there could be a component
+			// which already uses it to submit the forum. This should be fixed 
+			// when we pre parse the markup so that we know the id is at front.
+
+			tag.put("method", getMethod());
 			tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&",
 					"&amp;"));
 
