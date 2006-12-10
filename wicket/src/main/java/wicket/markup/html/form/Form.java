@@ -125,22 +125,43 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
 public class Form extends WebMarkupContainer implements IFormSubmitListener
 {
 	/**
+	 * Constant for specifying how a form is submitted, in this case using post.
+	 */
+	public static final String METHOD_POST = "post";
+	
+	/**
+	 * Constant for specifying how a form is submitted, in this case using get.
+	 */
+	public static final String METHOD_GET = "get";
+
+	/**
 	 * Visitor used for validation
 	 * 
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
-	private static abstract class ValidationVisitor implements FormComponent.IVisitor
+	static abstract class ValidationVisitor implements FormComponent.IVisitor
 	{
-
 		/**
-		 * @see wicket.markup.html.form.FormComponent.IVisitor#formComponent(wicket.markup.html.form.FormComponent)
+		 * @see wicket.markup.html.form.FormComponent.IVisitor#formComponent(wicket.markup.html.form.IFormProcessingListener)
 		 */
-		public void formComponent(FormComponent formComponent)
+		public Object formComponent(IFormProcessingListener component)
 		{
-			if (formComponent.isVisibleInHierarchy() && formComponent.isValid()
-					&& formComponent.isEnabled() && formComponent.isEnableAllowed())
+			if (component instanceof FormComponent)
 			{
-				validate(formComponent);
+				FormComponent formComponent = (FormComponent)component;
+				if (formComponent.isVisibleInHierarchy() && formComponent.isValid()
+						&& formComponent.isEnabled() && formComponent.isEnableAllowed())
+				{
+					validate(formComponent);
+				}
+			}
+			if (component.processChildren())
+			{
+				return Component.IVisitor.CONTINUE_TRAVERSAL;
+			}
+			else
+			{
+				return Component.IVisitor.CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
 			}
 		}
 
@@ -150,7 +171,6 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		 * @param formComponent
 		 */
 		public abstract void validate(FormComponent formComponent);
-
 	}
 
 	private static final String UPLOAD_TOO_LARGE_RESOURCE_KEY = "uploadTooLarge";
@@ -212,6 +232,17 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		super(id, model);
 	}
 
+	/**
+	 * Gets the method used to submit the form. Defaults to 'post'. Override this
+	 * if you have a requirement to alter this behavior.
+	 *
+	 * @return the method used to submit the form.
+	 */
+	protected String getMethod()
+	{
+		return METHOD_POST;
+	}
+
 	protected boolean getStatelessHint()
 	{
 		return false;
@@ -252,9 +283,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	public final void loadPersistentFormComponentValues()
 	{
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				// Component must implement persister interface and
 				// persistence for that component must be enabled.
@@ -364,9 +395,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		final IValuePersister persister = getValuePersister();
 
 		// Search for FormComponents like TextField etc.
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -434,9 +465,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 		super.setVersioned(isVersioned);
 
 		// Search for FormComponents like TextField etc.
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				formComponent.setVersioned(isVersioned);
 			}
@@ -652,9 +683,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void internalOnModelChanged()
 	{
 		// Visit all the form components and validate each
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				// If form component is using form model
 				if (formComponent.sameRootModel(Form.this))
@@ -671,9 +702,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected final void markFormComponentsInvalid()
 	{
 		// call invalidate methods of all nested form components
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -690,9 +721,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected final void markFormComponentsValid()
 	{
 		// call invalidate methods of all nested form components
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -787,7 +818,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 				tag.put("id", javascriptId);
 			}
 		}
-		tag.put("method", "post");
+		tag.put("method", getMethod());
 		tag.put("action", Strings.replaceAll(urlFor(IFormSubmitListener.INTERFACE), "&", "&amp;"));
 		if (multiPart)
 		{
@@ -819,9 +850,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	protected void onRender(final MarkupStream markupStream)
 	{
 		// Force multi-part on if any child form component is multi-part
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(FormComponent formComponent)
+			public void onFormComponent(FormComponent formComponent)
 			{
 				if (formComponent.isVisible() && formComponent.isMultiPart())
 				{
@@ -894,18 +925,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void updateFormComponentModels()
 	{
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new ValidationVisitor() 
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void validate(FormComponent formComponent)
 			{
-				// Only update the component when it is visible and valid
-				if (formComponent.isVisibleInHierarchy() && formComponent.isEnabled()
-						&& formComponent.isValid() && formComponent.isEnableAllowed())
-				{
-					// Potentially update the model
-					formComponent.updateModel();
-				}
-			}
+				// Potentially update the model
+				formComponent.updateModel();
+			}		
 		});
 	}
 
@@ -918,9 +944,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	public final void clearInput()
 	{
 		// Visit all the (visible) form components and clear the input on each.
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -1142,9 +1168,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 			final IValuePersister persister = getValuePersister();
 
 			// Search for FormComponent children. Ignore all other
-			visitFormComponents(new FormComponent.IVisitor()
+			visitFormComponents(new FormComponent.AbstractVisitor()
 			{
-				public void formComponent(final FormComponent formComponent)
+				public void onFormComponent(final FormComponent formComponent)
 				{
 					if (formComponent.isVisibleInHierarchy())
 					{
@@ -1203,9 +1229,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	private void inputChanged()
 	{
-		visitFormComponents(new FormComponent.IVisitor()
+		visitFormComponents(new FormComponent.AbstractVisitor()
 		{
-			public void formComponent(final FormComponent formComponent)
+			public void onFormComponent(final FormComponent formComponent)
 			{
 				if (formComponent.isVisibleInHierarchy())
 				{
@@ -1470,6 +1496,4 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	{
 		error(new MapVariableInterpolator(error, args).toString());
 	}
-
-
 }
