@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id: BasePage.java 460884 2006-06-02 15:15:55 -0700 (Fri, 02 Jun 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-06-02 15:15:55 -0700 (Fri, 02
+ * Jun 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -23,6 +24,7 @@ import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
+import wicket.version.undo.Change;
 
 /**
  * Base page for component demo pages.
@@ -82,4 +84,26 @@ public class BasePage extends ExamplePage
 			};
 		}
 	}
+
+	/**
+	 * @param selected
+	 *            the selected to set
+	 */
+	public void setSelected(Contact selected)
+	{
+		addStateChange(new Change()
+		{
+			private final Contact old = BasePage.this.selected;
+
+			@Override
+			public void undo()
+			{
+				BasePage.this.selected = old;
+			}
+
+		});
+		this.selected = selected;
+	}
+
+
 }
