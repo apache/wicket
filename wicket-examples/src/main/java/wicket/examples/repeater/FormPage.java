@@ -125,8 +125,7 @@ public class FormPage extends BasePage
 				}
 			});
 
-			SubmitLink removeLink;
-			add(removeLink = new SubmitLink("remove", form)
+			SubmitLink removeLink = new SubmitLink("remove", form)
 			{
 				public void onSubmit()
 				{
@@ -134,8 +133,9 @@ public class FormPage extends BasePage
 					info("Removed contact " + contact);
 					DatabaseLocator.getDatabase().delete(contact);
 				}
-			});
+			};
 			removeLink.setDefaultFormProcessing(false);
+			add(removeLink);
 		}
 	}
 }
