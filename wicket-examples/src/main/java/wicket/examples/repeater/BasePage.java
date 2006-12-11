@@ -23,6 +23,7 @@ import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
+import wicket.version.undo.Change;
 
 /**
  * Base page for component demo pages.
@@ -88,6 +89,16 @@ public class BasePage extends ExamplePage
 
 	public void setSelected(Contact selected)
 	{
+		addStateChange(new Change()
+		{
+			private final Contact old = BasePage.this.selected;
+
+			public void undo()
+			{
+				BasePage.this.selected = old;
+
+			}
+		});
 		this.selected = selected;
 	}
 }
