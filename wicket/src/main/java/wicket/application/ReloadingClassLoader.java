@@ -19,9 +19,11 @@ package wicket.application;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -41,7 +43,7 @@ public class ReloadingClassLoader extends URLClassLoader
 	private static final Log log = LogFactory.getLog(ReloadingClassLoader.class);
 
 	private static final Set urls = new HashSet();
-	private static final Set patterns = new HashSet();
+	private static final List patterns = new ArrayList();
 
     protected boolean tryClassHere(String name) {
         // don't include classes in the java or javax.servlet package
@@ -73,6 +75,36 @@ public class ReloadingClassLoader extends URLClassLoader
 
         return tryHere;
     }
+
+	/**
+	 * Include a pattern
+	 * 
+	 * @param pattern the pattern to include
+	 */
+	public static void includePattern(String pattern)
+	{
+		patterns.add("+"+pattern);
+	}
+
+	/**
+	 * Exclude a pattern
+	 * 
+	 * @param pattern the pattern to exclude
+	 */
+	public static void excludePattern(String pattern)
+	{
+		patterns.add("-"+pattern);
+	}
+
+	/**
+	 * Returns the list of all configured inclusion or exclusion patterns
+	 * 
+	 * @return list of patterns as String
+	 */
+	public static Set getPatterns()
+	{
+		return urls;
+	}
 
 	/**
 	 * Add the location of a directory containing class files
@@ -132,6 +164,8 @@ public class ReloadingClassLoader extends URLClassLoader
 	static
 	{
 		addClassLoaderUrls(ReloadingClassLoader.class.getClassLoader());
+		excludePattern("wicket.*");
+		includePattern("wicket.examples.*");
 	}
 
 	/**
@@ -149,8 +183,7 @@ public class ReloadingClassLoader extends URLClassLoader
 		super(new URL[] {}, parent);
 		// probably doubles from this class, but just in case
 		addClassLoaderUrls(parent);
-		patterns.add("-wicket.*");
-		patterns.add("+wicket.examples.*");
+
 		for (Iterator i = urls.iterator(); i.hasNext();)
 		{
 			addURL((URL)i.next());
