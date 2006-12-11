@@ -19,6 +19,7 @@ package wicket.examples.repeater;
 
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.html.panel.Panel;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
@@ -38,6 +39,7 @@ public class BasePage extends ExamplePage
 	public BasePage()
 	{
 		add(new Label("selectedLabel", new PropertyModel(this, "selectedContactLabel")));
+		add(new FeedbackPanel("feedback"));
 	}
 
 	/**
@@ -77,5 +79,15 @@ public class BasePage extends ExamplePage
 				}
 			});
 		}
+	}
+
+	public Contact getSelected()
+	{
+		return selected;
+	}
+
+	public void setSelected(Contact selected)
+	{
+		this.selected = selected;
 	}
 }
