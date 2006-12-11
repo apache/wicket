@@ -18,6 +18,7 @@ package wicket;
 
 import java.io.OutputStream;
 import java.net.SocketException;
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -254,26 +255,32 @@ public abstract class Resource implements IResourceListener
 			boolean ignoreException = false;
 			while (throwable != null)
 			{
-				if (throwable instanceof SocketException)
+				if (throwable instanceof SQLException)
+				{
+					break; // leave false and quit loop
+				}
+				else if (throwable instanceof SocketException)
 				{
 					String message = throwable.getMessage();
 					ignoreException = message != null
-							&& (message.indexOf("Connection reset by peer") != -1 || message
-									.indexOf("Software caused connection abort") != -1);
+							&& (message.indexOf("Connection reset") != -1
+									|| message.indexOf("Broken pipe") != -1
+									|| message.indexOf("Socket closed") != -1
+									|| message.indexOf("connection abort") != -1);
 				}
 				else
 				{
 					ignoreException = throwable.getClass().getName()
 							.indexOf("ClientAbortException") >= 0;
-					if (ignoreException)
+				}
+				if (ignoreException)
+				{
+					if (log.isDebugEnabled())
 					{
-						if (log.isDebugEnabled())
-						{
-							log.debug("Socket exception ignored for sending Resource "
-									+ "response to client (ClientAbort)", e);
-						}
-						break;
+						log.debug("Socket exception ignored for sending Resource "
+								+ "response to client (ClientAbort)", e);
 					}
+					break;
 				}
 				throwable = throwable.getCause();
 			}
