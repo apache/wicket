@@ -184,8 +184,8 @@ public class PopupSettings implements Serializable
 			windowTitle = windowTitle.replace(':', '_');
 		}
 
-		StringBuffer script = new StringBuffer("window.open(" + target + ", '").append(windowTitle)
-				.append("', '");
+		StringBuffer script = new StringBuffer("var w = window.open(" + target + ", '").append(
+				windowTitle).append("', '");
 
 		script.append("scrollbars=").append(flagToString(SCROLLBARS));
 		script.append(",location=").append(flagToString(LOCATION_BAR));
@@ -214,7 +214,7 @@ public class PopupSettings implements Serializable
 			script.append(",top=").append(top);
 		}
 
-		script.append("'); ").append(" return false;");
+		script.append("'); if(w.blur) w.focus();").append(" return false;");
 
 		return script.toString();
 	}
