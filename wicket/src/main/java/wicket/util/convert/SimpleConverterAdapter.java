@@ -100,7 +100,7 @@ public abstract class SimpleConverterAdapter extends LocalizableAdapter implemen
 		{
 			return toObject((value instanceof String) ? (String)value : value.toString());
 		}
-		else if (value != null && (!value.getClass().isAssignableFrom(c)))
+		else if (value != null && (!c.isAssignableFrom(value.getClass())))
 		{
 			throw new IllegalArgumentException("unable to convert " + value + " to type " + c);
 		}
