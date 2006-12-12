@@ -1073,7 +1073,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	{
 		// first try a manually set id
 		String markupId = getMarkupAttributes().getString(MARKUP_ID_ATTR_NAME);
-		if (id == null)
+		if (markupId == null)
 		{
 			// then check the metadata
 			markupId = getMetaData(MARKUP_ID_KEY);
