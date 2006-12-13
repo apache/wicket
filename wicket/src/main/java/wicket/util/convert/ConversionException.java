@@ -43,7 +43,10 @@ public class ConversionException extends WicketRuntimeException
 	private Object sourceValue;
 
 	/** Target type for the failed conversion. */
-	private Class targetType;
+	private Class<?> targetType;
+	
+	/** Resource key for the message that should be displayed */
+	private String resourceKey;
 
 	/**
 	 * Construct exception with message.
@@ -125,7 +128,7 @@ public class ConversionException extends WicketRuntimeException
 	 * 
 	 * @return the target property type.
 	 */
-	public final Class getTargetType()
+	public final Class<?> getTargetType()
 	{
 		return targetType;
 	}
@@ -189,10 +192,36 @@ public class ConversionException extends WicketRuntimeException
 	 *            sets the target property type
 	 * @return This
 	 */
-	public final ConversionException setTargetType(Class targetType)
+	public final ConversionException setTargetType(Class<?> targetType)
 	{
 		this.targetType = targetType;
 		return this;
 	}
+
+
+	
+
+	/**
+	 * @return The resource key for the message that should be displayed
+	 */
+	public String getResourceKey()
+	{
+		return resourceKey;
+	}
+
+
+	/**
+	 * Set the resource key for the message that should be displayed.
+	 * 
+	 * @param resourceKey
+	 * 				sets the resource key
+	 * @return This
+	 */
+	public ConversionException setResourceKey(String resourceKey)
+	{
+		this.resourceKey = resourceKey;
+		return this;
+	}
+
 
 }

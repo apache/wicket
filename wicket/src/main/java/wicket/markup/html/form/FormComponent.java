@@ -632,6 +632,10 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			catch (ConversionException e)
 			{
 				ValidationError error = new ValidationError();
+				if (e.getResourceKey() != null)
+				{
+					error.addMessageKey(e.getResourceKey());
+				}
 				if (e.getTargetType() != null)
 				{
 					error.addMessageKey("ConversionError." + Classes.simpleName(e.getTargetType()));
@@ -664,6 +668,10 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			catch (ConversionException e)
 			{
 				ValidationError error = new ValidationError();
+				if (e.getResourceKey() != null)
+				{
+					error.addMessageKey(e.getResourceKey());
+				}
 				error.addMessageKey("TypeValidator." + Classes.simpleName(type));
 				error.addMessageKey("TypeValidator");
 
