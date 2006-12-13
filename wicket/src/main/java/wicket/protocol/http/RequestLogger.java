@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,9 +56,6 @@ import wicket.util.string.AppendingStringBuffer;
  * To view this information live see the {@link InspectorBug} that shows the
  * {@link InspectorPage} with the {@link LiveSessionsPage}
  * 
- * This class is still a bit experimental for the 1.2 release. Will improve
- * further in 2.0
- * 
  * @author jcompagner
  * 
  * @since 1.2
@@ -67,11 +65,11 @@ public class RequestLogger implements IRequestLogger
 	/** log. */
 	protected static Log log = LogFactory.getLog(RequestLogger.class);
 
-	
+
 	/**
-	 * This interface can be implemented in a custom session object.
-	 * to give an object that has more information for the current session 
-	 * (state of session).
+	 * This interface can be implemented in a custom session object. to give an
+	 * object that has more information for the current session (state of
+	 * session).
 	 * 
 	 * @author jcompagner
 	 */
@@ -79,10 +77,14 @@ public class RequestLogger implements IRequestLogger
 	{
 
 		/**
-		 * @return The custom object stored in the request loggers current request.
+		 * If you use the request logger log functionality then this object
+		 * should have a nice String representation. So make sure that the
+		 * toString() is implemented for the returned object.
+		 * 
+		 * @return The custom object stored in the request loggers current
+		 *         request.
 		 */
 		Object getSessionInfo();
-
 	}
 
 
@@ -92,12 +94,11 @@ public class RequestLogger implements IRequestLogger
 
 	private List<RequestData> requests;
 
-	private Map<String,SessionData> liveSessions;
+	private Map<String, SessionData> liveSessions;
 
 	private ThreadLocal<RequestData> currentRequest = new ThreadLocal<RequestData>();
 
-	private int active;
-
+	private AtomicInteger active;
 
 	/**
 	 * Construct.
@@ -111,10 +112,10 @@ public class RequestLogger implements IRequestLogger
 			/**
 			 * @see java.util.LinkedList#add(java.lang.Object)
 			 */
-			public void add(int index,RequestData o)
+			public void add(int index, RequestData o)
 			{
-				super.add(index,o);
-				if(size() > Application.get().getRequestLoggerSettings().getRequestsWindowSize())
+				super.add(index, o);
+				if (size() > Application.get().getRequestLoggerSettings().getRequestsWindowSize())
 				{
 					removeLast();
 				}
@@ -140,16 +141,25 @@ public class RequestLogger implements IRequestLogger
 	}
 
 	/**
+	 * @see wicket.protocol.http.IRequestLogger#getCurrentActiveRequestCount()
+	 */
+	public int getCurrentActiveRequestCount()
+	{
+		return active.get();
+	}
+
+	/**
 	 * @see wicket.protocol.http.IRequestLogger#getRequests()
 	 */
 	public List<RequestData> getRequests()
 	{
 		return Collections.unmodifiableList(requests);
 	}
-	
+
 	public SessionData[] getLiveSessions()
 	{
-		SessionData[] sessions = liveSessions.values().toArray(new SessionData[liveSessions.size()]);
+		SessionData[] sessions = liveSessions.values()
+				.toArray(new SessionData[liveSessions.size()]);
 		Arrays.sort(sessions);
 		return sessions;
 	}
@@ -168,25 +178,23 @@ public class RequestLogger implements IRequestLogger
 	public void sessionCreated(String sessionId)
 	{
 		liveSessions.put(sessionId, new SessionData(sessionId));
-		if(liveSessions.size() > peakSessions) peakSessions = liveSessions.size();
+		if (liveSessions.size() > peakSessions)
+			peakSessions = liveSessions.size();
 		totalCreatedSessions++;
 	}
 
 	RequestData getCurrentRequest()
 	{
 		RequestData rd = (RequestData)currentRequest.get();
-		if(rd == null)
+		if (rd == null)
 		{
 			rd = new RequestData();
 			currentRequest.set(rd);
-			synchronized (this)
-			{
-				active++;
-			}
+			active.incrementAndGet();
 		}
 		return rd;
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.IRequestLogger#requestTime(long)
 	 */
@@ -198,43 +206,49 @@ public class RequestLogger implements IRequestLogger
 			Session session = Session.get();
 			String sessionId = session.getId();
 			rd.setSessionId(sessionId);
-			
+
 			Object sessionInfo = getSessionInfo(session);
 			rd.setSessionInfo(sessionInfo);
-			
+
 			long sizeInBytes = -1;
-			if(Application.get().getRequestLoggerSettings().getRecordSessionSize())
+			if (Application.get().getRequestLoggerSettings().getRecordSessionSize())
 			{
 				sizeInBytes = session.getSizeInBytes();
 			}
 			rd.setSessionSize(sizeInBytes);
 			rd.setTimeTaken(timeTaken);
+			if(active.decrementAndGet() < 0)
+			{
+				// just a fail save, i don't think this can really happen.
+				active.set(0);
+			}
+
 			requests.add(0, rd);
 			currentRequest.set(null);
-			if(sessionId != null)
+			if (sessionId != null)
 			{
 				SessionData sd = liveSessions.get(sessionId);
-				if(sd == null)
+				if (sd == null)
 				{
 					// passivated session or logger only started after it.
 					sessionCreated(sessionId);
 					sd = liveSessions.get(sessionId);
-				}				
-				if(sd != null)
+				}
+				if (sd != null)
 				{
 					sd.setSessionInfo(sessionInfo);
 					sd.setSessionSize(sizeInBytes);
 					sd.addTimeTaken(timeTaken);
-					log(rd,sd);
+					log(rd, sd);
 				}
 				else
 				{
-					log(rd,null);
+					log(rd, null);
 				}
 			}
 			else
 			{
-				log(rd,null);
+				log(rd, null);
 			}
 		}
 	}
@@ -245,53 +259,53 @@ public class RequestLogger implements IRequestLogger
 	 */
 	private void log(RequestData rd, SessionData sd)
 	{
-		 if(log.isInfoEnabled())
-		 {
-			 AppendingStringBuffer asb = new AppendingStringBuffer(150);
-			 asb.append("time=");
-			 asb.append(rd.getTimeTaken());
-			 asb.append(",event=");
-			 asb.append(rd.getEventTarget());
-			 asb.append(",response=");
-			 asb.append(rd.getResponseTarget());
-			 if(rd.getSessionInfo() != null && !rd.getSessionInfo().equals(""))
-			 {
-				 asb.append(",sessioninfo=");
-				 asb.append(rd.getSessionInfo());
-			 }
-			 else
-			 {
-				 asb.append(",sessionid=");
-				 asb.append(rd.getSessionId());
-			 }
-			 asb.append(",sessionsize=");
-			 asb.append(rd.getSessionSize());
-			 if(sd != null)
-			 {
-				 asb.append(",sessionstart=");
-				 asb.append(sd.getStartDate());
-				 asb.append(",requests=");
-				 asb.append(sd.getNumberOfRequests());
-				 asb.append(",totaltime=");
-				 asb.append(sd.getTotalTimeTaken());
-			 }
-			 asb.append(",activerequests=");
-			 asb.append(rd.getActiveRequest());			 
-			 Runtime runtime = Runtime.getRuntime();
-			 long max = runtime.maxMemory()/1000000;
-			 long total = runtime.totalMemory()/1000000;
-			 long used = total - runtime.freeMemory()/1000000;
-			 asb.append(",maxmem=");
-			 asb.append(max);
-			 asb.append("M,total=");
-			 asb.append(total);
-			 asb.append("M,used=");
-			 asb.append(used);
-			 asb.append("M");
-			 log.info(asb.toString());
-		 }
+		if (log.isInfoEnabled())
+		{
+			AppendingStringBuffer asb = new AppendingStringBuffer(150);
+			asb.append("time=");
+			asb.append(rd.getTimeTaken());
+			asb.append(",event=");
+			asb.append(rd.getEventTarget());
+			asb.append(",response=");
+			asb.append(rd.getResponseTarget());
+			if (rd.getSessionInfo() != null && !rd.getSessionInfo().equals(""))
+			{
+				asb.append(",sessioninfo=");
+				asb.append(rd.getSessionInfo());
+			}
+			else
+			{
+				asb.append(",sessionid=");
+				asb.append(rd.getSessionId());
+			}
+			asb.append(",sessionsize=");
+			asb.append(rd.getSessionSize());
+			if (sd != null)
+			{
+				asb.append(",sessionstart=");
+				asb.append(sd.getStartDate());
+				asb.append(",requests=");
+				asb.append(sd.getNumberOfRequests());
+				asb.append(",totaltime=");
+				asb.append(sd.getTotalTimeTaken());
+			}
+			asb.append(",activerequests=");
+			asb.append(rd.getActiveRequest());
+			Runtime runtime = Runtime.getRuntime();
+			long max = runtime.maxMemory() / 1000000;
+			long total = runtime.totalMemory() / 1000000;
+			long used = total - runtime.freeMemory() / 1000000;
+			asb.append(",maxmem=");
+			asb.append(max);
+			asb.append("M,total=");
+			asb.append(total);
+			asb.append("M,used=");
+			asb.append(used);
+			asb.append("M");
+			log.info(asb.toString());
+		}
 	}
-	
+
 	private Object getSessionInfo(Session session)
 	{
 		if (session instanceof ISessionLogInfo)
@@ -309,7 +323,7 @@ public class RequestLogger implements IRequestLogger
 		RequestData rd = getCurrentRequest();
 		if (value instanceof Page)
 		{
-			Page page = (Page)value;
+			Page<?> page = (Page<?>)value;
 			rd.addEntry("Page removed, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if (value instanceof PageMap)
@@ -336,7 +350,7 @@ public class RequestLogger implements IRequestLogger
 		RequestData rd = getCurrentRequest();
 		if (value instanceof Page)
 		{
-			Page page = (Page)value;
+			Page<?> page = (Page<?>)value;
 			rd.addEntry("Page updated, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if (value instanceof PageMap)
@@ -368,7 +382,7 @@ public class RequestLogger implements IRequestLogger
 		}
 		else if (value instanceof Page)
 		{
-			Page page = (Page)value;
+			Page<?> page = (Page<?>)value;
 			rd.addEntry("Page created, id: " + page.getId() + ", class:" + page.getClass());
 		}
 		else if (value instanceof PageMap)
@@ -408,7 +422,7 @@ public class RequestLogger implements IRequestLogger
 	private String getRequestTargetString(IRequestTarget target)
 	{
 		AppendingStringBuffer sb = new AppendingStringBuffer(128);
-		if(target instanceof IListenerInterfaceRequestTarget)
+		if (target instanceof IListenerInterfaceRequestTarget)
 		{
 			IListenerInterfaceRequestTarget listener = (IListenerInterfaceRequestTarget)target;
 			sb.append("Interface[target:");
@@ -425,7 +439,7 @@ public class RequestLogger implements IRequestLogger
 			sb.append(listener.getRequestListenerInterface().getMethod().getName());
 			sb.append("]");
 		}
-		else if(target instanceof IPageRequestTarget)
+		else if (target instanceof IPageRequestTarget)
 		{
 			IPageRequestTarget pageRequestTarget = (IPageRequestTarget)target;
 			sb.append("PageRequest[");
@@ -434,14 +448,14 @@ public class RequestLogger implements IRequestLogger
 			sb.append(pageRequestTarget.getPage().getId());
 			sb.append(")]");
 		}
-		else if(target instanceof IBookmarkablePageRequestTarget)
+		else if (target instanceof IBookmarkablePageRequestTarget)
 		{
 			IBookmarkablePageRequestTarget pageRequestTarget = (IBookmarkablePageRequestTarget)target;
 			sb.append("BookmarkablePage[");
 			sb.append(pageRequestTarget.getPageClass().getName());
 			sb.append("]");
 		}
-		else if(target instanceof ISharedResourceRequestTarget)
+		else if (target instanceof ISharedResourceRequestTarget)
 		{
 			ISharedResourceRequestTarget sharedResourceTarget = (ISharedResourceRequestTarget)target;
 			sb.append("SharedResource[");
@@ -454,7 +468,7 @@ public class RequestLogger implements IRequestLogger
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * This class hold the information one request of a session has.
 	 * 
@@ -463,7 +477,7 @@ public class RequestLogger implements IRequestLogger
 	public static class SessionData implements Serializable, Comparable<SessionData>
 	{
 		private static final long serialVersionUID = 1L;
-		
+
 		private String sessionId;
 		private long startDate;
 		private long lastActive;
@@ -474,15 +488,16 @@ public class RequestLogger implements IRequestLogger
 
 		/**
 		 * Construct.
+		 * 
 		 * @param sessionId
 		 */
 		public SessionData(String sessionId)
 		{
 			this.sessionId = sessionId;
-			this.startDate = System.currentTimeMillis(); 
+			this.startDate = System.currentTimeMillis();
 			this.numberOfRequests = 1;
 		}
-		
+
 		/**
 		 * @return The last active date.
 		 */
@@ -490,7 +505,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			return new Date(lastActive);
 		}
-		
+
 		/**
 		 * @return The start date of this session
 		 */
@@ -498,7 +513,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			return new Date(startDate);
 		}
-		
+
 		/**
 		 * @return The number of request for this session
 		 */
@@ -506,7 +521,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			return numberOfRequests;
 		}
-		
+
 		/**
 		 * @return Returns the session size.
 		 */
@@ -514,7 +529,7 @@ public class RequestLogger implements IRequestLogger
 		{
 			return sessionSize;
 		}
-		
+
 		/**
 		 * @return Returns the total time this session has spent.
 		 */
@@ -522,15 +537,16 @@ public class RequestLogger implements IRequestLogger
 		{
 			return totalTimeTaken;
 		}
-		
+
 		/**
-		 * @return The session info object given by the {@link ISessionLogInfo#getSessionInfo()} session method.
+		 * @return The session info object given by the
+		 *         {@link ISessionLogInfo#getSessionInfo()} session method.
 		 */
 		public Object getSessionInfo()
 		{
 			return sessionInfo;
 		}
-		
+
 		/**
 		 * @return The session id
 		 */
@@ -538,19 +554,19 @@ public class RequestLogger implements IRequestLogger
 		{
 			return sessionId;
 		}
-		
+
 		void addTimeTaken(long time)
 		{
 			this.lastActive = System.currentTimeMillis();
 			this.numberOfRequests++;
 			this.totalTimeTaken += time;
 		}
-		
+
 		void setSessionInfo(Object sessionInfo)
 		{
-			this.sessionInfo = sessionInfo; 
+			this.sessionInfo = sessionInfo;
 		}
-		
+
 		void setSessionSize(long size)
 		{
 			this.sessionSize = size;
@@ -562,7 +578,7 @@ public class RequestLogger implements IRequestLogger
 		}
 
 	}
-	
+
 	/**
 	 * This class hold the information one request of a session has.
 	 * 
@@ -583,9 +599,9 @@ public class RequestLogger implements IRequestLogger
 		private long totalSessionSize;
 
 		private Object sessionInfo;
-		
+
 		private int activeRequest;
-		
+
 		/**
 		 * @return The time taken for this request
 		 */
@@ -595,8 +611,9 @@ public class RequestLogger implements IRequestLogger
 		}
 
 		/**
-		 * @param activeRequest The number of active request when this request happend 
-		 */ 
+		 * @param activeRequest
+		 *            The number of active request when this request happend
+		 */
 		public void setActiveRequest(int activeRequest)
 		{
 			this.activeRequest = activeRequest;
@@ -611,15 +628,17 @@ public class RequestLogger implements IRequestLogger
 		}
 
 		/**
-		 * @return The session object info, created by {@link ISessionLogInfo#getSessionInfo()}
+		 * @return The session object info, created by
+		 *         {@link ISessionLogInfo#getSessionInfo()}
 		 */
 		public Object getSessionInfo()
 		{
 			return sessionInfo;
 		}
-		
+
 		/**
 		 * Set the session info object of the session for this request.
+		 * 
 		 * @param sessionInfo
 		 */
 		public void setSessionInfo(Object sessionInfo)
@@ -689,7 +708,7 @@ public class RequestLogger implements IRequestLogger
 		public void setTimeTaken(long timeTaken)
 		{
 			this.timeTaken = timeTaken;
-			this.startDate = System.currentTimeMillis()-timeTaken;
+			this.startDate = System.currentTimeMillis() - timeTaken;
 		}
 
 		/**
@@ -737,8 +756,10 @@ public class RequestLogger implements IRequestLogger
 
 		public String toString()
 		{
-			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo + ",sessionid=" + sessionId+ ",sessionsize=" + totalSessionSize+
-		     ",request=" + eventTarget + ",response=" + responseTarget + ",alteredobjects=" +getAlteredObjects() + ",activerequest="+ activeRequest+ "]";
+			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo
+					+ ",sessionid=" + sessionId + ",sessionsize=" + totalSessionSize + ",request="
+					+ eventTarget + ",response=" + responseTarget + ",alteredobjects="
+					+ getAlteredObjects() + ",activerequest=" + activeRequest + "]";
 		}
 	}
 }
