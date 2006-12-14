@@ -30,16 +30,22 @@ import wicket.model.Model;
 import wicket.version.undo.Change;
 
 /**
+ * A ListView is a repeater that makes it easy to display/work with {@link List}s.
+ * However, there are situations where it is necessary to work with other
+ * collection types, for repeaters that might work better with non-list or
+ * database-driven collections see the wicket.markup.repeater package.
+ * 
+ * 
  * A ListView holds ListItem children. Items can be re-ordered and deleted,
  * either one at a time or many at a time.
  * <p>
  * Example:
  * 
  * <pre>
- *                  &lt;tbody&gt;
- *                    &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                        &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                    ...    
+ *                     &lt;tbody&gt;
+ *                       &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                           &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                       ...    
  * </pre>
  * 
  * <p>
@@ -72,13 +78,13 @@ import wicket.version.undo.Change;
  * </p>
  * 
  * <p>
- * <strong>WARNING:</strong> though you can nest ListViews within Forms, you HAVE to set the
- * optimizeItemRemoval property to true in order to have validation work
- * properly. By default, optimizeItemRemoval is false, which has the effect that
- * ListView replaces all child components by new instances. The idea behind this
- * is that you always render the fresh data, and as people usually use ListViews
- * for displaying read-only lists (at least, that's what we think), this is good
- * default behavior. <br />
+ * <strong>WARNING:</strong> though you can nest ListViews within Forms, you
+ * HAVE to set the optimizeItemRemoval property to true in order to have
+ * validation work properly. By default, optimizeItemRemoval is false, which has
+ * the effect that ListView replaces all child components by new instances. The
+ * idea behind this is that you always render the fresh data, and as people
+ * usually use ListViews for displaying read-only lists (at least, that's what
+ * we think), this is good default behavior. <br />
  * However, as the components are replaced before the rendering starts, the
  * search for specific messages for these components fails as they are replaced
  * with other instances. Another problem is that 'wrong' user input is kept as
