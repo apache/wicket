@@ -196,6 +196,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addComponent(Component component)
 	{
+		if (component==null) {
+			throw new IllegalArgumentException("component cannot be null");
+		}
+		if (component.getOutputMarkupId()==false)
+		{
+			throw new IllegalArgumentException("cannot update component that does not have setOutputMarkupId property set to true. Component: "+component.toString());
+		}
 		addComponent(component, component.getMarkupId());
 	}
 
@@ -261,11 +268,11 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public void detach(final RequestCycle requestCycle)
 	{
-//		Page page = requestCycle.getRequest().getPage();
-//		if(page != null) 
-//		{
-//			page.detachModels();
-//		}
+		// Page page = requestCycle.getRequest().getPage();
+		// if(page != null)
+		// {
+		// page.detachModels();
+		// }
 	}
 
 	/**
@@ -360,7 +367,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				final Map.Entry entry = (Entry)it.next();
 				final Component component = (Component)entry.getValue();
 				final String markupId = (String)entry.getKey();
-				
+
 				respondComponent(response, markupId, component);
 			}
 
@@ -475,9 +482,9 @@ public class AjaxRequestTarget implements IRequestTarget
 
 		page.startComponentRender(component);
 		component.renderComponent();
-		
-		respondHeaderContribution(response, component);		
-		
+
+		respondHeaderContribution(response, component);
+
 		page.endComponentRender(component);
 
 		page.setVersioned(versioned);
@@ -501,9 +508,9 @@ public class AjaxRequestTarget implements IRequestTarget
 		encodingBodyResponse.reset();
 	}
 
-	
+
 	private HtmlHeaderContainer header = null;
-	
+
 	/**
 	 * 
 	 * @param response
@@ -511,11 +518,11 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	private void respondHeaderContribution(final Response response, final Component component)
 	{
-		if (header == null) {
-			header = new HtmlHeaderContainer(
-					HtmlHeaderSectionHandler.HEADER_ID);	
+		if (header == null)
+		{
+			header = new HtmlHeaderContainer(HtmlHeaderSectionHandler.HEADER_ID);
 		}
-		
+
 		if (component.getPage().get(HtmlHeaderSectionHandler.HEADER_ID) != null)
 		{
 			component.getPage().replace(header);
@@ -548,7 +555,7 @@ public class AjaxRequestTarget implements IRequestTarget
 					}
 				}
 			});
-		}				
+		}
 
 		RequestCycle.get().setResponse(oldResponse);
 
