@@ -20,7 +20,6 @@ import javax.swing.tree.TreeNode;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.tree.table.ColumnLocation.Alignment;
 
 /**
  * Convenience class for building tree columns, i.e. columns that contain the

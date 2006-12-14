@@ -21,10 +21,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import wicket.WicketRuntimeException;
-import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.repeater.RepeatingView;
 import wicket.model.IModel;
 import wicket.model.Model;
 

@@ -82,11 +82,18 @@ public class BasePage extends ExamplePage
 		}
 	}
 
+	/**
+	 * @return selected contact
+	 */
 	public Contact getSelected()
 	{
 		return selected;
 	}
 
+	/**
+	 * sets selected contact
+	 * @param selected
+	 */
 	public void setSelected(Contact selected)
 	{
 		addStateChange(new Change()

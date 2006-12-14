@@ -17,16 +17,14 @@
  */
 package wicket.examples.repeater;
 
-import wicket.extensions.markup.html.repeater.data.GridView;
-import wicket.extensions.markup.html.repeater.data.IDataProvider;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.PagingNavigator;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.data.GridView;
+import wicket.markup.repeater.data.IDataProvider;
 
 /**
  * page for demonstrating the gridview componnet
- * 
- * @see wicket.extensions.markup.html.repeater.data.GridView
  * 
  * @author igor
  */

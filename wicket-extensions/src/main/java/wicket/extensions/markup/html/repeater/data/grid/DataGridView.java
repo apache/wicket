@@ -18,7 +18,8 @@ package wicket.extensions.markup.html.repeater.data.grid;
 
 import java.util.List;
 
-import wicket.extensions.markup.html.repeater.data.IDataProvider;
+import wicket.markup.repeater.data.IDataProvider;
+
 
 /**
  * Simple concrete implementation of {@link AbstractDataGridView}

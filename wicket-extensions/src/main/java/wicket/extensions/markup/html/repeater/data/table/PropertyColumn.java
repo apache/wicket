@@ -17,8 +17,8 @@
 package wicket.extensions.markup.html.repeater.data.table;
 
 import wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
+import wicket.markup.repeater.Item;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
 

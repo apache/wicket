@@ -19,13 +19,13 @@ package wicket.examples.repeater;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.ReuseIfModelsEqualStrategy;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.navigation.paging.PagingNavigator;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.ReuseIfModelsEqualStrategy;
+import wicket.markup.repeater.data.DataView;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 import wicket.model.Model;

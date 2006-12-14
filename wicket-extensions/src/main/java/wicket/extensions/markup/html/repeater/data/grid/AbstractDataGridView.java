@@ -20,11 +20,11 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import wicket.WicketRuntimeException;
-import wicket.extensions.markup.html.repeater.data.DataViewBase;
-import wicket.extensions.markup.html.repeater.data.IDataProvider;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
-import wicket.extensions.markup.html.repeater.util.ArrayIteratorAdapter;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.RefreshingView;
+import wicket.markup.repeater.data.DataViewBase;
+import wicket.markup.repeater.data.IDataProvider;
+import wicket.markup.repeater.util.ArrayIteratorAdapter;
 import wicket.model.IModel;
 import wicket.model.Model;
 

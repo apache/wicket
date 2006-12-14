@@ -16,10 +16,10 @@
  */
 package wicket.extensions.markup.html.repeater.data.table;
 
-import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.repeater.RepeatingView;
 
 /**
  * Toolbars that displays column headers. If the column is sortable a sortable

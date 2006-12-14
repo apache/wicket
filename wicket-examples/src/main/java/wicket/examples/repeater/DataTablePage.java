@@ -23,7 +23,7 @@ import java.util.List;
 import wicket.extensions.markup.html.repeater.data.table.AbstractColumn;
 import wicket.extensions.markup.html.repeater.data.table.DefaultDataTable;
 import wicket.extensions.markup.html.repeater.data.table.PropertyColumn;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.markup.repeater.Item;
 import wicket.model.IModel;
 import wicket.model.Model;
 
