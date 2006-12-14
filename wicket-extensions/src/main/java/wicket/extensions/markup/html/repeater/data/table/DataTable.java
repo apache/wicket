@@ -19,15 +19,15 @@ package wicket.extensions.markup.html.repeater.data.table;
 import java.io.Serializable;
 
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.repeater.RepeatingView;
-import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.data.grid.DataGridView;
-import wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.repeater.IItemReuseStrategy;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.RefreshingView;
+import wicket.markup.repeater.RepeatingView;
+import wicket.markup.repeater.data.IDataProvider;
 import wicket.model.IModel;
 
 /**

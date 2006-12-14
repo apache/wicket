@@ -48,7 +48,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#iterator(int,
+	 * @see wicket.markup.repeater.data.IDataProvider#iterator(int,
 	 *      int)
 	 */
 	public Iterator<Contact> iterator(int first, int count)
@@ -58,7 +58,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#size()
+	 * @see wicket.markup.repeater.data.IDataProvider#size()
 	 */
 	public int size()
 	{
@@ -66,7 +66,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#model(java.lang.Object)
+	 * @see wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
 	public IModel<Contact> model(Contact object)
 	{

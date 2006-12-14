@@ -446,11 +446,18 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 			{
 				MarkupFragment fragment = (MarkupFragment)element;
 				ComponentTag tag = fragment.getTag();
-				if ((tag != null) && tag.isWicketTag()
-						&& WicketTagIdentifier.isRegisteredToHaveUniqueId(tag))
+				if (tag.getName().equals("fragment"))
 				{
-					String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
-					tag.setId(id);
+
+				}
+				else
+				{
+					if ((tag != null) && tag.isWicketTag()
+							&& WicketTagIdentifier.isRegisteredToHaveUniqueId(tag))
+					{
+						String id = Component.AUTO_COMPONENT_PREFIX + tag.getName() + index++;
+						tag.setId(id);
+					}
 				}
 				return CONTINUE_TRAVERSAL;
 			}

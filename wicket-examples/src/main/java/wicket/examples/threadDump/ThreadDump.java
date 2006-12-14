@@ -23,11 +23,11 @@ import java.util.Map;
 import wicket.AttributeModifier;
 import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
-import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
+import wicket.markup.repeater.RepeatingView;
 import wicket.model.Model;
 
 /**

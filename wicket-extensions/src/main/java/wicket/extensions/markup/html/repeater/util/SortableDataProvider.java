@@ -16,9 +16,9 @@
  */
 package wicket.extensions.markup.html.repeater.util;
 
-import wicket.extensions.markup.html.repeater.data.IDataProvider;
 import wicket.extensions.markup.html.repeater.data.sort.ISortState;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
+import wicket.markup.repeater.data.IDataProvider;
 
 /**
  * Convinience implementation of a data provider that can also act as a locator

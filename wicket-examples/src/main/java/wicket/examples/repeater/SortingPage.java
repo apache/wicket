@@ -19,17 +19,17 @@
 package wicket.examples.repeater;
 
 import wicket.AttributeModifier;
-import wicket.extensions.markup.html.repeater.data.DataView;
 import wicket.extensions.markup.html.repeater.data.sort.OrderByBorder;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.navigation.paging.PagingNavigator;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.data.DataView;
 import wicket.model.AbstractReadOnlyModel;
 
 /**
  * page that demonstrates dataview and sorting
  * 
- * @see wicket.extensions.markup.html.repeater.data.DataView
+ * @see wicket.markup.repeater.data.DataView
  * @see wicket.extensions.markup.html.repeater.data.sort.OrderByBorder
  * @see wicket.extensions.markup.html.repeater.data.sort.OrderByLink
  * 

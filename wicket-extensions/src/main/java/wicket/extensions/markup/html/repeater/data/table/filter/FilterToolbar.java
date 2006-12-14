@@ -18,13 +18,13 @@ package wicket.extensions.markup.html.repeater.data.table.filter;
 
 import wicket.Component;
 import wicket.MarkupContainer;
-import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.extensions.markup.html.repeater.data.table.AbstractToolbar;
 import wicket.extensions.markup.html.repeater.data.table.DataTable;
 import wicket.extensions.markup.html.repeater.data.table.IColumn;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupStream;
 import wicket.markup.html.WebMarkupContainer;
+import wicket.markup.repeater.RepeatingView;
 import wicket.util.string.AppendingStringBuffer;
 
 /**

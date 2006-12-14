@@ -220,6 +220,7 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 				{
 					MarkupFragment fragment = (MarkupFragment)elem;
 					String tagId = fragment.getId();
+
 					if ((tagId != null) && tagId.equals(id))
 					{
 						return fragment;
