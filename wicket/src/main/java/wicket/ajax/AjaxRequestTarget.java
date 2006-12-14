@@ -89,6 +89,13 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addComponent(Component component)
 	{
+		if (component==null) {
+			throw new IllegalArgumentException("component cannot be null");
+		}
+		if (component.getOutputMarkupId()==false)
+		{
+			throw new IllegalArgumentException("cannot update component that does not have setOutputMarkupId property set to true. Component: "+component.toString());
+		}
 		addComponent(component, component.getMarkupId());
 	}
 
