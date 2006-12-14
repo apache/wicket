@@ -35,6 +35,12 @@ import wicket.version.undo.Change;
  * collection types, for repeaters that might work better with non-list or
  * database-driven collections see the wicket.markup.repeater package.
  * 
+ * Also notice that in a list the item's uniqueness/primary key/id is identified
+ * as its index in the list. If this is not the case you should either override
+ * {@link #getListItemModel(IModel, int)} to return a model that will work with
+ * the item's true primary key, or use a different repeater that does not rely
+ * on the list index.
+ * 
  * 
  * A ListView holds ListItem children. Items can be re-ordered and deleted,
  * either one at a time or many at a time.
@@ -42,10 +48,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *                     &lt;tbody&gt;
- *                       &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                           &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                       ...    
+ *                      &lt;tbody&gt;
+ *                        &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                            &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                        ...    
  * </pre>
  * 
  * <p>
@@ -79,18 +85,18 @@ import wicket.version.undo.Change;
  * 
  * <p>
  * <strong>WARNING:</strong> though you can nest ListViews within Forms, you
- * HAVE to set the setReuseItems property to true in order to have
- * validation work properly. By default, setReuseItems is false, which has
- * the effect that ListView replaces all child components by new instances. The
- * idea behind this is that you always render the fresh data, and as people
- * usually use ListViews for displaying read-only lists (at least, that's what
- * we think), this is good default behavior. <br />
+ * HAVE to set the setReuseItems property to true in order to have validation
+ * work properly. By default, setReuseItems is false, which has the effect that
+ * ListView replaces all child components by new instances. The idea behind this
+ * is that you always render the fresh data, and as people usually use ListViews
+ * for displaying read-only lists (at least, that's what we think), this is good
+ * default behavior. <br />
  * However, as the components are replaced before the rendering starts, the
  * search for specific messages for these components fails as they are replaced
  * with other instances. Another problem is that 'wrong' user input is kept as
  * (temporary) instance data of the components. As these components are replaced
- * by new ones, your user will never see the wrong data when setReuseItems
- * is false.
+ * by new ones, your user will never see the wrong data when setReuseItems is
+ * false.
  * </p>
  * 
  * @author Jonathan Locke
