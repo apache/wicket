@@ -18,8 +18,8 @@ package wicket.extensions.ajax.markup.html.autocomplete;
 
 import java.util.Iterator;
 
-import wicket.markup.html.form.TextField;
 import wicket.behavior.SimpleAttributeModifier;
+import wicket.markup.html.form.TextField;
 import wicket.model.IModel;
 
 /**

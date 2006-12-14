@@ -18,7 +18,7 @@ package wicket.extensions.markup.html.repeater.data.grid;
 
 import java.io.Serializable;
 
-import wicket.extensions.markup.html.repeater.refreshing.Item;
+import wicket.markup.repeater.Item;
 import wicket.model.IModel;
 
 /**

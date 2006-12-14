@@ -23,10 +23,10 @@ import java.util.List;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.link.Link;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.RefreshingView;
 import wicket.model.AbstractReadOnlyModel;
 
 /**

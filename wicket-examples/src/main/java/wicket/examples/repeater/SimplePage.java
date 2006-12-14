@@ -19,15 +19,13 @@ package wicket.examples.repeater;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.basic.Label;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.data.DataView;
 import wicket.model.AbstractReadOnlyModel;
 
 /**
  * Page that demonstrates a simple dataview.
- * 
- * @see wicket.extensions.markup.html.repeater.data.DataView
  * 
  * @author igor
  */

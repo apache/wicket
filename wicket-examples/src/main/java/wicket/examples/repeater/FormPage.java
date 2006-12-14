@@ -18,16 +18,16 @@ package wicket.examples.repeater;
 
 import java.util.Iterator;
 
-import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.OddEvenItem;
-import wicket.extensions.markup.html.repeater.refreshing.RefreshingView;
-import wicket.extensions.markup.html.repeater.refreshing.ReuseIfModelsEqualStrategy;
-import wicket.extensions.markup.html.repeater.util.ModelIteratorAdapter;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.SubmitLink;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.OddEvenItem;
+import wicket.markup.repeater.RefreshingView;
+import wicket.markup.repeater.ReuseIfModelsEqualStrategy;
+import wicket.markup.repeater.util.ModelIteratorAdapter;
 import wicket.model.IModel;
 import wicket.model.PropertyModel;
 
@@ -106,7 +106,7 @@ public class FormPage extends BasePage
 	/**
 	 * Panel that houses row-actions
 	 */
-	class ActionPanel extends Panel
+	private class ActionPanel extends Panel
 	{
 		/**
 		 * @param id

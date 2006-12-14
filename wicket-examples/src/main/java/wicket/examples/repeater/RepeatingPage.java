@@ -21,15 +21,13 @@ import java.util.Iterator;
 
 import wicket.AttributeModifier;
 import wicket.Component;
-import wicket.extensions.markup.html.repeater.RepeatingView;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
+import wicket.markup.repeater.RepeatingView;
 import wicket.model.AbstractReadOnlyModel;
 
 /**
  * page that demonstrates a simple repeater view.
- * 
- * @see wicket.extensions.markup.html.repeater.RepeatingView
  * 
  * @author igor
  */

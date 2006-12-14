@@ -18,9 +18,9 @@ package wicket.extensions.markup.html.repeater.data.table;
 
 import java.util.List;
 
-import wicket.extensions.markup.html.repeater.refreshing.Item;
-import wicket.extensions.markup.html.repeater.refreshing.OddEvenItem;
 import wicket.extensions.markup.html.repeater.util.SortableDataProvider;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.OddEvenItem;
 import wicket.model.IModel;
 
 /**
