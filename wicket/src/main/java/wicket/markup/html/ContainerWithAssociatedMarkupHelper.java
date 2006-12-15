@@ -27,7 +27,6 @@ import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
 import wicket.markup.TagUtils;
 import wicket.markup.WicketTag;
-import wicket.markup.html.WebMarkupContainerWithAssociatedMarkup.HeaderPartContainer;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.response.NullResponse;
 import wicket.util.lang.Classes;
@@ -38,7 +37,7 @@ import wicket.util.value.ValueMap;
  * 
  * @author Juergen Donnerstag
  */
-class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
+public class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 {
 	private static final long serialVersionUID = 1L;
 
@@ -49,14 +48,14 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	private boolean noMoreWicketHeadTagsAllowed = false;
 
 	/** The markup container the helper is associated with */
-	private final WebMarkupContainerWithAssociatedMarkup container;
+	private final WebMarkupContainer container;
 
 	/**
 	 * @param container
 	 */
-	ContainerWithAssociatedMarkupHelper(final WebMarkupContainerWithAssociatedMarkup container)
+	public ContainerWithAssociatedMarkupHelper(final IHeaderPartContainerProvider container)
 	{
-		this.container = container;
+		this.container = (WebMarkupContainer)container;
 	}
 
 	/**
@@ -72,7 +71,7 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	 * @param htmlContainer
 	 *            The HtmlHeaderContainer added to the Page
 	 */
-	protected final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
+	public final void renderHeadFromAssociatedMarkupFile(final HtmlHeaderContainer htmlContainer)
 	{
 		// Gracefully getAssociateMarkupStream. Throws no exception in case
 		// markup is not found
@@ -173,7 +172,8 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 						// Attach an AttributeModifier to the body container
 						// which appends the new value to the onLoad
 						// attribute
-						container.getWebPage().getBodyContainer().addOnLoadModifier(onLoad, container);
+						container.getWebPage().getBodyContainer().addOnLoadModifier(onLoad,
+								container);
 					}
 
 					// There can only be one body tag
@@ -225,8 +225,8 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 				// it
 				String scope = wTag.getAttributes().getString(
 						markupStream.getWicketNamespace() + ":scope");
-				final HeaderPartContainer headerContainer = this.container.newHeaderPartContainer(
-						headerId, scope);
+				final HeaderPartContainer headerContainer = ((IHeaderPartContainerProvider)this.container)
+						.newHeaderPartContainer(headerId, scope);
 				headerContainer.setMyMarkupStream(markupStream);
 				headerContainer.setRenderBodyOnly(true);
 
@@ -240,9 +240,10 @@ class ContainerWithAssociatedMarkupHelper extends AbstractBehavior
 	}
 
 	/**
+	 * Process next header markup fragment.
 	 * 
 	 * @param associatedMarkupStream
-	 * @return xxx
+	 * @return index or -1 when done
 	 */
 	private final int nextHeaderMarkup(final MarkupStream associatedMarkupStream)
 	{
