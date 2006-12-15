@@ -139,6 +139,8 @@ public class FormInput extends WicketExamplePage
 			add(new RequiredTextField("integerInRangeProperty", Integer.class).add(NumberValidator
 					.range(0, 100)));
 			add(new CheckBox("booleanProperty"));
+			add(new Multiply("multiply"));
+			add(new Label("multiplyLabel", new PropertyModel(getModel(), "multiply")));
 			RadioChoice rc = new RadioChoice("numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model("number"));
 			rc.setRequired(true);

@@ -82,21 +82,21 @@ public final class FormInputModel implements Serializable
 		}
 	}
 
-	private String stringProperty = "test";
-	private Integer integerProperty = new Integer(100);
-	private Double doubleProperty = new Double(20.5);
-	private Date dateProperty = new Date();
-	private Integer integerInRangeProperty = new Integer(50);
 	private Boolean booleanProperty;
-	private URL urlProperty;
-	private String numberRadioChoice = (String)FormInput.NUMBERS.get(0);
-	private Set siteSelection = new HashSet();
+	private Date dateProperty = new Date();
+	private Double doubleProperty = new Double(20.5);
+	private Integer integerInRangeProperty = new Integer(50);
+	private Integer integerProperty = new Integer(100);
 	private List lines = new ArrayList();
+	private Integer multiply = new Integer(0);
+	private String numberRadioChoice = (String)FormInput.NUMBERS.get(0);
+	private List numbersCheckGroup = new ArrayList();
 	private String numbersGroup;
-
 	/** US phone number with mask '(###) ###-####'. */
 	private UsPhoneNumber phoneNumberUS = new UsPhoneNumber("(123) 456-1234");
-	private List numbersCheckGroup = new ArrayList();
+	private Set siteSelection = new HashSet();
+	private String stringProperty = "test";
+	private URL urlProperty;
 
 	/**
 	 * Construct.
@@ -117,6 +117,16 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
+	 * Gets the booleanProperty.
+	 * 
+	 * @return booleanProperty
+	 */
+	public Boolean getBooleanProperty()
+	{
+		return booleanProperty;
+	}
+
+	/**
 	 * Gets dateProperty.
 	 * 
 	 * @return dateProperty
@@ -124,17 +134,6 @@ public final class FormInputModel implements Serializable
 	public Date getDateProperty()
 	{
 		return dateProperty;
-	}
-
-	/**
-	 * Sets dateProperty.
-	 * 
-	 * @param dateProperty
-	 *            dateProperty
-	 */
-	public void setDateProperty(Date dateProperty)
-	{
-		this.dateProperty = dateProperty;
 	}
 
 	/**
@@ -148,14 +147,13 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
-	 * Sets doubleProperty.
+	 * Gets integerInRangeProperty.
 	 * 
-	 * @param doubleProperty
-	 *            doubleProperty
+	 * @return integerInRangeProperty
 	 */
-	public void setDoubleProperty(Double doubleProperty)
+	public Integer getIntegerInRangeProperty()
 	{
-		this.doubleProperty = doubleProperty;
+		return integerInRangeProperty;
 	}
 
 	/**
@@ -169,14 +167,65 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
-	 * Sets integerProperty.
+	 * Gets lines.
 	 * 
-	 * @param integerProperty
-	 *            integerProperty
+	 * @return lines
 	 */
-	public void setIntegerProperty(Integer integerProperty)
+	public List getLines()
 	{
-		this.integerProperty = integerProperty;
+		return lines;
+	}
+
+	/**
+	 * @return gets multiply
+	 */
+	public Integer getMultiply()
+	{
+		return multiply;
+	}
+
+	/**
+	 * Gets the favoriteColor.
+	 * 
+	 * @return favoriteColor
+	 */
+	public String getNumberRadioChoice()
+	{
+		return numberRadioChoice;
+	}
+
+	/**
+	 * @return the numbers list
+	 */
+	public List getNumbersCheckGroup()
+	{
+		return numbersCheckGroup;
+	}
+
+	/**
+	 * @return the group number
+	 */
+	public String getNumbersGroup()
+	{
+		return this.numbersGroup;
+	}
+
+	/**
+	 * @return the phoneNumberUS
+	 */
+	public UsPhoneNumber getPhoneNumberUS()
+	{
+		return phoneNumberUS;
+	}
+
+	/**
+	 * Gets the selectedSites.
+	 * 
+	 * @return selectedSites
+	 */
+	public Set getSiteSelection()
+	{
+		return siteSelection;
 	}
 
 	/**
@@ -190,45 +239,13 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
-	 * Sets stringProperty.
+	 * Gets the urlProperty.
 	 * 
-	 * @param stringProperty
-	 *            stringProperty
+	 * @return urlProperty
 	 */
-	public void setStringProperty(String stringProperty)
+	public URL getUrlProperty()
 	{
-		this.stringProperty = stringProperty;
-	}
-
-	/**
-	 * Gets integerInRangeProperty.
-	 * 
-	 * @return integerInRangeProperty
-	 */
-	public Integer getIntegerInRangeProperty()
-	{
-		return integerInRangeProperty;
-	}
-
-	/**
-	 * Sets integerInRangeProperty.
-	 * 
-	 * @param integerInRangeProperty
-	 *            integerInRangeProperty
-	 */
-	public void setIntegerInRangeProperty(Integer integerInRangeProperty)
-	{
-		this.integerInRangeProperty = integerInRangeProperty;
-	}
-
-	/**
-	 * Gets the booleanProperty.
-	 * 
-	 * @return booleanProperty
-	 */
-	public Boolean getBooleanProperty()
-	{
-		return booleanProperty;
+		return urlProperty;
 	}
 
 	/**
@@ -243,34 +260,67 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
-	 * Gets the urlProperty.
+	 * Sets dateProperty.
 	 * 
-	 * @return urlProperty
+	 * @param dateProperty
+	 *            dateProperty
 	 */
-	public URL getUrlProperty()
+	public void setDateProperty(Date dateProperty)
 	{
-		return urlProperty;
+		this.dateProperty = dateProperty;
 	}
 
 	/**
-	 * Sets the urlProperty.
+	 * Sets doubleProperty.
 	 * 
-	 * @param urlProperty
-	 *            urlProperty
+	 * @param doubleProperty
+	 *            doubleProperty
 	 */
-	public void setUrlProperty(URL urlProperty)
+	public void setDoubleProperty(Double doubleProperty)
 	{
-		this.urlProperty = urlProperty;
+		this.doubleProperty = doubleProperty;
 	}
 
 	/**
-	 * Gets the favoriteColor.
+	 * Sets integerInRangeProperty.
 	 * 
-	 * @return favoriteColor
+	 * @param integerInRangeProperty
+	 *            integerInRangeProperty
 	 */
-	public String getNumberRadioChoice()
+	public void setIntegerInRangeProperty(Integer integerInRangeProperty)
 	{
-		return numberRadioChoice;
+		this.integerInRangeProperty = integerInRangeProperty;
+	}
+
+	/**
+	 * Sets integerProperty.
+	 * 
+	 * @param integerProperty
+	 *            integerProperty
+	 */
+	public void setIntegerProperty(Integer integerProperty)
+	{
+		this.integerProperty = integerProperty;
+	}
+
+	/**
+	 * Sets lines.
+	 * 
+	 * @param lines
+	 *            lines
+	 */
+	public void setLines(List lines)
+	{
+		this.lines = lines;
+	}
+
+	/**
+	 * @param multiply
+	 *            the multiply to set
+	 */
+	public void setMultiply(Integer multiply)
+	{
+		this.multiply = multiply;
 	}
 
 	/**
@@ -296,29 +346,12 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
-	 * @return the group number
+	 * @param phoneNumberUS
+	 *            the phoneNumberUS to set
 	 */
-	public String getNumbersGroup()
+	public void setPhoneNumberUS(UsPhoneNumber phoneNumberUS)
 	{
-		return this.numbersGroup;
-	}
-
-	/**
-	 * @return the numbers list
-	 */
-	public List getNumbersCheckGroup()
-	{
-		return numbersCheckGroup;
-	}
-
-	/**
-	 * Gets the selectedSites.
-	 * 
-	 * @return selectedSites
-	 */
-	public Set getSiteSelection()
-	{
-		return siteSelection;
+		this.phoneNumberUS = phoneNumberUS;
 	}
 
 	/**
@@ -333,41 +366,25 @@ public final class FormInputModel implements Serializable
 	}
 
 	/**
-	 * Gets lines.
+	 * Sets stringProperty.
 	 * 
-	 * @return lines
+	 * @param stringProperty
+	 *            stringProperty
 	 */
-	public List getLines()
+	public void setStringProperty(String stringProperty)
 	{
-		return lines;
+		this.stringProperty = stringProperty;
 	}
 
 	/**
-	 * Sets lines.
+	 * Sets the urlProperty.
 	 * 
-	 * @param lines
-	 *            lines
+	 * @param urlProperty
+	 *            urlProperty
 	 */
-	public void setLines(List lines)
+	public void setUrlProperty(URL urlProperty)
 	{
-		this.lines = lines;
-	}
-
-	/**
-	 * @return the phoneNumberUS
-	 */
-	public UsPhoneNumber getPhoneNumberUS()
-	{
-		return phoneNumberUS;
-	}
-
-	/**
-	 * @param phoneNumberUS
-	 *            the phoneNumberUS to set
-	 */
-	public void setPhoneNumberUS(UsPhoneNumber phoneNumberUS)
-	{
-		this.phoneNumberUS = phoneNumberUS;
+		this.urlProperty = urlProperty;
 	}
 
 	/**
