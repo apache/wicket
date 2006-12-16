@@ -17,7 +17,6 @@
 package wicket.markup.html.form;
 
 import wicket.Component;
-import wicket.Page;
 import wicket.WicketTestCase;
 
 /**

@@ -62,7 +62,8 @@ public class Panel<T> extends WebMarkupContainerWithAssociatedMarkup<T>
 {
 	private static final long serialVersionUID = 1L;
 	
-	private static final String PANEL = "panel";
+	/** */
+	public static final String PANEL = "panel";
 
 	static
 	{
