@@ -90,7 +90,7 @@ import wicket.version.undo.Change;
  * @see MarkupStream
  * @author Jonathan Locke
  */
-public abstract class MarkupContainer<T> extends Component<T> implements Iterable<Component>
+public abstract class MarkupContainer<T> extends Component<T> implements Iterable<Component<?>>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -124,7 +124,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
-	public MarkupContainer(MarkupContainer parent, final String id)
+	public MarkupContainer(MarkupContainer<?> parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -132,7 +132,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String, IModel)
 	 */
-	public MarkupContainer(MarkupContainer parent, final String id, IModel<T> model)
+	public MarkupContainer(MarkupContainer<?> parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}
@@ -166,7 +166,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 *             operation.
 	 * @return This
 	 */
-	final MarkupContainer add(final Component<?> child)
+	final MarkupContainer<?> add(final Component<?> child)
 	{
 		if (child == null)
 		{
@@ -180,8 +180,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		}
 
 		// Add to map
-		addedComponent(child);
-		Component replaced = put(child);
+		Component<?> replaced = put(child);
 		child.setFlag(FLAG_REMOVED_FROM_PARENT, false);
 		if (replaced != null)
 		{
@@ -195,6 +194,8 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			String replacedId = (replaced.hasMarkupIdMetaData()) ? replaced.getMarkupId() : null;
 			child.setMarkupIdMetaData(replacedId);
 		}
+		// now call addedComponent (after removedComponent)
+		addedComponent(child);
 
 		return this;
 	}
@@ -229,7 +230,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 *            True if all descendents should be considered
 	 * @return True if the component is contained in this container
 	 */
-	public final boolean contains(final Component component, final boolean recurse)
+	public final boolean contains(final Component<?> component, final boolean recurse)
 	{
 		if (component == null)
 		{
@@ -239,10 +240,10 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		if (recurse)
 		{
 			// Start at component and continue while we're not out of parents
-			for (Component current = component; current != null;)
+			for (Component<?> current = component; current != null;)
 			{
 				// Get parent
-				final MarkupContainer parent = current.getParent();
+				final MarkupContainer<?> parent = current.getParent();
 
 				// If this container is the parent, then the component is
 				// recursively contained by this container
@@ -274,7 +275,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @return The component at the path
 	 */
 	@Override
-	public final Component get(final String path)
+	public final Component<?> get(final String path)
 	{
 		// Reference to this container
 		if (path == null || path.trim().equals(""))
@@ -286,7 +287,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		final String id = Strings.firstPathComponent(path, Component.PATH_SEPARATOR);
 
 		// Get child by id
-		Component child = children_get(id);
+		Component<?> child = children_get(id);
 
 		// If the container is transparent, than ask its parent.
 		// ParentResolver does something quite similar, but because of <head>,
@@ -341,7 +342,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 *             Thrown if a child with the same id is replaced by the add
 	 *             operation.
 	 */
-	public void internalAdd(final Component child)
+	public void internalAdd(final Component<?> child)
 	{
 		if (log.isDebugEnabled())
 		{
@@ -372,7 +373,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			for (int i = 0; i < size; i++)
 			{
 				// Get next child
-				final Component child = children_get(i);
+				final Component<?> child = children_get(i);
 
 				// Ignore feedback as that was done in Page
 				if (!(child instanceof IFeedback))
@@ -409,7 +410,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		super.internalDetach();
 
 		// Loop through child components
-		for (Component child : this)
+		for (Component<?> child : this)
 		{
 			// Call end request on the child
 			child.internalDetach();
@@ -420,9 +421,9 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @return Iterator that iterates through children in the order they were
 	 *         added
 	 */
-	public final Iterator<Component> iterator()
+	public final Iterator<Component<?>> iterator()
 	{
-		return new Iterator<Component>()
+		return new Iterator<Component<?>>()
 		{
 			int index = 0;
 
@@ -431,7 +432,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 				return index < children_size();
 			}
 
-			public Component next()
+			public Component<?> next()
 			{
 				return children_get(index++);
 			}
@@ -449,9 +450,9 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @return Iterator that iterates over children in the order specified by
 	 *         comparator
 	 */
-	public final Iterator<Component> iterator(Comparator<Component> comparator)
+	public final Iterator<Component<?>> iterator(Comparator<Component<?>> comparator)
 	{
-		final List<Component> sorted;
+		final List<Component<?>> sorted;
 		if (children == null)
 		{
 			sorted = Collections.emptyList();
@@ -460,12 +461,12 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		{
 			if (children instanceof Component)
 			{
-				sorted = new ArrayList<Component>(1);
-				sorted.add((Component)children);
+				sorted = new ArrayList<Component<?>>(1);
+				sorted.add((Component<?>)children);
 			}
 			else
 			{
-				sorted = Arrays.asList((Component[])children);
+				sorted = Arrays.asList((Component<?>[])children);
 			}
 		}
 		Collections.sort(sorted, comparator);
@@ -476,7 +477,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @param component
 	 *            Component to remove from this container
 	 */
-	public void remove(final Component component)
+	public void remove(final Component<?> component)
 	{
 		if (component == null)
 		{
@@ -503,7 +504,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			throw new IllegalArgumentException("argument id may not be null");
 		}
 
-		final Component component = get(id);
+		final Component<?> component = get(id);
 		if (component != null)
 		{
 			remove(component);
@@ -685,7 +686,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 				for (int i = 0; i < size; i++)
 				{
 					// Get next child
-					final Component child = children_get(i);
+					final Component<?> child = children_get(i);
 					if (i != 0)
 					{
 						buffer.append(' ');
@@ -709,7 +710,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @return The return value from a visitor which halted the traversal, or
 	 *         null if the entire traversal occurred
 	 */
-	public final Object visitChildren(final Class clazz, final IVisitor visitor)
+	public final Object visitChildren(final Class<?> clazz, final IVisitor visitor)
 	{
 		if (visitor == null)
 		{
@@ -720,7 +721,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		for (int i = 0; i < children_size(); i++)
 		{
 			// Get next child component
-			final Component child = children_get(i);
+			final Component<?> child = children_get(i);
 			Object value = null;
 
 			// Is the child of the correct class (or was no class specified)?
@@ -780,7 +781,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	protected final MarkupStream findMarkupStream()
 	{
 		// Start here
-		MarkupContainer c = this;
+		MarkupContainer<?> c = this;
 
 		// Walk up hierarchy until markup found
 		while (c.getMarkupStream() == null)
@@ -1025,7 +1026,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @param child
 	 *            Child to add
 	 */
-	private final void children_add(final Component child)
+	private final void children_add(final Component<?> child)
 	{
 		if (this.children == null)
 		{
@@ -1037,7 +1038,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			final int size = children_size();
 
 			// Create array that holds size + 1 elements
-			final Component[] children = new Component[size + 1];
+			final Component<?>[] children = new Component[size + 1];
 
 			// Loop through existing children copying them
 			for (int i = 0; i < size; i++)
@@ -1059,7 +1060,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		{
 			if (children instanceof Component)
 			{
-				return (Component)children;
+				return (Component<?>)children;
 			}
 			else
 			{
@@ -1072,11 +1073,11 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		}
 	}
 
-	private final Component children_get(final String id)
+	private final Component<?> children_get(final String id)
 	{
 		if (children instanceof Component)
 		{
-			final Component component = (Component)children;
+			final Component<?> component = (Component<?>)children;
 			if (component.getId().equals(id))
 			{
 				return component;
@@ -1086,8 +1087,8 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		{
 			if (children != null)
 			{
-				final Component[] components = (Component[])children;
-				for (Component element : components)
+				final Component<?>[] components = (Component[])children;
+				for (Component<?> element : components)
 				{
 					if (element.getId().equals(id))
 					{
@@ -1099,11 +1100,18 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		return null;
 	}
 
+	/**
+	 * Will search for this specific child instance in the current
+	 * children. So it will do a identity check, it will not look if the
+	 * id is already present in the children. Use indexOf(String) for that. 
+	 * @param child
+	 * @return The index of this child.
+	 */
 	private final int children_indexOf(Component<?> child)
 	{
 		if (children instanceof Component)
 		{
-			if (((Component)children).getId().equals(child.getId()))
+			if (children == child)
 			{
 				return 0;
 			}
@@ -1112,10 +1120,10 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		{
 			if (children != null)
 			{
-				final Component[] components = (Component[])children;
+				final Component<?>[] components = (Component[])children;
 				for (int i = 0; i < components.length; i++)
 				{
-					if (components[i].getId().equals(child.getId()))
+					if (components[i] == child)
 					{
 						return i;
 					}
@@ -1125,7 +1133,38 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		return -1;
 	}
 
-	private final Component children_remove(Component<?> component)
+	/**
+	 * Will search for the id if it is found in the current children.
+	 * @param id The id to search for.
+	 * @return The index of this child.
+	 */
+	private final int children_indexOf(String id)
+	{
+		if (children instanceof Component)
+		{
+			if (((Component<?>)children).getId().equals(id))
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			if (children != null)
+			{
+				final Component<?>[] components = (Component[])children;
+				for (int i = 0; i < components.length; i++)
+				{
+					if (components[i].getId().equals(id))
+					{
+						return i;
+					}
+				}
+			}
+		}
+		return -1;
+	}
+
+	private final Component<?> children_remove(Component<?> component)
 	{
 		int index = children_indexOf(component);
 		if (index != -1)
@@ -1135,13 +1174,13 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		return null;
 	}
 
-	private final Component children_remove(int index)
+	private final Component<?> children_remove(int index)
 	{
 		if (children instanceof Component)
 		{
 			if (index == 0)
 			{
-				final Component removed = (Component)children;
+				final Component<?> removed = (Component<?>)children;
 				this.children = null;
 				return removed;
 			}
@@ -1152,8 +1191,8 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		}
 		else
 		{
-			Component[] c = ((Component[])children);
-			final Component removed = c[index];
+			Component<?>[] c = ((Component[])children);
+			final Component<?> removed = c[index];
 			if (c.length == 2)
 			{
 				if (index == 0)
@@ -1171,7 +1210,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			}
 			else
 			{
-				Component[] newChildren = new Component[c.length - 1];
+				Component<?>[] newChildren = new Component[c.length - 1];
 				int j = 0;
 				for (int i = 0; i < c.length; i++)
 				{
@@ -1186,19 +1225,19 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		}
 	}
 
-	private final Component children_set(int index, Component child)
+	private final Component<?> children_set(int index, Component<?> child)
 	{
-		final Component replaced;
+		final Component<?> replaced;
 		if (index < children_size())
 		{
 			if (children == null || children instanceof Component)
 			{
-				replaced = (Component)children;
+				replaced = (Component<?>)children;
 				children = child;
 			}
 			else
 			{
-				final Component[] children = (Component[])this.children;
+				final Component<?>[] children = (Component[])this.children;
 				replaced = children[index];
 				children[index] = child;
 			}
@@ -1234,9 +1273,12 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 *            The child to put into the map
 	 * @return Any component that was replaced
 	 */
-	private final Component put(final Component<?> child)
+	private final Component<?> put(final Component<?> child)
 	{
-		int index = children_indexOf(child);
+		// search for the child by id. So that it will
+		// find the right index for the id instead of looking
+		// if the component itself is already children.
+		int index = children_indexOf(child.getId());
 		if (index == -1)
 		{
 			children_add(child);
@@ -1410,7 +1452,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		{
 			super.renderHead(response);
 
-			for (Component child : this)
+			for (Component<?> child : this)
 			{
 				child.renderHead(response);
 			}

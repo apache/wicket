@@ -303,7 +303,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 	 */
 	private static class ItemsIterator<T> implements Iterator<Item<T>>
 	{
-		private Iterator<Component> rows;
+		private Iterator<Component<?>> rows;
 		private Iterator<Item<T>> cells;
 
 		private Item<T> next;
@@ -312,7 +312,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 		 * @param rows
 		 *            iterator over child row views
 		 */
-		public ItemsIterator(Iterator<Component> rows)
+		public ItemsIterator(Iterator<Component<?>> rows)
 		{
 			this.rows = rows;
 			findNext();

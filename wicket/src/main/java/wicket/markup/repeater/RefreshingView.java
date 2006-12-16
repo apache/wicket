@@ -170,7 +170,7 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 	 */
 	public Iterator<Item<T>> getItems()
 	{
-		final Iterator<Component> iterator = iterator();
+		final Iterator<Component<?>> iterator = iterator();
 		return new Iterator<Item<T>>()
 		{
 			public boolean hasNext()
