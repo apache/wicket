@@ -103,6 +103,8 @@ public class FormInput extends WicketExamplePage
 			new RequiredTextField<Integer>(this, "integerInRangeProperty", Integer.class)
 					.add(NumberValidator.range(0, 100));
 			new CheckBox(this, "booleanProperty");
+			new Multiply(this, "multiply");
+			new Label(this, "multiplyLabel", new PropertyModel(getModel(), "multiply"));
 			RadioChoice<String> rc = new RadioChoice<String>(this, "numberRadioChoice", NUMBERS)
 					.setSuffix("");
 			rc.setLabel(new Model<String>("number"));
@@ -218,7 +220,6 @@ public class FormInput extends WicketExamplePage
 	/** list view to be nested in the form. */
 	private static final class LinesListView extends ListView
 	{
-
 		/**
 		 * Construct.
 		 * 

@@ -89,6 +89,7 @@ public final class FormInputModel implements Serializable
 	private Integer integerInRangeProperty = new Integer(50);
 	private Integer integerProperty = new Integer(100);
 	private List<Line> lines = new ArrayList<Line>();
+	private Integer multiply = new Integer(0);
 	private String numberRadioChoice = FormInput.NUMBERS.get(0);
 	private List<String> numbersCheckGroup = new ArrayList<String>();
 	private String numbersGroup;
@@ -98,7 +99,7 @@ public final class FormInputModel implements Serializable
 
 	private String stringProperty = "test";
 	private URL urlProperty;
-
+	
 	/**
 	 * Construct.
 	 */
@@ -409,5 +410,22 @@ public final class FormInputModel implements Serializable
 		b.append("]");
 		b.append("]");
 		return b.toString();
+	}
+
+	/**
+	 * @return gets multiply
+	 */
+	public Integer getMultiply()
+	{
+		return multiply;
+	}
+
+	/**
+	 * @param multiply
+	 *            the multiply to set
+	 */
+	public void setMultiply(Integer multiply)
+	{
+		this.multiply = multiply;
 	}
 }
