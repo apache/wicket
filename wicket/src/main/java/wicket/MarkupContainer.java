@@ -181,7 +181,6 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 
 		// Add to map
 		Component<?> replaced = put(child);
-		child.setFlag(FLAG_REMOVED_FROM_PARENT, false);
 		if (replaced != null)
 		{
 			replaced.setFlag(FLAG_REMOVED_FROM_PARENT, true);
@@ -349,9 +348,18 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 			log.debug("internalAdd " + child.getId() + " to " + this);
 		}
 
+		int index = children_indexOf(child.getId());
+		if(index != -1)
+		{
+			if(children_get(index) != child)
+			{
+				throw new IllegalArgumentException("MarkupContainer " + getId() + " already contains child: " + child.getId());
+			}
+			return;
+		}
 		// Add to map
-		addedComponent(child);
 		put(child);
+		addedComponent(child);
 	}
 
 	/**
@@ -1275,6 +1283,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 */
 	private final Component<?> put(final Component<?> child)
 	{
+		child.setFlag(FLAG_REMOVED_FROM_PARENT, false);
 		// search for the child by id. So that it will
 		// find the right index for the id instead of looking
 		// if the component itself is already children.
