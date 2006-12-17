@@ -9,11 +9,15 @@ wicketAjaxDebugEnable=true;
 <script type="text/javascript" src="/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug-drag.js"></script>
 <script type="text/javascript" src="/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication/resources/wicket.ajax.AbstractDefaultAjaxBehavior/wicket-ajax-debug.js"></script>
 </head>
-<body onload="setTimeout(function() { var wcall=wicketAjaxGet('/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:interface=:0:testPanel:baseSpan:linja1:-1:IUnversionedBehaviorListener&wicket:behaviorId=0', function() { }, function() { }); }, 2000);">
+<body>
   <span wicket:id="testPanel"><wicket:panel>
     <span wicket:id="baseSpan">
       <wicket:child><wicket:extend>
-    this counter should update every 2 seconds: <span id="testPanel_baseSpan_linja1" wicket:id="linja1">0</span>
+    this counter should update every 2 seconds: <span id="linja10" wicket:id="linja1">0</span><script type="text/javascript" ><!--/*--><![CDATA[/*><!--*/
+setTimeout(" var wcall=wicketAjaxGet('/WicketTester$DummyWebApplication/WicketTester$DummyWebApplication?wicket:interface=:0:testPanel:baseSpan:linja1:-1:IUnversionedBehaviorListener&wicket:behaviorId=0', function() { }, function() { }); ", 2000);
+/*-->]]>*/</script>
+
+
   </wicket:extend></wicket:child>
     </span>
   </wicket:panel></span>
