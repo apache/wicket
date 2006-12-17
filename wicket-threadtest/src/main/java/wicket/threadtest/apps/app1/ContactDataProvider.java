@@ -19,15 +19,16 @@ package wicket.threadtest.apps.app1;
 
 import java.util.Iterator;
 
-import wicket.extensions.markup.html.repeater.data.IDataProvider;
+import wicket.markup.repeater.data.DataViewBase;
+import wicket.markup.repeater.data.IDataProvider;
 import wicket.model.IModel;
 
 /**
  * Implementation of IDataProvider that retrieves contacts from the contact
  * database.
  * 
- * @see wicket.extensions.markup.html.repeater.data.IDataProvider
- * @see wicket.extensions.markup.html.repeater.data.DataViewBase
+ * @see IDataProvider
+ * @see DataViewBase
  * 
  * @author igor
  * 
@@ -46,8 +47,7 @@ public class ContactDataProvider implements IDataProvider<Contact> {
 	 * retrieves contacts from database starting with index <code>first</code>
 	 * and ending with <code>first+count</code>
 	 * 
-	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#iterator(int,
-	 *      int)
+	 * @see IDataProvider#iterator(int,int)
 	 */
 	@SuppressWarnings("unchecked")
 	public Iterator<Contact> iterator(int first, int count) {
@@ -57,7 +57,7 @@ public class ContactDataProvider implements IDataProvider<Contact> {
 	/**
 	 * wraps retrieved contact pojo with a wicket model
 	 * 
-	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#model(java.lang.Object)
+	 * @see IDataProvider#model(java.lang.Object)
 	 */
 	public IModel<Contact> model(Contact object) {
 		return new DetachableContactModel(object);
@@ -66,7 +66,7 @@ public class ContactDataProvider implements IDataProvider<Contact> {
 	/**
 	 * returns total number of contacts in the database
 	 * 
-	 * @see wicket.extensions.markup.html.repeater.data.IDataProvider#size()
+	 * @see IDataProvider#size()
 	 */
 	public int size() {
 		return getContactsDB().getCount();

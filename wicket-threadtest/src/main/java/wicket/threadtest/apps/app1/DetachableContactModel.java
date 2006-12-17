@@ -17,7 +17,9 @@
  */
 package wicket.threadtest.apps.app1;
 
-import wicket.extensions.markup.html.repeater.refreshing.IItemReuseStrategy;
+import wicket.markup.repeater.AbstractPageableView;
+import wicket.markup.repeater.IItemReuseStrategy;
+import wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import wicket.model.AbstractReadOnlyDetachableModel;
 
 /**
@@ -52,8 +54,8 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	/**
 	 * used for dataview with ReuseIfModelsEqualStrategy item reuse strategy
 	 * 
-	 * @see wicket.extensions.markup.html.repeater.pageable.AbstractPageableView#setItemReuseStrategy(IItemReuseStrategy)
-	 * @see wicket.extensions.markup.html.repeater.refreshing.ReuseIfModelsEqualStrategy
+	 * @see AbstractPageableView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

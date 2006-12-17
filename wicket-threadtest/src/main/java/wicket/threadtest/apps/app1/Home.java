@@ -29,8 +29,6 @@ import wicket.AttributeModifier;
 import wicket.MarkupContainer;
 import wicket.Session;
 import wicket.extensions.markup.html.datepicker.DatePicker;
-import wicket.extensions.markup.html.repeater.data.DataView;
-import wicket.extensions.markup.html.repeater.refreshing.Item;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.basic.Label;
@@ -53,6 +51,8 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.repeater.Item;
+import wicket.markup.repeater.data.DataView;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.IModel;
@@ -330,12 +330,12 @@ public class Home extends WebPage {
 			}
 		};
 
-		new Label(this, "selectedLabel", new PropertyModel(this, "selectedContactLabel"));
+		new Label(this, "selectedLabel", new PropertyModel<String>(this, "selectedContactLabel"));
 
-		new DataView(this, "simple", new ContactDataProvider()) {
+		new DataView<Contact>(this, "simple", new ContactDataProvider()) {
 			@Override
-			protected void populateItem(final Item item) {
-				Contact contact = (Contact) item.getModelObject();
+			protected void populateItem(final Item<Contact> item) {
+				Contact contact = item.getModelObject();
 				new ActionPanel(item, "actions", item.getModel());
 				new Label(item, "contactid", String.valueOf(contact.getId()));
 				new Label(item, "firstname", contact.getFirstName());
