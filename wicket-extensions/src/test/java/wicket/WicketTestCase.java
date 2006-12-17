@@ -75,7 +75,7 @@ public abstract class WicketTestCase extends TestCase
 		String document = accessPage(pageClass).getDocument();
 
 		// Validate the document
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+		DiffUtil.validatePage(document, this.getClass(), filename,true);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public abstract class WicketTestCase extends TestCase
 		tester.processRequestCycle(cycle);
 
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
+		DiffUtil.validatePage(document, pageClass, filename,true);
 	}
 
 	/**
@@ -143,6 +143,6 @@ public abstract class WicketTestCase extends TestCase
 		tester.processRequestCycle(cycle);
 
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
+		DiffUtil.validatePage(document, pageClass, filename,true);
 	}
 }
