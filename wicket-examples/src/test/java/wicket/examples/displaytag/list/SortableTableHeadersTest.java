@@ -62,8 +62,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 		application.processRequestCycle();
 		SortableTableHeadersPage page = (SortableTableHeadersPage)application.getLastRenderedPage();
 		String document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"SortableTableHeadersExpectedResult_1.html"));
+		DiffUtil.validatePage(document, this.getClass(),"SortableTableHeadersExpectedResult_1.html",true);
 
 		Link link = (Link)page.get("header:<auto>-id:actionLink");
 		assertTrue(link.isEnabled());
@@ -89,8 +88,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 		application.processRequestCycle();
 
 		document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"SortableTableHeadersExpectedResult_2.html"));
+		DiffUtil.validatePage(document, this.getClass(),"SortableTableHeadersExpectedResult_2.html",true);
 
 		// reverse sorting
 		link = (Link)page.get("header:<auto>-name:actionLink");
@@ -108,7 +106,6 @@ public class SortableTableHeadersTest extends WicketTestCase
 		application.processRequestCycle();
 
 		document = application.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"SortableTableHeadersExpectedResult_3.html"));
+		DiffUtil.validatePage(document, this.getClass(),"SortableTableHeadersExpectedResult_3.html",true);
 	}
 }
