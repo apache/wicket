@@ -22,9 +22,12 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 
+import junit.framework.Assert;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import wicket.WicketTestCase;
 import wicket.util.io.Streams;
 import wicket.util.string.StringList;
 
@@ -54,10 +57,11 @@ public final class DiffUtil
 	 *            Expected ouput
 	 * @param clazz
 	 *            Used to load the file (relativ to clazz package)
+	 * @param wicketTestCase 
 	 * @return true, if equal
 	 * @throws IOException
 	 */
-	public static final boolean validatePage(String document, final Class clazz, final String file)
+	public static final boolean validatePage(String document, final Class clazz, final String file, boolean failWithAssert)
 			throws IOException
 	{
 		String filename = clazz.getPackage().getName();
@@ -98,30 +102,37 @@ public final class DiffUtil
 				return true;
 			}
 
-			log.error("File name: " + file);
-			/*  */
-			log.error("===================");
-			log.error(reference);
-			log.error("===================");
-
-			log.error(document);
-			log.error("===================");
-			/* */
-
-			String[] test1 = StringList.tokenize(reference, "\n").toArray();
-			String[] test2 = StringList.tokenize(document, "\n").toArray();
-			Diff df = new Diff(test1);
-			Revision r;
-			try
+			if(failWithAssert)
 			{
-				r = df.diff(test2);
+				Assert.assertEquals(filename, reference, document);
 			}
-			catch (DifferentiationFailedException e)
+			else
 			{
-				throw new RuntimeException(e);
+				log.error("File name: " + file);
+				/*  */
+				log.error("===================");
+				log.error(reference);
+				log.error("===================");
+	
+				log.error(document);
+				log.error("===================");
+				/* */
+	
+				String[] test1 = StringList.tokenize(reference, "\n").toArray();
+				String[] test2 = StringList.tokenize(document, "\n").toArray();
+				Diff df = new Diff(test1);
+				Revision r;
+				try
+				{
+					r = df.diff(test2);
+				}
+				catch (DifferentiationFailedException e)
+				{
+					throw new RuntimeException(e);
+				}
+	
+				System.out.println(r.toString());
 			}
-
-			System.out.println(r.toString());
 		}
 
 		return equals;

@@ -52,7 +52,7 @@ public class FormTesterTest extends WicketTestCase
 		tester.processRequestCycle();
 
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "ExpectedResult-1.html"));
+		DiffUtil.validatePage(document, this.getClass(), "ExpectedResult-1.html",true);
 
 		assertEquals(EmailPage.class, tester.getLastRenderedPage().getClass());
 		EmailPage page = (EmailPage)tester.getLastRenderedPage();
@@ -66,6 +66,6 @@ public class FormTesterTest extends WicketTestCase
 		assertEquals(EmailPage.class, page.getClass());
 
 		document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "ExpectedResult-2.html"));
+		DiffUtil.validatePage(document, this.getClass(), "ExpectedResult-2.html",true);
 	}
 }

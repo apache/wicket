@@ -192,6 +192,6 @@ public class PagedTableNavigatorWithMarginTest extends TestCase
 
 	private boolean validatePage(final String document, final String file) throws IOException
 	{
-		return DiffUtil.validatePage(document, this.getClass(), file);
+		return DiffUtil.validatePage(document, this.getClass(), file,true);
 	}
 }

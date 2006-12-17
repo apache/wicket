@@ -70,7 +70,7 @@ public abstract class WicketPortletTestCase extends TestCase
 
 		// Validate the document
 		String document = application.getPortletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), filename));
+		DiffUtil.validatePage(document, this.getClass(), filename,true);
 	}
 
 
@@ -99,7 +99,7 @@ public abstract class WicketPortletTestCase extends TestCase
 		application.processRenderRequestCycle(application.createRenderRequestCycle());
 		
 		String document = application.getPortletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
+		DiffUtil.validatePage(document, pageClass, filename,true);
 	}
 
 	/**
@@ -126,6 +126,6 @@ public abstract class WicketPortletTestCase extends TestCase
 		application.processRenderRequestCycle(application.createRenderRequestCycle());
 
 		String document = application.getPortletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, pageClass, filename));
+		DiffUtil.validatePage(document, pageClass, filename,true);
 	}	
 }

@@ -78,7 +78,7 @@ public class MockPortletApplicationTest extends TestCase
 
 		// Validate the document
 		String document = application.getPortletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MockPortletPage_expectedResult.html"));
+		DiffUtil.validatePage(document, this.getClass(), "MockPortletPage_expectedResult.html",true);
 
 		// Inspect the page & model
 		MockPortletPage p = (MockPortletPage)application.getLastRenderedPage();
@@ -105,7 +105,7 @@ public class MockPortletApplicationTest extends TestCase
 
 		// Validate the document
 		String document = application.getPortletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MockPortletPage_expectedResult2.html"));
+		DiffUtil.validatePage(document, this.getClass(), "MockPortletPage_expectedResult2.html",true);
 
 		// Inspect the page & model
 		p = (MockPortletPage)application.getLastRenderedPage();

@@ -61,6 +61,6 @@ public class IndexedParamTest extends WicketTestCase
 
 		// Validate the document
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "IndexedParamTest_ExpectedResult-2.html"));
+		DiffUtil.validatePage(document, this.getClass(), "IndexedParamTest_ExpectedResult-2.html",true);
 	}
 }

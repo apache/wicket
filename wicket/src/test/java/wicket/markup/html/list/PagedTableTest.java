@@ -69,8 +69,8 @@ public class PagedTableTest extends TestCase
 		tester.getServletRequest().setRequestToComponent(link);
 		tester.processRequestCycle();
 		document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"PagedTablePageExpectedResult.html"));
+		DiffUtil.validatePage(document, this.getClass(),
+				"PagedTablePageExpectedResult.html",true);
 	}
 
 	/**

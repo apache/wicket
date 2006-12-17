@@ -155,7 +155,7 @@ public class AjaxRequestTargetTest extends WicketTestCase
 		else
 		{
 			assertNotNull("Probably an exception happened", headerContribution);
-			assertTrue(DiffUtil.validatePage(headerContribution, this.getClass(), expectedFile));
+			DiffUtil.validatePage(headerContribution, this.getClass(), expectedFile,true);
 		}
 	}
 }

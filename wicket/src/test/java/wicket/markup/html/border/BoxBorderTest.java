@@ -158,6 +158,6 @@ public class BoxBorderTest extends WicketTestCase
 		tester.clickLink("link");
 
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "BoxBorderTestPage_ExpectedResult_7-1.html"));
+		DiffUtil.validatePage(document, this.getClass(), "BoxBorderTestPage_ExpectedResult_7-1.html",true);
 	}
 }

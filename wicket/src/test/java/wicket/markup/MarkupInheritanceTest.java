@@ -72,8 +72,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 		assertEquals(MarkupInheritanceExtension_4.class, tester.getLastRenderedPage()
 				.getClass());
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"MarkupInheritanceExpectedResult_4.html"));
+		DiffUtil.validatePage(document, this.getClass(), "MarkupInheritanceExpectedResult_4.html",true);
 
 		MarkupInheritanceExtension_4 page = (MarkupInheritanceExtension_4)tester
 				.getLastRenderedPage();
@@ -87,8 +86,7 @@ public class MarkupInheritanceTest extends WicketTestCase
 				.getClass());
 
 		document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(),
-				"MarkupInheritanceExpectedResult_4-1.html"));
+		DiffUtil.validatePage(document, this.getClass(),"MarkupInheritanceExpectedResult_4-1.html",true);
 	}
 
 	/**

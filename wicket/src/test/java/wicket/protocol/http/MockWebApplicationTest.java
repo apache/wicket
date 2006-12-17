@@ -65,7 +65,7 @@ public class MockWebApplicationTest extends TestCase
 
 		// Validate the document
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult.html"));
+		DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult.html",true);
 
 		// Inspect the page & model
 		MockPage p = (MockPage)tester.getLastRenderedPage();
@@ -119,8 +119,7 @@ public class MockWebApplicationTest extends TestCase
 		 */
 		// Validate the document
 		String document = tester.getServletResponse().getDocument();
-		assertTrue(DiffUtil
-				.validatePage(document, this.getClass(), "MockPage_expectedResult2.html"));
+		DiffUtil.validatePage(document, this.getClass(), "MockPage_expectedResult2.html",true);
 
 		// Inspect the page & model
 		p = (MockPage)tester.getLastRenderedPage();
