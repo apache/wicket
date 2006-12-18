@@ -89,7 +89,7 @@ public class FormPage extends BasePage
 			}
 
 			@Override
-			protected Item<Contact> newItem(MarkupContainer parent, String id, int index,
+			protected Item<Contact> newItem(MarkupContainer<?> parent, String id, int index,
 					IModel<Contact> model)
 			{
 				// this item sets markup class attribute to either 'odd' or
