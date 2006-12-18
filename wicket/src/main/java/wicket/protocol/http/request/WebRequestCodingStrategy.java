@@ -46,7 +46,6 @@ import wicket.request.IRequestCodingStrategy;
 import wicket.request.IRequestTargetMountsInfo;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
-import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.component.IPageRequestTarget;
 import wicket.request.target.component.listener.IListenerInterfaceRequestTarget;
@@ -583,7 +582,7 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 
 		boolean firstParameter = true;
 		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName)
-				|| requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
+				/*|| requestTarget instanceof BookmarkableListenerInterfaceRequestTarget*/)
 		{
 			firstParameter = false;
 			url.append('?');
@@ -615,26 +614,26 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		}
 
 		// Is it a bookmarkable interface listener?
-		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
-		{
-			BookmarkableListenerInterfaceRequestTarget listenerTarget = (BookmarkableListenerInterfaceRequestTarget)requestTarget;
-			if (firstParameter == true)
-			{
-				url.append("?");
-			}
-			else
-			{
-				url.append("&");
-			}
-			firstParameter = false;
-			url.append(INTERFACE_PARAMETER_NAME);
-			url.append("=");
-			url.append(Component.PATH_SEPARATOR);
-			url.append(listenerTarget.getComponentPath());
-			url.append(Component.PATH_SEPARATOR);
-			url.append(Component.PATH_SEPARATOR);
-			url.append(listenerTarget.getInterfaceName());
-		}
+//		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
+//		{
+//			BookmarkableListenerInterfaceRequestTarget listenerTarget = (BookmarkableListenerInterfaceRequestTarget)requestTarget;
+//			if (firstParameter == true)
+//			{
+//				url.append("?");
+//			}
+//			else
+//			{
+//				url.append("&");
+//			}
+//			firstParameter = false;
+//			url.append(INTERFACE_PARAMETER_NAME);
+//			url.append("=");
+//			url.append(Component.PATH_SEPARATOR);
+//			url.append(listenerTarget.getComponentPath());
+//			url.append(Component.PATH_SEPARATOR);
+//			url.append(Component.PATH_SEPARATOR);
+//			url.append(listenerTarget.getInterfaceName());
+//		}
 
 		// Get page parameters
 		final PageParameters parameters = requestTarget.getPageParameters();

@@ -23,6 +23,8 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -52,6 +54,18 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		super(pageMapName, pageClass, pageParameters);
 		this.componentPath = componentPath;
 		this.interfaceName = interfaceName;
+
+		// add the 2 extra params that must be in the url.
+		pageParameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,pageMapName + Component.PATH_SEPARATOR + pageClass.getName());
+		
+		AppendingStringBuffer param = new AppendingStringBuffer(3 + componentPath.length() + interfaceName.length());
+		param.append(Component.PATH_SEPARATOR);
+		param.append(getComponentPath());
+		param.append(Component.PATH_SEPARATOR);
+		param.append(Component.PATH_SEPARATOR);
+		param.append(getInterfaceName());
+		
+		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,param.toString());
 	}
 
 	/**
