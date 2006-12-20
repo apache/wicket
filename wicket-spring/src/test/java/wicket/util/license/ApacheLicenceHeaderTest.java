@@ -14,35 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.injection.util;
-
+package wicket.util.license;
 
 /**
- * Object used to test injection
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * @author Frank Bille Jensen (frankbille)
  */
-public class InternalTestObject
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-	private MockDependency dependency1;
-
-	private MockDependency dependency2 = new MockDependency("dont-inject");
-
 	/**
-	 * @return dependency1
+	 * Construct.
 	 */
-	public MockDependency getDependency1()
+	public ApacheLicenceHeaderTest()
 	{
-		return dependency1;
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				"src/assembly/bin.xml",
+				"src/assembly/build.xml"
+		};
 	}
-
-	/**
-	 * @return dependency2
-	 */
-	public MockDependency getDependency2()
-	{
-		return dependency2;
-	}
-
 }
