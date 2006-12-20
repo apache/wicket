@@ -14,43 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.annot;
-
-import wicket.injection.ConfigurableInjector;
-import wicket.injection.IFieldValueFactory;
-import wicket.spring.ISpringContextLocator;
+package wicket.util.license;
 
 /**
- * Injector that injects classes based on {@link SpringBean} annotation
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Igor Vaynberg (ivaynberg)
- * 
+ * @author Frank Bille Jensen (frankbille)
  */
-public class AnnotSpringInjector extends ConfigurableInjector
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-
-	IFieldValueFactory factory;
-
 	/**
-	 * Constructor
-	 * 
-	 * @param locator
-	 *            spring context locator
+	 * Construct.
 	 */
-	public AnnotSpringInjector(ISpringContextLocator locator)
+	public ApacheLicenceHeaderTest()
 	{
-		initFactory(locator);
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				"src/assembly/bin.xml",
+				"src/assembly/build.xml"
+		};
 	}
-
-	private void initFactory(ISpringContextLocator locator)
-	{
-		factory = new AnnotProxyFieldValueFactory(locator);
-	}
-
-	@Override
-	protected IFieldValueFactory getFieldValueFactory()
-	{
-		return factory;
-	}
-
 }
