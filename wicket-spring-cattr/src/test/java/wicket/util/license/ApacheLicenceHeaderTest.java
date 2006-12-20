@@ -14,35 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.injection.cattr;
+package wicket.util.license;
 
 /**
- * Commons Attribute used to tag a field as a placeholder for a spring bean.
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Karthik Gurumurthy
+ * @author Frank Bille Jensen (frankbille)
  */
-public class SpringBean {
-
-	/** the name of the bean. */
-	private String name;
-
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+{
 	/**
 	 * Construct.
-	 * 
-	 * @param name
-	 *            the name of the bean
 	 */
-	public SpringBean(String name) {
-		this.name = name;
+	public ApacheLicenceHeaderTest()
+	{
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				"src/assembly/bin.xml",
+				"src/assembly/build.xml"
+		};
 	}
-
-	/**
-	 * Gets the name of the bean.
-	 * 
-	 * @return the name of the bean
-	 */
-	public String getName() {
-		return name;
-	}
-
 }
