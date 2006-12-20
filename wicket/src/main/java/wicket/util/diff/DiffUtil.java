@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 
+import junit.framework.Assert;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -98,6 +100,8 @@ public final class DiffUtil
 				return true;
 			}
 
+			Assert.assertEquals(filename, reference, document);
+			
 			log.error("File name: " + file);
 			/*  */
 			log.error("===================");
