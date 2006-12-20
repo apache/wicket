@@ -14,33 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.authentication.example;
-
-import wicket.PageParameters;
-import wicket.authentication.pages.SignInPage;
+package wicket.util.license;
 
 /**
- * Simple example of a sign in page. It extends MySignInPage, a base class which
- * provide standard functionality for typical log-in pages
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Jonathan Locke
+ * @author Frank Bille Jensen (frankbille)
  */
-public final class MySignInPage extends SignInPage
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
 	/**
-	 * Constructor
+	 * Construct.
 	 */
-	public MySignInPage()
+	public ApacheLicenceHeaderTest()
 	{
-	}
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param parameters
-	 *            Parameters to page
-	 */
-	public MySignInPage(final PageParameters parameters)
-	{
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				"src/assembly/bin.xml",
+				"src/assembly/build.xml"
+		};
 	}
 }
