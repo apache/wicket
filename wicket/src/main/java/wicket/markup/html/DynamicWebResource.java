@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import wicket.protocol.http.WebResponse;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
@@ -81,13 +82,27 @@ public abstract class DynamicWebResource extends WebResource
 	 * The resource locale.
 	 */
 	private Locale locale;
+
+	/** The filename that will be set as the Content-Disposition header. */
+	private final String filename;
 	
 	/**
 	 * Creates a dynamic resource.
 	 */
 	public DynamicWebResource()
 	{
-		setCacheable(false);
+		this(null,null);
+	}
+
+	/**
+	 * Creates a dynamic resource.
+	 * 
+	 * @param filename 
+	 * 			  The filename that will be set as the Content-Disposition header.
+	 */
+	public DynamicWebResource(String filename)
+	{
+		this(null,filename);
 	}
 
 	/**
@@ -98,10 +113,34 @@ public abstract class DynamicWebResource extends WebResource
 	 */
 	public DynamicWebResource(Locale locale)
 	{
-		this();
+		this(locale,null);
+	}
+	/**
+	 * Creates a dynamic resource from for the given locale
+	 * 
+	 * @param locale
+	 *            The locale of this resource
+	 * @param filename 
+	 * 			  The filename that will be set as the Content-Disposition header.
+	 */
+	public DynamicWebResource(Locale locale, String filename)
+	{
 		this.locale = locale;
+		this.filename = filename;
+		setCacheable(false);
 	}
 
+	/**
+	 * @see wicket.markup.html.WebResource#setHeaders(wicket.protocol.http.WebResponse)
+	 */
+	protected void setHeaders(WebResponse response)
+	{
+		super.setHeaders(response);
+		if(filename != null)
+		{
+			response.setAttachmentHeader(filename);
+		}
+	}	
 	/**
 	 * Returns the resource locale.
 	 * 
