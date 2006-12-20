@@ -14,29 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.quickstart;
-
-import wicket.protocol.http.WebApplication;
-import wicket.protocol.http.WebSession;
+package wicket.util.license;
 
 /**
- * Subclass of WebSession for QuickStartApplication to allow easy and typesafe
- * access to session properties.
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Jonathan Locke
+ * @author Frank Bille Jensen (frankbille)
  */
-public final class QuickStartSession extends WebSession
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-	//  TODO Add any session properties here
-
 	/**
-	 * Constructor
-	 * 
-	 * @param application
-	 *            The application
+	 * Construct.
 	 */
-	protected QuickStartSession(final WebApplication application)
+	public ApacheLicenceHeaderTest()
 	{
-		super(application);
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				"src/assembly/bin.xml",
+				"src/assembly/build.xml"
+		};
+		
+		htmlIgnore = new String[] {
+				// This is a quickstart project, so too much information in the HTML file
+				// will confuse.
+				"src/main/java/wicket/quickstart/Index.html",
+				// Small redirect file with no clever content.
+				"src/main/webapp/index.html"
+		};
 	}
 }
