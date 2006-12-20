@@ -106,7 +106,7 @@ public class WizardPanel extends Panel
 
 			Button previousButton = new Button("previous")
 			{
-				protected void onSubmit()
+				public void onSubmit()
 				{
 					Node current = state.getCurrentNode();
 					if (current instanceof Step)
@@ -129,7 +129,7 @@ public class WizardPanel extends Panel
 
 			Button nextButton = new Button("next")
 			{
-				protected void onSubmit()
+				public void onSubmit()
 				{
 					Node current = state.getCurrentNode();
 					if (current instanceof Step)
@@ -152,7 +152,7 @@ public class WizardPanel extends Panel
 
 			Button exitButton = new Button("exit")
 			{
-				protected void onSubmit()
+				public void onSubmit()
 				{
 					Node current = state.getCurrentNode();
 					if (current instanceof Exit)
