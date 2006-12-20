@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
+import wicket.protocol.http.WebResponse;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.time.Time;
@@ -43,25 +44,19 @@ public abstract class DynamicWebResource extends WebResource
 	 * 
 	 * @author jcompagner
 	 */
-	public static class ResourceState
+	public static abstract class ResourceState
 	{
 		protected Time lastModifiedTime;
 
 		/**
 		 * @return The Byte array for this resource
 		 */
-		public byte[] getData()
-		{
-			return null;
-		}
+		public abstract byte[] getData();
 
 		/**
 		 * @return The content type of this resource
 		 */
-		public String getContentType()
-		{
-			return null;
-		}
+		public abstract String getContentType();
 
 		/**
 		 * @return The last modified time of this resource
@@ -69,9 +64,7 @@ public abstract class DynamicWebResource extends WebResource
 		public Time lastModifiedTime()
 		{
 			if (lastModifiedTime == null)
-			{
 				lastModifiedTime = Time.now();
-			}
 			return lastModifiedTime;
 		}
 
@@ -89,13 +82,27 @@ public abstract class DynamicWebResource extends WebResource
 	 * The resource locale.
 	 */
 	private Locale locale;
-
+	
+	/** The filename that will be set as the Content-Disposition header. */
+	private final String filename;
+	
 	/**
 	 * Creates a dynamic resource.
 	 */
 	public DynamicWebResource()
 	{
-		setCacheable(false);
+		this(null,null);
+	}
+
+	/**
+	 * Creates a dynamic resource.
+	 * 
+	 * @param filename 
+	 * 			  The filename that will be set as the Content-Disposition header.
+	 */
+	public DynamicWebResource(String filename)
+	{
+		this(null,filename);
 	}
 
 	/**
@@ -106,10 +113,34 @@ public abstract class DynamicWebResource extends WebResource
 	 */
 	public DynamicWebResource(Locale locale)
 	{
-		this();
+		this(locale,null);
+	}
+	/**
+	 * Creates a dynamic resource from for the given locale
+	 * 
+	 * @param locale
+	 *            The locale of this resource
+	 * @param filename 
+	 * 			  The filename that will be set as the Content-Disposition header.
+	 */
+	public DynamicWebResource(Locale locale, String filename)
+	{
 		this.locale = locale;
+		this.filename = filename;
+		setCacheable(false);
 	}
 
+	/**
+	 * @see wicket.markup.html.WebResource#setHeaders(wicket.protocol.http.WebResponse)
+	 */
+	protected void setHeaders(WebResponse response)
+	{
+		super.setHeaders(response);
+		if(filename != null)
+		{
+			response.setAttachmentHeader(filename);
+		}
+	}	
 	/**
 	 * Returns the resource locale.
 	 * 
@@ -123,7 +154,7 @@ public abstract class DynamicWebResource extends WebResource
 	/**
 	 * @return Gets the resource to attach to the component.
 	 */
-	@Override
+	// this method is deliberately non-final. some users depend on it
 	public IResourceStream getResourceStream()
 	{
 		return new IResourceStream()

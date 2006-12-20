@@ -325,9 +325,11 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 			}
 		}
 
+		String responseRequestEncoding = application.getRequestCycleSettings().getResponseRequestEncoding();
+
 		boolean firstParameter = true;
-		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName)
-				|| requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
+		if (!application.getHomePage().equals(pageClass) || !"".equals(pageMapName) ||
+			(application.getHomePage().equals(pageClass) && requestTarget instanceof BookmarkableListenerInterfaceRequestTarget) )
 		{
 			firstParameter = false;
 			url.append('?');
@@ -349,35 +351,14 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 			 */
 			try
 			{
-				pageClassName = URLEncoder.encode(pageClassName, "UTF-8");
+				url.append(URLEncoder.encode(pageMapName + Component.PATH_SEPARATOR + pageClassName,responseRequestEncoding));
 			}
-			catch (UnsupportedEncodingException e)
+			catch (UnsupportedEncodingException ex)
 			{
-				throw new RuntimeException(e);
+				log.error(ex.getMessage(), ex);
+				url.append(pageMapName + Component.PATH_SEPARATOR + pageClassName);
 			}
-			url.append(pageMapName + Component.PATH_SEPARATOR + pageClassName);
-		}
-
-		// Is it a bookmarkable interface listener?
-		if (requestTarget instanceof BookmarkableListenerInterfaceRequestTarget)
-		{
-			BookmarkableListenerInterfaceRequestTarget listenerTarget = (BookmarkableListenerInterfaceRequestTarget)requestTarget;
-			if (firstParameter == true)
-			{
-				url.append("?");
-			}
-			else
-			{
-				url.append("&");
-			}
-			firstParameter = false;
-			url.append(INTERFACE_PARAMETER_NAME);
-			url.append("=");
-			url.append(Component.PATH_SEPARATOR);
-			url.append(listenerTarget.getComponentPath());
-			url.append(Component.PATH_SEPARATOR);
-			url.append(Component.PATH_SEPARATOR);
-			url.append(listenerTarget.getInterfaceName());
+			
 		}
 
 		// Get page parameters
@@ -393,8 +374,7 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 					String escapedValue = value;
 					try
 					{
-						escapedValue = URLEncoder.encode(escapedValue, application
-								.getRequestCycleSettings().getResponseRequestEncoding());
+						escapedValue = URLEncoder.encode(escapedValue, responseRequestEncoding);
 					}
 					catch (UnsupportedEncodingException ex)
 					{

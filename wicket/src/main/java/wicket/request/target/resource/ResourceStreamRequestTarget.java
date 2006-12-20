@@ -195,10 +195,13 @@ public class ResourceStreamRequestTarget implements IRequestTarget
 	 * @param fileName
 	 *            Optional filename, used to set the content disposition header.
 	 *            Only meaningful when using with web requests.
+	 * @return this
+	 *         
 	 */
-	public void setFileName(String fileName)
+	public ResourceStreamRequestTarget setFileName(String fileName)
 	{
 		this.fileName = fileName;
+		return this;
 	}
 
 	/**

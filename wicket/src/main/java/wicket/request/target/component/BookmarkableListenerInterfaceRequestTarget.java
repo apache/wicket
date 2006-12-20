@@ -23,6 +23,8 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 
 /**
@@ -37,7 +39,9 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	private String interfaceName;
 
 	/**
-	 * Construct.
+	 * This constructor is called when a stateless link is clicked on but the page
+	 * wasn't found in the session. Then this class will recreate the page and call
+	 * the interface method on the component that is targetted with the component path.
 	 * 
 	 * @param pageMapName
 	 * @param pageClass
@@ -55,7 +59,10 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	}
 
 	/**
-	 * Construct.
+	 * This constructor is called for generating the urls (RequestCycle.urlFor())
+	 * So it will alter the PageParameters to include the 2 wicket params
+	 * {@link WebRequestCodingStrategy#BOOKMARKABLE_PAGE_PARAMETER_NAME} and
+	 * {@link WebRequestCodingStrategy#INTERFACE_PARAMETER_NAME}
 	 * 
 	 * @param pageMapName
 	 * @param pageClass
@@ -64,17 +71,36 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param listenerInterface
 	 */
 	public BookmarkableListenerInterfaceRequestTarget(String pageMapName,
-			Class<? extends Page> pageClass, PageParameters pageParameters, Component component,
+			Class<? extends Page> pageClass, PageParameters pageParameters, Component<?> component,
 			RequestListenerInterface listenerInterface)
 	{
 		this(pageMapName, pageClass, pageParameters, component.getPath(),
 				listenerInterface.getName());
+		
+		int version = component.getPage().getCurrentVersionNumber();
+
+		// add the wicket:interface param to the params.
+		AppendingStringBuffer param = new AppendingStringBuffer(3 + componentPath.length() + interfaceName.length());
+		if(pageMapName != null)
+		{
+			param.append(pageMapName);
+		}
+		param.append(Component.PATH_SEPARATOR);
+		param.append(getComponentPath());
+		param.append(Component.PATH_SEPARATOR);
+		if(version != 0)
+		{
+			param.append(version);
+		}
+		param.append(Component.PATH_SEPARATOR);
+		param.append(getInterfaceName());
+		
+		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,param.toString());
 	}
 
-	@Override
 	public void processEvents(RequestCycle requestCycle)
 	{
-		Page page = getPage(requestCycle);
+		Page<?> page = getPage(requestCycle);
 		final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 				Component.PATH_SEPARATOR);
 		Component<?> component = page.get(pageRelativeComponentPath);
@@ -83,7 +109,6 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		listenerInterface.invoke(page, component);
 	}
 
-	@Override
 	public void respond(RequestCycle requestCycle)
 	{
 		getPage(requestCycle).renderPage();

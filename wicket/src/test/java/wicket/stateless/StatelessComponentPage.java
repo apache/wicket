@@ -16,6 +16,7 @@
  */
 package wicket.stateless;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.link.StatelessLink;
 
@@ -38,7 +39,7 @@ public class StatelessComponentPage extends WebPage
 			@Override
 			public void onClick()
 			{
-				// test
+				throw new WicketRuntimeException("wanted exception");
 			}
 		};
 		

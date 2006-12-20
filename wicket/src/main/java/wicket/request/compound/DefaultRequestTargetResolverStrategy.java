@@ -23,12 +23,16 @@ import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
+import wicket.Page;
+import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.protocol.http.request.WebExternalResourceRequestTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
+import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
+import wicket.request.target.component.IBookmarkablePageRequestTarget;
 import wicket.request.target.resource.SharedResourceRequestTarget;
 import wicket.util.string.Strings;
 
@@ -67,7 +71,31 @@ public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetR
 		IRequestTarget mounted = requestCodingStrategy.targetForRequest(requestParameters);
 		if (mounted != null)
 		{
-			// the path was mounted, so return that directly
+			if(mounted instanceof IBookmarkablePageRequestTarget)
+			{
+				IBookmarkablePageRequestTarget bookmarkableTarget = (IBookmarkablePageRequestTarget)mounted;
+				// the path was mounted, so return that directly
+				if (requestParameters.getComponentPath() != null
+						&& requestParameters.getInterfaceName() != null)
+				{
+					final String componentPath = requestParameters.getComponentPath();
+					final Page<?> page = Session.get().getPage(requestParameters.getPageMapName(), componentPath,
+							requestParameters.getVersionNumber());
+					
+					if(page != null && page.getClass() == bookmarkableTarget.getPageClass())
+					{
+						return resolveListenerInterfaceTarget(requestCycle, page, componentPath,
+								requestParameters.getInterfaceName(), requestParameters);
+					}
+					else
+					{
+						PageParameters params = new PageParameters(requestParameters.getParameters());
+						return new BookmarkableListenerInterfaceRequestTarget(requestParameters
+								.getPageMapName(), bookmarkableTarget.getPageClass(), params, requestParameters.getComponentPath(),
+								requestParameters.getInterfaceName());
+					}
+				}
+			}
 			return mounted;
 		}
 
