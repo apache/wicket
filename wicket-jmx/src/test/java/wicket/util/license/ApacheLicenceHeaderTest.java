@@ -14,11 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.jmx;
+package wicket.util.license;
 
-class Stringz
+/**
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
+ * 
+ * @author Frank Bille Jensen (frankbille)
+ */
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 {
-	static String className(Object o) {
-		return (o != null) ? o.getClass().getName() : null;
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenceHeaderTest()
+	{
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				"src/assembly/bin.xml",
+				"src/assembly/build.xml"
+		};
 	}
 }
