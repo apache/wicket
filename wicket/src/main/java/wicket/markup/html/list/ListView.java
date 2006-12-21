@@ -540,57 +540,60 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 	@SuppressWarnings("unchecked")
 	protected void internalOnAttach()
 	{
-		// Get number of items to be displayed
-		final int size = getViewSize();
-		if (size > 0)
+		if (isVisibleInHierarchy())
 		{
-			if (getReuseItems())
+			// Get number of items to be displayed
+			final int size = getViewSize();
+			if (size > 0)
 			{
-				// Remove all ListItems no longer required
-				final int maxIndex = firstIndex + size;
-				for (final Iterator iterator = iterator(); iterator.hasNext();)
+				if (getReuseItems())
 				{
-					// Get next child component
-					final ListItem child = (ListItem)iterator.next();
-					if (child != null)
+					// Remove all ListItems no longer required
+					final int maxIndex = firstIndex + size;
+					for (final Iterator iterator = iterator(); iterator.hasNext();)
 					{
-						final int index = child.getIndex();
-						if (index < firstIndex || index >= maxIndex)
+						// Get next child component
+						final ListItem child = (ListItem)iterator.next();
+						if (child != null)
 						{
-							iterator.remove();
+							final int index = child.getIndex();
+							if (index < firstIndex || index >= maxIndex)
+							{
+								iterator.remove();
+							}
 						}
+					}
+				}
+				else
+				{
+					// Automatically rebuild all ListItems before rendering the
+					// list view
+					removeAll();
+				}
+	
+				// Loop through the markup in this container for each item
+				for (int i = 0; i < size; i++)
+				{
+					// Get index
+					final int index = firstIndex + i;
+	
+					// If this component does not already exist, populate it
+					ListItem<T> item = (ListItem<T>)get(Integer.toString(index));
+					if (item == null)
+					{
+						// Create item for index
+						item = newItem(index);
+	
+						// Populate the list item
+						onBeginPopulateItem(item);
+						populateItem(item);
 					}
 				}
 			}
 			else
 			{
-				// Automatically rebuild all ListItems before rendering the
-				// list view
 				removeAll();
 			}
-
-			// Loop through the markup in this container for each item
-			for (int i = 0; i < size; i++)
-			{
-				// Get index
-				final int index = firstIndex + i;
-
-				// If this component does not already exist, populate it
-				ListItem<T> item = (ListItem<T>)get(Integer.toString(index));
-				if (item == null)
-				{
-					// Create item for index
-					item = newItem(index);
-
-					// Populate the list item
-					onBeginPopulateItem(item);
-					populateItem(item);
-				}
-			}
-		}
-		else
-		{
-			removeAll();
 		}
 	}
 
