@@ -112,7 +112,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * </p>
  * <p>
  * To get form components to persist their values for users via cookies, simply
- * call setPersistent(true) on the form component.
+ * call setPersistent(true) on each component.
  * </p>
  * 
  * @author Jonathan Locke
