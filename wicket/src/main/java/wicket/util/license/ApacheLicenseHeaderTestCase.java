@@ -129,7 +129,7 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 	private class DirectoryFileFilter implements FileFilter
 	{
-		private String[] ignoreDirectory = new String[] { ".svn", "target" };
+		private String[] ignoreDirectory = new String[] { ".svn" };
 
 		public boolean accept(File pathname)
 		{
@@ -137,19 +137,25 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 
 			if (pathname.isDirectory())
 			{
-				boolean found = false;
-				for (int i = 0; i < ignoreDirectory.length; i++)
-				{
-					String ignore = ignoreDirectory[i];
-					if (pathname.getName().equals(ignore))
+				String relativePathname = pathname.getAbsolutePath();
+				relativePathname = Strings.replaceAll(relativePathname,
+						baseDirectory.getAbsolutePath() + System.getProperty("file.separator"), "")
+						.toString();
+				if (relativePathname.equals("target") == false) {
+					boolean found = false;
+					for (int i = 0; i < ignoreDirectory.length; i++)
 					{
-						found = true;
-						break;
+						String ignore = ignoreDirectory[i];
+						if (pathname.getName().equals(ignore))
+						{
+							found = true;
+							break;
+						}
 					}
-				}
-				if (found == false)
-				{
-					accept = true;
+					if (found == false)
+					{
+						accept = true;
+					}
 				}
 			}
 
