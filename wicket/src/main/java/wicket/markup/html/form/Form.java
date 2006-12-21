@@ -113,7 +113,7 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * </p>
  * <p>
  * To get form components to persist their values for users via cookies, simply
- * call setPersistent(true) on the form component.
+ * call setPersistent(true) on each component.
  * </p>
  * <p>
  * Forms can be nested. You can put a form in another form. Since HTML doesn't 
