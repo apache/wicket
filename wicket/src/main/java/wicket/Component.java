@@ -1602,33 +1602,6 @@ public abstract class Component implements Serializable
 				// Make sure that while rendering the markup stream is found
 				parent.setMarkupStream(markupStream);
 
-				if (this instanceof MarkupContainer)
-				{
-					MarkupContainer container = (MarkupContainer)this;
-
-					// First, give priority to IFeedback instances, as they have
-					// to
-					// collect their messages before components like ListViews
-					// remove any child components
-					container.visitChildren(IFeedback.class, new IVisitor()
-					{
-						public Object component(Component component)
-						{
-							((IFeedback)component).updateFeedback();
-							component.internalAttach();
-							return IVisitor.CONTINUE_TRAVERSAL;
-						}
-					});
-				}
-
-				if (this instanceof IFeedback)
-				{
-					((IFeedback)this).updateFeedback();
-				}
-
-				// attach
-				internalAttach();
-
 				// check authorization
 				// first the component itself
 				// (after attach as otherwise list views etc wont work)
@@ -2591,7 +2564,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * Called when a request begins.
 	 */
-	protected void internalAttach()
+	public void internalAttach()
 	{
 		onBeginRequest();
 		onAttach();
@@ -2604,7 +2577,7 @@ public abstract class Component implements Serializable
 	 * 
 	 * Called when a request ends.
 	 */
-	protected void internalDetach()
+	public void internalDetach()
 	{
 		internalOnDetach();
 		onDetach();
