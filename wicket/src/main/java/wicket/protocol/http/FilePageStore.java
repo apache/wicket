@@ -31,6 +31,12 @@ import wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore;
 import wicket.util.lang.Objects;
 
 /**
+ * Stores pages on disk.
+ * <p>
+ * Override {@link #getWorkDir()} to change the default directory
+ * for pages, which is configured from the javax.servlet.context.tempdir
+ * attribute in the servlet context.
+ * 
  * @author jcompagner
  */
 public class FilePageStore implements IPageStore
@@ -38,16 +44,16 @@ public class FilePageStore implements IPageStore
 	/** log. */
 	protected static Log log = LogFactory.getLog(FilePageStore.class);
 
-	private File workDir;
-
-	/**
-	 * Construct.
-	 */
-	public FilePageStore()
-	{
-		workDir = (File)((WebApplication)Application.get()).getServletContext().getAttribute(
-				"javax.servlet.context.tempdir");
-	}
+        /**
+         * Returns the working directory for this disk-based PageStore.
+         * Override this to configure a different location. The default
+         * is javax.servlet.context.tempdir from the servlet context.
+         *  
+         * @return Working directory
+         */
+        protected File getWorkDir() {
+            return (File)((WebApplication)Application.get()).getServletContext().getAttribute("javax.servlet.context.tempdir");
+        }
 
 	/**
 	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
@@ -55,7 +61,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public Page getPage(String sessionId, int id, int versionNumber)
 	{
-		File sessionDir = new File(workDir, sessionId);
+		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
 			File pageFile = getPageFile(id, versionNumber, sessionDir);
@@ -124,7 +130,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public void removePage(String sessionId, Page page)
 	{
-		File sessionDir = new File(workDir, sessionId);
+		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
 			File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(),
@@ -142,7 +148,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public void storePage(String sessionId, Page page)
 	{
-		File sessionDir = new File(workDir, sessionId);
+		File sessionDir = new File(getWorkDir(), sessionId);
 		sessionDir.mkdirs();
 		File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
 		// TODO check can this be called everytime at this place? Putting should
@@ -184,7 +190,7 @@ public class FilePageStore implements IPageStore
 	 */
 	public void unbind(String sessionId)
 	{
-		File sessionDir = new File(workDir, sessionId);
+		File sessionDir = new File(getWorkDir(), sessionId);
 		if (sessionDir.exists())
 		{
 			File[] files = sessionDir.listFiles();
