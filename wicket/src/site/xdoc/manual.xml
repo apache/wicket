@@ -9,7 +9,7 @@
 			<p>
 				Currently there is no (finished) up to date User's Guide. In this document we
 				describe places where you can find any documentation that is available.
-				<a href="/wiki/index.php/Newuserguide">Work is in progress</a>
+				<a href="http://cwiki.apache.org/WICKET/newuserguide.html">Work is in progress</a>
 				to build a new, up to date user's guide.
 			</p>
 			<p>You could consult the following places for information on using Wicket:</p>
@@ -25,15 +25,15 @@
 					.
 				</li>
 				<li>
-					<a href="/wiki/index.php/Models">Working with Wicket Models</a>
+					<a href="http://cwiki.apache.org/WICKET/working-with-wicket-models.html">Working with Wicket Models</a>
 				</li>
 				<li>
-					<a href="/wiki/index.php/Lifecycle">The Lifecycle of a Wicket Application</a>
+					<a href="http://cwiki.apache.org/WICKET/lifecycle-of-a-wicket-application.html">The Lifecycle of a Wicket Application</a>
 				</li>
 				<li>
-					<a href="/wiki/index.php/Newuserguide">The new User's Guide</a>
+					<a href="http://cwiki.apache.org/WICKET/newuserguide.html">The new User's Guide</a>
 					Please consult the
-					<a href="/wiki/index.php/Newuserguide">Wiki</a>
+					<a href="http://cwiki.apache.org/WICKET/newuserguide.html">Wiki</a>
 					effort for creating a new, up to date user's guide. It is still in its infancy,
 					but you will find accurate documentation there.
 				</li>
