@@ -54,7 +54,7 @@ class XmlLicenseHeaderHandler extends AbstractLicenseHeaderHandler
 
 			if (header.startsWith("<?xml"))
 			{
-				header = header.substring(header.indexOf(LINE_ENDING) + 1);
+				header = header.substring(header.indexOf(LINE_ENDING) + LINE_ENDING.length());
 			}
 			else
 			{
