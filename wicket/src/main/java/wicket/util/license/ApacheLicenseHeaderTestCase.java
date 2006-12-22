@@ -99,7 +99,9 @@ public abstract class ApacheLicenseHeaderTestCase extends TestCase
 				for (int i = 0; i < ignoreFiles.length; i++)
 				{
 					String ignorePath = ignoreFiles[i];
-					File ignoreFile = new File(baseDirectory, ignorePath);
+                    // Will convert '/'s to '\\'s on Windows
+                    ignorePath = Strings.replaceAll(ignorePath, "/", System.getProperty("file.separator")).toString();
+                    File ignoreFile = new File(baseDirectory, ignorePath);
 
 					// Directory ignore
 					if (ignoreFile.isDirectory())
