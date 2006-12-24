@@ -15,14 +15,12 @@
 			<p>You could consult the following places for information on using Wicket:</p>
 			<ul>
 				<li>
-					<a href="QuickTour.html">The examples</a>
+					<a href="Examples.html">The examples</a>
 					The examples are a showcase of how one might use Wicket. There are examples
 					displaying form validation, using Hibernate, Spring, etc. You can see the
-					examples in action using the
-					<a href="QuickStartBinary.html">binary distribution</a>
-					, or the
-					<a href="QuickStartSource.html">source distribution</a>
-					.
+					examples in action at the 
+					<a href="http://wicket-library.com/wicket-examples">Wicket Library</a>. The
+					examples also contain a component reference.
 				</li>
 				<li>
 					<a href="http://cwiki.apache.org/WICKET/working-with-wicket-models.html">Working with Wicket Models</a>
