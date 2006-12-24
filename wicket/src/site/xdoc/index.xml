@@ -59,6 +59,30 @@
 			</p>
 		</section>
 		<section name="Latest News">
+			<subsection name="December 24th, 2006 - Santa bring Wicket 1.2.4">
+				<p>
+					As a thank you for your support in 2006, Santa has put Wicket 1.2.4 under the tree! Happy holidays and best wishes for 2007!
+				</p>
+				<p>
+					Wicket is a Java web application framework that takes simplicity, separation of concerns and ease of development to a whole new level. Wicket pages can be mocked up, previewed and later revised using standard WYSIWYG HTML design tools. Dynamic content processing and form handling is all handled in Java code using a first-class component model backed by POJO data beans that can easily be persisted using your favorite technology.
+				</p>
+				<ul>
+					<li>Download the releases <a href="http://sourceforge.net/project/showfiles.php?group_id=119783">here</a></li>
+				</ul>
+				<p>
+					Although Wicket has recently entered the ASF Incubator, this interim release is provided outside of the ASF, solely as a service to existing Wicket users to resolve existing bugs in the Wicket product. As such, this release of the Wicket project is not endorsed or approved by the Apache Software Foundation. The Apache Software Foundation is in no way affiliated with this release.
+				</p>
+				<h2>Fixed bugs</h2>
+				<ul>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-29'>WICKET-29</a>] - javascript error in wicket-ajax.js: Wicket.Log.Error is not a function</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-31'>WICKET-31</a>] - Wrong source paths in build.xml</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-35'>WICKET-35</a>] - WicketTester doesn't pass PageParameters to bookmarkable pages</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-64'>WICKET-64</a>] - Check/Radio fail in a GridView with item reuse strategy</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-143'>WICKET-143</a>] - [PATCH]Re-render a table element via AjaxRequestTarget under IE does not works</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-144'>WICKET-144</a>] - wrong handling of exceptions for Resource#respond and ComponentResourceRequestTarget#respond</li>
+					<li>[<a href='http://issues.apache.org/jira/browse/WICKET-179'>WICKET-179</a>] - ListView should not call getModelObject when not visible in hierarchy</li>
+				</ul>
+			</subsection>
 			<subsection name="October 31st, 2006 - Wicket 1.2.3 released">
 				<p>
 					The wicket-team is pleased to announce the release of Wicket 1.2.3!
