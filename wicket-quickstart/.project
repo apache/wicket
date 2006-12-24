@@ -1,7 +1,10 @@
 <projectDescription>
   <name>wicket-quickstart</name>
-  <comment></comment>
-  <projects/>
+  <comment>Wicket Quickstart is designed to get you up and coding your Wicket applications within minutes. No more creating your own project and having to download dependencies yourself. This is an all-in-one package allowing you to concentrate on your application, and Quickstart on the project structure.</comment>
+  <projects>
+    <project>wicket-extensions</project>
+    <project>wicket</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

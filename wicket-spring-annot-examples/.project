@@ -1,7 +1,9 @@
 <projectDescription>
   <name>wicket-spring-annot-examples</name>
   <comment>Examples project for using annotation based Spring integration in Wicket applications. This requires Java 5.</comment>
-  <projects/>
+  <projects>
+    <project>wicket-spring-annot</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>

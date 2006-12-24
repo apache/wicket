@@ -1,7 +1,9 @@
 <projectDescription>
   <name>wicket-auth-roles-examples</name>
   <comment>Examples project for the Wicket authorization based on roles. Requires Java 1.5</comment>
-  <projects/>
+  <projects>
+    <project>wicket-auth-roles</project>
+  </projects>
   <buildSpec>
     <buildCommand>
       <name>org.eclipse.jdt.core.javabuilder</name>
