@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 import wicket.MarkupContainer;
 import wicket.markup.html.navigation.paging.IPageable;
-import wicket.markup.repeater.AbstractPageableView;
+import wicket.markup.repeater.PageableRefreshingView;
 import wicket.markup.repeater.RefreshingView;
 import wicket.model.IModel;
 
@@ -41,7 +41,7 @@ import wicket.model.IModel;
  * @param <T> 
  * 			Type of model object this component holds 
  */
-public abstract class DataViewBase<T> extends AbstractPageableView<T>
+public abstract class DataViewBase<T> extends PageableRefreshingView<T>
 {
 	private IDataProvider<T> dataProvider;
 

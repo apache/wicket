@@ -251,7 +251,7 @@ public abstract class GridView<T> extends DataViewBase<T>
 	}
 
 	/**
-	 * @see wicket.markup.repeater.AbstractPageableView#getItems()
+	 * @see wicket.markup.repeater.PageableRefreshingView#getItems()
 	 */
 	@Override
 	public Iterator<Item<T>> getItems()

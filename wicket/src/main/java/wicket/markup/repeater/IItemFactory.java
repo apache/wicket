@@ -23,7 +23,7 @@ import wicket.model.IModel;
  * Factory interface for creating new child item containers for
  * <b>AbstractPageableView</b>.
  * 
- * @see wicket.markup.repeater.AbstractPageableView
+ * @see wicket.markup.repeater.PageableRefreshingView
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 

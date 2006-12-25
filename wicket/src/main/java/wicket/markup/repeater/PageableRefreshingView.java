@@ -47,7 +47,7 @@ import wicket.version.undo.Change;
  * @param <T> 
  * 			Type of model object this component holds 
  */
-public abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPageable
+public abstract class PageableRefreshingView<T> extends RefreshingView<T> implements IPageable
 {
 	/**
 	 * Keeps track of the number of items we show per page. The default is
@@ -70,7 +70,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 
 
 	/** @see wicket.Component#Component(MarkupContainer,String, IModel) */
-	public AbstractPageableView(MarkupContainer<?> parent, final String id, IModel<T> model)
+	public PageableRefreshingView(MarkupContainer<?> parent, final String id, IModel<T> model)
 	{
 		super(parent, id, model);
 		clearCachedItemCount();
@@ -78,7 +78,7 @@ public abstract class AbstractPageableView<T> extends RefreshingView<T> implemen
 
 
 	/** @see wicket.Component#Component(MarkupContainer,String) */
-	public AbstractPageableView(MarkupContainer<?> parent, final String id)
+	public PageableRefreshingView(MarkupContainer<?> parent, final String id)
 	{
 		super(parent, id);
 		clearCachedItemCount();
