@@ -448,7 +448,7 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 				ComponentTag tag = fragment.getTag();
 				if (tag.getName().equals("fragment"))
 				{
-
+					//FIXME TEMP FIX FOR FragmentInheritanceTest
 				}
 				else
 				{
