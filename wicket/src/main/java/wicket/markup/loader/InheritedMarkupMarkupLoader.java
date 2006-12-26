@@ -34,7 +34,6 @@ import wicket.markup.MarkupResourceStream;
 import wicket.markup.MarkupStream;
 import wicket.markup.parser.XmlTag;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
-import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.string.Strings;
@@ -432,27 +431,6 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 			{
 				ComponentTag tag = (ComponentTag)element;
 				tag.setMarkupClass(parent.getMarkup().getResource().getMarkupClass());
-				return CONTINUE_TRAVERSAL;
-			}
-		});
-
-		// Reset auto-link id's. 
-		// When rendered at least once the auto-id has an unique integer appended. We
-		// can/must reset it, because this is a new markup. We are not re-using
-		// the base markup, we are copying the tags.
-		mergedMarkup.visitChildren(MarkupFragment.class, new MarkupFragment.IVisitor()
-		{
-			private int index = 0;
-
-			public Object visit(final MarkupElement element, final MarkupFragment parent)
-			{
-				MarkupFragment fragment = (MarkupFragment)element;
-				ComponentTag tag = fragment.getTag();
-				if ((tag != null) && tag.isAutolinkEnabled())
-				{
-					String id = WicketLinkTagHandler.AUTOLINK_ID;
-					tag.setId(id);
-				}
 				return CONTINUE_TRAVERSAL;
 			}
 		});

@@ -753,7 +753,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			final Component link = resolveAutomaticLink(container,
 					WicketLinkTagHandler.AUTOLINK_ID, tag);
 
-			// Add the link to the container
+			// Render the link to the container
 			link.render(markupStream);
 			if (log.isDebugEnabled())
 			{
@@ -789,14 +789,10 @@ public final class AutoLinkResolver implements IComponentResolver
 		final Page page = container.getPage();
 
 		// Make the id (page-)unique
-		final String autoId = id + Integer.toString(page.getAutoIndex());
+		final String autoId = id + page.getAutoIndex();
 
 		// get the tag name, which is something like 'a' or 'script'
 		final String tagName = tag.getName();
-
-		// By setting the component name, the tag becomes a Wicket component
-		// tag, which must have a associated Component.
-		tag.setId(autoId);
 
 		// get the reference resolver
 		ITagReferenceResolver referenceResolver = tagNameToTagReferenceResolvers.get(tagName);
