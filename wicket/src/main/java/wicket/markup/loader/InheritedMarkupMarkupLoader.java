@@ -282,15 +282,41 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 				// Append the onload and onunload attributes
 				ComponentTag newBodyTag = body2.getTag().mutable();
 
-				String onload = Strings.join(";", newBodyTag.getAttributes().getString(ONLOAD),
-						body1.getTag().getAttributes().getString(ONLOAD));
-
-				String onunload = Strings.join(";", newBodyTag.getAttributes().getString(ONUNLOAD),
-						body1.getTag().getAttributes().getString(ONUNLOAD));
+				String onload = null;
+				String attr1 = newBodyTag.getAttributes().getString(ONLOAD);
+				String attr2 = body1.getTag().getAttributes().getString(ONLOAD);
+				if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == false))
+				{
+					onload = attr1 + ";" + attr2;
+				}
+				else if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == true))
+				{
+					onload = attr1;
+				}
+				else if ((Strings.isEmpty(attr1) == true) && (Strings.isEmpty(attr2) == false))
+				{
+					onload = attr2;
+				}
 
 				if (Strings.isEmpty(onload) == false)
 				{
 					newBodyTag.put(ONLOAD, onload);
+				}
+
+				String onunload = null;
+				attr1 = newBodyTag.getAttributes().getString(ONUNLOAD);
+				attr2 = body1.getTag().getAttributes().getString(ONUNLOAD);
+				if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == false))
+				{
+					onunload = attr1 + ";" + attr2;
+				}
+				else if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == true))
+				{
+					onunload = attr1;
+				}
+				else if ((Strings.isEmpty(attr1) == true) && (Strings.isEmpty(attr2) == false))
+				{
+					onunload = attr2;
 				}
 
 				if (Strings.isEmpty(onunload) == false)
