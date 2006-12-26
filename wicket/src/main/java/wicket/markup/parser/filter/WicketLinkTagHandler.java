@@ -113,7 +113,7 @@ public class WicketLinkTagHandler extends AbstractMarkupFilter
 			// Mark it as autolink enabled
 			tag.enableAutolink(true);
 
-			// Just a dummy name. The ComponentTag will not be forwarded.
+			// Just a dummy name, otherwise the ComponentTag will not be forwarded.
 			tag.setId(AUTOLINK_ID);
 			return tag;
 		}
