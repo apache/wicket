@@ -25,16 +25,18 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.Component.IVisitor;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.request.compound.IResponseStrategy;
 import wicket.request.target.component.PageRequestTarget;
 
 /**
- * Portlet render ResponseStrategy handles outputting of the header contributions 
- * into the response. 
+ * Portlet render ResponseStrategy handles outputting of the header
+ * contributions into the response.
  * 
- * Portlets do not support real header contribution. 
+ * Portlets do not support real header contribution.
  * 
  * @author Janne Hietam&auml;ki
  */
@@ -50,23 +52,24 @@ public class PortletRenderResponseStrategy implements IResponseStrategy
 		if (requestTarget != null)
 		{
 			Application.get().logResponseTarget(requestTarget);
-			respondHeaderContribution(requestCycle,requestTarget);
+			respondHeaderContribution(requestCycle, requestTarget);
 			requestTarget.respond(requestCycle);
 		}
 	}
 
-	private void respondHeaderContribution(final RequestCycle requestCycle,final IRequestTarget requestTarget)
+	private void respondHeaderContribution(final RequestCycle requestCycle,
+			final IRequestTarget requestTarget)
 	{
-		if(requestTarget instanceof PageRequestTarget)
+		if (requestTarget instanceof PageRequestTarget)
 		{
-			final PageRequestTarget target=(PageRequestTarget)requestTarget;
+			final PageRequestTarget target = (PageRequestTarget)requestTarget;
 			final Response response = RequestCycle.get().getResponse();
-			final Page page=target.getPage();
+			final Page page = target.getPage();
 
 			final HtmlHeaderContainer header = new HtmlHeaderContainer(
 					HtmlHeaderSectionHandler.HEADER_ID);
 
-			if(page.get(HtmlHeaderSectionHandler.HEADER_ID) != null)
+			if (page.get(HtmlHeaderSectionHandler.HEADER_ID) != null)
 			{
 				page.replace(header);
 			}
@@ -92,16 +95,42 @@ public class PortletRenderResponseStrategy implements IResponseStrategy
 			});
 
 
-			header.visitChildren(new Component.IVisitor()
+			// collect feedback, is this really necessary for a header
+			// container?
+			header.visitChildren(IFeedback.class, new IVisitor()
 			{
 				public Object component(Component component)
 				{
-					page.startComponentRender(component);
-					component.renderComponent();
-					page.endComponentRender(component);
-					return CONTINUE_TRAVERSAL;
+					((IFeedback)component).updateFeedback();
+					return IVisitor.CONTINUE_TRAVERSAL;
 				}
 			});
+
+			if (header instanceof IFeedback)
+			{
+				((IFeedback)header).updateFeedback();
+			}
+
+			header.internalAttach();
+
+			try
+			{
+				header.visitChildren(new Component.IVisitor()
+				{
+					public Object component(Component component)
+					{
+						page.startComponentRender(component);
+						component.renderComponent();
+						page.endComponentRender(component);
+						return CONTINUE_TRAVERSAL;
+					}
+				});
+			}
+			finally
+			{
+				header.internalDetach();
+			}
+
 			page.remove(header);
 		}
 	}

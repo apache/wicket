@@ -34,6 +34,8 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.Component.IVisitor;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.internal.HtmlHeaderContainer;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
 import wicket.protocol.http.WebResponse;
@@ -361,15 +363,8 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondInvocation(response, js);
 			}
 
-			it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
-			{
-				final Map.Entry entry = (Entry)it.next();
-				final Component component = (Component)entry.getValue();
-				final String markupId = (String)entry.getKey();
-
-				respondComponent(response, markupId, component);
-			}
+			// process added components
+			respondComponents(response);
 
 			it = appendJavascripts.iterator();
 			while (it.hasNext())
@@ -390,6 +385,80 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 	}
 
+	 
+	/**
+	 * Processes components added to the target. This involves attaching
+	 * components, rendering markup into a client side xml envelope, and
+	 * detaching them
+	 *
+	 * @param response
+	 */
+	private void respondComponents(WebResponse response)
+	{
+		Iterator it;
+
+		try
+		{
+			// process feedback
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Component component = (Component)((Entry)it.next()).getValue();
+				if (component instanceof MarkupContainer)
+				{
+					MarkupContainer container = (MarkupContainer)component;
+
+					// collect feedback
+					container.visitChildren(IFeedback.class, new IVisitor()
+					{
+						public Object component(Component component)
+						{
+							((IFeedback)component).updateFeedback();
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
+				}
+
+				if (component instanceof IFeedback)
+				{
+					((IFeedback)component).updateFeedback();
+				}
+			}
+
+			// attach components
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Component component = (Component)((Entry)it.next()).getValue();
+				component.internalAttach();
+			}
+
+			// process component markup
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Map.Entry entry = (Entry)it.next();
+				final Component component = (Component)entry.getValue();
+				final String markupId = (String)entry.getKey();
+
+				respondComponent(response, markupId, component);
+			}
+
+		}
+		finally
+		{
+			// detach
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Component component = (Component)((Entry)it.next()).getValue();
+				component.getPage().internalDetach();
+				// we are done since we detached the page
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * @see java.lang.Object#toString()
 	 */
