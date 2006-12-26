@@ -36,6 +36,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	private boolean attachedBodyOnLoadModifier = false;
 
+	private boolean stopped = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -48,25 +50,13 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
-	 * Subclasses should call super.onBind()
-	 * 
-	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
+	 * Stops the timer
 	 */
-	@Override
-	protected void onBind()
+	public final void stop()
 	{
-		super.onBind();
+		stopped = true;
 	}
-	
-	/**
-	 * @see wicket.behavior.AbstractAjaxBehavior#renderHead(wicket.markup.html.IHeaderResponse)
-	 */
-	@Override
-	public void renderHead(IHeaderResponse response)
-	{
-		super.renderHead(response);
-	}
-	
+
 	/**
 	 * @param updateInterval
 	 *            Duration between AJAX callbacks
@@ -96,14 +86,19 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	 *            The request target
 	 */
 	protected abstract void onTimer(final AjaxRequestTarget target);
-	
+
 	/**
-	 * Inject the timer script into the markup after the component is rendered 
+	 * Inject the timer script into the markup after the component is rendered
+	 * 
 	 * @see wicket.behavior.AbstractAjaxBehavior#onComponentRendered()
 	 */
 	@Override
 	protected void onComponentRendered()
 	{
-		JavascriptUtils.writeJavascript(RequestCycle.get().getResponse(), getJsTimeoutCall(updateInterval));
+		if (!stopped)
+		{
+			JavascriptUtils.writeJavascript(RequestCycle.get().getResponse(),
+					getJsTimeoutCall(updateInterval));
+		}
 	}
 }
