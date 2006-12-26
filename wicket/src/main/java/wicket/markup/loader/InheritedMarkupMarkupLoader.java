@@ -287,7 +287,14 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 				String attr2 = body1.getTag().getAttributes().getString(ONLOAD);
 				if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == false))
 				{
-					onload = attr1 + ";" + attr2;
+					if (attr1.endsWith(";"))
+					{
+						onload = attr1 + attr2;
+					}
+					else
+					{
+						onload = attr1 + ";" + attr2;
+					}
 				}
 				else if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == true))
 				{
@@ -308,7 +315,14 @@ public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 				attr2 = body1.getTag().getAttributes().getString(ONUNLOAD);
 				if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == false))
 				{
-					onunload = attr1 + ";" + attr2;
+					if (attr1.endsWith(";"))
+					{
+						onunload = attr1 + attr2;
+					}
+					else
+					{
+						onunload = attr1 + ";" + attr2;
+					}
 				}
 				else if ((Strings.isEmpty(attr1) == false) && (Strings.isEmpty(attr2) == true))
 				{
