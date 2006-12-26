@@ -53,7 +53,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	private static final Log log = LogFactory.getLog(PrependContextPathHandler.class);
 
 	/** List of attribute names considered */
-	private static final String attributeNames[] = new String[] { "href", "src" };
+	private static final String attributeNames[] = new String[] { "href", "src", "background" };
 
 	private final Application application;
 
