@@ -137,7 +137,7 @@ public class MockWebApplication
 	{
 		this.application = application;
 
-		final MockServletContext context = new MockServletContext(this.application, null);
+		final ServletContext context = newServletContext(path);
 		WicketFilter filter = new WicketFilter()
 		{
 			@Override
@@ -231,6 +231,19 @@ public class MockWebApplication
 		createRequestCycle();
 	}
 
+	/**
+	 * Used to create a new mock servlet context.
+	 * 
+	 * @param path
+	 *            The absolute path on disk to the web tester contents (e.g. war
+	 *            root) - may be null
+	 * @return ServletContext
+	 */
+	public ServletContext newServletContext(final String path)
+	{
+		return new MockServletContext(this.application, path);
+	}
+	
 	/**
 	 * Gets the application object.
 	 * 
