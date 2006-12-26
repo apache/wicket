@@ -225,41 +225,53 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		int startIndex = url.indexOf("?x=");
 		if (startIndex != -1)
 		{
-			startIndex = startIndex + 3;
-			final int endIndex = url.indexOf("&", startIndex);
-			String secureParam;
-			if (endIndex == -1)
-			{
-				secureParam = url.substring(startIndex);
-			}
-			else
-			{
-				secureParam = url.substring(startIndex, endIndex);
-			}
-
 			try
 			{
+				startIndex = startIndex + 3;
+				final int endIndex = url.indexOf("&", startIndex);
+				String secureParam;
+				if (endIndex == -1)
+				{
+					secureParam = url.substring(startIndex);
+				}
+				else
+				{
+					secureParam = url.substring(startIndex, endIndex);
+				}
+	
 				secureParam = URLDecoder.decode(secureParam, Application
 						.get().getRequestCycleSettings().getResponseRequestEncoding());
+	
+				// Get the crypt implementation from the application
+				final ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory()
+						.newCrypt();
+	
+				// Decrypt the query string
+				String queryString = urlCrypt.decryptUrlSafe(secureParam);
+	
+				// The querystring might have been shortened (length reduced).
+				// In that case, lengthen the query string again.
+				queryString = rebuildUrl(queryString);
+				return queryString;
 			}
-			catch (UnsupportedEncodingException ex)
+			catch (Exception ex)
 			{
-				throw new WicketRuntimeException(ex);
+				return onError(ex);
 			}
-
-			// Get the crypt implementation from the application
-			final ICrypt urlCrypt = Application.get().getSecuritySettings().getCryptFactory()
-					.newCrypt();
-
-			// Decrypt the query string
-			String queryString = urlCrypt.decryptUrlSafe(secureParam);
-
-			// The querystring might have been shortened (length reduced).
-			// In that case, lengthen the query string again.
-			queryString = rebuildUrl(queryString);
-			return queryString;
 		}
 		return null;
+	}
+	
+	/**
+	 * @param ex
+	 * 
+	 * @return decoded URL
+	 */
+	protected String onError(final Exception ex)
+	{
+		log.error(ex);
+	
+		throw new HackAttackException("Invalid URL");
 	}
 
 	/**
@@ -474,6 +486,45 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 		public String getURL()
 		{
 			return this.url;
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public class HackAttackException extends WicketRuntimeException
+	{
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Construct.
+		 * 
+		 * @param msg
+		 */
+		public HackAttackException(final String msg)
+		{
+			super(msg);
+		}
+
+		/**
+		 * No stack trace. We don't won't to tell the hacker internals of wicket
+		 * 
+		 * @see java.lang.Throwable#getStackTrace()
+		 */
+		public StackTraceElement[] getStackTrace()
+		{
+			return new StackTraceElement[0];
+		}
+
+		/**
+		 * No additional information. We don't won't to tell the hacker
+		 * internals of wicket
+		 * 
+		 * @see java.lang.Throwable#toString()
+		 */
+		public String toString()
+		{
+			return getMessage();
 		}
 	}
 }
