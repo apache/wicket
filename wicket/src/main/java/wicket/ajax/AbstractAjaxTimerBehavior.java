@@ -35,6 +35,8 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 
 	private boolean attachedBodyOnLoadModifier = false;
 
+	private boolean stopped = false;
+
 	/**
 	 * Construct.
 	 * 
@@ -47,13 +49,11 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	}
 
 	/**
-	 * Subclasses should call super.onBind()
-	 * 
-	 * @see wicket.ajax.AbstractDefaultAjaxBehavior#onBind()
+	 * Stops the timer
 	 */
-	protected void onBind()
+	public final void stop()
 	{
-		super.onBind();
+		stopped = true;
 	}
 
 	/**
@@ -90,11 +90,14 @@ public abstract class AbstractAjaxTimerBehavior extends AbstractDefaultAjaxBehav
 	{
 		onTimer(target);
 
-		// this might look strange, but it is necessary for IE not to leak :(
-		String js = "setTimeout(\"" + getCallbackScript(false, true) + "\", "
-				+ updateInterval.getMilliseconds() + ");";
-		
-		target.appendJavascript(js);
+		if (!stopped)
+		{
+			// this might look strange, but it is necessary for IE not to leak
+			String js = "setTimeout(\"" + getCallbackScript(false, true) + "\", "
+					+ updateInterval.getMilliseconds() + ");";
+
+			target.appendJavascript(js);
+		}
 	}
 
 	/**
