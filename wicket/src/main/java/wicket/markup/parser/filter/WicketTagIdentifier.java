@@ -49,9 +49,9 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 
 	static
 	{
-		// Register wicket:div (which doesn't need any additional 
+		// Register wicket:container (which doesn't need any additional 
 		// MarkupFilter or Resolver to work properly. 
-		WicketTagIdentifier.registerWellKnownTagName("div");
+		WicketTagIdentifier.registerWellKnownTagName("container");
 	}
 
 	/**
