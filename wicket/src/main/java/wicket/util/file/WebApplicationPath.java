@@ -26,18 +26,20 @@ import javax.servlet.ServletContext;
 import wicket.util.string.StringList;
 
 /**
- * Mantains a list of folders as a path.
+ * Maintain a list of paths which might either be ordinary folders of the
+ * filesystem or relative paths to the web application's servlet context.
  * 
  * @author Johan Compagner
  */
 public final class WebApplicationPath implements IResourcePath
 {
 	/** The list of urls in the path */
-	private final List<Comparable> webappPaths = new ArrayList<Comparable>();
+	private final List<String> webappPaths = new ArrayList<String>();
 
 	/** The list of folders in the path */
-	private final List<Comparable> folders = new ArrayList<Comparable>();
+	private final List<Folder> folders = new ArrayList<Folder>();
 
+	/** The web apps servlet context */
 	private final ServletContext servletContext;
 
 	/**
@@ -47,33 +49,33 @@ public final class WebApplicationPath implements IResourcePath
 	 *            The webapplication context where the resources must be loaded
 	 *            from
 	 */
-	public WebApplicationPath(ServletContext servletContext)
+	public WebApplicationPath(final ServletContext servletContext)
 	{
 		this.servletContext = servletContext;
 	}
 
 	/**
-	 * @param folder
+	 * @param path
 	 *            add a path that is lookup through the servlet context
 	 */
-	public void add(String folder)
+	public void add(String path)
 	{
-		final Folder f = new Folder(folder);
-		if (f.exists())
+		final Folder folder = new Folder(path);
+		if (folder.exists())
 		{
-			folders.add(f);
+			folders.add(folder);
 		}
 		else
 		{
-			if (!folder.startsWith("/"))
+			if (!path.startsWith("/"))
 			{
-				folder = "/" + folder;
+				path = "/" + path;
 			}
-			if (!folder.endsWith("/"))
+			if (!path.endsWith("/"))
 			{
-				folder += "/";
+				path += "/";
 			}
-			webappPaths.add(folder);
+			webappPaths.add(path);
 		}
 	}
 
@@ -86,10 +88,9 @@ public final class WebApplicationPath implements IResourcePath
 	 */
 	public URL find(final String pathname)
 	{
-		for (Comparable comparable : folders)
+		for (Folder folder : folders)
 		{
-			Folder folder = (Folder)comparable;
-			File file = new File(folder, pathname);
+			final File file = new File(folder, pathname);
 			if (file.exists())
 			{
 				try
@@ -102,9 +103,9 @@ public final class WebApplicationPath implements IResourcePath
 				}
 			}
 		}
-		for (Comparable comparable : webappPaths)
+
+		for (String path : webappPaths)
 		{
-			final String path = (String)comparable;
 			try
 			{
 				final URL file = servletContext.getResource(path + pathname);

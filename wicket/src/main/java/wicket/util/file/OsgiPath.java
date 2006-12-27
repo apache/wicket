@@ -19,7 +19,7 @@ package wicket.util.file;
 import java.net.URL;
 
 /**
- * Path for working with OSGi bundles.
+ * A Finder (note: it is not a Path) for working with OSGi bundles.
  * 
  * @author Timur Mehrvarz
  */

@@ -17,7 +17,6 @@
 package wicket.util.resource.locator;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,10 +56,9 @@ public final class CompoundResourceStreamLocator implements IResourceStreamLocat
 	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
 			String extension)
 	{
-		Iterator<IResourceStreamLocator> iter = locators.iterator();
-		while (iter.hasNext())
+		for (IResourceStreamLocator locator : locators)
 		{
-			IResourceStream resource = iter.next().locate(clazz, path, style, locale, extension);
+			IResourceStream resource = locator.locate(clazz, path, style, locale, extension);
 			if (resource != null)
 			{
 				return resource;
