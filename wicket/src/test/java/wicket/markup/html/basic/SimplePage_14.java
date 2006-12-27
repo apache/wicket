@@ -18,7 +18,6 @@ package wicket.markup.html.basic;
 
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.WebPage;
-import wicket.markup.parser.filter.WicketTagIdentifier;
 
 /**
  * Mock page for testing.
@@ -27,11 +26,6 @@ public class SimplePage_14 extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
-	static
-	{
-		WicketTagIdentifier.registerWellKnownTagName("pseudo");
-	}
-	
 	/**
 	 * Construct.
 	 */

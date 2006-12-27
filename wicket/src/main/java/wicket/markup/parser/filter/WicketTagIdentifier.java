@@ -47,6 +47,13 @@ public final class WicketTagIdentifier extends AbstractMarkupFilter
 	/** The current markup needed to get the markups namespace */
 	private final IMarkup markup;
 
+	static
+	{
+		// Register wicket:div (which doesn't need any additional 
+		// MarkupFilter or Resolver to work properly. 
+		WicketTagIdentifier.registerWellKnownTagName("div");
+	}
+
 	/**
 	 * Construct.
 	 * 
