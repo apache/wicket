@@ -32,24 +32,7 @@ public class ContextParamWebApplicationFactory implements IWebApplicationFactory
 	 */
 	public final String APP_CLASS_PARAM = "applicationClassName";
 
-	/** @see IWebApplicationFactory#createApplication(WicketServlet) */
-	public WebApplication createApplication(WicketServlet servlet)
-	{
-		final String applicationClassName = servlet.getInitParameter(APP_CLASS_PARAM);
-
-		if (applicationClassName == null)
-		{
-			throw new WicketRuntimeException(
-					"servlet init param ["
-							+ APP_CLASS_PARAM
-							+ "] is missing. If you are trying to use your own implementation of IWebApplicationFactory and get this message then the servlet init param ["
-							+ WicketFilter.APP_FACT_PARAM + "] is missing");
-		}
-
-		return createApplication(applicationClassName);
-	}
-
-	/** @see IWebApplicationFactory#createApplication(WicketServlet) */
+	/** @see IWebApplicationFactory#createApplication(WicketFilter) */
 	public WebApplication createApplication(WicketFilter filter)
 	{
 		final String applicationClassName = filter.getFilterConfig().getInitParameter(

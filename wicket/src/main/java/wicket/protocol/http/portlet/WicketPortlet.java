@@ -33,7 +33,6 @@ import wicket.AbortException;
 import wicket.Application;
 import wicket.Session;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.ContextParamWebApplicationFactory;
 import wicket.protocol.http.WebApplicationFactoryCreationException;
 
 /**
@@ -271,9 +270,7 @@ public class WicketPortlet extends GenericPortlet
 	 * Creates the web application factory instance.
 	 * 
 	 * If no APP_FACT_PARAM is specified in web.xml
-	 * ContextParamWebApplicationFactory will be used by default.
-	 * 
-	 * @see ContextParamWebApplicationFactory
+	 * PortletPreferencesPortletApplicationFactory will be used by default.
 	 * 
 	 * @return application factory instance
 	 */
