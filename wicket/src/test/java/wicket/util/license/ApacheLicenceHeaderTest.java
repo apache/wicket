@@ -79,10 +79,6 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 				"src/main/java/wicket/util/diff/myers/PathNode.java",
 				"src/main/java/wicket/util/diff/myers/Snake.java",
 				/*
-				 * Needs to be rewritten
-				 */
-				"src/main/java/wicket/protocol/http/ClientProperties.java",
-				/*
 				 * Needs to be resolved (rewritten or NOTICE)
 				 */
 				"src/main/java/wicket/util/concurrent/ConcurrentReaderHashMap.java",
