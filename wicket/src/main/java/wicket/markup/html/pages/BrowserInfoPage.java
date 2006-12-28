@@ -207,18 +207,32 @@ public class BrowserInfoPage extends WebPage
 		 */
 		public void merge(ClientProperties properties)
 		{
-			properties.setProperty(ClientProperties.NAVIGATOR_APP_NAME, navigatorAppName);
-			properties.setProperty(ClientProperties.NAVIGATOR_APP_VERSION, navigatorAppVersion);
-			properties.setProperty(ClientProperties.NAVIGATOR_APP_CODE_NAME, navigatorAppCodeName);
-			properties.setProperty(ClientProperties.NAVIGATOR_COOKIE_ENABLED, navigatorAppCodeName);
-			properties.setProperty(ClientProperties.NAVIGATOR_JAVA_ENABLED, navigatorJavaEnabled);
-			properties.setProperty(ClientProperties.NAVIGATOR_LANGUAGE, navigatorLanguage);
-			properties.setProperty(ClientProperties.NAVIGATOR_PLATFORM, navigatorPlatform);
-			properties.setProperty(ClientProperties.NAVIGATOR_USER_AGENT, navigatorUserAgent);
-			properties.setProperty(ClientProperties.SCREEN_WIDTH, screenWidth);
-			properties.setProperty(ClientProperties.SCREEN_HEIGHT, screenHeight);
-			properties.setProperty(ClientProperties.SCREEN_COLOR_DEPTH, screenColorDepth);
-			properties.setProperty(ClientProperties.UTC_OFFSET, utcOffset);
+			properties.setNavigatorAppName(navigatorAppName);
+			properties.setNavigatorAppVersion(navigatorAppVersion);
+			properties.setNavigatorAppCodeName(navigatorAppCodeName);
+			properties.setCookiesEnabled(navigatorCookieEnabled.booleanValue());
+			properties.setJavaEnabled(navigatorJavaEnabled.booleanValue());
+			properties.setNavigatorLanguage(navigatorLanguage);
+			properties.setNavigatorPlatform(navigatorPlatform);
+			properties.setNavigatorUserAgent(navigatorUserAgent);
+			properties.setScreenWidth(getInt(screenWidth));
+			properties.setScreenHeight(getInt(screenHeight));
+			properties.setScreenColorDepth(getInt(screenColorDepth));
+			properties.setUtcOffset(utcOffset);
+		}
+		
+		private int getInt(String value) 
+		{
+			int intValue = -1;
+			try 
+			{
+				intValue = Integer.parseInt(value);
+			}
+			catch (NumberFormatException e)
+			{
+				// Do nothing
+			}
+			return intValue;
 		}
 
 		/**
@@ -455,7 +469,7 @@ public class BrowserInfoPage extends WebPage
 		{
 			WebClientInfo info = (WebClientInfo)clientInfo;
 			ClientProperties properties = info.getProperties();
-			properties.setProperty(ClientProperties.NAVIGATOR_JAVA_ENABLED, Boolean.FALSE);
+			properties.setJavaEnabled(false);
 		}
 		else
 		{
