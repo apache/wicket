@@ -29,10 +29,6 @@ import wicket.request.ClientInfo;
 /**
  * Default client info object for web applications.
  * 
- * Based on <code>nextapp.echo2.webrender.ClientAnalyzerProcessor</code> from
- * collegue java webapplication framework <a
- * href="http://www.nextapp.com/platform/echo2/echo/">NextApp Echo 2</a>.
- * 
  * @author Eelco Hillenius
  */
 public class WebClientInfo extends ClientInfo
@@ -44,7 +40,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically,
-	 * this might differ from {@link ClientProperties#NAVIGATOR_JAVA_ENABLED}
+	 * this might differ from {@link ClientProperties#isJavaEnabled()}
 	 * property, which is not set until an actual reply from a browser (e.g.
 	 * using {@link wicket.markup.html.pages.BrowserInfoPage} is set.
 	 */
