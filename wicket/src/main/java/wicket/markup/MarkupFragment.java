@@ -490,33 +490,6 @@ public class MarkupFragment extends MarkupElement implements Iterable<MarkupElem
 	}
 
 	/**
-	 * Re-balance the markup tree which became out-of-balance due to unclosed
-	 * HTML tags.
-	 */
-	public final void handleUnclosedTags()
-	{
-		for (int i = 0; i < size(); i++)
-		{
-			MarkupElement element = get(i);
-			if (element instanceof MarkupFragment)
-			{
-				MarkupFragment frag = (MarkupFragment)element;
-				if (frag.getTag().hasNoCloseTag())
-				{
-					while (frag.size() > 1)
-					{
-						addMarkupElement(i + 1, frag.removeMarkupElement(frag.size() - 1));
-					}
-				}
-				else
-				{
-					frag.handleUnclosedTags();
-				}
-			}
-		}
-	}
-
-	/**
 	 * Traverses all child components of the given class in this container,
 	 * calling the visitor's visit method at each one.
 	 * 

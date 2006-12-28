@@ -18,6 +18,8 @@ package wicket.markup;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,8 +76,8 @@ public class MarkupParser
 	/** The root markup fragment of the markup being parsed */
 	private final MarkupFragment rootFragment;
 
-	/** The current markup fragment in process */
-	private MarkupFragment currentFragment;
+	/** The current list of markup elements */
+	private List<MarkupElement> markupElements;
 
 	/** True if comments are to be removed */
 	private boolean stripComments;
@@ -178,14 +180,14 @@ public class MarkupParser
 
 	/**
 	 * Like internal filters, user provided filters might need access to the
-	 * markup as well. But be careful, out of the fragment tree it is always the
-	 * one currently in process.
+	 * markup as well. But be careful, the list contains only the markup
+	 * elements processed so far.
 	 * 
 	 * @return The markup resource stream
 	 */
-	public final MarkupFragment getCurrentMarkupFragment()
+	public final List<MarkupElement> getTemporaryListOfMarkupElements()
 	{
-		return this.currentFragment;
+		return this.markupElements;
 	}
 
 	/**
@@ -284,13 +286,12 @@ public class MarkupParser
 	 */
 	private MarkupFragment parseMarkup()
 	{
-		final Stack<MarkupFragment> fragmentStack = new Stack<MarkupFragment>();
-		this.currentFragment = this.rootFragment;
+		this.markupElements = new ArrayList<MarkupElement>(20);
 
 		try
 		{
-			// allways remember the latest index (size)
-			int size = currentFragment.size();
+			// always remember the latest index (size)
+			int size = this.markupElements.size();
 
 			// Loop through tags
 			for (ComponentTag tag; null != (tag = (ComponentTag)this.markupFilterChain.nextTag());)
@@ -324,7 +325,7 @@ public class MarkupParser
 
 						// Make sure you add it at the correct location.
 						// IMarkupFilters might have added elements as well.
-						currentFragment.addMarkupElement(size, new RawMarkup(rawMarkup));
+						this.markupElements.add(size, new RawMarkup(rawMarkup));
 					}
 
 					if (add)
@@ -333,55 +334,42 @@ public class MarkupParser
 						// flagged as removed
 						if (!WicketRemoveTagHandler.IGNORE.equals(tag.getId()))
 						{
-							if (tag.isOpen() || tag.isOpenClose())
-							{
-								fragmentStack.push(currentFragment);
-								MarkupFragment newFragment = new MarkupFragment(this.markup);
-								currentFragment.addMarkupElement(newFragment);
-								currentFragment = newFragment;
-							}
-
-							currentFragment.addMarkupElement(tag);
-							if (tag.isClose() || tag.isOpenClose() || tag.hasNoCloseTag())
-							{
-								currentFragment = fragmentStack.pop();
-							}
+							this.markupElements.add(tag);
 						}
 					}
 					else if (tag.isModified())
 					{
-						currentFragment.addMarkupElement(new RawMarkup(tag.toCharSequence()));
+						this.markupElements.add(new RawMarkup(tag.toCharSequence()));
 					}
 
 					this.xmlParser.setPositionMarker();
 				}
 
 				// allways remember the latest index (size)
-				size = currentFragment.size();
+				size = this.markupElements.size();
 			}
 		}
 		catch (final ParseException ex)
 		{
+			int size = this.markupElements.size();
+
 			// Add remaining input string
 			final CharSequence text = this.xmlParser.getInputFromPositionMarker(-1);
 			if (text.length() > 0)
 			{
-				currentFragment.addMarkupElement(new RawMarkup(text));
+				this.markupElements.add(new RawMarkup(text));
 			}
 
 			this.markup.setEncoding(this.xmlParser.getEncoding());
 			this.markup.setXmlDeclaration(this.xmlParser.getXmlDeclaration());
 
 			// Create a MarkupStream and position it at the error location
-			MarkupElement element = currentFragment.get(currentFragment.size() - 1);
-			MarkupStream markupStream = new MarkupStream(this.rootFragment);
-			while (markupStream.hasMore())
+			for (MarkupElement elem : this.markupElements)
 			{
-				if (markupStream.next() == element)
-				{
-					break;
-				}
+				this.rootFragment.addMarkupElement(elem);
 			}
+			MarkupStream markupStream = new MarkupStream(this.rootFragment);
+			markupStream.setCurrentIndex(size);
 
 			throw new MarkupException(markupStream, ex.getMessage(), ex);
 		}
@@ -402,23 +390,65 @@ public class MarkupParser
 				rawMarkup = compressWhitespace(rawMarkup);
 			}
 
-			currentFragment.addMarkupElement(new RawMarkup(rawMarkup));
+			this.markupElements.add(new RawMarkup(rawMarkup));
 		}
 
-		// Do we have unclosed tags in the markup? Re-balance the markup tree
-		if (fragmentStack.size() > 0)
+		// Convert the list into a MarkupFragment tree
+		if (this.markupElements.size() > 0)
 		{
-			currentFragment.handleUnclosedTags();
-			currentFragment = this.rootFragment;
+			Stack<MarkupFragment> stack = new Stack<MarkupFragment>();
+			stack.push(this.rootFragment);
+			MarkupFragment currentFragment = this.rootFragment;
+
+			for (MarkupElement elem : this.markupElements)
+			{
+				if (elem instanceof RawMarkup)
+				{
+					currentFragment.addMarkupElement(elem);
+				}
+				else
+				{
+					ComponentTag tag = (ComponentTag)elem;
+					if (tag.isOpen() || tag.isOpenClose())
+					{
+						// Push the current markup fragment on the stack
+						stack.push(currentFragment);
+
+						// and create a new MarkupFragment
+						MarkupFragment newFragment = new MarkupFragment(this.rootFragment
+								.getMarkup());
+
+						// add the new fragment to its parent
+						currentFragment.addMarkupElement(newFragment);
+
+						// make the new fragment the current one
+						currentFragment = newFragment;
+					}
+
+					// Add the tag to the fragment
+					currentFragment.addMarkupElement(tag);
+
+					// If required "close" the fragment and continue with the
+					// parent fragment
+					if (tag.isOpenClose() || tag.isClose() || tag.hasNoCloseTag())
+					{
+						currentFragment = stack.pop();
+					}
+				}
+			}
+			
+			// Avoid an "empty" root fragment. Return the first fragment instead
+			if (this.rootFragment.size() == 1)
+			{
+				MarkupElement elem = this.rootFragment.get(0);
+				if (elem instanceof MarkupFragment)
+				{
+					return (MarkupFragment) elem;
+				}
+			}
 		}
 
-		// remove "empty" root fragment
-		if ((currentFragment.size() == 1) && (currentFragment.get(0) instanceof MarkupFragment))
-		{
-			currentFragment = (MarkupFragment)currentFragment.get(0);
-		}
-		
-		return currentFragment;
+		return this.rootFragment;
 	}
 
 	/**
@@ -431,13 +461,13 @@ public class MarkupParser
 	{
 		// We don't want to compress whitespace inside <pre> tags, so we look
 		// for matches and:
-		//  - Do whitespace compression on everything before the first match.
-		//  - Append the <pre>.*?</pre> match with no compression.
-		//  - Loop to find the next match.
-		//  - Append with compression everything between the two matches.
-		//  - Repeat until no match, then special-case the fragment after the
-		//    last <pre>.
-		
+		// - Do whitespace compression on everything before the first match.
+		// - Append the <pre>.*?</pre> match with no compression.
+		// - Loop to find the next match.
+		// - Append with compression everything between the two matches.
+		// - Repeat until no match, then special-case the fragment after the
+		// last <pre>.
+
 		Pattern preBlock = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
 		Matcher m = preBlock.matcher(rawMarkup);
 		int lastend = 0;
@@ -445,12 +475,11 @@ public class MarkupParser
 		while (true)
 		{
 			boolean matched = m.find();
-			String nonPre = matched
-					? rawMarkup.substring(lastend, m.start())
-					: rawMarkup.substring(lastend);
+			String nonPre = matched ? rawMarkup.substring(lastend, m.start()) : rawMarkup
+					.substring(lastend);
 			nonPre = nonPre.replaceAll("[ \\t]+", " ");
 			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
-			
+
 			// Don't create a StringBuffer if we don't actually need one.
 			// This optimises the trivial common case where there is no <pre>
 			// tag at all down to just doing the replaceAlls above.

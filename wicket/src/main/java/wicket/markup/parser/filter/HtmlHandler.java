@@ -134,11 +134,10 @@ public final class HtmlHandler extends AbstractMarkupFilter
 
 				// If the name of the current close tag does not match the
 				// tag on the stack then we may have a mismatched close tag
-				boolean mismatch = !top.hasEqualTagName(tag);
-				if (mismatch)
+				if (top.hasEqualTagName(tag) == false)
 				{
-					top.setHasNoCloseTag(true);
-
+					boolean mismatch = true;
+					
 					// Pop any simple tags off the top of the stack
 					while (mismatch && !requiresCloseTag(top.getName()))
 					{
@@ -148,7 +147,7 @@ public final class HtmlHandler extends AbstractMarkupFilter
 						top = stack.pop();
 
 						// Does new top of stack mismatch too?
-						mismatch = !top.hasEqualTagName(tag);
+						mismatch = (top.hasEqualTagName(tag) == false);
 					}
 
 					// If adjusting for simple tags did not fix the problem,

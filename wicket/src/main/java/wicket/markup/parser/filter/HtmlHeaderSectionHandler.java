@@ -21,7 +21,6 @@ import java.text.ParseException;
 import wicket.Component;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
-import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupParser;
 import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.markup.parser.XmlTag;
@@ -131,9 +130,7 @@ public final class HtmlHeaderSectionHandler extends AbstractMarkupFilter
 		closeTag.setOpenTag(openTag);
 
 		// insert the tags into the markup stream
-		MarkupFragment fragment = new MarkupFragment(parser.getMarkup());
-		fragment.addMarkupElement(openTag);
-		fragment.addMarkupElement(closeTag);
-		this.parser.getCurrentMarkupFragment().addMarkupElement(fragment);
+		this.parser.getTemporaryListOfMarkupElements().add(openTag);
+		this.parser.getTemporaryListOfMarkupElements().add(closeTag);
 	}
 }
