@@ -157,56 +157,89 @@ public class TestDetachPage extends WebPage
 		super.detachModels();
 	}
 
+	/**
+	 * @return nrComponentDetachModelCalls
+	 */
 	public int getNrComponentDetachModelCalls()
 	{
 		return nrComponentDetachModelCalls;
 	}
 
+	/**
+	 * @return nrComponentDetachModelsCalls
+	 */
 	public int getNrComponentDetachModelsCalls()
 	{
 		return nrComponentDetachModelsCalls;
 	}
 
+	/**
+	 * @return nrComponentInternalDetachCalls
+	 */
 	public int getNrComponentInternalDetachCalls()
 	{
 		return nrComponentInternalDetachCalls;
 	}
 
+	/**
+	 * @return nrComponentOnDetachCalls
+	 */
 	public int getNrComponentOnDetachCalls()
 	{
 		return nrComponentOnDetachCalls;
 	}
 
+	/**
+	 * @return nrPageDetachModelCalls
+	 */
 	public int getNrPageDetachModelCalls()
 	{
 		return nrPageDetachModelCalls;
 	}
 
+	/**
+	 * @return nrPageDetachModelsCalls
+	 */
 	public int getNrPageDetachModelsCalls()
 	{
 		return nrPageDetachModelsCalls;
 	}
 
+	/**
+	 * @return nrPageInternalDetachCalls
+	 */
 	public int getNrPageInternalDetachCalls()
 	{
 		return nrPageInternalDetachCalls;
 	}
 
+	/**
+	 * @return nrPageOnDetachCalls
+	 */
 	public int getNrPageOnDetachCalls()
 	{
 		return nrPageOnDetachCalls;
 	}
 
+	/**
+	 * @return nrModelDetachCalls
+	 */
 	public int getNrModelDetachCalls()
 	{
 		return nrModelDetachCalls;
 	}
 
+	/**
+	 * @return nrAjaxBehaviorDetachModelCalls
+	 */
 	public int getNrAjaxBehaviorDetachModelCalls()
 	{
 		return nrAjaxBehaviorDetachModelCalls;
 	}
 
+	/**
+	 * @return ajaxEventBehavior
+	 */
 	public AjaxEventBehavior getAjaxBehavior()
 	{
 		return ajaxEventBehavior;

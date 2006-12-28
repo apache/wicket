@@ -92,9 +92,8 @@ public class PasswordTextField extends TextField
 		{
 			try
 			{
-				// TODO kept for backwards compatibility. Replace with encryptUrlSafe after 1.2
-				return getApplication().getSecuritySettings().getCryptFactory().newCrypt().encrypt(
-						value);
+				return getApplication().getSecuritySettings().getCryptFactory().newCrypt()
+						.encryptUrlSafe(value);
 			}
 			catch (Exception ex)
 			{
@@ -131,9 +130,8 @@ public class PasswordTextField extends TextField
 		String decryptedValue;
 		try
 		{
-			// TODO kept for backwards compatibility. Replace with decryptUrlSafe after 1.2
 			decryptedValue = getApplication().getSecuritySettings().getCryptFactory().newCrypt()
-					.decrypt(value);
+					.decryptUrlSafe(value);
 		}
 		catch (Exception ex)
 		{

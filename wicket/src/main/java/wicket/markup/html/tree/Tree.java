@@ -31,7 +31,6 @@ import wicket.Component;
 import wicket.ResourceReference;
 import wicket.WicketRuntimeException;
 import wicket.behavior.HeaderContributor;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.basic.Label;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
@@ -39,6 +38,7 @@ import wicket.markup.html.list.ListItem;
 import wicket.markup.html.list.ListView;
 import wicket.markup.html.list.Loop;
 import wicket.markup.html.panel.Panel;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.model.AbstractReadOnlyDetachableModel;
 import wicket.model.IModel;
 
@@ -307,21 +307,21 @@ public class Tree extends AbstractTree implements TreeModelListener
 	public static final String NODE_IMAGE_NAME = "nodeImage";
 
 	/** Blank image. */
-	private static final ResourceReference BLANK = new PackageResourceReference(Tree.class,
+	private static final ResourceReference BLANK = new ResourceReference(Tree.class,
 			"blank.gif");
 
 	/**
 	 * Reference to the css file.
 	 */
-	private static final PackageResourceReference CSS = new PackageResourceReference(Tree.class,
+	private static final ResourceReference CSS = new CompressedResourceReference(Tree.class,
 			"tree.css");
 
 	/** Minus sign image. */
-	private static final ResourceReference MINUS = new PackageResourceReference(Tree.class,
+	private static final ResourceReference MINUS = new ResourceReference(Tree.class,
 			"minus.gif");
 
 	/** Plus sign image. */
-	private static final ResourceReference PLUS = new PackageResourceReference(Tree.class,
+	private static final ResourceReference PLUS = new ResourceReference(Tree.class,
 			"plus.gif");
 
 	private static final long serialVersionUID = 1L;
@@ -357,7 +357,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		this.treePathsModel = new TreePathsModel();
 		add(treePathsListView = createTreePathsListView());
 
-		PackageResourceReference css = getCss();
+		ResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
 	}
 
@@ -376,7 +376,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 		this.treePathsModel = new TreePathsModel();
 		add(treePathsListView = createTreePathsListView());
 
-		PackageResourceReference css = getCss();
+		ResourceReference css = getCss();
 		add(HeaderContributor.forCss(css.getScope(), css.getName()));
 	}
 
@@ -627,7 +627,7 @@ public class Tree extends AbstractTree implements TreeModelListener
 	 * 
 	 * @return the stylesheet
 	 */
-	protected PackageResourceReference getCss()
+	protected ResourceReference getCss()
 	{
 		return CSS;
 	}
