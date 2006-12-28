@@ -20,7 +20,6 @@ import wicket.Application;
 import wicket.AttributeModifier;
 import wicket.Component;
 import wicket.ResourceReference;
-import wicket.markup.html.PackageResourceReference;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -121,10 +120,12 @@ public class PackagedResourceReference extends WebMarkupContainer
 	 * @param name
 	 * @return created resource reference
 	 */
-	protected PackageResourceReference createPackageResourceReference(Application app, Class scope,
+	protected ResourceReference createPackageResourceReference(Application app, Class scope,
 			String name)
 	{
-		return new PackageResourceReference(app, scope, name);
+		ResourceReference resourceReference = new ResourceReference(scope, name);
+		resourceReference.bind(app);
+		return resourceReference;
 	}
 
 	/**

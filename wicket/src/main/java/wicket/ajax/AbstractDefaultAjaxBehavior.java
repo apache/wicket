@@ -23,7 +23,7 @@ import wicket.ResourceReference;
 import wicket.behavior.AbstractAjaxBehavior;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.resources.CompressedResourceReference;
-import wicket.settings.IAjaxSettings;
+import wicket.settings.IDebugSettings;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
@@ -73,11 +73,11 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	{
 		super.renderHead(response);
 		
-		final IAjaxSettings settings = Application.get().getAjaxSettings();
+		final IDebugSettings debugSettings = Application.get().getDebugSettings();
 
 		response.renderJavascriptReference(JAVASCRIPT);
 		
-		if (settings.isAjaxDebugModeEnabled())
+		if (debugSettings.isAjaxDebugModeEnabled())
 		{
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");			
 			response.renderJavascriptReference(JAVASCRIPT_DEBUG_DRAG);			

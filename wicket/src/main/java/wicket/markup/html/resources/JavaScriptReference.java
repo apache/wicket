@@ -19,7 +19,6 @@ package wicket.markup.html.resources;
 import wicket.Application;
 import wicket.ResourceReference;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.PackageResourceReference;
 import wicket.model.IModel;
 import wicket.util.value.ValueMap;
 
@@ -107,9 +106,10 @@ public class JavaScriptReference extends PackagedResourceReference
 	 * @see wicket.markup.html.resources.PackagedResourceReference#createPackageResourceReference(wicket.Application,
 	 *      java.lang.Class, java.lang.String)
 	 */
-	protected PackageResourceReference createPackageResourceReference(Application app, Class scope,
-			String name)
+	protected ResourceReference createPackageResourceReference(Application app, Class scope, String name)
 	{
-		return new CompressedPackageResourceReference(app, scope, name);
+		CompressedResourceReference compressedResourceReference = new CompressedResourceReference(scope, name);
+		compressedResourceReference.bind(app);
+		return compressedResourceReference;
 	}
 }

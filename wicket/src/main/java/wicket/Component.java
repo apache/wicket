@@ -33,7 +33,6 @@ import wicket.authorization.IAuthorizationStrategy;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.behavior.IBehavior;
 import wicket.feedback.FeedbackMessage;
-import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupException;
 import wicket.markup.MarkupStream;
