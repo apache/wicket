@@ -1,30 +1,30 @@
 /*
- File: ConcurrentReaderHashMap
+  File: ConcurrentReaderHashMap
 
- Written by Doug Lea. Adapted and released, under explicit
- permission, from JDK1.2 HashMap.java and Hashtable.java which
- carries the following copyright:
+  Written by Doug Lea. Adapted and released, under explicit
+  permission, from JDK1.2 HashMap.java and Hashtable.java which
+  carries the following copyright:
 
- * Copyright 1997 by Sun Microsystems, Inc.,
- * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of Sun Microsystems, Inc. ("Confidential Information").  You
- * shall not disclose such Confidential Information and shall use
- * it only in accordance with the terms of the license agreement
- * you entered into with Sun.
+     * Copyright 1997 by Sun Microsystems, Inc.,
+     * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
+     * All rights reserved.
+     *
+     * This software is the confidential and proprietary information
+     * of Sun Microsystems, Inc. ("Confidential Information").  You
+     * shall not disclose such Confidential Information and shall use
+     * it only in accordance with the terms of the license agreement
+     * you entered into with Sun.
 
- History:
- Date       Who                What
- 28oct1999  dl               Created
- 14dec1999  dl               jmm snapshot
- 19apr2000  dl               use barrierLock
- 12jan2001  dl               public release
- 17nov2001  dl               Minor tunings
- 20may2002  dl               BarrierLock can now be serialized.
- 09dec2002  dl               Fix interference checks.
- */
+  History:
+  Date       Who                What
+  28oct1999  dl               Created
+  14dec1999  dl               jmm snapshot
+  19apr2000  dl               use barrierLock
+  12jan2001  dl               public release
+  17nov2001  dl               Minor tunings
+  20may2002  dl               BarrierLock can now be serialized.
+  09dec2002  dl               Fix interference checks.
+*/
 package wicket.util.concurrent;
 
 import java.io.IOException;
