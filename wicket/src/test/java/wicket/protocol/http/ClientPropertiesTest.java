@@ -34,7 +34,7 @@ public class ClientPropertiesTest extends TestCase
 	{
 		String utc = "-2.0";
 		ClientProperties props = new ClientProperties();
-		props.setProperty(ClientProperties.UTC_OFFSET, utc);
+		props.setUtcOffset(utc);
 
 		assertEquals(TimeZone.getTimeZone("GMT-2:00"), props.getTimeZone());
 	}
@@ -46,7 +46,7 @@ public class ClientPropertiesTest extends TestCase
 	{
 		String utc = "+2.0";
 		ClientProperties props = new ClientProperties();
-		props.setProperty(ClientProperties.UTC_OFFSET, utc);
+		props.setUtcOffset(utc);
 
 		assertEquals(TimeZone.getTimeZone("GMT+2:00"), props.getTimeZone());
 	}
@@ -58,7 +58,7 @@ public class ClientPropertiesTest extends TestCase
 	{
 		String utc = "+11.0";
 		ClientProperties props = new ClientProperties();
-		props.setProperty(ClientProperties.UTC_OFFSET, utc);
+		props.setUtcOffset(utc);
 
 		assertEquals(TimeZone.getTimeZone("GMT+11:00"), props.getTimeZone());
 	}
@@ -70,7 +70,7 @@ public class ClientPropertiesTest extends TestCase
 	{
 		String utc = "+2.5";
 		ClientProperties props = new ClientProperties();
-		props.setProperty(ClientProperties.UTC_OFFSET, utc);
+		props.setUtcOffset(utc);
 
 		assertEquals(TimeZone.getTimeZone("GMT+2:30"), props.getTimeZone());
 	}
@@ -82,7 +82,7 @@ public class ClientPropertiesTest extends TestCase
 	{
 		String utc = "-2.5";
 		ClientProperties props = new ClientProperties();
-		props.setProperty(ClientProperties.UTC_OFFSET, utc);
+		props.setUtcOffset(utc);
 
 		assertEquals(TimeZone.getTimeZone("GMT-2:30"), props.getTimeZone());
 	}
@@ -94,7 +94,7 @@ public class ClientPropertiesTest extends TestCase
 	{
 		String utc = "3";
 		ClientProperties props = new ClientProperties();
-		props.setProperty(ClientProperties.UTC_OFFSET, utc);
+		props.setUtcOffset(utc);
 
 		assertEquals(TimeZone.getTimeZone("GMT+3:00"), props.getTimeZone());
 	}
@@ -106,7 +106,7 @@ public class ClientPropertiesTest extends TestCase
 	{
 		String utc = "-3";
 		ClientProperties props = new ClientProperties();
-		props.setProperty(ClientProperties.UTC_OFFSET, utc);
+		props.setUtcOffset(utc);
 
 		assertEquals(TimeZone.getTimeZone("GMT-3:00"), props.getTimeZone());
 	}
