@@ -1,27 +1,27 @@
 /*
- File: ConcurrentHashMap
+  File: ConcurrentHashMap
 
- Written by Doug Lea. Adapted and released, under explicit
- permission, from JDK1.2 HashMap.java and Hashtable.java which
- carries the following copyright:
+  Written by Doug Lea. Adapted and released, under explicit
+  permission, from JDK1.2 HashMap.java and Hashtable.java which
+  carries the following copyright:
 
- * Copyright 1997 by Sun Microsystems, Inc.,
- * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of Sun Microsystems, Inc. ("Confidential Information").  You
- * shall not disclose such Confidential Information and shall use
- * it only in accordance with the terms of the license agreement
- * you entered into with Sun.
+     * Copyright 1997 by Sun Microsystems, Inc.,
+     * 901 San Antonio Road, Palo Alto, California, 94303, U.S.A.
+     * All rights reserved.
+     *
+     * This software is the confidential and proprietary information
+     * of Sun Microsystems, Inc. ("Confidential Information").  You
+     * shall not disclose such Confidential Information and shall use
+     * it only in accordance with the terms of the license agreement
+     * you entered into with Sun.
 
- History:
- Date       Who                What
- 26nov2000  dl               Created, based on ConcurrentReaderHashMap
- 12jan2001  dl               public release
- 17nov2001  dl               Minor tunings
- 24oct2003  dl               Segment implements Serializable
- */
+  History:
+  Date       Who                What
+  26nov2000  dl               Created, based on ConcurrentReaderHashMap
+  12jan2001  dl               public release
+  17nov2001  dl               Minor tunings
+  24oct2003  dl               Segment implements Serializable
+*/
 
 package wicket.util.concurrent;
 
