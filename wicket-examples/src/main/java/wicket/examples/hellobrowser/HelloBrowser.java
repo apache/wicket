@@ -25,6 +25,7 @@ import java.util.TimeZone;
 
 import wicket.examples.WicketExamplePage;
 import wicket.markup.html.basic.Label;
+import wicket.markup.html.basic.MultiLineLabel;
 import wicket.model.AbstractReadOnlyModel;
 import wicket.model.IModel;
 import wicket.protocol.http.ClientProperties;
@@ -57,7 +58,7 @@ public class HelloBrowser extends WicketExamplePage
 		WebClientInfo clientInfo = WebRequestCycle.get().getClientInfo();
 		final ClientProperties properties = clientInfo.getProperties();
 
-		new Label(this, "clientinfo", properties.toString());
+		new MultiLineLabel(this, "clientinfo", properties.toString());
 
 		IModel clientTimeModel = new AbstractReadOnlyModel()
 		{

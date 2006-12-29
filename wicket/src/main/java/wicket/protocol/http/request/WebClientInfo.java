@@ -40,7 +40,7 @@ public class WebClientInfo extends ClientInfo
 
 	/**
 	 * The user agent string from the User-Agent header, app. Theoretically,
-	 * this might differ from {@link ClientProperties#NAVIGATOR_JAVA_ENABLED}
+	 * this might differ from {@link ClientProperties#isJavaEnabled()}
 	 * property, which is not set until an actual reply from a browser (e.g.
 	 * using {@link wicket.markup.html.pages.BrowserInfoPage} is set.
 	 */
@@ -65,7 +65,7 @@ public class WebClientInfo extends ClientInfo
 		{
 			throw new WicketRuntimeException("unable to read header 'User-Agent'");
 		}
-		properties.setProperty(ClientProperties.REMOTE_ADDRESS,httpServletRequest.getRemoteAddr());
+		properties.setRemoteAddress(httpServletRequest.getRemoteAddr());
 
 		init();
 	}
@@ -90,7 +90,7 @@ public class WebClientInfo extends ClientInfo
 		this.userAgent = userAgent;
 		HttpServletRequest httpServletRequest = requestCycle.getWebRequest()
 		.getHttpServletRequest();
-		properties.setProperty(ClientProperties.REMOTE_ADDRESS,httpServletRequest.getRemoteAddr());
+		properties.setRemoteAddress(httpServletRequest.getRemoteAddr());
 
 		init();
 	}
@@ -120,27 +120,27 @@ public class WebClientInfo extends ClientInfo
 		// Store browser information.
 		if (browserOpera)
 		{
-			properties.setProperty(ClientProperties.BROWSER_OPERA, Boolean.TRUE);
+			properties.setBrowserOpera(true);
 		}
 		else if (browserKonqueror)
 		{
-			properties.setProperty(ClientProperties.BROWSER_KONQUEROR, Boolean.TRUE);
+			properties.setBrowserKonqueror(true);
 		}
 		else if (browserSafari)
 		{
-			properties.setProperty(ClientProperties.BROWSER_SAFARI, Boolean.TRUE);
+			properties.setBrowserSafari(true);
 		}
 		else if (browserMozilla)
 		{
-			properties.setProperty(ClientProperties.BROWSER_MOZILLA, Boolean.TRUE);
+			properties.setBrowserMozilla(true);
 			if (browserFireFox)
 			{
-				properties.setProperty(ClientProperties.BROWSER_MOZILLA_FIREFOX, Boolean.TRUE);
+				properties.setBrowserMozillaFirefox(true);
 			}
 		}
 		else if (browserInternetExplorer)
 		{
-			properties.setProperty(ClientProperties.BROWSER_INTERNET_EXPLORER, Boolean.TRUE);
+			properties.setBrowserInternetExplorer(true);
 			if (userAgent.indexOf("msie 6.") != -1)
 			{
 				majorVersion = 6;
@@ -153,47 +153,37 @@ public class WebClientInfo extends ClientInfo
 
 		if (majorVersion != -1)
 		{
-			properties.setProperty(ClientProperties.BROWSER_VERSION_MAJOR, Integer
-					.valueOf(majorVersion));
+			properties.setBrowserVersionMajor(majorVersion);
 		}
 
 		if (minorVersion != -1)
 		{
-			properties.setProperty(ClientProperties.BROWSER_VERSION_MINOR, Integer
-					.valueOf(minorVersion));
+			properties.setBrowserVersionMinor(minorVersion);
 		}
 
 		// Set quirk flags.
 		if (browserInternetExplorer)
 		{
-			properties.setProperty(ClientProperties.PROPRIETARY_IE_CSS_EXPRESSIONS_SUPPORTED,
-					Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_CSS_POSITIONING_ONE_SIDE_ONLY,
-					Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_REPAINT, Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_Z_INDEX, Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_TEXTAREA_NEWLINE_OBLITERATION,
-					Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_PERCENT_WIDTH, Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_SELECT_LIST_DOM_UPDATE, Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_IE_TABLE_PERCENT_WIDTH_SCROLLBAR_ERROR,
-					Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_CSS_BACKGROUND_ATTACHMENT_USE_FIXED,
-					Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_CSS_BORDER_COLLAPSE_INSIDE, Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_CSS_BORDER_COLLAPSE_FOR_0_PADDING,
-					Boolean.TRUE);
+			properties.setProprietaryIECssExpressionsSupported(true);
+			properties.setQuirkCssPositioningOneSideOnly(true);
+			properties.setQuirkIERepaint(true);
+			properties.setQuirkIESelectZIndex(true);
+			properties.setQuirkIETextareaNewlineObliteration(true);
+			properties.setQuirkIESelectPercentWidth(true);
+			properties.setQuirkIESelectListDomUpdate(true);
+			properties.setQuirkIETablePercentWidthScrollbarError(true);
+			properties.setQuirkCssBackgroundAttachmentUseFixed(true);
+			properties.setQuirkCssBorderCollapseInside(true);
+			properties.setQuirkCssBorderCollapseFor0Padding(true);
 			if (majorVersion < 7)
 			{
-				properties.setProperty(ClientProperties.PROPRIETARY_IE_PNG_ALPHA_FILTER_REQUIRED,
-						Boolean.TRUE);
+				properties.setProprietaryIEPngAlphaFilterRequired(true);
 			}
 		}
 		if (browserMozilla)
 		{
-			properties.setProperty(ClientProperties.QUIRK_MOZILLA_TEXT_INPUT_REPAINT, Boolean.TRUE);
-			properties.setProperty(ClientProperties.QUIRK_MOZILLA_PERFORMANCE_LARGE_DOM_REMOVE,
-					Boolean.TRUE);
+			properties.setQuirkMozillaTextInputRepaint(true);
+			properties.setQuirkMozillaPerformanceLargeDomRemove(true);
 		}
 
 		if (log.isDebugEnabled())
@@ -220,33 +210,6 @@ public class WebClientInfo extends ClientInfo
 	public final ClientProperties getProperties()
 	{
 		return properties;
-	}
-
-	// TODO 2.0: add some more of these convinience getters, using properties is
-	// not the most intuitive thing in the world
-
-	/**
-	 * @return true if the client browser is internet explorer
-	 */
-	public final boolean isBrowserInternetExplorer()
-	{
-		return properties.getBoolean(ClientProperties.BROWSER_INTERNET_EXPLORER);
-	}
-
-	/**
-	 * @return major version of client browser or 0 if not available
-	 */
-	public final int getBrowserMajorVersion()
-	{
-		return properties.getInt(ClientProperties.BROWSER_VERSION_MAJOR, 0);
-	}
-
-	/**
-	 * @return minor version of client browser or 0 if not available
-	 */
-	public final int getBrowserMinorVersion()
-	{
-		return properties.getInt(ClientProperties.BROWSER_VERSION_MINOR, 0);
 	}
 
 }

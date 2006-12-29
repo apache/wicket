@@ -21,6 +21,7 @@ import wicket.ResourceReference;
 import wicket.behavior.AbstractBehavior;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
+import wicket.protocol.http.ClientProperties;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.request.WebClientInfo;
 
@@ -47,8 +48,9 @@ public class ExplorerPngFix extends AbstractBehavior implements IHeaderContribut
 		if (response.wasRendered(ref) == false)
 		{
 			WebClientInfo info = ((WebRequestCycle)RequestCycle.get()).getClientInfo();
+			ClientProperties properties = info.getProperties();
 
-			if (info.isBrowserInternetExplorer() && info.getBrowserMajorVersion() < 7)
+			if (properties.isBrowserInternetExplorer() && properties.getBrowserVersionMajor() < 7)
 			{
 				response.getResponse().write("<!--[if lt IE 7.]> <script defer type=\"text/javascript\" src=\"");
 				response.getResponse().write(RequestCycle.get().urlFor(ref));
