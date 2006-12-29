@@ -21,8 +21,8 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -69,7 +69,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 	public static final String VERSION_PARAMETER_NAME = NAME_SPACE + "version";
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(PortletRequestCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(PortletRequestCodingStrategy.class);
 
 
 	/** cached url prefix. */

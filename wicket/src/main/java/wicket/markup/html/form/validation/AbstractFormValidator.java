@@ -23,6 +23,7 @@ import java.util.Map;
 import wicket.markup.html.form.FormComponent;
 import wicket.model.IModel;
 import wicket.util.lang.Classes;
+import wicket.validation.IValidatable;
 import wicket.validation.IValidationError;
 import wicket.validation.ValidationError;
 

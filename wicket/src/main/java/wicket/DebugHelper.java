@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component.IVisitor;
 import wicket.markup.MarkupException;
@@ -37,7 +37,7 @@ import wicket.util.value.Count;
  */
 public class DebugHelper
 {
-	private static Log log = LogFactory.getLog(DebugHelper.class);
+	private static Logger log = LoggerFactory.getLogger(DebugHelper.class);
 
 	private Set<Component> renderedComponents;
 

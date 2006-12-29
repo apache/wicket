@@ -16,6 +16,8 @@
  */
 package wicket.util.tester.apps_6;
 
+import java.io.Serializable;
+
 import wicket.Page;
 import wicket.WicketTestCase;
 import wicket.ajax.AjaxRequestTarget;
@@ -28,8 +30,13 @@ import wicket.util.tester.ITestPageSource;
  * 
  * @author Frank Bille
  */
-public class AjaxLinkClickTest extends WicketTestCase
+public class AjaxLinkClickTest extends WicketTestCase implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private boolean linkClicked;
 	private AjaxRequestTarget ajaxRequestTarget;
 

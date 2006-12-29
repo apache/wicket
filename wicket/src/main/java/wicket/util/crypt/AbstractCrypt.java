@@ -21,8 +21,8 @@ import java.security.GeneralSecurityException;
 
 import javax.crypto.Cipher;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.WicketRuntimeException;
 
@@ -40,7 +40,7 @@ public abstract class AbstractCrypt implements ICrypt
 	private static final String CHARACTER_ENCODING = "UTF-8";
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(AbstractCrypt.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractCrypt.class);
 
 	/** Key used to de-/encrypt the data */
 	private String encryptionKey = DEFAULT_ENCRYPTION_KEY;

@@ -18,8 +18,8 @@ package wicket.util.resource.locator;
 
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
@@ -34,7 +34,7 @@ import wicket.util.resource.UrlResourceStream;
 public final class ClassLoaderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(ClassLoaderResourceStreamLocator.class);
+	private static final Logger log = LoggerFactory.getLogger(ClassLoaderResourceStreamLocator.class);
 
 	/**
 	 * Constructor

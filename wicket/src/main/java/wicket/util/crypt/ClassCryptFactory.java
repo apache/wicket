@@ -16,8 +16,8 @@
  */
 package wicket.util.crypt;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ClassCryptFactory implements ICryptFactory
 {
-	private static final Log log = LogFactory.getLog(ClassCryptFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(ClassCryptFactory.class);
 	private Class cryptClass;
 	private String encryptionKey;
 

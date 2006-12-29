@@ -16,8 +16,8 @@
  */
 package wicket.protocol.http.portlet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Page;
 import wicket.RequestCycle;
@@ -42,7 +42,7 @@ import wicket.request.ClientInfo;
 public abstract class PortletRequestCycle extends RequestCycle
 {
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(WebRequestCycle.class);
+	private static final Logger log = LoggerFactory.getLogger(WebRequestCycle.class);
 
 	/**
 	 * Constructor which simply passes arguments to superclass for storage

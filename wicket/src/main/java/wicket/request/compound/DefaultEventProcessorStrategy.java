@@ -16,8 +16,8 @@
  */
 package wicket.request.compound;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
@@ -36,7 +36,7 @@ import wicket.request.target.IEventProcessor;
 public final class DefaultEventProcessorStrategy implements IEventProcessorStrategy
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(DefaultEventProcessorStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultEventProcessorStrategy.class);
 
 	/**
 	 * Construct.

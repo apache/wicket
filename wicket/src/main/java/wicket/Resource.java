@@ -21,8 +21,8 @@ import java.net.SocketException;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
@@ -64,7 +64,7 @@ public abstract class Resource implements IResourceListener
 	private static final long serialVersionUID = 1L;
 
 	/** Logger */
-	private static final Log log = LogFactory.getLog(Resource.class);
+	private static final Logger log = LoggerFactory.getLogger(Resource.class);
 
 	/** True if this resource can be cached */
 	private boolean cacheable;

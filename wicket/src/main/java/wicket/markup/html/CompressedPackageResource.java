@@ -26,6 +26,7 @@ import java.util.zip.GZIPOutputStream;
 
 import wicket.Application;
 import wicket.SharedResources;
+import wicket.markup.html.resources.CompressedResourceReference;
 import wicket.protocol.http.WebRequest;
 import wicket.protocol.http.WebRequestCycle;
 import wicket.protocol.http.WebResponse;

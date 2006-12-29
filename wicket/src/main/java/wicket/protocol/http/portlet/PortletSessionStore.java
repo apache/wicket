@@ -24,8 +24,8 @@ import java.util.List;
 
 import javax.portlet.PortletSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.AccessStackPageMap;
 import wicket.Application;
@@ -49,7 +49,7 @@ public class PortletSessionStore implements ISessionStore
 	private final static int SCOPE = PortletSession.APPLICATION_SCOPE;
 
 	/** log. */
-	protected static Log log = LogFactory.getLog(PortletSessionStore.class);
+	protected static Logger log = LoggerFactory.getLogger(PortletSessionStore.class);
 
 	protected final PortletApplication application;
 

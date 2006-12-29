@@ -19,8 +19,8 @@ package wicket.markup.loader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -58,7 +58,7 @@ public class MarkupFragmentUtils
 	}
 
 	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(MarkupFragmentUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(MarkupFragmentUtils.class);
 
 	/**
 	 * 

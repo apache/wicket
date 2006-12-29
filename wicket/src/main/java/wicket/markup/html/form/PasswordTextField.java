@@ -16,8 +16,8 @@
  */
 package wicket.markup.html.form;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
@@ -36,7 +36,7 @@ import wicket.model.IModel;
 public class PasswordTextField extends TextField<String>
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(PasswordTextField.class);
+	private static final Logger log = LoggerFactory.getLogger(PasswordTextField.class);
 
 	private static final long serialVersionUID = 1L;
 

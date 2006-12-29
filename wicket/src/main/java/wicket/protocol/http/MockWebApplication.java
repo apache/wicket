@@ -24,8 +24,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -85,7 +85,7 @@ public class MockWebApplication
 {
 	/** Logging */
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(MockWebApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(MockWebApplication.class);
 
 	/** The last rendered page. */
 	private Page lastRenderedPage;

@@ -59,8 +59,8 @@ package wicket.util.diff;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This class delegates handling of the to a StringBuffer based version.

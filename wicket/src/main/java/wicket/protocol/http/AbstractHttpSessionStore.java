@@ -22,8 +22,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Request;
@@ -43,7 +43,7 @@ public abstract class AbstractHttpSessionStore implements ISessionStore
 {
 
 	/** log. */
-	protected static Log log = LogFactory.getLog(AbstractHttpSessionStore.class);
+	protected static Logger log = LoggerFactory.getLogger(AbstractHttpSessionStore.class);
 
 	/**
 	 * Reacts on unbinding from the session by cleaning up the session related

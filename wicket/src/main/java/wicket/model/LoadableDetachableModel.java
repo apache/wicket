@@ -16,8 +16,8 @@
  */
 package wicket.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.RequestCycle;
 
@@ -55,7 +55,7 @@ import wicket.RequestCycle;
 public abstract class LoadableDetachableModel<T> extends AbstractReadOnlyModel<T>
 {
 	/** Logger. */
-	private static final Log log = LogFactory.getLog(LoadableDetachableModel.class);
+	private static final Logger log = LoggerFactory.getLogger(LoadableDetachableModel.class);
 
 	/** keeps track of whether this model is attached or detached */
 	private transient boolean attached = false;

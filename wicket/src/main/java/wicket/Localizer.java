@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.model.IModel;
 import wicket.resource.loader.IStringResourceLoader;
@@ -54,7 +54,7 @@ public class Localizer
 {
 	/** Log */
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(Localizer.class);
+	private static final Logger log = LoggerFactory.getLogger(Localizer.class);
 
 	/** The application and its settings to use to control the utils. */
 	private Application application;

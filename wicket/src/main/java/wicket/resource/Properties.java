@@ -28,7 +28,7 @@ import wicket.util.value.ValueMap;
 public final class Properties
 {
 	/** Log. */
-	// private static final Log log = LogFactory.getLog(Properties.class);
+	// private static final Logger log = LoggerFactory.getLogger(Properties.class);
 	/** The resource key for the properties file */
 	private final String key;
 

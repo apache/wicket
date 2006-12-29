@@ -18,8 +18,8 @@ package wicket.util.resource.locator;
 
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.util.file.IResourceFinder;
 import wicket.util.resource.IResourceStream;
@@ -35,7 +35,7 @@ import wicket.util.resource.UrlResourceStream;
 public class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(ResourceFinderResourceStreamLocator.class);
+	private static final Logger log = LoggerFactory.getLogger(ResourceFinderResourceStreamLocator.class);
 
 	/** The finder to use to locate the resource stream */
 	private IResourceFinder finder;

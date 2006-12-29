@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Session;
 import wicket.WicketRuntimeException;
@@ -62,7 +62,7 @@ public final class PropertyResolver
 			64);
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(PropertyResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(PropertyResolver.class);
 
 	/**
 	 * Looksup the value from the object with the given expression. If the

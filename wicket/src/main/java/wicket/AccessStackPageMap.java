@@ -19,8 +19,8 @@ package wicket;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.session.pagemap.IPageMapEntry;
 import wicket.util.collections.ArrayListStack;
@@ -51,7 +51,7 @@ public class AccessStackPageMap extends PageMap implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(AccessStackPageMap.class);
+	private static final Logger log = LoggerFactory.getLogger(AccessStackPageMap.class);
 
 
 	/** Stack of entry accesses by id */

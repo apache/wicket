@@ -18,8 +18,8 @@ package wicket.markup.parser.filter;
 
 import java.text.ParseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.markup.ComponentTag;
@@ -41,7 +41,7 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 {
 	/** Logging */
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(PrependContextPathHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(PrependContextPathHandler.class);
 
 	/** List of attribute names considered */
 	private static final String attributeNames[] = new String[] { "href", "src", "background" };

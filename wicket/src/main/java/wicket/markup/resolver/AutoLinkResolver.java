@@ -21,8 +21,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -655,7 +655,7 @@ public final class AutoLinkResolver implements IComponentResolver
 			"href");
 
 	/** Logging */
-	private static final Log log = LogFactory.getLog(AutoLinkResolver.class);
+	private static final Logger log = LoggerFactory.getLogger(AutoLinkResolver.class);
 
 	private static final long serialVersionUID = 1L;
 

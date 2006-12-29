@@ -35,8 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -249,7 +249,7 @@ public final class Objects
 	private static final int INT = 4;
 
 	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(Objects.class);
+	private static final Logger log = LoggerFactory.getLogger(Objects.class);
 
 	/** Type tag meaning long. */
 	private static final int LONG = 5;

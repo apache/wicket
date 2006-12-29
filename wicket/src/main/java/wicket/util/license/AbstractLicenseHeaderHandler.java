@@ -22,9 +22,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.net.URL;
 
-import wicket.util.string.Strings;
-
 import junit.framework.Assert;
+import wicket.util.string.Strings;
 
 
 abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler

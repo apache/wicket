@@ -22,8 +22,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Page;
@@ -42,7 +42,7 @@ import wicket.util.lang.Objects;
 public class FilePageStore implements IPageStore
 {
 	/** log. */
-	protected static Log log = LogFactory.getLog(FilePageStore.class);
+	protected static Logger log = LoggerFactory.getLogger(FilePageStore.class);
 
         /**
          * Returns the working directory for this disk-based PageStore.

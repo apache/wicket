@@ -25,8 +25,8 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.protocol.http.WebApplication;
@@ -46,7 +46,7 @@ public class UrlResourceStream extends AbstractResourceStream
 	private static final long serialVersionUID = 1L;
 
 	/** Logging. */
-	private static final Log log = LogFactory.getLog(UrlResourceStream.class);
+	private static final Logger log = LoggerFactory.getLogger(UrlResourceStream.class);
 
 	/** Resource stream. */
 	private transient InputStream inputStream;

@@ -17,8 +17,8 @@
 package wicket;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.protocol.http.BufferedWebResponse;
 import wicket.protocol.http.IRequestLogger;
@@ -183,7 +183,7 @@ public abstract class RequestCycle
 	private static final int HANDLE_EXCEPTION = 5;
 
 	/** Log */
-	private static final Log log = LogFactory.getLog(RequestCycle.class);
+	private static final Logger log = LoggerFactory.getLogger(RequestCycle.class);
 
 	/** No processing has been done. */
 	private static final int NOT_STARTED = 0;

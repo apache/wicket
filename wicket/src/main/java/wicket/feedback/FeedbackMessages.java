@@ -21,9 +21,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.util.string.StringList;
@@ -38,7 +39,7 @@ import wicket.util.string.StringList;
 public final class FeedbackMessages implements Serializable
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(FeedbackMessages.class);
+	private static final Logger log = LoggerFactory.getLogger(FeedbackMessages.class);
 
 	private static final long serialVersionUID = 1L;
 

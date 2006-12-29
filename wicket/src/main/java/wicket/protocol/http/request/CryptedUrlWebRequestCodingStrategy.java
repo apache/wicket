@@ -24,8 +24,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
@@ -67,7 +67,7 @@ import wicket.util.string.Strings;
 public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrategy
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(CryptedUrlWebRequestCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(CryptedUrlWebRequestCodingStrategy.class);
 
 	/** The default request coding strategy most of the methods are delegated to */
 	private final IRequestCodingStrategy defaultStrategy;
@@ -273,7 +273,7 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	 */
 	protected String onError(final Exception ex)
 	{
-		log.error(ex);
+		log.error("Invalid URL", ex);
 
 		throw new HackAttackException("Invalid URL");
 	}

@@ -21,8 +21,8 @@ package wicket.ajax;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.MockPageWithLinkAndComponent;
 import wicket.MockPageWithOneComponent;
@@ -45,7 +45,7 @@ import wicket.util.time.Duration;
  */
 public class AjaxTimerBehaviorTest extends WicketTestCase
 {
-	private static final Log log = LogFactory.getLog(AjaxTimerBehaviorTest.class);
+	private static final Logger log = LoggerFactory.getLogger(AjaxTimerBehaviorTest.class);
 
 	/**
 	 * Tests timer behavior in a component added to an AjaxRequestTarget

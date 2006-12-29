@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
+import org.slf4j.Logger;
 
 import wicket.util.string.StringValue;
 import wicket.util.string.StringValueConversionException;
@@ -123,7 +123,7 @@ public class Duration extends AbstractTimeValue
 	 *            Optional log to use with errors and exceptions
 	 * @return The duration it took to run the code
 	 */
-	public static Duration benchmark(final ICode code, final Log log)
+	public static Duration benchmark(final ICode code, final Logger log)
 	{
 		// Get time before running code
 		final Time start = Time.now();

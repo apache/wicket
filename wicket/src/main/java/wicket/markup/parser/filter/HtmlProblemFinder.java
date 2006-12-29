@@ -19,8 +19,8 @@ package wicket.markup.parser.filter;
 import java.text.ParseException;
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -49,7 +49,7 @@ import wicket.markup.parser.AbstractMarkupFilter;
 public final class HtmlProblemFinder extends AbstractMarkupFilter
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(HtmlProblemFinder.class);
+	private static final Logger log = LoggerFactory.getLogger(HtmlProblemFinder.class);
 
 	/** Ignore the issue detected */
 	public static final int ERR_INGORE = 3;

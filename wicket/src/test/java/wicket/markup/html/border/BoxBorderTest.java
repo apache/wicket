@@ -31,7 +31,7 @@ import wicket.util.diff.DiffUtil;
  */
 public class BoxBorderTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(BoxBorderTest.class);
+	// private static final Logger log = LoggerFactory.getLogger(BoxBorderTest.class);
 
 	/**
 	 * Create the test.

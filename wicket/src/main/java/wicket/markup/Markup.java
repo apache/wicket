@@ -16,8 +16,8 @@
  */
 package wicket.markup;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Holds markup as a resource (the stream that the markup came from) and a list
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class Markup implements IMarkup
 {
-	private static final Log log = LogFactory.getLog(Markup.class);
+	private static final Logger log = LoggerFactory.getLogger(Markup.class);
 
 	/** The markup's resource stream for diagnostic purposes */
 	private MarkupResourceStream resource;

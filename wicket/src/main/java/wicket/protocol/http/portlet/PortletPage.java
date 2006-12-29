@@ -19,8 +19,8 @@ package wicket.protocol.http.portlet;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.IPageMap;
 import wicket.Page;
@@ -45,7 +45,7 @@ public class PortletPage<T> extends Page<T>
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(PortletPage.class);
+	private static final Logger log = LoggerFactory.getLogger(PortletPage.class);
 
 	/*
 	 * Current portlet mode. PortletMode is not serializable, so this is stored

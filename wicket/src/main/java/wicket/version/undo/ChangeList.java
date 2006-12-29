@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 
@@ -35,7 +35,7 @@ class ChangeList implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(ChangeList.class);
+	private static final Logger log = LoggerFactory.getLogger(ChangeList.class);
 
 	/** the changes. */
 	private List<Change> changes = new ArrayList<Change>();

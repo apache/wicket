@@ -18,8 +18,8 @@ package wicket.request.compound;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -34,6 +34,7 @@ import wicket.WicketRuntimeException;
 import wicket.authorization.UnauthorizedActionException;
 import wicket.markup.MarkupException;
 import wicket.markup.html.INewBrowserWindowListener;
+import wicket.protocol.http.portlet.PortletRequestTargetResolverStrategy;
 import wicket.protocol.http.request.WebErrorCodeResponseTarget;
 import wicket.request.IRequestCodingStrategy;
 import wicket.request.RequestParameters;
@@ -56,7 +57,7 @@ public abstract class AbstractRequestTargetResolverStrategy implements IRequestT
 {
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(AbstractRequestTargetResolverStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractRequestTargetResolverStrategy.class);
 
 	/**
 	 * Resolves to a page target that was previously rendered. Optionally

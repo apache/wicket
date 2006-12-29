@@ -16,8 +16,8 @@
  */
 package wicket.protocol.http.portlet;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.request.compound.CompoundRequestCycleProcessor;
 import wicket.request.compound.IEventProcessorStrategy;
@@ -37,7 +37,7 @@ public class PortletRenderRequestCycleProcessor extends CompoundRequestCycleProc
 {
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(PortletRenderRequestCycleProcessor.class);
+	private static final Logger log = LoggerFactory.getLogger(PortletRenderRequestCycleProcessor.class);
 
 	/**
 	 * Construct.

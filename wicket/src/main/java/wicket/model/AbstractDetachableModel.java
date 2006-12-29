@@ -16,8 +16,8 @@
  */
 package wicket.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.RequestCycle;
@@ -41,7 +41,7 @@ import wicket.WicketRuntimeException;
 public abstract class AbstractDetachableModel<T> implements IModel<T>
 {
 	/** Logger. */
-	private static final Log log = LogFactory.getLog(AbstractDetachableModel.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractDetachableModel.class);
 
 	/**
 	 * Transient flag to prevent multiple detach/attach scenario. We need to

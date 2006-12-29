@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.application.IComponentInstantiationListener;
 import wicket.markup.MarkupCache;
@@ -136,7 +136,7 @@ public abstract class Application
 	private static final ThreadLocal<Application> current = new ThreadLocal<Application>();
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Application.class);
+	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
 	/**
 	 * Get Application for current thread.

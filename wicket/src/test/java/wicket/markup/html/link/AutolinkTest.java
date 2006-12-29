@@ -26,7 +26,7 @@ import wicket.WicketTestCase;
  */
 public class AutolinkTest extends WicketTestCase
 {
-	// private static final Log log = LogFactory.getLog(AutolinkTest.class);
+	// private static final Logger log = LoggerFactory.getLogger(AutolinkTest.class);
 
 	/**
 	 * Create the test.

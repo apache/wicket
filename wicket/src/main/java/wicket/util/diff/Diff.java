@@ -57,7 +57,11 @@
 
 package wicket.util.diff;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import wicket.util.diff.myers.MyersDiff;
 

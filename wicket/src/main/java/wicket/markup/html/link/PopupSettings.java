@@ -18,8 +18,8 @@ package wicket.markup.html.link;
 
 import java.io.Serializable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.IPageMap;
@@ -44,7 +44,7 @@ import wicket.PageMap;
 public class PopupSettings implements Serializable
 {
 	/** The log. */
-	private static final Log log = LogFactory.getLog(PopupSettings.class);
+	private static final Logger log = LoggerFactory.getLogger(PopupSettings.class);
 
 	private static final long serialVersionUID = 1L;
 

@@ -16,8 +16,8 @@
  */
 package wicket.version.undo;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.markup.html.form.FormComponent;
@@ -39,7 +39,7 @@ class ModelChange<T> extends Change
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(ModelChange.class);
+	private static final Logger log = LoggerFactory.getLogger(ModelChange.class);
 
 	/** subject. */
 	private final Component<T> component;

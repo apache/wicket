@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -55,7 +55,7 @@ import wicket.util.watch.ModificationWatcher;
 public class PropertiesFactory implements IPropertiesFactory
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(PropertiesFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(PropertiesFactory.class);
 
 	/** Cache for all properties files loaded */
 	private final Map<String, Properties> propertiesCache = new HashMap<String, Properties>();

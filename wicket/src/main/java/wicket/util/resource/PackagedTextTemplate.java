@@ -19,8 +19,8 @@ package wicket.util.resource;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.lang.Packages;
@@ -38,7 +38,7 @@ public class PackagedTextTemplate extends TextTemplate
 	private static final long serialVersionUID = 1L;
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(PackagedTextTemplate.class);
+	private static final Logger log = LoggerFactory.getLogger(PackagedTextTemplate.class);
 
 	/** class loader stream locator. */
 	private static final ClassLoaderResourceStreamLocator streamLocator = new ClassLoaderResourceStreamLocator();

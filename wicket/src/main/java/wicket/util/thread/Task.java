@@ -16,8 +16,8 @@
  */
 package wicket.util.thread;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.util.time.Duration;
 import wicket.util.time.Time;
@@ -49,7 +49,7 @@ public final class Task
 	private boolean isStarted = false;
 
 	/** The log to give to the user's code. */
-	private transient Log log = null;
+	private transient Logger log = null;
 
 	/** The name of this task. */
 	private final String name;
@@ -93,7 +93,7 @@ public final class Task
 				{
 					// Sleep until start time
 					startTime.fromNow().sleep();
-					final Log log = getLog();
+					final Logger log = getLog();
 
 					while (!stop)
 					{
@@ -168,7 +168,7 @@ public final class Task
 	 * @param log
 	 *            The log
 	 */
-	public synchronized void setLog(final Log log)
+	public synchronized void setLog(final Logger log)
 	{
 		this.log = log;
 	}
@@ -209,11 +209,11 @@ public final class Task
 	 * 
 	 * @return the log
 	 */
-	protected Log getLog()
+	protected Logger getLog()
 	{
 		if (log == null)
 		{
-			log = LogFactory.getLog(Task.class);
+			log = LoggerFactory.getLogger(Task.class);
 		}
 		return log;
 	}

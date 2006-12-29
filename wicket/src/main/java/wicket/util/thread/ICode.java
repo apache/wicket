@@ -16,7 +16,7 @@
  */
 package wicket.util.thread;
 
-import org.apache.commons.logging.Log;
+import org.slf4j.Logger;
 
 /**
  * Interface to an arbitrary piece of code that runs and can do logging.
@@ -31,5 +31,5 @@ public interface ICode
 	 * @param log
 	 *            The log that will be used by the code.
 	 */
-	void run(Log log);
+	void run(Logger log);
 }

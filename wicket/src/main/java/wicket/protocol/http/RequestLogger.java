@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
@@ -63,7 +63,7 @@ import wicket.util.string.AppendingStringBuffer;
 public class RequestLogger implements IRequestLogger
 {
 	/** log. */
-	protected static Log log = LogFactory.getLog(RequestLogger.class);
+	protected static Logger log = LoggerFactory.getLogger(RequestLogger.class);
 
 
 	/**

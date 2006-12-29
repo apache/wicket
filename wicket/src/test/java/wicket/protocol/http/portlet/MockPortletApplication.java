@@ -26,8 +26,8 @@ import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
@@ -57,7 +57,7 @@ import wicket.util.file.WebApplicationPath;
 public class MockPortletApplication extends PortletApplication
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(MockPortletApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(MockPortletApplication.class);
 
 	Map<String, Object> renderParameters = new HashMap<String, Object>();
 

@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -63,7 +63,7 @@ import wicket.util.string.Strings;
  */
 public class AjaxRequestTarget implements IRequestTarget
 {
-	private static final Log Log = LogFactory.getLog(AjaxRequestTarget.class);
+	private static final Logger Log = LoggerFactory.getLogger(AjaxRequestTarget.class);
 
 	/** */
 	private final List<String> appendJavascripts = new ArrayList<String>();

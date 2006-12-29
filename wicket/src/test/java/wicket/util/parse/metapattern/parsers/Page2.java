@@ -16,8 +16,8 @@
  */
 package wicket.util.parse.metapattern.parsers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.PageParameters;
 import wicket.markup.html.WebPage;
@@ -26,7 +26,7 @@ import wicket.markup.html.WebPage;
  */
 public class Page2 extends WebPage
 {
-	private static final Log log = LogFactory.getLog(Page2.class);
+	private static final Logger log = LoggerFactory.getLogger(Page2.class);
 	
 	private static final long serialVersionUID = 1L;
 

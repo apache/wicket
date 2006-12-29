@@ -23,8 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.authorization.Action;
 import wicket.authorization.AuthorizationException;
@@ -549,7 +549,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	private static final int FLAG_HEAD_RENDERED = 0x100000;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Component.class);
+	private static final Logger log = LoggerFactory.getLogger(Component.class);
 
 	/**
 	 * The name of attribute that will hold markup id

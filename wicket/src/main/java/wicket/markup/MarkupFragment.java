@@ -21,8 +21,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.WicketRuntimeException;
@@ -45,7 +45,7 @@ import wicket.util.string.Strings;
 public class MarkupFragment extends MarkupElement implements Iterable<MarkupElement>
 {
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(MarkupFragment.class);
+	private static final Logger log = LoggerFactory.getLogger(MarkupFragment.class);
 
 	/** Placeholder that indicates no markup */
 	public static final MarkupFragment NO_MARKUP_FRAGMENT = new MarkupFragment(IMarkup.NO_MARKUP);

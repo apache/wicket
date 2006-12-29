@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.util.string.AppendingStringBuffer;
@@ -44,7 +44,7 @@ public abstract class AbstractRequestTargetUrlCodingStrategy
 			IRequestTargetUrlCodingStrategy
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(AbstractRequestTargetUrlCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractRequestTargetUrlCodingStrategy.class);
 
 
 	/** mounted path. */

@@ -19,8 +19,8 @@ package wicket.markup.loader;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.MarkupContainer;
@@ -47,7 +47,7 @@ import wicket.util.string.Strings;
 public class InheritedMarkupMarkupLoader extends AbstractMarkupLoader
 {
 	/** Log for reporting. */
-	private static final Log log = LogFactory.getLog(InheritedMarkupMarkupLoader.class);
+	private static final Logger log = LoggerFactory.getLogger(InheritedMarkupMarkupLoader.class);
 
 	/** onload attribute; according to XHTML all attrs are lowercase */
 	private static final String ONLOAD = "onload";

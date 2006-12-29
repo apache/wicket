@@ -16,8 +16,8 @@
  */
 package wicket.protocol.http.request.urlcompressing;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.IRedirectListener;
@@ -62,7 +62,7 @@ import wicket.util.string.Strings;
 public class WebURLCompressingTargetResolverStrategy extends DefaultRequestTargetResolverStrategy
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(WebURLCompressingTargetResolverStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(WebURLCompressingTargetResolverStrategy.class);
 
 	/**
 	 * Resolves the RequestTarget for the given interface. This method can be

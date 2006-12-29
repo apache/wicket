@@ -16,8 +16,8 @@
  */
 package wicket;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.authorization.UnauthorizedActionException;
 import wicket.feedback.FeedbackMessages;
@@ -155,7 +155,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	private static final int FLAG_STATELESS_HINT = FLAG_RESERVED5;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Page.class);
+	private static final Logger log = LoggerFactory.getLogger(Page.class);
 
 	/** Used to create page-unique numbers */
 	private short autoIndex;

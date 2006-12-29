@@ -16,9 +16,9 @@
  */
 package wicket;
 
+import junit.framework.TestCase;
 import wicket.markup.html.WebPage;
 import wicket.util.tester.WicketTester;
-import junit.framework.TestCase;
 
 /**
  * @author jcompagner

@@ -23,8 +23,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.WicketRuntimeException;
@@ -46,7 +46,7 @@ public class ServletWebRequest extends WebRequest
 	private final HttpServletRequest httpServletRequest;
 
 	/** Log */
-	private static final Log log = LogFactory.getLog(ServletWebRequest.class);
+	private static final Logger log = LoggerFactory.getLogger(ServletWebRequest.class);
 
 	/**
 	 * Protected constructor.

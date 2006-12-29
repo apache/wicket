@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IResponseFilter;
@@ -46,7 +46,7 @@ import wicket.util.string.JavascriptUtils;
  */
 public class ServerAndClientTimeFilter implements IResponseFilter
 {
-	private static final Log log = LogFactory.getLog(ServerAndClientTimeFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(ServerAndClientTimeFilter.class);
 
 	/**
 	 * @see wicket.IResponseFilter#filter(AppendingStringBuffer)

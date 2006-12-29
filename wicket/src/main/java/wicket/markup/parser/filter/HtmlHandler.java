@@ -20,8 +20,8 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
@@ -38,7 +38,7 @@ import wicket.util.collections.ArrayListStack;
 public final class HtmlHandler extends AbstractMarkupFilter
 {
 	/** Logging */
-	private static final Log log = LogFactory.getLog(HtmlHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(HtmlHandler.class);
 
 	/** Tag stack to find balancing tags */
 	final private ArrayListStack<ComponentTag> stack = new ArrayListStack<ComponentTag>();

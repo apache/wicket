@@ -27,8 +27,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -180,7 +180,7 @@ import wicket.util.tester.WicketTesterHelper.ComponentData;
 public class WicketTester extends MockWebApplication
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(WicketTester.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketTester.class);
 
 	/**
 	 * @author frankbille

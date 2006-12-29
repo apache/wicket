@@ -29,8 +29,8 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.application.IClassResolver;
 import wicket.authorization.IAuthorizationStrategy;
@@ -165,7 +165,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	private static final ThreadLocal<List<Serializable>> dirtyObjects = new ThreadLocal<List<Serializable>>();
 
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(Session.class);
+	private static final Logger log = LoggerFactory.getLogger(Session.class);
 
 	/** Attribute prefix for page maps stored in the session */
 	private static final String pageMapAttributePrefix = "m:";

@@ -16,8 +16,8 @@
  */
 package wicket.markup.html.form.login;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Session;
 import wicket.markup.html.WebPage;
@@ -33,7 +33,7 @@ public class MockHomePage extends WebPage
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(MockHomePage.class);
+	private static final Logger log = LoggerFactory.getLogger(MockHomePage.class);
 
 	/**
 	 * 

@@ -18,8 +18,8 @@ package wicket.request.compound;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IRequestTarget;
@@ -49,7 +49,7 @@ import wicket.util.string.Strings;
 public class DefaultRequestTargetResolverStrategy extends AbstractRequestTargetResolverStrategy
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(DefaultRequestTargetResolverStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultRequestTargetResolverStrategy.class);
 
 	/**
 	 * Construct.

@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -94,7 +94,7 @@ public final class Settings
 			IFrameworkSettings,
 			IRequestLoggerSettings
 {
-	private final static Log log = LogFactory.getLog(Settings.class);
+	private final static Logger log = LoggerFactory.getLogger(Settings.class);
 
 	/** Class of access denied page. */
 	private Class<? extends Page> accessDeniedPage;

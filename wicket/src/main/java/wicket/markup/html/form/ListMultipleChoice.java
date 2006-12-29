@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.MarkupContainer;
 import wicket.markup.ComponentTag;
@@ -46,7 +46,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(ListMultipleChoice.class);
+	private static final Logger log = LoggerFactory.getLogger(ListMultipleChoice.class);
 
 	/** The default maximum number of rows to display. */
 	private static int defaultMaxRows = 8;

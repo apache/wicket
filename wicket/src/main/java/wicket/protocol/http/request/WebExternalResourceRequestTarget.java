@@ -22,8 +22,8 @@ import java.io.InputStream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.IRequestTarget;
 import wicket.RequestCycle;
@@ -44,7 +44,7 @@ import wicket.util.io.Streams;
 public class WebExternalResourceRequestTarget implements IRequestTarget
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(WebExternalResourceRequestTarget.class);
+	private static final Logger log = LoggerFactory.getLogger(WebExternalResourceRequestTarget.class);
 
 	/** the relative url of the external resource. */
 	private final String url;

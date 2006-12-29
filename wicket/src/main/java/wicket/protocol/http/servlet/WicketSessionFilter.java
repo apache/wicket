@@ -27,8 +27,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Session;
 
@@ -99,7 +99,7 @@ import wicket.Session;
 public class WicketSessionFilter implements Filter
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(WicketSessionFilter.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketSessionFilter.class);
 
 	/** the servlet path. */
 	private String servletPath;

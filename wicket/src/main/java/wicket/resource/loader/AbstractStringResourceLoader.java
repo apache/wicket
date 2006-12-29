@@ -18,8 +18,8 @@ package wicket.resource.loader;
 
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -104,7 +104,7 @@ import wicket.util.value.ValueMap;
 public abstract class AbstractStringResourceLoader implements IStringResourceLoader
 {
 	/** Log. */
-	private static final Log log = LogFactory.getLog(AbstractStringResourceLoader.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractStringResourceLoader.class);
 
 	/** Wickets application object */
 	protected final Application application;

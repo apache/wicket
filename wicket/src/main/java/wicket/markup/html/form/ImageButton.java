@@ -36,7 +36,7 @@ public abstract class ImageButton extends Button implements IResourceListener
 {
 	private static final long serialVersionUID = 1L;
 
-	// private static final Log log = LogFactory.getLog(ImageButton.class);
+	// private static final Logger log = LoggerFactory.getLogger(ImageButton.class);
 
 	/** The image resource this image component references */
 	private LocalizedImageResource localizedImageResource = new LocalizedImageResource(this);

@@ -21,8 +21,8 @@ import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -79,7 +79,7 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 
 
 	/** log. */
-	private static final Log log = LogFactory.getLog(AbstractWebRequestCodingStrategy.class);
+	private static final Logger log = LoggerFactory.getLogger(AbstractWebRequestCodingStrategy.class);
 
 
 	/**

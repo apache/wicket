@@ -26,8 +26,8 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.AbortException;
 import wicket.Application;
@@ -109,7 +109,7 @@ public class WicketPortlet extends GenericPortlet
 	public static final String APP_FACT_PARAM = "applicationFactoryClassName";
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(WicketPortlet.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketPortlet.class);
 
 	/** The application this portlet is serving */
 	protected PortletApplication portletApplication = null;

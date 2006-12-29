@@ -23,8 +23,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.IRequestTarget;
@@ -209,7 +209,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(Form.class);
+	private static final Logger log = LoggerFactory.getLogger(Form.class);
 
 	/** Maximum size of an upload in bytes */
 	private Bytes maxSize = Bytes.MAX;

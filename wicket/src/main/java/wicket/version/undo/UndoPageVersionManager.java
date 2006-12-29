@@ -16,8 +16,8 @@
  */
 package wicket.version.undo;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.Page;
@@ -37,7 +37,7 @@ import wicket.version.IPageVersionManager;
 public class UndoPageVersionManager<T> implements IPageVersionManager<T>
 {
 	/** log. */
-	private static final Log log = LogFactory.getLog(UndoPageVersionManager.class);
+	private static final Logger log = LoggerFactory.getLogger(UndoPageVersionManager.class);
 
 	private static final long serialVersionUID = 1L;
 

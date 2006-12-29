@@ -45,8 +45,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.Component;
@@ -150,7 +150,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/** Logging object */
-	private static final Log log = LogFactory.getLog(MockHttpServletRequest.class);
+	private static final Logger log = LoggerFactory.getLogger(MockHttpServletRequest.class);
 
 	/** The application */
 	private final Application application;

@@ -19,8 +19,8 @@ package wicket.markup.html;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.IResponseFilter;
@@ -47,7 +47,7 @@ import wicket.util.string.JavascriptUtils;
  */
 public class AjaxServerAndClientTimeFilter implements IResponseFilter
 {
-	private static Log log = LogFactory.getLog(AjaxServerAndClientTimeFilter.class);
+	private static Logger log = LoggerFactory.getLogger(AjaxServerAndClientTimeFilter.class);
 
 	/**
 	 * @see wicket.IResponseFilter#filter(java.lang.StringBuffer)

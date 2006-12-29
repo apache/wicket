@@ -16,8 +16,8 @@
  */
 package wicket.markup.html;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -43,7 +43,7 @@ import wicket.model.IModel;
  */
 public class WebMarkupContainerWithAssociatedMarkup<T> extends WebMarkupContainer<T>
 {
-	private static final Log log = LogFactory.getLog(WebMarkupContainerWithAssociatedMarkup.class);
+	private static final Logger log = LoggerFactory.getLogger(WebMarkupContainerWithAssociatedMarkup.class);
 
 	private static final long serialVersionUID = 1L;
 
