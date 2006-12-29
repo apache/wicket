@@ -84,8 +84,7 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 		
 		htmlIgnore = new String[] {
 				"src/test/java/wicket",
-				"src/main/java/wicket/util/diff/package.html",
-				"src/main/java/wicket/util/diff/myers/package.html"
+				"src/main/java/wicket/util/diff",
 		};
 	}
 }

@@ -1,40 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-  <classpathentry kind="src" path="src/main/java"/>
-  <classpathentry kind="src" path="src/test/java" output="target/test-classes"/>
-  <classpathentry kind="output" path="target/classes"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar" sourcepath="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.0/commons-lang-2.0.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.0/commons-lang-2.0-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/tomcat/jasper-runtime/4.1.30/jasper-runtime-4.1.30.jar" sourcepath="M2_REPO/tomcat/jasper-runtime/4.1.30/jasper-runtime-4.1.30-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty/6.0.1/jetty-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty/6.0.1/jetty-6.0.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.1.0/slf4j-api-1.1.0.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.1.0/slf4j-api-1.1.0-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jdom/jdom/1.0/jdom-1.0.jar" sourcepath="M2_REPO/jdom/jdom/1.0/jdom-1.0-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar" sourcepath="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/asm/asm/1.5.3/asm-1.5.3.jar"/>
-  <classpathentry kind="var" path="M2_REPO/rhino/js/1.6R1/js-1.6R1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/ccil/cowan/tagsoup/tagsoup/0.9.7/tagsoup-0.9.7.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty-management/6.0.1/jetty-management-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty-management/6.0.1/jetty-management-6.0.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.2.1/xmlParserAPIs-2.2.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6.jar" sourcepath="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/xom/xom/1.0b3/xom-1.0b3.jar"/>
-  <classpathentry kind="var" path="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar" sourcepath="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/xalan/xalan/2.6.0/xalan-2.6.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jwebunit/jwebunit/1.2/jwebunit-1.2.jar" sourcepath="M2_REPO/jwebunit/jwebunit/1.2/jwebunit-1.2-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/ibm/icu/icu4j/2.6.1/icu4j-2.6.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/servlet-api-2.5/6.0.1/servlet-api-2.5-6.0.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/mx4j/mx4j-tools/3.0.1/mx4j-tools-3.0.1.jar" sourcepath="M2_REPO/mx4j/mx4j-tools/3.0.1/mx4j-tools-3.0.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar" sourcepath="M2_REPO/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/tomcat/jasper-compiler/4.1.30/jasper-compiler-4.1.30.jar" sourcepath="M2_REPO/tomcat/jasper-compiler/4.1.30/jasper-compiler-4.1.30-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1.jar" sourcepath="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/mx4j/mx4j/3.0.1/mx4j-3.0.1.jar" sourcepath="M2_REPO/mx4j/mx4j/3.0.1/mx4j-3.0.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.1.0/slf4j-log4j12-1.1.0.jar" sourcepath="M2_REPO/org/slf4j/slf4j-log4j12/1.1.0/slf4j-log4j12-1.1.0-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8.jar" sourcepath="M2_REPO/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty-util/6.0.1/jetty-util-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty-util/6.0.1/jetty-util-6.0.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/wicket/wicket-extensions/2.0-SNAPSHOT/wicket-extensions-2.0-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket-extensions/2.0-SNAPSHOT/wicket-extensions-2.0-SNAPSHOT-sources.jar"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
+	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar" sourcepath="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-lang/commons-lang/2.0/commons-lang-2.0.jar" sourcepath="M2_REPO/commons-lang/commons-lang/2.0/commons-lang-2.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/tomcat/jasper-runtime/4.1.30/jasper-runtime-4.1.30.jar" sourcepath="M2_REPO/tomcat/jasper-runtime/4.1.30/jasper-runtime-4.1.30-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty/6.0.1/jetty-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty/6.0.1/jetty-6.0.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.1.0/slf4j-api-1.1.0.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.1.0/slf4j-api-1.1.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jdom/jdom/1.0/jdom-1.0.jar" sourcepath="M2_REPO/jdom/jdom/1.0/jdom-1.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar" sourcepath="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/asm/asm/1.5.3/asm-1.5.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/rhino/js/1.6R1/js-1.6R1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/ccil/cowan/tagsoup/tagsoup/0.9.7/tagsoup-0.9.7.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty-management/6.0.1/jetty-management-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty-management/6.0.1/jetty-management-6.0.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/xerces/xmlParserAPIs/2.2.1/xmlParserAPIs-2.2.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6.jar" sourcepath="M2_REPO/httpunit/httpunit/1.6/httpunit-1.6-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/xom/xom/1.0b3/xom-1.0b3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar" sourcepath="M2_REPO/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/xalan/xalan/2.6.0/xalan-2.6.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jwebunit/jwebunit/1.2/jwebunit-1.2.jar" sourcepath="M2_REPO/jwebunit/jwebunit/1.2/jwebunit-1.2-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/ibm/icu/icu4j/2.6.1/icu4j-2.6.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/servlet-api-2.5/6.0.1/servlet-api-2.5-6.0.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/mx4j/mx4j-tools/3.0.1/mx4j-tools-3.0.1.jar" sourcepath="M2_REPO/mx4j/mx4j-tools/3.0.1/mx4j-tools-3.0.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5.jar" sourcepath="M2_REPO/nekohtml/nekohtml/0.9.5/nekohtml-0.9.5-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/tomcat/jasper-compiler/4.1.30/jasper-compiler-4.1.30.jar" sourcepath="M2_REPO/tomcat/jasper-compiler/4.1.30/jasper-compiler-4.1.30-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3.jar" sourcepath="M2_REPO/javax/servlet/servlet-api/2.3/servlet-api-2.3-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1.jar" sourcepath="M2_REPO/commons-collections/commons-collections/2.1/commons-collections-2.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/mx4j/mx4j/3.0.1/mx4j-3.0.1.jar" sourcepath="M2_REPO/mx4j/mx4j/3.0.1/mx4j-3.0.1-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.1.0/slf4j-log4j12-1.1.0.jar" sourcepath="M2_REPO/org/slf4j/slf4j-log4j12/1.1.0/slf4j-log4j12-1.1.0-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8.jar" sourcepath="M2_REPO/jaxen/jaxen/1.1-beta-8/jaxen-1.1-beta-8-sources.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/mortbay/jetty/jetty-util/6.0.1/jetty-util-6.0.1.jar" sourcepath="M2_REPO/org/mortbay/jetty/jetty-util/6.0.1/jetty-util-6.0.1-sources.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>
