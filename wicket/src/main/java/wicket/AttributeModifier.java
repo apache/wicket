@@ -188,6 +188,8 @@ public class AttributeModifier extends AbstractBehavior implements Serializable
 		{
 			replaceModel.detach();
 		}
+		
+		super.detachModel(component);
 	}
 
 	/**
