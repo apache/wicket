@@ -31,4 +31,13 @@ public class AbortException extends RuntimeException
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @see java.lang.Throwable#fillInStackTrace()
+	 */
+	public synchronized Throwable fillInStackTrace()
+	{
+		// we do not need a stack trace, so to speed things up just return null
+		return null;
+	}
+
 }
