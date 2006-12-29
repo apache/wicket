@@ -18,10 +18,11 @@
  */
 package wicket.examples.signin2;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.Test;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import wicket.examples.WicketWebTestCase;
 
 /**
@@ -29,7 +30,7 @@ import wicket.examples.WicketWebTestCase;
  */
 public class Signin2Test extends WicketWebTestCase
 {
-	private final static Log log = LogFactory.getLog(Signin2Test.class);
+	private final static Logger log = LoggerFactory.getLogger(Signin2Test.class);
 
 	/**
 	 * 

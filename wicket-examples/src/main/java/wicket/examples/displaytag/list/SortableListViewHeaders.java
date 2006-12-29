@@ -18,8 +18,8 @@
  */
 package wicket.examples.displaytag.list;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -48,7 +48,7 @@ public class SortableListViewHeaders<T> extends WebMarkupContainer<T> implements
 {
 	/** Logging. */
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(SortableListViewHeaders.class);
+	private static final Logger log = LoggerFactory.getLogger(SortableListViewHeaders.class);
 
 	/** Each SortableTableHeader (without 's) must be attached to a group. */
 	final private SortableListViewHeaderGroup<T> group;

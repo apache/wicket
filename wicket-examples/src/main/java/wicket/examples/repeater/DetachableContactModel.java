@@ -91,7 +91,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	/**
 	 * used for dataview with ReuseIfModelsEqualStrategy item reuse strategy
 	 * 
-	 * @see wicket.markup.repeater.AbstractPageableView#setItemReuseStrategy(IItemReuseStrategy)
+	 * @see wicket.markup.repeater.PageableRefreshingView#setItemReuseStrategy(IItemReuseStrategy)
 	 * @see wicket.markup.repeater.ReuseIfModelsEqualStrategy
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */

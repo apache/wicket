@@ -20,8 +20,8 @@ package wicket.examples.guestbook;
 
 import junit.framework.Test;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.examples.WicketWebTestCase;
 
@@ -31,7 +31,7 @@ import wicket.examples.WicketWebTestCase;
 public class GuestbookTest extends WicketWebTestCase
 {
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(GuestbookTest.class);
+	private static final Logger log = LoggerFactory.getLogger(GuestbookTest.class);
 
 	/**
 	 * 

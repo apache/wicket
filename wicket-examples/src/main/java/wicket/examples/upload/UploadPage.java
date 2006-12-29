@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.MarkupContainer;
 import wicket.PageParameters;
@@ -156,7 +156,7 @@ public class UploadPage extends WicketExamplePage
 
 	/** Log. */
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(UploadPage.class);
+	private static final Logger log = LoggerFactory.getLogger(UploadPage.class);
 
 	/** Reference to listview for easy access. */
 	private FileListView fileListView;

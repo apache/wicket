@@ -40,8 +40,8 @@ import java.net.Socket;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mortbay.jetty.Server;
 
 /**
@@ -63,7 +63,7 @@ public class JettyMonitor extends Thread
 	private String commKey;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(JettyMonitor.class);
+	private static final Logger log = LoggerFactory.getLogger(JettyMonitor.class);
 
 	/** socket chanel for commands. */
 	private ServerSocketChannel serverSocketChanel = null;
@@ -135,8 +135,8 @@ public class JettyMonitor extends Thread
 		}
 		catch (Exception e)
 		{
-			log.fatal(e.getMessage(), e);
-			log.fatal("************ SHUTTING DOWN VM!");
+			log.error(e.getMessage(), e);
+			log.error("************ SHUTTING DOWN VM!");
 			System.exit(1);
 		}
 	}
@@ -251,8 +251,8 @@ public class JettyMonitor extends Thread
 		}
 		catch (Exception e)
 		{
-			log.fatal(e.getMessage(), e);
-			log.fatal("************* Hard shutdown this server (System.exit)!");
+			log.error(e.getMessage(), e);
+			log.error("************* Hard shutdown this server (System.exit)!");
 			System.exit(1);
 		}
 		System.out.flush();

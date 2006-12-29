@@ -18,8 +18,8 @@
  */
 package wicket.examples;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.protocol.http.WebApplication;
 import wicket.settings.ISecuritySettings;
@@ -37,7 +37,7 @@ public abstract class WicketExampleApplication extends WebApplication
 	 * Used for logging.
 	 */
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(WicketExampleApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(WicketExampleApplication.class);
 
 	/**
 	 * Constructor.

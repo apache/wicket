@@ -19,8 +19,8 @@ package wicket.examples.encodings;
 
 import java.util.Locale;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.PageParameters;
 import wicket.examples.WicketExamplePage;
@@ -34,7 +34,7 @@ import wicket.markup.html.basic.Label;
 public class Home extends WicketExamplePage
 {
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(Home.class);
+	private static final Logger log = LoggerFactory.getLogger(Home.class);
 
 	/**
 	 * Constructor

@@ -28,7 +28,7 @@ import wicket.model.AbstractReadOnlyModel;
  * Page that demonstrates a paging dataview
  * 
  * @see wicket.markup.repeater.data.DataView
- * @see wicket.markup.repeater.AbstractPageableView
+ * @see wicket.markup.repeater.PageableRefreshingView
  * @see wicket.markup.html.navigation.paging.PagingNavigator
  * @author igor
  * 

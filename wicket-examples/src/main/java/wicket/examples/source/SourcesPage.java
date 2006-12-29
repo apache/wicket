@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.Component;
 import wicket.MarkupContainer;
@@ -63,7 +63,7 @@ import wicket.util.string.Strings;
  */
 public class SourcesPage extends WebPage
 {
-	private static final Log log = LogFactory.getLog(SourcesPage.class);
+	private static final Logger log = LoggerFactory.getLogger(SourcesPage.class);
 
 	/**
 	 * Model for retrieving the source code from the classpath of a packaged

@@ -27,8 +27,8 @@ import javax.servlet.http.Cookie;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
@@ -48,7 +48,7 @@ import wicket.util.tester.WicketTester;
 public class CookieTest extends TestCase
 {
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(CookieTest.class);
+	private static final Logger log = LoggerFactory.getLogger(CookieTest.class);
 
 	private WicketTester application;
 	private SignInPanel panel;

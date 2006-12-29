@@ -18,8 +18,8 @@
  */
 package wicket.examples.displaytag.list;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.examples.WicketTestCase;
 import wicket.markup.html.link.Link;
@@ -35,7 +35,7 @@ import wicket.util.tester.WicketTester;
 public class SortableTableHeadersTest extends WicketTestCase
 {
 	@SuppressWarnings("unused")
-	private static final Log log = LogFactory.getLog(SortableTableHeadersTest.class);
+	private static final Logger log = LoggerFactory.getLogger(SortableTableHeadersTest.class);
 
 	/**
 	 * Construct.

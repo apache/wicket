@@ -31,8 +31,8 @@ package nl.openedge.util.jetty;
 
 import junit.framework.Test;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
@@ -85,7 +85,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 public class JettyDecorator extends AbstractJettyDecorator
 {
 	/** logger. */
-	private static final Log log = LogFactory.getLog(JettyDecorator.class);
+	private static final Logger log = LoggerFactory.getLogger(JettyDecorator.class);
 
 	/** instance of jetty server. */
 	private Server server = null;

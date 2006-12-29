@@ -22,8 +22,8 @@ import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
@@ -40,7 +40,7 @@ public class StartExamples
 	/**
 	 * Used for logging.
 	 */
-	private static final Log log = LogFactory.getLog(StartExamples.class);
+	private static final Logger log = LoggerFactory.getLogger(StartExamples.class);
 
 	/**
 	 * Main function, starts the jetty server.

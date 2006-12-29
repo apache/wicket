@@ -24,8 +24,8 @@ import java.util.Set;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test case for the <code>WordGenerator</code> class.
@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 public class WordGeneratorTest extends TestCase
 {
 
-	private static final Log log = LogFactory.getLog(WordGeneratorTest.class);
+	private static final Logger log = LoggerFactory.getLogger(WordGeneratorTest.class);
 
 	/**
 	 * Create the test case.
