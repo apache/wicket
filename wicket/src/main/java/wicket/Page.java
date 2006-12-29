@@ -427,7 +427,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			}
 		});
 
-		detachModel();
+		super.detachModels();
 	}
 
 	/**
