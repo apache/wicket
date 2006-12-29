@@ -662,15 +662,8 @@ public abstract class Component implements Serializable
 		// Detach any detachable model from this component
 		detachModel();
 
-		// Also detach models from any contained attribute modifiers
-		if (behaviors != null)
-		{
-			for (Iterator i = behaviors.iterator(); i.hasNext();)
-			{
-				IBehavior behavior = (IBehavior)i.next();
-				behavior.detachModel(this);
-			}
-		}
+		// detach any behaviors
+		detachBehaviors();
 	}
 
 	/**
