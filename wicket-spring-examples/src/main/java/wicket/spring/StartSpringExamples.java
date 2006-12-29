@@ -19,10 +19,10 @@ package wicket.spring;
 
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.BasicConfigurator;
 import org.mortbay.jetty.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Seperate startup class for people that want to run the examples directly.
@@ -32,7 +32,7 @@ public class StartSpringExamples
 	/**
 	 * Used for logging.
 	 */
-	private static final Log log = LogFactory.getLog(StartSpringExamples.class);
+	private static final Logger log = LoggerFactory.getLogger(StartSpringExamples.class);
 
 	/**
 	 * Construct.
@@ -56,14 +56,14 @@ public class StartSpringExamples
 			URL jettyConfig = new URL("file:src/main/java/jetty-config.xml");
 			if (jettyConfig == null)
 			{
-				log.fatal("Unable to locate jetty-config.xml on the classpath");
+				log.error("Unable to locate jetty-config.xml on the classpath");
 			}
 			jettyServer = new Server(jettyConfig);
 			jettyServer.start();
 		}
 		catch (Exception e)
 		{
-			log.fatal("Could not start the Jetty server: " + e);
+			log.error("Could not start the Jetty server: " + e);
 			if (jettyServer != null)
 			{
 				try
@@ -72,7 +72,7 @@ public class StartSpringExamples
 				}
 				catch (InterruptedException e1)
 				{
-					log.fatal("Unable to stop the jetty server: " + e1);
+					log.error("Unable to stop the jetty server: " + e1);
 				}
 			}
 		}
