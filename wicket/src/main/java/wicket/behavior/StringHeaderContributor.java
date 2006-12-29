@@ -164,6 +164,7 @@ public class StringHeaderContributor extends AbstractHeaderContributor
 	public void detachModel(Component component)
 	{
 		contributor.contribution.detach();
+		super.detachModel(component);
 	}
 
 	/**

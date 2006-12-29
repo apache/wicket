@@ -327,7 +327,7 @@ public abstract class Page extends MarkupContainer implements IRedirectListener,
 			}
 		});
 
-		detachModel();
+		super.detachModels();
 	}
 
 	/**

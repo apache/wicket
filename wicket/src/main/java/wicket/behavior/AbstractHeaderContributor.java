@@ -96,5 +96,6 @@ public abstract class AbstractHeaderContributor extends AbstractBehavior
 	{
 		// clean up thread
 		processedEntries.set(null);
+		super.cleanup();
 	}
 }

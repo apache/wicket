@@ -49,7 +49,7 @@ public abstract class AbstractBehavior implements IBehavior
 	 */
 	public void detachModel(Component component)
 	{
-		cleanup();
+	
 	}
 
 	/**
@@ -65,7 +65,14 @@ public abstract class AbstractBehavior implements IBehavior
 	 */
 	public final void rendered(final Component component)
 	{
-		onRendered(component);
+		try
+		{
+			onRendered(component);
+		}
+		finally
+		{
+			cleanup();
+		}
 	}
 
 	/**
@@ -84,8 +91,14 @@ public abstract class AbstractBehavior implements IBehavior
 	 */
 	public void exception(Component component, RuntimeException exception)
 	{
-		onException(component, exception);
-		cleanup();
+		try
+		{
+			onException(component, exception);
+		}
+		finally
+		{
+			cleanup();
+		}
 	}
 
 	/**
