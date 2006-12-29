@@ -44,16 +44,28 @@ public class FilePageStore implements IPageStore
 	/** log. */
 	protected static Logger log = LoggerFactory.getLogger(FilePageStore.class);
 
-        /**
-         * Returns the working directory for this disk-based PageStore.
-         * Override this to configure a different location. The default
-         * is javax.servlet.context.tempdir from the servlet context.
-         *  
-         * @return Working directory
-         */
-        protected File getWorkDir() {
-            return (File)((WebApplication)Application.get()).getServletContext().getAttribute("javax.servlet.context.tempdir");
-        }
+	private File defaultWorkDir;
+
+	/**
+	 * Construct.
+	 */
+	public FilePageStore()
+	{
+		defaultWorkDir = (File)((WebApplication)Application.get()).getServletContext()
+				.getAttribute("javax.servlet.context.tempdir");
+	}
+
+	/**
+	 * Returns the working directory for this disk-based PageStore. Override
+	 * this to configure a different location. The default is
+	 * javax.servlet.context.tempdir from the servlet context.
+	 * 
+	 * @return Working directory
+	 */
+	protected File getWorkDir()
+	{
+		return defaultWorkDir;
+	}
 
 	/**
 	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
