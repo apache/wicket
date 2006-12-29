@@ -23,8 +23,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.WicketRuntimeException;
 import wicket.markup.html.WebResource;
@@ -45,7 +45,7 @@ public class ThumbnailImageResource extends DynamicImageResource
 	private static final long serialVersionUID = 1L;
 
 	/** Log. */
-	private static final Log log = LogFactory.getLog(ThumbnailImageResource.class);
+	private static final Logger log = LoggerFactory.getLogger(ThumbnailImageResource.class);
 
 	/** the unscaled, original image resource. */
 	private final WebResource unscaledImageResource;

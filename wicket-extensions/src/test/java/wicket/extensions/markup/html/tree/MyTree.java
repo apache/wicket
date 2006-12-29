@@ -21,8 +21,8 @@ import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import wicket.MarkupContainer;
 import wicket.ResourceReference;
@@ -41,7 +41,7 @@ public class MyTree extends Tree
 	private static final ResourceReference folderOpen = new ResourceReference(MyTree.class,
 			"folderopen.gif");
 	/** Log. */
-	private static final Log log = LogFactory.getLog(MyTree.class);
+	private static final Logger log = LoggerFactory.getLogger(MyTree.class);
 
 	private static final ResourceReference nodeImage = new ResourceReference(MyTree.class,
 			"node.gif");
