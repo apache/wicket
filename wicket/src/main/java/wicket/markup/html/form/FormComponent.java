@@ -355,6 +355,14 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 			inputName.prepend(Component.PATH_SEPARATOR);
 			id = c.getId();
 		}
+
+		// having input name "submit" causes problems with javascript, so we
+		// create a unique string to replace it by prepending a path separator
+		if (inputName.equals("submit"))
+		{
+			inputName.prepend(Component.PATH_SEPARATOR);
+		}
+
 		return inputName.toString();
 	}
 
