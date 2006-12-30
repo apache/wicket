@@ -144,7 +144,7 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 			final RequestParameters parameters)
 	{
 		final String requestString = request
-				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+				.getParameter(AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			final String[] components = Strings.split(requestString, Component.PATH_SEPARATOR);
@@ -333,7 +333,7 @@ public abstract class AbstractWebRequestCodingStrategy implements IRequestCoding
 		{
 			firstParameter = false;
 			url.append('?');
-			url.append(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+			url.append(AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 			url.append('=');
 
 

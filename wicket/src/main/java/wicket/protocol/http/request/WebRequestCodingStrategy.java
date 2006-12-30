@@ -193,7 +193,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 	 */
 	public IRequestTargetUrlCodingStrategy[] listMounts()
 	{
-		return (IRequestTargetUrlCodingStrategy[])mountsOnPath.strategies().toArray(
+		return mountsOnPath.strategies().toArray(
 				new IRequestTargetUrlCodingStrategy[mountsOnPath.size()]);
 	}
 
@@ -436,7 +436,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 				mount = mount.toLowerCase();
 			}
 
-			return (IRequestTargetUrlCodingStrategy)map.get(mount);
+			return map.get(mount);
 		}
 
 		/**
@@ -454,7 +454,7 @@ public class WebRequestCodingStrategy extends AbstractWebRequestCodingStrategy
 			{
 				mount = mount.toLowerCase();
 			}
-			return (IRequestTargetUrlCodingStrategy)map.put(mount, encoder);
+			return map.put(mount, encoder);
 		}
 
 

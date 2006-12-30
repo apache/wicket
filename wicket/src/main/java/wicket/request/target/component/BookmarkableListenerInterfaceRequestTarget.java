@@ -23,6 +23,7 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -95,9 +96,10 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		param.append(Component.PATH_SEPARATOR);
 		param.append(getInterfaceName());
 		
-		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,param.toString());
+		pageParameters.put(AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,param.toString());
 	}
 
+	@Override
 	public void processEvents(RequestCycle requestCycle)
 	{
 		Page<?> page = getPage(requestCycle);
@@ -109,6 +111,7 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		listenerInterface.invoke(page, component);
 	}
 
+	@Override
 	public void respond(RequestCycle requestCycle)
 	{
 		getPage(requestCycle).renderPage();

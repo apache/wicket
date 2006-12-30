@@ -289,19 +289,19 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	protected CharSequence shortenUrl(CharSequence queryString)
 	{
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=", "1-");
+				AbstractWebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=", "1-");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener", "2-");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener", "2-");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener", "3-");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener", "3-");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener", "4-");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener", "4-");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener", "5-");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener", "5-");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=", "6-");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=", "6-");
 		queryString = Strings.replaceAll(queryString,
-				WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=", "7-");
+				AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=", "7-");
 
 		// For debugging only: determine possibilities to further shorten
 		// the query string
@@ -332,19 +332,19 @@ public class CryptedUrlWebRequestCodingStrategy implements IRequestCodingStrateg
 	protected String rebuildUrl(CharSequence queryString)
 	{
 		queryString = Strings.replaceAll(queryString, "1-",
-				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=");
+				AbstractWebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME + "=");
 		queryString = Strings.replaceAll(queryString, "2-",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IRedirectListener");
 		queryString = Strings.replaceAll(queryString, "3-",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IFormSubmitListener");
 		queryString = Strings.replaceAll(queryString, "4-",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=IOnChangeListener");
 		queryString = Strings.replaceAll(queryString, "5-",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=ILinkListener");
 		queryString = Strings.replaceAll(queryString, "6-",
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=");
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + "=");
 		queryString = Strings.replaceAll(queryString, "7-",
-				WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=");
+				AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME + "=");
 
 		return queryString.toString();
 	}
