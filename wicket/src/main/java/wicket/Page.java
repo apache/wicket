@@ -1280,6 +1280,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	 * @param id
 	 * @return MarkupFragment
 	 */
+	@Override
 	public MarkupFragment getMarkupFragment(final String id)
 	{
 		return getMarkupFragment().getChildFragment(id, true);

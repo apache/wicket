@@ -279,7 +279,7 @@ public class SharedResources
 	 */
 	public final Class getAliasClass(String alias)
 	{
-		return (Class)aliasClassMap.get(alias);
+		return aliasClassMap.get(alias);
 	}
 
 	/**

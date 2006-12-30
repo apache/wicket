@@ -171,6 +171,7 @@ public class ResourceReference implements Serializable
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj)
 	{
 		if (obj instanceof ResourceReference)
@@ -241,6 +242,7 @@ public class ResourceReference implements Serializable
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode()
 	{
 		int result = 17;
@@ -283,6 +285,7 @@ public class ResourceReference implements Serializable
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "[ResourceReference name = " + name + ", scope = " + scope + ", locale = " + locale

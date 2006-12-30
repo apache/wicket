@@ -62,6 +62,7 @@ public class Initializer implements IInitializer, IDestroyer
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		return "Wicket core library initializer";

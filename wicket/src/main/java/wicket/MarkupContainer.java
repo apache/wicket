@@ -856,6 +856,7 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * 
 	 * @see wicket.Component#onAfterRender()
 	 */
+	@Override
 	protected void onAfterRender()
 	{
 		this.associatedMarkup = null;
