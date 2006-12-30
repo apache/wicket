@@ -46,6 +46,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 	 * 
 	 * FIXME 2.0: remove asap
 	 */
+	@Deprecated
 	protected final Map<String, Object> messageModel()
 	{
 		throw new UnsupportedOperationException("THIS METHOD IS DEPRECATED, SEE JAVADOC");
@@ -171,7 +172,7 @@ public abstract class AbstractFormValidator implements IFormValidator
 				IModel label = formComponent.getLabel();
 				if (label != null)
 				{
-					args.put(arg, (Serializable)label.getObject());
+					args.put(arg, label.getObject());
 				}
 				else
 				{

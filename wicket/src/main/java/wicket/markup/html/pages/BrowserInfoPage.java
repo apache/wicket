@@ -463,8 +463,8 @@ public class BrowserInfoPage extends WebPage
 		}
 		setContinueTo(to);
 		initComps();
-		WebRequestCycle requestCycle = (WebRequestCycle)getRequestCycle();
-		WebSession session = (WebSession)getSession();
+		WebRequestCycle requestCycle = getRequestCycle();
+		WebSession session = getSession();
 		ClientInfo clientInfo = session.getClientInfo();
 		if (clientInfo == null)
 		{

@@ -60,9 +60,11 @@ import wicket.markup.html.form.IFormSubmitListener;
 import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ILinkListener;
+import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.file.File;
 import wicket.util.lang.Classes;
+import wicket.util.upload.FileUploadBase;
 import wicket.util.upload.ServletFileUpload;
 import wicket.util.value.ValueMap;
 
@@ -342,7 +344,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	{
 		if (uploadedFiles != null && uploadedFiles.size() > 0)
 		{
-			return ServletFileUpload.MULTIPART_FORM_DATA + "; boundary=abcdefgABCDEFG";
+			return FileUploadBase.MULTIPART_FORM_DATA + "; boundary=abcdefgABCDEFG";
 		}
 
 		return null;
@@ -1155,7 +1157,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	public void setRequestToBookmarkablePage(final Page page, final Map<String, String> params)
 	{
 		parameters.putAll(params);
-		parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
+		parameters.put(AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, page.getClass()
 				.getName());
 	}
 
@@ -1172,7 +1174,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 		if (component instanceof BookmarkablePageLink)
 		{
 			final Class clazz = ((BookmarkablePageLink)component).getPageClass();
-			parameters.put(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
+			parameters.put(AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageMapName
 					+ ':' + clazz.getName());
 		}
 		else
@@ -1206,7 +1208,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 								+ component.getClass());
 			}
 
-			parameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':'
+			parameters.put(AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, pageMapName + ':'
 					+ component.getPath() + ':' + (version == 0 ? "" : "" + version) + ':'
 					+ Classes.simpleName(clazz));
 		}

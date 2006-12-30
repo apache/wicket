@@ -118,7 +118,7 @@ public class Check<T> extends WebMarkupContainer<T>
 
 		// check if the model collection of the group contains the model object.
 		// if it does check the check box.
-		Collection collection = (Collection)group.getModelObject();
+		Collection collection = group.getModelObject();
 
 		// check for npe in group's model object
 		if (collection == null)
@@ -153,7 +153,7 @@ public class Check<T> extends WebMarkupContainer<T>
 			// url that points to this components IOnChangeListener method
 			final CharSequence url = group.urlFor(IOnChangeListener.INTERFACE);
 
-			Form form = (Form)group.findParent(Form.class);
+			Form form = group.findParent(Form.class);
 			if (form != null)
 			{
 				tag.put("onclick", form.getJsForInterfaceUrl(url));

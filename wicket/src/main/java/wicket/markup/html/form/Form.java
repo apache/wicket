@@ -1605,7 +1605,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		do
 		{
 			form = parent;
-			parent = (Form<?>)form.findParent(Form.class);
+			parent = form.findParent(Form.class);
 		}
 		while (parent != null);
 

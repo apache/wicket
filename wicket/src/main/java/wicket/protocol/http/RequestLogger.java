@@ -112,6 +112,7 @@ public class RequestLogger implements IRequestLogger
 			/**
 			 * @see java.util.LinkedList#add(java.lang.Object)
 			 */
+			@Override
 			public void add(int index, RequestData o)
 			{
 				super.add(index, o);
@@ -185,7 +186,7 @@ public class RequestLogger implements IRequestLogger
 
 	RequestData getCurrentRequest()
 	{
-		RequestData rd = (RequestData)currentRequest.get();
+		RequestData rd = currentRequest.get();
 		if (rd == null)
 		{
 			rd = new RequestData();
@@ -754,6 +755,7 @@ public class RequestLogger implements IRequestLogger
 			return totalSessionSize;
 		}
 
+		@Override
 		public String toString()
 		{
 			return "Request[timetaken=" + getTimeTaken() + ",sessioninfo=" + sessionInfo

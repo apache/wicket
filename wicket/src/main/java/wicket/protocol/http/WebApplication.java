@@ -414,6 +414,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * 
 	 * TODO Post 2.0: Remove
 	 */
+	@Deprecated
 	protected final IRequestCycleFactory getDefaultRequestCycleFactory()
 	{
 		return getRequestCycleFactory();
