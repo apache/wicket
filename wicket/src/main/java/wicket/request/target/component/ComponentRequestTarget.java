@@ -19,8 +19,11 @@
 package wicket.request.target.component;
 
 import wicket.Component;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
+import wicket.Component.IVisitor;
+import wicket.feedback.IFeedback;
 
 /**
  * Default implementation of
@@ -71,8 +74,40 @@ public class ComponentRequestTarget implements IComponentRequestTarget
 		else
 		{
 			// Render the component
-			component.renderComponent();
-			
+			try
+			{
+				// collect feedback
+				if (component instanceof MarkupContainer)
+				{
+					MarkupContainer container = (MarkupContainer)component;
+
+					container.visitChildren(IFeedback.class, new IVisitor()
+					{
+						public Object component(Component component)
+						{
+							((IFeedback)component).updateFeedback();
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
+				}
+
+				if (component instanceof IFeedback)
+				{
+					((IFeedback)component).updateFeedback();
+				}
+
+				// attach
+				component.internalAttach();
+
+				// Render the component
+				component.renderComponent();
+			}
+			finally
+			{
+				component.getPage().internalDetach();
+			}
+
+
 			if (page != null)
 			{
 				page.endComponentRender(component);

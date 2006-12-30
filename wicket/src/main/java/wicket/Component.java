@@ -1847,32 +1847,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 
 			try
 			{
-				if (this instanceof MarkupContainer)
-				{
-					MarkupContainer<T> container = (MarkupContainer<T>)this;
-
-					// First, give priority to IFeedback instances, as they have
-					// to collect their messages before components like
-					// ListViews remove any child components
-					container.visitChildren(IFeedback.class, new IVisitor()
-					{
-						public Object component(Component component)
-						{
-							((IFeedback)component).updateFeedback();
-							component.internalAttach();
-							return IVisitor.CONTINUE_TRAVERSAL;
-						}
-					});
-				}
-
-				if (this instanceof IFeedback)
-				{
-					((IFeedback)this).updateFeedback();
-				}
-
-				// attach
-				internalAttach();
-
 				// check authorization
 				// first the component itself
 				// (after attach as otherwise list views etc wont work)
@@ -1903,9 +1877,6 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			{
 				onAfterRender();
 			}
-
-			// detach
-			internalDetach();
 		}
 	}
 
@@ -2807,7 +2778,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * 
 	 * Called when a request begins.
 	 */
-	protected void internalAttach()
+	public void internalAttach()
 	{
 		onAttach();
 		internalOnAttach();
@@ -2819,7 +2790,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * 
 	 * Called when a request ends.
 	 */
-	protected void internalDetach()
+	public void internalDetach()
 	{
 		internalOnDetach();
 		onDetach();

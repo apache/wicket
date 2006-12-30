@@ -18,8 +18,10 @@ package wicket.ajax;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +29,12 @@ import org.slf4j.LoggerFactory;
 import wicket.Application;
 import wicket.Component;
 import wicket.IRequestTarget;
+import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.RequestCycle;
 import wicket.Response;
+import wicket.Component.IVisitor;
+import wicket.feedback.IFeedback;
 import wicket.markup.html.IHeaderResponse;
 import wicket.markup.html.internal.HeaderResponse;
 import wicket.protocol.http.WebResponse;
@@ -89,12 +94,16 @@ public class AjaxRequestTarget implements IRequestTarget
 	 */
 	public final void addComponent(Component component)
 	{
-		if (component==null) {
+		if (component == null)
+		{
 			throw new IllegalArgumentException("component cannot be null");
 		}
-		if (component.getOutputMarkupId()==false&&!component.getMarkupAttributes().containsKey("id"))
+		if (component.getOutputMarkupId() == false
+				&& !component.getMarkupAttributes().containsKey("id"))
 		{
-			throw new IllegalArgumentException("cannot update component that does not have setOutputMarkupId property set to true or id attribute set in its markup attributes. Component: "+component.toString());
+			throw new IllegalArgumentException(
+					"cannot update component that does not have setOutputMarkupId property set to true or id attribute set in its markup attributes. Component: "
+							+ component.toString());
 		}
 		addComponent(component, component.getMarkupId());
 	}
@@ -236,14 +245,7 @@ public class AjaxRequestTarget implements IRequestTarget
 				respondInvocation(response, js);
 			}
 
-			for (Map.Entry<String, Component> entry : markupIdToComponent.entrySet())
-			{
-				final Component component = entry.getValue();
-				final String markupId = entry.getKey();
-
-				// render the component
-				respondComponent(response, markupId, component);
-			}
+			respondComponents(response);
 
 			for (String js : appendJavascripts)
 			{
@@ -264,6 +266,78 @@ public class AjaxRequestTarget implements IRequestTarget
 			requestCycle.setResponse(response);
 		}
 	}
+
+	/**
+	 * Processes components added to the target. This involves attaching
+	 * components, rendering markup into a client side xml envelope, and
+	 * detaching them
+	 * 
+	 * @param response
+	 */
+	private void respondComponents(WebResponse response)
+	{
+		Iterator it;
+
+		try
+		{
+			// process feedback
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Component component = (Component)((Entry)it.next()).getValue();
+				if (component instanceof MarkupContainer)
+				{
+					MarkupContainer container = (MarkupContainer)component;
+
+					// collect feedback
+					container.visitChildren(IFeedback.class, new IVisitor()
+					{
+						public Object component(Component component)
+						{
+							((IFeedback)component).updateFeedback();
+							return IVisitor.CONTINUE_TRAVERSAL;
+						}
+					});
+				}
+
+				if (component instanceof IFeedback)
+				{
+					((IFeedback)component).updateFeedback();
+				}
+			}
+
+			// attach components
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Component component = (Component)((Entry)it.next()).getValue();
+				component.internalAttach();
+			}
+
+			// process component markup
+			it = markupIdToComponent.entrySet().iterator();
+			while (it.hasNext())
+			{
+				final Map.Entry entry = (Entry)it.next();
+				final Component component = (Component)entry.getValue();
+				final String markupId = (String)entry.getKey();
+
+				respondComponent(response, markupId, component);
+			}
+
+		}
+		finally
+		{
+			// detach
+			it = markupIdToComponent.entrySet().iterator();
+			if (it.hasNext())
+			{
+				final Component component = (Component)((Entry)it.next()).getValue();
+				component.getPage().internalDetach();
+			}
+		}
+	}
+
 
 	/**
 	 * @see java.lang.Object#toString()
@@ -335,7 +409,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		component.setOutputMarkupId(true);
-	
+
 		// Initialize temporary variables
 		final Page page = component.getPage();
 		if (page == null)
@@ -348,7 +422,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		page.setVersioned(false);
 
 		page.startComponentRender(component);
-		
+
 		// render any associated headers of the component
 		respondHeaderContribution(response, component);
 
@@ -356,7 +430,7 @@ public class AjaxRequestTarget implements IRequestTarget
 		try
 		{
 			RequestCycle.get().setResponse(componentResponse);
-			
+
 			component.renderComponent();
 		}
 		finally
@@ -392,7 +466,7 @@ public class AjaxRequestTarget implements IRequestTarget
 	private void respondHeaderContribution(final Response response, final Component component)
 	{
 		Response encodingResponse = new StringResponse();
-		
+
 		try
 		{
 			final IHeaderResponse headerResponse = new HeaderResponse(encodingResponse);
@@ -405,11 +479,11 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		String data = encodingResponse.toString();
-		
+
 		if (data.length() != 0)
 		{
-			response.write("<header-contribution");			
-			
+			response.write("<header-contribution");
+
 			if (needsEncoding(encodingResponse.toString()))
 			{
 				response.write(" encoding=\"");

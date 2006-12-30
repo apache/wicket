@@ -182,7 +182,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	private IPageVersionManager<T> versionManager;
 
 	private transient boolean attached = false;
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -764,11 +764,20 @@ public abstract class Page<T> extends MarkupContainer<T>
 	@Override
 	public void internalDetach()
 	{
-		if(attached )
-		{
+		/*
+		 * FIXME ivaynberg: i am disabling this check because components can be
+		 * attached without the page itself being attached (like during page
+		 * render), but it is convinient to call internaldetach() on the page to
+		 * cascade the detach call to all components
+		 * 
+		 * i think this check should be moved into each component, not just be
+		 * in the page
+		 */
+		//if (attached)
+		//{
 			super.internalDetach();
 			attached = false;
-		}
+		//}
 	}
 
 	/**
@@ -777,7 +786,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 	@Override
 	public void internalAttach()
 	{
-		if(!attached)
+		if (!attached)
 		{
 			super.internalAttach();
 			attached = true;
