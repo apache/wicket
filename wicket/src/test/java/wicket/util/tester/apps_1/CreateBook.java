@@ -20,7 +20,7 @@ import wicket.MarkupContainer;
 import wicket.Page;
 import wicket.markup.html.WebPage;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RequiredTextField;
+import wicket.markup.html.form.TextField;
 import wicket.model.Model;
 import wicket.model.PropertyModel;
 
@@ -49,10 +49,11 @@ public class CreateBook extends WebPage
 			super(parent, id);
 
 			// label model here comes from java
-			new RequiredTextField<String>(this, "id", new PropertyModel<String>(book, "id"))
-					.setLabel(new Model<String>("id"));
+			new TextField<String>(this, "id", new PropertyModel<String>(book, "id")).setLabel(
+					new Model<String>("id")).setRequired(true);
 			// label model here comes from CreateBook.properties
-			new RequiredTextField<String>(this, "name", new PropertyModel<String>(book, "name"));
+			new TextField<String>(this, "name", new PropertyModel<String>(book, "name"))
+					.setRequired(true);
 		}
 
 		/**
