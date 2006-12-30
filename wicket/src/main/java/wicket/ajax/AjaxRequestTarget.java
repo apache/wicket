@@ -449,12 +449,10 @@ public class AjaxRequestTarget implements IRequestTarget
 		{
 			// detach
 			it = markupIdToComponent.entrySet().iterator();
-			while (it.hasNext())
+			if (it.hasNext())
 			{
 				final Component component = (Component)((Entry)it.next()).getValue();
 				component.getPage().internalDetach();
-				// we are done since we detached the page
-				break;
 			}
 		}
 	}
