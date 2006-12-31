@@ -27,6 +27,7 @@ import wicket.ajax.markup.html.form.AjaxSubmitButton;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.SimpleFormComponentLabel;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
 import wicket.model.ResourceModel;
@@ -62,13 +63,13 @@ public class FormPage extends BasePage
 
 		// add form components to the form as usual
 
-		fc = new RequiredTextField(form, "name");
+		fc = new TextField(form, "name").setRequired(true);
 		fc.add(StringValidator.minimumLength(4));
 		fc.setLabel(new ResourceModel("label.name"));
 
 		new SimpleFormComponentLabel(form, "name-label", fc);
 
-		fc = new RequiredTextField(form, "email");
+		fc = new TextField(form, "email").setRequired(true);
 		fc.add(EmailAddressPatternValidator.getInstance());
 		fc.setLabel(new ResourceModel("label.email"));
 

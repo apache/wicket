@@ -92,14 +92,15 @@ public class FormInput extends WicketExamplePage
 				}
 			};
 
-			RequiredTextField stringTextField = new RequiredTextField<String>(this,
-					"stringProperty");
+			TextField<String> stringTextField = new TextField<String>(this, "stringProperty");
+			stringTextField.setRequired(true);
 			stringTextField.setLabel(new Model<String>("String"));
-			RequiredTextField integerTextField = new RequiredTextField<Integer>(this,
-					"integerProperty", Integer.class);
+			TextField<Integer> integerTextField = new TextField<Integer>(this, "integerProperty",
+					Integer.class);
+			integerTextField.setRequired(true);
 			integerTextField.add(NumberValidator.POSITIVE);
-			new RequiredTextField<Double>(this, "doubleProperty", Double.class);
-			new RequiredTextField<Integer>(this, "integerInRangeProperty", Integer.class)
+			new TextField<Double>(this, "doubleProperty", Double.class).setRequired(true);
+			new TextField<Integer>(this, "integerInRangeProperty", Integer.class).setRequired(true)
 					.add(NumberValidator.range(0, 100));
 			new CheckBox(this, "booleanProperty");
 			new Multiply(this, "multiply");

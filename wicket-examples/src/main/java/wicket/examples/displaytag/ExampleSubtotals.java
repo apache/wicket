@@ -102,7 +102,7 @@ public class ExampleSubtotals extends Displaytag
 	{
 		private ReportableListObject previousValue = null;
 		private double subtotal = 0;
-		private final String city;
+		private String city;
 
 		/**
 		 * Constructor

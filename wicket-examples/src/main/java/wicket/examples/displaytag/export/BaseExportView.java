@@ -48,7 +48,7 @@ public abstract class BaseExportView implements Serializable
 	/**
 	 * Headers.
 	 */
-	private final List headerData;
+	private List headerData;
 
 	/**
 	 * TableModel to render.

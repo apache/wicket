@@ -103,8 +103,8 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			public View(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
-				new RequiredTextField(this, "user.firstName");
-				new RequiredTextField(this, "user.lastName");
+				new TextField(this, "user.firstName").setRequired(true);
+				new TextField(this, "user.lastName").setRequired(true);
 				new TextField(this, "user.department");
 				new CheckBox(this, "assignRoles");
 			}
@@ -145,9 +145,9 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			public View(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
-				new RequiredTextField(this, "user.userName");
-				new RequiredTextField(this, "user.email").add(EmailAddressPatternValidator
-						.getInstance());
+				new TextField(this, "user.userName").setRequired(true);
+				new TextField(this, "user.email").setRequired(true).add(
+						EmailAddressPatternValidator.getInstance());
 			}
 		}
 

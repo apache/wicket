@@ -24,6 +24,7 @@ import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.captcha.CaptchaImageResource;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
+import wicket.markup.html.form.TextField;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.PropertyModel;
@@ -54,7 +55,7 @@ public class Captcha extends WicketExamplePage
 
 			captchaImageResource = new CaptchaImageResource(imagePass);
 			new Image(this, "captchaImage", captchaImageResource);
-			new RequiredTextField<String>(this, "password", new PropertyModel<String>(properties,
+			new TextField<String>(this, "password", new PropertyModel<String>(properties,
 					"password"))
 			{
 				@Override
@@ -64,7 +65,7 @@ public class Captcha extends WicketExamplePage
 					// clear the field after each render
 					tag.put("value", "");
 				}
-			};
+			}.setRequired(true);
 		}
 
 		/**
