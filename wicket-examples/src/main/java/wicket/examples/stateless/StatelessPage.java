@@ -47,6 +47,7 @@ public class StatelessPage extends WebPage
 			/**
 			 * @see wicket.markup.html.form.Form#onSubmit()
 			 */
+			@Override
 			protected void onSubmit()
 			{
 				info("Onsubmit of stateless page pressed, textfield updated: " + tf.getModelObject());

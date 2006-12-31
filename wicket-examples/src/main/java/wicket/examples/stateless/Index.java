@@ -45,6 +45,7 @@ public class Index extends WebPage
 			/**
 			 * @see wicket.markup.html.link.Link#onClick()
 			 */
+			@Override
 			public void onClick()
 			{
 				getRequestCycle().setResponsePage(StatefulPage.class);
