@@ -115,7 +115,9 @@ public final class CaptchaImageResource extends DynamicImageResource
 		int num = randomInt(min, max);
 		byte b[] = new byte[num];
 		for (int i = 0; i < num; i++)
+		{
 			b[i] = (byte)randomInt('a', 'z');
+		}
 		return new String(b);
 	}
 
@@ -179,7 +181,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 		Shape shape;
 		for (int i = 0; i < chars.length; i++)
 		{
-			String fontName = (String)fontNames.get(randomInt(0, fontNames.size()));
+			String fontName = fontNames.get(randomInt(0, fontNames.size()));
 			double rotation = Math.toRadians(randomInt(-35, 35));
 			int rise = randomInt(margin / 2, margin);
 			Random ran = new Random();
@@ -217,6 +219,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	 * 
 	 * @see wicket.Resource#invalidate()
 	 */
+	@Override
 	public final void invalidate()
 	{
 		imageData = null;
@@ -225,6 +228,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 	/**
 	 * @see wicket.markup.html.image.resource.DynamicImageResource#getImageData()
 	 */
+	@Override
 	protected final byte[] getImageData()
 	{
 		// get image data is always called in sync block
@@ -262,7 +266,7 @@ public final class CaptchaImageResource extends DynamicImageResource
 			int curWidth = margin;
 			for (int i = 0; i < charAttsList.size(); i++)
 			{
-				CharAttributes cf = (CharAttributes)charAttsList.get(i);
+				CharAttributes cf = charAttsList.get(i);
 				TextLayout text = new TextLayout(cf.getChar() + "", getFont(cf.getName()), gfx
 						.getFontRenderContext());
 				AffineTransform textAt = new AffineTransform();

@@ -16,8 +16,6 @@
  */
 package wicket.validation.validator;
 
-import wicket.validation.validator.EmailAddressPatternValidator;
-import wicket.validation.validator.PatternValidator;
 
 /**
  * Validator for validating email addresses according to the RFC 822. This

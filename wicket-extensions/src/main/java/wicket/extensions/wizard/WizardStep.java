@@ -114,11 +114,6 @@ public abstract class WizardStep implements IWizardStep
 	private IModel<String> title;
 
 	/**
-	 * The wizard model.
-	 */
-	private IWizardModel wizardModel;
-
-	/**
 	 * Construct without a title and a summary. Useful for when you provide a
 	 * custom header by overiding
 	 * {@link #getHeader(MarkupContainer, String, IWizard)}.
@@ -186,7 +181,6 @@ public abstract class WizardStep implements IWizardStep
 	 */
 	public final void init(IWizardModel wizardModel)
 	{
-		this.wizardModel = wizardModel;
 		onInit(wizardModel);
 	}
 

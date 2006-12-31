@@ -58,7 +58,7 @@ public class AjaxFallbackDefaultDataTable extends DataTable
 	public AjaxFallbackDefaultDataTable(MarkupContainer parent, final String id, final List<IColumn> columns,
 			SortableDataProvider dataProvider, int rowsPerPage)
 	{
-		this(parent, id, (IColumn[])columns.toArray(new IColumn[columns.size()]), dataProvider,
+		this(parent, id, columns.toArray(new IColumn[columns.size()]), dataProvider,
 				rowsPerPage);
 	}
 

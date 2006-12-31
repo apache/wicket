@@ -51,6 +51,7 @@ public class UploadProgressBar extends Panel
 		/**
 		 * @see java.lang.Object#toString()
 		 */
+		@Override
 		public String toString()
 		{
 			return "Ajax UploadProgressBar initializer";

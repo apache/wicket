@@ -726,7 +726,9 @@ public class ModalWindow extends Panel<Object>
 	{
 		super.remove(component);
 		if (component.getId().equals(getContentId()))
+		{
 			empty = new WebMarkupContainer(this, getContentId());
+		}
 	}
 
 	/**
@@ -848,9 +850,13 @@ public class ModalWindow extends Panel<Object>
 		buffer.append("settings.width=\"" + getInitialWidth() + "\";\n");
 
 		if (isUseInitialHeight() == true || isCustomComponent() == false)
+		{
 			buffer.append("settings.height=\"" + getInitialHeight() + "\";\n");
+		}
 		else
+		{
 			buffer.append("settings.height=null;\n");
+		}
 
 		buffer.append("settings.resizable=" + Boolean.toString(isResizable()) + ";\n");
 

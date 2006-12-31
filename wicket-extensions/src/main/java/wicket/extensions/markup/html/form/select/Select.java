@@ -89,12 +89,14 @@ public class Select<T> extends AbstractSelect<T>
 	protected void checkSelectedOptionsCount(int count)	
 	{
 		if (count > 1)
+		{
 			throw new WicketRuntimeException(
 				"The model of Select component ["
 						+ getPath()
 						+ "] is not of type java.util.Collection, but more then one SelectOption component "
 						+ "has been selected. Either remove the multiple attribute from the select tag or "
 						+ "make the model of the Select component a collection");
+		}
 	}
 	
 	/**

@@ -113,7 +113,9 @@ public class RenderedLabel extends Image
 						line.setLength(0);
 					}
 					else
+					{
 						line.append(sp);
+					}
 				}
 				line.append(word);
 				topWidth = Math.max(metrics.stringWidth(line.toString()), topWidth);
@@ -123,6 +125,7 @@ public class RenderedLabel extends Image
 		}
 
 		/** Renders text into image. */
+		@Override
 		protected boolean render(final Graphics2D graphics)
 		{
 			renderedText = getModelObjectAsString(); // get text from outer
@@ -140,7 +143,9 @@ public class RenderedLabel extends Image
 			if (renderedText == null)
 			{
 				if (width == 1 && height == 1)
+				{
 					return true;
+				}
 				setWidth(1);
 				setHeight(1);
 				return false;
@@ -378,7 +383,9 @@ public class RenderedLabel extends Image
 	protected void onBeforeRender()
 	{
 		if (!Strings.isEqual(renderedText, getModelObjectAsString()))
+		{
 			resource.invalidate();
+		}
 	}
 
 	/**
@@ -396,9 +403,13 @@ public class RenderedLabel extends Image
 		{
 			int hash = text.hashCode() ^ font.hashCode() ^ color.hashCode();
 			if (backgroundColor != null)
+			{
 				hash ^= backgroundColor.hashCode();
+			}
 			if (maxWidth != null)
+			{
 				hash ^= maxWidth.hashCode();
+			}
 
 			String url = tag.getAttributes().getString("src");
 			url = url + ((url.indexOf("?") >= 0) ? "&" : "?");

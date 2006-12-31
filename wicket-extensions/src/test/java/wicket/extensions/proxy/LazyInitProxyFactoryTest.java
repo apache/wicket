@@ -88,7 +88,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		assertEquals(proxy.getMessage(), "interface");
 
 		// test serialization
-		IInterface proxy2 = (IInterface) Objects.cloneObject(proxy);
+		IInterface proxy2 = Objects.cloneObject(proxy);
 		assertTrue(proxy != proxy2);
 		assertEquals(proxy2.getMessage(), "interface");
 
@@ -136,7 +136,7 @@ public class LazyInitProxyFactoryTest extends TestCase
 		assertEquals(proxy.getMessage(), "concrete");
 
 		// test serialization
-		ConcreteObject proxy2 = (ConcreteObject) Objects.cloneObject(proxy);
+		ConcreteObject proxy2 = Objects.cloneObject(proxy);
 		assertTrue(proxy != proxy2);
 		assertEquals(proxy2.getMessage(), "concrete");
 

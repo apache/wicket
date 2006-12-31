@@ -181,12 +181,6 @@ public abstract class RatingPanel extends Panel<Integer>
 	private IModel<Integer> nrOfStars = new Model<Integer>(Integer.valueOf(5));
 
 	/**
-	 * The number of votes that have been cast, should result in an Integer
-	 * object.
-	 */
-	private IModel nrOfVotes;
-
-	/**
 	 * Handle to the rating label to set the visibility.
 	 */
 	private Component ratingLabel;
@@ -250,7 +244,6 @@ public abstract class RatingPanel extends Panel<Integer>
 		super(parent, id, rating);
 
 		this.nrOfStars = nrOfStars;
-		this.nrOfVotes = nrOfVotes;
 		this.hasVoted = hasVoted;
 
 		WebMarkupContainer rater = new WebMarkupContainer(this, "rater");

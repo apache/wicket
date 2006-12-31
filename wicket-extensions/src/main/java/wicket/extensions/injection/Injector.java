@@ -158,7 +158,7 @@ public class Injector
 			clazz = clazz.getSuperclass();
 		}
 
-		return (Field[]) matched.toArray(new Field[matched.size()]);
+		return matched.toArray(new Field[matched.size()]);
 	}
 
 }
