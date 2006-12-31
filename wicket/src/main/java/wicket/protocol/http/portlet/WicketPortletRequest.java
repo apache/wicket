@@ -77,7 +77,7 @@ public class WicketPortletRequest extends Request
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getParameterMap()
 	{
-		return (Map<String, Object>)req.getParameterMap();
+		return req.getParameterMap();
 	}
 
 	/**

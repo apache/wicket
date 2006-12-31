@@ -115,7 +115,7 @@ public class PortletRequestTargetResolverStrategy extends  AbstractRequestTarget
 		Class<? extends Page> pageClass;
 		try
 		{
-			pageClass = (Class<? extends Page>)session.getClassResolver().resolveClass(bookmarkablePageClass);
+			pageClass = session.getClassResolver().resolveClass(bookmarkablePageClass);
 		}
 		catch (RuntimeException e)
 		{

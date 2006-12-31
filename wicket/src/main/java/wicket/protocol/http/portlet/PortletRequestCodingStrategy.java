@@ -395,7 +395,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		final PageParameters parameters = requestTarget.getPageParameters();
 		url.setParameters(parameters);
 
-		url.setParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageClass
+		url.setParameter(AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME, pageClass
 				.getName());
 
 		return url.toString();
@@ -420,7 +420,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 			final RequestParameters parameters)
 	{
 		final String requestString = request
-				.getParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
+				.getParameter(AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME);
 		if (requestString != null)
 		{
 			parameters.setBookmarkablePageClass(requestString);
@@ -490,7 +490,7 @@ public final class PortletRequestCodingStrategy extends AbstractWebRequestCoding
 		final Class pageClass = requestTarget.getPageClass();
 
 		response.setRenderParameter(PAGEMAP, "");
-		response.setRenderParameter(WebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
+		response.setRenderParameter(AbstractWebRequestCodingStrategy.BOOKMARKABLE_PAGE_PARAMETER_NAME,
 				pageClass.getName());
 		response.setRenderParameters(requestTarget.getPageParameters());
 	}
