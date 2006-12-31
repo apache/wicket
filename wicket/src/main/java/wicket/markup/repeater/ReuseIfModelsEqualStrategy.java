@@ -77,7 +77,7 @@ public class ReuseIfModelsEqualStrategy implements IItemReuseStrategy
 			public Object next()
 			{
 				final IModel model = (IModel)newModels.next();
-				final Item oldItem = (Item)modelToItem.get(model);
+				final Item oldItem = modelToItem.get(model);
 
 				final Item item;
 				if (oldItem == null)
