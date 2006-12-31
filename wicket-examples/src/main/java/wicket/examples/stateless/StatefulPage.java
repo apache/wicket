@@ -70,7 +70,7 @@ public class StatefulPage extends WebPage
 	 * @param linkClickCount
 	 *            linkClickCount
 	 */
-	public void setLinkClickCount(int linkClickCount)
+	public void setLinkClickCount(final int linkClickCount)
 	{
 		this.linkClickCount = linkClickCount;
 	}

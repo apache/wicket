@@ -44,7 +44,7 @@ public class StaticWizard extends Wizard<String>
 	 * @param id
 	 *            The component id
 	 */
-	public StaticWizard(MarkupContainer parent, String id)
+	public StaticWizard(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 

@@ -44,7 +44,7 @@ public class ChoicePage extends BasePage
 {
 	private String selectedMake;
 
-	private Map<String, List<String>> modelsMap = new HashMap<String, List<String>>(); // map:company->model
+	private final Map<String, List<String>> modelsMap = new HashMap<String, List<String>>(); // map:company->model
 
 	/**
 	 * @return Currently selected make
@@ -58,7 +58,7 @@ public class ChoicePage extends BasePage
 	 * @param selectedMake
 	 *            The make that is currently selected
 	 */
-	public void setSelectedMake(String selectedMake)
+	public void setSelectedMake(final String selectedMake)
 	{
 		this.selectedMake = selectedMake;
 	}
@@ -113,7 +113,7 @@ public class ChoicePage extends BasePage
 		makes.add(new AjaxFormComponentUpdatingBehavior(ClientEvent.CHANGE)
 		{
 			@Override
-			protected void onUpdate(AjaxRequestTarget target)
+			protected void onUpdate(final AjaxRequestTarget target)
 			{
 				target.addComponent(models);
 			}

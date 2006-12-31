@@ -33,7 +33,7 @@ public final class RandomSampleUtil
 	/**
 	 * list of words.
 	 */
-	private static String[] words = new String[] { "Lorem", "ipsum", "dolor", "sit", "amet",
+	private static final String[] words = new String[] { "Lorem", "ipsum", "dolor", "sit", "amet",
 			"consetetur", "sadipscing", "elitr", "sed", "diam", "nonumy", "eirmod", "tempor",
 			"invidunt", "ut", "labore", "et", "dolore", "magna", "aliquyam", "erat", "sed", "diam",
 			"voluptua", "At", "vero", "eos", "et", "accusam", "et", "justo", "duo", "dolores",
@@ -43,7 +43,7 @@ public final class RandomSampleUtil
 	/**
 	 * random number producer.
 	 */
-	private static Random random = new Random();
+	private static final Random random = new Random();
 
 	/**
 	 * utility class, don't instantiate.
@@ -70,7 +70,7 @@ public final class RandomSampleUtil
 	 *            number of word in the sentence
 	 * @return random sentence made of <code>wordNumber</code> words
 	 */
-	public static String getRandomSentence(int wordNumber)
+	public static String getRandomSentence(final int wordNumber)
 	{
 		StringBuffer buffer = new StringBuffer(wordNumber * 12);
 

@@ -44,7 +44,7 @@ public final class RecursivePanel extends Panel
 	 * @param list
 	 *            a list where each element is either a string or another list
 	 */
-	public RecursivePanel(MarkupContainer parent, final String id, List list)
+	public RecursivePanel(final MarkupContainer parent, final String id, final List list)
 	{
 		super(parent, id);
 		setVersioned(false);
@@ -67,7 +67,7 @@ public final class RecursivePanel extends Panel
 		 *            list
 		 */
 		@SuppressWarnings("unchecked")
-		public Rows(MarkupContainer parent, String name, List list)
+		public Rows(final MarkupContainer parent, final String name, final List list)
 		{
 			super(parent, name, list);
 		}
@@ -76,7 +76,7 @@ public final class RecursivePanel extends Panel
 		 * @see wicket.markup.html.list.ListView#populateItem(wicket.markup.html.list.ListItem)
 		 */
 		@Override
-		protected void populateItem(ListItem<T> listItem)
+		protected void populateItem(final ListItem<T> listItem)
 		{
 			T modelObject = listItem.getModelObject();
 

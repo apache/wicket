@@ -36,7 +36,7 @@ public class WizardPage extends WicketExamplePage
 	 * @param wizardClass
 	 *            class of the wizard component
 	 */
-	public WizardPage(Class wizardClass)
+	public WizardPage(final Class wizardClass)
 	{
 		if (wizardClass == null)
 		{

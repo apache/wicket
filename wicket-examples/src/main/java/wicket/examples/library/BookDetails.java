@@ -48,7 +48,7 @@ public final class BookDetails extends AuthenticatedWebPage
 	 *            The title to show if book is null
 	 * @return The external page link
 	 */
-	public static BookmarkablePageLink link(MarkupContainer parent, final String name,
+	public static BookmarkablePageLink link(final MarkupContainer parent, final String name,
 			final Book book, final String noBookTitle)
 	{
 		final BookmarkablePageLink link = new BookmarkablePageLink(parent, name, BookDetails.class);

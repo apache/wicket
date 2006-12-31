@@ -32,7 +32,7 @@ public class Multiply extends FormComponentPanel<Integer>
 	 * @param id
 	 *            The component id
 	 */
-	public Multiply(final MarkupContainer parent, String id)
+	public Multiply(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 		init();
@@ -47,7 +47,7 @@ public class Multiply extends FormComponentPanel<Integer>
 	 * @param model
 	 *            The model
 	 */
-	public Multiply(final MarkupContainer parent, String id, IModel<Integer> model)
+	public Multiply(final MarkupContainer parent, final String id, final IModel<Integer> model)
 	{
 		super(parent, id, model);
 		init();
@@ -73,7 +73,7 @@ public class Multiply extends FormComponentPanel<Integer>
 	 * @param lhs
 	 *            the lhs to set
 	 */
-	public void setLhs(int lhs)
+	public void setLhs(final int lhs)
 	{
 		this.lhs = lhs;
 	}
@@ -82,7 +82,7 @@ public class Multiply extends FormComponentPanel<Integer>
 	 * @param rhs
 	 *            the rhs to set
 	 */
-	public void setRhs(int rhs)
+	public void setRhs(final int rhs)
 	{
 		this.rhs = rhs;
 	}
@@ -90,6 +90,7 @@ public class Multiply extends FormComponentPanel<Integer>
 	/**
 	 * @see wicket.markup.html.form.FormComponent#updateModel()
 	 */
+	@Override
 	public void updateModel()
 	{
 		// childs are currently updated *after* this component,

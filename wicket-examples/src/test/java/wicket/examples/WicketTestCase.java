@@ -37,7 +37,7 @@ public abstract class WicketTestCase extends TestCase
 	 * @param name
 	 *            The test name
 	 */
-	public WicketTestCase(String name)
+	public WicketTestCase(final String name)
 	{
 		super(name);
 	}

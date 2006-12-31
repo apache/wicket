@@ -73,7 +73,7 @@ public final class LibraryApplication extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession(Request request)
+			public Session newSession(final Request request)
 			{
 				return new LibrarySession(LibraryApplication.this);
 			}

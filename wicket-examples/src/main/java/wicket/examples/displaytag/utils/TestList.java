@@ -56,7 +56,7 @@ public class TestList extends ArrayList<ListObject> implements Serializable
 	 * @param duplicates
 	 *            boolean put duplicates in the list
 	 */
-	public TestList(int size, boolean duplicates)
+	public TestList(final int size, final boolean duplicates)
 	{
 		if (duplicates)
 		{
@@ -108,7 +108,7 @@ public class TestList extends ArrayList<ListObject> implements Serializable
 	 *            int index of the List object into the array
 	 * @return ListObject
 	 */
-	public ListObject getItem(int index)
+	public ListObject getItem(final int index)
 	{
 		return super.get(index);
 	}

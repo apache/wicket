@@ -62,8 +62,8 @@ public class LeftFrame extends WebPage
 		 * @param bodyFrame
 		 * @param pageClass
 		 */
-		public ChangeFramePageLink(MarkupContainer parent, final String id, BodyFrame bodyFrame,
-				Class< ? extends Page> pageClass)
+		public ChangeFramePageLink(final MarkupContainer parent, final String id, final BodyFrame bodyFrame,
+				final Class< ? extends Page> pageClass)
 		{
 			super(parent, id);
 			this.bodyFrame = bodyFrame;
@@ -92,7 +92,7 @@ public class LeftFrame extends WebPage
 	 * @param index
 	 *            parent frame class
 	 */
-	public LeftFrame(BodyFrame index)
+	public LeftFrame(final BodyFrame index)
 	{
 		new ChangeFramePageLink(this, "linkToPage1", index, Page1.class);
 		new ChangeFramePageLink(this, "linkToPage2", index, Page2.class);

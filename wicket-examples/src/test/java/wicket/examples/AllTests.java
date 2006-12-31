@@ -18,8 +18,6 @@
  */
 package wicket.examples;
 
-import com.meterware.httpunit.HttpUnitOptions;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import nl.openedge.util.jetty.JettyDecorator;
@@ -43,6 +41,8 @@ import wicket.examples.repeater.RepeaterTest;
 import wicket.examples.signin2.Signin2Test;
 import wicket.examples.template.TemplateTest;
 
+import com.meterware.httpunit.HttpUnitOptions;
+
 /**
  * All tests in the project; used by Maven.
  */
@@ -62,7 +62,7 @@ public final class AllTests extends TestSuite
 	 * @param arg0
 	 * @param arg1
 	 */
-	public AllTests(Class arg0, String arg1)
+	public AllTests(final Class arg0, final String arg1)
 	{
 		super(arg0, arg1);
 	}
@@ -72,7 +72,7 @@ public final class AllTests extends TestSuite
 	 * 
 	 * @param arg0
 	 */
-	public AllTests(Class arg0)
+	public AllTests(final Class arg0)
 	{
 		super(arg0);
 	}
@@ -82,7 +82,7 @@ public final class AllTests extends TestSuite
 	 * 
 	 * @param arg0
 	 */
-	public AllTests(String arg0)
+	public AllTests(final String arg0)
 	{
 		super(arg0);
 	}

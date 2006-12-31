@@ -137,7 +137,7 @@ public abstract class TemplatePage extends WicketExamplePage
 	 * @param title
 	 *            title
 	 */
-	public final void setPageTitle(String title)
+	public final void setPageTitle(final String title)
 	{
 		this.pageTitle = title;
 	}

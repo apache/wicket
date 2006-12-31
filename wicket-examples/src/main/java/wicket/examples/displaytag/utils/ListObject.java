@@ -38,7 +38,7 @@ public class ListObject implements Serializable
 	/**
 	 * random number generator.
 	 */
-	private static Random random = new Random();
+	private static final Random random = new Random();
 
 	/**
 	 * id.
@@ -146,7 +146,7 @@ public class ListObject implements Serializable
 	 * @param value
 	 *            int id
 	 */
-	public void setId(int value)
+	public void setId(final int value)
 	{
 		this.id = value;
 	}
@@ -177,7 +177,7 @@ public class ListObject implements Serializable
 	 * @param value
 	 *            String email
 	 */
-	public void setEmail(String value)
+	public void setEmail(final String value)
 	{
 		this.email = value;
 	}
@@ -357,7 +357,7 @@ public class ListObject implements Serializable
 	 * 
 	 * @param active
 	 */
-	public void setActive(boolean active)
+	public void setActive(final boolean active)
 	{
 		this.active = active;
 	}

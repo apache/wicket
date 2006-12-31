@@ -24,7 +24,6 @@ import wicket.examples.WicketExamplePage;
 import wicket.extensions.markup.html.captcha.CaptchaImageResource;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.form.Form;
-import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.PropertyModel;
@@ -49,7 +48,7 @@ public class Captcha extends WicketExamplePage
 		 * @param parent
 		 * @param id
 		 */
-		public CaptchaForm(MarkupContainer parent, String id)
+		public CaptchaForm(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 
@@ -58,6 +57,7 @@ public class Captcha extends WicketExamplePage
 			new RequiredTextField<String>(this, "password", new PropertyModel<String>(properties,
 					"password"))
 			{
+				@Override
 				protected final void onComponentTag(final ComponentTag tag)
 				{
 					super.onComponentTag(tag);
@@ -70,6 +70,7 @@ public class Captcha extends WicketExamplePage
 		/**
 		 * @see wicket.markup.html.form.Form#onSubmit()
 		 */
+		@Override
 		public void onSubmit()
 		{
 			if (!imagePass.equals(getPassword()))
@@ -89,22 +90,24 @@ public class Captcha extends WicketExamplePage
 
 	private static final long serialVersionUID = 1L;
 
-	private static int randomInt(int min, int max)
+	private static int randomInt(final int min, final int max)
 	{
 		return (int)(Math.random() * (max - min) + min);
 	}
 
-	private static String randomString(int min, int max)
+	private static String randomString(final int min, final int max)
 	{
 		int num = randomInt(min, max);
 		byte b[] = new byte[num];
 		for (int i = 0; i < num; i++)
+		{
 			b[i] = (byte)randomInt('a', 'z');
+		}
 		return new String(b);
 	}
 
 	/** Random captcha password to match against. */
-	private String imagePass = randomString(6, 8);
+	private final String imagePass = randomString(6, 8);
 
 	private final ValueMap properties = new ValueMap();
 

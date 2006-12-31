@@ -107,7 +107,7 @@ public class ExamplePaging extends Displaytag
 			}
 
 			@Override
-			protected void onSelectionChanged(Object newSelection)
+			protected void onSelectionChanged(final Object newSelection)
 			{
 				int anz = Integer.parseInt((String)newSelection);
 

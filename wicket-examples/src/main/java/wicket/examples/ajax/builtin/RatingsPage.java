@@ -51,7 +51,7 @@ public class RatingsPage extends BasePage
 		 * @param object
 		 *            the model to reset.
 		 */
-		public ResetRatingLink(MarkupContainer parent, String id, IModel<RatingModel> object)
+		public ResetRatingLink(final MarkupContainer parent, final String id, final IModel<RatingModel> object)
 		{
 			super(parent, id, object);
 		}
@@ -86,7 +86,7 @@ public class RatingsPage extends BasePage
 		 *            the number of the star
 		 * @return true when the star is active
 		 */
-		public boolean isActive(int star)
+		public boolean isActive(final int star)
 		{
 			return star < ((int)(rating + 0.5));
 		}
@@ -108,7 +108,7 @@ public class RatingsPage extends BasePage
 		 * @param nrOfStars
 		 *            the number of stars the user has cast
 		 */
-		public void addRating(int nrOfStars)
+		public void addRating(final int nrOfStars)
 		{
 			nrOfVotes++;
 			sumOfRatings += nrOfStars;
@@ -140,13 +140,13 @@ public class RatingsPage extends BasePage
 	 * static models for the ratings, not thread safe, but in this case, we
 	 * don't care.
 	 */
-	private static RatingModel rating1 = new RatingModel();
+	private static final RatingModel rating1 = new RatingModel();
 
 	/**
 	 * static model for the ratings, not thread safe, but in this case, we don't
 	 * care.
 	 */
-	private static RatingModel rating2 = new RatingModel();
+	private static final RatingModel rating2 = new RatingModel();
 
 	/**
 	 * keeps track whether the user has already voted on this page, comes
@@ -163,13 +163,13 @@ public class RatingsPage extends BasePage
 				new PropertyModel<Integer>(rating1, "nrOfVotes"), true)
 		{
 			@Override
-			protected boolean onIsStarActive(int star)
+			protected boolean onIsStarActive(final int star)
 			{
 				return RatingsPage.rating1.isActive(star);
 			}
 
 			@Override
-			protected void onRated(int rating, AjaxRequestTarget target)
+			protected void onRated(final int rating, final AjaxRequestTarget target)
 			{
 				RatingsPage.rating1.addRating(rating);
 			}
@@ -180,25 +180,25 @@ public class RatingsPage extends BasePage
 						"hasVoted"), true)
 		{
 			@Override
-			protected String getActiveStarUrl(int iteration)
+			protected String getActiveStarUrl(final int iteration)
 			{
 				return getRequestCycle().urlFor(WICKETSTAR1).toString();
 			}
 
 			@Override
-			protected String getInactiveStarUrl(int iteration)
+			protected String getInactiveStarUrl(final int iteration)
 			{
 				return getRequestCycle().urlFor(WICKETSTAR0).toString();
 			}
 
 			@Override
-			protected boolean onIsStarActive(int star)
+			protected boolean onIsStarActive(final int star)
 			{
 				return RatingsPage.rating2.isActive(star);
 			}
 
 			@Override
-			protected void onRated(int rating, AjaxRequestTarget target)
+			protected void onRated(final int rating, final AjaxRequestTarget target)
 			{
 				// make sure the user can't vote again
 				hasVoted = Boolean.TRUE;

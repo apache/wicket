@@ -184,7 +184,7 @@ public class SourcesPage extends WebPage
 			}
 		}
 
-		private void get(Class scope)
+		private void get(final Class scope)
 		{
 			String packageRef = Strings.replaceAll(PackageName.forClass(scope).getName(), ".", "/")
 					.toString();
@@ -268,7 +268,7 @@ public class SourcesPage extends WebPage
 			return;
 		}
 
-		private void scanJarFile(Class scope, String packageRef, JarFile jf)
+		private void scanJarFile(final Class scope, final String packageRef, final JarFile jf)
 		{
 			Enumeration enumeration = jf.entries();
 			while (enumeration.hasMoreElements())
@@ -300,13 +300,13 @@ public class SourcesPage extends WebPage
 		 * @param id
 		 *            the component identifier
 		 */
-		public FilesBrowser(MarkupContainer parent, String id)
+		public FilesBrowser(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 			new ListView<String>(this, "file", new PackagedResourcesModel())
 			{
 				@Override
-				protected void populateItem(ListItem<String> item)
+				protected void populateItem(final ListItem<String> item)
 				{
 					AjaxFallbackLink link = new AjaxFallbackLink<String>(item, "link", item.getModel())
 					{
@@ -341,7 +341,7 @@ public class SourcesPage extends WebPage
 		 * @param id
 		 *            the component id
 		 */
-		public CodePanel(MarkupContainer parent, String id)
+		public CodePanel(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 			Label code = new Label(this, "code", new SourceModel());
@@ -373,7 +373,7 @@ public class SourcesPage extends WebPage
 	 * @param name
 	 *            the name to set.
 	 */
-	public void setName(String name)
+	public void setName(final String name)
 	{
 		this.name = name;
 	}
@@ -402,7 +402,7 @@ public class SourcesPage extends WebPage
 	 * @param page
 	 *            the page where the sources need to be shown from.
 	 */
-	public SourcesPage(Class page)
+	public SourcesPage(final Class page)
 	{
 		this.page = page;
 

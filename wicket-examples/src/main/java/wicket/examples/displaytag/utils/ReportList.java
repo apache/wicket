@@ -58,7 +58,7 @@ public class ReportList extends ArrayList<ReportableListObject> implements Seria
 	 * @param size
 	 *            int
 	 */
-	public ReportList(int size)
+	public ReportList(final int size)
 	{
 		super();
 

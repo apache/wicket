@@ -15,7 +15,7 @@ public class ModalPanel1 extends Panel {
 	 * @param parent
 	 * @param id
 	 */
-	public ModalPanel1(MarkupContainer parent, String id) {
+	public ModalPanel1(final MarkupContainer parent, final String id) {
 		super(parent, id);
 	}
 

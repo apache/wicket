@@ -56,12 +56,12 @@ public final class SignIn2Application extends WicketExampleApplication
 
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{
-			public boolean isActionAuthorized(Component component, Action action)
+			public boolean isActionAuthorized(final Component component, final Action action)
 			{
 				return true;
 			}
 
-			public boolean isInstantiationAuthorized(Class componentClass)
+			public boolean isInstantiationAuthorized(final Class componentClass)
 			{
 				if (AuthenticatedWebPage.class.isAssignableFrom(componentClass))
 				{
@@ -88,7 +88,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession(Request request)
+			public Session newSession(final Request request)
 			{
 				return new SignIn2Session(SignIn2Application.this);
 			}

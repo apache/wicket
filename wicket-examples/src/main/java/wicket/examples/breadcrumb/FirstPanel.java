@@ -38,7 +38,7 @@ public class FirstPanel extends BreadCrumbPanel
 	 * @param id
 	 * @param breadCrumbModel
 	 */
-	public FirstPanel(MarkupContainer parent, final String id,
+	public FirstPanel(final MarkupContainer parent, final String id,
 			final IBreadCrumbModel breadCrumbModel)
 	{
 		super(parent, id, breadCrumbModel);

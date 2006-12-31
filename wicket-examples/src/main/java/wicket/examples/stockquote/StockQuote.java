@@ -37,7 +37,7 @@ public class StockQuote
 	 * @param symbol
 	 *            the symbol to look up
 	 */
-	public StockQuote(String symbol)
+	public StockQuote(final String symbol)
 	{
 		this.symbol = symbol;
 	}
@@ -57,7 +57,7 @@ public class StockQuote
 	 * 
 	 * @param symbol
 	 */
-	public void setSymbol(String symbol)
+	public void setSymbol(final String symbol)
 	{
 		this.symbol = symbol;
 	}
@@ -90,7 +90,7 @@ public class StockQuote
 	 *            the name to search for
 	 * @return the SOAP response containing the stockquote
 	 */
-	private String getSOAPQuote(String symbol)
+	private String getSOAPQuote(final String symbol)
 	{
 		String response = "";
 
@@ -125,7 +125,7 @@ public class StockQuote
 	 *            the connection
 	 * @throws IOException
 	 */
-	private void writeRequest(String message, HttpURLConnection httpConn) throws IOException
+	private void writeRequest(final String message, final HttpURLConnection httpConn) throws IOException
 	{
 		OutputStream out = httpConn.getOutputStream();
 		out.write(message.toString().getBytes());
@@ -143,7 +143,7 @@ public class StockQuote
 	 * @throws IOException
 	 * @throws ProtocolException
 	 */
-	private HttpURLConnection setUpHttpConnection(URL url, int length) throws IOException,
+	private HttpURLConnection setUpHttpConnection(final URL url, final int length) throws IOException,
 			ProtocolException
 	{
 		URLConnection connection = url.openConnection();
@@ -166,7 +166,7 @@ public class StockQuote
 	 * @return the response
 	 * @throws IOException
 	 */
-	private String readResult(HttpURLConnection connection) throws IOException
+	private String readResult(final HttpURLConnection connection) throws IOException
 	{
 		InputStream inputStream = connection.getInputStream();
 		InputStreamReader isr = new InputStreamReader(inputStream);
@@ -190,7 +190,7 @@ public class StockQuote
 	 *            the symbol to query for
 	 * @return the request message
 	 */
-	private String createMessage(String symbol)
+	private String createMessage(final String symbol)
 	{
 		StringBuffer message = new StringBuffer("<?xml version = '1.0' encoding = 'UTF-8'?>");
 		message.append("<SOAP-ENV:Envelope xmlns:SOAP-ENV=");

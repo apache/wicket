@@ -39,7 +39,7 @@ public class EncodingTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public EncodingTest(String name)
+	public EncodingTest(final String name)
 	{
 		super(name);
 	}

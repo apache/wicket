@@ -26,7 +26,6 @@ import wicket.ajax.form.AjaxFormValidatingBehavior;
 import wicket.ajax.markup.html.form.AjaxSubmitButton;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
-import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.SimpleFormComponentLabel;
 import wicket.markup.html.panel.FeedbackPanel;
 import wicket.model.CompoundPropertyModel;
@@ -44,7 +43,7 @@ import wicket.validation.validator.StringValidator;
  */
 public class FormPage extends BasePage
 {
-	private Bean bean = new Bean();
+	private final Bean bean = new Bean();
 
 	/**
 	 * Constructor
@@ -84,14 +83,15 @@ public class FormPage extends BasePage
 		// add a button that can be used to submit the form via ajax
 		new AjaxSubmitButton(form, "ajax-submit-button", form)
 		{
-			protected void onSubmit(AjaxRequestTarget target, Form form)
+			@Override
+			protected void onSubmit(final AjaxRequestTarget target, final Form form)
 			{
 				// repaint the feedback panel so that it is hidden
 				target.addComponent(feedback);
 			}
 
 			@Override
-			protected void onError(AjaxRequestTarget target, Form form)
+			protected void onError(final AjaxRequestTarget target, final Form form)
 			{
 				// repaint the feedback panel so errors are shown
 				target.addComponent(feedback);
@@ -120,7 +120,7 @@ public class FormPage extends BasePage
 		 * @param email
 		 *            email
 		 */
-		public void setEmail(String email)
+		public void setEmail(final String email)
 		{
 			this.email = email;
 		}
@@ -141,7 +141,7 @@ public class FormPage extends BasePage
 		 * @param name
 		 *            name
 		 */
-		public void setName(String name)
+		public void setName(final String name)
 		{
 			this.name = name;
 		}

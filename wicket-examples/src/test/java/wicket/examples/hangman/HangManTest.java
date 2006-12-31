@@ -47,7 +47,7 @@ public class HangManTest extends WicketWebTestCase
 	 * @param message
 	 *            The test name
 	 */
-	public HangManTest(String message)
+	public HangManTest(final String message)
 	{
 		super(message);
 	}
@@ -107,7 +107,7 @@ public class HangManTest extends WicketWebTestCase
 		Assert.assertFalse(hangman.isLost());
 	}
 
-	private Letter letter(Game hangman, char c)
+	private Letter letter(final Game hangman, final char c)
 	{
 		for (Iterator iter = hangman.getLetters().iterator(); iter.hasNext();)
 		{
@@ -120,7 +120,7 @@ public class HangManTest extends WicketWebTestCase
 		return null;
 	}
 
-	private boolean guess(Game hangman, char c)
+	private boolean guess(final Game hangman, final char c)
 	{
 		return hangman.guess(letter(hangman, c));
 	}
@@ -224,7 +224,7 @@ public class HangManTest extends WicketWebTestCase
 	 * @param c
 	 * @param expected
 	 */
-	private void doGuessTest(Game hangman, char c, boolean expected)
+	private void doGuessTest(final Game hangman, final char c, final boolean expected)
 	{
 		Assert.assertFalse(letter(hangman, c).isGuessed());
 		Assert.assertEquals(expected, guess(hangman, c));

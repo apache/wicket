@@ -46,7 +46,7 @@ public final class FrameTarget implements Serializable
 	 * 
 	 * @param frameClass
 	 */
-	public FrameTarget(Class<? extends Page> frameClass)
+	public FrameTarget(final Class<? extends Page> frameClass)
 	{
 		this.frameClass = frameClass;
 	}
@@ -67,7 +67,7 @@ public final class FrameTarget implements Serializable
 	 * @param frameClass
 	 *            lefFrameClass
 	 */
-	public void setFrameClass(Class<? extends Page> frameClass)
+	public void setFrameClass(final Class<? extends Page> frameClass)
 	{
 		this.frameClass = frameClass;
 	}

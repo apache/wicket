@@ -43,7 +43,7 @@ public class SortableTableHeadersTest extends WicketTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public SortableTableHeadersTest(String name)
+	public SortableTableHeadersTest(final String name)
 	{
 		super(name);
 	}

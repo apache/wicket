@@ -45,7 +45,7 @@ public class GuestBook extends BasePage
 		 * @param id
 		 *            The name of this component
 		 */
-		public CommentForm(MarkupContainer parent, final String id)
+		public CommentForm(final MarkupContainer parent, final String id)
 		{
 			// Construct form with no validation listener
 			super(parent, id, new CompoundPropertyModel<Comment>(new Comment()));
@@ -132,7 +132,7 @@ public class GuestBook extends BasePage
 				return new AjaxCallDecorator()
 				{
 					@Override
-					public CharSequence decorateScript(CharSequence script)
+					public CharSequence decorateScript(final CharSequence script)
 					{
 						return script + "return false;";
 					}
@@ -140,7 +140,7 @@ public class GuestBook extends BasePage
 			}
 
 			@Override
-			protected void onSubmit(AjaxRequestTarget target)
+			protected void onSubmit(final AjaxRequestTarget target)
 			{
 				// add the list of components that need to be updated
 				target.addComponent(comments);

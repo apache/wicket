@@ -120,7 +120,7 @@ public class SelectPage extends WicketExamplePage
 			return "site = '" + site + "', choices='" + listAsString(choices) + "'";
 		}
 
-		private String listAsString(List list)
+		private String listAsString(final List list)
 		{
 			StringBuffer b = new StringBuffer();
 			for (Iterator i = list.iterator(); i.hasNext();)

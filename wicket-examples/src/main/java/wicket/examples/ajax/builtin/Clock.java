@@ -42,7 +42,7 @@ public class Clock extends Label
 	 * @param tz
 	 *            Timezone
 	 */
-	public Clock(MarkupContainer parent, final String id, TimeZone tz)
+	public Clock(final MarkupContainer parent, final String id, final TimeZone tz)
 	{
 		super(parent, id, new ClockModel(tz));
 
@@ -61,7 +61,7 @@ public class Clock extends Label
 		/**
 		 * @param tz
 		 */
-		public ClockModel(TimeZone tz)
+		public ClockModel(final TimeZone tz)
 		{
 			df = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
 			df.setTimeZone(tz);

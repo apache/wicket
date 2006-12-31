@@ -44,7 +44,7 @@ public class WordGeneratorTest extends TestCase
 	 * @param message
 	 *            The test name
 	 */
-	public WordGeneratorTest(String message)
+	public WordGeneratorTest(final String message)
 	{
 		super(message);
 	}

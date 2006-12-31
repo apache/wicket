@@ -42,7 +42,7 @@ public class UnicodeConverter extends WicketExamplePage
 
 	private static final String TO_ESCAPED_UNICODE = "to escaped unicode";
 
-	private static List<String> translationTypes = Arrays.asList(new String[] { TO_ESCAPED_UNICODE,
+	private static final List<String> translationTypes = Arrays.asList(new String[] { TO_ESCAPED_UNICODE,
 			FROM_ESCAPED_UNICODE });
 
 	private String source = "";
@@ -84,7 +84,7 @@ public class UnicodeConverter extends WicketExamplePage
 		/**
 		 * @see wicket.model.IModel#setObject(java.lang.Object)
 		 */
-		public void setObject(String object)
+		public void setObject(final String object)
 		{
 			// Ignore. We are not interested in updating any value,
 			// and we don't want to throw an exception like
@@ -119,7 +119,7 @@ public class UnicodeConverter extends WicketExamplePage
 	 * @param source
 	 *            the source to set
 	 */
-	public void setSource(String source)
+	public void setSource(final String source)
 	{
 		this.source = source;
 	}
@@ -136,7 +136,7 @@ public class UnicodeConverter extends WicketExamplePage
 	 * @param translationType
 	 *            the selection
 	 */
-	public void setTranslationType(String translationType)
+	public void setTranslationType(final String translationType)
 	{
 		this.translationType = translationType;
 	}

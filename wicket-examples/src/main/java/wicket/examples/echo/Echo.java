@@ -65,7 +65,7 @@ public class Echo extends WicketExamplePage
 	 * @param message
 	 *            the message to set
 	 */
-	public void setMessage(String message)
+	public void setMessage(final String message)
 	{
 		this.message = message;
 	}

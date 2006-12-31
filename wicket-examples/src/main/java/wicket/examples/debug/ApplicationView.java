@@ -42,7 +42,7 @@ public final class ApplicationView extends Panel
 	 * @param application
 	 *            The application to view
 	 */
-	public ApplicationView(MarkupContainer parent, final String id, final Application application)
+	public ApplicationView(final MarkupContainer parent, final String id, final Application application)
 	{
 		super(parent, id);
 

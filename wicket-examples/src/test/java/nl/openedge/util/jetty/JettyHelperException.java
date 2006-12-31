@@ -27,7 +27,7 @@ public class JettyHelperException extends Exception
 	 * @param message
 	 *            exception message
 	 */
-	public JettyHelperException(String message)
+	public JettyHelperException(final String message)
 	{
 		super(message);
 	}
@@ -38,7 +38,7 @@ public class JettyHelperException extends Exception
 	 * @param cause
 	 *            exception cause
 	 */
-	public JettyHelperException(Throwable cause)
+	public JettyHelperException(final Throwable cause)
 	{
 		super(cause);
 	}
@@ -51,7 +51,7 @@ public class JettyHelperException extends Exception
 	 * @param cause
 	 *            exception cause
 	 */
-	public JettyHelperException(String message, Throwable cause)
+	public JettyHelperException(final String message, final Throwable cause)
 	{
 		super(message, cause);
 	}

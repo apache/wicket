@@ -45,7 +45,7 @@ public final class WicketExampleHeader extends Panel
 	 * @param exampleTitle
 	 *            title of the example
 	 */
-	public WicketExampleHeader(MarkupContainer parent, final String id, String exampleTitle)
+	public WicketExampleHeader(final MarkupContainer parent, final String id, final String exampleTitle)
 	{
 		super(parent, id);
 		WebPage page = (WebPage)parent.getPage();

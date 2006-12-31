@@ -41,7 +41,7 @@ public class NiceUrlTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public NiceUrlTest(String name)
+	public NiceUrlTest(final String name)
 	{
 		super(name);
 	}

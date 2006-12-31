@@ -16,7 +16,6 @@
  */
 package wicket.util.license;
 
-import wicket.util.license.ApacheLicenseHeaderTestCase;
 
 /**
  * Test that the license headers are in place in this project. The tests are run

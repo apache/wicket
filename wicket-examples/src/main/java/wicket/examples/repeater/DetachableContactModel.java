@@ -40,7 +40,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	/**
 	 * @param c
 	 */
-	public DetachableContactModel(Contact c)
+	public DetachableContactModel(final Contact c)
 	{
 		this(c.getId());
 		contact = c;
@@ -49,7 +49,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	/**
 	 * @param id
 	 */
-	public DetachableContactModel(long id)
+	public DetachableContactModel(final long id)
 	{
 		if (id == 0)
 		{
@@ -96,7 +96,7 @@ public class DetachableContactModel extends AbstractReadOnlyDetachableModel<Cont
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj)
+	public boolean equals(final Object obj)
 	{
 		if (obj instanceof DetachableContactModel)
 		{

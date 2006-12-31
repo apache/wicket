@@ -62,7 +62,7 @@ public class SortableListViewHeaders<T> extends WebMarkupContainer<T> implements
 	 * @param listView
 	 *            the underlying ListView
 	 */
-	public SortableListViewHeaders(MarkupContainer parent, final String id, final ListView<T> listView)
+	public SortableListViewHeaders(final MarkupContainer parent, final String id, final ListView<T> listView)
 	{
 		super(parent, id);
 

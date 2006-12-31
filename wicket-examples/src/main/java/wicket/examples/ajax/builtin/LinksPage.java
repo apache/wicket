@@ -79,7 +79,7 @@ public class LinksPage extends BasePage
 		new AjaxLink(this, "c1-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				counter1++;
 				target.addComponent(c1);
@@ -89,7 +89,7 @@ public class LinksPage extends BasePage
 		new AjaxFallbackLink(this, "c2-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				counter2++;
 				// notice that for a fallback link we need to makesure the
@@ -106,7 +106,7 @@ public class LinksPage extends BasePage
 		new IndicatingAjaxLink(this, "c3-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				counter3++;
 				target.addComponent(c3);
@@ -125,7 +125,7 @@ public class LinksPage extends BasePage
 		new AjaxLink(this, "success-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 			}
 
@@ -135,19 +135,19 @@ public class LinksPage extends BasePage
 				return new AjaxCallDecorator()
 				{
 					@Override
-					public CharSequence decorateOnSuccessScript(CharSequence script)
+					public CharSequence decorateOnSuccessScript(final CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
 					@Override
-					public CharSequence decorateOnFailureScript(CharSequence script)
+					public CharSequence decorateOnFailureScript(final CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
 					@Override
-					public CharSequence decorateScript(CharSequence script)
+					public CharSequence decorateScript(final CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;
 					}
@@ -158,7 +158,7 @@ public class LinksPage extends BasePage
 		new AjaxLink(this, "failure-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				throw new WicketRuntimeException("Failure link clicked");
 			}
@@ -169,19 +169,19 @@ public class LinksPage extends BasePage
 				return new AjaxCallDecorator()
 				{
 					@Override
-					public CharSequence decorateOnSuccessScript(CharSequence script)
+					public CharSequence decorateOnSuccessScript(final CharSequence script)
 					{
 						return "alert('Success');";
 					}
 
 					@Override
-					public CharSequence decorateOnFailureScript(CharSequence script)
+					public CharSequence decorateOnFailureScript(final CharSequence script)
 					{
 						return "alert('Failure');";
 					}
 
 					@Override
-					public CharSequence decorateScript(CharSequence script)
+					public CharSequence decorateScript(final CharSequence script)
 					{
 						return "alert('Before ajax call');" + script;
 					}
@@ -191,8 +191,9 @@ public class LinksPage extends BasePage
 
 		new AjaxLink(this, "set-response-page")
 		{
+			@Override
 			@SuppressWarnings("unchecked")
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				setResponsePage(LinksPage.class);
 			}

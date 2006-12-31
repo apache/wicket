@@ -37,7 +37,7 @@ public class UsPhoneNumber implements Serializable
 	 * 
 	 * @param number
 	 */
-	public UsPhoneNumber(String number)
+	public UsPhoneNumber(final String number)
 	{
 		this.number = number;
 	}
@@ -58,7 +58,7 @@ public class UsPhoneNumber implements Serializable
 	 * @param number
 	 *            text
 	 */
-	public void setNumber(String number)
+	public void setNumber(final String number)
 	{
 		this.number = number;
 	}

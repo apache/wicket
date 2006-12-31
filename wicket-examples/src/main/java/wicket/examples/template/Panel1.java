@@ -36,7 +36,7 @@ public class Panel1<T> extends TemplatePanel<T>
 	 * @param id
 	 *            component id
 	 */
-	public Panel1(MarkupContainer parent, String id)
+	public Panel1(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -51,7 +51,7 @@ public class Panel1<T> extends TemplatePanel<T>
 	 * @param model
 	 *            the model
 	 */
-	public Panel1(MarkupContainer parent, final String id, IModel<T> model)
+	public Panel1(final MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 	}

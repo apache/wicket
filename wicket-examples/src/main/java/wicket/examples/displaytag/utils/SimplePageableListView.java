@@ -60,7 +60,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 	 * @param data
 	 * @param rowsPerPage
 	 */
-	public SimplePageableListView(MarkupContainer parent, final String id, final List<T> data,
+	public SimplePageableListView(final MarkupContainer parent, final String id, final List<T> data,
 			final int rowsPerPage)
 	{
 		super(parent, id, data, rowsPerPage);
@@ -74,7 +74,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 	 * @param model
 	 * @param rowsPerPage
 	 */
-	public SimplePageableListView(MarkupContainer parent, final String id, final IModel<List<T>> model,
+	public SimplePageableListView(final MarkupContainer parent, final String id, final IModel<List<T>> model,
 			final int rowsPerPage)
 	{
 		super(parent, id, model, rowsPerPage);
@@ -152,7 +152,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 	 * @param id
 	 * @return Usually a Label like component
 	 */
-	protected Component newLabel(MarkupContainer parent, final String id)
+	protected Component newLabel(final MarkupContainer parent, final String id)
 	{
 		return new Label(parent, id);
 	}
@@ -172,7 +172,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 	 */
 	public static class SimpleListLabel
 	{
-		private static Map<String, Label> idToLabel = new HashMap<String, Label>();
+		private static final Map<String, Label> idToLabel = new HashMap<String, Label>();
 
 		/**
 		 * Construct
@@ -187,7 +187,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 		 * @param id
 		 * @return Label
 		 */
-		public static Label getInstance(MarkupContainer parent, final String id)
+		public static Label getInstance(final MarkupContainer parent, final String id)
 		{
 			Label label = idToLabel.get(id);
 			if (label == null)
@@ -215,7 +215,7 @@ public class SimplePageableListView<T> extends PageableListView<T> implements IC
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(MarkupContainer parent, final int index, final IModel<T> model)
+		public SimpleListListItem(final MarkupContainer parent, final int index, final IModel<T> model)
 		{
 			super(parent, index, model);
 		}

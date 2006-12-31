@@ -35,7 +35,7 @@ public class Banner2<T> extends Banner<T>
 	 *            The parent of this component The parent of this component.
 	 * @param id
 	 */
-	public Banner2(MarkupContainer parent, String id)
+	public Banner2(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -48,7 +48,7 @@ public class Banner2<T> extends Banner<T>
 	 * @param id
 	 * @param model
 	 */
-	public Banner2(MarkupContainer parent, final String id, IModel<T> model)
+	public Banner2(final MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 	}

@@ -185,7 +185,7 @@ public class Home extends WicketExamplePage
 		 * @param id
 		 *            component id
 		 */
-		public RedirectForm(MarkupContainer parent, String id)
+		public RedirectForm(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 			setModel(new CompoundPropertyModel<RedirectForm>(this));
@@ -217,7 +217,7 @@ public class Home extends WicketExamplePage
 		 * @param redirectUrl
 		 *            redirectUrl
 		 */
-		public void setRedirectUrl(String redirectUrl)
+		public void setRedirectUrl(final String redirectUrl)
 		{
 			this.redirectUrl = redirectUrl;
 		}
@@ -256,7 +256,7 @@ public class Home extends WicketExamplePage
 	 * @param onClickLinkClickCount
 	 *            onClickLinkClickCount
 	 */
-	public void setOnClickLinkClickCount(int onClickLinkClickCount)
+	public void setOnClickLinkClickCount(final int onClickLinkClickCount)
 	{
 		this.onClickLinkClickCount = onClickLinkClickCount;
 	}

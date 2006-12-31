@@ -28,7 +28,7 @@ import java.util.Collection;
  */
 public class ContactGenerator
 {
-	private static ContactGenerator instance = new ContactGenerator();
+	private static final ContactGenerator instance = new ContactGenerator();
 	private static long nextId = 1;
 
 	/**
@@ -39,11 +39,11 @@ public class ContactGenerator
 		return instance;
 	}
 
-	private String[] firstNames = { "Jacob", "Emily", "Michael", "Sarah", "Matthew", "Brianna",
+	private final String[] firstNames = { "Jacob", "Emily", "Michael", "Sarah", "Matthew", "Brianna",
 			"Nicholas", "Samantha", "Christopher", "Hailey", "Abner", "Abby", "Joshua", "Douglas",
 			"Jack", "Keith", "Gerald", "Samuel", "Willie", "Larry", "Jose", "Timothy", "Sandra",
 			"Kathleen", "Pamela", "Virginia", "Debra", "Maria", "Linda" };
-	private String[] lastNames = { "Smiith", "Johnson", "Williams", "Jones", "Brown", "Donahue",
+	private final String[] lastNames = { "Smiith", "Johnson", "Williams", "Jones", "Brown", "Donahue",
 			"Bailey", "Rose", "Allen", "Black", "Davis", "Clark", "Hall", "Lee", "Baker",
 			"Gonzalez", "Nelson", "Moore", "Wilson", "Graham", "Fisher", "Cruz", "Ortiz", "Gomez",
 			"Murray" };
@@ -82,7 +82,7 @@ public class ContactGenerator
 	 * @param collection
 	 * @param count
 	 */
-	public void generate(Collection<Contact> collection, int count)
+	public void generate(final Collection<Contact> collection, final int count)
 	{
 		for (int i = 0; i < count; i++)
 		{
@@ -97,12 +97,12 @@ public class ContactGenerator
 				.append(rint(0, 9)).toString();
 	}
 
-	private int rint(int min, int max)
+	private int rint(final int min, final int max)
 	{
 		return (int)(Math.random() * (max - min) + min);
 	}
 
-	private String randomString(String[] choices)
+	private String randomString(final String[] choices)
 	{
 		return choices[rint(0, choices.length)];
 	}

@@ -43,7 +43,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 	 * @param clazz
 	 * @return Test suite
 	 */
-	public static Test suite(Class clazz)
+	public static Test suite(final Class clazz)
 	{
 		// The javascript 'history' variable is not supported by
 		// httpunit and we don't want httpunit to throw an
@@ -65,7 +65,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 	 * 
 	 * @param name
 	 */
-	public WicketWebTestCase(String name)
+	public WicketWebTestCase(final String name)
 	{
 		super(name);
 	}

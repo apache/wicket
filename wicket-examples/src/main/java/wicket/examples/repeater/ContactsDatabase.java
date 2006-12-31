@@ -33,11 +33,11 @@ import java.util.Map;
  */
 public class ContactsDatabase
 {
-	private Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
-	private List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
-	private List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final Map<Long, Contact> map = Collections.synchronizedMap(new HashMap<Long, Contact>());
+	private final List<Contact> fnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> lnameIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> fnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
+	private final List<Contact> lnameDescIdx = Collections.synchronizedList(new ArrayList<Contact>());
 
 	/**
 	 * Constructor
@@ -45,7 +45,7 @@ public class ContactsDatabase
 	 * @param count
 	 *            number of contacts to generate at startup
 	 */
-	public ContactsDatabase(int count)
+	public ContactsDatabase(final int count)
 	{
 		for (int i = 0; i < count; i++)
 		{
@@ -60,7 +60,7 @@ public class ContactsDatabase
 	 * @param id
 	 * @return contact
 	 */
-	public Contact get(long id)
+	public Contact get(final long id)
 	{
 		Contact c = map.get(new Long(id));
 		if (c == null)
@@ -88,13 +88,13 @@ public class ContactsDatabase
 	 * @param sortAsc
 	 * @return list of contacts
 	 */
-	public List<Contact> find(int first, int count, String sortProperty, boolean sortAsc)
+	public List<Contact> find(final int first, final int count, final String sortProperty, final boolean sortAsc)
 	{
 		List<Contact> sublist = getIndex(sortProperty, sortAsc).subList(first, first + count);
 		return sublist;
 	}
 
-	protected List<Contact> getIndex(String prop, boolean asc)
+	protected List<Contact> getIndex(final String prop, final boolean asc)
 	{
 		if (prop == null)
 		{
@@ -161,7 +161,7 @@ public class ContactsDatabase
 	{
 		Collections.sort(fnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Contact arg0, Contact arg1)
+			public int compare(final Contact arg0, final Contact arg1)
 			{
 				return arg0.getFirstName().compareTo(arg1.getFirstName());
 			}
@@ -169,7 +169,7 @@ public class ContactsDatabase
 
 		Collections.sort(lnameIdx, new Comparator<Contact>()
 		{
-			public int compare(Contact arg0, Contact arg1)
+			public int compare(final Contact arg0, final Contact arg1)
 			{
 				return arg0.getLastName().compareTo(arg1.getLastName());
 			}
@@ -177,7 +177,7 @@ public class ContactsDatabase
 
 		Collections.sort(fnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Contact arg0, Contact arg1)
+			public int compare(final Contact arg0, final Contact arg1)
 			{
 				return arg1.getFirstName().compareTo(arg0.getFirstName());
 			}
@@ -185,7 +185,7 @@ public class ContactsDatabase
 
 		Collections.sort(lnameDescIdx, new Comparator<Contact>()
 		{
-			public int compare(Contact arg0, Contact arg1)
+			public int compare(final Contact arg0, final Contact arg1)
 			{
 				return arg1.getLastName().compareTo(arg0.getLastName());
 			}

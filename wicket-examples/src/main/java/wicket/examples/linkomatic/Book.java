@@ -51,7 +51,7 @@ public class Book implements Serializable
 	 * @param title
 	 *            The title to set.
 	 */
-	public void setTitle(String title)
+	public void setTitle(final String title)
 	{
 		this.title = title;
 	}

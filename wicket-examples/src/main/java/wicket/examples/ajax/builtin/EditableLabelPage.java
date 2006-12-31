@@ -102,7 +102,7 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 	/**
 	 * @param text1
 	 */
-	public void setText1(String text1)
+	public void setText1(final String text1)
 	{
 		this.text1 = text1;
 	}
@@ -110,7 +110,7 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 	/**
 	 * @param text2
 	 */
-	public void setText2(String text2)
+	public void setText2(final String text2)
 	{
 		this.text2 = text2;
 	}
@@ -119,7 +119,7 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 	 * @param text3
 	 *            the text3 to set
 	 */
-	public void setText3(String text3)
+	public void setText3(final String text3)
 	{
 		this.text3 = text3;
 	}
@@ -136,7 +136,7 @@ public class EditableLabelPage extends BasePage<EditableLabelPage>
 	 * @param site
 	 *            the site to set
 	 */
-	public void setSite(String site)
+	public void setSite(final String site)
 	{
 		this.site = site;
 	}

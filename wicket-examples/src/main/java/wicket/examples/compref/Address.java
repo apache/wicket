@@ -51,7 +51,7 @@ public class Address implements Serializable
 	 * @param address
 	 *            address
 	 */
-	public void setAddress(String address)
+	public void setAddress(final String address)
 	{
 		this.address = address;
 	}
@@ -72,7 +72,7 @@ public class Address implements Serializable
 	 * @param city
 	 *            city
 	 */
-	public void setCity(String city)
+	public void setCity(final String city)
 	{
 		this.city = city;
 	}
@@ -93,7 +93,7 @@ public class Address implements Serializable
 	 * @param country
 	 *            country
 	 */
-	public void setCountry(String country)
+	public void setCountry(final String country)
 	{
 		this.country = country;
 	}
@@ -114,7 +114,7 @@ public class Address implements Serializable
 	 * @param postcode
 	 *            postcode
 	 */
-	public void setPostcode(String postcode)
+	public void setPostcode(final String postcode)
 	{
 		this.postcode = postcode;
 	}

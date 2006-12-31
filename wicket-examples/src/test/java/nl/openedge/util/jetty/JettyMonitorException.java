@@ -27,7 +27,7 @@ public class JettyMonitorException extends Exception
 	 * @param message
 	 *            exception message
 	 */
-	public JettyMonitorException(String message)
+	public JettyMonitorException(final String message)
 	{
 		super(message);
 	}
@@ -38,7 +38,7 @@ public class JettyMonitorException extends Exception
 	 * @param cause
 	 *            exception cause
 	 */
-	public JettyMonitorException(Throwable cause)
+	public JettyMonitorException(final Throwable cause)
 	{
 		super(cause);
 	}
@@ -51,7 +51,7 @@ public class JettyMonitorException extends Exception
 	 * @param cause
 	 *            exception cause
 	 */
-	public JettyMonitorException(String message, Throwable cause)
+	public JettyMonitorException(final String message, final Throwable cause)
 	{
 		super(message, cause);
 	}

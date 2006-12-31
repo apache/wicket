@@ -41,7 +41,7 @@ public class HelloBrowserTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public HelloBrowserTest(String name)
+	public HelloBrowserTest(final String name)
 	{
 		super(name);
 	}

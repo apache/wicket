@@ -76,7 +76,7 @@ public final class SignIn extends WicketExamplePage
 		 * @param id
 		 *            id of the form component
 		 */
-		public SignInForm(MarkupContainer parent, final String id)
+		public SignInForm(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 

@@ -41,7 +41,7 @@ public class DisplaytagTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public DisplaytagTest(String name)
+	public DisplaytagTest(final String name)
 	{
 		super(name);
 	}

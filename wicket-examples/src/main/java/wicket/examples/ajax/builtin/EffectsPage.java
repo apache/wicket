@@ -44,7 +44,7 @@ public class EffectsPage extends BasePage
 	 * @param counter1
 	 *            New value for counter1
 	 */
-	public void setCounter1(int counter1)
+	public void setCounter1(final int counter1)
 	{
 		this.counter1 = counter1;
 	}
@@ -61,7 +61,7 @@ public class EffectsPage extends BasePage
 	 * @param counter2
 	 *            New value for counter2
 	 */
-	public void setCounter2(int counter2)
+	public void setCounter2(final int counter2)
 	{
 		this.counter2 = counter2;
 	}
@@ -80,7 +80,7 @@ public class EffectsPage extends BasePage
 		new AjaxLink(this, "c1-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				counter1++;
 				target.addComponent(c1);
@@ -91,7 +91,7 @@ public class EffectsPage extends BasePage
 		new AjaxFallbackLink(this, "c2-link")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				counter2++;
 				if (target != null)

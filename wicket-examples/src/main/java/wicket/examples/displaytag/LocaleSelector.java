@@ -46,7 +46,7 @@ public class LocaleSelector extends Panel
 	 * @param parent
 	 * @param id
 	 */
-	public LocaleSelector(MarkupContainer parent, final String id)
+	public LocaleSelector(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 
@@ -92,7 +92,7 @@ public class LocaleSelector extends Panel
 		 * @param id
 		 *            component id
 		 */
-		public LocaleDropDownChoice(MarkupContainer parent, String id)
+		public LocaleDropDownChoice(final MarkupContainer parent, final String id)
 		{
 			super(parent, id, LOCALES, new LocaleChoiceRenderer());
 
@@ -115,7 +115,7 @@ public class LocaleSelector extends Panel
 		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
 		@Override
-		public void onSelectionChanged(Object newSelection)
+		public void onSelectionChanged(final Object newSelection)
 		{
 			// note that we don't have to do anything here, as our property
 			// model allready calls FormInput.setLocale when the model is
@@ -140,7 +140,7 @@ public class LocaleSelector extends Panel
 		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
 		@Override
-		public Object getDisplayValue(Locale locale)
+		public Object getDisplayValue(final Locale locale)
 		{
 			String display = locale.getDisplayName(getLocale());
 			return display;

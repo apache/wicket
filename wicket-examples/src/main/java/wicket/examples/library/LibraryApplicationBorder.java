@@ -38,7 +38,7 @@ public class LibraryApplicationBorder extends Border implements IAlternateParent
 	 * @param id
 	 *            The id of this component
 	 */
-	public LibraryApplicationBorder(MarkupContainer parent, final String id)
+	public LibraryApplicationBorder(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 		
@@ -49,7 +49,8 @@ public class LibraryApplicationBorder extends Border implements IAlternateParent
 	/**
 	 * @see wicket.markup.IAlternateParentProvider#getAlternateParent(java.lang.Class, java.lang.String)
 	 */
-	public MarkupContainer getAlternateParent(Class childClass, String childId)
+	@Override
+	public MarkupContainer getAlternateParent(final Class childClass, final String childId)
 	{
 		return (getBodyContainer() != null && !"mainNavigation".equals(childId) 
 				? getBodyContainer() : this);

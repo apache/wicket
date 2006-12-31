@@ -47,7 +47,7 @@ public class AutoCompletePage extends BasePage
 			 * @see wicket.ajax.markup.html.AjaxLink#onClick(wicket.ajax.AjaxRequestTarget)
 			 */
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				target.appendJavascript("alert('This is just a dummy ajax link.');");
 			}
 		};
@@ -57,7 +57,7 @@ public class AutoCompletePage extends BasePage
 		new AutoCompleteTextField<String>(form, "ac", new Model<String>(""))
 		{
 			@Override
-			protected Iterator getChoices(String input)
+			protected Iterator getChoices(final String input)
 			{
 				if (Strings.isEmpty(input))
 				{

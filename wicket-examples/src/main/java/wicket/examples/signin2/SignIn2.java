@@ -48,7 +48,7 @@ public final class SignIn2 extends WicketExamplePage
 		new SignInPanel(this, "signInPanel")
 		{
 			@Override
-			public boolean signIn(String username, String password)
+			public boolean signIn(final String username, final String password)
 			{
 				return ((SignIn2Session)getSession()).authenticate(username, password);
 			}

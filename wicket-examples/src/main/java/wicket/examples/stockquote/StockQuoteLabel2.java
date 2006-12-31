@@ -24,7 +24,7 @@ public class StockQuoteLabel2 extends Label
 	 * @param symbol
 	 *            the symbol to look up
 	 */
-	public StockQuoteLabel2(MarkupContainer parent, final String id, final String symbol)
+	public StockQuoteLabel2(final MarkupContainer parent, final String id, final String symbol)
 	{
 		super(parent, id, new AbstractReadOnlyModel()
 		{

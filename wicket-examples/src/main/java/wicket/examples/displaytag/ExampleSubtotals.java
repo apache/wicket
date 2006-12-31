@@ -102,7 +102,7 @@ public class ExampleSubtotals extends Displaytag
 	{
 		private ReportableListObject previousValue = null;
 		private double subtotal = 0;
-		private String city;
+		private final String city;
 
 		/**
 		 * Constructor
@@ -111,7 +111,7 @@ public class ExampleSubtotals extends Displaytag
 		 * @param id
 		 * @param data
 		 */
-		public SubtotalTable(MarkupContainer parent, final String id, final List<T> data)
+		public SubtotalTable(final MarkupContainer parent, final String id, final List<T> data)
 		{
 			super(parent, id, data);
 		}

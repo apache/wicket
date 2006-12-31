@@ -38,7 +38,6 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.Radio;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RadioGroup;
-import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.link.Link;
 import wicket.markup.html.list.ListItem;
@@ -75,7 +74,7 @@ public class FormInput extends WicketExamplePage
 		 * @param name
 		 *            Component name
 		 */
-		public InputForm(MarkupContainer parent, String name)
+		public InputForm(final MarkupContainer parent, final String name)
 		{
 			super(parent, name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
 
@@ -114,7 +113,7 @@ public class FormInput extends WicketExamplePage
 			new ListView<String>(group, "numbers", NUMBERS)
 			{
 				@Override
-				protected void populateItem(ListItem<String> item)
+				protected void populateItem(final ListItem<String> item)
 				{
 					new Radio<String>(item, "radio", item.getModel());
 					new Label(item, "number", item.getModelObject());
@@ -125,7 +124,7 @@ public class FormInput extends WicketExamplePage
 			new ListView<String>(checks, "numbers", NUMBERS)
 			{
 				@Override
-				protected void populateItem(ListItem<String> item)
+				protected void populateItem(final ListItem<String> item)
 				{
 					new Check<String>(item, "check", item.getModel());
 					new Label(item, "number", item.getModelObject());
@@ -141,12 +140,12 @@ public class FormInput extends WicketExamplePage
 				 * @see wicket.Component#getConverter(java.lang.Class)
 				 */
 				@Override
-				public IConverter getConverter(Class type)
+				public IConverter getConverter(final Class type)
 				{
 					return new SimpleConverterAdapter()
 					{
 						@Override
-						public Object toObject(String value)
+						public Object toObject(final String value)
 						{
 							try
 							{
@@ -159,7 +158,7 @@ public class FormInput extends WicketExamplePage
 						}
 
 						@Override
-						public String toString(Object value)
+						public String toString(final Object value)
 						{
 							return value != null ? value.toString() : null;
 						}
@@ -174,7 +173,7 @@ public class FormInput extends WicketExamplePage
 				 * @see wicket.Component#getConverter(java.lang.Class)
 				 */
 				@Override
-				public IConverter getConverter(Class type)
+				public IConverter getConverter(final Class type)
 				{
 					// US telephone number mask
 					return new MaskConverter("(###) ###-####", UsPhoneNumber.class);
@@ -226,7 +225,7 @@ public class FormInput extends WicketExamplePage
 		 * @param parent
 		 * @param id
 		 */
-		public LinesListView(MarkupContainer parent, String id)
+		public LinesListView(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 			// always do this in forms!
@@ -234,7 +233,7 @@ public class FormInput extends WicketExamplePage
 		}
 
 		@Override
-		protected void populateItem(ListItem item)
+		protected void populateItem(final ListItem item)
 		{
 			// add a text field that works on each list item model (returns
 			// objects of
@@ -260,7 +259,7 @@ public class FormInput extends WicketExamplePage
 		 * @see wicket.markup.html.form.IChoiceRenderer#getDisplayValue(Object)
 		 */
 		@Override
-		public String getDisplayValue(Locale locale)
+		public String getDisplayValue(final Locale locale)
 		{
 			String display = locale.getDisplayName(getLocale());
 			return display;
@@ -279,7 +278,7 @@ public class FormInput extends WicketExamplePage
 		 * @param id
 		 *            component id
 		 */
-		public LocaleDropDownChoice(MarkupContainer parent, String id)
+		public LocaleDropDownChoice(final MarkupContainer parent, final String id)
 		{
 			super(parent, id, LOCALES, new LocaleChoiceRenderer());
 
@@ -292,7 +291,7 @@ public class FormInput extends WicketExamplePage
 		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
 		@Override
-		public void onSelectionChanged(Object newSelection)
+		public void onSelectionChanged(final Object newSelection)
 		{
 			// note that we don't have to do anything here, as our property
 			// model allready calls FormInput.setLocale when the model is
@@ -341,7 +340,7 @@ public class FormInput extends WicketExamplePage
 	 * @param locale
 	 *            The new locale
 	 */
-	public void setLocale(Locale locale)
+	public void setLocale(final Locale locale)
 	{
 		if (locale != null)
 		{

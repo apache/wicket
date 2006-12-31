@@ -41,7 +41,7 @@ public class AjaxTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public AjaxTest(String name)
+	public AjaxTest(final String name)
 	{
 		super(name);
 	}

@@ -40,9 +40,9 @@ import java.net.Socket;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
+import org.mortbay.jetty.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mortbay.jetty.Server;
 
 /**
  * Monitor thread. This thread listens on the port specified by the STOP.PORT
@@ -79,7 +79,7 @@ public class JettyMonitor extends Thread
 	 * @param monitorPort
 	 *            monitor port
 	 */
-	private JettyMonitor(String commKey, int monitorPort)
+	private JettyMonitor(final String commKey, final int monitorPort)
 	{
 		this.commKey = commKey;
 		this.monitorPort = monitorPort;
@@ -88,6 +88,7 @@ public class JettyMonitor extends Thread
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
+	@Override
 	public void run()
 	{
 		log.info("Starting Jetty Monitor on port " + monitorPort);
@@ -209,7 +210,7 @@ public class JettyMonitor extends Thread
 	 * @return value of goOn, possibly changed
 	 * @throws IOException
 	 */
-	private boolean handleCommand(String cmd, OutputStream socketOutputStream, boolean goOn)
+	private boolean handleCommand(final String cmd, final OutputStream socketOutputStream, boolean goOn)
 			throws IOException
 	{
 		log.info("handle command '" + cmd + "'");
@@ -231,7 +232,7 @@ public class JettyMonitor extends Thread
 	 * @param socketOutputStream
 	 *            output stream of socket
 	 */
-	private void handleStopCommand(OutputStream socketOutputStream)
+	private void handleStopCommand(final OutputStream socketOutputStream)
 	{
 		// write ack
 		try
@@ -266,7 +267,7 @@ public class JettyMonitor extends Thread
 	 *            output stream of socket
 	 * @throws IOException
 	 */
-	private void handleStatusCommand(OutputStream socketOutputStream) throws IOException
+	private void handleStatusCommand(final OutputStream socketOutputStream) throws IOException
 	{
 		if ((server != null) && server.isStarted())
 		{
@@ -302,7 +303,7 @@ public class JettyMonitor extends Thread
 	 *            port of monitor
 	 * @return instance of monitor
 	 */
-	public static JettyMonitor startMonitor(Server theServer, String commKey, int monitorPort)
+	public static JettyMonitor startMonitor(final Server theServer, final String commKey, final int monitorPort)
 	{
 		JettyMonitor monitor = new JettyMonitor(commKey, monitorPort);
 		monitor.setServer(theServer);
@@ -327,7 +328,7 @@ public class JettyMonitor extends Thread
 	 * @param server
 	 *            server to set.
 	 */
-	public void setServer(Server server)
+	public void setServer(final Server server)
 	{
 		this.server = server;
 	}

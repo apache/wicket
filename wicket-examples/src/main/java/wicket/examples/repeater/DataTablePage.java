@@ -47,7 +47,7 @@ public class DataTablePage extends BasePage
 
 		columns.add(new AbstractColumn<String>(new Model<String>("Actions"))
 		{
-			public void populateItem(Item cellItem, String componentId, IModel model)
+			public void populateItem(final Item cellItem, final String componentId, final IModel model)
 			{
 				new ActionPanel(cellItem, componentId, model);
 			}

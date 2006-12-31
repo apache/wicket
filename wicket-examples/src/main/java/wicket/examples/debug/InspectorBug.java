@@ -45,7 +45,7 @@ public final class InspectorBug extends Panel
 	 * @param page
 	 *            Page to inspect
 	 */
-	public InspectorBug(MarkupContainer parent, final String id, final WebPage page)
+	public InspectorBug(final MarkupContainer parent, final String id, final WebPage page)
 	{
 		super(parent, id);
 		PageParameters parameters = new PageParameters();

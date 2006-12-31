@@ -34,7 +34,7 @@ class AnotherPanel extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public AnotherPanel(MarkupContainer parent, String id)
+	public AnotherPanel(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}

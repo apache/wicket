@@ -25,7 +25,7 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	 * @param header
 	 * @param propertyExpression
 	 */
-	public PropertyEditableColumn(ColumnLocation location, String header, String propertyExpression) 
+	public PropertyEditableColumn(final ColumnLocation location, final String header, final String propertyExpression) 
 	{
 		super(location, header, propertyExpression);
 	}
@@ -33,7 +33,8 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	/**
 	 * @see IColumn#newCell(MarkupContainer, String, TreeNode, int)
 	 */
-	public Component newCell(MarkupContainer parent, String id, TreeNode node, int level) 
+	@Override
+	public Component newCell(final MarkupContainer parent, final String id, final TreeNode node, final int level) 
 	{
 		return new EditablePanel(parent, id, new PropertyModel<String>(node, getPropertyExpression()));
 	}
@@ -41,11 +42,16 @@ public class PropertyEditableColumn extends PropertyRenderableColumn
 	/**
 	 * @see IColumn#newCell(TreeNode, int)
 	 */
-	public IRenderable newCell(TreeNode node, int level) 
+	@Override
+	public IRenderable newCell(final TreeNode node, final int level) 
 	{
 		if (getTreeTable().getTreeState().isNodeSelected(node))
+		{
 			return null;
+		}
 		else
+		{
 			return super.newCell(node, level);
+		}
 	}
 }

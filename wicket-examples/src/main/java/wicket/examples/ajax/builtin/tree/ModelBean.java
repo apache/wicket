@@ -21,7 +21,7 @@ public class ModelBean
 	 * @param s
 	 *		String that will be suffix of each property. 		
 	 */
-	public ModelBean(String s)
+	public ModelBean(final String s)
 	{
 		property1 = "1:" + s;
 		property2 = "2:" + s;
@@ -48,7 +48,7 @@ public class ModelBean
 	 * @param property1
 	 * 		Mew value
 	 */
-	public void setProperty1(String property1)
+	public void setProperty1(final String property1)
 	{
 		this.property1 = property1;
 	}
@@ -70,7 +70,7 @@ public class ModelBean
 	 * @param property2
 	 * 			New value
 	 */
-	public void setProperty2(String property2)
+	public void setProperty2(final String property2)
 	{
 		this.property2 = property2;
 	}
@@ -92,7 +92,7 @@ public class ModelBean
 	 * @param property3
 	 * 		New value
 	 */
-	public void setProperty3(String property3)
+	public void setProperty3(final String property3)
 	{
 		this.property3 = property3;
 	}
@@ -114,7 +114,7 @@ public class ModelBean
 	 * @param property4
 	 * 		New value
 	 */
-	public void setProperty4(String property4)
+	public void setProperty4(final String property4)
 	{
 		this.property4 = property4;
 	}
@@ -136,7 +136,7 @@ public class ModelBean
 	 * @param property5
 	 * 		New value
 	 */
-	public void setProperty5(String property5)
+	public void setProperty5(final String property5)
 	{
 		this.property5 = property5;
 	}
@@ -158,7 +158,7 @@ public class ModelBean
 	 * @param property6
 	 * 		New value
 	 */
-	public void setProperty6(String property6)
+	public void setProperty6(final String property6)
 	{
 		this.property6 = property6;
 	}

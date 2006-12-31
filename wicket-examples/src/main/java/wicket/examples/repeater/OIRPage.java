@@ -58,7 +58,7 @@ public class OIRPage extends BasePage
 		 * @param index
 		 * @param model
 		 */
-		public HighlitableDataItem(MarkupContainer parent, final String id, int index, IModel model)
+		public HighlitableDataItem(final MarkupContainer parent, final String id, final int index, final IModel model)
 		{
 			super(parent, id, index, model);
 			add(new AttributeModifier("style", true, new Model<String>("background-color:#80b6ed;"))

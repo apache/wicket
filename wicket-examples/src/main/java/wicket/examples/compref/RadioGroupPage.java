@@ -38,7 +38,7 @@ public class RadioGroupPage extends WicketExamplePage
 		new ListView<Person>(group, "persons", ComponentReferenceApplication.getPersons())
 		{
 			@Override
-			protected void populateItem(ListItem item)
+			protected void populateItem(final ListItem item)
 			{
 				new Radio(item, "radio", item.getModel());
 				new Label(item, "name", new PropertyModel(item.getModel(), "name"));

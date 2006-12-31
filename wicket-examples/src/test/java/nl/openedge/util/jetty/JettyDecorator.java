@@ -31,12 +31,12 @@ package nl.openedge.util.jetty;
 
 import junit.framework.Test;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JUnit decorator for starting and stopping a local instance Jetty for usage
@@ -107,6 +107,7 @@ public class JettyDecorator extends AbstractJettyDecorator
 	 * @throws Exception
 	 * @see junit.extensions.TestSetup#setUp()
 	 */
+	@Override
 	public void setUp() throws Exception
 	{
 		server = new Server();
@@ -129,6 +130,7 @@ public class JettyDecorator extends AbstractJettyDecorator
 	 * 
 	 * @see junit.extensions.TestSetup#tearDown()
 	 */
+	@Override
 	public void tearDown()
 	{
 		log.info("Stopping Jetty");

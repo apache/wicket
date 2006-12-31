@@ -33,7 +33,6 @@ import wicket.markup.html.form.CheckBox;
 import wicket.markup.html.form.Form;
 import wicket.markup.html.form.FormComponent;
 import wicket.markup.html.form.ListMultipleChoice;
-import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.form.validation.AbstractFormValidator;
 import wicket.markup.html.panel.Panel;
@@ -101,7 +100,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			 * @param parent
 			 * @param id
 			 */
-			public View(MarkupContainer parent, String id)
+			public View(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
 				new RequiredTextField(this, "user.firstName");
@@ -115,7 +114,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
 		 *      java.lang.String, wicket.extensions.wizard.IWizard)
 		 */
-		public Component getView(MarkupContainer parent, String id, IWizard wizard)
+		public Component getView(final MarkupContainer parent, final String id, final IWizard wizard)
 		{
 			return new View(parent, id);
 		}
@@ -143,7 +142,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			 * @param parent
 			 * @param id
 			 */
-			public View(MarkupContainer parent, String id)
+			public View(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
 				new RequiredTextField(this, "user.userName");
@@ -156,7 +155,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
 		 *      java.lang.String, wicket.extensions.wizard.IWizard)
 		 */
-		public Component getView(MarkupContainer parent, String id, IWizard wizard)
+		public Component getView(final MarkupContainer parent, final String id, final IWizard wizard)
 		{
 			return new View(parent, id);
 		}
@@ -176,7 +175,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 			 * @param parent
 			 * @param id
 			 */
-			public View(MarkupContainer parent, String id)
+			public View(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
 				final ListMultipleChoice rolesChoiceField = new ListMultipleChoice<String>(this,
@@ -193,7 +192,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 						return null;
 					}
 
-					public void validate(Form form)
+					public void validate(final Form form)
 					{
 						String rolesInput = rolesChoiceField.getInput();
 						if (rolesInput != null && (!"".equals(rolesInput)))
@@ -231,7 +230,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 		 * @see wicket.extensions.wizard.IWizardStep#getView(wicket.MarkupContainer,
 		 *      java.lang.String, wicket.extensions.wizard.IWizard)
 		 */
-		public Component getView(MarkupContainer parent, String id, IWizard wizard)
+		public Component getView(final MarkupContainer parent, final String id, final IWizard wizard)
 		{
 			return new View(parent, id);
 		}
@@ -255,7 +254,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	 * @param id
 	 *            The component id
 	 */
-	public NewUserWizard(MarkupContainer parent, String id)
+	public NewUserWizard(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 
@@ -317,7 +316,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	 * @param assignRoles
 	 *            assignRoles
 	 */
-	public void setAssignRoles(boolean assignRoles)
+	public void setAssignRoles(final boolean assignRoles)
 	{
 		this.assignRoles = assignRoles;
 	}
@@ -328,7 +327,7 @@ public class NewUserWizard extends Wizard<NewUserWizard>
 	 * @param user
 	 *            user
 	 */
-	public void setUser(User user)
+	public void setUser(final User user)
 	{
 		this.user = user;
 	}

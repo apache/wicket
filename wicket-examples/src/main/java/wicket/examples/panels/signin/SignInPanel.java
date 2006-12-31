@@ -71,7 +71,7 @@ public abstract class SignInPanel extends Panel
 		 * @param id
 		 *            id of the form component
 		 */
-		public SignInForm(MarkupContainer parent, final String id)
+		public SignInForm(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 
@@ -127,7 +127,7 @@ public abstract class SignInPanel extends Panel
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
-	public SignInPanel(MarkupContainer parent, final String id)
+	public SignInPanel(final MarkupContainer parent, final String id)
 	{
 		this(parent, id, true);
 	}
@@ -141,7 +141,7 @@ public abstract class SignInPanel extends Panel
 	 *            True if form should include a remember-me checkbox
 	 * @see wicket.Component#Component(MarkupContainer, String)
 	 */
-	public SignInPanel(MarkupContainer parent, final String id, final boolean includeRememberMe)
+	public SignInPanel(final MarkupContainer parent, final String id, final boolean includeRememberMe)
 	{
 		super(parent, id);
 
@@ -201,7 +201,7 @@ public abstract class SignInPanel extends Panel
 	 * @param enable
 	 *            Whether the fields should be persistent
 	 */
-	public void setPersistent(boolean enable)
+	public void setPersistent(final boolean enable)
 	{
 		username.setPersistent(enable);
 		password.setPersistent(enable);
@@ -212,7 +212,7 @@ public abstract class SignInPanel extends Panel
 	 * 
 	 * @param rememberMe
 	 */
-	public void setRememberMe(boolean rememberMe)
+	public void setRememberMe(final boolean rememberMe)
 	{
 		this.rememberMe = rememberMe;
 		this.setPersistent(rememberMe);

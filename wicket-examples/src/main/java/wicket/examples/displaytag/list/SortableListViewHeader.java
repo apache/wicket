@@ -56,7 +56,7 @@ public abstract class SortableListViewHeader<T> extends Border<T>
 	 * @param group
 	 *            The group of headers the new one will be added to
 	 */
-	public SortableListViewHeader(MarkupContainer parent, final String id,
+	public SortableListViewHeader(final MarkupContainer parent, final String id,
 			final SortableListViewHeaderGroup<T> group)
 	{
 		super(parent, id);
@@ -88,7 +88,7 @@ public abstract class SortableListViewHeader<T> extends Border<T>
 	 *            second object
 	 * @return comparision result
 	 */
-	protected int compareTo(T o1, T o2)
+	protected int compareTo(final T o1, final T o2)
 	{
 		Comparable obj1 = getObjectToCompare(o1);
 		Comparable obj2 = getObjectToCompare(o2);
@@ -115,7 +115,7 @@ public abstract class SortableListViewHeader<T> extends Border<T>
 	 *            the ListItems model object
 	 * @return The object to compare
 	 */
-	protected Comparable getObjectToCompare(Object object)
+	protected Comparable getObjectToCompare(final Object object)
 	{
 		return (Comparable)object;
 	}
@@ -155,7 +155,7 @@ public abstract class SortableListViewHeader<T> extends Border<T>
 	{
 		Collections.sort(group.getListViewModelObject(), new Comparator<T>()
 		{
-			public int compare(T o1, T o2)
+			public int compare(final T o1, final T o2)
 			{
 				if (ascending)
 				{

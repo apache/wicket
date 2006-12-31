@@ -37,7 +37,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		tabs.add(new AbstractTab(new Model<String>("first tab"))
 		{
 			@Override
-			public Panel getPanel(MarkupContainer parent, String panelId)
+			public Panel getPanel(final MarkupContainer parent, final String panelId)
 			{
 				return new TabPanel1(parent, panelId);
 			}
@@ -46,7 +46,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		tabs.add(new AbstractTab(new Model<String>("second tab"))
 		{
 			@Override
-			public Panel getPanel(MarkupContainer parent, String panelId)
+			public Panel getPanel(final MarkupContainer parent, final String panelId)
 			{
 				return new TabPanel2(parent, panelId);
 			}
@@ -55,7 +55,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		tabs.add(new AbstractTab(new Model<String>("third tab"))
 		{
 			@Override
-			public Panel getPanel(MarkupContainer parent, String panelId)
+			public Panel getPanel(final MarkupContainer parent, final String panelId)
 			{
 				return new TabPanel3(parent, panelId);
 			}
@@ -87,7 +87,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		 * @param id
 		 * @param clazz
 		 */
-		public CssSwitchingLink(MarkupContainer parent, final String id, String clazz)
+		public CssSwitchingLink(final MarkupContainer parent, final String id, final String clazz)
 		{
 			super(parent, id);
 			this.clazz = clazz;
@@ -129,7 +129,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		 * @param id
 		 *            component id
 		 */
-		public TabPanel1(MarkupContainer parent, String id)
+		public TabPanel1(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 		}
@@ -153,7 +153,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		 * @param id
 		 *            component id
 		 */
-		public TabPanel2(MarkupContainer parent, String id)
+		public TabPanel2(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 		}
@@ -177,7 +177,7 @@ public class TabbedPanelPage extends WicketExamplePage<String>
 		 * @param id
 		 *            component id
 		 */
-		public TabPanel3(MarkupContainer parent, String id)
+		public TabPanel3(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 		}

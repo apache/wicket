@@ -34,7 +34,7 @@ public class Page3 extends WicketExamplePage
 	 * 
 	 * @param parameters
 	 */
-	public Page3(PageParameters parameters)
+	public Page3(final PageParameters parameters)
 	{
 		new Label(this, "bookmarkparameter", parameters.getString("bookmarkparameter"));
 	}

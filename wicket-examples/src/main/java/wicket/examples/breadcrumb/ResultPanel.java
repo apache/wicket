@@ -40,7 +40,7 @@ public class ResultPanel extends BreadCrumbPanel
 	 * @param result
 	 *            The 'result' to display as a label
 	 */
-	public ResultPanel(MarkupContainer parent, final String id,
+	public ResultPanel(final MarkupContainer parent, final String id,
 			final IBreadCrumbModel breadCrumbModel, String result)
 	{
 		super(parent, id, breadCrumbModel);

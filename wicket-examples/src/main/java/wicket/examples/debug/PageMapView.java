@@ -58,7 +58,7 @@ public final class PageMapView extends Panel
 	 * @param pageMap
 	 *            Page map to show
 	 */
-	public PageMapView(MarkupContainer parent, final String id, final IPageMap pageMap)
+	public PageMapView(final MarkupContainer parent, final String id, final IPageMap pageMap)
 	{
 		super(parent, id);
 

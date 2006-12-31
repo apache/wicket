@@ -65,7 +65,7 @@ public class UploadPage extends WicketExamplePage
 		 * @param files
 		 *            The file list model
 		 */
-		public FileListView(MarkupContainer parent, String name, final List<File> files)
+		public FileListView(final MarkupContainer parent, final String name, final List<File> files)
 		{
 			super(parent, name, files);
 		}
@@ -74,7 +74,7 @@ public class UploadPage extends WicketExamplePage
 		 * @see ListView#populateItem(ListItem)
 		 */
 		@Override
-		protected void populateItem(ListItem<File> listItem)
+		protected void populateItem(final ListItem<File> listItem)
 		{
 			final File file = listItem.getModelObject();
 			new Label(listItem, "file", file.getName());
@@ -107,7 +107,7 @@ public class UploadPage extends WicketExamplePage
 		 * @param name
 		 *            Component name
 		 */
-		public FileUploadForm(MarkupContainer parent, String name)
+		public FileUploadForm(final MarkupContainer parent, final String name)
 		{
 			super(parent, name);
 
@@ -162,7 +162,7 @@ public class UploadPage extends WicketExamplePage
 	private FileListView fileListView;
 
 	/** List of files, model for file table. */
-	private List<File> files = new ArrayList<File>();
+	private final List<File> files = new ArrayList<File>();
 
 	/** Upload folder */
 	private Folder uploadFolder;
@@ -205,7 +205,7 @@ public class UploadPage extends WicketExamplePage
 	 * @param newFile
 	 *            the file to check
 	 */
-	private void checkFileExists(File newFile)
+	private void checkFileExists(final File newFile)
 	{
 		if (newFile.exists())
 		{

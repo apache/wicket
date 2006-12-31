@@ -93,7 +93,7 @@ public class StockQuotePage extends WicketExamplePage
 		 * @param symbol
 		 *            the symbol
 		 */
-		public void setSymbol(String symbol)
+		public void setSymbol(final String symbol)
 		{
 			this.symbol = symbol;
 		}

@@ -55,7 +55,7 @@ public class Export extends Page
 	 * @param markupStream
 	 */
 	@Override
-	protected void onRender(MarkupStream markupStream)
+	protected void onRender(final MarkupStream markupStream)
 	{
 		doExport();
 	}
@@ -152,7 +152,7 @@ public class Export extends Page
 	 *            instance of MediaTypeEnum
 	 * @return String filename
 	 */
-	public String getExportFileName(MediaTypeEnum exportType)
+	public String getExportFileName(final MediaTypeEnum exportType)
 	{
 		return "Test" + "." + exportType;
 	}

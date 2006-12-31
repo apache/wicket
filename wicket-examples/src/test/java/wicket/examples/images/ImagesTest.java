@@ -41,7 +41,7 @@ public class ImagesTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public ImagesTest(String name)
+	public ImagesTest(final String name)
 	{
 		super(name);
 	}

@@ -30,7 +30,7 @@ public class StockQuoteLabel extends WebComponent<String>
 	 * @param id
 	 *            See Component
 	 */
-	public StockQuoteLabel(MarkupContainer parent, String id)
+	public StockQuoteLabel(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -47,7 +47,7 @@ public class StockQuoteLabel extends WebComponent<String>
 	 * 
 	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public StockQuoteLabel(MarkupContainer parent, final String id, String symbol)
+	public StockQuoteLabel(final MarkupContainer parent, final String id, final String symbol)
 	{
 		super(parent, id, new Model<String>(symbol));
 	}
@@ -55,7 +55,7 @@ public class StockQuoteLabel extends WebComponent<String>
 	/**
 	 * @see wicket.Component#Component(MarkupContainer, String, IModel)
 	 */
-	public StockQuoteLabel(MarkupContainer parent, final String id, IModel<String> model)
+	public StockQuoteLabel(final MarkupContainer parent, final String id, final IModel<String> model)
 	{
 		super(parent, id, model);
 	}

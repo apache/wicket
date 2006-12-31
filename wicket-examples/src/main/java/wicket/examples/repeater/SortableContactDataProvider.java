@@ -51,7 +51,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	 * @see wicket.markup.repeater.data.IDataProvider#iterator(int,
 	 *      int)
 	 */
-	public Iterator<Contact> iterator(int first, int count)
+	public Iterator<Contact> iterator(final int first, final int count)
 	{
 		SortParam sp = getSort();
 		return getContactsDB().find(first, count, sp.getProperty(), sp.isAscending()).iterator();
@@ -68,7 +68,7 @@ public class SortableContactDataProvider extends SortableDataProvider<Contact>
 	/**
 	 * @see wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
-	public IModel<Contact> model(Contact object)
+	public IModel<Contact> model(final Contact object)
 	{
 		return new DetachableContactModel(object);
 	}

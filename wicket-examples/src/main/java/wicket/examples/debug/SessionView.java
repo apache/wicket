@@ -52,7 +52,7 @@ public final class SessionView extends Panel
 	 * @param session
 	 * @see Component#Component(MarkupContainer, String)
 	 */
-	public SessionView(MarkupContainer parent, final String id, final Session session)
+	public SessionView(final MarkupContainer parent, final String id, final Session session)
 	{
 		super(parent, id);
 

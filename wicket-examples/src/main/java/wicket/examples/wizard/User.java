@@ -132,7 +132,7 @@ public final class User implements Serializable
 	 * @param email
 	 *            email
 	 */
-	public void setEmail(String email)
+	public void setEmail(final String email)
 	{
 		this.email = email;
 	}
@@ -143,7 +143,7 @@ public final class User implements Serializable
 	 * @param firstName
 	 *            firstName
 	 */
-	public void setFirstName(String firstName)
+	public void setFirstName(final String firstName)
 	{
 		this.firstName = firstName;
 	}
@@ -154,7 +154,7 @@ public final class User implements Serializable
 	 * @param lastName
 	 *            lastName
 	 */
-	public void setLastName(String lastName)
+	public void setLastName(final String lastName)
 	{
 		this.lastName = lastName;
 	}
@@ -165,7 +165,7 @@ public final class User implements Serializable
 	 * @param roles
 	 *            roles
 	 */
-	public void setRoles(Set<String> roles)
+	public void setRoles(final Set<String> roles)
 	{
 		this.roles = roles;
 	}
@@ -176,7 +176,7 @@ public final class User implements Serializable
 	 * @param rolesSetName
 	 *            rolesSetName
 	 */
-	public void setRolesSetName(String rolesSetName)
+	public void setRolesSetName(final String rolesSetName)
 	{
 		this.rolesSetName = rolesSetName;
 	}
@@ -187,7 +187,7 @@ public final class User implements Serializable
 	 * @param userName
 	 *            userName
 	 */
-	public void setUserName(String userName)
+	public void setUserName(final String userName)
 	{
 		this.userName = userName;
 	}

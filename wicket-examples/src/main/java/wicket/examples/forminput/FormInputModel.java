@@ -47,7 +47,7 @@ public final class FormInputModel implements Serializable
 		 * 
 		 * @param text
 		 */
-		public Line(String text)
+		public Line(final String text)
 		{
 			this.text = text;
 		}
@@ -68,7 +68,7 @@ public final class FormInputModel implements Serializable
 		 * @param text
 		 *            text
 		 */
-		public void setText(String text)
+		public void setText(final String text)
 		{
 			this.text = text;
 		}
@@ -91,7 +91,7 @@ public final class FormInputModel implements Serializable
 	private List<Line> lines = new ArrayList<Line>();
 	private Integer multiply = new Integer(0);
 	private String numberRadioChoice = FormInput.NUMBERS.get(0);
-	private List<String> numbersCheckGroup = new ArrayList<String>();
+	private final List<String> numbersCheckGroup = new ArrayList<String>();
 	private String numbersGroup;
 	/** US phone number with mask '(###) ###-####'. */
 	private UsPhoneNumber phoneNumberUS = new UsPhoneNumber("(123) 456-1234");
@@ -248,7 +248,7 @@ public final class FormInputModel implements Serializable
 	 * @param booleanProperty
 	 *            booleanProperty
 	 */
-	public void setBooleanProperty(Boolean booleanProperty)
+	public void setBooleanProperty(final Boolean booleanProperty)
 	{
 		this.booleanProperty = booleanProperty;
 	}
@@ -259,7 +259,7 @@ public final class FormInputModel implements Serializable
 	 * @param dateProperty
 	 *            dateProperty
 	 */
-	public void setDateProperty(Date dateProperty)
+	public void setDateProperty(final Date dateProperty)
 	{
 		this.dateProperty = dateProperty;
 	}
@@ -270,7 +270,7 @@ public final class FormInputModel implements Serializable
 	 * @param doubleProperty
 	 *            doubleProperty
 	 */
-	public void setDoubleProperty(Double doubleProperty)
+	public void setDoubleProperty(final Double doubleProperty)
 	{
 		this.doubleProperty = doubleProperty;
 	}
@@ -281,7 +281,7 @@ public final class FormInputModel implements Serializable
 	 * @param integerInRangeProperty
 	 *            integerInRangeProperty
 	 */
-	public void setIntegerInRangeProperty(Integer integerInRangeProperty)
+	public void setIntegerInRangeProperty(final Integer integerInRangeProperty)
 	{
 		this.integerInRangeProperty = integerInRangeProperty;
 	}
@@ -292,7 +292,7 @@ public final class FormInputModel implements Serializable
 	 * @param integerProperty
 	 *            integerProperty
 	 */
-	public void setIntegerProperty(Integer integerProperty)
+	public void setIntegerProperty(final Integer integerProperty)
 	{
 		this.integerProperty = integerProperty;
 	}
@@ -303,7 +303,7 @@ public final class FormInputModel implements Serializable
 	 * @param lines
 	 *            lines
 	 */
-	public void setLines(List<Line> lines)
+	public void setLines(final List<Line> lines)
 	{
 		this.lines = lines;
 	}
@@ -314,7 +314,7 @@ public final class FormInputModel implements Serializable
 	 * @param favoriteColor
 	 *            favoriteColor
 	 */
-	public void setNumberRadioChoice(String favoriteColor)
+	public void setNumberRadioChoice(final String favoriteColor)
 	{
 		this.numberRadioChoice = favoriteColor;
 	}
@@ -325,7 +325,7 @@ public final class FormInputModel implements Serializable
 	 * @param group
 	 *            number
 	 */
-	public void setNumbersGroup(String group)
+	public void setNumbersGroup(final String group)
 	{
 		this.numbersGroup = group;
 	}
@@ -334,7 +334,7 @@ public final class FormInputModel implements Serializable
 	 * @param phoneNumberUS
 	 *            the phoneNumberUS to set
 	 */
-	public void setPhoneNumberUS(UsPhoneNumber phoneNumberUS)
+	public void setPhoneNumberUS(final UsPhoneNumber phoneNumberUS)
 	{
 		this.phoneNumberUS = phoneNumberUS;
 	}
@@ -345,7 +345,7 @@ public final class FormInputModel implements Serializable
 	 * @param selectedSites
 	 *            selectedSites
 	 */
-	public void setSiteSelection(Set selectedSites)
+	public void setSiteSelection(final Set selectedSites)
 	{
 		this.siteSelection = selectedSites;
 	}
@@ -356,7 +356,7 @@ public final class FormInputModel implements Serializable
 	 * @param stringProperty
 	 *            stringProperty
 	 */
-	public void setStringProperty(String stringProperty)
+	public void setStringProperty(final String stringProperty)
 	{
 		this.stringProperty = stringProperty;
 	}
@@ -367,7 +367,7 @@ public final class FormInputModel implements Serializable
 	 * @param urlProperty
 	 *            urlProperty
 	 */
-	public void setUrlProperty(URL urlProperty)
+	public void setUrlProperty(final URL urlProperty)
 	{
 		this.urlProperty = urlProperty;
 	}
@@ -424,7 +424,7 @@ public final class FormInputModel implements Serializable
 	 * @param multiply
 	 *            the multiply to set
 	 */
-	public void setMultiply(Integer multiply)
+	public void setMultiply(final Integer multiply)
 	{
 		this.multiply = multiply;
 	}

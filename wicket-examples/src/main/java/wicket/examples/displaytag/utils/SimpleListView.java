@@ -56,7 +56,7 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 	 * @param id
 	 * @param data
 	 */
-	public SimpleListView(MarkupContainer parent, final String id, final List<T> data)
+	public SimpleListView(final MarkupContainer parent, final String id, final List<T> data)
 	{
 		super(parent, id, data);
 	}
@@ -68,7 +68,7 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 	 * @param id
 	 * @param model
 	 */
-	public SimpleListView(MarkupContainer parent, final String id, final IModel<List<T>> model)
+	public SimpleListView(final MarkupContainer parent, final String id, final IModel<List<T>> model)
 	{
 		super(parent, id, model);
 	}
@@ -140,7 +140,7 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 	 * @param id
 	 * @return Usually a Label like component
 	 */
-	protected Component newLabel(MarkupContainer parent, final String id)
+	protected Component newLabel(final MarkupContainer parent, final String id)
 	{
 		return new Label(parent, id);
 	}
@@ -169,7 +169,7 @@ public class SimpleListView<T> extends ListView<T> implements IComponentResolver
 		 * @param model
 		 *            The associated model
 		 */
-		public SimpleListListItem(MarkupContainer parent, final int index, final IModel<T> model)
+		public SimpleListListItem(final MarkupContainer parent, final int index, final IModel<T> model)
 		{
 			super(parent, index, model);
 		}

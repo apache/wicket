@@ -41,7 +41,7 @@ public class TemplateTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public TemplateTest(String name)
+	public TemplateTest(final String name)
 	{
 		super(name);
 	}

@@ -46,7 +46,7 @@ public class Person implements Serializable
 	 * @param lastName
 	 *            last name
 	 */
-	public Person(String name, String lastName)
+	public Person(final String name, final String lastName)
 	{
 		this.name = name;
 		this.lastName = lastName;
@@ -68,7 +68,7 @@ public class Person implements Serializable
 	 * @param dateOfBirth
 	 *            dateOfBirth
 	 */
-	public void setDateOfBirth(Date dateOfBirth)
+	public void setDateOfBirth(final Date dateOfBirth)
 	{
 		this.dateOfBirth = dateOfBirth;
 	}
@@ -89,7 +89,7 @@ public class Person implements Serializable
 	 * @param lastName
 	 *            lastName
 	 */
-	public void setLastName(String lastName)
+	public void setLastName(final String lastName)
 	{
 		this.lastName = lastName;
 	}
@@ -110,7 +110,7 @@ public class Person implements Serializable
 	 * @param name
 	 *            name
 	 */
-	public void setName(String name)
+	public void setName(final String name)
 	{
 		this.name = name;
 	}
@@ -131,7 +131,7 @@ public class Person implements Serializable
 	 * @param address
 	 *            address
 	 */
-	public void setAddress(Address address)
+	public void setAddress(final Address address)
 	{
 		this.address = address;
 	}

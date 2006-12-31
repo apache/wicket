@@ -59,7 +59,7 @@ public class WorldClockPage extends BasePage
 			 * @see wicket.ajax.AbstractAjaxTimerBehavior#onTimer(wicket.ajax.AjaxRequestTarget)
 			 */
 			@Override
-			protected void onTimer(AjaxRequestTarget target)
+			protected void onTimer(final AjaxRequestTarget target)
 			{
 				target.addComponent(la);
 				target.addComponent(ny);

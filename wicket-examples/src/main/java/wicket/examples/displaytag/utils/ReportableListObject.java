@@ -39,17 +39,17 @@ public class ReportableListObject extends Object implements Comparable, Serializ
 	/**
 	 * random number producer.
 	 */
-	private static Random random = new Random();
+	private static final Random random = new Random();
 
 	/**
 	 * city names.
 	 */
-	private static String[] cities = { "Roma", "Olympia", "Neapolis", "Carthago" };
+	private static final String[] cities = { "Roma", "Olympia", "Neapolis", "Carthago" };
 
 	/**
 	 * project names.
 	 */
-	private static String[] projects = { "Taxes", "Arts", "Army", "Gladiators" };
+	private static final String[] projects = { "Taxes", "Arts", "Army", "Gladiators" };
 
 	/**
 	 * city.
@@ -125,7 +125,7 @@ public class ReportableListObject extends Object implements Comparable, Serializ
 	/**
 	 * @see java.lang.Comparable#compareTo(Object)
 	 */
-	public int compareTo(Object object)
+	public int compareTo(final Object object)
 	{
 		ReportableListObject myClass = (ReportableListObject)object;
 		return new CompareToBuilder().append(this.city, myClass.city).append(this.project,

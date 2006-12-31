@@ -48,7 +48,7 @@ public class BookmarkablePage extends WebPage
 	 * 
 	 * @param pageParameters
 	 */
-	public BookmarkablePage(PageParameters pageParameters)
+	public BookmarkablePage(final PageParameters pageParameters)
 	{
 		// get the message from the passed 'message' parameter or fall back to
 		// the default

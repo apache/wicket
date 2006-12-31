@@ -34,7 +34,7 @@ public class Page2QP extends Page2
 	 * 
 	 * @param parameters
 	 */
-	public Page2QP(PageParameters parameters)
+	public Page2QP(final PageParameters parameters)
 	{
 		super(parameters);
 	}

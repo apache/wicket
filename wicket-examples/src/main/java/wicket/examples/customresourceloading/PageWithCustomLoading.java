@@ -57,7 +57,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * @return A IResourceStream if the resource was found
 	 */
 	public IResourceStream getMarkupResourceStream(final MarkupContainer container,
-			Class< ? extends MarkupContainer> containerClass)
+			final Class< ? extends MarkupContainer> containerClass)
 	{
 		// load a template with a totally different name from this package using
 		// this component's class loader

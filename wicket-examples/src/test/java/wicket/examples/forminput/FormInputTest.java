@@ -41,7 +41,7 @@ public class FormInputTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public FormInputTest(String name)
+	public FormInputTest(final String name)
 	{
 		super(name);
 	}

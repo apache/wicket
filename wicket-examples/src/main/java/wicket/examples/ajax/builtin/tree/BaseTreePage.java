@@ -29,7 +29,8 @@ public abstract class BaseTreePage extends BasePage
 	{				
 		new AjaxLink(this, "expandAll") 
 		{
-			public void onClick(AjaxRequestTarget target)
+			@Override
+			public void onClick(final AjaxRequestTarget target)
 			{
 				getTree().getTreeState().expandAll();
 				getTree().updateTree(target);
@@ -38,7 +39,8 @@ public abstract class BaseTreePage extends BasePage
 		
 		new AjaxLink(this, "collapseAll") 
 		{
-			public void onClick(AjaxRequestTarget target)
+			@Override
+			public void onClick(final AjaxRequestTarget target)
 			{
 				getTree().getTreeState().collapseAll();
 				getTree().updateTree(target);
@@ -47,7 +49,8 @@ public abstract class BaseTreePage extends BasePage
 		
 		new AjaxLink(this, "switchRootless") 
 		{
-			public void onClick(AjaxRequestTarget target)
+			@Override
+			public void onClick(final AjaxRequestTarget target)
 			{
 				getTree().setRootLess(!getTree().isRootLess());
 				getTree().updateTree(target);
@@ -112,7 +115,7 @@ public abstract class BaseTreePage extends BasePage
 		return convertToTreeModel(l1);
 	}
 	
-	private TreeModel convertToTreeModel(List list)
+	private TreeModel convertToTreeModel(final List list)
 	{
 		TreeModel model = null;
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(new ModelBean("ROOT"));
@@ -121,7 +124,7 @@ public abstract class BaseTreePage extends BasePage
 		return model;
 	}
 
-	private void add(DefaultMutableTreeNode parent, List sub)
+	private void add(final DefaultMutableTreeNode parent, final List sub)
 	{
 		for (Iterator i = sub.iterator(); i.hasNext();)
 		{

@@ -141,7 +141,7 @@ public class ExcelView extends BaseExportView
 	 * @see wicket.examples.displaytag.export.BaseExportView#escapeColumnValue(java.lang.Object)
 	 */
 	@Override
-	protected Object escapeColumnValue(Object value)
+	protected Object escapeColumnValue(final Object value)
 	{
 		if (value != null)
 		{

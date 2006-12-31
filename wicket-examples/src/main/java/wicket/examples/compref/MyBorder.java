@@ -34,7 +34,7 @@ class MyBorder extends Border
 	 * @param id
 	 *            component id
 	 */
-	public MyBorder(MarkupContainer parent, String id)
+	public MyBorder(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}

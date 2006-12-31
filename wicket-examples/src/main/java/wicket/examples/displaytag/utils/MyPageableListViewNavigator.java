@@ -40,7 +40,7 @@ public class MyPageableListViewNavigator extends PagingNavigator
 	 * @param id
 	 * @param pageableListView
 	 */
-	public MyPageableListViewNavigator(MarkupContainer parent, final String id,
+	public MyPageableListViewNavigator(final MarkupContainer parent, final String id,
 			final PageableListView pageableListView)
 	{
 		super(parent, id, pageableListView);

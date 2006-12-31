@@ -48,7 +48,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 *      int)
 	 */
 	@SuppressWarnings("unchecked")
-	public Iterator<Contact> iterator(int first, int count)
+	public Iterator<Contact> iterator(final int first, final int count)
 	{
 		return getContactsDB().find(first, count, "firstName", true).iterator();
 	}
@@ -68,7 +68,7 @@ public class ContactDataProvider implements IDataProvider<Contact>
 	 * 
 	 * @see wicket.markup.repeater.data.IDataProvider#model(java.lang.Object)
 	 */
-	public IModel<Contact> model(Contact object)
+	public IModel<Contact> model(final Contact object)
 	{
 		return new DetachableContactModel(object);
 	}

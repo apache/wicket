@@ -62,7 +62,7 @@ public class Comment implements Serializable
 	 * @param text
 	 *            The text to set.
 	 */
-	public void setText(String text)
+	public void setText(final String text)
 	{
 		this.text = text;
 	}
@@ -79,7 +79,7 @@ public class Comment implements Serializable
 	 * @param date
 	 *            The date to set.
 	 */
-	public void setDate(Date date)
+	public void setDate(final Date date)
 	{
 		this.date = date;
 	}

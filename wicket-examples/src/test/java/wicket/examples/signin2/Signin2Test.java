@@ -47,7 +47,7 @@ public class Signin2Test extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public Signin2Test(String name)
+	public Signin2Test(final String name)
 	{
 		super(name);
 	}

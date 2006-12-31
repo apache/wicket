@@ -27,14 +27,15 @@ public class EditablePanel extends Panel {
 	 * @param inputModel
 	 * 			Model of the text field
 	 */
-	public EditablePanel(MarkupContainer parent, String id, IModel<String> inputModel) {
+	public EditablePanel(final MarkupContainer parent, final String id, final IModel<String> inputModel) {
 		super(parent, id);
 		
 		TextField<String> field = new TextField<String>(this, "textfield", inputModel);
 		
 		field.add(new AjaxFormComponentUpdatingBehavior(ClientEvent.BLUR) 
 		{
-			protected void onUpdate(AjaxRequestTarget target) 
+			@Override
+			protected void onUpdate(final AjaxRequestTarget target) 
 			{
 			}
 		});

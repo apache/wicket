@@ -41,7 +41,7 @@ public class LibraryTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public LibraryTest(String name)
+	public LibraryTest(final String name)
 	{
 		super(name);
 	}

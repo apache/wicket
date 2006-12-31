@@ -71,7 +71,7 @@ public class BasePage extends ExamplePage
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(MarkupContainer parent, final String id, IModel model)
+		public ActionPanel(final MarkupContainer parent, final String id, final IModel model)
 		{
 			super(parent, id, model);
 			new Link(this, "select")
@@ -89,7 +89,7 @@ public class BasePage extends ExamplePage
 	 * @param selected
 	 *            the selected to set
 	 */
-	public void setSelected(Contact selected)
+	public void setSelected(final Contact selected)
 	{
 		addStateChange(new Change()
 		{

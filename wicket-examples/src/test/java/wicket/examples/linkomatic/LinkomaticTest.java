@@ -41,7 +41,7 @@ public class LinkomaticTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public LinkomaticTest(String name)
+	public LinkomaticTest(final String name)
 	{
 		super(name);
 	}

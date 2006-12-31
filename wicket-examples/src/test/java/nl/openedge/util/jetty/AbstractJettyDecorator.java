@@ -54,7 +54,7 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param test
 	 *            test to decorate
 	 */
-	public AbstractJettyDecorator(Test test)
+	public AbstractJettyDecorator(final Test test)
 	{
 		super(test);
 	}
@@ -95,7 +95,7 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param contextPath
 	 *            context path (webapp name).
 	 */
-	public void setContextPath(String contextPath)
+	public void setContextPath(final String contextPath)
 	{
 		this.contextPath = contextPath;
 	}
@@ -106,7 +106,7 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param port
 	 *            port for http requests.
 	 */
-	public void setPort(int port)
+	public void setPort(final int port)
 	{
 		this.port = port;
 	}
@@ -117,7 +117,7 @@ public abstract class AbstractJettyDecorator extends TestSetup
 	 * @param webappContextRoot
 	 *            webappContextRoot to set.
 	 */
-	public void setWebappContextRoot(String webappContextRoot)
+	public void setWebappContextRoot(final String webappContextRoot)
 	{
 		this.webappContextRoot = webappContextRoot;
 	}

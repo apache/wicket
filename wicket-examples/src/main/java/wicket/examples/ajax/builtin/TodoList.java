@@ -47,7 +47,7 @@ public class TodoList extends BasePage
 			 * @param id
 			 *            the component id.
 			 */
-			public AddTodoForm(MarkupContainer parent, String id)
+			public AddTodoForm(final MarkupContainer parent, final String id)
 			{
 				super(parent, id, new CompoundPropertyModel<TodoItem>(new TodoItem()));
 				setOutputMarkupId(true);
@@ -55,7 +55,7 @@ public class TodoList extends BasePage
 				new AjaxSubmitButton(this, "add", this)
 				{
 					@Override
-					protected void onSubmit(AjaxRequestTarget target, Form form)
+					protected void onSubmit(final AjaxRequestTarget target, final Form form)
 					{
 						// retrieve the todo item
 						TodoItem item = (TodoItem)getParent().getModelObject();
@@ -68,7 +68,7 @@ public class TodoList extends BasePage
 				new AjaxSubmitButton(this, "cancel", this)
 				{
 					@Override
-					public void onSubmit(AjaxRequestTarget target, Form form)
+					public void onSubmit(final AjaxRequestTarget target, final Form form)
 					{
 						onCancelTodo(target);
 					}
@@ -92,7 +92,7 @@ public class TodoList extends BasePage
 		private final class AddTodoLink extends AjaxFallbackLink
 		{
 			/** Constructor. */
-			private AddTodoLink(MarkupContainer parent, String id)
+			private AddTodoLink(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
 			}
@@ -116,7 +116,7 @@ public class TodoList extends BasePage
 			 *            the request target.
 			 */
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				onShowForm(target);
 			}
@@ -136,7 +136,7 @@ public class TodoList extends BasePage
 			 * @param id
 			 *            component id
 			 */
-			public RemoveCompletedTodosLink(MarkupContainer parent, String id)
+			public RemoveCompletedTodosLink(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
 			}
@@ -157,7 +157,7 @@ public class TodoList extends BasePage
 			 * @see AjaxFallbackLink#onClick(AjaxRequestTarget)
 			 */
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				onRemoveCompletedTodos(target);
 			}
@@ -174,7 +174,7 @@ public class TodoList extends BasePage
 		 * @param id
 		 *            the component id.
 		 */
-		public AddItemsContainer(MarkupContainer parent, String id)
+		public AddItemsContainer(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 			// let wicket generate a markup-id so the contents can be
@@ -193,7 +193,7 @@ public class TodoList extends BasePage
 		 * @param target
 		 *            the request target
 		 */
-		void onAdd(TodoItem item, AjaxRequestTarget target)
+		void onAdd(final TodoItem item, final AjaxRequestTarget target)
 		{
 			// add the item
 			items.add(new TodoItem(item));
@@ -219,7 +219,7 @@ public class TodoList extends BasePage
 		 * @param target
 		 *            the request target.
 		 */
-		void onCancelTodo(AjaxRequestTarget target)
+		void onCancelTodo(final AjaxRequestTarget target)
 		{
 			// toggle the visibility
 			linkVisible = true;
@@ -228,7 +228,7 @@ public class TodoList extends BasePage
 			target.addComponent(this);
 		}
 
-		void onRemoveCompletedTodos(AjaxRequestTarget target)
+		void onRemoveCompletedTodos(final AjaxRequestTarget target)
 		{
 			List<TodoItem> ready = new ArrayList<TodoItem>();
 			for (TodoItem todo : items)
@@ -254,7 +254,7 @@ public class TodoList extends BasePage
 		 * @param target
 		 *            the request target.
 		 */
-		void onShowForm(AjaxRequestTarget target)
+		void onShowForm(final AjaxRequestTarget target)
 		{
 			// toggle the visibility
 			linkVisible = false;
@@ -286,7 +286,7 @@ public class TodoList extends BasePage
 		 * @param item
 		 *            the item to copy the values from.
 		 */
-		public TodoItem(TodoItem item)
+		public TodoItem(final TodoItem item)
 		{
 			this.text = item.text;
 		}
@@ -315,7 +315,7 @@ public class TodoList extends BasePage
 		 * @param checked
 		 *            The checked property to set.
 		 */
-		public void setChecked(boolean checked)
+		public void setChecked(final boolean checked)
 		{
 			this.checked = checked;
 		}
@@ -326,7 +326,7 @@ public class TodoList extends BasePage
 		 * @param text
 		 *            The text to set.
 		 */
-		public void setText(String text)
+		public void setText(final String text)
 		{
 			this.text = text;
 		}
@@ -346,7 +346,7 @@ public class TodoList extends BasePage
 		 * @param id
 		 *            the component identifier.
 		 */
-		public TodoItemsContainer(MarkupContainer parent, String id)
+		public TodoItemsContainer(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 
@@ -358,13 +358,13 @@ public class TodoList extends BasePage
 			new ListView<TodoItem>(this, "item", items)
 			{
 				@Override
-				protected void populateItem(ListItem item)
+				protected void populateItem(final ListItem item)
 				{
 					// add an AJAX checkbox to the item
 					new AjaxCheckBox(item, "check", new PropertyModel<Boolean>(item.getModel(), "checked"))
 					{
 						@Override
-						protected void onUpdate(AjaxRequestTarget target)
+						protected void onUpdate(final AjaxRequestTarget target)
 						{
 							// no need to do anything, the model is updated by
 							// itself, and we don't have to re-render a

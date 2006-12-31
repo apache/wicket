@@ -52,7 +52,7 @@ public final class Book implements Serializable
 	 * @param author
 	 *            author
 	 */
-	public final void setAuthor(String author)
+	public final void setAuthor(final String author)
 	{
 		this.author = author;
 	}
@@ -73,7 +73,7 @@ public final class Book implements Serializable
 	 * @param isbn
 	 *            isbn
 	 */
-	public final void setIsbn(String isbn)
+	public final void setIsbn(final String isbn)
 	{
 		this.isbn = isbn;
 	}
@@ -94,7 +94,7 @@ public final class Book implements Serializable
 	 * @param title
 	 *            title
 	 */
-	public final void setTitle(String title)
+	public final void setTitle(final String title)
 	{
 		this.title = title;
 	}

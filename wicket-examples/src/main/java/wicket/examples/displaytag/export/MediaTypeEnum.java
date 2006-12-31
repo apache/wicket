@@ -74,7 +74,7 @@ public final class MediaTypeEnum
 	 * @param name
 	 *            description of media type
 	 */
-	private MediaTypeEnum(int code, String name)
+	private MediaTypeEnum(final int code, final String name)
 	{
 		this.enumCode = code;
 		this.enumName = name;
@@ -108,7 +108,7 @@ public final class MediaTypeEnum
 	 *            int code
 	 * @return MediaTypeEnum or null if no mediaType is found with the given key
 	 */
-	public static MediaTypeEnum fromCode(int key)
+	public static MediaTypeEnum fromCode(final int key)
 	{
 		for (MediaTypeEnum element : ALL)
 		{
@@ -128,7 +128,7 @@ public final class MediaTypeEnum
 	 *            Integer code - null safe: a null key returns a null Enum
 	 * @return MediaTypeEnum or null if no mediaType is found with the given key
 	 */
-	public static MediaTypeEnum fromIntegerCode(Integer key)
+	public static MediaTypeEnum fromIntegerCode(final Integer key)
 	{
 		if (key == null)
 		{
@@ -147,7 +147,7 @@ public final class MediaTypeEnum
 	 *            String code - null safe: a null key returns a null Enum
 	 * @return MediaTypeEnum or null if no mediaType is found with the given key
 	 */
-	public static MediaTypeEnum fromName(String code)
+	public static MediaTypeEnum fromName(final String code)
 	{
 		for (MediaTypeEnum element : ALL)
 		{
@@ -190,7 +190,7 @@ public final class MediaTypeEnum
 	 * @return hashCode
 	 */
 	@Override
-	public boolean equals(Object o)
+	public boolean equals(final Object o)
 	{
 		if (this == o)
 		{

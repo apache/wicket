@@ -55,14 +55,14 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 		 * packaged custom components etc <strong>will</strong> depend in this
 		 * loading.
 		 */
-		private ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
+		private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
 
 		/**
 		 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.Class,
 		 *      java.lang.String)
 		 */
 		@Override
-		protected IResourceStream locate(Class clazz, String path)
+		protected IResourceStream locate(final Class clazz, final String path)
 		{
 			// Log attempt
 			if (log.isDebugEnabled())

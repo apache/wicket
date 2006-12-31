@@ -53,7 +53,7 @@ public class Index extends WicketExamplePage
 		 * @param wizardClass
 		 *            Class of the wizard to instantiate
 		 */
-		public WizardLink(MarkupContainer parent, final String id, Class wizardClass)
+		public WizardLink(final MarkupContainer parent, final String id, final Class wizardClass)
 		{
 			super(parent, id);
 			this.wizardClass = wizardClass;

@@ -44,7 +44,7 @@ public abstract class ListViewWithAlternatingRowStyle<T> extends ListView<T>
 	 * @param id
 	 * @param data
 	 */
-	public ListViewWithAlternatingRowStyle(MarkupContainer parent, final String id, final List<T> data)
+	public ListViewWithAlternatingRowStyle(final MarkupContainer parent, final String id, final List<T> data)
 	{
 		super(parent, id, data);
 	}
@@ -56,7 +56,7 @@ public abstract class ListViewWithAlternatingRowStyle<T> extends ListView<T>
 	 * @param id
 	 * @param model
 	 */
-	public ListViewWithAlternatingRowStyle(MarkupContainer parent, final String id,
+	public ListViewWithAlternatingRowStyle(final MarkupContainer parent, final String id,
 			final IModel<List<T>> model)
 	{
 		super(parent, id, model);

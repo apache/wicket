@@ -43,7 +43,7 @@ public class FragmentPage extends WicketExamplePage
 		 * @param markupId
 		 *            The id in the markup
 		 */
-		public MyFragment(MarkupContainer parent, String id, String markupId)
+		public MyFragment(final MarkupContainer parent, final String id, final String markupId)
 		{
 			super(parent, id, markupId);
 			new Label(this, "label", "yep, this is from a component proper");

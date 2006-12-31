@@ -36,7 +36,7 @@ public abstract class Banner<T> extends Panel<T>
 	 *            The parent of this component The parent of this component.
 	 * @param id
 	 */
-	public Banner(MarkupContainer parent, String id)
+	public Banner(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 	}
@@ -49,7 +49,7 @@ public abstract class Banner<T> extends Panel<T>
 	 * @param id
 	 * @param model
 	 */
-	public Banner(MarkupContainer parent, final String id, IModel<T> model)
+	public Banner(final MarkupContainer parent, final String id, final IModel<T> model)
 	{
 		super(parent, id, model);
 	}

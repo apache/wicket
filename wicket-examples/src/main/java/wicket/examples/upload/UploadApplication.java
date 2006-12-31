@@ -62,7 +62,7 @@ public class UploadApplication extends WicketExampleApplication
 	 * @see wicket.protocol.http.WebApplication#newWebRequest(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	protected WebRequest newWebRequest(HttpServletRequest servletRequest)
+	protected WebRequest newWebRequest(final HttpServletRequest servletRequest)
 	{
 		return new UploadWebRequest(servletRequest);
 	}

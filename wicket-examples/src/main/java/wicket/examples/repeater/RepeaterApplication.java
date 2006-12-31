@@ -29,7 +29,7 @@ import wicket.protocol.http.WebApplication;
  */
 public class RepeaterApplication extends WebApplication
 {
-	private ContactsDatabase contactsDB = new ContactsDatabase(50);
+	private final ContactsDatabase contactsDB = new ContactsDatabase(50);
 
 	/**
 	 * Constructor.

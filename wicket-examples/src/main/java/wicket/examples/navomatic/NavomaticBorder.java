@@ -36,7 +36,7 @@ public class NavomaticBorder extends Border
 	 * @param id
 	 *            The id of this component
 	 */
-	public NavomaticBorder(MarkupContainer parent, final String id)
+	public NavomaticBorder(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 		new BoxBorder(this, "navigationBorder");

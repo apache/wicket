@@ -71,7 +71,7 @@ public class Index extends WicketExamplePage
 			 * @see wicket.markup.html.link.Link#getOnClickScript(java.lang.CharSequence)
 			 */
 			@Override
-			protected CharSequence getOnClickScript(CharSequence url)
+			protected CharSequence getOnClickScript(final CharSequence url)
 			{
 				return new AppendingStringBuffer("new Ajax.Updater('counter', '").append(
 						urlFor(ILinkListener.INTERFACE))

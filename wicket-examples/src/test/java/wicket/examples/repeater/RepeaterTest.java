@@ -41,7 +41,7 @@ public class RepeaterTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public RepeaterTest(String name)
+	public RepeaterTest(final String name)
 	{
 		super(name);
 	}

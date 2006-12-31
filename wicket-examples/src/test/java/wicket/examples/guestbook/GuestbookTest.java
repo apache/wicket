@@ -48,7 +48,7 @@ public class GuestbookTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public GuestbookTest(String name)
+	public GuestbookTest(final String name)
 	{
 		super(name);
 	}

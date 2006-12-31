@@ -55,7 +55,7 @@ public class GuestBookApplication extends WicketExampleApplication
 	{
 		return new ISessionFactory()
 		{
-			public Session newSession(Request request)
+			public Session newSession(final Request request)
 			{
 				return new GuestBookSession(GuestBookApplication.this);
 			}

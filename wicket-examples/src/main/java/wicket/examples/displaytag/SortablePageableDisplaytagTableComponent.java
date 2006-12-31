@@ -57,7 +57,7 @@ public class SortablePageableDisplaytagTableComponent<T> extends Panel<T>
 	 * @param list
 	 *            List of data to display
 	 */
-	public SortablePageableDisplaytagTableComponent(MarkupContainer parent, final String id,
+	public SortablePageableDisplaytagTableComponent(final MarkupContainer parent, final String id,
 			final List<T> list)
 	{
 		super(parent, id);
@@ -73,7 +73,7 @@ public class SortablePageableDisplaytagTableComponent<T> extends Panel<T>
 		new SortableListViewHeaders<T>(this, "header", table)
 		{
 			@Override
-			protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
+			protected int compareTo(final SortableListViewHeader header, final Object o1, final Object o2)
 			{
 				if (header.getId().equals("id"))
 				{
@@ -135,7 +135,7 @@ public class SortablePageableDisplaytagTableComponent<T> extends Panel<T>
 		 * @param id
 		 * @param table
 		 */
-		public TableHeaderLabel(MarkupContainer parent, final String id,
+		public TableHeaderLabel(final MarkupContainer parent, final String id,
 				final PageableListView table)
 		{
 			super(parent, id, (IModel)null);

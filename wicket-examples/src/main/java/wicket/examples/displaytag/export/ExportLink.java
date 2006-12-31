@@ -40,7 +40,7 @@ public class ExportLink extends Link
 	 * @param data
 	 * @param exportView
 	 */
-	public ExportLink(MarkupContainer parent, final String id, final List data,
+	public ExportLink(final MarkupContainer parent, final String id, final List data,
 			final BaseExportView exportView)
 	{
 		super(parent, id);

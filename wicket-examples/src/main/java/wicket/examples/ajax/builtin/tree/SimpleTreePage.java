@@ -17,6 +17,7 @@ public class SimpleTreePage extends BaseTreePage
 {
 	private Tree tree;
 
+	@Override
 	protected AbstractTree getTree()
 	{
 		return tree;
@@ -30,7 +31,8 @@ public class SimpleTreePage extends BaseTreePage
 	{
 		tree = new Tree(this, "tree", createTreeModel()) 
 		{
-			protected String renderNode(TreeNode node)
+			@Override
+			protected String renderNode(final TreeNode node)
 			{
 				ModelBean bean = (ModelBean) ((DefaultMutableTreeNode)node).getUserObject();
 				return bean.getProperty1();

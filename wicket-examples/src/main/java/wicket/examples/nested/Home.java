@@ -114,7 +114,7 @@ public class Home extends WicketExamplePage
 	 * @param sub
 	 *            the sub list
 	 */
-	private void add(DefaultMutableTreeNode parent, List sub)
+	private void add(final DefaultMutableTreeNode parent, final List sub)
 	{
 		for (Iterator i = sub.iterator(); i.hasNext();)
 		{
@@ -140,7 +140,7 @@ public class Home extends WicketExamplePage
 	 *            the list
 	 * @return tree model
 	 */
-	private TreeModel convertToTreeModel(List list)
+	private TreeModel convertToTreeModel(final List list)
 	{
 		TreeModel model = null;
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");

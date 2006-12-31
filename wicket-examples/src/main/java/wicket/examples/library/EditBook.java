@@ -64,7 +64,7 @@ public final class EditBook extends AuthenticatedWebPage
 		 * @param book
 		 *            Book model
 		 */
-		public EditBookForm(MarkupContainer parent, final String id, final Book book)
+		public EditBookForm(final MarkupContainer parent, final String id, final Book book)
 		{
 			super(parent, id, new CompoundPropertyModel<Book>(book));
 
@@ -130,7 +130,7 @@ public final class EditBook extends AuthenticatedWebPage
 	 *            The id of the book that the page will edit
 	 * @return The page link
 	 */
-	public static PageLink link(MarkupContainer parent, final String name, final long id)
+	public static PageLink link(final MarkupContainer parent, final String name, final long id)
 	{
 		return new PageLink(parent, name, new IPageLink()
 		{

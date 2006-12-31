@@ -56,7 +56,7 @@ public class AjaxMouseEventPage extends BasePage
 		box.add(new AjaxMouseEventBehavior(eventType)
 		{
 			@Override
-			protected void onEvent(AjaxRequestTarget target, MouseEvent event)
+			protected void onEvent(final AjaxRequestTarget target, final MouseEvent event)
 			{
 				StringBuffer output = new StringBuffer();
 

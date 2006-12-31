@@ -40,7 +40,7 @@ public class ComprefTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public ComprefTest(String name)
+	public ComprefTest(final String name)
 	{
 		super(name);
 	}

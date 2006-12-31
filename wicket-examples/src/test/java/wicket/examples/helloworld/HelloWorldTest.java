@@ -41,7 +41,7 @@ public class HelloWorldTest extends WicketWebTestCase
 	 * @param name
 	 *            name of test
 	 */
-	public HelloWorldTest(String name)
+	public HelloWorldTest(final String name)
 	{
 		super(name);
 	}

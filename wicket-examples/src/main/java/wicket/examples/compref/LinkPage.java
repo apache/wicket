@@ -83,7 +83,7 @@ public class LinkPage extends WicketExamplePage
 			 * 
 			 * @param id
 			 */
-			public CustomLink(MarkupContainer parent, String id)
+			public CustomLink(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
 				count2 = new ClickCount();
@@ -110,7 +110,7 @@ public class LinkPage extends WicketExamplePage
 			 * 
 			 * @param id
 			 */
-			public ButtonLink(MarkupContainer parent, String id)
+			public ButtonLink(final MarkupContainer parent, final String id)
 			{
 				super(parent, id);
 				count3 = new ClickCount();
@@ -162,7 +162,7 @@ public class LinkPage extends WicketExamplePage
 		 * @param clickCount
 		 *            the count object
 		 */
-		public ClickCountLabel(MarkupContainer parent, final String id, final ClickCount clickCount)
+		public ClickCountLabel(final MarkupContainer parent, final String id, final ClickCount clickCount)
 		{
 			// call super with a simple annonymous class model that displays the
 			// current number of clicks

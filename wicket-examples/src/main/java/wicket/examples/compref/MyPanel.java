@@ -35,7 +35,7 @@ class MyPanel extends Panel
 	 * @param id
 	 *            component id
 	 */
-	public MyPanel(MarkupContainer parent, String id)
+	public MyPanel(final MarkupContainer parent, final String id)
 	{
 		super(parent, id);
 		new Label(this, "label", "yep, this is from a component proper");

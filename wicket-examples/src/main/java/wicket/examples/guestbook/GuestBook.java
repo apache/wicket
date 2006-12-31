@@ -99,7 +99,7 @@ public final class GuestBook extends WicketExamplePage
 		 * @param id
 		 *            The name of this component
 		 */
-		public CommentForm(MarkupContainer parent, final String id)
+		public CommentForm(final MarkupContainer parent, final String id)
 		{
 			// Construct form with no validation listener
 			super(parent, id, new CompoundPropertyModel<Comment>(new Comment()));

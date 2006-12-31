@@ -66,7 +66,7 @@ public class ExampleAutolink extends Displaytag
 		new SimpleListView<ListObject>(this, "rows2", data)
 		{
 			@Override
-			protected Component newLabel(MarkupContainer parent, String id)
+			protected Component newLabel(final MarkupContainer parent, final String id)
 			{
 				return new SmartLinkLabel(parent, id);
 			}

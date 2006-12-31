@@ -32,14 +32,14 @@ import wicket.markup.html.link.BookmarkablePageLink;
  */
 public class Page5 extends WicketExamplePage
 {
-	private Random random = new Random();
+	private final Random random = new Random();
 
 	/**
 	 * Constructor
 	 * 
 	 * @param parameters
 	 */
-	public Page5(PageParameters parameters)
+	public Page5(final PageParameters parameters)
 	{
 		String p1 = "CANNOT RESOLVE FROM URL";
 		if (parameters.containsKey("param1"))

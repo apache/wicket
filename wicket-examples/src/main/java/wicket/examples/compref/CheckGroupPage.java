@@ -43,7 +43,7 @@ public class CheckGroupPage extends WicketExamplePage
 		{
 
 			@Override
-			protected void populateItem(ListItem<Person> item)
+			protected void populateItem(final ListItem<Person> item)
 			{
 				new Check<Person>(item, "checkbox", item.getModel());
 				new Label(item, "name", new PropertyModel(item.getModel(), "name"));

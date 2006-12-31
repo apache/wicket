@@ -41,14 +41,14 @@ public class ModalWindowPage extends BasePage
 		});
 		modal1.setWindowClosedCallback(new ModalWindow.WindowClosedCallback()
 		{
-			public void onClose(AjaxRequestTarget target)
+			public void onClose(final AjaxRequestTarget target)
 			{
 				target.addComponent(result);
 			}
 		});
 		modal1.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
 		{
-			public boolean onCloseButtonClicked(AjaxRequestTarget target)
+			public boolean onCloseButtonClicked(final AjaxRequestTarget target)
 			{
 				setResult("Modal window 1 - close button");
 				return true;
@@ -58,7 +58,7 @@ public class ModalWindowPage extends BasePage
 		new AjaxLink(this, "showModal1")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				modal1.show(target);
 			}
@@ -75,7 +75,7 @@ public class ModalWindowPage extends BasePage
 
 		modal2.setCloseButtonCallback(new ModalWindow.CloseButtonCallback()
 		{
-			public boolean onCloseButtonClicked(AjaxRequestTarget target)
+			public boolean onCloseButtonClicked(final AjaxRequestTarget target)
 			{
 				setResult("Modal window 2 - close button");
 				return true;
@@ -84,7 +84,7 @@ public class ModalWindowPage extends BasePage
 
 		modal2.setWindowClosedCallback(new ModalWindow.WindowClosedCallback()
 		{
-			public void onClose(AjaxRequestTarget target)
+			public void onClose(final AjaxRequestTarget target)
 			{
 				target.addComponent(result);
 			}
@@ -93,7 +93,7 @@ public class ModalWindowPage extends BasePage
 		new AjaxLink(this, "showModal2")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target)
+			public void onClick(final AjaxRequestTarget target)
 			{
 				modal2.show(target);
 			}
@@ -112,7 +112,7 @@ public class ModalWindowPage extends BasePage
 	 * @param result
 	 *            the result to set
 	 */
-	public void setResult(String result)
+	public void setResult(final String result)
 	{
 		this.result = result;
 	}

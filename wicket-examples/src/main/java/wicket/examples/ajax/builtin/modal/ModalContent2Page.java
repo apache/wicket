@@ -22,7 +22,7 @@ public class ModalContent2Page extends WebPage {
 		new AjaxLink(this, "close")
 		{
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			public void onClick(final AjaxRequestTarget target) {
 				ModalWindow.close(target);
 			}
 		};

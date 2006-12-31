@@ -75,7 +75,7 @@ public class SortableTableHeadersPage extends WebPage
 			 * If object does not support equals()
 			 */
 			@Override
-			protected int compareTo(SortableListViewHeader header, Object o1, Object o2)
+			protected int compareTo(final SortableListViewHeader header, final Object o1, final Object o2)
 			{
 				if (header.getId().equals("id"))
 				{
@@ -111,7 +111,7 @@ public class SortableTableHeadersPage extends WebPage
 
 	}
 
-	private void addUser(List<User> data, int id, String name, String email)
+	private void addUser(final List<User> data, final int id, final String name, final String email)
 	{
 		User user = new User();
 		user.setId(id);
@@ -142,7 +142,7 @@ public class SortableTableHeadersPage extends WebPage
 		 * @param email
 		 *            email
 		 */
-		public final void setEmail(String email)
+		public final void setEmail(final String email)
 		{
 			this.email = email;
 		}
@@ -163,7 +163,7 @@ public class SortableTableHeadersPage extends WebPage
 		 * @param id
 		 *            id
 		 */
-		public final void setId(int id)
+		public final void setId(final int id)
 		{
 			this.id = id;
 		}
@@ -184,7 +184,7 @@ public class SortableTableHeadersPage extends WebPage
 		 * @param name
 		 *            name
 		 */
-		public final void setName(String name)
+		public final void setName(final String name)
 		{
 			this.name = name;
 		}

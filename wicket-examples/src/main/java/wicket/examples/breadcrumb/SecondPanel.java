@@ -49,7 +49,7 @@ public class SecondPanel extends BreadCrumbPanel
 		 * @param id
 		 *            The component id
 		 */
-		public InputForm(MarkupContainer parent, String id)
+		public InputForm(final MarkupContainer parent, final String id)
 		{
 			super(parent, id);
 			setModel(new CompoundPropertyModel<SecondPanel>(this));
@@ -76,8 +76,8 @@ public class SecondPanel extends BreadCrumbPanel
 				{
 					activate(new IBreadCrumbPanelFactory()
 					{
-						public BreadCrumbPanel create(MarkupContainer parent, String componentId,
-								IBreadCrumbModel breadCrumbModel)
+						public BreadCrumbPanel create(final MarkupContainer parent, final String componentId,
+								final IBreadCrumbModel breadCrumbModel)
 						{
 							return new ResultPanel(parent, componentId, breadCrumbModel, input);
 						}
@@ -102,7 +102,7 @@ public class SecondPanel extends BreadCrumbPanel
 		 * @param input
 		 *            input
 		 */
-		public void setInput(String input)
+		public void setInput(final String input)
 		{
 			this.input = input;
 		}
@@ -116,7 +116,7 @@ public class SecondPanel extends BreadCrumbPanel
 	 * @param id
 	 * @param breadCrumbModel
 	 */
-	public SecondPanel(MarkupContainer parent, final String id,
+	public SecondPanel(final MarkupContainer parent, final String id,
 			final IBreadCrumbModel breadCrumbModel)
 	{
 		super(parent, id, breadCrumbModel);

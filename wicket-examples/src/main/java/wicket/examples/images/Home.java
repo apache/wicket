@@ -51,12 +51,13 @@ public final class Home extends WicketExamplePage
 	 */
 	private final class CircleDynamicImageResource extends RenderedDynamicImageResource
 	{
-		private CircleDynamicImageResource(int width, int height)
+		private CircleDynamicImageResource(final int width, final int height)
 		{
 			super(width, height);
 		}
 
-		protected boolean render(Graphics2D graphics)
+		@Override
+		protected boolean render(final Graphics2D graphics)
 		{
 			drawCircle(graphics);
 			return true;
@@ -80,7 +81,7 @@ public final class Home extends WicketExamplePage
 		new Image(this, "image3", new RenderedDynamicImageResource(100, 100)
 		{
 			@Override
-			protected boolean render(Graphics2D graphics)
+			protected boolean render(final Graphics2D graphics)
 			{
 				drawCircle(graphics);
 				return true;
@@ -138,7 +139,7 @@ public final class Home extends WicketExamplePage
 	 * @param graphics
 	 *            The graphics to draw on
 	 */
-	void drawCircle(Graphics2D graphics)
+	void drawCircle(final Graphics2D graphics)
 	{
 		// Compute random size for circle
 		final Random random = new Random();

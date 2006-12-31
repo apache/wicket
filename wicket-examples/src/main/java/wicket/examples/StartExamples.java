@@ -22,13 +22,13 @@ import java.lang.management.ManagementFactory;
 
 import javax.management.MBeanServer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 import org.mortbay.management.MBeanContainer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Seperate startup class for people that want to run the examples directly. Use
@@ -47,7 +47,7 @@ public class StartExamples
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		Server server = new Server();
 		SelectChannelConnector connector = new SelectChannelConnector();

@@ -37,7 +37,7 @@ public class FourthPanel extends BreadCrumbPanel
 	 * @param id
 	 * @param breadCrumbModel
 	 */
-	public FourthPanel(MarkupContainer parent, final String id,
+	public FourthPanel(final MarkupContainer parent, final String id,
 			final IBreadCrumbModel breadCrumbModel)
 	{
 		super(parent, id, breadCrumbModel);

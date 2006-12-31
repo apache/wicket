@@ -64,7 +64,7 @@ public class CookieTest extends TestCase
 	 * @param name
 	 *            The test name
 	 */
-	public CookieTest(String name)
+	public CookieTest(final String name)
 	{
 		super(name);
 	}

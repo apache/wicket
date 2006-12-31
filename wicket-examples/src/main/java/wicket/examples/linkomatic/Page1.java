@@ -34,7 +34,7 @@ public class Page1 extends WicketExamplePage
 	 * 
 	 * @param parameters
 	 */
-	public Page1(PageParameters parameters)
+	public Page1(final PageParameters parameters)
 	{
 	}
 

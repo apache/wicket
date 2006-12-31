@@ -47,13 +47,13 @@ public class XmlPage extends WebPage
 		 * @param list
 		 *            the model
 		 */
-		public PersonsListView(MarkupContainer parent, final String id, List<Person> list)
+		public PersonsListView(final MarkupContainer parent, final String id, final List<Person> list)
 		{
 			super(parent, id, list);
 		}
 
 		@Override
-		protected void populateItem(ListItem<Person> item)
+		protected void populateItem(final ListItem<Person> item)
 		{
 			Person person = item.getModelObject();
 			new Label(item, "firstName", person.getName());

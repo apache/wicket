@@ -64,6 +64,7 @@ public class FormPage extends BasePage
 				return new ModelIteratorAdapter<Contact>(contacts)
 				{
 
+					@Override
 					protected IModel<Contact> model(Contact object)
 					{
 						return new DetachableContactModel(object);
@@ -118,7 +119,7 @@ public class FormPage extends BasePage
 		 * @param model
 		 *            model for contact
 		 */
-		public ActionPanel(MarkupContainer parent, String id, IModel model)
+		public ActionPanel(final MarkupContainer parent, final String id, final IModel model)
 		{
 			super(parent, id, model);
 			new Link(this, "select")
