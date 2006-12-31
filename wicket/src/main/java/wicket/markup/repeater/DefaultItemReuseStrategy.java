@@ -39,6 +39,7 @@ public class DefaultItemReuseStrategy<T> implements IItemReuseStrategy<T>
 	private static final IItemReuseStrategy instance = new DefaultItemReuseStrategy();
 
 	/**
+	 * @param <X> 
 	 * @return static instance of this strategy
 	 */
 	public static <X> IItemReuseStrategy<X> getInstance()

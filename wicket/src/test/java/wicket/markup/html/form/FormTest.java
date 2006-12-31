@@ -67,6 +67,10 @@ public class FormTest extends WicketTestCase
 		}));
 	}
 	
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	public void testFormMethodGet() throws Exception 
 	{
 		executeTest(FormMethodTestPage.class, "FormMethodTestPage_expected.html");
