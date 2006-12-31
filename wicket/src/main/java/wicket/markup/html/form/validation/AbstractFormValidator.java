@@ -16,7 +16,6 @@
  */
 package wicket.markup.html.form.validation;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 

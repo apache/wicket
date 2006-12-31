@@ -22,7 +22,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.Session;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;
@@ -86,7 +86,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
 
-		final String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		final String pageMapName = (String)parameters.remove(AbstractWebRequestCodingStrategy.PAGEMAP);
 		requestParameters.setPageMapName(pageMapName);
 
 		BookmarkablePageRequestTarget target = new BookmarkablePageRequestTarget(pageMapName,
@@ -112,7 +112,7 @@ public class PackageRequestTargetUrlCodingStrategy extends AbstractRequestTarget
 		PageParameters pageParameters = target.getPageParameters();
 		if (target.getPageMapName() != null)
 		{
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, target.getPageMapName());
+			pageParameters.put(AbstractWebRequestCodingStrategy.PAGEMAP, target.getPageMapName());
 		}
 
 		appendParameters(url, pageParameters);

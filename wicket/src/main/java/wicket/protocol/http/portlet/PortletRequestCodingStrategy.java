@@ -39,7 +39,6 @@ import wicket.RequestListenerInterface;
 import wicket.Session;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.coding.IRequestTargetUrlCodingStrategy;
 import wicket.request.target.component.IBookmarkablePageRequestTarget;

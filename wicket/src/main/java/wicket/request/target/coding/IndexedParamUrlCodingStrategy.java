@@ -6,7 +6,7 @@ import wicket.Page;
 import wicket.PageMap;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.value.ValueMap;
 
@@ -66,11 +66,11 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 			i++;
 		}
 
-		String pageMap = (String)parameters.get(WebRequestCodingStrategy.PAGEMAP);
+		String pageMap = (String)parameters.get(AbstractWebRequestCodingStrategy.PAGEMAP);
 		if (pageMap != null)
 		{
 			i++;
-			url.append("/").append(WebRequestCodingStrategy.PAGEMAP).append("/").append(
+			url.append("/").append(AbstractWebRequestCodingStrategy.PAGEMAP).append("/").append(
 					urlEncode(pageMap));
 		}
 
@@ -99,10 +99,10 @@ public class IndexedParamUrlCodingStrategy extends BookmarkablePageRequestTarget
 		String[] parts = urlFragment.split("/");
 		for (int i = 0; i < parts.length; i++)
 		{
-			if (WebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
+			if (AbstractWebRequestCodingStrategy.PAGEMAP.equals(parts[i]))
 			{
 				i++;
-				params.put(WebRequestCodingStrategy.PAGEMAP, parts[i]);
+				params.put(AbstractWebRequestCodingStrategy.PAGEMAP, parts[i]);
 			}
 			else
 			{

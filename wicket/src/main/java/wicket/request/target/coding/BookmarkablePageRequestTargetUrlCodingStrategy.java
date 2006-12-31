@@ -23,7 +23,7 @@ import wicket.IRequestTarget;
 import wicket.Page;
 import wicket.PageParameters;
 import wicket.WicketRuntimeException;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
 import wicket.request.RequestParameters;
 import wicket.request.target.component.BookmarkableListenerInterfaceRequestTarget;
 import wicket.request.target.component.BookmarkablePageRequestTarget;
@@ -100,7 +100,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			{
 				pageParameters = new PageParameters();
 			}
-			pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, value);
+			pageParameters.put(AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, value);
 		}
 		
 		String pagemap = pageMapName != null ? pageMapName : target.getPageMapName();
@@ -110,7 +110,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			{
 				pageParameters = new PageParameters();
 			}
-			pageParameters.put(WebRequestCodingStrategy.PAGEMAP, pagemap);
+			pageParameters.put(AbstractWebRequestCodingStrategy.PAGEMAP, pagemap);
 		}
 		appendParameters(url, pageParameters);
 		return url;
@@ -126,7 +126,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 				getMountPath().length());
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
-		String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
+		String pageMapName = (String)parameters.remove(AbstractWebRequestCodingStrategy.PAGEMAP);
 		if(requestParameters.getPageMapName() == null)
 		{
 			requestParameters.setPageMapName(pageMapName);
@@ -139,7 +139,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		final BookmarkablePageRequestTarget target;
 		
 		final String bookmarkableInterfaceListener = (String) parameters.remove(
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+				AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
 		
 		// Do the parameters contain component path and listener interface?
 		if (bookmarkableInterfaceListener != null) {
@@ -152,7 +152,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 			if (pathComponents.length < 4)
 			{
 				throw new WicketRuntimeException("Internal error parsing "
-						+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = " + bookmarkableInterfaceListener);
+						+ AbstractWebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = " + bookmarkableInterfaceListener);
 			}
 			final String interfaceName = pathComponents[pathComponents.length - 1];
 			final String componentPath = bookmarkableInterfaceListener.substring(1, 

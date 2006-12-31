@@ -61,11 +61,9 @@ import wicket.markup.html.form.IOnChangeListener;
 import wicket.markup.html.link.BookmarkablePageLink;
 import wicket.markup.html.link.ILinkListener;
 import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.file.File;
 import wicket.util.lang.Classes;
 import wicket.util.upload.FileUploadBase;
-import wicket.util.upload.ServletFileUpload;
 import wicket.util.value.ValueMap;
 
 /**

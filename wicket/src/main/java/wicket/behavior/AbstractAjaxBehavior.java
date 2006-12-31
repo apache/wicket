@@ -21,7 +21,7 @@ import wicket.RequestListenerInterface;
 import wicket.markup.ComponentTag;
 import wicket.markup.html.IHeaderContributor;
 import wicket.markup.html.IHeaderResponse;
-import wicket.protocol.http.request.WebRequestCodingStrategy;
+import wicket.protocol.http.request.AbstractWebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
 
 /**
@@ -128,7 +128,7 @@ public abstract class AbstractAjaxBehavior extends AbstractBehavior
 		// might
 		// already be encoded.
 		return new AppendingStringBuffer(getComponent().urlFor(rli)).append('&').append(
-				WebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME).append('=').append(index);
+				AbstractWebRequestCodingStrategy.BEHAVIOR_ID_PARAMETER_NAME).append('=').append(index);
 	}
 
 	/**
