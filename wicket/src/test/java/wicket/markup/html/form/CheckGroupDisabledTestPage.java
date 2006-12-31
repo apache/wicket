@@ -16,7 +16,6 @@
  */
 package wicket.markup.html.form;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import wicket.markup.html.WebMarkupContainer;
@@ -25,30 +24,31 @@ import wicket.model.Model;
 
 /**
  * Tests rendering of the CheckGroup and Check components
+ * 
  * @author igor
  */
 public class CheckGroupDisabledTestPage extends WebPage
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	
 	/**
 	 * Constructor
-	 * @param list 
+	 * 
+	 * @param list
 	 */
-	@SuppressWarnings("unchecked") // It's not the warnings which are important here.
-	public CheckGroupDisabledTestPage() {
-		
-		Form form=new Form(this, "form");
-		CheckGroup group=new CheckGroup(form, "group", new Model((Serializable)Arrays.asList(new String[]{"check1","check2"})));
+	// It's not the warnings which are important here.
+	@SuppressWarnings("unchecked")
+	public CheckGroupDisabledTestPage()
+	{
+
+		Form form = new Form(this, "form");
+		CheckGroup group = new CheckGroup(form, "group", new Model(Arrays.asList(new String[] {
+				"check1", "check2" })));
 		group.setRenderBodyOnly(false);
-		WebMarkupContainer container=new WebMarkupContainer(group, "container");
-		Check check1=new Check(group, "check1", new Model("check1"));
-		Check check2=new Check(container, "check2", new Model("check2"));
-		
+		WebMarkupContainer container = new WebMarkupContainer(group, "container");
+		Check check1 = new Check(group, "check1", new Model("check1"));
+		Check check2 = new Check(container, "check2", new Model("check2"));
+
 		group.setEnabled(false);
 	}
 }
