@@ -67,7 +67,7 @@ public class SelectOption<T> extends WebMarkupContainer<T>
 		// must be attached to <option .../> tag
 		checkComponentTag(tag, "option");
 
-		Select select = (Select)findParent(Select.class);
+		Select select = findParent(Select.class);
 		if (select == null)
 		{
 			throw new WicketRuntimeException(

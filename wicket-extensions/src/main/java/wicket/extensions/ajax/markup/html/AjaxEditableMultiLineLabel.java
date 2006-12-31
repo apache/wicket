@@ -207,6 +207,7 @@ public class AjaxEditableMultiLineLabel<T> extends AjaxEditableLabel<T>
 	 * @return The string which should be displayed when the model object is
 	 *         null.
 	 */
+	@Override
 	protected String defaultNullLabel()
 	{
 		return "...";

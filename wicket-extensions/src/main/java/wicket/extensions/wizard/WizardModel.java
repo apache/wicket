@@ -280,7 +280,7 @@ public class WizardModel implements IWizardModel
 	 */
 	public void previous()
 	{
-		IWizardStep step = (IWizardStep)history.pop();
+		IWizardStep step = history.pop();
 		setActiveStep(step);
 	}
 
