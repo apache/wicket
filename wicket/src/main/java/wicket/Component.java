@@ -2778,7 +2778,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/**
 	 * Attaches any child components
 	 */
-	void attachChildren() {
+	void attachChildren()
+	{
 		// noop
 	}
 
@@ -2802,17 +2803,18 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			}
 			setFlag(FLAG_ATTACHED, true);
 		}
-		
+
 		attachChildren();
 	}
 
 	/**
 	 * Detaches any child components
 	 */
-	void detachChildren() {
-		
+	void detachChildren()
+	{
+
 	}
-	
+
 	/**
 	 * Detaches component
 	 * 
@@ -2833,8 +2835,56 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			}
 			setFlag(FLAG_ATTACHED, false);
 		}
-		
+
 		detachChildren();
+	}
+
+	/**
+	 * deprecated api guard
+	 * 
+	 * FIXME 2.0 remove
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	public final void internalAttach()
+	{
+	}
+
+	/**
+	 * deprecated api guard
+	 * 
+	 * FIXME 2.0 remove
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	public final void internalDetach()
+	{
+	}
+
+	/**
+	 * deprecated api guard
+	 * 
+	 * FIXME 2.0 remove
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	protected final void internalOnAttach()
+	{
+	}
+
+	/**
+	 * deprecated api guard
+	 * 
+	 * FIXME 2.0 remove
+	 * 
+	 * @deprecated
+	 */
+	@Deprecated
+	protected final void internalOnDetach()
+	{
 	}
 
 	/**
