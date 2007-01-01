@@ -27,9 +27,7 @@ import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.loader.DefaultMarkupLoader;
-import wicket.markup.loader.HeaderCleanupMarkupLoader;
 import wicket.markup.loader.IMarkupLoader;
-import wicket.markup.loader.InheritedMarkupMarkupLoader;
 import wicket.util.listener.IChangeListener;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
@@ -411,11 +409,7 @@ public class MarkupCache
 	 */
 	protected IMarkupLoader newMarkupLoader()
 	{
-		return new InheritedMarkupMarkupLoader(application)
-			.setParent(
-					new HeaderCleanupMarkupLoader(application)
-						.setParent(
-								new DefaultMarkupLoader(application)));
+		return new DefaultMarkupLoader();
 	}
 
 	/**

@@ -32,7 +32,7 @@ import wicket.markup.MarkupCache;
 import wicket.markup.MarkupParser;
 import wicket.markup.MarkupParserFactory;
 import wicket.markup.MarkupResourceStream;
-import wicket.markup.loader.DefaultMarkupLoader;
+import wicket.markup.loader.BaseMarkupLoader;
 import wicket.markup.parser.filter.EnclosureHandler;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.markup.resolver.EnclosureResolver;
@@ -267,7 +267,7 @@ public class MarkupParserPerformanceTest
 		int i = 0;
 		try
 		{
-			DefaultMarkupLoader loader = new DefaultMarkupLoader(this.application);
+			BaseMarkupLoader loader = new BaseMarkupLoader();
 			for (MarkupResourceStream stream : this.resources)
 			{
 				loader.loadMarkup(null, stream);
@@ -392,7 +392,7 @@ public class MarkupParserPerformanceTest
 		{
 			Random random = new Random();
 			int size = this.resources.size();
-			DefaultMarkupLoader loader = new DefaultMarkupLoader(this.application);
+			BaseMarkupLoader loader = new BaseMarkupLoader();
 
 			for (int i = 0; i < count; i++)
 			{

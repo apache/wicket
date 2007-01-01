@@ -17,38 +17,21 @@
 package wicket.markup;
 
 import wicket.Application;
-import wicket.markup.parser.filter.PrependContextPathHandler;
 import wicket.settings.IMarkupSettings;
 
 /**
  * Default implementation of IMarkupParserFactory
  * 
- * @TODO This class doesn't serve any purpose anymore and should be removed
  * @author Igor Vaynberg (ivaynberg)
  */
 public class MarkupParserFactory implements IMarkupParserFactory
 {
-	/** Wicket application object */
-	private final Application application;
-
 	/**
 	 * Construct.
 	 * 
 	 */
 	public MarkupParserFactory()
 	{
-		this.application = Application.get();
-	}
-
-	/**
-	 * Construct.
-	 * 
-	 * @param application
-	 *            Application settings necessary to configure the parser
-	 */
-	public MarkupParserFactory(final Application application)
-	{
-		this.application = application;
 	}
 
 	/**
@@ -78,7 +61,7 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	protected void initSettings(final MarkupParser parser)
 	{
-		final IMarkupSettings settings = this.application.getMarkupSettings();
+		final IMarkupSettings settings = Application.get().getMarkupSettings();
 		parser.setCompressWhitespace(settings.getCompressWhitespace());
 		parser.setStripComments(settings.getStripComments());
 		parser.setDefaultMarkupEncoding(settings.getDefaultMarkupEncoding());
@@ -95,6 +78,5 @@ public class MarkupParserFactory implements IMarkupParserFactory
 	 */
 	protected void initMarkupFilters(final MarkupParser parser)
 	{
-		parser.registerMarkupFilter(new PrependContextPathHandler(this.application));
 	}
 }

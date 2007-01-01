@@ -33,6 +33,9 @@ import wicket.markup.MarkupElement;
  */
 public interface IMarkupFilter
 {
+	/** Default execution priority */
+	final int DEFAULT_PRIORITY = 50;
+
 	/**
 	 * IMarkupFilters are usually chained with the last filter being an XML
 	 * parser. The getParent() method returns the next filter in the chain.
@@ -59,4 +62,24 @@ public interface IMarkupFilter
 	 *            The parent of this component The next element in the chain
 	 */
 	void setParent(final IMarkupFilter parent);
+
+	/**
+	 * Filters with a low priority numbers are executed before filters with
+	 * higher numbers.
+	 * <p>
+	 * Note that the priority is only used while registering the filter with the
+	 * MarkupParser to determine the filters position within the list of
+	 * filters.
+	 * 
+	 * @param priority
+	 * @return this
+	 */
+	IMarkupFilter setPriority(final int priority);
+
+	/**
+	 * Get the filters priority
+	 * 
+	 * @return execution prio
+	 */
+	int getPriority();
 }

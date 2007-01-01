@@ -71,7 +71,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		MarkupResourceStream stream = new MarkupResourceStream(new StringResourceStream(markup),
 				null, null);
-		final MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
+		final MarkupParser parser = new MarkupParserFactory()
 				.newMarkupParser(stream);
 		parser.setWicketNamespace(namespace);
 		return parser.readAndParse();
@@ -90,7 +90,7 @@ public final class MarkupParserTest extends WicketTestCase
 	{
 		MarkupResourceStream stream = new MarkupResourceStream(new StringResourceStream(markup),
 				null, null);
-		final MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
+		final MarkupParser parser = new MarkupParserFactory()
 				.newMarkupParser(stream);
 		return parser.readAndParse();
 	}
@@ -126,7 +126,7 @@ public final class MarkupParserTest extends WicketTestCase
 	private MarkupFragment parse(final MarkupResourceStream resource) throws IOException,
 			ResourceStreamNotFoundException
 	{
-		final MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
+		final MarkupParser parser = new MarkupParserFactory()
 				.newMarkupParser(resource);
 		return parser.readAndParse();
 	}
@@ -373,7 +373,7 @@ public final class MarkupParserTest extends WicketTestCase
 		// Assert.assertEquals(docText, tokens.get(0).toString());
 
 		resource = newMarkupResourceStream(locator, this.getClass(), "9", null, "html");
-		MarkupParser parser = new MarkupParserFactory(this.tester.getApplication())
+		MarkupParser parser = new MarkupParserFactory()
 				.newMarkupParser(resource);
 		parser.setStripComments(true);
 		parser.readAndParse();

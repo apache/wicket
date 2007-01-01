@@ -79,9 +79,12 @@ public final class PrependContextPathHandler extends AbstractMarkupFilter
 	 *            The application object
 	 * 
 	 */
-	public PrependContextPathHandler(final Application application)
+	public PrependContextPathHandler()
 	{
-		String contextPath = application.getApplicationSettings().getContextPath();
+		// Make sure the filter is placed at the end of the list of filters.
+		setPriority(999);
+		
+		String contextPath = Application.get().getApplicationSettings().getContextPath();
 
 		if (contextPath != null)
 		{

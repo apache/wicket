@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import wicket.Page;
+import wicket.WicketRuntimeException;
 import wicket.markup.parser.IMarkupFilter;
 import wicket.markup.parser.IXmlPullParser;
 import wicket.markup.parser.XmlPullParser;
@@ -32,6 +33,7 @@ import wicket.markup.parser.filter.BodyOnLoadHandler;
 import wicket.markup.parser.filter.HeadForceTagIdHandler;
 import wicket.markup.parser.filter.HtmlHandler;
 import wicket.markup.parser.filter.HtmlHeaderSectionHandler;
+import wicket.markup.parser.filter.PrependContextPathHandler;
 import wicket.markup.parser.filter.TagTypeHandler;
 import wicket.markup.parser.filter.WicketLinkTagHandler;
 import wicket.markup.parser.filter.WicketMessageTagHandler;
@@ -198,6 +200,7 @@ public class MarkupParser
 	{
 		// Chain together all the different markup filters and configure them
 		this.markupFilterChain = xmlParser;
+		xmlParser.setPriority(0);
 
 		registerMarkupFilter(new WicketTagIdentifier(this.markup));
 		registerMarkupFilter(new TagTypeHandler());
@@ -225,20 +228,8 @@ public class MarkupParser
 				registerMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
-	}
-
-	/**
-	 * Append a new filter to the list of already pre-configured markup filters.
-	 * To be used by subclasses which implement {@link #initFilterChain()}.
-	 * 
-	 * @param filter
-	 *            The filter to be appended
-	 * @deprecated since 2.0 please use registerMarkupFilter() instead
-	 */
-	public final void appendMarkupFilter(final IMarkupFilter filter)
-	{
-		filter.setParent(this.markupFilterChain);
-		this.markupFilterChain = filter;
+		
+		registerMarkupFilter(new PrependContextPathHandler());
 	}
 
 	/**
@@ -250,8 +241,26 @@ public class MarkupParser
 	 */
 	public final void registerMarkupFilter(final IMarkupFilter filter)
 	{
-		filter.setParent(this.markupFilterChain);
-		this.markupFilterChain = filter;
+		IMarkupFilter parent = this.markupFilterChain;
+		IMarkupFilter prevParent = null;
+		while (parent.getPriority() > filter.getPriority())
+		{
+			prevParent = parent;
+			parent = parent.getParent();
+			if (parent == null)
+			{
+				throw new WicketRuntimeException("The filters priority is too low. Must be > 0. Filter: " + filter);
+			}
+		}
+		filter.setParent(parent);
+		if (parent == this.markupFilterChain)
+		{
+			this.markupFilterChain = filter;
+		}
+		else
+		{
+			prevParent.setParent(filter);
+		}
 	}
 
 	/**

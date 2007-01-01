@@ -51,6 +51,7 @@ public class HeaderCleanupMarkupLoader extends AbstractMarkupLoader
 	 * @see wicket.markup.loader.IMarkupLoader#loadMarkup(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupResourceStream)
 	 */
+	@Override
 	public final MarkupFragment loadMarkup(final MarkupContainer container,
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException

@@ -26,11 +26,15 @@ import wicket.markup.ComponentTag;
  * @see wicket.markup.MarkupParser
  * 
  * @author Jonathan Locke
+ * @author Juergen Donnerstag
  */
 public abstract class AbstractMarkupFilter implements IMarkupFilter
 {
 	/** The next MarkupFilter in the chain */
 	private IMarkupFilter parent;
+
+	/** The filters execution priority */
+	private int priority = DEFAULT_PRIORITY;
 
 	/**
 	 * Construct.
@@ -71,5 +75,22 @@ public abstract class AbstractMarkupFilter implements IMarkupFilter
 	protected final ComponentTag nextComponentTag() throws ParseException
 	{
 		return (ComponentTag)getParent().nextTag();
+	}
+
+	/**
+	 * @see wicket.markup.parser.IMarkupFilter#getPriority()
+	 */
+	public int getPriority()
+	{
+		return this.priority;
+	}
+
+	/**
+	 * @see wicket.markup.parser.IMarkupFilter#setPriority(int)
+	 */
+	public IMarkupFilter setPriority(int priority)
+	{
+		this.priority = priority;
+		return this;
 	}
 }
