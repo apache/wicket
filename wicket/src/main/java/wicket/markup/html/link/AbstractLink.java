@@ -113,12 +113,11 @@ public abstract class AbstractLink<T> extends WebMarkupContainer<T>
 		this.beforeDisabledLink = beforeDisabledLink;
 	}
 
-	/**
-	 * @see wicket.Component#internalOnAttach()
-	 */
 	@Override
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
+
 		// Set default for before/after link text
 		if (beforeDisabledLink == null)
 		{

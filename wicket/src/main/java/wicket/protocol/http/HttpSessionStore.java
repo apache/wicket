@@ -54,7 +54,7 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 		{
 			if (value instanceof Page)
 			{
-				((Page)value).internalDetach();
+				((Page)value).detach();
 			}
 			String valueTypeName = (value != null ? value.getClass().getName() : "null");
 			try

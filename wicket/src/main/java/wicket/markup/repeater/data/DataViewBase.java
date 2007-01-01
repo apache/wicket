@@ -146,7 +146,7 @@ public abstract class DataViewBase<T> extends PageableRefreshingView<T>
 	@Override
 	protected void onDetach()
 	{
-		super.onDetach();
 		dataProvider.detach();
+		super.onDetach();
 	}
 }

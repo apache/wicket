@@ -116,17 +116,16 @@ import wicket.util.upload.FileUploadBase.SizeLimitExceededException;
  * call setPersistent(true) on each component.
  * </p>
  * <p>
- * Forms can be nested. You can put a form in another form. Since HTML doesn't 
- * allow nested &lt;form&gt; tags, the inner forms will be rendered using
- * the &lt;div&gt; tag. You have to submit the inner forms using explicit 
- * components (like Button or SubmitLink), you can't rely on implicit submit
- * behavior (by using just &lt;input type="submit"&gt; that is not attached
- * to a component). 
+ * Forms can be nested. You can put a form in another form. Since HTML doesn't
+ * allow nested &lt;form&gt; tags, the inner forms will be rendered using the
+ * &lt;div&gt; tag. You have to submit the inner forms using explicit components
+ * (like Button or SubmitLink), you can't rely on implicit submit behavior (by
+ * using just &lt;input type="submit"&gt; that is not attached to a component).
  * </p>
  * <p>
  * When a nested form is submitted, the user entered values in outer (parent)
  * forms are preserved and only the fields in the submitted form are validated.
- * </b> 
+ * </b>
  * 
  * @param <T>
  *            Type of model object this component holds
@@ -154,7 +153,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * Constant for specifying how a form is submitted, in this case using post.
 	 */
 	public static final String METHOD_POST = "post";
-	
+
 	/**
 	 * Constant for specifying how a form is submitted, in this case using get.
 	 */
@@ -260,9 +259,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	}
 
 	/**
-	 * Gets the method used to submit the form. Defaults to 'post'. Override this
-	 * if you have a requirement to alter this behavior.
-	 *
+	 * Gets the method used to submit the form. Defaults to 'post'. Override
+	 * this if you have a requirement to alter this behavior.
+	 * 
 	 * @return the method used to submit the form.
 	 */
 	protected String getMethod()
@@ -287,10 +286,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * IE has it's own way of doing things.
 	 * </p>
 	 * <p>
-	 * 	There can be only one default button per form hierarchy. So if you want
-	 *  to get the default button on a nested form, it will actually delegate the 
-	 *  call to root form.
-	 * </b>
+	 * There can be only one default button per form hierarchy. So if you want
+	 * to get the default button on a nested form, it will actually delegate the
+	 * call to root form. </b>
 	 * 
 	 * @return The button to set as the default button, or null when you want to
 	 *         'unset' any previously set default button
@@ -300,11 +298,11 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		if (isRootForm())
 		{
 			return defaultButton;
-		}			
+		}
 		else
 		{
-			return getRootForm().getDefaultButton(); 
-		}	
+			return getRootForm().getDefaultButton();
+		}
 	}
 
 	/**
@@ -384,7 +382,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 				{
 					// this is the root form
 					Form formToProcess = this;
-					
+
 					// find out whether it was a nested form that was submitted
 					if (submittingButton != null)
 					{
@@ -412,26 +410,21 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		return getFlag(FLAG_SUBMITTED);
 	}
 
-	/**
-	 * @see wicket.Component#internalOnAttach()
-	 */
 	@Override
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
-		super.internalOnAttach();
+		super.onAttach();
+
 		setOutputMarkupId(true);
-		
-		// TODO: MatejK - Handle multi part 
+
+		// TODO: MatejK - Handle multi part
 	}
-	
-	/**
-	 * @see wicket.Component#internalOnDetach()
-	 */
+
 	@Override
-	protected void internalOnDetach()
+	protected void onDetach()
 	{
-		super.internalOnDetach();
 		setFlag(FLAG_SUBMITTED, false);
+		super.onDetach();
 	}
 
 	/**
@@ -484,10 +477,9 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 * IE has it's own way of doing things.
 	 * </p>
 	 * <p>
-	 * 	There can be only one default button per form hierarchy. So if you set
-	 *  default button on a nested form, it will actually delegate the call
-	 *  to root form.
-	 * </b>
+	 * There can be only one default button per form hierarchy. So if you set
+	 * default button on a nested form, it will actually delegate the call to
+	 * root form. </b>
 	 * 
 	 * @param button
 	 *            The button to set as the default button, or null when you want
@@ -677,7 +669,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 		if (submittingComponent != null)
 		{
 			submittingComponent.onSubmit();
-			
+
 			// call onSubmit on the processed form
 			submittingComponent.getForm().onSubmit();
 		}
@@ -843,13 +835,15 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 			String fs = getHiddenFieldId(HIDDEN_FIELD_FAKE_SUBMIT);
 			getResponse().write(
 					new AppendingStringBuffer(
-							"\n<div style=\"display:none\"><input type=\"hidden\" name=\"").append(fs)
-							.append("\" id=\"").append(fs).append("\"/>"));
+							"\n<div style=\"display:none\"><input type=\"hidden\" name=\"").append(
+							fs).append("\" id=\"").append(fs).append("\"/>"));
 			String ws = getHiddenFieldId(HIDDEN_FIELD_WICKET_STATE);
-			getResponse().write(
-					new AppendingStringBuffer("\n<input type=\"hidden\" name=\"wicketState\" id=\"")
-							.append(ws).append("\"/></div>"));
-	
+			getResponse()
+					.write(
+							new AppendingStringBuffer(
+									"\n<input type=\"hidden\" name=\"wicketState\" id=\"").append(
+									ws).append("\"/></div>"));
+
 			// if a default button was set, handle the rendering of that
 			if (defaultButton != null && defaultButton.isVisibleInHierarchy()
 					&& defaultButton.isEnabled())
@@ -875,7 +869,7 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 
 			// If the javascriptid is already generated then use that on even it
 			// was before the first render. Because there could be a component
-			// which already uses it to submit the forum. This should be fixed 
+			// which already uses it to submit the forum. This should be fixed
 			// when we pre parse the markup so that we know the id is at front.
 
 			tag.put("method", getMethod());
@@ -997,14 +991,14 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	 */
 	protected final void updateFormComponentModels()
 	{
-		visitFormComponents(new ValidationVisitor() 
+		visitFormComponents(new ValidationVisitor()
 		{
 			@Override
 			public void validate(FormComponent formComponent)
 			{
 				// Potentially update the model
 				formComponent.updateModel();
-			}		
+			}
 		});
 	}
 

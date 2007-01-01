@@ -112,12 +112,11 @@ public abstract class Loop extends AbstractRepeater<Integer>
 		return getModelObject();
 	}
 
-	/**
-	 * @see wicket.Component#internalOnAttach()
-	 */
 	@Override
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
+
 		// Remove any previous loop contents
 		removeAll();
 
@@ -133,9 +132,14 @@ public abstract class Loop extends AbstractRepeater<Integer>
 
 				// Add and populate item
 				populateItem(item);
+				
+				// Attach item
+				item.attach();
 			}
 		}
+
 	}
+	
 
 	/**
 	 * Create a new LoopItem for loop at iteration.

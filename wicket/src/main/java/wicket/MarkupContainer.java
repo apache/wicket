@@ -26,7 +26,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import wicket.feedback.IFeedback;
 import wicket.markup.ComponentTag;
 import wicket.markup.MarkupElement;
 import wicket.markup.MarkupException;
@@ -216,12 +215,11 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	 * @param component
 	 *            The component to add
 	 */
-//	final void autoAdd(final Component component)
-//	{
-//		component.setAuto(true);
-//		add(component);
-//	}
-
+	// final void autoAdd(final Component component)
+	// {
+	// component.setAuto(true);
+	// add(component);
+	// }
 	/**
 	 * @param component
 	 *            The component to check
@@ -349,11 +347,12 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		}
 
 		int index = children_indexOf(child.getId());
-		if(index != -1)
+		if (index != -1)
 		{
-			if(children_get(index) != child)
+			if (children_get(index) != child)
 			{
-				throw new IllegalArgumentException("MarkupContainer " + getId() + " already contains child: " + child.getId());
+				throw new IllegalArgumentException("MarkupContainer " + getId()
+						+ " already contains child: " + child.getId());
 			}
 			return;
 		}
@@ -362,33 +361,15 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		addedComponent(child);
 	}
 
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called when a request begins.
-	 */
 	@Override
-	public void internalAttach()
+	void attachChildren()
 	{
-		// Handle begin request for the container itself
+		super.attachChildren();
 		try
 		{
-			super.internalAttach();
-
-			// Loop through child components
-			final int size = children_size();
-			for (int i = 0; i < size; i++)
+			for (Component child : this)
 			{
-				// Get next child
-				final Component<?> child = children_get(i);
-
-				// Ignore feedback as that was done in Page
-				if (!(child instanceof IFeedback))
-				{
-					// Call begin request on the child
-					child.internalAttach();
-				}
+				child.attach();
 			}
 		}
 		catch (RuntimeException ex)
@@ -405,24 +386,16 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 		}
 	}
 
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called when a request ends.
-	 */
 	@Override
-	public void internalDetach()
+	void detachChildren()
 	{
-		// Handle end request for the container itself
-		super.internalDetach();
-
 		// Loop through child components
 		for (Component<?> child : this)
 		{
 			// Call end request on the child
-			child.internalDetach();
+			child.detach();
 		}
+		super.detachChildren();
 	}
 
 	/**
@@ -1110,9 +1083,10 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 	}
 
 	/**
-	 * Will search for this specific child instance in the current
-	 * children. So it will do a identity check, it will not look if the
-	 * id is already present in the children. Use indexOf(String) for that. 
+	 * Will search for this specific child instance in the current children. So
+	 * it will do a identity check, it will not look if the id is already
+	 * present in the children. Use indexOf(String) for that.
+	 * 
 	 * @param child
 	 * @return The index of this child.
 	 */
@@ -1144,7 +1118,9 @@ public abstract class MarkupContainer<T> extends Component<T> implements Iterabl
 
 	/**
 	 * Will search for the id if it is found in the current children.
-	 * @param id The id to search for.
+	 * 
+	 * @param id
+	 *            The id to search for.
 	 * @return The index of this child.
 	 */
 	private final int children_indexOf(String id)

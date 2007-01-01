@@ -44,8 +44,8 @@ import wicket.version.undo.Change;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * @param <T> 
- * 			Type of model object this component holds 
+ * @param <T>
+ *            Type of model object this component holds
  */
 public abstract class PageableRefreshingView<T> extends RefreshingView<T> implements IPageable
 {
@@ -106,10 +106,10 @@ public abstract class PageableRefreshingView<T> extends RefreshingView<T> implem
 
 
 	@Override
-	protected void internalOnDetach()
+	protected void onDetach()
 	{
-		super.internalOnDetach();
 		clearCachedItemCount();
+		super.onDetach();
 	}
 
 	/**
@@ -343,7 +343,7 @@ public abstract class PageableRefreshingView<T> extends RefreshingView<T> implem
 	 * Iterator adapter that makes sure only the specified max number of items
 	 * can be accessed from its delegate.
 	 * 
-	 * @param <T> 
+	 * @param <T>
 	 */
 	private static class CappedIteratorAdapter<T> implements Iterator<IModel<T>>
 	{

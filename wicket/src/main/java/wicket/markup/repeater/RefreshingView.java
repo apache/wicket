@@ -33,8 +33,8 @@ import wicket.version.undo.Change;
  * and {@link RefreshingView#populateItem(Item) } methods. RefreshingView builds
  * the items that will be rendered by looping over the models retrieved from
  * {@link RefreshingView#getItemModels() } and calling the
- * {@link RefreshingView#newItem(MarkupContainer, String, int, IModel) } to generate the child
- * item container followed by a call to
+ * {@link RefreshingView#newItem(MarkupContainer, String, int, IModel) } to
+ * generate the child item container followed by a call to
  * {@link RefreshingView#populateItem(Item) } to let the user populate the newly
  * created item container with custom components.
  * </p>
@@ -49,8 +49,8 @@ import wicket.version.undo.Change;
  * 
  * @author Igor Vaynberg (ivaynberg)
  * 
- * @param <T> 
- * 			Type of model object this component holds 
+ * @param <T>
+ *            Type of model object this component holds
  * 
  */
 public abstract class RefreshingView<T> extends RepeatingView<T>
@@ -86,9 +86,9 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 	 * selected item reuse strategy
 	 */
 	@Override
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
-		super.internalOnAttach();
+		super.onAttach();
 
 		if (isVisibleInHierarchy())
 		{
@@ -101,13 +101,15 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 					String id = RefreshingView.this.newChildId();
 					Item<T> item = RefreshingView.this.newItem(parent, id, index, model);
 					RefreshingView.this.populateItem(item);
+					item.attach();
 					return item;
 				}
 
 			};
 
 			Iterator<IModel<T>> models = getItemModels();
-			Iterator<Item<T>> items = getItemReuseStrategy().getItems(RefreshingView.this, itemFactory, models, getItems());
+			Iterator<Item<T>> items = getItemReuseStrategy().getItems(RefreshingView.this,
+					itemFactory, models, getItems());
 			removeAll();
 			addItems(items);
 		}
@@ -148,7 +150,8 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 	 * Factory method for Item container. Item containers are simple
 	 * MarkupContainer used to aggregate the user added components for a row
 	 * inside the view.
-	 * @param parent 
+	 * 
+	 * @param parent
 	 * 
 	 * @see Item
 	 * @param id
@@ -160,7 +163,8 @@ public abstract class RefreshingView<T> extends RepeatingView<T>
 	 * 
 	 * @return DataItem created DataItem
 	 */
-	protected Item<T> newItem(MarkupContainer<?> parent, final String id, int index, final IModel<T> model)
+	protected Item<T> newItem(MarkupContainer<?> parent, final String id, int index,
+			final IModel<T> model)
 	{
 		return new Item<T>(parent, id, index, model);
 	}

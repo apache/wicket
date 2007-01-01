@@ -1051,8 +1051,8 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	@Override
 	protected void onDetach()
 	{
-		super.onDetach();
 		convertedInput = null;
+		super.onDetach();
 	}
 
 	/**

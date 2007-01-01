@@ -181,8 +181,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 	/** Version manager for this page */
 	private IPageVersionManager<T> versionManager;
 
-	private transient boolean attached = false;
-
 	/**
 	 * Constructor.
 	 */
@@ -758,49 +756,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 		dirty();
 	}
 
-	/**
-	 * @see wicket.MarkupContainer#internalDetach()
-	 */
 	@Override
-	public void internalDetach()
-	{
-		/*
-		 * FIXME ivaynberg: i am disabling this check because components can be
-		 * attached without the page itself being attached (like during page
-		 * render), but it is convinient to call internaldetach() on the page to
-		 * cascade the detach call to all components
-		 * 
-		 * i think this check should be moved into each component, not just be
-		 * in the page
-		 */
-		//if (attached)
-		//{
-			super.internalDetach();
-			attached = false;
-		//}
-	}
-
-	/**
-	 * @see wicket.MarkupContainer#internalAttach()
-	 */
-	@Override
-	public void internalAttach()
-	{
-		if (!attached)
-		{
-			super.internalAttach();
-			attached = true;
-		}
-	}
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * @see wicket.Component#internalOnDetach()
-	 */
-	@Override
-	protected final void internalOnDetach()
+	protected void onDetach()
 	{
 		if (log.isDebugEnabled())
 		{
@@ -819,6 +776,8 @@ public abstract class Page<T> extends MarkupContainer<T>
 
 			endVersion();
 		}
+
+		super.onDetach();
 	}
 
 	/**
@@ -1136,7 +1095,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			public Object component(Component component)
 			{
 				((IFeedback)component).updateFeedback();
-				component.internalAttach();
+				component.attach();
 				return IVisitor.CONTINUE_TRAVERSAL;
 			}
 		});
@@ -1147,7 +1106,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 		}
 
 		// Now, do the initialization for the other components
-		internalAttach();
+		attach();
 
 		// Visit all this page's children to reset header contribution status
 		// and check

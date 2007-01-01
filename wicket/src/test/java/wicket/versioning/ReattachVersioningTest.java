@@ -30,9 +30,9 @@ public class ReattachVersioningTest extends WicketTestCase
 	{
 		executeTest(ReattachTestPage.class, "ReattachTestPage_result.html");
 		ReattachTestPage testPage = (ReattachTestPage)tester.getLastRenderedPage();
-		testPage.internalAttach();
+		testPage.attach();
 		testPage.reattachLabel1();
-		testPage.internalDetach();
+		testPage.detach();
 		assertEquals(testPage.getVersions(), 2);
 		testPage = (ReattachTestPage)testPage.getVersion(0);
 		assertNotNull(testPage.get("label"));

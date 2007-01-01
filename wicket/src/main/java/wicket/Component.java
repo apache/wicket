@@ -547,6 +547,10 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/** Whether the header has already been contributed */
 	private static final int FLAG_HEAD_RENDERED = 0x100000;
 
+	private static final int FLAG_ATTACHED = 0x20000000;
+	private static final int FLAG_ATTACHING = 0x40000000;
+	private static final int FLAG_DETACHING = 0x80000000;
+
 	/** Log. */
 	private static final Logger log = LoggerFactory.getLogger(Component.class);
 
@@ -1705,7 +1709,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 			// Auto-components didn't yet call attach()
 			if (getFlag(FLAG_AUTO) == true)
 			{
-				internalAttach();
+				attach();
 			}
 
 			try
@@ -2772,49 +2776,65 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called when a request begins.
+	 * Attaches any child components
 	 */
-	public void internalAttach()
-	{
-		onAttach();
-		internalOnAttach();
+	void attachChildren() {
+		// noop
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
+	 * Attaches the component.
 	 * 
-	 * Called when a request ends.
+	 * FIXME more javadoc
 	 */
-	public void internalDetach()
+	public final void attach()
 	{
-		internalOnDetach();
-		onDetach();
+		if (!getFlag(FLAG_ATTACHED))
+		{
+			setFlag(FLAG_ATTACHING, true);
+			onAttach();
+			if (getFlag(FLAG_ATTACHING))
+			{
+				throw new IllegalStateException(Component.class.getName()
+						+ " has not been properly attached. Something in the hierarchy of "
+						+ getClass().getName()
+						+ " has not called super.onAtach() in the override of onAttach() method");
+			}
+			setFlag(FLAG_ATTACHED, true);
+		}
+		
+		attachChildren();
 	}
 
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
-	 * 
-	 * Called when a request begins.
-	 * 
+	 * Detaches any child components
 	 */
-	protected void internalOnAttach()
-	{
+	void detachChildren() {
+		
 	}
-
+	
 	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL OR
-	 * OVERRIDE.
+	 * Detaches component
 	 * 
-	 * Called when a request ends.
-	 * 
+	 * FIXME more javadoc
 	 */
-	protected void internalOnDetach()
+	public final void detach()
 	{
+		if (getFlag(FLAG_ATTACHED))
+		{
+			setFlag(FLAG_DETACHING, true);
+			onDetach();
+			if (getFlag(FLAG_DETACHING))
+			{
+				throw new IllegalStateException(Component.class.getName()
+						+ " has not been properly detached. Something in the hierarchy of "
+						+ getClass().getName()
+						+ " has not called super.onDetach() in the override of onDetach() method");
+			}
+			setFlag(FLAG_ATTACHED, false);
+		}
+		
+		detachChildren();
 	}
 
 	/**
@@ -2915,6 +2935,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	protected void onAttach()
 	{
+		setFlag(FLAG_ATTACHING, false);
 	}
 
 	/**
@@ -2959,6 +2980,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	protected void onDetach()
 	{
+		setFlag(FLAG_DETACHING, false);
 	}
 
 	/**

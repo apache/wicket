@@ -48,10 +48,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *     &lt;tbody&gt;
- *       &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *       &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *     ...    
+ *       &lt;tbody&gt;
+ *         &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *         &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *       ...    
  * </pre>
  * 
  * <p>
@@ -533,13 +533,11 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 		return new ListItemModel<T>(this, index);
 	}
 
-	/**
-	 * @see wicket.MarkupContainer#internalOnAttach()
-	 */
 	@Override
-	@SuppressWarnings("unchecked")
-	protected void internalOnAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
+
 		if (isVisibleInHierarchy())
 		{
 			// Get number of items to be displayed
@@ -570,23 +568,24 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 					// list view
 					removeAll();
 				}
-	
+
 				// Loop through the markup in this container for each item
 				for (int i = 0; i < size; i++)
 				{
 					// Get index
 					final int index = firstIndex + i;
-	
+
 					// If this component does not already exist, populate it
 					ListItem<T> item = (ListItem<T>)get(Integer.toString(index));
 					if (item == null)
 					{
 						// Create item for index
 						item = newItem(index);
-	
+
 						// Populate the list item
 						onBeginPopulateItem(item);
 						populateItem(item);
+						item.attach();
 					}
 				}
 			}

@@ -228,12 +228,12 @@ public abstract class AbstractTree extends Panel<TreeModel>
 		@Override
 		protected void onDetach()
 		{
-			super.onDetach();
 			TreeNode node = getModelObject();
 			if (node instanceof IDetachable)
 			{
 				((IDetachable)node).detach();
 			}
+			super.onDetach();
 		}
 	}
 
@@ -508,12 +508,13 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	}
 
 	/**
-	 * Called at the beginning of the request (not ajax request, unless we are
-	 * rendering the entire component)
+	 * @see wicket.MarkupContainer#onAttach()
 	 */
 	@Override
-	public void internalAttach()
+	protected void onAttach()
 	{
+		super.onAttach();
+
 		if (attached == false)
 		{
 			onBeforeAttach();
@@ -553,17 +554,14 @@ public abstract class AbstractTree extends Panel<TreeModel>
 
 			attached = true;
 		}
-		super.internalAttach();
+		super.attach();
 	}
 
-	/**
-	 * @see wicket.MarkupContainer#internalDetach()
-	 */
 	@Override
-	public void internalDetach()
+	protected void onDetach()
 	{
-		super.internalDetach();
 		attached = false;
+		super.onDetach();
 	}
 
 	/**
@@ -699,10 +697,11 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			{
 				TreeItem item = (TreeItem)parent.getChildren().get(i);
 
-				// invalidate the node and it's children, so that they are redrawn
-				invalidateNodeWithChildren((TreeNode)item.getModelObject());					
+				// invalidate the node and it's children, so that they are
+				// redrawn
+				invalidateNodeWithChildren((TreeNode)item.getModelObject());
 			}
-		}		
+		}
 	}
 
 	/**
@@ -827,10 +826,11 @@ public abstract class AbstractTree extends Panel<TreeModel>
 			}
 
 			// We have to repeat this as long as there are any dirty items to be
-			// created. The reason why we can't do this in one pass is that some 
-			// of the items may need to be inserted after items that has not been 
-			// inserted yet, so we have to detect those and wait until the items 
-			// they depend on are  inserted.
+			// created. The reason why we can't do this in one pass is that some
+			// of the items may need to be inserted after items that has not
+			// been
+			// inserted yet, so we have to detect those and wait until the items
+			// they depend on are inserted.
 			while (dirtyItemsCreateDOM.isEmpty() == false)
 			{
 				for (Iterator<TreeItem> i = dirtyItemsCreateDOM.iterator(); i.hasNext();)

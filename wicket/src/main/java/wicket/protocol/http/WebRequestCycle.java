@@ -222,7 +222,7 @@ public class WebRequestCycle extends RequestCycle
 
 			// Redirect page can touch its models already (via for example the
 			// constructors)
-			page.internalDetach();
+			page.detach();
 		}
 
 		if (redirectUrl == null)

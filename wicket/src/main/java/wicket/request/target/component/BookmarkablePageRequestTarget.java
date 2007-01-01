@@ -119,7 +119,7 @@ public class BookmarkablePageRequestTarget implements IBookmarkablePageRequestTa
 	{
 		if (page != null)
 		{
-			page.internalDetach();
+			page.detach();
 		}
 	}
 
