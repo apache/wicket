@@ -404,7 +404,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 	 */
 	public Collection getModelCollection()
 	{
-		return (Collection)getModelObject();
+		return getModelObject();
 	}
 
 	/**
@@ -542,6 +542,7 @@ public class Palette<T, E> extends Panel<Collection<T>>
 		}
 
 
+		@Override
 		protected void onComponentTag(ComponentTag tag)
 		{
 			if (!isPaletteEnabled())
