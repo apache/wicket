@@ -35,7 +35,8 @@ import wicket.util.resource.UrlResourceStream;
 public class ResourceFinderResourceStreamLocator extends AbstractResourceStreamLocator
 {
 	/** Logging */
-	private static final Logger log = LoggerFactory.getLogger(ResourceFinderResourceStreamLocator.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(ResourceFinderResourceStreamLocator.class);
 
 	/** The finder to use to locate the resource stream */
 	private IResourceFinder finder;
@@ -71,7 +72,23 @@ public class ResourceFinderResourceStreamLocator extends AbstractResourceStreamL
 		if (file != null)
 		{
 			// Return file resource
-			return new UrlResourceStream(file);
+			IResourceStream stream = new UrlResourceStream(file);
+
+			if (log.isDebugEnabled())
+			{
+				if (stream != null)
+				{
+					log.error("ResourceFinder found a file (URL) but the locator failed to create the UrlResourceStream. Maybe a classloader issue?");
+				}
+				else
+				{
+					log.debug("'file' classLoader: " + file.getClass().getClassLoader().toString()
+							+ "; 'stream' classLoader: "
+							+ stream.getClass().getClassLoader().toString());
+				}
+			}
+
+			return stream;
 		}
 		return null;
 	}

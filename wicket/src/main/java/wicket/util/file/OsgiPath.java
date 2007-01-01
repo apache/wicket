@@ -18,6 +18,9 @@ package wicket.util.file;
 
 import java.net.URL;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A Finder (note: it is not a Path) for working with OSGi bundles.
  * 
@@ -25,6 +28,8 @@ import java.net.URL;
  */
 public final class OsgiPath implements IResourceFinder
 {
+	private final Logger log = LoggerFactory.getLogger(OsgiPath.class);
+	
 	/** ClassLoader to be used for locating resources. */
 	final ClassLoader classLoader;
 
@@ -48,7 +53,11 @@ public final class OsgiPath implements IResourceFinder
 	 */
 	public URL find(final String pathname)
 	{
-		String resourcePathName = "/" + pathname;
+		String resourcePathName = /* "/" + */ pathname;
+		if (log.isDebugEnabled())
+		{
+			log.debug("classLoader: " + classLoader.toString());
+		}
 		return classLoader.getResource(resourcePathName);
 	}
 }
