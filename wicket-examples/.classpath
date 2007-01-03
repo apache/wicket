@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/wicket-extensions"/>
 	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.6.2/xercesImpl-2.6.2-sources.jar"/>
@@ -19,7 +19,6 @@
 	<classpathentry kind="var" path="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket/2.0-SNAPSHOT/wicket-2.0-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev.jar" sourcepath="M2_REPO/jtidy/jtidy/4aug2000r7-dev/jtidy-4aug2000r7-dev-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.1.0/slf4j-api-1.1.0.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.1.0/slf4j-api-1.1.0-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/wicket/wicket-extensions/2.0-SNAPSHOT/wicket-extensions-2.0-SNAPSHOT.jar" sourcepath="M2_REPO/wicket/wicket-extensions/2.0-SNAPSHOT/wicket-extensions-2.0-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3.jar" sourcepath="M2_REPO/cglib/cglib/2.1_3/cglib-2.1_3-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/ibm/icu/icu4j/2.6.1/icu4j-2.6.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13.jar" sourcepath="M2_REPO/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar"/>
