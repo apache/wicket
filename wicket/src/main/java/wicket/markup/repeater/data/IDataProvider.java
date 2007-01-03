@@ -29,15 +29,15 @@ import wicket.model.IModel;
  * <pre>
  *         class UsersProvider implements IDataProvider<User>() {
  *           
- *           Iterator<User> iterator(int first, int count) {
+ *           public Iterator<User> iterator(int first, int count) {
  *             MyApplication.get().getUserDao().iterator(first, count);
  *           }
  *           
- *           int size() {
+ *           public int size() {
  *             MyApplication.get().getUserDao().getCount();
  *           }
  *           
- *           IModel<User> model(User user) {
+ *           public IModel<User> model(User user) {
  *             return new DetachableUserModel<User>(user);
  *           }
  *         }
