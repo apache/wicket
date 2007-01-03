@@ -43,7 +43,6 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.Radio;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RadioGroup;
-import wicket.markup.html.form.RequiredTextField;
 import wicket.markup.html.form.TextField;
 import wicket.markup.html.image.Image;
 import wicket.markup.html.link.Link;
@@ -112,11 +111,9 @@ public class Home extends WebPage {
 				}
 			};
 
-			RequiredTextField stringTextField = new RequiredTextField<String>(this, "stringProperty");
-			stringTextField.setLabel(new Model<String>("String"));
-			RequiredTextField integerTextField = new RequiredTextField<Integer>(this, "integerProperty", Integer.class);
-			integerTextField.add(NumberValidator.POSITIVE);
-			new RequiredTextField<Double>(this, "doubleProperty", Double.class);
+			new TextField<String>(this, "stringProperty").setRequired(true).setLabel(new Model<String>("String"));
+			new TextField<Integer>(this, "integerProperty", Integer.class).setRequired(true).add(NumberValidator.POSITIVE);
+			new TextField<Double>(this, "doubleProperty", Double.class).setRequired(true);
 			// we have a component attached to the label here, as we want to
 			// synchronize the
 			// id's of the label, textfield and datepicker. Note that you can
@@ -125,8 +122,8 @@ public class Home extends WebPage {
 			WebMarkupContainer dateLabel = new WebMarkupContainer(this, "dateLabel");
 			TextField datePropertyTextField = new TextField<Date>(this, "dateProperty", Date.class);
 			new DatePicker(this, "datePicker", dateLabel, datePropertyTextField);
-			new RequiredTextField<Integer>(this, "integerInRangeProperty", Integer.class).add(NumberValidator.range(0,
-					100));
+			new TextField<Integer>(this, "integerInRangeProperty", Integer.class).add(NumberValidator.range(0,
+					100)).setRequired(true);
 			new CheckBox(this, "booleanProperty");
 			RadioChoice<String> rc = new RadioChoice<String>(this, "numberRadioChoice", NUMBERS).setSuffix("");
 			rc.setLabel(new Model<String>("number"));

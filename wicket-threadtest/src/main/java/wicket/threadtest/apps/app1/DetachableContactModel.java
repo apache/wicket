@@ -17,7 +17,6 @@
  */
 package wicket.threadtest.apps.app1;
 
-import wicket.markup.repeater.AbstractPageableView;
 import wicket.markup.repeater.IItemReuseStrategy;
 import wicket.markup.repeater.ReuseIfModelsEqualStrategy;
 import wicket.model.AbstractReadOnlyDetachableModel;
