@@ -409,7 +409,7 @@ public class MarkupCache
 	 */
 	protected IMarkupLoader newMarkupLoader()
 	{
-		return new DefaultMarkupLoader();
+		return new DefaultMarkupLoader(application);
 	}
 
 	/**
