@@ -25,38 +25,36 @@ import wicket.markup.MarkupResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 
 /**
- * Load the markup via the MarkupParser, not more, not less. Caching is provided
- * separately as well as Inherited-Markup merging.
+ * Reading and parsing the markup resource file is just one task while loading
+ * the whole markup associated with a component. E.g. markup inheritance
+ * requires to merge two markup files.
  * 
  * @author Juergen Donnerstag
  */
-public class DefaultMarkupLoader implements IMarkupLoader
+public class DefaultMarkupLoader extends AbstractMarkupLoader
 {
-	/** The Wicket application */
-	private final Application application;
-
 	/**
 	 * Constructor.
-	 * 
-	 * @param application
 	 */
-	public DefaultMarkupLoader(final Application application)
+	public DefaultMarkupLoader()
 	{
-		this.application = application;
 	}
 
 	/**
 	 * @see wicket.markup.loader.IMarkupLoader#loadMarkup(wicket.MarkupContainer,
 	 *      wicket.markup.MarkupResourceStream)
 	 */
+	@Override
 	public final MarkupFragment loadMarkup(final MarkupContainer container,
 			final MarkupResourceStream markupResourceStream) throws IOException,
 			ResourceStreamNotFoundException
 	{
-		// read and parse the markup
-		MarkupFragment markup = application.getMarkupSettings().getMarkupParserFactory()
-				.newMarkupParser(markupResourceStream).readAndParse();
+		final Application application = Application.get();
 
-		return markup;
+		IMarkupLoader loader = new InheritedMarkupMarkupLoader(application)
+				.setParent(new HeaderCleanupMarkupLoader(application)
+						.setParent(new BaseMarkupLoader()));
+
+		return loader.loadMarkup(container, markupResourceStream);
 	}
 }
