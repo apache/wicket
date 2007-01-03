@@ -27,17 +27,17 @@ import wicket.model.IModel;
  * Example:
  * 
  * <pre>
- *         class UsersProvider implements IDataProvider() {
+ *         class UsersProvider implements IDataProvider {
  *           
- *           Iterator iterator(int first, int count) {
+ *           public Iterator iterator(int first, int count) {
  *             ((MyApplication)Application.get()).getUserDao().iterator(first, count);
  *           }
  *           
- *           int size() {
+ *           public int size() {
  *             ((MyApplication)Application.get()).getUserDao().getCount();
  *           }
  *           
- *           IModel model(Object object) {
+ *           public IModel model(Object object) {
  *             return new DetachableUserModel((User)object);
  *           }
  *         }
