@@ -402,33 +402,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * Detaches any attached models referenced by this page.
-	 */
-	@Override
-	public void detachModels()
-	{
-		// visit all this page's children to detach the models
-		visitChildren(new IVisitor()
-		{
-			public Object component(Component component)
-			{
-				try
-				{
-					// detach any models of the component
-					component.detachModels();
-				}
-				catch (Exception e) // catch anything; we MUST detach all models
-				{
-					log.error("detaching models of component " + component + " failed:", e);
-				}
-				return IVisitor.CONTINUE_TRAVERSAL;
-			}
-		});
-
-		super.detachModels();
-	}
-
-	/**
 	 * Mark this page as dirty in the session
 	 */
 	public final void dirty()

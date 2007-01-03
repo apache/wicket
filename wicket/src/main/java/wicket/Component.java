@@ -3030,6 +3030,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 */
 	protected void onDetach()
 	{
+		detachModels();
 		setFlag(FLAG_DETACHING, false);
 	}
 
