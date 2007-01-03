@@ -16,6 +16,7 @@
  */
 package wicket.markup.html.list;
 
+import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.MarkupStream;
@@ -168,7 +169,8 @@ public abstract class Loop extends AbstractRepeater<Integer>
 			for (int iteration = 0; iteration < iterations; iteration++)
 			{
 				// Get item for iteration
-				final LoopItem item = (LoopItem)get(Integer.toString(iteration));
+				// Cast to Component fixes JDK 1.5.0_06 compiler bug
+				final LoopItem item = (LoopItem)(Component)get(Integer.toString(iteration));
 
 				// Item should have been constructed in internalOnBeginRequest
 				if (item == null)

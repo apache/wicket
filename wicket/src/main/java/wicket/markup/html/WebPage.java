@@ -19,6 +19,7 @@ package wicket.markup.html;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import wicket.Component;
 import wicket.IPageMap;
 import wicket.IRequestTarget;
 import wicket.MarkupContainer;
@@ -166,7 +167,8 @@ public class WebPage<T> extends Page<T> implements INewBrowserWindowListener
 	 */
 	public final HeaderContainer getHeaderContainer()
 	{
-		return (HeaderContainer)get(HtmlHeaderSectionHandler.HEADER_ID);
+		// Cast to Component fixes compiler bug in JDK 1.5.0_06
+		return (HeaderContainer)(Component)get(HtmlHeaderSectionHandler.HEADER_ID);
 	}
 
 	/**
