@@ -16,6 +16,7 @@
  */
 package wicket.ajax.form;
 
+import wicket.Component;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.ClientEvent;
@@ -46,6 +47,17 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 	private Form form;
 
+	/**
+	 * Constructor. This constructor can only be used when the component this
+	 * behavior is attached to is inside a form.
+	 * 
+	 * @param event
+	 *            javascript event this behavior is attached to, like onclick
+	 */
+	public AjaxFormSubmitBehavior(ClientEvent event)
+	{
+		this(null, event);
+	}
 
 	/**
 	 * Construct.
@@ -61,12 +73,37 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		this.form = form;
 	}
 
+	private Form getForm()
+	{
+		if (form == null)
+		{
+			// try to find form in the hierarchy of owning component
+			Component cursor = getComponent();
+			while (cursor != null && !(cursor instanceof Form))
+			{
+				cursor = cursor.getParent();
+			}
+			if (cursor == null)
+			{
+				throw new IllegalStateException(
+						"form was not specified in the constructor and cannot "
+								+ "be found in the hierarchy of the component this behavior "
+								+ "is attached to");
+			}
+			else
+			{
+				form = (Form)cursor;
+			}
+		}
+		return form;
+	}
+
 	@Override
 	protected CharSequence getEventHandler()
 	{
-		// get the form we are really going to submit 
-		final Form form = this.form.getRootForm();
-		
+		// get the form we are really going to submit
+		final Form form = getForm().getRootForm();
+
 		final String formId = form.getMarkupId();
 		final CharSequence url = getCallbackUrl();
 
@@ -76,7 +113,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 		if (getComponent() instanceof IFormSubmittingComponent)
 		{
-			call.append("'").append(((IFormSubmittingComponent)getComponent()).getInputName()).append("' ");
+			call.append("'").append(((IFormSubmittingComponent)getComponent()).getInputName())
+					.append("' ");
 		}
 		else
 		{
@@ -89,9 +127,9 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	@Override
 	protected void onEvent(AjaxRequestTarget target)
 	{
-		// get the form we are really going to submit 
-		final Form form = this.form.getRootForm();
-		
+		// get the form we are really going to submit
+		final Form form = getForm().getRootForm();
+
 		form.onFormSubmitted();
 		if (!form.hasError())
 		{
