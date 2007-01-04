@@ -49,6 +49,17 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 	private Form form;
 
+	/**
+	 * Constructor. This constructor can only be used when the component this
+	 * behavior is attached to is inside a form.
+	 * 
+	 * @param event
+	 *            javascript event this behavior is attached to, like onclick
+	 */
+	public AjaxFormSubmitBehavior(String event)
+	{
+		this(null, event);
+	}
 
 	/**
 	 * Construct.
