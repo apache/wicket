@@ -16,6 +16,7 @@
  */
 package wicket.ajax.form;
 
+import wicket.Component;
 import wicket.ajax.AjaxEventBehavior;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.markup.html.form.Button;
@@ -44,6 +45,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private Component owner;
+
 	private Form form;
 
 
@@ -61,9 +64,35 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 		this.form = form;
 	}
 
+	private Form getForm()
+	{
+		if (form == null)
+		{
+			// try to find form in the hierarchy of owning component
+			Component cursor = getComponent();
+			while (cursor != null && !(cursor instanceof Form))
+			{
+				cursor = cursor.getParent();
+			}
+			if (cursor == null)
+			{
+				throw new IllegalStateException(
+						"form was not specified in the constructor and cannot "
+								+ "be found in the hierarchy of the component this behavior "
+								+ "is attached to");
+			}
+			else
+			{
+				form = (Form)cursor;
+			}
+		}
+		return form;
+	}
+
+
 	protected CharSequence getEventHandler()
 	{
-		final String formId = form.getMarkupId();
+		final String formId = getForm().getMarkupId();
 		final CharSequence url = getCallbackUrl();
 
 
@@ -84,8 +113,8 @@ public abstract class AjaxFormSubmitBehavior extends AjaxEventBehavior
 
 	protected void onEvent(AjaxRequestTarget target)
 	{
-		form.onFormSubmitted();
-		if (!form.hasError())
+		getForm().onFormSubmitted();
+		if (!getForm().hasError())
 		{
 			onSubmit(target);
 		}

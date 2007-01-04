@@ -41,6 +41,16 @@ public abstract class AjaxSubmitButton extends Button
 	 * Construct.
 	 * 
 	 * @param id
+	 */
+	public AjaxSubmitButton(String id)
+	{
+		this(id, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
 	 * @param form
 	 */
 	public AjaxSubmitButton(String id, final Form form)
@@ -56,7 +66,7 @@ public abstract class AjaxSubmitButton extends Button
 			{
 				AjaxSubmitButton.this.onSubmit(target, form);
 			}
-			
+
 			protected void onError(AjaxRequestTarget target)
 			{
 				AjaxSubmitButton.this.onError(target, form);
@@ -121,8 +131,9 @@ public abstract class AjaxSubmitButton extends Button
 	 * 
 	 * TODO 1.3: Make abstract to be consistent with onsubmit()
 	 */
-	protected void onError(AjaxRequestTarget target, Form form) {
-		
+	protected void onError(AjaxRequestTarget target, Form form)
+	{
+
 	}
 
 }

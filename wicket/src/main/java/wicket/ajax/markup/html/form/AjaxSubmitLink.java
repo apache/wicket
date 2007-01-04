@@ -41,6 +41,16 @@ public abstract class AjaxSubmitLink extends WebMarkupContainer
 	 * Construct.
 	 * 
 	 * @param id
+	 */
+	public AjaxSubmitLink(String id)
+	{
+		this(id, null);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param id
 	 * @param form
 	 */
 	public AjaxSubmitLink(String id, final Form form)
