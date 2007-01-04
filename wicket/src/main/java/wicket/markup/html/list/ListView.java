@@ -48,10 +48,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *                   &lt;tbody&gt;
- *                     &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *                     &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *                   ...    
+ *                     &lt;tbody&gt;
+ *                       &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                       &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                     ...    
  * </pre>
  * 
  * <p>
@@ -533,6 +533,9 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 		return new ListItemModel<T>(this, index);
 	}
 
+	/**
+	 * @see wicket.Component#onAttach()
+	 */
 	@Override
 	protected void onAttach()
 	{
@@ -553,8 +556,15 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 
 	/**
 	 * Generates items of the listview. Subclasses can override to introduce a
-	 * different way items can be generated. Newly created items should be
-	 * populated by {@link ListView#populateItem(ListItem)} method.
+	 * different way items can be generated.
+	 * 
+	 * Newly created items should be populated by
+	 * {@link ListView#populateItem(ListItem)} method.
+	 * 
+	 * When this item is invoked the old listitems are still present in the
+	 * listview in order to support item recycling, dont forget to call
+	 * {@link #removeAll()} if you are going to generate a completely new set of
+	 * items.
 	 */
 	protected void onGenerateItems()
 	{
