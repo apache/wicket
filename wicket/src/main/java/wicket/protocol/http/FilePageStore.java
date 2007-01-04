@@ -16,10 +16,12 @@
  */
 package wicket.protocol.http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 
 import org.slf4j.Logger;
@@ -33,9 +35,9 @@ import wicket.util.lang.Objects;
 /**
  * Stores pages on disk.
  * <p>
- * Override {@link #getWorkDir()} to change the default directory
- * for pages, which is configured from the javax.servlet.context.tempdir
- * attribute in the servlet context.
+ * Override {@link #getWorkDir()} to change the default directory for pages,
+ * which is configured from the javax.servlet.context.tempdir attribute in the
+ * servlet context.
  * 
  * @author jcompagner
  */
@@ -166,19 +168,27 @@ public class FilePageStore implements IPageStore
 		// TODO check can this be called everytime at this place? Putting should
 		// be called after the rendering so it should be ok.
 		page.detach();
-		byte[] bytes = Objects.objectToByteArray(page);
 		FileOutputStream fos = null;
 		try
 		{
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			try
+			{
+				new ObjectOutputStream(out).writeObject(page);
+			}
+			finally
+			{
+				out.close();
+			}
+			byte[] bytes = out.toByteArray();
 			fos = new FileOutputStream(pageFile);
 			ByteBuffer bb = ByteBuffer.wrap(bytes);
 			fos.getChannel().write(bb);
 		}
 		catch (Exception e)
 		{
-			log.debug("Error saving page " + page.getId() + " with version "
-					+ page.getCurrentVersionNumber() + " for the sessionid " + sessionId
-					+ " from disc", e);
+			log.error("Error saving page " + page.getId() + " with version "
+					+ page.getCurrentVersionNumber() + " for the sessionid " + sessionId, e);
 		}
 		finally
 		{
