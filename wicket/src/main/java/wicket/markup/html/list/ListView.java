@@ -48,10 +48,10 @@ import wicket.version.undo.Change;
  * Example:
  * 
  * <pre>
- *       &lt;tbody&gt;
- *         &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
- *         &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
- *       ...    
+ *                   &lt;tbody&gt;
+ *                     &lt;tr wicket:id=&quot;rows&quot; class=&quot;even&quot;&gt;
+ *                     &lt;td&gt;&lt;span wicket:id=&quot;id&quot;&gt;Test ID&lt;/span&gt;&lt;/td&gt;
+ *                   ...    
  * </pre>
  * 
  * <p>
@@ -540,58 +540,68 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 
 		if (isVisibleInHierarchy())
 		{
-			// Get number of items to be displayed
-			final int size = getViewSize();
-			if (size > 0)
+			if (getViewSize() > 0)
 			{
-				if (getReuseItems())
-				{
-					// Remove all ListItems no longer required
-					final int maxIndex = firstIndex + size;
-					for (final Iterator iterator = iterator(); iterator.hasNext();)
-					{
-						// Get next child component
-						final ListItem child = (ListItem)iterator.next();
-						if (child != null)
-						{
-							final int index = child.getIndex();
-							if (index < firstIndex || index >= maxIndex)
-							{
-								iterator.remove();
-							}
-						}
-					}
-				}
-				else
-				{
-					// Automatically rebuild all ListItems before rendering the
-					// list view
-					removeAll();
-				}
-
-				// Loop through the markup in this container for each item
-				for (int i = 0; i < size; i++)
-				{
-					// Get index
-					final int index = firstIndex + i;
-
-					// If this component does not already exist, populate it
-					ListItem<T> item = (ListItem<T>)get(Integer.toString(index));
-					if (item == null)
-					{
-						// Create item for index
-						item = newItem(index);
-
-						// Populate the list item
-						onBeginPopulateItem(item);
-						populateItem(item);
-						item.attach();
-					}
-				}
+				onGenerateItems();
 			}
 			else
 			{
 				removeAll();
+			}
+		}
+	}
+
+	/**
+	 * Generates items of the listview. Subclasses can override to introduce a
+	 * different way items can be generated. Newly created items should be
+	 * populated by {@link ListView#populateItem(ListItem)} method.
+	 */
+	protected void onGenerateItems()
+	{
+		// Get number of items to be displayed
+		final int size = getViewSize();
+		if (getReuseItems())
+		{
+			// Remove all ListItems no longer required
+			final int maxIndex = firstIndex + size;
+			for (final Iterator iterator = iterator(); iterator.hasNext();)
+			{
+				// Get next child component
+				final ListItem child = (ListItem)iterator.next();
+				if (child != null)
+				{
+					final int index = child.getIndex();
+					if (index < firstIndex || index >= maxIndex)
+					{
+						iterator.remove();
+					}
+				}
+			}
+		}
+		else
+		{
+			// Automatically rebuild all ListItems before rendering the
+			// list view
+			removeAll();
+		}
+
+		// Loop through the markup in this container for each item
+		for (int i = 0; i < size; i++)
+		{
+			// Get index
+			final int index = firstIndex + i;
+
+			// If this component does not already exist, populate it
+			ListItem<T> item = (ListItem<T>)get(Integer.toString(index));
+			if (item == null)
+			{
+				// Create item for index
+				item = newItem(index);
+
+				// Populate the list item
+				onBeginPopulateItem(item);
+				populateItem(item);
+				item.attach();
 			}
 		}
 	}
