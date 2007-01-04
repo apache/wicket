@@ -1,18 +1,18 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package wicket.extensions.markup.html.form.palette.component;
 
@@ -38,8 +38,8 @@ public class Recorder extends HiddenField
 {
 	private static final long serialVersionUID = 1L;
 
-	private static final String[] EMPTY_IDS=new String[0];
-	
+	private static final String[] EMPTY_IDS = new String[0];
+
 	/** conviniently maintained array of selected ids */
 	private String[] ids;
 
@@ -66,13 +66,31 @@ public class Recorder extends HiddenField
 		this.palette = palette;
 
 		setOutputMarkupId(true);
-		
+		initIds();
+	}
+
+	protected void onAttach()
+	{
+		super.onAttach();
+
+		if (!getForm().hasError())
+		{
+			initIds();
+		}
+
+	}
+
+	/**
+	 * Syncrhonize ids collection from the palette's model
+	 */
+	private void initIds()
+	{
 		// construct the model string based on selection collection
 		IChoiceRenderer renderer = getPalette().getChoiceRenderer();
 		StringBuffer modelStringBuffer = new StringBuffer();
 		Iterator selection = getPalette().getModelCollection().iterator();
-		
-		int i=0;
+
+		int i = 0;
 		while (selection.hasNext())
 		{
 			modelStringBuffer.append(renderer.getIdValue(selection.next(), i++));
@@ -88,7 +106,7 @@ public class Recorder extends HiddenField
 		updateIds(modelString);
 	}
 
-	
+
 	protected void onValid()
 	{
 		super.onValid();
@@ -172,10 +190,14 @@ public class Recorder extends HiddenField
 		updateIds(getValue());
 	}
 
-	private void updateIds(String value) {
-		if (Strings.isEmpty(value)) {
-			ids=EMPTY_IDS;
-		} else {
+	private void updateIds(String value)
+	{
+		if (Strings.isEmpty(value))
+		{
+			ids = EMPTY_IDS;
+		}
+		else
+		{
 			ids = value.split(",");
 		}
 	}
