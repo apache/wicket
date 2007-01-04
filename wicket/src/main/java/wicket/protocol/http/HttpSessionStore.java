@@ -67,8 +67,8 @@ public class HttpSessionStore extends AbstractHttpSessionStore
 			catch (Exception e)
 			{
 				throw new WicketRuntimeException(
-						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class: "
-								+ valueTypeName, e);
+						"Internal error cloning object. Make sure all dependent objects implement Serializable. Class="
+								+ valueTypeName + ",attribute=" + name + ", value=" + value, e);
 			}
 		}
 
