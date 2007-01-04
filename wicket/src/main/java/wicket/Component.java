@@ -2982,6 +2982,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * this will be tightened in Wicket 1.3 when we will add the guarantee that
 	 * onAttach() be called before any framework use of a Component (in the
 	 * implementation of request targets).
+	 * 
+	 * IMPORTANT: Overrides must call super.onAttach()
 	 */
 	protected void onAttach()
 	{
@@ -3027,6 +3029,8 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	 * of this will be tightened in Wicket 1.3 when we will add the guarantee
 	 * that onDetach() be called after all framework use of a Component (in the
 	 * implementation of request targets).
+	 * 
+	 * IMPORTANT: Overrides must call super.onDetach()
 	 */
 	protected void onDetach()
 	{
