@@ -102,7 +102,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	 * @see wicket.Application#getSessionFactory()
 	 */
 	@Override
-	protected final ISessionFactory getSessionFactory()
+	protected ISessionFactory getSessionFactory()
 	{
 		return new ISessionFactory()
 		{
