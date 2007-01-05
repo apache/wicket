@@ -71,13 +71,13 @@ public abstract class AjaxSubmitLink extends AbstractSubmitLink
 			@Override
 			protected void onSubmit(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onSubmit(target, getForm());
+				AjaxSubmitLink.this.onSubmit(target, AjaxSubmitLink.this.getForm());
 			}
 
 			@Override
 			protected void onError(AjaxRequestTarget target)
 			{
-				AjaxSubmitLink.this.onError(target, getForm());
+				AjaxSubmitLink.this.onError(target, AjaxSubmitLink.this.getForm());
 			}
 
 			@Override
