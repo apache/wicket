@@ -14,6 +14,7 @@
  */
 package wicket.jmx;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,22 +38,13 @@ import wicket.WicketRuntimeException;
  * Registers Wicket's MBeans.
  * <p>
  * Users can specify the MBeanServer implementation in which to register the
- * MBeans by setting the <code>wicket.mbean.server.impl</code> property to the
- * class name of the MBeanServer implementation they want. This is needed since
- * running an application server like JBoss with Java 1.5 causes more than one
- * MBeanServer to be created (the JVM one and the JBoss one). It is recognized
- * that there could possibly be more than one instance of an MBeanServer for a
- * given implementation class, but the assumption is that such a situation is
- * rare. In the event that such a situation is encountered, the first instance
- * encountered in the list returned by
- * <code>MBeanServerFactory.findMBeanServer(null)</code> is used. This
- * algorithm should handle most situations. Here is a list of known MBeanServer
- * implementation class names:
- * <ul>
- * <li>Java 1.5 JVM - com.sun.jmx.mbeanserver.JmxMBeanServer</li>
- * <li>JBoss - org.jboss.mx.server.MBeanServerImpl</li>
- * </ul>
- * </p>
+ * MBeans by setting the <code>wicket.mbean.server.agentid</code> property to
+ * the agent id of the MBeanServer implementation they want, or by setting
+ * <code>wicket.mbean.server.class</code> to the mbean server class they want
+ * (if both are provided, and the agent id returns a server, that one is used).
+ * This initializer will log an error when no mbean server with the provided
+ * agent id can be found, and will then fall back to use the platform mbean
+ * server. When no agent id is provided, the platform mbean server will be used.
  * 
  * @author eelcohillenius
  * @author David Hosier
@@ -75,22 +67,19 @@ public class Initializer implements IInitializer, IDestroyer
 	 */
 	public void destroy(wicket.Application application)
 	{
-		if (mbeanServer != null)
+		for (ObjectName objectName : registered)
 		{
-			for (ObjectName objectName : registered)
+			try
 			{
-				try
-				{
-					mbeanServer.unregisterMBean(objectName);
-				}
-				catch (InstanceNotFoundException e)
-				{
-					log.error(e.getMessage(), e);
-				}
-				catch (MBeanRegistrationException e)
-				{
-					log.error(e.getMessage(), e);
-				}
+				mbeanServer.unregisterMBean(objectName);
+			}
+			catch (InstanceNotFoundException e)
+			{
+				log.error(e.getMessage(), e);
+			}
+			catch (MBeanRegistrationException e)
+			{
+				log.error(e.getMessage(), e);
 			}
 		}
 	}
@@ -101,52 +90,55 @@ public class Initializer implements IInitializer, IDestroyer
 	@SuppressWarnings("unchecked")
 	public void init(wicket.Application application)
 	{
-		/*
-		 * This method uses the wicket.mbean.server.impl property to know which
-		 * MBeanServer to get, but it could just as easily allow users to
-		 * specify the MBeanServer per Application by changing the line:
-		 * 
-		 * String mbeanServerImplClass =
-		 * System.getProperty("wicket.mbean.server.impl");
-		 * 
-		 * TO
-		 * 
-		 * String mbeanServerImplClass =
-		 * System.getProperty(System.getProperty("wicket." + name +
-		 * ".mbean.server.impl"), "wicket.mbean.server.impl");
-		 * 
-		 * That will allow users to specify a per application MBeanServer
-		 * implemenation class. However, the global reference to the MBeanServer
-		 * will have to be changed to maybe like a HashMap where the key is the
-		 * Application name and the value is the reference to that Application's
-		 * specified MBeanServer.
-		 */
-
 		try
 		{
 			String name = application.getName();
-			ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
-					.findMBeanServer(null);
 
-			mbeanServer = mbeanServers.get(0); // set the MBeanServer to the
-												// zero entry as a default
-			String mbeanServerImplClass = System.getProperty("wicket.mbean.server.impl");
-			if (mbeanServerImplClass != null)
+			String agentId = System.getProperty("wicket.mbean.server.agentid");
+			if (agentId != null)
 			{
-				for (MBeanServer mbs : mbeanServers)
+				ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
+						.findMBeanServer(agentId);
+				if (!mbeanServers.isEmpty())
 				{
-					if (mbs.getClass().getName().equals(mbeanServerImplClass))
+					mbeanServer = mbeanServers.get(0); // get first
+				}
+				else
+				{
+					log.error("unable to find mbean server with agent id " + agentId);
+				}
+			}
+			if (mbeanServer == null)
+			{
+				String impl = System.getProperty("wicket.mbean.server.class");
+				if (impl != null)
+				{
+					ArrayList<MBeanServer> mbeanServers = (ArrayList<MBeanServer>)MBeanServerFactory
+							.findMBeanServer(null);
+					if (!mbeanServers.isEmpty())
 					{
-						mbeanServer = mbs;
-						/*
-						 * this will cause the first instance to be accepted in
-						 * the case that there is more than one MBeanServer of
-						 * the given implementation Class
-						 */
-						break;
+						for (MBeanServer mbs : mbeanServers)
+						{
+							if (mbs.getClass().getName().equals(impl))
+							{
+								mbeanServer = mbs;
+								break;
+							}
+						}
+					}
+					if (mbeanServer == null)
+					{
+						log.error("unable to find mbean server of type " + impl);
 					}
 				}
 			}
+			if (mbeanServer == null)
+			{
+				mbeanServer = ManagementFactory.getPlatformMBeanServer();
+				// never null
+			}
+
+			log.info("registering Wicket mbeans with server " + mbeanServer);
 
 			// register top level application object, but first check whether
 			// multiple instances of the same application (name) are running and
@@ -163,30 +155,30 @@ public class Initializer implements IInitializer, IDestroyer
 			domain = tempDomain;
 
 			Application appBean = new Application(application);
-			register(mbeanServer, appBean, appBeanName);
+			register(appBean, appBeanName);
 
-			register(mbeanServer, new ApplicationSettings(application), new ObjectName(domain
+			register(new ApplicationSettings(application), new ObjectName(domain
 					+ ":type=Application,name=ApplicationSettings"));
-			register(mbeanServer, new DebugSettings(application), new ObjectName(domain
+			register(new DebugSettings(application), new ObjectName(domain
 					+ ":type=Application,name=DebugSettings"));
-			register(mbeanServer, new MarkupSettings(application), new ObjectName(domain
+			register(new MarkupSettings(application), new ObjectName(domain
 					+ ":type=Application,name=MarkupSettings"));
-			register(mbeanServer, new ResourceSettings(application), new ObjectName(domain
+			register(new ResourceSettings(application), new ObjectName(domain
 					+ ":type=Application,name=ResourceSettings"));
-			register(mbeanServer, new PageSettings(application), new ObjectName(domain
+			register(new PageSettings(application), new ObjectName(domain
 					+ ":type=Application,name=PageSettings"));
-			register(mbeanServer, new RequestCycleSettings(application), new ObjectName(domain
+			register(new RequestCycleSettings(application), new ObjectName(domain
 					+ ":type=Application,name=RequestCycleSettings"));
-			register(mbeanServer, new SecuritySettings(application), new ObjectName(domain
+			register(new SecuritySettings(application), new ObjectName(domain
 					+ ":type=Application,name=SecuritySettings"));
-			register(mbeanServer, new SessionSettings(application), new ObjectName(domain
+			register(new SessionSettings(application), new ObjectName(domain
 					+ ":type=Application,name=SessionSettings"));
-			register(mbeanServer, new CookieValuePersisterSettings(application), new ObjectName(
-					domain + ":type=Application,name=CookieValuePersisterSettings"));
+			register(new CookieValuePersisterSettings(application), new ObjectName(domain
+					+ ":type=Application,name=CookieValuePersisterSettings"));
 
 			RequestLogger sessionsBean = new RequestLogger(application);
 			ObjectName sessionsBeanName = new ObjectName(domain + ":type=RequestLogger");
-			register(mbeanServer, sessionsBean, sessionsBeanName);
+			register(sessionsBean, sessionsBeanName);
 		}
 		catch (MalformedObjectNameException e)
 		{
@@ -218,21 +210,19 @@ public class Initializer implements IInitializer, IDestroyer
 	/**
 	 * Register MBean.
 	 * 
-	 * @param mbs
-	 *            server
 	 * @param o
 	 *            MBean
 	 * @param objectName
 	 *            Object name
+	 * 
 	 * @throws NotCompliantMBeanException
 	 * @throws MBeanRegistrationException
 	 * @throws InstanceAlreadyExistsException
 	 */
-	private void register(MBeanServer mbs, Object o, ObjectName objectName)
-			throws InstanceAlreadyExistsException, MBeanRegistrationException,
-			NotCompliantMBeanException
+	private void register(Object o, ObjectName objectName) throws InstanceAlreadyExistsException,
+			MBeanRegistrationException, NotCompliantMBeanException
 	{
-		mbs.registerMBean(o, objectName);
+		mbeanServer.registerMBean(o, objectName);
 		registered.add(objectName);
 	}
 }
