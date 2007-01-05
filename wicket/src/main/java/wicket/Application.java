@@ -238,7 +238,7 @@ public abstract class Application
 
 	/** Request logger instance. */
 	private IRequestLogger requestLogger;
-	
+
 	/** Settings for this application. */
 	private Settings settings;
 
@@ -284,7 +284,7 @@ public abstract class Application
 			}
 		});
 	}
-	
+
 	/**
 	 * Gets the {@link RequestLogger}.
 	 * 
@@ -292,28 +292,29 @@ public abstract class Application
 	 */
 	public final IRequestLogger getRequestLogger()
 	{
-		if(getRequestLoggerSettings().isRequestLoggerEnabled())
+		if (getRequestLoggerSettings().isRequestLoggerEnabled())
 		{
-			if(requestLogger == null) requestLogger = newRequestLogger();
+			if (requestLogger == null)
+				requestLogger = newRequestLogger();
 		}
 		else
 		{
 			requestLogger = null;
 		}
 		return requestLogger;
-	}	
-	
+	}
+
 	/**
 	 * creates a new request logger when requests logging is enabled.
 	 * 
-	 * @return  The new request logger
+	 * @return The new request logger
 	 * 
 	 */
 	protected IRequestLogger newRequestLogger()
 	{
 		return new RequestLogger();
 	}
-	
+
 	/**
 	 * Adds a component instantiation listener. This method should typicaly only
 	 * be called during application startup; it is not thread safe.
@@ -437,7 +438,7 @@ public abstract class Application
 	 * @since 1.2
 	 * @deprecated use {@link #getDebugSettings()} instead
 	 */
-	public final IAjaxSettings getAjaxSettings()
+	public IAjaxSettings getAjaxSettings()
 	{
 		return getSettings();
 	}
@@ -455,7 +456,7 @@ public abstract class Application
 	 * @see IApplicationSettings
 	 * @since 1.2
 	 */
-	public final IApplicationSettings getApplicationSettings()
+	public IApplicationSettings getApplicationSettings()
 	{
 		return getSettings();
 	}
@@ -477,7 +478,7 @@ public abstract class Application
 	 * @see IDebugSettings
 	 * @since 1.2
 	 */
-	public final IDebugSettings getDebugSettings()
+	public IDebugSettings getDebugSettings()
 	{
 		return getSettings();
 	}
@@ -487,7 +488,7 @@ public abstract class Application
 	 * @see IExceptionSettings
 	 * @since 1.2
 	 */
-	public final IExceptionSettings getExceptionSettings()
+	public IExceptionSettings getExceptionSettings()
 	{
 		return getSettings();
 	}
@@ -497,7 +498,7 @@ public abstract class Application
 	 * @see IFrameworkSettings
 	 * @since 1.2
 	 */
-	public final IFrameworkSettings getFrameworkSettings()
+	public IFrameworkSettings getFrameworkSettings()
 	{
 		return getSettings();
 	}
@@ -525,7 +526,7 @@ public abstract class Application
 	 * @see IMarkupSettings
 	 * @since 1.2
 	 */
-	public final IMarkupSettings getMarkupSettings()
+	public IMarkupSettings getMarkupSettings()
 	{
 		return getSettings();
 	}
@@ -558,7 +559,7 @@ public abstract class Application
 	 * @see IPageSettings
 	 * @since 1.2
 	 */
-	public final IPageSettings getPageSettings()
+	public IPageSettings getPageSettings()
 	{
 		return getSettings();
 	}
@@ -568,7 +569,7 @@ public abstract class Application
 	 * @see IDebugSettings
 	 * @since 1.2
 	 */
-	public final IRequestCycleSettings getRequestCycleSettings()
+	public IRequestCycleSettings getRequestCycleSettings()
 	{
 		return getSettings();
 	}
@@ -578,7 +579,7 @@ public abstract class Application
 	 * @see IResourceSettings
 	 * @since 1.2
 	 */
-	public final IResourceSettings getResourceSettings()
+	public IResourceSettings getResourceSettings()
 	{
 		return getSettings();
 	}
@@ -588,16 +589,17 @@ public abstract class Application
 	 * @see IResourceSettings
 	 * @since 1.3
 	 */
-	public final IRequestLoggerSettings getRequestLoggerSettings()
+	public IRequestLoggerSettings getRequestLoggerSettings()
 	{
 		return getSettings();
 	}
+
 	/**
 	 * @return Application's security related settings
 	 * @see ISecuritySettings
 	 * @since 1.2
 	 */
-	public final ISecuritySettings getSecuritySettings()
+	public ISecuritySettings getSecuritySettings()
 	{
 		return getSettings();
 	}
@@ -607,7 +609,7 @@ public abstract class Application
 	 * @see ISessionSettings
 	 * @since 1.2
 	 */
-	public final ISessionSettings getSessionSettings()
+	public ISessionSettings getSessionSettings()
 	{
 		return getSettings();
 	}
@@ -638,10 +640,8 @@ public abstract class Application
 	 * @see Application#getResourceSettings()
 	 * @see Application#getSecuritySettings()
 	 * @see Application#getSessionSettings()
-	 * @deprecated will be made private after 1.2
 	 */
-	// TODO Post 1.2: Make private
-	public Settings getSettings()
+	private Settings getSettings()
 	{
 		if (!settingsAccessible)
 		{
