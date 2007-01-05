@@ -16,7 +16,9 @@
  */
 package wicket.spring;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -168,10 +170,39 @@ public class SpringBeanLocator implements IProxyTargetLocator
 		}
 		if (beans.size() > 1)
 		{
-			throw new IllegalStateException(
-					"more then one bean of type ["
-							+ clazz.getName()
-							+ "] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict");
+			// there are more then one bean of this class found, try to default
+			// to the one with matching class name
+
+			final String defaultName = clazz.getSimpleName();
+			final Iterator entries = beans.entrySet().iterator();
+			while (entries.hasNext())
+			{
+				Map.Entry beanDef = (Entry) entries.next();
+				if (defaultName.equalsIgnoreCase((String) beanDef.getKey()))
+				{
+					return beanDef.getValue();
+				}
+			}
+
+			// no default could be found, error out
+
+			String msg = "more then one bean of type [["
+					+ clazz.getName()
+					+ "]] found, you have to specify the name of the bean (@SpringBean(name=\"foo\")) in order to resolve this conflict. Beans that match type [[";
+
+			Iterator beanNames = beans.keySet().iterator();
+			while (beanNames.hasNext())
+			{
+				String beanName = (String) beanNames.next();
+				msg += beanName;
+				if (beanNames.hasNext())
+				{
+					msg += ", ";
+				}
+			}
+
+			msg += "]]";
+			throw new IllegalStateException(msg);
 		}
 		return beans.values().iterator().next();
 	}
