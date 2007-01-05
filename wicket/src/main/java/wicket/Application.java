@@ -387,7 +387,7 @@ public abstract class Application
 	 * @see IApplicationSettings
 	 * @since 1.2
 	 */
-	public final IApplicationSettings getApplicationSettings()
+	public IApplicationSettings getApplicationSettings()
 	{
 		return getSettings();
 	}
@@ -409,7 +409,7 @@ public abstract class Application
 	 * @see IDebugSettings
 	 * @since 1.2
 	 */
-	public final IDebugSettings getDebugSettings()
+	public IDebugSettings getDebugSettings()
 	{
 		return getSettings();
 	}
@@ -419,7 +419,7 @@ public abstract class Application
 	 * @see IFrameworkSettings
 	 * @since 1.2
 	 */
-	public final IFrameworkSettings getFrameworkSettings()
+	public IFrameworkSettings getFrameworkSettings()
 	{
 		return getSettings();
 	}
@@ -447,7 +447,7 @@ public abstract class Application
 	 * @see IMarkupSettings
 	 * @since 1.2
 	 */
-	public final IMarkupSettings getMarkupSettings()
+	public IMarkupSettings getMarkupSettings()
 	{
 		return getSettings();
 	}
@@ -481,7 +481,7 @@ public abstract class Application
 	 * @see IPageSettings
 	 * @since 1.2
 	 */
-	public final IPageSettings getPageSettings()
+	public IPageSettings getPageSettings()
 	{
 		return getSettings();
 	}
@@ -491,7 +491,7 @@ public abstract class Application
 	 * @see IDebugSettings
 	 * @since 1.2
 	 */
-	public final IRequestCycleSettings getRequestCycleSettings()
+	public IRequestCycleSettings getRequestCycleSettings()
 	{
 		return getSettings();
 	}
@@ -531,7 +531,7 @@ public abstract class Application
 	 * @see IResourceSettings
 	 * @since 1.2
 	 */
-	public final IResourceSettings getResourceSettings()
+	public IResourceSettings getResourceSettings()
 	{
 		return getSettings();
 	}
@@ -541,7 +541,7 @@ public abstract class Application
 	 * @see IResourceSettings
 	 * @since 1.3
 	 */
-	public final IRequestLoggerSettings getRequestLoggerSettings()
+	public IRequestLoggerSettings getRequestLoggerSettings()
 	{
 		return getSettings();
 	}
@@ -551,7 +551,7 @@ public abstract class Application
 	 * @see ISecuritySettings
 	 * @since 1.2
 	 */
-	public final ISecuritySettings getSecuritySettings()
+	public ISecuritySettings getSecuritySettings()
 	{
 		return getSettings();
 	}
@@ -561,7 +561,7 @@ public abstract class Application
 	 * @see ISessionSettings
 	 * @since 1.2
 	 */
-	public final ISessionSettings getSessionSettings()
+	public ISessionSettings getSessionSettings()
 	{
 		return getSettings();
 	}
