@@ -43,8 +43,6 @@ import wicket.model.CompoundPropertyModel;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
 import wicket.model.IModelComparator;
-import wicket.settings.IApplicationSettings;
-import wicket.settings.Settings;
 import wicket.util.convert.IConverter;
 import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
@@ -747,42 +745,6 @@ public abstract class Component implements Serializable
 	public final Application getApplication()
 	{
 		return Application.get();
-	}
-
-	/**
-	 * 
-	 * Deprecated. Use getApplication().getXXXSettings() instead
-	 * 
-	 * Gets the application pages from the application that this component
-	 * belongs to.
-	 * 
-	 * @return The application pages
-	 * @see IApplicationSettings
-	 * 
-	 * @deprecated
-	 */
-	// TODO Post 1.2: Remove this method
-	public final IApplicationSettings getApplicationPages()
-	{
-		return getApplication().getSettings();
-	}
-
-	/**
-	 * This method has been deprecated in favor of
-	 * Application.get().getXXXSettings()
-	 * 
-	 * Gets the application settings from the application that this component
-	 * belongs to.
-	 * 
-	 * @return The application settings from the application that this component
-	 *         belongs to
-	 * @see Settings
-	 * @deprecated will be removed after 1.2
-	 */
-	// TODO Post 1.2: Remove this method
-	public final Settings getApplicationSettings()
-	{
-		return getApplication().getSettings();
 	}
 
 	/**
