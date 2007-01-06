@@ -513,8 +513,6 @@ public abstract class AbstractTree extends Panel<TreeModel>
 	@Override
 	protected void onAttach()
 	{
-		super.onAttach();
-
 		if (attached == false)
 		{
 			onBeforeAttach();
@@ -554,7 +552,7 @@ public abstract class AbstractTree extends Panel<TreeModel>
 
 			attached = true;
 		}
-		super.attach();
+		super.onAttach();
 	}
 
 	@Override

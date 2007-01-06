@@ -285,7 +285,7 @@ public class TreeTable extends DefaultAbstractTree
 			addHeader();
 		}
 
-		super.onAttach();
+		super.onBeforeAttach();
 	}
 
 	/**
