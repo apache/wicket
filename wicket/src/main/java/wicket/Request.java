@@ -115,24 +115,6 @@ public abstract class Request
 	public abstract String getRelativeURL();
 
 	/**
-	 * Retrieves the absolute URL of this request for local use.
-	 * 
-	 * @return The absolute request URL for local use
-	 */
-	public abstract String getURL();
-
-	/**
-	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
-	 * 
-	 * @param page
-	 *            The Page for this request
-	 */
-	public void setPage(final Page page)
-	{
-		this.page = page;
-	}
-
-	/**
 	 * Gets the request parameters object using the instance of
 	 * {@link IRequestCodingStrategy} of the provided request cycle processor.
 	 * 
@@ -160,8 +142,8 @@ public abstract class Request
 		try
 		{
 			requestParameters = encoder.decode(this);
-		} 
-		catch(RuntimeException re)
+		}
+		catch (RuntimeException re)
 		{
 			// do set the parameters as it was parsed.
 			// else the error page will also error again (infinite loop)
@@ -174,5 +156,31 @@ public abstract class Request
 					+ encoder + ")");
 		}
 		return requestParameters;
+	}
+
+	/**
+	 * Retrieves the absolute URL of this request for local use.
+	 * 
+	 * @return The absolute request URL for local use
+	 */
+	public abstract String getURL();
+
+	/**
+	 * THIS METHOD IS NOT PART OF THE WICKET PUBLIC API. DO NOT CALL IT.
+	 * 
+	 * @param page
+	 *            The Page for this request
+	 */
+	public void setPage(final Page page)
+	{
+		this.page = page;
+	}
+
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString()
+	{
+		return "Request[url=" + getURL() + "]";
 	}
 }
