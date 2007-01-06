@@ -20,7 +20,6 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 import wicket.util.lang.Objects;
 
@@ -39,39 +38,15 @@ import wicket.util.lang.Objects;
  * @author Sven Meier (svenmeier)
  * 
  */
-public class Radio<T> extends WebMarkupContainer<T>
+public class Radio<T> extends AbstractRadio<T>
 {
-	private static final String ATTR_DISABLED = "disabled";
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * page-scoped uuid of this check. this property must not be accessed
-	 * directly, instead {@link #getValue()} must be used
-	 */
-	private short uuid = -1;
-
-	/**
-	 * Form submission value used for this radio component. This string will
-	 * appear as the value of the <code>value</code> html attribute for the
-	 * <code>input</code> tag.
+	 * Construct.
 	 * 
-	 * @return form submission value
-	 */
-	public final String getValue()
-	{
-		if (uuid < 0)
-		{
-			uuid = getPage().getAutoIndex();
-		}
-		return "radio" + uuid;
-	}
-
-
-	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
+	 * @param parent
+	 * @param id
 	 */
 	public Radio(MarkupContainer parent, String id)
 	{
@@ -79,14 +54,41 @@ public class Radio<T> extends WebMarkupContainer<T>
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
-	 *      IModel)
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param model
 	 */
 	public Radio(MarkupContainer parent, String id, IModel<T> model)
 	{
 		super(parent, id, model);
 	}
 
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param model
+	 * @param group
+	 */
+	public Radio(MarkupContainer parent, String id, IModel<T> model, RadioGroup group)
+	{
+		super(parent, id, model, group);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param group
+	 */
+	public Radio(MarkupContainer parent, String id, RadioGroup group)
+	{
+		super(parent, id, group);
+	}
 
 	/**
 	 * @see Component#onComponentTag(ComponentTag)
@@ -122,15 +124,22 @@ public class Radio<T> extends WebMarkupContainer<T>
 
 		// compare the model objects of the group and self, if the same add the
 		// checked attribute, first check if there was a raw input on the group.
+		boolean checked = false;
+
 		if (group.hasRawInput())
 		{
 			String rawInput = group.getRawInput();
 			if (rawInput != null && rawInput.equals(value))
 			{
-				tag.put("checked", "checked");
+				checked = true;
 			}
 		}
 		else if (Objects.equal(group.getModelObject(), getModelObject()))
+		{
+			checked = true;
+		}
+
+		if (checked)
 		{
 			tag.put("checked", "checked");
 		}
@@ -157,7 +166,8 @@ public class Radio<T> extends WebMarkupContainer<T>
 
 		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
 		{
-			tag.put(ATTR_DISABLED, ATTR_DISABLED);
+			tag.put("disabled", "disabled");
 		}
 	}
+	
 }

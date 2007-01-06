@@ -32,13 +32,13 @@ import wicket.util.convert.ConversionException;
  * ie
  * 
  * <pre>
- *    &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
- *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
- *      ...
- *      &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
- *      ...
- *    &lt;/span&gt;
+ *      &lt;span wicket:id=&quot;radiochoicegroup&quot;&gt;
+ *        ...
+ *        &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice1&quot;&gt;choice 1&lt;/input&gt;
+ *        ...
+ *        &lt;input type=&quot;radio&quot; wicket:id=&quot;singleradiochoice2&quot;&gt;choice 2&lt;/input&gt;
+ *        ...
+ *      &lt;/span&gt;
  * </pre>
  * 
  * @param <T>
@@ -109,7 +109,7 @@ public class RadioGroup<T> extends FormComponent<T> implements IOnChangeListener
 					if (component instanceof Radio)
 					{
 						final Radio radio = (Radio)component;
-						if (radio.getValue().equals(value))
+						if (radio.getValue().equals(value) && radio.getGroup() == RadioGroup.this)
 						{
 							return radio;
 						}

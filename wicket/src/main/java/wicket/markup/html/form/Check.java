@@ -22,7 +22,6 @@ import wicket.Component;
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
-import wicket.markup.html.WebMarkupContainer;
 import wicket.model.IModel;
 
 /**
@@ -33,54 +32,62 @@ import wicket.model.IModel;
  * 
  * @see wicket.markup.html.form.CheckGroup
  * @param <T>
- *            The type
+ *            The type of model object
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * 
  */
-public class Check<T> extends WebMarkupContainer<T>
+public class Check<T> extends AbstractCheck<T>
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final String ATTR_DISABLED = "disabled";
-
-	private short uuid = -1;
-
 	/**
-	 * Form submission value used for this radio component. This string will
-	 * appear as the value of the <code>value</code> html attribute for the
-	 * <code>input</code> tag.
+	 * Construct.
 	 * 
-	 * @return form submission value
+	 * @param parent
+	 * @param id
+	 * @param group
 	 */
-	public final String getValue()
+	public Check(MarkupContainer parent, String id, CheckGroup group)
 	{
-		if (uuid < 0)
-		{
-			uuid = getPage().getAutoIndex();
-		}
-		return "check" + uuid;
-	}
-
-
-	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
-	 */
-	public Check(MarkupContainer parent, String id)
-	{
-		super(parent, id);
+		super(parent, id, group);
 	}
 
 	/**
-	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String,
-	 *      IModel)
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param model
+	 * @param group
+	 */
+	public Check(MarkupContainer parent, String id, IModel<T> model, CheckGroup group)
+	{
+		super(parent, id, model, group);
+	}
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 * @param model
 	 */
 	public Check(MarkupContainer parent, String id, IModel<T> model)
 	{
 		super(parent, id, model);
+	}
+
+
+	/**
+	 * Construct.
+	 * 
+	 * @param parent
+	 * @param id
+	 */
+	public Check(MarkupContainer parent, String id)
+	{
+		super(parent, id);
 	}
 
 
@@ -99,17 +106,7 @@ public class Check<T> extends WebMarkupContainer<T>
 		checkComponentTag(tag, "input");
 		checkComponentTagAttribute(tag, "type", "checkbox");
 
-		CheckGroup<?> group = findParent(CheckGroup.class);
-
-		if (group == null)
-		{
-			throw new WicketRuntimeException(
-					"Check component ["
-							+ getPath()
-							+ "] cannot find its parent CheckGroup. All Check components must be a child of or below in the hierarchy of a CheckGroup component.");
-		}
-
-
+		final CheckGroup<?> group = getGroup();
 		final String value = getValue();
 
 		// assign name and value
@@ -129,6 +126,8 @@ public class Check<T> extends WebMarkupContainer<T>
 							+ "] contains a null model object, must be an object of type java.util.Collection");
 		}
 
+		boolean checked = false;
+
 		if (group.hasRawInput())
 		{
 			String[] inputs = group.getInputAsArray();
@@ -138,12 +137,18 @@ public class Check<T> extends WebMarkupContainer<T>
 				{
 					if (value.equals(input))
 					{
-						tag.put("checked", "checked");
+						checked = true;
+						break;
 					}
 				}
 			}
 		}
 		else if (collection.contains(getModelObject()))
+		{
+			checked = true;
+		}
+
+		if (checked)
 		{
 			tag.put("checked", "checked");
 		}
@@ -166,10 +171,12 @@ public class Check<T> extends WebMarkupContainer<T>
 						+ "=' + this.value;");
 			}
 		}
-
+		
+		// disable html component if necessary
 		if (!isActionAuthorized(ENABLE) || !isEnabled() || !group.isEnabled())
 		{
-			tag.put(ATTR_DISABLED, ATTR_DISABLED);
+			tag.put("disabled", "disabled");
 		}
+
 	}
 }

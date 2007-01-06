@@ -135,15 +135,16 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 				{
 
 					// retrieve the selected checkbox component
-					Check<T> checkbox = (Check)visitChildren(new Component.IVisitor()
+					AbstractCheck<T> checkbox = (AbstractCheck<T>)visitChildren(new Component.IVisitor()
 					{
 
 						public Object component(Component component)
 						{
 							if (component instanceof Check)
 							{
-								final Check check = (Check)component;
-								if (String.valueOf(check.getValue()).equals(value))
+								final AbstractCheck<T> check = (AbstractCheck<T>)component;
+								if (String.valueOf(check.getValue()).equals(value)
+										&& check.getGroup() == CheckGroup.this)
 								{
 									return check;
 								}
