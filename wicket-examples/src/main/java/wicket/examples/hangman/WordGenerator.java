@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import wicket.Application;
 import wicket.util.io.Streams;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
-import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
 
 /**
  * The word generator is responsible for reading in a list of words from a data
@@ -55,8 +55,8 @@ public class WordGenerator implements Serializable
 	{
 		try
 		{
-			final IResourceStream resource = new ClassLoaderResourceStreamLocator().locate(null,
-					"wicket/examples/hangman/WordList", "", Locale.getDefault(), ".txt");
+			final IResourceStream resource = Application.get().getResourceSettings().getResourceStreamLocator().locate(this.getClass(), 
+					"wicket/examples/hangman/WordList", null, Locale.getDefault(), ".txt");
 			final String wordlist = Streams.readString(resource.getInputStream());
 			this.words = Arrays.asList(wordlist.split("\\s+"));
 			shuffle();
