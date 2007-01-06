@@ -622,7 +622,7 @@ Wicket.Ajax.Request.prototype = {
 	stateChangeCallback: function() {	
 		var t = this.transport;
 
-		if (t.readyState == 4) {
+		if (t != null && t.readyState == 4) {
 			if (t.status == 200) {				
 				var responseAsText = t.responseText;
 				
