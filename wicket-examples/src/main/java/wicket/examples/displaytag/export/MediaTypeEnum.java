@@ -18,9 +18,9 @@
  */
 package wicket.examples.displaytag.export;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
-import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -167,7 +167,7 @@ public final class MediaTypeEnum
 	 */
 	public static Iterator iterator()
 	{
-		return new ArrayIterator(ALL);
+		return Arrays.asList(ALL).iterator();	
 	}
 
 	/**
