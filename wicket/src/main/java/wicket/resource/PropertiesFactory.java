@@ -98,7 +98,7 @@ public class PropertiesFactory implements IPropertiesFactory
 		Properties props = propertiesCache.get(key);
 		if ((props == null) && (propertiesCache.containsKey(key) == false))
 		{
-			final IResourceStream resource = resourceSettings.getResourceStreamLocator().locate(
+			final IResourceStream resource = resourceSettings.getResourceStreamFactory().locate(
 					clazz, clazz.getName().replace('.', '/'), style, locale, "properties,xml");
 
 			if (resource != null)

@@ -63,8 +63,8 @@ import wicket.util.crypt.ICryptFactory;
 import wicket.util.file.IResourceFinder;
 import wicket.util.file.IResourcePath;
 import wicket.util.file.Path;
-import wicket.util.resource.locator.CompoundResourceStreamLocator;
-import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamFactory;
+import wicket.util.resource.locator.ResourceStreamFactory;
 import wicket.util.string.Strings;
 import wicket.util.time.Duration;
 import wicket.util.watch.ModificationWatcher;
@@ -224,7 +224,7 @@ public final class Settings
 	private Duration resourcePollFrequency = null;
 
 	/** resource locator for this application */
-	private IResourceStreamLocator resourceStreamLocator;
+	private IResourceStreamFactory resourceStreamFactory;
 
 	/** ModificationWatcher to watch for changes in markup files */
 	private ModificationWatcher resourceWatcher;
@@ -694,17 +694,15 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#getResourceStreamLocator()
+	 * @see wicket.settings.IResourceSettings#getResourceStreamFactory()
 	 */
-	public IResourceStreamLocator getResourceStreamLocator()
+	public IResourceStreamFactory getResourceStreamFactory()
 	{
-		if (resourceStreamLocator == null)
+		if (resourceStreamFactory == null)
 		{
-			// Create compound resource locator using source path from
-			// application settings
-			resourceStreamLocator = new CompoundResourceStreamLocator(getResourceFinder());
+			resourceStreamFactory = new ResourceStreamFactory(getResourceFinder());
 		}
-		return resourceStreamLocator;
+		return resourceStreamFactory;
 	}
 
 	/**
@@ -1153,7 +1151,7 @@ public final class Settings
 		this.resourceFinder = resourceFinder;
 
 		// Cause resource locator to get recreated
-		this.resourceStreamLocator = null;
+		this.resourceStreamFactory = null;
 	}
 
 	/**
@@ -1165,11 +1163,11 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.IResourceStreamLocator)
+	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.IResourceStreamFactory)
 	 */
-	public void setResourceStreamLocator(IResourceStreamLocator resourceStreamLocator)
+	public void setResourceStreamLocator(IResourceStreamFactory resourceStreamFactory)
 	{
-		this.resourceStreamLocator = resourceStreamLocator;
+		this.resourceStreamFactory = resourceStreamFactory;
 	}
 
 	/**

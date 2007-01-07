@@ -86,7 +86,7 @@ public class ResourceSettings implements ResourceSettingsMBean
 	 */
 	public String getResourceStreamLocator()
 	{
-		return Stringz.className(application.getResourceSettings().getResourceStreamLocator());
+		return Stringz.className(application.getResourceSettings().getResourceStreamFactory());
 	}
 
 	/**

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import wicket.util.io.Streams;
 import wicket.util.lang.Packages;
-import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
+import wicket.util.resource.locator.ResourceStreamFactory;
 import wicket.util.string.interpolator.MapVariableInterpolator;
 
 /**
@@ -39,9 +39,6 @@ public class PackagedTextTemplate extends TextTemplate
 
 	/** log. */
 	private static final Logger log = LoggerFactory.getLogger(PackagedTextTemplate.class);
-
-	/** class loader stream locator. */
-	private static final ClassLoaderResourceStreamLocator streamLocator = new ClassLoaderResourceStreamLocator();
 
 	/** contents */
 	private StringBuffer buffer = new StringBuffer();
@@ -97,7 +94,7 @@ public class PackagedTextTemplate extends TextTemplate
 		super(contentType);
 
 		String path = Packages.absolutePath(clazz, fileName);
-		IResourceStream stream = streamLocator.locate(clazz, path);
+		IResourceStream stream = ResourceStreamFactory.get().locate(clazz, path);
 
 		if (stream == null)
 		{

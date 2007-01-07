@@ -25,7 +25,7 @@ import wicket.util.resource.IResourceStream;
  * 
  * @author Jonathan Locke
  */
-public interface IResourceStreamLocator
+public interface IResourceStreamFactory
 {
 	/**
 	 * Loads a resource, given a path, style, locale and extension.
@@ -46,4 +46,16 @@ public interface IResourceStreamLocator
 	 */
 	public IResourceStream locate(Class clazz, String path, String style, Locale locale,
 			String extension);
+
+	/**
+	 * Loads a resource, given a path, style, locale and extension.
+	 * 
+	 * @param clazz
+	 *            The class loader for delegating the loading of the resource
+	 * @param path
+	 *            The path of the resource
+	 * 
+	 * @return The resource
+	 */
+	public IResourceStream locate(Class clazz, String path);
 }

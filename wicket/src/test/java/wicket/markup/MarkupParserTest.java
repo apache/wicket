@@ -34,8 +34,8 @@ import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.ResourceStreamNotFoundException;
 import wicket.util.resource.StringResourceStream;
-import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
-import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamFactory;
+import wicket.util.resource.locator.ResourceStreamFactory;
 import wicket.util.string.StringValueConversionException;
 
 /**
@@ -105,7 +105,7 @@ public final class MarkupParserTest extends WicketTestCase
 	 * @param extension
 	 * @return MarkupResourceStream
 	 */
-	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamLocator locator,
+	private MarkupResourceStream newMarkupResourceStream(final IResourceStreamFactory locator,
 			final Class c, final String style, final Locale locale, final String extension)
 	{
 		IResourceStream resource = locator.locate(c, c.getName().replace('.', '/'), style, locale,
@@ -316,7 +316,7 @@ public final class MarkupParserTest extends WicketTestCase
 	public final void testFileDocument() throws ParseException, ResourceStreamNotFoundException,
 			IOException
 	{
-		IResourceStreamLocator locator = new ClassLoaderResourceStreamLocator();
+		IResourceStreamFactory locator = new ResourceStreamFactory();
 		MarkupResourceStream resource = newMarkupResourceStream(locator, this.getClass(), "1",
 				null, "html");
 

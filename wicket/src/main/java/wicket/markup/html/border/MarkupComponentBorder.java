@@ -17,10 +17,12 @@
 package wicket.markup.html.border;
 
 import java.util.List;
+import java.util.Locale;
 
 import wicket.Application;
 import wicket.Component;
 import wicket.IComponentBorder;
+import wicket.MarkupContainer;
 import wicket.Response;
 import wicket.Session;
 import wicket.WicketRuntimeException;
@@ -31,9 +33,11 @@ import wicket.markup.MarkupFragment;
 import wicket.markup.MarkupResourceStream;
 import wicket.markup.parser.filter.WicketTagIdentifier;
 import wicket.util.resource.IResourceStream;
-import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamFactory;
 
 /**
+ * @TODO Comment
+ * 
  * @author jcompagner
  */
 public class MarkupComponentBorder implements IComponentBorder
@@ -44,51 +48,82 @@ public class MarkupComponentBorder implements IComponentBorder
 		WicketTagIdentifier.registerWellKnownTagName(Border.BORDER);
 		WicketTagIdentifier.registerWellKnownTagName(Border.BODY);
 	}
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
+	/**
+	 * 
+	 * @see wicket.IComponentBorder#renderAfter(wicket.Component)
+	 */
 	public void renderAfter(Component<?> component)
 	{
-		MarkupFragment mf = findMarkup();
-		MarkupFragment child = mf.getWicketFragment(Border.BORDER, true);
-		List<MarkupElement> allElementsFlat = child.getAllElementsFlat();
+		final String extension;
+		if (component instanceof MarkupContainer)
+		{
+			extension = ((MarkupContainer<?>)component).getMarkupType();
+		}
+		else
+		{
+			extension = component.getParent().getMarkupId();
+		}
+		MarkupFragment markupFragment = findMarkup(extension);
+		MarkupFragment childFragment = markupFragment.getWicketFragment(Border.BORDER, true);
+		List<MarkupElement> allElementsFlat = childFragment.getAllElementsFlat();
 		Response response = component.getResponse();
 		boolean render = false;
 		for (MarkupElement markupElement : allElementsFlat)
 		{
-			if(markupElement instanceof ComponentTag)
+			if (markupElement instanceof ComponentTag)
 			{
-				ComponentTag ct = (ComponentTag)markupElement;
-				if(ct.isWicketBodyTag())
+				ComponentTag tag = (ComponentTag)markupElement;
+				if (tag.isWicketBodyTag())
 				{
 					render = true;
 					continue;
 				}
-				else if(ct.isBorderTag())
+				else if (tag.isBorderTag())
 				{
 					continue;
 				}
 			}
-			if(render) response.write(markupElement.toCharSequence());
+			if (render)
+			{
+				response.write(markupElement.toCharSequence());
+			}
 		}
 	}
 
+	/**
+	 * 
+	 * @see wicket.IComponentBorder#renderBefore(wicket.Component)
+	 */
 	public void renderBefore(Component<?> component)
 	{
-		MarkupFragment mf = findMarkup();
-		MarkupFragment child = mf.getWicketFragment(Border.BORDER, true);
-		List<MarkupElement> allElementsFlat = child.getAllElementsFlat();
+		final String extension;
+		if (component instanceof MarkupContainer)
+		{
+			extension = ((MarkupContainer<?>)component).getMarkupType();
+		}
+		else
+		{
+			extension = component.getParent().getMarkupId();
+		}
+		MarkupFragment markupFragment = findMarkup(extension);
+		MarkupFragment childFragment = markupFragment.getWicketFragment(Border.BORDER, true);
+		
+		List<MarkupElement> allElementsFlat = childFragment.getAllElementsFlat();
 		Response response = component.getResponse();
+		
 		for (MarkupElement markupElement : allElementsFlat)
 		{
-			if(markupElement instanceof ComponentTag)
+			if (markupElement instanceof ComponentTag)
 			{
 				ComponentTag ct = (ComponentTag)markupElement;
-				if(ct.isWicketBodyTag())
+				if (ct.isWicketBodyTag())
 				{
 					break;
 				}
-				else if(ct.isBorderTag())
+				else if (ct.isBorderTag())
 				{
 					continue;
 				}
@@ -97,25 +132,36 @@ public class MarkupComponentBorder implements IComponentBorder
 		}
 	}
 
+	/**
+	 * 
+	 * @param extension
+	 * @return MarkupFragment
+	 */
 	@SuppressWarnings("unchecked")
-	private MarkupFragment findMarkup()
+	private MarkupFragment findMarkup(final String extension)
 	{
 		// Get locator to search for the resource
-		final IResourceStreamLocator locator = Application.get().getResourceSettings()
-				.getResourceStreamLocator();
+		final IResourceStreamFactory locator = Application.get().getResourceSettings()
+				.getResourceStreamFactory();
 
 		final Session session = Session.get();
+		final String style = session.getStyle();
+		final Locale locale = session.getLocale();
+
 		MarkupResourceStream markupResourceStream = null;
 		Class containerClass = getClass();
+
 		while (containerClass != MarkupComponentBorder.class)
 		{
-			final IResourceStream resourceStream = locator.locate(containerClass, containerClass
-					.getName().replace('.', '/'), session.getStyle(), session.getLocale(), "html");
+			String path = containerClass.getName().replace('.', '/');
+			IResourceStream resourceStream = locator.locate(containerClass, path, style, locale,
+					extension);
 
 			// Did we find it already?
 			if (resourceStream != null)
 			{
-				ContainerInfo ci = new ContainerInfo(containerClass,session.getLocale(),session.getStyle(),null,"html",null);
+				ContainerInfo ci = new ContainerInfo(containerClass, locale, style, null,
+						extension, null);
 				markupResourceStream = new MarkupResourceStream(resourceStream, ci, containerClass);
 			}
 
@@ -127,7 +173,7 @@ public class MarkupComponentBorder implements IComponentBorder
 		try
 		{
 			markup = Application.get().getMarkupSettings().getMarkupParserFactory()
-			.newMarkupParser(markupResourceStream).readAndParse();
+					.newMarkupParser(markupResourceStream).readAndParse();
 		}
 		catch (Exception e)
 		{
@@ -136,5 +182,4 @@ public class MarkupComponentBorder implements IComponentBorder
 
 		return markup;
 	}
-
 }

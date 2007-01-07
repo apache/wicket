@@ -175,7 +175,7 @@ public class PackageResource extends WebResource
 			final String style)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
-		return Application.get().getResourceSettings().getResourceStreamLocator().locate(scope,
+		return Application.get().getResourceSettings().getResourceStreamFactory().locate(scope,
 				absolutePath, style, locale, null) != null;
 	}
 
@@ -332,7 +332,7 @@ public class PackageResource extends WebResource
 	{
 		// Locate resource
 		IResourceStream resourceStream = Application.get().getResourceSettings()
-				.getResourceStreamLocator().locate(scope, absolutePath, style, locale, null);
+				.getResourceStreamFactory().locate(scope, absolutePath, style, locale, null);
 
 		// Check that resource was found
 		if (resourceStream == null)

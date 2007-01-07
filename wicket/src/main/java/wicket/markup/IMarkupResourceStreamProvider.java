@@ -30,7 +30,7 @@ import wicket.util.resource.IResourceStream;
  * key algorithm, which sometimes is useful when the MarkupContainer implements
  * its own IMarkupResourceStreamProvider as well.
  * 
- * @see wicket.util.resource.locator.IResourceStreamLocator
+ * @see wicket.util.resource.locator.IResourceStreamFactory
  * @see IMarkupCacheKeyProvider
  * 
  * @author Juergen Donnerstag

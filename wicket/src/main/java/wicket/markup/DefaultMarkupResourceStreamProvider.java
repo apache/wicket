@@ -16,13 +16,15 @@
  */
 package wicket.markup;
 
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.Application;
 import wicket.MarkupContainer;
 import wicket.util.resource.IResourceStream;
-import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamFactory;
 
 /**
  * Wicket default implementation for loading the markup resource stream
@@ -34,7 +36,8 @@ import wicket.util.resource.locator.IResourceStreamLocator;
 public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStreamProvider
 {
 	/** Log for reporting. */
-	private static final Logger log = LoggerFactory.getLogger(DefaultMarkupResourceStreamProvider.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(DefaultMarkupResourceStreamProvider.class);
 
 	/**
 	 * Constructor.
@@ -53,7 +56,7 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 	 * a markup resource should be extended for ALL components of your
 	 * application.
 	 * 
-	 * @see wicket.util.resource.locator.IResourceStreamLocator
+	 * @see wicket.util.resource.locator.IResourceStreamFactory
 	 * @see wicket.markup.DefaultMarkupResourceStreamProvider
 	 * 
 	 * @param container
@@ -66,17 +69,21 @@ public class DefaultMarkupResourceStreamProvider implements IMarkupResourceStrea
 			Class<? extends MarkupContainer> containerClass)
 	{
 		// Get locator to search for the resource
-		final IResourceStreamLocator locator = Application.get().getResourceSettings()
-				.getResourceStreamLocator();
+		final IResourceStreamFactory locator = Application.get().getResourceSettings()
+				.getResourceStreamFactory();
+
+		String style = container.getStyle();
+		Locale locale = container.getLocale();
+		String ext = container.getMarkupType();
 
 		// Markup is associated with the containers class. Walk up the class
 		// hierarchy up to MarkupContainer to find the containers markup
 		// resource.
 		while (containerClass != MarkupContainer.class)
 		{
-			final IResourceStream resourceStream = locator.locate(containerClass, containerClass
-					.getName().replace('.', '/'), container.getStyle(), container.getLocale(),
-					container.getMarkupType());
+			String path = containerClass.getName().replace('.', '/');
+			IResourceStream resourceStream = locator.locate(container.getClass(), path, style,
+					locale, ext);
 
 			// Did we find it already?
 			if (resourceStream != null)
