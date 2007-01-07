@@ -28,9 +28,11 @@ public interface IResourceFinder
 	/**
 	 * Looks for a given pathname along this path
 	 * 
+	 * @param clazz
+	 *            The class requesting the resource stream
 	 * @param pathname
 	 *            The filename with possible path
 	 * @return The resource stream
 	 */
-	IResourceStream find(final String pathname);
+	IResourceStream find(final Class clazz, final String pathname);
 }

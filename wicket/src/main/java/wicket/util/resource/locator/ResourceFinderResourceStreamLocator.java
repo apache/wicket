@@ -63,6 +63,6 @@ public class ResourceFinderResourceStreamLocator extends AbstractResourceStreamL
 		}
 
 		// Try to find file resource on the path supplied
-		return finder.find(path);
+		return finder.find(clazz, path);
 	}
 }

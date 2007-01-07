@@ -88,9 +88,9 @@ public final class WebApplicationPath implements IResourcePath
 
 	/**
 	 * 
-	 * @see wicket.util.file.IResourceFinder#find(java.lang.String)
+	 * @see wicket.util.file.IResourceFinder#find(Class, String)
 	 */
-	public IResourceStream find(final String pathname)
+	public IResourceStream find(final Class clazz, final String pathname)
 	{
 		for (Folder folder : folders)
 		{
