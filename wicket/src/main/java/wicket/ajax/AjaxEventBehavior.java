@@ -29,17 +29,18 @@ import wicket.util.time.Duration;
  * Example:
  * 
  * <pre>
- *       DropDownChoice choice=new DropDownChoice(...);
- *       choice.add(new AjaxEventBehavior(&quot;onchange&quot;) {
- *           protected void onEvent(AjaxRequestTarget target) {
- *               System.out.println(&quot;ajax here!&quot;);
- *           }
- *       }
+ *         WebMarkupContainer div=new WebMarkupContainer(...);
+ *         div.setOutputMarkupId(true);
+ *         div.add(new AjaxEventBehavior(&quot;onclick&quot;) {
+ *             protected void onEvent(AjaxRequestTarget target) {
+ *                 System.out.println(&quot;ajax here!&quot;);
+ *             }
+ *         }
  * </pre>
  * 
- * This behavior will be linked to the onChange javascript event of the select
- * box this DropDownChoice represents, and so anytime a new option is selected
- * we will get the System.out message
+ * This behavior will be linked to the onclick javascript event of the div
+ * WebMarkupContainer represents, and so anytime a user clicks this div the
+ * {@link #onEvent(AjaxRequestTarget)} of the behavior is invoked.
  * 
  * @since 1.2
  * 
@@ -103,9 +104,9 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 	protected void onComponentTag(final ComponentTag tag)
 	{
 		super.onComponentTag(tag);
-		
+
 		// only add the event handler when the component is enabled.
-		if (this.getComponent().isEnabled()) 
+		if (this.getComponent().isEnabled())
 		{
 			tag.put(event, getEventHandler());
 		}
@@ -125,8 +126,8 @@ public abstract class AjaxEventBehavior extends AbstractDefaultAjaxBehavior
 		return handler;
 	}
 
-	protected CharSequence getCallbackScript(CharSequence partialCall, CharSequence onSuccessScript,
-			CharSequence onFailureScript)
+	protected CharSequence getCallbackScript(CharSequence partialCall,
+			CharSequence onSuccessScript, CharSequence onFailureScript)
 	{
 		CharSequence script = super
 				.getCallbackScript(partialCall, onSuccessScript, onFailureScript);
