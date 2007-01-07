@@ -55,7 +55,7 @@ public class WordGenerator implements Serializable
 	{
 		try
 		{
-			final IResourceStream resource = Application.get().getResourceSettings().getResourceStreamLocator().locate(this.getClass(), 
+			final IResourceStream resource = Application.get().getResourceSettings().getResourceStreamFactory().locate(this.getClass(), 
 					"wicket/examples/hangman/WordList", null, Locale.getDefault(), ".txt");
 			final String wordlist = Streams.readString(resource.getInputStream());
 			this.words = Arrays.asList(wordlist.split("\\s+"));

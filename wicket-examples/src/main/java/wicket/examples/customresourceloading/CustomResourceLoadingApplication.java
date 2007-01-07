@@ -30,9 +30,8 @@ import wicket.examples.WicketExampleApplication;
 import wicket.protocol.http.WebApplication;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
-import wicket.util.resource.locator.AbstractResourceStreamLocator;
-import wicket.util.resource.locator.ClassLoaderResourceStreamLocator;
-import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamFactory;
+import wicket.util.resource.locator.ResourceStreamFactory;
 import wicket.util.string.Strings;
 
 /**
@@ -43,26 +42,20 @@ import wicket.util.string.Strings;
 public class CustomResourceLoadingApplication extends WicketExampleApplication
 {
 	/** log. */
-	private static final Logger log = LoggerFactory.getLogger(CustomResourceLoadingApplication.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(CustomResourceLoadingApplication.class);
 
 	/**
-	 * Custom implementation of {@link IResourceStreamLocator}.
+	 * Custom implementation of {@link IResourceStreamFactory}.
 	 */
-	private final class CustomResourceStreamLocator extends AbstractResourceStreamLocator
+	private final class CustomResourceStreamFactory extends ResourceStreamFactory
 	{
 		/**
-		 * Locator to fallback on. Always a good idea to do this, because
-		 * packaged custom components etc <strong>will</strong> depend in this
-		 * loading.
-		 */
-		private final ClassLoaderResourceStreamLocator classLoaderLocator = new ClassLoaderResourceStreamLocator();
-
-		/**
-		 * @see wicket.util.resource.locator.AbstractResourceStreamLocator#locate(java.lang.Class,
+		 * @see wicket.util.resource.locator.ResourceStreamFactory#locate(java.lang.Class,
 		 *      java.lang.String)
 		 */
 		@Override
-		protected IResourceStream locate(final Class clazz, final String path)
+		public IResourceStream locate(final Class clazz, final String path)
 		{
 			// Log attempt
 			if (log.isDebugEnabled())
@@ -101,10 +94,9 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 				throw new WicketRuntimeException(e);
 			}
 
-			// resource not found; fall back on class loading
-			return classLoaderLocator.locate(clazz, path);
+			// resource not found; fall back on Wicket default
+			return super.locate(clazz, path);
 		}
-
 	}
 
 	/**
@@ -130,6 +122,6 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	protected void init()
 	{
 		// instruct the application to use our custom resource stream locator
-		getResourceSettings().setResourceStreamLocator(new CustomResourceStreamLocator());
+		getResourceSettings().setResourceStreamLocator(new CustomResourceStreamFactory());
 	}
 }

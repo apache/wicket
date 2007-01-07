@@ -19,11 +19,11 @@
 package wicket.examples.customresourceloading;
 
 import wicket.examples.WicketExamplePage;
-import wicket.util.resource.locator.IResourceStreamLocator;
+import wicket.util.resource.locator.IResourceStreamFactory;
 
 /**
  * The markup for this page is loaded from the web context by a custom
- * {@link IResourceStreamLocator} locator set in
+ * {@link IResourceStreamFactory} locator set in
  * {@link CustomResourceLoadingApplication}.
  * 
  * @author Eelco Hillenius
