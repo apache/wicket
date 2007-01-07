@@ -1,37 +1,34 @@
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with this
- * work for additional information regarding copyright ownership. The ASF
- * licenses this file to You under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package wicket.extensions.markup.html.form.select;
-
-import java.util.Collection;
 
 import wicket.MarkupContainer;
 import wicket.WicketRuntimeException;
 import wicket.model.IModel;
-import wicket.util.lang.Objects;
 
 /**
- * Component that represents a single selection <code>&lt;select&gt;</code>
- * box. Elements are provided by one or more <code>SelectChoice</code> or
+ * Component that represents a single selection <code>&lt;select&gt;</code> box. Elements are
+ * provided by one or more <code>SelectChoice</code> or
  * <code>SelectOptions</code> components in the hierarchy below the
  * <code>Select</code> component.
  * 
  * Advantages to the standard choice components is that the user has a lot more
  * control over the markup between the &lt;select&gt; tag and its children
- * &lt;option&gt; tags: allowing for such things as &lt;optgroup&gt; tags.
+ * &lt;option&gt; tags: allowing for such things as &lt;optgroup&gt; tags. 
  * 
  * TODO Post 1.2: General: Example
  * 
@@ -40,14 +37,13 @@ import wicket.util.lang.Objects;
  * 
  * @author Igor Vaynberg (ivaynberg@users.sf.net)
  * @author Matej Knopp
- * 
- * @param <T>
- *            Type of selection item's model
+ *
+ * @param <T> Type of selection item's model
  */
 public class Select<T> extends AbstractSelect<T>
 {
 	private static final long serialVersionUID = 2L;
-
+	
 	/**
 	 * @see wicket.Component#Component(MarkupContainer,String)
 	 */
@@ -72,7 +68,7 @@ public class Select<T> extends AbstractSelect<T>
 	{
 		getModel().setObject(null);
 	}
-
+	
 	/**
 	 * @see AbstractSelect#assignValue(Object)
 	 */
@@ -82,26 +78,24 @@ public class Select<T> extends AbstractSelect<T>
 	{
 		getModel().setObject((T)value);
 	}
-
+	
 	/**
 	 * @see AbstractSelect#checkSelectedOptionsCount(int)
 	 */
 	@Override
-	protected void checkSelectedOptionsCount(int count)
+	protected void checkSelectedOptionsCount(int count)	
 	{
 		if (count > 1)
 		{
 			throw new WicketRuntimeException(
-					"The model of "
-							+ getClass().getSimpleName()
-							+ " component ["
-							+ getPath()
-							+ "] is not of type java.util.Collection, but more then one SelectOption component "
-							+ "has been selected. Either remove the multiple attribute from the select tag or use "
-							+ SelectMultiple.class.getSimpleName() + " component instead.");
+				"The model of Select component ["
+						+ getPath()
+						+ "] is not of type java.util.Collection, but more then one SelectOption component "
+						+ "has been selected. Either remove the multiple attribute from the select tag or "
+						+ "make the model of the Select component a collection");
 		}
 	}
-
+	
 	/**
 	 * @see AbstractSelect#finishModelUpdate()
 	 */
@@ -110,56 +104,7 @@ public class Select<T> extends AbstractSelect<T>
 	{
 	}
 
-	/**
-	 * Checks if the specified option is selected
-	 * 
-	 * @param option
-	 * @return true if the option is selected, false otherwise
-	 */
-	@SuppressWarnings("unchecked")
-	boolean isSelected(SelectOption option)
-	{
-		// if the raw input is specified use that, otherwise use model
-		if (hasRawInput())
-		{
-			String[] paths = getInputAsArray();
-			if (paths != null && paths.length > 0)
-			{
-				for (int i = 0; i < paths.length; i++)
-				{
-					String path = paths[i];
-					if (path.equals(option.getPath()))
-					{
-						return true;
-					}
-				}
-			}
-		}
-		else
-		{
-			Object selected = getModelObject();
-			Object value = option.getModelObject();
-
-			if (selected != null && selected instanceof Collection)
-			{
-				if (value instanceof Collection)
-				{
-					return ((Collection)selected).containsAll((Collection)value);
-				}
-				else
-				{
-					return ((Collection)selected).contains(value);
-				}
-			}
-			else
-			{
-				return Objects.equal(selected, value);
-			}
-		}
-
-		return false;
-
-	}
 
 
+	
 }
