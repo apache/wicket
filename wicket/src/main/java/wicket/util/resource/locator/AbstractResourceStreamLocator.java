@@ -18,6 +18,7 @@ package wicket.util.resource.locator;
 
 import java.util.Locale;
 
+import wicket.Application;
 import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 
@@ -57,6 +58,16 @@ public abstract class AbstractResourceStreamLocator implements IResourceStreamLo
 	{
 	}
 
+	/**
+	 * Helper to get the Application registered resource stream locator
+	 * 
+	 * @return resource stream locator
+	 */
+	public static IResourceStreamLocator get()
+	{
+		return Application.get().getResourceSettings().getResourceStreamLocator();
+	}
+	
 	/**
 	 * Locate a resource. See class comments for more details.
 	 * 

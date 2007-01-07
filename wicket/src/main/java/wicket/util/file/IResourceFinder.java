@@ -16,7 +16,7 @@
  */
 package wicket.util.file;
 
-import java.net.URL;
+import wicket.util.resource.IResourceStream;
 
 /**
  * Knows how to find resources.
@@ -30,7 +30,7 @@ public interface IResourceFinder
 	 * 
 	 * @param pathname
 	 *            The filename with possible path
-	 * @return The url located on the path
+	 * @return The resource stream
 	 */
-	URL find(final String pathname);
+	IResourceStream find(final String pathname);
 }

@@ -16,16 +16,18 @@
  */
 package wicket.protocol.http.portlet;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletContext;
 
+import wicket.util.file.File;
 import wicket.util.file.Folder;
 import wicket.util.file.IResourcePath;
+import wicket.util.resource.FileResourceStream;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.UrlResourceStream;
 import wicket.util.string.StringList;
 
 
@@ -43,6 +45,7 @@ public class PortletApplicationPath implements IResourcePath
 	/** The list of folders in the path */
 	private final List<Folder> folders = new ArrayList<Folder>();
 
+	/** Portlet Context */
 	private final PortletContext portletContext;
 
 	/**
@@ -74,6 +77,7 @@ public class PortletApplicationPath implements IResourcePath
 			{
 				folder = "/" + folder;
 			}
+			
 			if (!folder.endsWith("/"))
 			{
 				folder += "/";
@@ -83,37 +87,27 @@ public class PortletApplicationPath implements IResourcePath
 	}
 
 	/**
-	 * Looks for a given pathname along this path
 	 * 
-	 * @param pathname
-	 *            The filename with possible path
-	 * @return The file located on the path
+	 * @see wicket.util.file.IResourceFinder#find(java.lang.String)
 	 */
-	public URL find(final String pathname)
+	public IResourceStream find(final String pathname)
 	{
 		for (Folder folder : folders)
 		{
 			File file = new File(folder, pathname);
 			if (file.exists())
 			{
-				try
-				{
-					return file.toURI().toURL();
-				}
-				catch (MalformedURLException ex)
-				{
-					// ignore
-				}
+				return new FileResourceStream(file);
 			}
 		}
 		for (String path : webappPaths)
 		{
 			try
 			{
-				final URL file = portletContext.getResource(path + pathname);
-				if (file != null)
+				final URL url = portletContext.getResource(path + pathname);
+				if (url != null)
 				{
-					return file;
+					return new UrlResourceStream(url);
 				}
 			}
 			catch (Exception ex)

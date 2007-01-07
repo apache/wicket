@@ -16,14 +16,11 @@
  */
 package wicket.util.resource.locator;
 
-import java.net.URL;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.util.file.IResourceFinder;
 import wicket.util.resource.IResourceStream;
-import wicket.util.resource.UrlResourceStream;
 
 /**
  * IResourceStreamLocator implementation that locates resources along a
@@ -66,30 +63,6 @@ public class ResourceFinderResourceStreamLocator extends AbstractResourceStreamL
 		}
 
 		// Try to find file resource on the path supplied
-		final URL file = finder.find(path);
-
-		// Found resource?
-		if (file != null)
-		{
-			// Return file resource
-			IResourceStream stream = new UrlResourceStream(file);
-
-			if (log.isDebugEnabled())
-			{
-				if (stream != null)
-				{
-					log.error("ResourceFinder found a file (URL) but the locator failed to create the UrlResourceStream. Maybe a classloader issue?");
-				}
-				else
-				{
-					log.debug("'file' classLoader: " + file.getClass().getClassLoader().toString()
-							+ "; 'stream' classLoader: "
-							+ stream.getClass().getClassLoader().toString());
-				}
-			}
-
-			return stream;
-		}
-		return null;
+		return finder.find(path);
 	}
 }

@@ -16,13 +16,18 @@
  */
 package wicket.util.file;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import wicket.util.resource.FileResourceStream;
+import wicket.util.resource.IResourceStream;
+import wicket.util.resource.UrlResourceStream;
 import wicket.util.string.StringList;
 
 /**
@@ -33,6 +38,8 @@ import wicket.util.string.StringList;
  */
 public final class WebApplicationPath implements IResourcePath
 {
+	private final static Logger log = LoggerFactory.getLogger(WebApplicationPath.class);
+
 	/** The list of urls in the path */
 	private final List<String> webappPaths = new ArrayList<String>();
 
@@ -80,27 +87,17 @@ public final class WebApplicationPath implements IResourcePath
 	}
 
 	/**
-	 * Looks for a given pathname along this path
 	 * 
-	 * @param pathname
-	 *            The filename with possible path
-	 * @return The file located on the path
+	 * @see wicket.util.file.IResourceFinder#find(java.lang.String)
 	 */
-	public URL find(final String pathname)
+	public IResourceStream find(final String pathname)
 	{
 		for (Folder folder : folders)
 		{
 			final File file = new File(folder, pathname);
 			if (file.exists())
 			{
-				try
-				{
-					return file.toURI().toURL();
-				}
-				catch (MalformedURLException ex)
-				{
-					// ignore
-				}
+				return new FileResourceStream(file);
 			}
 		}
 
@@ -108,10 +105,16 @@ public final class WebApplicationPath implements IResourcePath
 		{
 			try
 			{
-				final URL file = servletContext.getResource(path + pathname);
-				if (file != null)
+				final URL url = servletContext.getResource(path + pathname);
+				if (url != null)
 				{
-					return file;
+					IResourceStream stream = new UrlResourceStream(url);
+					if (stream == null)
+					{
+						log.error("ClassLoader problem: found the URL, but was unable to load it. URL="
+										+ url.toExternalForm());
+					}
+					return stream;
 				}
 			}
 			catch (Exception ex)
