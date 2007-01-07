@@ -91,6 +91,7 @@ public class SelectOptions<T> extends RepeatingView<Collection<T>>
 	@Override
 	protected void onAttach()
 	{
+		super.onAttach();
 		if (size() == 0 || recreateChoices)
 		{
 			// populate this repeating view with SelectOption components
