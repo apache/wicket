@@ -87,6 +87,7 @@ public class Guess extends HangmanPage
 					@Override
 					protected void onAttach()
 					{
+						super.onAttach();
 						// Set enable state of link
 						setAutoEnable(false);
 						setEnabled(!letter.isGuessed());
