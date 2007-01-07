@@ -142,7 +142,7 @@ public class ResourceStreamFactory implements IResourceStreamFactory
 	}
 
 	/**
-	 * Subclass implementation locates the resource at the given path. Different
+	 * Locates the resource at the given path. Different
 	 * subclasses may take different approaches to the search.
 	 * 
 	 * @param clazz
