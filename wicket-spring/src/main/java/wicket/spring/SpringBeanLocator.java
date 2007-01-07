@@ -25,6 +25,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 import wicket.proxy.IProxyTargetLocator;
+import wicket.util.lang.Classes;
 import wicket.util.lang.Objects;
 
 /**
@@ -173,7 +174,7 @@ public class SpringBeanLocator implements IProxyTargetLocator
 			// there are more then one bean of this class found, try to default
 			// to the one with matching class name
 
-			final String defaultName = clazz.getSimpleName();
+			final String defaultName = Classes.simpleName(clazz);
 			final Iterator entries = beans.entrySet().iterator();
 			while (entries.hasNext())
 			{
