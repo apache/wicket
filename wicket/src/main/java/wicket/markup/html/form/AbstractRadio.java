@@ -87,7 +87,7 @@ class AbstractRadio<T> extends WebMarkupContainer<T>
 		{
 			value = getPage().getAutoIndex();
 		}
-		return "check" + value;
+		return "radio" + value;
 	}
 
 	/**

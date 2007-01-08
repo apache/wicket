@@ -25,7 +25,7 @@ import wicket.IConverterLocator;
  * @author Eelco Hillenius
  * @author Jonathan Locke
  */
-public final class CoverterLocatorFactory implements IConverterLocatorFactory
+public final class ConverterLocatorFactory implements IConverterLocatorFactory
 {
 	/**
 	 * @see wicket.util.convert.IConverterLocatorFactory#newConverterLocator()

@@ -56,7 +56,7 @@ import wicket.resource.loader.IStringResourceLoader;
 import wicket.session.DefaultPageFactory;
 import wicket.session.pagemap.IPageMapEvictionStrategy;
 import wicket.session.pagemap.LeastRecentlyAccessedEvictionStrategy;
-import wicket.util.convert.CoverterLocatorFactory;
+import wicket.util.convert.ConverterLocatorFactory;
 import wicket.util.convert.IConverterLocatorFactory;
 import wicket.util.crypt.CachingSunJceCryptFactory;
 import wicket.util.crypt.ICryptFactory;
@@ -496,7 +496,7 @@ public final class Settings
 	{
 		if (converterFactory == null)
 		{
-			converterFactory = new CoverterLocatorFactory();
+			converterFactory = new ConverterLocatorFactory();
 		}
 		return converterFactory;
 	}
