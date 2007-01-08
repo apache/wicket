@@ -36,7 +36,7 @@ class AbstractRadio<T> extends WebMarkupContainer<T>
 
 	private RadioGroup group;
 
-	private int value;
+	private int value=-1;
 
 	/**
 	 * @see WebMarkupContainer#WebMarkupContainer(MarkupContainer,String)
