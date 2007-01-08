@@ -104,8 +104,8 @@ public class FilePageStore implements IPageStore
 				}
 				catch (Exception e)
 				{
-					log.debug("Error loading page " + id + " with version " + versionNumber
-							+ " for the sessionid " + sessionId + " from disc", e);
+					log.debug("Error loading page " + id + "," + versionNumber
+							+ " for the sessionid " + sessionId + " from disk", e);
 				}
 				finally
 				{
@@ -165,46 +165,56 @@ public class FilePageStore implements IPageStore
 		File sessionDir = new File(getWorkDir(), sessionId);
 		sessionDir.mkdirs();
 		File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
-		// TODO check can this be called everytime at this place? Putting should
-		// be called after the rendering so it should be ok.
-		page.detach();
-		FileOutputStream fos = null;
-		try
+
+		// only store when not yet stored
+		if (!pageFile.exists())
 		{
-			final ByteArrayOutputStream out = new ByteArrayOutputStream();
+			page.detach();
+			FileOutputStream fos = null;
 			try
 			{
-				new ObjectOutputStream(out).writeObject(page);
+				long t1 = System.currentTimeMillis();
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				try
+				{
+					new ObjectOutputStream(out).writeObject(page);
+				}
+				finally
+				{
+					out.close();
+				}
+				byte[] bytes = out.toByteArray();
+				fos = new FileOutputStream(pageFile);
+				ByteBuffer bb = ByteBuffer.wrap(bytes);
+				fos.getChannel().write(bb);
+				if (log.isDebugEnabled())
+				{
+					long t2 = System.currentTimeMillis();
+					log.info("storing page " + page.getNumericId() + ","
+							+ page.getCurrentVersionNumber() + " for session " + sessionId
+							+ " took " + (t2 - t1) + " miliseconds");
+				}
+			}
+			catch (Exception e)
+			{
+				log.error("Error saving page " + page.getId() + ","
+						+ page.getCurrentVersionNumber() + " for the sessionid " + sessionId, e);
 			}
 			finally
 			{
-				out.close();
-			}
-			byte[] bytes = out.toByteArray();
-			fos = new FileOutputStream(pageFile);
-			ByteBuffer bb = ByteBuffer.wrap(bytes);
-			fos.getChannel().write(bb);
-		}
-		catch (Exception e)
-		{
-			log.error("Error saving page " + page.getId() + " with version "
-					+ page.getCurrentVersionNumber() + " for the sessionid " + sessionId, e);
-		}
-		finally
-		{
-			try
-			{
-				if (fos != null)
+				try
 				{
-					fos.close();
+					if (fos != null)
+					{
+						fos.close();
+					}
+				}
+				catch (IOException ex)
+				{
+					// ignore
 				}
 			}
-			catch (IOException ex)
-			{
-				// ignore
-			}
 		}
-
 	}
 
 	/**
