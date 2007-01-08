@@ -272,6 +272,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 			@Override
 			protected void onAttach()
 			{
+				super.onAttach();
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == (getList().size() - 1))
 				{
@@ -333,6 +334,7 @@ public abstract class ListView<T> extends AbstractRepeater<List<T>>
 			@Override
 			protected void onAttach()
 			{
+				super.onAttach();
 				setAutoEnable(false);
 				if (getList().indexOf(item.getModelObject()) == 0)
 				{
