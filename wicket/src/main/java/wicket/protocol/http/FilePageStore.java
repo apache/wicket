@@ -58,18 +58,6 @@ public class FilePageStore implements IPageStore
 	}
 
 	/**
-	 * Returns the working directory for this disk-based PageStore. Override
-	 * this to configure a different location. The default is
-	 * javax.servlet.context.tempdir from the servlet context.
-	 * 
-	 * @return Working directory
-	 */
-	protected File getWorkDir()
-	{
-		return defaultWorkDir;
-	}
-
-	/**
 	 * @see wicket.protocol.http.SecondLevelCacheSessionStore.IPageStore#getPage(java.lang.String,
 	 *      int, int)
 	 */
@@ -134,18 +122,6 @@ public class FilePageStore implements IPageStore
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * @param id
-	 * @param versionNumber
-	 * @param sessionDir
-	 * @return The file pointing to the page
-	 */
-	private File getPageFile(int id, int versionNumber, File sessionDir)
-	{
-		return new File(sessionDir, Application.get().getApplicationKey() + "-page-" + id
-				+ "-version-" + versionNumber);
 	}
 
 	/**
@@ -245,5 +221,29 @@ public class FilePageStore implements IPageStore
 			}
 			sessionDir.delete();
 		}
+	}
+
+	/**
+	 * Returns the working directory for this disk-based PageStore. Override
+	 * this to configure a different location. The default is
+	 * javax.servlet.context.tempdir from the servlet context.
+	 * 
+	 * @return Working directory
+	 */
+	protected File getWorkDir()
+	{
+		return defaultWorkDir;
+	}
+
+	/**
+	 * @param id
+	 * @param versionNumber
+	 * @param sessionDir
+	 * @return The file pointing to the page
+	 */
+	private File getPageFile(int id, int versionNumber, File sessionDir)
+	{
+		return new File(sessionDir, Application.get().getApplicationKey() + "-page-" + id
+				+ "-version-" + versionNumber);
 	}
 }
