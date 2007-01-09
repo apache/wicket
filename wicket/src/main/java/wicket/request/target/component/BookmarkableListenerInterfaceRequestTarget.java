@@ -21,6 +21,7 @@ import wicket.Page;
 import wicket.PageParameters;
 import wicket.RequestCycle;
 import wicket.RequestListenerInterface;
+import wicket.WicketRuntimeException;
 import wicket.protocol.http.request.WebRequestCodingStrategy;
 import wicket.util.string.AppendingStringBuffer;
 import wicket.util.string.Strings;
@@ -37,9 +38,10 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	private String interfaceName;
 
 	/**
-	 * This constructor is called when a stateless link is clicked on but the page
-	 * wasn't found in the session. Then this class will recreate the page and call
-	 * the interface method on the component that is targetted with the component path.
+	 * This constructor is called when a stateless link is clicked on but the
+	 * page wasn't found in the session. Then this class will recreate the page
+	 * and call the interface method on the component that is targetted with the
+	 * component path.
 	 * 
 	 * @param pageMapName
 	 * @param pageClass
@@ -47,9 +49,8 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param componentPath
 	 * @param interfaceName
 	 */
-	public BookmarkableListenerInterfaceRequestTarget(String pageMapName,
-			Class pageClass, PageParameters pageParameters, String componentPath,
-			String interfaceName)
+	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class pageClass,
+			PageParameters pageParameters, String componentPath, String interfaceName)
 	{
 		super(pageMapName, pageClass, pageParameters);
 		this.componentPath = componentPath;
@@ -57,8 +58,9 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	}
 
 	/**
-	 * This constructor is called for generating the urls (RequestCycle.urlFor())
-	 * So it will alter the PageParameters to include the 2 wicket params
+	 * This constructor is called for generating the urls
+	 * (RequestCycle.urlFor()) So it will alter the PageParameters to include
+	 * the 2 wicket params
 	 * {@link WebRequestCodingStrategy#BOOKMARKABLE_PAGE_PARAMETER_NAME} and
 	 * {@link WebRequestCodingStrategy#INTERFACE_PARAMETER_NAME}
 	 * 
@@ -68,32 +70,33 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 	 * @param component
 	 * @param listenerInterface
 	 */
-	public BookmarkableListenerInterfaceRequestTarget(String pageMapName,
-			Class pageClass, PageParameters pageParameters, Component component,
+	public BookmarkableListenerInterfaceRequestTarget(String pageMapName, Class pageClass,
+			PageParameters pageParameters, Component component,
 			RequestListenerInterface listenerInterface)
 	{
-		this(pageMapName, pageClass, pageParameters, component.getPath(),
-				listenerInterface.getName());
-		
+		this(pageMapName, pageClass, pageParameters, component.getPath(), listenerInterface
+				.getName());
+
 		int version = component.getPage().getCurrentVersionNumber();
 
 		// add the wicket:interface param to the params.
-		AppendingStringBuffer param = new AppendingStringBuffer(3 + componentPath.length() + interfaceName.length());
-		if(pageMapName != null)
+		AppendingStringBuffer param = new AppendingStringBuffer(3 + componentPath.length()
+				+ interfaceName.length());
+		if (pageMapName != null)
 		{
 			param.append(pageMapName);
 		}
 		param.append(Component.PATH_SEPARATOR);
 		param.append(getComponentPath());
 		param.append(Component.PATH_SEPARATOR);
-		if(version != 0)
+		if (version != 0)
 		{
 			param.append(version);
 		}
 		param.append(Component.PATH_SEPARATOR);
 		param.append(getInterfaceName());
-		
-		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME,param.toString());
+
+		pageParameters.put(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME, param.toString());
 	}
 
 	public void processEvents(RequestCycle requestCycle)
@@ -102,6 +105,11 @@ public class BookmarkableListenerInterfaceRequestTarget extends BookmarkablePage
 		final String pageRelativeComponentPath = Strings.afterFirstPathComponent(componentPath,
 				Component.PATH_SEPARATOR);
 		Component component = page.get(pageRelativeComponentPath);
+		if (component == null)
+		{
+			throw new WicketRuntimeException("unable to find component with path "
+					+ pageRelativeComponentPath + " on page " + page);
+		}
 		RequestListenerInterface listenerInterface = RequestListenerInterface
 				.forName(interfaceName);
 		listenerInterface.invoke(page, component);
