@@ -35,11 +35,44 @@ import wicket.session.pagemap.IPageMapEntry;
  */
 public class SecondLevelCacheSessionStore extends HttpSessionStore
 {
+	/**
+	 * FIXME document me!
+	 */
+	public static interface IPageStore
+	{
+
+		/**
+		 * @param sessionId
+		 * @param id
+		 * @param versionNumber
+		 * @return The page
+		 */
+		Page getPage(String sessionId, int id, int versionNumber);
+
+		/**
+		 * @param sessionId
+		 * @param page
+		 */
+		void removePage(String sessionId, Page page);
+
+		/**
+		 * @param sessionId
+		 * @param page
+		 */
+		void storePage(String sessionId, Page page);
+
+		/**
+		 * @param sessionId
+		 */
+		void unbind(String sessionId);
+
+	}
+
 	private static final class SecondLevelCachePageMap extends PageMap
 	{
 		private static final long serialVersionUID = 1L;
 
-		Page lastPage = null;
+		private Page lastPage = null;
 
 		/**
 		 * Construct.
@@ -50,31 +83,6 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 		private SecondLevelCachePageMap(String name, Session session)
 		{
 			super(name, session);
-		}
-
-		@Override
-		public void removeEntry(IPageMapEntry entry)
-		{
-			String sessionId = getSession().getId();
-			if (sessionId != null)
-			{
-				getStore().removePage(sessionId, entry.getPage());
-			}
-		}
-
-		@Override
-		public void put(Page page)
-		{
-			if (!page.isPageStateless())
-			{
-				String sessionId = getSession().getId();
-				if (sessionId != null)
-				{
-					lastPage = page;
-					dirty();
-					getStore().storePage(sessionId, page);
-				}
-			}
 		}
 
 		@Override
@@ -96,43 +104,35 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 			return null;
 		}
 
+		@Override
+		public void put(Page page)
+		{
+			if (!page.isPageStateless())
+			{
+				String sessionId = getSession().getId();
+				if (sessionId != null)
+				{
+					lastPage = page;
+					dirty();
+					getStore().storePage(sessionId, page);
+				}
+			}
+		}
+
+		@Override
+		public void removeEntry(IPageMapEntry entry)
+		{
+			String sessionId = getSession().getId();
+			if (sessionId != null)
+			{
+				getStore().removePage(sessionId, entry.getPage());
+			}
+		}
+
 		private IPageStore getStore()
 		{
 			return ((SecondLevelCacheSessionStore)Application.get().getSessionStore()).getStore();
 		}
-	}
-
-	/**
-	 * FIXME document me!
-	 */
-	public interface IPageStore
-	{
-
-		/**
-		 * @param sessionId
-		 * @param page
-		 */
-		void storePage(String sessionId, Page page);
-
-		/**
-		 * @param sessionId
-		 * @param id
-		 * @param versionNumber
-		 * @return The page
-		 */
-		Page getPage(String sessionId, int id, int versionNumber);
-
-		/**
-		 * @param sessionId
-		 * @param page
-		 */
-		void removePage(String sessionId, Page page);
-
-		/**
-		 * @param sessionId
-		 */
-		void unbind(String sessionId);
-
 	}
 
 	private final IPageStore cachingStore;
@@ -146,27 +146,7 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	{
 		this.cachingStore = new IPageStore()
 		{
-			Map<String, SoftReference<Map<String, SoftReference<Page>>>> sessionMap = new ConcurrentHashMap<String, SoftReference<Map<String, SoftReference<Page>>>>();
-
-			public void unbind(String sessionId)
-			{
-				sessionMap.remove(sessionId);
-				pageStore.unbind(sessionId);
-			}
-
-			public void removePage(String sessionId, Page page)
-			{
-				SoftReference sr = sessionMap.get(sessionId);
-				if (sr != null)
-				{
-					Map map = (Map)sr.get();
-					if (map != null)
-					{
-						map.remove(page.getId());
-					}
-				}
-				pageStore.removePage(sessionId, page);
-			}
+			private Map<String, SoftReference<Map<String, SoftReference<Page>>>> sessionMap = new ConcurrentHashMap<String, SoftReference<Map<String, SoftReference<Page>>>>();
 
 			public Page getPage(String sessionId, int id, int versionNumber)
 			{
@@ -194,6 +174,20 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				return pageStore.getPage(sessionId, id, versionNumber);
 			}
 
+			public void removePage(String sessionId, Page page)
+			{
+				SoftReference sr = sessionMap.get(sessionId);
+				if (sr != null)
+				{
+					Map map = (Map)sr.get();
+					if (map != null)
+					{
+						map.remove(page.getId());
+					}
+				}
+				pageStore.removePage(sessionId, page);
+			}
+
 			public void storePage(String sessionId, Page page)
 			{
 				Map<String, SoftReference<Page>> pageMap = null;
@@ -207,7 +201,31 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 				pageMap.put(page.getId(), new SoftReference<Page>(page));
 				pageStore.storePage(sessionId, page);
 			}
+
+			public void unbind(String sessionId)
+			{
+				sessionMap.remove(sessionId);
+				pageStore.unbind(sessionId);
+			}
 		};
+	}
+
+	/**
+	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String,
+	 *      wicket.Session)
+	 */
+	@Override
+	public IPageMap createPageMap(String name, Session session)
+	{
+		return new SecondLevelCachePageMap(name, session);
+	}
+
+	/**
+	 * @return The store to use
+	 */
+	public IPageStore getStore()
+	{
+		return cachingStore;
 	}
 
 	/**
@@ -231,23 +249,5 @@ public class SecondLevelCacheSessionStore extends HttpSessionStore
 	protected void onUnbind(String sessionId)
 	{
 		getStore().unbind(sessionId);
-	}
-
-	/**
-	 * @return The store to use
-	 */
-	public IPageStore getStore()
-	{
-		return cachingStore;
-	}
-
-	/**
-	 * @see wicket.protocol.http.HttpSessionStore#createPageMap(java.lang.String,
-	 *      wicket.Session)
-	 */
-	@Override
-	public IPageMap createPageMap(String name, Session session)
-	{
-		return new SecondLevelCachePageMap(name, session);
 	}
 }
