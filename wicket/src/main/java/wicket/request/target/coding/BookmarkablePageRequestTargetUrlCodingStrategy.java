@@ -100,7 +100,6 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		{
 			// TODO check if the page already exists and reuse that?
 
-
 			// try to parse component path and listener interface
 			final String[] pathComponents = Strings.split(bookmarkableInterfaceListener,
 					Component.PATH_SEPARATOR);
@@ -112,7 +111,8 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 						+ bookmarkableInterfaceListener);
 			}
 			final String interfaceName = pathComponents[pathComponents.length - 1];
-			final String componentPath = bookmarkableInterfaceListener.substring(1,
+			int start = (pageMapName != null) ? pageMapName.length() + 1 : 1;
+			final String componentPath = bookmarkableInterfaceListener.substring(start,
 					bookmarkableInterfaceListener.length() - interfaceName.length() - 2);
 
 			target = new BookmarkableListenerInterfaceRequestTarget(pageMapName,
