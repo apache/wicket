@@ -81,6 +81,16 @@ public class FilePageStore implements IPageStore
 			File pageFile = getPageFile(id, versionNumber, sessionDir);
 			if (pageFile.exists())
 			{
+				// check higher numbers and delete (if they exist, this is a
+				// rollback, and versions after this one should be removed to
+				// make place for new version)
+				int tmp = versionNumber;
+				File f;
+				while ((f = getPageFile(id, tmp++, sessionDir)).exists())
+				{
+					f.delete();
+				}
+
 				FileInputStream fis = null;
 				try
 				{
