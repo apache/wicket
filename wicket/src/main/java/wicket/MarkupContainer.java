@@ -277,9 +277,9 @@ public abstract class MarkupContainer extends Component
 		}
 
 		// Found child?
-		final String path2 = Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR);
 		if (child != null)
 		{
+			final String path2 = Strings.afterFirstPathComponent(path, Component.PATH_SEPARATOR);
 			// Recurse on latter part of path
 			return child.get(path2);
 		}
