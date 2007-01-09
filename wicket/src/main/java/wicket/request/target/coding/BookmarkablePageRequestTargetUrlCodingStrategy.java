@@ -77,7 +77,7 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		final PageParameters parameters = new PageParameters(decodeParameters(parametersFragment,
 				requestParameters.getParameters()));
 		String pageMapName = (String)parameters.remove(WebRequestCodingStrategy.PAGEMAP);
-		if(requestParameters.getPageMapName() == null)
+		if (requestParameters.getPageMapName() == null)
 		{
 			requestParameters.setPageMapName(pageMapName);
 		}
@@ -85,38 +85,41 @@ public class BookmarkablePageRequestTargetUrlCodingStrategy
 		{
 			pageMapName = requestParameters.getPageMapName();
 		}
-		
+
 		final BookmarkablePageRequestTarget target;
-		
-		final String bookmarkableInterfaceListener = (String) parameters.remove(
-				WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
-		
+
+		final String bookmarkableInterfaceListener = (String)parameters
+				.remove(WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME);
+
 		// Do the parameters contain component path and listener interface?
-		if (bookmarkableInterfaceListener != null) {
+		if (bookmarkableInterfaceListener != null)
+		{
 			// TODO check if the page already exists and reuse that?
-			
-			
-			// try to parse component path and listener interface 
-			final String[] pathComponents = Strings.split(bookmarkableInterfaceListener, Component.PATH_SEPARATOR);
+
+			// try to parse component path and listener interface
+			final String[] pathComponents = Strings.split(bookmarkableInterfaceListener,
+					Component.PATH_SEPARATOR);
 			// There must be at least 4 path components
 			if (pathComponents.length < 4)
 			{
 				throw new WicketRuntimeException("Internal error parsing "
-						+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = " + bookmarkableInterfaceListener);
+						+ WebRequestCodingStrategy.INTERFACE_PARAMETER_NAME + " = "
+						+ bookmarkableInterfaceListener);
 			}
 			final String interfaceName = pathComponents[pathComponents.length - 1];
-			final String componentPath = bookmarkableInterfaceListener.substring(1, 
+			int start = (pageMapName != null) ? pageMapName.length() + 1 : 1;
+			final String componentPath = bookmarkableInterfaceListener.substring(start,
 					bookmarkableInterfaceListener.length() - interfaceName.length() - 2);
-			
-			target = new BookmarkableListenerInterfaceRequestTarget(pageMapName, bookmarkablePageClass, parameters,
-					componentPath, interfaceName);
-		}										
-		else 
-		{
-			target = new BookmarkablePageRequestTarget(pageMapName,
-					bookmarkablePageClass, parameters);	
+
+			target = new BookmarkableListenerInterfaceRequestTarget(pageMapName,
+					bookmarkablePageClass, parameters, componentPath, interfaceName);
 		}
-		 
+		else
+		{
+			target = new BookmarkablePageRequestTarget(pageMapName, bookmarkablePageClass,
+					parameters);
+		}
+
 		return target;
 	}
 
