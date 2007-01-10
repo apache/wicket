@@ -122,6 +122,6 @@ public class CustomResourceLoadingApplication extends WicketExampleApplication
 	protected void init()
 	{
 		// instruct the application to use our custom resource stream locator
-		getResourceSettings().setResourceStreamLocator(new CustomResourceStreamFactory());
+		getResourceSettings().setResourceStreamFactory(new CustomResourceStreamFactory());
 	}
 }
