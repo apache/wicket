@@ -1163,9 +1163,9 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IResourceSettings#setResourceStreamLocator(wicket.util.resource.locator.IResourceStreamFactory)
+	 * @see wicket.settings.IResourceSettings#setResourceStreamFactory(wicket.util.resource.locator.IResourceStreamFactory)
 	 */
-	public void setResourceStreamLocator(IResourceStreamFactory resourceStreamFactory)
+	public void setResourceStreamFactory(IResourceStreamFactory resourceStreamFactory)
 	{
 		this.resourceStreamFactory = resourceStreamFactory;
 	}

@@ -243,7 +243,7 @@ public interface IResourceSettings
 	 * @param resourceStreamFactory
 	 *            new resource stream locator
 	 */
-	void setResourceStreamLocator(IResourceStreamFactory resourceStreamFactory);
+	void setResourceStreamFactory(IResourceStreamFactory resourceStreamFactory);
 
 	/**
 	 * @see wicket.settings.IExceptionSettings#setThrowExceptionOnMissingResource(boolean)
