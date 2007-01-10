@@ -17,7 +17,6 @@
 package wicket.ajax;
 
 import wicket.Application;
-import wicket.Page;
 import wicket.RequestCycle;
 import wicket.ResourceReference;
 import wicket.behavior.AbstractAjaxBehavior;
@@ -213,27 +212,18 @@ public abstract class AbstractDefaultAjaxBehavior extends AbstractAjaxBehavior
 	 */
 	public final void onRequest()
 	{
-		boolean isPageVersioned = true;
-		Page page = getComponent().getPage();
-		try
-		{
-			isPageVersioned = page.isVersioned();
-			page.setVersioned(false);
-
-			AjaxRequestTarget target = new AjaxRequestTarget();
-			RequestCycle.get().setRequestTarget(target);
-			respond(target);
-		}
-		finally
-		{
-			page.setVersioned(isPageVersioned);
-		}
+		AjaxRequestTarget target = new AjaxRequestTarget();
+		RequestCycle.get().setRequestTarget(target);
+		respond(target);
 	}
 
 	/**
 	 * @param target
 	 *            The AJAX target
 	 */
+	// TODO rename this to onEvent or something? respond is mostly the same as onRender
+	// this is not the case this is still the event handling period. respond is called
+	// in the RequestCycle on the AjaxRequestTarget..
 	protected abstract void respond(AjaxRequestTarget target);
 
 	/**

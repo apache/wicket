@@ -176,6 +176,18 @@ public abstract class Request
 	{
 		this.page = page;
 	}
+	
+	/**
+	 * A request can say if the current request should generated a new version number.
+	 * If this returns true, then all the changes on a page that has versioning enabled
+	 * is merged with the latest version. Else it will just create a new version.
+	 * 
+	 * @return true if the version must be merged with the previous latest.
+	 */
+	public boolean mergeVersion()
+	{
+		return false;
+	}
 
 	/**
 	 * @see java.lang.Object#toString()

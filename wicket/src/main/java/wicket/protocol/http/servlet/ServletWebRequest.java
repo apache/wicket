@@ -245,6 +245,13 @@ public class ServletWebRequest extends WebRequest
 		}
 	}
 	
+	/**
+	 * This will return true if the header "Wicket-Ajax" is set.
+	 * 
+	 * @see wicket.protocol.http.WebRequest#isAjax()
+	 */
+	// TODO matej? should we have a simple way of supporting other ajax things? 
+	// or should they just set that same header??
 	public boolean isAjax()
 	{
 		boolean ajax = false;
@@ -264,5 +271,17 @@ public class ServletWebRequest extends WebRequest
 		}
 
 		return ajax;
+	}
+	
+	/**
+	 * This method by default just calls isAjax, wicket ajax request do have
+	 * an header set. And for all the ajax request the versioning should be merged
+	 * with the previous one.
+	 * 
+	 * @see wicket.Request#mergeVersion()
+	 */
+	public boolean mergeVersion()
+	{
+		return isAjax();
 	}
 }

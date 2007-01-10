@@ -404,6 +404,7 @@ public class AjaxRequestTarget implements IRequestTarget
 			while (it.hasNext())
 			{
 				final Component component = (Component)((Entry)it.next()).getValue();
+				
 				if (component instanceof MarkupContainer)
 				{
 					MarkupContainer container = (MarkupContainer)component;
@@ -544,17 +545,12 @@ public class AjaxRequestTarget implements IRequestTarget
 					"Ajax request attempted on a component that is not associated with a Page");
 		}
 
-		final boolean versioned = page.isVersioned();
-		page.setVersioned(false);
-
 		page.startComponentRender(component);
 		component.renderComponent();
 
 		respondHeaderContribution(response, component);
 
 		page.endComponentRender(component);
-
-		page.setVersioned(versioned);
 
 		// Restore original response
 		RequestCycle.get().setResponse(originalResponse);

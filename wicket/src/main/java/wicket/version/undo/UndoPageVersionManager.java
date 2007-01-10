@@ -69,15 +69,19 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.version.IPageVersionManager#beginVersion()
+	 * @see wicket.version.IPageVersionManager#beginVersion(boolean)
 	 */
-	public void beginVersion()
+	public void beginVersion(boolean mergeVersion)
 	{
 		// Create new change list
 		changeList = new ChangeList();
 
-		// We are working on the next version now
-		currentVersionNumber++;
+		// if we merge then the version number shouldn't be upgraded.
+		if(!mergeVersion)
+		{
+			// We are working on the next version now
+			currentVersionNumber++;
+		}
 	}
 
 	/**
@@ -113,25 +117,41 @@ public class UndoPageVersionManager implements IPageVersionManager
 	}
 
 	/**
-	 * @see wicket.version.IPageVersionManager#endVersion()
+	 * @see wicket.version.IPageVersionManager#endVersion(boolean)
 	 */
-	public void endVersion()
+	public void endVersion(boolean mergeVersion)
 	{
-		// Push change list onto stack
-		changeListStack.push(changeList);
-		
-		// If stack is overfull, remove oldest entry
-		if (getVersions() > maxVersions)
+		if(mergeVersion)
 		{
-			expireOldestVersion();
+			if(changeListStack.size() > 0)
+			{
+				ChangeList previous = (ChangeList)changeListStack.peek();
+				previous.add(changeList);
+			}
+			else
+			{
+				// ignore this request.. mergeVersion shouldn generate a new version..
+				log.info("an end version request is made with mergedVersion to true without previous changes, can't merge");
+			}
 		}
-
-		// Make memory efficient for replication
-		changeListStack.trimToSize();
-
-		if (log.isDebugEnabled())
+		else
 		{
-			log.debug("Version " + currentVersionNumber + " for page " + page + " stored");
+			// Push change list onto stack
+			changeListStack.push(changeList);
+			
+			// If stack is overfull, remove oldest entry
+			if (getVersions() > maxVersions)
+			{
+				expireOldestVersion();
+			}
+	
+			// Make memory efficient for replication
+			changeListStack.trimToSize();
+	
+			if (log.isDebugEnabled())
+			{
+				log.debug("Version " + currentVersionNumber + " for page " + page + " stored");
+			}
 		}
 	}
 	
