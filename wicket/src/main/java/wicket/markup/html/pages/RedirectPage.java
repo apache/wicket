@@ -30,7 +30,7 @@ import wicket.model.Model;
  * 
  * @author Eelco Hillenius
  */
-public final class RedirectPage extends WebPage
+public class RedirectPage extends WebPage
 {
 	private static final long serialVersionUID = 1L;
 
