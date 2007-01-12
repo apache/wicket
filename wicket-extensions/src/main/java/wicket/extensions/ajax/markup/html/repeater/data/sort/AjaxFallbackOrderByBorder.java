@@ -16,6 +16,7 @@
  */
 package wicket.extensions.ajax.markup.html.repeater.data.sort;
 
+import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
@@ -122,6 +123,8 @@ public abstract class AjaxFallbackOrderByBorder extends Border
 			}
 		};
 		add(new AjaxFallbackOrderByLink.CssModifier(link, cssProvider));
+		
+		setBorderBodyContainer(link);
 	}
 
 	
