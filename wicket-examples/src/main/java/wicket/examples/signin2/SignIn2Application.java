@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 4296 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,7 +18,6 @@
 package wicket.examples.signin2;
 
 import wicket.Component;
-import wicket.ISessionFactory;
 import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
@@ -50,7 +49,7 @@ public final class SignIn2Application extends WicketExampleApplication
 	protected void init()
 	{
 		super.init();
-		
+
 		getSecuritySettings().setAuthorizationStrategy(new IAuthorizationStrategy()
 		{
 			public boolean isActionAuthorized(Component component, Action action)
@@ -78,27 +77,20 @@ public final class SignIn2Application extends WicketExampleApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
+	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
 	 */
-	public ISessionFactory getSessionFactory()
+	public Session newSession(Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(Request request)
-			{
-				return new SignIn2Session(SignIn2Application.this);
-			}
-		};
+		return new SignIn2Session(SignIn2Application.this, request);
 	}
-	
+
 	/**
 	 * @see wicket.protocol.http.WebApplication#newRequestCycleProcessor()
 	 */
 	protected IRequestCycleProcessor newRequestCycleProcessor()
 	{
-		return new CompoundRequestCycleProcessor(
-				new CryptedUrlWebRequestCodingStrategy(new WebRequestCodingStrategy()),
-				null, null, null, null);
+		return new CompoundRequestCycleProcessor(new CryptedUrlWebRequestCodingStrategy(
+				new WebRequestCodingStrategy()), null, null, null, null);
 	}
 
 	/**

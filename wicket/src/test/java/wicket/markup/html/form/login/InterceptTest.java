@@ -80,7 +80,8 @@ public class InterceptTest extends TestCase
 
 		application.setupRequestAndResponse();
 		application.getServletRequest().setRequestToComponent(loginPage.getForm());
-		application.getServletRequest().setParameter(loginPage.getTextField().getInputName(), "admin");
+		application.getServletRequest().setParameter(loginPage.getTextField().getInputName(),
+				"admin");
 		application.processRequestCycle();
 
 		// continueToInterceptPage seems to return the same call, causing it to
@@ -88,7 +89,8 @@ public class InterceptTest extends TestCase
 		assertEquals(application.getHomePage(), application.getLastRenderedPage().getClass());
 
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(application.getLastRenderedPage().get("link"));
+		application.getServletRequest().setRequestToComponent(
+				application.getLastRenderedPage().get("link"));
 		application.processRequestCycle();
 		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
 	}
@@ -103,16 +105,17 @@ public class InterceptTest extends TestCase
 		application.processRequestCycle();
 		MockLoginPage loginPage = (MockLoginPage)application.getLastRenderedPage();
 		assertEquals(application.getLoginPage(), loginPage.getClass());
-		
+
 		// bypass form completely to login but continue to intercept page
 		application.setupRequestAndResponse();
 		WebRequestCycle requestCycle = application.createRequestCycle();
 		assertTrue(((MockLoginPage)application.getLastRenderedPage()).login("admin"));
 		application.processRequestCycle(requestCycle);
 		assertEquals(application.getHomePage(), application.getLastRenderedPage().getClass());
-		
+
 		application.setupRequestAndResponse();
-		application.getServletRequest().setRequestToComponent(application.getLastRenderedPage().get("link"));
+		application.getServletRequest().setRequestToComponent(
+				application.getLastRenderedPage().get("link"));
 		application.processRequestCycle();
 		assertEquals(PageA.class, application.getLastRenderedPage().getClass());
 	}
@@ -149,16 +152,7 @@ public class InterceptTest extends TestCase
 		 */
 		public Session newSession(Request request)
 		{
-			return new MySession(this);
-		}
-
-		/**
-		 * 
-		 * @see wicket.Application#getSessionFactory()
-		 */
-		protected ISessionFactory getSessionFactory()
-		{
-			return this;
+			return new MySession(this, request);
 		}
 	}
 
@@ -173,10 +167,11 @@ public class InterceptTest extends TestCase
 
 		/**
 		 * @param application
+		 * @param request
 		 */
-		protected MySession(WebApplication application)
+		protected MySession(WebApplication application, Request request)
 		{
-			super(application);
+			super(application, request);
 		}
 
 		protected final String getUsername()

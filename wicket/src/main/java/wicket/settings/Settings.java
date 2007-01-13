@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import wicket.Application;
@@ -148,9 +147,6 @@ public final class Settings
 
 	/** Default markup for before a disabled link */
 	private String defaultBeforeDisabledLink = "<em>";
-
-	/** The default locale to use */
-	private Locale defaultLocale = Locale.getDefault();
 
 	/** Default markup encoding. If null, the OS default will be used */
 	private String defaultMarkupEncoding;
@@ -503,14 +499,6 @@ public final class Settings
 	public String getDefaultBeforeDisabledLink()
 	{
 		return defaultBeforeDisabledLink;
-	}
-
-	/**
-	 * @see wicket.settings.IApplicationSettings#getDefaultLocale()
-	 */
-	public Locale getDefaultLocale()
-	{
-		return defaultLocale;
 	}
 
 	/**
@@ -965,14 +953,6 @@ public final class Settings
 	}
 
 	/**
-	 * @see wicket.settings.IApplicationSettings#setDefaultLocale(java.util.Locale)
-	 */
-	public void setDefaultLocale(Locale defaultLocale)
-	{
-		this.defaultLocale = defaultLocale;
-	}
-
-	/**
 	 * @see wicket.settings.IMarkupSettings#setDefaultMarkupEncoding(java.lang.String)
 	 */
 	public void setDefaultMarkupEncoding(final String encoding)
@@ -1257,7 +1237,7 @@ public final class Settings
 	 */
 	public boolean isRequestLoggerEnabled()
 	{
-		return requestLoggerEnabled; 
+		return requestLoggerEnabled;
 	}
 
 	/**

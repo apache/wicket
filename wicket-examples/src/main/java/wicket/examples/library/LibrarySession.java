@@ -1,6 +1,7 @@
 /*
- * $Id$ $Revision:
- * 3156 $ $Date$
+ * $Id: LibrarySession.java 460265 2006-04-16 15:36:52 +0200 (Sun, 16 Apr 2006)
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 15:36:52 +0200 (Sun, 16 Apr
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -19,6 +20,7 @@ package wicket.examples.library;
 
 import java.util.List;
 
+import wicket.Request;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
@@ -36,10 +38,12 @@ public final class LibrarySession extends WebSession
 	 * 
 	 * @param application
 	 *            The application
+	 * @param request
+	 *            The current request object
 	 */
-	protected LibrarySession(final WebApplication application)
+	protected LibrarySession(final WebApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**

@@ -16,8 +16,6 @@
  */
 package wicket.settings;
 
-import java.util.Locale;
-
 import wicket.Application;
 import wicket.application.IClassResolver;
 import wicket.protocol.http.WebApplication;
@@ -62,7 +60,7 @@ public interface IApplicationSettings
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *     appserver.com/context mapped to webserver/ (context path should be '/')
+	 *      appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * @return The context path
@@ -78,11 +76,6 @@ public interface IApplicationSettings
 	 * @return the converter factory
 	 */
 	IConverterFactory getConverterFactory();
-
-	/**
-	 * @return Returns the defaultLocale.
-	 */
-	Locale getDefaultLocale();
 
 	/**
 	 * Gets internal error page class.
@@ -122,7 +115,7 @@ public interface IApplicationSettings
 	 * Application Server that is used as a virtual server on a Webserver:
 	 * 
 	 * <pre>
-	 *     appserver.com/context mapped to webserver/ (context path should be '/')
+	 *      appserver.com/context mapped to webserver/ (context path should be '/')
 	 * </pre>
 	 * 
 	 * This method can be called in the init phase of the application with the
@@ -144,12 +137,6 @@ public interface IApplicationSettings
 	 *            new factory
 	 */
 	void setConverterFactory(IConverterFactory factory);
-
-	/**
-	 * @param defaultLocale
-	 *            The defaultLocale to set.
-	 */
-	void setDefaultLocale(Locale defaultLocale);
 
 	/**
 	 * Sets internal error page class. The class must be bookmarkable and must
