@@ -1587,9 +1587,6 @@ public abstract class Component implements Serializable
 				parent.setMarkupStream(originalMarkupStream);
 				onAfterRender();
 			}
-
-			// Component has been rendered
-			notifyBehaviorsComponentRendered();
 		}
 	}
 
