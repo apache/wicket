@@ -16,7 +16,6 @@
  */
 package wicket.extensions.ajax.markup.html.repeater.data.sort;
 
-import wicket.MarkupContainer;
 import wicket.ajax.AjaxRequestTarget;
 import wicket.ajax.IAjaxCallDecorator;
 import wicket.extensions.markup.html.repeater.data.sort.ISortStateLocator;
