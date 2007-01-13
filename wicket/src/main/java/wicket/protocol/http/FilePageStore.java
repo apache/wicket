@@ -69,15 +69,20 @@ public class FilePageStore implements IPageStore
 			File pageFile = getPageFile(id, versionNumber, sessionDir);
 			if (pageFile.exists())
 			{
-				// check higher numbers and delete (if they exist, this is a
-				// rollback, and versions after this one should be removed to
-				// make place for new version)
-				int tmp = versionNumber;
-				File f;
-				while ((f = getPageFile(id, tmp++, sessionDir)).exists())
-				{
-					f.delete();
-				}
+				// TODO Deleting newer files was not a good idea, as pushing the
+				// back button a few times and then pressing refresh, would
+				// trigger this delete, while the forward button is still in
+				// effect. We should try to come up with an alternative, where
+				// we don't serialize and write to the same file all the time,
+				// but are sure we do when we need to. This would probably
+				// involve keeping meta data or do something smart.
+
+				// int tmp = versionNumber;
+				// File f;
+				// while ((f = getPageFile(id, tmp++, sessionDir)).exists())
+				// {
+				// f.delete();
+				// }
 
 				FileInputStream fis = null;
 				try
@@ -152,55 +157,58 @@ public class FilePageStore implements IPageStore
 		sessionDir.mkdirs();
 		File pageFile = getPageFile(page.getNumericId(), page.getCurrentVersionNumber(), sessionDir);
 
+		// currently, we always have to write, as we don't know whether
+		// it is a new version or really the same one
+
 		// only store when not yet stored
-		if (!pageFile.exists())
+		// if (!pageFile.exists())
+		// {
+		page.detach();
+		FileOutputStream fos = null;
+		try
 		{
-			page.detach();
-			FileOutputStream fos = null;
+			long t1 = System.currentTimeMillis();
+			final ByteArrayOutputStream out = new ByteArrayOutputStream();
 			try
 			{
-				long t1 = System.currentTimeMillis();
-				final ByteArrayOutputStream out = new ByteArrayOutputStream();
-				try
-				{
-					new ObjectOutputStream(out).writeObject(page);
-				}
-				finally
-				{
-					out.close();
-				}
-				byte[] bytes = out.toByteArray();
-				fos = new FileOutputStream(pageFile);
-				ByteBuffer bb = ByteBuffer.wrap(bytes);
-				fos.getChannel().write(bb);
-				if (log.isDebugEnabled())
-				{
-					long t2 = System.currentTimeMillis();
-					log.info("storing page " + page.getNumericId() + ","
-							+ page.getCurrentVersionNumber() + " for session " + sessionId
-							+ " took " + (t2 - t1) + " miliseconds");
-				}
-			}
-			catch (Exception e)
-			{
-				log.error("Error saving page " + page.getId() + ","
-						+ page.getCurrentVersionNumber() + " for the sessionid " + sessionId, e);
+				new ObjectOutputStream(out).writeObject(page);
 			}
 			finally
 			{
-				try
-				{
-					if (fos != null)
-					{
-						fos.close();
-					}
-				}
-				catch (IOException ex)
-				{
-					// ignore
-				}
+				out.close();
+			}
+			byte[] bytes = out.toByteArray();
+			fos = new FileOutputStream(pageFile);
+			ByteBuffer bb = ByteBuffer.wrap(bytes);
+			fos.getChannel().write(bb);
+			if (log.isDebugEnabled())
+			{
+				long t2 = System.currentTimeMillis();
+				log.info("storing page " + page.getNumericId() + ","
+						+ page.getCurrentVersionNumber() + " for session " + sessionId + " took "
+						+ (t2 - t1) + " miliseconds");
 			}
 		}
+		catch (Exception e)
+		{
+			log.error("Error saving page " + page.getId() + "," + page.getCurrentVersionNumber()
+					+ " for the sessionid " + sessionId, e);
+		}
+		finally
+		{
+			try
+			{
+				if (fos != null)
+				{
+					fos.close();
+				}
+			}
+			catch (IOException ex)
+			{
+				// ignore
+			}
+		}
+		// }
 	}
 
 	/**
