@@ -1,7 +1,7 @@
 /*
  * $Id: GuestBookApplication.java 3646 2006-01-04 21:32:14 +0000 (Wed, 04 Jan
- * 2006) ivaynberg $ $Revision$ $Date: 2006-01-04 21:32:14 +0000 (Wed, 04
- * Jan 2006) $
+ * 2006) ivaynberg $ $Revision$ $Date: 2006-01-04 21:32:14 +0000 (Wed,
+ * 04 Jan 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,7 +18,6 @@
  */
 package wicket.examples.guestbook;
 
-import wicket.ISessionFactory;
 import wicket.Page;
 import wicket.Request;
 import wicket.Session;
@@ -51,14 +50,8 @@ public class GuestBookApplication extends WicketExampleApplication
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
 	@Override
-	public ISessionFactory getSessionFactory()
+	public Session newSession(final Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(final Request request)
-			{
-				return new GuestBookSession(GuestBookApplication.this);
-			}
-		};
+		return new GuestBookSession(GuestBookApplication.this, request);
 	}
 }

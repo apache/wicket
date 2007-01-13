@@ -18,6 +18,7 @@ package wicket.protocol.http;
 
 import wicket.Application;
 import wicket.IRequestCycleFactory;
+import wicket.Request;
 import wicket.RequestCycle;
 import wicket.Session;
 import wicket.protocol.http.request.WebClientInfo;
@@ -30,7 +31,8 @@ import wicket.protocol.http.request.WebClientInfo;
 public class WebSession extends Session
 {
 	/** log. careful, this log is used to trigger profiling too! */
-	// private static final Logger log = LoggerFactory.getLogger(WebSession.class);
+	// private static final Logger log =
+	// LoggerFactory.getLogger(WebSession.class);
 	private static final long serialVersionUID = 1L;
 
 	/** The request cycle factory for the session */
@@ -44,10 +46,13 @@ public class WebSession extends Session
 	 * 
 	 * @param application
 	 *            The application
+	 * @param request
+	 *            The current request (note that {@link RequestCycle} is not yet
+	 *            available)
 	 */
-	public WebSession(final Application application)
+	public WebSession(final Application application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**

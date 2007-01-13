@@ -18,6 +18,7 @@ package wicket.protocol.http.portlet;
 
 import wicket.Application;
 import wicket.IRequestCycleFactory;
+import wicket.Request;
 import wicket.protocol.http.WebSession;
 
 /**
@@ -38,10 +39,12 @@ public class WicketPortletSession extends WebSession
 	 * 
 	 * @param application
 	 *            The application
+	 * @param request
+	 *            The current request
 	 */
-	protected WicketPortletSession(PortletApplication application)
+	protected WicketPortletSession(PortletApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**

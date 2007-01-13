@@ -1,7 +1,7 @@
 /*
  * $Id: SignIn2Session.java 5394 2006-04-16 13:36:52 +0000 (Sun, 16 Apr 2006)
- * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16 Apr
- * 2006) $
+ * jdonnerstag $ $Revision$ $Date: 2006-04-16 13:36:52 +0000 (Sun, 16
+ * Apr 2006) $
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -18,6 +18,7 @@
  */
 package wicket.examples.signin2;
 
+import wicket.Request;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
@@ -36,10 +37,12 @@ public final class SignIn2Session extends WebSession
 	 * 
 	 * @param application
 	 *            The application
+	 * @param request
+	 *            The current request
 	 */
-	protected SignIn2Session(final WebApplication application)
+	protected SignIn2Session(final WebApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**

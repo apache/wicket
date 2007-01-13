@@ -1,6 +1,7 @@
 /*
  * $Id: SignInApplication.java 5838 2006-05-24 20:44:49 +0000 (Wed, 24 May 2006)
- * joco01 $ $Revision$ $Date$
+ * joco01 $ $Revision$ $Date: 2006-12-31 18:58:21 +0700 (Sun, 31 Dec
+ * 2006) $
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,7 +19,6 @@
 package wicket.examples.signin;
 
 import wicket.Component;
-import wicket.ISessionFactory;
 import wicket.Page;
 import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
@@ -77,15 +77,9 @@ public final class SignInApplication extends WicketExampleApplication
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
 	@Override
-	public ISessionFactory getSessionFactory()
+	public Session newSession(final Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(final Request request)
-			{
-				return new SignInSession(SignInApplication.this);
-			}
-		};
+		return new SignInSession(SignInApplication.this, request);
 	}
 
 	/**

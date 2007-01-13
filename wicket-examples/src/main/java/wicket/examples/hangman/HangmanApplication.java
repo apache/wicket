@@ -18,7 +18,6 @@
  */
 package wicket.examples.hangman;
 
-import wicket.ISessionFactory;
 import wicket.Page;
 import wicket.Request;
 import wicket.Session;
@@ -43,15 +42,9 @@ public class HangmanApplication extends WicketExampleApplication
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
 	@Override
-	public ISessionFactory getSessionFactory()
+	public Session newSession(final Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(final Request request)
-			{
-				return new HangmanSession(HangmanApplication.this);
-			}
-		};
+		return new HangmanSession(HangmanApplication.this, request);
 	}
 
 	/**

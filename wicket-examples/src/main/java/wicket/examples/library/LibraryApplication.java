@@ -18,7 +18,6 @@
  */
 package wicket.examples.library;
 
-import wicket.ISessionFactory;
 import wicket.Page;
 import wicket.Request;
 import wicket.Session;
@@ -69,15 +68,9 @@ public final class LibraryApplication extends WicketExampleApplication
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
 	@Override
-	public ISessionFactory getSessionFactory()
+	public Session newSession(final Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(final Request request)
-			{
-				return new LibrarySession(LibraryApplication.this);
-			}
-		};
+		return new LibrarySession(LibraryApplication.this, request);
 	}
 
 	/**

@@ -52,8 +52,6 @@ public final class ApplicationView extends Panel
 				+ application.getDebugSettings().getComponentUseCheck());
 		new Label(this, "compressWhitespace", ""
 				+ application.getMarkupSettings().getCompressWhitespace());
-		new Label(this, "defaultLocale", ""
-				+ application.getApplicationSettings().getDefaultLocale());
 		new Label(this, "maxPageVersions", "" + application.getPageSettings().getMaxPageVersions());
 		new Label(this, "stripComments", "" + application.getMarkupSettings().getStripComments());
 		new Label(this, "stripWicketTags", ""

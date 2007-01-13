@@ -298,11 +298,14 @@ public abstract class Session implements Serializable, IConverterLocator
 	 * 
 	 * @param application
 	 *            The application that this is a session of
+	 * @param request
+	 *            The current request (note that {@link RequestCycle} is not yet
+	 *            available)
 	 */
-	protected Session(final Application application)
+	protected Session(final Application application, Request request)
 	{
-		// Set locale to default locale
-		setLocale(application.getApplicationSettings().getDefaultLocale());
+		// Set locale to request's locale
+		setLocale(request.getLocale());
 	}
 
 	/**

@@ -19,7 +19,6 @@
 package wicket.examples.signin2;
 
 import wicket.Component;
-import wicket.ISessionFactory;
 import wicket.Page;
 import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
@@ -84,15 +83,9 @@ public final class SignIn2Application extends WicketExampleApplication
 	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
 	 */
 	@Override
-	public ISessionFactory getSessionFactory()
+	public Session newSession(final Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(final Request request)
-			{
-				return new SignIn2Session(SignIn2Application.this);
-			}
-		};
+		return new SignIn2Session(SignIn2Application.this, request);
 	}
 
 	/**

@@ -22,6 +22,7 @@ package wicket.examples.guestbook;
 import java.util.ArrayList;
 import java.util.List;
 
+import wicket.Request;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
@@ -47,10 +48,12 @@ public class GuestBookSession extends WebSession
 	 * Constructor
 	 * 
 	 * @param application
+	 * @param request
+	 *            The current request
 	 */
-	protected GuestBookSession(final WebApplication application)
+	protected GuestBookSession(final WebApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**

@@ -20,6 +20,7 @@ import junit.framework.TestCase;
 import wicket.Component;
 import wicket.ISessionFactory;
 import wicket.Page;
+import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
 import wicket.authorization.Action;
@@ -40,7 +41,7 @@ public class InterceptTest extends TestCase
 	private WicketTester tester;
 
 	private MyWebApplication application;
-	
+
 	/**
 	 * Constructor for InterceptTest.
 	 * 
@@ -58,7 +59,7 @@ public class InterceptTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		
+
 		application = new MyWebApplication();
 		tester = new WicketTester(application, "src/test/"
 				+ getClass().getPackage().getName().replace('.', '/'));
@@ -76,8 +77,7 @@ public class InterceptTest extends TestCase
 
 		tester.setupRequestAndResponse();
 		tester.getServletRequest().setRequestToComponent(loginPage.getForm());
-		tester.getServletRequest().setParameter(loginPage.getTextField().getInputName(),
-				"admin");
+		tester.getServletRequest().setParameter(loginPage.getTextField().getInputName(), "admin");
 		tester.processRequestCycle();
 
 		// continueToInterceptPage seems to return the same call, causing it to
@@ -85,8 +85,7 @@ public class InterceptTest extends TestCase
 		assertEquals(application.getHomePage(), tester.getLastRenderedPage().getClass());
 
 		tester.setupRequestAndResponse();
-		tester.getServletRequest().setRequestToComponent(
-				tester.getLastRenderedPage().get("link"));
+		tester.getServletRequest().setRequestToComponent(tester.getLastRenderedPage().get("link"));
 		tester.processRequestCycle();
 		assertEquals(PageA.class, tester.getLastRenderedPage().getClass());
 	}
@@ -110,8 +109,7 @@ public class InterceptTest extends TestCase
 		assertEquals(application.getHomePage(), tester.getLastRenderedPage().getClass());
 
 		tester.setupRequestAndResponse();
-		tester.getServletRequest().setRequestToComponent(
-				tester.getLastRenderedPage().get("link"));
+		tester.getServletRequest().setRequestToComponent(tester.getLastRenderedPage().get("link"));
 		tester.processRequestCycle();
 		assertEquals(PageA.class, tester.getLastRenderedPage().getClass());
 	}
@@ -143,10 +141,10 @@ public class InterceptTest extends TestCase
 		protected void init()
 		{
 			super.init();
-			
+
 			getSecuritySettings().setAuthorizationStrategy(new MyAuthorizationStrategy());
 		}
-		
+
 		/**
 		 * 
 		 * @return Class
@@ -157,13 +155,12 @@ public class InterceptTest extends TestCase
 		}
 
 		/**
-		 * 
-		 * @see wicket.ISessionFactory#newSession()
+		 * @see wicket.ISessionFactory#newSession(Request)
 		 */
 		@Override
-		public Session newSession()
+		public Session newSession(Request request)
 		{
-			return new MySession(this);
+			return new MySession(this, request);
 		}
 
 		/**
@@ -188,10 +185,11 @@ public class InterceptTest extends TestCase
 
 		/**
 		 * @param application
+		 * @param request
 		 */
-		protected MySession(WebApplication application)
+		protected MySession(WebApplication application, Request request)
 		{
-			super(application);
+			super(application, request);
 		}
 
 		protected final String getUsername()
