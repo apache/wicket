@@ -17,7 +17,6 @@
  */
 package wicket.examples.library;
 
-import wicket.ISessionFactory;
 import wicket.Request;
 import wicket.Session;
 import wicket.authorization.IAuthorizationStrategy;
@@ -61,19 +60,12 @@ public final class LibraryApplication extends WicketExampleApplication
 		getSecuritySettings().setAuthorizationStrategy(authorizationStrategy);
 	}
 
-
 	/**
-	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
+	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
 	 */
-	public ISessionFactory getSessionFactory()
+	public Session newSession(Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(Request request)
-			{
-				return new LibrarySession(LibraryApplication.this);
-			}
-		};
+		return new LibrarySession(LibraryApplication.this, request);
 	}
 
 	/**

@@ -67,16 +67,16 @@ import wicket.util.watch.ModificationWatcher;
  * not do this in the constructor itself because the defaults will then override
  * your settings.
  * <p>
- * If you want to use a filter specific configuration, e.g. using init parameters
- * from the {@link javax.servlet.FilterConfig} object, you should override the
- * init() method. For example:
+ * If you want to use a filter specific configuration, e.g. using init
+ * parameters from the {@link javax.servlet.FilterConfig} object, you should
+ * override the init() method. For example:
  * 
  * <pre>
- *   public void init()
- *   {
- *       String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
- *       URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
- *       ...
+ *        public void init()
+ *        {
+ *            String webXMLParameter = getInitParameter(&quot;myWebXMLParameter&quot;);
+ *            URL schedulersConfig = getServletContext().getResource(&quot;/WEB-INF/schedulers.xml&quot;);
+ *            ...
  * </pre>
  * 
  * @see WicketFilter
@@ -147,7 +147,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 		return wicketFilter;
 	}
 
-	
+
 	/**
 	 * @see wicket.Application#getApplicationKey()
 	 */
@@ -351,10 +351,13 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 * registered your own ISessionFactory with the Application.
 	 * 
 	 * @return The created session
+	 * @deprecated DO NOT CALL THIS METHOD, BUT RATHER
+	 *             {@link WebApplication#newSession(Request)}.
 	 */
-	public Session newSession()
+	// FIXME remove this method after 1.3.0
+	public final Session newSession()
 	{
-		return new WebSession(WebApplication.this);
+		throw new UnsupportedOperationException("this method is replaced by Application#newSession");
 	}
 
 	/**
@@ -362,7 +365,7 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	public Session newSession(Request request)
 	{
-		return newSession();
+		return new WebSession(WebApplication.this, request);
 	}
 
 	/**
@@ -654,8 +657,6 @@ public abstract class WebApplication extends Application implements ISessionFact
 		{
 			// Create session using session factory
 			session = getSessionFactory().newSession(request);
-			// Set the client Locale for this session
-			session.setLocale(request.getLocale());
 
 			if (sessionStore.getSessionId(request, false) != null)
 			{

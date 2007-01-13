@@ -286,11 +286,14 @@ public abstract class Session implements Serializable
 	 * 
 	 * @param application
 	 *            The application that this is a session of
+	 * @param request
+	 *            The current request (note that {@link RequestCycle} is not yet
+	 *            available)
 	 */
-	protected Session(final Application application)
+	protected Session(Application application, Request request)
 	{
-		// Set locale to default locale
-		setLocale(application.getApplicationSettings().getDefaultLocale());
+		// Set locale to one in the current request
+		setLocale(request.getLocale());
 	}
 
 	/**
@@ -1025,7 +1028,7 @@ public abstract class Session implements Serializable
 				}
 			}
 		}
-		
+
 		// Set the actual attribute
 		store.setAttribute(request, name, value);
 	}

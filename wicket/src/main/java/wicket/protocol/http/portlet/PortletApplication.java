@@ -214,7 +214,7 @@ public abstract class PortletApplication extends Application implements ISession
 	 */
 	public Session newSession(Request request)
 	{
-		return new WicketPortletSession(this);
+		return new WicketPortletSession(this, request);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.9 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,7 +18,6 @@
 package wicket.examples.signin;
 
 import wicket.Component;
-import wicket.ISessionFactory;
 import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
 import wicket.Session;
@@ -72,17 +71,11 @@ public final class SignInApplication extends WicketExampleApplication
 	}
 
 	/**
-	 * @see wicket.protocol.http.WebApplication#getSessionFactory()
+	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
 	 */
-	public ISessionFactory getSessionFactory()
+	public Session newSession(Request request)
 	{
-		return new ISessionFactory()
-		{
-			public Session newSession(Request request)
-			{
-				return new SignInSession(SignInApplication.this);
-			}
-		};
+		return new SignInSession(SignInApplication.this, request);
 	}
 
 	/**

@@ -18,6 +18,7 @@ package wicket.protocol.http.portlet;
 
 import wicket.Application;
 import wicket.IRequestCycleFactory;
+import wicket.Request;
 import wicket.protocol.http.WebSession;
 import wicket.session.ISessionStore;
 
@@ -39,10 +40,12 @@ public class WicketPortletSession extends WebSession
 	 * 
 	 * @param application
 	 *            The application
+	 * @param request
+	 *            The current request
 	 */
-	protected WicketPortletSession(PortletApplication application)
+	protected WicketPortletSession(PortletApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**
@@ -53,7 +56,7 @@ public class WicketPortletSession extends WebSession
 		if (requestCycleFactory == null)
 		{
 			this.requestCycleFactory = ((PortletApplication)Application.get())
-			.getDefaultRequestCycleFactory();
+					.getDefaultRequestCycleFactory();
 		}
 
 		return this.requestCycleFactory;
@@ -67,6 +70,6 @@ public class WicketPortletSession extends WebSession
 	 */
 	protected final ISessionStore getSessionStore()
 	{
-		return getApplication().getSessionStore(); 
+		return getApplication().getSessionStore();
 	}
 }

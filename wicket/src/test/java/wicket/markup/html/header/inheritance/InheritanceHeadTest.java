@@ -80,7 +80,7 @@ public class InheritanceHeadTest extends WicketTestCase
 			 */
 			public Session newSession(Request request)
 			{
-				return new WebSession(this).setStyle("myStyle");
+				return new WebSession(this, request).setStyle("myStyle");
 			}
 		};
 		

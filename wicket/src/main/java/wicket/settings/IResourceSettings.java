@@ -17,7 +17,6 @@
 package wicket.settings;
 
 import java.util.List;
-import java.util.Locale;
 
 import wicket.IResourceFactory;
 import wicket.Localizer;
@@ -111,11 +110,6 @@ public interface IResourceSettings
 	void addStringResourceLoader(final IStringResourceLoader loader);
 
 	/**
-	 * @return Returns the defaultLocale.
-	 */
-	Locale getDefaultLocale();
-
-	/**
 	 * Get the application's localizer.
 	 * 
 	 * @see IResourceSettings#addStringResourceLoader(wicket.resource.loader.IStringResourceLoader)
@@ -189,12 +183,6 @@ public interface IResourceSettings
 	 *         resource is requested
 	 */
 	boolean getUseDefaultOnMissingResource();
-
-	/**
-	 * @param defaultLocale
-	 *            The defaultLocale to set.
-	 */
-	void setDefaultLocale(Locale defaultLocale);
 
 	/**
 	 * Sets the {@link PackageResourceGuard package resource guard}.
