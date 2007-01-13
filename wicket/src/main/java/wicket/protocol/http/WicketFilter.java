@@ -305,15 +305,18 @@ public class WicketFilter implements Filter
 					filterPath = filterPath.substring(1);
 				}
 			}
-			else if (filterPath == null)
-				filterPath = "";
-			if (!path.endsWith("/"))
-			{
-				rootPath = path + "/" + filterPath;
-			}
-			else
-			{
-				rootPath = path + filterPath;
+
+			rootPath = path;
+
+			if (filterPath != null) {
+				if (!path.endsWith("/"))
+				{
+					rootPath = rootPath + "/" + filterPath;
+				}
+				else
+				{
+					rootPath = rootPath + filterPath;
+				}
 			}
 		}
 		return rootPath;
@@ -513,12 +516,18 @@ public class WicketFilter implements Filter
 		// Homepage
 		if (url.startsWith(fullRootPath))
 		{
+			// url == "/"
+			// fullRootPath == ""
+			if (url.equals("/"))
+			{
+				return true;
+			}
 			// url == fullRootPath
 			if (url.length() == fullRootPath.length())
 			{
 				return true;
 			}
-			//  
+			// NOTE: a semicolon may be delimiting the jsessionid in the URI
 			if ((url.length() > fullRootPath.length())
 					&& (url.charAt(fullRootPath.length()) == ';'))
 			{

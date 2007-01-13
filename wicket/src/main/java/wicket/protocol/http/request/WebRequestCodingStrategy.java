@@ -231,10 +231,12 @@ public class WebRequestCodingStrategy implements IRequestCodingStrategy, IReques
 		if (path != null)
 		{
 			CharSequence prefix = urlPrefix(requestCycle);
-			// special check if the prefix ends on '/' because a mount always
-			// starts with '/'
-			if (prefix.charAt(prefix.length() - 1) == '/')
-				prefix = prefix.subSequence(0, prefix.length() - 1);
+			if (prefix.length() > 0) {
+				// special check if the prefix ends on '/' because a mount always
+				// starts with '/'
+				if (prefix.charAt(prefix.length() - 1) == '/')
+					prefix = prefix.subSequence(0, prefix.length() - 1);
+			}
 			final AppendingStringBuffer buffer = new AppendingStringBuffer(prefix.length()
 					+ path.length());
 			buffer.append(prefix);
