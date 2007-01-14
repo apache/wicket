@@ -57,7 +57,7 @@ public class PropertyPopulator implements ICellPopulator
 	}
 
 	/**
-	 * @see wicket.extensions.markup.html.repeater.data.grid.ICellPopulator#populateItem(wicket.extensions.markup.html.repeater.refreshing.Item,
+	 * @see wicket.extensions.markup.html.repeater.data.grid.ICellPopulator#populateItem(wicket.markup.repeater.Item,
 	 *      java.lang.String, wicket.model.IModel)
 	 */
 	public void populateItem(Item cellItem, String componentId, IModel rowModel)
