@@ -898,6 +898,15 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
+	 * @return True if there has been added files to this request using
+	 *         {@link #addFile(String, File, String)}
+	 */
+	public boolean hasUploadedFiles()
+	{
+		return uploadedFiles != null;
+	}
+
+	/**
 	 * Reset the request back to a default state.
 	 */
 	public void initialize()
