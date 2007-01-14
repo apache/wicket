@@ -39,12 +39,19 @@ import wicket.markup.html.form.ListMultipleChoice;
 import wicket.markup.html.form.Radio;
 import wicket.markup.html.form.RadioChoice;
 import wicket.markup.html.form.RadioGroup;
+import wicket.markup.html.form.upload.FileUploadField;
+import wicket.protocol.http.MockHttpServletRequest;
+import wicket.protocol.http.WebRequestCycle;
+import wicket.protocol.http.servlet.MultipartServletWebRequest;
+import wicket.util.file.File;
 import wicket.util.string.Strings;
+import wicket.util.upload.FileUploadException;
 
 /**
  * A helper for testing validaiton and submission of Form component.
  * 
  * @author Ingram Chen
+ * @author Frank Bille (frankbille)
  */
 public class FormTester
 {
@@ -458,6 +465,34 @@ public class FormTester
 	}
 
 	/**
+	 * Set the file on a {@link FileUploadField}.
+	 * 
+	 * @param formComponentId
+	 *            relative path (from form) to formComponent. The form component
+	 *            must be of a type FileUploadField.
+	 * @param file
+	 *            The file to upload.
+	 * @param contentType
+	 *            The content type of the file. Must be a correct mimetype.
+	 */
+	public void setFile(final String formComponentId, final File file, final String contentType)
+	{
+		checkClosed();
+
+		FormComponent formComponent = (FormComponent)workingForm.get(formComponentId);
+
+		if (formComponent instanceof FileUploadField == false)
+		{
+			throw new IllegalArgumentException("'" + formComponentId + "' is not "
+					+ "a FileUploadField. You can only attach a file to form "
+					+ "component of this type.");
+		}
+
+		MockHttpServletRequest servletRequest = wicketTester.getServletRequest();
+		servletRequest.addFile(formComponent.getInputName(), file, contentType);
+	}
+
+	/**
 	 * submit the form. note that submit() can be executed only once.
 	 */
 	public void submit()
@@ -465,8 +500,21 @@ public class FormTester
 		checkClosed();
 		try
 		{
-			wicketTester.getServletRequest().setRequestToComponent(workingForm);
-			wicketTester.processRequestCycle();
+			MockHttpServletRequest servletRequest = wicketTester.getServletRequest();
+			WebRequestCycle requestCycle = wicketTester.createRequestCycle();
+			servletRequest.setRequestToComponent(workingForm);
+
+			if (servletRequest.hasUploadedFiles())
+			{
+				requestCycle.setRequest(new MultipartServletWebRequest(servletRequest, workingForm
+						.getMaxSize()));
+			}
+
+			wicketTester.processRequestCycle(requestCycle);
+		}
+		catch (FileUploadException e)
+		{
+			throw new WicketRuntimeException(e);
 		}
 		finally
 		{
