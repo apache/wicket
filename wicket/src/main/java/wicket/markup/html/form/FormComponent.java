@@ -168,7 +168,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	/**
 	 * Type that the raw input string will be converted to
 	 */
-	private Class type;
+	private Class<? extends T> type;
 
 	/**
 	 * Make empty strings null values boolean. Used by AbstractTextComponent
@@ -1058,7 +1058,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	/**
 	 * @return the type to use when updating the model for this form component
 	 */
-	public final Class getType()
+	public final Class<? extends T> getType()
 	{
 		return type;
 	}
@@ -1070,7 +1070,7 @@ public abstract class FormComponent<T> extends WebMarkupContainer<T>
 	 * @param type
 	 * @return this for chaining
 	 */
-	public final FormComponent setType(Class type)
+	public final FormComponent setType(Class<? extends T> type)
 	{
 		this.type = type;
 		if (type != null && type.isPrimitive())
