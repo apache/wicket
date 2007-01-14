@@ -52,7 +52,7 @@ public class WebRequestCycle extends RequestCycle
 	/** Logging object */
 	private static final Logger log = LoggerFactory.getLogger(WebRequestCycle.class);
 
-	private static final MetaDataKey<Boolean> BROWSER_WAS_POLLED_KEY = new MetaDataKey<Boolean>(Boolean.class)
+	private static final MetaDataKey<Boolean> BROWSER_WAS_POLLED_KEY = new MetaDataKey<Boolean>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

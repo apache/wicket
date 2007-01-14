@@ -36,18 +36,11 @@ public abstract class MetaDataKey<T extends Serializable> implements Serializabl
 {
 	private static final long serialVersionUID = 1L;
 
-	/** Type of data associated with this key */
-	private Class<T> type;
-
 	/**
 	 * Constructor.
-	 * 
-	 * @param type
-	 *            The type of value stored under this key
 	 */
-	public MetaDataKey(final Class<T> type)
+	public MetaDataKey()
 	{
-		this.type = type;
 	}
 
 	/**
@@ -89,7 +82,6 @@ public abstract class MetaDataKey<T extends Serializable> implements Serializabl
 	 */
 	MetaDataEntry[] set(MetaDataEntry[] metaData, final T object)
 	{
-		checkType(object);
 		boolean set = false;
 		if (metaData != null)
 		{
@@ -121,24 +113,5 @@ public abstract class MetaDataKey<T extends Serializable> implements Serializabl
 			}
 		}
 		return metaData;
-	}
-
-	/**
-	 * Checks the type of the given object against the type for this metadata
-	 * key.
-	 * 
-	 * @param object
-	 *            The object to check
-	 * @throws IllegalArgumentException
-	 *             Thrown if the type of the given object does not match the
-	 *             type for this key.
-	 */
-	void checkType(final Object object)
-	{
-		if (object != null && !type.isAssignableFrom(object.getClass()))
-		{
-			throw new IllegalArgumentException("MetaDataKey " + getClass()
-					+ " requires argument of " + type + ", not " + object.getClass());
-		}
 	}
 }

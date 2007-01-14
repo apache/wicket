@@ -125,8 +125,7 @@ public abstract class Session implements Serializable, IConverterLocator
 	private static final long serialVersionUID = 1L;
 
 	/** meta data key for missing body tags logging. */
-	public static final MetaDataKey<PageMapAccessMetaData> PAGEMAP_ACCESS_MDK = new MetaDataKey<PageMapAccessMetaData>(
-			PageMapAccessMetaData.class)
+	public static final MetaDataKey<PageMapAccessMetaData> PAGEMAP_ACCESS_MDK = new MetaDataKey<PageMapAccessMetaData>()
 	{
 		private static final long serialVersionUID = 1L;
 	};

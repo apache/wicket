@@ -57,7 +57,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * not need to use this meta data key directly, but instead use one of the
 	 * bind methods of this class.
 	 */
-	public static final MetaDataKey<ActionPermissions> ACTION_PERMISSIONS = new MetaDataKey<ActionPermissions>(ActionPermissions.class)
+	public static final MetaDataKey<ActionPermissions> ACTION_PERMISSIONS = new MetaDataKey<ActionPermissions>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -67,8 +67,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * do not need to use this meta data key directly, but instead use one of
 	 * the bind methods of this class.
 	 */
-	public static final MetaDataKey<InstantiationPermissions> INSTANTIATION_PERMISSIONS = new MetaDataKey<InstantiationPermissions>(
-			InstantiationPermissions.class)
+	public static final MetaDataKey<InstantiationPermissions> INSTANTIATION_PERMISSIONS = new MetaDataKey<InstantiationPermissions>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -87,7 +86,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            The comma separated roles that are authorized to create
 	 *            component instances of type componentClass
 	 */
-	public static final void authorize(final Class< ? extends Component> componentClass,
+	public static final void authorize(final Class<? extends Component> componentClass,
 			final String roles)
 	{
 		final Application application = Application.get();
@@ -131,10 +130,11 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @param componentClass
 	 *            The component class
 	 */
-	public static final void authorizeAll(final Class< ? extends Component> componentClass)
+	public static final void authorizeAll(final Class<? extends Component> componentClass)
 	{
 		Application application = Application.get();
-		InstantiationPermissions authorizedRoles = application.getMetaData(INSTANTIATION_PERMISSIONS);
+		InstantiationPermissions authorizedRoles = application
+				.getMetaData(INSTANTIATION_PERMISSIONS);
 		if (authorizedRoles != null)
 		{
 			authorizedRoles.authorizeAll(componentClass);
@@ -174,10 +174,11 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            The comma separated list of roles that are no longer to be
 	 *            authorized to create instances of type componentClass
 	 */
-	public static final void unauthorize(final Class< ? extends Component> componentClass,
+	public static final void unauthorize(final Class<? extends Component> componentClass,
 			final String roles)
 	{
-		final InstantiationPermissions permissions = Application.get().getMetaData(INSTANTIATION_PERMISSIONS);
+		final InstantiationPermissions permissions = Application.get().getMetaData(
+				INSTANTIATION_PERMISSIONS);
 		if (permissions != null)
 		{
 			permissions.unauthorize(componentClass, new Roles(roles));
@@ -218,7 +219,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 * @param componentClass
 	 *            The component class
 	 */
-	public static final void unauthorizeAll(Class< ? extends Component> componentClass)
+	public static final void unauthorizeAll(Class<? extends Component> componentClass)
 	{
 		authorizeAll(componentClass);
 		authorize(componentClass, NO_ROLE);
@@ -315,7 +316,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *         or null if no specific authorization was configured
 	 */
 	private static Roles rolesAuthorizedToInstantiate(
-			final Class< ? extends Component> componentClass)
+			final Class<? extends Component> componentClass)
 	{
 		final InstantiationPermissions permissions = (InstantiationPermissions)Application.get()
 				.getMetaData(INSTANTIATION_PERMISSIONS);
@@ -335,7 +336,7 @@ public class MetaDataRoleAuthorizationStrategy extends AbstractRoleAuthorization
 	 *            the action
 	 * @return the roles for the action as defined with the given component
 	 */
-	private static Roles rolesAuthorizedToPerformAction(final Component component,
+	private static Roles rolesAuthorizedToPerformAction(final Component<?> component,
 			final Action action)
 	{
 		final ActionPermissions permissions = (ActionPermissions)component

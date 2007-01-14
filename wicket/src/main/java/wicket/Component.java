@@ -477,8 +477,7 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	private static final Object[] LISTENER_ARGS = new Object[] {};
 
 	/** meta data key for missing body tags logging. */
-	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>(
-			IComponentBorder.class)
+	private static final MetaDataKey<IComponentBorder> BORDER_KEY = new MetaDataKey<IComponentBorder>()
 	{
 		private static final long serialVersionUID = 1L;
 	};
@@ -3368,11 +3367,9 @@ public abstract class Component<T> implements Serializable, IConverterLocator
 	/**
 	 * Metadata key used to store/retrieve markup id
 	 */
-	private static MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<String>(String.class)
+	private static MetaDataKey<String> MARKUP_ID_KEY = new MetaDataKey<String>()
 	{
-
 		private static final long serialVersionUID = 1L;
-
 	};
 
 }
