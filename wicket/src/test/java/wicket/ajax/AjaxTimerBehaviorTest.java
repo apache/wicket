@@ -31,6 +31,7 @@ import wicket.markup.html.WebComponent;
 import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.basic.Label;
 import wicket.protocol.http.WebRequestCycle;
+import wicket.util.string.Strings;
 import wicket.util.tester.ITestPageSource;
 import wicket.util.time.Duration;
 
@@ -96,7 +97,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 
 		application.clickLink(MockPageWithLinkAndComponent.LINK_ID);
 
-		validate(timer);
+		validate(timer, false);
 
 	}
 
@@ -124,7 +125,7 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 			}
 		});
 
-		validate(timer);
+		validate(timer, true);
 
 	}
 
@@ -133,14 +134,23 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 * when called.
 	 * 
 	 * @param timer
+	 * @param inBodyOnLoad 
 	 */
-	private void validate(MyAjaxSelfUpdatingTimerBehavior timer)
+	private void validate(MyAjaxSelfUpdatingTimerBehavior timer, boolean inBodyOnLoad)
 	{
 		String document = application.getServletResponse().getDocument();
 
 		String updateScript = timer.getUpdateScript();
+		String bodyOnLoadUpdateScript = "<body onload=\"" + Strings.replaceAll(updateScript, "\"", "\\\"")+ "\">";
 
-		validateTimerScript(document, updateScript);
+		if (inBodyOnLoad) 
+		{
+			validateTimerScript(document, bodyOnLoadUpdateScript);
+		}
+		else 
+		{
+			validateTimerScript(document, updateScript);
+		}
 
 
 		application.setupRequestAndResponse();
@@ -165,7 +175,9 @@ public class AjaxTimerBehaviorTest extends WicketTestCase
 	 */
 	private void validateTimerScript(String document, String updateScript)
 	{
-		String quotedRegex = quote(updateScript);
+		log.debug(document);
+		String quotedRegex;
+		quotedRegex = quote(updateScript);
 		Pattern pat = Pattern.compile(quotedRegex, Pattern.DOTALL);
 		Matcher mat = pat.matcher(document);
 
