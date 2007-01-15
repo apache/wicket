@@ -386,7 +386,7 @@ public final class XmlPullParser extends AbstractMarkupFilter implements IXmlPul
 		finally
 		{
 			resource.close();
-			this.xmlReader.close();
+			if(this.xmlReader != null) this.xmlReader.close();
 		}
 	}
 
