@@ -54,7 +54,7 @@ public class Start
 		server.setConnectors(new Connector[] { connector });
 
 		WebAppContext web = new WebAppContext();
-		web.setContextPath("/wicket-examples");
+		web.setContextPath("/quickstart");
 		web.setWar("src/main/webapp");
 		server.addHandler(web);
 
