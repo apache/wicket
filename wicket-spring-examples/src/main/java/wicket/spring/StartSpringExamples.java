@@ -17,28 +17,20 @@
  */
 package wicket.spring;
 
-import java.net.URL;
-
-import org.apache.log4j.BasicConfigurator;
+import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mortbay.jetty.nio.SelectChannelConnector;
+import org.mortbay.jetty.webapp.WebAppContext;
 
 /**
  * Seperate startup class for people that want to run the examples directly.
  */
-public class StartSpringExamples
-{
-	/**
-	 * Used for logging.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(StartSpringExamples.class);
+public class StartSpringExamples {
 
 	/**
 	 * Construct.
 	 */
-	StartSpringExamples()
-	{
+	StartSpringExamples() {
 		super();
 	}
 
@@ -47,34 +39,29 @@ public class StartSpringExamples
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args)
-	{
-        BasicConfigurator.configure();
-        Server jettyServer = null;
-		try
-		{
-			URL jettyConfig = new URL("file:src/main/java/jetty-config.xml");
-			if (jettyConfig == null)
-			{
-				log.error("Unable to locate jetty-config.xml on the classpath");
-			}
-			jettyServer = new Server(jettyConfig);
-			jettyServer.start();
-		}
-		catch (Exception e)
-		{
-			log.error("Could not start the Jetty server: " + e);
-			if (jettyServer != null)
-			{
-				try
-				{
-					jettyServer.stop();
-				}
-				catch (InterruptedException e1)
-				{
-					log.error("Unable to stop the jetty server: " + e1);
-				}
-			}
+	public static void main(String[] args) {
+		Server server = new Server();
+		SelectChannelConnector connector = new SelectChannelConnector();
+		connector.setPort(8080);
+		server.setConnectors(new Connector[] { connector });
+
+		WebAppContext web = new WebAppContext();
+		web.setContextPath("/wicket-spring-examples");
+		web.setWar("src/main/webapp");
+		server.addHandler(web);
+
+		// Turn this on when you want to use JMX
+		// MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+		// MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
+		// server.getContainer().addEventListener(mBeanContainer);
+		// mBeanContainer.start();
+
+		try {
+			server.start();
+			server.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(100);
 		}
 	}
 }
