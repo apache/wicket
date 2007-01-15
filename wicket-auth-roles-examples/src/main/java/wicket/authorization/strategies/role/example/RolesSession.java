@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision$
- * $Date$
+ * $Id$ $Revision:
+ * 462390 $ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -17,6 +17,7 @@
  */
 package wicket.authorization.strategies.role.example;
 
+import wicket.Request;
 import wicket.Session;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
@@ -43,10 +44,11 @@ public class RolesSession extends WebSession
 	 * Construct.
 	 * 
 	 * @param application
+	 * @param request
 	 */
-	public RolesSession(WebApplication application)
+	public RolesSession(WebApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**

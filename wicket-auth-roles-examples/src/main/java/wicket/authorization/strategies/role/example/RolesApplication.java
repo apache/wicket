@@ -1,6 +1,6 @@
 /*
- * $Id$ $Revision:
- * 1.2 $ $Date$
+ * $Id$
+ * $Revision$ $Date$
  * 
  * ==============================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -22,6 +22,7 @@ import java.util.List;
 
 import wicket.ISessionFactory;
 import wicket.Page;
+import wicket.Request;
 import wicket.Session;
 import wicket.authorization.strategies.role.RoleAuthorizationStrategy;
 import wicket.authorization.strategies.role.example.pages.AdminBookmarkablePage;
@@ -60,11 +61,11 @@ public class RolesApplication extends WebApplication implements ISessionFactory
 	}
 
 	/**
-	 * @see wicket.ISessionFactory#newSession()
+	 * @see wicket.ISessionFactory#newSession(Request)
 	 */
-	public Session newSession()
+	public Session newSession(Request request)
 	{
-		return new RolesSession(this);
+		return new RolesSession(this, request);
 	}
 
 	@Override

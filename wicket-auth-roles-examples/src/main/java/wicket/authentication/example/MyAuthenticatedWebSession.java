@@ -1,7 +1,6 @@
 /*
  * $Id$
- * $Revision$
- * $Date$
+ * $Revision$ $Date$
  * 
  * ==================================================================== Licensed
  * under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -18,6 +17,7 @@
  */
 package wicket.authentication.example;
 
+import wicket.Request;
 import wicket.authentication.AuthenticatedWebApplication;
 import wicket.authentication.AuthenticatedWebSession;
 import wicket.authorization.strategies.role.Roles;
@@ -34,10 +34,12 @@ public class MyAuthenticatedWebSession extends AuthenticatedWebSession
 	 * 
 	 * @param application
 	 *            The application
+	 * @param request
+	 *            The current request
 	 */
-	public MyAuthenticatedWebSession(final AuthenticatedWebApplication application)
+	public MyAuthenticatedWebSession(final AuthenticatedWebApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 
 	/**
