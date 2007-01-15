@@ -17,6 +17,7 @@
  */
 package wicket.quickstart;
 
+import wicket.Request;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebSession;
 
@@ -28,16 +29,18 @@ import wicket.protocol.http.WebSession;
  */
 public final class QuickStartSession extends WebSession
 {
-	//  TODO Add any session properties here
+	// TODO Add any session properties here
 
 	/**
 	 * Constructor
 	 * 
 	 * @param application
 	 *            The application
+	 * @param request
+	 *            The current request
 	 */
-	protected QuickStartSession(final WebApplication application)
+	protected QuickStartSession(final WebApplication application, Request request)
 	{
-		super(application);
+		super(application, request);
 	}
 }
