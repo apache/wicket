@@ -366,6 +366,10 @@ public class SimplePageTest extends WicketTestCase
 
 	    Panel panel = (Panel)application.getLastRenderedPage().get("myPanel");
 	    assertNotNull(panel);
+		// we need to setup request/response before calling setvisible
+		application.setupRequestAndResponse();
+		application.createRequestCycle();
+
 	    panel.setVisible(true);
 		application.processRequestCycle(panel);
 		String document = application.getServletResponse().getDocument();
