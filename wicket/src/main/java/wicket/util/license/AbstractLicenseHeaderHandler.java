@@ -19,13 +19,12 @@ package wicket.util.license;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.LineNumberReader;
-import java.net.URI;
-import java.net.URL;
-
-import wicket.util.string.Strings;
 
 import junit.framework.Assert;
+import wicket.util.io.Streams;
+import wicket.util.string.Strings;
 
 
 abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
@@ -68,8 +67,15 @@ abstract class AbstractLicenseHeaderHandler implements ILicenseHeaderHandler
 		{
 			try
 			{
-				URL url = ApacheLicenseHeaderTestCase.class.getResource(getLicenseHeaderFilename());
-				licenseHeader = new wicket.util.file.File(new URI(url.toString())).readString();
+				InputStream in = ApacheLicenseHeaderTestCase.class.getResourceAsStream(getLicenseHeaderFilename());
+				try
+				{
+					licenseHeader = Streams.readString(in);
+				}
+				finally
+				{
+					in.close();
+				}
 				licenseHeader = licenseHeader.trim();
 			}
 			catch (Exception e)
