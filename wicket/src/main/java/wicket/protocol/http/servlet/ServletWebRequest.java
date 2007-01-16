@@ -27,7 +27,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import wicket.Application;
+import wicket.IRedirectListener;
+import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
+import wicket.markup.html.link.ILinkListener;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.util.lang.Bytes;
@@ -274,14 +277,18 @@ public class ServletWebRequest extends WebRequest
 	}
 	
 	/**
-	 * This method by default just calls isAjax, wicket ajax request do have
+	 * This method by default calls isAjax(), wicket ajax request do have
 	 * an header set. And for all the ajax request the versioning should be merged
-	 * with the previous one.
+	 * with the previous one. And when it sees that the current request is a 
+	 * redirect to page request the version will also be merged with the previous one
+	 * because refresh in the browser or redirects to a page shouldn't generate a new
+	 * version. 
 	 * 
 	 * @see wicket.Request#mergeVersion()
 	 */
 	public boolean mergeVersion()
 	{
-		return isAjax();
+		RequestListenerInterface intface = getRequestParameters().getInterface();
+		return isAjax() || intface == IRedirectListener.INTERFACE;
 	}
 }
