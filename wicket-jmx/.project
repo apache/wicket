@@ -1,25 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>wicket-jmx</name>
-	<comment>Wicket Authorization Integration Based on roles, metadata and annotations. This project requires Java 5.</comment>
-	<projects>
-		<project>wicket</project>
-	</projects>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.wst.validation.validationbuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
-		<nature>org.eclipse.wst.common.modulecore.ModuleCoreNature</nature>
-	</natures>
+  <name>wicket-jmx</name>
+  <comment>Wicket Java Management Extensions for Wicket 1.x (will be part of the main distro from Wicket 2.0 on)</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+      <arguments/>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
 </projectDescription>
