@@ -83,6 +83,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 	public void setUp() throws Exception
 	{
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
+		getTestContext().setEncodingScheme("UTF-8");
 	}
 
 	/**
