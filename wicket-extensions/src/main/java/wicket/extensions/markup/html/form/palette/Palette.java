@@ -48,9 +48,9 @@ import wicket.model.Model;
  * Example:
  * 
  * <pre>
- *       Form form=new Form(...);
- *       Palette palette=new Palette(...);
- *       palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
+ *        Form form=new Form(...);
+ *        Palette palette=new Palette(...);
+ *        palette.getRecorderComponent().add(new AjaxFormComponentUpdatingBehavior(&quot;onchange&quot;) {...});
  * </pre>
  * 
  * @author Igor Vaynberg ( ivaynberg )
@@ -439,6 +439,7 @@ public class Palette extends Panel
 			final Object selectedChoice = it.next();
 			model.add(selectedChoice);
 		}
+
 	}
 
 	/**
