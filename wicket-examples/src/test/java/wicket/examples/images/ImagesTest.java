@@ -53,7 +53,6 @@ public class ImagesTest extends WicketWebTestCase
 	public void testHelloWorld() throws Exception
 	{
 		beginAt("/images");
-		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - images");
 	}
 }

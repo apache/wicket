@@ -52,7 +52,6 @@ public class EncodingTest extends WicketWebTestCase
 	public void test_1() throws Exception
 	{
 		beginAt("/encodings");
-		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - encodings");
 		assertTextPresent("Hello world! Test: הצü");
 	}

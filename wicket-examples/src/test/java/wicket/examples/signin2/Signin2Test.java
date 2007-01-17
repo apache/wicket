@@ -81,12 +81,10 @@ public class Signin2Test extends WicketWebTestCase
 		// this.dumpCookies(System.err);
 		// this.assertCookiePresent("signInPanel.signInForm.username");
 		// this.assertCookiePresent("signInPanel.signInForm.password");
-		this.dumpResponse(System.out);
 		log.debug("Click 'Sign Out'");
 		this.clickLinkWithText("Sign Out");
 
 		assertTitleEquals("Wicket Examples - signin2");
-		this.dumpResponse(System.out);
 		log.debug("Click 'Home'");
 		this.clickLinkWithText("Home");
 		/*

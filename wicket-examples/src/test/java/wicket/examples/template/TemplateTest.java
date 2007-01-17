@@ -53,7 +53,6 @@ public class TemplateTest extends WicketWebTestCase
 	public void testHelloWorld() throws Exception
 	{
 		beginAt("/template");
-		this.dumpResponse(System.out);
 		assertTitleEquals("Template example, page 1");
 		assertTextPresent("Lorem ipsum dolor sit amet, consectetuer");
 	}

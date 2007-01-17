@@ -54,7 +54,6 @@ public class HelloBrowserTest extends WicketWebTestCase
 	{
 		beginAt("/hellobrowser");
 		clickLinkWithText("this link");
-		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - hellobrowser");
 		assertTextPresent("ClientProperties:");
 	}
