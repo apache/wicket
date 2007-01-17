@@ -42,6 +42,7 @@ public abstract class WicketTestCase extends TestCase
 
 	protected void setUp() throws Exception
 	{
+		System.setProperty("wicket.configuration", "deployment");
 		application = new MockWebApplication(null);
 	}
 
