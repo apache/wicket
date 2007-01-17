@@ -95,6 +95,14 @@ public class BehaviorRequestTarget extends AbstractListenerInterfaceRequestTarge
 		}
 
 		// Invoke the interface method
-		behaviorListener.onRequest();
+		component.getPage().beforeCallComponent(component, IBehaviorListener.INTERFACE);
+		try
+		{
+			behaviorListener.onRequest();
+		}
+		finally
+		{
+			component.getPage().afterCallComponent(component, IBehaviorListener.INTERFACE);
+		}
 	}
 }
