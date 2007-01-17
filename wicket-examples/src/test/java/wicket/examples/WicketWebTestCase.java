@@ -49,6 +49,8 @@ public abstract class WicketWebTestCase extends WebTestCase
 		// exception just because they can not handle it.
 		HttpUnitOptions.setExceptionsThrownOnScriptError(false);
 
+		System.setProperty("wicket.configuration", "deployment");
+		
 		TestSuite suite = new TestSuite();
 		suite.addTestSuite(clazz);
 		JettyDecorator deco = new JettyDecorator(suite);
