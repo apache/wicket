@@ -139,9 +139,10 @@ public class ModalWindow extends Panel<Object>
 	public ModalWindow(MarkupContainer parent, String id)
 	{
 		super(parent, id);
+		setVersioned(false);
 		empty = new WebMarkupContainer(this, getContentId());
 
-		this.cookieName = "modal-window-" + getClassRelativePath();
+		this.cookieName = null;
 
 		add(new CloseButtonBehavior());
 		add(new WindowClosedBehavior());
@@ -299,10 +300,20 @@ public class ModalWindow extends Panel<Object>
 	 */
 	private static String getCloseJavacript()
 	{
-		return "var win;\n" + "try {\n" + "	win = window.parent.Wicket.Window;\n"
-				+ "} catch (ignore) {\n" + "}\n"
+		return "var win;\n" //
+				+ "try {\n"
+				+ "	win = window.parent.Wicket.Window;\n"
+				+ "} catch (ignore) {\n"
+				+ "}\n"
+				+ "if (typeof(win) == \"undefined\" || typeof(win.current) == \"undefined\") {\n"
+				+ "  try {\n"
+				+ "     win = window.Wicket.Window;\n"
+				+ "  } catch (ignore) {\n"
+				+ "  }\n"
+				+ "}\n"
 				+ "if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n"
-				+ "	window.parent.setTimeout(function() {\n" + "		win.current.close();\n"
+				+ "	window.parent.setTimeout(function() {\n"
+				+ "		win.current.close();\n"
 				+ "	}, 0);\n" + "}";
 	}
 
