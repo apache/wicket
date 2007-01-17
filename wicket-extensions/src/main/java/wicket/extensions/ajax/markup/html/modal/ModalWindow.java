@@ -102,8 +102,7 @@ import wicket.util.string.Strings;
  * in a cookie, so that it is preserved when window is close. The name of the
  * cookie is specified via <code>{@link #setCookieName(String)}</code>. If
  * the name is <code>null</code>, position is not stored (initial width and
- * height are always used). Default cookie name is generated using
- * <code>hashCode()</code>.
+ * height are always used). Default cookie name is null (position is not stored).
  * <li><code>{@link #setMinimalWidth(int)}</code> and
  * <code>{@link #setMinimalHeight(int)}</code> set the minimal dimensions of
  * resizable window.
@@ -126,8 +125,8 @@ public class ModalWindow extends Panel
 	private static ResourceReference JAVASCRIPT = new CompressedResourceReference(
 			ModalWindow.class, "res/modal.js");
 
-	private static ResourceReference CSS = new CompressedResourceReference(
-			ModalWindow.class, "res/modal.css");
+	private static ResourceReference CSS = new CompressedResourceReference(ModalWindow.class,
+			"res/modal.css");
 
 	/**
 	 * Creates a new modal window component.
@@ -138,7 +137,8 @@ public class ModalWindow extends Panel
 	public ModalWindow(String id)
 	{
 		super(id);
-		this.cookieName = "modal-window-" + hashCode();
+		setVersioned(false);
+		this.cookieName = null;
 		add(empty = new WebMarkupContainer(getContentId()));
 
 		add(new CloseButtonBehavior());
@@ -297,10 +297,20 @@ public class ModalWindow extends Panel
 	 */
 	private static String getCloseJavacript()
 	{
-		return "var win;\n" + "try {\n" + "	win = window.parent.Wicket.Window;\n"
-				+ "} catch (ignore) {\n" + "}\n"
+		return "var win;\n" //
+				+ "try {\n"
+				+ "	win = window.parent.Wicket.Window;\n"
+				+ "} catch (ignore) {\n"
+				+ "}\n"
+				+ "if (typeof(win) == \"undefined\" || typeof(win.current) == \"undefined\") {\n"
+				+ "  try {\n"
+				+ "     win = window.Wicket.Window;\n"
+				+ "  } catch (ignore) {\n"
+				+ "  }\n"
+				+ "}\n"
 				+ "if (typeof(win) != \"undefined\" && typeof(win.current) != \"undefined\") {\n"
-				+ "	window.parent.setTimeout(function() {\n" + "		win.current.close();\n"
+				+ "	window.parent.setTimeout(function() {\n"
+				+ "		win.current.close();\n"
 				+ "	}, 0);\n" + "}";
 	}
 
