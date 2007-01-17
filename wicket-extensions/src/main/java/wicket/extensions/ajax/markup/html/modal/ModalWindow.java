@@ -101,8 +101,7 @@ import wicket.util.string.AppendingStringBuffer;
  * in a cookie, so that it is preserved when window is close. The name of the
  * cookie is specified via <code>{@link #setCookieName(String)}</code>. If
  * the name is <code>null</code>, position is not stored (initial width and
- * height are always used). Default cookie name is generated using
- * <code>getClassRelativePath()</code>.
+ * height are always used). Default cookie name is null (position is not stored).
  * <li><code>{@link #setMinimalWidth(int)}</code> and
  * <code>{@link #setMinimalHeight(int)}</code> set the minimal dimensions of
  * resizable window.
