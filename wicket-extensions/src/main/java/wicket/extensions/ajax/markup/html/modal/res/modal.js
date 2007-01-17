@@ -311,6 +311,11 @@ Wicket.Iframe = {
 Wicket.Window = Class.create();
 
 /**
+ * Display confirmation dialog if the user is about to leave a page (IE and FF).
+ */
+Wicket.Window.unloadConfirmation = true;
+
+/**
  * Creates a wicket window instance. The advantage of using this is
  * that in case an iframe modal window is opened in an already displayed 
  * iframe modal window, the new window is created as a top-level window.
@@ -771,10 +776,12 @@ Wicket.Window.prototype = {
 		// preserve old beforeunload handler
 		this.old_onbeforeunload = window.onbeforeunload;
 		
-		// new beforeunload handler - ask user before reloading window
-		window.onbeforeunload = function() {			
-			return "Reloading this page will cause the modal window disappear.";
-		}				
+		if (Wicket.Window.unloadConfirmation == true) {
+			// new beforeunload handler - ask user before reloading window
+			window.onbeforeunload = function() {			
+				return "Reloading this page will cause the modal window disappear.";
+			}				
+		}
 
 		
 		// create the mask that covers the background		
