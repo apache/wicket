@@ -53,7 +53,6 @@ public class RepeaterTest extends WicketWebTestCase
 	public void testHelloWorld() throws Exception
 	{
 		beginAt("/repeater");
-		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - repeater views");
 
 		this.clickLinkWithText("OrderedRepeatingView Example - basic example of a repeater view");

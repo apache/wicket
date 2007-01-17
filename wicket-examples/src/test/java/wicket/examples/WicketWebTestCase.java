@@ -19,7 +19,7 @@ package wicket.examples;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import net.sourceforge.jwebunit.WebTestCase;
+import net.sourceforge.jwebunit.junit.WebTestCase;
 import nl.openedge.util.jetty.JettyDecorator;
 
 import org.dom4j.Attribute;
@@ -85,7 +85,6 @@ public abstract class WicketWebTestCase extends WebTestCase
 	public void setUp() throws Exception
 	{
 		getTestContext().setBaseUrl("http://localhost:8098/wicket-examples");
-		getTestContext().setEncodingScheme("UTF-8");
 	}
 
 	/**
@@ -97,7 +96,7 @@ public abstract class WicketWebTestCase extends WebTestCase
 	 */
 	public Node selectSingleNode(final String xpath) throws Exception
 	{
-		final String resp = this.getDialog().getResponse().getText();
+		final String resp = this.getDialog().getPageText();
 		final Document doc = DocumentHelper.parseText(resp);
 		// String xml = doc.asXML();
 		// System.out.print(xml);

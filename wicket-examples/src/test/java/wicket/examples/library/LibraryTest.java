@@ -53,7 +53,6 @@ public class LibraryTest extends WicketWebTestCase
 	public void test_1() throws Exception
 	{
 		beginAt("/library");
-		this.dumpResponse(System.out);
 		assertTitleEquals("Wicket Examples - library");
 		assertTextPresent("Username and password are both");
 
