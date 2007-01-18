@@ -69,23 +69,6 @@ public class MarkupCache
 	}
 
 	/**
-	 * Clear markup cache and force reload of all markup data
-	 */
-	public void clear()
-	{
-		this.afterLoadListeners.clear();
-		this.markupCache.clear();
-	}
-
-	/**
-	 * @return the number of elements currently in the cache.
-	 */
-	public int size()
-	{
-		return markupCache.size();
-	}
-
-	/**
 	 * Add a listener which is triggered after the resource has been (re-)loaded
 	 * 
 	 * @param resourceStream
@@ -100,24 +83,10 @@ public class MarkupCache
 	/**
 	 * Clear markup cache and force reload of all markup data
 	 */
-	public void removeAllListeners()
+	public void clear()
 	{
 		this.afterLoadListeners.clear();
-	}
-
-	/**
-	 * Remove the markup from the cache and trigger all associated listeners
-	 * 
-	 * @param markupResourceStream
-	 *            The resource stream
-	 */
-	public final void removeMarkup(final MarkupResourceStream markupResourceStream)
-	{
-		markupCache.remove(markupResourceStream.getCacheKey());
-
-		// trigger all listeners registered on the markup that is removed
-		afterLoadListeners.notifyListeners(markupResourceStream);
-		afterLoadListeners.remove(markupResourceStream);
+		this.markupCache.clear();
 	}
 
 	/**
@@ -157,18 +126,6 @@ public class MarkupCache
 		}
 
 		return null;
-	}
-
-	/**
-	 * Check if container has associated markup
-	 * 
-	 * @param container
-	 *            The container the markup should be associated with
-	 * @return True if this markup container has associated markup
-	 */
-	public final boolean hasAssociatedMarkup(final MarkupContainer container)
-	{
-		return getMarkup(container, container.getClass()) != MarkupFragment.NO_MARKUP_FRAGMENT;
 	}
 
 	/**
@@ -273,38 +230,58 @@ public class MarkupCache
 	}
 
 	/**
-	 * Determine the markup resource stream provider to be used
+	 * Check if container has associated markup
 	 * 
 	 * @param container
-	 *            The MarkupContainer requesting the markup resource stream
-	 * @return IMarkupResourceStreamProvider
+	 *            The container the markup should be associated with
+	 * @return True if this markup container has associated markup
 	 */
-	protected IMarkupResourceStreamProvider getMarkupResourceStreamProvider(
-			final MarkupContainer container)
+	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
-		if (container instanceof IMarkupResourceStreamProvider)
-		{
-			return (IMarkupResourceStreamProvider)container;
-		}
-
-		return new DefaultMarkupResourceStreamProvider();
+		return getMarkup(container, container.getClass()) != MarkupFragment.NO_MARKUP_FRAGMENT;
 	}
 
 	/**
-	 * Determine the markup cache key provider to be used
-	 * 
-	 * @param container
-	 *            The MarkupContainer requesting the markup resource stream
-	 * @return IMarkupResourceStreamProvider
+	 * Clear markup cache and force reload of all markup data
 	 */
-	protected IMarkupCacheKeyProvider getMarkupCacheKeyProvider(final MarkupContainer container)
+	public void removeAllListeners()
 	{
-		if (container instanceof IMarkupCacheKeyProvider)
-		{
-			return (IMarkupCacheKeyProvider)container;
-		}
+		this.afterLoadListeners.clear();
+	}
 
-		return new DefaultMarkupCacheKeyProvider();
+	/**
+	 * Remove the markup from the cache and trigger all associated listeners
+	 * 
+	 * @param markupResourceStream
+	 *            The resource stream
+	 */
+	public final void removeMarkup(final MarkupResourceStream markupResourceStream)
+	{
+		markupCache.remove(markupResourceStream.getCacheKey());
+
+		// trigger all listeners registered on the markup that is removed
+		afterLoadListeners.notifyListeners(markupResourceStream);
+		afterLoadListeners.remove(markupResourceStream);
+	}
+
+	/**
+	 * In case you need a more sophisticate cache implementation.
+	 * <p>
+	 * Make sure that you cache implementation is thread safe.
+	 * 
+	 * @param markupCache
+	 */
+	public void setCacheMap(Map<CharSequence, MarkupFragment> markupCache)
+	{
+		this.markupCache = markupCache;
+	}
+
+	/**
+	 * @return the number of elements currently in the cache.
+	 */
+	public int size()
+	{
+		return markupCache.size();
 	}
 
 	/**
@@ -403,6 +380,41 @@ public class MarkupCache
 	}
 
 	/**
+	 * Determine the markup cache key provider to be used
+	 * 
+	 * @param container
+	 *            The MarkupContainer requesting the markup resource stream
+	 * @return IMarkupResourceStreamProvider
+	 */
+	protected IMarkupCacheKeyProvider getMarkupCacheKeyProvider(final MarkupContainer container)
+	{
+		if (container instanceof IMarkupCacheKeyProvider)
+		{
+			return (IMarkupCacheKeyProvider)container;
+		}
+
+		return new DefaultMarkupCacheKeyProvider();
+	}
+
+	/**
+	 * Determine the markup resource stream provider to be used
+	 * 
+	 * @param container
+	 *            The MarkupContainer requesting the markup resource stream
+	 * @return IMarkupResourceStreamProvider
+	 */
+	protected IMarkupResourceStreamProvider getMarkupResourceStreamProvider(
+			final MarkupContainer container)
+	{
+		if (container instanceof IMarkupResourceStreamProvider)
+		{
+			return (IMarkupResourceStreamProvider)container;
+		}
+
+		return new DefaultMarkupResourceStreamProvider();
+	}
+
+	/**
 	 * In case there is a need to extend the default chain of MarkupLoaders
 	 * 
 	 * @return MarkupLoader
@@ -410,17 +422,5 @@ public class MarkupCache
 	protected IMarkupLoader newMarkupLoader()
 	{
 		return new DefaultMarkupLoader();
-	}
-
-	/**
-	 * In case you need a more sophisticate cache implementation.
-	 * <p>
-	 * Make sure that you cache implementation is thread safe.
-	 * 
-	 * @param markupCache
-	 */
-	public void setCacheMap(Map<CharSequence, MarkupFragment> markupCache)
-	{
-		this.markupCache = markupCache;
 	}
 }
