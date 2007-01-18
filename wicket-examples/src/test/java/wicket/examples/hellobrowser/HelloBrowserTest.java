@@ -53,7 +53,6 @@ public class HelloBrowserTest extends WicketWebTestCase
 	public void testHelloWorld() throws Exception
 	{
 		beginAt("/hellobrowser");
-		clickLinkWithText("this link");
 		assertTitleEquals("Wicket Examples - hellobrowser");
 		assertTextPresent("ClientProperties:");
 	}
