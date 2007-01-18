@@ -37,6 +37,8 @@ public abstract class AjaxSubmitButton extends Button
 {
 	private static final long serialVersionUID = 1L;
 
+	private Form form;
+	
 	/**
 	 * Construct.
 	 * 
@@ -45,6 +47,19 @@ public abstract class AjaxSubmitButton extends Button
 	public AjaxSubmitButton(String id)
 	{
 		this(id, null);
+	}
+	
+	/**
+	 * Returns the form if it was set in constructor, otherwise returns the 
+	 * form nearest in parent hierarchy.
+	 * @see wicket.markup.html.form.FormComponent#getForm()
+	 */
+	public Form getForm()
+	{
+		if (form != null)
+			return form;
+		else
+			return super.getForm();
 	}
 
 	/**
@@ -56,6 +71,7 @@ public abstract class AjaxSubmitButton extends Button
 	public AjaxSubmitButton(String id, final Form form)
 	{
 		super(id);
+		this.form = form;
 
 		add(new AjaxFormSubmitBehavior(form, "onclick")
 		{
