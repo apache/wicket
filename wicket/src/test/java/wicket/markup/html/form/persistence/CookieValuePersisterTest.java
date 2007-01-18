@@ -106,7 +106,7 @@ public class CookieValuePersisterTest extends TestCase
 		persister.save(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test+%C3%A4%C3%B6%C3%BC%C3%9F%C3%A9%C3%A8%C3%AA", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("test+%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD", (getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form%3Ainput", (getResponseCookies(cycle).get(0)).getName());
 		assertEquals(cycle.getWebRequest().getContextPath(), (getResponseCookies(cycle)
 				.get(0)).getPath());
@@ -118,7 +118,7 @@ public class CookieValuePersisterTest extends TestCase
 		persister.clear(textField);
 		assertNull(getRequestCookies(cycle));
 		assertEquals(1, getResponseCookies(cycle).size());
-		assertEquals("test+%C3%A4%C3%B6%C3%BC%C3%9F%C3%A9%C3%A8%C3%AA", (getResponseCookies(cycle).get(0)).getValue());
+		assertEquals("test+%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD%C3%AF%C2%BF%C2%BD", (getResponseCookies(cycle).get(0)).getValue());
 		assertEquals("form%3Ainput", (getResponseCookies(cycle).get(0)).getName());
 		assertEquals(cycle.getWebRequest().getContextPath(), (getResponseCookies(cycle)
 				.get(0)).getPath());
