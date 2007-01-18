@@ -16,6 +16,7 @@
  */
 package wicket.protocol.http;
 
+import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -123,6 +124,10 @@ public class MockWebApplication
 	/** The tester object */
 	private final WebApplication application;
 
+	private ServletContext context;
+
+	private WicketFilter filter;
+
 	/**
 	 * Create the mock http tester that can be used for testing.
 	 * 
@@ -137,8 +142,8 @@ public class MockWebApplication
 	{
 		this.application = application;
 
-		final ServletContext context = newServletContext(path);
-		WicketFilter filter = new WicketFilter()
+		context = newServletContext(path);
+		filter = new WicketFilter()
 		{
 			@Override
 			protected IWebApplicationFactory getApplicationFactory()
@@ -516,5 +521,38 @@ public class MockWebApplication
 	public void setParametersForNextRequest(Map<String, Object> parametersForNextRequest)
 	{
 		this.parametersForNextRequest = parametersForNextRequest;
+	}
+	
+	/**
+	 * clears this mock application
+	 */
+	public void destroy()
+	{
+		filter.destroy();
+		File dir = (File)context.getAttribute("javax.servlet.context.tempdir");
+		deleteDir(dir);
+	}
+	
+	private void deleteDir(File dir)
+	{
+		if(dir != null && dir.isDirectory())
+		{
+			File[] files = dir.listFiles();
+			if (files != null)
+			{
+				for (File element : files)
+				{
+					if(element.isDirectory())
+					{
+						deleteDir(element);
+					}
+					else
+					{
+						element.delete();
+					}
+				}
+			}
+			dir.delete();
+		}
 	}
 }

@@ -114,9 +114,10 @@ public class MockServletContext implements ServletContext
 		try
 		{
 			File tmpDir = File.createTempFile("wicket", null);
+			File dir = new File(tmpDir.getParentFile(),tmpDir.getName() + "p");
+			dir.mkdir();
+			setAttribute("javax.servlet.context.tempdir", dir);
 			tmpDir.delete();
-			tmpDir.mkdir();
-			setAttribute("javax.servlet.context.tempdir", tmpDir);
 		}
 		catch (IOException e)
 		{
