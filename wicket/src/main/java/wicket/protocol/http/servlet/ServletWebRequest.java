@@ -150,7 +150,8 @@ public class ServletWebRequest extends WebRequest
 		String rootPath = ((WebApplication)Application.get()).getRootPath();
 		if (url.startsWith(rootPath))
 		{
-			return url.substring(rootPath.length());
+			// We return everything after rootPath, making sure we start with a slash.
+			return url.substring(rootPath.endsWith("/") ? rootPath.length() - 1 : rootPath.length());
 		}
 		return null;
 	}
