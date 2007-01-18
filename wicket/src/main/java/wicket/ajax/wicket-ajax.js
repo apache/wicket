@@ -164,6 +164,7 @@ Wicket.FunctionsExecuter.prototype = {
 Wicket.replaceOuterHtml = function(element, text) {	
     if (element.outerHTML) { // internet explorer or opera
 		var parent = element.parentNode;
+
        
 		// find out the element's index and next element (if any). we need to access
 		// newly created elements to execute theirs <script elements
@@ -203,7 +204,6 @@ Wicket.replaceOuterHtml = function(element, text) {
 		}
 
     } else {
-        
     	// create range and fragment
         var range = element.ownerDocument.createRange();
         range.selectNode(element);
@@ -1006,7 +1006,9 @@ Wicket.Head.addJavascripts = function(element) {
 			content = element.text;
 		Wicket.Head.addJavascript(content);		
 	}
-	if (element.tagName.toLowerCase() == "script") {
+	if (typeof(element) != "undefined" &&
+	    typeof(element.tagName) != "undefined" &&
+	    element.tagName.toLowerCase() == "script") {
 		add(element);
 	} else {
 		// we need to check if there are any children, becase Safari
