@@ -512,6 +512,10 @@ public class WicketFilter implements Filter
 	{
 		String fullRootPath = getRootPath(request);
 		String url = request.getRequestURI();
+		String containerSuppliedContextPath = request.getContextPath();
+		if (!fullRootPath.startsWith(containerSuppliedContextPath)) {
+			url = url.substring(containerSuppliedContextPath.length());
+		}
 
 		// Homepage
 		if (url.startsWith(fullRootPath))
@@ -521,6 +525,11 @@ public class WicketFilter implements Filter
 			if (url.equals("/"))
 			{
 				return true;
+			}
+			// Strip trailing slash off url, but not if the filter is mapped at the root /
+			if (fullRootPath.length() > 0 && fullRootPath.length() == url.length() - 1 && url.endsWith("/"))
+			{
+				url = url.substring(0, url.length() - 1);
 			}
 			// url == fullRootPath
 			if (url.length() == fullRootPath.length())
