@@ -30,7 +30,6 @@ import wicket.Application;
 import wicket.IRedirectListener;
 import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
-import wicket.markup.html.link.ILinkListener;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
 import wicket.util.lang.Bytes;
@@ -147,7 +146,8 @@ public class ServletWebRequest extends WebRequest
 		String rootPath = ((WebApplication)Application.get()).getRootPath();
 		if (url.startsWith(rootPath))
 		{
-			return rootPath.equals("/") ? url : url.substring(rootPath.length());
+			// We return everything after rootPath, making sure we start with a slash.
+			return url.substring(rootPath.endsWith("/") ? rootPath.length() - 1 : rootPath.length());
 		}
 		return null;
 	}
