@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * Please use {@link WicketFilter} if possible instead of this servlet.
+ * OSGi doesn't support filters yet, so you may be stuck with this.
  * 
  * Servlet class for all wicket applications. The specific application class to
  * instantiate should be specified to the application server via an init-params
