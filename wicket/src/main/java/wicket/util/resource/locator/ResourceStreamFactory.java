@@ -119,7 +119,7 @@ public class ResourceStreamFactory implements IResourceStreamFactory
 			String newPath = styleIter.next();
 
 			// next is the Locale
-			Iterator<String> localeIter = new LocaleResourceNameIterator(newPath, locale);
+			LocaleResourceNameIterator localeIter = new LocaleResourceNameIterator(newPath, locale);
 			while (localeIter.hasNext())
 			{
 				newPath = localeIter.next();
@@ -132,6 +132,7 @@ public class ResourceStreamFactory implements IResourceStreamFactory
 					IResourceStream stream = locate(clazz, newPath);
 					if (stream != null)
 					{
+						stream.setLocale(localeIter.getLocale());
 						return stream;
 					}
 				}

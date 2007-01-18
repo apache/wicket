@@ -175,8 +175,15 @@ public class PackageResource extends WebResource
 			final String style)
 	{
 		String absolutePath = Packages.absolutePath(scope, path);
+		String extension = null;
+		int index = absolutePath.lastIndexOf(".");
+		if (index != -1)
+		{
+			extension = absolutePath.substring(index+1);
+			absolutePath = absolutePath.substring(0,index);
+		}
 		return Application.get().getResourceSettings().getResourceStreamFactory().locate(scope,
-				absolutePath, style, locale, null) != null;
+				absolutePath, style, locale, extension) != null;
 	}
 
 	/**
@@ -248,6 +255,9 @@ public class PackageResource extends WebResource
 	/** The resource's style */
 	private final String style;
 
+	/** The extention of this resource */
+	private final String extension;
+
 	/**
 	 * Hidden constructor.
 	 * 
@@ -268,7 +278,7 @@ public class PackageResource extends WebResource
 			final String style)
 	{
 		// Convert resource path to absolute path relative to base package
-		this.absolutePath = Packages.absolutePath(scope, path);
+		String absolutePath = Packages.absolutePath(scope, path);
 
 		IPackageResourceGuard guard = Application.get().getResourceSettings()
 				.getPackageResourceGuard();
@@ -278,6 +288,17 @@ public class PackageResource extends WebResource
 					+ " may not be accessed");
 		}
 
+		int index = absolutePath.lastIndexOf(".");
+		if (index != -1)
+		{
+			extension = absolutePath.substring(index+1);
+			absolutePath = absolutePath.substring(0,index);
+		}
+		else
+		{
+			this.extension = null;
+		}
+		this.absolutePath = absolutePath;
 		this.scope = scope;
 		this.path = path;
 		this.locale = locale;
@@ -332,7 +353,7 @@ public class PackageResource extends WebResource
 	{
 		// Locate resource
 		IResourceStream resourceStream = Application.get().getResourceSettings()
-				.getResourceStreamFactory().locate(scope, absolutePath, style, locale, null);
+				.getResourceStreamFactory().locate(scope, absolutePath, style, locale, extension);
 
 		// Check that resource was found
 		if (resourceStream == null)
