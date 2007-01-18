@@ -70,6 +70,15 @@ public class MarkupCache
 	}
 
 	/**
+	 * Clear markup cache and force reload of all markup data
+	 */
+	public void clear()
+	{
+		this.afterLoadListeners.clear();
+		this.markupCache.clear();
+	}
+
+	/**
 	 * Gets a fresh markup stream that contains the (immutable) markup resource
 	 * for this class.
 	 * 
@@ -131,6 +140,119 @@ public class MarkupCache
 	public final boolean hasAssociatedMarkup(final MarkupContainer container)
 	{
 		return getMarkup(container, container.getClass()) != Markup.NO_MARKUP;
+	}
+
+	/**
+	 * Remove the markup from the cache and trigger all associated listeners
+	 * 
+	 * @since 1.2.3
+	 * @param markupResourceStream
+	 *            The resource stream
+	 */
+	public void removeMarkup(final MarkupResourceStream markupResourceStream)
+	{
+		CharSequence key = null;
+		Iterator iter = this.markupCache.entrySet().iterator();
+		while (iter.hasNext())
+		{
+			Map.Entry entry = (Map.Entry)iter.next();
+			if (entry.getValue() == markupResourceStream)
+			{
+				key = (CharSequence)entry.getKey();
+				break;
+			}
+		}
+
+		if (key != null)
+		{
+			removeMarkup(key, markupResourceStream);
+		}
+	}
+
+	/**
+	 * @return the number of elements currently in the cache.
+	 */
+	public int size()
+	{
+		return markupCache.size();
+	}
+
+	/**
+	 * The markup has just been loaded and now we check if markup inheritance
+	 * applies, which is if <wicket:extend> is found in the markup. If yes, than
+	 * load the base markups and merge the markup elements to create an updated
+	 * (merged) list of markup elements.
+	 * 
+	 * @param container
+	 *            The original requesting markup container
+	 * @param key
+	 *            Key under which markup should be cached
+	 * @param markup
+	 *            The markup to checked for inheritance
+	 * @return A markup object with the the base markup elements resolved.
+	 */
+	private Markup checkForMarkupInheritance(final MarkupContainer container,
+			final CharSequence key, final Markup markup)
+	{
+		// Check if markup contains <wicket:extend> which tells us that
+		// we need to read the inherited markup as well.
+		int extendIndex = requiresBaseMarkup(markup);
+		if (extendIndex == -1)
+		{
+			// return a MarkupStream for the markup
+			return markup;
+		}
+
+		// get the base markup
+		final Markup baseMarkup = getMarkup(container, markup.getResource().getMarkupClass()
+				.getSuperclass());
+
+		if (baseMarkup == Markup.NO_MARKUP)
+		{
+			throw new MarkupNotFoundException(
+					"Parent markup of inherited markup not found. Component class: "
+							+ markup.getResource().getContainerInfo().getContainerClass().getName()
+							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
+		}
+
+		// register an after-load listener for base markup. The listener
+		// implementation will remove the derived markup which must be merged
+		// with the base markup
+		afterLoadListeners.add(baseMarkup.getResource(), new IChangeListener()
+		{
+			/**
+			 * Make sure there is only one listener per derived markup
+			 * 
+			 * @see java.lang.Object#equals(java.lang.Object)
+			 */
+			public boolean equals(Object obj)
+			{
+				return true;
+			}
+
+			/**
+			 * Make sure there is only one listener per derived markup
+			 * 
+			 * @see java.lang.Object#hashCode()
+			 */
+			public int hashCode()
+			{
+				return key.hashCode();
+			}
+
+			public void onChange()
+			{
+				if (log.isDebugEnabled())
+				{
+					log.debug("Remove derived markup from cache: " + markup.getResource());
+				}
+				removeMarkup(key, markup.getResource());
+			}
+		});
+
+		// Merge base and derived markup
+		Markup mergedMarkup = new MergedMarkup(markup, baseMarkup, extendIndex);
+		return mergedMarkup;
 	}
 
 	/**
@@ -210,51 +332,6 @@ public class MarkupCache
 			}
 		}
 		return markup;
-	}
-
-	/**
-	 * Remove the markup from the cache and trigger all associated listeners
-	 * 
-	 * @param key
-	 *            The cache key
-	 * @param markupResourceStream
-	 *            The resource stream
-	 */
-	private void removeMarkup(final CharSequence key,
-			final MarkupResourceStream markupResourceStream)
-	{
-		markupCache.remove(key);
-
-		// trigger all listeners registered on the markup that is removed
-		afterLoadListeners.notifyListeners(markupResourceStream);
-		afterLoadListeners.remove(markupResourceStream);
-	}
-
-	/**
-	 * Remove the markup from the cache and trigger all associated listeners
-	 * 
-	 * @since 1.2.3
-	 * @param markupResourceStream
-	 *            The resource stream
-	 */
-	public void removeMarkup(final MarkupResourceStream markupResourceStream)
-	{
-		CharSequence key = null;
-		Iterator iter = this.markupCache.entrySet().iterator();
-		while (iter.hasNext())
-		{
-			Map.Entry entry = (Map.Entry)iter.next();
-			if (entry.getValue() == markupResourceStream)
-			{
-				key = (CharSequence)entry.getKey();
-				break;
-			}
-		}
-
-		if (key != null)
-		{
-			removeMarkup(key, markupResourceStream);
-		}
 	}
 
 	/**
@@ -398,98 +475,21 @@ public class MarkupCache
 	}
 
 	/**
-	 * Clear markup cache and force reload of all markup data
-	 */
-	public void clear()
-	{
-		this.afterLoadListeners.clear();
-		this.markupCache.clear();
-	}
-
-	/**
-	 * @return the number of elements currently in the cache.
-	 */
-	public int size()
-	{
-		return markupCache.size();
-	}
-
-	/**
-	 * The markup has just been loaded and now we check if markup inheritance
-	 * applies, which is if <wicket:extend> is found in the markup. If yes, than
-	 * load the base markups and merge the markup elements to create an updated
-	 * (merged) list of markup elements.
+	 * Remove the markup from the cache and trigger all associated listeners
 	 * 
-	 * @param container
-	 *            The original requesting markup container
 	 * @param key
-	 *            Key under which markup should be cached
-	 * @param markup
-	 *            The markup to checked for inheritance
-	 * @return A markup object with the the base markup elements resolved.
+	 *            The cache key
+	 * @param markupResourceStream
+	 *            The resource stream
 	 */
-	private Markup checkForMarkupInheritance(final MarkupContainer container,
-			final CharSequence key, final Markup markup)
+	private void removeMarkup(final CharSequence key,
+			final MarkupResourceStream markupResourceStream)
 	{
-		// Check if markup contains <wicket:extend> which tells us that
-		// we need to read the inherited markup as well.
-		int extendIndex = requiresBaseMarkup(markup);
-		if (extendIndex == -1)
-		{
-			// return a MarkupStream for the markup
-			return markup;
-		}
+		markupCache.remove(key);
 
-		// get the base markup
-		final Markup baseMarkup = getMarkup(container, markup.getResource().getMarkupClass()
-				.getSuperclass());
-
-		if (baseMarkup == Markup.NO_MARKUP)
-		{
-			throw new MarkupNotFoundException(
-					"Parent markup of inherited markup not found. Component class: "
-							+ markup.getResource().getContainerInfo().getContainerClass().getName()
-							+ " Enable debug messages for wicket.util.resource.Resource to get a list of all filenames tried.");
-		}
-
-		// register an after-load listener for base markup. The listener
-		// implementation will remove the derived markup which must be merged
-		// with the base markup
-		afterLoadListeners.add(baseMarkup.getResource(), new IChangeListener()
-		{
-			public void onChange()
-			{
-				if (log.isDebugEnabled())
-				{
-					log.debug("Remove derived markup from cache: " + markup.getResource());
-				}
-				removeMarkup(key, markup.getResource());
-			}
-
-			/**
-			 * Make sure there is only one listener per derived markup
-			 * 
-			 * @see java.lang.Object#equals(java.lang.Object)
-			 */
-			public boolean equals(Object obj)
-			{
-				return true;
-			}
-
-			/**
-			 * Make sure there is only one listener per derived markup
-			 * 
-			 * @see java.lang.Object#hashCode()
-			 */
-			public int hashCode()
-			{
-				return key.hashCode();
-			}
-		});
-
-		// Merge base and derived markup
-		Markup mergedMarkup = new MergedMarkup(markup, baseMarkup, extendIndex);
-		return mergedMarkup;
+		// trigger all listeners registered on the markup that is removed
+		afterLoadListeners.notifyListeners(markupResourceStream);
+		afterLoadListeners.remove(markupResourceStream);
 	}
 
 	/**
