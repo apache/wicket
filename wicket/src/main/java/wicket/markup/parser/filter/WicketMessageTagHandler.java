@@ -49,7 +49,7 @@ public final class WicketMessageTagHandler extends AbstractMarkupFilter
 	 * globally enable wicket:message; If accepted by user, we should use an
 	 * apps setting
 	 */
-	public static boolean enable = false;
+	public static final boolean enable = true;
 
 	/**
 	 * The MarkupContainer requesting the information incl. class, locale and
