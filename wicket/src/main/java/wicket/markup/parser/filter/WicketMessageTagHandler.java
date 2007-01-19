@@ -29,8 +29,6 @@ import wicket.markup.parser.AbstractMarkupFilter;
 import wicket.settings.IResourceSettings;
 
 /**
- * THIS IS EXPERIMENTAL ONLY AND DISABLED BY DEFAULT
- * <p>
  * This is a markup inline filter. It identifies wicket:message attributes and
  * replaces the attributes referenced. E.g. wicket:message="value=key" would
  * replace or add the attribute "value" with the message associated with "key".
