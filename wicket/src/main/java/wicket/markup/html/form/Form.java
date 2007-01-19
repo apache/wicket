@@ -1156,9 +1156,16 @@ public class Form<T> extends WebMarkupContainer<T> implements IFormSubmitListene
 	}
 
 	/**
-	 * @return False if form is multipart and upload failed
+	 * Handles multi-part processing of the submitted data.
+	 * 
+	 * WARNING
+	 * 
+	 * If this method is overridden it can break {@link FileUploadField}s on
+	 * this form
+	 * 
+	 * @return false if form is multipart and upload failed
 	 */
-	private final boolean handleMultiPart()
+	protected boolean handleMultiPart()
 	{
 		if (multiPart)
 		{
