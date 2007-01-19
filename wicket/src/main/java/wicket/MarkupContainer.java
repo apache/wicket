@@ -36,6 +36,7 @@ import wicket.markup.WicketTag;
 import wicket.markup.resolver.IComponentResolver;
 import wicket.model.ICompoundModel;
 import wicket.model.IModel;
+import wicket.util.resource.IResourceStream;
 import wicket.util.string.Strings;
 import wicket.version.undo.Change;
 
@@ -845,6 +846,19 @@ public abstract class MarkupContainer extends Component
 							+ " Enable debug messages for wicket.util.resource to get a list of all filenames tried"),
 					ex);
 		}
+	}
+
+	/**
+	 * NOT USED ANYMORE; it's here for helping people migrate from Wicket 1.2 to Wicket 1.3
+	 * @param containerClass
+	 * @return nothing
+	 * @throws always throws an {@link IllegalStateException}
+	 */
+	// TODO remove after release 1.3.0
+	public final IResourceStream newMarkupResourceStream(Class containerClass)
+	{
+		throw new IllegalStateException(
+				"this method is not used any more (and shouldn't be called by clients anyway)");
 	}
 
 	/**
