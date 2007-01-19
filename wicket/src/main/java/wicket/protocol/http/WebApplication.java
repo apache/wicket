@@ -468,9 +468,11 @@ public abstract class WebApplication extends Application implements ISessionFact
 	 */
 	protected void internalDestroy()
 	{
-		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher();
+		ModificationWatcher resourceWatcher = getResourceSettings().getResourceWatcher(false);
 		if (resourceWatcher != null)
+		{
 			resourceWatcher.destroy();
+		}
 		super.internalDestroy();
 		bufferedResponses.clear();
 		// destroy the resource watcher

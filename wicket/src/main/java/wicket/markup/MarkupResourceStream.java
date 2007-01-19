@@ -49,6 +49,9 @@ public class MarkupResourceStream implements IResourceStream
 	 */
 	private final Class markupClass;
 
+	/** The key used to cache the markup resource stream */
+	private CharSequence cacheKey;
+
 	/**
 	 * Construct.
 	 * 
@@ -151,6 +154,24 @@ public class MarkupResourceStream implements IResourceStream
 	public ContainerInfo getContainerInfo()
 	{
 		return containerInfo;
+	}
+
+	/**
+	 * Gets cacheKey.
+	 * @return cacheKey
+	 */
+	public final CharSequence getCacheKey()
+	{
+		return cacheKey;
+	}
+
+	/**
+	 * Set the cache key
+	 * @param cacheKey
+	 */
+	public final void setCacheKey(final CharSequence cacheKey)
+	{
+		this.cacheKey = cacheKey;
 	}
 
 	/**
