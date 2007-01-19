@@ -38,6 +38,7 @@ import wicket.markup.html.WebMarkupContainer;
 import wicket.markup.html.border.Border;
 import wicket.markup.html.form.persistence.CookieValuePersister;
 import wicket.markup.html.form.persistence.IValuePersister;
+import wicket.markup.html.form.upload.FileUploadField;
 import wicket.markup.html.form.validation.IFormValidator;
 import wicket.model.IModel;
 import wicket.model.Model;
@@ -128,7 +129,7 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 * Constant for specifying how a form is submitted, in this case using post.
 	 */
 	public static final String METHOD_POST = "post";
-	
+
 	/**
 	 * Constant for specifying how a form is submitted, in this case using get.
 	 */
@@ -233,9 +234,9 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * Gets the method used to submit the form. Defaults to 'post'. Override this
-	 * if you have a requirement to alter this behavior.
-	 *
+	 * Gets the method used to submit the form. Defaults to 'post'. Override
+	 * this if you have a requirement to alter this behavior.
+	 * 
 	 * @return the method used to submit the form.
 	 */
 	protected String getMethod()
@@ -925,13 +926,13 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	 */
 	protected final void updateFormComponentModels()
 	{
-		visitFormComponents(new ValidationVisitor() 
+		visitFormComponents(new ValidationVisitor()
 		{
 			public void validate(FormComponent formComponent)
 			{
 				// Potentially update the model
 				formComponent.updateModel();
-			}		
+			}
 		});
 	}
 
@@ -1086,9 +1087,16 @@ public class Form extends WebMarkupContainer implements IFormSubmitListener
 	}
 
 	/**
-	 * @return False if form is multipart and upload failed
+	 * Handles multi-part processing of the submitted data.
+	 * 
+	 * WARNING
+	 * 
+	 * If this method is overridden it can break {@link FileUploadField}s on
+	 * this form
+	 * 
+	 * @return false if form is multipart and upload failed
 	 */
-	private final boolean handleMultiPart()
+	protected boolean handleMultiPart()
 	{
 		if (multiPart)
 		{
