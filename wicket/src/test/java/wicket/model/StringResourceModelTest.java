@@ -65,6 +65,12 @@ public class StringResourceModelTest extends TestCase
 		ws = new WeatherStation();
 		wsModel = new Model<WeatherStation>(ws);
 	}
+	
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
 
 	/**
 	 * 

@@ -36,6 +36,12 @@ public class TesterTest extends TestCase
 	{
 		tester = new WicketTester();
 	}
+	
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
 
 	/**
 	 * 

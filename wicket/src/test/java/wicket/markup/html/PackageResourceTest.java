@@ -58,6 +58,12 @@ public class PackageResourceTest extends TestCase
 		tester = new WicketTester();
 	}
 
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
+	
 	/**
 	 * Tests binding a single absolute package resource.
 	 * 

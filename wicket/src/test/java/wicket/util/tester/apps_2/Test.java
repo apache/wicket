@@ -47,5 +47,7 @@ public class Test extends TestCase
 
 		tester.startPage(RedirectPage.class);
 		tester.assertRenderedPage(LoginPage.class);
+		
+		tester.destroy();
 	}
 }

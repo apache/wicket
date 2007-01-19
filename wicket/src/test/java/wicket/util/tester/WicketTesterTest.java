@@ -76,6 +76,8 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.assertLabel("id", "xxId");
 		tester.assertLabel("name", "xxName");
+		
+		tester.destroy();
 	}
 
 	/**
@@ -98,6 +100,8 @@ public class WicketTesterTest extends TestCase
 
 		// assert error message from validation
 		tester.assertErrorMessages(new String[] { "id is required", "name is required" });
+		
+		tester.destroy();
 	}
 
 	/**
@@ -123,6 +127,7 @@ public class WicketTesterTest extends TestCase
 		// assert previous page expired.
 		// TODO Post 1.2: General: No longer a valid test
 		// tester.assertExpirePreviousPage();
+		tester.destroy();
 	}
 
 	/**
@@ -150,6 +155,8 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
+		
+		tester.destroy();
 	}
 
 	/**
@@ -167,6 +174,8 @@ public class WicketTesterTest extends TestCase
 		tester.assertRenderedPage(ViewBook.class);
 		tester.clickLink("link");
 		tester.assertRenderedPage(CreateBook.class);
+		
+		tester.destroy();
 	}
 
 	/**
@@ -225,6 +234,8 @@ public class WicketTesterTest extends TestCase
 
 		// This must not fail
 		tester.assertComponentOnAjaxResponse(component);
+		
+		tester.destroy();
 	}
 
 	/**
@@ -265,6 +276,8 @@ public class WicketTesterTest extends TestCase
 		tester.executeAjaxEvent(label, ClientEvent.DBLCLICK);
 
 		assertTrue(eventExecuted);
+		
+		tester.destroy();
 	}
 
 	/**
@@ -285,6 +298,8 @@ public class WicketTesterTest extends TestCase
 		// label should now have "1" in it because that's what comes
 		// from the page parameter.
 		tester.assertLabel("label", "1");
+		
+		tester.destroy();
 	}
 
 	/**
@@ -298,5 +313,7 @@ public class WicketTesterTest extends TestCase
 		tester.startPage(MockResourceLinkPage.class);
 		
 		tester.clickLink("link");
+		
+		tester.destroy();
 	}
 }

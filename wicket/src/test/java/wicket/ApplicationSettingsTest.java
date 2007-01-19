@@ -136,5 +136,7 @@ public class ApplicationSettingsTest extends TestCase
 		WicketTester tester = new WicketTester();
 		Assert.assertNotNull("Localizer should be available", tester.getApplication()
 				.getResourceSettings().getLocalizer());
+		
+		tester.destroy();
 	}
 }

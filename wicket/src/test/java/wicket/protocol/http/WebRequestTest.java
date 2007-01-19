@@ -64,11 +64,14 @@ public class WebRequestTest extends TestCase
 
 	private void assertWithHeader(String header, String value, boolean isAjax)
 	{
-		MockHttpServletRequest mockRequest = new WicketTester().getServletRequest();
+		WicketTester tester = new WicketTester();
+		MockHttpServletRequest mockRequest = tester.getServletRequest();
 		mockRequest.addHeader(header, value);
 
 		WebRequest webRequest = new ServletWebRequest(mockRequest);
 
 		assertEquals(isAjax, webRequest.isAjax());
+		
+		tester.destroy();
 	}
 }

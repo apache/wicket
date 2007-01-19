@@ -316,6 +316,11 @@ public class MixedParamUrlCodingStrategyTest extends TestCase
 		tester.getApplication().getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
 	}
 
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
 	/**
 	 * @param parameterMap
 	 *            a map

@@ -32,17 +32,20 @@ import wicket.util.tester.WicketTester;
 public class ListViewTest extends TestCase
 {
 	/** Use a mock tester to handle Link-clicked event */
-	private static WicketTester tester;
+	private WicketTester tester;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
 
-		if (tester == null)
-		{
-			tester = new WicketTester();
-		}
+		tester = new WicketTester();
+	}
+	
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
 	}
 
 	/**

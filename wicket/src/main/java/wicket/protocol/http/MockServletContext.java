@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
@@ -41,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.Application;
-import wicket.WicketRuntimeException;
 import wicket.util.value.ValueMap;
 
 /**
@@ -111,19 +111,58 @@ public class MockServletContext implements ServletContext
 		mimeTypes.put("png", "image/png");
 
 		// Set ServletContext temp dir
-		try
-		{
-			File tmpDir = File.createTempFile("wicket", null);
-			File dir = new File(tmpDir.getParentFile(),tmpDir.getName() + "p");
-			dir.mkdir();
-			setAttribute("javax.servlet.context.tempdir", dir);
-			tmpDir.delete();
-		}
-		catch (IOException e)
-		{
-			throw new WicketRuntimeException(e);
-		}
+		setAttribute("javax.servlet.context.tempdir", createTempDir("wicket" + UUID.randomUUID()));
 	}
+	
+	/**
+	 * Creates a temp directory
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static File createTempDir(String name)
+	{
+		String tempDir = System.getProperty("java.io.tmpdir");
+		if (tempDir == null || tempDir.trim().length() == 0)
+		{
+			throw new RuntimeException(
+					"Could not create a temporary directory. System's [[java.io.tmpdir]] property is not "
+							+ "properly set. Current value is [[" + tempDir
+							+ "]]. Set via [[java -Djava.io.tmpdir=/var/tmp]]");
+		}
+
+		if (!tempDir.endsWith(File.separator))
+		{
+			tempDir += File.separator;
+		}
+
+		tempDir += name;
+
+		File dir = new File(tempDir);
+
+		int counter = 0;
+		while (dir.exists())
+		{
+			dir = new File(dir.getAbsolutePath() + counter);
+			counter++;
+			if (counter > 100)
+			{
+				throw new RuntimeException("Could not create temporary directory [["
+						+ dir.getAbsolutePath() + "]] after attempting 100 tries");
+			}
+		}
+
+		if (!dir.mkdirs())
+		{
+			throw new RuntimeException("Could not create path for tempdir [["
+					+ dir.getAbsolutePath() + "]]");
+		}
+
+		dir.deleteOnExit();
+
+		return dir;
+	}
+
 
 	/**
 	 * Add an init parameter.

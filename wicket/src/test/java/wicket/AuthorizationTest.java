@@ -73,8 +73,9 @@ public class AuthorizationTest extends TestCase
 	 */
 	public void testCreateAllowedComponent() throws Exception
 	{
-		new WicketTester();
+		WicketTester app = new WicketTester();
 		new WebComponent(new MockPageWithOneComponent(), "component");
+		app.destroy();
 	}
 
 	/**
@@ -104,6 +105,7 @@ public class AuthorizationTest extends TestCase
 		{
 			// this is good: authorization should have failed
 		}
+		app.destroy();
 	}
 
 	/**
@@ -119,6 +121,8 @@ public class AuthorizationTest extends TestCase
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
 		app.assertLabel("label", "wicked!");
+		
+		app.destroy();
 	}
 
 	/**
@@ -148,6 +152,8 @@ public class AuthorizationTest extends TestCase
 		app.startPage(AuthTestPage1.class);
 		app.assertRenderedPage(AuthTestPage1.class);
 		app.assertInvisible("label");
+		
+		app.destroy();
 	}
 
 	/**
@@ -170,6 +176,8 @@ public class AuthorizationTest extends TestCase
 		Input input = page.getTestModel();
 		assertNotNull(input.getStringInput());
 		assertEquals("test", input.getStringInput());
+		
+		app.destroy();
 	}
 
 	/**
@@ -211,6 +219,7 @@ public class AuthorizationTest extends TestCase
 			// good
 		}
 
+		app.destroy();
 	}
 
 	/**
