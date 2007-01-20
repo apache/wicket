@@ -20,16 +20,24 @@ package wicket.examples.customresourceloading;
 
 import java.net.URL;
 
+import wicket.MarkupContainer;
 import wicket.examples.WicketExamplePage;
+import wicket.markup.IMarkupCacheKeyProvider;
+import wicket.markup.IMarkupResourceStreamProvider;
 import wicket.util.resource.IResourceStream;
 import wicket.util.resource.UrlResourceStream;
 
 /**
  * The markup for this page is loaded by the Page component itself.
  * 
+ * @see IMarkupResourceStreamProvider
+ * @see IMarkupCacheKeyProvider
+ * 
  * @author Eelco Hillenius
  */
 public class PageWithCustomLoading extends WicketExamplePage
+		implements
+			IMarkupResourceStreamProvider
 {
 	/**
 	 * Constructor
@@ -45,13 +53,15 @@ public class PageWithCustomLoading extends WicketExamplePage
 	 * template from a database without any other component or the application
 	 * having to know about it.
 	 * 
-	 * @see wicket.MarkupContainer#newMarkupResourceStream(Class)
-	 * 
+	 * @param container
+	 *            The MarkupContainer which requests to load the Markup resource
+	 *            stream
 	 * @param containerClass
 	 *            The container the markup should be associated with
 	 * @return A IResourceStream if the resource was found
 	 */
-	public IResourceStream newMarkupResourceStream(final Class containerClass)
+	public IResourceStream getMarkupResourceStream(final MarkupContainer container,
+			final Class containerClass)
 	{
 		// load a template with a totally different name from this package using
 		// this component's class loader
@@ -61,7 +71,7 @@ public class PageWithCustomLoading extends WicketExamplePage
 			return new UrlResourceStream(url);
 		}
 
-		// not resource was not found
+		// no resource was not found
 		return null;
 	}
 }

@@ -13,8 +13,12 @@
 	    to have to know about it's differing loading resource.
     </p>
     <p>
-	    Note that while it is great to have this flexiblity, the further away you step from Wicket's default
-	    way of doing things the harder it will get to figure out what your application is doing.
+	    This example loads the custom template just once, though it may reload when resource polling is
+	    turned on and the template changes. If you want a load the template every time a page (or panel)
+	    is requested, you can additionally let your container implement IMarkupCacheKeyProvider, and then
+	    return null in the implementation of getCacheKey; Wicket will not cache templates without a
+	    cache key. This functionality can be used to e.g. when you want to load templates from a database,
+	    and you know that the actual templates can be different from request to request.
     </p>
 </body>
 </html>
