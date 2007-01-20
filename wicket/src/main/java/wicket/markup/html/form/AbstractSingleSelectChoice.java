@@ -244,7 +244,7 @@ abstract class AbstractSingleSelectChoice<T> extends AbstractChoice<T, T>
 					|| selected.equals(EMPTY_STRING))
 			{
 				// Force the user to pick a non-null value
-				final String option = getLocalizer().getString("null", this, CHOOSE_ONE);
+				final String option = getDefaultChoiceText();
 				return new AppendingStringBuffer("\n<option selected=\"selected\" value=\"\">")
 						.append(option).append("</option>");
 			}
