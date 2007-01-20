@@ -52,7 +52,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param fileName
 	 *            The name of the file, relative to the clazz position
 	 */
-	public PackagedTextTemplate(final Class clazz, final String fileName)
+	public PackagedTextTemplate(final Class<?> clazz, final String fileName)
 	{
 		this(clazz, fileName, "text");
 	}
@@ -69,7 +69,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 *            The mime type of this resource, such as "image/jpeg" or
 	 *            "text/html"
 	 */
-	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType)
+	public PackagedTextTemplate(final Class<?> clazz, final String fileName, final String contentType)
 	{
 		this(clazz, fileName, contentType, null);
 	}
@@ -88,7 +88,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 * @param encoding
 	 *            The file's encoding, e.g. 'UTF-8'
 	 */
-	public PackagedTextTemplate(final Class clazz, final String fileName, final String contentType,
+	public PackagedTextTemplate(final Class<?> clazz, final String fileName, final String contentType,
 			final String encoding)
 	{
 		super(contentType);
@@ -150,7 +150,7 @@ public class PackagedTextTemplate extends TextTemplate
 	 *            The variables to interpolate
 	 * @return This for chaining
 	 */
-	public final PackagedTextTemplate interpolate(Map variables)
+	public final PackagedTextTemplate interpolate(Map<?, ?> variables)
 	{
 		if (variables != null)
 		{

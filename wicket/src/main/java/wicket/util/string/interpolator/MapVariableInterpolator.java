@@ -26,7 +26,7 @@ import java.util.Map;
 public class MapVariableInterpolator extends VariableInterpolator
 {
 	/** Map of variables */
-	private Map variables;
+	private Map<?, ?> variables;
 
 	/**
 	 * Constructor
@@ -36,7 +36,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 * @param variables
 	 *            The variables to substitute
 	 */
-	public MapVariableInterpolator(final String string, final Map variables)
+	public MapVariableInterpolator(final String string, final Map<?, ?> variables)
 	{
 		super(string);
 		this.variables = variables;
@@ -56,7 +56,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 *            ${varname} string will be left in the <code>string</code> so
 	 *            multiple interpolators can be chained
 	 */
-	public MapVariableInterpolator(String string, final Map variables,
+	public MapVariableInterpolator(String string, final Map<?, ?> variables,
 			boolean exceptionOnNullVarValue)
 	{
 		super(string, exceptionOnNullVarValue);
@@ -70,7 +70,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 * @param variables
 	 *            New value
 	 */
-	public final void setVariables(final Map variables)
+	public final void setVariables(final Map<?, ?> variables)
 	{
 		this.variables = variables;
 	}
@@ -95,7 +95,7 @@ public class MapVariableInterpolator extends VariableInterpolator
 	 * @param variables
 	 * @return interpolated string
 	 */
-	public static String interpolate(String string, Map variables)
+	public static String interpolate(String string, Map<?, ?> variables)
 	{
 		return new MapVariableInterpolator(string, variables).toString();
 	}

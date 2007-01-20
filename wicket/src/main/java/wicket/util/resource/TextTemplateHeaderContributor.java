@@ -47,7 +47,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 * The model that holds any variables for interpolation. It should
 		 * return a {@link Map} or null.
 		 */
-		private final IModel<Map> variablesModel;
+		private final IModel<Map<?, ?>> variablesModel;
 
 		/**
 		 * Construct.
@@ -58,7 +58,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		 *            The model that holds any variables for interpolation. It
 		 *            should return a {@link Map} or null.
 		 */
-		protected TemplateModel(TextTemplate template, IModel<Map> variablesModel)
+		protected TemplateModel(TextTemplate template, IModel<Map<?, ?>> variablesModel)
 		{
 			if (template == null)
 			{
@@ -97,7 +97,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 		{
 			if (variablesModel != null)
 			{
-				Map variables = variablesModel.getObject();
+				Map<?, ?> variables = variablesModel.getObject();
 				if (variables != null)
 				{
 					return template.asString(variables);
@@ -124,8 +124,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 *            The variables to interpolate
 	 * @return The header contributor instance
 	 */
-	public static TextTemplateHeaderContributor forCss(final Class clazz, final String fileName,
-			IModel<Map> variablesModel)
+	public static TextTemplateHeaderContributor forCss(final Class<?> clazz, final String fileName,
+			IModel<Map<?, ?>> variablesModel)
 	{
 		return forCss(new PackagedTextTemplate(clazz, fileName), variablesModel);
 	}
@@ -142,7 +142,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return The header contributor instance
 	 */
 	public static TextTemplateHeaderContributor forCss(TextTemplate template,
-			IModel<Map> variablesModel)
+			IModel<Map<?, ?>> variablesModel)
 	{
 		return new TextTemplateHeaderContributor(new CssTemplate(template), variablesModel);
 	}
@@ -162,8 +162,8 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 *            The variables to interpolate
 	 * @return The header contributor instance
 	 */
-	public static TextTemplateHeaderContributor forJavaScript(final Class clazz,
-			final String fileName, IModel<Map> variablesModel)
+	public static TextTemplateHeaderContributor forJavaScript(final Class<?> clazz,
+			final String fileName, IModel<Map<?, ?>> variablesModel)
 	{
 		return forJavaScript(new PackagedTextTemplate(clazz, fileName), variablesModel);
 	}
@@ -180,7 +180,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @return The header contributor instance
 	 */
 	public static TextTemplateHeaderContributor forJavaScript(TextTemplate template,
-			IModel<Map> variablesModel)
+			IModel<Map<?, ?>> variablesModel)
 	{
 		return new TextTemplateHeaderContributor(new JavaScriptTemplate(template), variablesModel);
 	}
@@ -193,7 +193,7 @@ public class TextTemplateHeaderContributor extends StringHeaderContributor
 	 * @param variablesModel
 	 *            Optional model for variable substitution
 	 */
-	protected TextTemplateHeaderContributor(TextTemplate template, IModel<Map> variablesModel)
+	protected TextTemplateHeaderContributor(TextTemplate template, IModel<Map<?, ?>> variablesModel)
 	{
 		super(new TemplateModel(template, variablesModel));
 	}

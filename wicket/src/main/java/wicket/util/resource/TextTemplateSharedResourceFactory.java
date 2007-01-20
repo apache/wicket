@@ -54,7 +54,7 @@ public class TextTemplateSharedResourceFactory
 	/**
 	 * Shared resource scope
 	 */
-	private final Class scope;
+	private final Class<?> scope;
 
 	/**
 	 * Template to use to create resources
@@ -80,7 +80,7 @@ public class TextTemplateSharedResourceFactory
 	 * @param scope
 	 *            The scope in shared resources to add resources at
 	 */
-	public TextTemplateSharedResourceFactory(final TextTemplate template, final Class scope)
+	public TextTemplateSharedResourceFactory(final TextTemplate template, final Class<?> scope)
 	{
 		this.template = template;
 		this.scope = scope;
@@ -92,7 +92,7 @@ public class TextTemplateSharedResourceFactory
 	 * @return A resource reference to the template encoded as a resource with
 	 *         the given variables interpolated.
 	 */
-	public ResourceReference resourceReference(final Map variables)
+	public ResourceReference resourceReference(final Map<?, ?> variables)
 	{
 		final String uniqueName = sharedResourceName(variables);
 		final String templateValue = template.asString(variables);
@@ -137,10 +137,10 @@ public class TextTemplateSharedResourceFactory
 	 *            Variables that parameterize the linked-to resource
 	 * @return A unique name for the variables to use as a resource key
 	 */
-	protected String sharedResourceName(final Map variables)
+	protected String sharedResourceName(final Map<?, ?> variables)
 	{
 		final StringBuffer buffer = new StringBuffer();
-		for (final Iterator iterator = variables.values().iterator(); iterator.hasNext();)
+		for (final Iterator<?> iterator = variables.values().iterator(); iterator.hasNext();)
 		{
 			final String value = iterator.next().toString();
 			buffer.append(encodeValue(value));

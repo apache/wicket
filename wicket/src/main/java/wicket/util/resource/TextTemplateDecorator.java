@@ -74,7 +74,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * @see wicket.util.resource.TextTemplate#asString(java.util.Map)
 	 */
 	@Override
-	public String asString(Map variables)
+	public String asString(Map<?, ?> variables)
 	{
 		StringBuffer b = new StringBuffer();
 		b.append(getBeforeTemplateContents());
@@ -87,7 +87,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * Gets the string to put before the actual template contents, e.g.
 	 * 
 	 * <pre>
-	 *      &lt;script type=&quot;text/javascript&quot;&gt;
+	 *       &lt;script type=&quot;text/javascript&quot;&gt;
 	 * </pre>
 	 * 
 	 * @return The string to put before the actual template contents
@@ -98,7 +98,7 @@ public abstract class TextTemplateDecorator extends TextTemplate
 	 * Gets the string to put after the actual template contents, e.g.
 	 * 
 	 * <pre>
-	 *      &lt;/script&gt;
+	 *       &lt;/script&gt;
 	 * </pre>
 	 * 
 	 * @return The string to put after the actual template contents

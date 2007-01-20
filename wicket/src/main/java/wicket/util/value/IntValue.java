@@ -27,7 +27,7 @@ import wicket.util.lang.Primitives;
  * 
  * @author Jonathan Locke
  */
-public class IntValue implements Comparable, Serializable
+public class IntValue implements Comparable<IntValue>, Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -50,10 +50,8 @@ public class IntValue implements Comparable, Serializable
 	 *            The object to compare with
 	 * @return 0 if equal, -1 if less than or 1 if greater than
 	 */
-	public final int compareTo(final Object object)
+	public final int compareTo(final IntValue that)
 	{
-		final IntValue that = (IntValue)object;
-
 		if (this.value < that.value)
 		{
 			return -1;

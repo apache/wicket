@@ -59,7 +59,7 @@ public abstract class TextTemplate extends AbstractStringResourceStream
 	 *            The variables to interpolate
 	 * @return the result of the interpolation
 	 */
-	public String asString(Map variables)
+	public String asString(Map<?, ?> variables)
 	{
 		if (variables != null)
 		{
