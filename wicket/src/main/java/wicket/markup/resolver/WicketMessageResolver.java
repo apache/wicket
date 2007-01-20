@@ -128,6 +128,7 @@ public class WicketMessageResolver implements IComponentResolver
 		public MyLabel(final String id, final String value)
 		{
 			super(id, value);
+			setEscapeModelStrings(false);
 		}
 
 		/**
