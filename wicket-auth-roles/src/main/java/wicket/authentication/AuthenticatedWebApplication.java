@@ -17,7 +17,6 @@
 package wicket.authentication;
 
 import wicket.Component;
-import wicket.ISessionFactory;
 import wicket.Page;
 import wicket.Request;
 import wicket.RestartResponseAtInterceptPageException;
@@ -42,7 +41,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 			IUnauthorizedComponentInstantiationListener
 {
 	/** Subclass of authenticated web session to instantiate */
-	private final Class< ? extends AuthenticatedWebSession> webSessionClass;
+	private final Class<? extends AuthenticatedWebSession> webSessionClass;
 
 	/**
 	 * Constructor
@@ -52,7 +51,7 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 		// Get web session class to instantiate
 		this.webSessionClass = getWebSessionClass();
 	}
-	
+
 	@Override
 	protected void init()
 	{
@@ -99,47 +98,33 @@ public abstract class AuthenticatedWebApplication extends WebApplication
 	}
 
 	/**
-	 * @see wicket.Application#getSessionFactory()
+	 * @see wicket.protocol.http.WebApplication#newSession(wicket.Request)
 	 */
 	@Override
-	protected ISessionFactory getSessionFactory()
+	public Session newSession(Request request)
 	{
-		return new ISessionFactory()
+		try
 		{
-			private static final long serialVersionUID = 1L;
-
-			public Session newSession(Request request)
-			{
-				return newSession();
-			}
-			
-			public Session newSession()
-			{
-				try
-				{
-					return webSessionClass
-							.getDeclaredConstructor(AuthenticatedWebApplication.class).newInstance(
-									AuthenticatedWebApplication.this);
-				}
-				catch (Exception e)
-				{
-					throw new WicketRuntimeException("Unable to instantiate web session class "
-							+ webSessionClass, e);
-				}
-			}
-		};
+			return webSessionClass.getDeclaredConstructor(AuthenticatedWebApplication.class,
+					Request.class).newInstance(AuthenticatedWebApplication.this, request);
+		}
+		catch (Exception e)
+		{
+			throw new WicketRuntimeException("Unable to instantiate web session class "
+					+ webSessionClass, e);
+		}
 	}
 
 	/**
 	 * @return AuthenticatedWebSession subclass to use in this authenticated web
 	 *         application.
 	 */
-	protected abstract Class< ? extends AuthenticatedWebSession> getWebSessionClass();
+	protected abstract Class<? extends AuthenticatedWebSession> getWebSessionClass();
 
 	/**
 	 * @return Subclass of sign-in page
 	 */
-	protected abstract Class< ? extends WebPage> getSignInPageClass();
+	protected abstract Class<? extends WebPage> getSignInPageClass();
 
 	/**
 	 * Called when an AUTHENTICATED user tries to navigate to a page that they
