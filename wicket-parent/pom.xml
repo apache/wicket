@@ -31,12 +31,12 @@
 	<name>Wicket Parent</name>
 	<description>Wicket is a Java open source, component based web application framework.</description>
 
-	<url>http://wicketframework.org/${project.artifactId}</url>
+	<url>http://incubator.apache.org/wicket/${project.artifactId}</url>
 	<inceptionYear>2004</inceptionYear>
 
 	<organization>
-		<name>Wicket developers</name>
-		<url>http://wicketframework.org</url>
+		<name>Apache Software Foundation</name>
+		<url>http://apache.org</url>
 	</organization>
 
 	<licenses>
