@@ -14,22 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.annot.web;
+package wicket.util.license;
 
-import wicket.spring.common.Contact;
-import wicket.spring.common.ContactDao;
-import wicket.spring.common.web.ContactDetachableModel;
-
-public class ProxyModel extends ContactDetachableModel {
-	private ContactDao dao;
-
-	public ProxyModel(Contact contact, ContactDao dao) {
-		super(contact);
-		this.dao = dao;
+/**
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
+ * 
+ * @author Frank Bille Jensen (frankbille)
+ */
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+{
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenceHeaderTest()
+	{
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				".settings/org.eclipse.wst.common.project.facet.core.xml"
+		};
 	}
-
-	protected ContactDao getContactDao() {
-		return dao;
-	}
-
 }
