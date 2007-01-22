@@ -14,18 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package wicket.spring.common.web;
-
-import wicket.markup.html.WebPage;
-import wicket.markup.html.link.BookmarkablePageLink;
+package wicket.util.license;
 
 /**
- * Base page class. This is mainly here to provide some consistent look and feel
+ * Test that the license headers are in place in this project. The tests are run
+ * from {@link ApacheLicenseHeaderTestCase}, but you can add project specific
+ * tests here if needed.
  * 
- * @author Igor Vaynberg (ivaynberg)
+ * @author Frank Bille Jensen (frankbille)
  */
-public class BasePage extends WebPage {
-	public BasePage() {
-		add(new BookmarkablePageLink("home-link", HomePage.class));
+public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
+{
+	/**
+	 * Construct.
+	 */
+	public ApacheLicenceHeaderTest()
+	{
+//		addHeaders = true;
+		
+		xmlIgnore = new String[] {
+				".settings/org.eclipse.wst.common.project.facet.core.xml"
+		};
 	}
 }
