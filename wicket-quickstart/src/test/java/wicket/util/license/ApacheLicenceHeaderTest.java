@@ -32,11 +32,6 @@ public class ApacheLicenceHeaderTest extends ApacheLicenseHeaderTestCase
 	{
 //		addHeaders = true;
 		
-		xmlIgnore = new String[] {
-				"src/assembly/bin.xml",
-				"src/assembly/build.xml"
-		};
-		
 		htmlIgnore = new String[] {
 				// This is a quickstart project, so too much information in the HTML file
 				// will confuse.
