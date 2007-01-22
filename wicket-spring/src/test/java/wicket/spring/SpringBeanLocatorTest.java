@@ -100,8 +100,8 @@ public class SpringBeanLocatorTest extends TestCase
 	public void testLookupByClassTooManyFound()
 	{
 		Bean bean = new Bean();
-		ctx.putBean("bean", bean);
-		ctx.putBean("bean2", bean);
+		ctx.putBean("somebean", bean);
+		ctx.putBean("somebean2", bean);
 
 		SpringBeanLocator locator = new SpringBeanLocator(Bean.class, ctxLocator);
 		try
