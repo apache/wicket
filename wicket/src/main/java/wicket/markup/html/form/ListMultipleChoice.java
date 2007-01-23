@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
@@ -184,7 +185,10 @@ public class ListMultipleChoice extends AbstractChoice
 	public final String getModelValue()
 	{
 		// Get the list of selected values
-		final Collection selectedValues = (Collection)getModelObject();
+		Object modelObject = getModelObject();
+		if (! (modelObject instanceof Collection))
+			throw new WicketRuntimeException("Model object for a ListMultipleChoice must be a Collection (found " + modelObject.getClass() + ")");
+		final Collection selectedValues = (Collection)modelObject;
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
@@ -277,6 +281,8 @@ public class ListMultipleChoice extends AbstractChoice
 		Collection selectedValues = (Collection)getModelObject();
 		if (selectedValues != null)
 		{
+			if (getModelObject() != selectedValues)
+				throw new WicketRuntimeException("Updating a ListMultipleChoice works by modifying the underlying model object in-place, so please make sure that getObject() always returns the same Collection instance!");
 			modelChanging();
 			selectedValues.clear();
 			selectedValues.addAll((Collection)getConvertedInput());
