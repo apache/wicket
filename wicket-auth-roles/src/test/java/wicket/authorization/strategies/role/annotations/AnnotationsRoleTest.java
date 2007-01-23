@@ -73,6 +73,8 @@ public class AnnotationsRoleTest extends TestCase
 			}
 		});
 		tester.assertRenderedPage(NormalPage.class);
+		
+		tester.destroy();
 	}
 
 	/**
@@ -93,6 +95,8 @@ public class AnnotationsRoleTest extends TestCase
 			}
 		});
 		tester.assertRenderedPage(AdminPage.class);
+		
+		tester.destroy();
 	}
 
 	/**
@@ -137,6 +141,7 @@ public class AnnotationsRoleTest extends TestCase
 				throw e;
 			}
 		}
+		tester.destroy();
 	}
 
 	/**
