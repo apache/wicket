@@ -361,13 +361,13 @@ public class MarkupParser
 	{
 		// We don't want to compress whitespace inside <pre> tags, so we look
 		// for matches and:
-		//  - Do whitespace compression on everything before the first match.
-		//  - Append the <pre>.*?</pre> match with no compression.
-		//  - Loop to find the next match.
-		//  - Append with compression everything between the two matches.
-		//  - Repeat until no match, then special-case the fragment after the
-		//    last <pre>.
-		
+		// - Do whitespace compression on everything before the first match.
+		// - Append the <pre>.*?</pre> match with no compression.
+		// - Loop to find the next match.
+		// - Append with compression everything between the two matches.
+		// - Repeat until no match, then special-case the fragment after the
+		// last <pre>.
+
 		Pattern preBlock = Pattern.compile("<pre>.*?</pre>", Pattern.DOTALL | Pattern.MULTILINE);
 		Matcher m = preBlock.matcher(rawMarkup);
 		int lastend = 0;
@@ -375,12 +375,11 @@ public class MarkupParser
 		while (true)
 		{
 			boolean matched = m.find();
-			String nonPre = matched
-					? rawMarkup.substring(lastend, m.start())
-					: rawMarkup.substring(lastend);
+			String nonPre = matched ? rawMarkup.substring(lastend, m.start()) : rawMarkup
+					.substring(lastend);
 			nonPre = nonPre.replaceAll("[ \\t]+", " ");
 			nonPre = nonPre.replaceAll("( ?[\\r\\n] ?)+", "\n");
-			
+
 			// Don't create a StringBuffer if we don't actually need one.
 			// This optimises the trivial common case where there is no <pre>
 			// tag at all down to just doing the replaceAlls above.
@@ -432,11 +431,14 @@ public class MarkupParser
 				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
 				{
 					buf.append(rawMarkup.substring(0, pos1 - 1));
-					buf.append(rawMarkup.substring(pos2 + 4));
+					if (rawMarkup.length() >= pos2 + 4)
+					{
+						buf.append(rawMarkup.substring(pos2 + 4));
+					}
 					rawMarkup = buf.toString();
 				}
 			}
-			pos1 = rawMarkup.indexOf("<!--", pos1 + 4);
+			pos1 = rawMarkup.length() <= pos1 + 2 ? -1 : rawMarkup.indexOf("<!--", pos1 + 4);
 		}
 		return rawMarkup;
 	}
