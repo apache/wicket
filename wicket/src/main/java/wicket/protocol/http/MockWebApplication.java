@@ -202,26 +202,6 @@ public class MockWebApplication
 		this.wicketSession = this.application.getSession(wicketRequest);
 		this.requestCycleFactory = this.wicketSession.getRequestCycleFactory();
 
-		// -----------------------------------
-		// Copied from WicketFilter
-
-		// Call internal init method of web application for default
-		// initialisation
-		this.application.internalInit();
-
-		// Call init method of web application
-		this.application.init();
-
-		// We initialize components here rather than in the constructor or
-		// in the internal init, because in the init method class aliases
-		// can be added, that would be used in installing resources in the
-		// component.
-		this.application.initializeComponents();
-
-		// Give the application the option to log that it is started
-		this.application.logStarted();
-		// -----------------------------------
-
 		// set the default context path
 		this.application.getApplicationSettings().setContextPath(context.getServletContextName());
 
