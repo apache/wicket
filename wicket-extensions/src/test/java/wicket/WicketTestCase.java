@@ -58,6 +58,12 @@ public abstract class WicketTestCase extends TestCase
 	{
 		tester = new WicketTester();
 	}
+	
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
 
 	/**
 	 * Use <code>-Dwicket.replace.expected.results=true</code> to

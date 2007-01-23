@@ -115,6 +115,8 @@ public class LazyInitProxyFactoryTest extends TestCase
 		testerProxy.hashCode();
 		testerProxy.toString();
 		assertTrue(tester.isValid());
+		
+		application.destroy();
 	}
 
 	/**
