@@ -228,7 +228,7 @@ public class MarkupParser
 				registerMarkupFilter(new HeadForceTagIdHandler(containerInfo.getContainerClass()));
 			}
 		}
-		
+
 		registerMarkupFilter(new PrependContextPathHandler());
 	}
 
@@ -249,7 +249,8 @@ public class MarkupParser
 			parent = parent.getParent();
 			if (parent == null)
 			{
-				throw new WicketRuntimeException("The filters priority is too low. Must be > 0. Filter: " + filter);
+				throw new WicketRuntimeException(
+						"The filters priority is too low. Must be > 0. Filter: " + filter);
 			}
 		}
 		filter.setParent(parent);
@@ -445,14 +446,14 @@ public class MarkupParser
 					}
 				}
 			}
-			
+
 			// Avoid an "empty" root fragment. Return the first fragment instead
 			if (this.rootFragment.size() == 1)
 			{
 				MarkupElement elem = this.rootFragment.get(0);
 				if (elem instanceof MarkupFragment)
 				{
-					return (MarkupFragment) elem;
+					return (MarkupFragment)elem;
 				}
 			}
 		}
@@ -543,11 +544,14 @@ public class MarkupParser
 				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
 				{
 					buf.append(rawMarkup.substring(0, pos1 - 1));
-					buf.append(rawMarkup.substring(pos2 + 4));
+					if (rawMarkup.length() >= pos2 + 4)
+					{
+						buf.append(rawMarkup.substring(pos2 + 4));
+					}
 					rawMarkup = buf.toString();
 				}
 			}
-			pos1 = rawMarkup.indexOf("<!--", pos1 + 4);
+			pos1 = rawMarkup.length() <= pos1 + 2 ? -1 : rawMarkup.indexOf("<!--", pos1 + 4);
 		}
 		return rawMarkup;
 	}
