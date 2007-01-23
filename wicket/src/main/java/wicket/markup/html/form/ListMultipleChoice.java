@@ -186,8 +186,10 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		// Get the list of selected values
 		Object modelObject = getModelObject();
-		if (! (modelObject instanceof Collection))
-			throw new WicketRuntimeException("Model object for a ListMultipleChoice must be a Collection (found " + modelObject.getClass() + ")");
+		if (modelObject != null && !(modelObject instanceof Collection))
+			throw new WicketRuntimeException(
+					"Model object for a ListMultipleChoice must be a Collection (found "
+							+ modelObject.getClass() + ")");
 		final Collection selectedValues = (Collection)modelObject;
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
@@ -235,7 +237,7 @@ public class ListMultipleChoice extends AbstractChoice
 	{
 		super.onComponentTag(tag);
 		tag.put("multiple", "multiple");
-		
+
 		if (!tag.getAttributes().containsKey("size"))
 		{
 			tag.put("size", Math.min(maxRows, getChoices().size()));
@@ -272,7 +274,7 @@ public class ListMultipleChoice extends AbstractChoice
 		}
 		return selectedValues;
 	}
-	
+
 	/**
 	 * @see FormComponent#updateModel()
 	 */
@@ -282,7 +284,8 @@ public class ListMultipleChoice extends AbstractChoice
 		if (selectedValues != null)
 		{
 			if (getModelObject() != selectedValues)
-				throw new WicketRuntimeException("Updating a ListMultipleChoice works by modifying the underlying model object in-place, so please make sure that getObject() always returns the same Collection instance!");
+				throw new WicketRuntimeException(
+						"Updating a ListMultipleChoice works by modifying the underlying model object in-place, so please make sure that getObject() always returns the same Collection instance!");
 			modelChanging();
 			selectedValues.clear();
 			selectedValues.addAll((Collection)getConvertedInput());
