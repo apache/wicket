@@ -206,7 +206,7 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	{
 		// Get the list of selected values
 		Object modelObject = getModelObject();
-		if (!(modelObject instanceof Collection))
+		if (modelObject != null && !(modelObject instanceof Collection))
 		{
 			throw new WicketRuntimeException(
 					"Model object for a ListMultipleChoice must be a Collection (found "
