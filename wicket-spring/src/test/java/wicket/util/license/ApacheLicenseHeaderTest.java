@@ -32,10 +32,10 @@ public class ApacheLicenseHeaderTest extends ApacheLicenseHeaderTestCase
 	 */
 	public ApacheLicenseHeaderTest()
 	{
-//		addHeaders = true;
-		
-		xmlIgnore = new String[] {
-			"src/assembly/bin.xml"
-		};
+		// addHeaders = true;
+
+		xmlIgnore = new String[] {"src/assembly/bin.xml"};
+
+		propertiesIgnore = new String[] {"src/test/java/log4j.properties"};
 	}
 }
