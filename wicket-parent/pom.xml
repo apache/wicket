@@ -416,6 +416,14 @@
 					<exclude>**/*.java</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<directory>${basedir}</directory>
+				<targetPath>META-INF</targetPath>
+				<includes>
+					<include>NOTICE.txt</include>
+					<include>LICENSE.txt</include>
+				</includes>
+			</resource>
 		</resources>
 
 		<testResources>
@@ -489,6 +497,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
+					<version>2.0-beta-5</version>
 					<configuration>
 						<templateDirectory>${basedir}/src/site/template/</templateDirectory>
 						<template>wicket-site.vm</template>
@@ -497,6 +506,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.1.3</version>
 					<configuration>
 						<includes>
 							<include>**/*Test.java</include>
