@@ -388,11 +388,13 @@ public class MarkupParser
 				if (CONDITIONAL_COMMENT.matcher(comment).matches() == false)
 				{
 					buf.append(rawMarkup.substring(0, pos1 - 1));
-					buf.append(rawMarkup.substring(pos2 + 4));
+					if (rawMarkup.length() >= pos2 + 4) {
+						buf.append(rawMarkup.substring(pos2 + 4));
+					}
 					rawMarkup = buf.toString();
 				}
 			}
-			pos1 = rawMarkup.indexOf("<!--", pos1 + 4);
+			pos1 = rawMarkup.length() <= pos1 + 2 ? -1 : rawMarkup.indexOf("<!--", pos1 + 4);
 		}
 		return rawMarkup;
 	}
