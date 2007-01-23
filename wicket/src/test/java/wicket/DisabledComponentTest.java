@@ -51,6 +51,7 @@ public class DisabledComponentTest extends WicketTestCase
 	{
 		executeTest(DisabledComponentPage1.class, "DisabledComponentPage1a_result.html");
 		Link link = ((DisabledComponentPage1)tester.getLastRenderedPage()).link;
+		tester.createRequestCycle();
 		link.setEnabled(false);
 		executedListener(DisabledComponentPage1.class, link, "DisabledComponentPage1b_result.html");
 	}

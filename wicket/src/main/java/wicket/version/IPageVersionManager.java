@@ -55,9 +55,13 @@ public interface IPageVersionManager<T> extends Serializable
 	 * <p>
 	 * In requests where a Page is not changed at all, beginVersion will never
 	 * be called, nor will any of the other methods in this interface.
+	 * 
+	 * @param mergeVersion
+	 *            If this is set the version that was created is merged with the
+	 *            previous one.
 	 */
-	void beginVersion();
-
+	void beginVersion(boolean mergeVersion);
+	
 	/**
 	 * Indicates that the given component was added.
 	 * 
@@ -99,10 +103,14 @@ public interface IPageVersionManager<T> extends Serializable
 	/**
 	 * Called when changes to the page have ended.
 	 * 
+	 * @param mergeVersion
+	 *            If this is set the version that was created is merged with the
+	 *            previous one.
+	 * 
 	 * @see IPageVersionManager#beginVersion()
 	 */
-	void endVersion();
-
+	void endVersion(boolean mergeVersion);
+	
 	/**
 	 * Expires oldest version
 	 */

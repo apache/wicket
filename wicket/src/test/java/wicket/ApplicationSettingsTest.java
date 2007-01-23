@@ -17,9 +17,12 @@
 package wicket;
 
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import wicket.model.IModel;
+import wicket.model.Model;
 import wicket.resource.DummyApplication;
 import wicket.resource.loader.BundleStringResourceLoader;
 import wicket.resource.loader.ClassStringResourceLoader;
@@ -42,6 +45,13 @@ public class ApplicationSettingsTest extends TestCase
 	public ApplicationSettingsTest(final String message)
 	{
 		super(message);
+		
+		IModel<Map<String,String>> test = new Model<Map<String,String>>();
+		foo(test);
+	}
+	
+	void foo(IModel<? extends Map> x)
+	{
 	}
 
 	/**

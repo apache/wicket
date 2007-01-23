@@ -30,6 +30,7 @@ public class ReattachVersioningTest extends WicketTestCase
 	{
 		executeTest(ReattachTestPage.class, "ReattachTestPage_result.html");
 		ReattachTestPage testPage = (ReattachTestPage)tester.getLastRenderedPage();
+		tester.createRequestCycle();
 		testPage.attach();
 		testPage.reattachLabel1();
 		testPage.detach();

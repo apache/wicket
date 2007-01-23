@@ -418,9 +418,6 @@ public class AjaxRequestTarget implements IRequestTarget
 					"Ajax request attempted on a component that is not associated with a Page");
 		}
 
-		final boolean versioned = page.isVersioned();
-		page.setVersioned(false);
-
 		page.startComponentRender(component);
 
 		// render any associated headers of the component
@@ -440,7 +437,6 @@ public class AjaxRequestTarget implements IRequestTarget
 		}
 
 		page.endComponentRender(component);
-		page.setVersioned(versioned);
 
 		response.write("<component id=\"");
 		response.write(markupId);

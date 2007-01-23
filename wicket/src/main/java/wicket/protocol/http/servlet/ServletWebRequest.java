@@ -27,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.Application;
+import wicket.IRedirectListener;
+import wicket.RequestListenerInterface;
 import wicket.WicketRuntimeException;
 import wicket.protocol.http.WebApplication;
 import wicket.protocol.http.WebRequest;
@@ -261,6 +263,13 @@ public class ServletWebRequest extends WebRequest
 		}
 	}
 
+	/**
+	 * This will return true if the header "Wicket-Ajax" is set.
+	 * 
+	 * @see wicket.protocol.http.WebRequest#isAjax()
+	 */
+	// TODO matej? should we have a simple way of supporting other ajax things?
+	// or should they just set that same header??
 	@Override
 	public boolean isAjax()
 	{
@@ -282,4 +291,20 @@ public class ServletWebRequest extends WebRequest
 
 		return ajax;
 	}
+	
+	/**
+	 * This method by default calls isAjax(), wicket ajax request do have
+	 * an header set. And for all the ajax request the versioning should be merged
+	 * with the previous one. And when it sees that the current request is a 
+	 * redirect to page request the version will also be merged with the previous one
+	 * because refresh in the browser or redirects to a page shouldn't generate a new
+	 * version. 
+	 * 
+	 * @see wicket.Request#mergeVersion()
+	 */
+	public boolean mergeVersion()
+	{
+		RequestListenerInterface intface = getRequestParameters().getInterface();
+		return isAjax() || intface == IRedirectListener.INTERFACE;
+	}	
 }

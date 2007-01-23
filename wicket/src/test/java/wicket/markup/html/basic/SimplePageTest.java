@@ -380,6 +380,7 @@ public class SimplePageTest extends WicketTestCase
 
 		Panel panel = (Panel)tester.getLastRenderedPage().get("myPanel");
 		assertNotNull(panel);
+		tester.createRequestCycle();
 		panel.setVisible(true);
 		tester.processRequestCycle(panel);
 		String document = tester.getServletResponse().getDocument();

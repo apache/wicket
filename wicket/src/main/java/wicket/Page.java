@@ -439,7 +439,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 			// We're done with this version
 			if (versionManager != null)
 			{
-				versionManager.endVersion();
+				versionManager.endVersion(getRequest().mergeVersion());
 			}
 
 			// Evict any page version(s) as need be
@@ -918,7 +918,7 @@ public abstract class Page<T> extends MarkupContainer<T>
 					}
 
 					// start a new version
-					versionManager.beginVersion();
+					versionManager.beginVersion(getRequest().mergeVersion());
 					setFlag(FLAG_NEW_VERSION, true);
 				}
 

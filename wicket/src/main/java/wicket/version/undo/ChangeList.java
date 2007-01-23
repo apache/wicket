@@ -90,6 +90,12 @@ class ChangeList implements Serializable
 	{
 		changes.add(new Remove(component));
 	}
+	
+	
+	void add(ChangeList list)
+	{
+		changes.addAll(list.changes);
+	}	
 
 	/**
 	 * Undo changes (rollback).
