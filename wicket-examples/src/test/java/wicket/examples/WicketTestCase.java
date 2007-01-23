@@ -47,6 +47,12 @@ public abstract class WicketTestCase extends TestCase
 	{
 		tester = new WicketTester();
 	}
+	
+	@Override
+	protected void tearDown() throws Exception
+	{
+		tester.destroy();
+	}
 
 	/**
 	 * @param pageClass

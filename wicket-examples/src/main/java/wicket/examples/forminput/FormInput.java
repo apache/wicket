@@ -79,7 +79,8 @@ public class FormInput extends WicketExamplePage
 			super(parent, name, new CompoundPropertyModel<FormInputModel>(new FormInputModel()));
 
 			// Dropdown for selecting locale
-			new LocaleDropDownChoice(this, "localeSelect");
+			new LocaleDropDownChoice(this, "localeSelect").setComponentBorder(new MyBorder());
+			
 
 			// Link to return to default locale
 			new Link(this, "defaultLocaleLink")

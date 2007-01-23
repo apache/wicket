@@ -7,8 +7,6 @@
 
 	<display-name>Wicket Examples</display-name>
 	
-	<distributable />
-
 	<!-- only available with servlet spec. 2.4 
 	<locale-encoding-mapping-list>
 		<locale-encoding-mapping>
@@ -29,7 +27,7 @@
 -->
 	<context-param>
 	  <param-name>configuration</param-name>
-	  <param-value>development</param-value>
+	  <param-value>deployment</param-value>
 	</context-param>
 
 	<filter>
