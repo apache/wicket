@@ -47,6 +47,8 @@ public class Recorder extends HiddenField
 	/** parent palette object */
 	private Palette palette;
 
+	private boolean attached = false;
+
 	/**
 	 * @return parent Palette object
 	 */
@@ -69,15 +71,17 @@ public class Recorder extends HiddenField
 		this.palette = palette;
 
 		setOutputMarkupId(true);
-
-		initIds();
 	}
 
 	@Override
 	protected void onAttach()
 	{
 		super.onAttach();
-		initIds();
+		if (!getForm().hasError())
+		{
+			initIds();
+		}
+		attached = true;
 	}
 
 	/**
@@ -110,7 +114,8 @@ public class Recorder extends HiddenField
 	protected void onValid()
 	{
 		super.onValid();
-		updateIds();
+		if (attached)
+			updateIds();
 	}
 
 	/**
@@ -182,7 +187,8 @@ public class Recorder extends HiddenField
 	protected void onInvalid()
 	{
 		super.onInvalid();
-		updateIds();
+		if (attached)
+			updateIds();
 	}
 
 	private void updateIds()
