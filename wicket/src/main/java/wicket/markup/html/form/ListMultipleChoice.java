@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import wicket.MarkupContainer;
+import wicket.WicketRuntimeException;
 import wicket.markup.ComponentTag;
 import wicket.model.IModel;
 import wicket.util.convert.ConversionException;
@@ -199,11 +200,21 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 	/**
 	 * @see FormComponent#getModelValue()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public final String getModelValue()
 	{
 		// Get the list of selected values
-		final Collection<T> selectedValues = getModelObject();
+		Object modelObject = getModelObject();
+		if (!(modelObject instanceof Collection))
+		{
+			throw new WicketRuntimeException(
+					"Model object for a ListMultipleChoice must be a Collection (found "
+							+ modelObject.getClass() + ")");
+		}
+
+		final Collection<T> selectedValues = (Collection<T>)modelObject;
+
 		final AppendingStringBuffer buffer = new AppendingStringBuffer();
 		if (selectedValues != null)
 		{
@@ -297,6 +308,12 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 		Collection<T> selectedValues = getModelObject();
 		if (selectedValues != null)
 		{
+			if (getModelObject() != selectedValues)
+			{
+				throw new WicketRuntimeException(
+						"Updating a ListMultipleChoice works by modifying the underlying model object in-place, so please make sure that getObject() always returns the same Collection instance!");
+			}
+
 			modelChanging();
 			selectedValues.clear();
 			selectedValues.addAll(getConvertedInput());
@@ -305,10 +322,10 @@ public class ListMultipleChoice<T> extends AbstractChoice<Collection<T>, T>
 			try
 			{
 				getModel().setObject(selectedValues);
-			} 
-			catch(Exception e)
+			}
+			catch (Exception e)
 			{
-				// ignore this exception because it could be that there 
+				// ignore this exception because it could be that there
 				// is not setter for this collection.
 				log.info("no setter for the property attached to " + this);
 			}
