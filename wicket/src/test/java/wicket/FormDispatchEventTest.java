@@ -79,7 +79,7 @@ public class FormDispatchEventTest extends WicketTestCase
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			protected void onSelectionChanged(Object newSelection)
+			protected void onSelectionChanged(String newSelection)
 			{
 				selection = true;
 			}

@@ -242,7 +242,7 @@ public class CheckGroup<T> extends FormComponent<Collection<T>> implements IOnCh
 	 *            same as you would get by calling getModelObject() if the new
 	 *            selection were current
 	 */
-	protected void onSelectionChanged(final Collection newSelection)
+	protected void onSelectionChanged(final Collection<T> newSelection)
 	{
 	}
 

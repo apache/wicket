@@ -115,12 +115,12 @@ public class LocaleSelector extends Panel
 		 * @see wicket.markup.html.form.DropDownChoice#onSelectionChanged(java.lang.Object)
 		 */
 		@Override
-		public void onSelectionChanged(final Object newSelection)
+		public void onSelectionChanged(final Locale newSelection)
 		{
 			// note that we don't have to do anything here, as our property
 			// model allready calls FormInput.setLocale when the model is
 			// updated
-			// setLocale((Locale)newSelection); // so we don't need to do this
+			// setLocale(newSelection); // so we don't need to do this
 		}
 	}
 

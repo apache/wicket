@@ -213,7 +213,7 @@ public class DropDownChoice<T> extends AbstractSingleSelectChoice<T> implements 
 	 *            the same as you would get by calling getModelObject() if the
 	 *            new selection were current
 	 */
-	protected void onSelectionChanged(final Object newSelection)
+	protected void onSelectionChanged(final T newSelection)
 	{
 	}
 
