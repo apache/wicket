@@ -1093,7 +1093,7 @@ public class MockHttpServletRequest implements HttpServletRequest
 	}
 
 	/**
-	 * Set the complete url for this request. The url will be analized.
+	 * Set the complete url for this request. The url will be analyzed.
 	 * 
 	 * @param url
 	 */
