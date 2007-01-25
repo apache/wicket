@@ -241,41 +241,6 @@ public abstract class Page<T> extends MarkupContainer<T>
 	}
 
 	/**
-	 * Called right after a component's listener method (the provided method
-	 * argument) was called. This method may be used to clean up dependencies,
-	 * do logging, etc. NOTE: this method will also be called when
-	 * {@link WebPage#beforeCallComponent(Component, RequestListenerInterface)}
-	 * or the method invocation itself failed.
-	 * 
-	 * @param component
-	 *            the component that is to be called
-	 * @param listener
-	 *            the listener of that component that is to be called
-	 */
-	public void afterCallComponent(final Component component,
-			final RequestListenerInterface listener)
-	{
-	}
-
-	/**
-	 * Called just before a component's listener method (the provided method
-	 * argument) is called. This method may be used to set up dependencies,
-	 * enforce authorization, etc. NOTE: if this method fails, the method will
-	 * not be excuted. Method
-	 * {@link WebPage#afterCallComponent(Component, RequestListenerInterface)}
-	 * will always be called.
-	 * 
-	 * @param component
-	 *            the component that is to be called
-	 * @param listener
-	 *            the listener of that component that is to be called
-	 */
-	public void beforeCallComponent(final Component component,
-			final RequestListenerInterface listener)
-	{
-	}
-
-	/**
 	 * A component was added.
 	 * 
 	 * @param <V>

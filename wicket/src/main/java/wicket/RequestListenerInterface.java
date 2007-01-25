@@ -155,8 +155,6 @@ public class RequestListenerInterface
 	 */
 	public final void invoke(final Page page, final Component component)
 	{
-		page.beforeCallComponent(component, this);
-
 		try
 		{
 			// Invoke the interface method on the component
@@ -180,10 +178,6 @@ public class RequestListenerInterface
 			throw new WicketRuntimeException("Method " + method.getName() + " of "
 					+ method.getDeclaringClass() + " targeted at component " + component
 					+ " threw an exception", e);
-		}
-		finally
-		{
-			page.afterCallComponent(component, this);
 		}
 	}
 
