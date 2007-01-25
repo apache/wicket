@@ -154,8 +154,6 @@ public class RequestListenerInterface
 	 */
 	public final void invoke(final Page page, final Component component)
 	{
-		page.beforeCallComponent(component, this);
-
 		try
 		{
 			// Invoke the interface method on the component
@@ -164,9 +162,9 @@ public class RequestListenerInterface
 		catch (InvocationTargetException e)
 		{
 			// Honor redirect exception contract defined in IPageFactory
-			if (e.getTargetException() instanceof AbstractRestartResponseException || 
-					e.getTargetException() instanceof AuthorizationException ||
-					e.getTargetException() instanceof WicketRuntimeException)
+			if (e.getTargetException() instanceof AbstractRestartResponseException
+					|| e.getTargetException() instanceof AuthorizationException
+					|| e.getTargetException() instanceof WicketRuntimeException)
 			{
 				throw (RuntimeException)e.getTargetException();
 			}
@@ -179,10 +177,6 @@ public class RequestListenerInterface
 			throw new WicketRuntimeException("Method " + method.getName() + " of "
 					+ method.getDeclaringClass() + " targeted at component " + component
 					+ " threw an exception", e);
-		}
-		finally
-		{
-			page.afterCallComponent(component, this);
 		}
 	}
 

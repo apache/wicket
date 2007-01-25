@@ -64,8 +64,6 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 	 */
 	public void respond(RequestCycle requestCycle)
 	{
-		page.beforeCallComponent(component, listener);
-
 		try
 		{
 			// Invoke the interface method on the component
@@ -89,10 +87,6 @@ public final class ComponentResourceRequestTarget implements IRequestTarget
 						+ listener.getMethod().getDeclaringClass() + " targetted at component "
 						+ component + " threw an exception", e);
 			}
-		}
-		finally
-		{
-			page.afterCallComponent(component, listener);
 		}
 	}
 
