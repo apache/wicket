@@ -140,7 +140,7 @@ public class PortletRequestCodingStrategy implements IRequestCodingStrategy
 	 *      wicket.IRequestTarget)
 	 */
 	public final CharSequence encode(final RequestCycle requestCycle,
-			final IRequestTarget requestTarget)
+			final IRequestTarget requestTarget, final boolean relativePath)
 	{
 
 		if (requestTarget instanceof IBookmarkablePageRequestTarget)
